@@ -4,6 +4,7 @@ import com.thundashop.app.newsmanager.data.MailSubscription;
 import com.thundashop.app.newsmanager.data.NewsEntry;
 import com.thundashop.app.newsmanager.data.NewsUser;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Writing;
@@ -29,7 +30,7 @@ public interface INewsManager {
      * @return The id for this news entry.
      * @throws ErrorExceNption 
      */
-    @Administrator
+    @Editor
     @Writing
     public String addNews(NewsEntry newsEntry, String newsListId) throws ErrorException;
     

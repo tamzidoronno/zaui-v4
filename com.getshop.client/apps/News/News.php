@@ -26,7 +26,7 @@ class News extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        if ($this->hasWriteAccess()) {
+        if ($this->isEditorMode()) {
             $this->includefile("addnewnews");
         } 
         $this->includefile("filter");

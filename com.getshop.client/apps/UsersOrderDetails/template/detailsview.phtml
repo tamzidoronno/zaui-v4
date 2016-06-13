@@ -4,14 +4,14 @@ $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderid']);
 ?>
 <table cellspacing='0' cellpadding='0' width='100%'>
     <tr>
-        <th colspan='2'>User details</th>
+        <th colspan='2'><?php echo $this->__w("User details"); ?></th>
     </tr>
     <tr>    
         <td width='40%'>Created date</td>
         <td><?php echo date("d.m.Y H:i", strtotime($order->rowCreatedDate)); ?></td>
     </tr>
     <tr>
-        <td width='40%'>Shipment address</td>
+        <td width='40%'><?php echo $this->__w("Shipment address"); ?></td>
         <td>
             <?php echo $order->cart->address->fullName; ?><br>
             <?php echo $order->cart->address->address; ?><br>
@@ -20,7 +20,7 @@ $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderid']);
         </td>
     </tr>
     <tr>
-        <td>Payment type</td>
+        <td><?php echo $this->__w("Payment type"); ?></td>
         <td>
             <?php
             $type = $order->payment->paymentType;

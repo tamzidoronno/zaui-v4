@@ -11,7 +11,13 @@ $group = $this->getSelectedGroup();
 
         <div class="step_content">
             <?
-            echo "* ".$this->__f("Please enter your customernumber");
+            if ($group->usersRequireGroupReferencePlaceholder ){
+                echo "* ".$this->__f("Please enter your"). " " .$group->usersRequireGroupReferencePlaceholder;
+            } else {
+                echo "* ".$this->__f("Please enter your customernumber");
+            }
+            
+            
             ?>
             <br/>
             <input class="gsniceinput1 customerNumber" min='<? echo $group->usersRequireGroupReferenceValidationMin; ?>' max='<? echo $group->usersRequireGroupReferenceValidationMax; ?>' placeholder="<? echo $group->usersRequireGroupReferencePlaceholder; ?>"/>

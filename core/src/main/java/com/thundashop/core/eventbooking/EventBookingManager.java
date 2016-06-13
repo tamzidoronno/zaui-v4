@@ -766,6 +766,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public void saveBookingTypeMetaData(BookingItemTypeMetadata bookingItemTypeMetadata) {
+        BookingItemTypeMetadata inMemory = getBookingTypeMetaData(bookingItemTypeMetadata.bookingItemTypeId);
+        
+        if (inMemory != null) {
+            deleteAllOtherMetaTypes(inMemory);
+            bookingItemTypeMetadata.id = inMemory.id;
+        }
+        
         saveObject(bookingItemTypeMetadata);
         bookingTypeMetaDatas.put(bookingItemTypeMetadata.id, bookingItemTypeMetadata);
     }
@@ -800,13 +807,14 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     private boolean isVisibleForGroup(Event o) {
         BookingItemTypeMetadata metaData = getBookingTypeMetaData(o);
         
-        if (getSession() != null || getSession() == null) {
+        User loggedOnUser = userManager.getLoggedOnUser();
+        
+        if (loggedOnUser == null || metaData.publicVisible) {
             return metaData.publicVisible;
         }
         
-        if (getSession().currentUser.groups.get(0) == null) {
-            return true;
-        }
+        if (!loggedOnUser.useGroupId.isEmpty())
+            return metaData.visibleForGroup.get(loggedOnUser.useGroupId);
         
         return metaData.visibleForGroup.get(getSession().currentUser.groups.get(0));
     }
@@ -1646,5 +1654,16 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     private void clearEventForBookings(Event o) {
         bookingEngine.getAllBookingsByBookingItem(o.bookingItemId).stream().forEach(booking -> bookingEngine.deleteBooking(booking.id));
+    }
+
+    private void deleteAllOtherMetaTypes(BookingItemTypeMetadata inMemory) {
+        bookingTypeMetaDatas.values().stream()
+                .filter(type -> type.bookingItemTypeId.equals(inMemory.bookingItemTypeId) && !type.id.equals(inMemory.id))
+                .forEach(type -> removeAndDeleteType(type));
+    }
+
+    private void removeAndDeleteType(BookingItemTypeMetadata type) {
+        bookingTypeMetaDatas.remove(type.id);
+        deleteObject(type);
     }
 }

@@ -11,7 +11,7 @@ if (!count($events)) {
 foreach ($events as $event) {
     echo "<div class='downloadrow'>";
         echo "<div>".$event->bookingItemType->name."</div>";
-        echo "<div>".$this->__w("Date").": ".$event->mainStartDate."</div>";
+        echo "<div>".$this->__w("Date").": ". ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatMainStartDates($event)."</div>";
         echo "<div class='downloadcertificates'>";
         $user = $this->getApi()->getUserManager()->getUserById($event->currentUserId);
         if ($event->markedAsReady && $this->getApi()->getEventBookingManager()->canDownloadCertificate($this->getBookingEngineName(), $event->id)) {

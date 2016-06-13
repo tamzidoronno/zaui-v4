@@ -112,6 +112,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     @Transient
     public double priceExTaxes;
+    
+    public Map<String, String> variationCombinations;
 
     public void setMainImage(String fileId) {
         mainImage = fileId;

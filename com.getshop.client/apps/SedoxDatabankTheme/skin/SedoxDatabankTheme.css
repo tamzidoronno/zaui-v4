@@ -446,6 +446,14 @@ body {
 .gsucell[cellid="e0c500ea-38bc-4b36-a2fa-e9bdfbfda01f"] {display: none;}
 .gsucell[cellid="2868afee-1765-483f-923a-b19bd962137d"] {display: none;}
 
+.gsucell[cellid="4120c1f5-7f61-4f50-abb4-dec5f6156fe9_f770f86b-c421-4aec-a9b0-765fe6e5daea"] {height: 100%}
+.gsucell[cellid="4120c1f5-7f61-4f50-abb4-dec5f6156fe9_f770f86b-c421-4aec-a9b0-765fe6e5daea"] .gsinner {height: 100%;}
+.gsucell[cellid="b9894ff6-25fb-4f12-a76b-51d472f35b6f"] .applicationarea {padding-top: 10%;}
+.gsucell[cellid="63019a25-ceaa-4e8d-8f7e-6336fe1c3848"] .applicationarea {padding-top: 4%;}
+.gsucell[cellid="9065f808-3e1a-4212-bb35-94268a11320e"] .applicationarea {margin-top: -2%;}
+.gsucell[cellid="4120c1f5-7f61-4f50-abb4-dec5f6156fe9_f770f86b-c421-4aec-a9b0-765fe6e5daea"] .gsinner .gsucell {height: 33%; padding-left: 10%;}
+.gsucell[cellid="4120c1f5-7f61-4f50-abb4-dec5f6156fe9_f770f86b-c421-4aec-a9b0-765fe6e5daea"] .gsinner .gsucell .ImageDisplayer .imagecontainer img {width: 28%; min-width: 210px;}
+
 @media screen and (max-width: 1399px) {
     .SedoxFileServiceStatus .applicationinner .status1 {display: none;}
     .SedoxFileServiceStatus .applicationinner .status2 {border-left: none; padding-left: 0px;}
@@ -584,4 +592,8 @@ body {
     .ContentManager[appid="2e4099f5-e9f4-49a5-b6da-5c802eba87f3"] {font-size: 12px;}
     .gsucell[cellid='925e929d-c061-43ce-b33e-3a8b35d5ad70'] {width: auto !important; float: none !important;}
     .gsucell[cellid='832efc80-763f-483c-bc42-9127426f741a'] {width: auto !important; float: none !important;}
+    .gsucell[cellid="b9894ff6-25fb-4f12-a76b-51d472f35b6f"] .applicationarea {padding-top: 7%;}
+    .gsucell[cellid="63019a25-ceaa-4e8d-8f7e-6336fe1c3848"] .applicationarea {padding-top: 3%;}
+    .gsucell[cellid="9065f808-3e1a-4212-bb35-94268a11320e"] .applicationarea {margin-top: -1%;}
+    .gsucell[cellid="4120c1f5-7f61-4f50-abb4-dec5f6156fe9_f770f86b-c421-4aec-a9b0-765fe6e5daea"] .gsinner .gsucell {padding-left: 5%;}
 }

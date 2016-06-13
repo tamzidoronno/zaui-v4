@@ -211,7 +211,9 @@ class CartManager extends \SystemApplication implements \Application {
     private function redirectToSuccessPaymentPage() {
         \HelperCart::clearSession();
         $this->getApi()->getCartManager()->clear();
-        echo "<span class='thankyoumessage'>" . $this->__w("Thank you for your order.") . "</span>";
+        echo "<script>";
+        echo "thundashop.common.goToPage('payment_success');";
+        echo "</script>";
     }
         
     public function getTotalAmount() {

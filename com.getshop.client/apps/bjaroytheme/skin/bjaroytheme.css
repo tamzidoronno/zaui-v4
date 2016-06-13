@@ -17,6 +17,7 @@
 .Menu .entries .entries .entry:hover { background-color:#080605; }
 .Menu .entries .entries .entry { background-color: #181411; border-bottom: solid 1px #414244; }
 .Menu { float: right; padding-top: 10px; }
+.gsbody_inner[pageid="276d8e86-db42-46ca-9248-7c8fbf6bc020"] .Banner img { width: 226px; height: 226px; border-radius: 160px; margin: 25px; margin-bottom: 10px; border: solid 4px #939493; }
 .gsarea[area="header"] .gsinner.gsdepth_0 { width: 100%; padding-right: 20px;}
 #gsbody {
     font-weight: 100;

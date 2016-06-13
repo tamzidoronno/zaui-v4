@@ -74,7 +74,9 @@ class Products extends \WebshopApplication implements \Application {
         $product->name = $_POST['title'];
         $product->shortDescription = $_POST['lisviewdescription'];
         $product->price = $_POST['price'];
-        $product->sku = $_POST['sku'];
+        if(!\HelperCart::hasVariations($product)) {
+            $product->sku = $_POST['sku'];
+        }
         $product->taxgroup = $_POST['taxgroup'];
         $product->stockQuantity = $_POST['stockQuantity'];
         $product->progressivePriceModel = $_POST['isProgressive'];
@@ -265,4 +267,11 @@ class Products extends \WebshopApplication implements \Application {
         $_POST['value'] = $product->id;
     }
 
+    public function saveCombinationSkus() {
+        $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
+        foreach($_POST['combinations'] as $combination) {
+            $product->variationCombinations->{$combination["id"]} = $combination["sku"];
+        }
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
 }

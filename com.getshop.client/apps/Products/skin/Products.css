@@ -221,3 +221,42 @@
     max-width: 100%;
     width: inherit;
 }
+
+.combinationSetting {
+    position: relative;
+    height: 45px;
+}
+
+.combination_wrapper {
+    margin-top: 10px;
+    padding-top: 15px;
+    padding-left: 10px;
+    border: 1px solid lightgray;
+    border-radius: 7px;
+}
+
+.combinations_hidden {
+    display: none;
+}
+
+.combinationSku {
+    top: -5px !important;
+}
+
+#sku {
+    padding-right: 0px;
+}
+
+.sku_button {
+    float: right;
+    margin-top: 10px;
+}
+
+.open_sku {
+    margin-right: 10px;
+}
+
+.open_sku > i {
+    padding-right: 3px;
+    padding-left: 2px;
+}

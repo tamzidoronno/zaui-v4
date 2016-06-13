@@ -94,12 +94,50 @@ $groups = $this->getApi()->getUserManager()->getAllGroups();
             
             <div class="textfield gss_setting"  id="sku">
                 <span class="title"><?php echo $this->__f("SKU"); ?></span>
+            <?
+            if(!HelperCart::hasVariations($product)) {
+            ?>
                 <input type="textfield" gs_model='productmodel' gs_model_attr='sku' value="<? echo $product->sku; ?>" placeholder=''>
                 <div class="description">
                     <?php echo $this->__("A unique identifier for the product."); ?>
                 </div>
-            </div>
+                
+            <?
+            } else {
+                ?>
+                
+                <div class="gss_button sku_button save_sku" productId="<? echo $product->id; ?>"><i class='fa fa-save'></i><? echo $this->__f("Save SKUs"); ?></div>
+                <div class="gss_button sku_button open_sku"><i class='fa fa-arrow-down'></i></div>
+                <div class="description">
+                    <?php echo $this->__("A unique identifier for the product's variations."); ?>
+                </div>
+                <div class="combination_wrapper combinations_hidden">
+                <?
+                $variationCombinations = ProductHelper::getVariationCombinations($this->getApi(), $product->id);
+                
+                foreach($variationCombinations as $combination) {
+                    ?>
+                    <div class="combinationSetting">    
+                    <?
+                    $combinationId = "";
+                    foreach($combination as $value) {
+                        $combinationId .= $value["value"]->id;
+                        echo $value["name"]->text . ": " . $value["value"]->text . " | ";
+                    }
+                    ?>
+                    
+                    <input type="textfield" class="combinationSku" combination_id='<?echo $combinationId; ?>' value="<? echo isset($product->variationCombinations->{$combinationId}) ? $product->variationCombinations->{$combinationId} : ""; ?>" placeholder=''>
+                    </div>
+                    <?
+                }
+                ?>
+                </div>
+                <?
+            }
             
+            ?>
+            </div>
+                
             <div class="textfield gss_setting"  id="accountingSystemId">
                 <span class="title"><?php echo $this->__f("Accounting product id."); ?></span>
                 <input type="textfield" gs_model='productmodel' gs_model_attr='accountingSystemId' value="<? echo $product->accountingSystemId; ?>" placeholder=''>

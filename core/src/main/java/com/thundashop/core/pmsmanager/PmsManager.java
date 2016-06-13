@@ -850,6 +850,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String createOrder(String bookingId, NewOrderFilter filter) {
+        if(configuration.autoCreateInvoices && !filter.autoGeneration) {
+            filter.maxAutoCreateDate = filter.endInvoiceAt;
+            filter.autoGeneration = true;
+            filter.increaseUnits = configuration.increaseUnits;
+            filter.prepayment = configuration.prepayment;
+        }
+        
         return pmsInvoiceManager.createOrder(bookingId, filter);
     }
 
@@ -1094,7 +1101,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
         PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings, prices.pricesExTaxes);
+        
         int totalRooms = bookingEngine.getBookingItems().size();
+        if(!filter.typeFilter.isEmpty()) {
+            totalRooms = 0;
+            for(String id : filter.typeFilter) {
+                totalRooms += bookingEngine.getBookingItemsByType(id).size();
+            }
+        }
+        
         PmsStatistics result = builder.buildStatistics(filter, totalRooms);
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
         result.buildTotalSales();
@@ -3091,6 +3106,48 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         saveBooking(booking);
+    }
+
+    @Override
+    public List<CleaningStatistics> getCleaningStatistics(Date start, Date end) {
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        List<CleaningStatistics> toReturn = new ArrayList<CleaningStatistics>();
+        Calendar cal = Calendar.getInstance();
+        for(BookingItemType type : types) {
+            HashMap<Integer, Double> result = new HashMap();
+            for(BookingItem item : items) {
+                if(item.bookingItemTypeId != null && !item.bookingItemTypeId.equals(type.id)) {
+                    continue;
+                }
+                
+                PmsAdditionalItemInformation additional = getAdditionalInfo(item.id);
+                List<Date> cleaningDates = additional.getAllCleaningDates();
+                for(Date date : cleaningDates) {
+                    if(date.before(start)) {
+                        continue;
+                    }
+                    if(date.after(end)) {
+                        continue;
+                    }
+                    cal.setTime(date);
+                    int weekday = cal.get(Calendar.DAY_OF_WEEK);
+                    Double tmpCount = 0.0;
+                    if(result.containsKey(weekday)) {
+                        tmpCount = result.get(weekday);
+                    }
+                    tmpCount++;
+                    result.put(weekday, tmpCount);
+                }
+            }
+            
+            CleaningStatistics stats = new CleaningStatistics();
+            stats.cleanings = result;
+            stats.typeId = type.id;
+            toReturn.add(stats);
+        }
+        
+        return toReturn;
     }
 
 }

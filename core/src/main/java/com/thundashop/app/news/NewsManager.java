@@ -177,7 +177,8 @@ public class NewsManager extends ManagerBase implements INewsManager {
 
     private void finalize(NewsEntry entry) {
         if(entry.pageId == null || entry.pageId.isEmpty()) {
-            Page templatePage = pageManager.createPageFromTemplatePage("news_template_1");
+            String template = "news_template_" + entry.pageLayout;
+            Page templatePage = pageManager.createPageFromTemplatePage(template);
             entry.pageId = templatePage.id;
             if(entry.userId != null && !entry.userId.isEmpty()) {
                 entry.usersName = userManager.getUserById(entry.userId).fullName;
@@ -198,7 +199,14 @@ public class NewsManager extends ManagerBase implements INewsManager {
 
     @Override
     public List<NewsUser> getNewsUsers(String eventId) {
-        Set<String> distinctUserIDs = entries.values().stream()
+        List<NewsEntry> tmpEntries = new ArrayList();
+        for(NewsEntry entr : entries.values()) {
+            if(entr.newsListId.equals(eventId)) {
+                tmpEntries.add(entr);
+            }
+        }
+                
+        Set<String> distinctUserIDs = tmpEntries.stream()
                 .map(entry -> entry.userId)
                 .collect(Collectors.toSet());
         

@@ -15,7 +15,11 @@ class PmsBooking extends \WebshopApplication implements \Application {
             echo "Please set name of booking engine.";
             return;
         }
-        $this->includefile("pmsfront_1");
+        $front = $this->getConfigurationSetting("front");
+        if(!$front) {
+            $front = "1";
+        }
+        $this->includefile("pmsfront_".$front);
     }
     
     public function initBooking() {

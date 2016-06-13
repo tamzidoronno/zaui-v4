@@ -1,0 +1,36 @@
+<?
+/* @var $this \ns_815955a0_559a_4164_8994_cecd4497efb9\Magento */
+?>
+
+<div class='gss_settings_header'>
+    <span class="fa-stack fa-lg" style="margin-right: 60px;">
+        <i class="fa fa-gears fa-stack-1x"></i>
+    </span>
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Magento Settings"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("Credentials for the API");
+            ?>	
+        </div>
+    </div>	
+</div>
+<div class='gss_settings_content'>
+    <div class="textfield gss_setting"  id="name">
+        <span class="title"><?php echo $this->__f("Hostname"); ?></span>
+        <input type="textfield" gs_model='magentocreds' gs_model_attr='hostname' value="<? echo $this->getConfigurationSetting("hostname"); ?>" placeholder="">
+    </div>
+    <div class="textfield gss_setting"  id="name">
+        <span class="title"><?php echo $this->__f("Username"); ?></span>
+        <input type="textfield" gs_model='magentocreds' gs_model_attr='username' value="<? echo $this->getConfigurationSetting("username"); ?>" placeholder="">
+    </div>
+    <div class="textfield gss_setting"  id="name">
+        <span class="title"><?php echo $this->__f("Password"); ?></span>
+        <input type="textfield" gs_model='magentocreds' gs_model_attr='password' value="<? echo $this->getConfigurationSetting("password"); ?>" placeholder="">
+    </div>
+    <div class='gss_button_area save_button'>
+        <div class="gss_button" gss_method="saveCredentials" gss_model="magentocreds"><i class='fa fa-save'></i><?php echo $this->__f("Save"); ?></div>
+    </div>
+</div>

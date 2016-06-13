@@ -185,7 +185,7 @@ public class StorePool {
                 System.out.println("test");
             }
             try {
-                Object argument = gson.fromJson(object.args.get(parameter), casttypes[i]);
+                 Object argument = gson.fromJson(object.args.get(parameter), casttypes[i]);
                 executeArgs[i] = argument;
             } catch (Exception e) {
                 e.printStackTrace();

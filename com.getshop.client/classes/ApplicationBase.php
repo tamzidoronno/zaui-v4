@@ -278,6 +278,11 @@ class ApplicationBase extends FactoryBase {
     }
     
     public function hasWriteAccess() {
+        
+        if($this->getFactory()->getStore()->id == "f2d0c13c-a0f7-41a7-8584-3c6fa7eb68d1") {
+            return $this->isEditorMode();
+        }
+        
         if(!$this->isEditorMode()) {
             return false;
         }

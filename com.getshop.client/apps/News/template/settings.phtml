@@ -21,6 +21,22 @@
         </td>
     </tr>
     <tr>
+        <td width="50%">Layout template</td>
+        <td width="50%">
+            <select gsname="setting_layout_template">
+                <?php 
+                for($i = 1; $i < 10; $i++) {
+                    $checked = "";
+                    if($i == $this->getConfigurationSetting("layout_template")) {
+                        $checked = "SELECTED";
+                    }
+                    echo "<option value='$i' $checked>Layout template $i</option>";
+                }
+                ?>
+            </select>
+        </td>
+    </tr>
+    <tr>
         <td width="50%">News list id</td>
         <td width="50%">
             <input gsname="setting_newslistid" value="<?php echo $this->getConfigurationSetting("newslistid"); ?>">

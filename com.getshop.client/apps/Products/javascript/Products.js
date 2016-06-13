@@ -19,6 +19,8 @@ app.Products = {
         $(document).on('keyup', '.attrtext', app.Products.updateAttrText);
         $(document).on('click', '.setupDynamicPricing', app.Products.setupDynamicPricing);
         $(document).on('change', '#gss_filterproducts', app.Products.filterProducts);
+        $(document).on('click', '.open_sku', app.Products.toggleSkuTable);
+        $(document).on('click', '.save_sku', app.Products.saveSkuTable);
     },
     copyProduct: function() {
         var name = prompt(__f("New product name"));
@@ -253,6 +255,35 @@ app.Products = {
 
         reader.readAsDataURL(file);
     },
+    
+    toggleSkuTable: function() {
+        $(".combination_wrapper").slideToggle();
+        var icon = $(this).children("i");
+        if(icon.hasClass("fa-arrow-down")) {
+            icon.removeClass("fa-arrow-down");
+            icon.addClass("fa-arrow-up");
+        } else if (icon.hasClass("fa-arrow-up")) {
+            icon.removeClass("fa-arrow-up");
+            icon.addClass("fa-arrow-down");
+        }
+    },
+    
+    saveSkuTable: function() {
+        var combinations = [];
+        
+        $(".combinationSku").each(function() {
+            var combination = {id: $(this).attr("combination_id"), sku: $(this).val()};
+            combinations.push(combination);
+        });
+        
+        var data = {
+            gss_view: 'gss_productwork_area',
+            gss_fragment: 'editproduct',
+            value : $(this).attr('productId'),
+            combinations: combinations
+        }
+        getshop.Settings.post(data, "saveCombinationSkus");
+    }
 }
 
 

@@ -3,19 +3,23 @@
 .Menu a { font-size: 16px; font-weight: bold; color:#FFF; padding-right: 30px; display:inline-block; }
 .Menu .lastentry a { padding-right: 0px; }
 .Menu .entries .entries a { width: 200px; }
+.News .item .news_img_container { margin-bottom: 10px; }
+.NewsElements .newstype_shorttext { font-weight: bold; }
+.NewsElements .bysub { font-size: 12px; }
 body {    
     background-color: #FFF; font-size: 18px; 
-
+    color: #696969;
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
     font-weight: 300;
 }
+.C3EventRegistration table { width: 100%; }
+.C3EventRegistration td { font-size: 18px; }
 .gsarea[area="header"] {
    background: #39c6c1; /* Old browsers */
     background: -moz-linear-gradient(top,  #39c6c1 0%, #28b4af 100%); /* FF3.6-15 */
     background: -webkit-linear-gradient(top,  #39c6c1 0%,#28b4af 100%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom,  #39c6c1 0%,#28b4af 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#39c6c1', endColorstr='#28b4af',GradientType=0 ); /* IE6-9 */
-
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#39c6c1', endCovlorstr='#28b4af',GradientType=0 ); /* IE6-9 */
 }
 
 .gsarea[area="header"] .gs_page_width { height: 190px;  margin-bottom: 20px; padding-top: 20px; }
@@ -147,6 +151,11 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     height: 200px;
     width: auto !important;
 }
+.News .item .news_img_container, .News .item img { overflow: hidden; height: 140px; }
+.gsbody_inner[pageid="d204ec01-0895-444b-95a2-a4f0f8662afe"] .News .item img, 
+.gsbody_inner[pageid="8a9e7b98-8b93-4c99-8618-549ef3d46601"] .News .item img {
+    height: auto !important;
+}
 
 .News .news_entry_header {
     height: 55px;
@@ -179,6 +188,14 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     width: 280px;
 }
 
+.gsbody_inner[pageid="8a9e7b98-8b93-4c99-8618-549ef3d46601"] .News .newsboxtemplate_1 {
+    font-size: 12px;
+}
+
 .gsbody_inner[pageid="b0e1350d-743f-44fa-a1b1-8dc78cb6007f"] .news_img_container {
     display: none;
+}
+
+.ProfilePrinter .imagearea img {
+    width: auto !important;
 }

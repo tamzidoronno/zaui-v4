@@ -82,6 +82,7 @@ $days[7] = "Sunday";
 <span class="changeview pmsbutton" data-panel='instructions'>Instructions</span>
 <span class="changeview pmsbutton" data-panel='defaultmessage'>Default msg</span>
 <span class="changeview pmsbutton" data-panel='other_config'>Other</span>
+<span class="changeview pmsbutton" data-panel='cleaning'>Cleaning</span>
 <span class="changeview pmsbutton" data-panel='addons'>Addons</span>
 <div style='padding-top: 20px;'>
     Variables: {code},
@@ -125,6 +126,10 @@ $days[7] = "Sunday";
 
     <div class='addons notificationpanel'>
         <?php $this->includefile("addonsconfigpanel"); ?>
+    </div>
+
+    <div class='cleaning notificationpanel'>
+        <?php $this->includefile("cleaning"); ?>
     </div>
     
     <div class='sms_notifcations notificationpanel'>
@@ -208,6 +213,19 @@ $days[7] = "Sunday";
         <h2>
             Other configurations
         </h2>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->forceRequiredFieldsForEditors) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='forceRequiredFieldsForEditors' <? echo $checked; ?>>
+            </span>
+            Force required fields, when an editor / admin registers, does it need to fill in required fields?
+        </div>
+        
         <div class='configrow'>
             <span class='configentry'>
                 <?

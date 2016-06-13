@@ -1,0 +1,30 @@
+
+<div gstype="form" method="saveAppInstanceSettings">
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%">Tid / Time</td>
+        <td width="50%">
+            <input type='text' gsname="setting_time" value="<?php echo $this->getConfigurationSetting("time"); ?>">
+        </td>
+    </tr>
+    <tr>
+        <td width="50%">Sted / location</td>
+        <td width="50%">
+            <input type='text' gsname="setting_location" value="<?php echo $this->getConfigurationSetting("location"); ?>">
+        </td>
+    </tr>
+    <tr>
+        <td width="50%">Meld på link eller epost / registering link or email</td>
+        <td width="50%">
+            <input type='text' gsname="setting_register" value="<?php echo $this->getConfigurationSetting("register"); ?>">
+        </td>
+    </tr>
+    <tr>
+        <td width="50%">Email subject / tittel på epost</td>
+        <td width="50%">
+            <input type='text' gsname="setting_email_subject" value="<?php echo $this->getConfigurationSetting("email_subject"); ?>">
+        </td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

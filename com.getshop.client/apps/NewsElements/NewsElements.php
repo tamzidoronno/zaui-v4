@@ -11,7 +11,13 @@ class NewsElements extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        $entry = $this->getApi()->getNewsManager()->getNewsForPage($this->getPage()->javapage->id);
         $type = $this->getConfigurationSetting("type");
+        if(!$entry) {
+            echo "Selected type: " . $type;
+            return;
+        }
+        
         if(!$type) {
             echo "Not spefied a type yet, please specify one";
             return;
@@ -20,7 +26,9 @@ class NewsElements extends \MarketingApplication implements \Application {
         if($this->getFactory()->getPage()->javapage->id == "news_template_1") {
             echo $type;
         } else {
+            echo "<div class='newstype_$type'>";
             $this->includefile($type);
+            echo "</div>";
         }
     }
     
@@ -30,6 +38,7 @@ class NewsElements extends \MarketingApplication implements \Application {
         $entry->content = $_POST['data']['content'];
         $entry->date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
         $entry->userId = $_POST['data']['newsowner'];
+        $entry->imageText = $_POST['data']['imageText'];
         $entry->rowCreatedDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
         
         $this->getApi()->getNewsManager()->addNews($entry, $entry->newsListId);

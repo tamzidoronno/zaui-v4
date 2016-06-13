@@ -182,6 +182,7 @@ Full name;-;Hele navnet
 Gallery;-;Galleri
 Got a coupon from use? Apply it and get discount.;-;Har du en kupong? bruk den her
 Group;-;Gruppe
+Group Access;-;Gruppetilgang
 Guest email;-;Gjestens epost
 Guest information;-;Gjesteinformasjon
 Guest information for room;-;Gjesteinformasjon for rom
@@ -198,6 +199,7 @@ I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
 If you enable this, the parallex effect will be enabled. The background will scroll faster then the cell on top;-;Hvis du aktiverer dette vil du aktivere paralaxx effekter, bakgrunnen vil da scrolle raskere enn cellen over.
 Image;-;Bilde
+Image text;-;Bildetekst
 Include breakfast for {price} per night per room;-;Legg til frokost for {price}kr per natt / per rom.
 Include early checkin for {price};-;Legg inn tidlig innsjekk for {price}kr.
 Include extra bed for {price} per night per room;-;Legg til en ekstra seng for {price}kr per rom.
@@ -283,6 +285,7 @@ Nice modern theme. Suitable for different carmarkeds.;-;Pent og moderne tema. Go
 No;-;Nei
 No code added yet;-;Ingen kode er lagt til enda
 No companies registered yet!;-;Ingen firma er registrert enda.
+No files added.;-;Ingen filer er lagt til.
 No header uploaded for mobile landscape mode yet, please upload one.;-;Ingen header har blitt lastet opp for landskaps modus på mobil enda, vennligst last opp et.
 No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen header har blitt lastet opp for potrait modus på mobil enda, vennligst last opp et.
 No items;-;Ingen elementer

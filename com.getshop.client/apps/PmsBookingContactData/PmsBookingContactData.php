@@ -220,7 +220,8 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     }
 
     public function validatePostedForm() {
-        if($this->isEditorMode()) {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        if($this->isEditorMode() && !$config->forceRequiredFieldsForEditors) {
             return;
         }
         
@@ -255,6 +256,9 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             return;
         }
         if(isset($_POST['data']['choosetyperadio']) && $_POST['data']['choosetyperadio'] == "registration_company" && stristr($key, "user_")) {
+            return;
+        }
+        if(isset($_POST['data']['choosetyperadio']) && $_POST['data']['choosetyperadio'] == "registered_user") {
             return;
         }
         
@@ -346,6 +350,10 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     }
 
     public function validateGuestData() {
+        if($this->isAdminMode()) {
+            return;
+        }
+        
         $booking = $this->getCurrentBooking();
         $i = 1;
         foreach($booking->rooms as $room) {

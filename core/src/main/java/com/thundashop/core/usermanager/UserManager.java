@@ -1157,10 +1157,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     private Comparator<User> compareByName() {
         return (User a, User b) -> {
-            if (a.fullName.isEmpty())
+            if (a == null || a.fullName == null || a.fullName.isEmpty())
                 return 1;
             
-            if (b.fullName.isEmpty())
+            if (b == null || b.fullName == null || b.fullName.isEmpty())
                 return -1;
             
             if (Character.isDigit(a.fullName.charAt(0)))

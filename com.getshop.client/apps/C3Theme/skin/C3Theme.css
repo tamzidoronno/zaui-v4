@@ -191,3 +191,7 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .gsbody_inner[pageid="b0e1350d-743f-44fa-a1b1-8dc78cb6007f"] .news_img_container {
     display: none;
 }
+
+.ProfilePrinter .imagearea img {
+    width: auto !important;
+}

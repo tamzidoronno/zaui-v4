@@ -205,13 +205,25 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                     ?>
                                 </select><br>
                                 <span class='pmsbutton tiny' gstype='submitToInfoBox' gsvalue='notsplit'>Change</span>
-                                <span class='pmsbutton tiny' gstype='submitToInfoBox' gsvalue='split'>Split change</span>
+                                <?php
+                                $start = strtotime($room->date->start);
+                                $diff = strtotime($room->date->end) - $start;
+                                $splitchange = false;
+                                if($start < time() && $diff > 86400 && date("dmY", $start) != date("dmY", time())) {
+                                    $splitchange = true;
+                                }
+                                if($splitchange) {
+                                ?>
+                                    <span class='pmsbutton tiny' gstype='submitToInfoBox' gsvalue='split'>Split change</span>
+                                <?php } ?>
                                 <div class="tiparea">
                                 </div>
-                                <div>
-                                    * Change moves the entire stay to the new room<br>
-                                    * Split change only move the stay from today.<br>
-                                </div>
+                                <?php if($splitchange) { ?>
+                                    <div>
+                                        * Change moves the entire stay to the new room<br>
+                                        * Split change only move the stay from today.<br>
+                                    </div>
+                                <?php } ?>
                             </span>
                         </span>
                     </span>

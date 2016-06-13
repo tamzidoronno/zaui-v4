@@ -35,9 +35,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $roomid) {
                 $start = $room->date->start;
-                if(strtotime($start) < time()) {
-                    $start = $this->convertToJavaDate(time());
-                }
                 $end = $room->date->end;
                 
                 $filter = new \core_pmsmanager_PmsBookingFilter();

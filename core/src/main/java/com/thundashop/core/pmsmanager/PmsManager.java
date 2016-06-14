@@ -791,7 +791,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return "Booking does not exists";
         }
         try {
-             PmsBookingRooms room = booking.findRoom(roomId);
+            PmsBookingRooms room = booking.findRoom(roomId);
+            if(room.bookingItemId != null && room.bookingItemId.equals(itemId)) {
+                //Why change into the same room?
+                return "";
+            }
+             
             if (room == null) {
                 return "Room does not exists";
             }

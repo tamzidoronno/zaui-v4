@@ -785,17 +785,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public String setBookingItem(String roomId, String bookingId, String itemId) {
+    public String setBookingItem(String roomId, String bookingId, String itemId, boolean split) {
         PmsBooking booking = getBooking(bookingId);
         if (booking == null) {
             return "Booking does not exists";
         }
         try {
-             PmsBookingRooms room = booking.findRoom(roomId);
+            PmsBookingRooms room = booking.findRoom(roomId);
+            if(room.bookingItemId != null && room.bookingItemId.equals(itemId)) {
+                //Why change into the same room?
+                return "";
+            }
+             
             if (room == null) {
                 return "Room does not exists";
             }
-            room = splitBookingIfNesesary(booking, room);
+            if(split) {
+                room = splitBookingIfNesesary(booking, room);
+            }
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
             resetBookingItem(room, itemId, booking);

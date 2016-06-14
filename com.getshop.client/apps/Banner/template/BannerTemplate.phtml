@@ -41,10 +41,10 @@
                     }
                 }
             }
-                $dispwidth = "";
-                if($this->getConfigurationSetting("toggleCompressMainImage") == "on") {
-                    $dispwidth = "&width=300";
-                }
+            $dispwidth = "";
+            if($this->getConfigurationSetting("toggleCompressMainImage") == "on") {
+                $dispwidth = "&width=300";
+            }
             list($width, $height) = getimagesize("../uploadedfiles/" . $imageId);
             $img = "displayImage.php?id=$imageId";
             echo "<div class='banner gsgallery gallerymainimgdiv' height='$height' width='$width' img='$img' index='0'>";

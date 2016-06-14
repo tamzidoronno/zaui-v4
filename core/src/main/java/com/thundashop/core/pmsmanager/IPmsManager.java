@@ -51,7 +51,7 @@ public interface IPmsManager {
     public void splitBooking(String roomId);
     
     @Administrator
-    public String setBookingItem(String roomId, String bookingId, String itemId);
+    public String setBookingItem(String roomId, String bookingId, String itemId, boolean split);
     
     @Administrator
     public PmsBookingRooms changeDates(String roomId, String bookingId, Date start, Date end);

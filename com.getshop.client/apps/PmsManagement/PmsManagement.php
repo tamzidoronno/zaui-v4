@@ -789,6 +789,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return true;
         }
 
+        if($room->deleted) {
+            return false;
+        }
+        
         if(isset($filter->searchWord) && $filter->searchWord) {
             return true;
         }

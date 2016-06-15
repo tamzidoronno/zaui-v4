@@ -26,4 +26,28 @@
         top: 30px;
         padding-right: 60px;
     }
+    
+    .PmsBookingProductList .productentry .name {
+        font-size: 14px;
+        font-weight: bold;
+        left: 0px;
+        position: absolute;
+        background-color: #fff;
+        box-sizing: border-box;
+        width: 100%;
+        top: 0px;
+        height: 35px;
+        line-height: 35px;
+        padding-left: 10px;
+    }
+    .PmsBookingProductList .continue_button { width: 100%; box-sizing: border-box; }
+    .PmsBookingProductList .imgcontainer { top: 34px; }
+    .PmsBookingProductList .productentry { height: 110px; margin-bottom: 30px; }
+    
+    .PmsBookingProductList .productentry .price { background-color:#fff;  right: 0px; top: 0px;        height: 34px;
+                                                 padding-right: 10px;
+        line-height: 33px; padding-left: 10px;
+font-size: 14px; }
+    
+    .shop_button { width: 100%; }
 }

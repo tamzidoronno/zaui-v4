@@ -158,18 +158,30 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     }
 
     @Override
-    public HashMap<String, String> getAllFiles() {
-        HashMap<String, String> result = new HashMap();
+    public List<SavedOrderFile> getAllFiles() {
+        List<SavedOrderFile> result = new ArrayList();
         for(String res : files.keySet()) {
             SavedOrderFile obj = files.get(res);
-            result.put(res, obj.rowCreatedDate.toString());
+            result.add(obj);
         }
+        
+        for(String res : creditorFiles.keySet()) {
+            SavedOrderFile obj = creditorFiles.get(res);
+            result.add(obj);
+        }
+        
         return result;
     }
     
     @Override
     public List<String> getFile(String id) {
-        return files.get(id).result;
+        SavedOrderFile file = files.get(id);
+        
+        if(file == null) {
+            file = creditorFiles.get(id);
+        }
+        
+        return file.result;
     }
 
     @Override
@@ -216,7 +228,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         for(SavedOrderFile saved : filesToTransfer) {
             String path = saveFileToDisk(saved);
             try {
-                boolean transferred = ftpManager.transferFile(config.username, config.password, config.hostname, path, config.path, 21);
+                boolean transferred = ftpManager.transferFile(config.username, config.password, config.hostname, path, config.path, config.port, config.useActiveMode);
                 if(transferred) {
                     saved.transferred = true;
                     saveObject(saved);
@@ -343,7 +355,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                         config.creditor_password, 
                         config.creditor_hostname, 
                         path, 
-                        config.creditor_path, 21);
+                        config.creditor_path, 
+                        config.creditor_port, 
+                        config.creditor_useActiveMode);
                 if(transferred) {
                     saved.transferred = true;
                     saveObject(saved);

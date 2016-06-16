@@ -17,7 +17,7 @@ public interface IAccountingManager {
     @Administrator
     public List<String> createCreditorFile(boolean newOnly) throws Exception;
     @Administrator
-    public HashMap<String, String> getAllFiles();
+    public List<SavedOrderFile> getAllFiles();
     @Administrator
     public List<SavedOrderFile> getAllFilesNotTransferredToAccounting();
     @Administrator

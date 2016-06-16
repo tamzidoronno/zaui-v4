@@ -38,10 +38,20 @@ $config = $this->getApi()->getAccountingManager()->getAccountingManagerConfig();
         <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=combined&onlynew=false');"><i class='fa fa-save'></i><?php echo $this->__("Combine order file and all user file"); ?></div>
     </div>
 <?php
+echo "<br>";
 echo "<h2>Download orderfile history</h2>";
-foreach($files as $fileId => $date) {
-    echo $date . ", <a style='color:blue;cursor:pointer;' onclick=\"window.open('/scripts/accounting.php?id=".$fileId."');\">download</a><br>";
+foreach($files as $file) {
+    $date = $file->rowCreatedDate;
+    $fileId = $file->id;
+    $type = $file->type;
+    $transferred = ", not transferred yet.";
+    if($file->transferred) {
+        $transferred = ", transferred";
+    }
+    echo date("d.m.Y - H:i", strtotime($date)) . ", <a style='color:blue;cursor:pointer;' onclick=\"window.open('/scripts/accounting.php?id=".$fileId."');\">download</a> - ($type)$transferred<br>";
 }
+echo "<br>";
+echo "<br>";
 ?>
     <div style='clear:both;'></div>
     <?php
@@ -94,14 +104,38 @@ foreach($files as $fileId => $date) {
             Example: .edi
         </div>
     </div>
+    <div class="textfield gss_setting" id="port">
+        <span class="title">Port</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="port" value="<?php echo $config->port; ?>">
+        <div class="description">
+           
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="useActiveMode">
+        <span class="title">Use active transfer mode</span>
+        <div class="gss_onoff" gs_model="adminconfig" gs_model_attr="useActiveMode">
+            <?
+            $faclass = $config->useActiveMode ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="useSftp">
+        <span class="title">Use sftp</span>
+        <div class="gss_onoff" gs_model="adminconfig" gs_model_attr="useSftp">
+            <?
+            $faclass = $config->useSftp ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+    </div>
     
     <div class='gss_button_area'>
         <?php if($config->username) { ?>
             <div class="gss_button" gss_method="transferNewFiles" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Transfer new files to ftp"); ?></div>
         <?php } ?>
-        <div class="gss_button" gss_method="saveAccountingConfig" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
     </div>
-    
+    <h1>Creditor transfer</h1>
     <br>
     <br>
     <br>
@@ -133,10 +167,40 @@ foreach($files as $fileId => $date) {
             Ftp path to put the file in
         </div>
     </div>
+    <div class="textfield gss_setting" id="creditor_port">
+        <span class="title">Port</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="creditor_port" value="<?php echo $config->creditor_port; ?>">
+        <div class="description">
+           
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="creditor_useActiveMode">
+        <span class="title">Use active transfer mode</span>
+        <div class="gss_onoff" gs_model="adminconfig" gs_model_attr="creditor_useActiveMode">
+            <?
+            $faclass = $config->creditor_useActiveMode ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="creditor_useSftp">
+        <span class="title">Use sftp</span>
+        <div class="gss_onoff" gs_model="adminconfig" gs_model_attr="creditor_useSftp">
+            <?
+            $faclass = $config->creditor_useSftp ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+    </div>    
+    
     <div style='text-align:right; margin-bottom: 30px;'>
         <h2 style='float:left;'>Ftp transfer setup to creditor system</h2>
-        <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=transfercreditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Transfer to creditor"); ?></div>
+        <?php if($config->creditor_username) { ?>
+            <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=transfercreditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Transfer to creditor"); ?></div>
+        <?php } ?>
         <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=creditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Download new creditor file"); ?></div>
     </div>
-
+    <div style='text-align:right; margin-bottom: 30px;'>
+        <div class="gss_button" gss_method="saveAccountingConfig" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+    </div>
 </div>

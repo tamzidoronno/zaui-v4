@@ -188,6 +188,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
                 
                 PmsBookingEventEntry overrideEntry = entry.getDay(day);
                 PmsEventListEntry newEntry = new PmsEventListEntry(overrideEntry, range.start, entry.roomNames.get(i));
+                newEntry.eventId = entry.id;
                 result.add(newEntry);
                 i++;
             }

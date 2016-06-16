@@ -2182,9 +2182,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     room.keyIsReturned = true;
                     logEntry("Key delivered for room: " + bookingEngine.getBookingItem(room.bookingItemId).bookingItemName, booking.id, roomId);
                 }
-                saveBooking(booking);
                 if (!room.isEndingToday() && room.keyIsReturned) {
                     if(!room.isEnded()) {
+                        Calendar now = Calendar.getInstance();
+                        
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(room.date.end);
+                        cal.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR));
+                        cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
+                        room.date.end = cal.getTime();
+                        updateBooking(room);
+                        
                         User usr = userManager.getUserById(booking.userId);
                         BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                         String roomName = "";
@@ -2197,6 +2205,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         System.out.println(msg);
                     }
                 }
+                saveBooking(booking);
                 return;
             }
         }
@@ -2352,7 +2361,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (!room.isStarted(atTime)) {
                     continue;
                 }
-                if (room.bookingItemId.equals(itemId)) {
+                if (room.bookingItemId != null && room.bookingItemId.equals(itemId)) {
                     return room;
                 }
             }
@@ -3157,6 +3166,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return toReturn;
+    }
+
+    private void updateBooking(PmsBookingRooms room) {
+        bookingEngine.changeDatesOnBooking(room.bookingId, room.date.start, room.date.end);
     }
 
 }

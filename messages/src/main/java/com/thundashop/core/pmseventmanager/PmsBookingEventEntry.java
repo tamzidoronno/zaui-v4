@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pmsmanager.PmsBookingDateRange;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,10 +50,13 @@ public class PmsBookingEventEntry extends DataCommon {
     }
 
     private PmsBookingEventEntry copy() {
-        Gson gson = new Gson();
-        String res = gson.toJson(this);
-        PmsBookingEventEntry result = gson.fromJson(res, PmsBookingEventEntry.class);
-        return result;
+        try {
+            DataCommon res = this.clone();
+            return (PmsBookingEventEntry) res;
+        }catch(CloneNotSupportedException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 
     void finalizeSubEntries() {

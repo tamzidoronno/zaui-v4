@@ -195,7 +195,7 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
      * @return \core_pmseventmanager_PmsBookingEventEntry[]
      */
     public function getEventList() {
-        $list = $this->getApi()->getPmsEventManager()->getEventEntries($this->getSelectedName(), null);
+        $list = $this->getApi()->getPmsEventManager()->getEventList($this->getSelectedName());
         if(!$list) {
             return array();
         }

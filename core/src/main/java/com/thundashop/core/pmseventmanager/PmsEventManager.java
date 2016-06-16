@@ -2,6 +2,7 @@ package com.thundashop.core.pmseventmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
@@ -12,10 +13,14 @@ import com.thundashop.core.pmseventmanager.PmsBookingEventEntry;
 import com.thundashop.core.pmseventmanager.PmsEventFilter;
 import com.thundashop.core.pmsmanager.IPmsManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingDateRange;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,6 +167,63 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
             entries.remove(remove.id);
             deleteObject(remove);
         }
+    }
+
+    @Override
+    public List<PmsEventListEntry> getEventList() {
+        List<PmsBookingEventEntry> eventlist = getEventEntries(null);
+        List<PmsEventListEntry> result = new ArrayList();
+        Calendar cal = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 6);
+        Date todayDate = today.getTime();
+        for(PmsBookingEventEntry entry : eventlist) {
+            int i = 0;
+            for(PmsBookingDateRange range : entry.dateRanges) {
+                if(!range.start.after(todayDate)) {
+                    continue;
+                }
+                cal.setTime(range.start);
+                String day = getDayString(cal);
+                
+                PmsBookingEventEntry overrideEntry = entry.getDay(day);
+                PmsEventListEntry newEntry = new PmsEventListEntry(overrideEntry, range.start, entry.roomNames.get(i));
+                result.add(newEntry);
+                i++;
+            }
+        }
+        
+        Collections.sort(result, new Comparator<PmsEventListEntry>(){
+            public int compare(PmsEventListEntry o1, PmsEventListEntry o2){
+                return o1.date.compareTo(o2.date);
+            }
+       });
+
+        
+        return result;
+    }
+
+    private String getDayString(Calendar cal) {
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        month++;
+        String timeString = year + "-";
+        if(month < 10) {
+            timeString += "0" + month;
+        } else {
+            timeString += month;
+        }
+        
+        timeString += "-";
+        
+        if(day < 10) {
+            timeString += "0" + day;
+        } else {
+            timeString += day;
+        }
+        
+        return timeString;
     }
     
 }

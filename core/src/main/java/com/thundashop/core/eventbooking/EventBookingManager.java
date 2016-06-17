@@ -1118,6 +1118,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         text = text.replace("{Company.Country}", checkNull(user.companyObject == null || user.companyObject.address == null ? "" : user.companyObject.address.countryname));
         text = text.replace("{Company.City}", checkNull(user.companyObject == null || user.companyObject.address == null ? "" : user.companyObject.address.city));
         
+        text = text.replace("{Event.SubLocation.Description}", checkNull(event.subLocation == null ? "" : event.subLocation.description));
         
         text = text.replace("\n", "<br/>");
         

@@ -3,6 +3,6 @@
 $types = $this->getApi()->getEventBookingManager()->getBookingItemTypes($this->getBookingEgineName());
 
 foreach ($types as $type) {
-    echo "<div class='eventtype'><a href='/?page=$type->pageId'>$type->name</a></div>";
+    echo "<a href='/?page=$type->pageId'><div class='eventtype'>$type->name</div></a>";
 }
 ?>

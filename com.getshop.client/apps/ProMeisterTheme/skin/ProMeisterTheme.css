@@ -158,6 +158,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', end
 .gsucell[cellid="33d9d64c-60ae-4534-b3a6-c17b4dadf803"] {width: 80% !important;}
 .gsucell[cellid="edd80a12-0897-429c-829e-577fa08572aa"] {width: 20% !important;}
 .Button[appid="8475817a-2a48-46f4-93c2-1307ae798c5a"] {width: 80px; margin-left: calc(100% - 100px);}
+.Button[appid="f3669a81-5de4-4b0e-8084-c9ca73cc04b7"] {width: 105px; margin-left: calc(100% - 60px);}
+
 
 @media screen and (max-width: 1159px) {
     .gsucell[cellid="2cbcd9d8-c1e5-47ea-8a91-ae6a28aa7d63"] {padding: 20px;}
@@ -166,10 +168,23 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', end
     .openedmenu {left: 0px !important; }
     .Button[appid="8475817a-2a48-46f4-93c2-1307ae798c5a"] {margin-left: calc(100% - 90px);}
     .gs_main_column {width: 100%;}
+    .gsbody_inner[pageid="874bb4eb-a570-43ca-9522-f8bb3c330ad1"] .gs_main_column {min-height: 1089px;}
     .ImageDisplayer[appid="b63744f7-f774-4f3a-bbff-ef19a85bfa72"] img {margin-left: 10px;}
     .EventLister[appid="f763f270-d338-487d-ae66-c5176aefa0bd"] {text-align: center;}
     .EventLister[appid="f763f270-d338-487d-ae66-c5176aefa0bd"] .locationlist {float: none !important; margin-bottom: 20px; text-align: center;}
     .EventLister[appid="f763f270-d338-487d-ae66-c5176aefa0bd"] .eventlist {text-align: initial; width: auto !important; float: none !important; padding-left: 0px;}
+    .gs_site_main_buttons_view {display: none !important;}
+    .gseditrowbuttons {display: none !important;}
+    .gsbody_inner {margin: 0 !important; border-right: none !important;}
+    .gscellheadermin {display: none !important;}
+    .applicationinner .gs_icon {display: none !important;}
+    .gscellbox {border: none !important;}
+    .gsucell[cellid="d0d94a55-c589-4c78-b538-b3ba698bb1e0"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="d0d94a55-c589-4c78-b538-b3ba698bb1e0"] .chartdivview {margin: auto;}
+    .gsucell[cellid="c18f0ae5-1fb1-4e0f-b397-09135e987f86"] {width: auto !important; float: none !important;}
+    .gs_modalinner {width: 80%;}
+    .gsucell[cellid="e08436f1-dd46-4bbd-ab3d-39e95bae639f"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="6fcce290-6977-4a23-9a35-857e6ce6caa6"] {width: auto !important; float: none !important;}
 }
 
 @media screen and (max-width: 959px) {
@@ -195,10 +210,24 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', end
     .gsucell[cellid="ca8da9f4-19e8-4856-b4aa-623ad470e5ba"] {width: auto !important; float: none !important;}
     .gsucell[cellid="92ee954d-8efb-447a-8471-46399d85c05f"] {width: auto !important; float: none !important;}
     .EventLister[appid="f763f270-d338-487d-ae66-c5176aefa0bd"] .eventlist .monthheader .col {display: none;}
+    .EventLister[appid="f763f270-d338-487d-ae66-c5176aefa0bd"] .datefilter input.gsniceinput1 {width: 175px !important;}
+    .gsucell[cellid="0526a818-fa60-4fa5-ade8-49143cedc721"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="aa5c5d61-6922-4652-b4e6-018353554d57"] {width: auto !important; float: none !important;}
+    
 }
 
 @media screen and (max-width: 799px) {
     .Menu[appid='e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3'] .horizontal {width: auto !important; background-color: transparent !important; display: inline-block !important; position: static !important; left: auto !important; top: auto !important; z-index: auto !important;}
-    .Menu[appid='e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3'] .menuentries .entry {width: auto !important; display: inline-block !important; padding-left: 10px !important; padding-right: 10px !important;}
+    .Menu[appid='e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3'] .menuentries .entry {width: auto !important; display: inline-block !important; padding-left: 7px !important; padding-right: 7px !important;}
     .Menu[appid='e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3'] .menuentries .entry .entries {display: none; position: absolute;}
+    .Menu[appid='e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3'] .menuentries .entry > a[ajaxlink="/?page=262bebb6-5fe2-4a32-a154-4cadb9319e16"] + .entries {left: -140px;}
+    .Menu[appid='e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3'] .menuentries .entry .entries .entry {display: block !important;}
 }
+
+@media screen and (max-width: 599px) {
+    .gsucell[cellid="d0d94a55-c589-4c78-b538-b3ba698bb1e0"] > .gsinner {padding: 0 !important;}
+    .gsucell[cellid="d0d94a55-c589-4c78-b538-b3ba698bb1e0"] .chartdivview {transform: scale(0.9);}
+    .CreateEvent[appid="5317970c-cc61-435f-be01-a5a679f4fe86"] .shop_button {padding-left: 16px !important; padding-right: 16px !important;}
+}
+
+

@@ -192,14 +192,13 @@ foreach($bookings as $booking) {
         $state = "";
         if($booking->unConfirmed) {
             $state = "Rejected";
-        } else if($booking->isDeleted) {
+        } else if($booking->isDeleted || $room->deleted) {
             $state = "Deleted";
         } else if($booking->confirmed) {
             $state = "Confirmed";
         } else if(!$booking->confirmed) {
             $state = "Unconfirmed";
-        }
-        if($hasPrices && !$booking->payedFor) {
+        } else if($hasPrices && !$booking->payedFor) {
             $state = "Unpaid";
         }
         

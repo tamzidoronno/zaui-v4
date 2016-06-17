@@ -789,7 +789,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return true;
         }
 
-        if($room->deleted) {
+        if($room->deleted && !$filter->includeDeleted) {
             return false;
         }
         

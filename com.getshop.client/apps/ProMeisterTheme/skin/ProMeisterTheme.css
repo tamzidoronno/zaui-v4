@@ -2,10 +2,9 @@ body {
     font-size: 16px;
     font-family: 'Open Sans', sans-serif;
     color: #222;
-    min-width: 1300px;
 }
 .gs_page_width {
-    width: 1160px;
+    max-width: 1160px;
     margin: 0 auto;
 }
 
@@ -150,4 +149,56 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', end
 
 .news_container.item.news_container_0 {
     border: solid 2px #DDD !important;
+}
+
+.mobilenavigatemenu {
+    display: none !important;
+}
+
+.gsucell[cellid="33d9d64c-60ae-4534-b3a6-c17b4dadf803"] {width: 80% !important;}
+.gsucell[cellid="edd80a12-0897-429c-829e-577fa08572aa"] {width: 20% !important;}
+.Button[appid="8475817a-2a48-46f4-93c2-1307ae798c5a"] {width: 80px; margin-left: calc(100% - 100px);}
+
+@media screen and (max-width: 1159px) {
+    .gsucell[cellid="2cbcd9d8-c1e5-47ea-8a91-ae6a28aa7d63"] {padding: 20px;}
+    .gsucell[cellid="840c7de5-85a4-4fb1-ba5d-ecd126f4001d"] {padding: 20px;}
+    .left_side_bar {left: -300px; position: absolute; z-index: 10; transition: left 0.3s;}
+    .openedmenu {left: 0px !important; }
+    .Button[appid="8475817a-2a48-46f4-93c2-1307ae798c5a"] {margin-left: calc(100% - 90px);}
+    .gs_main_column {width: 100%;}
+    .ImageDisplayer[appid="b63744f7-f774-4f3a-bbff-ef19a85bfa72"] img {margin-left: 10px;}
+    .EventLister[appid="f763f270-d338-487d-ae66-c5176aefa0bd"] {text-align: center;}
+    .EventLister[appid="f763f270-d338-487d-ae66-c5176aefa0bd"] .locationlist {float: none !important; margin-bottom: 20px; text-align: center;}
+    .EventLister[appid="f763f270-d338-487d-ae66-c5176aefa0bd"] .eventlist {text-align: initial; width: auto !important; float: none !important; padding-left: 0px;}
+}
+
+@media screen and (max-width: 959px) {
+    .gsucell[cellid="9198473a-552d-470a-9f77-ecd9afecbedd"] {width: auto !important; float: none !important; margin-left: 20px;}
+    .gsucell[cellid="9198473a-552d-470a-9f77-ecd9afecbedd"] > .gsinner {margin-left: 20px !important;}
+    .gsucell[cellid="9a238cbb-5b8a-4634-9a84-fa2d0dcbb6b5"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="9a238cbb-5b8a-4634-9a84-fa2d0dcbb6b5"] > .gsinner {margin-right: 20px !important;}
+    .gsucell[cellid="db14a071-c1b0-4654-9fb6-ce4474f2caee"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="db14a071-c1b0-4654-9fb6-ce4474f2caee"] > .gsinner {margin-left: 20px !important;}
+    .gsucell[cellid="ed640823-2c7a-4464-b1f3-4e1e24addd67"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="ed640823-2c7a-4464-b1f3-4e1e24addd67"] > .gsinner {margin-left: 20px !important;}
+    .gsucell[cellid="01719a53-a790-45a6-b545-eeadb163c5f9"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="01719a53-a790-45a6-b545-eeadb163c5f9"] > .gsinner {margin-right: 20px !important;}
+    .gsbody_inner[pageid="4afbf5b8-57b4-49bb-bee6-1cdb872cf59a"] > .gsarea[area="body"] > .gsucell_extra_outer > .gsucell_outer > .gsucell > .gsinner > .gsucell {width: 50% !important; float: none !important; display: inline-block;}
+    .gsucell[cellid="2cbcd9d8-c1e5-47ea-8a91-ae6a28aa7d63"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="840c7de5-85a4-4fb1-ba5d-ecd126f4001d"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="89cc9fbd-3c7e-4532-89a2-87a946ec6072"] {width: 100% !important;}
+    .gsucell[cellid="ff43ec6a-0a7a-4932-b5fa-d42d911903d3"] {width: 100% !important; margin-top: 25px;}
+    .ContentManager[appid="f6a9ce11-f6a9-49d3-ba8e-e9581092cd83"] table tbody tr > td:first-child {display: none;}
+    .gsucell[cellid="0d93875b-2351-4aa1-879a-e68ee6319621"] {width: 125% !important; margin-top: 30px;}
+    .Menu[appid='e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3'] {text-align: center;}
+    .gsucell[cellid="4efcb6ab-8aad-43a0-ac8f-673130ee7234"] {width: 100% !important;}
+    .gsucell[cellid="ca8da9f4-19e8-4856-b4aa-623ad470e5ba"] {width: auto !important; float: none !important;}
+    .gsucell[cellid="92ee954d-8efb-447a-8471-46399d85c05f"] {width: auto !important; float: none !important;}
+    .EventLister[appid="f763f270-d338-487d-ae66-c5176aefa0bd"] .eventlist .monthheader .col {display: none;}
+}
+
+@media screen and (max-width: 799px) {
+    .Menu[appid='e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3'] .horizontal {width: auto !important; background-color: transparent !important; display: inline-block !important; position: static !important; left: auto !important; top: auto !important; z-index: auto !important;}
+    .Menu[appid='e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3'] .menuentries .entry {width: auto !important; display: inline-block !important; padding-left: 10px !important; padding-right: 10px !important;}
+    .Menu[appid='e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3'] .menuentries .entry .entries {display: none; position: absolute;}
 }

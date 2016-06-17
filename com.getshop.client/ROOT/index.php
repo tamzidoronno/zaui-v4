@@ -105,7 +105,8 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     <head>
         
         <?
-        if($factory->getApplicationPool()->getSelectedThemeApp()->appName == "SedoxDatabankTheme") {
+        $themeName = $factory->getApplicationPool()->getSelectedThemeApp()->appName;
+        if($themeName == "SedoxDatabankTheme" || $themeName == "ProMeisterTheme") {
             echo '<meta name="viewport" content="width=480, initial-scale=0.666">';
         }
         

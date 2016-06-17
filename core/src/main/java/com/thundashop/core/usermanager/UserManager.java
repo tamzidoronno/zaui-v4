@@ -213,6 +213,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         saveObject(user);
         
         sendWelcomeEmail(user, uncryptedPassword);
+        sendEmailIfUserNeedCompanyOwnerApproval(user);
         return user;
     }
     
@@ -1552,5 +1553,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         new ArrayList<Group>(userStoreCollection.getGroups())
                 .stream().forEach(group -> removeGroup(group.id));
+    }
+
+    private void sendEmailIfUserNeedCompanyOwnerApproval(User user) {
+        if (user.wantToBecomeCompanyOwner && !user.isCompanyOwner) {
+            String message = "Hi <br/> <br/> There has been created a new user that needs to be approved as company owner <br/><br/> From: " + getStoreDefaultAddress();
+            messageManager.sendMessageToStoreOwner("A user requested to be a company owner", message);
+        }
+        
     }
 }

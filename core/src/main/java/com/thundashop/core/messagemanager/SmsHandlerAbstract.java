@@ -172,6 +172,11 @@ public abstract class SmsHandlerAbstract implements Runnable {
     }
 
     public String getMessage() {
+        if (message != null) {
+            message = message.replace("<br/>", "\n");
+            message = message.replace("<br>", "\n");
+        }
+        
         return message;
     }
 

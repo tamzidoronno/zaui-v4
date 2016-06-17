@@ -33,8 +33,13 @@ $interval = $this->getInterval();
                     }
                     
                     $texts = json_encode($banner->imagetext);
+                    $color = "";
+                    if($banner->isDefault) {
+                        $color = "isDefault";
+                    }
                     ?>
                     <div class='imageholder' texts='<? echo $texts; ?>' rotation="<? echo $rotation; ?>" crops="<? echo $cropsData ?>" imageId="<? echo $banner->imageId; ?>">
+                        <i class="fa fa-check-circle <?php echo $color; ?>" title='Default' style='background-color:#fff;  padding: 5px; z-index: 2; position: absolute; left: 0px; top: 0px;'></i>
                         <div class='innerholder' >
                             <img src="/displayImage.php?id=<? echo $banner->imageId; ?>"/>
                         </div>

@@ -85,11 +85,13 @@ $roomList = array();
 foreach($bookings as $booking) {
     foreach($booking->rooms as $room) {
         $pmsManager = new ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement();
-        if(!$pmsManager->isActive($room, $filter)) {
+        if(!$pmsManager->isActive($room, $filter, $booking)) {
             continue;
         }
         $room->userId = $booking->userId;
-        $roomList[$items[$room->bookingItemId]->bookingItemName] = $room;
+        if(isset($items[$room->bookingItemId])) {
+            $roomList[$items[$room->bookingItemId]->bookingItemName] = $room;
+        }
     }
 }
 

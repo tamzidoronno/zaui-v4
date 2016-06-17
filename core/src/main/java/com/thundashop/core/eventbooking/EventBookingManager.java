@@ -697,7 +697,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             }
         }
         
-        if (user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty()) {
+        if (user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty() && !user.companyObject.invoiceAddress.equals(user.emailAddress)) {
             String messageId = messageManager.sendMail(user.companyObject.invoiceEmail, user.fullName, subject, content, email, "");
             if (userIdInvoiceMessageId != null) {
                 userIdInvoiceMessageId.put(user.id, messageId);
@@ -766,6 +766,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public void saveBookingTypeMetaData(BookingItemTypeMetadata bookingItemTypeMetadata) {
+        BookingItemTypeMetadata inMemory = getBookingTypeMetaData(bookingItemTypeMetadata.bookingItemTypeId);
+        
+        if (inMemory != null) {
+            deleteAllOtherMetaTypes(inMemory);
+            bookingItemTypeMetadata.id = inMemory.id;
+        }
+        
         saveObject(bookingItemTypeMetadata);
         bookingTypeMetaDatas.put(bookingItemTypeMetadata.id, bookingItemTypeMetadata);
     }
@@ -800,13 +807,14 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     private boolean isVisibleForGroup(Event o) {
         BookingItemTypeMetadata metaData = getBookingTypeMetaData(o);
         
-        if (getSession() != null || getSession() == null) {
+        User loggedOnUser = userManager.getLoggedOnUser();
+        
+        if (loggedOnUser == null || metaData.publicVisible) {
             return metaData.publicVisible;
         }
         
-        if (getSession().currentUser.groups.get(0) == null) {
-            return true;
-        }
+        if (!loggedOnUser.useGroupId.isEmpty())
+            return metaData.visibleForGroup.get(loggedOnUser.useGroupId);
         
         return metaData.visibleForGroup.get(getSession().currentUser.groups.get(0));
     }
@@ -1316,7 +1324,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             User user = userManager.getUserById(booking.userId);
             sendMailReminder(user, event, template, null);
             
-            if (user.companyObject != null && user.companyObject.invoiceAddress != null && !user.companyObject.invoiceEmail.equals(user.emailAddress)) {
+            if (user.companyObject != null && user.companyObject.invoiceAddress != null && !user.companyObject.invoiceEmail.equals(user.emailAddress) && !user.companyObject.invoiceAddress.equals(user.emailAddress)) {
                 sendMailReminder(user, event, template, user.companyObject.invoiceEmail);
             }
         }
@@ -1414,9 +1422,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String dates = "";
         
         SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM-yyyy HH:mm");
+        SimpleDateFormat dateFormatter2 = new SimpleDateFormat("HH:mm");
         
         for (Day day : event.days) {
-            dates += dateFormatter.format(day.startDate) + " - " + dateFormatter.format(day.endDate) + "\n";
+            dates += dateFormatter.format(day.startDate) + " - " + dateFormatter2.format(day.endDate) + "\n";
         }
         
         return dates;
@@ -1646,5 +1655,16 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     private void clearEventForBookings(Event o) {
         bookingEngine.getAllBookingsByBookingItem(o.bookingItemId).stream().forEach(booking -> bookingEngine.deleteBooking(booking.id));
+    }
+
+    private void deleteAllOtherMetaTypes(BookingItemTypeMetadata inMemory) {
+        bookingTypeMetaDatas.values().stream()
+                .filter(type -> type.bookingItemTypeId.equals(inMemory.bookingItemTypeId) && !type.id.equals(inMemory.id))
+                .forEach(type -> removeAndDeleteType(type));
+    }
+
+    private void removeAndDeleteType(BookingItemTypeMetadata type) {
+        bookingTypeMetaDatas.remove(type.id);
+        deleteObject(type);
     }
 }

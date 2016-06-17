@@ -137,6 +137,10 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
 
     public boolean needToBeTranferredToCreditor() {
+        if(transferredToCreditor != null) {
+            return false;
+        }
+        
         if(status == Order.Status.PAYMENT_COMPLETED) {
             return false;
         }

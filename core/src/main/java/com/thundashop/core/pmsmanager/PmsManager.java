@@ -785,17 +785,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public String setBookingItem(String roomId, String bookingId, String itemId) {
+    public String setBookingItem(String roomId, String bookingId, String itemId, boolean split) {
         PmsBooking booking = getBooking(bookingId);
         if (booking == null) {
             return "Booking does not exists";
         }
         try {
-             PmsBookingRooms room = booking.findRoom(roomId);
+            PmsBookingRooms room = booking.findRoom(roomId);
+            if(room.bookingItemId != null && room.bookingItemId.equals(itemId)) {
+                //Why change into the same room?
+                return "";
+            }
+             
             if (room == null) {
                 return "Room does not exists";
             }
-            room = splitBookingIfNesesary(booking, room);
+            if(split) {
+                room = splitBookingIfNesesary(booking, room);
+            }
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
             resetBookingItem(room, itemId, booking);
@@ -1610,6 +1617,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             user.address.countryname = "";
         }
 
+        user.birthDay = result.get("user_birthday");
+        
         return userManager.createUser(user);
     }
 
@@ -2173,9 +2182,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     room.keyIsReturned = true;
                     logEntry("Key delivered for room: " + bookingEngine.getBookingItem(room.bookingItemId).bookingItemName, booking.id, roomId);
                 }
-                saveBooking(booking);
                 if (!room.isEndingToday() && room.keyIsReturned) {
                     if(!room.isEnded()) {
+                        Calendar now = Calendar.getInstance();
+                        
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(room.date.end);
+                        cal.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR));
+                        cal.set(Calendar.YEAR, now.get(Calendar.YEAR));
+                        room.date.end = cal.getTime();
+                        updateBooking(room);
+                        
                         User usr = userManager.getUserById(booking.userId);
                         BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                         String roomName = "";
@@ -2188,6 +2205,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         System.out.println(msg);
                     }
                 }
+                saveBooking(booking);
                 return;
             }
         }
@@ -2343,7 +2361,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (!room.isStarted(atTime)) {
                     continue;
                 }
-                if (room.bookingItemId.equals(itemId)) {
+                if (room.bookingItemId != null && room.bookingItemId.equals(itemId)) {
                     return room;
                 }
             }
@@ -3148,6 +3166,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return toReturn;
+    }
+
+    private void updateBooking(PmsBookingRooms room) {
+        bookingEngine.changeDatesOnBooking(room.bookingId, room.date.start, room.date.end);
     }
 
 }

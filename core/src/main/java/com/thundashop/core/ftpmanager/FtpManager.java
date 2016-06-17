@@ -14,15 +14,17 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class FtpManager implements IFtpManager {
-    public boolean transferFile(String username, String password, String hostname, String filePath, String location, Integer port) throws IOException {
+    public boolean transferFile(String username, String password, String hostname, String filePath, String location, Integer port, boolean useActiveMode) throws IOException {
         /**
-         * CAREFUL HERE... By exposing this public, you give access to upload whatever file to whoever.....
+         * CAREFUL HERE... By exposing this public, you give access to upload whatever file to whoever, DO NOT MAKE THIS AS A PUBLIC API CALL.....
          * THIS IS A MAJOR SECURITY RISK! FILEPATH IS NOT SECURE!!!!!!!
          */
         FTPClient client = new FTPClient();
         client.connect(hostname, port);
         client.login(username, password);
-        client.enterLocalPassiveMode();
+        if(!useActiveMode) {
+            client.enterLocalPassiveMode();
+        }
         client.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
         int reply = client.getReplyCode();
         if (!FTPReply.isPositiveCompletion(reply)) {

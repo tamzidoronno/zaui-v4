@@ -15,6 +15,8 @@ import java.util.List;
 @GetShopMultiLayerSession
 public interface IPmsEventManager {
     public List<PmsBookingEventEntry> getEventEntries(PmsEventFilter filter);
+    public List<PmsEventListEntry> getEventList();
+    
     public void saveEntry(PmsBookingEventEntry entry, String day);
     @Administrator
     public void deleteEntry(String entryId, String day);

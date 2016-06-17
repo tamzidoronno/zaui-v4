@@ -85,7 +85,6 @@ class Banner extends \WebshopApplication implements \Application {
         foreach ($this->bannerSet->banners as $banner) {
             $imageId = $banner->imageId;
             if (!in_array($imageId, $allImages)) {
-                echo "Removing: ".$imageId;
                 $this->getApi()->getBannerManager()->removeImage($this->bannerSet->id, $imageId);
             }
         }
@@ -93,6 +92,16 @@ class Banner extends \WebshopApplication implements \Application {
         if ($this->bannerSet->id) {
             $this->bannerSet = $this->getApi()->getBannerManager()->getSet($this->bannerSet->id);
         }
+        
+        foreach ($this->bannerSet->banners as $banner) {
+            /* @var $banner \app_bannermanager_data_Banner */
+            $banner->isDefault = false;
+            $imageId = $banner->imageId;
+            if($imageId == $_POST['data']['defaultImg']) {
+                $banner->isDefault = true;
+            }
+        }
+        
         $this->bannerSet->interval = $_POST['data']['interval'];
         $this->bannerSet->height = $_POST['data']['height'];
         $this->getApi()->getBannerManager()->saveSet($this->bannerSet);

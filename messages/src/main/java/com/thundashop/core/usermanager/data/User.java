@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +33,9 @@ public class User extends DataCommon implements Comparable<User> {
     public Company companyObject;
     
     public boolean virtual = false;
+    
+    @Transient
+    public String useGroupId = "";
  
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);
@@ -63,6 +67,59 @@ public class User extends DataCommon implements Comparable<User> {
         }
         
         return numb;
+    }
+
+    public Date getBirthDate() {
+        try {
+            SimpleDateFormat formater = new SimpleDateFormat("dd.MM.yy");
+            return formater.parse(birthDay);
+        }catch(Exception e) {
+            
+        }
+        try {
+            SimpleDateFormat formater = new SimpleDateFormat("dd.MM.yyyy");
+            return formater.parse(birthDay);
+        }catch(Exception e) {
+            
+        }
+        try {
+            SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yy");
+            return formater.parse(birthDay);
+        }catch(Exception e) {
+            
+        }
+        try {
+            SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
+            return formater.parse(birthDay);
+        }catch(Exception e) {
+            
+        }
+        try {
+            SimpleDateFormat formater = new SimpleDateFormat("MM.dd.YY");
+            return formater.parse(birthDay);
+        }catch(Exception e) {
+            
+        }
+        try {
+            SimpleDateFormat formater = new SimpleDateFormat("MM.dd.yyyy");
+            return formater.parse(birthDay);
+        }catch(Exception e) {
+            
+        }
+        try {
+            SimpleDateFormat formater = new SimpleDateFormat("mm-dd-YY");
+            return formater.parse(birthDay);
+        }catch(Exception e) {
+            
+        }
+        try {
+            SimpleDateFormat formater = new SimpleDateFormat("mm-dd-yyyy");
+            return formater.parse(birthDay);
+        }catch(Exception e) {
+            
+        }
+        
+        return null;
     }
  
     public static class Type {

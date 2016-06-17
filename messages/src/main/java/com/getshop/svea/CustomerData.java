@@ -1565,6 +1565,10 @@ public class CustomerData {
             @XmlElement(name = "Case", required = true)
             protected List<CustomerData.Creditor.Cases.Case> _case;
 
+            public void setCases(List<Case> cases) {
+                _case = cases;
+            }
+            
             /**
              * Gets the value of the case property.
              * 
@@ -1992,6 +1996,10 @@ public class CustomerData {
                  */
                 public String getCaseType() {
                     return caseType;
+                }
+                
+                public void setInvoice(List<Invoice> inv) {
+                    invoice = inv;
                 }
 
                 /**

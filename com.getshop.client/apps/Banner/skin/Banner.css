@@ -3,7 +3,7 @@
     background-image: url('{IMAGEFOLDER}/emptybanner.png');
     background-size: cover;
 }
-
+.Banner .isDefault { color: green; }
 .Banner .nobannersadded .banner_info_text {
     font-size: 16px;
     color: #000;

@@ -3,44 +3,22 @@
 $cats = $this->getCategories();
 $datelist = array();
 $indexrange = array();
-foreach($this->getEventList() as $eventEntry) {
-    $j = 0;
-    foreach($eventEntry->dateRanges as $idx => $range) {
-        $start = strtotime($range->start);
-        $datelist[] = $eventEntry;
-        $sortList[] = $start;
-        $indexrange[] = $j;
-        $j++;
-    }
-}
 
-asort($sortList);
-
-$today = strtotime(date("d.m.Y 06:00", time()));
-
+$entries = $this->getEventList();
+//print_r($entries);
 echo "<table>";
 $i = 0;
-foreach($sortList as $idx => $date) {
-    if($date < $today) {
-        continue;
-    }
+foreach($entries as $eventEntry) {
+    $time = strtotime($eventEntry->date);
     
-    $dateidx = $indexrange[$idx];
-    
-    $eventEntry = $datelist[$idx];
     if(!$eventEntry->starttime) {
-        $eventEntry->starttime = date("H:i", strtotime($eventEntry->dateRanges[0]->start));
+        $eventEntry->starttime = date("H:i", strtotime($eventEntry->date));
     }
     $title = $eventEntry->title;
     $starttime = $eventEntry->starttime;
     $shortDesc = $eventEntry->shortdesc;
-    $day = date("Y-m-d", $date);
+    $day = date("Y-m-d", $time);
     
-    if(isset($eventEntry->overrideEntries->{$day})) {
-        $title = $eventEntry->overrideEntries->{$day}->title;
-        $starttime = $eventEntry->overrideEntries->{$day}->starttime;
-        $shortDesc = $eventEntry->overrideEntries->{$day}->shortdesc;
-    }
     if(isset($_GET['list']) && $_GET['list'] == "tiny") {
         echo "<tr>";
         echo "<td valign='top' width='50'><div>".date("d.", $date). "<br>" . date("M", $date) ."</div></td>";
@@ -51,22 +29,19 @@ foreach($sortList as $idx => $date) {
         echo "</tr>";
     } else {
         echo "<tr>";
-        echo "<td valign='top' class='datecol' width='90'><div>".date("d.", $date). " " . date("M", $date) ."</div><div>".$starttime."</div></td>";
+        echo "<td valign='top' class='datecol' width='90'><div>".date("d.", $time). " " . date("M", $time) ."</div><div>".$starttime."</div></td>";
         echo "<td valign='top' class='listtext'>";
-        $shortId = explode("-", $eventEntry->id);
+        $shortId = explode("-", $eventEntry->eventId);
         $edit = "";
         if($this->isEditorMode()) {
-            $edit = "<i class='fa fa-trash-o deleteevent' eventid='".$eventEntry->id."' ></i> ";
-            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."'><i class='fa fa-pencil-square' title='Endre alle eventer i denne serien'></i></a> ";
-            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->id."&time=$date'><i class='fa fa-edit' title='Endre dette enkelteventet'></i></a> ";
+            $edit = "<i class='fa fa-trash-o deleteevent' eventid='".$eventEntry->eventId."' ></i> ";
+            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->eventId."'><i class='fa fa-pencil-square' title='Endre alle eventer i denne serien'></i></a> ";
+            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->eventId."&time=$time'><i class='fa fa-edit' title='Endre dette enkelteventet'></i></a> ";
         }
-        echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=".$date."'>" . $title  . " <span style='font-size: 12px;'>les mer</span></a></h2>";
+        echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=".$time."'>" . $title  . " <span style='font-size: 12px;'>les mer</span></a></h2>";
 
-        if(!isset($eventEntry->roomNames[$dateidx])) {
-            print_r($eventEntry->roomNames);
-        }
         echo "<div style='margin-top: 5px; margin-bottom: 5px;'>";
-        echo  $eventEntry->roomNames[$dateidx];
+        echo  $eventEntry->place;
         echo "<span class='arrangedby'>" . ", " . $eventEntry->arrangedBy . "</span>";
         echo "</div>";
         if(isset($cats[$eventEntry->category])) {

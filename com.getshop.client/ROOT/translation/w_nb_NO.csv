@@ -331,6 +331,7 @@ Payment failed;-;Betaling feilet
 Payment fee;-;Betalingsgebyr
 Payment information;-;Betalings informasjon
 Payment successfully completed;-;Betalingen gjennomført
+Payment type;-;Betalingstype
 Phone;-;Telefon
 Phone number for company;-;Tlf nummer for firmaet
 Pin area;-;Pin til område
@@ -416,6 +417,7 @@ Set new password;-;Sett nytt passord
 Settings;-;Instillinger
 Setup and manage your products;-;Legg inn og administrer dine produkter.
 Setup for norwegian avtalegiro.;-;Oppsett for norsk avtalegiro
+Shipment address;-;Forsendelseadresse
 Shipment information;-;Forsendelse informasjon
 Shipment settings;-;Forsendelse
 Shipping;-;Utsendelse
@@ -505,6 +507,7 @@ Update;-;Oppdater
 Upload and manipulate on images or add this to be able to search for professional images trough our image stock.;-;Last og behandle bilder, eventuelt så kan du søke opp profesjonelle bilder gjennom vår bildebank.
 Use a different email;-;Bruk en annen epost
 Use a predefined layout for cell;-;Bruk en predifinert layout for denne cellen
+User details;-;Informasjon om bruker
 User level for cell;-;Brukernivå for cellen
 Username / Email;-;Brukernavn / Epost
 Waiting for payment;-;Venter på betaling

@@ -808,9 +808,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
     
     private User getUserByEmail(String emailAddress) throws ErrorException {
-        List<User> users = getUserStoreCollection(storeId).getAllUsers();
+        List<User> users = getUserStoreCollection(storeId).getAllUsersNotFinalized();
         for (User user : users) {
             if (user.emailAddress != null && user.emailAddress.equals(emailAddress)) {
+                finalizeUser(user);
                 return user;
             }
         }
@@ -820,8 +821,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     
     public User getUserUserName(String username) {
-        for(User user : getUserStoreCollection(storeId).getAllUsers()) {
+        for(User user : getUserStoreCollection(storeId).getAllUsersNotFinalized()) {
             if(user.username.equals(username)) {
+                finalizeUser(user);
                 return user;
             }
         }

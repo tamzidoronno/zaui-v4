@@ -144,6 +144,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
          
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
+        createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
     }
 
     @Override
@@ -342,14 +343,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(booking.getActiveRooms().isEmpty()) {
             return null;
         }
-        
         notifyAdmin("booking_completed_" + booking.language, booking);
         if (!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);
         }
         
         checkForMissingEndDate(booking);
-
+        
         Integer result = 0;
         booking.isDeleted = false;
         
@@ -357,7 +357,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (configuration.payAfterBookingCompleted) {
             createPrepaymentOrder(booking.id);
         }
-
         
         List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
         try {
@@ -416,14 +415,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (loggedonuser != null && configuration.autoconfirmRegisteredUsers) {
             booking.confirmed = true;
         }
-        if(loggedonuser != null && (loggedonuser.isAdministrator() || loggedonuser.isEditor())) {
+       if(loggedonuser != null && (loggedonuser.isAdministrator() || loggedonuser.isEditor())) {
             booking.confirmed = true;
         }
         
         booking.sessionId = "";
 
         saveBooking(booking);
-        System.out.println("Booking has been completed: " + booking.id);
+       System.out.println("Booking has been completed: " + booking.id);
         return 0;
     }
 
@@ -2921,7 +2920,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void createUserForBooking(PmsBooking booking) {
         if (booking.userId == null || booking.userId.isEmpty()) {
+            long timer = System.currentTimeMillis();
             User newuser = createUser(booking);
+            System.out.println("\t Create user takes:" + (System.currentTimeMillis() - timer));
             booking.userId = newuser.id;
             Company curcompany = createCompany(booking);
             if (curcompany != null) {
@@ -3196,6 +3197,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         fetchedProducts.put(productId, product);
         
         return product;
+    }
+
+    @Override
+    public void hourlyProcessor() {
+        PmsManagerProcessor processor = new PmsManagerProcessor(this);
+        processor.hourlyProcessor();
     }
 
 }

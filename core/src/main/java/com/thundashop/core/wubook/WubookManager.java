@@ -601,7 +601,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         
         PmsBooking newbooking = pmsManager.startBooking();
-        newbooking.wubookchannelid = booking.channelId;
+        newbooking.channel = "wubook_" + booking.channelId;
         newbooking.wubookchannelreservationcode = booking.channel_reservation_code;
         newbooking.wubookreservationid = booking.reservationCode;
         newbooking.countryCode = booking.countryCode;
@@ -720,7 +720,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             System.out.println(code);
             boolean found = false;
             for(PmsBooking booking : bookings) {
-                if(booking.wubookreservationid.equals(code)) {
+                if(booking.wubookreservationid.equals(code + "")) {
                     found = true;
                 }
             }

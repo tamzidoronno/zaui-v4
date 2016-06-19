@@ -244,4 +244,8 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public boolean canAdd(Booking bookingToAdd) {
         return bookingEngineAbstract.canAdd(bookingToAdd);
     }
+
+    public BookingItem getBookingItemUnfinalized(String id) {
+        return deepClone(bookingEngineAbstract.getBookingItemUnfinalized(id));
+    }
 }

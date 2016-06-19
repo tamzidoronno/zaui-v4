@@ -68,6 +68,7 @@ import org.springframework.stereotype.Component;
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private HashMap<String, PmsBooking> bookings = new HashMap();
+    private HashMap<String, Product> fetchedProducts = new HashMap();
     private HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
     private PmsPricing prices = new PmsPricing();
     private PmsConfiguration configuration = new PmsConfiguration();
@@ -112,6 +113,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<PmsLog> logentries = new ArrayList();
     private boolean initFinalized = false;
     private String orderIdToSend;
+    private Date lastCheckForIncosistent;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -569,7 +571,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 finalized.add(toReturn);
             }
         }
-        checkForIncosistentBookings();
+        
+        long diff = 10900 * 1000;
+        if(lastCheckForIncosistent != null) {
+            diff = System.currentTimeMillis() - lastCheckForIncosistent.getTime();
+        }
+        if(diff > (10800 * 1000)) {
+            checkForIncosistentBookings();
+            lastCheckForIncosistent = new Date();
+        }
         return finalized;
     }
 
@@ -665,7 +675,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
 
                 if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
-                    room.item = bookingEngine.getBookingItem(room.bookingItemId);
+                    room.item = bookingEngine.getBookingItemUnfinalized(room.bookingItemId);
                     room.bookingItemTypeId = room.item.bookingItemTypeId;
                 }
 
@@ -674,7 +684,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (type != null) {
                     String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
                     if (productId != null) {
-                        Product product = productManager.getProduct(productId);
+                        Product product = getProduct(productId);
                         if (product != null && product.taxGroupObject != null) {
                             room.taxes = product.taxGroupObject.taxRate;
                         }
@@ -3174,6 +3184,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public List<PmsBooking> getAllBookingsFlat() {
         return new ArrayList(bookings.values());
+    }
+
+    private Product getProduct(String productId) {
+        if(fetchedProducts.containsKey(productId)) {
+            return fetchedProducts.get(productId);
+        }
+        
+        Product product = productManager.getProduct(productId);
+        
+        fetchedProducts.put(productId, product);
+        
+        return product;
     }
 
 }

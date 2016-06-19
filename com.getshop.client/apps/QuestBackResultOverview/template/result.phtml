@@ -1,0 +1,47 @@
+<?
+/* @var $this \ns_f8f67e15_ee94_491f_b04f_258069a57b18\QuestBackResultOverview */
+$results = $this->getResults();
+
+
+$found = false;
+
+foreach ($results->answers as $key => $value) {
+    $found = true;
+}
+
+if (!$found) {
+    echo $this->__f("No-one has started answering this QuestBack");
+    return;
+} 
+
+
+foreach ($results->answers as $questionId => $values) {
+    $question = $this->getApi()->getQuestBackManager()->getQuestion($questionId);
+    
+    echo "<div class='question'>";
+        echo "<div class='title'>".$question->name."</div>";
+
+        $answerPossibilites = $this->getApi()->getQuestBackManager()->getOptionsByPageId($question->pageId);
+        $type = $this->getApi()->getQuestBackManager()->getTypeByPageId($question->pageId);
+
+        echo "<div class='answer'>";
+            if ($type == "3") {
+                foreach ($values as $value) {
+                    if ($value) {
+                        echo "<div class='subanswer'>";
+                        echo nl2br($value);
+                        echo "</div>";
+                    }
+                }
+            } else {
+                foreach ($answerPossibilites as $option) {
+                    echo "<div class='subanswer'>";
+                    echo $option->text. " ( " .$this->countOption($option->id, $values, $questionId) . " )";
+                    echo "</div>";
+                }
+            }
+        echo "</div>";
+    
+    echo "</div>";
+}
+?>

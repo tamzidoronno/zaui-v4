@@ -48,6 +48,10 @@ class QuestBack extends \ApplicationBase implements \Application {
             $options = json_decode($options);
         }
         
+        if ($this->shouldShuffleOptions()) {
+            shuffle($options);
+        }
+        
         return $options;
     }
     
@@ -164,6 +168,17 @@ class QuestBack extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("width", $_POST['data']['w']);
         $this->setConfigurationSetting("height", $_POST['data']['h']);
     }
+
+    public function shouldShuffleOptions() {
+        $testId = \ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df\QuestBackUserOverview::getCurrentRunningTestId();
+        if (!$testId) {
+            return false;
+        }
+        
+        $test = $this->getApi()->getQuestBackManager()->getTest($testId);
+        return $test->type !== "questback";
+    }
+
 }
 
 class QuestBackOption {

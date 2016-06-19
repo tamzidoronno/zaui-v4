@@ -428,4 +428,5 @@ public interface IUserManager {
     @Administrator
     public void clearUserManagerForAllData();
     
+    public void assignMetaDataToVirtualSessionUser(String key, String value);
 }

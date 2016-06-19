@@ -1562,4 +1562,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
     }
+
+    @Override
+    public void assignMetaDataToVirtualSessionUser(String key, String value) {
+        User user = getVirtualSessionUser();
+        user.metaData.put(key, value);
+        saveObject(user);
+    }
 }

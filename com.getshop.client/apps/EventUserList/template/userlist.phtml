@@ -64,6 +64,23 @@ if (count($waitingListUsers)) {
     echo "</div>";
 }
 
-?>
+if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+    $tests = $this->getApi()->getQuestBackManager()->getAllTests();
+    if (count($tests)) {
+    ?>
+        <div class="questbacks">
+            <div class="title"><? echo $this->__f("Available questbacks"); ?></div>
+            <?
+            foreach ($tests as $test) {
+                if ($test->type === "questback") {
+                    echo '<span class="gs_shop_small_icon" style="cursor: pointer" gs_show_modal="showTestResult" testid="'.$test->id.'" referenceId="'.$event->id.'">'.$this->__f("See result").'</span> - '.$test->name;
+                }
+            }
+            ?>
+        </div>
+    <?
+    }
+}
 
+?>
 

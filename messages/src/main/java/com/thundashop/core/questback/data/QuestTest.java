@@ -35,4 +35,8 @@ public class QuestTest extends DataCommon {
     public QuestTest() {
 
     }
+
+    public boolean isQuestBackType() {
+        return type != null && type.equals("questback");
+    }
 }

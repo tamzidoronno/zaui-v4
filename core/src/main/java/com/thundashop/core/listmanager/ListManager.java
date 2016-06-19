@@ -767,11 +767,11 @@ public class ListManager extends ManagerBase implements IListManager {
         menu.entryList = getEntryListInternal(menu.entryListId);
         menu.entryList.name = menu.name;
         
-//        if (menu != null && menu.entryList != null && menu.entryList.entries != null) {
-//            for (Entry entry : menu.entryList.entries) {
-//                askForBadge(entry);
-//            }    
-//        }
+        if (menu != null && menu.entryList != null && menu.entryList.entries != null) {
+            for (Entry entry : menu.entryList.entries) {
+                askForBadge(entry);
+            }    
+        }
     }
 
     private void addMenu(Menu menu) {

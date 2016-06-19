@@ -176,8 +176,8 @@ class QuestBack extends \ApplicationBase implements \Application {
         }
         
         $test = $this->getApi()->getQuestBackManager()->getTest($testId);
-        return $test->type !== "questback";
-    }
+        return $test->type !== "questback"; 
+   }
 
 }
 

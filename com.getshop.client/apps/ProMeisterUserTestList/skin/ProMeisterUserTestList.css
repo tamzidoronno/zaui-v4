@@ -9,6 +9,10 @@
     margin-left: 10px;
 }
 
+.ProMeisterUserTestList .yourtests .test {
+    cursor: pointer;
+}
+
 .ProMeisterUserTestList .yourtests .test .progress_in_test {
     position: absolute;
     right: 10px;

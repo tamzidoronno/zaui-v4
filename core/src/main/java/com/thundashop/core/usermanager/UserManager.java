@@ -147,9 +147,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user.username == null || user.username.trim().length() == 0) {
             int i = 10000;
             boolean exists = true;
+            List<User> users = userStoreCollections.get(storeId).getAllUsersNotFinalized();
             while (exists) {
                 i++;
-                List<User> users = getAllUsers();
                 user.username = "" + (users.size() + i);
                 exists = false;
                 for (User usr : users) {
@@ -163,7 +163,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public User createUser(User user) throws ErrorException {
-
         if (getSession().currentUser == null && user.type > User.Type.CUSTOMER) {
             throw new ErrorException(26);
         }

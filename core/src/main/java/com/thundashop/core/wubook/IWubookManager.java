@@ -8,6 +8,7 @@ package com.thundashop.core.wubook;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -22,6 +23,10 @@ public interface IWubookManager {
     public boolean testConnection() throws Exception;
     @Administrator
     public List<WubookBooking> fetchAllBookings(Integer daysback) throws Exception;
+    @Administrator
+    public List<Integer> fetchBookingCodes(Integer daysback) throws Exception;
+    @Administrator
+    public List<WubookBooking> addNewBookingsPastDays(Integer daysback) throws Exception;
     @Administrator
     public List<WubookBooking> fetchNewBookings() throws Exception;
     @Administrator
@@ -40,4 +45,11 @@ public interface IWubookManager {
     public List<String> insertAllRooms() throws Exception;
     @Administrator
     public String deleteBooking(String rcode) throws Exception;
+    
+    @Administrator
+    public HashMap<String, WubookRoomData> getWubookRoomData();
+    
+    @Administrator
+    public void saveWubookRoomData(HashMap<String,WubookRoomData> res);
+    
 }

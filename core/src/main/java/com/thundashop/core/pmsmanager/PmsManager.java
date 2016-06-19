@@ -455,7 +455,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return false;
     }
-
+    
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
         if (!initFinalized) {
@@ -3170,6 +3170,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void updateBooking(PmsBookingRooms room) {
         bookingEngine.changeDatesOnBooking(room.bookingId, room.date.start, room.date.end);
+    }
+
+    public List<PmsBooking> getAllBookingsFlat() {
+        return new ArrayList(bookings.values());
     }
 
 }

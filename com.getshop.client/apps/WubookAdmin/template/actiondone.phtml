@@ -28,6 +28,14 @@ if($action == "testConnection") {
     } else {
         echo $res;
     }
+} else if($action == "fetchBookingCodes") {
+    $res = $wubookmgr->fetchBookingCodes($name, 2);
+    echo "<pre>";
+    print_r($res);
+    echo "</pre>";
+} else if($action == "addNewRoomsPastTwoDays") {
+    $res = $wubookmgr->addNewBookingsPastDays($name, 3);
+    $this->printBookingTable($res);
 } else if($action == "markNoShow") {
     $id = $_POST['data']['id'];
     $res = $wubookmgr->markNoShow($name, $id);

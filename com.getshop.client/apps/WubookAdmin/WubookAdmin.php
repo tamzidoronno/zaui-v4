@@ -41,6 +41,14 @@ class WubookAdmin extends \WebshopApplication implements \Application {
         
     }
 
+    public function updateRoomData() {
+        $curData = $this->getApi()->getWubookManager()->getWubookRoomData($this->getSelectedName());
+        foreach($_POST['data'] as $id => $val) {
+            $curData->{$id}->wubookroomid = $val;
+        }
+        $this->getApi()->getWubookManager()->saveWubookRoomData($this->getSelectedName(), $curData);
+    }
+    
     public function printBookingTable($res) {
         if(!$res) {
             echo "None found";

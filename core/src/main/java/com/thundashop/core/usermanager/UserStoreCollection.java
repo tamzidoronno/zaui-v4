@@ -478,4 +478,8 @@ public class UserStoreCollection {
                 .collect(Collectors.toList());
     }
 
+    List<User> getAllUsersNotFinalized() {
+        return new ArrayList(users.values());
+    }
+
 }

@@ -7,6 +7,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pmsmanager.CheckPmsProcessing;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingComment;
 import com.thundashop.core.pmsmanager.PmsBookingDateRange;
@@ -52,6 +53,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 wubookdata.put(dataCommon.id, (WubookRoomData) dataCommon);
             }
         }
+        
+        createScheduler("wubookprocessor", "* * * * *", WuBookManagerProcessor.class);
     }
     
     @Override
@@ -178,6 +181,47 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         return toReturn;
     }
+
+    @Override
+    public List<Integer> fetchBookingCodes(Integer daysBack) throws Exception {
+        if(!connectToApi()) {
+            return new ArrayList();
+        }
+        
+        if(daysBack == null) {
+            daysBack = 10;
+        }
+        
+        System.out.println("Verifying all bookings");
+        Vector params = new Vector();
+        params.addElement(token);
+        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+        
+        String pattern = "dd/MM/yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, daysBack*-1);
+        
+        String to = format.format(new Date());
+        String from = format.format(cal.getTime());
+        
+        params.addElement(from);
+        params.addElement(to);
+        System.out.println("Finding bookings from: " + from + " to -> " + to);
+        Vector result = (Vector) client.execute("fetch_bookings_codes", params);
+        List<Integer> toReturn = new ArrayList();
+        if((Integer)result.get(0) != 0) {
+            System.out.println("Failed to fetch all reservations: " + result.get(1));
+        } else {
+            Vector getAllBookings = (Vector) result.get(1);
+            
+            for(int bookcount = 0; bookcount < getAllBookings.size(); bookcount++) {
+                Hashtable reservation = (Hashtable) getAllBookings.get(bookcount);
+                toReturn.add((Integer) reservation.get("reservation_code"));
+            }
+        }
+        return toReturn;
+    }
     
     private WubookBooking buildBookingResult(Hashtable table) {
         WubookBooking booking = new WubookBooking();
@@ -251,6 +295,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public List<WubookBooking> fetchNewBookings() throws Exception {
+        connectToApi();
         Vector params = new Vector();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
@@ -537,6 +582,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private String addBookingToPms(WubookBooking booking) throws Exception {
+        long start = System.currentTimeMillis();
         if(booking.delete) {
             List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
             boolean found = false;
@@ -593,6 +639,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         pmsManager.setBooking(newbooking);
         
         pmsManager.completeCurrentBooking();
+        System.out.println("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
         return "";
     }
 
@@ -628,5 +675,64 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         WubookBooking booking = fetchBooking(rcode);
         booking.delete = true;
         return addBookingToPms(booking);
+    }
+
+    @Override
+    public HashMap<String, WubookRoomData> getWubookRoomData() {
+        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        for(BookingItemType type : types) {
+            boolean found = false;
+            for(WubookRoomData rdata : wubookdata.values()) {
+                if(rdata.bookingEngineTypeId.equals(type.id)) {
+                    found = true;
+                }
+            }
+            
+            if(!found) {
+                WubookRoomData newRdata = new WubookRoomData();
+                newRdata.bookingEngineTypeId = type.id;
+                saveObject(newRdata);
+                wubookdata.put(newRdata.id, newRdata);
+            }
+        }
+        
+        
+        return wubookdata;
+    }
+
+    @Override
+    public void saveWubookRoomData(HashMap<String, WubookRoomData> res) {
+        for(WubookRoomData data : res.values()) {
+            if(data.wubookroomid != null && data.wubookroomid > 0 && !data.addedToWuBook) {
+                data.addedToWuBook = true;
+            }
+            saveObject(data);
+            wubookdata.put(data.id, data);
+        }
+    }
+
+    @Override
+    public List<WubookBooking> addNewBookingsPastDays(Integer daysback) throws Exception {
+        List<Integer> codes = fetchBookingCodes(daysback);
+        List<WubookBooking> bookingsAdded = new ArrayList();
+        List<PmsBooking> bookings = pmsManager.getAllBookingsFlat();
+        for(Integer code : codes) {
+            System.out.println(code);
+            boolean found = false;
+            for(PmsBooking booking : bookings) {
+                if(booking.wubookreservationid.equals(code)) {
+                    found = true;
+                }
+            }
+            
+            if(!found) {
+                WubookBooking booking = fetchBooking(code + "");
+                addBookingToPms(booking);
+                bookingsAdded.add(booking);
+            }
+        }
+        
+        return bookingsAdded;
+        
     }
 }

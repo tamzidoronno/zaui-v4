@@ -626,7 +626,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     private void checkIfUserExists(User user) throws ErrorException {
-        List<User> allUsers = getAllUsers();
+        List<User> allUsers = getUserStoreCollection(storeId).getAllUsersNotFinalized();
         for(User tmpUser : allUsers) {
             if(tmpUser.username.equals(user.username)) {
                 ErrorException error = new ErrorException(66);
@@ -1496,7 +1496,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return false;
         }
         
-        boolean exists = getUserStoreCollection(storeId).getAllUsers().stream()
+        boolean exists = getUserStoreCollection(storeId).getAllUsersNotFinalized().stream()
                 .filter(matchOnEmailAndCellphone(user))
                 .count() > 0;
         

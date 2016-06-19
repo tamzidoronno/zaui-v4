@@ -552,7 +552,6 @@ public class PmsManagerProcessor {
     }
 
     private void autoMarkBookingsAsPaid() {
-        long start = System.currentTimeMillis();
         List<PmsBooking> all = getAllConfirmedNotDeleted(true);
         PmsConfiguration config = manager.getConfiguration();
         for(PmsBooking booking : all) {
@@ -581,6 +580,11 @@ public class PmsManagerProcessor {
                     if(!order.captured && order.status == Order.Status.PAYMENT_COMPLETED) {
                         needCapture = true;
                     }
+                    
+                    if(order.incrementOrderId == 106497) {
+                        System.out.println("What's up with this one");
+                    }
+                    
                     if(order.status != Order.Status.PAYMENT_COMPLETED) {
                         for(CartItem item : order.cart.getItems()) {
                             if(!firstDate && item.startDate != null && item.startDate.after(new Date())) {
@@ -598,7 +602,6 @@ public class PmsManagerProcessor {
                     needSaving = true;
                 }
             }
-            
             if(needSaving || booking.payedFor != payedfor) {
                 booking.payedFor = payedfor;
                 if(payedfor == true && booking.orderIds.size() == 1) {

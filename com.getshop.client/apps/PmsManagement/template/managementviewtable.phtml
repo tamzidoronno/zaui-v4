@@ -38,7 +38,6 @@ $prices[7] = "daily";
 $prices[8] = "daily";
 
 
-
 echo "<table width='100%' cellspacing='0' cellpadding='0'>";
 echo "<tr>";
 echo "<th></th>";
@@ -194,12 +193,12 @@ foreach($bookings as $booking) {
             $state = "Rejected";
         } else if($booking->isDeleted || $room->deleted) {
             $state = "Deleted";
+        } else if($hasPrices && !$booking->payedFor) {
+            $state = "Unpaid";
         } else if($booking->confirmed) {
             $state = "Confirmed";
         } else if(!$booking->confirmed) {
             $state = "Unconfirmed";
-        } else if($hasPrices && !$booking->payedFor) {
-            $state = "Unpaid";
         }
         
         

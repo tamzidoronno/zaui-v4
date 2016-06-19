@@ -717,7 +717,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         List<WubookBooking> bookingsAdded = new ArrayList();
         List<PmsBooking> bookings = pmsManager.getAllBookingsFlat();
         for(Integer code : codes) {
-            System.out.println(code);
             boolean found = false;
             for(PmsBooking booking : bookings) {
                 if(booking.wubookreservationid.equals(code + "")) {

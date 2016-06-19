@@ -384,7 +384,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id, e);
             e.printStackTrace();
         }
-        return null;
+        return null; 
     }
 
     @Override
@@ -484,7 +484,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
                 for (PmsBookingRooms room : booking.getActiveRooms()) {
                     if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
-                        BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                        BookingItem item = bookingEngine.getBookingItemUnfinalized(room.bookingItemId);
                         if (item != null && item.bookingItemName != null && item.bookingItemName.contains(filter.searchWord)) {
                             if(!result.contains(booking)) {
                                 result.add(booking);
@@ -2920,9 +2920,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void createUserForBooking(PmsBooking booking) {
         if (booking.userId == null || booking.userId.isEmpty()) {
-            long timer = System.currentTimeMillis();
             User newuser = createUser(booking);
-            System.out.println("\t Create user takes:" + (System.currentTimeMillis() - timer));
             booking.userId = newuser.id;
             Company curcompany = createCompany(booking);
             if (curcompany != null) {

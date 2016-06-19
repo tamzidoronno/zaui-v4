@@ -2715,3 +2715,6 @@ select.gsniceselect1:active {
 
 .slavePageModificationIndicator,
 .slavePageModificationIndicator a { color: #FFF;}
+
+.gsarea[area="body"] { position: relative; }
+.gs_toggleLeftSideBar { display: none; }

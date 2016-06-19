@@ -231,6 +231,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         booking.channelId = table.get("id_channel") + "";
         booking.reservationCode = table.get("reservation_code") + "";
         booking.channel_reservation_code = (String) table.get("channel_reservation_code");
+        Vector modifications = (Vector) table.get("modified_reservations");
+        if(modifications != null) {
+            for(int i = 0; i < modifications.size(); i++) {
+                booking.modifiedReservation.add((Integer) modifications.get(i));
+            }
+        }
         boolean delete = false;
         Integer status = (Integer) table.get("status");
         if(status == 5) {
@@ -582,8 +588,22 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private String addBookingToPms(WubookBooking booking) throws Exception {
+        PmsBooking newbooking = pmsManager.startBooking();
+
         long start = System.currentTimeMillis();
-        if(booking.delete) {
+        if(booking.modifiedReservation.size() > 0) {
+            List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
+            boolean found = false;
+            for(PmsBooking pmsbook : allbookings) {
+                if(pmsbook.wubookreservationid != null && pmsbook.wubookreservationid.equals(booking.modifiedReservation.get(0) + "")) {
+                    pmsManager.logEntry("Modified by channel manager", pmsbook.id, null);
+                    for(PmsBookingRooms room : pmsbook.getActiveRooms()) {
+                        pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
+                    }
+                    newbooking = pmsbook;
+                }
+            }
+        } else if(booking.delete) {
             List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
             boolean found = false;
             for(PmsBooking pmsbook : allbookings) {
@@ -599,8 +619,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return "";
         }
         
-        
-        PmsBooking newbooking = pmsManager.startBooking();
         newbooking.channel = "wubook_" + booking.channelId;
         newbooking.wubookchannelreservationcode = booking.channel_reservation_code;
         newbooking.wubookreservationid = booking.reservationCode;

@@ -86,6 +86,9 @@ public interface IBookingEngine {
     @Administrator
     public List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId);
     
+    @Administrator
+    public List<BookingItem> getAllAvailbleItemsWithBookingConsidered(Date start, Date end, String bookingid);
+    
     public List<TimeRepeaterData> getOpeningHours(String itemId);
     
     @Administrator

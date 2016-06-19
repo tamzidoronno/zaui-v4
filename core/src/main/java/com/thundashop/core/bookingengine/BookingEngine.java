@@ -232,6 +232,18 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     }
 
     @Override
+    public List<BookingItem> getAllAvailbleItemsWithBookingConsidered(Date start, Date end, String bookingid) {
+        List<BookingItem> res = new ArrayList();
+        List<BookingItemType> types = getBookingItemTypes();
+        for(BookingItemType type : types) {
+            List<BookingItem> found = getAvailbleItemsWithBookingConsidered(type.id, start, end, bookingid);
+            res.addAll(found);
+        }
+        
+        return res;
+    }
+
+    @Override
     public void deleteOpeningHours(String repeaterId) {
         bookingEngineAbstract.deleteOpeningHours(repeaterId);
     }

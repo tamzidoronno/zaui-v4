@@ -27,7 +27,6 @@ public class PmsManagerProcessor {
     }
 
     public void doProcessing() {
-        long start = System.currentTimeMillis();
         clearCachedObject();
         try { runAutoPayWithCard(); }catch(Exception e) { e.printStackTrace(); }
         clearCachedObject();
@@ -49,7 +48,6 @@ public class PmsManagerProcessor {
         try { processEndings(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
         try { processArx(); }catch(Exception e) { e.printStackTrace(); }
-        System.out.println("Processor time: " + (System.currentTimeMillis() - start));
     }
     
     public void hourlyProcessor() {
@@ -579,10 +577,6 @@ public class PmsManagerProcessor {
                     }
                     if(!order.captured && order.status == Order.Status.PAYMENT_COMPLETED) {
                         needCapture = true;
-                    }
-                    
-                    if(order.incrementOrderId == 106497) {
-                        System.out.println("What's up with this one");
                     }
                     
                     if(order.status != Order.Status.PAYMENT_COMPLETED) {

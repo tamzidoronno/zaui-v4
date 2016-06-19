@@ -642,7 +642,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         
         String testLink = "http://" + getStoreDefaultAddress() + "/?page=do_questback&gs_testId=" + test.id + "&referenceId="+reference;
                      
-        message = message.replace("{Test.Link}", testLink);
+        message = message.replace("{Test.Link}", "<a href='"+testLink+"'>"+testLink+"</a>");
 
         String storeEmail = getStoreEmailAddress();
         messageManager.sendMail(user.emailAddress, user.fullName, subject, message, storeEmail, null);

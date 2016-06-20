@@ -23,12 +23,17 @@ class EventSendTestToCandidates extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3
         foreach ($users as $user) {
             if (isset($_POST['data'][$user->id]) && $_POST['data'][$user->id] == "true") {
                 if ($test->type === "questback") {
-                    $this->getApi()->getQuestBackManager()->sendQuestBack($testid, $user->id, $eventId);
+                    $event = $this->getApi()->getEventBookingManager()->getEvent("booking", $eventId);
+                    $this->getApi()->getQuestBackManager()->sendQuestBack($testid, $user->id, $eventId, $event);
                 } else {
                     $this->getApi()->getQuestBackManager()->assignUserToTest($testid, $user->id);
                 }
             }
         }
+    }
+    
+    public function showCandidates() {
+        $this->includefile("userselection");
     }
 }
 ?>

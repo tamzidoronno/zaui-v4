@@ -1243,6 +1243,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         payment.paymentType = user.preferredPaymentType;
         return payment;
     }
+    
+    public Payment getUserPrefferedPaymentMethod(String userId) {
+        User user = userManager.getUserById(userId);
+        
+        if (user == null)
+            return null;
+        
+        if (user.preferredPaymentType == null || user.preferredPaymentType.isEmpty()) {
+            return null;
+        }
+        
+        Payment payment = new Payment();
+        payment.paymentType = user.preferredPaymentType;
+        return payment;
+    }
 
     public Payment getStorePreferredPayementMethod() {
         Application ecommerceSettingsApplication = applicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");

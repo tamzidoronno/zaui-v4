@@ -392,12 +392,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(day < 10) { dateString += "0" + day; } else { dateString += day; }
                 dateString += "-";
                 if(month < 10) { dateString += "0" + month; } else { dateString += month; }
-                dateString += "-" + year;
+                dateString += "-" + year; 
                 
                 if(pricesForType.containsKey(dateString)) {
                     price = pricesForType.get(dateString);
                 }
-                list.add(price.intValue());
+                if(price != null) {
+                    list.add(price.intValue());
+                }
                 calStart.add(Calendar.DAY_OF_YEAR, 1);
             }
             table.put(rdata.wubookroomid + "", list);

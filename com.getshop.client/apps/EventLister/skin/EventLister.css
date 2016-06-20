@@ -72,6 +72,10 @@
 .EventLister .col.col4 { width: 65px; }
 .EventLister .col.col5 { width: 140px; text-align: right; }
 
+.EventLister .smallviewinfo {
+    display: none;
+}
+
 .EventLister .daysinformation {
     
 }
@@ -82,3 +86,18 @@
     margin-bottom: 30px;
     text-align: center;
 }
+
+@media screen and (max-width: 599px) {
+    
+    .EventLister .col { display: inline-block; width: 100% !important;  padding: 4px; box-sizing: border-box; }   
+    
+    .EventLister .eventname { font-weight: bold;}
+    
+    
+    .EventLister .availablespots { padding-right: 20px;}
+    
+    
+    .EventLister .smallviewinfo { display: inline-block; margin-right: 10px;}
+    .EventLister .smallviewinfo.dates { display: block;}
+}
+    

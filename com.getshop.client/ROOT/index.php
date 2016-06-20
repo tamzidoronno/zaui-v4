@@ -105,8 +105,16 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     <head>
         
         <?
-        if($factory->getApplicationPool()->getSelectedThemeApp()->appName == "SedoxDatabankTheme") {
-            echo '<meta name="viewport" content="width=480, initial-scale=0.666">';
+        $themeName = $factory->getApplicationPool()->getSelectedThemeApp()->appName;
+        
+        // This is a hack and customers themes should never be distinquesed like this. TODO: make config options on theme instead.
+        // Also, dont scale viewport!
+        if($themeName == "ProMeisterTheme") {
+            echo '<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />';
+        }
+        
+        if($themeName == "SedoxDatabankTheme") {
+            echo '<meta name="viewport" content="width=480, initial-scale=1">';
         }
         
         if($factory->includeSeo()) {

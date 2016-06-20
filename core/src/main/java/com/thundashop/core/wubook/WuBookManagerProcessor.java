@@ -5,7 +5,7 @@
  * 3. Overføring til visma igjen
  * 4. Varlslingen av bookinger etter 5 og helger booking.com må på plass igjen
  * 5. Oppdatering av priser og avialability (egentlig done)
- * 6. No show må merkes riktig
+ * 6. No show må merkes riktig (DONE)
  * 
  */
 package com.thundashop.core.wubook;

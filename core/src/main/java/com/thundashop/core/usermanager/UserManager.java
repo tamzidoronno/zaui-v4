@@ -1573,4 +1573,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         this.counter.counter = counter;
         saveObject(this.counter);
     }
+    
+    public void assignMetaDataToVirtualSessionUser(String key, String value) {
+        User user = getVirtualSessionUser();
+        user.metaData.put(key, value);
+        saveObject(user);
+    }
 }

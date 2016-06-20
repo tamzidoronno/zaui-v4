@@ -144,6 +144,9 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
         $this->setConfigurationSetting("ordersubject", $_POST['ordersubject']);
         $this->setConfigurationSetting("orderemail", $_POST['emailconfig']);
         $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
+        
+        $this->setConfigurationSetting("questback_subject", $_POST['questback_subject']);
+        $this->setConfigurationSetting("questback_body", $_POST['questback_body']);
     }
     
     public function assignTestToUsers() {

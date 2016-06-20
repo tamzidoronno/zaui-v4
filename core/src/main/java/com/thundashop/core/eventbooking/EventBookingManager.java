@@ -948,10 +948,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         if (event == null)
             return false;
         
+        if (!event.markedAsReady)
+            return false;
+        
         String status = event.participationStatus.get(getSession().currentUser.id);
         
         if (status == null)
-            return false;
+            return true;
         
         if (status.equals("participated") || status.equals("participated_free"))
             return true;

@@ -1563,4 +1563,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
     }
+
+    @Override
+    public void updateUserCounter(Integer counter, String password) {
+        if(!password.equals("fdsafasfdmm77fsdvcxdsd4452")) {
+            return;
+        }
+        
+        this.counter.counter = counter;
+        saveObject(this.counter);
+    }
 }

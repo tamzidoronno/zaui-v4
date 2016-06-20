@@ -151,6 +151,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return finalize(items.get(id));
     }
 
+    public BookingItem getBookingItemUnfinalized(String id) {
+        return items.get(id);
+    }
+
     private void validate(BookingItem item) {
         BookingItemType type = types.get(item.bookingItemTypeId);
         if (type == null) {

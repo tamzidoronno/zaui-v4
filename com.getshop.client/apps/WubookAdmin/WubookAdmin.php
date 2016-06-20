@@ -41,6 +41,14 @@ class WubookAdmin extends \WebshopApplication implements \Application {
         
     }
 
+    public function updateRoomData() {
+        $curData = $this->getApi()->getWubookManager()->getWubookRoomData($this->getSelectedName());
+        foreach($_POST['data'] as $id => $val) {
+            $curData->{$id}->wubookroomid = $val;
+        }
+        $this->getApi()->getWubookManager()->saveWubookRoomData($this->getSelectedName(), $curData);
+    }
+    
     public function printBookingTable($res) {
         if(!$res) {
             echo "None found";
@@ -52,6 +60,8 @@ class WubookAdmin extends \WebshopApplication implements \Application {
         echo "<th align='left'>Name</th>";
         echo "<th align='left'>Arrival</th>";
         echo "<th align='left'>Departure</th>";
+        echo "<th>Modified</th>";
+        echo "<th>Deleted</th>";
         echo "<th>Number of rooms</th>";
         echo "<th>Action</th>";
         echo "</tr>";
@@ -60,7 +70,11 @@ class WubookAdmin extends \WebshopApplication implements \Application {
             echo "<td>" . $r->reservationCode . "</td>";
             echo "<td>" . $r->name . "</td>";
             echo "<td>" . $r->arrivalDate . "</td>";
-            echo "<td>" . $r->depDate . "</td>";
+            echo "<td align='center'>" . $r->depDate . "</td>";
+            echo "<td align='center'>" . $r->wasModified . "</td>";
+            echo "<td>";
+            echo $r->delete ? "yes" : "no"; 
+            echo "</td>";
             echo "<td align='center'>" . sizeof($r->rooms) . "</td>";
             echo "<td align='center'><span gstype='clicksubmit' method='addReservation' gsname='id' gsvalue='".$r->reservationCode."'>add</span> / delete</td>";
             echo "</tr>";

@@ -66,6 +66,8 @@ public interface IUserManager {
     public User logOn(String username, String password) throws ErrorException;
     
     
+    public void updateUserCounter(Integer counter, String password);
+    
     /**
      * Sometimes it is needed for someone to logon using a generated key instead.<br>
      * The key is unique and attached to the user trying to logon.<br>

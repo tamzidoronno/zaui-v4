@@ -98,6 +98,7 @@ public class PmsConfiguration extends DataCommon {
     public String wubooklcode = "";
     
     public HashMap<String, String> channelTranslations = new HashMap();
+    public HashMap<String, String> channelPaymentTypes = new HashMap();
     
     boolean hasLockSystem() {
         return (arxHostname != null && !arxHostname.isEmpty());

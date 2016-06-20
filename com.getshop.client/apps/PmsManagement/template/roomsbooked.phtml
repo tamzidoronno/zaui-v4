@@ -183,7 +183,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                 ?>
                                 <select gsname='itemid'>
                                     <?php 
-                                    $isAvailableItem = $object->getApi()->getBookingEngine()->getAllAvailbleItems($object->getSelectedName(), $now, $room->date->end);
+                                    $isAvailableItem = $object->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($object->getSelectedName(), $now, $room->date->end, $room->bookingId);
                                     $isAvailableItem = $object->indexList($isAvailableItem);
                                     $allItems = $object->getApi()->getBookingEngine()->getBookingItems($object->getSelectedName());
                                     foreach($allItems as $item) {

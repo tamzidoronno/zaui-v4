@@ -172,6 +172,7 @@ public interface IPmsManager {
     public PmsBooking getBooking(String bookingId);
     public PmsConfiguration getConfiguration();
     public void processor();
+    public void hourlyProcessor();
     public String getCurrenctContract() throws Exception;
     public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
     public void removeFromCurrentBooking(String roomId) throws Exception;

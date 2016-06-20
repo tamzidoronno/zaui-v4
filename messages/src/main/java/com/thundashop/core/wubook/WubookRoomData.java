@@ -6,6 +6,6 @@ public class WubookRoomData extends DataCommon {
     public String bookingEngineTypeId = "";
     public Integer code = -1;
     public String rid = "";
-    boolean addedToWuBook = false;
-    Integer wubookroomid = -1;
+    public boolean addedToWuBook = false;
+    public Integer wubookroomid = -1;
 }

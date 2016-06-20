@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.ibm.icu.util.Calendar;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -199,6 +200,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             checkIfNeedAdditionalEndInvoicing(room, filter);
         }
+    }
+
+    private Payment getChannelPreferredPaymentMethod(PmsBooking booking) {
+        String channelPaymentId = pmsManager.getConfigurationSecure().channelPaymentTypes.get(booking.channel);
+        if(channelPaymentId != null) {
+            Application paymentApplication = applicationPool.getApplication(channelPaymentId);
+            if (paymentApplication != null) { 
+                Payment payment = new Payment();
+                payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+                return payment;
+            }
+        }
+        return null;
     }
 
     class BookingOrderSummary {
@@ -478,10 +492,31 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         Order order = orderManager.createOrder(user.address);
 
-        Payment preferred = orderManager.getPrefferedPaymentMethod(user.id);
+        Payment preferred = orderManager.getStorePreferredPayementMethod();
+        Payment preferredChannel = getChannelPreferredPaymentMethod(booking);
+        Payment preferredUser = orderManager.getUserPrefferedPaymentMethod(order.userId);
+        
+        if(preferredChannel != null) {
+            preferred = preferredChannel;
+        }
+        
+        if(preferredUser != null) {
+            preferred = preferredUser;
+        }
+        
         order.payment = preferred;
         order.userId = booking.userId;
         order.invoiceNote = booking.invoiceNote;
+        
+        if(order.payment != null) {
+            String type = order.payment.paymentType.toLowerCase();
+            if(type.contains("invoice") || type.contains("expedia")) {
+                order.status = Order.Status.PAYMENT_COMPLETED;
+                order.captured = true;
+                order.payment.captured = true;
+            }
+        }
+        
 
         if (pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
             Calendar cal = Calendar.getInstance();

@@ -670,6 +670,28 @@ $days[7] = "Sunday";
                     <?php echo $chan; ?>
                 </div>
             <? } ?>
+            
+            <h2>Channel preferred payment methods</h2>
+            <?php 
+            $payment = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+            foreach($channels as $chan => $channel) { ?>
+                <div class='configrow'>
+                    <span class='configentry'>
+                        <select gsname='channel_payment_<?php echo $chan; ?>'>
+                            <?php
+                            foreach($payment as $test) {
+                                $selected = "";
+                                if($notificationSettings->channelPaymentTypes->{$chan} == $test->id) {
+                                    $selected = "SELECTED";
+                                }
+                                echo "<option value='".$test->id."' $selected>" . $test->appName . "</option>";
+                            }
+                            ?>
+                        </select>
+                    </span>
+                    <?php echo $chan; ?>
+                </div>
+            <? } ?>
         
         <? } ?>
         <h2>Wubook settings</h2>

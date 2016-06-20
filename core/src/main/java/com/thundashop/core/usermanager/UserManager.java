@@ -147,9 +147,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user.username == null || user.username.trim().length() == 0) {
             int i = 10000;
             boolean exists = true;
+            List<User> users = userStoreCollections.get(storeId).getAllUsersNotFinalized();
             while (exists) {
                 i++;
-                List<User> users = getAllUsers();
                 user.username = "" + (users.size() + i);
                 exists = false;
                 for (User usr : users) {
@@ -163,7 +163,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public User createUser(User user) throws ErrorException {
-
         if (getSession().currentUser == null && user.type > User.Type.CUSTOMER) {
             throw new ErrorException(26);
         }
@@ -626,7 +625,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     private void checkIfUserExists(User user) throws ErrorException {
-        List<User> allUsers = getAllUsers();
+        List<User> allUsers = getUserStoreCollection(storeId).getAllUsersNotFinalized();
         for(User tmpUser : allUsers) {
             if(tmpUser.username.equals(user.username)) {
                 ErrorException error = new ErrorException(66);
@@ -808,9 +807,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
     
     private User getUserByEmail(String emailAddress) throws ErrorException {
-        List<User> users = getUserStoreCollection(storeId).getAllUsers();
+        List<User> users = getUserStoreCollection(storeId).getAllUsersNotFinalized();
         for (User user : users) {
             if (user.emailAddress != null && user.emailAddress.equals(emailAddress)) {
+                finalizeUser(user);
                 return user;
             }
         }
@@ -820,8 +820,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     
     public User getUserUserName(String username) {
-        for(User user : getUserStoreCollection(storeId).getAllUsers()) {
+        for(User user : getUserStoreCollection(storeId).getAllUsersNotFinalized()) {
             if(user.username.equals(username)) {
+                finalizeUser(user);
                 return user;
             }
         }
@@ -1494,7 +1495,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return false;
         }
         
-        boolean exists = getUserStoreCollection(storeId).getAllUsers().stream()
+        boolean exists = getUserStoreCollection(storeId).getAllUsersNotFinalized().stream()
                 .filter(matchOnEmailAndCellphone(user))
                 .count() > 0;
         
@@ -1564,6 +1565,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     @Override
+    public void updateUserCounter(Integer counter, String password) {
+        if(!password.equals("fdsafasfdmm77fsdvcxdsd4452")) {
+            return;
+        }
+        
+        this.counter.counter = counter;
+        saveObject(this.counter);
+    }
+    
     public void assignMetaDataToVirtualSessionUser(String key, String value) {
         User user = getVirtualSessionUser();
         user.metaData.put(key, value);

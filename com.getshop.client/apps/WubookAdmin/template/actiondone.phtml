@@ -20,6 +20,8 @@ if($action == "testConnection") {
     } else {
         echo "Unable to connect to the api, make sure the username and password set in booking admin configuration are correct.";
     }
+} else if($action == "checkForNoShows") {
+    $this->getApi()->getWubookManager()->checkForNoShowsAndMark($this->getSelectedName());
 } else if($action == "markCCInvalid") {
     $id = $_POST['data']['id'];
     $res = $wubookmgr->markCCInvalid($name, $id);

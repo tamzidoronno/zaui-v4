@@ -47,6 +47,9 @@ public interface IWubookManager {
     public String deleteBooking(String rcode) throws Exception;
     
     @Administrator
+    public void checkForNoShowsAndMark() throws Exception;
+    
+    @Administrator
     public HashMap<String, WubookRoomData> getWubookRoomData();
     
     @Administrator

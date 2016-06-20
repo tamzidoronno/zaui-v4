@@ -11,10 +11,12 @@ import com.thundashop.core.pmsmanager.CheckPmsProcessing;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingComment;
 import com.thundashop.core.pmsmanager.PmsBookingDateRange;
+import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
+import com.thundashop.core.pmsmanager.PmsRoomSimple;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -753,5 +755,28 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         return bookingsAdded;
         
+    }
+
+    @Override
+    public void checkForNoShowsAndMark() throws Exception {
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = "checkout";
+        
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        
+        filter.startDate = cal.getTime();
+        filter.endDate = cal.getTime();
+        
+        List<PmsBooking> booking = pmsManager.getAllBookings(filter);
+        for(PmsBooking book : booking) {
+            if(book.payedFor) {
+                continue;
+            }
+            
+            if(book.channel != null && book.channel.contains("wubook")) {
+                markNoShow(book.wubookreservationid);
+            }
+        }
     }
 }

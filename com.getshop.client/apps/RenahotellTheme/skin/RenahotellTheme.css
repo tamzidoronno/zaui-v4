@@ -1,6 +1,6 @@
 .gs_page_width { max-width: 1024px; margin: auto; }
-.Menu { text-transform: uppercase; text-align: center;  }
-.Menu a div { padding: 20px; color:#fff;background-color:#265170; margin: 1px; width: 130px;margin-bottom: 10px; margin-top: 10px; letter-spacing: 2px; font-family: Sintony; }
+.Menu { text-transform: uppercase; text-align: right;  }
+.Menu a div { padding-left: 20px; color:#fff;margin: 1px; margin-bottom: 10px; margin-top: 10px; letter-spacing: 2px; font-family: Sintony; }
 .Menu .entries .entries div { margin: 0px; }
 .gsarea[area="header"] { background-color: #303030; padding-top: 10px; }
 .gsarea[area="footer"] { background-color: #303030; padding-top: 10px; padding-top: 80px; padding-bottom: 80px; color:#fff; }
@@ -71,7 +71,7 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
 .Login .form .gs_button:hover, .Login .form .loginbutton:hover,
 .Menu a div:hover {
     transition: all 0.5s ease;
-    background-color:#17222b; 
+    color:#efefef; 
 }
 
 .PmsBookingCalendar .calendar .day { border-color: #efefef; }

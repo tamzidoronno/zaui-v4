@@ -4,6 +4,10 @@ $cats = $this->getCategories();
 $datelist = array();
 $indexrange = array();
 
+
+$this->__w("Oct");
+$this->__w("Des");
+
 $entries = $this->getEventList();
 //print_r($entries);
 echo "<table>";
@@ -21,7 +25,7 @@ foreach($entries as $eventEntry) {
     
     if(isset($_GET['list']) && $_GET['list'] == "tiny") {
         echo "<tr>";
-        echo "<td valign='top' width='50'><div>".date("d.", $date). "<br>" . date("M", $date) ."</div></td>";
+        echo "<td valign='top' width='50'><div>".date("d.", $time). "<br>" . $this->__w(date("M", $time)) ."</div></td>";
         echo "<td valign='top' class='listtext'>";
         echo $title . "<br>";
         echo $starttime;
@@ -29,7 +33,7 @@ foreach($entries as $eventEntry) {
         echo "</tr>";
     } else {
         echo "<tr>";
-        echo "<td valign='top' class='datecol' width='90'><div>".date("d.", $time). " " . date("M", $time) ."</div><div>".$starttime."</div></td>";
+        echo "<td valign='top' class='datecol' width='90'><div>".date("d.", $time). " " . $this->__w(date("M", $time)) ."</div><div>".$starttime."</div></td>";
         echo "<td valign='top' class='listtext'>";
         $shortId = explode("-", $eventEntry->eventId);
         $edit = "";

@@ -183,7 +183,6 @@ public interface IEventBookingManager {
     @Editor
     public List<Event> getEventsByLocation(String locationId);
 
-    @Customer
     public Event getEventByPageId(String eventId);
     
     @Administrator

@@ -17,12 +17,14 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.eventbooking.Event;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.questback.data.QuestBackOption;
 import com.thundashop.core.questback.data.QuestBackQuestion;
 import com.thundashop.core.questback.data.QuestBackResult;
+import com.thundashop.core.questback.data.QuestBackSendt;
 import com.thundashop.core.questback.data.QuestTest;
 import com.thundashop.core.questback.data.QuestionTreeItem;
 import com.thundashop.core.questback.data.ResultRequirement;
@@ -68,6 +70,8 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
     private ResultRequirement resultRequirement = null;
 
     private List<UserTestResult> results = new ArrayList();
+    
+    private List<QuestBackSendt> sentQuestBacks = new ArrayList();
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -618,18 +622,19 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
                 res.addAnswers(ans.questionId, ans.answers);
             }
         }
-                
+                 
         return res;
     }
 
     @Override
-    public void sendQuestBack(String testId, String userId, String reference) {
+    public void sendQuestBack(String testId, String userId, String reference, Event event) {
         QuestTest test = getTest(testId);
-        sendQuestBackMail(userId, test, reference);
+        sendQuestBackMail(userId, test, reference, event);
+        saveSentQuestback(testId, userId, reference);
     }
 
     
-    public void sendQuestBackMail(String userId, QuestTest test, String reference) {
+    public void sendQuestBackMail(String userId, QuestTest test, String reference, Event event) {
         User user = userManager.getUserById(userId);
         
         Application application = storeApplicationPool.getApplication("3ff6088a-43d5-4bd4-a5bf-5c371af42534");
@@ -639,6 +644,11 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         
         message = manipulateText(message, user, test);
         subject = manipulateText(subject, user, test);
+        
+        if (event != null) {
+            message = message.replace("{Event.Name}", event.bookingItemType.name);
+            message = message.replace("{Event.Location}", event.location.name + " - " + event.subLocation.name);
+        }
         
         String testLink = "http://" + getStoreDefaultAddress() + "/?page=do_questback&gs_testId=" + test.id + "&referenceId="+reference;
                      
@@ -703,5 +713,22 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         }
         
         return null;
+    }
+
+    @Override
+    public boolean isQuestBackSent(String userId, String testId, String reference) {
+        return sentQuestBacks.stream()
+                .filter(o -> o.testId.equals(testId) && o.userId.equals(userId) && o.reference.equals(reference))
+                .count() > 0;
+    }
+
+    private void saveSentQuestback(String testId, String userId, String reference) {
+        QuestBackSendt sent = new QuestBackSendt();
+        sent.testId = testId;
+        sent.userId = userId;
+        sent.reference = reference;
+        
+        sentQuestBacks.add(sent);
+        saveObject(sent);
     }
 }

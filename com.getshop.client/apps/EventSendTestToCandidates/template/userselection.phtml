@@ -1,0 +1,36 @@
+
+<?
+/* @var $this \ns_20d70922_63fb_4cd8_bcc6_cfd1c1a1a4fd\EventSendTestToCandidates */
+$eventId = $this->getModalVariable("eventid");
+$users = $this->getApi()->getEventBookingManager()->getUsersForEvent($this->getBookingEngineName(), $eventId);
+$currentTestId = $_POST['data']['testId'];
+?>
+<br/>
+<br/>
+
+<b><? echo $this->__f("Select users you wish to send test to"); ?></b>
+<br/>
+
+<?
+foreach ($users as $user) {
+    $tests = $this->getApi()->getQuestBackManager()->getTestsForUser($user->id);
+    
+
+    $found = false;
+    
+    if ($tests) {
+        foreach ($tests as $test) {
+            if ($test->id == $currentTestId)
+                $found = true;
+        }
+    }
+    
+    if (!$found)
+        $found = $this->getApi()->getQuestBackManager()->isQuestBackSent($user->id, $currentTestId, $eventId);
+    
+    $disabled = $found ? 'disabled="disabled"' : "";
+    $disabled = $found ? 'disabled' : "";
+    $checked = !$found ? "checked='true'" : "";
+    echo "<br/><input $checked $disabled type='checkbox' gsname='$user->id' value='$user->id'/><span class='$disabled' >  ".$user->fullName ." </span>";
+}
+?>

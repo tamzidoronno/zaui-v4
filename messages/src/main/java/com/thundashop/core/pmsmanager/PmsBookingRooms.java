@@ -75,6 +75,20 @@ public class PmsBookingRooms implements Serializable {
         bookingItemId = "";
     }
     
+    public Integer getNumberOfDays() {
+        int days = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date.start);
+        while(true) {
+            days++;
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(cal.getTime().after(date.end)) {
+                break;
+            }
+        }
+        return days;
+    }
+    
     boolean isActiveOnDay(Date time) {
         if(date.end == null || date.start == null) {
             return false;

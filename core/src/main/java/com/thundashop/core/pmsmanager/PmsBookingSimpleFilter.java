@@ -42,6 +42,7 @@ public class PmsBookingSimpleFilter {
         simple.end = room.date.end.getTime();
         simple.bookingItemId = room.bookingItemId;
         simple.addons = room.addons;
+        simple.price = room.price;
         if(manager.getConfiguration().hasLockSystem()) {
             simple.code = room.code;
         }

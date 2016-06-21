@@ -455,6 +455,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Double getTotalAmount(Order order) {
+        if(order == null || order.cart == null) {
+            return 0.0;
+        }
+        
         Double toPay = order.cart.getTotal(false);
         
         if (order.shipping != null && order.shipping.cost > 0) {

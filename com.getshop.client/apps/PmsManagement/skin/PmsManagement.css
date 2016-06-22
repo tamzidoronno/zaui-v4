@@ -11,6 +11,7 @@
 .PmsManagement .Unconfirmed { color:red; }
 .PmsManagement .Unpaid { color:red; }
 .PmsManagement .roomdeleted td { color: red; }
+.PmsManagement .statisticsrow:hover { cursor:pointer; font-weight: bold; }
 .PmsManagement .tiparea {
     position: absolute;
     background-color: #fff;

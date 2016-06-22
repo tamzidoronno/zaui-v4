@@ -18,6 +18,7 @@ public class PmsRoomSimple implements Serializable {
     public String code = "";
     public String room ="";
     public String progressState = "";
+    public double price = 0.0;
     public boolean paidFor = false;
     public boolean transferredToArx = false;
     public boolean roomCleaned = false;

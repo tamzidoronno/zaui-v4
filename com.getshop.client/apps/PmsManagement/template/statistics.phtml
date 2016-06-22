@@ -15,13 +15,14 @@ $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->get
         </tr>
         <?
         foreach ($stats->entries as $entry) {
-            echo "<tr>";
-            echo "<td>";
             if ($entry->date) {
-                echo date("d.m.Y", strtotime($entry->date));
+                $day = date("d.m.Y", strtotime($entry->date));
             } else {
-                echo "Sum";
+                $day = "Sum";
             }
+            echo "<tr class='statisticsrow' type='coverage' day='$day'>";
+            echo "<td>";
+                echo $day;
             echo "</td>";
             echo "<td>"; if($entry->spearRooms >= 0) { echo $entry->spearRooms; } echo "</td>";
             echo "<td>"; if($entry->roomsRentedOut >= 0) { echo $entry->roomsRentedOut; } echo "</td>";
@@ -46,11 +47,13 @@ $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->get
         </tr>
         <?
         foreach ($stats->salesEntries as $saleEntry) {
-            echo "<tr>";
-            echo "<td>";
+            $day = "";
             if ($saleEntry->date) {
-                echo date("d.m.Y", strtotime($saleEntry->date));
+                $day = date("d.m.Y", strtotime($saleEntry->date));
             }
+            echo "<tr class='statisticsrow' type='sale' day='$day'>";
+            echo "<td>";
+            echo $day;
             echo "</td>";
             echo "<td>" . $saleEntry->nights . "</td>";
             echo "<td>" . $saleEntry->numberOfOrders . "</td>";

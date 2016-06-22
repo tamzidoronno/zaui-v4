@@ -230,7 +230,7 @@ foreach($bookings as $booking) {
         
         $row .= "<td align='center' class='$state'>$state";
         
-        if($booking->avoidAutoDelete) {
+        if($booking->avoidAutoDelete && $config->autoDeleteUnpaidBookings) {
             $row .= "<br>No autodelete";
         }
         if($hasPrices && $booking->payedFor && $booking->needCapture) {

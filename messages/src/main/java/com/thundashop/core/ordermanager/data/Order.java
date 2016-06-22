@@ -42,6 +42,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean captured = false;
     public List<CardTransaction> transactions = new ArrayList();
     public List<OrderLog> logLines = new ArrayList();
+    public List<String> notifications = new ArrayList();
     public String invoiceNote = "";
     public boolean closed = false;
     public List<String> creditOrderId = new ArrayList();
@@ -98,7 +99,8 @@ public class Order extends DataCommon implements Comparable<Order> {
             return false;
         }
         
-        if(payment.triedAutoPay.size() >= 3) {
+        if(payment.triedAutoPay.size() >= 50) {
+            //Tried to pay with card for 50 days.. time to give up.
             return true;
         }
         Calendar yestercal = Calendar.getInstance();

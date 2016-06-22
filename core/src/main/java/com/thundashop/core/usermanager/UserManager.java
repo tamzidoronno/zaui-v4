@@ -1579,4 +1579,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         user.metaData.put(key, value);
         saveObject(user);
     }
+
+    @Override
+    public void setPasswordDirect(String userId, String encryptedPassword) throws ErrorException {
+        User user = getUserById(userId);
+        if (user != null) {
+            user.password = encryptedPassword;
+            saveObject(user);
+        }
+    }
+
 }

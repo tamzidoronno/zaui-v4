@@ -129,6 +129,10 @@ public interface IUserManager {
      */
     public void saveUser(User user) throws ErrorException;
     
+    
+    @Administrator
+    public void setPasswordDirect(String userId, String encryptedPassword) throws ErrorException;
+    
     /**
      * If you need to reset the password for a given user, you need fetch a reset code by calling this call.
      * @param title The title of the message to attach to the reset code.

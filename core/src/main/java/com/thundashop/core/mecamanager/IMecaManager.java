@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.mecamanager;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
@@ -93,4 +94,9 @@ public interface IMecaManager {
     @Editor
     public void noShowService(String carId);
     
+    @Administrator
+    public void runNotificationCheck();
+    
+    @Administrator
+    public void sendNotificationToStoreOwner();
 }

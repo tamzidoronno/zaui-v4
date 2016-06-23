@@ -1,6 +1,6 @@
 .gsarea { padding-right: 40px; }
 .gsarea[area="footer"] { display:none; }
-.Menu .applicationinner { position: fixed; right: 0px; width: 40px; height: 100%; color:#000; padding: 3px; box-sizing: border-box;text-align: center; color:#fff; background-color:#0e0e0e; }
+.Menu .applicationinner { position: fixed; right: 0px; width: 40px; height: 100%; color:#000; padding: 3px; box-sizing: border-box;text-align: center; color:#fff; background-color:#0e0e0e; z-index: 3; }
 .gscanchangelayout .Menu  .applicationinner { right: 31px; }
 .Menu .fa-bars { font-size: 20px; }
 .Menu .fa { cursor: pointer; transition: color 0.5s ease;}

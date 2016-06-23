@@ -6,6 +6,7 @@ Address;-;Adress
 All fields are required.;-;Alla fält måste fyllas i
 Already signed up;-;Redan anmäld
 An email has been sent with a code to use in step 2.;-;Ett mail är skickat med en kod som du använder i steg 2
+Are you sure you want to toggle as garageleader?;-;Vill du ändra status på användaren till verkstadsägare? Användaren kommer då kunna se övriga användare på verkstaden.
 Available spots;-;Platser kvar
 Book;-;Boka
 Booking;-;Boka
@@ -111,6 +112,7 @@ The vat number;-;Organisationsnummer
 This event has already been passed;-;Kurstillfället har redan passerat
 This event has been canceled;-;Kurstillfället är inställt
 Title;-;Kursnamn
+Toggle garage leader;-;Ändra status till verkstadsägare
 Upcoming events;-;Kommande kurstillfällen
 Username / Email;-;Användarnamn/Epost
 Users in your company;-;Dina medarbetare

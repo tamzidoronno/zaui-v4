@@ -1,9 +1,12 @@
  app.EventEditorBooking = {
      init: function() {
-         $(document).on('change', '.EventEditorBooking .searchforuserinput', app.EventEditorBooking.searchForUsers);
+         $(document).on('keyup', '.EventEditorBooking .searchforuserinput', app.EventEditorBooking.searchForUsers);
      },
      
-     searchForUsers: function() {
+     searchForUsers: function(keycode) {
+         if (keycode.keyCode !== 13)
+             return;
+         
          var event = thundashop.Ajax.createEvent(null, "searchForUsers", this, {
              searchstring: $(this).val()
          });

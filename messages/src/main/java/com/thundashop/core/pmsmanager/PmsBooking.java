@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PmsBooking extends DataCommon {
  
-    private List<PmsBookingRooms> rooms = new ArrayList(); 
+    public List<PmsBookingRooms> rooms = new ArrayList(); 
     public List<String> notificationsSent = new ArrayList();
     public HashMap<Long, PmsBookingComment> comments = new HashMap(); 
     public String sessionId;
@@ -33,12 +33,15 @@ public class PmsBooking extends DataCommon {
     public boolean isDeleted = false;
     public boolean payedFor = false;
     public boolean avoidCreateInvoice = false;
+    public boolean testReservation = false;
     public PmsRepeatingData lastRepeatingData = null;
     public String invoiceNote = "";
     public String couponCode = "";
     public String wubookchannelid = "";
     public String wubookchannelreservationcode = "";
     public String wubookreservationid = "";
+    public boolean wubookNoShow = false;
+    
     public String countryCode = "";
     public boolean avoidAutoDelete = false;
     public boolean needCapture;
@@ -205,6 +208,14 @@ public class PmsBooking extends DataCommon {
 
     void removeRoom(PmsBookingRooms room) {
         rooms.remove(room);
+    }
+
+    public int getTotalDays() {
+        int total = 0;
+        for(PmsBookingRooms room : rooms) {
+            total += room.getNumberOfDays();
+        }
+        return total;
     }
 
     public static class PriceType {

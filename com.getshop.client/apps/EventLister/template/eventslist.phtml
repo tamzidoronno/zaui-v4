@@ -64,6 +64,11 @@ echo "<div class='eventlist'>";
                 $canSignUp = true;
             }
             
+            if ($event->isCanceled) {
+                $buttonText = $this->__w("Canceled");
+                $canSignUp = false;
+            }
+            
             ?>
             <div class='eventline' style='display: inline-block;'>
             <?
@@ -71,10 +76,11 @@ echo "<div class='eventlist'>";
             echo "<a href='/$pageId'>";
             ?>
             
-                <div class="col col1 location"><? echo $event->location->name. " - " .$event->subLocation->name; ?></div>
-                <div class="col col2 eventname"><? echo $event->bookingItemType->name; ?></div>
+                <div class="col col1 location"><span class='smallviewinfo'><? echo $this->__w("Location"); ?>: </span><? echo $event->location->name. " - " .$event->subLocation->name; ?></div>
+                <div class="col col2 eventname"><span class='smallviewinfo'><? echo $this->__w("Event name"); ?>: </span><? echo $event->bookingItemType->name; ?></div>
 
                 <div class='col col3 daysinformation'>
+                    <span class='smallviewinfo dates'><? echo $this->__w("Dates"); ?></span>
                     <?
                     foreach ($event->days as $day) {
                         echo ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatDates($day->startDate, $day->endDate)."<br/>";
@@ -83,7 +89,7 @@ echo "<div class='eventlist'>";
                     ?>
                 </div>
 
-                <div class="col col4 availablespots"><? echo $event->bookingItem->freeSpots; ?></div>
+                <div class="col col4 availablespots"><span class='smallviewinfo'><? echo $this->__w("Available spots"); ?>: </span><? echo $event->bookingItem->freeSpots; ?></div>
                 <div class="col col5 availablespots">
                     <?
                     if (!$canSignUp) {

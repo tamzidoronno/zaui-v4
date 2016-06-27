@@ -2,7 +2,7 @@ getshop.ProMeisterTheme =  {
     init: function() {
         $(document).on('swiperight', getshop.ProMeisterTheme.openLeftMenu);
         $(document).on('swipeleft', getshop.ProMeisterTheme.closeLeftMenu);
-        $(document).on('tap', '.Menu[appid="e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3"] .entries .entry:last-child', getshop.ProMeisterTheme.toggleLeftMenu);
+        $(document).on('tap', '.gs_toggleLeftSideBar', getshop.ProMeisterTheme.toggleLeftMenu);
         $(document).on('tap', '.Menu[appid="e5e6fe9d-1b6b-4b04-9806-4bb4b829b3d3"] .entries .entry a', getshop.ProMeisterTheme.handleMenuClick);
     },
     

@@ -17,6 +17,9 @@ $id = session_id();
 session_write_close();
 
 $url = "http://$_SERVER[HTTP_HOST]/scripts/promeister/createEventDiplomas.php?id=".  session_id()."&eventId=".$_GET['eventId'];
+if (isset($_GET['userId'])) {
+    $url .= "&userId=".$_GET['userId'];
+}
 $base64 = $factory->getApi()->getGetShop()->getBase64EncodedPDFWebPage($url);
 echo base64_decode($base64);
 ?>

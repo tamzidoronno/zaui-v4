@@ -7,7 +7,7 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
     }
 
     public function getName() {
-        return "AccountingTransfer";
+        return "ExternalTransfer";
     }
 
     public function render() {
@@ -39,17 +39,32 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
         $config->useSftp = $_POST['useSftp'];
         $config->port = $_POST['port'];
         $config->useActiveMode = $_POST['useActiveMode'];
-        
-        $config->creditor_username = $_POST['creditor_ftpuser'];
-        $config->creditor_password = $_POST['creditor_ftppassword'];
-        $config->creditor_hostname = $_POST['creditor_ftphostname'];
-        $config->creditor_path = $_POST['creditor_ftppath'];
-        $config->creditor_useSftp = $_POST['creditor_useSftp'];
-        $config->creditor_port = $_POST['creditor_port'];
-        $config->creditor_useActiveMode = $_POST['creditor_useActiveMode'];
-        
         $config->extension = $_POST['extension'];
+        
+        $types = $this->getTransferTypes();
+        
+        foreach($types as $idx => $heading) {
+            $ftpconfig = new \core_accountingmanager_TransferFtpConfig();
+            $ftpconfig->username = $_POST[$idx.'_ftpuser'];
+            $ftpconfig->password = $_POST[$idx.'_ftppassword'];
+            $ftpconfig->hostname = $_POST[$idx.'_ftphostname'];
+            $ftpconfig->path = $_POST[$idx.'_ftppath'];
+            $ftpconfig->useSftp = $_POST[$idx.'_useSftp'];
+            $ftpconfig->port = $_POST[$idx.'_port'];
+            $ftpconfig->useActiveMode = $_POST[$idx.'_useActiveMode'];
+            $ftpconfig->extension = $_POST[$idx.'_extension'];
+            $config->configrations->{$idx} = $ftpconfig;
+        }
+        
         $this->getApi()->getAccountingManager()->setAccountingManagerConfig($config);
     }
+
+    public function getTransferTypes() {
+        $transfertypes = array();
+        $transfertypes['creditor'] = "Creditor transfer";
+        $transfertypes['bookingcomratemanager'] = "Booking.com ratemanager transfer";
+        return $transfertypes;
+    }
+
 }
 ?>

@@ -17,12 +17,14 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.eventbooking.Event;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.questback.data.QuestBackOption;
 import com.thundashop.core.questback.data.QuestBackQuestion;
 import com.thundashop.core.questback.data.QuestBackResult;
+import com.thundashop.core.questback.data.QuestBackSendt;
 import com.thundashop.core.questback.data.QuestTest;
 import com.thundashop.core.questback.data.QuestionTreeItem;
 import com.thundashop.core.questback.data.ResultRequirement;
@@ -68,6 +70,8 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
     private ResultRequirement resultRequirement = null;
 
     private List<UserTestResult> results = new ArrayList();
+    
+    private List<QuestBackSendt> sentQuestBacks = new ArrayList();
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -408,7 +412,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             test.userIds.add(userId);
             saveObject(test);
         }
-        
+
         sendMail(userId, test);
     }
 
@@ -618,8 +622,113 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
                 res.addAnswers(ans.questionId, ans.answers);
             }
         }
+                 
+        return res;
+    }
+
+    @Override
+    public void sendQuestBack(String testId, String userId, String reference, Event event) {
+        QuestTest test = getTest(testId);
+        sendQuestBackMail(userId, test, reference, event);
+        saveSentQuestback(testId, userId, reference);
+    }
+
+    
+    public void sendQuestBackMail(String userId, QuestTest test, String reference, Event event) {
+        User user = userManager.getUserById(userId);
+        
+        Application application = storeApplicationPool.getApplication("3ff6088a-43d5-4bd4-a5bf-5c371af42534");
+        
+        String subject = application.getSetting("questback_subject");
+        String message = application.getSetting("questback_body");
+        
+        message = manipulateText(message, user, test);
+        subject = manipulateText(subject, user, test);
+        
+        if (event != null) {
+            message = message.replace("{Event.Name}", event.bookingItemType.name);
+            message = message.replace("{Event.Location}", event.location.name + " - " + event.subLocation.name);
+        }
+        
+        String testLink = "http://" + getStoreDefaultAddress() + "/?page=do_questback&gs_testId=" + test.id + "&referenceId="+reference;
+                     
+        message = message.replace("{Test.Link}", "<a href='"+testLink+"'>"+testLink+"</a>");
+
+        String storeEmail = getStoreEmailAddress();
+        messageManager.sendMail(user.emailAddress, user.fullName, subject, message, storeEmail, null);
+    }
+
+    @Override
+    public QuestBackResult getResultWithReference(String testId, String referenceId) {
+        List<UserTestResult> testResults = results.stream()
+                .filter(result -> result.testId.equals(testId))
+                .filter(result -> hasReference(result.userId, referenceId))
+                .collect(Collectors.toList());
+
+        QuestBackResult res = new QuestBackResult();
+        
+        for (UserTestResult testResult : testResults) {
+            for (UserQuestionAnswer ans : testResult.answers) {
+                res.addAnswers(ans.questionId, ans.answers);
+            }
+        }
                 
         return res;
     }
 
+    private boolean hasReference(String userId, String referenceId) {
+        User user = userManager.getUserById(userId);
+        if (user == null)
+            return false;
+        
+        return user.metaData.get("questback_referenceId") != null && user.metaData.get("questback_referenceId").equals(referenceId);
+    }
+
+    @Override
+    public List<QuestBackOption> getOptionsByPageId(String pageId) {
+        ApplicationInstance application = pageManager.getApplicationsForPage(pageId).stream()
+                .filter(app -> app.appSettingsId.equals("07422211-7818-445e-9f16-ad792320cb10"))
+                .findFirst()
+                .orElse(null);
+        
+        if (application != null) {
+            String jsonEncodedAnswers = application.getSetting("options");
+            Gson gson = new Gson();
+            List<QuestBackOption> options = gson.fromJson(jsonEncodedAnswers, new TypeToken<ArrayList<QuestBackOption>>(){}.getType());
+            return options;
+        }
+        
+        return null;
+    }
+
+    @Override
+    public String getTypeByPageId(String pageId) {
+        ApplicationInstance appInstance = pageManager.getApplicationsForPage(pageId).stream()
+                .filter(app -> app.appSettingsId.equals("07422211-7818-445e-9f16-ad792320cb10"))
+                .findFirst()
+                .orElse(null);
+        
+        if (appInstance != null) {
+            return appInstance.getSetting("type");
+        }
+        
+        return null;
+    }
+
+    @Override
+    public boolean isQuestBackSent(String userId, String testId, String reference) {
+        return sentQuestBacks.stream()
+                .filter(o -> o.testId.equals(testId) && o.userId.equals(userId) && o.reference.equals(reference))
+                .count() > 0;
+    }
+
+    private void saveSentQuestback(String testId, String userId, String reference) {
+        QuestBackSendt sent = new QuestBackSendt();
+        sent.testId = testId;
+        sent.userId = userId;
+        sent.reference = reference;
+        
+        sentQuestBacks.add(sent);
+        saveObject(sent);
+    }
 }

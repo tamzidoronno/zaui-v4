@@ -27,6 +27,13 @@ $config = $this->getConfigurationToUse();
     <tr>
         <td valign="top">
             <?
+            if($booking->channel) { echo "Channel : " . $booking->channel . "<br>"; }
+            if($booking->wubookchannelreservationcode) { echo "Channel res id : " . $booking->wubookchannelreservationcode . "<br>"; }
+            if($booking->wubookreservationid) { echo "Wubook res id : " . $booking->wubookreservationid . "<br>"; }
+            echo "Wubook no show : ";
+            echo $booking->wubookNoShow ? "Yes" : "no";
+            echo "<br>"; 
+            
             foreach($booking->registrationData->resultAdded as $key => $value) {
                 $name = "";
                 foreach($booking->registrationData->data as $val) {
@@ -136,7 +143,7 @@ if(!$user->fullName) {
             }
             ?>
             <span style="font-size:12px">
-                <a onclick='$(".PmsManagement .edituserbox").fadeIn(function() {$(".edituserbox select").chosen(); });'><? echo $user->fullName; ?></a>, <? echo $user->emailAddress . ", phone +" . $user->prefix . $user->cellPhone; ?>
+                <a onclick='$(".PmsManagement .edituserbox").fadeIn(function() {$(".edituserbox select").chosen(); });'><i class='fa fa-edit'></i> <? echo $user->fullName; ?></a>, <? echo $user->emailAddress . ", phone +" . $user->prefix . $user->cellPhone; ?>
                 <?php $this->includefile("edituserview"); ?>
             </span>
         </span>

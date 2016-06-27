@@ -1,4 +1,5 @@
 ###### framework ######
+Add more users;-;Lägg till fler deltagare
 All companies;-;Alla företag
 Automatically send reminder on email?;-;Vill du att epostpåminnelse ska skickas automatiskt?
 Automatically send reminder on sms?;-;Vill du att smspåminnelse ska skickas automatiskt?
@@ -61,6 +62,7 @@ Please search for users.;-;Sök efter användare
 Postcode;-;Postnummer
 Price: n/a;-;Pris ej tillgängligt
 Reports;-;Underlag
+Search;-;Sök
 Search for company;-;Sök efter företaget
 Search for users;-;Sök efter användare
 Send days before;-;Skicka, antal dagar för
@@ -81,5 +83,6 @@ Should send sms when user signs up?;-;Skicka SMS när användare anmäler sig?
 Should users be notified when a new test is available?;-;Ska användare få utskick när ett test finns tillgängligt?
 Step;-;Steg
 You currently dont have any tests, please contact admin to get access to one;-;Du har ännu inte gjort några tester, kontakta admin för att få tillgång;
+search;-;sök
 
 

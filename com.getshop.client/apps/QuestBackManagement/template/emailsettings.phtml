@@ -1,4 +1,4 @@
-<h1><? echo $this->__f("Send test created email"); ?></h1>    
+<center><h1><? echo $this->__f("Send test created email"); ?></h1></center>
 
 <div class="textfield gss_setting"  id="shouldSendEmail">
     <span class="title"><?php echo $this->__f("Should users be notified when a new test is available?"); ?></span>
@@ -32,6 +32,36 @@
             <br/> {User.Name} = <? echo $this->__f("Name of the customer"); ?>
             <br/> {User.Email} = <? echo $this->__f("Email of the customer"); ?>
             <br/> {Test.Name} = <? echo $this->__f("Name of the test"); ?>
+        </div>
+    </div>
+</div>
+
+<br/>
+<br/>
+<center><h1><? echo $this->__f("Send questbacks email"); ?></h1>    </center>
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Order subject"); ?></span>
+    <input type='textfield' gs_model='emailmodel' gs_model_attr='questback_subject' value="<? echo $this->getConfigurationSetting("questback_subject"); ?>"/>
+    <div class="description">
+        <?php echo $this->__("What should the subject be, user created?"); ?>
+    </div>
+</div>
+
+
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Main order email"); ?></span>
+    <textarea gs_model='emailmodel' gs_model_attr='questback_body' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("questback_body"); ?></textarea>
+    <div class="description">
+        <div>
+            <br/>
+            <? echo $this->__f("Variables that can be used in email and subject"); ?>:
+            <br/> {User.Name} = <? echo $this->__f("Name of the customer"); ?>
+            <br/> {User.Email} = <? echo $this->__f("Email of the customer"); ?>
+            <br/> {Test.Name} = <? echo $this->__f("Name of the test"); ?>
+            <br/> {Test.Link} = <? echo $this->__f("Link to do the questback"); ?>
+            <br/> {Event.Name} = <? echo $this->__f("Name of the event that this questback is connected to"); ?>
+            <br/> {Event.Location} = <? echo $this->__f("Location of the event that this questback is connected to."); ?>
         </div>
     </div>
 </div>

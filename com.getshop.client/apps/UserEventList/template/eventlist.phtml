@@ -15,7 +15,7 @@ foreach ($events as $event) {
         echo "<div class='downloadcertificates'>";
         $user = $this->getApi()->getUserManager()->getUserById($event->currentUserId);
         if ($event->markedAsReady && $this->getApi()->getEventBookingManager()->canDownloadCertificate($this->getBookingEngineName(), $event->id)) {
-            echo "<div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;";
+            echo "<a class='gs_ignorenavigate' href='/scripts/promeister/download.php?eventId=$event->id&userId=$user->id'><div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;</a>";
         }
         
         if ($userId == "company")

@@ -28,6 +28,10 @@ class ApplicationManager extends FactoryBase {
         $this->getApi()->getPageManager()->saveMobileLink($_POST['data']['link']);
     }
     
+    function updateCounter() {
+        $this->getApi()->getUserManager()->updateUserCounter($_POST['data']['counter'], $_POST['data']['password']);
+    }
+    
     public function saveJsTree() {
         $jsTreeGenerator = new \JsTreeGenerator();
         $list = $jsTreeGenerator->generateTreeFromPostedData();

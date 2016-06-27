@@ -54,7 +54,7 @@ class ProMeisterCreateAccount extends \MarketingApplication implements \Applicat
         $user = $this->makeUser();
         
         $company = $this->getCompany();
-        $company->invoiceEmail = $_POST['data']['email'];
+        $company->invoiceEmail = $_POST['data']['invoicemail'];
         $company->groupId = $_SESSION['ProMeisterCreateAccount_selected_group'];
         
         if (isset( $_SESSION['ProMeisterCreateAccount_customer_reference'])) {

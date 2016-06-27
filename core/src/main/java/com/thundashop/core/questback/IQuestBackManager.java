@@ -9,9 +9,12 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.eventbooking.Event;
+import com.thundashop.core.questback.data.QuestBackOption;
 import com.thundashop.core.questback.data.QuestBackQuestion;
 import com.thundashop.core.questback.data.QuestBackResult;
 import com.thundashop.core.questback.data.QuestTest;
+import com.thundashop.core.questback.data.QuestionTreeItem;
 import com.thundashop.core.questback.data.ResultRequirement;
 import com.thundashop.core.questback.data.UserTestResult;
 import java.util.List;
@@ -110,4 +113,19 @@ public interface IQuestBackManager {
     
     @Editor
     public QuestBackResult getResult(String testId);
+    
+    @Editor
+    public QuestBackResult getResultWithReference(String testId, String referenceId);
+    
+    @Administrator
+    public void sendQuestBack(String testId, String userId, String reference, Event event);
+    
+    @Editor
+    public List<QuestBackOption> getOptionsByPageId(String pageId);
+    
+    @Editor
+    public String getTypeByPageId(String pageId);
+    
+    @Administrator
+    public boolean isQuestBackSent(String userId, String testId, String reference);
 }

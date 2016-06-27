@@ -22,6 +22,10 @@ class QuestBackStarter extends \MarketingApplication implements \Application {
         echo "<div class='starting'><i class='fa fa-spin fa-spinner'></i> ".$this->__w("Starting")."</div>";
         $_SESSION['ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df_current_testid'] = $_GET['gs_testId'];
         $pageId = $this->getApi()->getQuestBackManager()->getNextQuestionPage(QuestBackStarter::getCurrentRunningTestId());
+        
+        if (isset($_GET['referenceId'])) {
+            $this->getApi()->getUserManager()->assignMetaDataToVirtualSessionUser("questback_referenceId", $_GET['referenceId']);
+        }
 //        
         if ($pageId == "done") {
             echo "<script> thundashop.common.goToPage('questback_result_page'); </script>";

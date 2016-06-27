@@ -15,6 +15,29 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
     }
     
+    public function loadDayStatistics() {
+        $type = $_POST['data']['type'];
+        $day = $_POST['data']['day'] . "00:00";
+        if($type == "coverage") {
+            $filter = new \core_pmsmanager_PmsBookingFilter();
+            $filter->filterType = "active";
+            $filter->startDate = $this->convertToJavaDate(strtotime($day));
+            $filter->endDate = $this->convertToJavaDate(strtotime($day));
+
+            $bookings = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
+            $this->printSimpleRoomTable($bookings);
+        } else {
+            $filterOptions = new \core_common_FilterOptions();
+            $filterOptions->startDate = $this->convertToJavaDate(strtotime($day));
+            $filterOptions->endDate = $this->convertToJavaDate(strtotime($day) + 86400);
+            $orders = $this->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);
+//            echo "<pre>";
+//            print_r($orders);
+            $this->printOrderTable($orders->datas);
+        }
+    }
+    
+    
     public function saveCardOnRoom() {
         $roomid = $_POST['data']['roomid'];
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
@@ -789,7 +812,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return true;
         }
 
-        if($room->deleted) {
+        if($room->deleted && !$filter->includeDeleted) {
             return false;
         }
         
@@ -1015,6 +1038,94 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $total = $entry->{'totalPrice'};
         }
         return $total;
+    }
+
+    public function printSimpleRoomTable($bookings) {
+        echo "<table cellspacing='0' cellpadding='0' width='100%'>";
+        echo "<tr>";
+        echo "<th>Room</th>";
+        echo "<th>Owner</th>";
+        echo "<th>Checkin</th>";
+        echo "<th>Checkout</th>";
+        echo "<th>Daily price</th>";
+        echo "<th>State</th>";
+        echo "</tr>";
+        
+        $totalprice = 0;
+        foreach($bookings as $booking) {
+            /* @var $booking \core_pmsmanager_PmsRoomSimple */
+            $price = round($booking->price);
+            $totalprice += $price;
+            echo "<tr class='moreinformationaboutbooking' style='cursor:pointer;' bookingid='".$booking->bookingId."'>";
+            echo "<td>" . $booking->room . "</td>";
+            echo "<td>" . $booking->owner . "</td>";
+            echo "<td>" . date("d.m.Y", $booking->start/1000) . "</td>";
+            echo "<td>" . date("d.m.Y", $booking->end/1000) . "</td>";
+            echo "<td>" . $price . "</td>";
+            echo "<td>" . $booking->progressState . "</td>";
+            echo "</tr>";
+        }
+        echo "<tr>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td>$totalprice</td>";
+        echo "<td></td>";
+        echo "</tr>";
+        echo "</table>";
+    }
+
+    public function printOrderTable($orders) {
+        echo "<table cellspacing='0' cellpadding='0' width='100%'>";
+        echo "<tr>";
+        echo "<th width='10'>Orderid</th>";
+        echo "<th>Date</th>";
+        echo "<th>Owner</th>";
+        echo "<th>Orderlines</th>";
+        echo "<th>Total</th>";
+        echo "<th>Status</th>";
+        echo "</tr>";
+        
+        $states[1] = "Created";
+        $states[2] = "Waiting for payment";
+        $states[3] = "Payment failed";
+        $states[4] = "Completed";
+        $states[5] = "Canceled";
+        $states[6] = "Sent";
+        $states[7] = "Payment completed";
+        $states[8] = "Collection failed";
+        $states[9] = "Need collecting";
+        $states[10] = "Send to invoice";
+        
+        $totalprice = 0;
+        foreach($orders as $order) {
+            if($order->status != 7) {
+                continue;
+            }
+            if($order->testOrder) {
+                continue;
+            }
+            $price = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
+            $totalprice += $price;
+            echo "<tr >";
+            echo "<td width='10'>" . $order->incrementOrderId . "</td>";
+            echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
+            echo "<td>" . $this->getApi()->getUserManager()->getUserById($order->userId)->fullName  . "</td>";
+            echo "<td>" . sizeof($order->cart->items) . "</td>";
+            echo "<td>" . round($price) . "</td>";
+            echo "<td>" . $states[$order->status] . "</td>";
+            echo "</tr>";
+        }
+        echo "<tr>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td>".round($totalprice)."</td>";
+        echo "<td></td>";
+        echo "</tr>";
+        echo "</table>";
     }
 
 }

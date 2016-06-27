@@ -19,16 +19,21 @@ public class PmsManagerProcessor {
 
     private final PmsManager manager;
     private Date lastProcessed;
+    private List<PmsBooking> cachedResult;
+    private List<PmsBooking> cachedResult_includepaidfor;
 
     PmsManagerProcessor(PmsManager manager) {
         this.manager = manager;
     }
 
     public void doProcessing() {
+        clearCachedObject();
         try { runAutoPayWithCard(); }catch(Exception e) { e.printStackTrace(); }
+        clearCachedObject();
         try { autoMarkBookingsAsPaid(); }catch(Exception e) { e.printStackTrace(); }
+        clearCachedObject(); 
+        
         try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
-        try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(-4, 0, false); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(0, 4, false); }catch(Exception e) { e.printStackTrace(); }
         try { processStarting(4, 12, false); }catch(Exception e) { e.printStackTrace(); }
@@ -42,10 +47,13 @@ public class PmsManagerProcessor {
         try { processEndings(0, 24 * 1); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
+        try { processArx(); }catch(Exception e) { e.printStackTrace(); }
+    }
+    
+    public void hourlyProcessor() {
+        try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
         try { processIntervalCleaning(false); }catch(Exception e) { e.printStackTrace(); }
         try { processIntervalCleaning(true); }catch(Exception e) { e.printStackTrace(); }
-        try { processArx(); }catch(Exception e) { e.printStackTrace(); }
-
         try { createPeriodeInvoices(); }catch(Exception e) { e.printStackTrace(); }
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
         try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
@@ -276,6 +284,13 @@ public class PmsManagerProcessor {
     }
 
     private List<PmsBooking> getAllConfirmedNotDeleted(boolean includeNotPaidFor) {
+        if(includeNotPaidFor && cachedResult_includepaidfor != null) {
+            return cachedResult_includepaidfor;
+        }
+        if(!includeNotPaidFor && cachedResult != null) {
+            return cachedResult;
+        }
+        
         List<PmsBooking> res = new ArrayList(manager.getBookingMap().values());
         List<PmsBooking> toRemove = new ArrayList();
         for (PmsBooking booking : res) {
@@ -296,6 +311,12 @@ public class PmsManagerProcessor {
             }
         }
         res.removeAll(toRemove);
+        
+        if(includeNotPaidFor) {
+            cachedResult_includepaidfor = res;
+        } else {
+            cachedResult = res;
+        }
         return res;
     }
 
@@ -529,7 +550,9 @@ public class PmsManagerProcessor {
     }
 
     private void autoMarkBookingsAsPaid() {
-        for(PmsBooking booking : getAllConfirmedNotDeleted(true)) {
+        List<PmsBooking> all = getAllConfirmedNotDeleted(true);
+        PmsConfiguration config = manager.getConfiguration();
+        for(PmsBooking booking : all) {
             if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }
@@ -540,9 +563,9 @@ public class PmsManagerProcessor {
             }
 
             boolean needSaving = false;
-            boolean payedfor = true;
+            boolean payedfor = true; 
             boolean firstDate = true;
-            if(manager.getConfiguration().requirePayments) {
+            if(config.requirePayments) {
                 boolean needCapture = false;
                 for(String orderId : booking.orderIds) {
                     Order order = manager.orderManager.getOrderSecure(orderId);
@@ -555,6 +578,7 @@ public class PmsManagerProcessor {
                     if(!order.captured && order.status == Order.Status.PAYMENT_COMPLETED) {
                         needCapture = true;
                     }
+                    
                     if(order.status != Order.Status.PAYMENT_COMPLETED) {
                         for(CartItem item : order.cart.getItems()) {
                             if(!firstDate && item.startDate != null && item.startDate.after(new Date())) {
@@ -572,7 +596,6 @@ public class PmsManagerProcessor {
                     needSaving = true;
                 }
             }
-            
             if(needSaving || booking.payedFor != payedfor) {
                 booking.payedFor = payedfor;
                 if(payedfor == true && booking.orderIds.size() == 1) {
@@ -630,5 +653,10 @@ public class PmsManagerProcessor {
                 manager.saveBooking(booking);
             }
         }
+    }
+
+    private void clearCachedObject() {
+        cachedResult_includepaidfor = null;
+        cachedResult = null;
     }
 }

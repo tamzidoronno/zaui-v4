@@ -204,7 +204,7 @@ public class StorePool {
         object.interfaceName = object.interfaceName.replace(".I", ".");
 
         if (sessionId != null) {
-            object.sessionId = sessionId;
+            object.sessionId = sessionId; 
         }
 
         long start = System.currentTimeMillis();

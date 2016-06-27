@@ -3,6 +3,7 @@ package com.thundashop.core.productmanager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductCriteria;
@@ -337,8 +338,12 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public Product copyProduct(String fromProductId, String newName) {
         Product product = products.get(fromProductId);
+        
+        Page currentPage = pageManager.getPage(product.pageId);
+        
         Product newProduct = product.clone();
         newProduct.id = UUID.randomUUID().toString();
+        newProduct.pageId = pageManager.createPageFromTemplatePage(currentPage.masterPageId).id;
         newProduct.name = newName;
         saveProduct(newProduct);
         

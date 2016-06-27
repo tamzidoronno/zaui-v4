@@ -1,0 +1,19 @@
+.QuestBackResultOverview .question {
+    border: solid 1px #DDD;
+    margin-bottom: 20px;
+}
+
+.QuestBackResultOverview .question .title {
+    background-color: #EEE;
+    text-align: center;
+    padding: 10px;
+}
+
+.QuestBackResultOverview .question .subanswer {
+    padding: 10px;
+    border-bottom: solid 1px #EEE;
+}
+
+.QuestBackResultOverview .question .subanswer:last-child {
+    border-bottom: solid 0px #EEE;
+}

@@ -455,6 +455,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Double getTotalAmount(Order order) {
+        if(order == null || order.cart == null) {
+            return 0.0;
+        }
+        
         Double toPay = order.cart.getTotal(false);
         
         if (order.shipping != null && order.shipping.cost > 0) {
@@ -1237,6 +1241,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (user.preferredPaymentType == null || user.preferredPaymentType.isEmpty()) {
             return getStorePreferredPayementMethod();
+        }
+        
+        Payment payment = new Payment();
+        payment.paymentType = user.preferredPaymentType;
+        return payment;
+    }
+    
+    public Payment getUserPrefferedPaymentMethod(String userId) {
+        User user = userManager.getUserById(userId);
+        
+        if (user == null)
+            return null;
+        
+        if (user.preferredPaymentType == null || user.preferredPaymentType.isEmpty()) {
+            return null;
         }
         
         Payment payment = new Payment();

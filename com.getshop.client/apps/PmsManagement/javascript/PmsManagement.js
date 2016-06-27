@@ -4,6 +4,7 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .setFilter', app.PmsManagement.setFilter);
         $(document).on('click', '.PmsManagement .moreinformationaboutbooking', app.PmsManagement.showMoreInformation);
         $(document).on('click', '.PmsManagement .roompostfix', app.PmsManagement.toggleEditMode);
+        $(document).on('click', '.PmsManagement .statisticsrow', app.PmsManagement.loadStatisticsOverview);
         $(document).on('click', '.PmsManagement .editGuestToggle', app.PmsManagement.editGuestToggle);
         $(document).on('change', '.PmsManagement [gsname="numberofguests"]', app.PmsManagement.editGuestToggle);
         $(document).on('click', '.PmsManagement .showorderbutton', app.PmsManagement.showOrder);
@@ -45,7 +46,17 @@ app.PmsManagement = {
         thundashop.Ajax.postWithCallBack(event, function() {
             thundashop.common.Alert("Success", "Card data has been updated.");
         });
+    },
+    
+    loadStatisticsOverview : function() {
+        var data = {
+            "type" : $(this).attr('type'),
+            "day" : $(this).attr('day')
+        }
         
+        var event = thundashop.Ajax.createEvent('','loadDayStatistics',$(this),data);
+        
+        thundashop.common.showInformationBoxNew(event, "Daily reservation");
     },
     
     removeAddons : function() {

@@ -36,7 +36,9 @@ $searchtypes['summary'] = "Summary";
             ?>
         </select>
         
-        <?php if(sizeof($channels) > 0) { ?>
+        <?php  
+        $channels = (array)$channels;
+       if(sizeof($channels) > 0) { ?>
             <select class="pmsinput filterType" gsname='channel'>
                 <?php
                 echo "<option value=''>All channels</option>";

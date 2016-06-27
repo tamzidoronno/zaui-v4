@@ -539,7 +539,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         ApplicationInstance mecaFleetService = apps.stream().filter(app -> app.appSettingsId.equals("e4a506de-4702-4d82-8224-f30e5fdb1d2e"))
                 .findAny()
                 .orElse(null);
-
+        
         ApplicationInstance mecaControl = apps.stream().filter(app -> app.appSettingsId.equals("b48c3e14-676d-4c9e-acfc-60591c711c57"))
                 .findAny()
                 .orElse(null);

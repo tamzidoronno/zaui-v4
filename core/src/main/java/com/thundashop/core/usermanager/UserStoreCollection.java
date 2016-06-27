@@ -77,7 +77,7 @@ public class UserStoreCollection {
             user.companyObject = userManager.getCompany(user.company.get(0));
         }
         
-        if (userManager.shouldDisconnectedCompanyWhenUserSuspended() && user.suspended) {
+        if (user.suspended && userManager.shouldDisconnectedCompanyWhenUserSuspended()) {
             user.company = new ArrayList();
         }
         
@@ -476,6 +476,10 @@ public class UserStoreCollection {
         return users.values().stream()
                 .filter(user -> user != null && user.type == type)
                 .collect(Collectors.toList());
+    }
+
+    List<User> getAllUsersNotFinalized() {
+        return new ArrayList(users.values());
     }
 
 }

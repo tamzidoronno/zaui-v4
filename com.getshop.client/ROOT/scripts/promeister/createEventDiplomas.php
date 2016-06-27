@@ -10,12 +10,15 @@ $event = $manager->getEvent("booking", $eventId);
 $usersUnfiltered = $manager->getUsersForEvent("booking", $eventId);
 
 $users = [];
+if (isset($_GET['userId'])) { 
+    $users[] = $factory->getApi()->getUserManager()->getLoggedOnUser();
+} else {
+    foreach ($usersUnfiltered as $user) {
+        $participatedStatus = @$event->participationStatus->{$user->id};
 
-foreach ($usersUnfiltered as $user) {
-    $participatedStatus = @$event->participationStatus->{$user->id};
-    
-    if ($participatedStatus !== "not_participated" && $participatedStatus !== "participated_50") {
-        $users[] = $user;
+        if ($participatedStatus !== "not_participated" && $participatedStatus !== "participated_50") {
+            $users[] = $user;
+        }
     }
 }
 

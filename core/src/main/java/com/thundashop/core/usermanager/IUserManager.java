@@ -66,6 +66,8 @@ public interface IUserManager {
     public User logOn(String username, String password) throws ErrorException;
     
     
+    public void updateUserCounter(Integer counter, String password);
+    
     /**
      * Sometimes it is needed for someone to logon using a generated key instead.<br>
      * The key is unique and attached to the user trying to logon.<br>
@@ -126,6 +128,10 @@ public interface IUserManager {
      * @throws ErrorException 
      */
     public void saveUser(User user) throws ErrorException;
+    
+    
+    @Administrator
+    public void setPasswordDirect(String userId, String encryptedPassword) throws ErrorException;
     
     /**
      * If you need to reset the password for a given user, you need fetch a reset code by calling this call.
@@ -428,4 +434,5 @@ public interface IUserManager {
     @Administrator
     public void clearUserManagerForAllData();
     
+    public void assignMetaDataToVirtualSessionUser(String key, String value);
 }

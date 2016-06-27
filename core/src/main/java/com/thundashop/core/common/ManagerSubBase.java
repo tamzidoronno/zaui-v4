@@ -47,6 +47,9 @@ public class ManagerSubBase {
     @Autowired
     public com.thundashop.core.storemanager.StorePool storePool;
     
+    @Autowired
+    public FrameworkConfig frameworkConfig;
+    
     protected boolean isSingleton = false;
     protected boolean ready = false;
     private Session session;
@@ -329,7 +332,14 @@ public class ManagerSubBase {
     }
     
     public String getStoreDefaultAddress() {
-        return storePool.getStore(storeId).getDefaultWebAddress();
+        String addre = storePool.getStore(storeId).getDefaultWebAddress();
+        
+        if (!frameworkConfig.productionMode) {
+            addre = addre.replace(".getshop", ".3.0.local.getshop");
+        }
+        
+        return addre;
+        
     }
     
     public String getStoreEmailAddress() {

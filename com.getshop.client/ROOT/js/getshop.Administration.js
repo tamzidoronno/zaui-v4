@@ -7,7 +7,10 @@ thundashop.Administration = {
         var event = thundashop.Ajax.createEvent("Administration", "enableExtendedMode", false, { "type": "GetShopAdministration", "password" : password, "toggle" : toggle });
         thundashop.Ajax.post(event);
     },
-        
+    updateUserCounter : function(password, counter) {
+        var event = thundashop.Ajax.createEvent("Administration", "updateCounter", false, { "password" : password, "counter" : counter });
+        thundashop.Ajax.post(event);
+    },
     attachUserToPartner : function(password, userId, partner) {
         var event = thundashop.Ajax.createEvent("Administration", "connectUserToPartner", false, { "userId": userId, "password" : password, "partner" : partner });
         thundashop.Ajax.post(event);

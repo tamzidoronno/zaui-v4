@@ -11,6 +11,7 @@
 .PmsManagement .Unconfirmed { color:red; }
 .PmsManagement .Unpaid { color:red; }
 .PmsManagement .roomdeleted td { color: red; }
+.PmsManagement .statisticsrow:hover { cursor:pointer; font-weight: bold; }
 .PmsManagement .tiparea {
     position: absolute;
     background-color: #fff;
@@ -92,13 +93,7 @@
 .PmsManagement .roomprefix { display: inline-block; width: 40%; float:left; font-size: 16px; margin-bottom: 10px; text-align: left; }
 .PmsManagement .roompostfix { display: inline-block;  float:left; font-size: 16px; line-height: 25px; }
 .PmsManagement .guestrow td { padding: 0px; border: 0px; }
-.PmsManagement .fa.fa-edit { border: solid 1px; padding: 3px; border-radius: 3px; background-color:#18ab29; color:#fff; cursor:pointer; }
-.PmsManagement .fa.fa-edit:hover { 
-      -moz-transition: all 0.2s ease-in;
-    -webkit-transition: all 0.2s ease-in;
-    -o-transition: all 0.2s ease-in;
-    transition: all 0.2s ease-in;
-    background-color: darkgreen; }
+.PmsManagement .fa.fa-edit { cursor:pointer; }
 
 .PmsManagement .pmsbutton.tiny { padding-top: 2px; padding-bottom: 2px; }
 .PmsManagement .bookinginfo select { font-size: 16px; }

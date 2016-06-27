@@ -84,7 +84,7 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
         for(Order order : orders) {
             JsonObject jsonObject = new JsonObject();
             
-            if(order.status != Order.Status.PAYMENT_COMPLETED || order.transferredToAccountingSystem ||  order.userId == null || userManager.getUserById(order.userId).accountingId == null || userManager.getUserById(order.userId).accountingId.isEmpty()) {
+            if(/*order.transferredToAccountingSystem ||*/  order.userId == null || userManager.getUserById(order.userId).accountingId == null || userManager.getUserById(order.userId).accountingId.isEmpty()) {
                 continue;
             }
             
@@ -127,6 +127,25 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
                 JsonObject jsonResponse = webManager.htmlPostJson("http://" + hostname + "/api/SalesOrders", jsonObject, null);
                 
                 if(jsonResponse != null && !jsonResponse.toString().isEmpty()) {
+//                  May be needed for CustomerInvoiceNo instead of the current one
+//                  String orderNo = jsonResponse.get("OrderNo").toString();
+                    
+                    JsonObject jsonVoucher = new JsonObject();
+                    
+                    JsonArray voucherLines = new JsonArray();
+                    JsonObject line = new JsonObject();
+                    line.addProperty("VoucherDate", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(order.createdDate));
+                    line.addProperty("EntryDate", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(order.createdDate));
+                    line.addProperty("VoucherText", order.invoiceNote);
+                    line.addProperty("SuppliersInvoiceNo", order.incrementOrderId);
+                    line.addProperty("CustomerInvoiceNo", userManager.getUserById(order.userId).accountingId);
+                    voucherLines.add(line);
+                    
+                    jsonVoucher.add("Lines", voucherLines);
+                    jsonVoucher.addProperty("EntryDate", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(order.createdDate));
+                    
+                    jsonResponse = webManager.htmlPostJson("http://" + hostname + "/api/SalesOrders", jsonVoucher, null);
+                    
                     order.transferredToAccountingSystem = true;
                     orderManager.saveOrder(order);
                 }

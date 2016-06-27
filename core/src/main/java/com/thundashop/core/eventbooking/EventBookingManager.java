@@ -198,8 +198,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             event.canBook = true;
         }
         
-        if (event.bookingItem.isFull || event.bookingItem.freeSpots < 1) {
+        if ((event.bookingItem.isFull || event.bookingItem.freeSpots < 1) && !event.isCanceled) {
             event.canBookWaitingList = true;
+        } else {
+            event.canBookWaitingList = false;            
         }
         
         event.price = getPrice(event);

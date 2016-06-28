@@ -22,6 +22,7 @@ public class PmsBookingFilter implements Serializable {
     public String searchWord;
     public Boolean needToBeConfirmed = false;
     public Boolean includeDeleted = false;
+    public Boolean onlyUntransferredToBookingCom = false;
     public String sorting;
     public String userId;
     public String channel;

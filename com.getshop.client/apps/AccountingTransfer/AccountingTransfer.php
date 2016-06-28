@@ -53,6 +53,7 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
             $ftpconfig->port = $_POST[$idx.'_port'];
             $ftpconfig->useActiveMode = $_POST[$idx.'_useActiveMode'];
             $ftpconfig->extension = $_POST[$idx.'_extension'];
+            $ftpconfig->engineNames = $_POST[$idx.'_engineNames'];
             $config->configrations->{$idx} = $ftpconfig;
         }
         
@@ -61,8 +62,8 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
 
     public function getTransferTypes() {
         $transfertypes = array();
-        $transfertypes['creditor'] = "Creditor transfer";
-        $transfertypes['bookingcomratemanager'] = "Booking.com ratemanager transfer";
+        $transfertypes['creditor'] = "Creditor";
+        $transfertypes['bookingcomratemanager'] = "Booking.com ratemanager";
         return $transfertypes;
     }
 

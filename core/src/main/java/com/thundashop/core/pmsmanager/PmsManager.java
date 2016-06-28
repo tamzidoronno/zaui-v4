@@ -546,6 +546,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         finalized = filterTypes(finalized, filter.typeFilter);
         finalized = filterByUser(finalized,filter.userId);
         finalized = filterByChannel(finalized,filter.channel);
+        finalized = filterByBComRateManager(finalized,filter);
 
         return finalized;
     }
@@ -3201,6 +3202,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void hourlyProcessor() {
         PmsManagerProcessor processor = new PmsManagerProcessor(this);
         processor.hourlyProcessor();
+    }
+
+    private List<PmsBooking> filterByBComRateManager(List<PmsBooking> finalized, PmsBookingFilter filter) {
+        if(filter == null) {
+            return finalized;
+        }
+        
+        if(!filter.onlyUntransferredToBookingCom) {
+            return finalized;
+        }
+        
+        List<PmsBooking> res = new ArrayList();
+        for(PmsBooking book : finalized) {
+            if(!book.transferredToRateManager) {
+                res.add(book);
+            }
+        }
+        
+        return res;
     }
 
 }

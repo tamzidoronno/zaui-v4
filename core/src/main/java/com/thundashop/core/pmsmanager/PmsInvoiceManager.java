@@ -2,7 +2,6 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import com.ibm.icu.util.Calendar;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
@@ -19,6 +18,7 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -125,18 +125,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return price;
     }
 
-    private String getOffsetKey(Calendar calStart, Integer priceType) {
-        String offset = "";
-        if(priceType == PmsBooking.PriceType.daily || 
-                priceType == PmsBooking.PriceType.interval || 
-                priceType == PmsBooking.PriceType.progressive) {
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-            offset = formatter.format(calStart.getTime());
-        } else if(priceType == PmsBooking.PriceType.monthly) {
-            offset = calStart.get(Calendar.MONTH) + "-" + calStart.get(Calendar.YEAR);
-        }
-        return offset;
-    }
+    
 
     private void updatePriceMatrix(PmsBookingRooms room, Date startDate, Date endDate, Integer priceType) {
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, startDate, endDate, priceType);
@@ -548,7 +537,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         cal.setTime(start);
         int days = offset;
         while (true) {
-            String dateToUse = getOffsetKey(cal, PmsBooking.PriceType.interval);
+            String dateToUse = PmsBookingRooms.getOffsetKey(cal, PmsBooking.PriceType.interval);
             
             int daysoffset = 0;
             for (ProgressivePriceAttribute attr : priceRange) {
@@ -645,7 +634,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         cal.setTime(start);
         Double price = 0.0;
         while (true) {
-            String dateToUse = getOffsetKey(cal, PmsBooking.PriceType.daily);
+            String dateToUse = PmsBookingRooms.getOffsetKey(cal, PmsBooking.PriceType.daily);
             cal.add(Calendar.DAY_OF_YEAR,1);
             if (priceRange.get(dateToUse) != null) {
                 price = priceRange.get(dateToUse);
@@ -671,7 +660,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         cal.setTime(start);
         while(true) {
             Double price = 0.0;
-            String toUse = getOffsetKey(cal, PmsBooking.PriceType.monthly);
+            String toUse = PmsBookingRooms.getOffsetKey(cal, PmsBooking.PriceType.monthly);
             cal.add(Calendar.MONTH, 1);
             if(priceRange == null) {
                 price = 0.0;
@@ -711,7 +700,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         while (true) {
-            String dateToUse = getOffsetKey(cal, PmsBooking.PriceType.interval);
+            String dateToUse = PmsBookingRooms.getOffsetKey(cal, PmsBooking.PriceType.interval);
             res.put(dateToUse, price);
             
             cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -901,7 +890,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             int count = 0;
             while(true) {
                 count++;
-                String offset = getOffsetKey(calStart, priceType);
+                String offset = room.getOffsetKey(calStart, priceType);
                 if(priceType == PmsBooking.PriceType.daily || priceType == PmsBooking.PriceType.progressive || priceType == PmsBooking.PriceType.interval) {
                     calStart.add(Calendar.DAY_OF_YEAR,1);
                 }

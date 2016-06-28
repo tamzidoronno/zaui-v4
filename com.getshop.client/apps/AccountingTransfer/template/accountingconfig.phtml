@@ -27,7 +27,7 @@ $config = $this->getApi()->getAccountingManager()->getAccountingManagerConfig();
         <div class="gss_settings_header_description_inner">
             <? echo $this->getDescription(); ?>
         </div>
-    </div>	
+    </div>
 </div>
 
 
@@ -132,6 +132,11 @@ echo "<br>";
         </div>
     </div>
     
+    <div class='gss_button_area'>
+        <?php if($config->username) { ?>
+            <div class="gss_button" gss_method="transferNewFiles" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Transfer new files to ftp"); ?></div>
+        <?php } ?>
+    </div>
     
     <?php foreach($transfertypes as $type => $heading) {
         $ftpconfig = new \core_accountingmanager_TransferFtpConfig();
@@ -141,12 +146,6 @@ echo "<br>";
         }
         
         ?>
-
-        <div class='gss_button_area'>
-            <?php if($ftpconfig->username) { ?>
-                <div class="gss_button" gss_method="transferNewFiles" gss_model="adminconfig" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Transfer new files to ftp"); ?></div>
-            <?php } ?>
-        </div>
         <h1><?php echo $heading; ?></h1>
         <br>
         <br>
@@ -183,7 +182,12 @@ echo "<br>";
             <span class="title">Port</span>
             <input type="textfield" gs_model="adminconfig" gs_model_attr="<?php echo $type; ?>_port" value="<?php echo $ftpconfig->port; ?>">
             <div class="description">
-
+            </div>
+        </div>
+        <div class="textfield gss_setting" id="creditor_port">
+            <span class="title">Engine name</span>
+            <input type="textfield" gs_model="adminconfig" gs_model_attr="<?php echo $type; ?>_engineNames" value="<?php echo $ftpconfig->engineNames; ?>">
+            <div class="description">
             </div>
         </div>
         <div class="textfield gss_setting" id="creditor_useActiveMode">
@@ -205,12 +209,11 @@ echo "<br>";
             </div>
         </div>    
 
-        <div style='text-align:right; margin-bottom: 30px;'>
-            <h2 style='float:left;'>Ftp transfer setup to creditor system</h2>
+        <div style='text-align:right; margin-bottom: 30px;margin-top: 20px;'>
             <?php if($ftpconfig->username) { ?>
-                <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=transfercreditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Transfer to creditor"); ?></div>
+                <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=<?php echo $type; ?>&subtype=transfer');"><i class='fa fa-save'></i><?php echo $this->__("Transfer to " . $heading); ?></div>
             <?php } ?>
-            <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=creditor&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Download new " . $heading . " file"); ?></div>
+            <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=<?php echo $type; ?>&subtype=download');"><i class='fa fa-save'></i><?php echo $this->__("Download new " . $heading . " file"); ?></div>
         </div>
     <?php } ?>
     <div style='text-align:right; margin-bottom: 30px;'>

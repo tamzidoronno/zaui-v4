@@ -1,5 +1,5 @@
 <?php
-namespace ns_0b4c0e65_6785_46a1_a91b_63a72999cc37;
+namespace ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a;
 
 class ExpediaPayment extends \PaymentApplication implements \Application {
     

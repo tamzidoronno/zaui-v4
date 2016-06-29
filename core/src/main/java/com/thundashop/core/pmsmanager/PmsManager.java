@@ -546,7 +546,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         finalized = filterTypes(finalized, filter.typeFilter);
         finalized = filterByUser(finalized,filter.userId);
         finalized = filterByChannel(finalized,filter.channel);
-//        finalized = filterByBComRateManager(finalized,filter);
+        finalized = filterByBComRateManager(finalized,filter);
 
         return finalized;
     }

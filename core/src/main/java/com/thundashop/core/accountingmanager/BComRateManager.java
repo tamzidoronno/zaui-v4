@@ -153,7 +153,7 @@ public class BComRateManager {
             value = value.replaceAll("\"", "");
             line += "\"" + value + "\",";
         }
-        return line.substring(0, line.length()-1);
+        return line.substring(0, line.length()-1) + "\r\n";
     }
 
     private String transformBoolean(boolean confirmed) {
@@ -188,7 +188,7 @@ public class BComRateManager {
                 "\"out_of_order\","+
                 "\"nationality\","+
                 "\"rate_policy\","+
-                "\"no_show\"";
+                "\"no_show\"\r\n";
     }
     
 }

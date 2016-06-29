@@ -88,7 +88,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 SavedOrderFile file = (SavedOrderFile) obj;
                 if(file.type.equals(getAccountingType())) {
                     files.put(((SavedOrderFile) obj).id, file);
-                } else if(file.type.equals(getSveaCreditorType())) {
+                } else {
                     otherFiles.put(((SavedOrderFile) obj).id, file);
                 }
             }

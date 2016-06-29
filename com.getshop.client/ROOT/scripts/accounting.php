@@ -50,7 +50,7 @@ if(!$res) {
 }
 
 foreach($res as $r) {
-    echo $r . "\r\n";
+    echo $r;
 }
 ?>
 

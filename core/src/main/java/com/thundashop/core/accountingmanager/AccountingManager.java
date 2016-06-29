@@ -335,7 +335,6 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                     String res = createSveaCreditorFile(order);
                     result.add(res);
                     order.transferredToCreditor = new Date();
-                    System.out.println(res);
                     orderManager.saveOrder(order);
                 }
             }
@@ -466,7 +465,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     @Override
     public void transferFiles(String type) throws Exception {
         if(type.equals(getSveaCreditorType())) {
-            createCreditorFile(true);
+            createCreditorFile(true); 
         } else if(type.equals(getBookingComRateManagerType())) {
             createBookingComRateManagerFile();
         } else {

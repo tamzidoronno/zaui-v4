@@ -190,6 +190,12 @@ echo "<br>";
             <div class="description">
             </div>
         </div>
+        <div class="textfield gss_setting" id="creditor_port">
+            <span class="title">Extension</span>
+            <input type="textfield" gs_model="adminconfig" gs_model_attr="<?php echo $type; ?>_extension" value="<?php echo $ftpconfig->extension; ?>">
+            <div class="description">
+            </div>
+        </div>
         <div class="textfield gss_setting" id="creditor_useActiveMode">
             <span class="title">Use active transfer mode</span>
             <div class="gss_onoff" gs_model="adminconfig" gs_model_attr="<?php echo $type; ?>_useActiveMode">

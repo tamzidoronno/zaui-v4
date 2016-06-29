@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -52,7 +53,7 @@ public class BComRateManager {
             typeName = type.name;
         }
         
-        HashMap<String, String> result = new HashMap();
+        LinkedHashMap<String, String> result = new LinkedHashMap();
         result.put("reservation_id", room.pmsBookingRoomId);
         result.put("date", convertDate(time.getTime()));
         result.put("check_in", convertDate(room.date.start));
@@ -88,8 +89,11 @@ public class BComRateManager {
     }
 
     List<String> generateLines() {
+        if(bookings.isEmpty()) {
+            return new ArrayList();
+        }
         List<String> result = new ArrayList();
-        
+        result.add(generateHeader());
         for(PmsBooking booking : bookings) {
             for(PmsBookingRooms room : booking.getActiveRooms()) {
                 result.addAll(createLinesFromRoom(room, booking));
@@ -157,6 +161,34 @@ public class BComRateManager {
             return "1";
         }
         return "0";
+    }
+
+    private String generateHeader() {
+        return "\"reservation_id\","+
+                "\"date\","+
+                "\"check_in\","+
+                "\"check_out\","+
+                "\"number_rooms\","+
+                "\"adults\","+
+                "\"children\","+
+                "\"room_type\","+
+                "\"price\","+
+                "\"currency\","+
+                "\"confirmed\","+
+                "\"confirmed_date\","+
+                "\"canceled\","+
+                "\"canceled_date\","+
+                "\"isgroup\","+
+                "\"channel\","+
+                "\"channel_detail\","+
+                "\"booking_date\","+
+                "\"allotment\","+
+                "\"segment\","+
+                "\"segment_detail\","+
+                "\"out_of_order\","+
+                "\"nationality\","+
+                "\"rate_policy\","+
+                "\"no_show\"";
     }
     
 }

@@ -237,7 +237,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         }
         List<SavedOrderFile> filesToTransfer = getAllFilesNotTransferredToAccounting();
         for(SavedOrderFile saved : filesToTransfer) {
-            String path = saveFileToDisk(saved);
+            String path = saveFileToDisk(saved, config.extension);
             try {
                 boolean transferred = ftpManager.transferFile(config.username, config.password, config.hostname, path, config.path, config.port, config.useActiveMode);
                 if(transferred) {
@@ -250,10 +250,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         }
     }
 
-    private String saveFileToDisk(SavedOrderFile saved) {
+    private String saveFileToDisk(SavedOrderFile saved, String extension) {
         try {
 
-            String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(saved.rowCreatedDate) + config.extension;
+            String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(saved.rowCreatedDate) + extension;
 
             File file = new File("/tmp/"+filename);
 
@@ -476,9 +476,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
 
         List<SavedOrderFile> filesToTransfer = getFilesNotTransferredYet(type);
         for(SavedOrderFile saved : filesToTransfer) {
-            String path = saveFileToDisk(saved);
+            TransferFtpConfig ftpconfig = getTransferConfig(type);
+            String path = saveFileToDisk(saved, ftpconfig.extension);
             try {
-                TransferFtpConfig ftpconfig = getTransferConfig(type);
                 
                 boolean transferred = ftpManager.transferFile(ftpconfig.username, 
                         ftpconfig.password, 

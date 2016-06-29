@@ -498,6 +498,56 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function exportBookingStats() {
+        $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->getSelectedFilter());
+        $arr = (array)$stats->entries;
+        array_unshift($arr, array_keys((array)$arr[0]));
+        echo json_encode($arr);
+    }
+    
+    public function exportSaleStats() {
+        $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->getSelectedFilter());
+        $arr = (array)$stats->salesEntries;
+        foreach($arr as $a => $k) {
+            unset($k->{'paymentTypes'});
+        }
+        array_unshift($arr, array_keys((array)$arr[0]));
+        echo json_encode($arr);
+    }
+    
+    public function exportBookingDataToExcel() {
+        $filter = $this->getSelectedFilter();
+        $res = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
+        if(!$res) {
+            echo "[]";
+            return;
+        }
+        $export = array();
+        foreach($res as $room) {
+            $exportLine = array();
+            foreach($room as $k => $val) {
+                if(is_bool($val)) {
+                    if($val) {
+                        $val = "yes";
+                    } else {
+                        $val = "no";
+                    }
+                }
+                
+                if($k == "guest" || $k == "addons") {
+                    $val = json_encode($val);
+                    $exportLine[$k] = $val;
+                } else {
+                    $exportLine[$k] = $val;
+                }
+            }
+            $export[] = $exportLine;
+        }
+        
+        array_unshift($export, array_keys($export[0]));
+        echo json_encode($export);
+    }
+    
     public function setFilter() {
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 00:00"));
@@ -505,7 +555,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->filterType = $_POST['data']['filterType'];
         $filter->state = 0;
         $filter->searchWord = $_POST['data']['searchWord'];
-        $filter->channel = $_POST['data']['channel'];
+        if(isset($_POST['data']['channel'])) {
+            $filter->channel = $_POST['data']['channel'];
+        }
         
         $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
     }

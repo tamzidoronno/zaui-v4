@@ -112,7 +112,7 @@ public class PmsBookingSimpleFilter {
             }
         } else if (filter.filterType.equals("checkout")) {
             if (room.checkingOutBetween(filter.startDate, filter.endDate)) {
-                return false;
+                return true;
             }
         } else if (filter.filterType.equals("deleted")) {
             if (booking.isDeleted) {

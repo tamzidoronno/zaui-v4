@@ -17,5 +17,9 @@ class Aviary extends \ThemeApplication implements \Application {
     public function saveImage() {
         \FileUpload::saveFileFromUrl($_POST['data']['url'], $_POST['data']['imageId']);
     }
+    
+    public function revertImage() {
+        \FileUpload::revertFileFromOriginal($_POST['data']['imageId']);
+    }
 }
 ?>

@@ -3,10 +3,23 @@
 }
 
 .aviary_button {
-    position: absolute;
-    top: -30px;
-    left: calc(50% - 15px);
-    width: 30px;
-    height: 30px;
-    background-color: black;
+    top: 0px;
+    
+    width: 18px;
+    height: 18px;
+    display: block !important;
+}
+
+.aviary_button > i {
+    font-size: 18px;
+    color: white;
+    margin-left: 1px;
+}
+
+.aviary_edit_button {
+    left: 0px;
+}
+
+.aviary_revert_button {
+    left: 22px;
 }

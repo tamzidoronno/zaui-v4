@@ -4,7 +4,8 @@ app.Aviary = {
     
     init: function() {
         PubSub.subscribe('NAVIGATION_COMPLETED', app.Aviary.initAviaryForImages);
-        $(document).on('click', '.aviary_button', app.Aviary.editImage);
+        $(document).on('click', '.aviary_edit_button', app.Aviary.editImage);
+        $(document).on('click', '.aviary_revert_button', app.Aviary.revertImage);
     },
     
     initAviaryForImages: function() {
@@ -14,7 +15,8 @@ app.Aviary = {
                 if(imageId != undefined) {
                     imageId = imageId.split("&")[0];
                     $(this).wrap("<div class='aviary_wrap'></div><>");
-                    $(this).before( "<div class='aviary_button' imageid='" + imageId + "'></div>" );
+                    $(this).before( "<div class='aviary_button aviary_edit_button application_settings' imageid='" + imageId + "'><i class='fa fa-edit'></i></div>" );
+                    $(this).before( "<div class='aviary_button aviary_revert_button application_settings' imageid='" + imageId + "'><i class='fa fa-undo'></i></div>" );
                     $(this).attr("id", imageId);
                 }
             });
@@ -52,6 +54,18 @@ app.Aviary = {
         }
                
         var event = thundashop.Ajax.createEvent(null, "saveImage", "ns_3405a32a_c82d_4587_825a_36f10890be8e\\Aviary", data);
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            location.reload();
+        });
+    },
+    
+    revertImage: function() {
+        var data = {
+            imageId: $("img[id='" + $(this).attr("imageid") + "']").attr("id")
+        }
+               
+        var event = thundashop.Ajax.createEvent(null, "revertImage", "ns_3405a32a_c82d_4587_825a_36f10890be8e\\Aviary", data);
         
         thundashop.Ajax.postWithCallBack(event, function(res) {
             location.reload();

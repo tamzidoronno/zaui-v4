@@ -885,15 +885,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         if (getSession().currentUser == null)
             return price;
         
-        if (getSession().currentUser.groups != null && !getSession().currentUser.groups.isEmpty()) {
-            price = metaData.groupPrices.get(getSession().currentUser.groups.get(0));
-        }
-
-        if (getSession().currentUser.companyObject != null && getSession().currentUser.companyObject.groupId != null && !getSession().currentUser.companyObject.groupId.isEmpty()) {
-            price = metaData.groupPrices.get(getSession().currentUser.companyObject.groupId);
-        }
-        
-        return price;
+        return getPriceForUser(metaData, getSession().currentUser);
     }
 
     @Override
@@ -1686,5 +1678,29 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     private void removeAndDeleteType(BookingItemTypeMetadata type) {
         bookingTypeMetaDatas.remove(type.id);
         deleteObject(type);
+    }
+
+    @Override
+    public Double getPriceForEventTypeAndUserId(String eventId, String userId) {
+        Event event = getEvent(eventId);
+        BookingItemTypeMetadata metaData = getBookingTypeMetaData(event);
+        
+        User user = userManager.getUserById(userId);
+        return getPriceForUser(metaData, user);
+
+    }
+
+    private Double getPriceForUser(BookingItemTypeMetadata metaData, User currentUser) {
+        Double price = metaData.publicPrice;
+        
+        if (currentUser.groups != null && !currentUser.groups.isEmpty()) {
+            price = metaData.groupPrices.get(currentUser.groups.get(0));
+        }
+
+        if (currentUser.companyObject != null && currentUser.companyObject.groupId != null && !currentUser.companyObject.groupId.isEmpty()) {
+            price = metaData.groupPrices.get(currentUser.companyObject.groupId);
+        }
+        
+        return price;
     }
 }

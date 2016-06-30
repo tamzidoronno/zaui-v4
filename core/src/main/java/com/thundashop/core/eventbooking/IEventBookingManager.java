@@ -194,4 +194,7 @@ public interface IEventBookingManager {
     
     @Administrator
     public void clearEventBookingManagerForAllData();
+    
+    @Editor
+    public Double getPriceForEventTypeAndUserId(String eventId, String userId);
 }

@@ -9,18 +9,26 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.stereotype.Component;
 
 /**
  *
  * @author ktonder
  */
-@Component
-public class SedoxAirgram {
-    private String sendurl = "https://api.pushover.net/1/messages.json";
-    private String applicationToken = "agzzgGjfWKovkVCvGQrhjQxNNc7P5n";
+public class SedoxAirgram implements Runnable {
+    private final String sendurl = "https://api.pushover.net/1/messages.json";
+    private final String applicationToken = "agzzgGjfWKovkVCvGQrhjQxNNc7P5n";
+    private final String pushoverUserId;
+    private final String message;
+
+    public SedoxAirgram(String pushoverUserId, String message) {
+        this.pushoverUserId = pushoverUserId;
+        this.message = message;
+    }
     
-    public void sendMessage(String pushoverUserId, String message) throws ErrorException {
+    private void sendMessage() throws ErrorException {
         String data = "token="+applicationToken+"&user=" + pushoverUserId + "&message=" + message;
         sendToAirgramHttp(data);
     }
@@ -44,6 +52,15 @@ public class SedoxAirgram {
             inputStreamReader.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            sendMessage();
+        } catch (ErrorException ex) {
+            Logger.getLogger(SedoxAirgram.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

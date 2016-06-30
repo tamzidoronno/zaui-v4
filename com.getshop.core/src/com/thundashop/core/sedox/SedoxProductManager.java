@@ -69,9 +69,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private Map<String, SedoxUser> users = new HashMap();
 
     @Autowired
-    public SedoxAirgram sedoxAirgram;
-
-    @Autowired
     public MailFactory mailFactory;
     private ApplicationContext context;
     private MailFactoryImpl sedoxDatabankMailAccount;
@@ -751,7 +748,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         String message = "File: " + sharedProduct.getName();
         message += " | User: " + user.fullName;
         message += " | Credit: " + sedoxUser.creditAccount.getBalance();
-        sedoxAirgram.sendMessage(pushoverUserId, message);
+        
+        new Thread(new SedoxAirgram(pushoverUserId, message)).start();
     }
 
     private String getNextProductId() {

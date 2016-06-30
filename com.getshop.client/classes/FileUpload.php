@@ -44,6 +44,12 @@ class FileUpload {
         
         return $id;
     }
+    
+    public static function saveFileFromUrl($url, $id) {
+        chmod("../uploadedfiles/".$id, 0755);
+        file_put_contents("../uploadedfiles/".$id, file_get_contents($url));
+        chmod("../uploadedfiles/".$id, 0444);
+    }
 
 }
 

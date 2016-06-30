@@ -376,7 +376,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
     }
     
-     private void preventOverwriteOfData(User user, User savedUser) {
+    @Override
+    public User getUserWithPermissionCheck(String userId) {
+        User user = getUserById(userId);
+        checkUserAccess(user);
+        return user;
+    }
+    
+    private void preventOverwriteOfData(User user, User savedUser) {
          if(savedUser != null) {
             //Reset the password.
             user.password = savedUser.password;

@@ -3,13 +3,17 @@ package com.thundashop.core.accountingmanager;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AccountingManagerConfig extends DataCommon {
-    public List<Integer> statesToInclude = new ArrayList();
     
+    
+    public List<Integer> statesToInclude = new ArrayList();
+    private HashMap<String, TransferFtpConfig> configrations = new HashMap();
     
     /* ftp accounting stuff */
+    public String vendor = "svea";
     public String username = "";
     public String password = "";
     public String hostname = "";
@@ -19,15 +23,22 @@ public class AccountingManagerConfig extends DataCommon {
     public boolean useActiveMode = false;
     public Integer port = 21;
     
-    /* ftp creditor stuff */
-    public String vendor = "svea";
-    public String creditor_username = "";
-    public String creditor_password = "";
-    public String creditor_hostname = "";
-    public String creditor_path = "";
-    public Integer creditor_port = 21;
-    public boolean creditor_useSftp = false;
-    public boolean creditor_useActiveMode = false;
+    public TransferFtpConfig getCreditorConfig() {
+        TransferFtpConfig config = configrations.get("creditor");
+        if(config == null) {
+            config = new TransferFtpConfig();
+        }
+        return config;
+    }
+    
+    public TransferFtpConfig getBComConfig() {
+        TransferFtpConfig config = configrations.get("creditor");
+        if(config == null) {
+            config = new TransferFtpConfig();
+        }
+        return config;
+    }
+    
 }
 
 

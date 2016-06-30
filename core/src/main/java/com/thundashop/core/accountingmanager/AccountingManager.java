@@ -12,6 +12,7 @@ import com.getshop.svea.CustomerData.Creditor.Cases.Case;
 import com.getshop.svea.CustomerData.Creditor.Cases.Case.Debtor;
 import com.getshop.svea.CustomerData.Creditor.Cases.Case.Invoice;
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import com.thundashop.core.accountingmanager.TransferFtpConfig;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ForStore;
 import com.thundashop.core.common.ManagerBase;
@@ -312,7 +313,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             return new ArrayList();
         }
         
-        if(config.creditor_username == null || config.creditor_username.isEmpty()) {
+        if(config.username == null || config.username.isEmpty()) {
             return new ArrayList();
         }
         
@@ -351,13 +352,14 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         for(SavedOrderFile saved : filesToTransfer) {
             String path = saveFileToDisk(saved);
             try {
-                boolean transferred = ftpManager.transferFile(config.creditor_username, 
-                        config.creditor_password, 
-                        config.creditor_hostname, 
+                TransferFtpConfig ftpconfig = config.getCreditorConfig();
+                boolean transferred = ftpManager.transferFile(ftpconfig.username, 
+                        ftpconfig.password, 
+                        ftpconfig.hostname, 
                         path, 
-                        config.creditor_path, 
-                        config.creditor_port, 
-                        config.creditor_useActiveMode);
+                        ftpconfig.path, 
+                        ftpconfig.port, 
+                        ftpconfig.useActiveMode);
                 if(transferred) {
                     saved.transferred = true;
                     saveObject(saved);

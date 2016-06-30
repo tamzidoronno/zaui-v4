@@ -64,6 +64,11 @@ echo "<div class='eventlist'>";
                 $canSignUp = true;
             }
             
+            if ($event->isCanceled) {
+                $buttonText = $this->__w("Canceled");
+                $canSignUp = false;
+            }
+            
             ?>
             <div class='eventline' style='display: inline-block;'>
             <?

@@ -559,7 +559,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->channel = $_POST['data']['channel'];
         }
         
-        $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
+        $this->setCurrentFilter($filter);
     }
     
     public function emptyfilter() {
@@ -616,6 +616,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $filter;
     }
 
+    public function changeTimeView() {
+        $filter = $this->getSelectedFilter();
+        $filter->timeInterval = $_POST['data']['view'];
+        $this->setCurrentFilter($filter);
+    }
+    
     public function getManager() {
         return $this->getApi()->getPmsManager();
     }
@@ -1247,6 +1253,17 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $arr = $this->getCreatedOrders();
         array_unshift($arr, array_keys($arr[0]));
        echo json_encode($arr);
+    }
+
+    public function setCurrentFilter($filter) {
+        $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
+    }
+
+    public function getDayText($date, $timeinterval) {
+        if($timeinterval == "monthly") { return date("m.Y", strtotime($date)); }
+        if($timeinterval == "yearly") { return date("Y", strtotime($date)); }
+        if($timeinterval == "weekly") { return date("d.m.Y", strtotime($date)) . "<br>" . date("d.m.Y", strtotime($date)+(86400*7)); }
+        return date("d.m.Y", strtotime($date));
     }
 
 }

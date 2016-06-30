@@ -28,4 +28,20 @@ class SalesStatisticsEntry implements Serializable {
         paymentTypes.put(paymentType, start);
         
     }
+
+    void append(SalesStatisticsEntry entry) {
+        totalPrice += entry.totalPrice;
+        nights += entry.nights;
+        numberOfOrders += entry.numberOfOrders;
+        avgPrice = (int)(totalPrice / nights);
+        avgOrderPrice = (int)(totalPrice / numberOfOrders);
+        for(String key : entry.paymentTypes.keySet()) {
+            Double newVal = 0.0;
+            if(paymentTypes.containsKey(key)) {
+                newVal = paymentTypes.get(key);
+            }
+            newVal += entry.paymentTypes.get(key);
+            entry.paymentTypes.put(key, newVal);
+        }
+    }
 }

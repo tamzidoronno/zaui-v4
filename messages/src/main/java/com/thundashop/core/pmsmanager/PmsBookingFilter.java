@@ -26,5 +26,7 @@ public class PmsBookingFilter implements Serializable {
     public String sorting;
     public String userId;
     public String channel;
+    public String interval;
+    public String timeInterval;
     public List<String> typeFilter = new ArrayList();
 }

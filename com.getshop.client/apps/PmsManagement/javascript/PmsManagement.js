@@ -21,6 +21,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .closeadduser', app.PmsManagement.closeadduser);
         $(document).on('change','.PmsManagement .changeuseronbooking', app.PmsManagement.changeuseronbooking);
         $(document).on('change','.PmsManagement .changecompanyonuser', app.PmsManagement.changecompanyonuser);
+        $(document).on('change','.PmsManagement .changestatisticsinterval', app.PmsManagement.changeSummaryView);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -33,6 +34,14 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .saveAddons', app.PmsManagement.saveAddons);
         $(document).on('click','.PmsManagement .removeAddons', app.PmsManagement.removeAddons);
         $(document).on('click','.PmsManagement .updatecardonroom', app.PmsManagement.updatecardonroom);
+    },
+    changeSummaryView : function() {
+        var data = {
+            "view" : $(this).val()
+        };
+        console.log(data);
+        
+        thundashop.Ajax.simplePost($(this),"changeTimeView", data);
     },
     updatecardonroom : function() {
         var row = $(this).closest('tr');

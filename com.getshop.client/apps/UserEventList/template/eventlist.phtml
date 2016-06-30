@@ -18,6 +18,7 @@ foreach ($events as $event) {
             echo "<a class='gs_ignorenavigate' href='/scripts/promeister/download.php?eventId=$event->id&userId=$userId'><div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;</a>";
         }
         
+        $user = $this->getApi()->getUserManager()->getUserWithPermissionCheck($event->currentUserId);
         if ($userId == "company")
             echo "<div>".$user->fullName."</div>";
         

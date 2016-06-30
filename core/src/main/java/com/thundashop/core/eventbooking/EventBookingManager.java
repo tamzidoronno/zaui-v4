@@ -359,7 +359,23 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .collect(Collectors.toList()));
         }
         
-        return cloneAndFinalize(retEvents);
+        retEvents = cloneAndFinalize(retEvents);
+
+        sortByEventDate(retEvents);
+        
+        return retEvents;
+    }
+
+    private void sortByEventDate(List<Event> retEvents) {
+        Collections.sort(retEvents, (o1, o2) -> {
+            if (o1 == null || o2 == null)
+                return 0;
+            
+            if (o1.mainStartDate == null || o2.mainStartDate == null)
+                return 0;
+            
+            return o1.mainStartDate.compareTo(o2.mainStartDate);
+        });
     }
 
     private boolean isInFuture(Event event) {

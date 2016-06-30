@@ -32,10 +32,16 @@ foreach($users as $user) {
     
     if($events) {
         foreach($events as $event) {
+            $status = @$event->participateData->{$user->id};
+            
+            if (strstr($status, "cancel") > -1) {
+                continue;
+            }
+            
             /* @var $event core_calendarmanager_data_Entry */
             echo "<tr>";
             echo "<td style='color:#666'>&nbsp;&nbsp;&nbsp;" . $event->title . "</td>";
-            echo "<td style='color:#666'>" . $event->location . " (" . $event->day . "." . $event->month . "." . $event->year . ")</td>";
+            echo "<td style='color:#666'>" . $event->location . " (" . $event->day . "." . $event->month . "." . $event->year . " - $status)</td>";
             echo "</tr>";
         }
     } else {

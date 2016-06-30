@@ -267,13 +267,14 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
      * @param \core_usermanager_data_User $user
      */
     public function getPriceForEvent($event, $user) {
-        if (!$event->price) {
+        $price = $this->getApi()->getEventBookingManager()->getPriceForEventTypeAndUserId("booking", $event->id, $user->id);
+        if (!$price) {
             return "";
         }
         
         $status = @$event->participationStatus->{$user->id};
         if (!$status || $status == "participated") {
-            return $event->price;
+            return $price;
         }
         
         if ($status == "participated_free") {
@@ -281,7 +282,7 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         }
         
         if ($status == "participated_50") {
-            return $event->price/2;
+            return $price/2;
         }
         
         if ($status == "not_participated") {

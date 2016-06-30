@@ -435,4 +435,6 @@ public interface IUserManager {
     public void clearUserManagerForAllData();
     
     public void assignMetaDataToVirtualSessionUser(String key, String value);
+    
+    public User getUserWithPermissionCheck(String userId);
 }

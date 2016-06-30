@@ -11,7 +11,8 @@ $usersUnfiltered = $manager->getUsersForEvent("booking", $eventId);
 
 $users = [];
 if (isset($_GET['userId'])) { 
-    $users[] = $factory->getApi()->getUserManager()->getLoggedOnUser();
+    $userToUse = $factory->getApi()->getUserManager()->getUserWithPermissionCheck($_GET['userId']);
+    $users[] = $userToUse;
 } else {
     foreach ($usersUnfiltered as $user) {
         $participatedStatus = @$event->participationStatus->{$user->id};

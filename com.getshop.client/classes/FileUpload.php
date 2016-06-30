@@ -44,7 +44,30 @@ class FileUpload {
         
         return $id;
     }
+    
+    public static function saveFileFromUrl($url, $id) {
+        chmod("../uploadedfiles/".$id, 0755);
+        if(!file_exists("../uploadedfiles/".$id."_orig")) {
+            copy("../uploadedfiles/".$id, "../uploadedfiles/".$id."_orig");
+            
+            chmod("../uploadedfiles/".$id."_orig", 0444);
+        }
+        
+        file_put_contents("../uploadedfiles/".$id, file_get_contents($url));
+        chmod("../uploadedfiles/".$id, 0444);
+    }
+    
+    public static function revertFileFromOriginal($id) {
+        if(file_exists("../uploadedfiles/".$id."_orig")) {
+            chmod("../uploadedfiles/".$id, 0755);
+            chmod("../uploadedfiles/".$id."_orig", 0755);
 
+            copy("../uploadedfiles/".$id."_orig", "../uploadedfiles/".$id);
+
+            chmod("../uploadedfiles/".$id, 0444);
+            chmod("../uploadedfiles/".$id."_orig", 0444);
+        }
+    }
 }
 
 ?>

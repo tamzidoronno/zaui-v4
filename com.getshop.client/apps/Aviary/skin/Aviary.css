@@ -1,0 +1,25 @@
+.aviary_wrap {
+    position: relative;
+}
+
+.aviary_button {
+    top: 0px;
+    
+    width: 18px;
+    height: 18px;
+    display: block !important;
+}
+
+.aviary_button > i {
+    font-size: 18px;
+    color: white;
+    margin-left: 1px;
+}
+
+.aviary_edit_button {
+    left: 0px;
+}
+
+.aviary_revert_button {
+    left: 22px;
+}

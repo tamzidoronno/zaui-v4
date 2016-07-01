@@ -498,6 +498,56 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function exportBookingStats() {
+        $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->getSelectedFilter());
+        $arr = (array)$stats->entries;
+        array_unshift($arr, array_keys((array)$arr[0]));
+        echo json_encode($arr);
+    }
+    
+    public function exportSaleStats() {
+        $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->getSelectedFilter());
+        $arr = (array)$stats->salesEntries;
+        foreach($arr as $a => $k) {
+            unset($k->{'paymentTypes'});
+        }
+        array_unshift($arr, array_keys((array)$arr[0]));
+        echo json_encode($arr);
+    }
+    
+    public function exportBookingDataToExcel() {
+        $filter = $this->getSelectedFilter();
+        $res = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
+        if(!$res) {
+            echo "[]";
+            return;
+        }
+        $export = array();
+        foreach($res as $room) {
+            $exportLine = array();
+            foreach($room as $k => $val) {
+                if(is_bool($val)) {
+                    if($val) {
+                        $val = "yes";
+                    } else {
+                        $val = "no";
+                    }
+                }
+                
+                if($k == "guest" || $k == "addons") {
+                    $val = json_encode($val);
+                    $exportLine[$k] = $val;
+                } else {
+                    $exportLine[$k] = $val;
+                }
+            }
+            $export[] = $exportLine;
+        }
+        
+        array_unshift($export, array_keys($export[0]));
+        echo json_encode($export);
+    }
+    
     public function setFilter() {
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 00:00"));
@@ -505,9 +555,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->filterType = $_POST['data']['filterType'];
         $filter->state = 0;
         $filter->searchWord = $_POST['data']['searchWord'];
-        $filter->channel = $_POST['data']['channel'];
+        if(isset($_POST['data']['channel'])) {
+            $filter->channel = $_POST['data']['channel'];
+        }
         
-        $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
+        $this->setCurrentFilter($filter);
     }
     
     public function emptyfilter() {
@@ -564,6 +616,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $filter;
     }
 
+    public function changeTimeView() {
+        $filter = $this->getSelectedFilter();
+        $filter->timeInterval = $_POST['data']['view'];
+        $this->setCurrentFilter($filter);
+    }
+    
     public function getManager() {
         return $this->getApi()->getPmsManager();
     }
@@ -1126,6 +1184,86 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "<td></td>";
         echo "</tr>";
         echo "</table>";
+    }
+
+    public function getCreatedOrders() {
+        $items = array();
+        
+        
+        $cartmgr = $this->getApi()->getCartManager();
+        $cart = $cartmgr->getCart();
+
+        $totalEx = 0;
+        $total = 0;
+        $totalCount = 0;
+        foreach($cart->items as $item) {
+            $booking = $this->findBookingFromRoom($item->product->externalReferenceId);
+            $user = $this->findUser($booking->userId);
+
+            $room = "";
+            foreach($booking->rooms as $r) {
+                if($r->pmsBookingRoomId == $item->product->externalReferenceId) {
+                    $room = $r;
+                }
+            }
+            $priceEx = round($item->product->priceExTaxes);
+            $price = round($item->product->price, 1);
+            $totalEx += ($priceEx * $item->count);
+            $total += ($price * $item->count);
+            $totalCount += $item->count;
+            $res = array();
+            $res['id'] = $booking->id;
+            $res['start'] = date("d.m.Y H:i", strtotime($room->date->start));
+            $res['end'] = date("d.m.Y H:i", strtotime($room->date->end));
+            $res['fullname'] = $user->fullName;
+            $res['invoicedto'] = date("d.m.Y H:i", strtotime($room->invoicedTo));
+            $res['additionalmetadata'] = $item->product->additionalMetaData;
+            $res['itemstart'] = date("d.m.Y H:i", strtotime($item->startDate));
+            $res['itemend'] = date("d.m.Y H:i", strtotime($item->endDate));
+            $res['productname'] = $item->product->name;
+            $res['metadata'] = $item->product->metaData;
+            $res['price'] = $price;
+            $res['priceex'] = $priceEx;
+            $res['roomprice'] = $room->price;
+            $res['count'] = $item->count;
+            $items[] = $res;
+        }
+        
+        $totalarr = array();
+        $totalarr['id'] = "";
+        $totalarr['start'] = "";
+        $totalarr['end'] = "";
+        $totalarr['fullname'] = "Total";
+        $totalarr['invoicedto'] = "";
+        $totalarr['additionalmetadata'] = "";
+        $totalarr['itemstart'] = "";
+        $totalarr['itemend'] = "";
+        $totalarr['productname'] = "";
+        $totalarr['metadata'] = "";
+        $totalarr['price'] = $total;
+        $totalarr['priceex'] = $totalEx;
+        $totalarr['roomprice'] = "";
+        $totalarr['count'] = $totalCount;
+        
+        $items[] = $totalarr;
+        return $items;
+    }
+    
+    public function getOrderInvoiceArray() {
+        $arr = $this->getCreatedOrders();
+        array_unshift($arr, array_keys($arr[0]));
+       echo json_encode($arr);
+    }
+
+    public function setCurrentFilter($filter) {
+        $_SESSION['pmfilter'][$this->getSelectedName()] = serialize($filter);
+    }
+
+    public function getDayText($date, $timeinterval) {
+        if($timeinterval == "monthly") { return date("m.Y", strtotime($date)); }
+        if($timeinterval == "yearly") { return date("Y", strtotime($date)); }
+        if($timeinterval == "weekly") { return date("d.m.Y", strtotime($date)) . "<br>" . date("d.m.Y", strtotime($date)+(86400*7)); }
+        return date("d.m.Y", strtotime($date));
     }
 
 }

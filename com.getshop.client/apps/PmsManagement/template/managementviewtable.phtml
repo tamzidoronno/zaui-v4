@@ -40,7 +40,9 @@ $prices[8] = "daily";
 
 echo "<table width='100%' cellspacing='0' cellpadding='0'>";
 echo "<tr>";
-echo "<th></th>";
+echo "<th style='text-align:center;'>";
+echo '<i gs_downloadexcelreport="exportBookingDataToExcel" title="Download to excel" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="bookingdataexport"></i>';
+echo "</th>";
 foreach($headers as $header => $value) {
     if($header == "price" && !$hasPrices) {
         continue;

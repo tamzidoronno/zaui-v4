@@ -21,4 +21,11 @@ public class StatisticsEntry {
         result *= 100;
         coverage = (int)result;
     }
+
+    void append(StatisticsEntry entry) {
+        totalPrice += entry.totalPrice;
+        roomsRentedOut += entry.roomsRentedOut;
+        totalRooms += entry.totalRooms;
+        finalize();
+    }
 }

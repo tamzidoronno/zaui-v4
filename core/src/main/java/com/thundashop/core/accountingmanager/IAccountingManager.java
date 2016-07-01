@@ -34,7 +34,10 @@ public interface IAccountingManager {
     public void transferFilesToAccounting();
     
     @Administrator
-    public void transferFilesToCreditor();
+    public void transferFiles(String type) throws Exception;
+    
+    @Administrator
+    public List<String> getNewFile(String type) throws Exception;
     
     @Administrator
     public AccountingManagerConfig getAccountingManagerConfig();

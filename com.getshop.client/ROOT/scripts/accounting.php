@@ -34,6 +34,14 @@ if(isset($_GET['id'])) {
     } else {
         $res = $factory->getApi()->getAccountingManager()->createUserFile(false);
     }
+} else if(isset($_GET['subtype'])) {
+    $type = $_GET['type'];
+    $subtype = $_GET['subtype'];
+    if($subtype == "transfer") {
+        $res = $factory->getApi()->getAccountingManager()->transferFiles($_GET["type"]);
+    } else {
+        $res = $factory->getApi()->getAccountingManager()->getNewFile($_GET["type"]);
+    }
 } else {
     $res = $factory->getApi()->getAccountingManager()->createOrderFile();
 }

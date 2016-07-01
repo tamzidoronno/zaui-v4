@@ -1,11 +1,30 @@
 <?php
 /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->getSelectedFilter());
+$filter = $this->getSelectedFilter();
+$intervaloptions = array();
+$intervaloptions['daily'] = "Daily";
+$intervaloptions['weekly'] = "Weekly";
+$intervaloptions['monthly'] = "Monthly";
+$intervaloptions['yearly'] = "Yearly";
 ?>
+<div style='clear:both;'>
+    <select class='changestatisticsinterval'>
+        <?php
+        foreach($intervaloptions as $type => $value) {
+            $selected = ($type == $filter->timeInterval) ?  "SELECTED" : "";
+            echo "<option value='$type' $selected>$value</option>";
+        }
+        ?>
+    </select>
+</div>
+<br>
 <div style='float:left; width: 45%'>
     <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
         <tr>
-            <th>Date</th>
+            <th>
+                <i gs_downloadexcelreport="exportBookingStats" title="Download to excel" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="bookingdataexport"></i>
+                Date</th>
             <th>Spare<br>rooms</th>
             <th>Rented<br>out</th>
             <th>Avg.<br>price</th>
@@ -16,7 +35,7 @@ $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->get
         <?
         foreach ($stats->entries as $entry) {
             if ($entry->date) {
-                $day = date("d.m.Y", strtotime($entry->date));
+                $day = $this->getDayText($entry->date, $filter->timeInterval);
             } else {
                 $day = "Sum";
             }
@@ -39,7 +58,9 @@ $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->get
 <div style='float:right; width: 45%'>
     <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
         <tr>
-            <th>Date</th>
+            <th>
+                <i gs_downloadexcelreport="exportSaleStats" title="Download to excel" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="salestats"></i>
+                Date</th>
             <th>Nights</th>
             <th>Orders</th>
             <th>Avg.<br> order</th>
@@ -49,7 +70,7 @@ $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->get
         foreach ($stats->salesEntries as $saleEntry) {
             $day = "";
             if ($saleEntry->date) {
-                $day = date("d.m.Y", strtotime($saleEntry->date));
+                $day = $this->getDayText($saleEntry->date, $filter->timeInterval);
             }
             echo "<tr class='statisticsrow' type='sale' day='$day'>";
             echo "<td>";

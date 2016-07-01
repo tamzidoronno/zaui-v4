@@ -29,6 +29,7 @@ public class PmsBooking extends DataCommon {
     public List<String> orderIds = new ArrayList();
     public Integer priceType = 1;
     public boolean confirmed = false;
+    public Date confirmedDate = null;
     public boolean unConfirmed = false;
     public boolean isDeleted = false;
     public boolean payedFor = false;
@@ -41,6 +42,7 @@ public class PmsBooking extends DataCommon {
     public String wubookchannelreservationcode = "";
     public String wubookreservationid = "";
     public boolean wubookNoShow = false;
+    public boolean transferredToRateManager = false;
     
     public String countryCode = "";
     public boolean avoidAutoDelete = false;

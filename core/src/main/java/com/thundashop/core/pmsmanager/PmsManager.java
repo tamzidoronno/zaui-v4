@@ -2485,7 +2485,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<Booking> bookingsToAdd = new ArrayList();
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             Booking bookingToAdd = createBooking(room);
-            if (!bookingEngine.canAdd(bookingToAdd)) {
+            if (!bookingEngine.canAdd(bookingToAdd) || configuration.deleteAllWhenAdded) {
                 room.canBeAdded = false;
                 room.deleted = true;
                 BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
@@ -2936,6 +2936,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
                 userManager.saveUserSecure(newuser);
             }
+        } else {
+            booking.registrationData.resultAdded = new LinkedHashMap();
         }
     }
 

@@ -4,10 +4,8 @@
 
 .aviary_button {
     top: 0px;
-    
     width: 18px;
     height: 18px;
-    display: block !important;
 }
 
 .aviary_button > i {

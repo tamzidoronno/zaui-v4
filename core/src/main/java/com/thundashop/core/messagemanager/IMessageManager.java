@@ -3,6 +3,7 @@ package com.thundashop.core.messagemanager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorMessage;
 import com.thundashop.core.common.GetShopApi;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,5 +58,8 @@ public interface IMessageManager  {
     public SmsMessage getSmsMessage(String smsMessageId);
     
     public void sendMessageToStoreOwner(String message, String subject);
+    
+    @Administrator
+    public List<MailMessage> getMailSent(Date from, Date to, String toEmailAddress);
     
 }

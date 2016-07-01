@@ -58,3 +58,16 @@ h1,h2,h3 { margin: 0px;  }
 .pagebox .gsdepth_1.gsinner { border: solid 1px #ddd; margin: 10px; box-sizing: border-box; }
 .pagebox .gsdepth_2.gscount_0.gsinner { border-bottom: solid 1px #ddd; padding-top: 5px; padding: 10px; text-align: center; padding-top: 20px; }
 .pagebox .gsdepth_2.gscount_1 { padding: 10px; }
+
+
+@media only all and (max-width: 800px) {
+    .gs_page_width { padding-left: 20px; padding-right: 20px; }
+    .mobilenavigatemenu { color:#fff; }
+   .Menu a div { width: 100%; box-sizing: border-box; }
+   
+   .mobilenavigatemenu {
+        text-align: center !important;
+        padding-bottom: 30px !important;
+    }
+    .Menu a div { text-align: center; }
+}

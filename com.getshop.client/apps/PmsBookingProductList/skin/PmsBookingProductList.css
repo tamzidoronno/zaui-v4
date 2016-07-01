@@ -19,10 +19,10 @@
 .PmsBookingProductList .roomdesc { font-size: 14px; font-weight: normal; margin-top: 10px; }
 
 @media only all and (max-width: 800px) {
-    .PmsBookingProductList .selectbutton { width: 100px; }
+    .PmsBookingProductList .selectbutton { top: 0px; right: 0px; height: 25px; line-height: 25px; }
     .PmsBookingProductList .roomdesc {
         position: absolute;
-        left: 94px;
+        right: 0px;
         top: 30px;
         padding-right: 60px;
     }
@@ -40,6 +40,7 @@
         line-height: 35px;
         padding-left: 10px;
     }
+    .PmsBookingProductList .roomimg { max-width: 80px; }
     .PmsBookingProductList .continue_button { width: 100%; box-sizing: border-box; }
     .PmsBookingProductList .imgcontainer { top: 34px; }
     .PmsBookingProductList .productentry { height: 110px; margin-bottom: 30px; }

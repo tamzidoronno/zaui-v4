@@ -167,6 +167,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || room.invoicedTo.after(endDate))) {
             return;
         }
+        if(room.invoicedTo == null && startDate.after(endDate)) {
+            //Never invoiced, and a credit not is needed?
+            return;
+        }
+        
         List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room);
         
         if (pmsManager.getConfigurationSecure().substractOneDayOnOrder && !filter.onlyEnded) {

@@ -55,7 +55,7 @@ public class PmsBookingRooms implements Serializable {
     boolean forcedOpenNeedClosing = false;
     public Date warnedAboutAutoExtend = null;
     public boolean credited;
-    public boolean deleted = false;
+    private boolean deleted = false;
     public Date deletedDate = new Date();
     
     /**
@@ -439,5 +439,29 @@ public class PmsBookingRooms implements Serializable {
             return priceMatrix.get(offset);
         }
         return price;
+    }
+
+    void undelete() {
+        deleted = false;
+        deletedDate = null;
+    }
+
+    void delete() {
+        deleted = true;
+        deletedDate = new Date();
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    void copyDeleted(PmsBookingRooms room) {
+        deleted = room.isDeleted();
+        deletedDate = room.deletedDate;
+    }
+
+    void setBooking(Booking booking) {
+        bookingId = booking.id;
+        this.booking = booking;
     }
 }

@@ -987,7 +987,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
-            if(room.deleted && !room.credited) {
+            if(room.isDeleted() && !room.credited) {
                 List<CartItem> credited = creditAllLinesOnBookingForRoom(booking.id, room.pmsBookingRoomId);
                 returnresult.addAll(credited);
                 if(!avoidOrderCreation) {

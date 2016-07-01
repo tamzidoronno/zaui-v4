@@ -33,6 +33,7 @@ public class PmsBookingRooms implements Serializable {
     public double taxes = 8;
     public String bookingId;
     public List<PmsBookingAddonItem> addons = new ArrayList();
+    public String currency = "NOK";
      
     @Editor
     public String code = "";
@@ -54,7 +55,8 @@ public class PmsBookingRooms implements Serializable {
     boolean forcedOpenNeedClosing = false;
     public Date warnedAboutAutoExtend = null;
     public boolean credited;
-    boolean deleted = false;
+    private boolean deleted = false;
+    public Date deletedDate = new Date();
     
     /**
      * Finalized entries
@@ -73,6 +75,19 @@ public class PmsBookingRooms implements Serializable {
         canBeAdded = true;
         bookingId = "";
         bookingItemId = "";
+    }
+    
+    public static String getOffsetKey(Calendar calStart, Integer priceType) {
+        String offset = "";
+        if(priceType == PmsBooking.PriceType.daily || 
+                priceType == PmsBooking.PriceType.interval || 
+                priceType == PmsBooking.PriceType.progressive) {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            offset = formatter.format(calStart.getTime());
+        } else if(priceType == PmsBooking.PriceType.monthly) {
+            offset = calStart.get(Calendar.MONTH) + "-" + calStart.get(Calendar.YEAR);
+        }
+        return offset;
     }
     
     public Integer getNumberOfDays() {
@@ -416,5 +431,37 @@ public class PmsBookingRooms implements Serializable {
         }
         
         return result;
+    }
+
+    public Double getPriceForDay(Integer priceType, Calendar time) {
+        String offset = getOffsetKey(time, priceType);
+        if(priceMatrix.containsKey(offset)) {
+            return priceMatrix.get(offset);
+        }
+        return price;
+    }
+
+    void undelete() {
+        deleted = false;
+        deletedDate = null;
+    }
+
+    void delete() {
+        deleted = true;
+        deletedDate = new Date();
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    void copyDeleted(PmsBookingRooms room) {
+        deleted = room.isDeleted();
+        deletedDate = room.deletedDate;
+    }
+
+    void setBooking(Booking booking) {
+        bookingId = booking.id;
+        this.booking = booking;
     }
 }

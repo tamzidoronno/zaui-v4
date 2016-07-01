@@ -32,7 +32,7 @@ public class AccountingManagerConfig extends DataCommon {
     }
     
     public TransferFtpConfig getBComConfig() {
-        TransferFtpConfig config = configrations.get("creditor");
+        TransferFtpConfig config = configrations.get("bookingcomratemanager");
         if(config == null) {
             config = new TransferFtpConfig();
         }

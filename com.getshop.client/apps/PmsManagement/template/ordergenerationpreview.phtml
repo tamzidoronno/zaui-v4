@@ -1,10 +1,10 @@
 <?php
 /* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
-$cartmgr = $this->getApi()->getCartManager();
-$cart = $cartmgr->getCart();
 echo "<table cellspacing='0' cellpadding='0' width='100%'>";
 echo "<tr>";
-echo "<th>Booking</th>";
+echo "<th>";
+echo '<i gs_downloadexcelreport="getOrderInvoiceArray" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="Orderpreviewexport"></i>';
+echo "Booking</th>";
 echo "<th>Room</th>";
 echo "<th>Start date</th>";
 echo "<th>End date</th>";
@@ -15,56 +15,44 @@ echo "<th>Count</th>";
 echo "<th>Total</th>";
 echo "</tr>";
 
-$totalEx = 0;
-$total = 0;
-$totalCount = 0;
-foreach($cart->items as $item) {
-    $booking = $this->findBookingFromRoom($item->product->externalReferenceId);
-    $user = $this->findUser($booking->userId);
-    
-    $room = "";
-    foreach($booking->rooms as $r) {
-        if($r->pmsBookingRoomId == $item->product->externalReferenceId) {
-            $room = $r;
+$orders = $this->getCreatedOrders();
+$i = 1;
+foreach($orders as $res) {
+    if($i != sizeof($orders)) {
+        echo "<tr>";
+        echo "<td class='moreinformationaboutbooking' bookingid='".$res['id']."' style='cursor:pointeR;'>" . $res['fullname'] . "<br>";
+        echo "<div style='color:#bbb;'>";
+        echo $res['start'] . " - " . $res['end'];
+        if($res['invoicedto']) {
+            echo " invoiced until: " . $res['invoicedto'];
         }
+        echo "</div>";
+        echo "</td>";
+        echo "<td>" . $res['additionalmetadata'] . "</td>";
+        echo "<td>" . $res['itemstart'] . "</td>";
+        echo "<td>" . $res['itemend']  . "</td>";
+        echo "<td>" . $res['productname'] ."<br><div style='color:#bbb;'>" . $res['metadata'] . "</div></td>";
+        echo "<td>" . $res['priceex'] . "<br><div style='color:#bbb;'>" . $res['price'] . "</div></td>";
+        echo "<td>" . $res['price'] . "<br>&nbsp;</div></td>";
+        echo "<td>" . $res['count'] . "</td>";
+        echo "<td>" . ($res['priceex'] * $res['count'])  . "<div style='color:#bbb;'>". ($res['price']  * $res['count']) ."</div></td>";
+        echo "</td>";
+        echo "</tr>";
+    } else {
+        echo "<tr>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td>" . $res['count'] . "</td>";
+        echo "<td>" . $res['priceex'] . "<div style='color:#bbb;'>". $res['price'] ."</div></td>";
+        echo "</tr>";
     }
-    $priceEx = round($item->product->priceExTaxes);
-    $price = round($item->product->price, 1);
-    $totalEx += ($priceEx * $item->count);
-    $total += ($price * $item->count);
-    $totalCount += $item->count;
-    
-    echo "<tr>";
-    echo "<td class='moreinformationaboutbooking' bookingid='".$booking->id."' style='cursor:pointeR;'>" . $user->fullName . "<br>";
-    echo "<div style='color:#bbb;'>";
-    echo date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end));
-    if($room->invoicedTo) {
-        echo " invoiced until: " . date("d.m.Y H:i", strtotime($room->invoicedTo));
-    }
-    echo "</div>";
-    echo "</td>";
-    echo "<td>" . $item->product->additionalMetaData. "</td>";
-    echo "<td>" . date("d.m.Y H:i", strtotime($item->startDate)). "</td>";
-    echo "<td>" . date("d.m.Y H:i", strtotime($item->endDate)) . "</td>";
-    echo "<td>" . $item->product->name ."<br><div style='color:#bbb;'>" . $item->product->metaData . "</div></td>";
-    echo "<td>" . $priceEx . "<br><div style='color:#bbb;'>" . $price . "</div></td>";
-    echo "<td>" . $room->price . "<br>&nbsp;</div></td>";
-    echo "<td>" . $item->count . "</td>";
-    echo "<td>" . $priceEx * $item->count  . "<div style='color:#bbb;'>".$price * $item->count ."</div></td>";
-    echo "</td>";
+    $i++;
 }
-echo "<tr>";
-echo "<td></td>";
-echo "<td></td>";
-echo "<td></td>";
-echo "<td></td>";
-echo "<td></td>";
-echo "<td></td>";
-echo "<td></td>";
-echo "<td>".$totalCount."</td>";
-echo "<td>$totalEx<br><div style='color:#bbb;'>$total</div></td>";
-echo "</tr>";
-
 echo "</table>";
 
 ?>

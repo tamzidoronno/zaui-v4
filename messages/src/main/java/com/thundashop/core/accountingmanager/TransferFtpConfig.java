@@ -12,4 +12,7 @@ public class TransferFtpConfig implements Serializable {
         public boolean useActiveMode = false;
         public Integer port = 21;
         
+        //Commaseparated list of bookingengines (if nessesary with more).
+        public String engineNames = "";
+        
     }

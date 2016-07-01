@@ -126,7 +126,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     <?php if(!$deleted) { ?>
                         <i class='fa fa-trash-o' gstype='submitToInfoBox'></i>
                     <?php } else { ?>
-                        Deleted
+                        Deleted <i class='fa fa-undo'  gstype='submitToInfoBox' title="Undelete" style='cursor:pointer;'></i>
                     <?php } ?>
                 </span>
                     <?php
@@ -140,11 +140,13 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                         <?php
                     }
                     ?>
-                <span gstype='form' method="splitToSingleBooking">
-                    <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
-                    <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                    <i class='fa fa-random' gstype='submitToInfoBox' title='Split into single booking' style='cursor:pointer;'></i>
-                </span>
+                <?php if(!$deleted) { ?>
+                    <span gstype='form' method="splitToSingleBooking">
+                        <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                        <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                        <i class='fa fa-random' gstype='submitToInfoBox' title='Split into single booking' style='cursor:pointer;'></i>
+                    </span>
+                <?php } ?>
             </td>
             <td>
                 <? 

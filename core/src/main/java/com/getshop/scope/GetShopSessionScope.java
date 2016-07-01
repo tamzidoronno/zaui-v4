@@ -31,6 +31,15 @@ public class GetShopSessionScope implements Scope {
     private Map<String, Object> objectMap = Collections.synchronizedMap(new HashMap<String, Object>());
     private Map<String, Object> namedSessionObjects = Collections.synchronizedMap(new HashMap<String, Object>());
 
+    public <T> T getNamedSessionBean(String multiLevelName, Class className) {
+        long threadId = Thread.currentThread().getId();
+        String storeId = threadStoreIds.get(threadId);
+        String name = className.getSimpleName();
+        name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
+        String key = "scopedTarget." + name+"_"+storeId+"_"+multiLevelName;
+        return (T)namedSessionObjects.get(key);
+    }
+    
     public Object get(String name, ObjectFactory<?> objectFactory) {
        
         long threadId = Thread.currentThread().getId();

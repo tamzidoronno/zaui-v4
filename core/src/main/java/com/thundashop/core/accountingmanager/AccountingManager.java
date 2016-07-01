@@ -4,6 +4,7 @@
 package com.thundashop.core.accountingmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.getshop.scope.GetShopSessionScope;
 import com.getshop.svea.AddressType;
 import com.getshop.svea.CustomerData;
 import com.getshop.svea.CustomerData.Creditor;
@@ -13,6 +14,9 @@ import com.getshop.svea.CustomerData.Creditor.Cases.Case.Debtor;
 import com.getshop.svea.CustomerData.Creditor.Cases.Case.Invoice;
 import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import com.thundashop.core.accountingmanager.TransferFtpConfig;
+import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingEngineAbstract;
+import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ForStore;
 import com.thundashop.core.common.ManagerBase;
@@ -20,6 +24,9 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ftpmanager.FtpManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingFilter;
+import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
@@ -54,7 +61,7 @@ import org.springframework.stereotype.Component;
 public class AccountingManager extends ManagerBase implements IAccountingManager {
 
     public HashMap<String, SavedOrderFile> files = new HashMap();
-    public HashMap<String, SavedOrderFile> creditorFiles = new HashMap();
+    public HashMap<String, SavedOrderFile> otherFiles = new HashMap();
     
     @Autowired
     OrderManager orderManager;
@@ -64,6 +71,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     
     @Autowired
     FtpManager ftpManager;
+    
+    @Autowired
+    GetShopSessionScope getShopSessionScope;
     
     private List<AccountingInterface> interfaces = new ArrayList();
     private AccountingManagerConfig config = new AccountingManagerConfig();
@@ -76,10 +86,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
             if(obj instanceof SavedOrderFile) {
                 SavedOrderFile file = (SavedOrderFile) obj;
-                if(file.type.equals("accounting")) {
+                if(file.type.equals(getAccountingType())) {
                     files.put(((SavedOrderFile) obj).id, file);
                 } else {
-                    creditorFiles.put(((SavedOrderFile) obj).id, file);
+                    otherFiles.put(((SavedOrderFile) obj).id, file);
                 }
             }
         }
@@ -126,7 +136,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         List<String> users = createUserFile(newUsersOnly);
         List<String> orders = createOrderFile(false);
         users.addAll(orders);
-        saveFile(users);
+        saveFile(users, getAccountingType());
         return users;
     }
     
@@ -135,11 +145,20 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         return createOrderFile(true);
     }
 
-    private void saveFile(List<String> result) {
+    private void saveFile(List<String> result, String type) {
+        if(result == null || result.isEmpty()) {
+            return;
+        }
+        
         SavedOrderFile file = new SavedOrderFile();
         file.result = result;
+        file.type = type;
         saveObject(file);
-        files.put(file.id, file);
+        if(type.equals(getAccountingType())) {
+            files.put(file.id, file);
+        } else {
+            otherFiles.put(file.id, file);
+        }
     }
 
     private void getInterfaceForStore() throws Exception {
@@ -161,16 +180,8 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     @Override
     public List<SavedOrderFile> getAllFiles() {
         List<SavedOrderFile> result = new ArrayList();
-        for(String res : files.keySet()) {
-            SavedOrderFile obj = files.get(res);
-            result.add(obj);
-        }
-        
-        for(String res : creditorFiles.keySet()) {
-            SavedOrderFile obj = creditorFiles.get(res);
-            result.add(obj);
-        }
-        
+        result.addAll(files.values());
+        result.addAll(otherFiles.values());
         return result;
     }
     
@@ -179,9 +190,8 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         SavedOrderFile file = files.get(id);
         
         if(file == null) {
-            file = creditorFiles.get(id);
+            file= otherFiles.get(id);
         }
-        
         return file.result;
     }
 
@@ -227,7 +237,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         }
         List<SavedOrderFile> filesToTransfer = getAllFilesNotTransferredToAccounting();
         for(SavedOrderFile saved : filesToTransfer) {
-            String path = saveFileToDisk(saved);
+            String path = saveFileToDisk(saved, config.extension);
             try {
                 boolean transferred = ftpManager.transferFile(config.username, config.password, config.hostname, path, config.path, config.port, config.useActiveMode);
                 if(transferred) {
@@ -240,10 +250,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         }
     }
 
-    private String saveFileToDisk(SavedOrderFile saved) {
+    private String saveFileToDisk(SavedOrderFile saved, String extension) {
         try {
 
-            String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(saved.rowCreatedDate) + config.extension;
+            String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(saved.rowCreatedDate) + extension;
 
             File file = new File("/tmp/"+filename);
 
@@ -294,7 +304,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             if(!orders.isEmpty()) {
                 List<String> result = iface.createOrderFile(orders);
                 if(save) {
-                    saveFile(result);
+                    saveFile(result, getAccountingType());
                 }
                 for(Order ord : orders) {
                     ord.transferredToAccountingSystem = true;
@@ -325,55 +335,22 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                     String res = createSveaCreditorFile(order);
                     result.add(res);
                     order.transferredToCreditor = new Date();
-                    System.out.println(res);
                     orderManager.saveOrder(order);
                 }
             }
         }
         
         if(!result.isEmpty()) {
-            SavedOrderFile file = new SavedOrderFile();
-            file.type = "creditor";
-            file.result = result;
-            saveObject(file);
+            saveFile(result, getSveaCreditorType());
         }
         
         return result;
     }
 
-    @Override
-    public void transferFilesToCreditor() {
-        try {
-            createCreditorFile(true);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        List<SavedOrderFile> filesToTransfer = getCreditorFilesNotTransferredToAccounting();
-        for(SavedOrderFile saved : filesToTransfer) {
-            String path = saveFileToDisk(saved);
-            try {
-                TransferFtpConfig ftpconfig = config.getCreditorConfig();
-                boolean transferred = ftpManager.transferFile(ftpconfig.username, 
-                        ftpconfig.password, 
-                        ftpconfig.hostname, 
-                        path, 
-                        ftpconfig.path, 
-                        ftpconfig.port, 
-                        ftpconfig.useActiveMode);
-                if(transferred) {
-                    saved.transferred = true;
-                    saveObject(saved);
-                }
-            }catch(Exception e) {
-                e.printStackTrace();
-            }
-        }    
-    }
-
-    private List<SavedOrderFile> getCreditorFilesNotTransferredToAccounting() {
+    private List<SavedOrderFile> getFilesNotTransferredYet(String type) {
         List<SavedOrderFile> res = new ArrayList();
-        for(SavedOrderFile file : creditorFiles.values()) {
-            if(!file.transferred) {
+        for(SavedOrderFile file : getAllFiles()) {
+            if(!file.transferred && file.type.equals(type)) {
                 res.add(file);
             }
         }
@@ -483,5 +460,105 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             deptor.setIsFirm(false);
         }
         return deptor;
+    }
+
+    @Override
+    public void transferFiles(String type) throws Exception {
+        if(type.equals(getSveaCreditorType())) {
+            createCreditorFile(true); 
+        } else if(type.equals(getBookingComRateManagerType())) {
+            createBookingComRateManagerFile();
+        } else {
+            System.out.println("Transferring of type... is not supported yet : " + type);
+            return;
+        }
+
+        List<SavedOrderFile> filesToTransfer = getFilesNotTransferredYet(type);
+        for(SavedOrderFile saved : filesToTransfer) {
+            TransferFtpConfig ftpconfig = getTransferConfig(type);
+            String path = saveFileToDisk(saved, ftpconfig.extension);
+            try {
+                
+                boolean transferred = ftpManager.transferFile(ftpconfig.username, 
+                        ftpconfig.password, 
+                        ftpconfig.hostname, 
+                        path, 
+                        ftpconfig.path, 
+                        ftpconfig.port, 
+                        ftpconfig.useActiveMode);
+                if(transferred) {
+                    saved.transferred = true;
+                    saveObject(saved);
+                }
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+    }
+
+    @Override
+    public List<String> getNewFile(String type) throws Exception {
+        if(type.equals(getSveaCreditorType())) {
+            return createCreditorFile(true);            
+        } else if(type.equals(getBookingComRateManagerType())) {
+            return createBookingComRateManagerFile();
+        } else {
+            System.out.println("Cant get file of type: " + type);
+        }
+        return new ArrayList();
+    }
+
+    private List<String> createBookingComRateManagerFile() {
+        List<String> files = new ArrayList();
+        PmsManager manager = getPmsManager();
+        BookingEngineAbstract engine = getBookingEngine();
+        
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.onlyUntransferredToBookingCom = true;
+        
+        List<PmsBooking> bookings = manager.getAllBookings(filter);
+        BComRateManager builder = new BComRateManager(bookings, engine.getBookingItemTypes());
+        
+        List<String> lines = builder.generateLines();
+        saveFile(lines, getBookingComRateManagerType());
+        
+        for(PmsBooking booking : bookings) {
+            booking.transferredToRateManager = true;
+            manager.saveBooking(booking);
+        }
+        
+        return lines;
+    }
+
+    private PmsManager getPmsManager() {
+        TransferFtpConfig configuration = config.getBComConfig();
+        PmsManager bean = getShopSessionScope.getNamedSessionBean(configuration.engineNames, PmsManager.class);
+        return bean;
+    }
+
+    private BookingEngineAbstract getBookingEngine() {
+        TransferFtpConfig configuration = config.getBComConfig();
+        BookingEngineAbstract beanAbs = getShopSessionScope.getNamedSessionBean(configuration.engineNames, BookingEngineAbstract.class);
+        return beanAbs;
+    }
+
+    private TransferFtpConfig getTransferConfig(String type) {
+        if(type.equals(getSveaCreditorType())) { return config.getCreditorConfig(); }
+        if(type.equals(getBookingComRateManagerType())) { return config.getBComConfig(); }
+        
+        return null;
+    }
+
+    private String getAccountingType() {
+        return "accounting";
+    }
+    
+    private String getBookingComRateManagerType() {
+        return "bookingcomratemanager";
+    }
+    
+    private String getSveaCreditorType() {
+        return "sveacreditor";
     }
 }

@@ -29,6 +29,7 @@ public class PmsBooking extends DataCommon {
     public List<String> orderIds = new ArrayList();
     public Integer priceType = 1;
     public boolean confirmed = false;
+    public Date confirmedDate = null;
     public boolean unConfirmed = false;
     public boolean isDeleted = false;
     public boolean payedFor = false;
@@ -41,6 +42,7 @@ public class PmsBooking extends DataCommon {
     public String wubookchannelreservationcode = "";
     public String wubookreservationid = "";
     public boolean wubookNoShow = false;
+    public boolean transferredToRateManager = false;
     
     public String countryCode = "";
     public boolean avoidAutoDelete = false;
@@ -81,7 +83,7 @@ public class PmsBooking extends DataCommon {
             roomCopied.date = room.date;
             roomCopied.bookingItemId = room.bookingItemId;
             roomCopied.bookingItemTypeId = room.bookingItemTypeId;
-            roomCopied.deleted = room.deleted;
+            roomCopied.copyDeleted(room);
             result.confirmed = currentCopy.confirmed;
             
             result.rooms.add(roomCopied);
@@ -178,7 +180,7 @@ public class PmsBooking extends DataCommon {
     public List<PmsBookingRooms> getActiveRooms() {
         List<PmsBookingRooms> result = new ArrayList();
         for(PmsBookingRooms room : rooms) {
-            if(room.deleted) {
+            if(room.isDeleted()) {
                 continue;
             }
             result.add(room);

@@ -84,7 +84,7 @@ H1,H2 { font-family: 'Anton', sans-serif; color: #3f2d51; letter-spacing: 1px; }
         width: 200px;
         top: 0px;
     }
-
+    .PmsBookingProductList .productentry .price { bottom: inherit; }
     
     .gsarea[area="header"] img { margin-left: 10px; }
     

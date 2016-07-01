@@ -83,7 +83,7 @@ public class PmsBooking extends DataCommon {
             roomCopied.date = room.date;
             roomCopied.bookingItemId = room.bookingItemId;
             roomCopied.bookingItemTypeId = room.bookingItemTypeId;
-            roomCopied.deleted = room.deleted;
+            roomCopied.copyDeleted(room);
             result.confirmed = currentCopy.confirmed;
             
             result.rooms.add(roomCopied);
@@ -180,7 +180,7 @@ public class PmsBooking extends DataCommon {
     public List<PmsBookingRooms> getActiveRooms() {
         List<PmsBookingRooms> result = new ArrayList();
         for(PmsBookingRooms room : rooms) {
-            if(room.deleted) {
+            if(room.isDeleted()) {
                 continue;
             }
             result.add(room);

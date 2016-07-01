@@ -66,7 +66,7 @@ public class BComRateManager {
         result.put("currency", room.currency);
         result.put("confirmed", transformBoolean(booking.confirmed));
         result.put("confirmed_date", convertDate(booking.confirmedDate));
-        result.put("canceled", transformBoolean(!room.deleted));
+        result.put("canceled", transformBoolean(!room.isDeleted()));
         result.put("canceled_date",convertDate(room.deletedDate));
         result.put("isgroup", transformBoolean(booking.rooms.size() > 1));
         result.put("channel", booking.channel);

@@ -303,7 +303,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function removeRoom() {
-        $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedName(),$_POST['data']['bookingid'], $_POST['data']['roomid']);
+        $error = $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedName(),$_POST['data']['bookingid'], $_POST['data']['roomid']);;
+        if($error) {
+            $this->errors[] = $error;
+        }
         $this->showBookingInformation();
     }
     
@@ -870,7 +873,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return true;
         }
 
-        if($room->deleted && !$filter->includeDeleted) {
+        if($room->deleted && @!$filter->includeDeleted) {
             return false;
         }
         

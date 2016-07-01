@@ -87,7 +87,7 @@ public interface IPmsManager {
     public PmsStatistics getStatistics(PmsBookingFilter filter);
     
     @Customer
-    public void removeFromBooking(String bookingId, String roomId) throws Exception;
+    public String removeFromBooking(String bookingId, String roomId) throws Exception;
     
     @Editor
     public String getContract(String bookingId) throws Exception;

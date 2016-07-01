@@ -243,6 +243,19 @@ $days[7] = "Sunday";
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->deleteAllWhenAdded) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='deleteAllWhenAdded' <? echo $checked; ?>>
+            </span>
+            Delete all items when booking is created.
+        </div>
+        
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->hasNoEndDate) {
                     $checked = "CHECKED";
                 }

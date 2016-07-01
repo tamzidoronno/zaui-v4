@@ -12,6 +12,8 @@
     font-size: 18px;
     color: white;
     margin-left: 1px;
+    position: absolute;
+    left: 2px;
 }
 
 .aviary_edit_button {

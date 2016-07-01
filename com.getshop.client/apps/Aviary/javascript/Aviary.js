@@ -6,6 +6,7 @@ app.Aviary = {
         PubSub.subscribe('NAVIGATION_COMPLETED', app.Aviary.initAviaryForImages);
         $(document).on('click', '.aviary_edit_button', app.Aviary.editImage);
         $(document).on('click', '.aviary_revert_button', app.Aviary.revertImage);
+        $(document).on('hover', '.aviary_wrap', app.Aviary.showAviaryButtons);
     },
     
     initAviaryForImages: function() {
@@ -15,8 +16,8 @@ app.Aviary = {
                 if(imageId != undefined) {
                     imageId = imageId.split("&")[0];
                     $(this).wrap("<div class='aviary_wrap'></div><>");
-                    $(this).before( "<div class='aviary_button aviary_edit_button application_settings' imageid='" + imageId + "'><i class='fa fa-instagram'></i></div>" );
-                    $(this).before( "<div class='aviary_button aviary_revert_button application_settings' imageid='" + imageId + "'><i class='fa fa-undo'></i></div>" );
+                    $(this).before( "<div class='aviary_button aviary_edit_button' imageid='" + imageId + "'><i class='fa fa-instagram'></i></div>" );
+                    $(this).before( "<div class='aviary_button aviary_revert_button' imageid='" + imageId + "'><i class='fa fa-undo'></i></div>" );
                     $(this).attr("id", imageId);
                 }
             });
@@ -70,6 +71,11 @@ app.Aviary = {
         thundashop.Ajax.postWithCallBack(event, function(res) {
             location.reload();
         });
+    },
+    
+    showAviaryButtons: function() {
+        var id = $(this).children("img").attr("id");
+        $(".aviary_button[imageid='" + id + "']").toggle();
     }
 }
 

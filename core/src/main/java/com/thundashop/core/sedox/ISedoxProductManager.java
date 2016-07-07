@@ -234,4 +234,10 @@ public interface ISedoxProductManager  {
     
     @Editor
     public void setType(String productId, String type);
+    
+    @Administrator
+    public void clearManager();
+    
+    @Administrator
+    public void invokeCreditUpdate();
 }

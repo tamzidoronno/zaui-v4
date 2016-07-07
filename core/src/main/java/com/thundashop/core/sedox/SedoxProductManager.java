@@ -2131,6 +2131,35 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         saveObject(sharedProduct);
     }
 
-    
+    @Override
+    public void clearManager() {
+        for (SedoxSharedProduct sharedProduct : productsShared.values()) {
+            deleteObject(sharedProduct);
+        }
+        
+        for (SedoxProduct product : products.values()) {
+            deleteObject(product);
+        }
+        
+        for (FailedEvcOrder failedOrder : failedEvcOrders) {
+            deleteObject(failedOrder);
+        }
+        
+        for (SedoxUser sedoxUser : users.values()) {
+            deleteObject(sedoxUser);
+        }
+        
+        productsShared.clear();
+        products.clear();
+        failedEvcOrders.clear();
+        users.clear();
+    }
 
+    @Override
+    public void invokeCreditUpdate() {
+        for (SedoxUser user : users.values()) {
+            user.changeCreditHistory();
+            saveObject(user);
+        }
+    }
 }

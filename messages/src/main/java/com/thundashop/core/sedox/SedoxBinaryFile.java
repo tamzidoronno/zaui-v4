@@ -87,22 +87,22 @@ public class SedoxBinaryFile implements Serializable {
         int addon = 0;
         
         if (options.requested_dpf && type.equals("car"))
-            addon += 50;
+            addon += 5;
         
         if (options.requested_adblue && type.equals("car"))
-            addon += 50;
+            addon += 5;
         
         if (options.requested_dpf && type.equals("truck"))
-            addon += 100;
+            addon += 10;
         
         if (options.requested_adblue && type.equals("truck"))
-            addon += 100;
+            addon += 10;
         
         if (options.requested_dpf && type.equals("tractor"))
-            addon += 100;
+            addon += 10;
         
         if (options.requested_adblue && type.equals("tractor"))
-            addon += 100;
+            addon += 10;
         
         return addon;
     }

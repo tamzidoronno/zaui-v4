@@ -13,5 +13,13 @@ class SedoxProfileUpdater extends \MarketingApplication implements \Application 
     public function render() {
         $this->includefile("profileupdater");
     }
+    
+    public function saveUser() {
+        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+        $user->fullName = $_POST['data']['name'];
+        $user->emailAddress = $_POST['data']['email'];
+        $user->cellPhone = $_POST['data']['cellphone'];
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
 }
 ?>

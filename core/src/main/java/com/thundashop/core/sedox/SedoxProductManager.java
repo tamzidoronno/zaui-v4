@@ -1725,7 +1725,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private double getPrice(SedoxProduct sedoxProduct, SedoxUser user, List<Integer> files) {
-        double totalPrice = 40;
+        double totalPrice = 4;
         
         if (user.fixedPrice != null && !user.fixedPrice.isEmpty()) {
             totalPrice = 0;
@@ -1753,7 +1753,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         totalPrice = totalPrice - alreadySpentOnProduct;
 
         // Make sure that the user does not pay for its own original file.
-        if (totalPrice == 40 && sedoxProduct.firstUploadedByUserId != null && sedoxProduct.firstUploadedByUserId.equals(user.id)) {
+        if (totalPrice == 4 && sedoxProduct.firstUploadedByUserId != null && sedoxProduct.firstUploadedByUserId.equals(user.id)) {
             totalPrice = 0;
         }
         

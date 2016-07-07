@@ -3,6 +3,7 @@ package com.thundashop.core.messagemanager;
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.chatmanager.SubscribedToAirgram;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.FrameworkConfig;
@@ -21,12 +22,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -254,6 +257,35 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     public void sendMessageToStoreOwner(String message, String subject) {
         String email = getStoreEmailAddress();
         mailFactory.send(email, email, subject, message);
+    }
+
+    @Override
+    public List<MailMessage> getMailSent(Date from, Date to, String toEmailAddress) {
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", MailMessage.class.getCanonicalName());
+        
+        if (toEmailAddress != null && !toEmailAddress.isEmpty()) {
+            query.put("to", Pattern.compile(".*"+toEmailAddress+".*" , Pattern.CASE_INSENSITIVE));
+        }
+        
+//        query.put("rowCreatedDate", BasicDBObjectBuilder.start("$gte", from).add("$lte", to).get());
+//        query.put("rowCreatedDate", BasicDBObjectBuilder.start("$gte", from).add("$lte", to).get());
+
+        List<DataCommon> datas = database.query(MessageManager.class.getSimpleName(), storeId+"_log", query);
+        List<MailMessage> messages = new ArrayList();
+        
+        for (DataCommon dataCommon : datas) {
+            if (dataCommon instanceof MailMessage) {
+                messages.add((MailMessage)dataCommon);
+            }
+        }
+        
+        Collections.sort(messages, (o1, o2) -> {
+            return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+        });
+        
+        return messages;
     }
 
 }

@@ -373,6 +373,10 @@ public class Database extends StoreComponent {
         checkId(data);
         DBCollection col = mongo.getDB(database).getCollection(collection);
         DBObject dbObject = morphia.toDBObject(data);
+        
+        if (data.rowCreatedDate == null) {
+            data.rowCreatedDate = new Date();
+        }
 
         logSavedMessge(data, database, collection);
         col.save(dbObject);

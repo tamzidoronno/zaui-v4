@@ -1,22 +1,25 @@
-<div class="updaterow">
-    <div class="label">First Name</div>
-    <div class="field"><input type="text"></div>
-</div>
+<?
+/* @var $this ns_b485ee62_3163_4612_93d4_a36b44e05a8d\SedoxProfileUpdater */
+$user = $this->getApi()->getUserManager()->getLoggedOnUser();
 
-<div class="updaterow">
-    <div class="label">Last Name</div>
-    <div class="field"><input type="text"></div>
-</div>
-
-<div class="updaterow">
-    <div class="label">Email</div>
-    <div class="field"><input type="text"></div>
-</div>
-
-<div class="updaterow">
-    <div class="label">Cellphone (receive sms on this)</div>
-    <div class="field"><input type="text"></div>
-</div>
-
-<div class="sedox_blue_button saveprofile">Save</div>
+?>
+<div gstype="form" method="saveUser">
     
+    <div class="updaterow">
+        <div class="label">Full Name</div>
+        <div class="field"><input type="text" gsname="name" value="<? echo $user->fullName; ?>"></div>
+    </div>
+
+    <div class="updaterow">
+        <div class="label">Email</div>
+        <div class="field"><input type="text" gsname="email" value="<? echo $user->emailAddress; ?>"></div>
+    </div>
+
+    <div class="updaterow">
+        <div class="label">Cellphone (receive sms on this)</div>
+        <div class="field"><input type="text" gsname="cellphone" value="<? echo $user->cellPhone; ?>"></div>
+    </div>
+
+    <div class="sedox_blue_button saveprofile" gstype="submit">Save</div>
+
+</div>

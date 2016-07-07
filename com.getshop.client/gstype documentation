@@ -56,6 +56,22 @@ Naming convension:
     Javascript: LeftMenu.js
     Templates: LeftMenuTemplate*
 
+Excel download
+    gs_downloadExcelReport = Name of function that generates the excel file data
+    gs_fileName = Name of the file that will be downloaded
+
+    downloadReport() should return a jsonencoded multidimension array like:
+        
+    public function downloadReport() { 
+        $excel[] = ["Col1","Col2","Col3"];
+        $excel[] = ["Car", "Blue", "Large"];
+        $excel[] = ["Car", "Blue", "Small"];
+        
+        echo json_encode($excel);
+    }
+
+    <div gs_downloadExcelReport='downloadReport' gs_fileName='$filename'>Download</div>
+
 Framework translation: __f("");
 
 

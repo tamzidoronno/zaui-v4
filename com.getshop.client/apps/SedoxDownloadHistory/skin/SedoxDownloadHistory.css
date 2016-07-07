@@ -18,6 +18,16 @@
     font-size: 15px;
 }
 
+.sedox_download {
+    display: inline-block;
+    padding: 10px;
+    border-left: Solid 1px #DDD;
+    margin-left: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer;
+}
+
 .SedoxDownloadHistory .header .col_header.col1 {
     width: 150px;
     padding-left: 30px;
@@ -28,11 +38,11 @@
 } 
 
 .SedoxDownloadHistory .header .col_header.col3 {
-    width: calc(100% - 500px);  
+    width: calc(100% - 530px);  
 }
 
 .SedoxDownloadHistory .header .col_header.col4 {
-    width: 200px;
+    width: 225px;
 }
 
 .SedoxDownloadHistory .tablecontent {

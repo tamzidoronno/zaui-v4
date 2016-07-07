@@ -1,0 +1,27 @@
+<?
+/* @var $this \ns_03e0641c_d42f_496b_9496_365affe7bce9\MessageLog */
+
+$messages = $this->getMessages();
+$searchValue = "";
+
+if (isset($_POST['data']['searchtext'])) {
+    $searchValue = $_POST['data']['searchtext'];
+}
+?>
+
+<div gstype='form' method='doSearch' style="margin-bottom: 20px; margin-top: 20px;">
+    Email address 
+    <input type='textfield' class='gsniceinput1' gsname="searchtext" value="<? echo $searchValue; ?>"/>
+    <div class='shop_button' gstype="submit">Search</div>    
+</div>
+
+<?
+foreach ($messages as $message) {
+    echo "<div style='border: solid 1px #DDD; padding: 20px; margin-bottom: 20px;'>";
+    echo "To: " . $message->to;
+    echo "<br/>Subject: " . $message->subject;
+    echo "<br/>Date: " . $message->rowCreatedDate;
+    echo "<div style='padding: 10px; margin-top: 10px; border-top: dashed 1px #DDD;'> " . nl2br($message->content)."</div>";
+    echo "</div>";
+}
+?>

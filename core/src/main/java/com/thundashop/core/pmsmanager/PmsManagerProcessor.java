@@ -557,11 +557,15 @@ public class PmsManagerProcessor {
                 continue;
             }
             
-            if(booking.isEnded()) {
+            if(booking.isEndedOverTwoMonthsAgo()) {
                 //Ended bookings are not relevant anymore.
                 continue;
             }
 
+            if(booking.id.equals("291314df-b675-4e51-8eb6-e6a5d63c32f9")) {
+                System.out.println("TEST");
+            }
+            
             boolean needSaving = false;
             boolean payedfor = true; 
             boolean firstDate = true;

@@ -10,7 +10,7 @@ $creditHistories = $this->getCreditHistory();
         <div class="col_header col3" sortby="sedoxcredithist_name">File <div class="sorter <? echo $this->getSorting() == 'sedoxcredithist_name' ? "active" : "";?> "></div></div>
         <div class="col_header col4">
             <input type="textfield" class='filterTextBox' value="<? echo $this->getFilterText(); ?>"/>
-            <div class="sedox_download"></div>
+            <div class="sedox_download" gs_downloadExcelReport='downloadHistory' gs_fileName='creditHistory.xls'><i class="fa fa-download"></i></div>
         </div>
     </div>
 

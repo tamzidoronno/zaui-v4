@@ -52,5 +52,31 @@ class SedoxCreditHistory extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxC
         $this->getApi()->getSedoxProductManager()->addUserCredit($_POST['userid'], $_POST['creditDescription'], $_POST['creditAmount']);
     }
 
+    public function downloadHistory() {
+        
+        $filter = $this->createFilterData();
+        $filter->pageNumber = 1;
+        $filter->pageSize = 9999999;
+        
+        $creditHistories =  $this->creditHistory = $this->getApi()
+                ->getSedoxProductManager()
+                ->getCurrentUserCreditHistory($filter);
+        
+        $rows = [];
+        
+        foreach ($creditHistories as $creditHistory) {
+            $time = $this->formatJavaDateToTime($creditHistory->dateCreated);
+            $date = date("d M Y", $time);
+
+            $row = [];
+            $row[] = $creditHistory->transactionReference;
+            $row[] = $date;
+            $row[] = $creditHistory->description;
+            $row[] = $creditHistory->amount;
+            $rows[] = $row;
+        }
+        
+        echo json_encode($rows);
+    }
 }
 ?>

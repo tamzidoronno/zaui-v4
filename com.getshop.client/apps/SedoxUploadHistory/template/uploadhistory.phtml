@@ -11,7 +11,7 @@ $products = $this->getCurrentUploadedFiles();
     <div class="col_header col3" sortby="sedoxproduct_name">File <div class="sorter <? echo $this->getSorting() == 'sedoxproduct_name' ? "active" : "";?> "></div></div>
     <div class="col_header col4">
         <input type="textfield" class='filterTextBox' value="<? echo $this->getFilterText(); ?>"/>
-        <div class="sedox_download"></div>
+        <div class="sedox_download" gs_downloadExcelReport='downloadHistory' gs_fileName='uploadHistory.xls'><i class="fa fa-download"></i></div>
     </div>
 </div>
 

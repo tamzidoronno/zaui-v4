@@ -1258,9 +1258,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return null;
         }
         
-        Payment payment = new Payment();
-        payment.paymentType = user.preferredPaymentType;
-        return payment;
+        Application paymentApplication = applicationPool.getApplication(user.preferredPaymentType);
+        if (paymentApplication != null) { 
+            Payment payment = new Payment();
+            payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+            return payment;
+        }
+        
+        
+        return null;
     }
 
     public Payment getStorePreferredPayementMethod() {

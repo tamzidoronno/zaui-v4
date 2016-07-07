@@ -58,6 +58,13 @@ public class SedoxUser extends DataCommon {
             hist.amount = hist.amount / 10;
         }
         
+        if (slaveIncome > 0)
+            slaveIncome = slaveIncome / 10;
+        
+        if (!fixedPrice.isEmpty()) {
+            fixedPrice = "" + (Double.parseDouble(fixedPrice) / 10);
+        }
+        
         creditAccount.setBalance(creditAccount.getBalance() / 10);
     }
 }

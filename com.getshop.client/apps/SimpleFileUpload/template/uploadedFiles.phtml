@@ -7,7 +7,7 @@ if(!$entries) {
 if(sizeof($entries) == 0) {
     echo $this->__w("No files added.");
 }
-echo "<table width='100%'>";
+echo "<table width='100%' cellspacing='0' >";
 foreach($entries as $entry) {
     if($this->imagePrinted == $entry->id) {
         continue;
@@ -25,7 +25,7 @@ foreach($entries as $entry) {
     }
     
     echo "<tr fileid='".$entry->id."'>";
-    echo "<td width='50'>";
+    echo "<td>";
         echo "<i class='fa fa-" . $this->translateFile($entry->name, $entry->type) . "'></i>";
     echo "</td>";
     echo "<td width='80'>" . date("d.m.Y", strtotime($entry->rowCreatedDate)) . "</td>";

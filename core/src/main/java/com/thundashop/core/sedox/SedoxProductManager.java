@@ -1014,6 +1014,27 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxProduct product = getProductById(productId);
         SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
         
+        SedoxUser user = getSedoxUserById(product.firstUploadedByUserId);
+        User getshopUser = getGetshopUser(product.firstUploadedByUserId);
+        String content = getMailContent(extraText, productId, order, user, files);
+
+        HashMap<String, String> fileMap = createFileMap(sharedProduct, files, product);
+        mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, sharedProduct.getName(), content, fileMap, true);
+        
+        product.states.put("sendProductByMail", new Date());
+
+        if (getshopUser.cellPhone != null && !getshopUser.cellPhone.equals("") && smsFactory != null) {
+            smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
+            product.addSmsSentToCustomer(getSession().id, getshopUser);
+        }
+
+        product.addProductSentToEmail(getSession().id, getshopUser);
+        
+        saveObject(product);
+        notifyOnSocket(product);
+    }
+
+    private HashMap<String, String> createFileMap(SedoxSharedProduct sharedProduct, List<Integer> files, SedoxProduct product) throws ErrorException {
         HashMap<String, String> fileMap = new HashMap();
         if (sharedProduct.isCmdEncryptedProduct && files.size() != 2) {
             throw new ErrorException(1031);
@@ -1039,25 +1060,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 String fileName = zipProductToTmpFolder(product, files);
                 fileMap.put(fileName, sharedProduct.getName() + ".zip");
             }
-
         }
-
-        SedoxUser user = getSedoxUserById(product.firstUploadedByUserId);
-        User getshopUser = getGetshopUser(product.firstUploadedByUserId);
-        String content = getMailContent(extraText, productId, order, user, files);
-
-        mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, sharedProduct.getName(), content, fileMap, true);
-        product.states.put("sendProductByMail", new Date());
-
-        if (getshopUser.cellPhone != null && !getshopUser.cellPhone.equals("") && smsFactory != null) {
-            smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
-            product.addSmsSentToCustomer(getSession().id, getshopUser);
-        }
-
-        product.addProductSentToEmail(getSession().id, getshopUser);
-        
-        saveObject(product);
-        notifyOnSocket(product);
+        return fileMap;
     }
 
     private String zipProductToTmpFolder(SedoxProduct sedoxProduct, List<Integer> files) throws ErrorException {
@@ -2161,5 +2165,20 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             user.changeCreditHistory();
             saveObject(user);
         }
+    }
+
+    @Override
+    public void sendProductToDifferentEmail(String productId, String emailAddress, List<Integer> files) {
+        purchaseOnlyForCustomer(productId, files);
+        
+        SedoxProduct product = getProductById(productId);
+        SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
+        
+        Application app = applicationPool.getApplication("1475891a-3154-49f9-a2b4-ed10bfdda1fc");
+        String content = app.getSetting("sentToDifferentEmail");
+        content = replaceEmailVariables(content, null, product, sharedProduct, null, null, null, null);
+        
+        HashMap<String, String> fileMap = createFileMap(sharedProduct, files, product);
+        mailFactory.sendWithAttachments("files@tuningfiles.com", emailAddress, sharedProduct.getName(), content, fileMap, true);
     }
 }

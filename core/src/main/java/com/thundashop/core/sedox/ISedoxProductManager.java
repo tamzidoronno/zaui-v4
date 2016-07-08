@@ -240,4 +240,7 @@ public interface ISedoxProductManager  {
     
     @Administrator
     public void invokeCreditUpdate();
+    
+    @Administrator
+    public void sendProductToDifferentEmail(String productId, String emailAddress, List<Integer> files);
 }

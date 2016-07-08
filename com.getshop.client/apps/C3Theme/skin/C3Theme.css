@@ -208,6 +208,8 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .gseditormode .SimpleFileUpload .filelist td,
 .SimpleFileUpload .filelist tr:last-child td {
     border-bottom: solid 0px #EEE;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 .SimpleFileUpload .filelist tr td:first-child {

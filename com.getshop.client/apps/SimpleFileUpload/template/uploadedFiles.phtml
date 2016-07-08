@@ -33,7 +33,7 @@ foreach($entries as $entry) {
     echo "<td width='100' align='right'>" . $this->humanFileSize($entry->size) . "</td>";
     echo "</tr>";
     if($this->isEditorMode()) {
-        echo "<tr><td colspan='4'><hr/></td></tr>";
+        echo "<tr fileid='".$entry->id."'><td colspan='4'><hr/></td></tr>";
     }
 }
 echo "</table>";

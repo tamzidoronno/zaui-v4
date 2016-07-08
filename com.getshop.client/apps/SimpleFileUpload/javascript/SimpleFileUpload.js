@@ -29,9 +29,11 @@ app.SimpleFileUpload = {
                 "fileid" : fileId
             }
             
+            rows = $(this).closest('table').find('tr[fileId="'+fileId+'"]');
+            
             var event = thundashop.Ajax.createEvent('', 'deleteFile', $(this), data);
             thundashop.Ajax.postWithCallBack(event, function() {
-                row.remove();
+                rows.remove();
             });
         }
     },

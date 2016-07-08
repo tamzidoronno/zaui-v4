@@ -15,6 +15,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
     }
     
+    public function creditOrder() {
+    $this->getApi()->getPmsInvoiceManager()->creditOrder($this->getSelectedName(), $_POST['data']['bookingid'], $_POST['data']['orderid']);
+        $this->showBookingInformation();
+    }
+    
     public function loadDayStatistics() {
         $type = $_POST['data']['type'];
         $day = $_POST['data']['day'] . "00:00";

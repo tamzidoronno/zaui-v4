@@ -134,6 +134,14 @@ public class Order extends DataCommon implements Comparable<Order> {
         for(CartItem item : cart.getItems()) {
             item.doFinalize();
         }
+        if(!closed) {
+            if(status == Order.Status.PAYMENT_COMPLETED) {
+                closed = true;
+            }
+            if(transferredToAccountingSystem) {
+                closed = true;
+            }
+        }
     }
 
     public boolean needToBeTranferredToCreditor() {

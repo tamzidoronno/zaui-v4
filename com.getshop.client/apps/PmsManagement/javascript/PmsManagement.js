@@ -34,7 +34,25 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .saveAddons', app.PmsManagement.saveAddons);
         $(document).on('click','.PmsManagement .removeAddons', app.PmsManagement.removeAddons);
         $(document).on('click','.PmsManagement .updatecardonroom', app.PmsManagement.updatecardonroom);
+        $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
     },
+    doCreditOrder : function() {
+        var confirmed = confirm("Are you sure you want to credit this order?");
+        if(!confirmed) {
+            return;
+        }
+        
+        var data = {
+            orderid : $(this).closest('tr').attr('orderid'),
+            bookingid : $('#openedbookingid').val()
+        };
+        
+        var event = thundashop.Ajax.createEvent('','creditOrder', $(this), data);
+        thundashop.common.showInformationBoxNew(event);
+        
+        
+    },
+    
     changeSummaryView : function() {
         var data = {
             "view" : $(this).val()

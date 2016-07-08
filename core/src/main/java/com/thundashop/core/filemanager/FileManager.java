@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -100,6 +99,16 @@ public class FileManager extends ManagerBase implements IFileManager {
             return null;
         }
         return entries.get(fileId);
+    }
+
+    @Override
+    public void renameFileEntry(String fileId, String newName) {
+        if(!uUIDSecurityManager.hasAccess(fileId, false, true)) {
+            return;
+        }
+        FileEntry toRename = entries.get(fileId);
+        toRename.name = newName;
+        saveObject(toRename);
     }
     
 }

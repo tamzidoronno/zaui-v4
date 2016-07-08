@@ -2,7 +2,24 @@ app.SimpleFileUpload = {
     init : function() {
         $(document).on('change', '.SimpleFileUpload #file_upload_selector', app.SimpleFileUpload.doUpload);
         $(document).on('click', '.SimpleFileUpload .fa-trash-o', app.SimpleFileUpload.deleteObject);
+        $(document).on('click', '.SimpleFileUpload .fa-edit', app.SimpleFileUpload.renameObject);
     },
+    
+    renameObject: function() {
+        var newFileName = prompt("What is the new filename?" , $(this).attr('fileName'));
+        
+        if (!newFileName) 
+            return;
+        
+        var row = $(this).closest('tr');
+        var fileId = row.attr('fileid');
+            
+        thundashop.Ajax.simplePost(this, "updateFileName",  {
+            fileId: fileId,
+            newFileName: newFileName
+        });
+    },
+    
     deleteObject : function() {
         var confirmed = confirm("Are you sure you want to delete this file?");
         if(confirmed) {
@@ -12,9 +29,11 @@ app.SimpleFileUpload = {
                 "fileid" : fileId
             }
             
+            rows = $(this).closest('table').find('tr[fileId="'+fileId+'"]');
+            
             var event = thundashop.Ajax.createEvent('', 'deleteFile', $(this), data);
             thundashop.Ajax.postWithCallBack(event, function() {
-                row.remove();
+                rows.remove();
             });
         }
     },

@@ -234,4 +234,13 @@ public interface ISedoxProductManager  {
     
     @Editor
     public void setType(String productId, String type);
+    
+    @Administrator
+    public void clearManager();
+    
+    @Administrator
+    public void invokeCreditUpdate();
+    
+    @Administrator
+    public void sendProductToDifferentEmail(String productId, String emailAddress, List<Integer> files);
 }

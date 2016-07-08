@@ -59,6 +59,7 @@
     
     background: rgba(0,0,0,0.9);
     text-align: center;
+    z-index: 1;
 }
 
 .SedoxLogin .login_check_modal .content {

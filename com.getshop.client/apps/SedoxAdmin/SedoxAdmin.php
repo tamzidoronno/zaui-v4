@@ -41,13 +41,13 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
             $status = "<div class='current_status_line'><b>Started by</b>: $startedByUser->fullName <div gsclick='markProductAsStarted' productid='$file->id' class='stop_button'><i class='fa fa-stop-circle'></i></div></div>";
         }
 
-        if (array_key_exists("notifyForCustomer", $file->states) || $sedoxProduct->isFinished ) {
+        if (array_key_exists("notifyForCustomer", $file->states) || $product->isFinished ) {
             $startedByUser = $this->getApi()->getUserManager()->getUserById($file->startedByUserId);
             $finishedByName = $startedByUser ? $startedByUser->fullName : "N/A";
             $status = "<div class='current_status_line'><b>Notified by</b>: $finishedByName <div class='finished_marker yellow'><i class='fa fa-comment'></i></div></div>";
         }
 
-        if (array_key_exists("sendProductByMail", $file->states) || $sedoxProduct->isFinished ) {
+        if (array_key_exists("sendProductByMail", $file->states) || $product->isFinished ) {
             $startedByUser = $this->getApi()->getUserManager()->getUserById($file->startedByUserId);
             $finishedByName = $startedByUser ? $startedByUser->fullName : "N/A";
             $status = "<div class='current_status_line'><b>Finished by</b>: $finishedByName <div class='finished_marker'><i class='fa fa-check'></i></div></div>";
@@ -217,11 +217,18 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $this->setConfigurationSetting("filereadyusernoattachmentemail", $_POST['filereadyusernoattachmentemail']);
         $this->setConfigurationSetting("filereadyuserattachmentemail", $_POST['filereadyuserattachmentemail']);
         
+        $this->setConfigurationSetting("sentToDifferentEmail", $_POST['sentToDifferentEmail']);
+        
         $this->setConfigurationSetting("signature", $_POST['signature']);
     }
     
     public function setType() {
         $this->getApi()->getSedoxProductManager()->setType($_POST['data']['productid'], $_POST['data']['value']);
     }
+    
+    public function sendProductToDifferentEmail() {
+        $this->getApi()->getSedoxProductManager()->sendProductToDifferentEmail($_POST['data']['productId'], $_POST['data']['email'], [$_POST['data']['fileId']]);
+    }
+    
 }
 ?>

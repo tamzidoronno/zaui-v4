@@ -7,11 +7,27 @@ app.SedoxAdmin = {
         $(document).on('click', '.SedoxAdmin .filetype', app.SedoxAdmin.fileTypeSelected);
         $(document).on('click', '.SedoxAdmin .setChecksum', app.SedoxAdmin.setChecksum);
         $(document).on('click', '.SedoxAdmin .sedoxadmin_see_user_button', app.SedoxAdmin.showUser);
+        $(document).on('click', '.SedoxAdmin .sendProductToDifferentEmail', app.SedoxAdmin.sendProductToDifferentEmail);
         
         $(document).on('dragover', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleDragOver);
         $(document).on('dragleave', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleDragOut);
         $(document).on('drop', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleFileSelect);
         getshop.WebSocketClient.addListener("com.thundashop.core.sedox.ProductStartStopToggle", app.SedoxAdmin.notificationReceived);
+    },
+    
+    sendProductToDifferentEmail: function() {
+        var email = prompt("Where do you want to send it? (email)");
+        
+        var data = {
+            email : email,
+            productId : $(this).attr('productId'),
+            fileId : $(this).attr('sedox_file_id')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "sendProductToDifferentEmail", this, data);
+        thundashop.Ajax.post(event, function() {
+            alert("Sent! ;D");
+        });
     },
     
     notificationReceived: function(data) {

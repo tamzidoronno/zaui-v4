@@ -7,21 +7,34 @@ if(!$entries) {
 if(sizeof($entries) == 0) {
     echo $this->__w("No files added.");
 }
-echo "<table width='100%'>";
+echo "<table width='100%' cellspacing='0' >";
 foreach($entries as $entry) {
     if($this->imagePrinted == $entry->id) {
         continue;
     }
-    echo "<tr fileid='".$entry->id."'>";
-    echo "<td width='50'>";
+    
     if($this->isEditorMode()) {
-        echo "<i class='fa fa-trash-o'></i> ";
+        echo "<tr fileid='".$entry->id."'>";
+            echo "<td width='100' colspan='4'>";
+
+                $filename = $this->getFileName($entry);
+                echo "<i class='fa fa-edit' fileName='$filename'></i> ";
+                echo "<i class='fa fa-trash-o'></i> ";
+            echo "</td>";
+        echo "</tr>";
     }
-    echo "<i class='fa fa-" . $this->translateFile($entry->name, $entry->type) . "'></i></td>";
+    
+    echo "<tr fileid='".$entry->id."'>";
+    echo "<td>";
+        echo "<i class='fa fa-" . $this->translateFile($entry->name, $entry->type) . "'></i>";
+    echo "</td>";
     echo "<td width='80'>" . date("d.m.Y", strtotime($entry->rowCreatedDate)) . "</td>";
     echo "<td><a onclick=\"window.open('loadFile.php?fileid=".$entry->id."')\">" . $entry->name . "</a></td>";
     echo "<td width='100' align='right'>" . $this->humanFileSize($entry->size) . "</td>";
     echo "</tr>";
+    if($this->isEditorMode()) {
+        echo "<tr fileid='".$entry->id."'><td colspan='4'><hr/></td></tr>";
+    }
 }
 echo "</table>";
 ?>

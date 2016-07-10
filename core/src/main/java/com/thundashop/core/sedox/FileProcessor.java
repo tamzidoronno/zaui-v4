@@ -73,7 +73,7 @@ public class FileProcessor extends GetShopSchedulerBase {
         this.productId = productId;
     }
     
-    private SedoxBinaryFile getOriginalBinaryFile(String base64EncodeString, String originalFileName) throws ErrorException {
+    private SedoxBinaryFile getOriginalBinaryFile(String base64EncodeString, String originalFileName) throws ErrorException, Exception {
         // Check if needs to be decrypted.
         byte[] fileData = DatatypeConverter.parseBase64Binary(base64EncodeString);
 
@@ -91,7 +91,7 @@ public class FileProcessor extends GetShopSchedulerBase {
         }
 
         originalFile.fileType = "Original";
-//        originalFile.id = getApi().getSedoxProductManager().getNextFileId(); // API
+        originalFile.id = getApi().getSedoxProductManager().getNextFileId(); // API
         originalFile.md5sum = getMd5Sum(fileData);
         originalFile.orgFilename = originalFileName;
 

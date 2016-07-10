@@ -116,7 +116,7 @@ class CommunicationHelper {
             $this->errors[] = "failed on " . $data . " sent: " . $len . " size compared to : " . strlen($data)+1;
         }
         
-        $res = stream_get_line($this->socket, 10000000000000, "\n");
+        $res = stream_get_line($this->socket, 2147483647, "\n");
 
         $object = json_decode($res, false);
         if (json_last_error() != 0) {

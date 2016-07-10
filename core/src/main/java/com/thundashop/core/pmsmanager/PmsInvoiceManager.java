@@ -209,6 +209,30 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return null;
     }
 
+    @Override
+    public void creditOrder(String bookingId, String orderId) {
+        Order currentOrder = orderManager.getOrder(orderId);
+        Order creditedOrder = orderManager.creditOrder(orderId);
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        if(currentOrder.closed) {
+            creditedOrder.status = Order.Status.PAYMENT_COMPLETED;
+            creditedOrder.closed = true;
+            orderManager.saveOrder(currentOrder);
+        }
+        
+        for(CartItem item : creditedOrder.cart.getItems()) {
+            String roomId = item.getProduct().externalReferenceId;
+            PmsBookingRooms room = booking.getRoom(roomId);
+            if(room == null) {
+                continue;
+            }
+            
+            room.invoicedTo = item.getStartingDate();
+        }
+        booking.orderIds.add(creditedOrder.id);
+        pmsManager.saveBooking(booking);
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -496,7 +520,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(preferredUser != null) {
             preferred = preferredUser;
-        }
+        }  
         
         order.payment = preferred;
         order.userId = booking.userId;
@@ -504,7 +528,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(order.payment != null) {
             String type = order.payment.paymentType.toLowerCase();
-            if(type.contains("invoice") || type.contains("expedia")) {
+            if(type.contains("expedia")) {
                 order.status = Order.Status.PAYMENT_COMPLETED;
                 order.captured = true;
                 order.payment.captured = true;

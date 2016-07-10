@@ -404,6 +404,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (!order.id.equals(orderId)) {
                 continue;
             }
+            finalizeOrder(order);
             String currentSession = getSession().id;
             if (user == null) {
                 if (order.session != null && order.session.equals(currentSession)) {
@@ -1295,6 +1296,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrderSecure(orderId);
         order.payment.paymentType = "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment";
         saveOrder(order);
+    }
+
+    private void finalizeOrder(Order order) {
+        List<Order> ordersToFinalise = new ArrayList();
+        ordersToFinalise.add(order);
+        finalize(ordersToFinalise);
     }
 
 }

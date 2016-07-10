@@ -84,38 +84,66 @@ if($booking->orderIds) {
         $result[$order->incrementOrderId] = $order;
     }
     ksort($result);
-    echo "<table cellspacing='0' cellpadding='0'>";
+    
+    $totalAmount = 0;
+    $totalAmountEx = 0;
+    
+    echo "<table cellspacing='0' cellpadding='0' width='100%'>";
     echo "<tr>";
     echo "<th>Orderid</th>";
     echo "<th>Order date</th>";
     echo "<th>Price</th>";
     echo "<th>Payment status</th>";
     echo "<th>Payment type</th>";
-    echo "<th>Transferred</th>";
+    echo "<th>Closed</th>";
+    echo "<th>Credit order</th>";
     echo "</tr>";
     foreach($result as $order) {
         $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
-        echo "<tr>";
+        $totalEx = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
+        
+        $totalAmount += $total;
+        $totalAmountEx += $totalEx;
+        
+        echo "<tr orderid='".$order->id."'>";
         echo "<td><a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a></td>";
         echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate))  . "</td>";
-        echo "<td>" . round($total) . "</td>";
+        echo "<td>" . round($totalEx) . "<br><span style='color:#bbb'>" . round($total) . "</span></td>";
         echo "<td>" . $paymentTypes[$order->status] . "</td>";
         echo "<td>";
         echo $this->translatePaymenttype($order->payment->paymentType, $instances);
-        if($order->status <= 5) {
-            echo " - <a href='/?page=cart&payorder=" . $order->id."'>pay</a> - <span style='cursor:pointer; color:blue' class='sendpaymentlink' orderid='".$order->id."' bookingid='".$booking->id."'>Send payment link</span>";
+        if($order->status <= 5 && $total > 0) {
+            if(!stristr($order->payment->paymentType, "invoice")) {
+                echo " - <a href='/?page=cart&payorder=" . $order->id."'>pay</a> - <span style='cursor:pointer; color:blue' class='sendpaymentlink' orderid='".$order->id."' bookingid='".$booking->id."'>Send payment link</span>";
+            }
         }
         echo "</td>";
         echo "<td align='center'>";
 
-        if(isset($order->transferedToAccountingSystem) && $order->transferedToAccountingSystem) {
+        if(@$order->closed) {
             echo "<i class='fa fa-check'>";
         } else {
             echo "<i class='fa fa-close'>";
         }
         echo "</td>";
+        if(@$order->closed && !@$order->isCreditNote) {
+            echo "<td class='doCreditOrder'>Credit order</td>";
+        } else {
+            echo "<td></td>";
+        }
         echo "</tr>";
     }
+    
+    echo "<tr>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td>$totalAmountEx<br><span style='color:#bbb'>$totalAmount</span></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "</tr>";
+    
     echo "</table>";
 } else {
     echo "<h2>No orders added to this booking yet.</h2>";

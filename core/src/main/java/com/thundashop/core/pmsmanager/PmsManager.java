@@ -2984,7 +2984,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Order firstOrder = null;
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrder(orderId);
-            if(order.status == Order.Status.PAYMENT_COMPLETED) {
+            if(order.closed) {
                 continue;
             }
             firstOrder = order;

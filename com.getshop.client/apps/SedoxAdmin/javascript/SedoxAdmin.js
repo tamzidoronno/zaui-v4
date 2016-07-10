@@ -40,7 +40,7 @@ app.SedoxAdmin = {
             
             var event = thundashop.Ajax.createEvent(null, "renderProduct", $('.SedoxAdmin'), dataToPost);
             thundashop.Ajax.postWithCallBack(event, function(res) {
-                $('.col_row_content[productid=90650]').html(res);
+                $('.col_row_content[productid='+data.productId+']').html(res);
             })
         }  
     },

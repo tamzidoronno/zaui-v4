@@ -134,12 +134,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public SedoxProductSearchPage searchUserFiles(SedoxSearch search) {
         User user = getSession() != null ? getSession().currentUser : null;
-        SedoxProductSearchPage result = sedoxSearchEngine.getSearchResult(new ArrayList(productsShared.values()), search, user);
+        SedoxProductSearchPage result = sedoxSearchEngine.getSearchResult(new ArrayList(productsShared.values()), new ArrayList(products.values()), search, user);
         List<SedoxProduct> retproducts = new ArrayList();
         result.products.stream()
                 .forEach(product -> retproducts.addAll(getProductsWithShareProductId(product.id)));
         result.products = new ArrayList();
-        result.userProducts = retproducts;
+        result.userProducts.addAll(retproducts);
         result.userProducts.stream().forEach(o -> finalize(o));
         return result;
     }
@@ -147,7 +147,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public synchronized SedoxProductSearchPage search(SedoxSearch search) {
         User user = getSession() != null ? getSession().currentUser : null;
-        SedoxProductSearchPage result = sedoxSearchEngine.getSearchResult(new ArrayList(productsShared.values()), search, user);
+        SedoxProductSearchPage result = sedoxSearchEngine.getSearchResult(new ArrayList(productsShared.values()), new ArrayList(products.values()), search, user);
         result.products.stream().forEach(o -> finalize(o));
         Collections.sort(result.products);
         return result;

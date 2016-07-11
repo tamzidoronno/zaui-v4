@@ -2029,7 +2029,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (items.isEmpty()) {
             System.out.println("No items available?");
         } else {
-            BookingItem item = items.get(0);
+            BookingItem item = null;
+            for(BookingItem tmpitem : items) {
+                item = tmpitem;
+                PmsAdditionalItemInformation additionalroominfo = getAdditionalInfo(item.id);
+                if(additionalroominfo.isClean()) {
+                    break;
+                }
+            }
             room.bookingItemId = item.id;
             room.bookingItemTypeId = item.bookingItemTypeId;
 

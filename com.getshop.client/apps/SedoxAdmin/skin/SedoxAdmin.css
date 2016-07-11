@@ -153,13 +153,14 @@
 .SedoxAdmin .creditinformation .product_action_button .action_inner {
     font-size: 14px;
     color: #FFF;
-    background-color: #4eb61e;
+    background-color: #b7001f;
     border-radius: 5px;
     padding: 15px;
 }
 
 .SedoxAdmin .creditinformation .product_action_button.redbutton .action_inner {
-    background-color: #b7001f;
+    background-color: #4eb61e;
+    
 }
 
 .SedoxAdmin .product_action_button {

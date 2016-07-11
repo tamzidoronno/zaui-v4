@@ -533,6 +533,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         user.address.fullName = user.fullName;
 
         Order order = orderManager.createOrder(user.address);
+        order.userId = booking.userId;
 
         Payment preferred = orderManager.getStorePreferredPayementMethod();
         Payment preferredChannel = getChannelPreferredPaymentMethod(booking);
@@ -547,7 +548,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }  
         
         order.payment = preferred;
-        order.userId = booking.userId;
         order.invoiceNote = booking.invoiceNote;
         
         if(order.payment != null) {

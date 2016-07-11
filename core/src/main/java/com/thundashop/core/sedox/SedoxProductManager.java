@@ -347,6 +347,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 sedoxProduct.rowCreatedDate = new Date();
                 sedoxProduct.isFinished = true;
                 sedoxProduct.virtual = true;
+                finalize(sedoxProduct);
                 return sedoxProduct;
             }
         }

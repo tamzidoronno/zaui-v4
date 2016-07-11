@@ -115,10 +115,12 @@ app.SedoxAdmin = {
     },
     
     showUploadProgress: function(file) {
+        $('.SedoxAdmin .uploadfilemodal .selectfiletypearea').hide();
         $('.SedoxAdmin .uploadfilemodal .progressbararea').show();
         $('.SedoxAdmin .uploadfilemodal .progressbararea .meter').show();
         $('.SedoxAdmin .uploadfilemodal .progressbararea .selectarea').hide();
         $('.SedoxAdmin .uploadfilemodal .selectarea').hide();
+        
         app.SedoxAdmin.handleDragOut();
         
         var fileName = file.name;
@@ -132,6 +134,8 @@ app.SedoxAdmin = {
                 fileName: fileName
             };
 
+            $('.SedoxAdmin .uploadfilemodal .sedox_upload_filename').html(data.fileName);
+            
             var event = thundashop.Ajax.createEvent(null, "uploadFile", $('#sedox_file_upload_selector'), data);
             
             thundashop.Ajax.post(
@@ -161,7 +165,8 @@ app.SedoxAdmin = {
         $('.SedoxAdmin .meter .progresindicator').html(progess+"%");
     },
     
-    fileUploaded: function() {
+    fileUploaded: function(arg) {
+        $('.SedoxAdmin .uploadfilemodal .selectfiletypearea').show();
         $('.SedoxAdmin .uploadfilemodal .progressbararea .meter').hide();
         $('.SedoxAdmin .uploadfilemodal .progressbararea .selectarea').show();
     }

@@ -131,6 +131,10 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $this->getApi()->getSedoxProductManager()->toggleStartStop($product->id, !$product->started);
     }
     
+    public function markAsFinished() {
+        $this->getApi()->getSedoxProductManager()->markAsFinished($_POST['data']['productid'], true);
+    }
+    
     public function sendFileByMail() {
         $files = array($_POST['data']['sedox_file_id']);
         $this->getApi()->getSedoxProductManager()->sendProductByMail($_POST['data']['productid'], "", $files);

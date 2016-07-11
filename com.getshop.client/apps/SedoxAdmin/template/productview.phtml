@@ -199,6 +199,17 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
             <div class='product_action_button'>
                 <div  sedox_file_id="" productid="<? echo $product->id; ?>" class='action_inner sendProductToDifferentEmail'>Send product to different email</div>
             </div>
+                
+            <?
+            if (!$product->isFinished) {
+            ?>
+                <div class='product_action_button'>
+                    <div  sedox_file_id="" productid="<? echo $product->id; ?>" class='action_inner markAsFinished' gsclick="markAsFinished">Mark as finished</div>
+                </div>
+            <?
+            }
+            ?>
+            
          </div>
     </div>
     

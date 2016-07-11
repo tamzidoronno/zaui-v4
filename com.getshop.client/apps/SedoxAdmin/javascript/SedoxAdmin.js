@@ -18,10 +18,14 @@ app.SedoxAdmin = {
     sendProductToDifferentEmail: function() {
         var email = prompt("Where do you want to send it? (email)");
         
+        if (!email)
+            return;
+        
         var data = {
             email : email,
             productId : $(this).attr('productId'),
-            fileId : $(this).attr('sedox_file_id')
+            fileId : $(this).attr('sedox_file_id'),
+            comment : $('.commentfield_for_emails[productId="'+$(this).attr('productId')+'"]').val()
         };
         
         var event = thundashop.Ajax.createEvent(null, "sendProductToDifferentEmail", this, data);
@@ -75,9 +79,6 @@ app.SedoxAdmin = {
                 requested_dtc : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #dtc').is(':checked'),
             }
         }
-        
-        
-
          
         var event = thundashop.Ajax.createEvent(null, "finalizeFileUpload", this, data);
         thundashop.Ajax.post(event, null, {}, true, true);

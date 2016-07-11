@@ -86,6 +86,16 @@ thundashop.Ajax = {
             }
         }
         
+        if ($(this).attr('gs_also')) {
+            var extraData = $(this).attr('gs_also').split(",");
+            for (var i in extraData) {
+                var field = $("."+extraData[i]);
+                var addData = $(field).val();
+                var name = $(field).attr('gsname');
+                data[name] = addData;
+            }
+        }
+        
         $.each(this.attributes, function(i, attrib) {
             var name = attrib.name;
             var value = attrib.value;

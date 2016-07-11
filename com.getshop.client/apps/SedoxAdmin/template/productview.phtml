@@ -178,11 +178,15 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
 
         ?>
         <div class='creditinformation'>
+            <div>
+                <textarea class="commentfield_for_emails" productId="<? echo $product->id; ?>" gsname="comment" placeholder="Comment for emails."></textarea>
+            </div>
+                
             <div class='product_action_button <? echo $class1; ?>'>
                 <div gsclick='purchaseProductOnly' sedox_file_id="" productid="<? echo $product->id; ?>" class='action_inner'>Purchase Order Only</div>
             </div>
-            <div class='product_action_button <? echo $class2; ?>' gsclick="notifyByEmail" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Notify by Email / SMS</div></div>
-            <div class='product_action_button <? echo $class3; ?>' gsclick="sendFileByMail" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Send product by email</div></div>
+            <div class='product_action_button <? echo $class2; ?>' gsclick="notifyByEmail" gs_also="commentfield_for_emails[productId='<? echo $product->id; ?>']" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Notify by Email / SMS</div></div>
+            <div class='product_action_button <? echo $class3; ?>' gsclick="sendFileByMail" gs_also="commentfield_for_emails[productId='<? echo $product->id; ?>']" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Send product by email</div></div>
             
             <?
             if ($product->saleAble) {

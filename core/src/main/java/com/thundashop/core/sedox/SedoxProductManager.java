@@ -1096,7 +1096,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             } else {
                 content = app.getSetting("filereadyusernoattachmentemail");
             }
-            content = replaceEmailVariables(content, null, product, sharedProduct, null, user, order, files);
+            content = replaceEmailVariables(content, null, product, sharedProduct, null, user, order, files, extraText);
         }
         
         content += getSignature();
@@ -1165,10 +1165,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
             
             if(title != null) {
-                title = replaceEmailVariables(title, special, sedoxProduct, sharedProduct, user, sedoxUser, null, fileIds);
+                title = replaceEmailVariables(title, special, sedoxProduct, sharedProduct, user, sedoxUser, null, fileIds, null);
             }
             if(content != null) {
-                content = replaceEmailVariables(content, special, sedoxProduct, sharedProduct, user, sedoxUser, null, fileIds);
+                content = replaceEmailVariables(content, special, sedoxProduct, sharedProduct, user, sedoxUser, null, fileIds, null);
             }
         }
         
@@ -1196,7 +1196,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         return spent;
     }
     
-    private String replaceEmailVariables(String text, String special, SedoxProduct sedoxProduct, SedoxSharedProduct sharedProduct, User user, SedoxUser sedoxUser, SedoxOrder order, List<Integer> fileIds) {
+    private String replaceEmailVariables(String text, String special, SedoxProduct sedoxProduct, SedoxSharedProduct sharedProduct, User user, SedoxUser sedoxUser, SedoxOrder order, List<Integer> fileIds, String extraText) {
         if(special != null) {
             text = text.replace("{special-info}", special);
             
@@ -1216,6 +1216,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             
             text = text.replace("{product-file-names}", binaryFiles);
         }
+        
+        
+        text = text.replace("{extra-comment-from-admin}", extraText == null ? "" : extraText);
         
         if(sedoxProduct != null) {
             text = text.replace("{product-id}", sedoxProduct.id);
@@ -1520,10 +1523,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             content = app.getSetting("purchaseadminemail");
             
             if(title != null) {
-                title = replaceEmailVariables(title, null, product, sharedProduct, getshopUser, user, order, null);
+                title = replaceEmailVariables(title, null, product, sharedProduct, getshopUser, user, order, null, null);
             }
             if(content != null) {
-                content = replaceEmailVariables(content, null, product, sharedProduct, getshopUser, user, order, null);
+                content = replaceEmailVariables(content, null, product, sharedProduct, getshopUser, user, order, null, null);
             }
         }
         
@@ -1550,10 +1553,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             content = app.getSetting("uploaduseremail");
             
             if(title != null) {
-                title = replaceEmailVariables(title, null, sedoxProduct, sharedProduct, null, null, null, null);
+                title = replaceEmailVariables(title, null, sedoxProduct, sharedProduct, null, null, null, null, null);
             }
             if(content != null) {
-                content = replaceEmailVariables(content, null, sedoxProduct, sharedProduct, null, null, null, null);
+                content = replaceEmailVariables(content, null, sedoxProduct, sharedProduct, null, null, null, null, null);
             }
         }
         
@@ -2174,7 +2177,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public void sendProductToDifferentEmail(String productId, String emailAddress, List<Integer> files) {
+    public void sendProductToDifferentEmail(String productId, String emailAddress, List<Integer> files, String extraText) {
         purchaseOnlyForCustomer(productId, files);
         
         SedoxProduct product = getProductById(productId);
@@ -2182,7 +2185,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         Application app = applicationPool.getApplication("1475891a-3154-49f9-a2b4-ed10bfdda1fc");
         String content = app.getSetting("sentToDifferentEmail");
-        content = replaceEmailVariables(content, null, product, sharedProduct, null, null, null, null);
+        content = replaceEmailVariables(content, null, product, sharedProduct, null, null, null, null, extraText);
         
         HashMap<String, String> fileMap = createFileMap(sharedProduct, files, product);
         mailFactory.sendWithAttachments("files@tuningfiles.com", emailAddress, sharedProduct.getName(), content, fileMap, true);

@@ -20,8 +20,8 @@
     border: solid 1px;
     display:none;
 }
-
-.PmsManagement .guestoverviewtable  td .roompostfix { font-size: 12px; }
+.PmsManagement .viewmode:hover { font-weight: bold; cursor: pointer; }
+.PmsManagement .guestoverviewtable  td .roompostfix { font-size: 12px; position:relative; }
 .PmsManagement .actions:hover {
      -moz-transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
@@ -98,7 +98,17 @@
 
 .PmsManagement .pmsbutton.tiny { padding-top: 2px; padding-bottom: 2px; }
 .PmsManagement .bookinginfo select { font-size: 16px; }
-.PmsManagement .bookinginfo .editmode { display: none; }
+.PmsManagement .bookinginfo .editmode { display: none;
+    position: absolute;
+    background-color: #fff;
+    z-index: 3;
+    padding: 10px;
+    border: solid 1px;
+    border-radius: 3px;
+    left: 5px;
+    top: 5px;
+    width: 280px;
+}
 .PmsManagement .needconfirmation { margin: 20px; font-size: 20px; padding: 10px;text-align: center; border: solid 1px #BBB; background-color:#efefef; }
 .PmsManagement .typefilter { display:inline-block; min-width: 100px; }
 .PmsManagement .commentbottom { color:#bbb; font-size: 10px; }

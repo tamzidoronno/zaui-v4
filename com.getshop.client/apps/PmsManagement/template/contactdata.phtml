@@ -30,9 +30,11 @@ $config = $this->getConfigurationToUse();
             if($booking->channel) { echo "Channel : " . $booking->channel . "<br>"; }
             if($booking->wubookchannelreservationcode) { echo "Channel res id : " . $booking->wubookchannelreservationcode . "<br>"; }
             if($booking->wubookreservationid) { echo "Wubook res id : " . $booking->wubookreservationid . "<br>"; }
-            echo "Wubook no show : ";
-            echo $booking->wubookNoShow ? "Yes" : "no";
-            echo "<br>"; 
+            if($booking->channel) { 
+                echo "Wubook no show : ";
+                echo $booking->wubookNoShow ? "Yes" : "no";
+                echo "<br>"; 
+            }
             
             foreach($booking->registrationData->resultAdded as $key => $value) {
                 $name = "";

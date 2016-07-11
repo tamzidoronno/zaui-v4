@@ -3,7 +3,7 @@ app.PmsManagement = {
         $(document).on('change', '.PmsManagement .attachedProduct', app.PmsManagement.attachProduct);
         $(document).on('click', '.PmsManagement .setFilter', app.PmsManagement.setFilter);
         $(document).on('click', '.PmsManagement .moreinformationaboutbooking', app.PmsManagement.showMoreInformation);
-        $(document).on('click', '.PmsManagement .roompostfix', app.PmsManagement.toggleEditMode);
+        $(document).on('click', '.PmsManagement .viewmode', app.PmsManagement.toggleEditMode);
         $(document).on('click', '.PmsManagement .statisticsrow', app.PmsManagement.loadStatisticsOverview);
         $(document).on('click', '.PmsManagement .editGuestToggle', app.PmsManagement.editGuestToggle);
         $(document).on('change', '.PmsManagement [gsname="numberofguests"]', app.PmsManagement.editGuestToggle);
@@ -314,8 +314,14 @@ app.PmsManagement = {
         }
         var view = row.find('.viewmode');
         var edit = row.find('.editmode');
-        view.hide();
-        edit.show();
+        edit.find('.fa-close').remove();
+        var close = $("<i class='fa fa-close' style='float:right;cursor:pointer;'></i>");
+        close.click(function() {
+            edit.fadeOut();
+            return;
+        });
+        edit.prepend(close);
+        edit.fadeIn();
     },
     showMoreInformation : function() {
         var data = {

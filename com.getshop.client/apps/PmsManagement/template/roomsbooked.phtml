@@ -101,7 +101,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
             <th>Invoiced until</th>
         <?php } ?>
         <?php if($hasArx) { ?>
-            <th>To arx</th>
+            <th>To lock</th>
         <?php } ?>
     </tr>
 
@@ -270,11 +270,12 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                             <span class="viewmode">
                                 <?php
                                 foreach ($room->guests as $guest) {
-                                    echo $guest->name . " - " . $guest->email . " - +" . $guest->prefix . $guest->phone;
+                                    echo ($guest->name) ? $guest->name : "No name";
+                                    echo "<br>";
                                 }
                                 ?>
                             </span>
-                            <span class="editmode" gstype='form' method="setGuests">
+                            <span class="editmode" gstype='form' method="setGuests" style="width:400px;">
                                 <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                                 <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                                 <select gsname='numberofguests'>
@@ -316,12 +317,31 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     <span class='roomattribute'>
                         <span class='roompostfix'>
                             <span class='viewmode'>
-                                <? echo round($room->price); ?>
+                                <? 
+                                echo round($room->price); 
+                                ?>
                             </span>
                             <span class='editmode' method='changePrice' gstype='form'>
                                 <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                                 <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                                <input type='text' gsname='price' value='<? echo $room->price; ?>'>
+                                <?
+                                $matrix = array();
+                                foreach($room->priceMatrix as $key => $val) {
+                                    $matrix[strtotime($key)] = $val;
+                                }
+                                ksort($matrix);
+                                
+                                if(!$config->usePriceMatrixOnOrder) {
+                                    ?>
+                                    <input type='hidden' value='no' gsname='pricematrix'>
+                                    <input type='text' gsname='price' value='<? echo $room->price; ?>'>
+                                    <?php
+                                } else {
+                                    echo "<input type='hidden' value='yes' gsname='pricematrix'>";
+                                    foreach($matrix as $key => $val) {
+                                        echo "<div style='display:inline-block; width: 125px;'>" . date("d.m.Y", $key) . " : <input type='txt' value='$val' gsname='matrixprice_$key' style='width: 40px; border: solid 1px;'></div><br>";
+                                    }
+                                } ?>
                                 <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
                             </span>
                         </span>
@@ -340,18 +360,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 </td>
                 <?php if($hasArx) { ?>
                     <td align='center'>
-                        <span class='roomattribute'>
-                            <span class='roompostfix'>
-                                <span class='viewmode'>
-                                    <? if($room->addedToArx) {
-                                        echo "yes";
-                                    } else {
-                                        echo "no";
-                                    }
-                                    ?>
-                                </span>
-                            </span>
-                        </span>
+                        <? echo ($room->addedToArx) ? "yes" : "no"; ?>
                     </td>
                 <? } ?>
         </tr>

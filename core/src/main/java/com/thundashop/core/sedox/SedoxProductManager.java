@@ -155,7 +155,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public synchronized void sync(String option) throws ErrorException {
-        if (!getStoreId().equals("608afafe-fd72-4924-aca7-9a8552bc6c81")) {
+        if (!getStoreId().equals("eafea78d-1eea-403f-abbb-3b23a6e61dae")) {
             throw new ErrorException(26);
         }
 

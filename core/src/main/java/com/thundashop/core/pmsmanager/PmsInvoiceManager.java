@@ -233,6 +233,30 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         pmsManager.saveBooking(booking);
     }
 
+    private void addItemToItemsToReturn(CartItem item) {
+        itemsToReturn.add(item);
+    }
+
+    private void addItemsToItemToReturn(List<CartItem> returnresult) {
+        itemsToReturn.addAll(returnresult);
+    }
+
+    public Date normalizeDate(Date date, boolean startdate) {
+        if(!pmsManager.getConfigurationSecure().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.DAILY)) {
+            return date;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        
+        cal.setTime(date);
+        if(startdate)
+            cal.set(Calendar.HOUR_OF_DAY, 15);
+        else
+            cal.set(Calendar.HOUR_OF_DAY, 12);
+        
+        return cal.getTime();
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -759,6 +783,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private List<CartItem> createCartItemsForRoom(Date startDate, Date endDate, PmsBooking booking, PmsBookingRooms room) {
+        
+        startDate = normalizeDate(startDate, true);
+        endDate = normalizeDate(endDate, false);
+        
         List<CartItem> items = new ArrayList();
         int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
         if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
@@ -840,7 +868,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         item.getProduct().externalReferenceId = roomId;
         
         if(!runningDiffRoutine) {
-            itemsToReturn.add(item);
+            addItemToItemsToReturn(item);
         }
         return item;
     }
@@ -1022,7 +1050,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         runningDiffRoutine = false;
-        itemsToReturn.addAll(returnresult);
+        addItemsToItemToReturn(returnresult);
         return returnresult;
     }
 

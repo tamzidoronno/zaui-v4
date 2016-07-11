@@ -11,6 +11,8 @@ public class PmsConfiguration extends DataCommon {
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;
         public static Integer DAILY = 2;
+        public static Integer WEEKLY = 3;
+        public static Integer MONTHLY = 4;
     }
     
     public HashMap<String, String> emails = new HashMap();

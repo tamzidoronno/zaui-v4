@@ -2835,6 +2835,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public void addAddonsToBooking(Integer type, String bookingId, String roomId, boolean remove) {
+        
         PmsBooking booking = getBooking(bookingId);
         PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
         
@@ -2853,6 +2854,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(remove) {
                 continue;
             }
+            
             if(addonConfig.isSingle) {
                 if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
                     PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room, room.date.start);
@@ -2865,12 +2867,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     room.addons.add(toAdd);
                 }
             } else {
-                Date start = room.date.start;
+            
+                Date start = pmsInvoiceManager.normalizeDate(room.date.start, true);
+                Date end = pmsInvoiceManager.normalizeDate(room.date.end, false);
+
                 while(true) {
                     PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room, start);
                     room.addons.add(toAdd);
                     start = addTimeUnit(start, booking.priceType);
-                    if(start.after(room.date.end)) {
+                    if(start.after(end)) {
                         break;
                     }
                 }
@@ -2933,7 +2938,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void setPriceOnRoom(PmsBookingRooms room, String couponCode, boolean avgPrice, Integer priceType) {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, couponCode, priceType);
-        room.priceMatrix = pmsInvoiceManager.buildPriceMatrix(room, couponCode, priceType);
+        LinkedHashMap<String, Double> priceMatrix = pmsInvoiceManager.buildPriceMatrix(room, couponCode, priceType);
+        LinkedHashMap<String, Double> newMatrix = new LinkedHashMap();
+        for(String key : priceMatrix.keySet()) {
+            Double value = priceMatrix.get(key);
+            if(room.priceMatrix.containsKey(key)) {
+                value = room.priceMatrix.get(key);
+            }
+            newMatrix.put(key, value);
+        }
+        room.priceMatrix = newMatrix;
         room.taxes = pmsInvoiceManager.calculateTaxes(room.bookingItemTypeId);
     }
 

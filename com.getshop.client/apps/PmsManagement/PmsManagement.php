@@ -651,7 +651,23 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $booking = $this->getSelectedBooking();
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
-                $room->price = $_POST['data']['price'];
+                if($_POST['data']['pricematrix'] == "no") {
+                    $room->price = $_POST['data']['price'];
+                } else {
+                    foreach($_POST['data'] as $key => $val) {
+                        if(stristr($key, "matrixprice_")) {
+                            $time = str_replace("matrixprice_", "", $key);
+                            $pricematrix[$time] = $val;
+                        }
+                    }
+                    ksort($pricematrix);
+                    $newmatrix = array();
+                    foreach($pricematrix as $k => $val) {
+                    $newmatrix[date("d-m-Y",$k)] = $val;
+                    }
+                    print_r($pricematrix);
+                    $room->priceMatrix = $newmatrix;
+                }
             }
         }
         

@@ -145,11 +145,11 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     
     public function sendFileByMail() {
         $files = array($_POST['data']['sedox_file_id']);
-        $this->getApi()->getSedoxProductManager()->sendProductByMail($_POST['data']['productid'], "", $files);
+        $this->getApi()->getSedoxProductManager()->sendProductByMail($_POST['data']['productid'], $_POST['data']['comment'], $files);
     }
     
     public function notifyByEmail() {
-        $this->getApi()->getSedoxProductManager()->notifyForCustomer($_POST['data']['productid'], "");
+        $this->getApi()->getSedoxProductManager()->notifyForCustomer($_POST['data']['productid'], $_POST['data']['comment']);
     }
     
     public function purchaseOrder() {
@@ -240,7 +240,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     }
     
     public function sendProductToDifferentEmail() {
-        $this->getApi()->getSedoxProductManager()->sendProductToDifferentEmail($_POST['data']['productId'], $_POST['data']['email'], [$_POST['data']['fileId']]);
+        $this->getApi()->getSedoxProductManager()->sendProductToDifferentEmail($_POST['data']['productId'], $_POST['data']['email'], [$_POST['data']['fileId']],  $_POST['data']['comment']);
     }
     
 }

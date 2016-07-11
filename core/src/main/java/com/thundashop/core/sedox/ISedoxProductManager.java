@@ -242,5 +242,5 @@ public interface ISedoxProductManager  {
     public void invokeCreditUpdate();
     
     @Administrator
-    public void sendProductToDifferentEmail(String productId, String emailAddress, List<Integer> files);
+    public void sendProductToDifferentEmail(String productId, String emailAddress, List<Integer> files, String extraText);
 }

@@ -39,6 +39,13 @@ attribute gstypes;
         gs_confirm="Are you sure you want to delete?"
         <div gsclick="save" gs_confirm="Are you sure">Test</div>
 
+        gs_also="classename":
+            <textarea class='myclassname2' gsname='moredata2'></textarea>
+            <textarea class='myclassname1' gsname='moredata1'></textarea>
+            <div gsclick="method" gs_also="myclassname2,myclassname1">submit</div>
+
+        
+
     gs_show_modal:
         example: <div gs_show_modal="modalname">Open Modal</div>
 

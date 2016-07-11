@@ -39,6 +39,10 @@
     width: 100px;
 }
 
+.SedoxAdmin .header .col_header.col4 {
+    width: 200px !important;
+}
+
 .SedoxAdmin .header .col_header.col3,
 .SedoxAdmin .tablecontent .col_content.col3 {
     width: calc(100% - 600px) !important;  

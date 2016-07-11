@@ -772,12 +772,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         for (SedoxUser developer : getDevelopers()) {
             User user = userManager.getUserById(developer.id);
             if (developer.isActiveDelevoper) {
-                sendPushoverMessage(user.emailAddress, sedoxProduct);
+                sendPushoverMessage(developer, sedoxProduct);
             }
         }
     }
 
-    private void sendPushoverMessage(String emailAddress, SedoxProduct sedoxProduct) throws ErrorException {
+    private void sendPushoverMessage(SedoxUser developer, SedoxProduct sedoxProduct) throws ErrorException {
         User user = userManager.getUserById(sedoxProduct.firstUploadedByUserId);
         userManager.checkUserAccess(user);
         
@@ -787,7 +787,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         String message = "File: " + sharedProduct.getName();
         message += " | User: " + user.fullName;
         message += " | Credit: " + sedoxUser.creditAccount.getBalance();
-        sedoxPushover.sendMessage(sedoxUser.pushoverId, message);
+        sedoxPushover.sendMessage(developer.pushoverId, message);
     }
 
     private String getNextProductId() {

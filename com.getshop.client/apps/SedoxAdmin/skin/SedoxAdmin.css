@@ -105,6 +105,10 @@
     cursor: pointer;
 }
 
+.SedoxAdmin .current_status_line .start_button {
+    background-color: #b7001f;
+}
+
 .SedoxAdmin .current_status_line .stop_button {
     background-color: #b7001f;
     display: inline-block;

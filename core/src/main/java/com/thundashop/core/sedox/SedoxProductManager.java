@@ -1240,6 +1240,18 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         
         if(sharedProduct != null && fileIds != null && !fileIds.isEmpty()) {
+            String requestInformation = "";
+            for (Integer fileId : fileIds) {
+                SedoxBinaryFile file = sharedProduct.getFileById(fileId);
+                if (file.options != null && !file.options.isEmpty()) {
+                    requestInformation = file.options.requested_remaptype + " - " + file.options.toString();
+                }
+            }
+            
+            text = text.replace("{product-requestinformation}", requestInformation);
+        }
+        
+        if(sharedProduct != null && fileIds != null && !fileIds.isEmpty()) {
             String files = "";
             
             for (Integer fileId : fileIds) {
@@ -1251,9 +1263,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 files += "<br>" + file.fileType;
                 if (file.extraInformation != null && !file.extraInformation.isEmpty()) {
                     files += " - " + file.extraInformation;
-                }
-                if (file.options != null && !file.options.isEmpty()) {
-                    files += " - (" + file.options.toString() + ")";
                 }
                 
                 if (file.orgFilename != null && !file.orgFilename.isEmpty()) {

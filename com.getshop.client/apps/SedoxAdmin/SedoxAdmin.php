@@ -18,6 +18,12 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     }
     
     public function renderProduct($product=false) {
+        
+        if (isset($_POST['data']['justCreatedFileId']) && $_POST['data']['justCreatedFileId']) {
+            $_POST['data']['fileId'] = $_POST['data']['justCreatedFileId'];
+            $this->fileSelected();
+        }
+        
         if (!$product) {
             $product = $this->getApi()->getSedoxProductManager()->getProductById($_POST['data']['productId']);
         }
@@ -30,6 +36,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $sedoxUserAccount = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($file->firstUploadedByUserId);
         $balance = $sedoxUserAccount->creditAccount->balance;
         $seeUserButton = "<div class='sedoxadmin_see_user_button' userid='$user->id' title='Check User'><i class='fa fa-search'></i></div>";
+        $impersonateUserButton = "<a href='/impersonate.php?userId=$user->id'><div class='sedoxadmin_impersonate_user_button' userid='$user->id' title='Impersonate'><i class='fa fa-magic'></i></div></a>";
 
 
         $status = "";
@@ -58,7 +65,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
                 echo "<div class='col_content col1'>$file->id</div>";
                 echo "<div class='col_content col2'>$date</div>";
                 echo "<div class='col_content col3'>$file->printableName</div>";
-                echo "<div class='col_content col4'> $seeUserButton $user->fullName</div>";
+                echo "<div class='col_content col4'>$impersonateUserButton $seeUserButton <span class='ownerusername'>$user->fullName</span></div>";
                 echo "<div class='col_content col5'>$balance</div>";
                 echo "<div class='admin_extrainfo_row'>";
                 echo "<b>Requested:</b> ".$this->getRequestedString($file);
@@ -68,6 +75,8 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
             $this->setCurrentProduct($file);
             $this->includefile("productview");
         echo "</div>";
+        
+        echo "<script>getshop.SedoxDatabankTheme.setAll();</script>";
     }
     
     public function getFilesToProcess() {
@@ -101,7 +110,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     public function finalizeFileUpload() {
         $base64 = $_SESSION['SEDOX_FILE_ADMIN_UPLOADED'];
         $filename = $_SESSION['SEDOX_FILE_ADMIN_UPLOADED_FILENAME'];
-        $this->getApi()->getSedoxProductManager()->addFileToProduct($base64, $filename, $_POST['data']['type'], $_POST['data']['productid']);
+        $this->getApi()->getSedoxProductManager()->addFileToProduct($base64, $filename, $_POST['data']['type'], $_POST['data']['productid'], $_POST['data']['options']);
     }
     
     public function markRowAsExpanded() {
@@ -128,6 +137,10 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     public function markProductAsStarted() {
         $product = $this->getApi()->getSedoxProductManager()->getProductById($_POST['data']['productid']);
         $this->getApi()->getSedoxProductManager()->toggleStartStop($product->id, !$product->started);
+    }
+    
+    public function markAsFinished() {
+        $this->getApi()->getSedoxProductManager()->markAsFinished($_POST['data']['productid'], true);
     }
     
     public function sendFileByMail() {

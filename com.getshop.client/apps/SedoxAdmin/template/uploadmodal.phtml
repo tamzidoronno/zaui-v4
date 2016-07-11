@@ -1,18 +1,34 @@
 <div class="uploadfilemodal">
-    
+
     <div class="modal_inner">
         <div class="modalcontent">
-            
-            
+
+
             <div class="progressbararea">
-                <div class="progressheader">Uploading: <span class="sedox_upload_filename"> Test</span></div>
-                
+                <div class="progressheader">Uploading: <span class="sedox_upload_filename"> </span></div>
+
                 <div class="meter">
                     <span style="width: 0%"></span>
                     <div class="progresindicator">0%</div>
                 </div>
-                
+
                 <div class="selectfiletypearea">
+                    <div class="information_radio_buttons">
+                        <?
+                        $extraTypes = array("DPF", "EGR", "Decat", "Vmax", "AdBlue", "DTC");
+                        foreach ($extraTypes as $type) {
+                            ?>
+                            <div style="display: inline-block;">
+                                <input type="checkbox" id="<? echo strtolower($type) ?>"><? echo $type ?></input>
+                                <label  for="<? echo strtolower($type) ?>"></label>
+                            </div>
+                            <?
+                        }
+                        ?>
+                    </div>
+                    <br/>
+                    <br/>
+                    
                     <div class="closebutton"><i class="fa fa-close"></i></div>    
                     What type of file is this?
                     <br/>
@@ -24,7 +40,7 @@
                     <div class="filetype" type='Original'>Original</div>
                 </div>
             </div>
-                
+
             <div class="selectarea">
                 <div class="closebutton"><i class="fa fa-close"></i></div>    
                 <div class="headertitle boldFont"> Upload your files </div>    
@@ -42,6 +58,5 @@
             </div>
         </div>
     </div>
-        
+
 </div>
-    

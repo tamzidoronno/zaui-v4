@@ -290,6 +290,13 @@ body {
     margin-bottom: 20px;
 } 
 
+.gsbody_inner[pageId="filematch"] .sedox_internal_view .downloadinfo select {
+    -moz-animation:blinkingBorder normal 1.5s infinite ease-in-out;
+    -webkit-animation:blinkingBorder normal 1.5s infinite ease-in-out;
+    -ms-animation:blinkingBorder normal 1.5s infinite ease-in-out;
+    animation:blinkingBorder normal 1.5s infinite ease-in-out;
+}
+
 .sedox_internal_view .row_type1 {
     line-height: 43px;
     border-bottom: solid 1px #cecfd1;

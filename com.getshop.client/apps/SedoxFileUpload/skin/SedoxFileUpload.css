@@ -287,7 +287,7 @@
 
 /* .squaredFour */
 .SedoxFileUpload .squaredFour .textlabel {
-    padding-left: 10px;
+    padding-left: 30px;
     display: inline-block;
 }
 
@@ -331,7 +331,10 @@
           transform: rotate(-45deg);
 }
 .SedoxFileUpload .squaredFour input[type=checkbox] {
-  visibility: hidden;
+    visibility: hidden;
+    position: absolute;
+    left: 0px;
+    top: 0px;
 }
 .SedoxFileUpload .squaredFour input[type=checkbox]:checked + label:after {
   opacity: 1;

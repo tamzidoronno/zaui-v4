@@ -109,7 +109,7 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
                     <div class='trash_button smallbutton' gs_confirm="Are you sure you want to delete it?" gsclick="deleteFile" sedox_file_id="" productid="<? echo $product->id; ?>" title="Delete File"><i class='fa fa-trash'></i></div>
                 </div>
                 <div class='priceview'>
-                    <div class='sedox_blue_button sedox_admin_upload_file' productid='<? echo $product->id; ?>' sedox_file_type="<? echo $origRequestType ?>">UPLOAD FILE</div>
+                    <div class='sedox_blue_button sedox_admin_upload_file' extrainfo='<? echo $extraInfo; ?>' productid='<? echo $product->id; ?>' sedox_file_type="<? echo $origRequestType ?>">UPLOAD FILE</div>
                 </div>
             </div>
         </div>
@@ -199,6 +199,17 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
             <div class='product_action_button'>
                 <div  sedox_file_id="" productid="<? echo $product->id; ?>" class='action_inner sendProductToDifferentEmail'>Send product to different email</div>
             </div>
+                
+            <?
+            if (!$product->isFinished) {
+            ?>
+                <div class='product_action_button'>
+                    <div  sedox_file_id="" productid="<? echo $product->id; ?>" class='action_inner markAsFinished' gsclick="markAsFinished">Mark as finished</div>
+                </div>
+            <?
+            }
+            ?>
+            
          </div>
     </div>
     

@@ -18,12 +18,24 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class SedoxPushOver {
+public class SedoxPushOver implements Runnable {
    private String sendurl = "https://api.pushover.net/1/messages.json";
     private String applicationToken = "agzzgGjfWKovkVCvGQrhjQxNNc7P5n";
     
     @Autowired
     private FrameworkConfig frameworkConfig;
+    private String message;
+    private String pushoverUserId;
+
+    public SedoxPushOver() {
+    }
+
+    public SedoxPushOver(FrameworkConfig frameworkConfig, String message, String pushoverUserId) {
+        this.frameworkConfig = frameworkConfig;
+        this.message = message;
+        this.pushoverUserId = pushoverUserId;
+    }
+    
     
     public void sendMessage(String pushoverUserId, String message) throws ErrorException {
         if (!frameworkConfig.productionMode) {
@@ -31,11 +43,12 @@ public class SedoxPushOver {
             return;
         }
         
-        String data = "token="+applicationToken+"&user=" + pushoverUserId + "&message=" + message;
-        sendPushoverNotification(data);
+        new Thread(new SedoxPushOver(frameworkConfig, message, pushoverUserId)).start();
     }
     
-    private void sendPushoverNotification(String data) throws ErrorException {
+    private void sendPushoverNotification() throws ErrorException {
+        String data = "token="+applicationToken+"&user=" + pushoverUserId + "&message=" + message;
+        
         try {
 
             URL obj = new URL(sendurl);
@@ -55,5 +68,10 @@ public class SedoxPushOver {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void run() {
+        sendPushoverNotification();
     }
 }

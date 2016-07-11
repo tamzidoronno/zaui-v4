@@ -39,11 +39,30 @@
     width: 100px;
 }
 
+.SedoxAdmin .col_row_content .col_content.col4 {
+    height: 40px !important;
+    line-height: 30px !important;
+    white-space:nowrap;
+    position: relative;
+}
+.SedoxAdmin .col_row_content .ownerusername {
+    white-space:nowrap;
+    display: inline-block;
+    width: 100px;
+    overflow-x: hidden;
+    position: absolute;
+    top: 5px;
+}
+.SedoxAdmin .header .col_header.col4 {
+    width: 200px !important;
+}
+
 .SedoxAdmin .header .col_header.col3,
 .SedoxAdmin .tablecontent .col_content.col3 {
     width: calc(100% - 600px) !important;  
 }
 
+.SedoxAdmin .sedoxadmin_impersonate_user_button,
 .SedoxAdmin .sedoxadmin_see_user_button {
     width: 30px;
     height: 30px;
@@ -66,6 +85,11 @@
     border-bottom: solid 2px #DDD;
 }
 
+
+.SedoxAdmin .tablecontent .col_row_content:nth-child(even) .admin_extrainfo_row {
+    background-color: #f9fafc;
+}
+
 .SedoxAdmin .current_status_line {
     display: inline-block;
     float: right;
@@ -84,6 +108,10 @@
     padding-left: 30px;
     margin-left: 20px;
     cursor: pointer;
+}
+
+.SedoxAdmin .current_status_line .start_button {
+    background-color: #b7001f;
 }
 
 .SedoxAdmin .current_status_line .stop_button {
@@ -125,13 +153,14 @@
 .SedoxAdmin .creditinformation .product_action_button .action_inner {
     font-size: 14px;
     color: #FFF;
-    background-color: #4eb61e;
+    background-color: #b7001f;
     border-radius: 5px;
     padding: 15px;
 }
 
 .SedoxAdmin .creditinformation .product_action_button.redbutton .action_inner {
-    background-color: #b7001f;
+    background-color: #4eb61e;
+    
 }
 
 .SedoxAdmin .product_action_button {

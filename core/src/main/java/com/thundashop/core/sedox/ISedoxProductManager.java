@@ -65,7 +65,7 @@ public interface ISedoxProductManager  {
     public void createSedoxProduct(SedoxSharedProduct sedoxProduct, String base64encodedOriginalFile, String originalFileName, String forSlaveId, String origin, String comment, String useCredit, SedoxBinaryFileOptions options, String reference);
     
     @Administrator
-    public void finishUpload(String forSlaveId, SedoxSharedProduct sharedProduct, String useCredit, String comment, SedoxBinaryFile originalFile, SedoxBinaryFile cmdEncryptedFile, SedoxBinaryFileOptions options, String base64EncodeString, String originalFileName, String origin, String fromUserId);
+    public void finishUpload(String forSlaveId, SedoxSharedProduct sharedProduct, String useCredit, String comment, SedoxBinaryFile originalFile, SedoxBinaryFile cmdEncryptedFile, SedoxBinaryFileOptions options, String base64EncodeString, String originalFileName, String origin, String fromUserId, String referenceId);
     
     @Administrator
     public void addFileToProductAsync(SedoxBinaryFile sedoxBinaryFile, String fileType, String fileName, String productId) ;
@@ -80,7 +80,7 @@ public interface ISedoxProductManager  {
     public void requestSpecialFile(String productId, String comment) throws ErrorException;
     
     @Editor
-    public void addFileToProduct(String base64EncodedFile, String fileName, String fileType, String productId) throws ErrorException;
+    public void addFileToProduct(String base64EncodedFile, String fileName, String fileType, String productId, SedoxBinaryFileOptions options) throws ErrorException;
     
     @Customer
     public String purchaseProduct(String productId, List<Integer> files) throws ErrorException;

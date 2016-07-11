@@ -150,4 +150,13 @@ public class SedoxSharedProduct extends DataCommon implements Comparable<SedoxSh
         
         return stringToCheck;
     }
+
+    public SedoxBinaryFile getOriginalCmdFile() {
+        for (SedoxBinaryFile binaryFile : binaryFiles) {
+            if (binaryFile.cmdFileType != null)
+                return binaryFile;
+        }
+        
+        return null;
+    }
 }

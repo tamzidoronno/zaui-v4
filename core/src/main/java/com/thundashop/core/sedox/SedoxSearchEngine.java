@@ -23,9 +23,11 @@ public class SedoxSearchEngine {
     private List<SedoxSharedProduct> products = new ArrayList();
     
     private int pageSize = 10;
+    private List<SedoxProduct> userProducts = new ArrayList();
     
-    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxSharedProduct> products, SedoxSearch search, User currentUser) {
+    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxSharedProduct> products, List<SedoxProduct> userProducts, SedoxSearch search, User currentUser) {
         this.products = products;
+        this.userProducts = userProducts;
         
         String searchString = search.searchCriteria.toLowerCase();
         
@@ -49,6 +51,7 @@ public class SedoxSearchEngine {
         SedoxProductSearchPage page = new SedoxProductSearchPage();
         page.pageNumber = search.page;
         page.products = new ArrayList<>(retProducts);
+        page.userProducts = getUserProducts(searchString);
         Collections.sort(page.products);
         page.totalPages = (int) Math.ceil((double)page.products.size()/(double)10);
         
@@ -65,6 +68,7 @@ public class SedoxSearchEngine {
             return page;
         }
         
+        
         page.pageNumber = 1;
         return page;
     }
@@ -73,6 +77,7 @@ public class SedoxSearchEngine {
         Set<SedoxSharedProduct> retProducts = new TreeSet<>();
         
         for (SedoxSharedProduct product : searchTroughProducts) {
+            
             if (product.id.equals(searchString) || inFileId(product, searchString)) {
                 retProducts.add(product);
             }
@@ -151,5 +156,17 @@ public class SedoxSearchEngine {
         }
         
         return false;
+    }
+
+    private List<SedoxProduct> getUserProducts(String searchString) {
+        List<SedoxProduct> rets = new ArrayList();
+        
+        for (SedoxProduct product : userProducts) {
+            if (product.id.equals(searchString)) {
+                rets.add(product);
+            }
+        }
+        
+        return rets;
     }
 }

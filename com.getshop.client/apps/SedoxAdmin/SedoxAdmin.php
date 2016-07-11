@@ -30,6 +30,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $sedoxUserAccount = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($file->firstUploadedByUserId);
         $balance = $sedoxUserAccount->creditAccount->balance;
         $seeUserButton = "<div class='sedoxadmin_see_user_button' userid='$user->id' title='Check User'><i class='fa fa-search'></i></div>";
+        $impersonateUserButton = "<a href='/impersonate.php?userId=$user->id'><div class='sedoxadmin_impersonate_user_button' userid='$user->id' title='Impersonate'><i class='fa fa-magic'></i></div></a>";
 
 
         $status = "";
@@ -58,7 +59,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
                 echo "<div class='col_content col1'>$file->id</div>";
                 echo "<div class='col_content col2'>$date</div>";
                 echo "<div class='col_content col3'>$file->printableName</div>";
-                echo "<div class='col_content col4'> $seeUserButton $user->fullName</div>";
+                echo "<div class='col_content col4'>$impersonateUserButton $seeUserButton $user->fullName</div>";
                 echo "<div class='col_content col5'>$balance</div>";
                 echo "<div class='admin_extrainfo_row'>";
                 echo "<b>Requested:</b> ".$this->getRequestedString($file);

@@ -65,12 +65,13 @@ public class FileProcessor extends GetShopSchedulerBase {
         this.type = "createProduct";
     }
     
-    public FileProcessor(String base64EncodedFile, String fileName, String fileType, String productId) {
+    public FileProcessor(String base64EncodedFile, String fileName, String fileType, String productId, SedoxBinaryFileOptions options) {
         this.type = "addFile";
         this.base64EncodedFile = base64EncodedFile;
         this.fileName = fileName;
         this.fileType = fileType;
         this.productId = productId;
+        this.options = options;
     }
     
     private SedoxBinaryFile getOriginalBinaryFile(String base64EncodeString, String originalFileName) throws ErrorException, Exception {
@@ -190,6 +191,7 @@ public class FileProcessor extends GetShopSchedulerBase {
 
     private void addFile() throws Exception {
         SedoxBinaryFile sedoxBinaryFile = getOriginalBinaryFile(base64EncodedFile, fileName);
+        sedoxBinaryFile.options = options;
         getApi().getSedoxProductManager().addFileToProductAsync(sedoxBinaryFile, fileType, fileName, productId); // API
     }
 

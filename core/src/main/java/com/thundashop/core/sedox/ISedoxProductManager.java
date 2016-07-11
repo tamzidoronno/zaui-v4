@@ -80,7 +80,7 @@ public interface ISedoxProductManager  {
     public void requestSpecialFile(String productId, String comment) throws ErrorException;
     
     @Editor
-    public void addFileToProduct(String base64EncodedFile, String fileName, String fileType, String productId) throws ErrorException;
+    public void addFileToProduct(String base64EncodedFile, String fileName, String fileType, String productId, SedoxBinaryFileOptions options) throws ErrorException;
     
     @Customer
     public String purchaseProduct(String productId, List<Integer> files) throws ErrorException;

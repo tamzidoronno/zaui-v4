@@ -18,6 +18,12 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     }
     
     public function renderProduct($product=false) {
+        
+        if (isset($_POST['data']['justCreatedFileId']) && $_POST['data']['justCreatedFileId']) {
+            $_POST['data']['fileId'] = $_POST['data']['justCreatedFileId'];
+            $this->fileSelected();
+        }
+        
         if (!$product) {
             $product = $this->getApi()->getSedoxProductManager()->getProductById($_POST['data']['productId']);
         }
@@ -69,6 +75,8 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
             $this->setCurrentProduct($file);
             $this->includefile("productview");
         echo "</div>";
+        
+        echo "<script>getshop.SedoxDatabankTheme.setAll();</script>";
     }
     
     public function getFilesToProcess() {
@@ -102,7 +110,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     public function finalizeFileUpload() {
         $base64 = $_SESSION['SEDOX_FILE_ADMIN_UPLOADED'];
         $filename = $_SESSION['SEDOX_FILE_ADMIN_UPLOADED_FILENAME'];
-        $this->getApi()->getSedoxProductManager()->addFileToProduct($base64, $filename, $_POST['data']['type'], $_POST['data']['productid']);
+        $this->getApi()->getSedoxProductManager()->addFileToProduct($base64, $filename, $_POST['data']['type'], $_POST['data']['productid'], $_POST['data']['options']);
     }
     
     public function markRowAsExpanded() {

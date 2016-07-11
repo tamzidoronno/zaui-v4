@@ -35,7 +35,8 @@ app.SedoxAdmin = {
         
         if (currentUserId !== data.userid) {
             var dataToPost = {
-                productId : data.productId
+                productId : data.productId,
+                justCreatedFileId: data.justCreatedFileId
             };
             
             var event = thundashop.Ajax.createEvent(null, "renderProduct", $('.SedoxAdmin'), dataToPost);
@@ -64,9 +65,20 @@ app.SedoxAdmin = {
     fileTypeSelected: function() {
         var data = {
             productid : app.SedoxAdmin.currentProductId,
-            type : $(this).attr('type')
+            type : $(this).attr('type'),
+            options : {
+                requested_dpf : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #dpf').is(':checked'),
+                requested_egr : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #egr').is(':checked'),
+                requested_decat : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #decat').is(':checked'),
+                requested_vmax : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #vmax').is(':checked'),
+                requested_adblue : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #adblue').is(':checked'),
+                requested_dtc : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #dtc').is(':checked'),
+            }
         }
         
+        
+
+         
         var event = thundashop.Ajax.createEvent(null, "finalizeFileUpload", this, data);
         thundashop.Ajax.post(event, null, {}, true, true);
 //        thundashop.Ajax.simplePost(this, "finalizeFileUpload", data); 
@@ -102,6 +114,15 @@ app.SedoxAdmin = {
         $('.SedoxAdmin .uploadfilemodal .progressbararea').hide();
         $('.SedoxAdmin .uploadfilemodal .selectarea').show();
         $('.SedoxAdmin .uploadfilemodal').fadeIn();
+        
+        // Set extra information stuff.
+        $('.SedoxAdmin .uploadfilemodal .information_radio_buttons input').removeAttr('checked');
+        
+        var extrainformation = $(this).attr('extrainfo').split(',');
+        for (var i in extrainformation) {
+            var extraInfo = extrainformation[i];
+            $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #' + extraInfo.trim().toLowerCase()).attr('checked', 'true');
+        }
     },
     
     closeModal: function(response) {

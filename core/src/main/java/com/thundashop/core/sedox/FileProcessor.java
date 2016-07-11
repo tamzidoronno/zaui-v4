@@ -196,7 +196,7 @@ public class FileProcessor extends GetShopSchedulerBase {
     private void createProduct() throws Exception {
         SedoxBinaryFile originalFile = getOriginalBinaryFile(base64EncodeString, originalFileName);
         SedoxBinaryFile cmdEncryptedFile = saveCmdEncryptedFile(base64EncodeString, originalFileName);
-        getApi().getSedoxProductManager().finishUpload(forSlaveId, sharedProduct, useCredit, comment, originalFile, cmdEncryptedFile, options, base64EncodeString, originalFileName, origin, currentUserId); 
+        getApi().getSedoxProductManager().finishUpload(forSlaveId, sharedProduct, useCredit, comment, originalFile, cmdEncryptedFile, options, base64EncodeString, originalFileName, origin, currentUserId, reference); 
     }
     
 }

@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -360,7 +361,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     @Override
-    public void finishUpload(String forSlaveId, SedoxSharedProduct sharedProduct, String useCredit, String comment, SedoxBinaryFile originalFile, SedoxBinaryFile cmdEncryptedFile, SedoxBinaryFileOptions options, String base64EncodeString, String originalFileName, String origin, String fromUserId) {
+    public void finishUpload(String forSlaveId, SedoxSharedProduct sharedProduct, String useCredit, String comment, SedoxBinaryFile originalFile, SedoxBinaryFile cmdEncryptedFile, SedoxBinaryFileOptions options, String base64EncodeString, String originalFileName, String origin, String fromUserId, String referenceId) {
         if (forSlaveId != null && !forSlaveId.equals("")) {
             checkIfMasterOfSlave(forSlaveId, fromUserId);
         }
@@ -373,6 +374,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sedoxProduct.id = getNextProductId();
         sedoxProduct.firstUploadedByUserId = forSlaveId != null && !forSlaveId.equals("") ? forSlaveId : fromUserId;
         sedoxProduct.storeId = storeId;
+        sedoxProduct.reference.put(fromUserId, referenceId);
         sedoxProduct.sharedProductId = sharedProduct.id;
         sedoxProduct.rowCreatedDate = new Date();
         sedoxProduct.addCreatedHistoryEntry(fromUserId);
@@ -383,6 +385,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         if (cmdEncryptedFile != null) {
             cmdEncryptedFile.options = options;
+            cmdEncryptedFile.orgFilename = originalFileName;
             sharedProduct.saleAble = false;
             sharedProduct.isCmdEncryptedProduct = true;
             sharedProduct.binaryFiles.add(cmdEncryptedFile);
@@ -391,6 +394,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         if (originalFile != null) {
             originalFile.options = options;
+            originalFile.orgFilename = originalFileName;
             sharedProduct.binaryFiles.add(originalFile);
 
             if (cmdEncryptedFile != null) {
@@ -1141,7 +1145,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         String title = "";
         String content = "";
         Application app = applicationPool.getApplication("1475891a-3154-49f9-a2b4-ed10bfdda1fc");
-                
+        
+        List<Integer> fileIds = new ArrayList();
+        for (SedoxBinaryFile file : sharedProduct.binaryFiles) {
+            fileIds.add(file.id);
+        }
+        
         if(app != null) {
             title = app.getSetting("uploadadminsubject");
             
@@ -1155,10 +1164,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
             
             if(title != null) {
-                title = replaceEmailVariables(title, special, sedoxProduct, sharedProduct, user, sedoxUser, null, null);
+                title = replaceEmailVariables(title, special, sedoxProduct, sharedProduct, user, sedoxUser, null, fileIds);
             }
             if(content != null) {
-                content = replaceEmailVariables(content, special, sedoxProduct, sharedProduct, user, sedoxUser, null, null);
+                content = replaceEmailVariables(content, special, sedoxProduct, sharedProduct, user, sedoxUser, null, fileIds);
             }
         }
         
@@ -1238,6 +1247,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 files += "<br>" + file.fileType;
                 if (file.extraInformation != null && !file.extraInformation.isEmpty()) {
                     files += " - " + file.extraInformation;
+                }
+                if (file.options != null && !file.options.isEmpty()) {
+                    files += " - (" + file.options.toString() + ")";
+                }
+                
+                if (file.orgFilename != null && !file.orgFilename.isEmpty()) {
+                    files += " - Original filename: " + file.orgFilename;
                 }
             }
             

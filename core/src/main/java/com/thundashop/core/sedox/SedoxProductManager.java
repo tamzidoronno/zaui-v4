@@ -1222,7 +1222,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         if(sedoxProduct != null) {
             text = text.replace("{product-id}", sedoxProduct.id);
-            text = text.replace("{product-comment}", sedoxProduct.comment);
+            text = text.replace("{product-comment}", sedoxProduct.comment != null ? sedoxProduct.comment : "");
             
             if (sedoxProduct != null 
                 && sedoxProduct.reference != null 

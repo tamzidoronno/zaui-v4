@@ -1036,9 +1036,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     private HashMap<String, String> createFileMap(SedoxSharedProduct sharedProduct, List<Integer> files, SedoxProduct product) throws ErrorException {
         HashMap<String, String> fileMap = new HashMap();
-        if (sharedProduct.isCmdEncryptedProduct && files.size() != 2) {
-            throw new ErrorException(1031);
-        }
+
         if (sharedProduct.isCmdEncryptedProduct) {
             String fileName = encryptProductAndZipToTmpFolder(product, files);
             fileMap.put(fileName, sharedProduct.getName() + ".mod");
@@ -1296,25 +1294,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     private String encryptProductAndZipToTmpFolder(SedoxProduct product, List<Integer> files) throws ErrorException {
         try {
-            SedoxBinaryFile originalFile = null;
-            SedoxBinaryFile tuningFile = null;
             SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
             
-            for (Integer sedoxBinaryFileId : files) {
-                
-                SedoxBinaryFile file = sharedProduct.getFileById(sedoxBinaryFileId);
-                if (file.cmdFileType != null) {
-                    originalFile = file;
-                } else {
-                    tuningFile = file;
-                }
-            }
-
+            SedoxBinaryFile originalFile = sharedProduct.getOriginalCmdFile();
+            SedoxBinaryFile tuningFile = sharedProduct.getFileById(files.get(0));
+            
             if (originalFile == null || tuningFile == null) {
                 throw new ErrorException(2000001);
             }
 
-            
             byte[] data = sedoxCMDEncrypter.decrypt(originalFile, tuningFile);
             String fileName = "/tmp/" + product.fileSafeName(sharedProduct.getName()) + ".mod";
             Path path = Paths.get(fileName);

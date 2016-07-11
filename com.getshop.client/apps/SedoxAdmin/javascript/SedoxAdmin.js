@@ -79,9 +79,6 @@ app.SedoxAdmin = {
                 requested_dtc : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #dtc').is(':checked'),
             }
         }
-        
-        
-
          
         var event = thundashop.Ajax.createEvent(null, "finalizeFileUpload", this, data);
         thundashop.Ajax.post(event, null, {}, true, true);

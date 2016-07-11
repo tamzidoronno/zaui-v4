@@ -104,7 +104,8 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     }
     
     public function purchaseProductOnly() {
-        
+        $files = array($_POST['data']['sedox_file_id']);
+        $this->getApi()->getSedoxProductManager()->purchaseOnlyForCustomer($_POST['data']['productid'], $files);
     }
     
     public function finalizeFileUpload() {

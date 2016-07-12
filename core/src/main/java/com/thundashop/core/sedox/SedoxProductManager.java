@@ -367,6 +367,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             checkIfMasterOfSlave(forSlaveId, fromUserId);
         }
         
+        if (originalFile != null) {
+            originalFile.id = getNextFileId();
+        }
+        
+        if (cmdEncryptedFile != null) {
+            cmdEncryptedFile.id = getNextFileId() + 1;
+        }
+        
         sharedProduct.id = UUID.randomUUID().toString();
         sharedProduct.storeId = storeId;
         productsShared.put(sharedProduct.id, sharedProduct);
@@ -1222,7 +1230,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         if(sedoxProduct != null) {
             text = text.replace("{product-id}", sedoxProduct.id);
-            text = text.replace("{product-comment}", sedoxProduct.comment);
+            text = text.replace("{product-comment}", sedoxProduct.comment != null ? sedoxProduct.comment : "");
             
             if (sedoxProduct != null 
                 && sedoxProduct.reference != null 
@@ -1240,6 +1248,18 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         
         if(sharedProduct != null && fileIds != null && !fileIds.isEmpty()) {
+            String requestInformation = "";
+            for (Integer fileId : fileIds) {
+                SedoxBinaryFile file = sharedProduct.getFileById(fileId);
+                if (file.options != null && !file.options.isEmpty()) {
+                    requestInformation = file.options.requested_remaptype + " - " + file.options.toString();
+                }
+            }
+            
+            text = text.replace("{product-requestinformation}", requestInformation);
+        }
+        
+        if(sharedProduct != null && fileIds != null && !fileIds.isEmpty()) {
             String files = "";
             
             for (Integer fileId : fileIds) {
@@ -1251,9 +1271,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 files += "<br>" + file.fileType;
                 if (file.extraInformation != null && !file.extraInformation.isEmpty()) {
                     files += " - " + file.extraInformation;
-                }
-                if (file.options != null && !file.options.isEmpty()) {
-                    files += " - (" + file.options.toString() + ")";
                 }
                 
                 if (file.orgFilename != null && !file.orgFilename.isEmpty()) {

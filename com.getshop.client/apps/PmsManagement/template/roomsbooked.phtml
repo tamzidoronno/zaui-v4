@@ -199,10 +199,15 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                             $taken = "";
                                         }
 
+                                        $desc = "";
+                                        if($item->description) {
+                                            $desc = ", ". strtolower($item->description);
+                                        }
+                                        
                                         if($room->booking->bookingItemId == $item->id) {
                                             $selected = "SELECTED";
                                         }
-                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")$taken" . "</option>";
+                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")$taken $desc" . "</option>";
                                     }
                                     ?>
                                 </select><br>
@@ -247,7 +252,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                             } 
                             ?>
                         </span>
-                        <span class='editmode' gstype='form' method="setNewStartDate" style='z-index: inherit;'>
+                        <span class='editmode' gstype='form' method="setNewStartDate">
                             <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                             <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                             <span style='display:inline-block; width: 80px;'>Start</span> 

@@ -138,6 +138,9 @@ if($booking->orderIds) {
                     echo "<a href='/?page=cart&payorder=" . $order->id."'>pay</a> - <span style='cursor:pointer; color:blue' class='sendpaymentlink' orderid='".$order->id."' bookingid='".$booking->id."'>Send payment link</span>";
                 }
             }
+            if(stristr($order->payment->paymentType, "invoice")) {
+                echo "<span style='cursor:pointer; color:blue' class='sendpaymentlink' orderid='".$order->id."' bookingid='".$booking->id."'>Send invoice</span>";
+            }
         } else {
             echo $this->translatePaymenttype($order->payment->paymentType, $instances);
         }

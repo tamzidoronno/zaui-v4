@@ -46,8 +46,10 @@ app.PmsManagement = {
             "paymenttype" : row.find('.paymenttype').val()
         };
         
+        var corScroll = $('.informationbox-outer').scrollTop();
         var event = thundashop.Ajax.createEvent('','updateOrder', $(this), data);
         thundashop.common.showInformationBoxNew(event);
+        $('.informationbox-outer').scrollTop(corScroll);
     },
     doCreditOrder : function() {
         var confirmed = confirm("Are you sure you want to credit this order?");

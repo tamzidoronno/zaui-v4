@@ -22,6 +22,7 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .changeuseronbooking', app.PmsManagement.changeuseronbooking);
         $(document).on('change','.PmsManagement .changecompanyonuser', app.PmsManagement.changecompanyonuser);
         $(document).on('change','.PmsManagement .changestatisticsinterval', app.PmsManagement.changeSummaryView);
+        $(document).on('click','.PmsManagement .updateorderrow', app.PmsManagement.updateorderrow);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -35,6 +36,18 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .removeAddons', app.PmsManagement.removeAddons);
         $(document).on('click','.PmsManagement .updatecardonroom', app.PmsManagement.updatecardonroom);
         $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
+    },
+    updateorderrow : function() {
+        var row = $(this).closest('tr');
+        var data = {
+            bookingid : $('#openedbookingid').val(),
+            "orderid" : row.attr('orderid'),
+            "status" : row.find('.orderstatus').val(),
+            "paymenttype" : row.find('.paymenttype').val()
+        };
+        
+        var event = thundashop.Ajax.createEvent('','updateOrder', $(this), data);
+        thundashop.common.showInformationBoxNew(event);
     },
     doCreditOrder : function() {
         var confirmed = confirm("Are you sure you want to credit this order?");

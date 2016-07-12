@@ -247,7 +247,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                             } 
                             ?>
                         </span>
-                        <span class='editmode' gstype='form' method="setNewStartDate">
+                        <span class='editmode' gstype='form' method="setNewStartDate" style='z-index: inherit;'>
                             <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                             <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                             <span style='display:inline-block; width: 80px;'>Start</span> 

@@ -725,6 +725,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
 
+    public function createPaymentTypeText($app) {
+        $idString = str_replace("-", "_", $app->id);
+        return "ns_" . $idString ."\\" . $app->appName;
+    }
+    
     public function translatePaymenttype($type, $paymentTypes) {
         foreach($paymentTypes as $paymentType) {
             $idString = str_replace("-", "_", $paymentType->id);
@@ -1296,6 +1301,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if($timeinterval == "yearly") { return date("Y", strtotime($date)); }
         if($timeinterval == "weekly") { return date("d.m.Y", strtotime($date)) . "<br>" . date("d.m.Y", strtotime($date)+(86400*7)); }
         return date("d.m.Y", strtotime($date));
+    }
+
+    public function isPaymentType($type, $app) {
+        $id = str_replace("-", "_", $app->id);
+        if(stristr($type, $id)) {
+            return true;
+        }
+        return false;
     }
 
 }

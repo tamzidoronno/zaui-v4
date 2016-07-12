@@ -367,6 +367,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             checkIfMasterOfSlave(forSlaveId, fromUserId);
         }
         
+        if (originalFile != null) {
+            originalFile.id = getNextFileId();
+        }
+        
+        if (cmdEncryptedFile != null) {
+            cmdEncryptedFile.id = getNextFileId() + 1;
+        }
+        
         sharedProduct.id = UUID.randomUUID().toString();
         sharedProduct.storeId = storeId;
         productsShared.put(sharedProduct.id, sharedProduct);

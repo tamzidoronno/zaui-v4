@@ -54,7 +54,7 @@ class CommunicationHelper {
         $this->socket = @fsockopen($this->host, $this->port, $erstr, $errno, 120);
         if (!$this->socket) {
             header("HTTP/1.0 500 Internal server error");
-            echo "This page is down for maintance, please come back later.";
+            echo "The system are being updated / upgraded, please retry in about 10 seconds.";
             exit(0);
         }
         $this->connected = true;

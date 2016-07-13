@@ -21,7 +21,7 @@ $products = $this->getCurrentUploadedFiles();
         
         $state = "not_started";
         $state = $product->started ? "started" : $state;
-        $state = $product->isFinished ? "finsihed" : $state;
+        $state = count($product->binaryFiles) > 1 ? "finsihed" : $state;
         
         $productName = $product->printableName;
         

@@ -15,6 +15,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
     }
     
+    public function updateOrder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->status = $_POST['data']['status'];
+        $order->payment->paymentType = $_POST['data']['paymenttype'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->showBookingInformation();
+    }
+    
     public function creditOrder() {
     $this->getApi()->getPmsInvoiceManager()->creditOrder($this->getSelectedName(), $_POST['data']['bookingid'], $_POST['data']['orderid']);
         $this->showBookingInformation();
@@ -717,6 +725,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
 
+    public function createPaymentTypeText($app) {
+        $idString = str_replace("-", "_", $app->id);
+        return "ns_" . $idString ."\\" . $app->appName;
+    }
+    
     public function translatePaymenttype($type, $paymentTypes) {
         foreach($paymentTypes as $paymentType) {
             $idString = str_replace("-", "_", $paymentType->id);
@@ -1288,6 +1301,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if($timeinterval == "yearly") { return date("Y", strtotime($date)); }
         if($timeinterval == "weekly") { return date("d.m.Y", strtotime($date)) . "<br>" . date("d.m.Y", strtotime($date)+(86400*7)); }
         return date("d.m.Y", strtotime($date));
+    }
+
+    public function isPaymentType($type, $app) {
+        $id = str_replace("-", "_", $app->id);
+        if(stristr($type, $id)) {
+            return true;
+        }
+        return false;
     }
 
 }

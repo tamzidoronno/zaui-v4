@@ -128,7 +128,7 @@ $selectedInterval = $this->getInterval();
             $printHeader = false;
         }
 
-        echo "<span class='valueentry_item'>" . $items[$itemId]->bookingItemName . "</span>";
+        echo "<span class='valueentry_item' title='".$items[$itemId]->description."'>" . $items[$itemId]->bookingItemName . " " . $items[$itemId]->description . "</span>";
         echo "<span class='valueentry_placeholder'>&nbsp;</span>";
         foreach($days as $time => $value) {
             if($toggle) {

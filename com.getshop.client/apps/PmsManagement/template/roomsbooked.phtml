@@ -199,10 +199,15 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                             $taken = "";
                                         }
 
+                                        $desc = "";
+                                        if($item->description) {
+                                            $desc = ", ". strtolower($item->description);
+                                        }
+                                        
                                         if($room->booking->bookingItemId == $item->id) {
                                             $selected = "SELECTED";
                                         }
-                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")$taken" . "</option>";
+                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")$taken $desc" . "</option>";
                                     }
                                     ?>
                                 </select><br>

@@ -147,9 +147,9 @@ class Sorters {
     private Comparator sortBySedoxProductDate(FilterData filterData) {
         return (Comparator<SedoxProduct>) (SedoxProduct o1, SedoxProduct o2) -> {
             if (filterData.ascending) {
-                return o1.rowCreatedDate.compareTo(o2.rowCreatedDate);
-            } else {
                 return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+            } else {
+                return o1.rowCreatedDate.compareTo(o2.rowCreatedDate);
             }
         };
     }

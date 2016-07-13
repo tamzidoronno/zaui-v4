@@ -24,14 +24,16 @@ app.SedoxLogin = {
         };
         
         var event = thundashop.Ajax.createEvent(null, "login", this, data);
-        
+    
         event['synchron'] = true;
-        thundashop.Ajax.postWithCallBack(event, app.SedoxLogin.loginResult, null, true, true);
+        
+        thundashop.Ajax.post(event, function(result) {
+            app.SedoxLogin.loginResult(result, data.username, data.password);
+        }, true);
     },
     
     registerUser: function() {
         if ($('.SedoxLogin input[gsname="create_password"]').val() !== $('.SedoxLogin input[gsname="create_password2"]').val()) {
-            debugger;
             alert("Password does not match, please check");
             return;
         }
@@ -68,9 +70,38 @@ app.SedoxLogin = {
         }
     },
     
-    loginResult: function(result) {
+    loginResult: function(result, username, password) {
+//        debugger;
         if (result === "success") {
-            document.location = "/?page=ab359dd6-062d-4c3f-a5d2-d3361f78d22b";
+            
+            var form = document.createElement("form");
+            var element1 = document.createElement("input"); 
+            var element2 = document.createElement("input");  
+
+            form.method = "POST";
+            form.action = "/?page=ab359dd6-062d-4c3f-a5d2-d3361f78d22b";   
+
+            element1.value=username;
+            element1.name="username";
+            element1.type="text";
+            form.appendChild(element1);  
+
+            element2.value=password;
+            element2.name="password";
+            element2.type="password";
+            form.appendChild(element2);
+
+            document.body.appendChild(form);
+
+            form.submit();
+//            debugger;
+//            var form = '<form id="login_form" action="/?page=ab359dd6-062d-4c3f-a5d2-d3361f78d22b" method="post"> <input type="text" name="username" value="'+username+'"/> <input type="password" name="password"  value="'+password+'"/> <button id="submit_button">Login</button> </form>';
+//            $(form).submit();
+//            event['synchron'] = true;
+//            event['username'] = data.username;
+//            event['password'] = data.password;
+//
+//            document.location = "";
         } else {
             $('.SedoxLogin .login_check_modal .content').html("Wrong username or password!");
             setTimeout(function() {
@@ -82,7 +113,7 @@ app.SedoxLogin = {
     config: function() {
         var key = prompt("Please enter key");
         if (!key) {
-            return;
+            return;"marte eline"
         }
         
         var address = prompt("Please enter address");

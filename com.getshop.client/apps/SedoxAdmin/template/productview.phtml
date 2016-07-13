@@ -20,6 +20,8 @@ $expaned = $this->isExpanded($product->id) ? "expanded" : "";
 $_POST['data']['productId'] = $product->id;
 $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
 
+$sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($product->firstUploadedByUserId);
+
 ?>
 <div class="sedox_internal_view <? echo $expaned; ?>" productid='<? echo $product->id; ?>'>
     <div class="overlayblocker">
@@ -176,6 +178,8 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
         $class2 = array_key_exists("notifyForCustomer", $product->states) ? "redbutton" : "";
         $class3 = array_key_exists("sendProductByMail", $product->states) ? "redbutton" : "";
 
+        $confirmation = $sedoxUser->creditAccount->balance > 0 ? "" : "gs_confirm='Negative credit, are you sure you want to send it?'";
+        
         ?>
         <div class='creditinformation'>
             <div>
@@ -186,7 +190,7 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
                 <div gsclick='purchaseProductOnly' sedox_file_id="" productid="<? echo $product->id; ?>" class='action_inner'>Purchase Order Only</div>
             </div>
             <div class='product_action_button <? echo $class2; ?>' gsclick="notifyByEmail" gs_also="commentfield_for_emails[productId='<? echo $product->id; ?>']" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Notify by Email / SMS</div></div>
-            <div class='product_action_button <? echo $class3; ?>' gsclick="sendFileByMail" gs_also="commentfield_for_emails[productId='<? echo $product->id; ?>']" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Send product by email</div></div>
+            <div class='product_action_button <? echo $class3; ?>' gsclick="sendFileByMail"  <? echo $confirmation; ?> gs_also="commentfield_for_emails[productId='<? echo $product->id; ?>']" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Send product by email</div></div>
             
             <?
             if ($product->saleAble) {

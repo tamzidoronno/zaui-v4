@@ -94,14 +94,6 @@ app.SedoxLogin = {
             document.body.appendChild(form);
 
             form.submit();
-//            debugger;
-//            var form = '<form id="login_form" action="/?page=ab359dd6-062d-4c3f-a5d2-d3361f78d22b" method="post"> <input type="text" name="username" value="'+username+'"/> <input type="password" name="password"  value="'+password+'"/> <button id="submit_button">Login</button> </form>';
-//            $(form).submit();
-//            event['synchron'] = true;
-//            event['username'] = data.username;
-//            event['password'] = data.password;
-//
-//            document.location = "";
         } else {
             $('.SedoxLogin .login_check_modal .content').html("Wrong username or password!");
             setTimeout(function() {

@@ -17,7 +17,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $this->includefile("sedoxadminlist");
     }
     
-    public function renderProduct($product=false) {
+    public function renderProduct($product=false, $fromList=false) {
         
         if (isset($_POST['data']['justCreatedFileId']) && $_POST['data']['justCreatedFileId']) {
             $_POST['data']['fileId'] = $_POST['data']['justCreatedFileId'];
@@ -62,11 +62,13 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
 
         echo "<div class='col_row_content' productid='$file->id'>";
             echo "<div class='col_row_content_inner'>";
-                echo "<div class='col_content col1'>$file->id</div>";
-                echo "<div class='col_content col2'>$date</div>";
-                echo "<div class='col_content col3'>$file->printableName</div>";
-                echo "<div class='col_content col4'>$impersonateUserButton $seeUserButton <span class='ownerusername'>$user->fullName</span></div>";
-                echo "<div class='col_content col5'>$balance</div>";
+                echo "<div class='header_content'>";
+                    echo "<div class='col_content col1'>$file->id</div>";
+                    echo "<div class='col_content col2'>$date</div>";
+                    echo "<div class='col_content col3'>$file->printableName</div>";
+                    echo "<div class='col_content col4'>$impersonateUserButton $seeUserButton <span class='ownerusername'>$user->fullName</span></div>";
+                    echo "<div class='col_content col5'>$balance</div>";
+                echo "</div>";
                 echo "<div class='admin_extrainfo_row'>";
                 echo "<b>Requested:</b> ".$this->getRequestedString($file);
                 echo $status;
@@ -76,7 +78,8 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
             $this->includefile("productview");
         echo "</div>";
         
-        echo "<script>getshop.SedoxDatabankTheme.setAll();</script>";
+        if (!$fromList)
+            echo "<script>getshop.SedoxDatabankTheme.setAll();</script>";
     }
     
     public function getFilesToProcess() {

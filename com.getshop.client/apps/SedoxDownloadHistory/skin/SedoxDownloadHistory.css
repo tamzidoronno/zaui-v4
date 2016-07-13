@@ -61,11 +61,11 @@
 }
 
 .SedoxDownloadHistory .tablecontent .col_row_content:nth-child(even) {
-    background-color: #f9fafc;
+    background-color: #fcfcfc;
 }
 
 .SedoxDownloadHistory .tablecontent .col_row_content:nth-child(odd) {
-    background-color: #fcfcfc;
+    background-color: #f2f2f3;
 }
 
 .SedoxDownloadHistory .tablecontent .col_content.col1 {
@@ -117,4 +117,8 @@
 
 .SedoxDownloadHistory .sorter.active {
     background-image: url('{IMAGEFOLDER}/sorter_active.png');
+}
+
+.SedoxDownloadHistory .tablecontent .col_row_content .innerview {
+    background-color: #FFF !important;
 }

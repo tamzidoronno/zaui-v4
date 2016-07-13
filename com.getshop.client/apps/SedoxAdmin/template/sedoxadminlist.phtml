@@ -81,7 +81,7 @@ if (isset($_SESSION['SEDOX_EDITOR_SEARCHWORD'])) {
     <div class="tablecontent">
         <?
         foreach ($files as $file) {
-            $this->renderProduct($file);
+            $this->renderProduct($file, true);
         }
         ?>
     </div>

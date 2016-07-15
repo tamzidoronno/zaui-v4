@@ -95,10 +95,10 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
         <th>Type</th>
         <th>Room</th>
         <th>Time periode</th>
-        <th>Guest</th>
         <?php if($config->manualcheckincheckout) { ?>
         <th>Check in/out</th>
         <?php } ?>
+        <th>Guest</th>
         <?php if(!$addons && $hasPrices) { ?>
         <th>Price <i class='fa fa-edit showmassupdatepricesfield' title='Update prices for all rooms'></i>
             <div class='massupdatepricesfield' gstype="form" method="massUpdatePrices">

@@ -555,12 +555,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach($res as $room) {
             $exportLine = array();
             foreach($room as $k => $val) {
+                if($k == "bookingId") { continue; }
+                if($k == "pmsRoomId") { continue; }
+                if($k == "bookingItemId") { continue; }
+                
                 if(is_bool($val)) {
                     if($val) {
                         $val = "yes";
                     } else {
                         $val = "no";
                     }
+                }
+                
+                if($k == "start" || $k == "end") {
+                    $val = date("d.m.Y H:i", $val/1000);
                 }
                 
                 if($k == "guest" || $k == "addons") {

@@ -96,6 +96,9 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
         <th>Room</th>
         <th>Time periode</th>
         <th>Guest</th>
+        <?php if($config->manualcheckincheckout) { ?>
+        <th>Check in/out</th>
+        <?php } ?>
         <?php if(!$addons && $hasPrices) { ?>
         <th>Price <i class='fa fa-edit showmassupdatepricesfield' title='Update prices for all rooms'></i>
             <div class='massupdatepricesfield' gstype="form" method="massUpdatePrices">
@@ -318,6 +321,31 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     </span>
                 </span>
             </td>
+            <?php if($config->manualcheckincheckout) { ?>
+            <td>
+                <?php
+                if(!$room->checkedin) {
+                    ?>
+                    <span gstype='form' method="checkInGuest">
+                          <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                          <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                          <span class='pmsbutton' gstype='submitToInfoBox' method='checkinguest' gsname='id' style='padding:3px; width:80px; text-align: center;'>Check in</span>
+                    </span>
+                    <?php
+                } else if(!$room->checkedout) { 
+                    ?>
+                    <span gstype='form' method="checkOutGuest">
+                          <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                          <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                          <span class='pmsbutton' gstype='submitToInfoBox' method='checkinguest' gsname='id' style='padding:3px; width:80px; text-align: center;'>Check out</span>
+                    </span>
+                    <?php
+                } else { 
+                    echo "Checked out"; 
+                }
+                ?>
+            </td>
+            <? } ?>
             <? if(!$addons && $hasPrices) { ?>
                 <td>
                     <span class='roomattribute'>
@@ -412,21 +440,21 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     </span>
                 </td>
             <? } ?>
-                <td class="changeInvoiceTo">
-                    <? 
-                    if($room->invoicedTo) {
-                        echo date("d.m.Y" , strtotime($room->invoicedFrom)) . "<br>"; 
-                        echo date("d.m.Y" , strtotime($room->invoicedTo)); 
-                    } else {
-                        echo " - ";
-                    }
-                    ?>
-                </td>
-                <?php if($hasArx) { ?>
-                    <td align='center'>
-                        <? echo ($room->addedToArx) ? "yes" : "no"; ?>
-                    </td>
-                <? } ?>
+            <td class="changeInvoiceTo">
+                <? 
+                if($room->invoicedTo) {
+                    echo date("d.m.Y" , strtotime($room->invoicedFrom)) . "<br>"; 
+                    echo date("d.m.Y" , strtotime($room->invoicedTo)); 
+                } else {
+                    echo " - ";
+                }
+                ?>
+            </td>
+            <?php if($hasArx) { ?>
+            <td align='center'>
+                <? echo ($room->addedToArx) ? "yes" : "no"; ?>
+            </td>
+            <? } ?>
         </tr>
     <?php } ?>
 </table>

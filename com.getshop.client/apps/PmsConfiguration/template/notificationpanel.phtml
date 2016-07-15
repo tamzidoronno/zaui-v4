@@ -261,6 +261,18 @@ $days[7] = "Sunday";
             </span>
             Force required fields, when an editor / admin registers, does it need to fill in required fields?
         </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->manualcheckincheckout) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='manualcheckincheckout' <? echo $checked; ?>>
+            </span>
+            Support manual checkin and checkout?
+        </div>
         
         <div class='configrow'>
             <span class='configentry'>

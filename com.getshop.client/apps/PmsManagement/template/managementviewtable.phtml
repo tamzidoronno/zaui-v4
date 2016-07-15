@@ -203,8 +203,15 @@ foreach($bookings as $booking) {
             $state = "Unconfirmed";
         }
         
+        $additionalState = "";
+        if($room->checkedout) {
+            $additionalState = "<span title='Checked in'>(ci)</span>";
+        } else if($room->checkedin) {
+            $additionalState = "<span title='Checked out'>(co)</span>";
+        }
         
-        $row .= "<td align='center' class='$state'>$state";
+        
+        $row .= "<td align='center' class='$state'>$state $additionalState";
         
         if($booking->avoidAutoDelete && $config->autoDeleteUnpaidBookings) {
             $row .= "<br>No autodelete";

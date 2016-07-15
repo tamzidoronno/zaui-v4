@@ -24,6 +24,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->deleteAllBookings($this->getSelectedName(), $code);
     }
     
+    
     public function saveContent() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         if($_POST['data']['fromid'] == "fireinstructions") {

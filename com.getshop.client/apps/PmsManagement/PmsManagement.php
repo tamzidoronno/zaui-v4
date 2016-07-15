@@ -571,9 +571,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     $val = date("d.m.Y H:i", $val/1000);
                 }
                 
-                if($k == "guest" || $k == "addons") {
-                    $val = json_encode($val);
-                    $exportLine[$k] = $val;
+                if($k == "addons") {
+                    $exportLine[$k] = json_encode($val);
+                } else if($k == "guest") {
+                    $toAdd = "";
+                    foreach($val as $guest) {
+                        $toAdd = $guest->name;
+                        if($guest->phone) {
+                            $toAdd .= "+" . $guest->prefix . $guest->phone . " ";
+                        }
+                        if($guest->email) {
+                            $toAdd .= $guest->email;
+                        }
+                    }
+                    $exportLine[$k] = $toAdd;
                 } else {
                     $exportLine[$k] = $val;
                 }

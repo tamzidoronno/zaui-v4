@@ -30,7 +30,7 @@ class SedoxUploadHistory extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxC
     }
     
     public function defaultSorting() {
-        return "";
+        return "sedoxproduct_date";
     }
     
     public function getTotalPages() {

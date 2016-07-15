@@ -81,14 +81,9 @@
 .SedoxAdmin .admin_extrainfo_row {
     font-size: 16px;
     padding: 12px;
-    background-color: #FAFAFA;
     border-bottom: solid 2px #DDD;
 }
 
-
-.SedoxAdmin .tablecontent .col_row_content:nth-child(even) .admin_extrainfo_row {
-    background-color: #f9fafc;
-}
 
 .SedoxAdmin .current_status_line {
     display: inline-block;
@@ -486,3 +481,19 @@
     margin-bottom: 20px;
     
 }
+
+.SedoxAdmin .SedoxDownloadHistory .tablecontent .col_row_content .header_content {
+    background-color: #fcfcfc !important;
+}
+
+.SedoxAdmin .SedoxDownloadHistory .tablecontent .col_row_content .admin_extrainfo_row {
+    background-color: #fafafa !important;
+}
+
+.SedoxAdmin .SedoxDownloadHistory .tablecontent .col_row_content:nth-child(odd) .header_content {
+    background-color: #f2f2f3 !important;
+}
+.SedoxAdmin .SedoxDownloadHistory .tablecontent .col_row_content:nth-child(odd) .admin_extrainfo_row {
+    background-color: #edeeef !important;
+}
+

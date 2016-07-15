@@ -22,7 +22,7 @@ if (!function_exists("sedox_notAvailableCheck")) {
             <i class='fa fa-file'></i> <? echo $productName; ?>
             <div class="extra_title_information">
                 <br/>Orig. Checksum: <? echo sedox_notAvailableCheck($product->originalChecksum); ?>
-                <br/>ECU Brand / Type: <? echo sedox_notAvailableCheck($product->ecuBrand); ?>
+                <br/>ECU Brand / Type: <? echo sedox_notAvailableCheck($product->ecuBrand); ?> / <? echo sedox_notAvailableCheck($product->ecuType); ?>
                 <br/>ECU Part No.: <? echo sedox_notAvailableCheck($product->ecuPartNumber); ?>
                 <br/>ECU Hardware No.: <? echo sedox_notAvailableCheck($product->ecuHardwareNumber); ?>
                 <br/>ECU Software No.: <? echo sedox_notAvailableCheck($product->ecuSoftwareNumber); ?>

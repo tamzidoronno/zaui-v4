@@ -11,10 +11,10 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.data.TreeNode;
-import com.thundashop.core.messagemanager.DummySmsFactory;
+
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MailFactoryImpl;
-import com.thundashop.core.messagemanager.SMSFactory;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -70,6 +70,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private Map<String, SedoxUser> users = new HashMap();
 
     @Autowired
+    private MessageManager messageManager;
+    
+    @Autowired
     public SedoxPushOver sedoxPushover;
 
     @Autowired
@@ -87,9 +90,6 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Autowired
     public WebSocketServerImpl webSocketServer;
     
-//    @Autowired
-//    @Qualifier("SmsFactoryClickatell")
-    public SMSFactory smsFactory = new DummySmsFactory();
     
     @Autowired
     public UserManager userManager;
@@ -995,11 +995,19 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         product.states.put("notifyForCustomer", new Date());
 
         if (getshopUser.cellPhone != null && !getshopUser.cellPhone.equals("")) {
-            smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
+            sendSmsOrPushover(getshopUser, user);
             product.addSmsSentToCustomer(getSession().id, getshopUser);
         }
 
         saveObject(product);
+    }
+
+    private void sendSmsOrPushover(User getshopUser, SedoxUser sedoxUser) {
+        if (sedoxUser.pushoverId == null || sedoxUser.pushoverId.isEmpty()) {
+            messageManager.sendSms("clickatelltuningfiles", getshopUser.cellPhone, "Your file is ready from Sedox Performance", null, "Sedox Performance");
+        } else {
+            sedoxPushover.sendMessage(sedoxUser.pushoverId, "Your file is ready from Sedox Performance");
+        }
     }
 
     private void copyFile(File from, File to) {
@@ -1036,8 +1044,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         product.states.put("sendProductByMail", new Date());
 
-        if (getshopUser.cellPhone != null && !getshopUser.cellPhone.equals("") && smsFactory != null) {
-            smsFactory.send("Sedox Performance", getshopUser.cellPhone, "Your file is ready from Sedox Performance");
+        if (getshopUser.cellPhone != null && !getshopUser.cellPhone.equals("")) {
+            sendSmsOrPushover(getshopUser, user);
             product.addSmsSentToCustomer(getSession().id, getshopUser);
         }
 

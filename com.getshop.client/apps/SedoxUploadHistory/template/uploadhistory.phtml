@@ -18,7 +18,14 @@ $products = $this->getCurrentUploadedFiles();
 <div class="tablecontent">
     <?
     foreach ($products as $product) {
+        
+        $state = "not_started";
+        $state = $product->started ? "started" : $state;
+        $state = count($product->binaryFiles) > 1 ? "finsihed" : $state;
+        
         $productName = $product->printableName;
+        
+        $ligth = "<div class='trafficelight $state'></div>";
         
         $time = $this->formatJavaDateToTime($product->rowCreatedDate);
         $date = date("d M Y", $time);
@@ -28,7 +35,7 @@ $products = $this->getCurrentUploadedFiles();
                 echo "<div class='col_content col1'>$product->id</div>";
                 echo "<div class='col_content col2'>$date</div>";
                 echo "<div class='col_content col3'>$productName</div>";
-                echo "<div class='col_content col4'>View Product <div class='expandproduct'></div></div>";
+                echo "<div class='col_content col4'>View Product <div class='expandproduct'></div> $ligth</div>";
             echo "</div>";
             $this->setCurrentProduct($product);
             $this->includefile("productview", "ns_4f89c95c_99dc_4ed7_9352_1e1c51f4630c");

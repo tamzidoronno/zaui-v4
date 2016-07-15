@@ -245,6 +245,10 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             handler = new NexmoSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
         }
         
+        if (provider.equals("clickatelltuningfiles")) {
+            handler = new ClickatellSmsHandlerTuningfiles(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
+        }
+        
         if (handler != null) {
             handler.sendMessage();
             return handler.getMessageId();

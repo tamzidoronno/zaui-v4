@@ -120,7 +120,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
-//                dumpBooking(booking);
+                dumpBooking(booking);
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof PmsPricing) {
@@ -3264,4 +3264,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return res;
     }
 
+    @Override
+    public void massUpdatePrices(PmsPricing price, String bookingId) throws Exception {
+        PmsBooking booking = getBooking(bookingId);
+        for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            for(String day : room.priceMatrix.keySet()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = sdf.parse(day);
+                LocalDate ldate = new LocalDate(date);
+                int dayofweek = ldate.dayOfWeek().get();
+                if(dayofweek == 1) { if(price.price_mon != null) room.priceMatrix.put(day, price.price_mon); }
+                if(dayofweek == 2) { if(price.price_tue != null) room.priceMatrix.put(day, price.price_tue); }
+                if(dayofweek == 3) { if(price.price_wed != null) room.priceMatrix.put(day, price.price_wed); }
+                if(dayofweek == 4) { if(price.price_thu != null) room.priceMatrix.put(day, price.price_thu); }
+                if(dayofweek == 5) { if(price.price_fri != null) room.priceMatrix.put(day, price.price_fri); }
+                if(dayofweek == 6) { if(price.price_sat != null) room.priceMatrix.put(day, price.price_sat); }
+                if(dayofweek == 7) { if(price.price_sun != null) room.priceMatrix.put(day, price.price_sun); }
+            }
+            room.calculateAvgPrice();
+        }
+    }
 }

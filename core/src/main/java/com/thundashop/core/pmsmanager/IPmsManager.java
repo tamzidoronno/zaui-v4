@@ -196,4 +196,7 @@ public interface IPmsManager {
     @Administrator
     public void updateAddons(List<PmsBookingAddonItem> items, String bookingId) throws Exception;
     
+    @Administrator
+    public void massUpdatePrices(PmsPricing price, String bookingId) throws Exception;
+    
 }

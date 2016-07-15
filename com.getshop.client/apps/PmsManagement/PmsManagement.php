@@ -15,6 +15,21 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
     }
     
+    public function massUpdatePrices() {
+        $bookingId = $_POST['data']['bookingid'];
+        $prices = new \core_pmsmanager_PmsPricing();
+        $prices->price_mon = $_POST['data']['price_mon'];
+        $prices->price_tue = $_POST['data']['price_tue'];
+        $prices->price_wed = $_POST['data']['price_wed'];
+        $prices->price_thu = $_POST['data']['price_thu'];
+        $prices->price_fri = $_POST['data']['price_fri'];
+        $prices->price_sat = $_POST['data']['price_sat'];
+        $prices->price_sun = $_POST['data']['price_sun'];
+        
+        $this->getApi()->getPmsManager()->massUpdatePrices($this->getSelectedName(), $prices, $bookingId);
+        $this->showBookingInformation();
+    }
+    
     public function updateOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $order->status = $_POST['data']['status'];
@@ -44,8 +59,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filterOptions->startDate = $this->convertToJavaDate(strtotime($day));
             $filterOptions->endDate = $this->convertToJavaDate(strtotime($day) + 86400);
             $orders = $this->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);
-//            echo "<pre>";
-//            print_r($orders);
             $this->printOrderTable($orders->datas);
         }
     }
@@ -670,11 +683,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     }
                     ksort($pricematrix);
                     $newmatrix = array();
+                    $avg = 0;
                     foreach($pricematrix as $k => $val) {
-                    $newmatrix[date("d-m-Y",$k)] = $val;
+                        $newmatrix[date("d-m-Y",$k)] = $val;
+                        $avg += $val;
                     }
-                    print_r($pricematrix);
                     $room->priceMatrix = $newmatrix;
+                    $room->price = $avg / sizeof($pricematrix);
                 }
             }
         }

@@ -12,4 +12,12 @@ public class PmsPricing extends DataCommon {
     public HashMap<String, ArrayList<ProgressivePriceAttribute>> progressivePrices = new HashMap(); 
     public boolean pricesExTaxes = false;
     public boolean privatePeopleDoNotPayTaxes = false;
+    
+    public Double price_mon;
+    public Double price_tue;
+    public Double price_wed;
+    public Double price_thu;
+    public Double price_fri;
+    public Double price_sat;
+    public Double price_sun;
 }

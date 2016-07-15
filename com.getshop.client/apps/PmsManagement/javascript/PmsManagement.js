@@ -19,6 +19,8 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
         $(document).on('click','.PmsManagement .showlog', app.PmsManagement.showlog);
         $(document).on('click','.PmsManagement .closeadduser', app.PmsManagement.closeadduser);
+        $(document).on('click','.PmsManagement .massupdatepricesfield .fa-close', app.PmsManagement.toggleMassUpdatePrices);
+        $(document).on('click','.PmsManagement .showmassupdatepricesfield', app.PmsManagement.toggleMassUpdatePrices);
         $(document).on('change','.PmsManagement .changeuseronbooking', app.PmsManagement.changeuseronbooking);
         $(document).on('change','.PmsManagement .changecompanyonuser', app.PmsManagement.changecompanyonuser);
         $(document).on('change','.PmsManagement .changestatisticsinterval', app.PmsManagement.changeSummaryView);
@@ -34,8 +36,33 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .addAddonsButton', app.PmsManagement.addAddon);
         $(document).on('click','.PmsManagement .saveAddons', app.PmsManagement.saveAddons);
         $(document).on('click','.PmsManagement .removeAddons', app.PmsManagement.removeAddons);
+        $(document).on('keyup','.PmsManagement .alldayprice', app.PmsManagement.updateDayPrices);
         $(document).on('click','.PmsManagement .updatecardonroom', app.PmsManagement.updatecardonroom);
         $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
+        $(document).on('keyup','.PmsManagement .matrixpricealldays', app.PmsManagement.updateRoomPriceMatrix);
+    },
+    
+    updateRoomPriceMatrix : function() {
+        var table = $(this).closest('.roompricematrixtable');
+        var val = $(this).val();
+        console.log(val);
+        table.find('.matrixdayprice').each(function() {
+            $(this).val(val);
+        });
+    },
+    
+    updateDayPrices : function() {
+        var val = $(this).val();
+        
+        $('.dayprice').val(val);
+    },
+    toggleMassUpdatePrices : function() {
+        var field = $('.PmsManagement .massupdatepricesfield');
+        if(field.is(":visible")) {
+            field.slideUp();
+        } else {
+            field.slideDown();
+        }
     },
     updateorderrow : function() {
         var row = $(this).closest('tr');

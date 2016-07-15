@@ -13,6 +13,7 @@
 .PmsManagement .roomdeleted td { color: red; }
 .PmsManagement .doCreditOrder:hover { font-weight: bold; cursor: pointer; }
 .PmsManagement .statisticsrow:hover { cursor:pointer; font-weight: bold; }
+.PmsManagement .massupdatepricesfield { position:absolute; background-color:#fff; border: solid 2px; border-radius: 3px; z-index: 1; display:none; }
 .PmsManagement .tiparea {
     position: absolute;
     background-color: #fff;

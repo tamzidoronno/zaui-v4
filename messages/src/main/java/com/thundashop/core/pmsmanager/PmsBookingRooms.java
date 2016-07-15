@@ -55,7 +55,7 @@ public class PmsBookingRooms implements Serializable {
     boolean forcedOpenNeedClosing = false;
     public Date warnedAboutAutoExtend = null;
     public boolean credited;
-    private boolean deleted = false;
+    public boolean deleted = false;
     public Date deletedDate = new Date();
     
     /**
@@ -463,5 +463,14 @@ public class PmsBookingRooms implements Serializable {
     void setBooking(Booking booking) {
         bookingId = booking.id;
         this.booking = booking;
+    }
+
+    void calculateAvgPrice() {
+        double sum = 0.0;
+        for(Double val : priceMatrix.values()) {
+            sum += val;
+        }
+        
+        price = sum / priceMatrix.keySet().size();
     }
 }

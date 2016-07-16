@@ -118,6 +118,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private boolean initFinalized = false;
     private String orderIdToSend;
     private Date lastCheckForIncosistent;
+    private String emailToSendTo;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -998,7 +999,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 attachments.put("sendinvoice.pdf", createInvoiceAttachment());
             }
             
-            messageManager.sendMailWithAttachments(user.emailAddress, user.fullName, title, message, fromEmail, fromName, attachments);
+            String recipientEmail = user.emailAddress;
+            if(emailToSendTo != null) {
+                recipientEmail = emailToSendTo;
+                emailToSendTo = null;
+            }
+            
+            messageManager.sendMailWithAttachments(recipientEmail, user.fullName, title, message, fromEmail, fromName, attachments);
 
             if (configuration.copyEmailsToOwnerOfStore) {
                 String copyadress = storeManager.getMyStore().configuration.emailAdress;
@@ -1020,6 +1027,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.guests == null || room.guests.isEmpty() || !bookingEngine.getConfig().rules.includeGuestData) {
                 if (type.equals("email")) {
                     String email = userManager.getUserById(booking.userId).emailAddress;
+                    if(emailToSendTo != null) {
+                        email = emailToSendTo;
+                        emailToSendTo = null;
+                    }
+                    
                     String name = userManager.getUserById(booking.userId).fullName;
                     String title = configuration.emailTitles.get(key);
                     title = formatMessage(title, booking, room, null);
@@ -3299,5 +3311,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String createInvoiceAttachment() {
         String invoice = invoiceManager.getBase64EncodedInvoice(orderIdToSend);
         return invoice;
+    }
+
+    void setEmailToSendTo(String email) {
+        emailToSendTo = email;
     }
 }

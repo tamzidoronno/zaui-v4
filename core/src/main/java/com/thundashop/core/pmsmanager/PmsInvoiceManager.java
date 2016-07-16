@@ -294,6 +294,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public void sendRecieptOrInvoice(String orderId, String email, String bookingId) {
         Order order = orderManager.getOrder(orderId);
         pmsManager.setOrderIdToSend(orderId);
+        pmsManager.setEmailToSendTo(email);
         if(order.status == Order.Status.PAYMENT_COMPLETED) {
             pmsManager.doNotification("sendreciept", bookingId);
         } else {

@@ -41,9 +41,9 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
                 }
             }
             $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
-            echo "<i class='fa fa-check'></i>";
+            $this->reRenderSummary();
         } else {
-            echo "<i class='fa fa-warning' color='red' title='".$this->__w("Sorry, but the selected time periode is not available, or incorrect")."'></i>";
+            echo "<i class='fa fa-warning failedfeedback' color='red' title='".$this->__w("Sorry, but the selected time periode is not available, or incorrect")."'></i>";
         }
     }
     
@@ -52,9 +52,15 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
             echo "Please specify a booking engine first";
             return;
         }
+        echo "<div class='summarizedbooking'>";
         $this->includefile("summary");
+        echo "</div>";
     }
 
+    public function reRenderSummary() {
+        $this->includefile("summary");
+    }
+    
     public function toggleAddon() {
         $this->getApi()->getPmsManager()->toggleAddon($this->getSelectedName(), $_POST['data']['item']);
     }

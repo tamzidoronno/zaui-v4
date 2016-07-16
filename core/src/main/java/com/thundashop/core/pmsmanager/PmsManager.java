@@ -995,8 +995,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (key.startsWith("sendreciept")) {
                 attachments.put("reciept.pdf", createInvoiceAttachment());
             }
-            if (key.startsWith("sendreciept")) {
-                attachments.put("sendinvoice.pdf", createInvoiceAttachment());
+            if (key.startsWith("sendinvoice")) {
+                attachments.put("invoice.pdf", createInvoiceAttachment());
             }
             
             String recipientEmail = user.emailAddress;

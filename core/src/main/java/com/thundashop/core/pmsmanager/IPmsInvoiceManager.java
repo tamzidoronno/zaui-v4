@@ -22,4 +22,7 @@ public interface IPmsInvoiceManager {
     
     @Administrator
     public void creditOrder(String bookingId, String orderId);
+
+    @Administrator
+    public void sendRecieptOrInvoice(String orderId, String email, String bookingId);
 }

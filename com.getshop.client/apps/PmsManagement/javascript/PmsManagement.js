@@ -25,6 +25,7 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .changecompanyonuser', app.PmsManagement.changecompanyonuser);
         $(document).on('change','.PmsManagement .changestatisticsinterval', app.PmsManagement.changeSummaryView);
         $(document).on('click','.PmsManagement .updateorderrow', app.PmsManagement.updateorderrow);
+        $(document).on('click','.PmsManagement .sendinvoice, .PmsManagement .sendreciept', app.PmsManagement.showsendinvoice);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -41,7 +42,9 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
         $(document).on('keyup','.PmsManagement .matrixpricealldays', app.PmsManagement.updateRoomPriceMatrix);
     },
-    
+    showsendinvoice : function() {
+        $(this).closest('tr').find('.sendinvoicebox').slideDown();
+    },
     updateRoomPriceMatrix : function() {
         var table = $(this).closest('.roompricematrixtable');
         var val = $(this).val();

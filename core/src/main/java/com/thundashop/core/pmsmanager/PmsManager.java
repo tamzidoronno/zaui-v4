@@ -37,6 +37,7 @@ import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;
@@ -95,6 +96,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     StoreManager storeManager;
+    
+    @Autowired
+    InvoiceManager invoiceManager;
 
     @Autowired
     ProductManager productManager;
@@ -982,12 +986,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             String title = configuration.emailTitles.get(key);
             String fromName = getFromName();
             String fromEmail = getFromEmail();
+            HashMap<String, String> attachments = new HashMap();
+            
             if (key.startsWith("booking_confirmed")) {
-                HashMap<String, String> attachments = createICalEntry(booking);
-                messageManager.sendMailWithAttachments(user.emailAddress, user.fullName, title, message, fromEmail, fromName, attachments);
-            } else {
-                messageManager.sendMail(user.emailAddress, user.fullName, title, message, fromEmail, fromName);
+                attachments.putAll(createICalEntry(booking));
             }
+            if (key.startsWith("sendreciept")) {
+                attachments.put("reciept.pdf", createInvoiceAttachment());
+            }
+            if (key.startsWith("sendreciept")) {
+                attachments.put("sendinvoice.pdf", createInvoiceAttachment());
+            }
+            
+            messageManager.sendMailWithAttachments(user.emailAddress, user.fullName, title, message, fromEmail, fromName, attachments);
 
             if (configuration.copyEmailsToOwnerOfStore) {
                 String copyadress = storeManager.getMyStore().configuration.emailAdress;
@@ -3283,5 +3294,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             room.calculateAvgPrice();
         }
+    }
+
+    private String createInvoiceAttachment() {
+        String invoice = invoiceManager.getBase64EncodedInvoice(orderIdToSend);
+        return invoice;
     }
 }

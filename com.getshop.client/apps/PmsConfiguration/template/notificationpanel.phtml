@@ -409,6 +409,12 @@ $days[7] = "Sunday";
         </div>
         <div class='configrow'>
             <span class='configentry'>
+                 <input type='number' style='width: 40px;' gsname='defaultNumberOfDaysBack' value='<? echo $notificationSettings->defaultNumberOfDaysBack; ?>'>
+            </span>
+            Default number of days selected back in time
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
                 <select gsname='bookingTimeInterval'>
                     <option value="1">Hourly</option>
                     <option value="2" <?php if($notificationSettings->bookingTimeInterval == 2) { echo "SELECTED"; } ?> >Daily</option>

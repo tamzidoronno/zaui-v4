@@ -662,11 +662,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(isset($_SESSION['pmfilter'][$this->getSelectedName()])) {
             return unserialize($_SESSION['pmfilter'][$this->getSelectedName()]);
         }
+
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->state = 0;
-        $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))-(86400*3));
-        $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 23:59", time()))+(86400*3));
+        $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))-(86400*$config->defaultNumberOfDaysBack));
+        $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 23:59", time())));
         $filter->sorting = "regdate";
         $filter->includeDeleted = true;
         return $filter;

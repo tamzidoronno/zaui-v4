@@ -32,6 +32,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean exposeUnsecureBookings = false;
     public boolean autoconfirmRegisteredUsers = false;
     public Integer minStay = 1;
+    public Integer defaultNumberOfDaysBack = 3;
     public boolean supportMoreDates = false;
     public boolean isItemBookingInsteadOfTypes = false;
     public boolean autoExtend = false;

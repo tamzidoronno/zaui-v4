@@ -15,6 +15,29 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
     }
     
+    public function sendInvoice() {
+        $email = $_POST['data']['email'];
+        $bookingId = $_POST['data']['bookingid'];
+        $orderid = $_POST['data']['orderid'];
+        $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderid, $email, $bookingId);
+        $this->showBookingInformation();
+    }
+    
+    public function massUpdatePrices() {
+        $bookingId = $_POST['data']['bookingid'];
+        $prices = new \core_pmsmanager_PmsPricing();
+        $prices->price_mon = $_POST['data']['price_mon'];
+        $prices->price_tue = $_POST['data']['price_tue'];
+        $prices->price_wed = $_POST['data']['price_wed'];
+        $prices->price_thu = $_POST['data']['price_thu'];
+        $prices->price_fri = $_POST['data']['price_fri'];
+        $prices->price_sat = $_POST['data']['price_sat'];
+        $prices->price_sun = $_POST['data']['price_sun'];
+        
+        $this->getApi()->getPmsManager()->massUpdatePrices($this->getSelectedName(), $prices, $bookingId);
+        $this->showBookingInformation();
+    }
+    
     public function updateOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $order->status = $_POST['data']['status'];
@@ -44,8 +67,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filterOptions->startDate = $this->convertToJavaDate(strtotime($day));
             $filterOptions->endDate = $this->convertToJavaDate(strtotime($day) + 86400);
             $orders = $this->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);
-//            echo "<pre>";
-//            print_r($orders);
             $this->printOrderTable($orders->datas);
         }
     }
@@ -542,6 +563,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach($res as $room) {
             $exportLine = array();
             foreach($room as $k => $val) {
+                if($k == "bookingId") { continue; }
+                if($k == "pmsRoomId") { continue; }
+                if($k == "bookingItemId") { continue; }
+                
                 if(is_bool($val)) {
                     if($val) {
                         $val = "yes";
@@ -550,9 +575,24 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     }
                 }
                 
-                if($k == "guest" || $k == "addons") {
-                    $val = json_encode($val);
-                    $exportLine[$k] = $val;
+                if($k == "start" || $k == "end") {
+                    $val = date("d.m.Y H:i", $val/1000);
+                }
+                
+                if($k == "addons") {
+                    $exportLine[$k] = json_encode($val);
+                } else if($k == "guest") {
+                    $toAdd = "";
+                    foreach($val as $guest) {
+                        $toAdd = $guest->name;
+                        if($guest->phone) {
+                            $toAdd .= "+" . $guest->prefix . $guest->phone . " ";
+                        }
+                        if($guest->email) {
+                            $toAdd .= $guest->email;
+                        }
+                    }
+                    $exportLine[$k] = $toAdd;
                 } else {
                     $exportLine[$k] = $val;
                 }
@@ -655,6 +695,30 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function checkInGuest() {
+        $booking = $this->getSelectedBooking();
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $r->checkedin = true;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
+    }
+    
+    public function checkOutGuest() {
+        $booking = $this->getSelectedBooking();
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $r->checkedout = true;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
+    }
+
     public function changePrice() {
         $booking = $this->getSelectedBooking();
         foreach($booking->rooms as $room) {
@@ -670,11 +734,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     }
                     ksort($pricematrix);
                     $newmatrix = array();
+                    $avg = 0;
                     foreach($pricematrix as $k => $val) {
-                    $newmatrix[date("d-m-Y",$k)] = $val;
+                        $newmatrix[date("d-m-Y",$k)] = $val;
+                        $avg += $val;
                     }
-                    print_r($pricematrix);
                     $room->priceMatrix = $newmatrix;
+                    $room->price = $avg / sizeof($pricematrix);
                 }
             }
         }

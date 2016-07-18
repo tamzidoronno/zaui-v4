@@ -8,6 +8,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
@@ -32,6 +33,38 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsInvoiceManager {
 
+    class BookingOrderSummary {
+        Integer count = 0;
+        Double price = 0.0;
+        String productId = "";
+    }
+    
+    private boolean avoidOrderCreation = false;
+    private List<CartItem> itemsToReturn = new ArrayList();
+    
+    @Autowired
+    PmsManager pmsManager;
+    
+    @Autowired
+    UserManager userManager;
+    
+    @Autowired
+    BookingEngine bookingEngine;
+    
+    @Autowired
+    ProductManager productManager;
+    
+    @Autowired
+    OrderManager orderManager;
+    
+    @Autowired
+    CartManager cartManager;
+    
+    @Autowired
+    MessageManager messageManager;
+    
+    private boolean runningDiffRoutine = false;
+    
     private List<BookingOrderSummary> summaries(List<CartItem> roomItems) {
         HashMap<String, BookingOrderSummary> res = new HashMap();
         for(CartItem item : roomItems) {
@@ -257,34 +290,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return cal.getTime();
     }
 
-    class BookingOrderSummary {
-        Integer count = 0;
-        Double price = 0.0;
-        String productId = "";
+    @Override
+    public void sendRecieptOrInvoice(String orderId, String email, String bookingId) {
+        Order order = orderManager.getOrder(orderId);
+        pmsManager.setOrderIdToSend(orderId);
+        pmsManager.setEmailToSendTo(email);
+        if(order.status == Order.Status.PAYMENT_COMPLETED) {
+            pmsManager.doNotification("sendreciept", bookingId);
+        } else {
+            pmsManager.doNotification("sendinvoice", bookingId);
+        }
     }
-    
-    private boolean avoidOrderCreation = false;
-    private List<CartItem> itemsToReturn = new ArrayList();
-    
-    @Autowired
-    PmsManager pmsManager;
-    
-    @Autowired
-    UserManager userManager;
-    
-    @Autowired
-    BookingEngine bookingEngine;
-    
-    @Autowired
-    ProductManager productManager;
-    
-    @Autowired
-    OrderManager orderManager;
-    
-    @Autowired
-    CartManager cartManager;
-    private boolean runningDiffRoutine = false;
-    
+
     public String createOrder(String bookingId, NewOrderFilter filter) {
         runningDiffRoutine = false;
         itemsToReturn.clear();

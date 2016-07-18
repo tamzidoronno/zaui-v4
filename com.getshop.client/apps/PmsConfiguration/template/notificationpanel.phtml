@@ -8,6 +8,9 @@ $channels = $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelecte
 
 $hasEventCalendar = false;
 $instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("27e174dc-b08c-4bf7-8179-9ea8379c91da");
+if(!$instances) {
+    $instances = array();
+}
 foreach($instances as $instance) {
     if(@$instance->settings->{"engine_name"}->value == $this->getSelectedName()) {
         $hasEventCalendar = true;
@@ -38,6 +41,8 @@ $notifications['booking_notconfirmed_'.$langauge] = "Booking has been rejected";
 $notifications['room_ended_0_hours_'.$langauge] = "Booking has ended.";
 $notifications['room_ended_24_hours_'.$langauge] = "Booking ended 1 day ago";
 $notifications['room_ended_48_hours_'.$langauge] = "Booking ended two days ago";
+$notifications['sendreciept_'.$langauge] = "When sending a reciept";
+$notifications['sendinvoice_'.$langauge] = "When sending an invoice";
 if($notificationSettings->requirePayments) {
     $notifications['booking_paymentmissing_'.$langauge] = "When payment is missing";
     $notifications['booking_sendpaymentlink_'.$langauge] = "Sending the payment link";
@@ -111,15 +116,26 @@ $days[7] = "Sunday";
 
 <div gstype="form" method="saveNotifications">
     <div class='email_notifcations notificationpanel'>
+        
+        <br>
+        <select class='emailtypeselection'>
         <?php
         foreach($notifications as $index => $name) {
-            echo "<h2>$name</h2>";
+            echo "<option value='$index'>$name</option>";
+        }
+        ?>
+        </select><br><br>
+    
+        <?php
+        foreach($notifications as $index => $name) {
+            echo "<div class='emailtype $index'>";
             echo "<input type='txt' gsname='".$index."_title' style='width:100%; box-sizing:border-box;' value='".@$notificationSettings->emailTitles->{$index}."'><br>";
             echo "<textarea gsname='".$index."_email' style='width: 100%; height: 400px; box-sizing:border-box;'>";
             if(isset($notificationSettings->emails->{$index})) {
                 echo $notificationSettings->emails->{$index};
             }
             echo "</textarea>";
+            echo "</div>";
         }
         ?>
     </div>
@@ -133,6 +149,16 @@ $days[7] = "Sunday";
     </div>
     
     <div class='sms_notifcations notificationpanel'>
+        
+        <br>
+        <select class='smstypeselection'>
+        <?php
+        foreach($notifications as $index => $name) {
+            echo "<option value='$index'>$name</option>";
+        }
+        ?>
+        </select><br><br>
+        
         <?php
         foreach($notifications as $index => $name) {
             if($this->startsWith($index, "room_")) {
@@ -140,25 +166,35 @@ $days[7] = "Sunday";
             } else {
                 $name = $name . " sent to booker";
             }
-            echo "<h2>$name</h2>";
+            echo "<div class='smstype $index'>";
             echo "<textarea gsname='".$index."_sms' style='width: 100%; height: 100px;'>";
             if(isset($notificationSettings->smses->{$index})) {
                 echo $notificationSettings->smses->{$index};
             }
             echo "</textarea>";
+            echo "</div>";
         }
         ?>
     </div>
 
-    <div class='admin_notifications notificationpanel'>
+    <div class='admin_notifications notificationpanel'>'
+          <br>
+        <select class='admintypeselection'>
         <?php
         foreach($notifications as $index => $name) {
-            echo "<h2>$name</h2>";
+            echo "<option value='$index'>$name</option>";
+        }
+        ?>
+        </select><br><br>
+        <?php
+        foreach($notifications as $index => $name) {
+            echo "<div class='admintype $index'>";
             echo "<textarea gsname='".$index."_admin' style='width: 100%; height: 100px;'>";
             if(isset($notificationSettings->adminmessages->{$index})) {
                 echo $notificationSettings->adminmessages->{$index};
             }
             echo "</textarea>";
+            echo "</div>";
         }
         ?>
     </div>
@@ -224,6 +260,18 @@ $days[7] = "Sunday";
                 <input type='checkbox' gsname='forceRequiredFieldsForEditors' <? echo $checked; ?>>
             </span>
             Force required fields, when an editor / admin registers, does it need to fill in required fields?
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->manualcheckincheckout) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='manualcheckincheckout' <? echo $checked; ?>>
+            </span>
+            Support manual checkin and checkout?
         </div>
         
         <div class='configrow'>
@@ -748,4 +796,8 @@ $days[7] = "Sunday";
     if(tabselected) {
         $('.'+tabselected).show();
     }
+    app.PmsConfiguration.changeEmailType();
+    app.PmsConfiguration.changeSmsType();
+    app.PmsConfiguration.changeAdminType();
+
 </script>

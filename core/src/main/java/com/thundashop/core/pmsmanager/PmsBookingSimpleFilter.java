@@ -73,6 +73,13 @@ public class PmsBookingSimpleFilter {
         if(!booking.payedFor) {
             simple.progressState = "notpaid";
         }
+        
+        if(room.checkedout) {
+            simple.progressState += ", checked out";
+        } else if(room.checkedin) {
+            simple.progressState += ", checked in";
+        }
+        
         simple.numberOfGuests = room.numberOfGuests;
         simple.transferredToArx = room.addedToArx;
         return simple;

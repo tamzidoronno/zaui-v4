@@ -7,19 +7,25 @@ app.PmsBookingSummary = {
         $(document).on('click','.PmsBookingSummary .adddatetype', app.PmsBookingSummary.changeAddDateType);
         $(document).on('click','.PmsBookingSummary .showRepeatDates', app.PmsBookingSummary.showRepeatDates);
         $(document).on('click','.PmsBookingSummary .addonselection', app.PmsBookingSummary.addonSelection);
-        $(document).on('blur','.PmsBookingSummary .roomaddedrow', app.PmsBookingSummary.updateRoomRow);
+//        $(document).on('blur','.PmsBookingSummary .roomaddedrow', app.PmsBookingSummary.updateRoomRow);
         $(document).on('keyup','.PmsBookingSummary .roomaddedrow', app.PmsBookingSummary.updateRoomRow);
     },
     updateRoomRow : function() {
-        var args = thundashop.framework.createGsArgs($(this));
+        app.PmsBookingSummary.updateRoomOnRowSpecified($(this));
+    },
+    updateRoomOnRowSpecified : function(row) {
+        var args = thundashop.framework.createGsArgs(row);
 
-        args['itemid'] = $(this).attr('itemid');
-        args['typeid'] = $(this).attr('typeid');
-        args['roomid'] = $(this).attr('roomid');
-        var row = $(this);
-        var event = thundashop.Ajax.createEvent('','updateDateOnRow',$(this), args);
+        args['itemid'] = row.attr('itemid');
+        args['typeid'] = row.attr('typeid');
+        args['roomid'] = row.attr('roomid');
+        var event = thundashop.Ajax.createEvent('','updateDateOnRow',row, args);
         thundashop.Ajax.postWithCallBack(event, function(result) {
-            row.find('.resultbox').html(result);
+            if(result.indexOf('failedfeedback') > -1) {
+                row.find('.resultbox').html(result);
+            } else {
+                $('.PmsBookingSummary .summarizedbooking').html(result);
+            }
         });
     },
     addonSelection : function() {

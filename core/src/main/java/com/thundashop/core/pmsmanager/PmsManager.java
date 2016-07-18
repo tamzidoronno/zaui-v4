@@ -37,6 +37,7 @@ import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;
@@ -95,6 +96,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     StoreManager storeManager;
+    
+    @Autowired
+    InvoiceManager invoiceManager;
 
     @Autowired
     ProductManager productManager;
@@ -114,13 +118,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private boolean initFinalized = false;
     private String orderIdToSend;
     private Date lastCheckForIncosistent;
+    private String emailToSendTo;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
-//                dumpBooking(booking);
+                dumpBooking(booking);
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof PmsPricing) {
@@ -982,12 +987,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             String title = configuration.emailTitles.get(key);
             String fromName = getFromName();
             String fromEmail = getFromEmail();
+            HashMap<String, String> attachments = new HashMap();
+            
             if (key.startsWith("booking_confirmed")) {
-                HashMap<String, String> attachments = createICalEntry(booking);
-                messageManager.sendMailWithAttachments(user.emailAddress, user.fullName, title, message, fromEmail, fromName, attachments);
-            } else {
-                messageManager.sendMail(user.emailAddress, user.fullName, title, message, fromEmail, fromName);
+                attachments.putAll(createICalEntry(booking));
             }
+            if (key.startsWith("sendreciept")) {
+                attachments.put("reciept.pdf", createInvoiceAttachment());
+            }
+            if (key.startsWith("sendinvoice")) {
+                attachments.put("invoice.pdf", createInvoiceAttachment());
+            }
+            
+            String recipientEmail = user.emailAddress;
+            if(emailToSendTo != null) {
+                recipientEmail = emailToSendTo;
+                emailToSendTo = null;
+            }
+            
+            messageManager.sendMailWithAttachments(recipientEmail, user.fullName, title, message, fromEmail, fromName, attachments);
 
             if (configuration.copyEmailsToOwnerOfStore) {
                 String copyadress = storeManager.getMyStore().configuration.emailAdress;
@@ -1009,6 +1027,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.guests == null || room.guests.isEmpty() || !bookingEngine.getConfig().rules.includeGuestData) {
                 if (type.equals("email")) {
                     String email = userManager.getUserById(booking.userId).emailAddress;
+                    if(emailToSendTo != null) {
+                        email = emailToSendTo;
+                        emailToSendTo = null;
+                    }
+                    
                     String name = userManager.getUserById(booking.userId).fullName;
                     String title = configuration.emailTitles.get(key);
                     title = formatMessage(title, booking, room, null);
@@ -3264,4 +3287,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return res;
     }
 
+    @Override
+    public void massUpdatePrices(PmsPricing price, String bookingId) throws Exception {
+        PmsBooking booking = getBooking(bookingId);
+        for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            for(String day : room.priceMatrix.keySet()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                Date date = sdf.parse(day);
+                LocalDate ldate = new LocalDate(date);
+                int dayofweek = ldate.dayOfWeek().get();
+                if(dayofweek == 1) { if(price.price_mon != null) room.priceMatrix.put(day, price.price_mon); }
+                if(dayofweek == 2) { if(price.price_tue != null) room.priceMatrix.put(day, price.price_tue); }
+                if(dayofweek == 3) { if(price.price_wed != null) room.priceMatrix.put(day, price.price_wed); }
+                if(dayofweek == 4) { if(price.price_thu != null) room.priceMatrix.put(day, price.price_thu); }
+                if(dayofweek == 5) { if(price.price_fri != null) room.priceMatrix.put(day, price.price_fri); }
+                if(dayofweek == 6) { if(price.price_sat != null) room.priceMatrix.put(day, price.price_sat); }
+                if(dayofweek == 7) { if(price.price_sun != null) room.priceMatrix.put(day, price.price_sun); }
+            }
+            room.calculateAvgPrice();
+        }
+    }
+
+    private String createInvoiceAttachment() {
+        String invoice = invoiceManager.getBase64EncodedInvoice(orderIdToSend);
+        return invoice;
+    }
+
+    void setEmailToSendTo(String email) {
+        emailToSendTo = email;
+    }
 }

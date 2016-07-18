@@ -2,6 +2,7 @@
 * Can pay with Visa/MasterCard trough PayPal;-;* Kan også betale med Visa/MasterCard igjennom PayPal.
 * PayOnDelivery fee;-;Gebyr henting 
 0-100 km/h;-;0-100 km/h
+10 digits required;-;10 nummer påkrevd
 A confirmation email has been sent to your email.;-;En bekreftelse er sendt til din e-post.
 A red theme that can be used when selling exciting things;-;Et rødt tema kan bli brukt for å selge flotte ting.
 Add;-;Legg til
@@ -19,6 +20,7 @@ Add row below;-;Legg til en rad under
 Add slides for carousel to mobile view;-;Legg til slidere som skal vises i mobil visning
 Add spacing to grid;-;Legg til midlertidig spacing
 Add text to your page with one of the best text editors on the web for manipulating text.;-;Legg inn tekst på websiden din med en av de beste tekst editorene for web.
+Add this account to the event;-;Legg til denne brukeren på eventet
 Add this to the header or to the body to make a new login form, can be added anywhere on the page.;-;Legge denne i headeren eller på hoveddelen av siden for å lage en ny pålogginsområde. 
 Add this to the page and you can allow your customers to search for products.;-;Legg til et produktsøk på siden din, og du gir deretter dine kunder mulighet til å søke opp dine produkter.
 Add youtube vidoes to your page. Just search for the video you want to add and click add.;-;Legg inn youtube videor på websiden din. Bare søk etter den filmen du ønsker og trykk på legg til.
@@ -31,20 +33,24 @@ All;-;Alle
 All fields are required.;-;Alle felt er påkrevd
 All orders;-;Alle bestilinger
 All products;-;Alle produkter
+Already signed up;-;Allerede registrert
 An email has been sent with a code to use in step 2.;-;En epost har blitt sendt til deg som kan benyttes i steg 2.s
 Anchor;-;Anker
 Application;-;Applikasjoner
 Apply coupon;-;Bruk kupong
 April;-;April
+Are you sure you want to toggle as garageleader?;-;Er du sikker på at du ønsker å skru av/på firmaeier?
 Attributes;-;Attributter
 August;-;August
 Availability;-;Tilgjengelighet
 Available positions;-;Ledige plasser
+Available spots;-;Ledige plasser
 Back to page;-;Tilbake til siden
 Background color;-;Bakgrundsfarge
 Background image / styling;-;Bakgrunnsbilde / Styling
 Birth Date;-;Fødselsdato
 Body title;-;Tittel
+Book;-;Bestill
 Booking;-;Booking
 Booking engine name;-;Bookingengine navn
 Booking size;-;Booking størrelse
@@ -54,6 +60,8 @@ Breakfast;-;Frokost
 Building your store;-;Lag din webbutikk
 Button;-;Knapp
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
+Can not create account, it already exists.;-;Kan ikke opprette konto, denne kontoen er alerede registrert.
+Cancel event;-;Kanseler event
 Cancel order;-;Kanselert ordre
 Cancelation possibility;-;Mulighet for avbestilling
 Canceled;-;Kanselert
@@ -77,6 +85,7 @@ Click here if you need to add more contacts;-;Trykk her hvis du vil legge til fl
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Clone cell;-;Klon cellen
 Close;-;Lukk
+Closed;-;Stengt
 Collection failed;-;Innkreving feilet
 Color transition;-;Fargetransisjoner
 Comments;-;Kommentarer
@@ -108,8 +117,11 @@ Coupon;-;Kupong
 Coupon discount;-;Kupong avslag
 Create a booking item;-;Opprett et booking item
 Create a booking item type;-;Opprett en booking item type
+Create a new account;-;Opprett en ny konto
 Create a new company;-;Opprett et nytt firma
 Create a new slide;-;Opprett en ny slide
+Create account;-;Opprett ny konto
+Create account for this company;-;Opprett konto for dette firmaet
 Create an account;-;Opprett en konto
 Create left column;-;Lag en ny venstrekolonne
 Create right column;-;Lag en ny høyrekolonne
@@ -147,11 +159,14 @@ Done editing;-;Ferdig å editere
 Door id (used for closing doors);-;Dørid (brukt for å lukke døren)
 Download ebill;-;Last ned ebill
 Download the terms and conditions;-;Last ned bruksvilkårene
+Du har deltatt på følgende kurs;-;Du har deltatt på følgende kurs
+Du skal delta på;-;Du skal delta på
 Duraction (ms);-;Tid (ms)
 Early checkin;-;Tidlig innsjekk
 Ecommerce settings;-;Netthandel instillinger
 Edit input fields;-;Endre input felter
 Edit row;-;Editer raden
+Edit tekst;-;Endre teksten
 Effects;-;Effekter
 Email;-;Epost
 Email address;-;Epost adresse
@@ -159,13 +174,16 @@ Email form type;-;Epost form type
 Email is incorrect;-;E-posten er feil
 Email to this address;-;E-post til denne adressen
 Embed your own code into the page;-;Embed din egen kode på websiden
+End;-;Slutt
 End date;-;Slutt dato
 End opacity;-;Slutt opacity
 Ending at;-;Slutt dato
 Ends;-;Avslutter
 Enter a new password.;-;Skriv inn ditt nye passord
 Enter room number;-;Skriv inn nom nummeret ditt
+Enter the code sent to your email/sms.;-;Oppgi koden som er sendt til deg på epost/sms
 Event label (google analythics);-;Event label (google analythics)
+Event name;-;Navn på eventet
 Extra bed;-;Ekstra seng
 Fade;-;Fade
 Fade in when scrolling;-;Fade når du scroller
@@ -229,6 +247,7 @@ July;-;Juli
 June;-;Juni
 Keep aspect ratio;-;Behold aspect ratio
 Keep original layout in mobile view.;-;Behold original layout på mobilen
+Kompetanseoversikt;-;Kompetanseoversikt
 Late checkout;-;Sen utsjekk
 Latest;-;Siste
 Latest news;-;Siste nytt
@@ -238,10 +257,12 @@ Les mer;-;Les mer
 Link this cell;-;Link denne cellen
 Load;-;Last
 Loading;-;Laster
+Location;-;Lokasjon
 Logged in;-;Innlogget
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
 March;-;Mars
+Mark as ready;-;Marker som ferdig
 May;-;Mai
 Menu;-;Meny
 Merchant ID is found in braintree account.;-;Merchant ID er noe du finner på kontoen din hos braintree.
@@ -252,6 +273,7 @@ Mon;-;Man
 Monday;-;Mandag
 Monthly;-;Månedlig
 More information;-;Mer informasjon
+More information about this event;-;Mer informasjon om dette eventet
 Mouse over background;-;Mus over bakgrundsfarge
 Mouse over text color;-;Mus over tekst farge
 Move cell to the left;-;Flytt celle til venstre
@@ -279,18 +301,26 @@ Navigate on mouseover;-;Naviger når musen er over
 New date;-;Ny dato
 New message;-;Ny melding
 New password;-;Nytt passord
+New user;-;Ny bruker
 NewsLetter;-;Nyhetsbrev
 Next;-; Neste
 Nice modern theme. Could be used for clothing, skateboarding, snowboarding etc.;-;Fint moderne tema. Kan bli brukt for klær, skateboards, snowbards, osv.
 Nice modern theme. Suitable for different carmarkeds.;-;Pent og moderne tema. Godt brukbart i bil markedet.
 No;-;Nei
+No available spots left for this event;-;Ingen tilgjengelige plasser på dette eventet
 No code added yet;-;Ingen kode er lagt til enda
 No companies registered yet!;-;Ingen firma er registrert enda.
+No data available yet.;-;Ingen data tilgjengelig enda.
+No events available;-;Ingen eventer tilgjenglig.
 No files added.;-;Ingen filer er lagt til.
 No header uploaded for mobile landscape mode yet, please upload one.;-;Ingen header har blitt lastet opp for landskaps modus på mobil enda, vennligst last opp et.
 No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen header har blitt lastet opp for potrait modus på mobil enda, vennligst last opp et.
 No items;-;Ingen elementer
+No users added yet;-;Ingen brukere lagt til enda
 Not invoiced yet;-;Ikke fakturert enda
+Not participated illegal reason;-;Ikke deltatt, ugyldig grunn.
+Not participated legal reason;-;Ikke deltatt, gyldig grunn.
+Not specified;-;Ikke spesifisert
 November;-;November
 Number of fields;-;Antall felt
 Number of guests;-;Antall gjester
@@ -320,6 +350,8 @@ Our local time is:;-;Vår lokale tid er
 Out of stock.;-;Ikke på lager
 Outer background;-;Ytre bakgrunn
 Parking;-;Parkering
+Participated;-;Deltatt
+Participated free;-;Deltatt gratis
 Password;-;Passord
 Password cannot be empty;-;Passordet kan ikke være tomt.
 Password does not match confirmed password.;-;Passordet stemmer ikke overens med bekreftet passord.
@@ -340,13 +372,20 @@ Pin area;-;Pin til område
 PixelateTheme1;-;PixelateTheme1
 Place order;-;Legg inn ordre
 Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
+Please check your invoice email address;-;Sjekk faktura epostaddressen din
 Please check your room number, you can only order cleaning while you are checked in.;-;Sjekk om romnret du har oppgitt er korrekt. Du kan kun bestille vask mens du holder til hos Wilhelmsen House.
+Please check your the invoice email address;-;Sjekk faktura epostaddressen din
+Please enter correct number of chars, min: {min}, max: {max};-;Vennligst oppgi nok tegn, min {min}, max {max}
+Please enter minimum three characters;-;Oppgi minst 3 bokstaver
+Please enter your email address or cellphone number:;-;Oppgi epostaddresse eller mobilnr.
 Please enter your room number;-;Skriv inn nom nummeret ditt
 Please enter your username and password;-;Skriv inn ditt brukernavn og passord
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
+Please select a company;-;Vennligst velg et firma
 Please select a payment method.;-;Vennligst velg en betalingsmetode
 Please select a user in the left menu;-;Vennligst velg en bruker fra venstre meny.
 Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
+Please select group;-;Vennligst velg en gruppe
 Please start typing to search for page, must be more then 2 chars;-;Start å søk etter en side, må ha minst 3 bokstaver
 Please wait;-;Vennligst vent
 Please wait while you are being transferred to dibs payment service.;-;-Vennligst vent til du blir overført til betaling siden.
@@ -358,6 +397,7 @@ Price;-;Pris
 Price and plans;-;Priser og oversikter
 Private key is found in braintree account.;-;Den privat nøkkelen er noe du finner på kontoen din hos braintree.
 Private person;-;Privatperson
+Processing order, please wait;-;Behandler bestilling, vennligst vent.
 Product List;-;Produktliste
 Product Search;-;Produkt søk
 Product view for your store.;-;Produkt visningen for din nettbutikk.
@@ -376,6 +416,7 @@ Reminder;-;Påminnelse
 Reminder sent by email;-;En påmindelse har blitt sendt per epost.
 Remove item;-;Fjern vare
 Remove selected tab;-;Fjern valgte tab
+Repeat event;-;Repiterende event
 Repeat every;-;Gjenta hver
 Repeat new password;-;Gjenta passord
 Repeat on;-;Gjenta på
@@ -406,7 +447,9 @@ Searching....;-;Søker....
 Select a background image.;-;Velg et bakgrundsbilde
 Select a category;-;Velg en kategori
 Select a time period to booking for before continue;-;Velg en tidsperiode for bookingen før du fortsetter
+Select company;-;Velg firma
 Select your car;-;Velg din bil
+Send;-;Send
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send to invoice;-;Sent til faktura
@@ -432,6 +475,7 @@ Sign out;-;Logg ut
 Sign up;-;Registrer deg
 Sign up with facebook;-;Logg inn me facebook
 Sign up with google;-;Logg inn med google
+Signup waitinglist;-;Meldg meg på ventelisten
 Single date;-;Enkeltdato
 Singup;-;Registrering
 Slide left;-;Slide til venstre
@@ -476,6 +520,7 @@ Thank you message;-;Takkemelding
 Thank you page;-;Takkeside
 Thank you, you will now be redirected to the payment service;-;Takk, du blir nå overført til betalingstjenesten
 The carousel is not rotating while logged in as administrator.;-;Karusellen roterer ikke når man er logget inn som administrator.
+The cellphone must be 10 digit;-;Telefonnr må være minimum 10 nummer
 The company name;-;Firmaet navn
 The email address is invalid.;-;Eposten din er ugyldig.
 The email already exists, please log on to continue.;-;Eposten eksisterer allerede, vennligst logg på for å fortsette.
@@ -484,6 +529,8 @@ The newsletter application allowes you to send emails to all of your customers w
 The passwords does not match.;-;Passordet stemmer ikke overens.
 The vat number;-;Orgnummer
 There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
+This event has already been passed;-;Dette eventet har allerede passert
+This event has been canceled;-;Dette eventet har blitt kanselert
 This event has the following entries;-;Dette kurset finner du i kalenderen på følgende dager
 This is a {} days event.;-;Dette er et {} dagers event.
 This user has not attended any events yet;-;Denne brukeren har ikke deltatt på noen eventer enda
@@ -495,6 +542,7 @@ Timer (ms);-;Timer (ms)
 Title;-;Tittel
 To be able to serve you we need to store a tiny amount of data about your browser. An identification id is being generated and added to your web browser. This allows us to track you for a two hours periode while you are navigating this site. This data is anonymous and are only being used to identify your web browser and not you as a person.;-;Vi bruker informasjonskapsler for å forbedre siden og gi deg en best mulig opplevelse. Fortsett og bruke siden som normalt om du godtar dette… 
 Today;-;Idag
+Toggle garage leader;-;Skru av/på firma-eier funksjonen.
 Top spacing;-;Øvre spacing
 Top speed;-;Topp hastighet
 Total;-;Total
@@ -505,6 +553,7 @@ Tune your online store by setting currency, does customers need to register to b
 Type;-;Type
 Unknown name;-;Ukjent navn
 Unpin area;-;Unpin område
+Upcoming events;-;Kommende eventer
 Update;-;Oppdater
 Upload and manipulate on images or add this to be able to search for professional images trough our image stock.;-;Last og behandle bilder, eventuelt så kan du søke opp profesjonelle bilder gjennom vår bildebank.
 Use a different email;-;Bruk en annen epost
@@ -512,8 +561,10 @@ Use a predefined layout for cell;-;Bruk en predifinert layout for denne cellen
 User details;-;Informasjon om bruker
 User level for cell;-;Brukernivå for cellen
 Username / Email;-;Brukernavn / Epost
+Users in your company;-;Brukere i firmaet
 Waiting for payment;-;Venter på betaling
 Waiting list;-;Venteliste
+Waitinglist;-;Venteliste
 Was not able to get payment methods, please check your postcode;-;Klarte ikke å oppdrive betalings metoder, vennligst sjekk ditt postnummer.
 Was not able to process your payment, check your card details and try again.;-;Klarte ikke å gjennomføre betalingen, sjekk betalingsopplysningene dine og prøv igjen.
 We;-;On
@@ -534,6 +585,9 @@ You are here:;-;Du er her:
 You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more.;-;Du er nå i edit modus for denne raden, du kan nå legge til kolonner, rader over og under, og mye mer.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You got rooms that are not available in the selected time periode.;-;Det er rom som ikke er tilgjenglig i valgt periode.
+You have been inactive to long and due to security reasons you will now be logged out.;-;Du har vært inaktiv for lenge og derfor blitt logget ut.
+You have not participated in any events yet.;-;Du har ikke deltatt på noen eventer enda
+You have not signed up for any events yet.;-;Du har ikke deltatt på noen eventer enda.
 You need to agree to the terms and conditions;-;Du må godta bruksvilkårene før du kan fortsette.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your email;-;Din epost
@@ -544,6 +598,7 @@ Your order has now been completed and is waiting to be shipped.;-;Orderen din ha
 Your order was placed successfully and you should momentarly receive an email with your eBill. You can also download it from the following link;-;Du vil snart motta en epost med din ebill, eller så kan du last den ned på følgende link
 Your personal information;-;Din personlige informasjon
 Your product has been added to the cart.;-;Produktet er nå lagt i handlekurven
+Your to late, the signup process has been closed;-;Du er for sen, bestillingsprossen har blitt stengt.
 Youtube background movie;-;Youtube bakgrundsfilm
 cellphone;-;Mobilnr
 day;-;dag

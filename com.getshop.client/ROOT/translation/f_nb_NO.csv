@@ -129,12 +129,15 @@ Card number;-;Kortnummer
 Carousel;-;Karusell
 Carousel mode is great if you wish to add sliding content, this means that you can add multiple slider and let your customers make a choice on what they want to view. Great for banners and advertisment.;-;Karusell modus er en toppers hvis du ønsker å slide innhold, dette betyr at du kan vise flere slidere og la kundene dine ta et valg om hva de ønsker å se.
 Category list;-;Kategori liste
+CellPhone;-;Mobilnr
+Cellphone;-;Mobilnr
 Cells;-;Celler
 Change colors;-;Endre farger
 Change image;-;Endre bilde
 Change movie;-;Endre film
 Change the settings information below?;-;Ender informasjonen for en bruker?
 Chat;-;Chat
+Check this if you administrate your mechanics.;-;Klikk av denne dersom du er verkstedes kursadministratør
 Chrome?;-;Chrome?
 City of the customer;-;Kundens by
 Click here to create a list;-;Trykk her for å lage en liste.
@@ -158,6 +161,7 @@ Company Name;-;Selskapsnavn
 Configure;-;Konfigurer
 Configure this application if you want to send email from a different email provider en the default one for GetShop;-;Konfigurer denne applikasjonen hvis du ønsker å sende eposter fra en annen epost leverandør enn den som er brukt for GetShop.
 Configure your starting point;-;Konfigurer dinn start punkt
+Confirm;-;Bekreft
 Confirm entry;-;Bekreft innlegg
 Congratulation, you have added your first image.;-;Gratulerer, du har lagt til ditt første bilde
 Connected;-;Tilkoblet
@@ -253,6 +257,7 @@ Enter the terms and condition text in the field below.;-;Skriv inn brukervilkår
 Error;-;Feil
 Event;-;Kurs
 Event calendar;-;Event kalender
+Event helder;-;Event holder
 Existing comments;-;Eksisterende kommentarer
 Existing product;-;Eksisterende produkt
 Exp date;-;Utløpsdato
@@ -275,6 +280,8 @@ Footer;-;Footer
 Found on backside, last 3 digits.;-;Funnet på baksiden av kortet, siste tre siffer
 Free;-;Gratis
 Free shipment;-;Gratisk frakt
+Garage email;-;Verksteds epostaddresse
+Garage leader;-;Verkstedsleder
 General user informational;-;Generell bruker informasjon
 Get Started;-;Kom i gang
 Get started, add this application and start adding news and updates to your page.;-;Kom i gang, legg til denne applikasjonen og start å legg til nyheter og oppdateringer to din side.
@@ -425,6 +432,7 @@ Orders added;-;Ordrer lagt til
 Orders created summary;-;Oppsummering over ordrer opprettet
 Orders done by this user;-;Ordrer gjennomført av denne brukeren
 Other applications;-;Andre applikasjoner
+Other companies you need access to?;-;Andre firmaer du har tilgang til?
 Over 16 million photos, illustrations, and vectors.;-;Over 16 millioner bilder, illustrasjoner og vektorer
 Over 16 million pictures at your fingertip;-;Over 16 millioner bilder ved dine fingerspisser
 Overall;-;Overalt
@@ -442,6 +450,7 @@ PayPal email address;-;PayPal epostaddresse
 PayPal settings;-;PayPal instillinger
 Payment application;-;Betalings applikasjon
 Percentage price;-;Prosent pris
+Personal Email;-;Personlig epost
 Phone number;-;Telefonnr
 Phonenumber to the customer;-;Tlf nr på din kunde
 Place;-;Sted
@@ -576,6 +585,7 @@ Start adding pictures to your webshop, create this application and start uploadi
 Start entering the page name you want this button to link to.;-;Skriv inn siden du ønsker denne knappen skal linkes til
 Start my store now;-;Start min butikk nå
 Start up price;-;Oppstarts pris
+Step;-;Steg
 Stock Control;-;Lagerstatus
 Store ids;-;Butikk id'er
 Street address;-;Gate adresse

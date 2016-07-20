@@ -8,6 +8,7 @@ import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.GrafanaFeeder;
 import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -180,6 +181,12 @@ public class StorePool {
         }
         
         if (store != null) {
+            GrafanaFeeder feeder = new GrafanaFeeder();
+            HashMap<String, Object> toAdd = new HashMap();
+            toAdd.put("webAddress", webAddress);
+            toAdd.put("sessionId", sessionId);
+            feeder.addPoint("webdata", "pageload", toAdd);
+            
             initStore(store, sessionId);
         }
         

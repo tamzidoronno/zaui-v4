@@ -31,6 +31,7 @@ import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GrafanaFeeder;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshoplock.GetShopLockManager;
@@ -427,6 +428,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.sessionId = "";
 
         saveBooking(booking);
+        feedGrafana(booking);
        System.out.println("Booking has been completed: " + booking.id);
         return 0;
     }
@@ -3321,5 +3323,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     void setEmailToSendTo(String email) {
         emailToSendTo = email;
+    }
+
+    private void feedGrafana(PmsBooking booking) {
+        HashMap<String, Object> toAdd = new HashMap();
+        int guests = 0;
+        int addons = 0;
+        for(PmsBookingRooms room : booking.rooms) {
+            guests += room.numberOfGuests;
+            addons += room.addons.size();
+        }
+        toAdd.put("reservations", (Number)booking.rooms.size());
+        toAdd.put("booking", 1);
+        toAdd.put("guests", (Number)guests);
+        toAdd.put("addons", (Number)addons);
+        toAdd.put("storeid", (String)storeId);
+        
+        GrafanaFeeder feeder = new GrafanaFeeder();
+        feeder.addPoint("pmsmanager", "booking", toAdd);
     }
 }

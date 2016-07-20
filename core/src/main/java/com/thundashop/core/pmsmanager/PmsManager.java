@@ -1344,6 +1344,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 tmpres.count = tl.count;
                 tmpres.time = tl.start.getTime();
                 
+                if(!tmpres.bookingIds.isEmpty()) {
+                    PmsBooking booking = getBookingFromBookingEngineId(tmpres.bookingIds.get(0));
+                    User user = userManager.getUserById(booking.userId);
+                    tmpres.name = user.fullName;
+                }
+                
                 itemCountLine.put(tl.start.getTime(), tmpres);
             }
             res.itemTimeLines.put(item.id, itemCountLine);

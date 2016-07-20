@@ -1,16 +1,26 @@
 app.PmsAvailabilityTimeline = {
     init : function() {
         $(document).on('click', '.PmsAvailabilityTimeline .valueentry.full', app.PmsAvailabilityTimeline.loadBooking);
-        $(document).on('mouseover', '.PmsAvailabilityTimeline .valueentry.full', app.PmsAvailabilityTimeline.mouseOver);
+        $(document).on('mouseover', '.PmsAvailabilityTimeline .valueentry', app.PmsAvailabilityTimeline.mouseOver);
+        $(document).on('mouseout', '.PmsAvailabilityTimeline .valueentry', app.PmsAvailabilityTimeline.mouseOut);
     },
-    mouseOver : function() {
+    
+    mouseOut : function() {
+        $('.ui-tooltip').remove();
         if(typeof(pmsAvailabilityTimelineTimeout) !== "undefined") {
             clearTimeout(pmsAvailabilityTimelineTimeout);
+        }
+    },
+    mouseOver : function() {
+        if($(this).hasClass('available')) {
+            return;
         }
         
         var bookingid = $(this).attr('bid');
         var from = $(this);
-        $('.ui-tooltip').remove();
+        if(!bookingid) {
+            return;
+        }
         
         pmsAvailabilityTimelineTimeout = setTimeout(function() {
             var event = thundashop.Ajax.createEvent('', 'loadHover', from, {
@@ -21,7 +31,7 @@ app.PmsAvailabilityTimeline = {
                 from.attr('title', res);
                 from.tooltip("open");
             });
-        }, "500");
+        }, "200");
     },
     showSettings : function() {
         var event = thundashop.Ajax.createEvent('','showSettings',$(this), {});

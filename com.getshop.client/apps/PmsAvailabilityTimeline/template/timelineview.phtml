@@ -24,8 +24,14 @@ $printTypeOverview = $this->printTypes();
 $start = date("d.m.Y", $this->getStart());
 $end = date("d.m.Y", $this->getEnd());
 $selectedInterval = $this->getInterval();
+$compact = $this->getCompactView();
+$compactChecked = "";
+if($compact) {
+    $compactChecked = "CHECKED";
+}
 ?>
 <div gstype="form" method="showTimeLine">
+    <input type='checkbox' gsname='compactmode' <?php echo $compactChecked; ?>> Compact view<br>
     <input type="text" gsname='start' value='<? echo $start; ?>'>
     <input type="text" gsname='end' value='<? echo $end; ?>'>
     <select gsname='interval'>
@@ -110,8 +116,11 @@ $selectedInterval = $this->getInterval();
     echo "<bR><bR>";
 
     $printHeader = true;
-
-    echo "<div class='timelineoverviewouter'>";
+    $detailed = "";
+    if(!$this->getCompactView()) {
+        $detailed = "detailedview";
+    }
+    echo "<div class='timelineoverviewouter $detailed'>";
     echo "<div class='timelineoverview'>";
     echo "<div class='topspacingitemoverview'></div>";
     foreach($result->itemTimeLines as $itemId => $days) {
@@ -128,26 +137,46 @@ $selectedInterval = $this->getInterval();
             $printHeader = false;
         }
 
-        echo "<span class='valueentry_item' title='".$items[$itemId]->description."'>" . $items[$itemId]->bookingItemName . " " . $items[$itemId]->description . "</span>";
+        echo "<span class='valueentry_item' title='".$items[$itemId]->description."'>" . $items[$itemId]->bookingItemName . " <span class='room_desc'>" . $items[$itemId]->description . "</span></span>";
         echo "<span class='valueentry_placeholder'>&nbsp;</span>";
+        $printed = false;
+        $free = "available";
         foreach($days as $time => $value) {
-            if($toggle) {
-                $free = "full";
-            } else {
-                $free = "full full_second";
-            }
+            $doPrint = true;
+            $isTaken = true;
             $id = "";
             if($value->count == 0) {
+                $doPrint = false;
                 $free = "available";
+                $isTaken = false;
             } else {
                 $id = $value->bookingIds[0];
             }
+            $name = "";
+            $toggled = false;
             if($id != $lastid) {
                 if($lastid)
-                   $toggle = !$toggle;
+                $toggle = !$toggle;
                 $lastid = $id;
+                if($isTaken) {
+                    $toggled = true;
+                    $printed = false;
+                }
             }
-            echo "<span class='valueentry $free' time='$time' itemid='".$itemId."' bid='$id'>&nbsp;</span>";
+            if(!$printed) {
+                $name = $this->makeInitials($value->name);
+                if($isTaken) {
+                    if($toggle) {
+                        $free = "full";
+                    } else {
+                        $free = "full full_second";
+                    }
+                }
+            }
+            echo "<span class='valueentry $free' time='$time' itemid='".$itemId."' bid='$id'>&nbsp;&nbsp;$name</span>";
+            if($isTaken) {
+                $printed = true;
+            }
         }
         echo "<div style='clear:both;'></div>";
     }

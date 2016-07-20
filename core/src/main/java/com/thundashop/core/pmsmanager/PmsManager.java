@@ -504,7 +504,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     result.add(booking);
                 }
             }
-        } else if (filter.filterType.equals("active")) {
+        } else if (filter.filterType.equals("active") || filter.filterType.equals("inhouse")) {
             for (PmsBooking booking : bookings.values()) {
                 if (booking.isActiveInPeriode(filter.startDate, filter.endDate)) {
                     result.add(booking);

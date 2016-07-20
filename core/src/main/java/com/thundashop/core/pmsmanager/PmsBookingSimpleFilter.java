@@ -105,6 +105,10 @@ public class PmsBookingSimpleFilter {
             if (filter.startDate == null || (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate))) {
                 return true;
             }
+        } else if (filter.filterType.equals("inhouse")) {
+            if(room.checkedin && !room.checkedout) {
+                return true;
+            }
         } else if (filter.filterType.equals("active")) {
             if (room.isActiveInPeriode(filter.startDate, filter.endDate)) {
                  return true;

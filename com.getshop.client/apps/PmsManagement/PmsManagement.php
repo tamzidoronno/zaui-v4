@@ -983,6 +983,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return true;
         }
         
+        if($filter->filterType == "inhouse") {
+            if($room->checkedin && !$room->checkedout) {
+                return true;
+            }
+            return false;
+        }
+        
         $filterStart = strtotime($filter->startDate);
         $filterEnd = strtotime($filter->endDate);
         

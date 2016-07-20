@@ -106,6 +106,9 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
 
     public function getCompactView() {
         $data = $this->getData();
+        if(!isset($data['compactmode'])) {
+            return false;
+        }
         return $data['compactmode'];
     }
 

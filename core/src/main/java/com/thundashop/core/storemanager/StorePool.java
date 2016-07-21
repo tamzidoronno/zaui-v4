@@ -185,6 +185,7 @@ public class StorePool {
             HashMap<String, Object> toAdd = new HashMap();
             toAdd.put("webAddress", webAddress);
             toAdd.put("sessionId", sessionId);
+            toAdd.put("storeId", store.id);
             feeder.addPoint("webdata", "pageload", toAdd);
             
             initStore(store, sessionId);

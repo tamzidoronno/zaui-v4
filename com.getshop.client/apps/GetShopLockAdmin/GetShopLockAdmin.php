@@ -29,6 +29,10 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $this->setConfigurationSetting("engine_name", $engine);
     }
     
+    public function runCheck() {
+        $this->getApi()->getGetShopLockManager()->checkIfAllIsOk($this->getSelectedName());
+    }
+    
     public function render() {
          if (!$this->getSelectedName()) {
             echo "You need to specify a booking engine first<br>";

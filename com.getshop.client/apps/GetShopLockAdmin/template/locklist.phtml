@@ -17,7 +17,8 @@ if(!$locks || sizeof($locks) == 0) {
         echo "<tr>";
         echo "<td>" . $lock->zwaveid . "</td>";
         echo "<td>" . $lock->type . "</td>";
-        echo "<td align='center'>" . sizeof((array)$lock->codes) . "</td>";
+        echo "<td align='center'>" . $lock->maxNumberOfCodes;
+        echo "</td>";
         echo "<td align='center'>";
         echo "<select class='connectlock' lockid='".$lock->id."'>";
         echo "<option value=''></option>";
@@ -35,3 +36,4 @@ if(!$locks || sizeof($locks) == 0) {
     echo "</table>";
 }
 ?>
+<span type='button' gstype='clicksubmit' method='runCheck' gsname='id' gsvalue='somevalue' class='shop_button'>Run check</span>

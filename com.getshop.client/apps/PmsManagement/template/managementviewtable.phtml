@@ -204,9 +204,9 @@ foreach($bookings as $booking) {
         }
         
         $additionalState = "";
-        if($room->checkedout) {
+        if(@$room->checkedout) {
             $additionalState = "<span title='Checked out'>(co)</span>";
-        } else if($room->checkedin) {
+        } else if(@$room->checkedin) {
             $additionalState = "<span title='Checked in'>(ci)</span>";
         }
         

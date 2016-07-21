@@ -20,6 +20,7 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;
@@ -513,6 +514,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         incrementingOrderId++;
         order.incrementOrderId = incrementingOrderId;
         order.doFinalize();
+        feedGrafana(order);
         return order;
     }
     
@@ -1302,6 +1304,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> ordersToFinalise = new ArrayList();
         ordersToFinalise.add(order);
         finalize(ordersToFinalise);
+    }
+
+    private void feedGrafana(Order order) {
+        HashMap<String, Object> toAdd = new HashMap();
+        
+        toAdd.put("inktax", getTotalAmount(order));
+        toAdd.put("extax", getTotalAmountExTaxes(order));
+        toAdd.put("items", (Number)order.cart.getItems().size());
+        if(order.payment != null) {
+            toAdd.put("payment", order.payment.paymentType);
+        }
+        toAdd.put("storeid", (String)storeId);
+        
+        GrafanaFeeder feeder = new GrafanaFeeder();
+        feeder.addPoint("webdata", "ordercreated", toAdd);
     }
 
 }

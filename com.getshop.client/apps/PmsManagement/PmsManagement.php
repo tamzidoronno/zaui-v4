@@ -983,7 +983,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return true;
         }
         
-        if($filter->filterType == "inhouse") {
+        if(isset($filter->filterType) && $filter->filterType == "inhouse") {
             if($room->checkedin && !$room->checkedout) {
                 return true;
             }
@@ -1148,9 +1148,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
      * @param type $addonType
      */
     public function hasAddon($room, $addonType) {
-        foreach($room->addons as $addon) {
-            if($addon->addonType == $addonType) {
-                return true;
+        if(isset($room->addons)) {
+            foreach($room->addons as $addon) {
+                if($addon->addonType == $addonType) {
+                    return true;
+                }
             }
         }
         return false;

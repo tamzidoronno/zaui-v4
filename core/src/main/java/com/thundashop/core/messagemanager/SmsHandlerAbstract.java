@@ -8,7 +8,9 @@ package com.thundashop.core.messagemanager;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.thundashop.core.common.GrafanaFeeder;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.ordermanager.data.Order;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
@@ -211,6 +213,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
         } else {
             System.out.println("SMS Sent with " + getName() + " [to:  " + to + ", from: " +from + ", prefix: " + prefix + ", msg: " + message +" ]");
         }
+        feedGrafana();
     }
     
     public abstract void postSms() throws Exception;
@@ -258,4 +261,16 @@ public abstract class SmsHandlerAbstract implements Runnable {
             return null;
         }
     }
+    
+    private void feedGrafana() {
+        HashMap<String, Object> toAdd = new HashMap();
+        
+        double smses = ((double)smsMessage.message.length() / 160);
+        Number smsCount = Math.ceil(smses);
+        toAdd.put("smses", smsCount);
+        toAdd.put("storeid", (String)storeId);
+        
+        GrafanaFeeder feeder = new GrafanaFeeder();
+        feeder.addPoint("webdata", "sms", toAdd);
+    }    
 }

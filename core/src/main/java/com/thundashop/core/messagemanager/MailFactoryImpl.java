@@ -9,6 +9,7 @@ import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GrafanaFeeder;
+import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.common.StoreComponent;
@@ -53,6 +54,9 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     
     @Autowired
     private Database database; 
+    
+    @Autowired
+    GrafanaManager grafanaManager;
     
     @Autowired
     public Logger logger;
@@ -323,6 +327,6 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         toAdd.put("storeid", (String)storeId);
         
         GrafanaFeeder feeder = new GrafanaFeeder();
-        feeder.addPoint("webdata", "email", toAdd);
+        grafanaManager.addPoint("webdata", "email", toAdd);
     }    
 }

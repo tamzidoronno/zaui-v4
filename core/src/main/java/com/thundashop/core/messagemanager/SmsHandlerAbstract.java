@@ -213,7 +213,6 @@ public abstract class SmsHandlerAbstract implements Runnable {
         } else {
             System.out.println("SMS Sent with " + getName() + " [to:  " + to + ", from: " +from + ", prefix: " + prefix + ", msg: " + message +" ]");
         }
-        feedGrafana();
     }
     
     public abstract void postSms() throws Exception;
@@ -262,15 +261,4 @@ public abstract class SmsHandlerAbstract implements Runnable {
         }
     }
     
-    private void feedGrafana() {
-        HashMap<String, Object> toAdd = new HashMap();
-        
-        double smses = ((double)smsMessage.message.length() / 160);
-        Number smsCount = Math.ceil(smses);
-        toAdd.put("smses", smsCount);
-        toAdd.put("storeid", (String)storeId);
-        
-        GrafanaFeeder feeder = new GrafanaFeeder();
-        feeder.addPoint("webdata", "sms", toAdd);
-    }    
 }

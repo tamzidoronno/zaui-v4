@@ -9,6 +9,7 @@ import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GrafanaFeeder;
+import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -42,6 +43,9 @@ public class StorePool {
     
     @Autowired
     public MessageManager messageManager;
+    
+    @Autowired
+    private GrafanaManager grafanaManager;
     
     @PostConstruct
     public void loadData() {
@@ -186,7 +190,7 @@ public class StorePool {
             toAdd.put("webAddress", webAddress);
             toAdd.put("sessionId", sessionId);
             toAdd.put("storeId", store.id);
-            feeder.addPoint("webdata", "pageload", toAdd);
+            grafanaManager.addPoint("webdata", "pageload", toAdd);
             
             initStore(store, sessionId);
         }

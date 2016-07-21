@@ -16,16 +16,9 @@ import org.influxdb.dto.Point;
  * @author boggi
  */
 public class GrafanaFeeder extends Thread {
-    private String dbName;
-    private String point;
-    private HashMap<String, Object> values;
-    
-    public void addPoint(String dbName, String point, HashMap<String, Object> values) {
-        this.dbName = dbName;
-        this.point = point;
-        this.values = values;
-        start();
-    }
+    public String dbName;
+    public String point;
+    public HashMap<String, Object> values;
     
     public void run() {
         InfluxDB influxDB = InfluxDBFactory.connect("http://10.0.3.95:8086", "root", "root");

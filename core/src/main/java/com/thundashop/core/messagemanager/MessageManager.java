@@ -7,6 +7,8 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.chatmanager.SubscribedToAirgram;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GrafanaFeeder;
+import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -65,6 +67,9 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     
     @Autowired
     private InvoiceManager invoiceManager;
+    
+    @Autowired
+    private GrafanaManager grafanaManager;
     
     @Override
     public String sendMail(String to, String toName, String subject, String content, String from, String fromName) {
@@ -254,9 +259,23 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             return handler.getMessageId();
         }
         
+        feedGrafana(message);
+        
         return "";
     }
 
+    private void feedGrafana(String message) {
+        HashMap<String, Object> toAdd = new HashMap();
+        
+        double smses = ((double)message.length() / 160);
+        Number smsCount = Math.ceil(smses);
+        toAdd.put("smses", smsCount);
+        toAdd.put("storeid", (String)storeId);
+        
+        GrafanaFeeder feeder = new GrafanaFeeder();
+        grafanaManager.addPoint("webdata", "sms", toAdd);
+    }    
+    
     @Override
     public void sendMessageToStoreOwner(String message, String subject) {
         String email = getStoreEmailAddress();

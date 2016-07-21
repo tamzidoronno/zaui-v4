@@ -77,6 +77,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private DibsManager dibsManager;
     
+    @Autowired
+    GrafanaManager grafanaManager;
+    
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
         Order order = getOrder(orderId);
@@ -1318,7 +1321,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         toAdd.put("storeid", (String)storeId);
         
         GrafanaFeeder feeder = new GrafanaFeeder();
-        feeder.addPoint("webdata", "ordercreated", toAdd);
+        grafanaManager.addPoint("webdata", "ordercreated", toAdd);
     }
 
 }

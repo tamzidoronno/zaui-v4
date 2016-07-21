@@ -32,6 +32,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GrafanaFeeder;
+import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshoplock.GetShopLockManager;
@@ -112,6 +113,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     PmsInvoiceManager pmsInvoiceManager;
+    
+    @Autowired
+    GrafanaManager grafanaManager;
     
     private String specifiedMessage = "";
     Date lastOrderProcessed;
@@ -3340,6 +3344,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toAdd.put("storeid", (String)storeId);
         
         GrafanaFeeder feeder = new GrafanaFeeder();
-        feeder.addPoint("pmsmanager", "booking", toAdd);
+        grafanaManager.addPoint("pmsmanager", "booking", toAdd);
     }
 }

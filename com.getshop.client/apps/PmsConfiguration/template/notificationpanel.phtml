@@ -20,6 +20,7 @@ foreach($instances as $instance) {
 $locktype = array();
 $locktype['arx'] = "Arx";
 $locktype['getshop'] = "GetShop";
+$locktype['getshophotellock'] = "GetShop hotel lock";
 
 $hasArx = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName())->arxHostname;
 

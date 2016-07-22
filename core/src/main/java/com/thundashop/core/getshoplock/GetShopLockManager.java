@@ -49,6 +49,14 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
     @Autowired
     MessageManager messageManager;
+
+    @Override
+    public void refreshLock(String lockId) {
+        GetShopDevice dev = devices.get(lockId);
+        for(GetShopLockCode code : dev.codes.values()) {
+            code.resetOnLock();
+        }
+    }
         
     class GetshopLockCodeManagemnt extends Thread {
 

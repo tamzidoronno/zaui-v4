@@ -42,4 +42,7 @@ public interface IGetShopLockManager {
     
     @Administrator
     public void setMasterCode(Integer slot, String code);
+    
+    @Administrator
+    public void refreshLock(String lockId);
 }

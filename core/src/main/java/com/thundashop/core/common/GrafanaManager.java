@@ -5,12 +5,14 @@
  */
 package com.thundashop.core.common;
 
+import com.getshop.scope.GetShopSession;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GrafanaManager {
+@GetShopSession
+public class GrafanaManager extends ManagerBase{
      
     @Autowired
     public FrameworkConfig frameworkConfig;
@@ -20,6 +22,8 @@ public class GrafanaManager {
         feeder.dbName = dbName;
         feeder.point = point;
         feeder.values = values;
+        values.put("storeId", storeId);
+
         if(frameworkConfig.productionMode) {
             feeder.start();
         }

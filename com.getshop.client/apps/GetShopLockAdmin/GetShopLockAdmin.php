@@ -33,6 +33,10 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $this->getApi()->getGetShopLockManager()->checkIfAllIsOk($this->getSelectedName());
     }
     
+    public function resetLock() {
+        echo "TEST";
+    }
+    
     public function render() {
          if (!$this->getSelectedName()) {
             echo "You need to specify a booking engine first<br>";
@@ -45,5 +49,35 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         
         $this->includefile("locklist");
     }
+
+    /**
+     * @param \core_getshop_data_GetShopLock $lock
+     */
+    public function printCodeList($lock) {
+        $total = $lock->maxNumberOfCodes;
+        
+        $inuse = 0;
+        $toUpdate = 0;
+        $toRemove = 0;
+        foreach($lock->codes as $code) {
+            /* @var $code \core_getshop_data_GetShopLockCode */
+            if($code->used) {
+                $inuse++;
+            }
+            if(!$code->addedToLock) {
+                $toUpdate++;
+            }
+            if($code->needToBeRemoved) {
+                $toRemove++;
+            }
+        }
+        $title = "In use : $inuse<br>";
+        $title .= "To update : $toUpdate<br>";
+        $title .= "To remove : $toRemove<br>";
+        $title .= "Total locks : $total<br>";
+        
+        echo "<span title='$title'>$inuse - $toUpdate - $toRemove - $total</span>";
+    }
+
 }
 ?>

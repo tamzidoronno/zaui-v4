@@ -19,6 +19,7 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
     padding-bottom: 10px;
     border-color: #265170;
 }
+.Menu .entries .entries { background-color:#000; text-align: left; }
 
 .PmsBookingProductList .imgcontainer { background-color:#f5f5f5; }
 .PmsBookingSummary .itemrow { font-size: 18px; }

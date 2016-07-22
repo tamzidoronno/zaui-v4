@@ -380,4 +380,6 @@ public interface IPageManager {
     public void saveMobileLink(String link);
     
     public String getMobileLink();
+    
+    public void startLoadPage();
 }

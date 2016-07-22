@@ -9,7 +9,7 @@ if(!$locks || sizeof($locks) == 0) {
     echo "<tr>";
     echo "<th align='left'>Id</th>";
     echo "<th align='left'>Type</th>";
-    echo "<th>Number of codes</th>";
+    echo "<th>Code status</th>";
     echo "<th>Connect</th>";
     echo "</tr>";
     
@@ -17,7 +17,8 @@ if(!$locks || sizeof($locks) == 0) {
         echo "<tr>";
         echo "<td>" . $lock->zwaveid . "</td>";
         echo "<td>" . $lock->type . "</td>";
-        echo "<td align='center'>" . $lock->maxNumberOfCodes;
+        echo "<td align='center'>";
+        $this->printCodeList($lock);
         echo "</td>";
         echo "<td align='center'>";
         echo "<select class='connectlock' lockid='".$lock->id."'>";
@@ -30,6 +31,7 @@ if(!$locks || sizeof($locks) == 0) {
             echo "<option value='". $item->id ."' $selected>" . $item->bookingItemName . "</option>";
         }
         echo "</select>";
+        echo " <i style='cursor:pointer;' class='fa fa-refresh' title='Refresh lock' gstype='clicksubmit' method='resetLock' gsname='id' gsvalue='".$lock->id."'></i>";
         echo "</td>";
         echo "</tr>";
     }

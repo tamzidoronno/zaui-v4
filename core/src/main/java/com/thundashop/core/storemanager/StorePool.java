@@ -44,9 +44,6 @@ public class StorePool {
     @Autowired
     public MessageManager messageManager;
     
-    @Autowired
-    private GrafanaManager grafanaManager;
-    
     @PostConstruct
     public void loadData() {
         credentials.manangerName = "StoreManager";
@@ -185,13 +182,6 @@ public class StorePool {
         }
         
         if (store != null) {
-            GrafanaFeeder feeder = new GrafanaFeeder();
-            HashMap<String, Object> toAdd = new HashMap();
-            toAdd.put("webAddress", webAddress);
-            toAdd.put("sessionId", sessionId);
-            toAdd.put("storeId", store.id);
-            grafanaManager.addPoint("webdata", "pageload", toAdd);
-            
             initStore(store, sessionId);
         }
         

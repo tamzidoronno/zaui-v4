@@ -17,9 +17,7 @@ public class GetShopLockCode implements Serializable {
     public void refreshCode() {
         Integer newcode = new Random().nextInt(799999) + 200000;
         code = newcode + "";
-        codeRefreshed = new Date();
-        addedToLock = null;
-        needToBeRemoved = null;
+        resetOnLock();
         used = false;
     }
 
@@ -85,5 +83,11 @@ public class GetShopLockCode implements Serializable {
     }
     public boolean isAddedToLock() {
         return addedToLock != null;
+    }
+
+    public void resetOnLock() {
+        codeRefreshed = new Date();
+        addedToLock = null;
+        needToBeRemoved = null;
     }
 }

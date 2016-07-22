@@ -182,6 +182,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
 
         $factory->loadJavascriptFilesEditorMode();
         $factory->getPageTitle();
+        $factory->getApi()->getPageManager()->startLoadPage();
         
         echo "<script>";
         if (isset($settings->fadein) && $settings->fadein == "true") {

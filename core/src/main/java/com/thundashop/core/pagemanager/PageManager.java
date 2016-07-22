@@ -57,7 +57,10 @@ public class PageManager extends ManagerBase implements IPageManager {
     
     @Autowired
     private ListManager listManager;
-    
+
+    @Autowired
+    private GrafanaManager grafanaManager;
+
     public Page createPage() throws ErrorException {
         return createPage(null);
     }
@@ -137,7 +140,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         if (page == null) {
             return null;
         }
-       
+        
         page = finalizePage(page);
 
         return page;
@@ -884,5 +887,11 @@ public class PageManager extends ManagerBase implements IPageManager {
         
         backupPage(page);
         saveObject(page);
+    }
+
+    @Override
+    public void startLoadPage() {
+        HashMap<String, Object> toAdd = new HashMap();
+        grafanaManager.addPoint("webdata", "pageload", toAdd);
     }
 }

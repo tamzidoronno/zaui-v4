@@ -31,7 +31,7 @@ if(!$locks || sizeof($locks) == 0) {
             echo "<option value='". $item->id ."' $selected>" . $item->bookingItemName . "</option>";
         }
         echo "</select>";
-        echo " <i style='cursor:pointer;' class='fa fa-refresh' title='Refresh lock' gstype='clicksubmit' method='resetLock' gsname='id' gsvalue='".$lock->id."'></i>";
+        echo " <i style='cursor:pointer;' class='fa fa-refresh' title='Resend codes to lock' gstype='clicksubmit' method='resetLock' gsname='id' gsvalue='".$lock->id."'></i>";
         echo "</td>";
         echo "</tr>";
     }

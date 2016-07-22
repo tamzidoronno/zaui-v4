@@ -31,7 +31,7 @@ public class GetShopLockCode implements Serializable {
         
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR_OF_DAY, -6);
-        Date past = new Date();
+        Date past = cal.getTime();
         if(past.after(codeRefreshed)) {
             return true;
         }

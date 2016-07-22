@@ -34,7 +34,7 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
     }
     
     public function resetLock() {
-        echo "TEST";
+        $this->getApi()->getGetShopLockManager()->refreshLock($this->getSelectedName(), $_POST['data']['id']);
     }
     
     public function render() {

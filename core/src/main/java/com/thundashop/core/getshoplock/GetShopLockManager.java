@@ -93,7 +93,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         @Override
         public void run() {
-            boolean didUpdate = false;
             for(Integer offset : device.codes.keySet()) {
                 GetShopLockCode code = device.codes.get(offset);
                 if(code.needUpdate()) {
@@ -112,7 +111,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                     GetShopHotelLockCodeResult res = getSetCodeResult(offset);
                                     if(res.hasCode.value.equals(true)) {
                                         code.setAddedToLock();
-                                        didUpdate = true;
+                                        device.needSaving = true;
                                         System.out.println("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)");
                                         break;
                                     } else {
@@ -131,10 +130,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     try { Thread.sleep(5000); }catch(Exception e) {}
                 }
             }
-            if(didUpdate) {
-                device.needSaving = true;
-            }
-            
             device.beingUpdated = false;
         }
 
@@ -232,7 +227,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             
             for(Integer offset : result.keySet()) {
                 ZWaveDevice device = result.get(offset);
-                System.out.println("ID: " + device.id + " - " + device.data.deviceTypeString.value);
                 GetShopDevice gsdevice = new GetShopDevice();
                 gsdevice.setDevice(device);
                 addDeviceIfNotExists(gsdevice);
@@ -243,13 +237,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
         
         finalizeLocks();
-        
-        for(GetShopDevice gsdevice : devices.values()) {
-            for(Integer user : gsdevice.codes.keySet()) { 
-                GetShopLockCode code = gsdevice.codes.get(user);
-                System.out.println(user + " : " + code.fetchCode());
-            }
-        }
         
         return new ArrayList(devices.values());
     }
@@ -284,8 +271,8 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     public void checkIfAllIsOk() {
         for(GetShopDevice dev : devices.values()) {
             if(dev.needSaving) {
-                saveObject(dev);
                 dev.needSaving = false;
+                saveObject(dev);
             }
             if(dev.warnAboutCodeNotSet()) {
                 messageManager.sendErrorNotification("Failed to update getshop hotel locks, this have not been able to update locks for 6 hours. this might be critical.", null);

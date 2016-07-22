@@ -7,6 +7,7 @@ import java.util.List;
 
 public class PmsConfiguration extends DataCommon {
 
+
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;
         public static Integer DAILY = 2;
@@ -104,7 +105,7 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<String, String> channelTranslations = new HashMap();
     public HashMap<String, String> channelPaymentTypes = new HashMap();
     
-    boolean isGetShopHotelLock() {
+    public boolean isGetShopHotelLock() {
         if(locktype != null && !locktype.isEmpty() && locktype.equals("getshophotellock")) {
             return true;
         }
@@ -112,7 +113,7 @@ public class PmsConfiguration extends DataCommon {
     }
 
     
-    boolean hasLockSystem() {
+    public boolean hasLockSystem() {
         return (arxHostname != null && !arxHostname.isEmpty());
     }
 

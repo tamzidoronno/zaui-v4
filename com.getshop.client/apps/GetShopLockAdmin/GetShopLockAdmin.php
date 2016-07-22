@@ -20,6 +20,12 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
     }
     
+    public function updateMasterCode() {
+        $codes = $this->getApi()->getGetShopLockManager()->getMasterCodes($this->getSelectedName());
+        $codes->codes->{$_POST['data']['offset']} = $_POST['data']['code'];
+        $this->getApi()->getGetShopLockManager()->saveMastercodes($this->getSelectedName(), $codes);
+    }
+    
     public function getSelectedName() {
         return $this->getConfigurationSetting("engine_name");
     }
@@ -74,7 +80,7 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $title = "In use : $inuse<br>";
         $title .= "To update : $toUpdate<br>";
         $title .= "To remove : $toRemove<br>";
-        $title .= "Total locks : $total<br>";
+        $title .= "Total codes : $total<br>";
         
         echo "<span title='$title'>$inuse - $toUpdate - $toRemove - $total</span>";
     }

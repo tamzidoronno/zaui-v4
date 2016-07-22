@@ -4,6 +4,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.getshop.data.GetShopDevice;
+import com.thundashop.core.getshop.data.GetShopLockMasterCodes;
 import java.util.Date;
 import java.util.List;
 
@@ -45,4 +46,11 @@ public interface IGetShopLockManager {
     
     @Administrator
     public void refreshLock(String lockId);
+    
+    @Administrator
+    public GetShopLockMasterCodes getMasterCodes();
+    
+    @Administrator
+    public void saveMastercodes(GetShopLockMasterCodes codes);
+    
 }

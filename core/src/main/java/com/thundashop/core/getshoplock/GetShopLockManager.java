@@ -15,6 +15,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshop.data.GetShopHotelLockCodeResult;
 import com.thundashop.core.getshop.data.GetShopLockCode;
+import com.thundashop.core.getshop.data.GetShopLockMasterCodes;
 import com.thundashop.core.getshop.data.ZWaveDevice;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pmsmanager.PmsManager;
@@ -45,6 +46,7 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetShopLockManager {
     private HashMap<String, GetShopDevice> devices = new HashMap();
+    private GetShopLockMasterCodes masterCodes = new GetShopLockMasterCodes();
     
         
     @Autowired
@@ -57,7 +59,23 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             code.resetOnLock();
         }
     }
-        
+
+    private void checkForMasterCodeUpdates(GetShopDevice dev) {
+        for(int i = 1; i <= 5; i++) {
+            GetShopLockCode code = dev.codes.get(i);
+            String masterCode = masterCodes.codes.get(i);
+            if(!code.fetchCodeToAddToLock().equals(masterCode)) {
+                code.setCode(masterCode);
+            }
+        }
+    }
+
+    @Override
+    public void saveMastercodes(GetShopLockMasterCodes codes) {
+        saveObject(codes);
+        masterCodes = codes;
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;
@@ -156,7 +174,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon obj : data.data) {
             if(obj instanceof GetShopDevice) {
-                devices.put(obj.id, (GetShopDevice) obj);
+                GetShopDevice toAdd = (GetShopDevice) obj;
+                devices.put(obj.id, toAdd);
+                toAdd.beingUpdated = false;
+            }
+            if(obj instanceof GetShopLockMasterCodes) {
+                masterCodes = (GetShopLockMasterCodes) obj;
             }
         }
     }
@@ -274,6 +297,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 dev.needSaving = false;
                 saveObject(dev);
             }
+            
+            if(dev.isLock()) {
+                checkForMasterCodeUpdates(dev);
+            }
+            
             if(dev.warnAboutCodeNotSet()) {
                 messageManager.sendErrorNotification("Failed to update getshop hotel locks, this have not been able to update locks for 6 hours. this might be critical.", null);
             }
@@ -310,6 +338,14 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
     }
 
+    @Override
+    public GetShopLockMasterCodes getMasterCodes() {
+        if(masterCodes.checkIfEmtpy()) {
+            saveObject(masterCodes);
+        }
+        return masterCodes;
+    }
+    
     private void addDeviceIfNotExists(GetShopDevice gsdevice) {
         for(GetShopDevice dev : devices.values()) {
             if(dev.zwaveid.equals(gsdevice.zwaveid)) {

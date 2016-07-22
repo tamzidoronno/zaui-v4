@@ -1,3 +1,4 @@
+<span type='button' gstype='clicksubmit' method='runCheck' gsname='id' gsvalue='somevalue' class='shop_button'>Run check</span>
 <?php
 /* @var $this ns_99d42f8c_e446_40fe_a038_af9f316dfb3a\GetShopLockAdmin */
 $locks = $this->getApi()->getGetShopLockManager()->getAllLocks($this->getSelectedName());
@@ -37,5 +38,17 @@ if(!$locks || sizeof($locks) == 0) {
     }
     echo "</table>";
 }
+echo "<br>";
+echo "<h1>Master codes</h1>";
+$masterCodes = $this->getApi()->getGetShopLockManager()->getMasterCodes($this->getSelectedName());
+foreach($masterCodes->codes as $offset => $code) {
+    ?>
+    <div gstype="form" method="updateMasterCode">
+        <input type='number' min='100000' max='999999' value='<?php echo $code; ?>' gsname='code'>
+        <input type="hidden" gsname="offset" value="<? echo $offset; ?>"/>
+        <input gstype="submit" value="Update master code <? echo $offset; ?>"  type="button">
+    </div>
+    <?php
+}
+echo "<br>";
 ?>
-<span type='button' gstype='clicksubmit' method='runCheck' gsname='id' gsvalue='somevalue' class='shop_button'>Run check</span>

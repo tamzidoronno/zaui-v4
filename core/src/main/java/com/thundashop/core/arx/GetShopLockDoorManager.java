@@ -28,17 +28,19 @@ public class GetShopLockDoorManager  implements IDoorManager {
         List<GetShopDevice> locks = getShopLockManager.getAllLocks();
         List<BookingItem> items = bookingEngine.getBookingItems();
         for(GetShopDevice lock : locks) {
-            String name = "unkown";
-            for(BookingItem item : items) {
-                if(item.bookingItemAlias.equals(lock.id)) {
-                    name = item.bookingItemName;
+            if(lock.isLock()) {
+                String name = "unkown";
+                for(BookingItem item : items) {
+                    if(item.bookingItemAlias.equals(lock.id)) {
+                        name = item.bookingItemName;
+                    }
                 }
+
+                Door door = new Door();
+                door.externalId = lock.id;
+                door.name = name;
+                doors.add(door);
             }
-            
-            Door door = new Door();
-            door.externalId = lock.id;
-            door.name = name;
-            doors.add(door);
         }
         
         return doors;
@@ -57,6 +59,9 @@ public class GetShopLockDoorManager  implements IDoorManager {
     @Override
     public void doorAction(String externalId, String state) throws Exception {
         System.out.println("External id: " + externalId + ", state: " + state);
+        if(state.equals("pulseOpen") || state.equals("forceOpenOn") || state.equals("forceOpenOff")) {
+            getShopLockManager.openLock(externalId);
+        }
     }
 
     @Override

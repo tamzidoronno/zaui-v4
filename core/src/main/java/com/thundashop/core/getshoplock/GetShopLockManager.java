@@ -268,7 +268,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         String hostname = getHostname();
         if(hostname == null || hostname.isEmpty()) { return; }
         GetShopDevice dev = devices.get(lockId);
-        String address = "http://"+getHostname()+":8083/ZWave.zway/Run/devices["+dev.zwaveid+"].instances[0].commandClasses[98].Set(1)";
+        String postfix = "ZWave.zway/Run/devices["+dev.zwaveid+"].instances[0].commandClasses[98].Set(1)";
+        try {
+            postfix = URLEncoder.encode(postfix, "UTF-8");
+        }catch(Exception e) {}
+        String address = "http://"+getHostname()+":8083/" + postfix;
         try {
             httpLoginRequest(address);
         } catch (Exception ex) {

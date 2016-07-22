@@ -29,3 +29,4 @@ a, a:hover { color:#000; }
 .disconnectedPage { position: fixed; z-index: 10; width: 100%; height: 100%; background-color:rgba(0,0,0,0.5); color: #fff; font-size: 30px; text-align: center; padding: 30px; display:none; }
 .guestinfocol,.firecheck { border-left: solid 1px; height: 90px; text-align: center;}
 .firecheck {  line-height: 90px; padding-left:0px; padding-right:0px; }
+.firecheck.checked { background-color: #000; color:#fff; }

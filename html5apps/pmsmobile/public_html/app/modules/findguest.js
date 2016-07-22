@@ -5,6 +5,16 @@ getshop.findguestController = function($scope, $state) {
     filter.filterType = $scope.filterType;
     $scope.listDate = new Date();
     
+    $scope.toggleFireCheck = function($event) {
+        console.log($event);
+        var box = $($event.target);
+        if(box.hasClass('checked')) {
+            box.removeClass('checked');
+        } else {
+            box.addClass('checked');
+        }
+    },
+            
     $scope.convertDate = function(time) {
         var d = new Date();
         d.setTime(time);

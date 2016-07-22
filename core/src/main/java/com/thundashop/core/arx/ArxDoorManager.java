@@ -58,6 +58,13 @@ public class ArxDoorManager implements IDoorManager {
     DoorManager doorManager;
     BookingEngine bookingEngine;
     
+    public void setManager(StoreManager store, PmsManager pms, DoorManager door, BookingEngine be) {
+        storeManager = store;
+        pmsManager = pms;
+        doorManager = door;
+        bookingEngine = be;
+    }
+    
     public String httpLoginRequest(String address, String content) throws Exception {
         String username = pmsManager.getConfigurationSecure().arxUsername;
         String arxHost = pmsManager.getConfigurationSecure().arxHostname;

@@ -1,6 +1,8 @@
 <!--TODO: Include wubook. -->
 
-<div class='additionalinfo row'>Orders</div>
+<div class='additionalinfo row'>
+    <a ui-sref="mainpage"><i class='fa fa-arrow-left' style='color:#fff; float:left;'></i></a>
+    Orders</div>
 <div ng-repeat="order in orders" class='orderrow row no-gutter'>
     <div class='col-xs-2'>{{order.incrementOrderId}}</div>
     <div class='col-xs-2'>{{order.amountInc}}</div>

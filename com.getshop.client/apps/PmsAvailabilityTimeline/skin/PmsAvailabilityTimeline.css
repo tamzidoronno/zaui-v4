@@ -5,8 +5,8 @@
 .PmsAvailabilityTimeline .valueentry_item { width: 60px; font-size: 10px; height: 12px; position:absolute; border-bottom: solid 1px #efefef; left:0px; background-color:#fff; display:inline-block; margin-top: 1px; }
 .PmsAvailabilityTimeline .valueentry_placeholder { border: solid 0px; width: 60px; font-size: 10px; line-height: 10px; float:left; left:0px; background-color:#fff; display:inline-block; margin-top: 1px; }
 .PmsAvailabilityTimeline .valueentry {
-        border-left: solid 1px #266408;
-    border-top: solid 1px #266408;
+        border-left: solid 1px #bbb;
+    border-top: solid 1px #bbb;
     display:inline-block; float: left; width: 60px; text-align: center; font-size: 8px; height: 10px; line-height: 10px;}
 .PmsAvailabilityTimeline .valueentry.date { 
     width: 61px;

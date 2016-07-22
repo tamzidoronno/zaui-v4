@@ -43,6 +43,9 @@ public class PmsBookingSimpleFilter {
         simple.bookingItemId = room.bookingItemId;
         simple.addons = room.addons;
         simple.price = room.price;
+        simple.checkedIn = false;
+        simple.checkedOut = false;
+        
         if(manager.getConfiguration().hasLockSystem()) {
             simple.code = room.code;
         }
@@ -74,11 +77,8 @@ public class PmsBookingSimpleFilter {
             simple.progressState = "notpaid";
         }
         
-        if(room.checkedout) {
-            simple.progressState += ", checked out";
-        } else if(room.checkedin) {
-            simple.progressState += ", checked in";
-        }
+        simple.checkedIn = room.checkedin;
+        simple.checkedOut = room.checkedout;
         
         simple.numberOfGuests = room.numberOfGuests;
         simple.transferredToArx = room.addedToArx;

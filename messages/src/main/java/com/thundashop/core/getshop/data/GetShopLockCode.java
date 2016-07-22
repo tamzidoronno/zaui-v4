@@ -89,5 +89,6 @@ public class GetShopLockCode implements Serializable {
         codeRefreshed = new Date();
         addedToLock = null;
         needToBeRemoved = null;
+        used = false;
     }
 }

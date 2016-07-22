@@ -227,6 +227,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             GetShopLockCode code = dev.codes.get(i);
             if(code.canUse()) {
                 String codeToUse = code.fetchCode();
+                saveObject(dev);
                 return codeToUse;
             }
         }

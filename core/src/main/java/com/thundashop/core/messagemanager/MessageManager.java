@@ -73,7 +73,9 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     
     @Override
     public String sendMail(String to, String toName, String subject, String content, String from, String fromName) {
-        return mailFactory.send(from, to, subject, content);
+        String res = mailFactory.send(from, to, subject, content);
+        feedGrafana(content);
+        return res;
     }
 
     @Override
@@ -129,9 +131,19 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        feedGrafana(content);
         return "";
     }
+    
+    
+    private void feedGrafana(String content) {
+        HashMap<String, Object> toAdd = new HashMap();
+        toAdd.put("emailsize", (Number)content.length());
+        toAdd.put("storeid", (String)storeId);
+        
+        GrafanaFeeder feeder = new GrafanaFeeder();
+        grafanaManager.addPoint("webdata", "email", toAdd);
+    }    
 
     @Override
     public List<String> getCollectedEmails() {
@@ -163,6 +175,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         String name = user.fullName;
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
         sendMailWithAttachments(email, name, title, message, copyadress, copyadress, attachments);
+        feedGrafana(message);
     }
     
     private void attachInvioce(HashMap<String, String> attachments, String orderId) {
@@ -259,12 +272,12 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             return handler.getMessageId();
         }
         
-        feedGrafana(message);
+        feedGrafanaSms(message);
         
         return "";
     }
 
-    private void feedGrafana(String message) {
+    private void feedGrafanaSms(String message) {
         HashMap<String, Object> toAdd = new HashMap();
         
         double smses = ((double)message.length() / 160);

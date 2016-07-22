@@ -317,16 +317,5 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 }
             }
         }
-        feedGrafana();
     }
-    
-    
-    private void feedGrafana() {
-        HashMap<String, Object> toAdd = new HashMap();
-        toAdd.put("emailsize", (Number)content.length());
-        toAdd.put("storeid", (String)storeId);
-        
-        GrafanaFeeder feeder = new GrafanaFeeder();
-        grafanaManager.addPoint("webdata", "email", toAdd);
-    }    
 }

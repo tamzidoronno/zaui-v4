@@ -5,7 +5,7 @@
  */
 package com.thundashop.core.getshoplock;
 
-import static com.thundashop.core.arx.DoorManager.wrapClient;
+import static com.thundashop.core.arx.WrapClient.wrapClient;
 import java.io.InputStream;
 import org.apache.axis.encoding.Base64;
 import org.apache.http.HttpEntity;

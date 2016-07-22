@@ -2565,8 +2565,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void checkDoorStatusControl() throws Exception {
-        PmsManagerDoorSurveilance sur = new PmsManagerDoorSurveilance(this);
-        sur.checkStatus();
     }
 
     @Override

@@ -246,6 +246,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 
     private String sendSmsInternal(String provider, String to, String message, String prefix, String from) {
         SmsHandler handler = null;
+        String res = "";
         
         if (provider.equals("plivo")) {
             handler = new PlivoSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
@@ -269,12 +270,12 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         
         if (handler != null) {
             handler.sendMessage();
-            return handler.getMessageId();
+            res = handler.getMessageId();
         }
         
         feedGrafanaSms(message);
         
-        return "";
+        return res;
     }
 
     private void feedGrafanaSms(String message) {

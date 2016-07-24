@@ -27,12 +27,9 @@ class StoreTranslationLine {
 
     public function populate($key, $text, $userLevel, $app) {
         $this->key = $key;
-        $this->text = $text;
+        $this->text = "";
         $this->userLevel = $userLevel;
         $this->app = $app;
-        if($this->key == $this->text) {
-            $this->text = "";
-        }
     }
 
 }

@@ -237,6 +237,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
                     echo "<div title='".$factory->__f("Toggle advanced mode")."' class='gs_site_main_button gs_toggle_advanced_mode'><i class='fa fa-rocket'></i></div>";
                     echo "<div title='".$factory->__f("Modify your layout? Drag this element to a cell you would like to modify.")."' class='gs_site_main_button gsaddrowcontentdnd'><i class='fa fa-plus-circle'></i></div>";
                     echo "<div title='".$factory->__f("Layout history")."' class='gs_site_main_button gslayouthistorybtn'><i class='fa fa-undo'></i></div>";
+                    echo "<div title='".$factory->__f("Translations")."' class='gs_site_main_button gstranslationbtn'><i class='fa fa-language'></i></div>";
 
                     $selectedThemeApp = $factory->getApplicationPool()->getSelectedThemeAppInstance();
                     if ($selectedThemeApp != null && method_exists($selectedThemeApp, "isAllowingSideBar") && $selectedThemeApp->isAllowingSideBar()) {

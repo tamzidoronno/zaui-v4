@@ -1,0 +1,70 @@
+<?php
+$factory = IocContainer::getFactorySingelton();
+$storeTrans = new GetShopTranslation();
+$storeTrans->language = $factory->getSelectedTranslation();
+$trans = $storeTrans->getStoreTranslations($factory->getStore()->id);
+$appName = "";
+$incAdmText = false;
+$incAdmTextSel = "";
+$apps = array();
+$selectedApp = "";
+
+if(isset($_POST['data']['app'])) {
+    $selectedApp = $_POST['data']['app'];
+}
+if(isset($_POST['data']['admintext'])) {
+    $incAdmText = $_POST['data']['admintext'] == "true";
+    if($incAdmText)
+        $incAdmTextSel = "CHECKED";
+}
+
+foreach($trans as $tran) {
+    if($tran->userLevel > 10 && !$incAdmTextSel) {
+            continue;
+        }
+    $apps[$tran->app] = $tran->app;
+}
+?>
+<div gstype="form" method="loadTranslation">
+    <input type='checkbox' gsname='admintext' <?php echo $incAdmTextSel; ?>> Include admin text<br>
+    <?php
+    echo "<select gsname='app'>";
+    echo "<option value=''>All application</option>";
+    foreach($apps as $app) {
+        $selected = "";
+        if( $selectedApp == $app) {
+            $selected = "SELECTED";
+        }
+        echo "<option value='$app' $selected>$app</option>";
+    }
+    echo "</select>";
+    ?>
+    <input gstype="submitToInfoBox" type="button" value='Update'>
+</div>
+
+
+<div gstype="form" method="saveTranslation">
+<table width='100%'>
+    <?php
+    foreach($trans as $tran) {
+        if($tran->userLevel > 10 && !$incAdmTextSel) {
+            continue;
+        }
+        if($selectedApp && $tran->app != $selectedApp) {
+            continue;
+        }
+        if($appName != $tran->app) {
+            $appName = $tran->app;
+            echo "<tr><td colspan='2'><br><b>" . $appName . "</b></td></tr>";
+        }
+        echo "<tr>";
+        echo "<td width='50%'>" . $tran->key . "</td>";
+        echo "<td width='50%'><input type='text' gsname='".$tran->key."' value='" . $tran->text . "' style='width:100%'></td>";
+        echo "</tr>";
+    }
+    ?>
+</table>
+    <div style='text-align:right;padding-top: 10px;'>
+        <input type='button' gstype="submitToInfoBox" value='Save translation for <?php echo $factory->getSelectedTranslation(); ?>'>
+    </div>
+</div>

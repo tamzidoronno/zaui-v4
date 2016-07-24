@@ -28,6 +28,24 @@ class ApplicationManager extends FactoryBase {
         $this->getApi()->getPageManager()->saveMobileLink($_POST['data']['link']);
     }
     
+    public function loadTranslation() {
+        include("translationview.phtml");
+    }
+    
+    public function saveTranslation() {
+        $gsTrans = new GetShopTranslation();
+        $gsTrans->language = $this->getFactory()->getSelectedTranslation();
+        $translations = $gsTrans->getStoreTranslations($this->getFactory()->getStore()->id);
+        foreach($translations as $trans) {
+            if(isset($_POST['data'][$trans->key])) {
+                $trans->text = $_POST['data'][$trans->key];
+            }
+        }
+        $gsTrans->saveStoreTranslations($translations, $this->getFactory()->getStore()->id);
+        $this->loadTranslation();
+        echo "<div style='text-align:right; font-weight:bold;'>* Translation has been updated.</div>";
+    }
+    
     function updateCounter() {
         $this->getApi()->getUserManager()->updateUserCounter($_POST['data']['counter'], $_POST['data']['password']);
     }

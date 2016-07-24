@@ -3,6 +3,7 @@ if(isset($_POST['data']['selectedlang'])) {
     $_GET['setLanguage'] = $_POST['data']['selectedlang'];
 }
 $factory = IocContainer::getFactorySingelton();
+$factory->read_csv_translation();
 $storeTrans = new GetShopTranslation();
 $storeTrans->language = $factory->getSelectedTranslation();
 $trans = $storeTrans->getStoreTranslations($factory->getStore()->id);
@@ -58,6 +59,8 @@ foreach($trans as $tran) {
 
 
 <div gstype="form" method="saveTranslation">
+    <input type="hidden" gsname='app' value='<?php echo $selectedApp; ?>'>
+    <input type='hidden' gsname='admintext' <?php echo $incAdmTextSel; ?>>
 <table width='100%'>
     <?php
     foreach($trans as $tran) {
@@ -72,7 +75,7 @@ foreach($trans as $tran) {
             echo "<tr><td colspan='2'><br><b>" . $appName . "</b></td></tr>";
         }
         echo "<tr>";
-        echo "<td width='50%'>" . $this->__w($tran->key) . "</td>";
+        echo "<td width='50%'>" . $this->__f($tran->key) . "</td>";
         echo "<td width='50%'><textarea type='text' gsname='".$tran->key."' style='width:100%; height: 16px;'>".$tran->text."</textarea></td>";
         echo "</tr>";
     }

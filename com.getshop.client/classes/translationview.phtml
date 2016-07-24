@@ -1,4 +1,7 @@
 <?php
+if(isset($_POST['data']['selectedlang'])) {
+    $_GET['setLanguage'] = $_POST['data']['selectedlang'];
+}
 $factory = IocContainer::getFactorySingelton();
 $storeTrans = new GetShopTranslation();
 $storeTrans->language = $factory->getSelectedTranslation();
@@ -8,6 +11,8 @@ $incAdmText = false;
 $incAdmTextSel = "";
 $apps = array();
 $selectedApp = "";
+$activeLangs = $factory->getLanguageCodes();
+$activeLangs[] = $factory->getMainLanguage();
 
 if(isset($_POST['data']['app'])) {
     $selectedApp = $_POST['data']['app'];
@@ -28,6 +33,15 @@ foreach($trans as $tran) {
 <div gstype="form" method="loadTranslation">
     <input type='checkbox' gsname='admintext' <?php echo $incAdmTextSel; ?>> Include admin text<br>
     <?php
+    echo "<select gsname='selectedlang'>";
+    foreach($activeLangs as $lang) {
+        $selected = "";
+        if($lang == $factory->getSelectedTranslation()) {
+            $selected = "SELECTED";
+        }
+        echo "<option value='$lang' $selected>$lang</option>";
+    }
+    echo "</select>";
     echo "<select gsname='app'>";
     echo "<option value=''>All application</option>";
     foreach($apps as $app) {
@@ -58,13 +72,13 @@ foreach($trans as $tran) {
             echo "<tr><td colspan='2'><br><b>" . $appName . "</b></td></tr>";
         }
         echo "<tr>";
-        echo "<td width='50%'>" . $tran->key . "</td>";
-        echo "<td width='50%'><input type='text' gsname='".$tran->key."' value='" . $tran->text . "' style='width:100%'></td>";
+        echo "<td width='50%'>" . $this->__w($tran->key) . "</td>";
+        echo "<td width='50%'><textarea type='text' gsname='".$tran->key."' style='width:100%; height: 16px;'>".$tran->text."</textarea></td>";
         echo "</tr>";
     }
     ?>
 </table>
     <div style='text-align:right;padding-top: 10px;'>
-        <input type='button' gstype="submitToInfoBox" value='Save translation for <?php echo $factory->getSelectedTranslation(); ?>'>
+        <input type='button' gstype="submitToInfoBox" value='Save translation'>
     </div>
 </div>

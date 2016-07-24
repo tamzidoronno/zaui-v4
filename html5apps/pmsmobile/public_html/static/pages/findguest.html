@@ -38,22 +38,23 @@
 <div class="row">
     <div ng-repeat="room in rooms" class='col-xs-12 roomrow {{room.progressState}}'>
         <a ui-sref="guestinfo({ roomid: '{{room.pmsRoomId}}', bookingid: '{{room.bookingId}}' })">
-            <span class='col-xs-1 roominfoblock'>
-                <div><span class='roominfo'>{{room.room}}</span><br>
-                    <i class='fa fa-smile-o' ng-show="{{room.checkedIn}}"></i>
+            <span class='col-xs-2 roominfoblock'>
+                <div>
+                    <span class='roominfo'><i class='fa fa-smile-o' ng-show="{{room.checkedIn}}">&nbsp;{{room.room}}</i></span>
+                    <span ng-show="{{!room.checkedIn}}">{{room.room}}</span>
+                    <div><i class='fa fa-users'></i> {{room.numberOfGuests}}</div>
+                    <div>{{room.code}}</div>
                 </div>
             </span>
-            <span class='col-xs-10' style='padding-top:5px;'>
-                <div>{{room.owner}}</div>
-                <div>Code : <span class='code'>{{room.code}}</span></div>
-                <div>Number of guests : <span class='code'>{{room.numberOfGuests}}</span></div>
-                <div>{{room.guest[0].name}}, {{room.guest[0].phone}}, {{room.guest[0].email}}
+            <span class='col-xs-8 guestinfoblock' style='padding-top:5px;'>
+                <div class='truncate'>{{room.owner}}</div>
+                <div class='truncate'>{{room.guest[0].name}}, {{room.guest[0].phone}}, {{room.guest[0].email}}
                     <span style='float:right; color:#bbb;'>{{convertDate(room.start)}} - {{convertDate(room.end)}}</span>
                 </div>
                 
             </span>
         </a>
-        <span class='col-xs-1 firecheck' ng-class="{'active': isActive}" ng-click="toggleFireCheck($event)">
+        <span class='col-xs-2 firecheck' ng-class="{'active': isActive}" ng-click="toggleFireCheck($event)">
                 Mark
             </span>
     </div>

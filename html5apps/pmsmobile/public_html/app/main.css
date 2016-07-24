@@ -12,13 +12,13 @@ body { background-color:#3a99d7; }
 .roomrow.ended { background-color:#ffe39f; color:#000 !important; }
 .roomrow.waitingforlock { border: solid 1px; background-color:blue;  }
 .roomrow.notpaid { border: solid 1px; background-color:red; color:#fff !important;  }
-.roomrow.notpaid a,
+.roomrow.notpaid a, 
 .roomrow.started a,
 .roomrow.waitingforlock a
 { color:#fff !important; } 
 .roomrow .guestinfo { height: 70px;position: relative; }
 .roomrow .dateinfo { color:#aaa; position:absolute; bottom: 5px; left: 10px; }
-.roomrow .roominfoblock { border-right: solid 1px; padding: 10px; min-height: 90px;}
+.roomrow .roominfoblock { border-right: solid 1px; padding: 10px; min-height: 70px;}
 .roomrow .guestinfocol { min-height: 70px; position: relative; padding-top: 5px; }
 a, a:hover { color:#000; } 
 .loading { text-align: center; font-size: 40px; }
@@ -27,6 +27,22 @@ a, a:hover { color:#000; }
 .doorlogrow .dooractionbutton { display:inline-block; margin-right: 5px; border: solid 1px; border-radius: 5px; text-align: center; width: 60px; height: 60px; padding: 7px; font-size: 8px; background-color:#2f749f; color:#fff; float:right;}
 .doorlogrow .dooractionbutton:hover { background-color: #494949; cursor:pointer; }
 .disconnectedPage { position: fixed; z-index: 10; width: 100%; height: 100%; background-color:rgba(0,0,0,0.5); color: #fff; font-size: 30px; text-align: center; padding: 30px; display:none; }
-.guestinfocol,.firecheck { border-left: solid 1px; height: 90px; text-align: center;}
-.firecheck {  line-height: 90px; padding-left:0px; padding-right:0px; }
+.guestinfocol,.firecheck { border-left: solid 1px; height: 70px; text-align: center;}
+.firecheck {  line-height: 70px; padding-left:0px; padding-right:0px; }
 .firecheck.checked { background-color: #000; color:#fff; }
+
+
+@media only all and (max-width: 500px) {
+.truncate {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.roomrow { font-size: 12px !important; }
+.roomrow .roominfoblock, 
+.guestinfocol,
+.firecheck { height: 70px !important; }
+.firecheck { line-height: 70px !important;  }
+    
+}

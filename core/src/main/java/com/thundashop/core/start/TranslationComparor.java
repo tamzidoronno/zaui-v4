@@ -61,6 +61,7 @@ public class TranslationComparor {
         languages.add("en_en");
         languages.add("fi_FI");
         languages.add("nl_NL");
+        languages.add("de");
         languages.add("se");
 
         for (String language : languages) {

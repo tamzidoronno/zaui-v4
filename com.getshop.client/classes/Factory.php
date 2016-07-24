@@ -766,6 +766,17 @@ class Factory extends FactoryBase {
                 }
             }
         }
+        
+        //Override translation from store translation.
+        $toOverride = new GetShopTranslation();
+        $toOverride->language = $this->getSelectedTranslation();
+        $trans = $toOverride->getStoreTranslations($this->getStore()->id);
+        foreach($trans as $tran) {
+            /* @var $tran StoreTranslationLine */
+            if($tran->text) {
+                $this->translationMatrix[$tran->key] = $tran->text;
+            }
+        }
     }
 
     public function dumpOtherTranslation() {

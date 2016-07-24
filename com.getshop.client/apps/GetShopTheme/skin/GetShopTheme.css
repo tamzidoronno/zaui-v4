@@ -26,7 +26,8 @@ body {
     width: 100%;
     box-shadow: 0px 0px 3px #000;
 }
-
+.gs_language_selection {position:absolute; right: 0px; }
+.gs_language_code { color:#fff;  }
 .gsarea[area="header"] .gsdepth_0.gscount_0.gsrow,
 .gsarea[area="header"] .gsdepth_0.gscount_1.gsrow {
     background: rgba(255,255,255,0.2); /* Old browsers */

@@ -9,7 +9,7 @@ if(!$next) {
 if($this->getText("displaytopcontinue") == "true") {
     ?>
     <div class='continue_button_outer'>
-        <div class='continue_button' next_page="<? echo $next; ?>"><? echo $this->getText("next_button"); ?></div>
+        <div class='continue_button' next_page="<? echo $next; ?>"><? echo $this->__w("Continue"); ?></div>
     </div>
     <?php
 }
@@ -31,7 +31,7 @@ foreach($rooms as $room) {
 $this->includefile("productlist1");
 ?>
 <div class='continue_button_outer'>
-    <div class='continue_button' next_page="<? echo $next; ?>"><? echo $this->getText("next_button"); ?></div>
+    <div class='continue_button' next_page="<? echo $next; ?>"><? echo $this->__w("Continue"); ?></div>
 </div>
 <?php
 if($numberSelected == 0) {

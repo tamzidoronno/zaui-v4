@@ -5,7 +5,7 @@ $rooms = $this->getRooms();
 $numberSelected = 0;
 
 $singleSelection = ($this->getText("onlyoneselectionallowed") == "true");
-$selectedText = $this->getText("selectedText");
+$selectedText = $this->__w("Selected");
 $prefixtext = $this->getText("prefixText");
 
 foreach($rooms as $room) {
@@ -50,15 +50,12 @@ foreach($rooms as $room) {
         }
         
         if($availability == 0) {
-            $text = $this->getText("no_rooms_available");
+            $text = $this->__w("No rooms are available.");
             if(!$text) {
                 $text = $this->__w("Out of stock.");
             }
         } else {
-            $text = $this->getText("selected_room_count_text");
-            if(!$text) {
-                $text = "You have selected {count} of this room type";
-            }
+            $text = $this->__w("You have selected {count} of this room type.");
 
             $dropdown = "<select class='roomcountselection' typeid='".$room->type->id."'>";
             for($i = 0;$i <= $availability;$i++) {
@@ -81,7 +78,7 @@ foreach($rooms as $room) {
             if($availability) {
                 if(!$selectedRow) {
                     ?>
-                    <span class="selectbutton" gstype="clicksubmit" method="selectRoom" gsvalue="<?echo $room->type->id; ?>" gsname="typeid"><?php echo $this->getText("select_button"); ?></span>
+                    <span class="selectbutton" gstype="clicksubmit" method="selectRoom" gsvalue="<?echo $room->type->id; ?>" gsname="typeid"><?php echo $this->__w("Select"); ?></span>
                     <?php
                 } else {
                     echo "<span class='selectedtext'>".$selectedText."</span>";

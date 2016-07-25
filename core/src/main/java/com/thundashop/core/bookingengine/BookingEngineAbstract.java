@@ -5,8 +5,10 @@
  */
 package com.thundashop.core.bookingengine;
 
+import com.getshop.scope.GetShopDataMapRepository;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.thundashop.app.contentmanager.data.ContentData;
 import com.thundashop.core.bookingengine.data.Availability;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
@@ -50,12 +52,17 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     private final Map<String, Booking> bookings = new HashMap();
     private final Map<String, Availability> availabilities = new HashMap();
     private final Map<String, BookingItem> items = new HashMap();
-    private final Map<String, BookingItemType> types = new HashMap();
+    private Map<String, BookingItemType> types = new HashMap();
     
     private BookingEngineConfiguration config = new BookingEngineConfiguration();
     
     private final BookingEngineVerifier verifier = new BookingEngineVerifier();
 
+    @Autowired
+    public void createGetShopDataMaps(GetShopDataMapRepository<String, BookingItemType> repository) {
+        this.types = repository.createNew(this);
+    }
+    
     public List<BookingItemType> getBookingItemTypes() {
         List<BookingItemType> result = new ArrayList(types.values());
         Comparator<BookingItemType> comparator = new Comparator<BookingItemType>() {
@@ -380,7 +387,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             }
         }
         
-        System.out.println(savedItem.pageId);
         savedItem.size = type.size;
         savedItem.name = type.name;
         savedItem.pageId = type.pageId;

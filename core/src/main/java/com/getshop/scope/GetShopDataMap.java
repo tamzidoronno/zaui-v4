@@ -9,6 +9,7 @@ import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.storemanager.StoreManager;
@@ -29,7 +30,7 @@ public class GetShopDataMap<K, V>  implements Map<K,V>  {
     private String storeMainLanguage = "";
     
     private Session session;
-    public ManagerBase parentManager;
+    public ManagerSubBase parentManager;
  
     
     @Override

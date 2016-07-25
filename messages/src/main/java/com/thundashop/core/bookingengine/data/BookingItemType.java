@@ -7,6 +7,7 @@
 package com.thundashop.core.bookingengine.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.Translation;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import java.util.HashMap;
 
@@ -21,6 +22,7 @@ public class BookingItemType extends DataCommon {
         public static Integer FORTIME = 2;
     }
     
+    @Translation
     public String name;
     public String productId;
     public String pageId;

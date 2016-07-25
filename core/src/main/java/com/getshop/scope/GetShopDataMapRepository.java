@@ -45,6 +45,18 @@ public class GetShopDataMapRepository<K, V> extends GetShopSessionObject {
         return retMap;
     }
     
+    
+    public GetShopDataMap<K, V> createNew(GetShopSessionBeanNamed parentManager) {
+        GetShopDataMap<K, V> retMap = new GetShopDataMap<K, V>();
+        retMap.storeId = storeId;
+        retMap.storeManager = storeManager;
+        retMap.storeApplicationPool = storeApplicationPool;
+        retMap.database = database;
+        retMap.parentManager = parentManager;
+        maps.add(retMap);
+        return retMap;
+    }
+    
     @Override
     public void setSession(Session session) {
         for (GetShopDataMap<K, V> map : maps) {

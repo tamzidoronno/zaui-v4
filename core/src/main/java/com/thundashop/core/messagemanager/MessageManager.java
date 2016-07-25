@@ -286,7 +286,6 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         toAdd.put("smses", smsCount);
         toAdd.put("storeid", (String)storeId);
         
-        GrafanaFeeder feeder = new GrafanaFeeder();
         grafanaManager.addPoint("webdata", "sms", toAdd);
     }    
     

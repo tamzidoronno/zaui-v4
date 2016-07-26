@@ -53,12 +53,12 @@ class GetShopTranslation {
         if(stristr($app, "\\")) {
             $app = substr($app, strpos($app, "\\")+1);
         }
-        if(!isset($storeTranslations[$key])) {
+        if(!isset($storeTranslations[$key . "_" . $app])) {
             $entry = new StoreTranslationLine();
             $entry->populate($key, $text, $userLevel, $app);
             $storeTranslations[$key] = $entry;
         } else {
-            $entry = $storeTranslations[$key];
+            $entry = $storeTranslations[$key . "_" . $app];
             if($entry->userLevel > $userLevel) {
                 $entry->userLevel = $userLevel;
             } else {
@@ -134,16 +134,16 @@ class GetShopTranslation {
             if($line) {
                 $data = new StoreTranslationLine();
                 $data->loadData($line);
-                $res[$data->key] = $data;
+                $res[$data->key . "_" . $data->app] = $data;
             }
         }
         return $res;
     }
 
     public function getStoreTranslationPath($storeId) {
-        $storePth = getcwd() . "/translation/store/";
+        $storePth = "../uploadedfiles/translations/";
         if(!file_exists($storePth)) {
-            mkdir($storePth);
+            mkdir($storePth, 0777, true);
         }
         return $storePth . $storeId . "_" . $this->language;
     }

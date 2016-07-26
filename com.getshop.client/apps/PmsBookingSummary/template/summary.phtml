@@ -16,11 +16,7 @@ foreach($bookingitems as $item) {
 
 $this->includeCouponSystem();
 
-echo "<br>";
-$addonsText = $this->getConfigurationSetting("heading_summary");
-if(!$addonsText) {
-    $addonsText = $this->__w("Rooms selected");
-}
+$addonsText = $this->__w("Rooms selected");
 $startingFromText = $this->__w("Starting from");
 
 echo "<h2 class='bottomborder'>" . $addonsText . "</h2>";

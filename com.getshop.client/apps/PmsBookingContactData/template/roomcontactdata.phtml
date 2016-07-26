@@ -25,8 +25,16 @@ foreach($config->data as $key => $value) {
     }
 }
 
-
-$completeText = $this->getConfigurationSetting("complete_order_button");
+switch($pmsconfig->bookingProfile) { 
+   case "subscription":
+         $completeText = $this->__w("Complete registration");
+        break;
+    case "storage":
+         $completeText = $this->__w("Reserve your storage room now");
+        break;
+    default:
+        $completeText = $this->__w("Reserve room now");
+}
 
 if(!$completeText) {
     $completeText = "Complete";

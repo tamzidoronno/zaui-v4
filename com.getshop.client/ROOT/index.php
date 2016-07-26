@@ -105,7 +105,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     <head>
         
         <?
-        $themeName = $factory->getApplicationPool()->getSelectedThemeApp()->appName;
+        $themeName = $factory->getThemeApplication()->getName();
         
         // This is a hack and customers themes should never be distinquesed like this. TODO: make config options on theme instead.
         // Also, dont scale viewport!

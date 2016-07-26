@@ -46,8 +46,6 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     private Map<String, SavedApplicationSettings> settings = new HashMap();
 
-    private Map<String, Application> chachedThemeApp = new HashMap();
-    
     private Application cachedThemeApp = null;
     
     @Override
@@ -150,15 +148,11 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
             return cachedThemeApp;
         }
         String id = getManagerSetting("selectedThemeApplication");
-
-        if (chachedThemeApp.get(id) != null) {
-            return chachedThemeApp.get(id);
-        }
         
         
         if (id == null) {
             Application app = finalizeApplication(getDefaultThemeApplication());
-            chachedThemeApp.put(id, app);
+            cachedThemeApp = app;
             return app;
         }
 
@@ -170,11 +164,11 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
         if (app == null) {
             app = finalizeApplication(getDefaultThemeApplication());
-            chachedThemeApp.put(id, app);
+            cachedThemeApp = app;
             return app;
         }
 
-        chachedThemeApp.put(id, app);
+        cachedThemeApp = app;
         return finalizeApplication(app);
     }
 

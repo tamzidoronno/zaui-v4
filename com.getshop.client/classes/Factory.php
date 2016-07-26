@@ -303,8 +303,7 @@ class Factory extends FactoryBase {
             echo "\n" . '<script src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
         }
 
-        $appTheme = $this->getApplicationPool()->getSelectedThemeApp();
-        $themeApp = $this->getApplicationPool()->createInstace($appTheme);
+        $themeApp = $this->getApplicationPool()->getSelectedThemeApp();
         $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
         foreach($apps as $app) {
             $appInstance = $this->getApplicationPool()->createInstace($app);

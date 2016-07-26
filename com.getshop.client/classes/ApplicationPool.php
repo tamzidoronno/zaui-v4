@@ -92,6 +92,11 @@ class ApplicationPool {
         if (!$applicationSetting) {
             return null;
         }
+        if(!isset($applicationSetting->id) || !$applicationSetting->id) {
+            echo "<pre>";
+            print_r(debug_backtrace());
+            echo "</pre>";
+        }
         $instance = $this->factory->convertUUIDtoString($applicationSetting->id) . "\\" . $applicationSetting->appName;
         if (class_exists($instance)) {
             $appInstance = new $instance();

@@ -130,7 +130,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
-                dumpBooking(booking);
+//                dumpBooking(booking);
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof PmsPricing) {
@@ -2862,7 +2862,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             System.out.println("-------");
         }
-        booking.sessionId = "";
     }
 
     PmsPricing getPriceObject() {

@@ -24,6 +24,13 @@ $locktype['getshophotellock'] = "GetShop hotel lock";
 
 $hasArx = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName())->arxHostname;
 
+$profiles = array();
+$profiles['dining'] = "Dining";
+$profiles['hotel'] = "Hotel";
+$profiles['conferense'] = "Conferense";
+$profiles['subscription'] = "Subscription";
+$profiles['storage'] = "Storage";
+
 $notifications = array();
 $notifications['room_starting_0_hours_'.$langauge] = "Booking is started.";
 $notifications['room_starting_4_hours_'.$langauge] = "Booking starting in 4 hours";
@@ -441,115 +448,90 @@ $days[7] = "Sunday";
             </span>
             Sms name
         </div> 
-       <br><br>
-        <h2>
-            Cleaning configuration
-        </h2>
         <div class='configrow'>
             <span class='configentry'>
-                <input type='number' style='width: 40px;' gsname='cleaningInterval' value='<? echo $notificationSettings->cleaningInterval; ?>'>
-            </span>
-            Cleaning interval default (0, disabled)
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='number' style='width: 40px;' gsname='numberOfCheckoutCleanings' value='<? echo $notificationSettings->numberOfCheckoutCleanings; ?>'>
-            </span>
-            Max number of checkout cleaning possible to do for a day (0, disabled)
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='number' style='width: 40px;' gsname='numberOfIntervalCleaning' value='<? echo $notificationSettings->numberOfIntervalCleaning; ?>'>
-            </span>
-            Max number of interval cleaning possible to do for a day (0, disabled)
-        </div>
-        <?php for($i=1;$i<=7;$i++) { ?>
-            <div class='configrow'>
-                <span class='configentry'>
-                <?
-                    $checked = "";
-                    if(isset($notificationSettings->cleaningDays->{$i}) && $notificationSettings->cleaningDays->{$i}) {
-                        $checked = "CHECKED";
+                <select gsname="bookingProfile">
+                <?php 
+                foreach($profiles as $key => $profile) {
+                    $selected = "";
+                    if($key == $notificationSettings->bookingProfile) {
+                        $selected = "SELECTED";
                     }
+                    echo "<option value='$key' $selected>$profile</option>";
+                }
                 ?>
-                <input type='checkbox' gsname='cleaningDays_<?php echo $i; ?>' <? echo $checked; ?>>
-                </span>
-                Cleaning on <?php echo $days[$i]; ?>
-            </div>
-        <?php } ?>
-        <div class='configrow'>
-            <span class='configentry'>
-            <?
-                $checked = "";
-                if(isset($notificationSettings->cleaningNextDay) && $notificationSettings->cleaningNextDay) {
-                    $checked = "CHECKED";
-                }
-            ?>
-            <input type='checkbox' gsname='cleaningNextDay' <? echo $checked; ?>>
+                </select>
             </span>
-            Cleaning is done the day after the stay
+            Sms name
         </div>
-        <div class='configrow'>
-            <span class='configentry'>
-            <?
-                $checked = "";
-                if(isset($notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) && $notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) {
-                    $checked = "CHECKED";
-                }
-            ?>
-            <input type='checkbox' gsname='unsetCleaningIfJustSetWhenChangingRooms' <? echo $checked; ?>>
-            </span>
-            Unset rooms marked as dirty when a room is changed within one our (recommended to be switched off)
-        </div>
+        
+        <?php if($this->isHotel($notificationSettings)) { ?>
+             <h2>
+                 Cleaning configuration
+             </h2>
+             <div class='configrow'>
+                 <span class='configentry'>
+                     <input type='number' style='width: 40px;' gsname='cleaningInterval' value='<? echo $notificationSettings->cleaningInterval; ?>'>
+                 </span>
+                 Cleaning interval default (0, disabled)
+             </div>
+             <div class='configrow'>
+                 <span class='configentry'>
+                     <input type='number' style='width: 40px;' gsname='numberOfCheckoutCleanings' value='<? echo $notificationSettings->numberOfCheckoutCleanings; ?>'>
+                 </span>
+                 Max number of checkout cleaning possible to do for a day (0, disabled)
+             </div>
+             <div class='configrow'>
+                 <span class='configentry'>
+                     <input type='number' style='width: 40px;' gsname='numberOfIntervalCleaning' value='<? echo $notificationSettings->numberOfIntervalCleaning; ?>'>
+                 </span>
+                 Max number of interval cleaning possible to do for a day (0, disabled)
+             </div>
+             <?php for($i=1;$i<=7;$i++) { ?>
+                 <div class='configrow'>
+                     <span class='configentry'>
+                     <?
+                         $checked = "";
+                         if(isset($notificationSettings->cleaningDays->{$i}) && $notificationSettings->cleaningDays->{$i}) {
+                             $checked = "CHECKED";
+                         }
+                     ?>
+                     <input type='checkbox' gsname='cleaningDays_<?php echo $i; ?>' <? echo $checked; ?>>
+                     </span>
+                     Cleaning on <?php echo $days[$i]; ?>
+                 </div>
+             <?php } ?>
+             <div class='configrow'>
+                 <span class='configentry'>
+                 <?
+                     $checked = "";
+                     if(isset($notificationSettings->cleaningNextDay) && $notificationSettings->cleaningNextDay) {
+                         $checked = "CHECKED";
+                     }
+                 ?>
+                 <input type='checkbox' gsname='cleaningNextDay' <? echo $checked; ?>>
+                 </span>
+                 Cleaning is done the day after the stay
+             </div>
+             <div class='configrow'>
+                 <span class='configentry'>
+                 <?
+                     $checked = "";
+                     if(isset($notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) && $notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) {
+                         $checked = "CHECKED";
+                     }
+                 ?>
+                 <input type='checkbox' gsname='unsetCleaningIfJustSetWhenChangingRooms' <? echo $checked; ?>>
+                 </span>
+                 Unset rooms marked as dirty when a room is changed within one our (recommended to be switched off)
+             </div>
+        <? } ?>
         
         <br><br>
         <h2>
             Payment and order creations
         </h2>
-        <div class='configrow'>
-            <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->runAutoPayWithCard) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='runAutoPayWithCard' <? echo $checked; ?>>
-            </span>
-            Run autopay order by creditcard function
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->usePriceMatrixOnOrder) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='usePriceMatrixOnOrder' <? echo $checked; ?>>
-            </span>
-            Use price matrix when calculating changes in booking.
-        </div>
         
-        <div class='configrow'>
-            <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->prepayment) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='prepayment' <? echo $checked; ?>>
-            </span>
-            Prepayment, customers pay ahead of their stay
-        </div>
-
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='number' style='width: 40px;' gsname='createOrderAtDayInMonth' value='<? echo $notificationSettings->createOrderAtDayInMonth; ?>'>
-            </span>
-            Specify a specific date in month to create the orders (0 is turned off).
-        </div>
         <div class='configrow'>
             <span class='configentry'>
                 <?
@@ -562,151 +544,198 @@ $days[7] = "Sunday";
             </span>
             Payments are required (opens possibility to set prices)
         </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->payAfterBookingCompleted) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='payAfterBookingCompleted' <? echo $checked; ?>>
-            </span>
-            Force payment after booking has been completed.
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->substractOneDayOnOrder) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='substractOneDayOnOrder' <? echo $checked; ?>>
-            </span>
-            Automatically substract one day on order date.
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->autoCreateInvoices) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='autoCreateInvoices' <? echo $checked; ?>>
-            </span>
-            Autocreate invoices.
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->autoGenerateChangeOrders) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='autoGenerateChangeOrders' <? echo $checked; ?>>
-            </span>
-            Autocreate generate orders when changes in booking.
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->updatePriceWhenChangingDates) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='updatePriceWhenChangingDates' <? echo $checked; ?>>
-            </span>
-            Automatically change prices when chaning dates on the room.
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->includeGlobalOrderCreationPanel) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='includeGlobalOrderCreationPanel' <? echo $checked; ?>>
-            </span>
-            Include global create invoice panel
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='number' style='width: 40px;' gsname='prepaymentDaysAhead' value='<? echo $notificationSettings->prepaymentDaysAhead; ?>'>
-            </span>
-            Specify the number of days you would like to create the order in advance.
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='number' style='width: 40px;' gsname='increaseUnits' value='<? echo $notificationSettings->increaseUnits; ?>'>
-            </span>
-            How many time units would you like to increase with (example: if the its a montly booking, 1 will increase the booking with one month).
-        </div>
+        <?php if($notificationSettings->requirePayments) { ?>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
+                    if($notificationSettings->runAutoPayWithCard) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='runAutoPayWithCard' <? echo $checked; ?>>
+                </span>
+                Run autopay order by creditcard function
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
+                    if($notificationSettings->usePriceMatrixOnOrder) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='usePriceMatrixOnOrder' <? echo $checked; ?>>
+                </span>
+                Use price matrix when calculating changes in booking.
+            </div>
+
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
+                    if($notificationSettings->prepayment) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='prepayment' <? echo $checked; ?>>
+                </span>
+                Prepayment, customers pay ahead of their stay
+            </div>
+
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='number' style='width: 40px;' gsname='createOrderAtDayInMonth' value='<? echo $notificationSettings->createOrderAtDayInMonth; ?>'>
+                </span>
+                Specify a specific date in month to create the orders (0 is turned off).
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
+                    if($notificationSettings->payAfterBookingCompleted) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='payAfterBookingCompleted' <? echo $checked; ?>>
+                </span>
+                Force payment after booking has been completed.
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
+                    if($notificationSettings->substractOneDayOnOrder) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='substractOneDayOnOrder' <? echo $checked; ?>>
+                </span>
+                Automatically substract one day on order date.
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
+                    if($notificationSettings->autoCreateInvoices) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='autoCreateInvoices' <? echo $checked; ?>>
+                </span>
+                Autocreate invoices.
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
+                    if($notificationSettings->autoGenerateChangeOrders) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='autoGenerateChangeOrders' <? echo $checked; ?>>
+                </span>
+                Autocreate generate orders when changes in booking.
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
+                    if($notificationSettings->updatePriceWhenChangingDates) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='updatePriceWhenChangingDates' <? echo $checked; ?>>
+                </span>
+                Automatically change prices when chaning dates on the room.
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
+                    if($notificationSettings->includeGlobalOrderCreationPanel) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='includeGlobalOrderCreationPanel' <? echo $checked; ?>>
+                </span>
+                Include global create invoice panel
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='number' style='width: 40px;' gsname='prepaymentDaysAhead' value='<? echo $notificationSettings->prepaymentDaysAhead; ?>'>
+                </span>
+                Specify the number of days you would like to create the order in advance.
+            </div>
+        <?php } ?>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='number' style='width: 40px;' gsname='increaseUnits' value='<? echo $notificationSettings->increaseUnits; ?>'>
+                </span>
+                How many time units would you like to increase with (example: if the its a montly booking, 1 will increase the booking with one month).
+            </div>
         <div class='configrow'>
             <span class='configentry'>
                 <input type='number' style='width: 40px;' gsname='whenInfinteDateFirstOrderTimeUnits' value='<? echo $notificationSettings->whenInfinteDateFirstOrderTimeUnits; ?>'>
             </span>
             When infinite date, how many time units would like to add to the first order, for example when months and 3, there will be 3 months on the first order.
         </div>
-        <br><br>
-        <h2>Lock settings</h2>
-        <div class='configrow'>
-            <span class='configentry'>
-                <select gsname='locktype'>
-                    <?php
-                    foreach($locktype as $idx => $value) {
-                        $selected = "";
-                        if($notificationSettings->locktype == $idx) {
-                            $selected = "SELECTED";
-                        }
-                        echo "<option value='$idx' $selected>$value</option>";
-                    }
-                    ?>
-                </select>
-            </span>
-            Lock Type
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='text' gsname='arxHostname' value='<? echo $notificationSettings->arxHostname; ?>'>
-            </span>
-            Lock hostname
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='text' gsname='arxUsername' value='<? echo $notificationSettings->arxUsername; ?>'>
-            </span>
-            Lock username
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='text' gsname='arxPassword' value='<? echo $notificationSettings->arxPassword; ?>'>
-            </span>
-            Lock password
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='text' gsname='arxCardFormat' value='<? echo $notificationSettings->arxCardFormat; ?>'>
-            </span>
-            Card format
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='text' gsname='arxCardFormatsAvailable' value='<? echo $notificationSettings->arxCardFormatsAvailable; ?>'>
-            </span>
-            Available card formats (semicolon separated list).
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='text' gsname='codeSize' value='<? echo $notificationSettings->codeSize; ?>'>
-            </span>
-            Code size (on the code sent to the user)
-        </div>
         
+        <br><br>
+            <h2>Lock settings</h2>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <select gsname='locktype'>
+                        <?php
+                        foreach($locktype as $idx => $value) {
+                            $selected = "";
+                            if($notificationSettings->locktype == $idx) {
+                                $selected = "SELECTED";
+                            }
+                            echo "<option value='$idx' $selected>$value</option>";
+                        }
+                        ?>
+                    </select>
+                </span>
+                Lock Type
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='text' gsname='arxHostname' value='<? echo $notificationSettings->arxHostname; ?>'>
+                </span>
+                Lock hostname
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='text' gsname='arxUsername' value='<? echo $notificationSettings->arxUsername; ?>'>
+                </span>
+                Lock username
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='text' gsname='arxPassword' value='<? echo $notificationSettings->arxPassword; ?>'>
+                </span>
+                Lock password
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='text' gsname='arxCardFormat' value='<? echo $notificationSettings->arxCardFormat; ?>'>
+                </span>
+                Card format
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='text' gsname='arxCardFormatsAvailable' value='<? echo $notificationSettings->arxCardFormatsAvailable; ?>'>
+                </span>
+                Available card formats (semicolon separated list).
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='text' gsname='codeSize' value='<? echo $notificationSettings->codeSize; ?>'>
+                </span>
+                Code size (on the code sent to the user)
+            </div>
+            
         <br><br>
         <h2>Messaging settings</h2>
         <br><br>
@@ -728,7 +757,7 @@ $days[7] = "Sunday";
             </span>
             Email to notify to
         </div>
-        <?php if(sizeof($channels) > 0) { ?>
+        <?php if(sizeof($channels) > 0 && $this->isHotel($notificationSettings)) { ?>
             <h2>Channel translations</h2>
             <?php foreach($channels as $chan => $channel) { ?>
                 <div class='configrow'>
@@ -762,27 +791,28 @@ $days[7] = "Sunday";
             <? } ?>
         
         <? } ?>
-        <h2>Wubook settings</h2>
-        <br><br>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='text' gsname='wubookusername' value='<? echo $notificationSettings->wubookusername; ?>'>
-            </span>
-            Wubook username
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='text' gsname='wubookpassword' value='<? echo $notificationSettings->wubookpassword; ?>'>
-            </span>
-            Wubook password
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <input type='text' gsname='wubooklcode' value='<? echo $notificationSettings->wubooklcode; ?>'>
-            </span>
-            Wubook lcode
-        </div>
-        
+        <?php if($this->isHotel($notificationSettings)) { ?>
+            <h2>Wubook settings</h2>
+            <br><br>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='text' gsname='wubookusername' value='<? echo $notificationSettings->wubookusername; ?>'>
+                </span>
+                Wubook username
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='text' gsname='wubookpassword' value='<? echo $notificationSettings->wubookpassword; ?>'>
+                </span>
+                Wubook password
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='text' gsname='wubooklcode' value='<? echo $notificationSettings->wubooklcode; ?>'>
+                </span>
+                Wubook lcode
+            </div>
+        <? } ?>
         <div style='text-align: right;'>
             <span gstype="form" method="deleteAllBookings">
                 <input type="txt" style="float:left;" gsname="code" placeholder="code">

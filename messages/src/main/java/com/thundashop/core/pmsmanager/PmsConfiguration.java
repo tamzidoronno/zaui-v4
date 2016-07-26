@@ -45,6 +45,7 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<Integer, PmsBookingAddonItem> addonConfiguration = new HashMap();
     public HashMap<String, CleaningStatistics> cleaningPriceConfig = new HashMap();
     public HashMap<String, Double> extraCleaningCost = new HashMap();
+    public String bookingProfile = "hotel";
 
     /* Invoice creation options */
     public boolean autoCreateInvoices = false;

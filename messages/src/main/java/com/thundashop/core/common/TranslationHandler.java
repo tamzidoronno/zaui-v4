@@ -57,6 +57,9 @@ public class TranslationHandler implements Serializable {
         }
         
         for (Field field : fields) {
+            if(!field.isAccessible()) {
+                continue;
+            }
             if(field.getType().isPrimitive() || field.getType().isEnum()) {
                 continue;
             }

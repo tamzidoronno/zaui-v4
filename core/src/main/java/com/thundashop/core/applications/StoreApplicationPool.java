@@ -48,6 +48,8 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     private Map<String, Application> chachedThemeApp = new HashMap();
     
+    private Application cachedThemeApp = null;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         getShopApplicationPool.addListener(this);
@@ -144,6 +146,9 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     @Override
     public Application getThemeApplication() {
+        if(cachedThemeApp != null) {
+            return cachedThemeApp;
+        }
         String id = getManagerSetting("selectedThemeApplication");
 
         if (chachedThemeApp.get(id) != null) {

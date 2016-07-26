@@ -20,8 +20,16 @@ $rows = 0;
 $headers = array();
 $headers['regdate'] = "Reg";
 $headers['periode'] = "Periode";
-$headers['visitor'] = "Visitor";
-$headers['room'] = "Room";
+switch($config->bookingProfile) {
+    case "subscription":
+        $headers['visitor'] = "Owner";
+        $headers['room'] = "Subscription";
+        break;
+    default:
+        $headers['visitor'] = "Visitor";
+        $headers['room'] = "Room";
+        break;
+}
 $headers['price'] = "Price";
 $headers['state'] = "State";
 if(!isset($filter->sorting)) {

@@ -13,7 +13,15 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
 
 <div class="pmsfront">
     <span class="heading">
-        <? echo $this->__w("Book your stay today"); ?>
+        <?
+        switch($config->bookingProfile) {
+            case "storage":
+                echo $this->__w("Book your storage room today");
+                break;
+            default: 
+                echo $this->__w("Book your stay today");
+        }
+        ?>
     </span>
     <span class='start_date dates'>
         <div><span class='inputhelpertext'>
@@ -40,7 +48,18 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
     <div style='clear:both;'></div>
     
     <div class='productlist'>
-        <span class='inputhelpertext'><? echo $this->getText("select_product"); ?></span>
+        <span class='inputhelpertext'><? echo $this->getText("select_product"); ?>
+        <?php
+        switch($config->bookingProfile) {
+            case "storage":
+                echo $this->__w("Reserve your storage room now");
+                break;
+            default:
+                echo $this->__w("Reserve your room now");
+                break;
+        }
+        ?>
+        </span>
         <select class='selected_product'>
             <?php
             foreach($rooms as $room) {

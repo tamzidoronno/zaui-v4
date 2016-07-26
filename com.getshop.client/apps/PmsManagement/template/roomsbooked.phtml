@@ -40,7 +40,19 @@ $cleaningInterval = $config->cleaningInterval;
     <input type='text' class='newroomenddate' style='width: 80px;' value='<?php echo date("d.m.Y", strtotime($end)); ?>' gsname='end'>
     <input type='text' class='newroomendtime' style='margin-right: 10px; width: 40px;text-align: center;' value='<?php echo date("H:i", strtotime($end)); ?>' gsname='endtime'>
     <? $this->includeAddRoomOptions($items, $start, $end, $defaultType); ?>
-    <span class='pmsbutton' gstype='submitToInfoBox'>Add room</span>
+    <span class='pmsbutton' gstype='submitToInfoBox'>
+        <?php
+        switch($config->bookingProfile) {
+            case "subscription":
+            case "storage":
+                echo "Add subscription";
+                break;
+            default:
+                echo  "Add room";
+                break;
+        }
+        ?>
+    </span>
     
     <?php
     if($config->supportMoreDates) {

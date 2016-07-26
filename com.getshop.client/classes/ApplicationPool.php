@@ -301,7 +301,7 @@ class ApplicationPool {
      * @throws ThemeApplication
      */
     public function getSelectedThemeApp() {
-        $app = $this->factory->getApi()->getStoreApplicationPool()->getThemeApplication();
+        $app = $this->factory->getThemeApplication();
         return $app;
     }
     

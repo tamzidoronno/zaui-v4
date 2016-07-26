@@ -15,8 +15,18 @@ foreach($bookingitems as $item) {
 }
 
 $this->includeCouponSystem();
-
-$addonsText = $this->__w("Rooms selected");
+switch($configuration->bookingProfile) {
+    case "subscription":
+        $addonsText = $this->__w("Subscription selected");
+        break;
+    case "storage":
+        $addonsText = $this->__w("Storage room selected");
+        break;
+    default:
+        $addonsText = $this->__w("Rooms selected");
+        break;
+}
+    
 $startingFromText = $this->__w("Starting from");
 
 echo "<h2 class='bottomborder'>" . $addonsText . "</h2>";

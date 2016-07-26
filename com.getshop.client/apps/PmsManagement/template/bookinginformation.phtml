@@ -62,7 +62,16 @@ $this->includefile("contactdata");
 
 echo "<div class='bookinginfo'>";
 echo "<span class='tabs'>";
-echo "<span class='tab' area='roomsbooked'>Rooms booked</span>";
+echo "<span class='tab' area='roomsbooked'>";
+switch($config->bookingProfile) {
+    case "subscription":
+        echo "Subscription";
+        break;
+    default:
+        echo "Rooms booked";
+        break;
+}
+echo "</span>";
 if($config->requirePayments) {
     echo "<span class='tab' area='orderinfo'>Orders</span>";
 }

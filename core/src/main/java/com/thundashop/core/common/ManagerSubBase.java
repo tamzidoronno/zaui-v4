@@ -199,6 +199,9 @@ public class ManagerSubBase {
 
     public void saveObject(DataCommon data) throws ErrorException {
         data.storeId = storeId;
+        if(getSession() != null) {
+            data.updateTranslation(getSession().language);
+        }
         database.save(data, credentials);
     }
  

@@ -2,12 +2,12 @@
 package com.thundashop.core.common;
 
 import com.google.gson.Gson;
-import com.google.gson.stream.MalformedJsonException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,33 +29,58 @@ public class TranslationHandler implements Serializable {
     
     private Set<TranslationHandler> getAllTranslationHandlers(Object inObject) throws IllegalArgumentException, IllegalAccessException {
         Set<TranslationHandler> handlers = new HashSet();
+        if(avoidCheck(inObject)) {
+            return handlers;
+        }
+        
+        if (inObject instanceof List) {
+            List list = (List)inObject;
+            for (Object check : list) {
+                handlers.addAll(getAllTranslationHandlers(check));
+            }
+            return handlers;
+        }
+        if(inObject instanceof Map) {
+            Map map = (Map)inObject;
+            for(Object dobject : map.values()) {
+                handlers.addAll(getAllTranslationHandlers(dobject));
+            }
+            return handlers;
+        }
         
         Field[] fields = null;
         
-        if (inObject == null) {
-            inObject = this;
-            fields = this.getClass().getFields();
-        } else {
-            fields = inObject.getClass().getFields();
-        }
+        fields = inObject.getClass().getFields();
         
         if (inObject instanceof TranslationHandler) {
             handlers.add((TranslationHandler)inObject);
         }
         
         for (Field field : fields) {
+            if(field.getType().isPrimitive() || field.getType().isEnum()) {
+                continue;
+            }
+            
+            if(field.isAnnotationPresent(Translation.class) && !(inObject instanceof TranslationHandler)) {
+                System.out.println("WARNING:::: translation annotiation added without extending translation handler, object: " + inObject.getClass().getCanonicalName());
+            }
+            
             Object dataObject = field.get(inObject);
             
             if (dataObject instanceof TranslationHandler) {
                 handlers.add((TranslationHandler)dataObject);
-                continue;
-            }
-            
-            if (dataObject instanceof List) {
+            } else if (dataObject instanceof List) {
                 List list = (List)dataObject;
                 for (Object check : list) {
                     handlers.addAll(getAllTranslationHandlers(check));
                 }
+            } else if(dataObject instanceof Map) {
+                Map map = (Map)dataObject;
+                for(Object dobject : map.values()) {
+                    handlers.addAll(getAllTranslationHandlers(dobject));
+                }
+            } else {
+                handlers.addAll(getAllTranslationHandlers(dataObject));
             }
         }
         
@@ -64,7 +89,7 @@ public class TranslationHandler implements Serializable {
     
     private boolean saveTranslationInternal(String language, boolean set) throws IllegalArgumentException, IllegalAccessException {
         boolean saved = false;
-        Set<TranslationHandler> handlers = getAllTranslationHandlers(null);
+        Set<TranslationHandler> handlers = getAllTranslationHandlers(this);
         for (TranslationHandler handler : handlers) {
             boolean handlerSaved = handler.update(language);
             if (handlerSaved) {
@@ -135,6 +160,32 @@ public class TranslationHandler implements Serializable {
     
     public void resetLanguage() {
         translationStrings = new HashMap();
+    }
+
+    private boolean avoidCheck(Object inObject) {
+        if(inObject == null) { return true; }
+        if(inObject instanceof String) { return true; }
+        if(inObject instanceof Boolean) { return true; }
+        if(inObject instanceof Character) { return true; }
+        if(inObject instanceof Byte) { return true; }
+        if(inObject instanceof Short) { return true; }
+        if(inObject instanceof Integer) { return true; }
+        if(inObject instanceof Long) { return true; }
+        if(inObject instanceof Float) { return true; }
+        if(inObject instanceof Double) { return true; }
+        if(inObject instanceof Void) { return true; }
+        return false;
+    }
+
+    void updateTranslationOnAll(String language, Object result) {
+        try {
+            Set<TranslationHandler> allHandlers = getAllTranslationHandlers(result);
+            for(TranslationHandler handle : allHandlers) {
+                handle.update(language);
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
     }
    
 }

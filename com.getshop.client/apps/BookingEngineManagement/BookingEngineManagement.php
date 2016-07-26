@@ -164,13 +164,16 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $generator = new \FieldGenerator();
         $rules = $generator->createBookingRules();
         
-        
         $saved = false;
         foreach($_POST['data'] as $key => $value) {
             if(stristr($key, "bookingengine_")) {
                 if($value == "true") {
                     $name = str_replace("bookingengine_", "", $key);
-                    $this->getApi()->getBookingEngine()->saveDefaultRegistrationRules($name, $rules);
+                    $res = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($name);
+                    foreach($rules->data as $f => $obj) {
+                        $res->data->{$f}->{"title"} = $obj->title;
+                    }
+                    $this->getApi()->getBookingEngine()->saveDefaultRegistrationRules($name, $res);
                     $saved = true;
                 }
             }

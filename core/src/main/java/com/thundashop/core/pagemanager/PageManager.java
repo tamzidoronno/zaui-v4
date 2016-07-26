@@ -169,10 +169,11 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
         
 //        page.layout.clearMobileList();
-        if(page.layout.needMobileList()) {
-            page.layout.updateMobileList();
-            savePage(page);
-        }
+//  This is a failed attempt on mobile implementation.
+//        if(page.layout.needMobileList()) {
+//            page.layout.updateMobileList();
+//            savePage(page);
+//        }
 
         if (page.isASlavePage()) {
             page.finalizeSlavePage(getPage(page.masterPageId));

@@ -113,37 +113,37 @@ public class GetShopDataMap<K, V>  implements Map<K,V>  {
     }
 
     private void updateTranslationObject(V data) {
-        if (!(data instanceof DataCommon)) {
-            return;
-        }
-        
-        getStoreMainLanguage();
-    
-        if (storeMainLanguage == null || storeMainLanguage.equals("")) {
-            return;
-        }
-        
-        String currentLanguage;
-        if (session == null || session.language == null || session.language.equals("")) {
-            currentLanguage = storeMainLanguage;
-        } else {
-            currentLanguage =  session.language; 
-        }
-        
-        
-        DataCommon dataCommon = (DataCommon)data;
-        boolean saved = dataCommon.updateTranslation(currentLanguage);
-        
-        if (saved) {
-            if (parentManager != null 
-                    && database != null 
-                    && dataCommon.storeId != null 
-                    && dataCommon.id != null 
-                    && !dataCommon.storeId.equals("") 
-                    && !dataCommon.id.equals("")) {
-                database.save(dataCommon, parentManager.getCredentials());
-            }
-        }
+//        if (!(data instanceof DataCommon)) {
+//            return;
+//        }
+//        
+//        getStoreMainLanguage();
+//    
+//        if (storeMainLanguage == null || storeMainLanguage.equals("")) {
+//            return;
+//        }
+//        
+//        String currentLanguage;
+//        if (session == null || session.language == null || session.language.equals("")) {
+//            currentLanguage = storeMainLanguage;
+//        } else {
+//            currentLanguage =  session.language; 
+//        }
+//        
+//        
+//        DataCommon dataCommon = (DataCommon)data;
+//        boolean saved = dataCommon.updateTranslation(currentLanguage);
+//        
+//        if (saved) {
+//            if (parentManager != null 
+//                    && database != null 
+//                    && dataCommon.storeId != null 
+//                    && dataCommon.id != null 
+//                    && !dataCommon.storeId.equals("") 
+//                    && !dataCommon.id.equals("")) {
+//                database.save(dataCommon, parentManager.getCredentials());
+//            }
+//        }
     }
 
     private void getStoreMainLanguage() {

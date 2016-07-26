@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +48,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     private Map<String, SavedApplicationSettings> settings = new HashMap();
 
     private Application cachedThemeApp = null;
+    private Date cachedThemeAppExpire = new Date();
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -145,8 +147,12 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     @Override
     public Application getThemeApplication() {
         if(cachedThemeApp != null) {
-            return cachedThemeApp;
+            if((System.currentTimeMillis() - cachedThemeAppExpire.getTime()) < 1000) {
+                return cachedThemeApp;
+            }
         }
+        
+        cachedThemeAppExpire = new Date();
         String id = getManagerSetting("selectedThemeApplication");
         
         

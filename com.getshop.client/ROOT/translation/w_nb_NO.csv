@@ -51,6 +51,8 @@ Background image / styling;-;Bakgrunnsbilde / Styling
 Birth Date;-;Fødselsdato
 Body title;-;Tittel
 Book;-;Bestill
+Book your stay today;-;Book ditt opphold idag
+Book your storage room today;-;Book din bod idag
 Booking;-;Booking
 Booking engine name;-;Bookingengine navn
 Booking size;-;Booking størrelse
@@ -77,6 +79,8 @@ Change to row mode;-;Bytt til rad modus
 Change to tab mode;-;Bytt til tab modus
 Changes has been saved!;-;Innstillingene har blitt lagret!
 Chat with us;-;Chat med oss
+Check in;-;Innsjekk
+Check out;-;Utsjekk
 Checkout;-;Utsjekking
 Children;-;Barn
 Choose;-;Velg
@@ -98,6 +102,7 @@ Company postcode;-;Firmaet postnummer
 Company's invoice email;-;Firmaets epost for faktura
 Company's main email;-;Firmaet hoved epost adresse
 Company's website;-;Firmaets webside
+Complete registration;-;Fullfør registreringen
 Completed;-;Gjennomført
 Configure item sorting;-;Konfigurer item sortering
 Configure mobile slides;-;Konfigurer mobil slidere
@@ -107,6 +112,7 @@ Contact information;-;Kontaktinformasjon
 Container operations;-;Operasjoner for kontaineren
 Continue;-;Fortsett
 Continue shopping;-;Fortsett å handle
+Continue to booking;-;Fortsett til booking
 Continue to cart;-;Gå til handlekurven
 Continue without payment;-;Fortsett uten betaling
 Cookies are being stored;-;Informasjonskapsler!
@@ -316,6 +322,7 @@ No files added.;-;Ingen filer er lagt til.
 No header uploaded for mobile landscape mode yet, please upload one.;-;Ingen header har blitt lastet opp for landskaps modus på mobil enda, vennligst last opp et.
 No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen header har blitt lastet opp for potrait modus på mobil enda, vennligst last opp et.
 No items;-;Ingen elementer
+No rooms are available.;-;Ingen rom er tilgjengelig
 No users added yet;-;Ingen brukere lagt til enda
 Not invoiced yet;-;Ikke fakturert enda
 Not participated illegal reason;-;Ikke deltatt, ugyldig grunn.
@@ -376,12 +383,10 @@ Please check your invoice email address;-;Sjekk faktura epostaddressen din
 Please check your room number, you can only order cleaning while you are checked in.;-;Sjekk om romnret du har oppgitt er korrekt. Du kan kun bestille vask mens du holder til hos Wilhelmsen House.
 Please check your the invoice email address;-;Sjekk faktura epostaddressen din
 Please enter correct number of chars, min: {min}, max: {max};-;Vennligst oppgi nok tegn, min {min}, max {max}
-Please enter minimum three characters;-;Oppgi minst 3 bokstaver
 Please enter your email address or cellphone number:;-;Oppgi epostaddresse eller mobilnr.
 Please enter your room number;-;Skriv inn nom nummeret ditt
 Please enter your username and password;-;Skriv inn ditt brukernavn og passord
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
-Please select a company;-;Vennligst velg et firma
 Please select a payment method.;-;Vennligst velg en betalingsmetode
 Please select a user in the left menu;-;Vennligst velg en bruker fra venstre meny.
 Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
@@ -427,6 +432,9 @@ Repeats daily;-;Repeter daglig
 Repeats every {periode} week;-;Repeter hver {periode} uke
 Repeats montly same date in month;-;Repeteres månedlig på fast dato i måneden
 Repeats montly same day in week;-;Repeters daglig på fast dag i uken
+Reserve room now;-;Reserver rom nå
+Reserve your room now;-;Reserver ditt rom nå
+Reserve your storage room now;-;Reserver din bod nå
 Resize column;-;Endre størrelse på kolonnen
 Right spacing;-;Høyre spacing
 Room;-;Rom
@@ -444,11 +452,13 @@ Save settings;-;Lagre instillinger
 Save the cards instead of extracting the amount?;-;Lagre kortet insteden for å trekke beløpet.
 Search for a product;-;Søk etter et produkt
 Searching....;-;Søker....
+Select;-;Velg
 Select a background image.;-;Velg et bakgrundsbilde
 Select a category;-;Velg en kategori
 Select a time period to booking for before continue;-;Velg en tidsperiode for bookingen før du fortsetter
 Select company;-;Velg firma
 Select your car;-;Velg din bil
+Selected;-;Valgt
 Send;-;Send
 Send me a code;-;Send meg koden
 Send message;-;Send melding
@@ -498,10 +508,12 @@ Start your 30 days free trial;-;Start din 30 dagers fri prøveperiode
 Starting;-;Starter
 Starting from;-;Starter fra
 Status;-;Status
+Storage room selected;-;Bod som er valgt
 Style row;-;Styling på rad
 Styling;-;Design
 Su;-;Sø
 Subject to recipient;-;Tittel på motaker
+Subscription selected;-;Abonnement som er valgt
 Success;-;Success
 Sun;-;Søn
 Sunday;-;Søndag
@@ -585,9 +597,9 @@ You are here:;-;Du er her:
 You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more.;-;Du er nå i edit modus for denne raden, du kan nå legge til kolonner, rader over og under, og mye mer.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv
 You got rooms that are not available in the selected time periode.;-;Det er rom som ikke er tilgjenglig i valgt periode.
-You have been inactive to long and due to security reasons you will now be logged out.;-;Du har vært inaktiv for lenge og derfor blitt logget ut.
 You have not participated in any events yet.;-;Du har ikke deltatt på noen eventer enda
 You have not signed up for any events yet.;-;Du har ikke deltatt på noen eventer enda.
+You have selected {count} of this room type.;-;Du har valgt {count} av denne romtypen.
 You need to agree to the terms and conditions;-;Du må godta bruksvilkårene før du kan fortsette.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your email;-;Din epost

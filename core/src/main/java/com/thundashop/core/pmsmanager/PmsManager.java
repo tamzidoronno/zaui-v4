@@ -131,9 +131,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
 //                dumpBooking(booking);
-                if(booking.sessionId != null && booking.sessionId.isEmpty() && booking.rooms.isEmpty()) {
-                    deleteObject(dataCommon);
-                }
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof PmsPricing) {

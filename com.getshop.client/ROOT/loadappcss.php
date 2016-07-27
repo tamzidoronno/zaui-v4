@@ -18,7 +18,7 @@ foreach ($factory->getApplicationPool()->getAllApplicationSettings() as $app) {
     }
 }
 
-doApp($themeApp, true, $factory);
+doApp($themeApp->applicationSettings, true, $factory);
 ob_start();
 function doApp($app, $isTheme, $factory) {
     $appId = $factory->convertUUIDtoString($app->id);

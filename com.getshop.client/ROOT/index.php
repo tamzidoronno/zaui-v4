@@ -239,7 +239,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
                     echo "<div title='".$factory->__f("Layout history")."' class='gs_site_main_button gslayouthistorybtn'><i class='fa fa-undo'></i></div>";
                     echo "<div title='".$factory->__f("Translations")."' class='gs_site_main_button gstranslationbtn'><i class='fa fa-language'></i></div>";
 
-                    $selectedThemeApp = $factory->getApplicationPool()->getSelectedThemeAppInstance();
+                    $selectedThemeApp = $factory->getThemeApplication();
                     if ($selectedThemeApp != null && method_exists($selectedThemeApp, "isAllowingSideBar") && $selectedThemeApp->isAllowingSideBar()) {
                         echo "<div class='gs_site_main_button gs_toggle_sidebar'>";
                         echo "<i class='fa fa-columns'></i>";

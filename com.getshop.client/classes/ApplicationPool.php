@@ -93,9 +93,10 @@ class ApplicationPool {
             return null;
         }
         if(!isset($applicationSetting->id) || !$applicationSetting->id) {
-            echo "<pre>";
-            print_r(debug_backtrace());
-            echo "</pre>";
+//            foreach(debug_backtrace() as $line) {
+//                echo $line['file'] . ":" . $line['line']."<bR>";
+//            }
+//            exit(0);
         }
         $instance = $this->factory->convertUUIDtoString($applicationSetting->id) . "\\" . $applicationSetting->appName;
         if (class_exists($instance)) {

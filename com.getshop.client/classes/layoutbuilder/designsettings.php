@@ -175,7 +175,7 @@ $factory = IocContainer::getFactorySingelton();
     <div style='clear:both;'></div>
     
     <?
-        $themeClasses = $factory->getApplicationPool()->getSelectedThemeAppInstance();
+        $themeClasses = $factory->getThemeApplication();
         if (method_exists($themeClasses, "getThemeClasses")) {
             $themeClasses = $themeClasses->getThemeClasses();
             if (count($themeClasses) > 0) {

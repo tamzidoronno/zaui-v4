@@ -1,6 +1,7 @@
 body {
     font-family: 'Open Sans', sans-serif;
 }
+.gsarea[area="header"] a {  color:rgb(49, 50, 52) !important; }
 .gsarea[area="header"] { height: 80px; background-color:#fff; }
 .gs_page_width { max-width: 1100px; margin: auto; }
 .gsarea[area="header"] .Menu .entry .entries {
@@ -22,12 +23,29 @@ body {
     text-align: left;
 }
 
+
+.PmsBookingCalendar .calendar .calendar_header,
+.PmsBookingCalendar .calendar .day.selected,
+.PmsBookingProductList .continue_button,
+.PmsBookingContactData .complete_button,
+.PmsBooking .pmsfront .check_available_button,
+.PmsBooking .pmsfront .fa-calendar {
+    background-color: rgb(19, 127, 196); 
+    text-transform: uppercase;
+}
+
 .gsarea[area="header"] .Menu .entry div i {
     display: block;
     font-size: 30px;
 }
+.gsarea[area="header"] .Menu .entry.active a ,
+.gsarea[area="header"] .Menu .entry:hover a {
+    color: rgb(19, 127, 196) !important;
+}
 .gsarea[area="header"] .Menu .entry  div {
-    font-size: 14px;
+    font-size: 13px;
+    outline: 0;
+    transition: all 0.2s ease-in-out;
     line-height: 25px;
     margin-top: 15px;
     margin-bottom: 15px;
@@ -35,7 +53,6 @@ body {
     padding-left: 20px;
     text-align: center;
     /*font-weight: 300;*/
-    color:#000;
 font-family: 'Raleway', sans-serif;
         text-transform: uppercase;
 }

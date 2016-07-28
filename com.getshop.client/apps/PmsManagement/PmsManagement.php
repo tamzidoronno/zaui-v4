@@ -532,6 +532,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 return;
             }
             $this->includefile("managementview");
+            
+            if(isset($_GET['docrashcause'])) {
+                $this->getApi()->getPmsManager()->screwMe($this->getSelectedName());
+            }
         }
     }
     

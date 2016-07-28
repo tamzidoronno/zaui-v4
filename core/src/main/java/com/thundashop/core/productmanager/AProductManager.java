@@ -1,6 +1,5 @@
 package com.thundashop.core.productmanager;
 
-import com.getshop.scope.GetShopDataMapRepository;
 import com.thundashop.app.content.ContentManager;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -38,7 +37,7 @@ public abstract class AProductManager extends ManagerBase {
     public HashMap<String, ProductCategory> categories = new HashMap();
     
 
-    public Map<String, Product> products;
+    public Map<String, Product> products = new HashMap();
     public ProductConfiguration productConfiguration = new ProductConfiguration();
     public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
 
@@ -48,11 +47,6 @@ public abstract class AProductManager extends ManagerBase {
     @Autowired
     public ListManager listManager;
     
-    @Autowired
-    public void createProductMap(GetShopDataMapRepository<String, Product> repository) {
-        this.products = repository.createNew(this);
-    }
-
     protected Product finalize(Product product) throws ErrorException {
         if (product == null) {
             return null;

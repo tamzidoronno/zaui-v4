@@ -1,6 +1,5 @@
 package com.thundashop.core.listmanager;
 
-import com.getshop.scope.GetShopDataMapRepository;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.AppContext;
@@ -32,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class ListManager extends ManagerBase implements IListManager {
-    private Map<String, EntryList> allEntries;
+    private Map<String, EntryList> allEntries = new HashMap();
     private HashMap<String, String> cachedPageIds = new HashMap();
     private Map<String, JsTreeList> jsTreeLists = new HashMap();
     
@@ -41,11 +40,6 @@ public class ListManager extends ManagerBase implements IListManager {
      * List instide is a list of all menues connected to the app.
      */
     private Map<String, List<Menu>> menues = new HashMap();
-    
-    @Autowired
-    public void createGetShopDataMaps(GetShopDataMapRepository<String, EntryList> repository) {
-        this.allEntries = repository.createNew(this);
-    }
     
     private Integer currentUniqueCounter = -1;
     

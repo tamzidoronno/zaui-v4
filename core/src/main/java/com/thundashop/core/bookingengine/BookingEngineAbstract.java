@@ -5,7 +5,6 @@
  */
 package com.thundashop.core.bookingengine;
 
-import com.getshop.scope.GetShopDataMapRepository;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.app.contentmanager.data.ContentData;
@@ -58,11 +57,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     
     private final BookingEngineVerifier verifier = new BookingEngineVerifier();
 
-    @Autowired
-    public void createGetShopDataMaps(GetShopDataMapRepository<String, BookingItemType> repository) {
-        this.types = repository.createNew(this);
-    }
-    
     public List<BookingItemType> getBookingItemTypes() {
         List<BookingItemType> result = new ArrayList(types.values());
         Comparator<BookingItemType> comparator = new Comparator<BookingItemType>() {

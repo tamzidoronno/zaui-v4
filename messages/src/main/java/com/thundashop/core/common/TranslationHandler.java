@@ -58,7 +58,7 @@ public class TranslationHandler implements Serializable {
         
         for (Field field : fields) {
             if(!field.isAccessible()) {
-                continue;
+//                continue;
             }
             if(field.getType().isPrimitive() || field.getType().isEnum()) {
                 continue;
@@ -72,7 +72,8 @@ public class TranslationHandler implements Serializable {
             
             if (dataObject instanceof TranslationHandler) {
                 handlers.add((TranslationHandler)dataObject);
-            } else if (dataObject instanceof List) {
+            }
+            if (dataObject instanceof List) {
                 List list = (List)dataObject;
                 for (Object check : list) {
                     handlers.addAll(getAllTranslationHandlers(check));

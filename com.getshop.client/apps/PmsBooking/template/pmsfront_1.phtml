@@ -11,7 +11,7 @@ if(!$nextPage) {
 $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()+86400));
 ?>
 
-<div class="pmsfront">
+<div class="pmsfront pmsfront1">
     <span class="heading">
         <?
         switch($config->bookingProfile) {

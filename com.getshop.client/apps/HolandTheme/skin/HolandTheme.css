@@ -1,9 +1,13 @@
 body {
     font-family: 'Open Sans', sans-serif;
+    color:rgb(112, 114, 117);
+    font-size: 14px;
 }
 .gsarea[area="header"] a {  color:rgb(49, 50, 52) !important; }
-.gsarea[area="header"] { height: 80px; background-color:#fff; }
-.gs_page_width { max-width: 1100px; margin: auto; }
+.gsarea[area="footer"] { background: #1a1a1a url("http://gaardsmotel.no/../img/bg_footer.png") center bottom no-repeat; margin-top: 50px; color:#878787; }
+.gsarea[area="header"] { height: 100px; background-color:#fff; }
+.gsarea[area="header"] .Menu { text-align: right; padding-top: 10px;}
+.gs_page_width { max-width: 1200px; margin: auto; }
 .gsarea[area="header"] .Menu .entry .entries {
     background-color: #fafafa;
     top: 30px;
@@ -49,8 +53,7 @@ body {
     line-height: 25px;
     margin-top: 15px;
     margin-bottom: 15px;
-    padding-right: 20px;
-    padding-left: 20px;
+    padding-left: 40px;
     text-align: center;
     /*font-weight: 300;*/
 font-family: 'Raleway', sans-serif;
@@ -59,4 +62,39 @@ font-family: 'Raleway', sans-serif;
 .gs_language_selection { position:absolute; right: 0px; font-family: 'Raleway', sans-serif; }
 .gsarea[area="header"] .Menu .entry:last-child a div {
     border-right: solid 0px;
+}
+
+h1, h2 {
+    display: block;
+    position: relative;
+    padding-bottom: 20px;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 58px;
+    margin: 20px;
+    font-family: 'Raleway', serif !important;
+    color: #313234;
+    font-style: normal;
+    text-rendering: optimizeLegibility;
+    padding: 0;
+}
+
+h2 {
+    line-height: 30px;
+        font-size: 22px;
+    font-weight: 300;
+    color: rgb(112, 114, 117);
+}
+
+h1:after {
+        content: '';
+    display: block;
+    height: 1px;
+    width: 44px;
+    border-bottom: 1px solid #9f9fa0;
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    margin-left: -22px;
+    margin-top: 10px;
 }

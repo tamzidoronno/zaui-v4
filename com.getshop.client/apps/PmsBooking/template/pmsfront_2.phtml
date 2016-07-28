@@ -11,22 +11,29 @@ if(!$nextPage) {
 $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()+86400));
 ?>
 
-<div class="pmsfront">
-    <span class='start_date dates'>
-        <div><span class='inputhelpertext'><? echo $this->getText("start_date"); ?></span></div>
-        <span class='dates_inner'>
-            <input class='start_date_input' value='<? echo $date; ?>'></input>
-            <span></span>
-            <i class='fa fa-calendar start_cal'></i>
+<div class="pmsfront pmsfront2">
+    <span class='inputblock'>
+        <i class='fa fa-bed'></i>
+    </span>
+    <span class='inputblock'>
+        <span class='start_date dates'>
+            <div><span class='inputhelpertext'><? echo $this->getText("start_date"); ?></span></div>
+            <span class='dates_inner'>
+                <input class='start_date_input' value='<? echo $date; ?>'></input>
+                <span></span>
+                <i class='fa fa-calendar start_cal'></i>
+            </span>
         </span>
     </span>
     <?php if($this->getText("display_end_date") == "yes") { ?>
-        <span class='end_date dates'>
-            <div><span class='inputhelpertext'><? echo $this->getText("end_date"); ?></span></div>
-            <span class='dates_inner'>
-                <input class='end_date_input' value='<? echo $date2; ?>'></input>
-                <span></span>
-                <i class='fa fa-calendar end_cal'></i>
+        <span class='inputblock'>
+            <span class='end_date dates'>
+                <div><span class='inputhelpertext'><? echo $this->getText("end_date"); ?></span></div>
+                <span class='dates_inner'>
+                    <input class='end_date_input' value='<? echo $date2; ?>'></input>
+                    <span></span>
+                    <i class='fa fa-calendar end_cal'></i>
+                </span>
             </span>
         </span>
     <? } ?>
@@ -51,7 +58,10 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
     </div>
     
     
-    <span class='check_available_button' next_page='<? echo $nextPage; ?>'><? echo $this->getText("check_availability"); ?></span>
+    <span class='inputblock'>
+        <span class='check_available_button' next_page='<? echo $nextPage; ?>'><? echo $this->getText("check_availability"); ?></span>
+    </span>
+    <div style='clear:both;'></div>
 </div>
 
 <script>

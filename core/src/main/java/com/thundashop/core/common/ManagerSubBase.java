@@ -275,7 +275,14 @@ public class ManagerSubBase {
           ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
           ObjectInputStream ois = new ObjectInputStream(bais);
           
-          return (T) ois.readObject();
+          
+          T res = (T) ois.readObject();
+          baos.close();
+          oos.close();
+          bais.close();
+          ois.close();
+          
+          return res;
         }
         catch (Exception e) {
           e.printStackTrace();

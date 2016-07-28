@@ -691,9 +691,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
 
                 room.type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                if (type != null) {
-                    String productId = bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+                if (room.type != null) {
+                    String productId = room.type.productId;
                     if (productId != null) {
                         Product product = getProduct(productId);
                         if (product != null && product.taxGroupObject != null) {

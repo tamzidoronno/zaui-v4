@@ -155,7 +155,7 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     }
     echo "<div class='no-room-selected'>Du må minst velge ett rom før du kan fortsette.</div>";
     
-    echo "<div class='itemrow $canNotBeAded'>";
+    echo "<div class='itemrow $canNotBeAded roomitemrow'>";
     echo "<i class='fa fa-trash-o removeAddon bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></i> ";
     $addonsAdded[$room->bookingItemTypeId] = true;
     echo "<span class='itemname'>";
@@ -214,7 +214,11 @@ function printAddons($room, $config, $object) {
     /* @var $config core_pmsmanager_PmsConfiguration */
     /* @var $object \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary */
     $additional = $object->getApi()->getPmsManager()->getAdditionalTypeInformationById($object->getSelectedName(), $room->bookingItemTypeId);
-    
+    $addons = $config->addonConfiguration;
+//    echo "<pre>";
+//    print_r($addons);
+//    echo "</pre>";
+   
     $types = array();
     foreach($room->addons as $addon) {
         if(!isset($types[$addon->addonType])) {
@@ -231,24 +235,44 @@ function printAddons($room, $config, $object) {
     $names[5] = $object->__w("Bed(s)");
     $names[6] = $object->__w("Cancelation possibility");
     
-    foreach($types as $type => $count) {
+    $addonsText = array();
+    $addonsText[1] = $object->__w("Include breakfast for {price} per night per guest");
+    $addonsText[2] = $object->__w("Include parking for {price} per night");
+    $addonsText[3] = $object->__w("Include late checkout for {price}");
+    $addonsText[4] = $object->__w("Include early checkin for {price}");
+    $addonsText[5] = $object->__w("Include extra bed for {price} per night");
+    $addonsText[6] = $object->__w("Include the possibility to cancel your stay for {price} per night");
+    
+    foreach($addons as $addon) {
+        if(!$addon->isActive) {
+            continue;
+        }
+        $type = $addon->addonType;
         $addon = $config->addonConfiguration->{$type};
         $product = $object->getProduct($addon->productId);
-        echo "<div class='itemrow addonitemrow'>";
-        echo "<i class='fa fa-trash-o removeAddonOnRoom' roomid='".$room->pmsBookingRoomId."' addontype='$type'></i> <span class='bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></span> <span class='itemname'>";
-        if($type == 5) {
-            echo "<select class='changeNumberOfBeds'>";
-            for($i = 1; $i <= $additional->maxNumberOfBeds; $i++) {
-                echo "<option value='$i'>$i</option>";
-            }
-            echo "</select>";
+        echo "<div class='itemrow addonitemrow' roomid='".$room->pmsBookingRoomId."' addontype='$type'>";
+        if(!isset($types[$type])) {
+            $text = $addonsText[$type];
+            echo "<div class='addAddonOnRoom'><i class='fa fa-plus-circle'></i> " .  str_replace("{price}", $product->price, $text) . "</div>";
         } else {
-            echo $count;
+            $count = $types[$type];
+            echo "<div><i class='fa fa-trash-o removeAddonOnRoom'></i> <span class='bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></span> <span class='itemname'>";
+            if($type == 5) {
+                echo "<select class='changeNumberOfBeds'>";
+                for($i = 1; $i <= $additional->maxNumberOfBeds; $i++) {
+                    echo "<option value='$i'>$i</option>";
+                }
+                echo "</select>";
+            } else {
+                echo $count;
+            }
+            echo " x ".$names[$type]."</span>";
+            echo "<span class='price'>" . $product->price * $count. " kr </span>";
+            echo "</div>";
         }
-        echo " x ".$names[$type]."</span>";
-        echo "<span class='price'>" . $product->price * $count. " kr </span>";
         echo "</div>";
     }
+    echo "<div class='addoncompletedprint'></div>";
 }
 
 ?>

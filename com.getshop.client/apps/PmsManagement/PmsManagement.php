@@ -136,7 +136,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $roomId = $_POST['data']['roomId'];
         $added = $_POST['data']['remove'];
 
-        $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $type, $bookingId, $roomId, $added);
+        $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $type, $roomId, $added);
         $this->showBookingInformation();
     }
     

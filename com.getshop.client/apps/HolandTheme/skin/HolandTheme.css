@@ -7,6 +7,7 @@ body {
 .gsarea[area="footer"] { background: #1a1a1a url("http://gaardsmotel.no/../img/bg_footer.png") center bottom no-repeat; margin-top: 50px; color:#878787; }
 .gsarea[area="header"] { height: 100px; background-color:#fff; }
 .gsarea[area="header"] .Menu { text-align: right; padding-top: 10px;}
+.PmsBookingSummary .itemname { width: 190px; }
 .gs_page_width { max-width: 1200px; margin: auto; }
 .gsarea[area="header"] .Menu .entry .entries {
     background-color: #fafafa;

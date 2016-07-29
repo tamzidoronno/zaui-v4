@@ -2872,9 +2872,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     @Override
-    public void addAddonsToBooking(Integer type, String bookingId, String roomId, boolean remove) {
+    public void addAddonsToBooking(Integer type, String roomId, boolean remove) {
         
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = getBookingFromRoom(roomId);
+        checkSecurity(booking);
         PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
         
         List<String> roomIds = new ArrayList();
@@ -3378,15 +3379,5 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsAdditionalTypeInformation current = getAdditionalTypeInformationById(info.typeId);
         current.update(info);
         saveObject(current);
-    }
-
-    @Override
-    public void removeAddonOnRoom(Integer addonType, String pmsRoomId) throws Exception {
-        PmsBooking booking = getBookingFromRoom(pmsRoomId);
-        checkSecurity(booking);
-        PmsBookingRooms room = booking.getRoom(pmsRoomId);
-        room.removeAddonByType(addonType);
-        saveBooking(booking);
-        
     }
 }

@@ -169,7 +169,7 @@ public interface IPmsManager {
     @Administrator
     public void changeInvoiceDate(String roomId, Date newDate);
     
-    public void addAddonsToBooking(Integer type, String bookingId, String roomId, boolean remove);
+    public void addAddonsToBooking(Integer type, String roomId, boolean remove);
     
     public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);
@@ -179,7 +179,6 @@ public interface IPmsManager {
     public String getCurrenctContract() throws Exception;
     public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
     public void removeFromCurrentBooking(String roomId) throws Exception;
-    public void removeAddonOnRoom(Integer addonType, String pmsRoomId) throws Exception;
     public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
     public List<PmsBooking> getAllBookingsForLoggedOnUser();
     public RegistrationRules initBookingRules();

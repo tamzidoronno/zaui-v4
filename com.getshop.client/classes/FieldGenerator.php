@@ -152,9 +152,11 @@ class FieldGenerator {
         return $fields;
     }
 
-    public function createBookingRules() {
-        $rules = new \core_bookingengine_data_RegistrationRules();
-        $rules->data = new \stdClass();
+    public function createBookingRules($rules = null) {
+        if($rules == null) {
+            $rules = new \core_bookingengine_data_RegistrationRules();
+            $rules->data = new \stdClass();
+        }
         
         foreach($_POST['data'] as $key => $value) {
             $field = explode(";", $key);
@@ -179,6 +181,9 @@ class FieldGenerator {
         
         foreach($result['additional'] as $field => $data) {
             $formData = new \core_bookingengine_data_RegistrationRulesField();
+            if(isset($rules->data->{$field})) {
+                $formData = $rules->data->{$field};
+            }
             $formData->dependsOnCondition = $data['dependency'];
             $formData->title = $data['title'];
             $formData->required = $data['required'] == "true";
@@ -192,6 +197,9 @@ class FieldGenerator {
         
         foreach($result['user'] as $field => $data) {
             $formData = new \core_bookingengine_data_RegistrationRulesField();
+            if(isset($rules->data->{$field})) {
+                $formData = $rules->data->{$field};
+            }
             $formData->title = $data['name'];
             $formData->active = $data['active'] == "true";
             $formData->required = $data['required'] == "true";

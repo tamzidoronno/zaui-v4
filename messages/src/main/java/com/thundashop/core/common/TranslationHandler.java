@@ -107,16 +107,26 @@ public class TranslationHandler implements Serializable {
     private boolean update(String language) throws IllegalArgumentException, IllegalAccessException {
         Gson gson = new Gson();
         boolean changed = false;
+   
+        try {
+            Field namefield = getClass().getField("name");
+            Object nameObject = namefield.get(this);
+            if(nameObject.toString().equals("user_username")) {
+                System.out.println("\t" + nameObject);
+            }
+        }catch(NoSuchFieldException e) {
+            
+        }
         
         Field[] fields = getClass().getFields();
         for (Field field : fields) {
             if (field.getAnnotation(Translation.class) != null) {
                 String keyindex = language+"_"+field.getName();
-                
                 String oldValue = "";
                 if (field.getName().equals("name")) {
                     oldValue = (String) field.get(this);
                 }
+                System.out.println(field.getName() + " : " + oldValue);
                 
                 
                 String currentKeyLang = translationStrings.get("current_key_lang_"+field.getName());

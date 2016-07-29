@@ -200,7 +200,8 @@ public class ManagerSubBase {
     public void saveObject(DataCommon data) throws ErrorException {
         data.storeId = storeId;
         if(getSession() != null) {
-            data.updateTranslation(getSession().language);
+            String lang = getSession().language;
+            data.updateTranslation(lang);
         }
         database.save(data, credentials);
     }

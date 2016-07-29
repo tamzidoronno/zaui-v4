@@ -161,8 +161,6 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     }
         
     public function saveDefaultBookingFields() {
-        $generator = new \FieldGenerator();
-        $rules = $generator->createBookingRules();
         
         $saved = false;
         foreach($_POST['data'] as $key => $value) {
@@ -170,6 +168,8 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
                 if($value == "true") {
                     $name = str_replace("bookingengine_", "", $key);
                     $res = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($name);
+                    $generator = new \FieldGenerator();
+                    $rules = $generator->createBookingRules($res);
                     foreach($rules->data as $f => $obj) {
                         $res->data->{$f}->{"title"} = $obj->title;
                     }

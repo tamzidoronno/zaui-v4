@@ -21,6 +21,11 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         return $this->getConfigurationSetting("engine_name");
     }
     
+    public function removeAddonOnRoom() {
+        $this->getApi()->getPmsManager()->removeAddonOnRoom($this->getSelectedName(), $_POST['data']['addontype'], $_POST['data']['roomid']);
+        $this->reRenderSummary();
+    }
+    
     public function updateDateOnRow() {
         $itemId = $_POST['data']['itemid'];
         $typeId = $_POST['data']['typeid'];

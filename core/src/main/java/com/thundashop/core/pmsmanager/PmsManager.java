@@ -6,7 +6,6 @@ import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import biweekly.property.Summary;
 import biweekly.util.Duration;
-import biweekly.util.Recurrence;
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
@@ -15,7 +14,6 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.ibm.icu.util.Calendar; 
-import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
@@ -77,6 +75,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
     private List<String> warnedAbout = new ArrayList();
+    private List<PmsAdditionalTypeInformation> additionDataForTypes = new ArrayList();
 
     @Autowired
     BookingEngine bookingEngine;
@@ -227,6 +226,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.count = totalDays;
             String couponCode = getCouponCode(booking.couponCode);
             setPriceOnRoom(room, couponCode, true, booking.priceType);
+            room.updateBreakfastCount();
             
             for (PmsGuests guest : room.guests) {
                 if (guest.prefix != null) {
@@ -3354,5 +3354,39 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    @Override
+    public List<PmsAdditionalTypeInformation> getAdditionalTypeInformation() throws Exception {
+        return additionDataForTypes;
+    }
+
+    @Override
+    public PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception {
+        for(PmsAdditionalTypeInformation add : additionDataForTypes) {
+            if(add.typeId.equals(typeId)) {
+                return add;
+            }
+        }
+        PmsAdditionalTypeInformation newOne = new PmsAdditionalTypeInformation();
+        additionDataForTypes.add(newOne);
+        return newOne;
+    }
+
+    @Override
+    public void saveAdditionalTypeInformation(PmsAdditionalTypeInformation info) throws Exception {
+        PmsAdditionalTypeInformation current = getAdditionalTypeInformationById(info.typeId);
+        current.update(info);
+        saveObject(current);
+    }
+
+    @Override
+    public void removeAddonOnRoom(Integer addonType, String pmsRoomId) throws Exception {
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        checkSecurity(booking);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        room.removeAddonByType(addonType);
+        saveBooking(booking);
+        
     }
 }

@@ -179,6 +179,7 @@ public interface IPmsManager {
     public String getCurrenctContract() throws Exception;
     public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
     public void removeFromCurrentBooking(String roomId) throws Exception;
+    public void removeAddonOnRoom(Integer addonType, String pmsRoomId) throws Exception;
     public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
     public List<PmsBooking> getAllBookingsForLoggedOnUser();
     public RegistrationRules initBookingRules();
@@ -195,6 +196,13 @@ public interface IPmsManager {
     public Integer getNumberOfAvailable(String itemType, Date start, Date end);
     public void checkDoorStatusControl() throws Exception;
     public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
+    
+    public PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception;
+    
+    public List<PmsAdditionalTypeInformation> getAdditionalTypeInformation() throws Exception;
+    
+    @Administrator
+    public void saveAdditionalTypeInformation(PmsAdditionalTypeInformation info) throws Exception;
     
     @Administrator
     public void updateAddons(List<PmsBookingAddonItem> items, String bookingId) throws Exception;

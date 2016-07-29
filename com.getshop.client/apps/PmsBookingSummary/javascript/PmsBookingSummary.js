@@ -9,6 +9,16 @@ app.PmsBookingSummary = {
         $(document).on('click','.PmsBookingSummary .addonselection', app.PmsBookingSummary.addonSelection);
 //        $(document).on('blur','.PmsBookingSummary .roomaddedrow', app.PmsBookingSummary.updateRoomRow);
         $(document).on('keyup','.PmsBookingSummary .roomaddedrow', app.PmsBookingSummary.updateRoomRow);
+        $(document).on('click','.PmsBookingSummary .removeAddonOnRoom', app.PmsBookingSummary.removeAddonOnRoom);
+    },
+    removeAddonOnRoom : function() {
+        var event = thundashop.Ajax.createEvent('','removeAddonOnRoom', $(this), {
+            roomid: $(this).attr('roomid'),
+            addontype : $(this).attr('addontype')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.PmsBookingSummary .summarizedbooking').html(res);
+        });
     },
     updateRoomRow : function() {
         app.PmsBookingSummary.updateRoomOnRowSpecified($(this));
@@ -35,7 +45,6 @@ app.PmsBookingSummary = {
         
         thundashop.Ajax.simplePost($(this), "toggleAddon", data);
     },
-    
     showRepeatDates : function() {
         if(!$('.repatingroomlist').is(':visible')) {
             $('.repatingroomlist').slideDown();

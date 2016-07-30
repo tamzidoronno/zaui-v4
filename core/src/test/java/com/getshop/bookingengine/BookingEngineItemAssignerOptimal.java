@@ -420,6 +420,6 @@ public class BookingEngineItemAssignerOptimal {
         items.add(item3);
         
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type1, unassignedBookings, items, null);
-        return assigner.getAvailableItems();
+        return assigner.getAvailableItems(null, null, null);
     }
 }

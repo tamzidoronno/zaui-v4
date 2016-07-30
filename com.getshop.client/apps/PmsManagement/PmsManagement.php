@@ -11,6 +11,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $checkedCanAdd = array();
     public $roomTable = "";
     
+    public function toggleFilterVersion() {
+        if(!isset($_SESSION['toggleOldFilterVersion'])) {
+            $_SESSION['toggleOldFilterVersion'] = true;
+        } else {
+            unset($_SESSION['toggleOldFilterVersion']);
+        }
+    }
+    
     public function runProcessor() {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
     }

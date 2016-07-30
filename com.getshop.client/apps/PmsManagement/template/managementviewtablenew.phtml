@@ -1,0 +1,114 @@
+<div class='newinformationwarning'>
+    <i class='fa fa-info-circle'></i> Hi there.<br>You are now using a new version of the table view below with increased filtering and performance.
+    To use the old version click <b gstype='clicksubmit' style='cursor:pointer;' method='toggleFilterVersion' gsname='id' gsvalue='somevalue'>here</b>.<br>
+    We will support the old version until 30.09.2016. Please report any incosistenscy to post@getshop.com.
+</div>
+<?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$filter = $this->getSelectedFilter();
+$rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
+$types = $this->getTypes();
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$channels = $this->getChannelMatrix();
+$hasPrices = false;
+
+if($config->requirePayments) {
+    $hasPrices = true;
+}
+foreach($items as $item) {
+    $items[$item->id] = $item;
+}
+
+$rows = 0;
+$headers = array();
+$headers['regdate'] = "Reg";
+$headers['periode'] = "Periode";
+switch($config->bookingProfile) {
+    case "subscription":
+        $headers['visitor'] = "Owner";
+        $headers['room'] = "Subscription";
+        break;
+    default:
+        $headers['visitor'] = "Visitor";
+        $headers['room'] = "Room";
+        break;
+}
+if($hasPrices) {
+    $headers['price'] = "Price";
+}
+$headers['state'] = "State";
+if(!isset($filter->sorting)) {
+    $filter->sorting = "regdate";
+}
+$prices = array();
+$prices[1] = "daily";
+$prices[2] = "monthly";
+$prices[3] = "weekly";
+$prices[4] = "minutly";
+$prices[5] = "hourly";
+$prices[6] = "secondly";
+$prices[7] = "daily";
+$prices[8] = "daily";
+
+
+$states = array();
+$states['rejected'] = "Rejected";
+$states['deleted'] = "Deleted";
+$states['notpaid'] = "Unpaid";
+$states['confirmed'] = "Confirmed";
+$states['unconfirmed'] = "Unconfirmed";
+$states['active'] = "Active";
+$states['ended'] = "Ended";
+
+        
+?>
+
+<table width='100%' cellspacing='0' cellpadding='0'>
+    <tr>
+        <th style='text-align:center;'>
+            <i gs_downloadexcelreport="exportBookingDataToExcel" title="Download to excel" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="bookingdataexport"></i>
+        </th>
+        <?php
+        foreach($headers as $header => $value) {
+            if($header == "price" && !$hasPrices) {
+                continue;
+            }
+            echo "<th>" . $value . "</th>";
+        }
+        ?>
+    </tr>
+    
+    <?php
+    foreach($rooms as $room) {
+        echo "<tr>";
+        echo "<td width='10' style='text-align:center;'>";
+        echo "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsRoomId."' bookingid='".$room->bookingId."'></i></td>";
+        echo "<td width='120'>".date("d.m.Y H:i", strtotime($room->regDate))."</td>";
+        $diff = ($room->end - $room->start)/1000;
+        if($diff < 40000) {
+            echo "<td>".date("d.m.Y H:i", $room->start/1000);
+            echo " - ".date("H:i", $room->end/1000)."</td>";
+        } else {
+            echo "<td>";
+            echo date("d.m.Y H:i", $room->start/1000) . "<br>";
+            echo date("d.m.Y H:i", $room->end/1000);
+            echo "</td>";
+        }
+        echo "<td>";
+        foreach($room->guest as $guest) {
+            echo $guest->name;
+            if($guest->email) { echo " - " . $guest->email; }
+            if($guest->phone) { echo " - +" . $guest->prefix . $guest->phone; }
+        }
+        echo "<div class='secondary_text'>" . $room->owner . "</div>";
+        echo "</td>";
+        echo "<td>" . $room->room . "</td>";
+        if($hasPrices) {
+            echo "<td>" . $room->price . "</td>";
+        }
+        echo "<td class='".$room->progressState."'>" . $states[$room->progressState] . "</td>";
+        echo "</tr>";
+    }
+    ?>
+</table>

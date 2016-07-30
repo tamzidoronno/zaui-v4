@@ -45,6 +45,7 @@ public class PmsBookingSimpleFilter {
         simple.price = room.price;
         simple.checkedIn = false;
         simple.checkedOut = false;
+        simple.regDate = booking.rowCreatedDate;
         
         if(manager.getConfiguration().hasLockSystem()) {
             simple.code = room.code;
@@ -65,12 +66,14 @@ public class PmsBookingSimpleFilter {
             if(manager.getConfiguration().hasLockSystem() && !room.addedToArx) {
                 simple.progressState = "waitingforlock";
             } else {
-                simple.progressState = "started";
+                simple.progressState = "active";
             }
         } else if(room.isEnded()) {
             simple.progressState = "ended";
-        } else {
-            simple.progressState = "notstarted";
+        } else if(!booking.confirmed) {
+            simple.progressState = "unconfirmed";
+        } else if(booking.confirmed) {
+            simple.progressState = "confirmed";
         }
         
         if(!booking.payedFor) {

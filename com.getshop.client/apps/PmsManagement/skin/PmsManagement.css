@@ -7,8 +7,13 @@
 .PmsManagement .showorderbutton { color: blue; cursor:pointer; }
 .PmsManagement .bookinginfo a { color: blue; }
 .PmsManagement .guestrow input { width: 20%; float:left; }
-.PmsManagement .Confirmed { color:green; }
-.PmsManagement .Unconfirmed { color:red; }
+.PmsManagement .ended { color: #aaa; }
+.PmsManagement .Confirmed,
+.PmsManagement .active,
+.PmsManagement .confirmed { color:green; }
+.PmsManagement .Unconfirmed,
+.PmsManagement .unconfirmed,
+.PmsManagement .notpaid,
 .PmsManagement .Unpaid { color:red; }
 .PmsManagement .roomdeleted td { color: red; }
 .PmsManagement .sendinvoicebox { position:absolute; padding: 10px; border: solid 1px; background-color: #fff; display:none; }
@@ -166,3 +171,4 @@
     float:left;
 }
 .PmsManagement .tabarea { display:none; border-top: solid 1px #C1DAD7; }
+.PmsManagement .newinformationwarning { padding: 10px; border: solid 1px #bbb; background-color: #eee; margin-bottom: 30px; }

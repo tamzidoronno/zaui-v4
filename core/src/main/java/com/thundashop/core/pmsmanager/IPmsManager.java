@@ -170,6 +170,7 @@ public interface IPmsManager {
     public void changeInvoiceDate(String roomId, Date newDate);
     
     public void addAddonsToBooking(Integer type, String roomId, boolean remove);
+    public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
     
     public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);

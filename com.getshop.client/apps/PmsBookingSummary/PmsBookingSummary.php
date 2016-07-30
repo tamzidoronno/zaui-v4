@@ -17,6 +17,14 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         $this->includefile("settings");
     }
     
+    public function updateCountOnAddon() {
+        $type = $_POST['data']['addontype'];
+        $roomid = $_POST['data']['roomid'];
+        $count = $_POST['data']['count'];
+        $this->getApi()->getPmsManager()->updateAddonsCountToBooking($this->getSelectedName(), $type, $roomid, $count);
+        $this->reRenderSummary();
+    }
+    
     public function getSelectedName() {
         return $this->getConfigurationSetting("engine_name");
     }

@@ -496,4 +496,12 @@ public class PmsBookingRooms implements Serializable {
         
         addons.removeAll(toRemove);
     }
+
+    void updateAddonCount(Integer type, Integer count) {
+        for(PmsBookingAddonItem item : addons) {
+            if(item.addonType.equals(type)) {
+                item.count = count;
+            }
+        }
+    }
 }

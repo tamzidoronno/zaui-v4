@@ -2226,6 +2226,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (PmsBooking booking : bookings.values()) {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                    checkSecurity(booking);
                     return booking;
                 }
             }
@@ -2585,7 +2586,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void checkSecurity(PmsBooking booking) {
         User loggedonuser = getSession().currentUser;
-        
+        if(booking.sessionId != null && getSession().id.equals(booking.sessionId)) {
+            return;
+        }
         if(loggedonuser != null && (booking.userId == null || booking.userId.isEmpty())) {
             return;
         }
@@ -3412,5 +3415,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 updateBooking(room);
             }
        }
+    }
+
+    @Override
+    public void updateAddonsCountToBooking(Integer type, String roomId, Integer count) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        room.updateAddonCount(type, count);
+        saveBooking(booking);
     }
 }

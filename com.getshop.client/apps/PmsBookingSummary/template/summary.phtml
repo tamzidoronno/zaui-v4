@@ -220,11 +220,13 @@ function printAddons($room, $config, $object) {
 //    echo "</pre>";
    
     $types = array();
+    $typesCount = array();
     foreach($room->addons as $addon) {
         if(!isset($types[$addon->addonType])) {
             $types[$addon->addonType] = 0;
         }
         $types[$addon->addonType] += $addon->count;
+        $typesCount[$addon->addonType] = $addon->count;
     }
     
     $names = array();
@@ -242,11 +244,12 @@ function printAddons($room, $config, $object) {
     $addonsText[4] = $object->__w("Include early checkin for {price}");
     $addonsText[5] = $object->__w("Include extra bed for {price} per night");
     $addonsText[6] = $object->__w("Include the possibility to cancel your stay for {price} per night");
-    
+    $printed = false;
     foreach($addons as $addon) {
         if(!$addon->isActive) {
             continue;
         }
+        $printed = true;
         $type = $addon->addonType;
         $addon = $config->addonConfiguration->{$type};
         $product = $object->getProduct($addon->productId);
@@ -258,9 +261,13 @@ function printAddons($room, $config, $object) {
             $count = $types[$type];
             echo "<div><i class='fa fa-check-square-o removeAddonOnRoom'></i> <span class='bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></span> <span class='itemname'>";
             if($type == 5) {
-                echo "<select class='changeNumberOfBeds'>";
+                echo "<select class='changeNumberOfBeds updateCountOnAddon'>";
                 for($i = 1; $i <= $additional->maxNumberOfBeds; $i++) {
-                    echo "<option value='$i'>$i</option>";
+                    $selected = "";
+                    if($i == $typesCount[$type]) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='$i' $selected>$i</option>";
                 }
                 echo "</select>";
             } else {
@@ -272,7 +279,9 @@ function printAddons($room, $config, $object) {
         }
         echo "</div>";
     }
-    echo "<div class='addoncompletedprint'></div>";
+    if($printed) {
+        echo "<div class='addoncompletedprint'></div>";
+    }
 }
 
 ?>

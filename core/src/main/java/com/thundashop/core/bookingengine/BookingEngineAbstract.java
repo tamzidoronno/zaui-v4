@@ -28,8 +28,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -533,17 +535,21 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         BookingItem bookingItem = getBookingItem(itemId);
-        if (bookingItem == null) {
+        if (bookingItem == null && !itemId.isEmpty()) {
             throw new BookingEngineException("Can not change to a bookingItem that does not exists");
         }
         
         Booking newBooking = deepClone(booking);
         newBooking.bookingItemId = itemId;
-        newBooking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+        if (bookingItem != null)
+            newBooking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+        
         validateChange(newBooking);
         
         booking.bookingItemId = itemId;
-        booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+        if (bookingItem != null)
+            booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+        
         saveObject(booking);
     }
 
@@ -723,7 +729,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId) {
         BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(typeId, start, end, bookingId);
 
-        List<BookingItem> retList = assigner.getAvailableItems().stream()
+        List<BookingItem> retList = assigner.getAvailableItems(bookingId, start, end).stream()
                 .map(o -> items.get(o))
                 .collect(Collectors.toList());
         
@@ -731,19 +737,32 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
 
     private BookingItemAssignerOptimal getAvailableItemsAssigner(String typeId, Date start, Date end, String bookingId) throws BookingEngineException {
+
         BookingItemType type = types.get(typeId);
         if (type == null) {
             throw new BookingEngineException("Can not get available items ");
         }
-        List<Booking> bookingsWithinDaterange = bookings.values().stream()
+        
+        Set<Booking> bookingsWithinDaterange = bookings.values().stream()
                 .filter(booking -> booking.bookingItemTypeId.equals(typeId))
                 .filter(booking -> booking.interCepts(start, end))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
+        
+        List<Booking> checkIt = new ArrayList(bookingsWithinDaterange);
+        for (Booking ibooking : checkIt) {
+            List<Booking> overlapping = bookings.values().stream()
+                    .filter(booking -> booking.bookingItemTypeId.equals(typeId))
+                    .filter(booking -> booking.interCepts(ibooking.startDate, ibooking.endDate))
+                    .collect(Collectors.toList());
+            
+            bookingsWithinDaterange.addAll(overlapping);
+        }
+        
         if (bookingId != null && !bookingId.isEmpty()) {
             bookingsWithinDaterange.removeIf(o -> o.id.equals(bookingId));
         }
         List<BookingItem> bookingItems = getBookingItemsByType(typeId);
-        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, bookingsWithinDaterange, bookingItems, shouldThrowException());
+        BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, new ArrayList(bookingsWithinDaterange), bookingItems, shouldThrowException());
         return assigner;
     }
     
@@ -869,14 +888,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             if (booking.id != null && !booking.id.isEmpty()) {
                 BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(booking.bookingItemTypeId, booking.startDate, booking.endDate, booking.id);
                 
-                List<BookingItem> availableItems = assigner.getAvailableItems().stream()
+                List<BookingItem> availableItems = assigner.getAvailableItems(booking.id, booking.startDate, booking.endDate).stream()
                 .map(o -> items.get(o))
                 .collect(Collectors.toList());
-                
-                if (availableItems.isEmpty()) {
-                    throw new BookingEngineException("Did not find an available item for booking: " + booking.getHumanReadableDates());
-                }
-                
+          
                 if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
                     boolean canUseRoom = availableItems.stream().map(item -> item.id)
                             .collect(Collectors.toList())
@@ -888,11 +903,15 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                         int i = 0;
                         
                         for (Booking ibooking : bookingsUsingItem) {
-                            i++;
-                            extra += "<br/> " + i + ". " + ibooking.getHumanReadableDates();
+                            if (ibooking.interCepts(booking.startDate, booking.endDate)) {
+                                i++;
+                                extra += "<br/> " + i + ". " + ibooking.getHumanReadableDates();
+                            }
                         }
                         
-                        throw new BookingEngineException("This bookingitem can not be used as it is not available, there is other bookings that depends on this." + extra);
+                        if (i > 0) {
+                            throw new BookingEngineException("This bookingitem can not be used as it is not available, there is other bookings that depends on this." + extra);
+                        }
                     }
                 }
             }

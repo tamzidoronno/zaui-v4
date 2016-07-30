@@ -253,6 +253,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                     $isAvailableItem = $object->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($object->getSelectedName(), $now, $room->date->end, $room->bookingId);
                                     $isAvailableItem = $object->indexList($isAvailableItem);
                                     $allItems = $object->getApi()->getBookingEngine()->getBookingItems($object->getSelectedName());
+                                    echo "<option value=''>Unassigned</option>";
                                     foreach($allItems as $item) {
                                         $selected = "";
                                         if($types[$item->bookingItemTypeId]->addon > 0) {

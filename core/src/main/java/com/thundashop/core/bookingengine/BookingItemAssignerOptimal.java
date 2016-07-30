@@ -11,6 +11,7 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -280,17 +281,34 @@ public class BookingItemAssignerOptimal {
      *  of items ids that can be used for assigning items to.
      * @return 
      */
-    public List<String> getAvailableItems() {
+    public List<String> getAvailableItems(String bookingToConsider, Date start, Date end) {
         List<OptimalBookingTimeLine> bookingLines = preCheck();
         dryRun = true;
         List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
         assignLeftovers(bookingLines, availableBookingItems);
         
-        return availableBookingItems
+        List<String> availableItems = availableBookingItems
                 .stream()
-                .filter(o -> o.notInUseAtAll())
+                .filter(o -> o.isAvailable(start, end))
                 .map(o -> o.bookingItemId)
                 .collect(Collectors.toList());
+        
+        addItemIfConcideredBookingItemIsAssigned(bookingToConsider, availableBookingItems, availableItems);
+        
+        return availableItems;
+    }
+
+    private void addItemIfConcideredBookingItemIsAssigned(String bookingToConsider, List<BookingItemTimeline> availableBookingItems, List<String> availableItems) {
+        if (bookingToConsider != null && !bookingToConsider.isEmpty()) {
+            for (Booking booking : assigned.keySet()) {
+                if (booking.id.equals(bookingToConsider)) {
+                    BookingItem item = assigned.get(booking);
+                    if (!availableBookingItems.contains(item.id)) {
+                        availableItems.add(item.id);
+                    }
+                }
+            }
+        }
     }
 
     private void printBookingLines(List<OptimalBookingTimeLine> bookingLines) {
@@ -358,6 +376,10 @@ public class BookingItemAssignerOptimal {
         }
         
         return bookingsToReturn;
+    }
+
+    boolean isAssigned(Booking booking) {
+        return assigned.get(booking) != null;
     }
 
 }

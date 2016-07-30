@@ -7,7 +7,6 @@ package com.thundashop.core.bookingengine;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.stream.Stream;
 
 /**
  *
@@ -15,7 +14,7 @@ import java.util.stream.Stream;
  */
 public class BookingItemTimeline {
     public String bookingItemId = "";
-    public HashMap<Date, Date> dates = new HashMap();
+    public HashMap<String, BookingDate> dates = new HashMap();
     public String bookingItemTypeId;
     public String optimalTimeLineId ;
 
@@ -29,8 +28,9 @@ public class BookingItemTimeline {
             return true;
         }
         
-        for (Date startDate : dates.keySet()) {
-            Date endDate = dates.get(startDate);
+        for (String bookingId : dates.keySet()) {
+            Date startDate = dates.get(bookingId).startDate;
+            Date endDate = dates.get(bookingId).endDate;
             
             long StartDate1 = start.getTime();
             long StartDate2 = startDate.getTime();
@@ -46,12 +46,17 @@ public class BookingItemTimeline {
         return true;
     }
     
-    public void add(Date start, Date end) {
+    public void add(String bookingId, Date start, Date end) {
         if (start == null || end == null) {
             return;
         }
         
-        dates.put(start, end);
+        BookingDate date = new BookingDate();
+        date.bookingId = bookingId;
+        date.startDate = start;
+        date.endDate = end;
+        
+        dates.put(bookingId, date);
     }
 
     public boolean notInUseAtAll() {
@@ -60,6 +65,10 @@ public class BookingItemTimeline {
 
     void setOptimalBookingTimeLineId(String uuid) {
         this.optimalTimeLineId = uuid;
+    }
+
+    void remove(String id) {
+        dates.remove(id);
     }
     
 }

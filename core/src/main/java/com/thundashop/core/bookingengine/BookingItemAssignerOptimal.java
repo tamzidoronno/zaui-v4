@@ -159,10 +159,14 @@ public class BookingItemAssignerOptimal {
                 if (item == null) {
                     throw new BookingEngineException("Did not find the booking item with id (it possible has been deleted): " + timeLineUsed.bookingItemId);
                 }
+                
+                System.out.println("Assigned: " + getBookingItem(timeLineUsed.bookingItemId).bookingItemName + " to " + booking.getHumanReadableDates());
 
                 assignBookingsToItem(booking, item);
             }
         }
+        
+        removeBookingsThatCanBeAssignedToDifferentRooms(bookingLines, bookingItemsFlatten);
     }
 
     private List<Booking> assignAllLinesThatAlreadyHasElementsWithBookingItemId(List<OptimalBookingTimeLine> bookingLines, List<BookingItemTimeline> bookingItemsFlatten) throws BookingEngineException {
@@ -267,7 +271,7 @@ public class BookingItemAssignerOptimal {
         
         for (BookingItemTimeline timeLine : timeLines) {
             if (timeLine.isAvailable(booking.startDate, booking.endDate)) {
-                timeLine.add(booking.startDate, booking.endDate);
+                timeLine.add(booking.id, booking.startDate, booking.endDate);
                 timeLine.setOptimalBookingTimeLineId(optimalTimeLine.uuid);
                 return timeLine;
             }
@@ -346,14 +350,14 @@ public class BookingItemAssignerOptimal {
     private BookingItemTimeline isThereAFreeItemForBookings(Booking booking, List<BookingItemTimeline> bookingItemsFlatten, OptimalBookingTimeLine bookingLine) {
         for (BookingItemTimeline timeLine : bookingItemsFlatten) {
             if (timeLine.bookingItemTypeId.equals(booking.bookingItemTypeId) && timeLine.isAvailable(booking.startDate, booking.endDate) && timeLine.optimalTimeLineId != null && timeLine.optimalTimeLineId.equals(bookingLine.uuid)) {
-                timeLine.add(booking.startDate, booking.endDate);
+                timeLine.add(booking.id, booking.startDate, booking.endDate);
                 return timeLine;
             }
         }
         
         for (BookingItemTimeline timeLine : bookingItemsFlatten) {
             if (timeLine.bookingItemTypeId.equals(booking.bookingItemTypeId) && timeLine.isAvailable(booking.startDate, booking.endDate)) {
-                timeLine.add(booking.startDate, booking.endDate);
+                timeLine.add(booking.id, booking.startDate, booking.endDate);
                 return timeLine;
             }
         }
@@ -380,6 +384,22 @@ public class BookingItemAssignerOptimal {
 
     boolean isAssigned(Booking booking) {
         return assigned.get(booking) != null;
+    }
+
+    private void removeBookingsThatCanBeAssignedToDifferentRooms(List<OptimalBookingTimeLine> bookingLines, List<BookingItemTimeline> bookingItemsFlatten) {
+    
+        for (OptimalBookingTimeLine bookingLine : bookingLines) {   
+            for (Booking booking : bookingLine.bookings) {
+                BookingItemTimeline timeLineUsed = isThereAFreeItemForBookings(booking, bookingItemsFlatten, bookingLine);
+
+                if (timeLineUsed != null && booking.bookingItemId.isEmpty()) {
+                    assigned.remove(booking);
+                    for (BookingItemTimeline timeLine : bookingItemsFlatten) {
+                        timeLine.remove(booking.id);
+                    }
+                }
+            }
+        }
     }
 
 }

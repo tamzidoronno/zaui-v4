@@ -761,6 +761,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         if (bookingId != null && !bookingId.isEmpty()) {
             bookingsWithinDaterange.removeIf(o -> o.id.equals(bookingId));
         }
+        
         List<BookingItem> bookingItems = getBookingItemsByType(typeId);
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type, new ArrayList(bookingsWithinDaterange), bookingItems, shouldThrowException());
         return assigner;
@@ -886,6 +887,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     private void checkIfAvailableBookingItemsOnlyEmptyBookings(List<Booking> bookings) {
         for (Booking booking : bookings) {
             if (booking.id != null && !booking.id.isEmpty()) {
+                
                 BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(booking.bookingItemTypeId, booking.startDate, booking.endDate, booking.id);
                 
                 List<BookingItem> availableItems = assigner.getAvailableItems(booking.id, booking.startDate, booking.endDate).stream()

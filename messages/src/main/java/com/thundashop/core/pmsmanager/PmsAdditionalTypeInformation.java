@@ -4,19 +4,19 @@ import com.thundashop.core.common.DataCommon;
 
 public class PmsAdditionalTypeInformation extends DataCommon {
     public String typeId = "";
-    public Integer numberOfBeds = 2;
-    public Integer maxNumberOfSingle = 2;
-    public Integer maxNumberOfDoubleBeds = 2;
-    public Integer numberOfChildrenBed = 1;
+    public Integer defaultNumberOfBeds = 1;
+    public Integer defaultNumberOfChildBeds = 0;
+    public Integer maxNumberOfBeds = 2;
+    public Integer maxNumberOfChildBeds = 0;
     public Integer numberOfChildren = 1;
     public Integer numberOfAdults = 2;
 
     void update(PmsAdditionalTypeInformation info) {
-        numberOfBeds = info.numberOfBeds;
-        maxNumberOfSingle = info.maxNumberOfSingle;
-        numberOfChildrenBed = info.numberOfChildrenBed;
+        defaultNumberOfChildBeds = info.defaultNumberOfChildBeds;
         numberOfChildren = info.numberOfChildren;
         numberOfAdults = info.numberOfAdults;
-        maxNumberOfDoubleBeds = info.maxNumberOfDoubleBeds;
+        defaultNumberOfBeds = info.defaultNumberOfBeds;
+        maxNumberOfBeds = info.maxNumberOfBeds;
+        maxNumberOfChildBeds = info.maxNumberOfChildBeds;
     }
 }

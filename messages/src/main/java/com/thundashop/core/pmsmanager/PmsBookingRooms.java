@@ -169,6 +169,7 @@ public class PmsBookingRooms implements Serializable {
                 toRemove.add(item2);
             }
         }
+        
         addons.removeAll(toRemove);
     }
     

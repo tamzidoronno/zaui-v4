@@ -7,6 +7,9 @@ $addons = array();
 $addons[0] = "None";
 $addons[1] = "One time";
 $addons[2] = "Per timeslot";
+
+$additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $id);
+
 ?>
 <div gstype="form" method="saveItemType">
     <input type='hidden' gsname='typeid' value='<? echo $id;?>'>
@@ -34,22 +37,6 @@ $addons[2] = "Per timeslot";
         </td>
     </tr>
     <tr>
-        <td width="50%"><? echo $this->__w("Addon type"); ?></td>
-        <td width="50%">
-            <select gsname="addon">
-                <? 
-                foreach($addons as $key => $addon) {
-                    $seleted = "";
-                    if($key == $item->addon) {
-                        $seleted = "SELECTED";
-                    }
-                    echo "<option value='".$key."' $seleted>".$addon."</option>";
-                }
-                ?>
-            </select>
-        </td>
-    </tr>
-    <tr>
         <td width="50%"><? echo $this->__w("Is visible for booking"); ?></td>
         <td width="50%">
             <select gsname="visibleForBooking">
@@ -59,19 +46,56 @@ $addons[2] = "Per timeslot";
         </td>
     </tr>
     <tr>
-        <td width="50%"><? echo $this->__w("Booking size"); ?></td>
+        <td width="50%"><? echo $this->__w("Number of guests"); ?></td>
         <td width="50%">
             <input type="number" style='width: 50px;' gsname="size" value="<? echo $item->size; ?>">
         </td>
     </tr>
+
     <tr>
-        <td width="50%">Capasity (full when counter hit this)</td>
-        <td width="50%"><input type="text" gsname="capacity" style='width:100%;' value="<? echo $item->capacity; ?>"></td>
+        <td width="50%"><? echo $this->__w("Number of children"); ?></td>
+        <td width="50%">
+            <input type="number" style='width: 50px;' gsname="additional_numberOfChildren" value="<? echo $additional->numberOfChildren; ?>">
+        </td>
     </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Number of adults"); ?></td>
+        <td width="50%">
+            <input type="number" style='width: 50px;' gsname="additional_numberOfAdults" value="<? echo $additional->numberOfAdults; ?>">
+        </td>
+    </tr>    
     <tr>
         <td width="50%">Description</td>
         <td width="50%"><textarea type="text" gsname="description" style='width:100%;'><? echo $item->description; ?></textarea></td>
     </tr>
+    <tr>
+        <td colspan='2'><b>Beds</b></td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Number of beds (default)"); ?></td>
+        <td width="50%">
+            <input type="number" style='width: 50px;' gsname="additional_defaultNumberOfBeds" value="<? echo $additional->defaultNumberOfBeds; ?>">
+        </td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Number of children beds (default)"); ?></td>
+        <td width="50%">
+            <input type="number" style='width: 50px;' gsname="additional_defaultNumberOfChildBeds" value="<? echo $additional->defaultNumberOfChildBeds; ?>">
+        </td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Max of number of beds"); ?></td>
+        <td width="50%">
+            <input type="number" style='width: 50px;' gsname="additional_maxNumberOfBeds" value="<? echo $additional->maxNumberOfBeds; ?>">
+        </td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Max of children beds"); ?></td>
+        <td width="50%">
+            <input type="number" style='width: 50px;' gsname="additional_maxNumberOfChildBeds" value="<? echo $additional->maxNumberOfChildBeds; ?>">
+        </td>
+    </tr>
+    
     
     </table>
     <input gstype="submit" type="button" value='Save'>

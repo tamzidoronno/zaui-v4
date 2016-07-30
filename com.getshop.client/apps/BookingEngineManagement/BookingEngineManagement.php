@@ -226,6 +226,15 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $item->description = $_POST['data']['description'];
         $item->capacity = $_POST['data']['capacity'];
         
+        $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $_POST['data']['typeid']);
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "additional_")) {
+                $k = str_replace("additional_", "", $key);
+                $additional->{$k} = $val;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveAdditionalTypeInformation($this->getSelectedName(), $additional);
+        
         $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $item);
     }
     

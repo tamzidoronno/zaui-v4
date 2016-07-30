@@ -253,10 +253,10 @@ function printAddons($room, $config, $object) {
         echo "<div class='itemrow addonitemrow' roomid='".$room->pmsBookingRoomId."' addontype='$type'>";
         if(!isset($types[$type])) {
             $text = $addonsText[$type];
-            echo "<div class='addAddonOnRoom'><i class='fa fa-plus-circle'></i> " .  str_replace("{price}", $product->price, $text) . "</div>";
+            echo "<div class='addAddonOnRoom'><i class='fa fa-square-o'></i> " .  str_replace("{price}", $product->price, $text) . "</div>";
         } else {
             $count = $types[$type];
-            echo "<div><i class='fa fa-trash-o removeAddonOnRoom'></i> <span class='bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></span> <span class='itemname'>";
+            echo "<div><i class='fa fa-check-square-o removeAddonOnRoom'></i> <span class='bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></span> <span class='itemname'>";
             if($type == 5) {
                 echo "<select class='changeNumberOfBeds'>";
                 for($i = 1; $i <= $additional->maxNumberOfBeds; $i++) {

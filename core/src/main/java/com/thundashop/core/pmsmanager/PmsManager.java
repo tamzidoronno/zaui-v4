@@ -2890,6 +2890,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(String tmpRoomId : roomIds) {
             PmsBookingRooms room = booking.getRoom(tmpRoomId);
             room.clearAddonType(type);
+            changeTimeFromAddon(addonConfig, room, remove);
             if(remove) {
                 continue;
             }
@@ -3370,6 +3371,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         PmsAdditionalTypeInformation newOne = new PmsAdditionalTypeInformation();
+        newOne.typeId = typeId;
         additionDataForTypes.add(newOne);
         return newOne;
     }
@@ -3379,5 +3381,36 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsAdditionalTypeInformation current = getAdditionalTypeInformationById(info.typeId);
         current.update(info);
         saveObject(current);
+    }
+
+    private void changeTimeFromAddon(PmsBookingAddonItem addonConfig, PmsBookingRooms room, boolean remove) {
+        if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
+            String[] defaultStartSplitted = configuration.defaultStart.split(":");
+            int hour = new Integer(defaultStartSplitted[0]);
+            if(!remove) {
+                hour = hour-3;
+            }
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(room.date.start);
+            cal.set(Calendar.HOUR_OF_DAY, hour);
+            room.date.start = cal.getTime();
+            if(room.bookingId != null) {
+                updateBooking(room);
+            }
+       }
+        if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
+            String[] defaultEndSplitted = configuration.defaultEnd.split(":");
+            int hour = new Integer(defaultEndSplitted[0]);
+            if(!remove) {
+                hour = hour+3;
+            }
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(room.date.end);
+            cal.set(Calendar.HOUR_OF_DAY, hour);
+            room.date.end = cal.getTime();
+            if(room.bookingId != null) {
+                updateBooking(room);
+            }
+       }
     }
 }

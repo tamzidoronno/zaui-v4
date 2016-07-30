@@ -92,6 +92,9 @@ public class TranslationHandler implements Serializable {
     }
     
     private boolean saveTranslationInternal(String language, boolean set) throws IllegalArgumentException, IllegalAccessException {
+        if(language == null) {
+            return false;
+        }
         boolean saved = false;
         Set<TranslationHandler> handlers = getAllTranslationHandlers(this);
         for (TranslationHandler handler : handlers) {

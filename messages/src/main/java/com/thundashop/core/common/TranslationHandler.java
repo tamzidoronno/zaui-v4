@@ -92,6 +92,9 @@ public class TranslationHandler implements Serializable {
     }
     
     private boolean saveTranslationInternal(String language, boolean set) throws IllegalArgumentException, IllegalAccessException {
+        if(language == null) {
+            return false;
+        }
         boolean saved = false;
         Set<TranslationHandler> handlers = getAllTranslationHandlers(this);
         for (TranslationHandler handler : handlers) {
@@ -112,12 +115,10 @@ public class TranslationHandler implements Serializable {
         for (Field field : fields) {
             if (field.getAnnotation(Translation.class) != null) {
                 String keyindex = language+"_"+field.getName();
-                
                 String oldValue = "";
                 if (field.getName().equals("name")) {
                     oldValue = (String) field.get(this);
                 }
-                
                 
                 String currentKeyLang = translationStrings.get("current_key_lang_"+field.getName());
                 if (currentKeyLang == null) {

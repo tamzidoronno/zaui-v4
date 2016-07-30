@@ -33,3 +33,10 @@
 .PmsBookingSummary .showRepeatDates { color: blue; cursor:pointer; }
 .PmsBookingSummary .addcouponbutton { border: solid 1px; padding: 2px; padding-left: 10px; padding-right: 10px; cursor:pointer; }
 .PmsBookingSummary .no-room-selected { padding: 5px; border: solid 1px; background-color: red; color:#fff; display:none; margin-bottom: 10px; }
+.PmsBookingSummary .addonitemrow .fa-trash-o { margin-left: 25px; cursor: pointer; }
+.PmsBookingSummary .addonitemrow .bookedaction { width: 5px; }
+.PmsBookingSummary .addonitemrow .addAddonOnRoom:hover { cursor: pointer; font-weight: bold; }
+.PmsBookingSummary .addonitemrow .fa-square-o,
+.PmsBookingSummary .addonitemrow .fa-check-square-o
+{ padding-left: 25px; }
+.PmsBookingSummary .addoncompletedprint { height: 10px; }

@@ -169,7 +169,8 @@ public interface IPmsManager {
     @Administrator
     public void changeInvoiceDate(String roomId, Date newDate);
     
-    public void addAddonsToBooking(Integer type, String bookingId, String roomId, boolean remove);
+    public void addAddonsToBooking(Integer type, String roomId, boolean remove);
+    public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
     
     public PmsPricing getPrices(Date start, Date end); 
     public PmsBooking getBooking(String bookingId);
@@ -195,6 +196,13 @@ public interface IPmsManager {
     public Integer getNumberOfAvailable(String itemType, Date start, Date end);
     public void checkDoorStatusControl() throws Exception;
     public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
+    
+    public PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception;
+    
+    public List<PmsAdditionalTypeInformation> getAdditionalTypeInformation() throws Exception;
+    
+    @Administrator
+    public void saveAdditionalTypeInformation(PmsAdditionalTypeInformation info) throws Exception;
     
     @Administrator
     public void updateAddons(List<PmsBookingAddonItem> items, String bookingId) throws Exception;

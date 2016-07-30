@@ -5,10 +5,9 @@ namespace ns_831647b5_6a63_4c46_a3a3_1b4a7c36710a;
 
 $prefix = $this->getPrefix();
 
-
 $link = $this->getConfigurationSetting("link".$prefix);
 $adjust = $this->getConfigurationSetting("adjustment".$prefix);
-$originalSize = $this->getConfigurationSetting("originalSize".$prefix);
+$originalSize = $this->getConfigurationSetting("originalSize");
 
 $id = $this->getImageId();
 $cords = $this->getTranslatedConfigurationSettings("image_cords");

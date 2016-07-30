@@ -6,7 +6,6 @@ import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import biweekly.property.Summary;
 import biweekly.util.Duration;
-import biweekly.util.Recurrence;
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
@@ -15,7 +14,6 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.ibm.icu.util.Calendar; 
-import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
@@ -77,6 +75,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
     private List<String> warnedAbout = new ArrayList();
+    private List<PmsAdditionalTypeInformation> additionDataForTypes = new ArrayList();
 
     @Autowired
     BookingEngine bookingEngine;
@@ -227,6 +226,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.count = totalDays;
             String couponCode = getCouponCode(booking.couponCode);
             setPriceOnRoom(room, couponCode, true, booking.priceType);
+            room.updateBreakfastCount();
             
             for (PmsGuests guest : room.guests) {
                 if (guest.prefix != null) {
@@ -2232,6 +2232,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (PmsBooking booking : bookings.values()) {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                    checkSecurity(booking);
                     return booking;
                 }
             }
@@ -2591,7 +2592,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void checkSecurity(PmsBooking booking) {
         User loggedonuser = getSession().currentUser;
-        
+        if(booking.sessionId != null && getSession().id.equals(booking.sessionId)) {
+            return;
+        }
         if(loggedonuser != null && (booking.userId == null || booking.userId.isEmpty())) {
             return;
         }
@@ -2878,9 +2881,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     @Override
-    public void addAddonsToBooking(Integer type, String bookingId, String roomId, boolean remove) {
+    public void addAddonsToBooking(Integer type, String roomId, boolean remove) {
         
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = getBookingFromRoom(roomId);
+        checkSecurity(booking);
         PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
         
         List<String> roomIds = new ArrayList();
@@ -2895,6 +2899,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(String tmpRoomId : roomIds) {
             PmsBookingRooms room = booking.getRoom(tmpRoomId);
             room.clearAddonType(type);
+            changeTimeFromAddon(addonConfig, room, remove);
             if(remove) {
                 continue;
             }
@@ -3360,5 +3365,69 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    @Override
+    public List<PmsAdditionalTypeInformation> getAdditionalTypeInformation() throws Exception {
+        return additionDataForTypes;
+    }
+
+    @Override
+    public PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception {
+        for(PmsAdditionalTypeInformation add : additionDataForTypes) {
+            if(add.typeId.equals(typeId)) {
+                return add;
+            }
+        }
+        PmsAdditionalTypeInformation newOne = new PmsAdditionalTypeInformation();
+        newOne.typeId = typeId;
+        additionDataForTypes.add(newOne);
+        return newOne;
+    }
+
+    @Override
+    public void saveAdditionalTypeInformation(PmsAdditionalTypeInformation info) throws Exception {
+        PmsAdditionalTypeInformation current = getAdditionalTypeInformationById(info.typeId);
+        current.update(info);
+        saveObject(current);
+    }
+
+    private void changeTimeFromAddon(PmsBookingAddonItem addonConfig, PmsBookingRooms room, boolean remove) {
+        if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
+            String[] defaultStartSplitted = configuration.defaultStart.split(":");
+            int hour = new Integer(defaultStartSplitted[0]);
+            if(!remove) {
+                hour = hour-3;
+            }
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(room.date.start);
+            cal.set(Calendar.HOUR_OF_DAY, hour);
+            room.date.start = cal.getTime();
+            if(room.bookingId != null) {
+                updateBooking(room);
+            }
+       }
+        if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
+            String[] defaultEndSplitted = configuration.defaultEnd.split(":");
+            int hour = new Integer(defaultEndSplitted[0]);
+            if(!remove) {
+                hour = hour+3;
+            }
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(room.date.end);
+            cal.set(Calendar.HOUR_OF_DAY, hour);
+            room.date.end = cal.getTime();
+            if(room.bookingId != null) {
+                updateBooking(room);
+            }
+       }
+    }
+
+    @Override
+    public void updateAddonsCountToBooking(Integer type, String roomId, Integer count) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        room.updateAddonCount(type, count);
+        saveBooking(booking);
     }
 }

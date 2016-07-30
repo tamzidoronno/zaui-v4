@@ -17,8 +17,24 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         $this->includefile("settings");
     }
     
+    public function updateCountOnAddon() {
+        $type = $_POST['data']['addontype'];
+        $roomid = $_POST['data']['roomid'];
+        $count = $_POST['data']['count'];
+        $this->getApi()->getPmsManager()->updateAddonsCountToBooking($this->getSelectedName(), $type, $roomid, $count);
+        $this->reRenderSummary();
+    }
+    
     public function getSelectedName() {
         return $this->getConfigurationSetting("engine_name");
+    }
+    
+    public function updateAddonOnRoom() {
+        $type = $_POST['data']['addontype'];
+        $roomid = $_POST['data']['roomid'];
+        $remove = $_POST['data']['add'] != "true";
+        $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $type, $roomid, $remove);
+        $this->reRenderSummary();
     }
     
     public function updateDateOnRow() {
@@ -79,6 +95,7 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
     public function removeAddon() {
         $itemType = $_POST['data']['itemtypeid'];
         $this->getApi()->getPmsManager()->removeFromCurrentBooking($this->getSelectedName(), $itemType);
+        $this->reRenderSummary();
     }
     
     

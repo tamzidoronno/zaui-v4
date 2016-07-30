@@ -4,11 +4,34 @@ app.PmsBookingSummary = {
         $(document).on('click','.PmsBookingSummary .removeAddon', app.PmsBookingSummary.removeAddon);
         $(document).on('click','.PmsBookingSummary .togglerepeatbox', app.PmsBookingSummary.closeRepeatBox);
         $(document).on('change','.PmsBookingSummary .repeat_type', app.PmsBookingSummary.changeRepeatType);
+        $(document).on('change','.PmsBookingSummary .updateCountOnAddon', app.PmsBookingSummary.updateCountOnAddon);
         $(document).on('click','.PmsBookingSummary .adddatetype', app.PmsBookingSummary.changeAddDateType);
         $(document).on('click','.PmsBookingSummary .showRepeatDates', app.PmsBookingSummary.showRepeatDates);
         $(document).on('click','.PmsBookingSummary .addonselection', app.PmsBookingSummary.addonSelection);
 //        $(document).on('blur','.PmsBookingSummary .roomaddedrow', app.PmsBookingSummary.updateRoomRow);
         $(document).on('keyup','.PmsBookingSummary .roomaddedrow', app.PmsBookingSummary.updateRoomRow);
+        $(document).on('click','.PmsBookingSummary .removeAddonOnRoom', app.PmsBookingSummary.updateAddonOnRoom);
+        $(document).on('click','.PmsBookingSummary .addAddonOnRoom', app.PmsBookingSummary.updateAddonOnRoom);
+    },
+    updateCountOnAddon : function() {
+        var event = thundashop.Ajax.createEvent('','updateCountOnAddon', $(this), {
+            roomid: $(this).closest('.itemrow').attr('roomid'),
+            addontype : $(this).closest('.itemrow').attr('addontype'),
+            count : $(this).val()
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.PmsBookingSummary .summarizedbooking').html(res);
+        });
+    },
+    updateAddonOnRoom : function() {
+        var event = thundashop.Ajax.createEvent('','updateAddonOnRoom', $(this), {
+            roomid: $(this).closest('.itemrow').attr('roomid'),
+            addontype : $(this).closest('.itemrow').attr('addontype'),
+            add : $(this).hasClass('addAddonOnRoom')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.PmsBookingSummary .summarizedbooking').html(res);
+        });
     },
     updateRoomRow : function() {
         app.PmsBookingSummary.updateRoomOnRowSpecified($(this));
@@ -35,7 +58,6 @@ app.PmsBookingSummary = {
         
         thundashop.Ajax.simplePost($(this), "toggleAddon", data);
     },
-    
     showRepeatDates : function() {
         if(!$('.repatingroomlist').is(':visible')) {
             $('.repatingroomlist').slideDown();
@@ -80,13 +102,8 @@ app.PmsBookingSummary = {
         };
         var row = $(this).closest('.itemrow');
         var event = thundashop.Ajax.createEvent('','removeAddon', $(this),data);
-        thundashop.Ajax.postWithCallBack(event, function() {
-            row.fadeOut(function() {
-                row.remove();
-                if($('.itemrow').length <= 1) {
-                    $('.PmsBookingSummary .no-room-selected').fadeIn();
-                }
-            });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.PmsBookingSummary .summarizedbooking').html(res);
         });
     },
     addAddon : function() {

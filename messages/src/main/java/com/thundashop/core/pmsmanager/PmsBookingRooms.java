@@ -169,6 +169,7 @@ public class PmsBookingRooms implements Serializable {
                 toRemove.add(item2);
             }
         }
+        
         addons.removeAll(toRemove);
     }
     
@@ -475,5 +476,32 @@ public class PmsBookingRooms implements Serializable {
         }
         
         price = sum / priceMatrix.keySet().size();
+    }
+
+    void updateBreakfastCount() {
+        for(PmsBookingAddonItem item : addons) {
+            if(item.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST) {
+                item.count = numberOfGuests;
+            }
+        }
+    }
+
+    void removeAddonByType(Integer addonType) {
+        List<PmsBookingAddonItem> toRemove = new ArrayList();
+        for(PmsBookingAddonItem item : addons) {
+            if(item.addonType.equals(addonType)) {
+                toRemove.add(item);
+            }
+        }
+        
+        addons.removeAll(toRemove);
+    }
+
+    void updateAddonCount(Integer type, Integer count) {
+        for(PmsBookingAddonItem item : addons) {
+            if(item.addonType.equals(type)) {
+                item.count = count;
+            }
+        }
     }
 }

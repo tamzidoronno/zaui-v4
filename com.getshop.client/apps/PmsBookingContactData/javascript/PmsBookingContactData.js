@@ -36,7 +36,17 @@ app.PmsBookingContactData = {
         savePmsBookingFormContactDataTimeout = setTimeout(function() {
             var data = thundashop.framework.createGsArgs(form);
             var event = thundashop.Ajax.createEvent('','savePostedForm',form, data);
-            thundashop.Ajax.postWithCallBack(event, function() {});
+            thundashop.Ajax.postWithCallBack(event, function() {
+                $('.PmsBookingSummary .summarizedbooking').each(function() {
+                    var view = $(this);
+                    var event = thundashop.Ajax.createEvent('','reRenderSummary', view, {});
+                    thundashop.Ajax.postWithCallBack(event, function(res) {
+                        view.html(res);
+                    });
+                    
+                });
+                
+            });
         }, "1000");
     },
     

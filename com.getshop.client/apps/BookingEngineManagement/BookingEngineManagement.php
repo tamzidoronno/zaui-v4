@@ -161,8 +161,6 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     }
         
     public function saveDefaultBookingFields() {
-        $generator = new \FieldGenerator();
-        $rules = $generator->createBookingRules();
         
         $saved = false;
         foreach($_POST['data'] as $key => $value) {
@@ -170,6 +168,8 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
                 if($value == "true") {
                     $name = str_replace("bookingengine_", "", $key);
                     $res = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($name);
+                    $generator = new \FieldGenerator();
+                    $rules = $generator->createBookingRules($res);
                     foreach($rules->data as $f => $obj) {
                         $res->data->{$f}->{"title"} = $obj->title;
                     }
@@ -225,6 +225,15 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $item->name = $_POST['data']['name'];
         $item->description = $_POST['data']['description'];
         $item->capacity = $_POST['data']['capacity'];
+        
+        $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $_POST['data']['typeid']);
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "additional_")) {
+                $k = str_replace("additional_", "", $key);
+                $additional->{$k} = $val;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveAdditionalTypeInformation($this->getSelectedName(), $additional);
         
         $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $item);
     }

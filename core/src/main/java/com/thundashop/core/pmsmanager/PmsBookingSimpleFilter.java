@@ -60,6 +60,9 @@ public class PmsBookingSimpleFilter {
         if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
             simple.room = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
         }
+        if(room.bookingItemTypeId != null) {
+            simple.roomType = manager.bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+        }
         
         simple.paidFor = booking.payedFor;
         if(room.isStarted() && !room.isEnded()) {

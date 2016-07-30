@@ -234,7 +234,7 @@ function printAddons($room, $config, $object) {
     $names[2] = $object->__w("Parking");
     $names[3] = $object->__w("Late checkout");
     $names[4] = $object->__w("Early checkin");
-    $names[5] = $object->__w("Bed(s)");
+    $names[5] = $object->__w("Extra beds");
     $names[6] = $object->__w("Cancelation possibility");
     
     $addonsText = array();
@@ -259,7 +259,7 @@ function printAddons($room, $config, $object) {
             echo "<div class='addAddonOnRoom'><i class='fa fa-square-o'></i> " .  str_replace("{price}", $product->price, $text) . "</div>";
         } else {
             $count = $types[$type];
-            echo "<div><i class='fa fa-check-square-o removeAddonOnRoom'></i> <span class='bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></span> <span class='itemname'>";
+            echo "<div><i class='fa fa-check-square-o removeAddonOnRoom'></i> <span class='bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></span>";
             if($type == 5) {
                 echo "<select class='changeNumberOfBeds updateCountOnAddon'>";
                 for($i = 1; $i <= $additional->maxNumberOfBeds; $i++) {
@@ -273,7 +273,7 @@ function printAddons($room, $config, $object) {
             } else {
                 echo $count;
             }
-            echo " x ".$names[$type]."</span>";
+            echo " x ".$names[$type];
             echo "<span class='price'>" . $product->price * $count. " kr </span>";
             echo "</div>";
         }

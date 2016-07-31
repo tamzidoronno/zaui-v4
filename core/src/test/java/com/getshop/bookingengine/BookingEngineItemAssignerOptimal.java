@@ -37,9 +37,9 @@ public class BookingEngineItemAssignerOptimal {
         type1.name = "type1";
         type1.id = UUID.randomUUID().toString();
         
-        item1 = getBookingItem();
-        item2 = getBookingItem();
-        item3 = getBookingItem();
+        item1 = getBookingItem(1);
+        item2 = getBookingItem(2);
+        item3 = getBookingItem(3);
     }
     /**
      * Testing that this simple case is assigned
@@ -101,9 +101,10 @@ public class BookingEngineItemAssignerOptimal {
         bookings.add(getBooking("2015-01-05 09:00", "2015-01-05 10:00", null));
         
         List<String> res = getAvailableResult(bookings);
-        Assert.assertEquals(2, res.size());  
-        Assert.assertEquals(item2.id, res.get(0)); 
-        Assert.assertEquals(item3.id, res.get(1)); 
+        Assert.assertEquals(3, res.size());  
+        Assert.assertEquals(item1.id, res.get(0)); 
+        Assert.assertEquals(item2.id, res.get(1)); 
+        Assert.assertEquals(item3.id, res.get(2)); 
     }
     
     /**
@@ -123,9 +124,10 @@ public class BookingEngineItemAssignerOptimal {
         bookings.add(getBooking("2015-01-05 09:00", "2015-01-05 10:00", item2));
         
         List<String> res = getAvailableResult(bookings);
-        Assert.assertEquals(2, res.size()); 
+        Assert.assertEquals(3, res.size()); 
         Assert.assertEquals(item1.id, res.get(0)); 
-        Assert.assertEquals(item3.id, res.get(1)); 
+        Assert.assertEquals(item2.id, res.get(1)); 
+        Assert.assertEquals(item3.id, res.get(2)); 
     }
     
     /**
@@ -395,11 +397,12 @@ public class BookingEngineItemAssignerOptimal {
         return null;
     }
 
-    private BookingItem getBookingItem() {
+    private BookingItem getBookingItem(int i) {
         BookingItem item = new BookingItem();
         item.bookingSize = 1;
         item.id = UUID.randomUUID().toString();
         item.bookingItemTypeId  = type1.id;
+        item.bookingItemName = "10" + i;
         return item;
     }
 
@@ -420,6 +423,6 @@ public class BookingEngineItemAssignerOptimal {
         items.add(item3);
         
         BookingItemAssignerOptimal assigner = new BookingItemAssignerOptimal(type1, unassignedBookings, items, null);
-        return assigner.getAvailableItems();
+        return assigner.getAvailableItems(null, null, null);
     }
 }

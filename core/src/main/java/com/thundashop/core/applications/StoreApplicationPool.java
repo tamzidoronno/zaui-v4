@@ -55,17 +55,12 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         getShopApplicationPool.addListener(this);
         loadApplicationsFromGetShopPool();
 
-        
-
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof SavedApplicationSettings) {
                 SavedApplicationSettings set = (SavedApplicationSettings) dataCommon;
                 settings.put(set.applicationId, set);
             }
         }
-
-        getApplications().stream()
-                .forEach(o -> System.out.println(o.id));
     }
 
     @Override

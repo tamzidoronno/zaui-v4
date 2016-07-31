@@ -103,7 +103,10 @@ $states['ended'] = "Ended";
         }
         echo "<div class='secondary_text'>" . $room->owner . "</div>";
         echo "</td>";
-        echo "<td>" . $room->room . "</td>";
+        echo "<td>";
+        echo $room->room;
+        echo "<div class='secondary_text'>".$room->roomType."</div>";
+        echo "</td>";
         if($hasPrices) {
             echo "<td>" . $room->price . "</td>";
         }

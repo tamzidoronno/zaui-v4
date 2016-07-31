@@ -36,7 +36,6 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
     background-color: #303030; 
     text-transform: uppercase;
 }
-.PmsBookingProductList .productentry .roomtypeselection { left: 170px; }
 
 .frontpagebox .gsdepth_1.gsinner { border: solid 1px #ddd; margin: 10px; box-sizing: border-box; }
 .frontpagebox .gsdepth_2.gscount_0 { border-bottom: solid 1px #ddd; padding-top: 5px; }

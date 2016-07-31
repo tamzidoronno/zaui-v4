@@ -354,9 +354,6 @@ app.PmsManagement = {
     },
     toggleEditMode : function() {
         var row = $(this).closest('.roomattribute');
-        if($(this).closest('tr').hasClass('roomdeleted')) {
-            return;
-        }
         var view = row.find('.viewmode');
         var edit = row.find('.editmode');
         edit.find('.fa-close').remove();

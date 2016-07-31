@@ -227,11 +227,11 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                         <span class='roompostfix'>
                             <span class="viewmode">
                                 <?
-                                if (!$room->booking || !$room->booking->bookingItemId) {
+                                if (!$room->bookingItemId) {
                                     echo "Not assigned yet";
                                 } else {
                                     $notifications = "notifications: " . join(",", $room->notificationsSent);
-                                    echo "<span title='$notifications'>" . $items[$room->booking->bookingItemId]->bookingItemName . "</span>";
+                                    echo "<span title='$notifications'>" . $items[$room->bookingItemId]->bookingItemName . "</span>";
                                 }
                                 if(!$object->getFactory()->isProductionMode()) {
 //                                    echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
@@ -270,7 +270,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                             $desc = ", ". strtolower($item->description);
                                         }
                                         
-                                        if($room->booking->bookingItemId == $item->id) {
+                                        if($room->bookingItemId == $item->id) {
                                             $selected = "SELECTED";
                                         }
                                         echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")$taken $desc" . "</option>";

@@ -121,6 +121,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         try {
                             GetShopHotelLockCodeResult result = getSetCodeResult(offset);
                             Thread.sleep(3000);
+                            if(result.hasCode == null) {
+                                //No code has been set yet.
+                                System.out.println("Not able to check if code is set, get not found");
+                                continue;
+                            }
                             if(result.hasCode.value.equals(true)) {
                                 System.out.println("\t Code alread set... should not be on offset: " + offset);
                             } else {

@@ -5,7 +5,9 @@ app.Aviary = {
     init: function() {
         PubSub.subscribe('NAVIGATION_COMPLETED', app.Aviary.initAviaryForImages);
         $(document).on('click', '.aviary_edit_button', app.Aviary.editImage);
+        $(document).on('hover', '.aviary_edit_button', app.Aviary.showAviaryRevertButton);
         $(document).on('click', '.aviary_revert_button', app.Aviary.revertImage);
+        $(document).on('hover', '.aviary_revert_button', app.Aviary.showAviaryRevertButton);
         $(document).on('hover', '.aviary_wrap', app.Aviary.showAviaryButtons);
     },
     
@@ -75,7 +77,12 @@ app.Aviary = {
     
     showAviaryButtons: function() {
         var id = $(this).children("img").attr("id");
-        $(".aviary_button[imageid='" + id + "']").toggle();
+        $(".aviary_edit_button[imageid='" + id + "']").toggle();
+    },
+    
+    showAviaryRevertButton: function() {
+        var id = $(this).attr("imageid");
+        $(".aviary_revert_button[imageid='" + id + "']").toggle();
     }
 }
 

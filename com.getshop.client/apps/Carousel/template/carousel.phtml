@@ -19,7 +19,7 @@ $appId = $this->getAppInstanceId();
             if(!empty($slideIds)) {
                 foreach ($slideIds as $slideId) {
         ?>
-                    <li style="background: url('/displayImage.php?id=<? echo $this->getApi()->getBannerManager()->getSlideById($slideId)->backgroundFileId ?>') no-repeat center center fixed; background-size:cover;">
+        <li style="background-image: url(/displayImage.php?id=<? echo $this->getApi()->getBannerManager()->getSlideById($slideId)->backgroundFileId ?>); transition-duration: <? echo ($this->getConfigurationSetting("animationspeed") / 1000)?>s;">
                         <? 
                         $this->printCell($appId . "_" . $slideId);
                         ?>
@@ -76,10 +76,9 @@ app.Carousel.setSlideNumber("<? echo $appId; ?>");
 </script>
 
 <?
-if($this->getConfigurationSetting("autoslide") == "true") {
+if($this->getConfigurationSetting("autoslide") == "true" && ($this->getApi()->getUserManager()->getLoggedOnUser() == null || $this->getApi()->getUserManager()->getLoggedOnUser()->type != 100)) {
 ?>
 <script>
-// Auto clicker for slide
 app.Carousel.initAutoClicker("<? echo $appId; ?>", "<? echo $this->getConfigurationSetting("slidedirection"); ?>", "<? echo $this->getConfigurationSetting("slidespeed"); ?>");
 </script>
 <?

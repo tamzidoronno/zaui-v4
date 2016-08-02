@@ -21,6 +21,7 @@ class Carousel extends \MarketingApplication implements \Application {
         $this->setConfigurationSetting("transition", $_POST['data']['transition']);
         $this->setConfigurationSetting("slidedirection", $_POST['data']['slidedirection']);
         $this->setConfigurationSetting("slidespeed", $_POST['data']['slidespeed']);
+        $this->setConfigurationSetting("animationspeed", $_POST['data']['animationspeed']);
         $this->setConfigurationSetting("showbullets", $_POST['data']['showbullets']);
         $this->setConfigurationSetting("showarrows", $_POST['data']['showarrows']);
         $this->setConfigurationSetting("arrowhorizontal", $_POST['data']['arrowhorizontal']);
@@ -83,6 +84,7 @@ class Carousel extends \MarketingApplication implements \Application {
         $this->setConfigurationSetting("autoslide", "true");
         $this->setConfigurationSetting("slidedirection", "right");
         $this->setConfigurationSetting("slidespeed", "3000");
+        $this->setConfigurationSetting("animationspeed", "500");
         $this->setConfigurationSetting("showbullets", "true");
         $this->setConfigurationSetting("showarrows", "true");
         $this->setConfigurationSetting("arrowvertical", "50");

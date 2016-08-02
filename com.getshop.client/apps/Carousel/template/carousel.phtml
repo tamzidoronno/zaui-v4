@@ -19,7 +19,7 @@ $appId = $this->getAppInstanceId();
             if(!empty($slideIds)) {
                 foreach ($slideIds as $slideId) {
         ?>
-                    <li style="background-image: url(/displayImage.php?id=<? echo $this->getApi()->getBannerManager()->getSlideById($slideId)->backgroundFileId ?>">
+        <li style="background-image: url(/displayImage.php?id=<? echo $this->getApi()->getBannerManager()->getSlideById($slideId)->backgroundFileId ?>); transition-duration: <? echo ($this->getConfigurationSetting("animationspeed") / 1000)?>s;">
                         <? 
                         $this->printCell($appId . "_" . $slideId);
                         ?>

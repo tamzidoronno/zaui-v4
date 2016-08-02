@@ -45,6 +45,7 @@ app.Carousel = {
         var transition = $(".Carousel input[name='transition']:checked").val();
         var slidedirection = $(".Carousel input[name='slidedirection']:checked").val();
         var slidespeed = $(".Carousel input[name='slidespeed']").val();
+        var animationspeed = $(".Carousel input[name='animationspeed']").val();
         var showbullets = $(".Carousel input[name='showbullets']:checked").val();
         var showarrows = $(".Carousel input[name='showarrows']:checked").val();
         var arrowvertical = $(".Carousel input[name='arrowvertical']").val();
@@ -57,6 +58,7 @@ app.Carousel = {
             autoslide: autoslide,
             slidedirection: slidedirection,
             slidespeed: slidespeed,
+            animationspeed: animationspeed,
             showbullets: showbullets,
             showarrows: showarrows,
             arrowvertical: arrowvertical,

@@ -68,7 +68,7 @@ app.Carousel = {
         var event = thundashop.Ajax.createEvent(null, "saveCarouselSettings", this, data);
         
         thundashop.Ajax.postWithCallBack(event, function() {
-            location.reload();
+            thundashop.framework.reprintPage();
         });
     },
     
@@ -179,24 +179,29 @@ app.Carousel = {
         });
     },
     
+    carouselIntervals: {},
+    
     initAutoClicker: function(carouselId, direction, speed) {
-        var forwarder = function() {
-            $(".Carousel[appid='" + carouselId + "'] .arrows label").each(function() {
-               if($(this).css(direction) === "0px") {
-                   $(this).click();
-                   return false;
-               } 
+        if(app.Carousel.carouselIntervals[carouselId] == null) {
+            var forwarder = function() {
+                $(".Carousel[appid='" + carouselId + "'] .arrows label").each(function() {
+                   if($(this).css(direction) === "0px") {
+                       $(this).click();
+                       return false;
+                   } 
+                });
+            };
+
+            var slideInterval = speed;
+            var slideInterval = slideInterval != "" ? slideInterval : 3000;
+            var forwarderInterval = setInterval(forwarder, slideInterval);
+            app.Carousel.carouselIntervals[carouselId] = true;
+
+            $(".Carousel[appid='" + carouselId + "'] .arrows label").on('click', function() {
+                clearInterval(forwarderInterval);
+                forwarderInterval = setInterval(forwarder, slideInterval);
             });
-        };
-
-        var slideInterval = speed;
-        var slideInterval = slideInterval != "" ? slideInterval : 3000;
-        var forwarderInterval = setInterval(forwarder, slideInterval);
-
-        $(".Carousel[appid='" + carouselId + "'] .arrows label").on('click', function() {
-            clearInterval(forwarderInterval);
-            forwarderInterval = setInterval(forwarder, slideInterval);
-        });
+        }
     },
     
     setCarouselPercentageHeight: function(carouselId) {

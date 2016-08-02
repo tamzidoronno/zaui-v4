@@ -19,7 +19,7 @@ $appId = $this->getAppInstanceId();
             if(!empty($slideIds)) {
                 foreach ($slideIds as $slideId) {
         ?>
-                    <li style="background: url('/displayImage.php?id=<? echo $this->getApi()->getBannerManager()->getSlideById($slideId)->backgroundFileId ?>') no-repeat center center fixed; background-size:cover;">
+                    <li style="background-image: url(/displayImage.php?id=<? echo $this->getApi()->getBannerManager()->getSlideById($slideId)->backgroundFileId ?>">
                         <? 
                         $this->printCell($appId . "_" . $slideId);
                         ?>
@@ -76,7 +76,7 @@ app.Carousel.setSlideNumber("<? echo $appId; ?>");
 </script>
 
 <?
-if($this->getConfigurationSetting("autoslide") == "true") {
+if($this->getConfigurationSetting("autoslide") == "true" && $this->getApi()->getUserManager()->getLoggedOnUser()->type != 100) {
 ?>
 <script>
 // Auto clicker for slide

@@ -24,6 +24,8 @@ import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -261,7 +263,17 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         finalizeLocks();
         
-        return new ArrayList(devices.values());
+        ArrayList<GetShopDevice> res = new ArrayList(devices.values());
+        Collections.sort(res, new Comparator<GetShopDevice>(){
+     public int compare(GetShopDevice o1, GetShopDevice o2){
+         if(o1.name == null || o2.name == null) {
+             return -1;
+         }
+         return o1.name.compareTo(o2.name);
+     }
+});
+        
+        return res;
     }
 
     @Override
@@ -351,14 +363,25 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
     
     private void addDeviceIfNotExists(GetShopDevice gsdevice) {
+        boolean found = false;
         for(GetShopDevice dev : devices.values()) {
             if(dev.zwaveid.equals(gsdevice.zwaveid)) {
-                return;
+                dev.type = gsdevice.type;
+                dev.name = gsdevice.name;
+                if(dev.name == null || dev.name.equals("null")) {
+                    dev.name = "";
+                }
+                if(dev.type == null || dev.type.equals("null")) {
+                    dev.type = "";
+                }
+                found = true;
             }
+        }
+        if(!found) {
+            devices.put(gsdevice.id, gsdevice);
         }
         
         saveObject(gsdevice);
-        devices.put(gsdevice.id, gsdevice);
     }
 
     private void finalizeLocks() {

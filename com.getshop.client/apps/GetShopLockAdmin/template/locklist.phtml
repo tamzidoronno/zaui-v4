@@ -17,7 +17,7 @@ if(!$locks || sizeof($locks) == 0) {
     foreach($locks as $lock) {
         echo "<tr>";
         echo "<td>" . $lock->zwaveid . "</td>";
-        echo "<td>" . $lock->type . "</td>";
+        echo "<td>" . $lock->name . " (" . $lock->type . ")</td>";
         echo "<td align='center'>";
         $this->printCodeList($lock);
         echo "</td>";

@@ -24,6 +24,23 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         echo "<div style='clear:both;'></div>";
     }
     
+    function updateFileName() {
+        $oldfile = $this->getApi()->getFileManager()->getFile($_POST['data']['fileId']);
+        
+        $extention = $this->getExtention($oldfile->name);
+        $newFileName = $_POST['data']['newFileName'];
+        
+        if ($extention) {
+            $newFileName .= ".".$extention;
+        }
+        
+        $this->getApi()->getFileManager()->renameFileEntry($_POST['data']['fileId'], $newFileName);
+        
+        $arrayres = array();
+        $arrayres[] = $_POST['data']['fileId'];
+        $this->notifyParent("fileRenamed", $arrayres);
+    }
+    
     function reloadFileList() {
         $this->includefile("uploadedFiles");
     }
@@ -145,6 +162,25 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         }
         
         return $this->getAppInstanceId();
+    }
+
+    public function getExtention($fileName) {
+        $fileName = explode(".", $fileName);
+        if (count($fileName) > 1) {
+            return $fileName[count($fileName)-1];
+        }
+        
+        return "";
+    }
+
+    public function getFileName($fileEntry) {
+        $fileName = explode(".", $fileEntry->name);
+        
+        if (count($fileName) > 1) {
+            array_pop($fileName);
+        }
+        
+        return implode(".", $fileName);
     }
 
 }

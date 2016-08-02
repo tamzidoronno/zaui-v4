@@ -65,15 +65,16 @@ public class FileProcessor extends GetShopSchedulerBase {
         this.type = "createProduct";
     }
     
-    public FileProcessor(String base64EncodedFile, String fileName, String fileType, String productId) {
+    public FileProcessor(String base64EncodedFile, String fileName, String fileType, String productId, SedoxBinaryFileOptions options) {
         this.type = "addFile";
         this.base64EncodedFile = base64EncodedFile;
         this.fileName = fileName;
         this.fileType = fileType;
         this.productId = productId;
+        this.options = options;
     }
     
-    private SedoxBinaryFile getOriginalBinaryFile(String base64EncodeString, String originalFileName) throws ErrorException {
+    private SedoxBinaryFile getOriginalBinaryFile(String base64EncodeString, String originalFileName) throws ErrorException, Exception {
         // Check if needs to be decrypted.
         byte[] fileData = DatatypeConverter.parseBase64Binary(base64EncodeString);
 
@@ -91,7 +92,7 @@ public class FileProcessor extends GetShopSchedulerBase {
         }
 
         originalFile.fileType = "Original";
-//        originalFile.id = getApi().getSedoxProductManager().getNextFileId(); // API
+        originalFile.id = getApi().getSedoxProductManager().getNextFileId(); // API
         originalFile.md5sum = getMd5Sum(fileData);
         originalFile.orgFilename = originalFileName;
 
@@ -190,13 +191,14 @@ public class FileProcessor extends GetShopSchedulerBase {
 
     private void addFile() throws Exception {
         SedoxBinaryFile sedoxBinaryFile = getOriginalBinaryFile(base64EncodedFile, fileName);
+        sedoxBinaryFile.options = options;
         getApi().getSedoxProductManager().addFileToProductAsync(sedoxBinaryFile, fileType, fileName, productId); // API
     }
 
     private void createProduct() throws Exception {
         SedoxBinaryFile originalFile = getOriginalBinaryFile(base64EncodeString, originalFileName);
         SedoxBinaryFile cmdEncryptedFile = saveCmdEncryptedFile(base64EncodeString, originalFileName);
-        getApi().getSedoxProductManager().finishUpload(forSlaveId, sharedProduct, useCredit, comment, originalFile, cmdEncryptedFile, options, base64EncodeString, originalFileName, origin, currentUserId); 
+        getApi().getSedoxProductManager().finishUpload(forSlaveId, sharedProduct, useCredit, comment, originalFile, cmdEncryptedFile, options, base64EncodeString, originalFileName, origin, currentUserId, reference); 
     }
     
 }

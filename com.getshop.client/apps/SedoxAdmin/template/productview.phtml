@@ -20,6 +20,8 @@ $expaned = $this->isExpanded($product->id) ? "expanded" : "";
 $_POST['data']['productId'] = $product->id;
 $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
 
+$sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($product->firstUploadedByUserId);
+
 ?>
 <div class="sedox_internal_view <? echo $expaned; ?>" productid='<? echo $product->id; ?>'>
     <div class="overlayblocker">
@@ -109,7 +111,7 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
                     <div class='trash_button smallbutton' gs_confirm="Are you sure you want to delete it?" gsclick="deleteFile" sedox_file_id="" productid="<? echo $product->id; ?>" title="Delete File"><i class='fa fa-trash'></i></div>
                 </div>
                 <div class='priceview'>
-                    <div class='sedox_blue_button sedox_admin_upload_file' productid='<? echo $product->id; ?>' sedox_file_type="<? echo $origRequestType ?>">UPLOAD FILE</div>
+                    <div class='sedox_blue_button sedox_admin_upload_file' extrainfo='<? echo $extraInfo; ?>' productid='<? echo $product->id; ?>' sedox_file_type="<? echo $origRequestType ?>">UPLOAD FILE</div>
                 </div>
             </div>
         </div>
@@ -135,7 +137,7 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
 
                 <div class='row_type2'>
                     ECU Brand / Type:
-                    <div class='row_subinfo'><? echo sedox_notAvailableCheck($product->ecuBrand); ?></div>
+                    <div class='row_subinfo'><? echo sedox_notAvailableCheck($product->ecuBrand); ?> / <? echo sedox_notAvailableCheck($product->ecuType); ?></div>
                 </div>
 
                 <div class='row_type2'>
@@ -176,13 +178,19 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
         $class2 = array_key_exists("notifyForCustomer", $product->states) ? "redbutton" : "";
         $class3 = array_key_exists("sendProductByMail", $product->states) ? "redbutton" : "";
 
+        $confirmation = $sedoxUser->creditAccount->balance > 0 ? "" : "gs_confirm='Negative credit, are you sure you want to send it?'";
+        
         ?>
         <div class='creditinformation'>
-            <div class='product_action_button <? echo $class1; ?>'>
-                <div gsclick='purchaseProductOnly' gsclick="purchaseOrder" sedox_file_id="" productid="<? echo $product->id; ?>" class='action_inner'>Purchase Order Only</div>
+            <div>
+                <textarea class="commentfield_for_emails" productId="<? echo $product->id; ?>" gsname="comment" placeholder="Comment for emails."></textarea>
             </div>
-            <div class='product_action_button <? echo $class2; ?>' gsclick="notifyByEmail" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Notify by Email / SMS</div></div>
-            <div class='product_action_button <? echo $class3; ?>' gsclick="sendFileByMail" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Send product by email</div></div>
+                
+            <div class='product_action_button <? echo $class1; ?>'>
+                <div gsclick='purchaseProductOnly' sedox_file_id="" productid="<? echo $product->id; ?>" class='action_inner'>Purchase Order Only</div>
+            </div>
+            <div class='product_action_button <? echo $class2; ?>' gsclick="notifyByEmail" gs_also="commentfield_for_emails[productId='<? echo $product->id; ?>']" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Notify by Email / SMS</div></div>
+            <div class='product_action_button <? echo $class3; ?>' gsclick="sendFileByMail"  <? echo $confirmation; ?> gs_also="commentfield_for_emails[productId='<? echo $product->id; ?>']" sedox_file_id="" productid="<? echo $product->id; ?>"><div class='action_inner'>Send product by email</div></div>
             
             <?
             if ($product->saleAble) {
@@ -195,6 +203,21 @@ $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
             <?
             }
             ?>
+                
+            <div class='product_action_button'>
+                <div  sedox_file_id="" productid="<? echo $product->id; ?>" class='action_inner sendProductToDifferentEmail'>Send product to different email</div>
+            </div>
+                
+            <?
+            if (!$product->isFinished) {
+            ?>
+                <div class='product_action_button'>
+                    <div  sedox_file_id="" productid="<? echo $product->id; ?>" class='action_inner markAsFinished' gsclick="markAsFinished">Mark as finished</div>
+                </div>
+            <?
+            }
+            ?>
+            
          </div>
     </div>
     

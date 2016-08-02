@@ -17,7 +17,13 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $this->includefile("sedoxadminlist");
     }
     
-    public function renderProduct($product=false) {
+    public function renderProduct($product=false, $fromList=false) {
+        
+        if (isset($_POST['data']['justCreatedFileId']) && $_POST['data']['justCreatedFileId']) {
+            $_POST['data']['fileId'] = $_POST['data']['justCreatedFileId'];
+            $this->fileSelected();
+        }
+        
         if (!$product) {
             $product = $this->getApi()->getSedoxProductManager()->getProductById($_POST['data']['productId']);
         }
@@ -30,6 +36,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $sedoxUserAccount = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($file->firstUploadedByUserId);
         $balance = $sedoxUserAccount->creditAccount->balance;
         $seeUserButton = "<div class='sedoxadmin_see_user_button' userid='$user->id' title='Check User'><i class='fa fa-search'></i></div>";
+        $impersonateUserButton = "<a href='/impersonate.php?userId=$user->id'><div class='sedoxadmin_impersonate_user_button' userid='$user->id' title='Impersonate'><i class='fa fa-magic'></i></div></a>";
 
 
         $status = "";
@@ -41,13 +48,13 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
             $status = "<div class='current_status_line'><b>Started by</b>: $startedByUser->fullName <div gsclick='markProductAsStarted' productid='$file->id' class='stop_button'><i class='fa fa-stop-circle'></i></div></div>";
         }
 
-        if (array_key_exists("notifyForCustomer", $file->states) || $sedoxProduct->isFinished ) {
+        if (array_key_exists("notifyForCustomer", $file->states) || $product->isFinished ) {
             $startedByUser = $this->getApi()->getUserManager()->getUserById($file->startedByUserId);
             $finishedByName = $startedByUser ? $startedByUser->fullName : "N/A";
             $status = "<div class='current_status_line'><b>Notified by</b>: $finishedByName <div class='finished_marker yellow'><i class='fa fa-comment'></i></div></div>";
         }
 
-        if (array_key_exists("sendProductByMail", $file->states) || $sedoxProduct->isFinished ) {
+        if (array_key_exists("sendProductByMail", $file->states) || $product->isFinished ) {
             $startedByUser = $this->getApi()->getUserManager()->getUserById($file->startedByUserId);
             $finishedByName = $startedByUser ? $startedByUser->fullName : "N/A";
             $status = "<div class='current_status_line'><b>Finished by</b>: $finishedByName <div class='finished_marker'><i class='fa fa-check'></i></div></div>";
@@ -55,11 +62,13 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
 
         echo "<div class='col_row_content' productid='$file->id'>";
             echo "<div class='col_row_content_inner'>";
-                echo "<div class='col_content col1'>$file->id</div>";
-                echo "<div class='col_content col2'>$date</div>";
-                echo "<div class='col_content col3'>$file->printableName</div>";
-                echo "<div class='col_content col4'> $seeUserButton $user->fullName</div>";
-                echo "<div class='col_content col5'>$balance</div>";
+                echo "<div class='header_content'>";
+                    echo "<div class='col_content col1'>$file->id</div>";
+                    echo "<div class='col_content col2'>$date</div>";
+                    echo "<div class='col_content col3'>$file->printableName</div>";
+                    echo "<div class='col_content col4'>$impersonateUserButton $seeUserButton <span class='ownerusername'>$user->fullName</span></div>";
+                    echo "<div class='col_content col5'>$balance</div>";
+                echo "</div>";
                 echo "<div class='admin_extrainfo_row'>";
                 echo "<b>Requested:</b> ".$this->getRequestedString($file);
                 echo $status;
@@ -68,6 +77,9 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
             $this->setCurrentProduct($file);
             $this->includefile("productview");
         echo "</div>";
+        
+        if (!$fromList)
+            echo "<script>getshop.SedoxDatabankTheme.setAll();</script>";
     }
     
     public function getFilesToProcess() {
@@ -95,13 +107,14 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     }
     
     public function purchaseProductOnly() {
-        
+        $files = array($_POST['data']['sedox_file_id']);
+        $this->getApi()->getSedoxProductManager()->purchaseOnlyForCustomer($_POST['data']['productid'], $files);
     }
     
     public function finalizeFileUpload() {
         $base64 = $_SESSION['SEDOX_FILE_ADMIN_UPLOADED'];
         $filename = $_SESSION['SEDOX_FILE_ADMIN_UPLOADED_FILENAME'];
-        $this->getApi()->getSedoxProductManager()->addFileToProduct($base64, $filename, $_POST['data']['type'], $_POST['data']['productid']);
+        $this->getApi()->getSedoxProductManager()->addFileToProduct($base64, $filename, $_POST['data']['type'], $_POST['data']['productid'], $_POST['data']['options']);
     }
     
     public function markRowAsExpanded() {
@@ -130,13 +143,17 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $this->getApi()->getSedoxProductManager()->toggleStartStop($product->id, !$product->started);
     }
     
+    public function markAsFinished() {
+        $this->getApi()->getSedoxProductManager()->markAsFinished($_POST['data']['productid'], true);
+    }
+    
     public function sendFileByMail() {
         $files = array($_POST['data']['sedox_file_id']);
-        $this->getApi()->getSedoxProductManager()->sendProductByMail($_POST['data']['productid'], "", $files);
+        $this->getApi()->getSedoxProductManager()->sendProductByMail($_POST['data']['productid'], $_POST['data']['comment'], $files);
     }
     
     public function notifyByEmail() {
-        $this->getApi()->getSedoxProductManager()->notifyForCustomer($_POST['data']['productid'], "");
+        $this->getApi()->getSedoxProductManager()->notifyForCustomer($_POST['data']['productid'], $_POST['data']['comment']);
     }
     
     public function purchaseOrder() {
@@ -217,11 +234,18 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $this->setConfigurationSetting("filereadyusernoattachmentemail", $_POST['filereadyusernoattachmentemail']);
         $this->setConfigurationSetting("filereadyuserattachmentemail", $_POST['filereadyuserattachmentemail']);
         
+        $this->setConfigurationSetting("sentToDifferentEmail", $_POST['sentToDifferentEmail']);
+        
         $this->setConfigurationSetting("signature", $_POST['signature']);
     }
     
     public function setType() {
         $this->getApi()->getSedoxProductManager()->setType($_POST['data']['productid'], $_POST['data']['value']);
     }
+    
+    public function sendProductToDifferentEmail() {
+        $this->getApi()->getSedoxProductManager()->sendProductToDifferentEmail($_POST['data']['productId'], $_POST['data']['email'], [$_POST['data']['fileId']],  $_POST['data']['comment']);
+    }
+    
 }
 ?>

@@ -54,7 +54,8 @@ public class StoreHandler {
     }
     
     public Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        initMultiLevels(storeId, getSession(inObject.sessionId));
+        Session session = getSession(inObject.sessionId);
+        initMultiLevels(storeId, session); 
         
         scope.setStoreId(storeId, inObject.multiLevelName, getSession(inObject.sessionId));
         Class getShopInterfaceClass = loadClass(inObject.realInterfaceName);
@@ -68,6 +69,10 @@ public class StoreHandler {
             Annotation userLevel = authenticateUserLevel(executeMethod, aClass, getShopInterfaceClass, inObject);
             Object result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
             clearSessionObject();
+            
+            TranslationHandler handle = new TranslationHandler();
+            handle.updateTranslationOnAll(session.language, result);
+
             result = cloneResult(result, user);
             return result;
         } catch (ErrorException ex) {

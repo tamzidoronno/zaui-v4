@@ -12,4 +12,5 @@ package com.thundashop.core.sedox;
 public class ProductStartStopToggle {
     public String productId = "";
     public String userid = "";
+    public Integer justCreatedFileId;
 }

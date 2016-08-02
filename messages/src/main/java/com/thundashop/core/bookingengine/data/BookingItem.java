@@ -6,6 +6,7 @@
 package com.thundashop.core.bookingengine.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.Translation;
 import java.util.ArrayList;
 import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
@@ -22,7 +23,7 @@ public class BookingItem extends DataCommon {
     public String bookingItemAlias = "";
     
     public String doorId = "";
-    
+   
     public String pageId = "";
     
     public String description = "";

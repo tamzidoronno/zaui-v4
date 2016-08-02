@@ -11,7 +11,7 @@ $groupId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != nu
         && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->companyObject->groupId 
         ? \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->companyObject->groupId : "";
 $metaData = $this->getApi()->getEventBookingManager()->getBookingTypeMetaData($this->getBookingEngineName(), $event->bookingItemType->id);
-$extraWarning = @$metaData->groupWarningInformation->{$groupId};
+$extraWarning = $metaData && $metaData->groupWarningInformation && isset($metaData->groupWarningInformation->{$groupId}) ? $metaData->groupWarningInformation->{$groupId} : false;
 
 if ($extraWarning) {
     echo "<div class='extrawarning'>";

@@ -3,11 +3,12 @@
 <span class="templatecode"><?php echo $this->__f("{product-id} - Product - ID"); ?></span>
 <span class="templatecode"><?php echo $this->__f("{product-fullname} - Product - Name"); ?></span>
 <span class="templatecode"><?php echo $this->__f("{product-comment} - Product - Comment"); ?></span>
-<span class="templatecode"><?php echo $this->__f("{product-reference} - Product - reference"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{product-reference} - Product - (License plate)"); ?></span>
 <span class="templatecode"><?php echo $this->__f("{product-tool} - Product - Tool"); ?></span>
 <span class="templatecode"><?php echo $this->__f("{product-geartype} - Product - Gear Type"); ?></span>
 <span class="templatecode"><?php echo $this->__f("{product-file-names} - Product - File List - Names"); ?></span>
-<span class="templatecode"><?php echo $this->__f("{product-file-type-and-information} - Product - File List - Type & Information"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{product-file-type-and-information} - Product - File List - Type & Extra Information "); ?></span>
+<span class="templatecode"><?php echo $this->__f("{product-requestinformation} - Requestinformation "); ?></span>
 
 <span class="templatecode"><?php echo $this->__f("{special-info} - Product - Special Information"); ?></span>
 <span class="templatecode"><?php echo $this->__f("{link-to-product} - Product - Link"); ?></span>
@@ -18,6 +19,7 @@
 <span class="templatecode"><?php echo $this->__f("{user-creditbalance} - User - Credit Balance"); ?></span>
 
 <span class="templatecode"><?php echo $this->__f("{order-credit} - Order - Credit Amount"); ?></span>
+<span class="templatecode"><?php echo $this->__f("{extra-comment-from-admin} - Comment - This is the comment admin can write additionally"); ?></span>
 
 <h1><? echo $this->__f("Email Templates"); ?></h1>
 
@@ -60,6 +62,10 @@
 </div>
 
 
+<div class="textfield gss_setting new_email">
+    <span class="title"><?php echo $this->__f("Product sent to different email"); ?></span>
+    <textarea gs_model='emailmodel' gs_model_attr='sentToDifferentEmail' style='margin-top: 15px; position: initial; width: 930px; height: 150px;'><? echo $this->getConfigurationSetting("sentToDifferentEmail"); ?></textarea>
+</div>
 
 <div class="textfield gss_setting new_email">
     <span class="title"><?php echo $this->__f("Signature"); ?></span>

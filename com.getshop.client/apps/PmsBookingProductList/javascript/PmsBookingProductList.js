@@ -1,9 +1,47 @@
 app.PmsBookingProductList = {
+    setRoomCountTimeout : null,
     init : function() {
         $(document).on('click', '.PmsBookingProductList .select_button', app.PmsBookingProductList.selectRoom);
         $(document).on('click', '.PmsBookingProductList .continue_button', app.PmsBookingProductList.continueToPage);
+        $(document).on('click', '.PmsBookingProductList .productentry .roomtypeselectioncount i', app.PmsBookingProductList.updateProductCount);
+        $(document).on('keyup', '.PmsBookingProductList .productcount', app.PmsBookingProductList.updateProductCount);
         $(document).on('change', '.PmsBookingProductList .roomcountselection', app.PmsBookingProductList.selectRoomCount);
     },
+    updateProductCount : function() {
+        if(app.PmsBookingProductList.setRoomCountTimeout) {
+            clearTimeout(app.PmsBookingProductList.setRoomCountTimeout);
+        }
+        var current = $(this).closest('.productentry');
+        var typeid = current.attr('typeid');
+        var currentInput = current.find('.productcount');
+        var currentCount = currentInput.val();
+        var max = currentInput.attr('max');
+        if(!$(this).hasClass('productcount')) {
+            if($(this).hasClass('fa-plus')) {
+                currentCount++;
+            } else {
+                currentCount--;
+            }
+        }
+        if(currentCount < 0) {
+            currentCount = 0;
+        }
+        if(currentCount > max) {
+            currentCount = max;
+        }
+        currentInput.val(currentCount);
+        
+        app.PmsBookingProductList.setRoomCountTimeout = setTimeout(function() {
+            var data = {
+                "typeid" : typeid,
+                "count" : currentCount
+            };
+            console.log(data);
+            var event = thundashop.Ajax.createEvent('','selectRoomCount',currentInput, data);
+            thundashop.Ajax.post(event);
+        }, 500);
+    },
+    
     continueToPage : function() {
         if($(this).hasClass('disabled')) {
             return;

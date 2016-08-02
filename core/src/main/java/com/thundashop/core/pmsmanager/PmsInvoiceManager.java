@@ -8,6 +8,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
@@ -32,6 +33,38 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsInvoiceManager {
 
+    class BookingOrderSummary {
+        Integer count = 0;
+        Double price = 0.0;
+        String productId = "";
+    }
+    
+    private boolean avoidOrderCreation = false;
+    private List<CartItem> itemsToReturn = new ArrayList();
+    
+    @Autowired
+    PmsManager pmsManager;
+    
+    @Autowired
+    UserManager userManager;
+    
+    @Autowired
+    BookingEngine bookingEngine;
+    
+    @Autowired
+    ProductManager productManager;
+    
+    @Autowired
+    OrderManager orderManager;
+    
+    @Autowired
+    CartManager cartManager;
+    
+    @Autowired
+    MessageManager messageManager;
+    
+    private boolean runningDiffRoutine = false;
+    
     private List<BookingOrderSummary> summaries(List<CartItem> roomItems) {
         HashMap<String, BookingOrderSummary> res = new HashMap();
         for(CartItem item : roomItems) {
@@ -209,34 +242,66 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return null;
     }
 
-    class BookingOrderSummary {
-        Integer count = 0;
-        Double price = 0.0;
-        String productId = "";
+    @Override
+    public void creditOrder(String bookingId, String orderId) {
+        Order currentOrder = orderManager.getOrder(orderId);
+        Order creditedOrder = orderManager.creditOrder(orderId);
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        if(currentOrder.closed) {
+            creditedOrder.status = Order.Status.PAYMENT_COMPLETED;
+            creditedOrder.closed = true;
+            orderManager.saveOrder(currentOrder);
+        }
+        
+        for(CartItem item : creditedOrder.cart.getItems()) {
+            String roomId = item.getProduct().externalReferenceId;
+            PmsBookingRooms room = booking.getRoom(roomId);
+            if(room == null) {
+                continue;
+            }
+            
+            room.invoicedTo = item.getStartingDate();
+        }
+        booking.orderIds.add(creditedOrder.id);
+        pmsManager.saveBooking(booking);
     }
-    
-    private boolean avoidOrderCreation = false;
-    private List<CartItem> itemsToReturn = new ArrayList();
-    
-    @Autowired
-    PmsManager pmsManager;
-    
-    @Autowired
-    UserManager userManager;
-    
-    @Autowired
-    BookingEngine bookingEngine;
-    
-    @Autowired
-    ProductManager productManager;
-    
-    @Autowired
-    OrderManager orderManager;
-    
-    @Autowired
-    CartManager cartManager;
-    private boolean runningDiffRoutine = false;
-    
+
+    private void addItemToItemsToReturn(CartItem item) {
+        itemsToReturn.add(item);
+    }
+
+    private void addItemsToItemToReturn(List<CartItem> returnresult) {
+        itemsToReturn.addAll(returnresult);
+    }
+
+    public Date normalizeDate(Date date, boolean startdate) {
+        if(!pmsManager.getConfigurationSecure().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.DAILY)) {
+            return date;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        
+        cal.setTime(date);
+        if(startdate)
+            cal.set(Calendar.HOUR_OF_DAY, 15);
+        else
+            cal.set(Calendar.HOUR_OF_DAY, 12);
+        
+        return cal.getTime();
+    }
+
+    @Override
+    public void sendRecieptOrInvoice(String orderId, String email, String bookingId) {
+        Order order = orderManager.getOrder(orderId);
+        pmsManager.setOrderIdToSend(orderId);
+        pmsManager.setEmailToSendTo(email);
+        if(order.status == Order.Status.PAYMENT_COMPLETED) {
+            pmsManager.doNotification("sendreciept", bookingId);
+        } else {
+            pmsManager.doNotification("sendinvoice", bookingId);
+        }
+    }
+
     public String createOrder(String bookingId, NewOrderFilter filter) {
         runningDiffRoutine = false;
         itemsToReturn.clear();
@@ -485,6 +550,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         user.address.fullName = user.fullName;
 
         Order order = orderManager.createOrder(user.address);
+        order.userId = booking.userId;
 
         Payment preferred = orderManager.getStorePreferredPayementMethod();
         Payment preferredChannel = getChannelPreferredPaymentMethod(booking);
@@ -496,15 +562,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(preferredUser != null) {
             preferred = preferredUser;
-        }
+        }  
         
         order.payment = preferred;
-        order.userId = booking.userId;
         order.invoiceNote = booking.invoiceNote;
         
         if(order.payment != null) {
             String type = order.payment.paymentType.toLowerCase();
-            if(type.contains("invoice") || type.contains("expedia")) {
+            if(type.contains("expedia")) {
                 order.status = Order.Status.PAYMENT_COMPLETED;
                 order.captured = true;
                 order.payment.captured = true;
@@ -735,6 +800,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private List<CartItem> createCartItemsForRoom(Date startDate, Date endDate, PmsBooking booking, PmsBookingRooms room) {
+        
+        startDate = normalizeDate(startDate, true);
+        endDate = normalizeDate(endDate, false);
+        
         List<CartItem> items = new ArrayList();
         int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
         if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
@@ -816,7 +885,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         item.getProduct().externalReferenceId = roomId;
         
         if(!runningDiffRoutine) {
-            itemsToReturn.add(item);
+            addItemToItemsToReturn(item);
         }
         return item;
     }
@@ -998,7 +1067,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         runningDiffRoutine = false;
-        itemsToReturn.addAll(returnresult);
+        addItemsToItemToReturn(returnresult);
         return returnresult;
     }
 

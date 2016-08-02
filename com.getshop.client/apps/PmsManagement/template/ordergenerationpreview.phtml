@@ -22,9 +22,9 @@ foreach($orders as $res) {
         echo "<tr>";
         echo "<td class='moreinformationaboutbooking' bookingid='".$res['id']."' style='cursor:pointeR;'>" . $res['fullname'] . "<br>";
         echo "<div style='color:#bbb;'>";
-        echo $res['start'] . " - " . $res['end'];
+        echo "<b>" . $res['start'] . "</b> - <b>" . $res['end'] . "</b>";
         if($res['invoicedto']) {
-            echo " invoiced until: " . $res['invoicedto'];
+            echo "<br> invoiced until: " . $res['invoicedto'];
         }
         echo "</div>";
         echo "</td>";

@@ -3,10 +3,15 @@
     border-radius: 3px;
     color: #807e8b;
     line-height: 25px;
-    border: solid 1px #3a3a3a;
+    border: solid 2px #3a3a3a;
     padding: 3px;
     margin-top: 15px;
     max-width: 270px;
+    
+    -moz-animation:blinkingBorder normal 1.5s infinite ease-in-out;
+    -webkit-animation:blinkingBorder normal 1.5s infinite ease-in-out;
+    -ms-animation:blinkingBorder normal 1.5s infinite ease-in-out;
+    animation:blinkingBorder normal 1.5s infinite ease-in-out;
 }
 .SedoxSearchHeader i {
     padding-left: 20px;
@@ -22,4 +27,16 @@
     height: 20px;
     width: 160px;
     color: #CCC;
+}
+
+@keyframes blinkingBorder {
+    0% {
+        border: solid 2px rgba(195,15,16,1);
+    }
+    50% {
+        border: solid 2px rgba(195,15,16,0.2);
+    }
+    100% {
+        border: solid 2px rgba(195,15,16,1);
+    }
 }

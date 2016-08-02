@@ -199,6 +199,10 @@ public class ManagerSubBase {
 
     public void saveObject(DataCommon data) throws ErrorException {
         data.storeId = storeId;
+        if(getSession() != null) {
+            String lang = getSession().language;
+            data.updateTranslation(lang);
+        }
         database.save(data, credentials);
     }
  
@@ -272,7 +276,14 @@ public class ManagerSubBase {
           ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
           ObjectInputStream ois = new ObjectInputStream(bais);
           
-          return (T) ois.readObject();
+          
+          T res = (T) ois.readObject();
+          baos.close();
+          oos.close();
+          bais.close();
+          ois.close();
+          
+          return res;
         }
         catch (Exception e) {
           e.printStackTrace();
@@ -304,9 +315,12 @@ public class ManagerSubBase {
             if (this instanceof UserManager) {
                 userManager = (UserManager)this;
             } else {
-                userManager = AppContext.appContext.getBean(UserManager.class);
+                userManager = AppContext.appContext != null ? AppContext.appContext.getBean(UserManager.class) : null;
             }
 
+            if (userManager == null)
+                return;
+            
             User user = userManager.getInternalApiUser();
             String webAddress = storePool.getStore(storeId).getDefaultWebAddress();
 

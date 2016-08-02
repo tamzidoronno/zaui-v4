@@ -1,4 +1,6 @@
-<div class='additionalinfo row'>Other instructions</div>
+<div class='additionalinfo row'>
+    <a ui-sref="mainpage"><i class='fa fa-arrow-left' style='color:#fff; float:left;'></i></a>
+    Other instructions</div>
 <div class='row'>
     <select class="form-control" ng-model='selectedroom' ng-change="updateLogList(selectedroom)" ng-options="item.id as item.bookingItemName for item in items"></select>
 </div>
@@ -18,4 +20,8 @@
         </div>
     </div>
 </div>
-<div class='additionalinfobottom row'></div>
+<div class='additionalinfobottom row'>
+    <div style='text-align:center; font-size: 20px; padding: 10px; color:#fff;'>
+        <a ui-sref="mainpage"><i class='fa fa-home' style='color:#fff;'></i></a>
+    </div>
+</div>

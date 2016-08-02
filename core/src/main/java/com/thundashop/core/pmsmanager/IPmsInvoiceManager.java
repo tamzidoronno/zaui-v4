@@ -19,4 +19,10 @@ import java.util.List;
 public interface IPmsInvoiceManager {
     @Administrator
     public List<CartItem> getChangesForBooking(String bookingId);
+    
+    @Administrator
+    public void creditOrder(String bookingId, String orderId);
+
+    @Administrator
+    public void sendRecieptOrInvoice(String orderId, String email, String bookingId);
 }

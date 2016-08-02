@@ -134,10 +134,25 @@ class FactoryBase {
      * @return string
      */
     public function __($string, $app = null) {
-        if (!$app)
+        $text = "";
+        if (!$app) {
+            /* @var $app ApplicationBase */
             $app = get_class($this);
+        }
         
-        return trim($this->getFactory()->getTranslationForKey($app, $string));
+        $text = trim($this->getFactory()->getTranslationForKey($app, $string));
+        $userLevel = 0;
+        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        if($user) {
+            $userLevel = $user->type;
+        }
+        $this->getFactory()->translation->logTranslationEntry($string,
+                $text,
+                $this->getFactory()->getStore()->id,
+                $userLevel,
+                $app,
+                $this->getFactory()->getSelectedTranslation());
+        return $text;
     }
 
     public function __w($string, $app = null) {
@@ -222,6 +237,7 @@ class FactoryBase {
         }
         return $newArray;
     }
+
 
 }
 

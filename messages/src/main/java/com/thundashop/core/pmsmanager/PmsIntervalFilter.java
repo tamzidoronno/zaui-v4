@@ -7,4 +7,5 @@ public class PmsIntervalFilter implements Serializable {
     Date start;
     Date end;
     Integer interval;
+    boolean compactMode = false;
 }

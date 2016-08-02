@@ -1,7 +1,6 @@
 <? 
 /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $booking = $this->getSelectedBooking();
-
 /*
  * public static int CREATED = 1;
     public static int WAITING_FOR_PAYMENT = 2;
@@ -47,6 +46,13 @@ if($instances) {
 
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 $items = $this->indexList($items);
+
+$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$invoiceEmail =  $user->emailAddress;
+if($user->emailAddressToInvoice) {
+    $invoiceEmail = $user->emailAddressToInvoice;
+}
+
 ?>
 
 <div class='orderinformation'>
@@ -84,38 +90,107 @@ if($booking->orderIds) {
         $result[$order->incrementOrderId] = $order;
     }
     ksort($result);
-    echo "<table cellspacing='0' cellpadding='0'>";
+    
+    $totalAmount = 0;
+    $totalAmountEx = 0;
+    
+    echo "<table cellspacing='0' cellpadding='0' width='100%'>";
     echo "<tr>";
     echo "<th>Orderid</th>";
-    echo "<th>Order date</th>";
+    echo "<th>Order</th>";
     echo "<th>Price</th>";
     echo "<th>Payment status</th>";
     echo "<th>Payment type</th>";
-    echo "<th>Transferred</th>";
+    echo "<th>Closed</th>";
+    echo "<th>Credit</th>";
+    echo "<th>Update</th>";
     echo "</tr>";
     foreach($result as $order) {
         $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
-        echo "<tr>";
+        $totalEx = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
+        
+        $totalAmount += $total;
+        $totalAmountEx += $totalEx;
+        
+        echo "<tr orderid='".$order->id."'>";
         echo "<td><a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a></td>";
         echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate))  . "</td>";
-        echo "<td>" . round($total) . "</td>";
-        echo "<td>" . $paymentTypes[$order->status] . "</td>";
+        echo "<td>" . round($totalEx) . "<br><span style='color:#bbb'>" . round($total) . "</span></td>";
         echo "<td>";
-        echo $this->translatePaymenttype($order->payment->paymentType, $instances);
-        if($order->status <= 5) {
-            echo " - <a href='/?page=cart&payorder=" . $order->id."'>pay</a> - <span style='cursor:pointer; color:blue' class='sendpaymentlink' orderid='".$order->id."' bookingid='".$booking->id."'>Send payment link</span>";
+        if(@!$order->closed) {
+            echo "<div>";
+            echo "<selecT class='orderstatus'>";
+            foreach($paymentTypes as $id => $val) {
+                $selected = ($id == $order->status) ? "selected" : "";
+                echo "<option value='$id' $selected>$val</option>";
+            }
+            echo "</selecT>";
+            echo "</div>";
+        } else {
+            echo $paymentTypes[$order->status];
         }
+        echo "</td>";
+        echo "<td>";
+        if(@!$order->closed) {
+            echo "<div>";
+            echo "<select class='paymenttype'>";
+            foreach($instances as $id => $app) {
+                $selected = ($this->isPaymentType($order->payment->paymentType, $app)) ? "selected" : "";
+                echo "<option value='".$this->createPaymentTypeText($app)."' $selected>".$app->appName."</option>";
+            }
+            echo "</select>";
+            echo "</div>";
+            if($order->status <= 5 && $total > 0) {
+                if(stristr($order->payment->paymentType, "dibs")) {
+                    echo "<a href='/?page=cart&payorder=" . $order->id."'>pay</a> - <span style='cursor:pointer; color:blue' class='sendpaymentlink' orderid='".$order->id."' bookingid='".$booking->id."'>Send payment link</span>";
+                }
+            }
+            if(stristr($order->payment->paymentType, "invoice")) {
+                echo "<span style='cursor:pointer; color:blue' class='sendinvoice' orderid='".$order->id."' bookingid='".$booking->id."'>Send invoice</span>";
+            }
+        } else {
+            echo $this->translatePaymenttype($order->payment->paymentType, $instances);
+            echo "<br><span style='cursor:pointer; color:blue' class='sendreciept' orderid='".$order->id."' bookingid='".$booking->id."'>Send reciept</span>";
+        }
+        echo "<span class='sendinvoicebox' gstype='form' method='sendInvoice'>";
+        echo "<input type='hidden' value='".$booking->id."' gsname='bookingid'>";
+        echo "<input type='hidden' value='".$order->id."' gsname='orderid'>";
+        echo "<input type='txt' value='".$invoiceEmail."' placeholder='Email' gsname='email'><span class='pmsbutton' gstype='submitToInfoBox'>Send</span>";
+        echo "</span>";
+        
         echo "</td>";
         echo "<td align='center'>";
 
-        if(isset($order->transferedToAccountingSystem) && $order->transferedToAccountingSystem) {
+        if(@$order->closed) {
             echo "<i class='fa fa-check'>";
         } else {
             echo "<i class='fa fa-close'>";
         }
         echo "</td>";
+        if(@$order->closed && !@$order->isCreditNote) {
+            echo "<td class='doCreditOrder'>Credit order</td>";
+        } else {
+            echo "<td></td>";
+        }
+        
+        if(@!$order->closed) {
+            echo "<td><input type='button' value='Update' class='updateorderrow'></td>";
+        }
+        
         echo "</tr>";
     }
+    
+    echo "<tr>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td>$totalAmountEx<br><span style='color:#bbb'>$totalAmount</span></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "</tr>";
+    
     echo "</table>";
 } else {
     echo "<h2>No orders added to this booking yet.</h2>";

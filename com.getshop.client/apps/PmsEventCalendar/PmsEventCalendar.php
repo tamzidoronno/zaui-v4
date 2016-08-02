@@ -87,6 +87,9 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         $list = $this->getEventList();
         
         foreach($list as $l) {
+            if(!isset($l->id)) {
+                continue;
+            }
             if($l->id == $bookingId) {
                 return true;
             }

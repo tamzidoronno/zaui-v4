@@ -1,5 +1,8 @@
 app.PmsConfiguration = {
     init: function () {
+        $(document).on('change', '.PmsConfiguration .emailtypeselection', app.PmsConfiguration.changeEmailType);
+        $(document).on('change', '.PmsConfiguration .smstypeselection', app.PmsConfiguration.changeSmsType);
+        $(document).on('change', '.PmsConfiguration .admintypeselection', app.PmsConfiguration.changeAdminType);
         $(document).on('click', '.PmsConfiguration .changeview', app.PmsConfiguration.changeview);
         $(document).on('click', '.PmsConfiguration #contractfield', function() {
             thundashop.common.activateCKEditor('contractfield', {
@@ -16,6 +19,21 @@ app.PmsConfiguration = {
                 autogrow : false
             });
         });
+    },
+    changeEmailType: function() {
+        var newType = $('.PmsConfiguration .emailtypeselection').val();
+        $('.PmsConfiguration .emailtype').hide();
+        $('.PmsConfiguration .emailtype.'+newType).show();
+    },
+    changeSmsType: function() {
+        var newType = $('.PmsConfiguration .smstypeselection').val();
+        $('.PmsConfiguration .smstype').hide();
+        $('.PmsConfiguration .smstype.'+newType).show();
+    },
+    changeAdminType: function() {
+        var newType = $('.PmsConfiguration .admintypeselection').val();
+        $('.PmsConfiguration .admintype').hide();
+        $('.PmsConfiguration .admintype.'+newType).show();
     },
     changeview : function() {
         thundashop.common.destroyCKEditors();

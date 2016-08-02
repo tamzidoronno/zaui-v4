@@ -92,6 +92,12 @@ class ApplicationPool {
         if (!$applicationSetting) {
             return null;
         }
+        if(!isset($applicationSetting->id) || !$applicationSetting->id) {
+//            foreach(debug_backtrace() as $line) {
+//                echo $line['file'] . ":" . $line['line']."<bR>";
+//            }
+//            exit(0);
+        }
         $instance = $this->factory->convertUUIDtoString($applicationSetting->id) . "\\" . $applicationSetting->appName;
         if (class_exists($instance)) {
             $appInstance = new $instance();
@@ -301,7 +307,7 @@ class ApplicationPool {
      * @throws ThemeApplication
      */
     public function getSelectedThemeApp() {
-        $app = $this->factory->getApi()->getStoreApplicationPool()->getThemeApplication();
+        $app = $this->factory->getThemeApplication();
         return $app;
     }
     

@@ -83,6 +83,7 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     public function showTimeLine() {
         $_POST['data']['start'] = strtotime($_POST['data']['start']);
         $_POST['data']['end'] = strtotime($_POST['data']['end']);
+        $_POST['data']['compactmode'] = $_POST['data']['compactmode'] == "true";
         $_SESSION['pmsavailabilitytimelinedata'] = serialize($_POST['data']);
     }
 
@@ -92,6 +93,23 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
             return ($data['viewtype'] == "types");
         }
         return true;
+    }
+
+    public function makeInitials($name) {
+        $inits = "";
+        $names = explode(" ", $name);
+        foreach($names as $name) {
+            $inits .= substr($name, 0, 1);
+        }
+        return $inits;
+    }
+
+    public function getCompactView() {
+        $data = $this->getData();
+        if(!isset($data['compactmode'])) {
+            return false;
+        }
+        return $data['compactmode'];
     }
 
 }

@@ -188,6 +188,7 @@ thundashop.framework = {
         $(document).on('click', '.store_design_button', this.loadGlobalCssEditor);
         $(document).on('click', '.gschangelayoutfromtime', this.gschangelayoutfromtime);
         $(document).on('click', '.gslayouthistorybtn', this.gslayouthistory);
+        $(document).on('click', '.gstranslationbtn', this.gstranslationbtn);
         $(document).on('click', '.gsmobileeditor', this.hideMobileView);
         $(document).on('click', '.gsmobilemenu .gsslideleft', this.slideMobileMenu);
         $(document).on('click', '.gsmobilemenu .gsslideright', this.slideMobileMenu);
@@ -463,6 +464,10 @@ thundashop.framework = {
     gslayouthistory : function() {
         $('.gslayouthistory').toggle();
         thundashop.framework.historyboxshown = $('.gslayouthistory').is(':visible');
+    },
+    gstranslationbtn : function() {
+        var event = thundashop.Ajax.createEvent('','loadTranslation',$(this), {});
+        thundashop.common.showInformationBoxNew(event, 'Translation')
     },
     gschangelayoutfromtime : function() {
         var event = thundashop.Ajax.createEvent('','changeLayoutToTime', $(this), { "time" : $(this).attr('time') });

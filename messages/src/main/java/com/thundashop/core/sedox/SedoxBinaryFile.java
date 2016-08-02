@@ -68,41 +68,41 @@ public class SedoxBinaryFile implements Serializable {
         }
         
         if (type.equals("car") || type.equals("boat")) {
-            return 60 + getAddons(type);
+            return 6 + getAddons(type);
         }
         
         if (type.equals("tractor")) {
-            return 110 + getAddons(type);
+            return 11 + getAddons(type);
         }
         
         if (type.equals("truck")) {
-            return 160 + getAddons(type);
+            return 16 + getAddons(type);
         }
         
         System.out.println("Warning, file price is not registered to this file");
-        return 60;
+        return 6;
     }
 
     private int getAddons(String type) {
         int addon = 0;
         
         if (options.requested_dpf && type.equals("car"))
-            addon += 50;
+            addon += 5;
         
         if (options.requested_adblue && type.equals("car"))
-            addon += 50;
+            addon += 5;
         
         if (options.requested_dpf && type.equals("truck"))
-            addon += 100;
+            addon += 10;
         
         if (options.requested_adblue && type.equals("truck"))
-            addon += 100;
+            addon += 10;
         
         if (options.requested_dpf && type.equals("tractor"))
-            addon += 100;
+            addon += 10;
         
         if (options.requested_adblue && type.equals("tractor"))
-            addon += 100;
+            addon += 10;
         
         return addon;
     }

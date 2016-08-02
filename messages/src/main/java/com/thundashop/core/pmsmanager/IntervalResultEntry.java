@@ -8,4 +8,5 @@ public class IntervalResultEntry implements Serializable {
     public Integer count = 0;
     public Long time;
     public List<String> bookingIds;
+    public String name = "";
 }

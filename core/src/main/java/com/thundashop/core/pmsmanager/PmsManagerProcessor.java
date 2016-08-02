@@ -120,6 +120,8 @@ public class PmsManagerProcessor {
                 pushToArx(room, true);
             }
             return pushToArx(room, deleted);
+        } else if(config.isGetShopHotelLock()) {
+            return fetchFromGetshopHotelLock(room, deleted);
         } else {
             return pushToGetShop(room, deleted);
         }
@@ -393,8 +395,6 @@ public class PmsManagerProcessor {
         }
         String result = "";
         try {
-            PmsConfiguration config = manager.getConfigurationSecure();
-            manager.getShopLockManager.setCredentials(config.arxUsername, config.arxPassword, config.arxHostname);
             if (deleted) {
                 result = manager.getShopLockManager.removeCode(room.pmsBookingRoomId);
             } else {
@@ -557,11 +557,12 @@ public class PmsManagerProcessor {
                 continue;
             }
             
-            if(booking.isEnded()) {
+            if(booking.isEndedOverTwoMonthsAgo()) {
                 //Ended bookings are not relevant anymore.
                 continue;
             }
 
+            
             boolean needSaving = false;
             boolean payedfor = true; 
             boolean firstDate = true;
@@ -658,5 +659,22 @@ public class PmsManagerProcessor {
     private void clearCachedObject() {
         cachedResult_includepaidfor = null;
         cachedResult = null;
+    }
+
+    private boolean fetchFromGetshopHotelLock(PmsBookingRooms room, boolean deleted) {
+        BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
+        if (item == null) {
+            System.out.println("Not able to fetch code from getshop hotel lock, no lock is connected to the room");
+            return false;
+        }
+        if(deleted) {
+            manager.getShopLockManager.removeCodeOnLock(item.bookingItemAlias, room.code);
+        } else {
+            room.code = manager.getShopLockManager.getCodeForLock(item.bookingItemAlias);
+            PmsBooking booking = manager.getBookingFromRoom(room.pmsBookingRoomId);
+            manager.saveBooking(booking);
+        }
+        
+        return true;
     }
 }

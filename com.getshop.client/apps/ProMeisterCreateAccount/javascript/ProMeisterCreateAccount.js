@@ -62,12 +62,24 @@ app.ProMeisterCreateAccount = {
             return;
         }
         
+        // ProMeister Sverige
         if ($('input[name="storeid"]').val() === "6524eb45-fa17-4e8c-95a5-7387d602a69b") {
             data.cellphone = data.cellphone.replace(" ", "");
             data.cellphone = data.cellphone.replace("-", "");
             
             if (data.cellphone.length !== 10) {
                 alert(__w("The cellphone must be 10 digit"));
+                return;
+            }
+        }
+        
+        // ProMeister Norge
+        if ($('input[name="storeid"]').val() === "17f52f76-2775-4165-87b4-279a860ee92c") {
+            data.cellphone = data.cellphone.replace(" ", "");
+            data.cellphone = data.cellphone.replace("-", "");
+            
+            if (data.cellphone.length !== 8) {
+                alert(__w("The cellphone must be 8 digit"));
                 return;
             }
         }

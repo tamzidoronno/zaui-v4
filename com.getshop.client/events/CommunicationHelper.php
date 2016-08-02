@@ -54,7 +54,7 @@ class CommunicationHelper {
         $this->socket = @fsockopen($this->host, $this->port, $erstr, $errno, 120);
         if (!$this->socket) {
             header("HTTP/1.0 500 Internal server error");
-            echo "This page is down for maintance, please come back later.";
+            echo "The system are being updated / upgraded, please retry in about 10 seconds.";
             exit(0);
         }
         $this->connected = true;
@@ -116,7 +116,7 @@ class CommunicationHelper {
             $this->errors[] = "failed on " . $data . " sent: " . $len . " size compared to : " . strlen($data)+1;
         }
         
-        $res = stream_get_line($this->socket, 10000000000000, "\n");
+        $res = stream_get_line($this->socket, 2147483647, "\n");
 
         $object = json_decode($res, false);
         if (json_last_error() != 0) {

@@ -1,0 +1,54 @@
+<span type='button' gstype='clicksubmit' method='runCheck' gsname='id' gsvalue='somevalue' class='shop_button'>Run check</span>
+<?php
+/* @var $this ns_99d42f8c_e446_40fe_a038_af9f316dfb3a\GetShopLockAdmin */
+$locks = $this->getApi()->getGetShopLockManager()->getAllLocks($this->getSelectedName());
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+if(!$locks || sizeof($locks) == 0) {
+    echo "<h1>No locks found</h1>";
+} else {
+    echo "<table width='100%'>";
+    echo "<tr>";
+    echo "<th align='left'>Id</th>";
+    echo "<th align='left'>Type</th>";
+    echo "<th>Code status</th>";
+    echo "<th>Connect</th>";
+    echo "</tr>";
+    
+    foreach($locks as $lock) {
+        echo "<tr>";
+        echo "<td>" . $lock->zwaveid . "</td>";
+        echo "<td>" . $lock->type . "</td>";
+        echo "<td align='center'>";
+        $this->printCodeList($lock);
+        echo "</td>";
+        echo "<td align='center'>";
+        echo "<select class='connectlock' lockid='".$lock->id."'>";
+        echo "<option value=''></option>";
+        foreach($items as $item) {
+            $selected = "";
+            if($item->bookingItemAlias == $lock->id) {
+                $selected = "SELECTED";
+            } 
+            echo "<option value='". $item->id ."' $selected>" . $item->bookingItemName . "</option>";
+        }
+        echo "</select>";
+        echo " <i style='cursor:pointer;' class='fa fa-refresh' title='Resend codes to lock' gstype='clicksubmit' method='resetLock' gsname='id' gsvalue='".$lock->id."'></i>";
+        echo "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+echo "<br>";
+echo "<h1>Master codes</h1>";
+$masterCodes = $this->getApi()->getGetShopLockManager()->getMasterCodes($this->getSelectedName());
+foreach($masterCodes->codes as $offset => $code) {
+    ?>
+    <div gstype="form" method="updateMasterCode">
+        <input type='number' min='100000' max='999999' value='<?php echo $code; ?>' gsname='code'>
+        <input type="hidden" gsname="offset" value="<? echo $offset; ?>"/>
+        <input gstype="submit" value="Update master code <? echo $offset; ?>"  type="button">
+    </div>
+    <?php
+}
+echo "<br>";
+?>

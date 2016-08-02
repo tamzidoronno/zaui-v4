@@ -6,7 +6,9 @@ package com.thundashop.core.sedox;
 
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -21,14 +23,61 @@ public class SedoxSearchEngine {
     private List<SedoxSharedProduct> products = new ArrayList();
     
     private int pageSize = 10;
+    private List<SedoxProduct> userProducts = new ArrayList();
     
-    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxSharedProduct> products, SedoxSearch search, User currentUser) {
+    public synchronized  SedoxProductSearchPage getSearchResult(List<SedoxSharedProduct> products, List<SedoxProduct> userProducts, SedoxSearch search, User currentUser) {
         this.products = products;
+        this.userProducts = userProducts;
         
         String searchString = search.searchCriteria.toLowerCase();
+        
+        List<String> searchStrings = Arrays.asList(searchString.split(" "));
+        
+        Set<SedoxSharedProduct> retProducts = new HashSet();
+        
+        if (searchStrings.size() == 1 || searchStrings.isEmpty()) {
+            retProducts = getProducts(searchString, currentUser, products);
+        } else {
+            for (String searchStringToUse : searchStrings) {
+                if (retProducts.isEmpty()) {
+                    retProducts = getProducts(searchStringToUse, currentUser, products);
+                } else {
+                    retProducts = getProducts(searchStringToUse, currentUser, new ArrayList(retProducts));
+                }
+            }
+        }
+        
+        
+        SedoxProductSearchPage page = new SedoxProductSearchPage();
+        page.pageNumber = search.page;
+        page.products = new ArrayList<>(retProducts);
+        page.userProducts = getUserProducts(searchString);
+        Collections.sort(page.products);
+        page.totalPages = (int) Math.ceil((double)page.products.size()/(double)10);
+        
+        int start = (search.page-1)*pageSize;
+        int stop = (search.page)*pageSize;
+            
+        if (page.products.size() >= start && page.products.size() >= stop) {
+            page.products = page.products.subList(start, stop);
+            return page;
+        } 
+        
+        if (page.products.size() >= start) {
+            page.products = page.products.subList(start, page.products.size());
+            return page;
+        }
+        
+        
+        page.pageNumber = 1;
+        return page;
+    }
+    
+    private Set<SedoxSharedProduct> getProducts(String searchString, User currentUser, List<SedoxSharedProduct> searchTroughProducts) {
         Set<SedoxSharedProduct> retProducts = new TreeSet<>();
         
-        for (SedoxSharedProduct product : products) {
+        for (SedoxSharedProduct product : searchTroughProducts) {
+            
             if (product.id.equals(searchString) || inFileId(product, searchString)) {
                 retProducts.add(product);
             }
@@ -89,27 +138,7 @@ public class SedoxSearchEngine {
             }
         }
         
-        SedoxProductSearchPage page = new SedoxProductSearchPage();
-        page.pageNumber = search.page;
-        page.products = new ArrayList<>(retProducts);
-        Collections.sort(page.products);
-        page.totalPages = (int) Math.ceil((double)page.products.size()/(double)10);
-        
-        int start = (search.page-1)*pageSize;
-        int stop = (search.page)*pageSize;
-            
-        if (page.products.size() >= start && page.products.size() >= stop) {
-            page.products = page.products.subList(start, stop);
-            return page;
-        } 
-        
-        if (page.products.size() >= start) {
-            page.products = page.products.subList(start, page.products.size());
-            return page;
-        }
-        
-        page.pageNumber = 1;
-        return page;
+        return retProducts;
     }
 
     private boolean inFileId(SedoxSharedProduct product, String searchString) {
@@ -127,5 +156,17 @@ public class SedoxSearchEngine {
         }
         
         return false;
+    }
+
+    private List<SedoxProduct> getUserProducts(String searchString) {
+        List<SedoxProduct> rets = new ArrayList();
+        
+        for (SedoxProduct product : userProducts) {
+            if (product.id.equals(searchString)) {
+                rets.add(product);
+            }
+        }
+        
+        return rets;
     }
 }

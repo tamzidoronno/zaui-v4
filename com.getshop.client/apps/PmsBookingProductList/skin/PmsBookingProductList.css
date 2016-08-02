@@ -3,10 +3,11 @@
 
 .PmsBookingProductList .productentry .select_button { float:right; cursor:pointer; background-color:#595959; width: 100px; text-align: center; display:inline-block; color:#fff; padding: 10px;}
 .PmsBookingProductList .productentry .name { font-size: 20px; font-weight: bold; }
-.PmsBookingProductList .productentry .price { font-size: 20px; font-weight: bold; position:absolute; right: 10px; }
+.PmsBookingProductList .productentry .price { font-size: 20px; font-weight: bold; position:absolute; right: 10px; bottom: 10px; }
 .PmsBookingProductList .continue_button_outer { text-align: right; padding-bottom: 10px; }
-.PmsBookingProductList .continue_button { cursor:pointer; border: solid 1px; background-color: #f29400; display:inline-block; color:#fff; padding: 10px; width:120px; text-align: center; }
-.PmsBookingProductList .productentry .roomtypeselection { position:absolute; left: 10px; bottom: 10px;  font-size: 20px; }
+.PmsBookingProductList .continue_button { cursor:pointer; border: solid 1px; background-color: #f29400; display:inline-block; color:#fff; padding: 10px; width:160px; text-align: center; }
+.PmsBookingProductList .productentry .roomtypeselection { position:absolute; right: 10px;  font-size: 18px;text-align: center; top: 0px; }
+.PmsBookingProductList .productentry .roomtypeselectioncount i { cursor: pointer; }
 .PmsBookingProductList .productentry .roomtypeselection select { margin-right: 5px; border: solid 1px #bbb; background-color:#fff; margin-left: 5px;}
 .PmsBookingProductList .continue_button.disabled { background-color:#efefef !important; color:#bbb !important; cursor:inherit; cursor:pointer; }
 .PmsBookingProductList .selectbutton { border: solid 1px; position:absolute; right: 10px; width: 200px; text-align: center; padding: 5px; text-transform: uppercase;z-index:5;  }

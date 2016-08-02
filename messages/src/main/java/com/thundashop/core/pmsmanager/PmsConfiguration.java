@@ -11,6 +11,8 @@ public class PmsConfiguration extends DataCommon {
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;
         public static Integer DAILY = 2;
+        public static Integer WEEKLY = 3;
+        public static Integer MONTHLY = 4;
     }
     
     public HashMap<String, String> emails = new HashMap();
@@ -30,6 +32,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean exposeUnsecureBookings = false;
     public boolean autoconfirmRegisteredUsers = false;
     public Integer minStay = 1;
+    public Integer defaultNumberOfDaysBack = 3;
     public boolean supportMoreDates = false;
     public boolean isItemBookingInsteadOfTypes = false;
     public boolean autoExtend = false;
@@ -38,9 +41,11 @@ public class PmsConfiguration extends DataCommon {
     public boolean hasNoEndDate = false;
     public boolean autoDeleteUnpaidBookings = false;
     public boolean deleteAllWhenAdded = false;
+    public boolean manualcheckincheckout = false;
     public HashMap<Integer, PmsBookingAddonItem> addonConfiguration = new HashMap();
     public HashMap<String, CleaningStatistics> cleaningPriceConfig = new HashMap();
     public HashMap<String, Double> extraCleaningCost = new HashMap();
+    public String bookingProfile = "hotel";
 
     /* Invoice creation options */
     public boolean autoCreateInvoices = false;
@@ -101,7 +106,15 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<String, String> channelTranslations = new HashMap();
     public HashMap<String, String> channelPaymentTypes = new HashMap();
     
-    boolean hasLockSystem() {
+    public boolean isGetShopHotelLock() {
+        if(locktype != null && !locktype.isEmpty() && locktype.equals("getshophotellock")) {
+            return true;
+        }
+        return false;
+    }
+
+    
+    public boolean hasLockSystem() {
         return (arxHostname != null && !arxHostname.isEmpty());
     }
 

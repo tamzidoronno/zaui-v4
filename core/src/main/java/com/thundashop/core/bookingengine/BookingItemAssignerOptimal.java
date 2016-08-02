@@ -11,6 +11,7 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -158,10 +159,14 @@ public class BookingItemAssignerOptimal {
                 if (item == null) {
                     throw new BookingEngineException("Did not find the booking item with id (it possible has been deleted): " + timeLineUsed.bookingItemId);
                 }
+                
+                System.out.println("Assigned: " + getBookingItem(timeLineUsed.bookingItemId).bookingItemName + " to " + booking.getHumanReadableDates());
 
                 assignBookingsToItem(booking, item);
             }
         }
+        
+        removeBookingsThatCanBeAssignedToDifferentRooms(bookingLines, bookingItemsFlatten);
     }
 
     private List<Booking> assignAllLinesThatAlreadyHasElementsWithBookingItemId(List<OptimalBookingTimeLine> bookingLines, List<BookingItemTimeline> bookingItemsFlatten) throws BookingEngineException {
@@ -266,7 +271,7 @@ public class BookingItemAssignerOptimal {
         
         for (BookingItemTimeline timeLine : timeLines) {
             if (timeLine.isAvailable(booking.startDate, booking.endDate)) {
-                timeLine.add(booking.startDate, booking.endDate);
+                timeLine.add(booking.id, booking.startDate, booking.endDate);
                 timeLine.setOptimalBookingTimeLineId(optimalTimeLine.uuid);
                 return timeLine;
             }
@@ -280,17 +285,34 @@ public class BookingItemAssignerOptimal {
      *  of items ids that can be used for assigning items to.
      * @return 
      */
-    public List<String> getAvailableItems() {
+    public List<String> getAvailableItems(String bookingToConsider, Date start, Date end) {
         List<OptimalBookingTimeLine> bookingLines = preCheck();
         dryRun = true;
         List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
         assignLeftovers(bookingLines, availableBookingItems);
         
-        return availableBookingItems
+        List<String> availableItems = availableBookingItems
                 .stream()
-                .filter(o -> o.notInUseAtAll())
+                .filter(o -> (start != null && end != null && o.isAvailable(start, end) || (o.notInUseAtAll())))
                 .map(o -> o.bookingItemId)
                 .collect(Collectors.toList());
+        
+        addItemIfConcideredBookingItemIsAssigned(bookingToConsider, availableBookingItems, availableItems);
+        
+        return availableItems;
+    }
+
+    private void addItemIfConcideredBookingItemIsAssigned(String bookingToConsider, List<BookingItemTimeline> availableBookingItems, List<String> availableItems) {
+        if (bookingToConsider != null && !bookingToConsider.isEmpty()) {
+            for (Booking booking : assigned.keySet()) {
+                if (booking.id.equals(bookingToConsider)) {
+                    BookingItem item = assigned.get(booking);
+                    if (!availableBookingItems.contains(item.id)) {
+                        availableItems.add(item.id);
+                    }
+                }
+            }
+        }
     }
 
     private void printBookingLines(List<OptimalBookingTimeLine> bookingLines) {
@@ -328,14 +350,14 @@ public class BookingItemAssignerOptimal {
     private BookingItemTimeline isThereAFreeItemForBookings(Booking booking, List<BookingItemTimeline> bookingItemsFlatten, OptimalBookingTimeLine bookingLine) {
         for (BookingItemTimeline timeLine : bookingItemsFlatten) {
             if (timeLine.bookingItemTypeId.equals(booking.bookingItemTypeId) && timeLine.isAvailable(booking.startDate, booking.endDate) && timeLine.optimalTimeLineId != null && timeLine.optimalTimeLineId.equals(bookingLine.uuid)) {
-                timeLine.add(booking.startDate, booking.endDate);
+                timeLine.add(booking.id, booking.startDate, booking.endDate);
                 return timeLine;
             }
         }
         
         for (BookingItemTimeline timeLine : bookingItemsFlatten) {
             if (timeLine.bookingItemTypeId.equals(booking.bookingItemTypeId) && timeLine.isAvailable(booking.startDate, booking.endDate)) {
-                timeLine.add(booking.startDate, booking.endDate);
+                timeLine.add(booking.id, booking.startDate, booking.endDate);
                 return timeLine;
             }
         }
@@ -358,6 +380,26 @@ public class BookingItemAssignerOptimal {
         }
         
         return bookingsToReturn;
+    }
+
+    boolean isAssigned(Booking booking) {
+        return assigned.get(booking) != null;
+    }
+
+    private void removeBookingsThatCanBeAssignedToDifferentRooms(List<OptimalBookingTimeLine> bookingLines, List<BookingItemTimeline> bookingItemsFlatten) {
+    
+        for (OptimalBookingTimeLine bookingLine : bookingLines) {   
+            for (Booking booking : bookingLine.bookings) {
+                BookingItemTimeline timeLineUsed = isThereAFreeItemForBookings(booking, bookingItemsFlatten, bookingLine);
+
+                if (timeLineUsed != null && booking.bookingItemId.isEmpty()) {
+                    assigned.remove(booking);
+                    for (BookingItemTimeline timeLine : bookingItemsFlatten) {
+                        timeLine.remove(booking.id);
+                    }
+                }
+            }
+        }
     }
 
 }

@@ -11,6 +11,8 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     private $currentBooking = "";
     private $adminInstanceId = null;
     private $bookingRules = null;
+    private $fetchedTypes = false;
+    private $appsForPage = false;
     
     public function getDescription() {
         return "Calendar view for displaying booked entries in a calendar.";
@@ -71,7 +73,10 @@ class PmsCalendar extends \WebshopApplication implements \Application {
      * @return \core_bookingengine_data_BookingItemType[]
      */
     public function getAllTypes() {
-        $rooms = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        if(!$this->fetchedTypes) {
+            $this->fetchedTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        }
+        $rooms = $this->fetchedTypes;
         
         $sortList = array();
         $unsorted = array();
@@ -470,7 +475,10 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
 
     public function getImageFromPage($pageId) {
-        $apps = $this->getApi()->getPageManager()->getApplicationsForPage($pageId);
+        if(!$this->appsForPage) {
+            $this->appsForPage = $this->getApi()->getPageManager()->getApplicationsForPage($pageId);
+        }
+        $apps = $this->appsForPage;
         if(!$apps) {
             $apps = array();
         }

@@ -5,13 +5,69 @@
  *
  * @author boggi
  */
+class StoreTranslationLine {
+    var $key;
+    var $text;
+    var $userLevel;
+    var $app;
+    
+    
+    function loadData($line) {
+        $line = explode(";-;", $line);
+        $this->userLevel = $line[0];
+        $this->app = $line[1];
+        $this->key = $line[2];
+        $this->text = $line[3];
+
+    }
+    
+    function toString() {
+        return $this->userLevel . ";-;". $this->app . ";-;" . $this->key . ";-;" .  $this->text;
+    }
+
+    public function populate($key, $text, $userLevel, $app) {
+        $this->key = $key;
+        $this->text = "";
+        $this->userLevel = $userLevel;
+        $this->app = $app;
+    }
+
+}
+
 class GetShopTranslation {
     var $base;
     var $translationMatrix;
+    var $language;
+    
     
     public function GetShopTranslation() {
         $base = array();
         $this->loadBase();
+    }
+    
+    
+    public function logTranslationEntry($key, $text, $storeId, $userLevel, $app, $lang) {
+        $this->language = $lang;
+        $addr = $this->getStoreTranslationPath($storeId);
+        $storeTranslations = $this->getStoreTranslations($storeId);
+        if(stristr($app, "\\")) {
+            $app = substr($app, strpos($app, "\\")+1);
+        }
+        if(!isset($storeTranslations[$key . "_" . $app])) {
+            $entry = new StoreTranslationLine();
+            $entry->populate($key, $text, $userLevel, $app);
+            $storeTranslations[$key] = $entry;
+        } else {
+            $entry = $storeTranslations[$key . "_" . $app];
+            if($entry->userLevel > $userLevel) {
+                $entry->userLevel = $userLevel;
+            } else {
+                return;
+            }
+        }
+        
+        $this->saveStoreTranslations($storeTranslations, $storeId);
+        
     }
     
     public function loadBase() {
@@ -65,7 +121,43 @@ class GetShopTranslation {
     public function getTranslationMatrix() {
         return $this->translationMatrix;
     }
-    
+
+    public function getStoreTranslations($storeId) {
+        $path = $this->getStoreTranslationPath($storeId);
+        if(!file_exists($path)) {
+            return array();
+        }
+        $content = file_get_contents($path);
+        $lines = explode("\n", $content);
+        $res = array();
+        foreach($lines as $line) {
+            if($line) {
+                $data = new StoreTranslationLine();
+                $data->loadData($line);
+                $res[$data->key . "_" . $data->app] = $data;
+            }
+        }
+        return $res;
+    }
+
+    public function getStoreTranslationPath($storeId) {
+        $storePth = "../uploadedfiles/translations/";
+        if(!file_exists($storePth)) {
+            mkdir($storePth, 0777, true);
+        }
+        return $storePth . $storeId . "_" . $this->language;
+    }
+
+    public function saveStoreTranslations($storeTranslations, $storeId) {
+        $path = $this->getStoreTranslationPath($storeId);
+        $content = "";
+        foreach($storeTranslations as $trans) {
+            /* @ $trans StoreTranslationLine */
+            $content .= $trans->toString() . "\n";
+        }
+        file_put_contents($path, $content);
+    }
+
 }
 
 ?>

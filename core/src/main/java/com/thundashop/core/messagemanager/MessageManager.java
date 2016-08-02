@@ -3,9 +3,12 @@ package com.thundashop.core.messagemanager;
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.chatmanager.SubscribedToAirgram;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GrafanaFeeder;
+import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -21,12 +24,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -63,9 +68,14 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     @Autowired
     private InvoiceManager invoiceManager;
     
+    @Autowired
+    private GrafanaManager grafanaManager;
+    
     @Override
     public String sendMail(String to, String toName, String subject, String content, String from, String fromName) {
-        return mailFactory.send(from, to, subject, content);
+        String res = mailFactory.send(from, to, subject, content);
+        feedGrafana(content);
+        return res;
     }
 
     @Override
@@ -121,9 +131,19 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(MessageManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        feedGrafana(content);
         return "";
     }
+    
+    
+    private void feedGrafana(String content) {
+        HashMap<String, Object> toAdd = new HashMap();
+        toAdd.put("emailsize", (Number)content.length());
+        toAdd.put("storeid", (String)storeId);
+        
+        GrafanaFeeder feeder = new GrafanaFeeder();
+        grafanaManager.addPoint("webdata", "email", toAdd);
+    }    
 
     @Override
     public List<String> getCollectedEmails() {
@@ -155,6 +175,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         String name = user.fullName;
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
         sendMailWithAttachments(email, name, title, message, copyadress, copyadress, attachments);
+        feedGrafana(message);
     }
     
     private void attachInvioce(HashMap<String, String> attachments, String orderId) {
@@ -225,6 +246,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 
     private String sendSmsInternal(String provider, String to, String message, String prefix, String from) {
         SmsHandler handler = null;
+        String res = "";
         
         if (provider.equals("plivo")) {
             handler = new PlivoSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
@@ -242,18 +264,64 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             handler = new NexmoSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
         }
         
-        if (handler != null) {
-            handler.sendMessage();
-            return handler.getMessageId();
+        if (provider.equals("clickatelltuningfiles")) {
+            handler = new ClickatellSmsHandlerTuningfiles(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
         }
         
-        return "";
+        if (handler != null) {
+            handler.sendMessage();
+            res = handler.getMessageId();
+        }
+        
+        feedGrafanaSms(message);
+        
+        return res;
     }
 
+    private void feedGrafanaSms(String message) {
+        HashMap<String, Object> toAdd = new HashMap();
+        
+        double smses = ((double)message.length() / 160);
+        Number smsCount = Math.ceil(smses);
+        toAdd.put("smses", smsCount);
+        toAdd.put("storeid", (String)storeId);
+        
+        grafanaManager.addPoint("webdata", "sms", toAdd);
+    }    
+    
     @Override
     public void sendMessageToStoreOwner(String message, String subject) {
         String email = getStoreEmailAddress();
         mailFactory.send(email, email, subject, message);
+    }
+
+    @Override
+    public List<MailMessage> getMailSent(Date from, Date to, String toEmailAddress) {
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", MailMessage.class.getCanonicalName());
+        
+        if (toEmailAddress != null && !toEmailAddress.isEmpty()) {
+            query.put("to", Pattern.compile(".*"+toEmailAddress+".*" , Pattern.CASE_INSENSITIVE));
+        }
+        
+//        query.put("rowCreatedDate", BasicDBObjectBuilder.start("$gte", from).add("$lte", to).get());
+//        query.put("rowCreatedDate", BasicDBObjectBuilder.start("$gte", from).add("$lte", to).get());
+
+        List<DataCommon> datas = database.query(MessageManager.class.getSimpleName(), storeId+"_log", query);
+        List<MailMessage> messages = new ArrayList();
+        
+        for (DataCommon dataCommon : datas) {
+            if (dataCommon instanceof MailMessage) {
+                messages.add((MailMessage)dataCommon);
+            }
+        }
+        
+        Collections.sort(messages, (o1, o2) -> {
+            return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+        });
+        
+        return messages;
     }
 
 }

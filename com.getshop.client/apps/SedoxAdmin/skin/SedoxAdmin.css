@@ -39,11 +39,30 @@
     width: 100px;
 }
 
+.SedoxAdmin .col_row_content .col_content.col4 {
+    height: 40px !important;
+    line-height: 30px !important;
+    white-space:nowrap;
+    position: relative;
+}
+.SedoxAdmin .col_row_content .ownerusername {
+    white-space:nowrap;
+    display: inline-block;
+    width: 100px;
+    overflow-x: hidden;
+    position: absolute;
+    top: 5px;
+}
+.SedoxAdmin .header .col_header.col4 {
+    width: 200px !important;
+}
+
 .SedoxAdmin .header .col_header.col3,
 .SedoxAdmin .tablecontent .col_content.col3 {
     width: calc(100% - 600px) !important;  
 }
 
+.SedoxAdmin .sedoxadmin_impersonate_user_button,
 .SedoxAdmin .sedoxadmin_see_user_button {
     width: 30px;
     height: 30px;
@@ -62,9 +81,9 @@
 .SedoxAdmin .admin_extrainfo_row {
     font-size: 16px;
     padding: 12px;
-    background-color: #FAFAFA;
     border-bottom: solid 2px #DDD;
 }
+
 
 .SedoxAdmin .current_status_line {
     display: inline-block;
@@ -84,6 +103,10 @@
     padding-left: 30px;
     margin-left: 20px;
     cursor: pointer;
+}
+
+.SedoxAdmin .current_status_line .start_button {
+    background-color: #b7001f;
 }
 
 .SedoxAdmin .current_status_line .stop_button {
@@ -125,13 +148,14 @@
 .SedoxAdmin .creditinformation .product_action_button .action_inner {
     font-size: 14px;
     color: #FFF;
-    background-color: #4eb61e;
+    background-color: #b7001f;
     border-radius: 5px;
     padding: 15px;
 }
 
 .SedoxAdmin .creditinformation .product_action_button.redbutton .action_inner {
-    background-color: #b7001f;
+    background-color: #4eb61e;
+    
 }
 
 .SedoxAdmin .product_action_button {
@@ -448,3 +472,28 @@
     margin-bottom: 10px;
     padding: 10px;
 }
+
+.SedoxAdmin .commentfield_for_emails {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: solid 1px #EEE;
+    margin-bottom: 20px;
+    
+}
+
+.SedoxAdmin .SedoxDownloadHistory .tablecontent .col_row_content .header_content {
+    background-color: #fcfcfc !important;
+}
+
+.SedoxAdmin .SedoxDownloadHistory .tablecontent .col_row_content .admin_extrainfo_row {
+    background-color: #fafafa !important;
+}
+
+.SedoxAdmin .SedoxDownloadHistory .tablecontent .col_row_content:nth-child(odd) .header_content {
+    background-color: #f2f2f3 !important;
+}
+.SedoxAdmin .SedoxDownloadHistory .tablecontent .col_row_content:nth-child(odd) .admin_extrainfo_row {
+    background-color: #edeeef !important;
+}
+

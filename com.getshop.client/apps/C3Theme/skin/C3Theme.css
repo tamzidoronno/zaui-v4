@@ -199,3 +199,19 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .ProfilePrinter .imagearea img {
     width: auto !important;
 }
+
+.SimpleFileUpload .filelist tr td {
+    padding: 10px;
+    border-bottom: solid 1px #efefef;
+}
+
+.gseditormode .SimpleFileUpload .filelist td,
+.SimpleFileUpload .filelist tr:last-child td {
+    border-bottom: solid 0px #EEE;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.SimpleFileUpload .filelist tr td:first-child {
+    padding-right: 0px;
+}

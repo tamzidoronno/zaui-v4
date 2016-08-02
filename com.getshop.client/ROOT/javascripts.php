@@ -32,7 +32,7 @@ if (!$factory->isEditorMode()) {
 
 $theme = $factory->getApplicationPool()->getSelectedThemeApp();
 if ($theme) {    
-    $apps[] = $theme;
+    $apps[] = $theme->applicationSettings;
 }
 
 $startupCount = $factory->getApi()->getUtilManager()->getStartupCount();

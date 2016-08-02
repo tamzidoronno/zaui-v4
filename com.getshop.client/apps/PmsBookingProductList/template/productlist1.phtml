@@ -5,7 +5,7 @@ $rooms = $this->getRooms();
 $numberSelected = 0;
 
 $singleSelection = ($this->getText("onlyoneselectionallowed") == "true");
-$selectedText = $this->getText("selectedText");
+$selectedText = $this->__w("Selected");
 $prefixtext = $this->getText("prefixText");
 
 foreach($rooms as $room) {
@@ -38,7 +38,7 @@ foreach($rooms as $room) {
         $imgDisplayed = "imgdisplayed";
     }
     ?>
-    <div class='productentry <? echo $selected . " " . $imgDisplayed; ?>'>
+    <div class='productentry <? echo $selected . " " . $imgDisplayed; ?>' typeid='<?php echo $room->type->id; ?>'>
         <?php
         if($this->getText("hideimages") != "true") {
             $imgs = $this->getImagesFromPage($room->type->pageId);
@@ -49,39 +49,32 @@ foreach($rooms as $room) {
             }
         }
         
+        $text = "";
         if($availability == 0) {
-            $text = $this->getText("no_rooms_available");
+            $text = $this->__w("No rooms are available.");
             if(!$text) {
                 $text = $this->__w("Out of stock.");
             }
-        } else {
-            $text = $this->getText("selected_room_count_text");
-            if(!$text) {
-                $text = "You have selected {count} of this room type";
-            }
-
-            $dropdown = "<select class='roomcountselection' typeid='".$room->type->id."'>";
-            for($i = 0;$i <= $availability;$i++) {
-               $selected = "";
-               if($i == $bookedCount) {
-                    $selected = "SELECTED";
-               }
-                $dropdown .= "<option value='$i' $selected>$i</option>"; 
-            }
-            $dropdown .= "</select>";
-
-            $text = str_replace("{count}", $dropdown, $text);
         }
         if(!$singleSelection) {
             ?>
             <span class='roomtypeselection'>
-                <?php echo $text; ?>
+                <?php
+                if($text) {
+                    echo $text;
+                } else {
+                    ?>
+                    <span style='font-size: 10px;'>Antall, max : <?php echo $availability; ?></span>
+                    <div class='roomtypeselectioncount'>
+                        <i class='fa fa-minus'></i><input type='text' class='productcount' value='<?php echo $bookedCount; ?>' max='<?php echo $availability; ?>' style='width: 25px; padding: 3px; font-size: 20px;text-align: center;margin-left: 5px;'> <i class='fa fa-plus'></i>
+                    </div>
+                <?php } ?>
             </span>
         <?php } else {
             if($availability) {
                 if(!$selectedRow) {
                     ?>
-                    <span class="selectbutton" gstype="clicksubmit" method="selectRoom" gsvalue="<?echo $room->type->id; ?>" gsname="typeid"><?php echo $this->getText("select_button"); ?></span>
+                    <span class="selectbutton" gstype="clicksubmit" method="selectRoom" gsvalue="<?echo $room->type->id; ?>" gsname="typeid"><?php echo $this->__w("Select"); ?></span>
                     <?php
                 } else {
                     echo "<span class='selectedtext'>".$selectedText."</span>";

@@ -7,11 +7,20 @@
 .PmsManagement .showorderbutton { color: blue; cursor:pointer; }
 .PmsManagement .bookinginfo a { color: blue; }
 .PmsManagement .guestrow input { width: 20%; float:left; }
-.PmsManagement .Confirmed { color:green; }
-.PmsManagement .Unconfirmed { color:red; }
+.PmsManagement .ended { color: #aaa; }
+.PmsManagement .Confirmed,
+.PmsManagement .active,
+.PmsManagement .confirmed { color:green; }
+.PmsManagement .Unconfirmed,
+.PmsManagement .unconfirmed,
+.PmsManagement .notpaid,
 .PmsManagement .Unpaid { color:red; }
 .PmsManagement .roomdeleted td { color: red; }
+.PmsManagement .sendinvoicebox { position:absolute; padding: 10px; border: solid 1px; background-color: #fff; display:none; }
+.PmsManagement .sendinvoicebox input { font-size: 20px; }
+.PmsManagement .doCreditOrder:hover { font-weight: bold; cursor: pointer; }
 .PmsManagement .statisticsrow:hover { cursor:pointer; font-weight: bold; }
+.PmsManagement .massupdatepricesfield { position:absolute; background-color:#fff; border: solid 2px; border-radius: 3px; z-index: 1; display:none; }
 .PmsManagement .tiparea {
     position: absolute;
     background-color: #fff;
@@ -19,8 +28,8 @@
     border: solid 1px;
     display:none;
 }
-
-.PmsManagement .guestoverviewtable  td .roompostfix { font-size: 12px; }
+.PmsManagement .viewmode:hover { font-weight: bold; cursor: pointer; }
+.PmsManagement .guestoverviewtable  td .roompostfix { font-size: 12px; position:relative; }
 .PmsManagement .actions:hover {
      -moz-transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
@@ -97,7 +106,17 @@
 
 .PmsManagement .pmsbutton.tiny { padding-top: 2px; padding-bottom: 2px; }
 .PmsManagement .bookinginfo select { font-size: 16px; }
-.PmsManagement .bookinginfo .editmode { display: none; }
+.PmsManagement .bookinginfo .editmode { display: none;
+    position: absolute;
+    background-color: #fff;
+    z-index: 3;
+    padding: 10px;
+    border: solid 1px;
+    border-radius: 3px;
+    left: 5px;
+    top: 5px;
+    min-width: 280px;
+}
 .PmsManagement .needconfirmation { margin: 20px; font-size: 20px; padding: 10px;text-align: center; border: solid 1px #BBB; background-color:#efefef; }
 .PmsManagement .typefilter { display:inline-block; min-width: 100px; }
 .PmsManagement .commentbottom { color:#bbb; font-size: 10px; }
@@ -152,3 +171,4 @@
     float:left;
 }
 .PmsManagement .tabarea { display:none; border-top: solid 1px #C1DAD7; }
+.PmsManagement .newinformationwarning { padding: 10px; border: solid 1px #bbb; background-color: #eee; margin-bottom: 30px; }

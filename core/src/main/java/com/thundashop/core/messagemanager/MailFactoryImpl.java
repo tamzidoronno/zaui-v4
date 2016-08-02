@@ -8,11 +8,14 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GrafanaFeeder;
+import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.Database;
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import javax.activation.DataHandler;
@@ -51,6 +54,9 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     
     @Autowired
     private Database database; 
+    
+    @Autowired
+    GrafanaManager grafanaManager;
     
     @Autowired
     public Logger logger;
@@ -243,7 +249,6 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             System.out.println("Unable to send email to : " + to + " since it does not contain an @");
             return;
         }
-        
         for(int i = 0; i < 24; i++) {
             try {
                 message.setSubject(subject, "UTF-8");

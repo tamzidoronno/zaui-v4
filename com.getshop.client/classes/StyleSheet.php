@@ -122,7 +122,7 @@ class StyleSheet {
             }
         }
 
-        $this->doApp($themeApp, true);
+        $this->doApp($themeApp->applicationSettings, true);
     }
 
     private function doApp($app, $isTheme) {

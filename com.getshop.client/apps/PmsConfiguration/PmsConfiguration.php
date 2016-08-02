@@ -24,6 +24,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->deleteAllBookings($this->getSelectedName(), $code);
     }
     
+    
     public function saveContent() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         if($_POST['data']['fromid'] == "fireinstructions") {
@@ -83,7 +84,9 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             }
         }
         for($i = 1; $i<=7;$i++) {
-            $notifications->cleaningDays->{$i} = $_POST['data']['cleaningDays_'.$i];
+            if(isset( $_POST['data']['cleaningDays_'.$i])) {
+                $notifications->cleaningDays->{$i} = $_POST['data']['cleaningDays_'.$i];
+            }
         }
         
         $translationMatrix = array();
@@ -167,6 +170,10 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             }
         }
         return $res;
+    }
+
+    public function isHotel($notificationSettings) {
+        return $notificationSettings->bookingProfile == "hotel";
     }
 
 }

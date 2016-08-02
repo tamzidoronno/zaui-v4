@@ -11,12 +11,22 @@ if(!$nextPage) {
 $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()+86400));
 ?>
 
-<div class="pmsfront">
+<div class="pmsfront pmsfront1">
     <span class="heading">
-        <? echo $this->getText("title"); ?>
+        <?
+        switch($config->bookingProfile) {
+            case "storage":
+                echo $this->__w("Book your storage room today");
+                break;
+            default: 
+                echo $this->__w("Book your stay today");
+        }
+        ?>
     </span>
     <span class='start_date dates'>
-        <div><span class='inputhelpertext'><? echo $this->getText("start_date"); ?></span></div>
+        <div><span class='inputhelpertext'>
+            <? echo $this->__w("Check in"); ?>
+            </span></div>
         <span class='dates_inner'>
             <input class='start_date_input' value='<? echo $date; ?>'></input>
             <span></span>
@@ -25,7 +35,9 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
     </span>
     <?php if($this->getText("display_end_date") == "yes") { ?>
         <span class='end_date dates'>
-            <div><span class='inputhelpertext'><? echo $this->getText("end_date"); ?></span></div>
+            <div><span class='inputhelpertext'>
+                <? echo $this->__w("Check out"); ?>
+                </span></div>
             <span class='dates_inner'>
                 <input class='end_date_input' value='<? echo $date2; ?>'></input>
                 <span></span>
@@ -36,7 +48,18 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
     <div style='clear:both;'></div>
     
     <div class='productlist'>
-        <span class='inputhelpertext'><? echo $this->getText("select_product"); ?></span>
+        <span class='inputhelpertext'><? echo $this->getText("select_product"); ?>
+        <?php
+        switch($config->bookingProfile) {
+            case "storage":
+                echo $this->__w("Reserve your storage room now");
+                break;
+            default:
+                echo $this->__w("Reserve your room now");
+                break;
+        }
+        ?>
+        </span>
         <select class='selected_product'>
             <?php
             foreach($rooms as $room) {
@@ -58,7 +81,7 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
     <div class='infotext'>
         <? echo $this->getText("info_text"); ?>
     </div>
-    <span class='check_available_button' next_page='<? echo $nextPage; ?>'><? echo $this->getText("check_availability"); ?></span>
+    <span class='check_available_button' next_page='<? echo $nextPage; ?>'><? echo $this->__w("Continue to booking"); ?></span>
 </div>
 
 <script>

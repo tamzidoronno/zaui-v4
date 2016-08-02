@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,14 +47,13 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     private Map<String, SavedApplicationSettings> settings = new HashMap();
 
-    private Map<String, Application> chachedThemeApp = new HashMap();
+    private Application cachedThemeApp = null;
+    private Date cachedThemeAppExpire = new Date();
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
         getShopApplicationPool.addListener(this);
         loadApplicationsFromGetShopPool();
-
-        
 
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof SavedApplicationSettings) {
@@ -61,9 +61,6 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
                 settings.put(set.applicationId, set);
             }
         }
-
-        getApplications().stream()
-                .forEach(o -> System.out.println(o.id));
     }
 
     @Override
@@ -144,16 +141,19 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     @Override
     public Application getThemeApplication() {
-        String id = getManagerSetting("selectedThemeApplication");
-
-        if (chachedThemeApp.get(id) != null) {
-            return chachedThemeApp.get(id);
+        if(cachedThemeApp != null) {
+            if((System.currentTimeMillis() - cachedThemeAppExpire.getTime()) < 1000) {
+                return cachedThemeApp;
+            }
         }
+        
+        cachedThemeAppExpire = new Date();
+        String id = getManagerSetting("selectedThemeApplication");
         
         
         if (id == null) {
             Application app = finalizeApplication(getDefaultThemeApplication());
-            chachedThemeApp.put(id, app);
+            cachedThemeApp = app;
             return app;
         }
 
@@ -165,11 +165,11 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
         if (app == null) {
             app = finalizeApplication(getDefaultThemeApplication());
-            chachedThemeApp.put(id, app);
+            cachedThemeApp = app;
             return app;
         }
 
-        chachedThemeApp.put(id, app);
+        cachedThemeApp = app;
         return finalizeApplication(app);
     }
 

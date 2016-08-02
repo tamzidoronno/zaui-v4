@@ -19,7 +19,7 @@ $appId = $this->getAppInstanceId();
             if(!empty($slideIds)) {
                 foreach ($slideIds as $slideId) {
         ?>
-                    <li style="background-image: url(/displayImage.php?id=<? echo $this->getApi()->getBannerManager()->getSlideById($slideId)->backgroundFileId ?>">
+                    <li style="background: url('/displayImage.php?id=<? echo $this->getApi()->getBannerManager()->getSlideById($slideId)->backgroundFileId ?>') no-repeat center center fixed; background-size:cover;">
                         <? 
                         $this->printCell($appId . "_" . $slideId);
                         ?>

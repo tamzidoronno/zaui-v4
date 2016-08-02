@@ -20,6 +20,7 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;
@@ -75,6 +76,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private DibsManager dibsManager;
+    
+    @Autowired
+    GrafanaManager grafanaManager;
     
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
@@ -404,6 +408,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (!order.id.equals(orderId)) {
                 continue;
             }
+            finalizeOrder(order);
             String currentSession = getSession().id;
             if (user == null) {
                 if (order.session != null && order.session.equals(currentSession)) {
@@ -512,6 +517,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         incrementingOrderId++;
         order.incrementOrderId = incrementingOrderId;
         order.doFinalize();
+        feedGrafana(order);
         return order;
     }
     
@@ -1258,9 +1264,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return null;
         }
         
-        Payment payment = new Payment();
-        payment.paymentType = user.preferredPaymentType;
-        return payment;
+        Application paymentApplication = applicationPool.getApplication(user.preferredPaymentType);
+        if (paymentApplication != null) { 
+            Payment payment = new Payment();
+            payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+            return payment;
+        }
+        
+        
+        return null;
     }
 
     public Payment getStorePreferredPayementMethod() {
@@ -1289,6 +1301,27 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrderSecure(orderId);
         order.payment.paymentType = "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment";
         saveOrder(order);
+    }
+
+    private void finalizeOrder(Order order) {
+        List<Order> ordersToFinalise = new ArrayList();
+        ordersToFinalise.add(order);
+        finalize(ordersToFinalise);
+    }
+
+    private void feedGrafana(Order order) {
+        HashMap<String, Object> toAdd = new HashMap();
+        
+        toAdd.put("inktax", getTotalAmount(order));
+        toAdd.put("extax", getTotalAmountExTaxes(order));
+        toAdd.put("items", (Number)order.cart.getItems().size());
+        if(order.payment != null) {
+            toAdd.put("payment", order.payment.paymentType);
+        }
+        toAdd.put("storeid", (String)storeId);
+        
+        GrafanaFeeder feeder = new GrafanaFeeder();
+        grafanaManager.addPoint("webdata", "ordercreated", toAdd);
     }
 
 }

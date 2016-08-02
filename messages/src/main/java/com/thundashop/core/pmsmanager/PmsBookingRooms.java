@@ -34,7 +34,10 @@ public class PmsBookingRooms implements Serializable {
     public String bookingId;
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public String currency = "NOK";
-     
+    
+    public boolean checkedin = false;
+    public boolean checkedout = false;
+    
     @Editor
     public String code = "";
     public String cardformat = "";
@@ -55,7 +58,7 @@ public class PmsBookingRooms implements Serializable {
     boolean forcedOpenNeedClosing = false;
     public Date warnedAboutAutoExtend = null;
     public boolean credited;
-    private boolean deleted = false;
+    public boolean deleted = false;
     public Date deletedDate = new Date();
     
     /**
@@ -166,6 +169,7 @@ public class PmsBookingRooms implements Serializable {
                 toRemove.add(item2);
             }
         }
+        
         addons.removeAll(toRemove);
     }
     
@@ -463,5 +467,41 @@ public class PmsBookingRooms implements Serializable {
     void setBooking(Booking booking) {
         bookingId = booking.id;
         this.booking = booking;
+    }
+
+    void calculateAvgPrice() {
+        double sum = 0.0;
+        for(Double val : priceMatrix.values()) {
+            sum += val;
+        }
+        
+        price = sum / priceMatrix.keySet().size();
+    }
+
+    void updateBreakfastCount() {
+        for(PmsBookingAddonItem item : addons) {
+            if(item.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST) {
+                item.count = numberOfGuests;
+            }
+        }
+    }
+
+    void removeAddonByType(Integer addonType) {
+        List<PmsBookingAddonItem> toRemove = new ArrayList();
+        for(PmsBookingAddonItem item : addons) {
+            if(item.addonType.equals(addonType)) {
+                toRemove.add(item);
+            }
+        }
+        
+        addons.removeAll(toRemove);
+    }
+
+    void updateAddonCount(Integer type, Integer count) {
+        for(PmsBookingAddonItem item : addons) {
+            if(item.addonType.equals(type)) {
+                item.count = count;
+            }
+        }
     }
 }

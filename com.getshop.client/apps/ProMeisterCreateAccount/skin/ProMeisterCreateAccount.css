@@ -96,3 +96,7 @@
 .ProMeisterCreateAccount .cellphonenumber {
     width: calc(100% - 77px) !important;
 }
+
+.ProMeisterCreateAccount .groupselect img {
+    max-width: 383px;
+}

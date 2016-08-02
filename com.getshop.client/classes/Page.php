@@ -1838,6 +1838,8 @@ class Page {
         $langText = array();
         $langText['nb_NO'] = "Norsk";
         $langText['se'] = "Svenska";
+        $langText['nl_NL'] = "Dutch";
+        $langText['dk'] = "Dansk";
         $langText['en_en'] = "English";
         
         $languages = $this->factory->getLanguageCodes();

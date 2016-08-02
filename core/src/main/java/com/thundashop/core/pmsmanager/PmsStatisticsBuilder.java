@@ -55,10 +55,6 @@ class PmsStatisticsBuilder {
             }
         }
         
-        
-        
-        statics.buildTotal();
-        
         return statics;
     }
     

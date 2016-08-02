@@ -11,8 +11,52 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $checkedCanAdd = array();
     public $roomTable = "";
     
+    public function toggleFilterVersion() {
+        if(!isset($_SESSION['toggleOldFilterVersion'])) {
+            $_SESSION['toggleOldFilterVersion'] = true;
+        } else {
+            unset($_SESSION['toggleOldFilterVersion']);
+        }
+    }
+    
     public function runProcessor() {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
+    }
+    
+    public function sendInvoice() {
+        $email = $_POST['data']['email'];
+        $bookingId = $_POST['data']['bookingid'];
+        $orderid = $_POST['data']['orderid'];
+        $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderid, $email, $bookingId);
+        $this->showBookingInformation();
+    }
+    
+    public function massUpdatePrices() {
+        $bookingId = $_POST['data']['bookingid'];
+        $prices = new \core_pmsmanager_PmsPricing();
+        $prices->price_mon = $_POST['data']['price_mon'];
+        $prices->price_tue = $_POST['data']['price_tue'];
+        $prices->price_wed = $_POST['data']['price_wed'];
+        $prices->price_thu = $_POST['data']['price_thu'];
+        $prices->price_fri = $_POST['data']['price_fri'];
+        $prices->price_sat = $_POST['data']['price_sat'];
+        $prices->price_sun = $_POST['data']['price_sun'];
+        
+        $this->getApi()->getPmsManager()->massUpdatePrices($this->getSelectedName(), $prices, $bookingId);
+        $this->showBookingInformation();
+    }
+    
+    public function updateOrder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->status = $_POST['data']['status'];
+        $order->payment->paymentType = $_POST['data']['paymenttype'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->showBookingInformation();
+    }
+    
+    public function creditOrder() {
+    $this->getApi()->getPmsInvoiceManager()->creditOrder($this->getSelectedName(), $_POST['data']['bookingid'], $_POST['data']['orderid']);
+        $this->showBookingInformation();
     }
     
     public function loadDayStatistics() {
@@ -31,8 +75,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filterOptions->startDate = $this->convertToJavaDate(strtotime($day));
             $filterOptions->endDate = $this->convertToJavaDate(strtotime($day) + 86400);
             $orders = $this->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);
-//            echo "<pre>";
-//            print_r($orders);
             $this->printOrderTable($orders->datas);
         }
     }
@@ -102,7 +144,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $roomId = $_POST['data']['roomId'];
         $added = $_POST['data']['remove'];
 
-        $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $type, $bookingId, $roomId, $added);
+        $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $type, $roomId, $added);
         $this->showBookingInformation();
     }
     
@@ -498,6 +540,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 return;
             }
             $this->includefile("managementview");
+            
+            if(isset($_GET['docrashcause'])) {
+                $this->getApi()->getPmsManager()->screwMe($this->getSelectedName());
+            }
         }
     }
     
@@ -529,6 +575,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach($res as $room) {
             $exportLine = array();
             foreach($room as $k => $val) {
+                if($k == "bookingId") { continue; }
+                if($k == "pmsRoomId") { continue; }
+                if($k == "bookingItemId") { continue; }
+                
                 if(is_bool($val)) {
                     if($val) {
                         $val = "yes";
@@ -537,9 +587,24 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     }
                 }
                 
-                if($k == "guest" || $k == "addons") {
-                    $val = json_encode($val);
-                    $exportLine[$k] = $val;
+                if($k == "start" || $k == "end") {
+                    $val = date("d.m.Y H:i", $val/1000);
+                }
+                
+                if($k == "addons") {
+                    $exportLine[$k] = json_encode($val);
+                } else if($k == "guest") {
+                    $toAdd = "";
+                    foreach($val as $guest) {
+                        $toAdd = $guest->name;
+                        if($guest->phone) {
+                            $toAdd .= "+" . $guest->prefix . $guest->phone . " ";
+                        }
+                        if($guest->email) {
+                            $toAdd .= $guest->email;
+                        }
+                    }
+                    $exportLine[$k] = $toAdd;
                 } else {
                     $exportLine[$k] = $val;
                 }
@@ -609,11 +674,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(isset($_SESSION['pmfilter'][$this->getSelectedName()])) {
             return unserialize($_SESSION['pmfilter'][$this->getSelectedName()]);
         }
+
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->state = 0;
-        $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))-(86400*3));
-        $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 23:59", time()))+(86400*3));
+        $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))-(86400*$config->defaultNumberOfDaysBack));
+        $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 23:59", time())));
         $filter->sorting = "regdate";
         $filter->includeDeleted = true;
         return $filter;
@@ -642,11 +709,53 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function checkInGuest() {
+        $booking = $this->getSelectedBooking();
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $r->checkedin = true;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
+    }
+    
+    public function checkOutGuest() {
+        $booking = $this->getSelectedBooking();
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $r->checkedout = true;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
+    }
+
     public function changePrice() {
         $booking = $this->getSelectedBooking();
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
-                $room->price = $_POST['data']['price'];
+                if($_POST['data']['pricematrix'] == "no") {
+                    $room->price = $_POST['data']['price'];
+                } else {
+                    foreach($_POST['data'] as $key => $val) {
+                        if(stristr($key, "matrixprice_")) {
+                            $time = str_replace("matrixprice_", "", $key);
+                            $pricematrix[$time] = $val;
+                        }
+                    }
+                    ksort($pricematrix);
+                    $newmatrix = array();
+                    $avg = 0;
+                    foreach($pricematrix as $k => $val) {
+                        $newmatrix[date("d-m-Y",$k)] = $val;
+                        $avg += $val;
+                    }
+                    $room->priceMatrix = $newmatrix;
+                    $room->price = $avg / sizeof($pricematrix);
+                }
             }
         }
         
@@ -696,6 +805,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
 
+    public function createPaymentTypeText($app) {
+        $idString = str_replace("-", "_", $app->id);
+        return "ns_" . $idString ."\\" . $app->appName;
+    }
+    
     public function translatePaymenttype($type, $paymentTypes) {
         foreach($paymentTypes as $paymentType) {
             $idString = str_replace("-", "_", $paymentType->id);
@@ -881,6 +995,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return true;
         }
         
+        if(isset($filter->filterType) && $filter->filterType == "inhouse") {
+            if($room->checkedin && !$room->checkedout) {
+                return true;
+            }
+            return false;
+        }
+        
         $filterStart = strtotime($filter->startDate);
         $filterEnd = strtotime($filter->endDate);
         
@@ -1039,9 +1160,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
      * @param type $addonType
      */
     public function hasAddon($room, $addonType) {
-        foreach($room->addons as $addon) {
-            if($addon->addonType == $addonType) {
-                return true;
+        if(isset($room->addons)) {
+            foreach($room->addons as $addon) {
+                if($addon->addonType == $addonType) {
+                    return true;
+                }
             }
         }
         return false;
@@ -1267,6 +1390,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if($timeinterval == "yearly") { return date("Y", strtotime($date)); }
         if($timeinterval == "weekly") { return date("d.m.Y", strtotime($date)) . "<br>" . date("d.m.Y", strtotime($date)+(86400*7)); }
         return date("d.m.Y", strtotime($date));
+    }
+
+    public function isPaymentType($type, $app) {
+        $id = str_replace("-", "_", $app->id);
+        if(stristr($type, $id)) {
+            return true;
+        }
+        return false;
     }
 
 }

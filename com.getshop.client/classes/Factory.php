@@ -303,8 +303,7 @@ class Factory extends FactoryBase {
             echo "\n" . '<script src="js/getshopwebsocketapi/GetShopApiWebSocket.js"></script>';
         }
 
-        $appTheme = $this->getApplicationPool()->getSelectedThemeApp();
-        $themeApp = $this->getApplicationPool()->createInstace($appTheme);
+        $themeApp = $this->getApplicationPool()->getSelectedThemeApp();
         $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
         foreach($apps as $app) {
             $appInstance = $this->getApplicationPool()->createInstace($app);
@@ -764,6 +763,17 @@ class Factory extends FactoryBase {
                 if (!isset($this->translationMatrix[$cell[0]])) {
                     $this->translationMatrix[$cell[0]] = $cell[1];
                 }
+            }
+        }
+        
+        //Override translation from store translation.
+        $toOverride = new GetShopTranslation();
+        $toOverride->language = $this->getSelectedTranslation();
+        $trans = $toOverride->getStoreTranslations($this->getStore()->id);
+        foreach($trans as $tran) {
+            /* @var $tran StoreTranslationLine */
+            if($tran->text) {
+                $this->translationMatrix[$tran->key] = $tran->text;
             }
         }
     }

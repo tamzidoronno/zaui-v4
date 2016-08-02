@@ -15,14 +15,14 @@ import java.util.List;
 public class SedoxCreditAccount implements Serializable {
     public List<SedoxCreditHistory> history = new ArrayList();
     public boolean allowNegativeCredit = false;
-    private double balance;
+    private int balance;
 
     void addOrderToCreditHistory(SedoxOrder order, SedoxSharedProduct sedoxProduct, int transactionSedoxId) {
         SedoxCreditHistory historyEntry = new SedoxCreditHistory();
         historyEntry.amount = -1 * order.creditAmount;
         historyEntry.description = sedoxProduct.getName();
         historyEntry.transactionReference = transactionSedoxId;
-        balance = balance + historyEntry.amount;
+        balance = (int) (balance + historyEntry.amount);
         historyEntry.newBalance = balance;
         history.add(historyEntry);
     }
@@ -42,12 +42,12 @@ public class SedoxCreditAccount implements Serializable {
         }
         
         historyEntry.transactionReference = sedoxCreditOrder.magentoOrderId;
-        balance = balance + historyEntry.amount;
+        balance = (int) (balance + historyEntry.amount);
         historyEntry.newBalance = balance;
         history.add(historyEntry);
     }
 
     void setBalance(double d) {
-        this.balance = d;
+        this.balance = (int) d;
     }
 }

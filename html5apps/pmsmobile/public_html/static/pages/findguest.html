@@ -1,15 +1,29 @@
 <div class='additionalinfo row'>
-    Find a guest
+   <a ui-sref="mainpage"><i class='fa fa-arrow-left' style='color:#fff; float:left;'></i></a> Find a guest
 </div>
 
 
 <div class='row'>
+    Search for a guest:<br>
     <div class="input-group">
         <input type="text" class="form-control" ng-model="searchWord" ng-keydown="$event.which === 13 && doSearch(searchWord)" placeholder="Search for...">
         <span class="input-group-btn">
             <button class="btn btn-default" type="button" ng-click="doSearch(searchWord)">Find guest</button>
         </span>
     </div>
+    <br>
+    Or browse a list:<br>
+    <select class='form-control' ng-model="filterType">
+        <option value='active'>Active guests</option>
+        <option value='checkin'>Guest checking in</option>
+        <option value='checkout'>Guest checking out</option>
+    </select>
+    <div class="input-group">
+        <input type="date" class="form-control" ng-model="listDate">
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="button" ng-click="displayList()">Show list</button>
+        </span>
+    </div>    
 </div>
 
 
@@ -22,26 +36,25 @@
 
 
 <div class="row">
-    <div ng-repeat="room in rooms" class='col-xs-12 roomrow {{room.progressState}}' style="border: solid 1px #2f749f;">
+    <div ng-repeat="room in rooms" class='col-xs-12 roomrow {{room.progressState}}'>
         <a ui-sref="guestinfo({ roomid: '{{room.pmsRoomId}}', bookingid: '{{room.bookingId}}' })">
-            <span class='col-xs-1 roominfoblock'>
-                <div><span class='roominfo'>{{room.room}}</span><br>
-                    <i class='fa fa-smile-o' ng-show="{{room.hasArrived}}"></i>
+            <span class='col-xs-2 roominfoblock'>
+                <div>
+                    <span class='roominfo'><i class='fa fa-smile-o' ng-show="{{room.checkedIn}}">&nbsp;{{room.room}}</i></span>
+                    <span ng-show="{{!room.checkedIn}}">{{room.room}}</span>
+                    <div><i class='fa fa-users'></i> {{room.numberOfGuests}}</div>
+                    <div>{{room.code}}</div>
                 </div>
             </span>
-            <span class='col-xs-5'>
-                <div>{{room.owner}}</div>
-                <div>Code : <span class='code'>{{room.code}}</span></div>
-                <div>Number of guests : <span class='code'>{{room.numberOfGuests}}</span></div>
+            <span class='col-xs-8 guestinfoblock' style='padding-top:5px;'>
+                <div class='truncate'>{{room.owner}}</div>
+                <div class='truncate'>{{room.guest[0].name}}, {{room.guest[0].phone}}, {{room.guest[0].email}}
+                    <span style='float:right; color:#bbb;'>{{convertDate(room.start)}} - {{convertDate(room.end)}}</span>
+                </div>
                 
             </span>
-            <span class='col-xs-5 guestinfocol'>
-                    <div>{{room.guest[0].name}}</div>
-                    <div>{{room.guest[0].phone}}</div>
-                    <div>{{room.guest[0].email}}</div>
-            </span>
         </a>
-            <span class='col-xs-1 firecheck'>
+        <span class='col-xs-2 firecheck' ng-class="{'active': isActive}" ng-click="toggleFireCheck($event)">
                 Mark
             </span>
     </div>
@@ -49,7 +62,7 @@
     <br>
     <div class="col-xs-12">
         Color descriptions:<br>
-        <div class="roomrow notnotstarted">Not started yet</div>
+        <div class="roomrow notstarted">Not started yet</div>
         <div class="roomrow started">Started</div>
         <div class="roomrow ended">Ended</div>
         <div class="roomrow notpaid">Not paid for</div>
@@ -57,4 +70,8 @@
     </div>
 </div>
 
-<div class='additionalinfobottom row'></div>
+<div class='additionalinfobottom row'>
+    <div style='text-align:center; font-size: 20px; padding: 10px; color:#fff;'>
+        <a ui-sref="mainpage"><i class='fa fa-home' style='color:#fff;'></i></a>
+    </div>
+</div>

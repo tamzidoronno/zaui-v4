@@ -20,7 +20,7 @@ class PmsAddonSelection extends \WebshopApplication implements \Application {
         $bookingId = $current->id;
         foreach($current->rooms as $room) {
             $roomId = $room->pmsBookingRoomId;
-            $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $type, $bookingId, $roomId, $remove);
+            $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $type, $roomId, $remove);
         }
     }
 

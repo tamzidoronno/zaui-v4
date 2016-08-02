@@ -69,6 +69,7 @@ app.Carousel = {
         
         thundashop.Ajax.postWithCallBack(event, function() {
             thundashop.framework.reprintPage();
+            thundashop.common.hideInformationBox();
         });
     },
     

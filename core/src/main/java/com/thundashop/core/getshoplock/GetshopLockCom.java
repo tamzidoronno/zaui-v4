@@ -7,6 +7,7 @@ package com.thundashop.core.getshoplock;
 
 import static com.thundashop.core.arx.WrapClient.wrapClient;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import org.apache.axis.encoding.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,7 +24,6 @@ import org.apache.http.params.HttpParams;
 public class GetshopLockCom {
     
     public static String httpLoginRequest(String address, String username, String password) throws Exception {
-
         String loginToken = null;
         String loginUrl = address;
         

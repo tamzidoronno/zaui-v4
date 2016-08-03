@@ -66,6 +66,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             code.resetOnLock();
         }
     }
+    
 
     private void checkForMasterCodeUpdates(GetShopDevice dev) {
         for(int i = 1; i <= 5; i++) {
@@ -214,6 +215,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 masterCodes = (GetShopLockMasterCodes) obj;
             }
         }
+        createScheduler("pmsprocessor", "* * * * *", CheckAllOkGetShopLocks.class);
     }
     
     public String getUsername() {
@@ -338,6 +340,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
 
     @Override
     public void checkIfAllIsOk() {
+        if(!pmsManager.getConfigurationSecure().isGetShopHotelLock()) {
+            return;
+        }
         for(GetShopDevice dev : devices.values()) {
             if(dev.needSaving) {
                 dev.needSaving = false;

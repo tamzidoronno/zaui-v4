@@ -773,18 +773,29 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return certificates.get(certificateId);
     }
 
-    @Override
-    public BookingItemTypeMetadata getBookingTypeMetaData(String id) {
-        BookingItemTypeMetadata res = bookingTypeMetaDatas.values().stream()
+    public BookingItemTypeMetadata getBookingTypeMetaDataInternal(String id, boolean fromFinalize) {
+         BookingItemTypeMetadata res = bookingTypeMetaDatas.values().stream()
                 .filter(o -> o.bookingItemTypeId.equals(id))
                 .findFirst()
                 .orElse(null);
+        if (fromFinalize)
+            return res;
+        
         return finalizeMetaData(res, id);
+    }
+    
+    @Override
+    public BookingItemTypeMetadata getBookingTypeMetaData(String id) {
+       return getBookingTypeMetaDataInternal(id, false);
     }
 
     @Override
     public void saveBookingTypeMetaData(BookingItemTypeMetadata bookingItemTypeMetadata) {
-        BookingItemTypeMetadata inMemory = getBookingTypeMetaData(bookingItemTypeMetadata.bookingItemTypeId);
+        saveBookingTypeMetaDataInternal(bookingItemTypeMetadata, false);
+    }
+    
+    public void saveBookingTypeMetaDataInternal(BookingItemTypeMetadata bookingItemTypeMetadata, boolean fromFinalize) {
+        BookingItemTypeMetadata inMemory = getBookingTypeMetaDataInternal(bookingItemTypeMetadata.bookingItemTypeId, fromFinalize);
         
         if (inMemory != null) {
             deleteAllOtherMetaTypes(inMemory);
@@ -803,7 +814,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         if (data == null) {
             data = new BookingItemTypeMetadata();
             data.bookingItemTypeId = id;
-            saveBookingTypeMetaData(data);
+            saveBookingTypeMetaDataInternal(data, true);
         }
         
         List<Group> groups = userManager.getAllGroups();

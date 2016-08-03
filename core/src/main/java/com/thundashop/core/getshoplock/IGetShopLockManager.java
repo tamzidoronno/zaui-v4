@@ -27,6 +27,9 @@ public interface IGetShopLockManager {
     public List<GetShopDevice> getAllLocks();
     
     @Administrator
+    public void deleteAllDevices(String password);
+    
+    @Administrator
     public void openLock(String lockId);
     
     @Administrator

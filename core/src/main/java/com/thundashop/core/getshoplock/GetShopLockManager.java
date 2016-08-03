@@ -77,6 +77,17 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         masterCodes = codes;
     }
 
+    @Override
+    public void deleteAllDevices(String password) {
+        if(!password.equals("fdsafbvvre4234235t")) {
+            return;
+        }
+        for(GetShopDevice dev : devices.values()) {
+            deleteObject(dev);
+        }
+        devices.clear();
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;
@@ -270,9 +281,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         ArrayList<GetShopDevice> res = new ArrayList(devices.values());
         Collections.sort(res, new Comparator<GetShopDevice>(){
-     public int compare(GetShopDevice o1, GetShopDevice o2){
-         if(o1.name == null || o2.name == null) {
-             return -1;
+             public int compare(GetShopDevice o1, GetShopDevice o2){
+             if(o1.name == null || o2.name == null) {
+             return 0;
          }
          return o1.name.compareTo(o2.name);
      }
@@ -371,6 +382,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         boolean found = false;
         for(GetShopDevice dev : devices.values()) {
             if(dev.zwaveid.equals(gsdevice.zwaveid)) {
+                gsdevice = dev;
                 dev.type = gsdevice.type;
                 dev.name = gsdevice.name;
                 if(dev.name == null || dev.name.equals("null")) {
@@ -382,11 +394,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 found = true;
             }
         }
+        saveObject(gsdevice);
         if(!found) {
             devices.put(gsdevice.id, gsdevice);
         }
         
-        saveObject(gsdevice);
     }
 
     private void finalizeLocks() {

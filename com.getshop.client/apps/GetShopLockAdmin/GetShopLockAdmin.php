@@ -6,6 +6,10 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         
     }
 
+    public function deleteLocks() {
+        $this->getApi()->getGetShopLockManager()->deleteAllDevices($this->getSelectedName(), "fdsafbvvre4234235t");
+    }
+    
     public function getName() {
         return "GetShopLockAdmin";
     }

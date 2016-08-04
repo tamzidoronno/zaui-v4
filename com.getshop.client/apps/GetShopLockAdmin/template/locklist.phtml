@@ -1,4 +1,5 @@
 <span type='button' gstype='clicksubmit' method='runCheck' gsname='id' gsvalue='somevalue' class='shop_button'>Run check</span>
+<span type='button' gstype='clicksubmit' method='deleteLocks' gsname='id' gsvalue='somevalue' class='shop_button'>Delete all devices</span>
 <?php
 /* @var $this ns_99d42f8c_e446_40fe_a038_af9f316dfb3a\GetShopLockAdmin */
 $locks = $this->getApi()->getGetShopLockManager()->getAllLocks($this->getSelectedName());
@@ -17,7 +18,7 @@ if(!$locks || sizeof($locks) == 0) {
     foreach($locks as $lock) {
         echo "<tr>";
         echo "<td>" . $lock->zwaveid . "</td>";
-        echo "<td>" . $lock->type . "</td>";
+        echo "<td>" . $lock->name . " (" . $lock->type . ")</td>";
         echo "<td align='center'>";
         $this->printCodeList($lock);
         echo "</td>";

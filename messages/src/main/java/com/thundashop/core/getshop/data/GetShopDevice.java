@@ -19,6 +19,7 @@ public class GetShopDevice extends DataCommon {
     public void setDevice(ZWaveDevice device) {
         zwaveid = device.id;
         type = device.data.deviceTypeString.value + "";
+        name = device.data.givenName.value + "";
     }
     
     public boolean isLock() {

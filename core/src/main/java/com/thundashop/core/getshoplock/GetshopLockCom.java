@@ -26,7 +26,7 @@ public class GetshopLockCom {
     public static String httpLoginRequest(String address, String username, String password) throws Exception {
         String loginToken = null;
         String loginUrl = address;
-        System.out.println("Running address: " + URLDecoder.decode(address));
+//        System.out.println("Running address: " + URLDecoder.decode(address));
         HttpParams my_httpParams = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(my_httpParams, 3000);
         HttpConnectionParams.setSoTimeout(my_httpParams, 6000);

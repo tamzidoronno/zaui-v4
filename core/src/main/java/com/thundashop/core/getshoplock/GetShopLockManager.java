@@ -281,12 +281,29 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             Type type = new TypeToken<HashMap<Integer, ZWaveDevice>>(){}.getType();
             Gson gson = new Gson();
             result = gson.fromJson(res, type);
-            
+            List<GetShopDevice> currentDevices = new ArrayList();
             for(Integer offset : result.keySet()) {
                 ZWaveDevice device = result.get(offset);
                 GetShopDevice gsdevice = new GetShopDevice();
                 gsdevice.setDevice(device);
                 addDeviceIfNotExists(gsdevice);
+                currentDevices.add(gsdevice);
+            }
+            
+            List<GetShopDevice> toRemove = new ArrayList();
+            for(GetShopDevice dev : devices.values()) {
+                boolean found = false;
+                for(GetShopDevice curlist :currentDevices) {
+                    if(curlist.zwaveid.equals(dev.zwaveid)) {
+                        found = true;
+                    }
+                }
+                if(!found) {
+                    toRemove.add(dev);
+                }
+            }
+            for(GetShopDevice torev : toRemove) {
+                devices.remove(torev.id);
             }
             
         } catch (Exception ex) {

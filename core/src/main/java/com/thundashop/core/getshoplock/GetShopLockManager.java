@@ -134,7 +134,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         public void run() {
             for(Integer offset : device.codes.keySet()) {
                 GetShopLockCode code = device.codes.get(offset);
-                if(!connectedToBookingEngineItem()) {
+                if(!connectedToBookingEngineItem(device, items)) {
                     continue;
                 }
                 if(code.needUpdate()) {
@@ -188,15 +188,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
             }
             return null;
-        }
-
-        private boolean connectedToBookingEngineItem() {
-            for(BookingItem item : items) {
-                if(item.bookingItemAlias != null && item.bookingItemAlias.equals(device.id)) {
-                    return true;
-                }
-            }
-            return false;
         }
     }
     
@@ -383,6 +374,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         List<BookingItem> items = bookingEngine.getBookingItems();
         for(GetShopDevice dev : devices.values()) {
+            if(!connectedToBookingEngineItem(dev, bookingEngine.getBookingItems())) {
+                continue;
+            }
             if(dev.isLock() && !dev.beingUpdated && dev.needUpdate()) {
                 dev.beingUpdated = true;
                 String user = getUsername();
@@ -394,6 +388,15 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 return;
             }
         }
+    }
+    
+    private boolean connectedToBookingEngineItem(GetShopDevice device, List<BookingItem> items) {
+        for(BookingItem item : items) {
+            if(item.bookingItemAlias != null && item.bookingItemAlias.equals(device.id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

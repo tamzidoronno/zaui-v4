@@ -354,7 +354,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
             
             if(dev.warnAboutCodeNotSet()) {
-                messageManager.sendErrorNotification("Failed to update getshop hotel locks, this have not been able to update locks for 6 hours. this might be critical.", null);
+//                messageManager.sendErrorNotification("Failed to update getshop hotel locks, this have not been able to update locks for 6 hours. this might be critical.", null);
             }
         }
         

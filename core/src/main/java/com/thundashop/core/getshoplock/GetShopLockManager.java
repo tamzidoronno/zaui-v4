@@ -153,7 +153,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                 System.out.println("\t\t Code alread set... should not be on offset: " + offset + " (" + device.name + ")");
                             } else {
                                 System.out.println("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")");
-                                for(int j = 0; j < 30; j++) {
+                                for(int j = 0; j < 5; j++) {
                                     setCode(offset, code.fetchCodeToAddToLock(), false);
                                     Thread.sleep(20000);
                                     GetShopHotelLockCodeResult res = getSetCodeResult(offset);
@@ -166,6 +166,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                         System.out.println("\t\t Failed to set code to offset " + offset + " on attempt: " + j+ " (" + device.name + ")");
                                     }
                                 }
+                                break;
                             }
                             if(code.isAddedToLock()) {
                                 break;

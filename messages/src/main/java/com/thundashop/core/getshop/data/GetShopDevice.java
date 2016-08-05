@@ -2,6 +2,7 @@ package com.thundashop.core.getshop.data;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ public class GetShopDevice extends DataCommon {
     public Integer zwaveid = -1;
     public String type;
     public HashMap<Integer, GetShopLockCode> codes = new HashMap();
+    public Date lastTriedUpdate = null;
 
     public void setDevice(ZWaveDevice device) {
         zwaveid = device.id;
@@ -43,6 +45,15 @@ public class GetShopDevice extends DataCommon {
     }
 
     public boolean needUpdate() {
+        if(lastTriedUpdate != null) {
+            //Wait an hour before trying again on this one.
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(lastTriedUpdate);
+            cal.add(Calendar.HOUR_OF_DAY, -1);
+            if(cal.getTime().before(new Date())) {
+                return false;
+            }
+        }
         for(GetShopLockCode code : codes.values()) {
             if(code.needUpdate()) {
                 return true;

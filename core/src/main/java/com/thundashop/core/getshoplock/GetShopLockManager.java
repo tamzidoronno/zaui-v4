@@ -136,13 +136,14 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         @Override
         public void run() {
+            device.lastTriedUpdate = new Date();
             for(Integer offset : device.codes.keySet()) {
                 GetShopLockCode code = device.codes.get(offset);
                 if(connectedToBookingEngineItem(device, items) == null) {
                     continue;
                 }
                 if(code.needUpdate()) {
-                    for(int i = 0; i < 3; i++) {
+                    for(int i = 0; i < 5; i++) {
                         System.out.println("\t Need to add code to offsett: " + offset + " (" + device.name + ")");
                         setCode(offset, code.fetchCodeToAddToLock(), true);
                         try {
@@ -173,7 +174,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                             Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    try { Thread.sleep(5000); }catch(Exception e) {}
+                    try { Thread.sleep(10000); }catch(Exception e) {}
                 }
             }
             device.beingUpdated = false;

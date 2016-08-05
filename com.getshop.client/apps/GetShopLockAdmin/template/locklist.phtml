@@ -19,7 +19,7 @@ if(!$locks || sizeof($locks) == 0) {
         echo "<tr>";
         echo "<td>" . $lock->zwaveid;
         if($lock->isFailed) {
-            echo " <i class='fa fa-ban'></i>";
+            echo " <i class='fa fa-ban' title='Lock is offline.'></i>";
         }
         
         echo "</td>";

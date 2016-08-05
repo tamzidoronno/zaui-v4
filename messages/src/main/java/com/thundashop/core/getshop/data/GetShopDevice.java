@@ -9,6 +9,8 @@ import java.util.List;
 public class GetShopDevice extends DataCommon {
     public boolean needSaving = false;
     public boolean beingUpdated = false;
+    public boolean isFailed = false;
+    public boolean isAwake = false;
     public String name;
     public Integer maxNumberOfCodes = 20;
     public Integer batteryStatus = 0;
@@ -20,6 +22,12 @@ public class GetShopDevice extends DataCommon {
         zwaveid = device.id;
         type = device.data.deviceTypeString.value + "";
         name = device.data.givenName.value + "";
+        if(device.data != null && device.data.isFailed != null && device.data.isFailed.value != null) {
+            isFailed = new Boolean(device.data.isFailed.value + "");
+        }
+        if(device.data != null && device.data.isAwake != null && device.data.isAwake.value != null) {
+            isAwake = new Boolean(device.data.isAwake.value + "");
+        }
     }
     
     public boolean isLock() {

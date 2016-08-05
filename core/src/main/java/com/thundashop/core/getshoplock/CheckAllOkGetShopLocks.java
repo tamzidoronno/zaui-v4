@@ -19,7 +19,7 @@ public class CheckAllOkGetShopLocks extends GetShopSchedulerBase  {
     
     @Override
     public void execute() throws Exception {
-//        getApi().getGetShopLockManager().
+        getApi().getGetShopLockManager().checkIfAllIsOk(getMultiLevelName());
     }
     
 }

@@ -9,4 +9,6 @@ public class ZwaveData {
     
     public ZwaveData deviceTypeString;
     public ZwaveData givenName;
+    public ZwaveData isFailed;
+    public ZwaveData isAwake;
 }

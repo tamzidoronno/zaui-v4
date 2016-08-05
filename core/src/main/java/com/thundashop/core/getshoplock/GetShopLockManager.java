@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshop.data.GetShopHotelLockCodeResult;
@@ -58,6 +59,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
 
     @Autowired
     BookingEngine bookingEngine;
+    
+    @Autowired
+    FrameworkConfig frameworkConfig;
     
     @Override
     public void refreshLock(String lockId) {
@@ -207,6 +211,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
         }
         createScheduler("pmsprocessor", "* * * * *", CheckAllOkGetShopLocks.class);
+        createScheduler("pmsprocessor_lock", "30 23,04 * * *", UpdateLockList.class);
     }
     
     public String getUsername() {
@@ -283,26 +288,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             
             List<GetShopDevice> toRemove = new ArrayList();
             for(GetShopDevice dev : devices.values()) {
-//                int i = 1;
-//                for(GetShopLockCode code : dev.codes.values()) {
-//                    BookingItem item = connectedToBookingEngineItem(dev, bookingEngine.getBookingItems());
-//                    if(item != null && code != null) {
-//                        if(item.equals("301") || 
-//                                item.bookingItemName.equals("301") || 
-//                                item.bookingItemName.equals("302") || 
-//                                item.bookingItemName.equals("303") ||
-//                                item.bookingItemName.equals("304") ||
-//                                item.bookingItemName.equals("215") ||
-//                                item.bookingItemName.equals("216") ||
-//                                item.bookingItemName.equals("217") ||
-//                                item.bookingItemName.equals("221") ||
-//                                item.bookingItemName.equals("222")) {
-//                                    System.out.println(item.bookingItemName + " : " + i + " : " + code.fetchCodeToAddToLock());
-//                        }
-//                    }
-//                    i++;
-//                }
-//                    
                 boolean found = false;
                 for(GetShopDevice curlist :currentDevices) {
                     if(curlist.zwaveid.equals(dev.zwaveid)) {
@@ -368,6 +353,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
 
     @Override
     public void checkIfAllIsOk() {
+        if(!frameworkConfig.productionMode) {
+            return;
+        }
         if(!pmsManager.getConfigurationSecure().isGetShopHotelLock()) {
             return;
         }
@@ -387,7 +375,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
         
         for(GetShopDevice dev : devices.values()) {
-            if(dev.beingUpdated) {
+            if(dev.beingUpdated && !dev.isFailed) {
                 return;
             }
         }
@@ -395,6 +383,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         List<BookingItem> items = bookingEngine.getBookingItems();
         for(GetShopDevice dev : devices.values()) {
             if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null) {
+                continue;
+            }
+            if(dev.isFailed) {
                 continue;
             }
             if(dev.isLock() && !dev.beingUpdated && dev.needUpdate()) {
@@ -450,9 +441,10 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         boolean found = false;
         for(GetShopDevice dev : devices.values()) {
             if(dev.zwaveid.equals(gsdevice.zwaveid)) {
-                gsdevice = dev;
                 dev.type = gsdevice.type;
                 dev.name = gsdevice.name;
+                dev.isAwake = gsdevice.isAwake;
+                dev.isFailed = gsdevice.isFailed;
                 if(dev.name == null || dev.name.equals("null")) {
                     dev.name = "";
                 }
@@ -460,6 +452,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     dev.type = "";
                 }
                 found = true;
+                gsdevice = dev;
             }
         }
         saveObject(gsdevice);

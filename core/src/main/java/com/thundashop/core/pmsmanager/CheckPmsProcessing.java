@@ -20,7 +20,7 @@ public class CheckPmsProcessing extends GetShopSchedulerBase {
     @Override
     public void execute() throws Exception {
         String name = getMultiLevelName();
-        getApi().getGetShopLockManager().checkIfAllIsOk(name);
+        getApi().getPmsManager().processor(name);
     }
     
 }

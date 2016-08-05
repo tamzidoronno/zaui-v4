@@ -597,14 +597,13 @@ class Factory extends FactoryBase {
             echo "</style>";
         }
         
-        $themeApp = $this->getApplicationPool()->getSelectedThemeApp();
+        $appinstance = $this->getApplicationPool()->getSelectedThemeApp();
         if(isset($_GET['removeextracss'])) {
             unset($_SESSION['includeextracss']);
         }
         
         if(isset($_GET['includeextracss']) || isset($_SESSION['includeextracss'])) {
             $_SESSION['includeextracss'] = true;
-            $appinstance = $this->getApplicationPool()->createInstace($themeApp);
             if(method_exists($appinstance, "includeExtraCss")) {
                 $appinstance->includeExtraCss();
             }

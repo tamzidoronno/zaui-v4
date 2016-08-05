@@ -5,7 +5,7 @@ $slideIds = array_filter(explode("|", $this->getConfigurationSetting("slideids")
 $appId = $this->getAppInstanceId();
 ?>
 
-<div id="slider1" class="csslider infinity" style="<? echo $this->getConfigurationSetting("heighttype") != "ratio" ? $this->getConfigurationSetting("carouselheight") != "" ? "height: " . $this->getConfigurationSetting("carouselheight") . $this->getConfigurationSetting("heighttype") : "" : ""?>">
+<div id="slider1" class="csslider infinity" style="<? echo $this->getConfigurationSetting("heighttype") == "px" ? $this->getConfigurationSetting("carouselheight") != "" ? "height: " . $this->getConfigurationSetting("carouselheight") . $this->getConfigurationSetting("heighttype") : "" : ""?>">
   
     <?
         foreach ($slideIds as $slideId) {
@@ -87,7 +87,7 @@ app.Carousel.initAutoClicker("<? echo $appId; ?>", "<? echo $this->getConfigurat
 if($this->getConfigurationSetting("heighttype") == "%") {
 ?>
 <script>
-app.Carousel.setCarouselPercentageHeight("<? echo $appId; ?>");
+app.Carousel.setCarouselPercentageHeight("<? echo $appId; ?>", "<? echo $this->getConfigurationSetting("carouselheight"); ?>");
 </script>
 <?
 }

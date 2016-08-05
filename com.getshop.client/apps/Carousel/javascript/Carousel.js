@@ -205,10 +205,8 @@ app.Carousel = {
         }
     },
     
-    setCarouselPercentageHeight: function(carouselId) {
-        $(".Carousel[appid='"+ carouselId + "']").parents(".applicationarea").css("height", "100%");
-        $(".Carousel[appid='" + carouselId + "']").css("height", "100%");
-        $(".Carousel[appid='" + carouselId + "']").find(".applicationinner").css("height", "100%");
+    setCarouselPercentageHeight: function(carouselId, heightPercentage) {
+        $(".Carousel[appid='" + carouselId + "']").find("#slider1").css("height", $(window).height() * (heightPercentage / 100) + "px");
     }
 }
 

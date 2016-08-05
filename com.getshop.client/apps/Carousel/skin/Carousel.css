@@ -45,6 +45,7 @@
   white-space: normal;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center center;
 }
 
 .Carousel .csslider > ul > li > img {

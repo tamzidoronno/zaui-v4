@@ -134,7 +134,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         public void run() {
             for(Integer offset : device.codes.keySet()) {
                 GetShopLockCode code = device.codes.get(offset);
-                if(!connectedToBookingEngineItem(device, items)) {
+                if(connectedToBookingEngineItem(device, items) == null) {
                     continue;
                 }
                 if(code.needUpdate()) {
@@ -283,6 +283,26 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             
             List<GetShopDevice> toRemove = new ArrayList();
             for(GetShopDevice dev : devices.values()) {
+//                int i = 1;
+//                for(GetShopLockCode code : dev.codes.values()) {
+//                    BookingItem item = connectedToBookingEngineItem(dev, bookingEngine.getBookingItems());
+//                    if(item != null && code != null) {
+//                        if(item.equals("301") || 
+//                                item.bookingItemName.equals("301") || 
+//                                item.bookingItemName.equals("302") || 
+//                                item.bookingItemName.equals("303") ||
+//                                item.bookingItemName.equals("304") ||
+//                                item.bookingItemName.equals("215") ||
+//                                item.bookingItemName.equals("216") ||
+//                                item.bookingItemName.equals("217") ||
+//                                item.bookingItemName.equals("221") ||
+//                                item.bookingItemName.equals("222")) {
+//                                    System.out.println(item.bookingItemName + " : " + i + " : " + code.fetchCodeToAddToLock());
+//                        }
+//                    }
+//                    i++;
+//                }
+//                    
                 boolean found = false;
                 for(GetShopDevice curlist :currentDevices) {
                     if(curlist.zwaveid.equals(dev.zwaveid)) {
@@ -374,7 +394,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         List<BookingItem> items = bookingEngine.getBookingItems();
         for(GetShopDevice dev : devices.values()) {
-            if(!connectedToBookingEngineItem(dev, bookingEngine.getBookingItems())) {
+            if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null) {
                 continue;
             }
             if(dev.isLock() && !dev.beingUpdated && dev.needUpdate()) {
@@ -390,13 +410,13 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
     }
     
-    private boolean connectedToBookingEngineItem(GetShopDevice device, List<BookingItem> items) {
+    private BookingItem connectedToBookingEngineItem(GetShopDevice device, List<BookingItem> items) {
         for(BookingItem item : items) {
             if(item.bookingItemAlias != null && item.bookingItemAlias.equals(device.id)) {
-                return true;
+                return item;
             }
         }
-        return false;
+        return null;
     }
 
     @Override

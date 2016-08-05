@@ -104,6 +104,10 @@ $states['ended'] = "Ended";
         echo "<div class='secondary_text'>" . $room->owner . "</div>";
         echo "</td>";
         echo "<td>";
+        if($room->keyIsReturned) {
+            echo '<i class="fa fa-key" title="Key has been returned" style="color:green;"></i> ';
+        }
+        
         echo $room->room;
         echo "<div class='secondary_text'>".$room->roomType."</div>";
         echo "</td>";

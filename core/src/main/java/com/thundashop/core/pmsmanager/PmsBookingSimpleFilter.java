@@ -51,6 +51,7 @@ public class PmsBookingSimpleFilter {
         simple.checkedIn = false;
         simple.checkedOut = false;
         simple.regDate = booking.rowCreatedDate;
+        simple.keyIsReturned = room.keyIsReturned;
         
         if(manager.getConfiguration().hasLockSystem()) {
             simple.code = room.code;

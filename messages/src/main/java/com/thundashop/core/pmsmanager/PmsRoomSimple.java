@@ -26,5 +26,6 @@ public class PmsRoomSimple implements Serializable {
     public boolean roomCleaned = false;
     public boolean checkedIn;
     public boolean checkedOut;
+    public boolean keyIsReturned = false;
     public Date regDate;
 }

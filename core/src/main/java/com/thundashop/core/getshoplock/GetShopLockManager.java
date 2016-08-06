@@ -207,6 +207,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 GetShopDevice toAdd = (GetShopDevice) obj;
                 devices.put(obj.id, toAdd);
                 toAdd.beingUpdated = false;
+                toAdd.lastTriedUpdate = null;
             }
             if(obj instanceof GetShopLockMasterCodes) {
                 masterCodes = (GetShopLockMasterCodes) obj;

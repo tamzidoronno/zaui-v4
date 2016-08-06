@@ -127,7 +127,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String addr2 = "http://"+hostname+":8083/" + URLEncoder.encode("ZWave.zway/Run/devices["+device.zwaveid+"].UserCode.Get("+offset+")", "UTF-8");
                 
                 GetshopLockCom.httpLoginRequest(addr,username,password);
-                GetshopLockCom.httpLoginRequest(addr2,username,password);
+//                GetshopLockCom.httpLoginRequest(addr2,username,password);
             } catch (Exception ex) {
                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -353,7 +353,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     @Override
     public void checkIfAllIsOk() {
         if(!frameworkConfig.productionMode) {
-//            return;
+            return;
         }
         if(!pmsManager.getConfigurationSecure().isGetShopHotelLock()) {
             return;

@@ -9,7 +9,10 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshop.data.GetShopHotelLockCodeResult;
@@ -21,9 +24,12 @@ import com.thundashop.core.pmsmanager.PmsManager;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +57,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     @Autowired
     MessageManager messageManager;
 
+    @Autowired
+    BookingEngine bookingEngine;
+    
+    @Autowired
+    FrameworkConfig frameworkConfig;
+    
     @Override
     public void refreshLock(String lockId) {
         GetShopDevice dev = devices.get(lockId);
@@ -58,6 +70,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             code.resetOnLock();
         }
     }
+    
 
     private void checkForMasterCodeUpdates(GetShopDevice dev) {
         for(int i = 1; i <= 5; i++) {
@@ -75,6 +88,17 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         masterCodes = codes;
     }
 
+    @Override
+    public void deleteAllDevices(String password) {
+        if(!password.equals("fdsafbvvre4234235t")) {
+            return;
+        }
+        for(GetShopDevice dev : devices.values()) {
+            deleteObject(dev);
+        }
+        devices.clear();
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;
@@ -82,12 +106,14 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         private String hostname = "";
         private String username = "";
         private String password = "";
+        private List<BookingItem> items;
 
-        public GetshopLockCodeManagemnt(GetShopDevice device, String username, String password, String hostname) {
+        public GetshopLockCodeManagemnt(GetShopDevice device, String username, String password, String hostname, List<BookingItem> items) {
             this.device = device;
             this.hostname = hostname;
             this.password = password;
             this.username = username;
+            this.items = items;
         }
         
         public void setCode(Integer offset, String code, boolean remove) {
@@ -97,8 +123,8 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
             
             try {
-                String addr = "http://"+hostname+":8083/" + URLEncoder.encode("ZWaveAPI/Run/devices[11].UserCode.Set("+offset+","+code+","+doUpdate+")", "UTF-8");
-                String addr2 = "http://"+hostname+":8083/" + URLEncoder.encode("ZWave.zway/Run/devices[11].UserCode.Get("+offset+")", "UTF-8");
+                String addr = "http://"+hostname+":8083/" + URLEncoder.encode("ZWaveAPI/Run/devices["+device.zwaveid+"].UserCode.Set("+offset+","+code+","+doUpdate+")", "UTF-8");
+                String addr2 = "http://"+hostname+":8083/" + URLEncoder.encode("ZWave.zway/Run/devices["+device.zwaveid+"].UserCode.Get("+offset+")", "UTF-8");
                 
                 GetshopLockCom.httpLoginRequest(addr,username,password);
                 GetshopLockCom.httpLoginRequest(addr2,username,password);
@@ -110,32 +136,37 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         @Override
         public void run() {
+            device.lastTriedUpdate = new Date();
             for(Integer offset : device.codes.keySet()) {
                 GetShopLockCode code = device.codes.get(offset);
+                if(connectedToBookingEngineItem(device, items) == null) {
+                    continue;
+                }
                 if(code.needUpdate()) {
-                    for(int i = 0; i < 3; i++) {
-                        System.out.println("\t Need to add code to offsett: " + offset);
+                    for(int i = 0; i < 5; i++) {
+                        System.out.println("\t Need to add code to offsett: " + offset + " (" + device.name + ")");
                         setCode(offset, code.fetchCodeToAddToLock(), true);
                         try {
                             GetShopHotelLockCodeResult result = getSetCodeResult(offset);
                             Thread.sleep(3000);
-                            if(result.hasCode.value.equals(true)) {
-                                System.out.println("\t Code alread set... should not be on offset: " + offset);
+                            if(result != null && result.hasCode != null && result.hasCode.value != null && result.hasCode.value.equals(true)) {
+                                System.out.println("\t\t Code alread set... should not be on offset: " + offset + " (" + device.name + ")");
                             } else {
-                                System.out.println("\t We are ready to set code to " +  offset + " attempt: " + i);
-                                for(int j = 0; j < 30; j++) {
+                                System.out.println("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")");
+                                for(int j = 0; j < 5; j++) {
                                     setCode(offset, code.fetchCodeToAddToLock(), false);
+                                    Thread.sleep(20000);
                                     GetShopHotelLockCodeResult res = getSetCodeResult(offset);
-                                    if(res.hasCode.value.equals(true)) {
+                                    if(res != null && res.hasCode != null && res.hasCode.value != null && res.hasCode.value.equals(true)) {
                                         code.setAddedToLock();
                                         device.needSaving = true;
-                                        System.out.println("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)");
+                                        System.out.println("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")");
                                         break;
                                     } else {
-                                        System.out.println("\t\t Failed to set code to offset " + offset + " on attempt: " + j);
+                                        System.out.println("\t\t Failed to set code to offset " + offset + " on attempt: " + j+ " (" + device.name + ")");
                                     }
-                                    Thread.sleep(200);
                                 }
+                                break;
                             }
                             if(code.isAddedToLock()) {
                                 break;
@@ -144,7 +175,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                             Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    try { Thread.sleep(5000); }catch(Exception e) {}
+                    try { Thread.sleep(10000); }catch(Exception e) {}
                 }
             }
             device.beingUpdated = false;
@@ -181,6 +212,8 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 masterCodes = (GetShopLockMasterCodes) obj;
             }
         }
+        createScheduler("pmsprocessor", "* * * * *", CheckAllOkGetShopLocks.class);
+        createScheduler("pmsprocessor_lock", "30 23,04 * * *", UpdateLockList.class);
     }
     
     public String getUsername() {
@@ -240,19 +273,35 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         if(hostname == null || hostname.isEmpty()) { return new ArrayList(); }
         try {
             String address = "http://" + hostname + ":8083/ZWave.zway/Run/devices";
-            System.out.println(address);
             String res = httpLoginRequest(address);
             
             HashMap<Integer, ZWaveDevice> result = new HashMap();
             Type type = new TypeToken<HashMap<Integer, ZWaveDevice>>(){}.getType();
             Gson gson = new Gson();
             result = gson.fromJson(res, type);
-            
+            List<GetShopDevice> currentDevices = new ArrayList();
             for(Integer offset : result.keySet()) {
                 ZWaveDevice device = result.get(offset);
                 GetShopDevice gsdevice = new GetShopDevice();
                 gsdevice.setDevice(device);
                 addDeviceIfNotExists(gsdevice);
+                currentDevices.add(gsdevice);
+            }
+            
+            List<GetShopDevice> toRemove = new ArrayList();
+            for(GetShopDevice dev : devices.values()) {
+                boolean found = false;
+                for(GetShopDevice curlist :currentDevices) {
+                    if(curlist.zwaveid.equals(dev.zwaveid)) {
+                        found = true;
+                    }
+                }
+                if(!found) {
+                    toRemove.add(dev);
+                }
+            }
+            for(GetShopDevice torev : toRemove) {
+                devices.remove(torev.id);
             }
             
         } catch (Exception ex) {
@@ -261,7 +310,17 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         finalizeLocks();
         
-        return new ArrayList(devices.values());
+        ArrayList<GetShopDevice> res = new ArrayList(devices.values());
+        Collections.sort(res, new Comparator<GetShopDevice>(){
+             public int compare(GetShopDevice o1, GetShopDevice o2){
+             if(o1.name == null || o2.name == null) {
+             return 0;
+         }
+         return o1.name.compareTo(o2.name);
+     }
+});
+        
+        return res;
     }
 
     @Override
@@ -296,6 +355,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
 
     @Override
     public void checkIfAllIsOk() {
+        if(!frameworkConfig.productionMode) {
+            return;
+        }
+        if(!pmsManager.getConfigurationSecure().isGetShopHotelLock()) {
+            return;
+        }
         for(GetShopDevice dev : devices.values()) {
             if(dev.needSaving) {
                 dev.needSaving = false;
@@ -307,20 +372,44 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
             
             if(dev.warnAboutCodeNotSet()) {
-                messageManager.sendErrorNotification("Failed to update getshop hotel locks, this have not been able to update locks for 6 hours. this might be critical.", null);
+//                messageManager.sendErrorNotification("Failed to update getshop hotel locks, this have not been able to update locks for 6 hours. this might be critical.", null);
             }
         }
         
         for(GetShopDevice dev : devices.values()) {
+            if(dev.beingUpdated && !dev.isFailed) {
+                return;
+            }
+        }
+        
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        for(GetShopDevice dev : devices.values()) {
+            if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null) {
+                continue;
+            }
+            if(dev.isFailed) {
+                continue;
+            }
             if(dev.isLock() && !dev.beingUpdated && dev.needUpdate()) {
                 dev.beingUpdated = true;
                 String user = getUsername();
                 String pass = getPassword();
                 String host = getHostname();
-                GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(dev, user, pass, host);
+                
+                GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(dev, user, pass, host, items);
                 mgr.start();
+                return;
             }
         }
+    }
+    
+    private BookingItem connectedToBookingEngineItem(GetShopDevice device, List<BookingItem> items) {
+        for(BookingItem item : items) {
+            if(item.bookingItemAlias != null && item.bookingItemAlias.equals(device.id)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -351,14 +440,28 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
     
     private void addDeviceIfNotExists(GetShopDevice gsdevice) {
+        boolean found = false;
         for(GetShopDevice dev : devices.values()) {
             if(dev.zwaveid.equals(gsdevice.zwaveid)) {
-                return;
+                dev.type = gsdevice.type;
+                dev.name = gsdevice.name;
+                dev.isAwake = gsdevice.isAwake;
+                dev.isFailed = gsdevice.isFailed;
+                if(dev.name == null || dev.name.equals("null")) {
+                    dev.name = "";
+                }
+                if(dev.type == null || dev.type.equals("null")) {
+                    dev.type = "";
+                }
+                found = true;
+                gsdevice = dev;
             }
         }
-        
         saveObject(gsdevice);
-        devices.put(gsdevice.id, gsdevice);
+        if(!found) {
+            devices.put(gsdevice.id, gsdevice);
+        }
+        
     }
 
     private void finalizeLocks() {

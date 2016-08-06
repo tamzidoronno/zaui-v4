@@ -99,7 +99,11 @@ if($filter->filterType == "stats") {
 } else if($filter->filterType == "summary") {
     $this->includefile("summary");
 } else {
-    $this->includefile("managementviewtable");
+    if(isset($_SESSION['toggleOldFilterVersion'])) {
+        $this->includefile("managementviewtable");
+    } else {
+        $this->includefile("managementviewtablenew");
+    }
     if($config->includeGlobalOrderCreationPanel) {
         $this->includefile("generateinvoicepanel");
     }

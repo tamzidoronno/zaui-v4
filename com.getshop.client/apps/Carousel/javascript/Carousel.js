@@ -45,6 +45,7 @@ app.Carousel = {
         var transition = $(".Carousel input[name='transition']:checked").val();
         var slidedirection = $(".Carousel input[name='slidedirection']:checked").val();
         var slidespeed = $(".Carousel input[name='slidespeed']").val();
+        var animationspeed = $(".Carousel input[name='animationspeed']").val();
         var showbullets = $(".Carousel input[name='showbullets']:checked").val();
         var showarrows = $(".Carousel input[name='showarrows']:checked").val();
         var arrowvertical = $(".Carousel input[name='arrowvertical']").val();
@@ -57,6 +58,7 @@ app.Carousel = {
             autoslide: autoslide,
             slidedirection: slidedirection,
             slidespeed: slidespeed,
+            animationspeed: animationspeed,
             showbullets: showbullets,
             showarrows: showarrows,
             arrowvertical: arrowvertical,
@@ -66,7 +68,8 @@ app.Carousel = {
         var event = thundashop.Ajax.createEvent(null, "saveCarouselSettings", this, data);
         
         thundashop.Ajax.postWithCallBack(event, function() {
-            location.reload();
+            thundashop.framework.reprintPage();
+            thundashop.common.hideInformationBox();
         });
     },
     
@@ -177,30 +180,33 @@ app.Carousel = {
         });
     },
     
+    carouselIntervals: {},
+    
     initAutoClicker: function(carouselId, direction, speed) {
-        var forwarder = function() {
-            $(".Carousel[appid='" + carouselId + "'] .arrows label").each(function() {
-               if($(this).css(direction) === "0px") {
-                   $(this).click();
-                   return false;
-               } 
+        if(app.Carousel.carouselIntervals[carouselId] == null) {
+            var forwarder = function() {
+                $(".Carousel[appid='" + carouselId + "'] .arrows label").each(function() {
+                   if($(this).css(direction) === "0px") {
+                       $(this).click();
+                       return false;
+                   } 
+                });
+            };
+
+            var slideInterval = speed;
+            var slideInterval = slideInterval != "" ? slideInterval : 3000;
+            var forwarderInterval = setInterval(forwarder, slideInterval);
+            app.Carousel.carouselIntervals[carouselId] = true;
+
+            $(".Carousel[appid='" + carouselId + "'] .arrows label").on('click', function() {
+                clearInterval(forwarderInterval);
+                forwarderInterval = setInterval(forwarder, slideInterval);
             });
-        };
-
-        var slideInterval = speed;
-        var slideInterval = slideInterval != "" ? slideInterval : 3000;
-        var forwarderInterval = setInterval(forwarder, slideInterval);
-
-        $(".Carousel[appid='" + carouselId + "'] .arrows label").on('click', function() {
-            clearInterval(forwarderInterval);
-            forwarderInterval = setInterval(forwarder, slideInterval);
-        });
+        }
     },
     
-    setCarouselPercentageHeight: function(carouselId) {
-        $(".Carousel[appid='"+ carouselId + "']").parents(".applicationarea").css("height", "100%");
-        $(".Carousel[appid='" + carouselId + "']").css("height", "100%");
-        $(".Carousel[appid='" + carouselId + "']").find(".applicationinner").css("height", "100%");
+    setCarouselPercentageHeight: function(carouselId, heightPercentage) {
+        $(".Carousel[appid='" + carouselId + "']").find("#slider1").css("height", $(window).height() * (heightPercentage / 100) + "px");
     }
 }
 

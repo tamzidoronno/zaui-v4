@@ -334,11 +334,15 @@ public class PmsBookingRooms implements Serializable {
 
     boolean containsSearchWord(String searchWord) {
         for(PmsGuests guest : guests) {
-            if(guest.email != null && guest.email.toLowerCase().contains(searchWord)) {
-                return true;
+            if(searchWord != null && searchWord.contains("@")) {
+                if(guest.email != null && guest.email.toLowerCase().contains(searchWord)) {
+                    return true;
+                }
             }
-            if(guest.phone != null && guest.phone.toLowerCase().contains(searchWord)) {
-                return true;
+            if(searchWord != null && searchWord.length() > 6) {
+                if(guest.phone != null && guest.phone.toLowerCase().contains(searchWord)) {
+                    return true;
+                }
             }
             if(guest.name != null && guest.name.toLowerCase().contains(searchWord)) {
                 return true;

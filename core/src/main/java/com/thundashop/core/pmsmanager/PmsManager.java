@@ -759,7 +759,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(bookingId);
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
-            bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
+            if(room.bookingId != null && !room.bookingId.isEmpty()) {
+                bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
+            }
             Date oldStart = room.date.start;
             Date oldEnd = room.date.end;
 
@@ -824,8 +826,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 room = splitBookingIfNesesary(booking, room);
             }
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
-            bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
-            resetBookingItem(room, itemId, booking);
+            if(room.bookingId != null && !room.bookingId.isEmpty()) {
+                bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
+                resetBookingItem(room, itemId, booking);
+            } else {
+                BookingItem item = bookingEngine.getBookingItem(itemId);
+                if(item != null) {
+                    room.bookingItemId = item.id;
+                    room.bookingItemTypeId = item.bookingItemTypeId;
+                } else {
+                    room.bookingItemId = null;
+                }
+            }
             finalize(booking);
 
             String from = "none";
@@ -2550,7 +2562,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<Booking> bookingsToAdd = new ArrayList();
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             Booking bookingToAdd = createBooking(room);
-            if (!bookingEngine.canAdd(bookingToAdd) || configuration.deleteAllWhenAdded) {
+            if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
                 room.canBeAdded = false;
                 room.delete();
                 BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
@@ -2671,7 +2683,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this);
-        return filtering.filterRooms(filter);
+        List<PmsRoomSimple> res = filtering.filterRooms(filter);
+        return res;
     }
 
     @Override
@@ -3429,5 +3442,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingRooms room = booking.getRoom(roomId);
         room.updateAddonCount(type, count);
         saveBooking(booking);
+    }
+
+    private boolean doAllDeleteWhenAdded() {
+        if(userManager.getLoggedOnUser() != null && userManager.getLoggedOnUser().isAdministrator()) {
+            return false;
+        }
+        return configuration.deleteAllWhenAdded;
     }
 }

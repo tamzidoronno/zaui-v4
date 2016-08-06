@@ -3,6 +3,7 @@
   -ms-perspective: 1300px;
   -webkit-perspective: 1300px;
   perspective: 1300px;
+  display: inline-block;
   text-align: left;
   position: relative;
 }
@@ -44,6 +45,7 @@
   white-space: normal;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center center;
 }
 
 .Carousel .csslider > ul > li > img {

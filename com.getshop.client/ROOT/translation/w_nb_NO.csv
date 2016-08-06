@@ -24,7 +24,6 @@ Add this account to the event;-;Legg til denne brukeren på eventet
 Add this to the header or to the body to make a new login form, can be added anywhere on the page.;-;Legge denne i headeren eller på hoveddelen av siden for å lage en ny pålogginsområde. 
 Add this to the page and you can allow your customers to search for products.;-;Legg til et produktsøk på siden din, og du gir deretter dine kunder mulighet til å søke opp dine produkter.
 Add youtube vidoes to your page. Just search for the video you want to add and click add.;-;Legg inn youtube videor på websiden din. Bare søk etter den filmen du ønsker og trykk på legg til.
-Addon type;-;Tilleggs type
 Addons;-;Tilegg
 Address;-;Adresse
 Adult;-;Voksne
@@ -55,7 +54,6 @@ Book your stay today;-;Book ditt opphold idag
 Book your storage room today;-;Book din bod idag
 Booking;-;Booking
 Booking engine name;-;Bookingengine navn
-Booking size;-;Booking størrelse
 Bottom spacing;-;Nedre spacing
 BrainTree is a international payment method offering VISA / MasterCard / PayPal etc. Very simple to use and gets you started with visa payment immediatly;-;BrainTree er en internasjonal betalingsmetode som eies av PayPal. De tilbyr betaling med Visa, MasterCard, PayPal, osv. Veldig enkel å bruke og gir det mulighet til å ta imot betaling online med gang.
 Breakfast;-;Frokost
@@ -190,7 +188,6 @@ Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email/sms.;-;Oppgi koden som er sendt til deg på epost/sms
 Event label (google analythics);-;Event label (google analythics)
 Event name;-;Navn på eventet
-Extra bed;-;Ekstra seng
 Fade;-;Fade
 Fade in when scrolling;-;Fade når du scroller
 Failed;-;Feilet
@@ -225,11 +222,15 @@ I am sorry, but all fields are required before sending a message.;-;Beklager, me
 If you enable this, the parallex effect will be enabled. The background will scroll faster then the cell on top;-;Hvis du aktiverer dette vil du aktivere paralaxx effekter, bakgrunnen vil da scrolle raskere enn cellen over.
 Image;-;Bilde
 Image text;-;Bildetekst
+Include breakfast for {price} per night per guest;-;Inkluder frokost for {price} kr per natt per gjest.
 Include breakfast for {price} per night per room;-;Legg til frokost for {price}kr per natt / per rom.
 Include early checkin for {price};-;Legg inn tidlig innsjekk for {price}kr.
+Include extra bed for {price} per night;-;Inkluder ekstra seng for {price} kr per natt.
 Include extra bed for {price} per night per room;-;Legg til en ekstra seng for {price}kr per rom.
 Include late checkout for {price};-;Legg til sen utsjekk for {price}kr per rom.
+Include parking for {price} per night;-;Inkluder parkering for {price} kr per natt.
 Include parking for {price} per night per room;-;Legg til parkering for {price}kr per natt per / per rom. 
+Include the possibility to cancel your stay for {price} per night;-;Inkluder muligheten for avbestilling for {price} per natt.
 Include the possibility to cancel your stay for {price} per night per room;-;Legg til mulighet for avbestilling for {price}kr per natt per rom.
 Information;-;Informasjon
 Inner background;-;Indre bakgrunn
@@ -269,6 +270,8 @@ Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
 March;-;Mars
 Mark as ready;-;Marker som ferdig
+Max of children beds;-;Max antall barnesenger
+Max of number of beds;-;Max antall senger
 May;-;Mai
 Menu;-;Meny
 Merchant ID is found in braintree account.;-;Merchant ID er noe du finner på kontoen din hos braintree.
@@ -329,6 +332,10 @@ Not participated illegal reason;-;Ikke deltatt, ugyldig grunn.
 Not participated legal reason;-;Ikke deltatt, gyldig grunn.
 Not specified;-;Ikke spesifisert
 November;-;November
+Number of adults;-;Antall voksne
+Number of beds (default);-;Antall senger (default)
+Number of children;-;Antall barn
+Number of children beds (default);-;Antall barnesenger (default)
 Number of fields;-;Antall felt
 Number of guests;-;Antall gjester
 Number of instances added;-;Antall av instanser lagt til
@@ -599,7 +606,6 @@ You do not have any products in your cart;-;Du har ingen produkter i din handlek
 You got rooms that are not available in the selected time periode.;-;Det er rom som ikke er tilgjenglig i valgt periode.
 You have not participated in any events yet.;-;Du har ikke deltatt på noen eventer enda
 You have not signed up for any events yet.;-;Du har ikke deltatt på noen eventer enda.
-You have selected {count} of this room type.;-;Du har valgt {count} av denne romtypen.
 You need to agree to the terms and conditions;-;Du må godta bruksvilkårene før du kan fortsette.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
 Your email;-;Din epost

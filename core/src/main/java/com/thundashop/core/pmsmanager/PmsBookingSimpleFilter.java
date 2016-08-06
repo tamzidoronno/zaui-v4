@@ -7,6 +7,7 @@ import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class PmsBookingSimpleFilter {
@@ -17,11 +18,15 @@ public class PmsBookingSimpleFilter {
         this.manager = aThis;
     }
 
-    List<PmsRoomSimple> filterRooms(PmsBookingFilter filter) {
-        List<PmsRoomSimple> result = new ArrayList();
+    LinkedList<PmsRoomSimple> filterRooms(PmsBookingFilter filter) {
+        LinkedList<PmsRoomSimple> result = new LinkedList();
         List<PmsBooking> bookings = manager.getAllBookings(filter);
         for(PmsBooking booking : bookings) {
-            for(PmsBookingRooms room : booking.getActiveRooms()) {
+            List<PmsBookingRooms> rooms = booking.getActiveRooms();
+            if(filter.includeDeleted) {
+                rooms = booking.getAllRoomsIncInactive();
+            }
+            for(PmsBookingRooms room : rooms) {
                 if(inFilter(room, filter, booking)) {
                     result.add(convertRoom(room, booking));
                 }
@@ -30,7 +35,7 @@ public class PmsBookingSimpleFilter {
         
         Collections.sort(result, new Comparator<PmsRoomSimple>(){
             public int compare(PmsRoomSimple o1, PmsRoomSimple o2){
-                return o1.room.compareTo(o2.room);
+                return o2.regDate.compareTo(o1.regDate);
             }
         });
         return result;
@@ -45,6 +50,8 @@ public class PmsBookingSimpleFilter {
         simple.price = room.price;
         simple.checkedIn = false;
         simple.checkedOut = false;
+        simple.regDate = booking.rowCreatedDate;
+        simple.keyIsReturned = room.keyIsReturned;
         
         if(manager.getConfiguration().hasLockSystem()) {
             simple.code = room.code;
@@ -59,21 +66,30 @@ public class PmsBookingSimpleFilter {
         if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
             simple.room = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
         }
+        if(room.bookingItemTypeId != null) {
+            simple.roomType = manager.bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+        }
         
         simple.paidFor = booking.payedFor;
-        if(room.isStarted() && !room.isEnded()) {
+        if(room.isDeleted() || booking.isDeleted) {
+            simple.progressState = "deleted";
+        } else if(room.isStarted() && !room.isEnded()) {
             if(manager.getConfiguration().hasLockSystem() && !room.addedToArx) {
                 simple.progressState = "waitingforlock";
             } else {
-                simple.progressState = "started";
+                simple.progressState = "active";
             }
+        } else if(!booking.confirmed) {
+            simple.progressState = "unconfirmed";
         } else if(room.isEnded()) {
             simple.progressState = "ended";
-        } else {
-            simple.progressState = "notstarted";
+        } else if(booking.confirmed) {
+            simple.progressState = "confirmed";
         }
         
-        if(!booking.payedFor) {
+        if(!booking.payedFor && 
+                manager.getConfigurationSecure().requirePayments && 
+                !simple.progressState.equals("deleted")) {
             simple.progressState = "notpaid";
         }
         

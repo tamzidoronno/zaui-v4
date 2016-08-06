@@ -8,4 +8,7 @@ public class ZwaveData {
     public Object value;
     
     public ZwaveData deviceTypeString;
+    public ZwaveData givenName;
+    public ZwaveData isFailed;
+    public ZwaveData isAwake;
 }

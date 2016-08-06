@@ -1,7 +1,7 @@
 <?
 /* @var $this \ns_e073a75a_87c9_4d92_a73a_bc54feb7317f\Products */
 $product = $this->getApi()->getProductManager()->getProduct($_POST['value']);
-$selectedThemeApp = $this->getFactory()->getApplicationPool()->getSelectedThemeAppInstance();
+$selectedThemeApp = $this->getFactory()->getApplicationPool()->getSelectedThemeApp();
 $templates = $selectedThemeApp->getAvailableProductTemplates();
 $groups = $this->getApi()->getUserManager()->getAllGroups();
 ?>

@@ -1,0 +1,8 @@
+.credit_transfer_input input {
+    float: right;
+    padding: 10px;
+    border: solid 2px #D0D0D0;
+    border-radius: 8px;
+    margin-right: 10px;
+    margin-top: 2px;
+}

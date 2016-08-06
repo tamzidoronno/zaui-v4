@@ -200,7 +200,7 @@ public class PmsBooking extends DataCommon {
         rooms.removeAll(toRemove);
     }
 
-    Iterable<PmsBookingRooms> getAllRoomsIncInactive() {
+    List<PmsBookingRooms> getAllRoomsIncInactive() {
         return rooms;
     }
 

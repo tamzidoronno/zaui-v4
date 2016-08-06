@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PmsRoomSimple implements Serializable {
@@ -17,6 +18,7 @@ public class PmsRoomSimple implements Serializable {
     public Integer numberOfGuests;
     public String code = "";
     public String room ="";
+    public String roomType = "";
     public String progressState = "";
     public double price = 0.0;
     public boolean paidFor = false;
@@ -24,4 +26,6 @@ public class PmsRoomSimple implements Serializable {
     public boolean roomCleaned = false;
     public boolean checkedIn;
     public boolean checkedOut;
+    public boolean keyIsReturned = false;
+    public Date regDate;
 }

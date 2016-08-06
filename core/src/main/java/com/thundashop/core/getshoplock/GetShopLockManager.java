@@ -157,6 +157,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                         if(res != null && res.hasCode != null && res.hasCode.value != null && res.hasCode.value.equals(true)) {
                                             code.setAddedToLock();
                                             device.needSaving = true;
+                                            device.lastTriedUpdate = null;
                                             System.out.println("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")");
                                             break;
                                         } else {

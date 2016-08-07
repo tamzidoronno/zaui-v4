@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
+import javax.annotation.PostConstruct;
+import org.springframework.aop.TargetSource;
+import org.springframework.aop.framework.Advised;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +51,21 @@ public class ListManager extends ManagerBase implements IListManager {
     
     @Autowired
     private List<ListBadgetAware> badgeAwareManagers;
+    
+    
+    @PostConstruct
+    public void setBadgeAwareManagers() throws Exception {
+        List<ListBadgetAware> newBadges = new ArrayList();
+        for (ListBadgetAware aware : badgeAwareManagers) {
+            Advised advised = (Advised) aware;
+            TargetSource source = advised.getTargetSource();
+            newBadges.add((ListBadgetAware)source.getTarget());
+        }
+        
+        badgeAwareManagers.clear();
+        badgeAwareManagers.addAll(newBadges);
+    }
+    
     
     @Override
     public void dataFromDatabase(DataRetreived data) {

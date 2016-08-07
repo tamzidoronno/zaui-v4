@@ -40,6 +40,8 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     private ListManager listManager;
     
     private Map<String, ApplicationInstance> applicationInstances;
+    
+    private HashMap<String, Integer> cachedSecurity = new HashMap();
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -100,6 +102,8 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
 
         application.settings = saveSettings;
         saveObject(application);
+        
+        cachedSecurity.remove(application.id);
         return checkSecurity(application);
     }
 
@@ -139,19 +143,14 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
             return secureClone;
         }
         
-        List<String> pages = pageManger.getPagesForApplicationOnlyBody(secureClone.id);
-
         int lowestAccessLevelForAppOnPages = Integer.MAX_VALUE;
         
-        if (pages.size() == 0) {
-            lowestAccessLevelForAppOnPages = 0;
+        if (cachedSecurity.get(secureClone.id) == null) {
+            List<String> pages = pageManger.getPagesForApplicationOnlyBody(secureClone.id);
+            lowestAccessLevelForAppOnPages = getLowestAccessLevel(pages);
+            cachedSecurity.put(secureClone.id, lowestAccessLevelForAppOnPages);
         } else {
-            for (String pageId : pages) {
-                int accessLevel = listManager.getHighestAccessLevel(pageId);
-                if (accessLevel < lowestAccessLevelForAppOnPages) {
-                    lowestAccessLevelForAppOnPages = accessLevel ;
-                }
-            }    
+            lowestAccessLevelForAppOnPages = cachedSecurity.get(secureClone.id);
         }
         
         if (lowestAccessLevelForAppOnPages > 0 && (getSession() == null || getSession().currentUser == null)) {
@@ -163,6 +162,21 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         }
         
         return secureClone;
+    }
+
+    private int getLowestAccessLevel(List<String> pages) {
+        int lowestAccessLevelForAppOnPages = Integer.MAX_VALUE;
+        if (pages.size() == 0) {
+            lowestAccessLevelForAppOnPages = 0;
+        } else {
+            for (String pageId : pages) {
+                int accessLevel = listManager.getHighestAccessLevel(pageId);
+                if (accessLevel < lowestAccessLevelForAppOnPages) {
+                    lowestAccessLevelForAppOnPages = accessLevel ;
+                }
+            }
+        }
+        return lowestAccessLevelForAppOnPages;
     }
 
     @Override

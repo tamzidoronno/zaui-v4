@@ -535,6 +535,11 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
 
     @Override
     public int getBadges(Entry entry) {
+        
+        if (!applicationPool.isActivated("e4a506de-4702-4d82-8224-f30e5fdb1d2e") && !applicationPool.isActivated("b48c3e14-676d-4c9e-acfc-60591c711c57")) {
+            return 0;
+        }
+        
         List<ApplicationInstance> apps = pageManager.getApplicationsForPage(entry.pageId);
         ApplicationInstance mecaFleetService = apps.stream().filter(app -> app.appSettingsId.equals("e4a506de-4702-4d82-8224-f30e5fdb1d2e"))
                 .findAny()

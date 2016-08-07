@@ -293,7 +293,7 @@ public class BookingItemAssignerOptimal {
         
         List<String> availableItems = availableBookingItems
                 .stream()
-                .filter(o -> (start != null && end != null && o.isAvailable(start, end) || (o.notInUseAtAll())))
+                .filter(o -> ( start != null && end != null && o.isAvailable(start, end) || (o.notInUseAtAll()) ))
                 .map(o -> o.bookingItemId)
                 .collect(Collectors.toList());
         

@@ -671,6 +671,7 @@ public class PmsManagerProcessor {
             manager.getShopLockManager.removeCodeOnLock(item.bookingItemAlias, room.code);
         } else {
             room.code = manager.getShopLockManager.getCodeForLock(item.bookingItemAlias);
+            room.addedToArx = true;
             PmsBooking booking = manager.getBookingFromRoom(room.pmsBookingRoomId);
             manager.saveBooking(booking);
         }

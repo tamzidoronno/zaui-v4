@@ -1,0 +1,48 @@
+<?php
+/* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+$today = date("d.m.Y", time());
+$tomorrow = date("d.m.Y", time()+86400);
+$nowTime = date("H:i", time());
+if($this->fastAddedCode) {
+    echo "<h1>Room has been added, code for room is: " . $this->fastAddedCode . "</h1>";
+}
+?>
+
+<span class='pmsbutton' onclick='$(".fastcheckinform").toggle();' gstype='submit'>Fast checking guest</span>
+
+<div gstype="form" method="fastCheckIn" class='fastcheckinform' style='background-color:#fff; position:absolute; border: solid 2px; padding: 5px; border-radius: 3px; display:none;'>
+    <h1 style='text-align: center;'>Fast checkin</h1>
+    <table>
+        <tr>
+            <td>Check in</td>
+            <td><input type='txt' class='fastcheckinstart' value='<?php echo $today; ?>' gsname='startdate'><input type='txt' style='width:40px; text-align: center;' value='<?php echo $nowTime; ?>' gsname='starttime'></td>
+        </tr>
+        <tr>
+            <td>Check out</td>
+            <td><input type='txt' class='fastcheckinend' value='<?php echo $tomorrow; ?>' gsname='enddate'><input type='txt' style='width:40px; text-align: center;' value='11:00' gsname='endtime'></td>
+        </tr>
+        <tr>
+            <td>Room</td>
+            <td>
+                <select gsname='roomitem' style='width:100%;box-sizing: border-box;text-align: center;'>
+                <?php
+                foreach($items as $item) {
+                    echo "<option value='".$item->id."'>" . $item->bookingItemName . "</option>";
+                }
+                ?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Add</td>
+            <td><span class='pmsbutton' style='width:100%;box-sizing: border-box;text-align: center;' gstype='submit'>Add guest</span></td>
+        </tr>
+    </table>
+</div>
+<hr>
+
+<script>
+    $('.fastcheckinstart').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.fastcheckinend').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

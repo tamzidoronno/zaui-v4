@@ -68,10 +68,12 @@ $searchtypes['summary'] = "Summary";
 <?php
 $types = $this->getTypes();
 
+if($config->fastCheckIn) {
+    $this->includefile("fastcheckin");
+}
 if(!isset($filter->typeFilter)) {
     $filter->typeFilter = array();
 }
-
 foreach($types as $id => $type) {
     echo "<span class='typefilter'>";
     $checked = "";

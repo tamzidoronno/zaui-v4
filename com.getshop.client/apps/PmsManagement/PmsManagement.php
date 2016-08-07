@@ -10,6 +10,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public $errors = array();
     private $checkedCanAdd = array();
     public $roomTable = "";
+    public $fastAddedCode = null;
     
     public function toggleFilterVersion() {
         if(!isset($_SESSION['toggleOldFilterVersion'])) {
@@ -29,6 +30,39 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $orderid = $_POST['data']['orderid'];
         $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderid, $email, $bookingId);
         $this->showBookingInformation();
+    }
+    
+    public function fastCheckIn() {
+        $starttime = strtotime($_POST['data']['startdate'] . " " . $_POST['data']['starttime']);
+        $endtime = strtotime($_POST['data']['enddate'] . " " . $_POST['data']['endtime']);
+        $room = $_POST['data']['roomitem'];
+        
+        $this->getApi()->getPmsManager()->markRoomAsCleaned($this->getSelectedName(), $room);
+        
+        $user = $this->getApi()->getUserManager()->getUserById("fastchecking_user");
+        if(!$user) {
+            $user = new \core_usermanager_data_User();
+            $user->fullName = "Fast checking user";
+            $user->id = "fastchecking_user";
+            $this->getApi()->getUserManager()->saveUser($user);
+        }
+        
+        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
+        $booking->userId = $user->id;
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+        
+        $this->getApi()->getPmsManager()->addBookingItem($this->getSelectedName(), 
+                $booking->id, 
+                $room,
+                $this->convertToJavaDate($starttime), 
+                $this->convertToJavaDate($endtime));
+        
+        $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $booking->id);
+        
+        foreach($booking->rooms as $room) {
+            $this->fastAddedCode = $room->code;
+        }
     }
     
     public function massUpdatePrices() {

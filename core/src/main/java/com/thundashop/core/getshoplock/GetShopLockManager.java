@@ -140,6 +140,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 for(Integer offset : device.codes.keySet()) {
                     GetShopLockCode code = device.codes.get(offset);
                     if(code.needUpdate()) {
+                        if(code.needToBeRemoved()) {
+                            code.refreshCode();
+                        }
                         for(int i = 0; i < 10; i++) {
                             System.out.println("\t Need to add code to offsett: " + offset + " (" + device.name + ")");
                             setCode(offset, code.fetchCodeToAddToLock(), true);

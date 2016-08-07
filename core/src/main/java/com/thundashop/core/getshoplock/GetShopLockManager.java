@@ -127,7 +127,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String addr2 = "http://"+hostname+":8083/" + URLEncoder.encode("ZWave.zway/Run/devices["+device.zwaveid+"].UserCode.Get("+offset+")", "UTF-8");
                 
                 GetshopLockCom.httpLoginRequest(addr,username,password);
-                GetshopLockCom.httpLoginRequest(addr2,username,password);
+//                GetshopLockCom.httpLoginRequest(addr2,username,password);
             } catch (Exception ex) {
                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -136,46 +136,45 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         @Override
         public void run() {
-            device.lastTriedUpdate = new Date();
-            for(Integer offset : device.codes.keySet()) {
-                GetShopLockCode code = device.codes.get(offset);
-                if(connectedToBookingEngineItem(device, items) == null) {
-                    continue;
-                }
-                if(code.needUpdate()) {
-                    for(int i = 0; i < 5; i++) {
-                        System.out.println("\t Need to add code to offsett: " + offset + " (" + device.name + ")");
-                        setCode(offset, code.fetchCodeToAddToLock(), true);
-                        try {
-                            GetShopHotelLockCodeResult result = getSetCodeResult(offset);
-                            Thread.sleep(3000);
-                            if(result != null && result.hasCode != null && result.hasCode.value != null && result.hasCode.value.equals(true)) {
-                                System.out.println("\t\t Code alread set... should not be on offset: " + offset + " (" + device.name + ")");
-                            } else {
-                                System.out.println("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")");
-                                for(int j = 0; j < 5; j++) {
-                                    setCode(offset, code.fetchCodeToAddToLock(), false);
-                                    Thread.sleep(20000);
-                                    GetShopHotelLockCodeResult res = getSetCodeResult(offset);
-                                    if(res != null && res.hasCode != null && res.hasCode.value != null && res.hasCode.value.equals(true)) {
-                                        code.setAddedToLock();
-                                        device.needSaving = true;
-                                        System.out.println("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")");
-                                        break;
-                                    } else {
-                                        System.out.println("\t\t Failed to set code to offset " + offset + " on attempt: " + j+ " (" + device.name + ")");
+            if(hasConnectivity()) {
+                for(Integer offset : device.codes.keySet()) {
+                    GetShopLockCode code = device.codes.get(offset);
+                    if(code.needUpdate()) {
+                        for(int i = 0; i < 10; i++) {
+                            System.out.println("\t Need to add code to offsett: " + offset + " (" + device.name + ")");
+                            setCode(offset, code.fetchCodeToAddToLock(), true);
+                            try {
+                                GetShopHotelLockCodeResult result = getSetCodeResult(offset);
+                                Thread.sleep(3000);
+                                if(result != null && result.hasCode != null && result.hasCode.value != null && result.hasCode.value.equals(true)) {
+                                    System.out.println("\t\t Code alread set... should not be on offset: " + offset + " (" + device.name + ")");
+                                } else {
+                                    System.out.println("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")");
+                                    for(int j = 0; j < 24; j++) {
+                                        setCode(offset, code.fetchCodeToAddToLock(), false);
+                                        Thread.sleep(5000);
+                                        GetShopHotelLockCodeResult res = getSetCodeResult(offset);
+                                        if(res != null && res.hasCode != null && res.hasCode.value != null && res.hasCode.value.equals(true)) {
+                                            code.setAddedToLock();
+                                            device.needSaving = true;
+                                            device.lastTriedUpdate = null;
+                                            System.out.println("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")");
+                                            break;
+                                        } else {
+                                            System.out.println("\t\t Failed to set code to offset " + offset + " on attempt: " + j+ " (" + device.name + ")");
+                                        }
                                     }
+                                    break;
                                 }
-                                break;
+                                if(code.isAddedToLock()) {
+                                    break;
+                                }
+                            } catch (Exception ex) {
+                                Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            if(code.isAddedToLock()) {
-                                break;
-                            }
-                        } catch (Exception ex) {
-                            Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                        try { Thread.sleep(10000); }catch(Exception e) {}
                     }
-                    try { Thread.sleep(10000); }catch(Exception e) {}
                 }
             }
             device.beingUpdated = false;
@@ -195,6 +194,34 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
             return null;
         }
+
+        private boolean hasConnectivity() {
+             try {
+                System.out.println("Checking for connectivity for " + device.name + " (" + device.zwaveid + ")");
+                String postfix = "ZWave.zway/Run/devices["+device.zwaveid+"].SendNoOperation()";
+                postfix = URLEncoder.encode(postfix, "UTF-8");
+                String address = "http://"+hostname+":8083/" + postfix;
+                GetshopLockCom.httpLoginRequest(address,username,password);
+               
+                try { Thread.sleep(90000); }catch(Exception e) {}
+                 
+                postfix = "ZWave.zway/Run/devices["+device.zwaveid+"]";
+                postfix = URLEncoder.encode(postfix, "UTF-8");
+                address = "http://"+hostname+":8083/" + postfix;
+                
+                Gson gson = new Gson();
+                String res = GetshopLockCom.httpLoginRequest(address,username,password);
+                ZWaveDevice result = gson.fromJson(res, ZWaveDevice.class);
+                boolean isFailed = new Boolean(result.data.isFailed.value + "");
+                if(isFailed) { 
+                    System.out.println("No connectivity found for :" + device.name + " (" + device.zwaveid + ")");
+                    return false; }
+                return true;
+            } catch (Exception ex) {
+                Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return false;
+        }
     }
     
     @Autowired
@@ -207,6 +234,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 GetShopDevice toAdd = (GetShopDevice) obj;
                 devices.put(obj.id, toAdd);
                 toAdd.beingUpdated = false;
+                toAdd.lastTriedUpdate = null;
             }
             if(obj instanceof GetShopLockMasterCodes) {
                 masterCodes = (GetShopLockMasterCodes) obj;
@@ -377,7 +405,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
         
         for(GetShopDevice dev : devices.values()) {
-            if(dev.beingUpdated && !dev.isFailed) {
+            if(dev.beingUpdated) {
                 return;
             }
         }
@@ -387,11 +415,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null) {
                 continue;
             }
-            if(dev.isFailed) {
-                continue;
-            }
             if(dev.isLock() && !dev.beingUpdated && dev.needUpdate()) {
                 dev.beingUpdated = true;
+                dev.lastTriedUpdate = new Date();
                 String user = getUsername();
                 String pass = getPassword();
                 String host = getHostname();

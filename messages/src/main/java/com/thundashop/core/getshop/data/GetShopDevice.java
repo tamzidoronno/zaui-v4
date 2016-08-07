@@ -49,8 +49,8 @@ public class GetShopDevice extends DataCommon {
             //Wait an hour before trying again on this one.
             Calendar cal = Calendar.getInstance();
             cal.setTime(lastTriedUpdate);
-            cal.add(Calendar.MINUTE, -5);
-            if(cal.getTime().before(new Date())) {
+            cal.add(Calendar.MINUTE, 15);
+            if(cal.getTime().after(new Date())) {
                 return false;
             }
         }

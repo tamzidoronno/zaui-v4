@@ -171,9 +171,9 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                     }
                 } else {
                     if($curBooking->confirmed) {
-                        echo 'thundashop.common.goToPage("/?page=booking_completed_'.$this->getSelectedName().'_confirmed");';
+                        echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName().'_confirmed");';
                     } else {
-                        echo 'thundashop.common.goToPage("/?page=booking_completed_'.$this->getSelectedName() . ");";
+                        echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
                     }
                 }
                 echo "</script>";

@@ -872,8 +872,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             return metaData.publicVisible;
         }
 
-        // Admins and editors.
-        if (getSession().currentUser.type > 10) {
+        // Admins
+        if (getSession().currentUser.type > 50) {
             return true;
         }
         

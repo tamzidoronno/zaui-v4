@@ -70,8 +70,6 @@ public class StoreHandler {
             Object result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
             clearSessionObject();
             
-            TranslationHandler handle = new TranslationHandler();
-            handle.updateTranslationOnAll(session.language, result);
 
             result = cloneResult(result, user);
             return result;
@@ -145,6 +143,16 @@ public class StoreHandler {
             ManagerSubBase manager = getManager(aClass, getShopInterfaceClass, inObject);
             Object result = executeMethod.invoke(manager, argObjects);
             result = manager.preProcessMessage(result, executeMethod);
+            
+            
+            TranslationHandler handle = new TranslationHandler();
+            String lang = manager.getSession().language;
+            if(lang == null) {
+                lang = manager.getStoreSettingsApplicationKey("language");
+            }
+            System.out.println(lang);
+            handle.updateTranslationOnAll(lang, result);
+            
             return result;
         } catch (IllegalAccessException ex) {
             throw new ErrorException(84);

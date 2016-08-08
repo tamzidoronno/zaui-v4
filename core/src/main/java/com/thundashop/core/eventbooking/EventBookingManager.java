@@ -715,7 +715,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             }
         }
         
-        if (user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty() && !user.companyObject.invoiceAddress.equals(user.emailAddress)) {
+        if (user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty() && !user.companyObject.invoiceEmail.equals(user.emailAddress)) {
             String messageId = messageManager.sendMail(user.companyObject.invoiceEmail, user.fullName, subject, content, email, "");
             if (userIdInvoiceMessageId != null) {
                 userIdInvoiceMessageId.put(user.id, messageId);
@@ -872,8 +872,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             return metaData.publicVisible;
         }
 
-        // Admins and editors.
-        if (getSession().currentUser.type > 10) {
+        // Admins
+        if (getSession().currentUser.type > 50) {
             return true;
         }
         

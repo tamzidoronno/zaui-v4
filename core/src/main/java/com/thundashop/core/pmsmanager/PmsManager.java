@@ -1994,16 +1994,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.end = end;
         room.guests.add(new PmsGuests());
 
-        Booking bookingToAdd = createBooking(room);
-        List<Booking> bookingToAddList = new ArrayList();
-        bookingToAddList.add(bookingToAdd);
-        if (!canAdd(bookingToAddList)) {
-            return "The room can not be added, its not available.";
-        }
+        if(booking.sessionId == null || booking.sessionId.isEmpty()) {
+            Booking bookingToAdd = createBooking(room);
+            List<Booking> bookingToAddList = new ArrayList();
+            bookingToAddList.add(bookingToAdd);
+            if (!canAdd(bookingToAddList)) {
+                return "The room can not be added, its not available.";
+            }
 
-        bookingEngine.addBookings(bookingToAddList);
-        booking.addRoom(room);
-        booking.attachBookingItems(bookingToAddList);
+            bookingEngine.addBookings(bookingToAddList);
+            booking.addRoom(room);
+            booking.attachBookingItems(bookingToAddList);
+        } else {
+            booking.addRoom(room);
+        }
+        
         saveBooking(booking);
 
         logEntry(itemToAdd.bookingItemName + " added to booking " + " time: " + convertToStandardTime(start) + " " + convertToStandardTime(end), bookingId, item);

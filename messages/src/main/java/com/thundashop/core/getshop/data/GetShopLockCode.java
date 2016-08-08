@@ -91,4 +91,11 @@ public class GetShopLockCode implements Serializable {
         needToBeRemoved = null;
         used = false;
     }
+
+    public boolean needToBeRemoved() {
+        if(needToBeRemoved != null) {
+            return true;
+        }
+        return false;
+    }
 }

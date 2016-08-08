@@ -3378,19 +3378,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         grafanaManager.addPoint("pmsmanager", "booking", toAdd);
     }
 
-    @Override
-    public void screwMe() {
-        for(int i = 0; i < 500; i++) {
-            for(PmsBooking booking : bookings.values()) {
-                for(PmsBookingRooms room : booking.rooms) {
-                    if(room.bookingId != null) {
-                        room.booking = bookingEngine.getBooking(room.bookingId);                
-                    }
-                }
-            }
-        }
-    }
-
+    
     @Override
     public List<PmsAdditionalTypeInformation> getAdditionalTypeInformation() throws Exception {
         return additionDataForTypes;

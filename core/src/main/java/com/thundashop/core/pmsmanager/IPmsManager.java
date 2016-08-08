@@ -39,8 +39,6 @@ public interface IPmsManager {
     @Editor
     public PmsBooking getBookingFromRoomIgnoreDeleted(String roomId);
     
-    @Administrator
-    public void screwMe();
     
     @Administrator
     public String setNewRoomType(String roomId, String bookingId, String newType);

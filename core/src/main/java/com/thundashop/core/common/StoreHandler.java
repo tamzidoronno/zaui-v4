@@ -150,7 +150,6 @@ public class StoreHandler {
             if(lang == null) {
                 lang = manager.getStoreSettingsApplicationKey("language");
             }
-            System.out.println(lang);
             handle.updateTranslationOnAll(lang, result);
             
             return result;

@@ -132,4 +132,8 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
         }
     }
 
+    public static function fetchStockQuantity() {
+        
+    }
+
 }

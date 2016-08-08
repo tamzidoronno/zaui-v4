@@ -129,7 +129,12 @@ $days[7] = "Sunday";
         <select class='emailtypeselection'>
         <?php
         foreach($notifications as $index => $name) {
-            echo "<option value='$index'>$name</option>";
+            $inuse = "";
+            if(isset($notificationSettings->emails->{$index})) {
+                $inuse = "(active)";
+            }
+            
+            echo "<option value='$index'>$name $inuse</option>";
         }
         ?>
         </select><br><br>

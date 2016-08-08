@@ -358,7 +358,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<PmsBookingAddonItem> toRemove = new ArrayList();
         HashMap<Integer, Integer> addTypes = new HashMap();
         for(PmsBookingAddonItem addon : room.addons) {
-            if(addon.isSingle) {
+            if(pmsManager.getConfigurationSecure().addonConfiguration.get(addon.addonType).isSingle) {
                 continue;
             }
             if(addon.date.before(room.date.start) || addon.date.after(room.date.end) &&

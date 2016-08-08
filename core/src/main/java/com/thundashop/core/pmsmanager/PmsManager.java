@@ -439,7 +439,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         saveBooking(booking);
         feedGrafana(booking);
-       System.out.println("Booking has been completed: " + booking.id);
+        System.out.println("Booking has been completed: " + booking.id);
         return 0;
     }
 

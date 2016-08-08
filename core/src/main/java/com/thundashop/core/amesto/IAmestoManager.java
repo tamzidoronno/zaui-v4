@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.amesto;
 
+import com.getshop.scope.GetShopSchedulerBase;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -15,9 +16,6 @@ import com.thundashop.core.common.GetShopApi;
  */
 @GetShopApi
 public interface IAmestoManager {
-    
-    @Editor
-    public void syncStockQuantity(String hostname, String productId) throws ErrorException;
     
     @Editor
     public void syncAllStockQuantity(String hostname) throws ErrorException;

@@ -14,6 +14,8 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.ibm.icu.util.Calendar; 
+import com.thundashop.core.amesto.AmestoManager;
+import com.thundashop.core.amesto.AmestoSync;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
@@ -154,6 +156,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
          
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
+        
+        if(applicationPool.getAvailableApplications().contains(applicationPool.getApplication("66b4483d-3384-42bb-9058-2ac915c77d80"))) {
+            createScheduler("amestosync", "00 08 * * *", AmestoSync.class);
+        }
     }
 
     @Override

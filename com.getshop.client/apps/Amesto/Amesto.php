@@ -22,10 +22,6 @@ class Amesto extends \MarketingApplication implements \Application {
         $this->setConfigurationSetting("hostname", $_POST['hostname']);
     }
     
-    public function syncStockQuantity() {
-        $this->getApi()->getAmestoManager()->syncStockQuantity($this->getConfigurationSetting("hostname"), $_POST['data']['productid']);
-    }
-    
     public function syncAllStockQuantity() {
         $this->getApi()->getAmestoManager()->syncAllStockQuantity($this->getConfigurationSetting("hostname"));
     }

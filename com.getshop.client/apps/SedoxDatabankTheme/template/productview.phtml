@@ -20,6 +20,7 @@ if (!function_exists("sedox_notAvailableCheck")) {
     <div class="innerview" productid="<? echo $product->id; ?>">
         <div class='title boldFont'>
             <i class='fa fa-file'></i> <? echo $productName; ?>
+            <div class='product_comment'><b> Comment: </b><? echo !@$product->comment ? "N/A" : $product->comment; ?></div>
         </div>
         <div class='downloadinfo'>
             <? $this->includefile("productdetails", "ns_4f89c95c_99dc_4ed7_9352_1e1c51f4630c"); ?>

@@ -2899,13 +2899,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public void addAddonsToBooking(Integer type, String roomId, boolean remove) {
-        
+        boolean foundRoom = true;
         PmsBooking booking = getBookingFromRoom(roomId);
+        if(booking == null) {
+            foundRoom = false;
+            booking = getBooking(roomId);
+        }
         checkSecurity(booking);
         PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
         
         List<String> roomIds = new ArrayList();
-        if(roomId == null || roomId.isEmpty()) {
+        if(!foundRoom) {
             for(PmsBookingRooms room : booking.getActiveRooms()) {
                 roomIds.add(room.pmsBookingRoomId);
             }

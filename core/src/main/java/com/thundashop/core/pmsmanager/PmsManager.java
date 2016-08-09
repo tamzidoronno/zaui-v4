@@ -266,13 +266,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result = startBooking();
         }
 
-        if (result.sessionEndDate != null && result.sessionStartDate != null && result.sessionStartDate.after(result.sessionEndDate) && !configuration.hasNoEndDate) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(result.sessionStartDate);
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            result.sessionEndDate = cal.getTime();
-        }
-
         return result;
     }
 
@@ -439,7 +432,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         saveBooking(booking);
         feedGrafana(booking);
-       System.out.println("Booking has been completed: " + booking.id);
+        System.out.println("Booking has been completed: " + booking.id);
         return 0;
     }
 
@@ -3378,19 +3371,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         grafanaManager.addPoint("pmsmanager", "booking", toAdd);
     }
 
-    @Override
-    public void screwMe() {
-        for(int i = 0; i < 500; i++) {
-            for(PmsBooking booking : bookings.values()) {
-                for(PmsBookingRooms room : booking.rooms) {
-                    if(room.bookingId != null) {
-                        room.booking = bookingEngine.getBooking(room.bookingId);                
-                    }
-                }
-            }
-        }
-    }
-
+    
     @Override
     public List<PmsAdditionalTypeInformation> getAdditionalTypeInformation() throws Exception {
         return additionDataForTypes;

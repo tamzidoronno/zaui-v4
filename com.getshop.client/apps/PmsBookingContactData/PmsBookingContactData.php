@@ -3,7 +3,6 @@ namespace ns_d3951fc4_6929_4230_a275_f2a7314f97c1;
 
 class PmsBookingContactData extends \WebshopApplication implements \Application {
     var $validation;
-    var $bookingCompleted = false;
     var $currentBooking = null;
     var $counter = 0;
     var $lastFieldPrintedType = "";
@@ -22,47 +21,9 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             echo "Please specify a booking engine first";
             return;
         }
-        if($this->bookingCompleted) {
-            $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-            if($config->payAfterBookingCompleted) {
-                $curBooking = $this->getCurrentBooking();
-                $orderId = $curBooking->orderIds[0];
-                
-                if(!$orderId) {
-                    ?>
-                    <script>
-                        document.location.href="/?page=payment_success";
-                    </script>
-                    <?
-                } else {
-                    ?>
-                    <script>
-                        document.location.href="/?page=cart&payorder=<?php echo $orderId; ?>";
-                    </script>
-                    <?
-                }
-            } else {
-                ?>
-                    <?php
-                    if($curBooking->confirmed) {
-                        ?>
-                        <script>
-                            document.location.href="/?page=booking_completed_<? echo $this->getSelectedName(); ?>_confirmed";
-                        </script>
-                        <?php
-                    } else {
-                        ?>
-                        <script>
-                            document.location.href="/?page=booking_completed_<? echo $this->getSelectedName(); ?>";
-                        </script>
-                        <?php
-                    }
-                    ?>
-                <?
-            }
-        } else {
-            $this->includefile("roomcontactdata");
-        }
+        echo "<span class='registrationdatafieldarea'>";
+        $this->includefile("roomcontactdata");
+        echo "</span>";
     }
     
     public function saveSettings() {
@@ -198,16 +159,30 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         if(!sizeof($this->validation) > 0) {
             $this->getCurrentBooking();
             $this->currentBooking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
-            if("s" == "d") {
-                
-            }
             if($this->currentBooking) {
-                $this->bookingCompleted = true;
+                $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+                $curBooking = $this->currentBooking;
+                echo "<script>";
+                if($config->payAfterBookingCompleted) {
+                    if(!isset($curBooking->orderIds[0])) {
+                        echo 'thundashop.common.goToPage("payment_success");';
+                    } else {
+                        echo 'thundashop.common.goToPageLink("?page=cart&payorder='.$curBooking->orderIds[0].'");';
+                    }
+                } else {
+                    if($curBooking->confirmed) {
+                        echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName().'_confirmed");';
+                    } else {
+                        echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
+                    }
+                }
+                echo "</script>";
             } else {
                 $this->validation[] = "An unknown error occured, could not complete the booking.";
                 $this->unknownError = "An unknown error occured, could not complete the booking.";
             }
         }
+        $this->includefile("roomcontactdata");
     }
 
     public function printTitle($title, $required, $type) {

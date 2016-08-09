@@ -95,7 +95,6 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
     public function removeAddon() {
         $itemType = $_POST['data']['itemtypeid'];
         $this->getApi()->getPmsManager()->removeFromCurrentBooking($this->getSelectedName(), $itemType);
-        $this->reRenderSummary();
     }
     
     

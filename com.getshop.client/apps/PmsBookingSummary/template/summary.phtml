@@ -83,7 +83,7 @@ foreach($booking->rooms as $room) {
         if(!isset($prices[$product->taxGroupObject->taxRate])) {
             $prices[$product->taxGroupObject->taxRate] = 0;
         }
-        $prices[$product->taxGroupObject->taxRate] += $product->price;
+        $prices[$product->taxGroupObject->taxRate] += ($product->price * $addon->count);
     }
     
 }

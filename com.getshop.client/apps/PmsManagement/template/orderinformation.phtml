@@ -294,7 +294,11 @@ if($booking->orderIds) {
         if($invoiceItemId == $room->bookingItemId) {
             $selected = "SELECTED";
         }
-        echo "<option value='".$room->bookingItemId."' $selected>" . $items[$room->bookingItemId]->bookingItemName . "</option>";
+        $guestInfo = "";
+        if($room->guests[0]->name) {
+            $guestInfo = " guest : " . $room->guests[0]->name;
+        }
+        echo "<option value='".$room->bookingItemId."' $selected>" . $items[$room->bookingItemId]->bookingItemName . $guestInfo . "</option>";
     }
 
     if(!$booking->invoicedTo) {

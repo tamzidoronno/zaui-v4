@@ -4,6 +4,8 @@
  */
 package com.thundashop.core.sedox;
 
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.sedox.magentoapi.SedoxApiPort;
 import com.thundashop.core.sedox.magentoapi.SedoxApiServiceLocator;
 import java.rmi.RemoteException;
@@ -104,7 +106,7 @@ public class SedoxMagentoIntegration {
         SedoxMagentoIntegration inte = new SedoxMagentoIntegration();
         List<Order> orders = inte.getOrders();
         for (Order order : orders) {
-            System.out.println(order);
+            GetShopLogHandler.logPrintStatic(order, null);
         }
 
         inte.getUserInformation(3611);

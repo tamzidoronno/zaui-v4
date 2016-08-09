@@ -65,7 +65,7 @@ public class TranslationHandler implements Serializable {
             }
             
             if(field.isAnnotationPresent(Translation.class) && !(inObject instanceof TranslationHandler)) {
-                System.out.println("WARNING:::: translation annotiation added without extending translation handler, object: " + inObject.getClass().getCanonicalName());
+                GetShopLogHandler.logPrintStatic("WARNING:::: translation annotiation added without extending translation handler, object: " + inObject.getClass().getCanonicalName(), null);
             }
             
             Object dataObject = field.get(inObject);

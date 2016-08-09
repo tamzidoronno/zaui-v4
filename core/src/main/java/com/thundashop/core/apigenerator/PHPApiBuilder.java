@@ -1,6 +1,8 @@
 package com.thundashop.core.apigenerator;
 
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -125,7 +127,7 @@ public class PHPApiBuilder {
 
     public void generate() throws IOException {
         String result = generatePHPApi();
-        System.out.println("Writing php api to : " + eventsPath);
+        GetShopLogHandler.logPrintStatic("Writing php api to : " + eventsPath, null);
         this.generator.writeFile(result, eventsPath + "API2.php");
         
         for (Class dataobject : dataObjects) {

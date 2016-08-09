@@ -15,7 +15,9 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.storemanager.StorePool;
@@ -118,16 +120,16 @@ public class Database extends StoreComponent {
         }
 
         if (file.exists() && !file.isDirectory()) {
-            System.out.println("The file " + file.getPath() + " is not a folder");
+            GetShopLogHandler.logPrintStatic("The file " + file.getPath() + " is not a folder", null);
             System.exit(-1);
         }
 
         file.mkdir();
 
         if (!file.exists()) {
-            System.out.println("=======================================================================================================");
-            System.out.println("Was not able to create folder " + file.getCanonicalPath());
-            System.out.println("=======================================================================================================");
+            GetShopLogHandler.logPrintStatic("=======================================================================================================", null);
+            GetShopLogHandler.logPrintStatic("Was not able to create folder " + file.getCanonicalPath(), null);
+            GetShopLogHandler.logPrintStatic("=======================================================================================================", null);
             System.exit(-1);
         }
 
@@ -194,8 +196,8 @@ public class Database extends StoreComponent {
             } catch (ClassCastException ex) {
                 // Nothing to do, the class probably been deleted but not the data in database.
             } catch (Exception ex) {
-                System.out.println("Figure out this : " + collection.getName() + " " + collection.getDB().getName());
-                System.out.println(dbObject);
+                GetShopLogHandler.logPrintStatic("Figure out this : " + collection.getName() + " " + collection.getDB().getName(), null);
+                GetShopLogHandler.logPrintStatic(dbObject, null);
                 ex.printStackTrace();
             }
         }

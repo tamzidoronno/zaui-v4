@@ -11,6 +11,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.Mongo;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DataScript;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.databasemanager.data.Credentials;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,34 +34,34 @@ public class Database2 {
     
     /**************** SAVE FUNCTIONS ***************/
     public void save(DataCommon application, Credentials cred) {
-        System.out.println("Saving1");
+        GetShopLogHandler.logPrintStatic("Saving1", null);
         databaseSingleton.save(application, cred);
     }
 
     void save(String database, String dbscripts, DataScript dbScript) {
-        System.out.println("Saving2");
+        GetShopLogHandler.logPrintStatic("Saving2", null);
         databaseSingleton.save(database, dbscripts, dbScript);
     }
     
     public void save(Class managerClass, DataCommon data) {
-        System.out.println("Saving3");
+        GetShopLogHandler.logPrintStatic("Saving3", null);
         databaseSingleton.save(managerClass, data);
     }
     
     public void save(String simpleName, String colName, DataCommon mailMessage) {
-        System.out.println("Saving4");
+        GetShopLogHandler.logPrintStatic("Saving4", null);
         databaseSingleton.save(simpleName, colName, mailMessage);
     }
     /**************** END SAVE ************/
     
     /**************** DELETE FUNCTIONS *************/
     public void delete(DataCommon application, Credentials cred) {
-        System.out.println("Delete1");
+        GetShopLogHandler.logPrintStatic("Delete1", null);
         databaseSingleton.delete(application, cred);
     }
 
     public void delete(Class managerClass, DataCommon data) {
-        System.out.println("Delete2");
+        GetShopLogHandler.logPrintStatic("Delete2", null);
         databaseSingleton.delete(managerClass, data);
     }
     /**************** END DELETE ************/

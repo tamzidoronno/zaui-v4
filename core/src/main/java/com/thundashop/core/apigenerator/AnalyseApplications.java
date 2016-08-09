@@ -8,6 +8,8 @@ import com.mongodb.Mongo;
 import com.thundashop.core.apigenerator.GenerateApi.ApiMethod;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.databasemanager.Database;
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +106,7 @@ public class AnalyseApplications {
         }
         
         if(path.isFile()) {
-            System.out.println(appPath + " is file");
+            GetShopLogHandler.logPrintStatic(appPath + " is file", null);
             return;
         }
         

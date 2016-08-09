@@ -5,6 +5,8 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.BufferedReader;
     import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -60,7 +62,7 @@ public class GenerateApi {
         coreClasses = findClasses(core);
         messageClasses = findClasses(messages);
         allManagers = filterClasses(coreClasses);
-        System.out.println("Done finding datasource");
+        GetShopLogHandler.logPrintStatic("Done finding datasource", null);
     }
 
     public void analyseApplications() throws UnknownHostException, IOException, ClassNotFoundException {
@@ -105,7 +107,7 @@ public class GenerateApi {
         }
 
         for(ApiMethod remove : toRemove) {
-            System.out.println("Removing: " + remove.methodName + " with : " + remove.arguments.size() + " arguments");
+            GetShopLogHandler.logPrintStatic("Removing: " + remove.methodName + " with : " + remove.arguments.size() + " arguments", null);
             methods.remove(remove);
         }
         
@@ -154,13 +156,13 @@ public class GenerateApi {
         for (String argresult : argresults) {
             String[] argmap = argresult.split(" ");
             if ((argmap.length != 2)) {
-                System.out.println("Failed to parse method: " + method.getName() + " arguments: " + args);
-                System.out.println("Number of arguments is incorrect (this is being splitted on spaces, make sure HashMap<String, String> is equal to HashMap<String,String> for example.");
+                GetShopLogHandler.logPrintStatic("Failed to parse method: " + method.getName() + " arguments: " + args, null);
+                GetShopLogHandler.logPrintStatic("Number of arguments is incorrect (this is being splitted on spaces, make sure HashMap<String, String> is equal to HashMap<String,String> for example.", null);
                 System.exit(0);
             }
             
             if (i >= method.getParameterTypes().length) {
-                System.out.println("Problem with ( is it overloading?, remember to order it with first least arguments first in both interface and java class) ; " + method.getName() + " ( " + filteredClass + ")");
+                GetShopLogHandler.logPrintStatic("Problem with ( is it overloading?, remember to order it with first least arguments first in both interface and java class) ; " + method.getName() + " ( " + filteredClass + ")", null);
                 System.exit(0);
             }
             map.put(argmap[1], method.getParameterTypes()[i].getCanonicalName());
@@ -246,7 +248,7 @@ public class GenerateApi {
     }
 
     public void generate() throws ClassNotFoundException, IOException, Exception {
-        System.out.println("Starting generate api");
+        GetShopLogHandler.logPrintStatic("Starting generate api", null);
         generatePHPApi();
         generateJavaApi();
 //        generatePythonApi();
@@ -257,7 +259,7 @@ public class GenerateApi {
     
 
     public LinkedList<Class> filterClasses(List<Class> apiClasses) {
-        System.out.println("Filtering classes");
+        GetShopLogHandler.logPrintStatic("Filtering classes", null);
         LinkedList<Class> filteredApiClasses = new LinkedList();
         for (Class apiClass : apiClasses) {
             for (Annotation anno : apiClass.getAnnotations()) {
@@ -280,7 +282,7 @@ public class GenerateApi {
         }
 
         if (debug) {
-            System.out.println("Number of annotated api classes: " + filteredApiClasses.size());
+            GetShopLogHandler.logPrintStatic("Number of annotated api classes: " + filteredApiClasses.size(), null);
         }
         return filteredApiClasses;
     }
@@ -301,7 +303,7 @@ public class GenerateApi {
     private static String[] createCommentLines(String readedContent, int methodStarting) {
         String cuttedText = readedContent.substring(0, methodStarting);
         if(cuttedText.lastIndexOf("/**") < 0) {
-            System.out.println("Failed to find comment in : " + readedContent);
+            GetShopLogHandler.logPrintStatic("Failed to find comment in : " + readedContent, null);
             System.exit(0);
         }
         String comment = cuttedText.substring(cuttedText.lastIndexOf("/**"));
@@ -339,7 +341,7 @@ public class GenerateApi {
             String path = filePath.getAbsolutePath() + "/src/main/java/" + filteredClass.getName().replace(".", "/") + ".java";
             String javafile = readContent(path);
             if(javafile.isEmpty()) {
-                System.out.println("Unable to load java file : " + path);
+                GetShopLogHandler.logPrintStatic("Unable to load java file : " + path, null);
                 System.exit(0);
             }
             result.arguments = findArguments(javafile, method, filteredClass);
@@ -363,7 +365,7 @@ public class GenerateApi {
         }
         
         if (debug)
-            System.out.println("Number of api calls in total: " + methods.size() + spaces + "for manager: " + filteredClass.getSimpleName());
+            GetShopLogHandler.logPrintStatic("Number of api calls in total: " + methods.size() + spaces + "for manager: " + filteredClass.getSimpleName(), null);
 
 
         if (methods.size() > 0) {

@@ -6,6 +6,8 @@ package com.thundashop.core.sedox;
 
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -39,7 +41,7 @@ public class SedoxPushOver implements Runnable {
     
     public void sendMessage(String pushoverUserId, String message) throws ErrorException {
         if (!frameworkConfig.productionMode) {
-            System.out.println("Sending pushover message: " + message);
+            GetShopLogHandler.logPrintStatic("Sending pushover message: " + message, null);
             return;
         }
         

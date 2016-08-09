@@ -8,9 +8,11 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.GrafanaFeeder;
 import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.Logger;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.Database;
@@ -246,7 +248,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             from = "post@getshop.com";
         }
         if(to == null || !to.contains("@")) {
-            System.out.println("Unable to send email to : " + to + " since it does not contain an @");
+            GetShopLogHandler.logPrintStatic("Unable to send email to : " + to + " since it does not contain an @", null);
             return;
         }
         for(int i = 0; i < 24; i++) {
@@ -280,7 +282,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 if (frameworkConfig.productionMode) {
                     Transport.send(message);
                 } else {
-                    System.out.println("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content.replace("<br>", "\n"));
+                    GetShopLogHandler.logPrintStatic("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content.replace("<br>", "\n"), null);
                 }
                 updateMailStatus("delivered");
                 delivered = true;

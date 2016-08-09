@@ -86,7 +86,6 @@ public class TranslationComparor {
         ArrayList<String> result = new ArrayList();
         for (String key : baseKeys) {
             if (toMerge.get(key) == null) {
-//                System.out.println("Unable to merge: " + key);
                 result.add(key + ";-;");
                 count++;
             } else {

@@ -104,9 +104,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Vector result = (Vector) client.execute("update_rooms_values", params);
 
         if ((Integer)result.get(0) != 0) {
-            System.out.println("Failed to update availability, send mail about it.");
-            System.out.println("0:" + result.get(0));
-            System.out.println("1:" + result.get(1));
+            logPrint("Failed to update availability, send mail about it.");
+            logPrint("0:" + result.get(0));
+            logPrint("1:" + result.get(1));
             return (String) result.get(1);
         }
         return "";
@@ -152,7 +152,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             daysBack = 10;
         }
         
-        System.out.println("Verifying all bookings");
+        logPrint("Verifying all bookings");
         Vector params = new Vector();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
@@ -167,11 +167,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         params.addElement(from);
         params.addElement(to);
-        System.out.println("Finding bookings from: " + from + " to -> " + to);
+        logPrint("Finding bookings from: " + from + " to -> " + to);
         Vector result = (Vector) client.execute("fetch_bookings", params);
         List<WubookBooking> toReturn = new ArrayList();
         if((Integer)result.get(0) != 0) {
-            System.out.println("Failed to fetch all reservations: " + result.get(1));
+            logPrint("Failed to fetch all reservations: " + result.get(1));
         } else {
             Vector getAllBookings = (Vector) result.get(1);
             
@@ -194,7 +194,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             daysBack = 10;
         }
         
-        System.out.println("Verifying all bookings");
+        logPrint("Verifying all bookings");
         Vector params = new Vector();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
@@ -209,11 +209,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         params.addElement(from);
         params.addElement(to);
-        System.out.println("Finding bookings from: " + from + " to -> " + to);
+        logPrint("Finding bookings from: " + from + " to -> " + to);
         Vector result = (Vector) client.execute("fetch_bookings_codes", params);
         List<Integer> toReturn = new ArrayList();
         if((Integer)result.get(0) != 0) {
-            System.out.println("Failed to fetch all reservations: " + result.get(1));
+            logPrint("Failed to fetch all reservations: " + result.get(1));
         } else {
             Vector getAllBookings = (Vector) result.get(1);
             
@@ -313,8 +313,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Vector result = (Vector) client.execute("fetch_new_bookings", params);
         List<WubookBooking> toReturn = new ArrayList();
         if (!result.get(0).equals(0)) {
-            System.out.println("0:" + result.get(0));
-            System.out.println("1:" + result.get(1));
+            logPrint("0:" + result.get(0));
+            logPrint("1:" + result.get(1));
             throw new Exception();
         } else {
             Vector bookings = (Vector) result.get(1);
@@ -347,7 +347,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Override
     public String markNoShow(String rcode) throws Exception {
         if(!connectToApi()) { return "Failed to connect to ap"; }
-        System.out.println("Setting no show on rcode: " + rcode);
+        logPrint("Setting no show on rcode: " + rcode);
         Vector params = new Vector();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
@@ -424,7 +424,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Override
     public String markCCInvalid(String rcode) throws Exception {
         if(!connectToApi()) { return "Failed to connect to ap"; }
-        System.out.println("Setting no show on rcode: " + rcode);
+        logPrint("Setting no show on rcode: " + rcode);
         Vector params = new Vector();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
@@ -511,7 +511,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             rdata.addedToWuBook = true;
             rdata.wubookroomid = (Integer)result.get(1);
             saveObject(rdata);
-            System.out.println("Succesfully added room");
+            logPrint("Succesfully added room");
         } else {
             res = result.toString();
         }
@@ -535,7 +535,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         String res = "";
         Integer response = (Integer) result.get(0);
         if(response == 0) {
-            System.out.println("Succesfully updated room");
+            logPrint("Succesfully updated room");
         } else {
             res = result.toString();
         }
@@ -661,7 +661,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         pmsManager.setBooking(newbooking);
         
         pmsManager.completeCurrentBooking();
-        System.out.println("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
+        logPrint("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
         return "";
     }
 

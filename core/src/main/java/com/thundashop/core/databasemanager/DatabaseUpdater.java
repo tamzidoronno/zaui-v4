@@ -7,6 +7,8 @@ package com.thundashop.core.databasemanager;
 
 import com.thundashop.core.common.DataScript;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,7 @@ public class DatabaseUpdater {
     }
     
     public void check(ApplicationContext context) {
-        System.out.println(" ============ Checing db scripts ==============");
+        GetShopLogHandler.logPrintStatic(" ============ Checing db scripts ==============", null);
         for (UpdateScript script : scripts) {
             
             if (script.doNotRun()) {
@@ -48,7 +50,7 @@ public class DatabaseUpdater {
             dbScript.id = id;
             
             if (!database.exists("GetShop", "dbscripts", dbScript)) {
-                System.out.println("DB UPDATING... " + script.getClass().getSimpleName());
+                GetShopLogHandler.logPrintStatic("DB UPDATING... " + script.getClass().getSimpleName(), null);
                 script.run();
                 database.save("GetShop", "dbscripts", dbScript);
             }
@@ -57,7 +59,7 @@ public class DatabaseUpdater {
 //            script.run();
         }
         
-        System.out.println(" ============ Done ==============");
+        GetShopLogHandler.logPrintStatic(" ============ Done ==============", null);
     }
     
 }

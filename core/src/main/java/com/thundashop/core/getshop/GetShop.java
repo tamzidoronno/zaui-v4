@@ -274,7 +274,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     public synchronized Store createWebPage(WebPageData data) throws ErrorException {
         String local = frameworkConfig.productionMode ? "" : ".local";
         if(storePool == null) {
-            System.out.println("Storepool null?");
+            logPrint("Storepool null?");
         }
         
         User user = new User();

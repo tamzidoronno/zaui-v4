@@ -777,7 +777,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     private void ensureNotOverwritingParameters(BookingItem item) {
         
         if (item == null) {
-            System.out.println("What?");
+            logPrint("What?");
         }
         BookingItem inMemory = items.get(item.id);
         if (inMemory != null) {
@@ -804,7 +804,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
                 BookingItem item = items.get(booking.bookingItemId);
                 if (!item.bookingItemTypeId.equals(booking.bookingItemTypeId)) {
-                    System.out.println("Updating: " + item.bookingItemName);
+                    logPrint("Updating: " + item.bookingItemName);
                     booking.bookingItemTypeId = item.bookingItemTypeId;
                     saveObject(booking);
                 }

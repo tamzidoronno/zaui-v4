@@ -10,7 +10,9 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.appmanager.data.ApplicationModule;
 import com.thundashop.core.appmanager.data.SavedApplicationSettings;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.storemanager.data.SettingsRow;
@@ -353,7 +355,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         
         for (Application app : allApplications) {
             if (app.appName.equals("SedoxMenu")) {
-                System.out.println("App 2: " + app.isFrontend + " Id: " + app.id);
+                GetShopLogHandler.logPrintStatic("App 2: " + app.isFrontend + " Id: " + app.id, null);
             }
         }
     }

@@ -967,7 +967,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             int High = 991881;
             int randomCode = r.nextInt(High-Low) + Low;
             
-            System.out.println("New code: " + randomCode);
+            logPrint("New code: " + randomCode);
             user.pinCode = ""+randomCode;
             collection.addUser(user);
             messageManager.sendSms("plivo", user.cellPhone, "Pincode: " + user.pinCode, "+47");

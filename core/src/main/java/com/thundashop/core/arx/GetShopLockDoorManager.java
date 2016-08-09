@@ -2,6 +2,7 @@ package com.thundashop.core.arx;
 
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author boggi
  */
-public class GetShopLockDoorManager  implements IDoorManager {
+public class GetShopLockDoorManager extends ManagerBase implements IDoorManager {
 
     private GetShopLockManager getShopLockManager;
     private BookingEngine bookingEngine;
@@ -58,7 +59,7 @@ public class GetShopLockDoorManager  implements IDoorManager {
 
     @Override
     public void doorAction(String externalId, String state) throws Exception {
-        System.out.println("External id: " + externalId + ", state: " + state);
+        logPrint("External id: " + externalId + ", state: " + state);
         if(state.equals("pulseOpen") || state.equals("forceOpenOn") || state.equals("forceOpenOff")) {
             getShopLockManager.openLock(externalId);
         }

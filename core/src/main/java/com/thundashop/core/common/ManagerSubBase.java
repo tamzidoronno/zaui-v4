@@ -10,6 +10,7 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
+import static com.thundashop.core.common.GetShopLogHandler.logPrintStatic;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -21,6 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -95,6 +97,10 @@ public class ManagerSubBase {
         
         startScheduler(gsscheduler, false);
         saveObject(gsscheduler);
+    }
+    
+    public void logPrint(Object key) {
+        logPrintStatic(key, storeId);
     }
     
     public void createProcessor(GetShopSchedulerBase process) {
@@ -340,7 +346,7 @@ public class ManagerSubBase {
                 schedulers.put(gsscheduler.id, gsscheduler);
             }
         } catch (Exception ex) {
-            System.out.println("Could not start scheduler");
+            GetShopLogHandler.logPrintStatic("Could not start scheduler", null);
             ex.printStackTrace();
         }
     }

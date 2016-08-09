@@ -4,7 +4,9 @@
  */
 package com.thundashop.core.databasemanager;
 
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -59,7 +61,7 @@ public class AddressList implements Serializable {
     }
     
     private void printHookupMessages() {
-        System.out.println("This server is not connected to a getshop network. Running standalone");
+        GetShopLogHandler.logPrintStatic("This server is not connected to a getshop network. Running standalone", null);
     }
     
      private boolean isMyIpaddress(String ip) {

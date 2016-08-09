@@ -38,7 +38,7 @@ public class StorePool {
         try {
              policy = Policy.getInstance(getClass().getResource("/antisamy-myspace-1.4.4.xml"));
         } catch (Exception ex) {
-            System.out.println("Could not find the antisamy policy file, can not continue unsecurly");
+            GetShopLogHandler.logPrintStatic("Could not find the antisamy policy file, can not continue unsecurly", null);
             ex.printStackTrace();
             System.exit(1);
         }
@@ -167,7 +167,7 @@ public class StorePool {
             object = gson.fromJson(message, type);
             object.addr = addr;
         } catch (JsonSyntaxException ex) {
-            System.out.println("Could not decode: " + message);
+            GetShopLogHandler.logPrintStatic("Could not decode: " + message, null);
             ex.printStackTrace();
             return null;
         }
@@ -182,17 +182,17 @@ public class StorePool {
             try {
                 Class classLoaded = getClass(types[i].getCanonicalName());
             }catch(Exception e) {
-                System.out.println("test");
+                GetShopLogHandler.logPrintStatic("test", null);
             }
             try {
                  Object argument = gson.fromJson(object.args.get(parameter), casttypes[i]);
                 executeArgs[i] = argument;
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("Cast type: " + casttypes[i]);
-                System.out.println("From json param: " + object.args.get(parameter));
-                System.out.println("From json paramValue: " + object.args.get(parameter));
-                System.out.println("From json message: " + message);
+                GetShopLogHandler.logPrintStatic("Cast type: " + casttypes[i], null);
+                GetShopLogHandler.logPrintStatic("From json param: " + object.args.get(parameter), null);
+                GetShopLogHandler.logPrintStatic("From json paramValue: " + object.args.get(parameter), null);
+                GetShopLogHandler.logPrintStatic("From json message: " + message, null);
                 ErrorException ex = new ErrorException(100);
                 ex.additionalInformation = e.getMessage();
                 throw ex;
@@ -213,7 +213,7 @@ public class StorePool {
         long end = System.currentTimeMillis();
         long diff = end - start;
         if (diff > 40) {
-            System.out.println("" + diff + " : " + object.interfaceName + " method: " + object.method);
+            GetShopLogHandler.logPrintStatic("" + diff + " : " + object.interfaceName + " method: " + object.method, null);
         }
         result = (result == null) ? new ArrayList() : result;
 
@@ -362,9 +362,9 @@ public class StorePool {
             }
         }
         if (method == null) {
-            System.out.println("Failed on interface: " + object.interfaceName);
-            System.out.println("Failed on method: " + object.method);
-            System.out.println("Failed on size: " + object.args.size());
+            GetShopLogHandler.logPrintStatic("Failed on interface: " + object.interfaceName, null);
+            GetShopLogHandler.logPrintStatic("Failed on method: " + object.method, null);
+            GetShopLogHandler.logPrintStatic("Failed on size: " + object.args.size(), null);
         }
         return method;
     }

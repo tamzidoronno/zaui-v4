@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopLogHandler;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -173,7 +174,7 @@ public class PmsBooking extends DataCommon {
     
     void dump() {
         for(String key : registrationData.resultAdded.keySet()) {
-            System.out.println(key + " : " + registrationData.resultAdded.get(key));
+            GetShopLogHandler.logPrintStatic(key + " : " + registrationData.resultAdded.get(key), null);
         }
     }
 
@@ -289,7 +290,7 @@ public class PmsBooking extends DataCommon {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(room.invoicedTo);
                 if(cal.get(Calendar.MONTH) == 2) {
-                    System.out.println(room.invoicedTo);
+                    GetShopLogHandler.logPrintStatic(room.invoicedTo, null);
                 }
             }
         }

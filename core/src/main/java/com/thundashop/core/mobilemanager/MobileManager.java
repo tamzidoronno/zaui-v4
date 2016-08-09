@@ -106,7 +106,7 @@ public class MobileManager extends ManagerBase implements IMobileManager {
             return;
         
         if (!frameworkConfig.productionMode) {
-            System.out.println("WARNING: Did not send push notification to android device, framework is set to DEVELOPMENT mode. Be careful!");
+            logPrint("WARNING: Did not send push notification to android device, framework is set to DEVELOPMENT mode. Be careful!");
             return;
         }
         

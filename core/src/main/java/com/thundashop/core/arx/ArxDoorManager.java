@@ -12,6 +12,8 @@ import com.assaabloy.arxdata.persons.PersonListType;
 import com.assaabloy.arxdata.persons.PersonType;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
@@ -76,7 +78,7 @@ public class ArxDoorManager implements IDoorManager {
         
         ArxConnection connection = new ArxConnection();
         if(!storeManager.isProductMode()) {
-            System.out.println("Executing:" + address);
+            GetShopLogHandler.logPrintStatic("Executing:" + address, null);
             return "";
         }
         return connection.httpLoginRequest(address, username, password, content);
@@ -112,7 +114,6 @@ public class ArxDoorManager implements IDoorManager {
         User currentUser = doorManager.getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export?include_accesscategory_id=true&exclude_deleted=true";
-//        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName, "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
@@ -145,7 +146,6 @@ public class ArxDoorManager implements IDoorManager {
         User currentUser = doorManager.getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export_accesscategory";
-//        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName, "");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
@@ -203,7 +203,7 @@ public class ArxDoorManager implements IDoorManager {
             hostName += "pulseOpen";
         }
         
-        System.out.println(hostName);
+        GetShopLogHandler.logPrintStatic(hostName, null);
         httpLoginRequest(hostName,"");
     }
 
@@ -349,7 +349,6 @@ public class ArxDoorManager implements IDoorManager {
     User currentUser = doorManager.getSession().currentUser;
         String arxHost = "https://" + currentUser.fullName;
         String hostName = arxHost + ":5002/arx/export?external_id=" + id + "&exclude_deleted=1";
-//        System.out.println("Looking at : " + hostName);
         
         String result = httpLoginRequest(hostName,"");
         InputStream is = new ByteArrayInputStream( result.getBytes() );
@@ -628,7 +627,6 @@ String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
                 }
                 if(element.getAttribute("type").equals("dac_properties")) {
                     log.dac_properties = element.getTextContent();
-//                    System.out.println(log.dac_properties);
                 }
             }
             

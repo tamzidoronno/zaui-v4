@@ -8,7 +8,9 @@ package com.thundashop.core.messagemanager;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.GrafanaFeeder;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.ordermanager.data.Order;
 import java.security.cert.CertificateException;
@@ -211,7 +213,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
         if (productionMode) {
             new Thread((Runnable) this).run();
         } else {
-            System.out.println("SMS Sent with " + getName() + " [to:  " + to + ", from: " +from + ", prefix: " + prefix + ", msg: " + message +" ]");
+            GetShopLogHandler.logPrintStatic("SMS Sent with " + getName() + " [to:  " + to + ", from: " +from + ", prefix: " + prefix + ", msg: " + message +" ]", null);
         }
     }
     

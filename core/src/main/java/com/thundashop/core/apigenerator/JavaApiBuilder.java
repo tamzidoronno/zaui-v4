@@ -6,7 +6,9 @@ package com.thundashop.core.apigenerator;
 
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.apigenerator.GenerateApi.ApiMethod;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -38,7 +40,7 @@ public class JavaApiBuilder {
         }
         
         File file = new File(apiPath);
-        System.out.println("Writing java api classes to: " + file.getAbsolutePath());
+        GetShopLogHandler.logPrintStatic("Writing java api classes to: " + file.getAbsolutePath(), null);
 
     }
 
@@ -93,10 +95,10 @@ public class JavaApiBuilder {
         String content = "";
         List<String> apiclasses = new ArrayList();
         if(apiPath == null) {
-            System.out.println("Not building java api, the path to source is not specified");
+            GetShopLogHandler.logPrintStatic("Not building java api, the path to source is not specified", null);
             return "";
         }
-        System.out.println("Building java api to: " + apiPath + "/");
+        GetShopLogHandler.logPrintStatic("Building java api to: " + apiPath + "/", null);
 
         for (Class entry : list) {
             String filename = getFileName(entry);

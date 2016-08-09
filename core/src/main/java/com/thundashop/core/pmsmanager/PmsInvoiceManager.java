@@ -329,8 +329,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 if(avoidOrderCreation) {
                     continue;
                 }
-                
-                Order order = getUnpaidOrder(booking);
+                Order order = null;
+                order = getUnpaidOrder(booking);
+                if(filter.createNewOrder) {
+                    order = null;
+                }
                 if(order != null) {
                     order.cart.addCartItems(itemsToReturn);
                     orderManager.saveOrder(order);
@@ -394,11 +397,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<CartItem> items = new ArrayList();
         boolean generateChanges = pmsManager.getConfigurationSecure().autoGenerateChangeOrders;
         if(generateChanges) {
-            List<CartItem> changes = getChangesForBooking(booking.id);
+            List<CartItem> changes = getChangesForBooking(booking.id, filter);
             items.addAll(changes);
         }
 
         for (PmsBookingRooms room : booking.getActiveRooms()) {
+            if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
+                if(!filter.pmsRoomId.equals(room.pmsBookingRoomId)) {
+                    continue;
+                }
+            }
             if(filter.autoGeneration) {
                 autoGenerateOrders(room, filter);
             } else {
@@ -1013,8 +1021,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return null;
     }
 
-    @Override
-    public List<CartItem> getChangesForBooking(String bookingId) {
+    private List<CartItem> getChangesForBooking(String bookingId, NewOrderFilter filter) {
         runningDiffRoutine = true;
         List<CartItem> returnresult = new ArrayList();
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
@@ -1022,6 +1029,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(room.invoicedFrom == null || room.invoicedTo == null) {
                 continue;
             }
+            
+            if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
+                if(!filter.pmsRoomId.equals(room.pmsBookingRoomId)) {
+                    continue;
+                }
+            }
+            
             List<CartItem> orderRoomItems = getAllOrderItemsForRoomOnBooking(room.pmsBookingRoomId, booking.id);
             List<CartItem> roomItems = createCartItemsForRoom(room.invoicedFrom, room.invoicedTo, booking, room);
             

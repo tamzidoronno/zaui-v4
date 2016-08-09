@@ -35,6 +35,9 @@ foreach($booking->rooms as $room) {
         continue;
     }
     $canUpdate = $this->getConfigurationSetting("canUpdateText") == "yes";
+    if($this->isEditorMode()) {
+        $canUpdate = true;
+    }
     printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText, $canUpdate);
     printAddons($room, $configuration, $this);
 }

@@ -469,8 +469,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($_POST['data']['endingAt']));
         }
         $filter->avoidOrderCreation = $_POST['data']['preview'] == "true";
-        $filter->itemId = $_POST['data']['itemid'];
+        $filter->pmsRoomId = $_POST['data']['roomId'];
         $filter->prepayment = true;
+        $filter->createNewOrder = true;
+        if($_POST['data']['appendToExisting'] == "true") {
+            $filter->createNewOrder = false;
+        }
         
         $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
         $this->showBookingInformation();

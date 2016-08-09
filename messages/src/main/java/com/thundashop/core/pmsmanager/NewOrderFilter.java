@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class NewOrderFilter implements Serializable {
     public Date endInvoiceAt = null;
-    public String itemId = "";
+    public String pmsRoomId = "";
     boolean onlyEnded = false;
     boolean prepayment = false;
     boolean forceInvoicing = false;
@@ -15,4 +15,5 @@ public class NewOrderFilter implements Serializable {
     public Date maxAutoCreateDate = null;
     public Integer increaseUnits = -1;
     public Integer prepaymentDaysAhead = -1;
+    public boolean createNewOrder = false;
 }

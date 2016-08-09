@@ -330,7 +330,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     continue;
                 }
                 Order order = null;
-                order = getUnpaidOrder(booking, filter.itemId);
+                order = getUnpaidOrder(booking);
+                if(filter.createNewOrder) {
+                    order = null;
+                }
                 if(order != null) {
                     order.cart.addCartItems(itemsToReturn);
                     orderManager.saveOrder(order);
@@ -399,8 +402,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
 
         for (PmsBookingRooms room : booking.getActiveRooms()) {
-            if(filter.itemId != null && !filter.itemId.isEmpty()) {
-                if(!filter.itemId.equals(room.bookingItemId)) {
+            if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
+                if(!filter.pmsRoomId.equals(room.pmsBookingRoomId)) {
                     continue;
                 }
             }
@@ -1008,21 +1011,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return price;
     }
 
-    private Order getUnpaidOrder(PmsBooking booking, String itemId) {
+    private Order getUnpaidOrder(PmsBooking booking) {
         for(String key : booking.orderIds) {
             Order ord = orderManager.getOrder(key);
             if(ord.status != Order.Status.PAYMENT_COMPLETED && !ord.transferredToAccountingSystem) {
-                if(itemId != null && !itemId.isEmpty()) {
-                    boolean found = false;
-                    for(CartItem item : ord.cart.getItems()) {
-                        if(item.getProduct().externalReferenceId != null && item.getProduct().externalReferenceId.equals(itemId)) {
-                            found = true;
-                        }
-                    }
-                    if(!found) {
-                        continue;
-                    }
-                }
                 return ord;
             }
         }
@@ -1038,8 +1030,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 continue;
             }
             
-            if(filter.itemId != null && !filter.itemId.isEmpty()) {
-                if(!filter.itemId.equals(room.bookingItemId)) {
+            if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
+                if(!filter.pmsRoomId.equals(room.pmsBookingRoomId)) {
                     continue;
                 }
             }

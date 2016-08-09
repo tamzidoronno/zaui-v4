@@ -52,7 +52,9 @@ $invoiceEmail =  $user->emailAddress;
 if($user->emailAddressToInvoice) {
     $invoiceEmail = $user->emailAddressToInvoice;
 }
-
+$phonePrefix = $user->prefix;
+$phoneNumber = $user->cellPhone;
+$bookerName = $user->fullName;
 ?>
 
 <div class='orderinformation'>
@@ -112,6 +114,19 @@ if($booking->orderIds) {
         $totalAmount += $total;
         $totalAmountEx += $totalEx;
         
+        $roomIds = array();
+        foreach($order->cart->items as $item) {
+            $roomIds[] = $item->product->externalReferenceId;
+        }
+        
+        $guests = array();
+        foreach($booking->rooms as $room) {
+            if(in_array($room->pmsBookingRoomId, $roomIds)) {
+                $guests = array_merge($guests, $room->guests);
+            }
+        }
+        
+        
         echo "<tr orderid='".$order->id."'>";
         echo "<td><a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a></td>";
         echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate))  . "</td>";
@@ -131,6 +146,38 @@ if($booking->orderIds) {
         }
         echo "</td>";
         echo "<td>";
+        
+        
+        echo "<span class='sendpaymentlinkbox' gstype='form' method='sendPaymentLink'>";
+        echo "<div style='padding-bottom: 10px;'>";
+        echo "<i class='fa fa-close closesendpaymentlink' style='float:right;'></i>";
+        echo "Send payment link";
+        echo "</div>";
+        echo "<input type='hidden' value='".$booking->id."' gsname='bookingid'>";
+        echo "<input type='hidden' value='".$order->id."' gsname='orderid'>";
+        echo "<div>";
+        
+        echo "<select style='width:100%; margin-bottom: 5px;' class='sendlinktouser'>";
+        echo "<option value='$phonePrefix:$phoneNumber:$invoiceEmail'>Booker : $bookerName</option>";
+        foreach($guests as $guest) {
+            /* @var $guest core_pmsmanager_PmsGuests */
+            if(!$guest->name) {
+                continue;
+            }
+            $pref = $guest->prefix;
+            $phone = $guest->phone;
+            $email = $guest->email;
+            echo "<option value='$pref:$phone:$email'>Guest : " . $guest->name . "</option>";
+        }
+        echo "</select><br>";
+        echo "<input type='txt' value='".$invoiceEmail."' placeholder='Email' gsname='bookerEmail' style='width:100%; margin-bottom: 5px;box-sizing:border-box;'><br>";
+        echo "<input type='txt' value='+".$phonePrefix."' placeholder='bookerPrefix' gsname='bookerPrefix' style='width: 30px;'>";
+        echo "<input type='txt' value='".$phoneNumber."' placeholder='bookerPhone' gsname='bookerPhone' style='width: 80px;'><input type='button' gstype='submitToInfoBox' gsvalue='sendtobooker' value='Send link'>";
+        echo "</div>";
+        
+        echo "</span>";
+        
+        
         if(@!$order->closed) {
             echo "<div>";
             echo "<select class='paymenttype'>";
@@ -218,6 +265,10 @@ if($booking->orderIds) {
     if(isset($_POST['data']['endingAt'])) {
         $endDate = strtotime($_POST['data']['endingAt']);
     }
+    $invoiceItemId = "";
+    if(isset($_POST['data']['itemid'])) {
+        $invoiceItemId = $_POST['data']['itemid'];
+    }
     
     $endingAt = date("d.m.Y", $endDate);
     
@@ -226,29 +277,31 @@ if($booking->orderIds) {
     $filter->onlyEnded = false;
     $filter->prepayment = $config->prepayment;
     $filter->avoidOrderCreation = true;
+    $filter->itemId = $invoiceItemId;
 
     $filter->endInvoiceAt = $this->convertToJavaDate($endDate);
     $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), $booking->id, $filter);
     $cart = $this->getApi()->getCartManager()->getCart();
-    if(sizeof($cart->items) > 0) {
-        echo "<br><h2>Next order preview (invoice until $endingAt)</h2>";
-        $this->includeOrderGenerationPreview();
 
-        echo "<br><label><input type='checkbox' gsname='preview' CHECKED> Update preview only</label><br>";
-        echo "<select gsname='itemid'>";
-        echo "<option value=''>All rooms</option>";
-        foreach($booking->rooms as $room) {
-            echo "<option value='".$room->bookingItemId."'>" . $items[$room->bookingItemId]->bookingItemName . "</option>";
-        }
+    echo "<br><h2>Next order preview (invoice until $endingAt)</h2>";
+    $this->includeOrderGenerationPreview();
 
-        if(!$booking->invoicedTo) {
-            $booking->invoicedTo = $booking->rooms[0]->date->start;
+    echo "<br><label><input type='checkbox' gsname='preview' CHECKED> Update preview only</label><br>";
+    echo "<select gsname='itemid'>";
+    echo "<option value=''>All rooms</option>";
+    foreach($booking->rooms as $room) {
+        $selected = "";
+        if($invoiceItemId == $room->bookingItemId) {
+            $selected = "SELECTED";
         }
-        echo "<label style='display:inline-block;'>Invoice to<br><input type='text' gsname='endingAt' value='$endingAt' style='font-size: 18px; width: 100px;padding: 4px;' /></label>";
-        echo "<span class='pmsbutton' gstype=\"submitToInfoBox\">Create new order</span>";
-    } else {
-        echo "There is nothing to invoice for this booking.";
+        echo "<option value='".$room->bookingItemId."' $selected>" . $items[$room->bookingItemId]->bookingItemName . "</option>";
     }
+
+    if(!$booking->invoicedTo) {
+        $booking->invoicedTo = $booking->rooms[0]->date->start;
+    }
+    echo "<label style='display:inline-block;'>Invoice to<br><input type='text' gsname='endingAt' value='$endingAt' style='font-size: 18px; width: 100px;padding: 4px;' /></label>";
+    echo "<span class='pmsbutton' gstype=\"submitToInfoBox\">Create new order</span>";
     ?>
 </div>
 

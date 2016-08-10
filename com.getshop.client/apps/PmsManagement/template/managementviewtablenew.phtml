@@ -12,6 +12,7 @@ $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelected
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 $channels = $this->getChannelMatrix();
 $hasPrices = false;
+$registrationRules = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
 
 if($config->requirePayments) {
     $hasPrices = true;
@@ -35,9 +36,7 @@ switch($config->bookingProfile) {
         $headers['room'] = "Room";
         break;
 }
-if($hasPrices) {
-    $headers['price'] = "Price";
-}
+$headers['price'] = "Price";
 $headers['state'] = "State";
 
 if(!isset($filter->sorting)) {
@@ -65,16 +64,47 @@ $states['active'] = "Active";
 $states['ended'] = "Ended";
 $states['waitingforlock'] = "Waiting for lock";
 
-        
+
+$allFieldsToPrint = array();
+foreach($headers as $key => $val) {
+    $allFieldsToPrint[$key] = $val;
+}
+foreach($registrationRules->data as $key => $data) {
+    if(stristr($key, "user_")) {
+        continue;
+    }
+    if(stristr($key, "company_")) {
+        continue;
+    }
+    if($data->active) {
+        $allFieldsToPrint[$key] = $data->title;
+    }
+}
+echo "<span class='toggleColumnFilter'>Column filter</span>";
+echo "<div gstype='form' method='saveSelectedFields' class='columnfilter'>";
+$selected = $this->getSelectedFields($allFieldsToPrint);
+foreach($allFieldsToPrint as $key => $val) {
+    echo "<div>";
+    $checked = "";
+    if(isset($selected[$key])) {
+        $checked = "CHECKED";
+    }
+    echo "<input type='checkbox' gsname='fieldtoset_$key' $checked></input>";
+    echo $val;
+    echo "</div>";
+}
+echo "<div style='text-align:right'>";
+echo "<input type='button' value='Select fields' gstype='submit'>";
+echo "</div>";
+echo "</div>";
+
+$selectedFields = $this->getSelectedFields($allFieldsToPrint);
 ?>
 
 <table width='100%' cellspacing='0' cellpadding='0'>
     <tr>
         <?php
-        foreach($headers as $header => $value) {
-            if($header == "price" && !$hasPrices) {
-                continue;
-            }
+        foreach($selectedFields as $header => $value) {
             echo "<th>" . $value . "</th>";
         }
         ?>
@@ -109,11 +139,28 @@ $states['waitingforlock'] = "Waiting for lock";
         $row['room'] .= "<div class='secondary_text'>".$room->roomType."</div>";
         $row['price'] = $room->price;
         $row['state'] = $room->progressState;
+        
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $room->bookingId);
+        foreach($registrationRules->data as $key => $data) {
+            if(stristr($key, "user_")) {
+                continue;
+            }
+            if(stristr($key, "company_")) {
+                continue;
+            }
+            if($data->active) {
+                $row[$key] = "";
+                if(isset($booking->registrationData->resultAdded->{$data->name})) {
+                    $row[$key] = $booking->registrationData->resultAdded->{$data->name};
+                }
+            }
+        }
+        
         $tableArray[] = $row;
     }
     foreach($tableArray as $row) {
         echo "<tr>";
-         foreach($headers as $header => $value) {
+         foreach($selectedFields as $header => $value) {
              if($header == "state") {
                  echo "<td class='".$row[$header]."'>" . $states[$row[$header]] . "</td>";
              } else {

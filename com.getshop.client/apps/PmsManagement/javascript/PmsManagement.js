@@ -39,10 +39,14 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .addAddonsButton', app.PmsManagement.addAddon);
         $(document).on('click','.PmsManagement .saveAddons', app.PmsManagement.saveAddons);
         $(document).on('click','.PmsManagement .removeAddons', app.PmsManagement.removeAddons);
+        $(document).on('click','.PmsManagement .toggleColumnFilter', app.PmsManagement.toggleColumnFilter);
         $(document).on('keyup','.PmsManagement .alldayprice', app.PmsManagement.updateDayPrices);
         $(document).on('click','.PmsManagement .updatecardonroom', app.PmsManagement.updatecardonroom);
         $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
         $(document).on('keyup','.PmsManagement .matrixpricealldays', app.PmsManagement.updateRoomPriceMatrix);
+    },
+    toggleColumnFilter : function() {
+        $('.PmsManagement .columnfilter').toggle();
     },
     changePaymentLinkUser : function() {
         var val = $(this).val();

@@ -100,7 +100,6 @@ class Dibs extends \PaymentApplication implements \Application {
         if($this->isTestMode()) {
                 echo '<input type="hidden" name="test" value="1"/>';
                 echo "This is in test mode...";
-                return;
             }
         echo '</form>';
 

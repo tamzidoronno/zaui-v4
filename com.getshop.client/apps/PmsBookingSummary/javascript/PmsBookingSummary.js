@@ -98,11 +98,17 @@ app.PmsBookingSummary = {
     },
     removeAddon : function() {
         var data = {
-            itemtypeid : $(this).attr('itemtypeid')
+            itemtypeid : $(this).attr('itemtypeid'),
         };
-        var row = $(this).closest('.itemrow');
         var event = thundashop.Ajax.createEvent('','removeAddon', $(this),data);
-        thundashop.Ajax.post(event);
+        var row = $(this).closest('.itemrow');
+        if($(this).closest('.repeatingrowprinted')) {
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                row.remove();
+            });
+        } else {
+            thundashop.Ajax.post(event);
+        }
     },
     addAddon : function() {
         var data = {

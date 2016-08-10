@@ -24,6 +24,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
     }
     
+    public function updateRegistrationData() {
+        $booking = $this->getSelectedBooking();
+        $booking->registrationData->resultAdded->{$_POST['data']['field']} = $_POST['data']['newval'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+    }
+    
     public function sendInvoice() {
         $email = $_POST['data']['email'];
         $bookingId = $_POST['data']['bookingid'];

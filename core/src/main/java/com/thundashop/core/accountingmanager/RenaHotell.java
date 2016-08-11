@@ -2,6 +2,8 @@ package com.thundashop.core.accountingmanager;
 
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ForStore;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
@@ -136,7 +138,7 @@ public class RenaHotell implements AccountingInterface {
                 if(toAdd.containsKey(i)) {
                     String text = toAdd.get(i);
                     if(text == null) {
-                        System.out.println("Null on: " + i);
+                        GetShopLogHandler.logPrintStatic("Null on: " + i, "null");
                     }
                     text = text.replaceAll(",", "");
                     text = text.replaceAll("\n", "");

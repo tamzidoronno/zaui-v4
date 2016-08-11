@@ -11,6 +11,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $checkedCanAdd = array();
     public $roomTable = "";
     public $fastAddedCode = null;
+    private $fetchedBookings = array();
     
     public function toggleFilterVersion() {
         if(!isset($_SESSION['toggleOldFilterVersion'])) {
@@ -22,6 +23,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function runProcessor() {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
+    }
+    
+    public function updateRegistrationData() {
+        $booking = $this->getSelectedBooking();
+        $booking->registrationData->resultAdded->{$_POST['data']['field']} = $_POST['data']['newval'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
     }
     
     public function sendInvoice() {
@@ -1436,6 +1443,47 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return true;
         }
         return false;
+    }
+
+    public function saveSelectedFields() {
+        $fields = array();
+        foreach($_POST['data'] as $key => $val) {
+            if($_POST['data'][$key] === "true") {
+                $fields[str_replace("fieldtoset_", "", $key)] = "";
+            }
+        }
+        $this->setConfigurationSetting("selected_fields", json_encode($fields));
+    }
+    
+    public function getSelectedFields($allFieldsToPrint) {
+        $selected = $this->getConfigurationSetting("selected_fields");
+        if(!$selected) {
+            $default = array();
+            $default['actions'] = $allFieldsToPrint['actions'];
+            $default['regdate'] = $allFieldsToPrint['regdate'];
+            $default['periode'] = $allFieldsToPrint['periode'];
+            $default['visitor'] = $allFieldsToPrint['visitor'];
+            $default['room'] = $allFieldsToPrint['room'];
+            $default['price'] = $allFieldsToPrint['price'];
+            $default['state'] = $allFieldsToPrint['state'];
+            return $default;
+        } else {
+            $sel = json_decode($selected,true);
+            foreach($sel as $key => $val) {
+                $sel[$key] = $allFieldsToPrint[$key];
+            }
+            return $sel;
+        }
+    }
+
+    public function getBooking($bookingId) {
+        if(isset($this->fetchedBookings[$bookingId])) {
+           $booking = $this->fetchedBookings[$bookingId];
+        } else {
+            $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingId);
+            $this->fetchedBookings[$bookingId] = $booking;
+        }
+        return $booking;
     }
 
 }

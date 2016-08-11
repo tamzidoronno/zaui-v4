@@ -5,6 +5,9 @@
  */
 package com.thundashop.core.messagemanager;
 
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
+
 /**
  *
  * @author ktonder
@@ -13,39 +16,39 @@ public class DummySmsFactory implements SMSFactory {
 
     @Override
     public void send(String from, String to, String message) {
-        System.out.println("running on dummy sms factory");
+        GetShopLogHandler.logPrintStatic("running on dummy sms factory", null);
     }
 
     @Override
     public int messageCount(int year, int month) {
-        System.out.println("running on dummy sms factory");
+        GetShopLogHandler.logPrintStatic("running on dummy sms factory", null);
         return 0;
     }
 
     @Override
     public void setStoreId(String storeId) {
-        System.out.println("running on dummy sms factory");
+        GetShopLogHandler.logPrintStatic("running on dummy sms factory", null);
     }
 
     @Override
     public void setMessageManager(MessageManager manager) {
-        System.out.println("running on dummy sms factory");
+        GetShopLogHandler.logPrintStatic("running on dummy sms factory", null);
     }
 
     @Override
     public void setPrefix(String prefix) {
-        System.out.println("running on dummy sms factory");
+        GetShopLogHandler.logPrintStatic("running on dummy sms factory", null);
     }
 
     @Override
     public String getMessageState(String msgId) {
-        System.out.println("running on dummy sms factory");
+        GetShopLogHandler.logPrintStatic("running on dummy sms factory", null);
         return "";
     }
 
     @Override
     public void setFrom(String from) {
-        System.out.println("running on dummy sms factory");
+        GetShopLogHandler.logPrintStatic("running on dummy sms factory", null);
     }
     
 }

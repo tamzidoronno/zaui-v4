@@ -12,6 +12,7 @@ $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelected
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 $channels = $this->getChannelMatrix();
 $hasPrices = false;
+$registrationRules = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
 
 if($config->requirePayments) {
     $hasPrices = true;
@@ -22,6 +23,7 @@ foreach($items as $item) {
 
 $rows = 0;
 $headers = array();
+$headers['actions'] = '<i gs_downloadexcelreport="exportBookingDataToExcel" title="Download to excel" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="bookingdataexport"></i>';
 $headers['regdate'] = "Reg";
 $headers['periode'] = "Periode";
 switch($config->bookingProfile) {
@@ -34,13 +36,13 @@ switch($config->bookingProfile) {
         $headers['room'] = "Room";
         break;
 }
-if($hasPrices) {
-    $headers['price'] = "Price";
-}
+$headers['price'] = "Price";
 $headers['state'] = "State";
+
 if(!isset($filter->sorting)) {
     $filter->sorting = "regdate";
 }
+
 $prices = array();
 $prices[1] = "daily";
 $prices[2] = "monthly";
@@ -62,60 +64,109 @@ $states['active'] = "Active";
 $states['ended'] = "Ended";
 $states['waitingforlock'] = "Waiting for lock";
 
-        
+
+$allFieldsToPrint = array();
+foreach($headers as $key => $val) {
+    $allFieldsToPrint[$key] = $val;
+}
+foreach($registrationRules->data as $key => $data) {
+    if(stristr($key, "user_")) {
+        continue;
+    }
+    if(stristr($key, "company_")) {
+        continue;
+    }
+    if($data->active) {
+        $allFieldsToPrint[$key] = $data->title;
+    }
+}
+echo "<span class='toggleColumnFilter'>Column filter</span>";
+echo "<div gstype='form' method='saveSelectedFields' class='columnfilter'>";
+$selected = $this->getSelectedFields($allFieldsToPrint);
+foreach($allFieldsToPrint as $key => $val) {
+    echo "<div>";
+    $checked = "";
+    if(isset($selected[$key])) {
+        $checked = "CHECKED";
+    }
+    echo "<input type='checkbox' gsname='fieldtoset_$key' $checked></input>";
+    echo $val;
+    echo "</div>";
+}
+echo "<div style='text-align:right'>";
+echo "<input type='button' value='Select fields' gstype='submit'>";
+echo "</div>";
+echo "</div>";
+
+$selectedFields = $this->getSelectedFields($allFieldsToPrint);
 ?>
 
 <table width='100%' cellspacing='0' cellpadding='0'>
     <tr>
-        <th style='text-align:center;'>
-            <i gs_downloadexcelreport="exportBookingDataToExcel" title="Download to excel" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="bookingdataexport"></i>
-        </th>
         <?php
-        foreach($headers as $header => $value) {
-            if($header == "price" && !$hasPrices) {
-                continue;
-            }
+        foreach($selectedFields as $header => $value) {
             echo "<th>" . $value . "</th>";
         }
         ?>
     </tr>
     
     <?php
+    $tableArray = array();
     foreach($rooms as $room) {
-        echo "<tr>";
-        echo "<td width='10' style='text-align:center;'>";
-        echo "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsRoomId."' bookingid='".$room->bookingId."'></i></td>";
-        echo "<td width='120'>".date("d.m.Y H:i", strtotime($room->regDate))."</td>";
+        $row = array();
+        $row['actions'] = "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsRoomId."' bookingid='".$room->bookingId."'></i>";
+        $row['regdate'] = date("d.m.Y H:i", strtotime($room->regDate));
+        
         $diff = ($room->end - $room->start)/1000;
         if($diff < 40000) {
-            echo "<td>".date("d.m.Y H:i", $room->start/1000);
-            echo " - ".date("H:i", $room->end/1000)."</td>";
+            $row['periode'] = date("d.m.Y H:i", $room->start/1000) . " - " . date("H:i", $room->end/1000);
         } else {
-            echo "<td>";
-            echo date("d.m.Y H:i", $room->start/1000) . "<br>";
-            echo date("d.m.Y H:i", $room->end/1000);
-            echo "</td>";
+            $row['periode'] =  date("d.m.Y H:i", $room->start/1000) . "<br>" . date("d.m.Y H:i", $room->end/1000);
         }
-        echo "<td>";
+        $row['visitor'] = "";
         foreach($room->guest as $guest) {
-            echo $guest->name;
-            if($guest->email) { echo " - " . $guest->email; }
-            if($guest->phone) { echo " - +" . $guest->prefix . $guest->phone; }
+            $row['visitor'] .= $guest->name;
+            if($guest->email) { $row['visitor'] .= " - " . $guest->email; }
+            if($guest->phone) { $row['visitor'] .= " - +" . $guest->prefix . $guest->phone; }
+            $row['visitor'] .= "<br>";
         }
-        echo "<div class='secondary_text'>" . $room->owner . "</div>";
-        echo "</td>";
-        echo "<td>";
+        $row['visitor'] .= "<div class='secondary_text'>" . $room->owner . "</div>";
         if($room->keyIsReturned) {
-            echo '<i class="fa fa-key" title="Key has been returned" style="color:green;"></i> ';
+            $row['room'] .=  '<i class="fa fa-key" title="Key has been returned" style="color:green;"></i> ';
         }
         
-        echo $room->room;
-        echo "<div class='secondary_text'>".$room->roomType."</div>";
-        echo "</td>";
-        if($hasPrices) {
-            echo "<td>" . $room->price . "</td>";
+        $row['room'] = $room->room;
+        $row['room'] .= "<div class='secondary_text'>".$room->roomType."</div>";
+        $row['price'] = $room->price;
+        $row['state'] = $room->progressState;
+        
+        $booking = $this->getBooking($room->bookingId);
+        foreach($registrationRules->data as $key => $data) {
+            if(stristr($key, "user_")) {
+                continue;
+            }
+            if(stristr($key, "company_")) {
+                continue;
+            }
+            if($data->active) {
+                $row[$key] = "";
+                if(isset($booking->registrationData->resultAdded->{$data->name})) {
+                    $row[$key] = $booking->registrationData->resultAdded->{$data->name};
+                }
+            }
         }
-        echo "<td class='".$room->progressState."'>" . $states[$room->progressState] . "</td>";
+        
+        $tableArray[] = $row;
+    }
+    foreach($tableArray as $row) {
+        echo "<tr>";
+         foreach($selectedFields as $header => $value) {
+             if($header == "state") {
+                 echo "<td class='".$row[$header]."'>" . $states[$row[$header]] . "</td>";
+             } else {
+                 echo "<td>" . $row[$header] . "</td>";
+             }
+         }
         echo "</tr>";
     }
     ?>

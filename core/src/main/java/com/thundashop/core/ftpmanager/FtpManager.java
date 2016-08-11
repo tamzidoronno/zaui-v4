@@ -1,6 +1,7 @@
 package com.thundashop.core.ftpmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.common.ManagerBase;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @GetShopSession
-public class FtpManager implements IFtpManager {
+public class FtpManager extends ManagerBase implements IFtpManager {
     public boolean transferFile(String username, String password, String hostname, String filePath, String location, Integer port, boolean useActiveMode) throws IOException {
         /**
          * CAREFUL HERE... By exposing this public, you give access to upload whatever file to whoever, DO NOT MAKE THIS AS A PUBLIC API CALL.....
@@ -28,7 +29,7 @@ public class FtpManager implements IFtpManager {
         client.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
         int reply = client.getReplyCode();
         if (!FTPReply.isPositiveCompletion(reply)) {
-            System.out.println("Failed to connect to ftp server: " + hostname + " with username: " + username);
+            logPrint("Failed to connect to ftp server: " + hostname + " with username: " + username);
             return false;
         }
 
@@ -40,7 +41,7 @@ public class FtpManager implements IFtpManager {
         inputStream.close();
         client.disconnect();
         if (!done) {
-            System.out.println("Failed to transfer file : " + file.getName() + " to location: " + location);
+            logPrint("Failed to transfer file : " + file.getName() + " to location: " + location);
             return false;
         } else {
             return true;

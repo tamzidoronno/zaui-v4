@@ -6,6 +6,7 @@
 package com.thundashop.core.sedox;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopLogHandler;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,13 +110,13 @@ public class SedoxSharedProduct extends DataCommon implements Comparable<SedoxSh
         if (tool != null && tool.toLowerCase().equals("ctc")) {
             tool = "Alientech Powergate 2";
             ret = true;
-            System.out.println("Product id: " + id);
+            GetShopLogHandler.logPrintStatic("Product id: " + id, null);
         }
         
         if (tool != null && tool.toLowerCase().equals("ctc2")) {
             tool = "Alientech Powergate 3";
             ret = true;
-            System.out.println("Product id2: " + id);
+            GetShopLogHandler.logPrintStatic("Product id2: " + id, null);
         }
         
         return ret;

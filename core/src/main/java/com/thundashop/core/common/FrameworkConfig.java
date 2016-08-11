@@ -35,7 +35,7 @@ public class FrameworkConfig {
             f = new File("../config.txt");
             
             if (!f.exists()) {
-                System.out.println("WARNING: Did not find framework config file (config.txt or ../config.txt), using default configs");
+                GetShopLogHandler.logPrintStatic("WARNING: Did not find framework config file (config.txt or ../config.txt), using default configs", null);
                 return;
             }
         }

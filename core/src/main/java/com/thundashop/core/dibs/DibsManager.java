@@ -104,7 +104,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             } else if (func.equals("Ping")) {
                 endpoint = "https://api.dibspayment.com/merchant/v1/JSON/Transaction/Ping";
             } else {
-                System.out.println("Error in postToDIBS(): Given function does not exist");
+                logPrint("Error in postToDIBS(): Given function does not exist");
                 return null;
             }
 
@@ -126,13 +126,13 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             out.close();
 
             if(debug) {
-                System.out.println("-------------- Debug ----------");
-                System.out.println("Endpoint: " + endpoint);
+                logPrint("-------------- Debug ----------");
+                logPrint("Endpoint: " + endpoint);
                 for(String key : parameters.keySet()) {
-                    System.out.println("\t" + key + " : " + parameters.get(key));
+                    logPrint("\t" + key + " : " + parameters.get(key));
                 }
 
-                System.out.println("Writing to stream: " + json);
+                logPrint("Writing to stream: " + json);
             }
             
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -150,14 +150,14 @@ public class DibsManager extends ManagerBase implements IDibsManager {
 
                 Map<String, String> response = gson.fromJson(result, Map.class);
                 if(debug) {
-                    System.out.println("Response code: " + connection.getResponseCode());
-                    System.out.println("Response message: " + result);
-                    System.out.println("-------------- Debug ----------");
+                    logPrint("Response code: " + connection.getResponseCode());
+                    logPrint("Response message: " + result);
+                    logPrint("-------------- Debug ----------");
                 }
                 return response;
             } else {
                 // Server returned HTTP error code.
-                System.out.println("HTTP error!" + connection.getResponseCode());
+                logPrint("HTTP error!" + connection.getResponseCode());
                 return null;
             }
         } catch (MalformedURLException e) {
@@ -304,7 +304,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             long start = System.currentTimeMillis();
             List<PullMessage> messages = getShopPullService.getMessages(pollKey, storeId);
             long end = System.currentTimeMillis();
-            System.out.println(start - end);
+            logPrint(start - end);
             for(PullMessage msg : messages) {
                 try {
                     LinkedHashMap<String,String> polledResult = gson.fromJson(msg.postVariables, LinkedHashMap.class);
@@ -351,7 +351,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
     private void saveCardOnUser(Order order) {
         User user = userManager.getUserById(order.userId);
         if(user == null) {
-            System.out.println("Failed to find user?" + order.userId);
+            logPrint("Failed to find user?" + order.userId);
             return;
         }
         UserCard card = new UserCard();
@@ -432,18 +432,18 @@ public class DibsManager extends ManagerBase implements IDibsManager {
      if (resp.get("status").equals("ACCEPT")) {
        // Authorization accepted. Check resp.get("transactionId") for transaction ID
        // ...
-       System.out.println("Ticket Auth accepted. Response:");
-       System.out.println(resp.toString());
+       logPrint("Ticket Auth accepted. Response:");
+       logPrint(resp.toString());
      } else if (resp.get("status").equals("DECLINE")) {
        // Authorization declined. Check resp.get("declineReason") for more information
        // ...
-       System.out.println("Ticket Auth declined. Response:");
-       System.out.println(resp.toString());
+       logPrint("Ticket Auth declined. Response:");
+       logPrint(resp.toString());
      } else {
        // An error happened. Check Check resp.get("declineReason") for more information
        // ...
-       System.out.println("An error happened during Auth. Response:");
-       System.out.println(resp.toString());
+       logPrint("An error happened during Auth. Response:");
+       logPrint(resp.toString());
      }
      
      return resp;
@@ -454,7 +454,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         if(!status.equals("ACCEPTED")) {
             messageManager.sendMail("post@getshop.com", "post@getshop.com", "Ticket status failure", "for order: " + order.incrementOrderId, "post@getshop.com", "post@getshop.com");
         } else {
-            System.out.println("This is a save card procedure...");
+            logPrint("This is a save card procedure...");
             saveCardOnUser(order);
             order.status = Order.Status.WAITING_FOR_PAYMENT;
             orderManager.saveOrder(order);

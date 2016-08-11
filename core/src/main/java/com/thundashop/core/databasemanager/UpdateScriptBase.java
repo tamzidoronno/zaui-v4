@@ -8,7 +8,9 @@ package com.thundashop.core.databasemanager;
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
@@ -41,7 +43,7 @@ public abstract class UpdateScriptBase implements ApplicationContextAware {
     public UpdateScriptBase() {
         
         if (UpdateScriptBase.sessionId.equals("")) {
-            System.out.println("asdfasdf");
+            GetShopLogHandler.logPrintStatic("asdfasdf", null);
             sessionId = UUID.randomUUID().toString();
 
         }

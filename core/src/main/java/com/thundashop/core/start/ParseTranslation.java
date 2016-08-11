@@ -1,6 +1,8 @@
 package com.thundashop.core.start;
 
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -167,7 +169,7 @@ public class ParseTranslation {
         } while (true);
 
         if (end < 0) {
-            System.out.println("Fuck.. did not find end for line: " + strLine);
+            GetShopLogHandler.logPrintStatic("Fuck.. did not find end for line: " + strLine, null);
             System.exit(0);
         }
         String result = strLine.substring(0, end);
@@ -233,11 +235,11 @@ public class ParseTranslation {
         int count = 0;
         for (TranslationKey key : keyMap.values()) {
             if (key.files.size() > 2) {
-                System.out.println(key.key + ";-;" + key.type + " ( " + key.files.size() + ")");
+                GetShopLogHandler.logPrintStatic(key.key + ";-;" + key.type + " ( " + key.files.size() + ")", null);
                 count++;
             }
         }
-        System.out.println("Duplicates: " + count);
+        GetShopLogHandler.logPrintStatic("Duplicates: " + count, null);
     }
 
     private HashMap<String, List<TranslationKey>> buildSortedTranslation(ArrayList<String> webShopTranslation) {
@@ -274,9 +276,9 @@ public class ParseTranslation {
         TranslationComparor tc = new TranslationComparor();
         tc.finalizeTranslationFiles();
 
-        System.out.println(fileCount + " files parsed");
-        System.out.println(frameworkTranslation.size() + " framework text lines found");
-        System.out.println(webShopTranslation.size() + " webshop text lines found");
+        GetShopLogHandler.logPrintStatic(fileCount + " files parsed", null);
+        GetShopLogHandler.logPrintStatic(frameworkTranslation.size() + " framework text lines found", null);
+        GetShopLogHandler.logPrintStatic(webShopTranslation.size() + " webshop text lines found", null);
         
     }
 
@@ -289,7 +291,7 @@ public class ParseTranslation {
         
         for (Application app : apps) {
             if (filePath.contains(app.appName)) {
-                System.out.println(filePath);
+                GetShopLogHandler.logPrintStatic(filePath, null);
                 return true;
             }
         }

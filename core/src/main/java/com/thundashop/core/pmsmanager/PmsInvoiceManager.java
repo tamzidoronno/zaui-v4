@@ -220,10 +220,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private void autoGenerateOrders(PmsBookingRooms room, NewOrderFilter filter) {
         if(room.needInvoicing(filter)) {
-//            System.out.println("NEed to create order for rooom: " + room.invoicedTo + " - " + room.date.start + " - " + room.date.end);
             BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
             if(item != null) {
-                System.out.println("Item: " + item.bookingItemName);
+                logPrint("Item: " + item.bookingItemName);
             }
             checkIfNeedAdditionalEndInvoicing(room, filter);
         }
@@ -443,7 +442,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private CartItem createCartItem(String productId, String name, PmsBookingRooms room, Date startDate, Date endDate, Double price, int count) {
         if(price.isNaN() || price.isInfinite()) {
-            System.out.println("Trying to create cart item with infinite or NaN price");
+            logPrint("Trying to create cart item with infinite or NaN price");
             price = 0.0;
         }
         if(price.intValue() == 0) {
@@ -455,7 +454,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
 
         if (productId == null) {
-            System.out.println("Product not set for this booking item type");
+            logPrint("Product not set for this booking item type");
             return null;
         }
         int numberOfDays = getNumberOfDays(startDate, endDate);
@@ -497,7 +496,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(!avoidOrderCreation) {
             room.invoicedTo = endDate;
             room.invoicedFrom = room.date.start;
-            System.out.println("\t new end date: " + room.invoicedTo);
+            logPrint("\t new end date: " + room.invoicedTo);
         }
         
         return item;
@@ -608,7 +607,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         ArrayList<ProgressivePriceAttribute> priceRange = pmsManager.getPriceObject().progressivePrices.get(typeId);
         LinkedHashMap<String, Double> result = new LinkedHashMap();
         if (priceRange == null) {
-            System.out.println("No progressive price found for type");
+            logPrint("No progressive price found for type");
             return result;
         }
         Calendar cal = Calendar.getInstance();
@@ -687,7 +686,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         if(price.isNaN() || price.isInfinite()) {
-            System.out.println("Nan price or infinite price... this is not good");
+            logPrint("Nan price or infinite price... this is not good");
             price = 0.0;
         }
         
@@ -762,7 +761,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         LinkedHashMap<String, Double> res = new LinkedHashMap();
         ArrayList<ProgressivePriceAttribute> priceRange = pmsManager.getPriceObject().progressivePrices.get(typeId);
         if (priceRange == null) {
-            System.out.println("No progressive price found for type");
+            logPrint("No progressive price found for type");
             return res;
         }
         int daysoffset = 0;
@@ -864,7 +863,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 if(count > 0) {
                     result.add(createCartItem(productId, null, room, startDate, endDate, price / count, count));
                 } else {
-                    System.out.println("Count 0?");
+                    logPrint("Count 0?");
                 }
             }
         }
@@ -977,7 +976,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     calStart.add(Calendar.DAY_OF_YEAR,1);
                 }
                 if(!room.priceMatrix.containsKey(offset)) {
-                    System.out.println("Huston, we have a problem: " + offset);
+                    logPrint("Huston, we have a problem: " + offset);
                 } else {
                     price += room.priceMatrix.get(offset);
                 }
@@ -1007,7 +1006,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             //Order price needs to be inc taxes.. 
             price *= tax;
         }
-        System.out.println(price);
+        logPrint(price);
         return price;
     }
 

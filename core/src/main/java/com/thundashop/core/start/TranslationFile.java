@@ -1,5 +1,7 @@
 package com.thundashop.core.start;
 
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -130,7 +132,7 @@ public class TranslationFile {
                 }
             }
             if (!found) {
-                System.out.println("New key found for file: " + filename + " : " + key);
+                GetShopLogHandler.logPrintStatic("New key found for file: " + filename + " : " + key, null);
                 toAdd.add(key);
             }
         }
@@ -149,7 +151,7 @@ public class TranslationFile {
                 }
             }
             if (!found) {
-                System.out.println("Key removed from file: " + filename + " : " + myKey);
+                GetShopLogHandler.logPrintStatic("Key removed from file: " + filename + " : " + myKey, null);
                 toRemove.add(myKey);
             }
         }
@@ -168,7 +170,7 @@ public class TranslationFile {
 
     void dump() {
         for (String key : translationMatrix.keySet()) {
-            System.out.println(key + ";-;" + translationMatrix.get(key));
+            GetShopLogHandler.logPrintStatic(key + ";-;" + translationMatrix.get(key), null);
         }
     }
 
@@ -188,9 +190,9 @@ public class TranslationFile {
             }
             TranslationKey tkey = ParseTranslation.keyMap.get(key);
             if(tkey == null) {
-                System.out.println("No translation key for : " + key);
+                GetShopLogHandler.logPrintStatic("No translation key for : " + key, null);
                 for(String test : ParseTranslation.keyMap.keySet()) {
-                    System.out.println("\t" + test);
+                    GetShopLogHandler.logPrintStatic("\t" + test, null);
                 }
                 System.exit(0);
             }

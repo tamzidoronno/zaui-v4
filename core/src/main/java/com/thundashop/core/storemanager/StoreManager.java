@@ -305,7 +305,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public void syncData(String environment, String username, String password) throws ErrorException {
         if (FrameworkConfig.productionMode) {
-            System.out.println("This function is not allowed in production mode");
+            logPrint("This function is not allowed in production mode");
             return;
         }
         
@@ -324,9 +324,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                     String dataToTransfer = StoreManager.toString((Serializable) datas);
                     byte[] bytes = compress(dataToTransfer);
                     double size = bytes.length;
-                    System.out.println("Data to transfer: " + Math.floor(size/1024) + "kb, " + Math.floor(size/1024/1024) + "mb");
+                    logPrint("Data to transfer: " + Math.floor(size/1024) + "kb, " + Math.floor(size/1024/1024) + "mb");
                     api.getStoreManager().receiveSyncData(bytes);
-                    System.out.println("Data sent, should be availble online now!");
+                    logPrint("Data sent, should be availble online now!");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -337,7 +337,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             
         } catch (Exception ex) {
             if(ex instanceof java.lang.ClassNotFoundException) {
-                System.out.println("Class not found: " + ex.getMessage());
+                logPrint("Class not found: " + ex.getMessage());
             } else {
                 ex.printStackTrace();
             }
@@ -389,14 +389,14 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public void receiveSyncData(byte[] data) throws ErrorException {
         try {
-            System.out.println("Sync data received");
+            logPrint("Sync data received");
             String json = decompress(data);
             List<DataCommon> datas = (List<DataCommon>) StoreManager.fromString(json);
-            System.out.println("Adding data to database: " + datas.size());
+            logPrint("Adding data to database: " + datas.size());
             database.refreshDatabase(datas);
-            System.out.println("Clearing store: " + storeId);
+            logPrint("Clearing store: " + storeId);
             getShopScope.clearStore(storeId);
-            System.out.println("Done");
+            logPrint("Done");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -413,7 +413,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         
         for (GetShopSessionBeanNamed named : getShopScope.getSessionNamedObjects()) {
             if(named == null || named.getName() == null) {
-                System.out.println("Null name");
+                logPrint("Null name");
             } else {
                 names.add(named.getName());
             }

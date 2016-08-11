@@ -1,4 +1,6 @@
 
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.net.InetSocketAddress;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -21,24 +23,24 @@ public class Main extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        System.out.println("Open");
+        GetShopLogHandler.logPrintStatic("Open", null);
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
         //Handle client received message here
         //send a message back:
-        System.out.println("Msg");
+        GetShopLogHandler.logPrintStatic("Msg", null);
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        System.out.println("Close");
+        GetShopLogHandler.logPrintStatic("Close", null);
     }
 
     @Override
     public void onError(WebSocket conn, Exception exc) {
-        System.out.println("Err");
+        GetShopLogHandler.logPrintStatic("Err", null);
     }
 
     public static void main(String[] args) {

@@ -1,6 +1,8 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import java.util.ArrayList;
@@ -79,7 +81,7 @@ class PmsStatisticsBuilder {
                     
                     if(order.createdOnDay(cal.getTime())) {
                         Double total = orderManager.getTotalAmountExTaxes(order);
-                        System.out.println(order.incrementOrderId + " - " + total);
+                        GetShopLogHandler.logPrintStatic(order.incrementOrderId + " - " + total, null);
                         entry.totalPrice += total;
                         entry.numberOfOrders++;
                         entry.date = cal.getTime();

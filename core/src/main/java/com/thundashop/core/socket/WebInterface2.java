@@ -4,7 +4,9 @@
  */
 package com.thundashop.core.socket;
 
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.StorePool;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -34,11 +36,11 @@ public class WebInterface2 implements Runnable {
             serverSocket = new ServerSocket(this.port);
             log.info(this, "Listening to port: " + this.port);
         } catch (IOException ex) {
-            System.out.println("");
-            System.out.println("=============================================================================================");
-            System.out.println("= Was not able to bind port, check if you have access and that no other programs is running =");
-            System.out.println("=============================================================================================");
-            System.out.println("");
+            GetShopLogHandler.logPrintStatic("", null);
+            GetShopLogHandler.logPrintStatic("=============================================================================================", null);
+            GetShopLogHandler.logPrintStatic("= Was not able to bind port, check if you have access and that no other programs is running =", null);
+            GetShopLogHandler.logPrintStatic("=============================================================================================", null);
+            GetShopLogHandler.logPrintStatic("", null);
             System.exit(0);
         }
 

@@ -179,7 +179,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             return;
         }
 
-        System.out.println("Sync done");
+        logPrint("Sync done");
     }
 
     @Override
@@ -864,7 +864,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
         }
 
-        System.out.println("Users updated");
+        logPrint("Users updated");
     }
 
     @Override

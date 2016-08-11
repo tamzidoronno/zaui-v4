@@ -876,7 +876,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             // We do not transfer order until them are atleast 
             if (order.createdDate.after(twentyFourHoursAgo)) {
-                System.out.println("Skipping : " + order.incrementOrderId + " date: " + order.createdDate);
+                logPrint("Skipping : " + order.incrementOrderId + " date: " + order.createdDate);
                 continue;
             }
             
@@ -1083,7 +1083,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(!orderNeedAutoPay(order)) {
                 continue;
             }
-            System.out.println("autopay for order: " + order.incrementOrderId);
+            logPrint("autopay for order: " + order.incrementOrderId);
             User user = userManager.getUserById(order.userId);
             for(UserCard card : user.savedCards) {
                 if(card.isExpired()) {
@@ -1110,7 +1110,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     public void notifyAboutFailedPaymentOnOrder(Order order) {
-        System.out.println("Need to notify about failed payment");
+        logPrint("Need to notify about failed payment");
     }
 
     private boolean orderNeedAutoPay(Order order) {
@@ -1118,7 +1118,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return false;
         }
         if(order.status > Order.Status.PAYMENT_COMPLETED) {
-            System.out.println("Not waiting for payment");
+            logPrint("Not waiting for payment");
             return false;
         }
 

@@ -4,6 +4,8 @@
  */
 package com.thundashop.core.databasemanager;
 
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -69,7 +71,7 @@ public class UnsentMessageQueue implements Serializable {
                     UnsentMessageQueue unsentQueue = (UnsentMessageQueue)objectInputStream.readObject();
                     messages.put(unsentQueue.getAddress(), unsentQueue);  
                 } catch (ClassNotFoundException | IOException ex) {
-                    System.out.println("Warning, was not able to rebuild sending list");
+                    GetShopLogHandler.logPrintStatic("Warning, was not able to rebuild sending list", null);
                     ex.printStackTrace();
                 }
             }

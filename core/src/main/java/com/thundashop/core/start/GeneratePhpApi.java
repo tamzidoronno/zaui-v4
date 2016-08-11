@@ -7,6 +7,8 @@
  */
 package com.thundashop.core.start;
 
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -90,7 +92,6 @@ public class GeneratePhpApi {
                     // happen, for example, in classes, which depend on 
                     // Spring to inject some beans, and which fail, 
                     // if dependency is not fulfilled
-//                    System.out.println(packageName);
 //                    if (packageName.startsWith("."))
 //                        packageName = packageName.substring(1);
                             
@@ -206,7 +207,7 @@ public class GeneratePhpApi {
             createFolders(entry);
             String filePath = getPath(entry);
             String classname = createPhpClassName(entry, filename);
-            System.out.println("generating class: "+classname);
+            GetShopLogHandler.logPrintStatic("generating class: "+classname, null);
             String fileContent = createPhpFileContent(entry, classname, filename, filePath);
 
             File phpfile = new File(filePath + "/" + filename + ".php");
@@ -227,8 +228,6 @@ public class GeneratePhpApi {
      * @throws Exception
      */
     public static void main(String[] args) throws InterruptedException, Exception {
-//        System.out.println("This is not in use anymore... please use GenerateApi");
-//        System.exit(0);
         File file = new File("../com.getshop.messages/build/classes/");
         File apps = new File("../com.getshop.app/build/classes/");
 
@@ -261,9 +260,9 @@ public class GeneratePhpApi {
 
     private static String BuildApi(List<Class> list) throws ClassNotFoundException {
 
-        System.out.println("----------------------------------------");
-        System.out.println("GENERATING PHP API FILE");
-        System.out.println("----------------------------------------");
+        GetShopLogHandler.logPrintStatic("----------------------------------------", null);
+        GetShopLogHandler.logPrintStatic("GENERATING PHP API FILE", null);
+        GetShopLogHandler.logPrintStatic("----------------------------------------", null);
 
         String content = "";
 

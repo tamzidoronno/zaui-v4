@@ -7,6 +7,8 @@
 .PmsManagement .showorderbutton { color: blue; cursor:pointer; }
 .PmsManagement .bookinginfo a { color: blue; }
 .PmsManagement .guestrow input { width: 20%; float:left; }
+.PmsManagement .columnfilter {position:absolute; border: solid 2px; padding: 5px; z-index: 2; background-color: #fff; max-width: 500px; display:none; margin-top: 5px;}
+.PmsManagement .toggleColumnFilter { cursor:pointer; }
 .PmsManagement .ended { color: #aaa; }
 .PmsManagement .Confirmed,
 .PmsManagement .active,

@@ -14,7 +14,9 @@ import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerSetting;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.databasemanager.UpdateScript;
 import com.thundashop.core.databasemanager.UpdateScriptBase;
 import com.thundashop.core.pagemanager.PageManager;
@@ -74,7 +76,7 @@ public class CleanupWrongAppIds extends UpdateScriptBase implements UpdateScript
             String id = (String)obj.get("_id");
             obj.put("_id", id.replaceAll("_", "-"));
             mongo.getDB("ApplicationPool").getCollection("col_all").save(obj);
-            System.out.println("updated: " + obj.get("_id"));
+            GetShopLogHandler.logPrintStatic("updated: " + obj.get("_id"), null);
         }
         
         for (Store store : allData.keySet()) {
@@ -87,7 +89,7 @@ public class CleanupWrongAppIds extends UpdateScriptBase implements UpdateScript
                 if (instance.appSettingsId.equals(origId)) {
                     instance.appSettingsId = origId.replaceAll("_", "-");
                     database.save(StoreApplicationInstancePool.class, data);
-                    System.out.println("Fixed");
+                    GetShopLogHandler.logPrintStatic("Fixed", null);
                 }
             }
         }

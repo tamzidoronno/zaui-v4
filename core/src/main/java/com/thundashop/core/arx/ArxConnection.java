@@ -2,6 +2,8 @@
 package com.thundashop.core.arx;
 
 import static com.thundashop.core.arx.WrapClient.wrapClient;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.usermanager.data.User;
 import java.io.InputStream;
 import org.apache.axis.encoding.Base64;
@@ -25,13 +27,13 @@ public class ArxConnection {
         } else {
             hostName += "&value=off";
         }
-        System.out.println(hostName);
+        GetShopLogHandler.logPrintStatic(hostName, null);
         httpLoginRequest(hostName, username, password, "");
     }
     
     public String httpLoginRequest(String address, String username, String password, String content) throws Exception {
         if(address == null || address.isEmpty() || !address.startsWith("http") || address.contains("://:50")) {
-            System.out.println("Tried accessing arx with empty host: " + address);
+            GetShopLogHandler.logPrintStatic("Tried accessing arx with empty host: " + address, null);
             return "";
         }
         String loginToken = null;
@@ -67,7 +69,7 @@ public class ArxConnection {
         try {
             httpResponse = client.execute(request);
         }catch(Exception e) {
-            System.out.println("Failed lookup on address: " + address);
+            GetShopLogHandler.logPrintStatic("Failed lookup on address: " + address, null);
             e.printStackTrace();
             throw e;
         }

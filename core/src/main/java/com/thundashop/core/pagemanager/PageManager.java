@@ -111,7 +111,7 @@ public class PageManager extends ManagerBase implements IPageManager {
             page.addApplication(pageCellId, instance.id); 
             savePage(page);
         } else {
-            System.out.println("Could not find cell to add app to");
+            logPrint("Could not find cell to add app to");
         }
         
         backupPage(page);
@@ -719,7 +719,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         for (PageCell cell : page.getCellsFlatList()) {
             ApplicationInstance instace = instancePool.getApplicationInstance(cell.appId);
             if (instace != null && instace.appSettingsId != null && instace.appSettingsId.equals("access_denied")) {
-                System.out.println("Removing: " + cell.appId);
+                logPrint("Removing: " + cell.appId);
                 cell.appId = null;
             }
         }

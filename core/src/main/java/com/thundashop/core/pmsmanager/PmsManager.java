@@ -258,7 +258,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking getCurrentBooking() {
         if (getSession() == null) {
-            System.out.println("Warning, no session set yet");
+            logPrint("Warning, no session set yet");
         }
         PmsBooking result = findBookingForSession();
 
@@ -432,7 +432,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         saveBooking(booking);
         feedGrafana(booking);
-        System.out.println("Booking has been completed: " + booking.id);
+        logPrint("Booking has been completed: " + booking.id);
         return 0;
     }
 
@@ -626,7 +626,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return newcode.toString();
             }
         }
-        System.out.println("Tried 100 000 times to generate a code without success");
+        logPrint("Tried 100 000 times to generate a code without success");
         return null;
     }
 
@@ -1343,7 +1343,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void warnArxDown() {
-        System.out.println("Arx is down");
+        logPrint("Arx is down");
     }
 
     @Override
@@ -2083,7 +2083,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         });
         if (items.isEmpty()) {
-            System.out.println("No items available?");
+            logPrint("No items available?");
         } else {
             BookingItem item = null;
             for(BookingItem tmpitem : items) {
@@ -2347,7 +2347,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Collections.sort(result, new Comparator<PmsBookingRooms>() {
             public int compare(PmsBookingRooms o1, PmsBookingRooms o2) {
                 if (o1.item == null || o2.item == null) {
-                    System.out.println("This is null");
+                    logPrint("This is null");
                     return 0;
                 }
                 return o1.item.bookingItemName.compareTo(o2.item.bookingItemName);
@@ -2378,7 +2378,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 String ownerMail = storeManager.getMyStore().configuration.emailAdress;
                 String addressMail = storeManager.getMyStore().webAddress;
                 if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
-                    System.out.println("Booking started without item, Owner: " + ownerMail + ", address:" + addressMail);
+                    logPrint("Booking started without item, Owner: " + ownerMail + ", address:" + addressMail);
                     continue;
                 }
 
@@ -2576,7 +2576,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 String text = "Removed room: " + name + " since it can't be added: " + room.date.start + " - " + room.date.end;
                 logEntry(text, booking.id, null);
-                System.out.println(text);
+                logPrint(text);
                 continue;
             }
             
@@ -2645,7 +2645,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         List<Integer> errors = new ArrayList();
         if(!oldRoom.date.start.equals(room.date.start)) {
-            System.out.println("Need to set a new start date");
+            logPrint("Need to set a new start date");
             if(room.isStarted()) {
                 errors.add(1);
                 room.date.start = oldRoom.date.start;
@@ -2878,14 +2878,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 booking.dump();
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
                     BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                    System.out.println("\t" + type.name + " - " + room.date.start + " frem til : " + room.date.end);
+                    logPrint("\t" + type.name + " - " + room.date.start + " frem til : " + room.date.end);
                 }
             } 
             User user = userManager.getUserById(booking.userId);
             if(user != null) {
-                System.out.println(user.fullName); 
+                logPrint(user.fullName); 
             }
-            System.out.println("-------");
+            logPrint("-------");
         }
     }
 

@@ -58,7 +58,7 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
             JsonObject jsonObj2 = webManager.htmlGetJson("http://" + hostname + "/api/Articles/" + product.sku);
             product.price = Float.parseFloat(jsonObj2.get("Price1").toString());
         } catch (Exception ex) {
-            System.out.println(ex.toString());
+            logPrint(ex.toString());
         }
         
         productManager.saveProduct(product);
@@ -150,7 +150,7 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
                         jsonVoucher.addProperty("EntryDate", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(order.createdDate));
 
                         jsonResponse = webManager.htmlPostJson("http://" + hostname + "/api/Vouchers", jsonVoucher, null);
-                        System.out.println(jsonResponse.toString());
+                        logPrint(jsonResponse.toString());
                     }
                     
                     order.transferredToAccountingSystem = true;
@@ -158,7 +158,7 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
                 }
                 
             } catch (Exception ex) {
-                System.out.println(ex.toString());
+                logPrint(ex.toString());
             }
         }
     }
@@ -206,7 +206,7 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
                         userManager.saveUser(user);
                     }
                 } catch (Exception ex) {
-                    System.out.println(ex.toString());
+                    logPrint(ex.toString());
                 }
             }          
         }

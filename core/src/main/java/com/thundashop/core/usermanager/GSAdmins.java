@@ -64,7 +64,6 @@ public class GSAdmins extends ManagerBase {
     }
     
     public static void main(String[] args) {
-        System.out.println(encryptPassword("micemice"));
     }
     
     private static String encryptPassword(String password) throws ErrorException {

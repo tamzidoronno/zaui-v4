@@ -4,7 +4,9 @@
  */
 package com.getshop.scope;
 
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.common.StoreComponent;
 import java.util.ArrayList;
@@ -95,7 +97,7 @@ public class GetShopSessionScope implements Scope {
                 
                 objectMap.put(nameWithStoreId, object);
             } catch (BeansException exception) {
-                System.out.println("Got an bean exception ? ");
+                GetShopLogHandler.logPrintStatic("Got an bean exception ? ", storeId);
                 exception.printStackTrace();
             }
         }

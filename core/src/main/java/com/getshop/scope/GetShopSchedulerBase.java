@@ -6,6 +6,8 @@
 package com.getshop.scope;
 
 import com.getshop.javaapi.GetShopApi;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.usermanager.data.User;
 import it.sauronsoftware.cron4j.Scheduler;
 import java.util.UUID;
@@ -77,7 +79,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
         try {
             execute();
         } catch (Exception ex) {
-            System.out.println("Problem with scheduled task....");
+            GetShopLogHandler.logPrintStatic("Problem with scheduled task....", null);
             ex.printStackTrace();
         }
     }

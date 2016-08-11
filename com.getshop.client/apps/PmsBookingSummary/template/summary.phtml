@@ -45,7 +45,7 @@ foreach($booking->rooms as $room) {
 if($configuration->supportMoreDates) {
     $this->includefile("addmoredates");
     if($this->hasRoomsThatCanNoBeAdded($booking)) {
-        echo "<span class='unavailableroomwarning'>";
+        echo "<span class='unavailableroomwarning repeatingrowprinted'>";
         echo $this->__w("You got rooms that are not available in the selected time periode.");
         echo "</span>";
         foreach($booking->rooms as $room) {
@@ -60,7 +60,7 @@ if($configuration->supportMoreDates) {
        }
     }
     
-    echo "<div class='repatingroomlist'>";
+    echo "<div class='repatingroomlist repeatingrowprinted'>";
     foreach($booking->rooms as $room) {
         if(!$room->addedByRepeater) {
             continue;
@@ -159,7 +159,7 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     echo "<div class='no-room-selected'>Du må minst velge ett rom før du kan fortsette.</div>";
     
     echo "<div class='itemrow $canNotBeAded roomitemrow'>";
-    echo "<i class='fa fa-trash-o removeAddon bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></i> ";
+    echo "<i class='fa fa-trash-o removeAddon bookedaction repeatingentry' itemtypeid='".$room->pmsBookingRoomId."'></i> ";
     $addonsAdded[$room->bookingItemTypeId] = true;
     echo "<span class='itemname'>";
     if($room->bookingItemId) {

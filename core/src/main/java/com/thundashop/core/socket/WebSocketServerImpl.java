@@ -9,7 +9,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ErrorMessage;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.JsonObject2;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.WebSocketReturnMessage;
 import com.thundashop.core.common.WebSocketWrappedMessage;
 import com.thundashop.core.websocket.WebSocketClient;
@@ -68,7 +70,7 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
             client.setWs(ws);
             clients.put(ws, client);
         } catch (BeansException ex) {
-            System.out.println("Got a bean exception?");
+            GetShopLogHandler.logPrintStatic("Got a bean exception?", null);
         }
     }
 

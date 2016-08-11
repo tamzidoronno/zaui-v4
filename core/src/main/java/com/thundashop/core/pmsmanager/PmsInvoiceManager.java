@@ -229,7 +229,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private Payment getChannelPreferredPaymentMethod(PmsBooking booking) {
-        String channelPaymentId = pmsManager.getConfigurationSecure().channelPaymentTypes.get(booking.channel);
+        String channelPaymentId = pmsManager.getConfigurationSecure().getChannelConfiguration(booking.channel).preferredPaymentType;
         if(channelPaymentId != null) {
             Application paymentApplication = applicationPool.getApplication(channelPaymentId);
             if (paymentApplication != null) { 

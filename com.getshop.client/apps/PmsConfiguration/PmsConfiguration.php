@@ -19,6 +19,11 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $this->includefile("notificationpanel");
     }
     
+    public function addNewChannel() {
+        $channel = $_POST['data']['name'];
+        $this->getApi()->getPmsManager()->createChannel($this->getSelectedName(), $channel);
+    }
+    
     public function deleteAllBookings() {
         $code = $_POST['data']['code'];
         $this->getApi()->getPmsManager()->deleteAllBookings($this->getSelectedName(), $code);
@@ -35,6 +40,10 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             $config->contracts->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['content'];
         }
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
+    public function removeChannel() {
+        $this->getApi()->getPmsManager()->removeChannel($this->getSelectedName(), $_POST['data']['channel']);
     }
     
     public function startsWith($haystack, $needle) {

@@ -230,8 +230,16 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
     }
 
     public function includeCouponSystem() {
+        echo "<h1>Discount</h1>";
+        echo "<div class='discountheader'>";
+        echo "<span class='discountbutton selected' type='none'>No discount</span></span>";
+        echo "<span class='discountbutton' type='coupon'>".$this->__w("Discount code")."</span>";
+        echo "<span class='discountbutton' type='partnership'>Partnership</span>";
+        echo "</div>";
+        
         $coupon = $this->getApi()->getStoreApplicationPool()->getApplication("90cd1330-2815-11e3-8224-0800200c9a66");
         if($coupon) {
+            echo "<div class='discounttype' type='coupon'>";
             if($this->getCurrentBooking()->couponCode) {
                 echo "<i class='fa fa-trash-o'  gstype='clicksubmit' method='removeCouponCode' gsname='id' gsvalue='somevalue'></i> ";
                 echo "Coupon code added: " . $this->getCurrentBooking()->couponCode;
@@ -245,7 +253,11 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
                 </div>
                 <?php
             }
+            echo "</div>";
         }
+        echo "<div class='discounttype' type='partnership'>";
+        echo "partnership";
+        echo "</div>";
     }
     
     public function addCouponCode() {

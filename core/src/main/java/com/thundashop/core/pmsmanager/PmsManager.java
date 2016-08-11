@@ -3183,7 +3183,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public HashMap<String, String> getChannelMatrix() {
         HashMap<String, String> res = new HashMap();
-        
+        HashMap<String, PmsChannelConfig> getChannels = configuration.getChannels();
+        for(String key : getChannels.keySet()) {
+            res.put(key, getChannels.get(key).channel);
+        }
         for(PmsBooking booking : bookings.values()) {
             if(booking.channel != null && !booking.channel.trim().isEmpty()) {
                 res.put(booking.channel, booking.channel);
@@ -3191,8 +3194,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         for(String key : res.keySet()) {
-            if(configuration.channelTranslations.containsKey(key)) {
-                res.put(key, configuration.channelTranslations.get(key));
+            if(getChannelConfig(key).humanReadableText != null && 
+                    !configuration.getChannelConfiguration(key).humanReadableText.isEmpty()) {
+                res.put(key, configuration.getChannelConfiguration(key).humanReadableText);
             }
         }
         
@@ -3445,5 +3449,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return false;
         }
         return configuration.deleteAllWhenAdded;
+    }
+
+    @Override
+    public void createChannel(String channel) {
+        getChannelConfig(channel);
+    }
+    
+    private PmsChannelConfig getChannelConfig(String channel) {
+        if(!getConfigurationSecure().channelExists(channel)) {
+            getConfigurationSecure().getChannelConfiguration(channel);
+            saveObject(getConfigurationSecure());
+        }
+        return getConfigurationSecure().getChannelConfiguration(channel);
+    }
+
+    @Override
+    public void removeChannel(String channel) {
+        getConfigurationSecure().removeChannel(channel);
     }
 }

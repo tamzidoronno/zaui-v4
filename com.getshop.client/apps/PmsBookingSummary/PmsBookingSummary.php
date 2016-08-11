@@ -236,18 +236,25 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
     }
         
     public function includeCouponSystem() {
+        $coupon = $this->getApi()->getStoreApplicationPool()->getApplication("90cd1330-2815-11e3-8224-0800200c9a66");
         $type = $this->getCurrentBooking()->discountType;
         $channels = (array)$this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedName());
+        
+        if(!$coupon && sizeof($channels) == 0) {
+            return;
+        }
+        
         echo "<h2>Discount</h2>";
         echo "<div class='discountheader'>";
         echo "<span class='discountbutton selected' type='none'>No discount</span></span>";
-        echo "<span class='discountbutton' type='coupon'>".$this->__w("Campaign code")."</span>";
+        if($coupon) {
+            echo "<span class='discountbutton' type='coupon'>".$this->__w("Campaign code")."</span>";
+        }
         if(sizeof($channels)) {
             echo "<span class='discountbutton' type='partnership'>Registered deal</span>";
         }
         echo "</div>";
         
-        $coupon = $this->getApi()->getStoreApplicationPool()->getApplication("90cd1330-2815-11e3-8224-0800200c9a66");
         if($coupon) {
             echo "<div class='discounttype' type='coupon'>";
             if($this->getCurrentBooking()->couponCode && $type == "coupon") {

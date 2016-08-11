@@ -140,7 +140,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         $row['price'] = $room->price;
         $row['state'] = $room->progressState;
         
-        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $room->bookingId);
+        $booking = $this->getBooking($room->bookingId);
         foreach($registrationRules->data as $key => $data) {
             if(stristr($key, "user_")) {
                 continue;

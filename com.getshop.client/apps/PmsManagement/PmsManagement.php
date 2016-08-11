@@ -11,6 +11,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $checkedCanAdd = array();
     public $roomTable = "";
     public $fastAddedCode = null;
+    private $fetchedBookings = array();
     
     public function toggleFilterVersion() {
         if(!isset($_SESSION['toggleOldFilterVersion'])) {
@@ -1473,6 +1474,16 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
             return $sel;
         }
+    }
+
+    public function getBooking($bookingId) {
+        if(isset($this->fetchedBookings[$bookingId])) {
+           $booking = $this->fetchedBookings[$bookingId];
+        } else {
+            $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingId);
+            $this->fetchedBookings[$bookingId] = $booking;
+        }
+        return $booking;
     }
 
 }

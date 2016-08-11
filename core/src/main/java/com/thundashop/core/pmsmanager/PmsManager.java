@@ -209,9 +209,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.sessionId = getSession().id;
         
         if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
-            Coupon cop = cartManager.getCoupon(booking.couponCode);
-            if(cop == null) {
-                booking.couponCode = "";
+            if(booking.discountType != null && booking.discountType.equals("coupon")) {
+                Coupon cop = cartManager.getCoupon(booking.couponCode);
+                if(cop == null) {
+                    booking.couponCode = "";
+                }
             }
         }
 
@@ -931,6 +933,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void saveConfiguration(PmsConfiguration notifications) {
         this.configuration = notifications;
+        
         saveObject(notifications);
         logEntry("Configuration updated", null, null);
     }

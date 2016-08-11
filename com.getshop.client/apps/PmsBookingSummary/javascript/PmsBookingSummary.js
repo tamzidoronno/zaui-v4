@@ -20,6 +20,12 @@ app.PmsBookingSummary = {
         var newType = $(this).attr('type');
         $('.discounttype').hide();
         $('.discounttype[type="'+newType+'"]').show();
+        var event = thundashop.Ajax.createEvent('','setDiscountType', $(this),{
+            type : newType
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            
+        });
     },
     
     updateCountOnAddon : function() {

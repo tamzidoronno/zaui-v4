@@ -102,10 +102,12 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         foreach($_POST['data'] as $key => $val) {
             if(stristr($key, "channel_translation_")) {
                 $channel = str_replace("channel_translation_", "", $key);
-                $translationMatrix[$channel] = $val;
+                if(!isset($notifications->channelConfiguration->{$channel})) {
+                    $notifications->channelConfiguration->{$channel} = new \core_pmsmanager_PmsChannelConfig();
+                }
+                $notifications->channelConfiguration->{$channel}->humanReadableText = $val;
             }
         }
-        $notifications->channelTranslations = $translationMatrix;
         
         $channelPaymentTypes = array();
         foreach($_POST['data'] as $key => $val) {

@@ -283,7 +283,7 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
             if($curSelected == $chan) {
                 $checked = "CHECKED";
             }
-            echo "<input type='radio' value='$chan' gsname='selectedChannel' $checked> $text<br>";
+            echo "<input type='radio' value='$chan' gsname='selectedChannel' name='selectedChannel' $checked> $text<br>";
         }
         echo "<input type='txt' class='identificationnumberval' gsname='code' value='$curCode'><input type='button' gstype='submit' value='Set identification number' class='setidentificationNumber'>";
         echo "</div>";

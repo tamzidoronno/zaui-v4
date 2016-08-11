@@ -195,7 +195,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.end = end;
             
             String couponcode = getCouponCode("");
-            setPriceOnRoom(room, couponcode, true, PmsBooking.PriceType.daily);
+            PmsBooking booking = new PmsBooking();
+            booking.priceType = PmsBooking.PriceType.daily;
+            setPriceOnRoom(room, true, booking);
             
             roomToAdd.price = room.price;
             result.add(roomToAdd);
@@ -233,7 +235,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             room.count = totalDays;
             String couponCode = getCouponCode(booking.couponCode);
-            setPriceOnRoom(room, couponCode, true, booking.priceType);
+            setPriceOnRoom(room, true, booking);
             room.updateBreakfastCount();
             
             for (PmsGuests guest : room.guests) {
@@ -771,7 +773,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.exitCleaningDate = null;
             room.date.cleaningDate = null;
             if(configuration.updatePriceWhenChangingDates) {
-                setPriceOnRoom(room, "", true, booking.priceType);
+                setPriceOnRoom(room, true, booking);
             }
             saveBooking(booking);
             
@@ -2028,7 +2030,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.start = start;
         room.date.end = end;
         room.guests.add(new PmsGuests());
-        setPriceOnRoom(room,  "", true, booking.priceType);
+        setPriceOnRoom(room, true, booking);
 
         String res = addBookingToBookingEngine(booking, room);
         if(!res.isEmpty()) {
@@ -3010,9 +3012,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return null;
     }
 
-    private void setPriceOnRoom(PmsBookingRooms room, String couponCode, boolean avgPrice, Integer priceType) {
-        room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, couponCode, priceType);
-        LinkedHashMap<String, Double> priceMatrix = pmsInvoiceManager.buildPriceMatrix(room, couponCode, priceType);
+    private void setPriceOnRoom(PmsBookingRooms room, boolean avgPrice, PmsBooking booking) {
+        room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
+        LinkedHashMap<String, Double> priceMatrix = pmsInvoiceManager.buildPriceMatrix(room, booking);
         LinkedHashMap<String, Double> newMatrix = new LinkedHashMap();
         for(String key : priceMatrix.keySet()) {
             Double value = priceMatrix.get(key);

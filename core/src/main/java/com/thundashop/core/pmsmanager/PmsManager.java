@@ -874,6 +874,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         prices.progressivePrices = newPrices.progressivePrices;
         prices.pricesExTaxes = newPrices.pricesExTaxes;
         prices.privatePeopleDoNotPayTaxes = newPrices.privatePeopleDoNotPayTaxes;
+        prices.channelDiscount = newPrices.channelDiscount;
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
             for (String date : priceMap.keySet()) {

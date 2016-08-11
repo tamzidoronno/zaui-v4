@@ -81,6 +81,7 @@ foreach($itemTypes as $item) {
         echo "<option value='$idx' $selected>$type</option>";
     }
     echo "</select>";
+    $this->includefile("discountpricing");
     if($priceObject->defaultPriceType == 7 || $priceObject->defaultPriceType == 8) {
         $this->includefile("progressivepricing");
     } else {

@@ -1,0 +1,54 @@
+#backsidesettings [app="UserMerge"] input[type=textfield] {
+    position: static;
+    width: 208px;
+}
+
+[app="UserMerge"] .gss_button {
+    padding: 6px;
+}
+
+[app="UserMerge"] .gss_settings_content:first-child {
+    text-align: center;
+}
+
+[app="UserMerge"] .property_select_wrapper {
+    position: relative;
+    height: 40px;
+    border-bottom: 1px dotted #CECECE;
+}
+
+[app="UserMerge"] .gss_settings_content .property_select_wrapper .property_description {
+    transform: translateY(50%);
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+[app="UserMerge"] .gss_settings_content .fa {
+    font-size: 50px;
+    margin-right: 20px;
+    margin-left: 10px;
+    color: #3a99d7;
+}
+
+[app="UserMerge"] .gss_dropdown {
+    top: 4px;
+    right: 0px;
+}
+
+[app="UserMerge"] .gss_dropdown select {
+    width: 100%;
+}
+
+[app="UserMerge"] .use_description {
+    font-size: 16px;
+    display: inline-block;
+    transform: translateY(-66%);
+}
+
+[app="UserMerge"] .use_description_wrapper {
+    border-bottom: 1px dotted #CECECE;
+}
+
+[app="UserMerge"] .merge_users {
+    float: right;
+}

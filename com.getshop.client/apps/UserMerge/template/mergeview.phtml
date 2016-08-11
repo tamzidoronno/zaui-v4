@@ -1,0 +1,64 @@
+<?
+/* @var $this \ns_1c48b89f_2279_40af_8bc1_470c8360fef8\UserMerge */
+?>
+
+<div>
+    <div class="gss_settings_header">
+        <i class="fa fa-compress"></i>
+        <div class="gss_settings_header_description">
+            <div class="gss_settings_header_title"><? echo $this->__f("User Merge"); ?></div>
+            <div class="gss_settings_header_description_inner">
+                <?
+                echo $this->__f("Below you see a dropdown list of users. Select users you want to merge, then select the properties to use on the new user.");
+                ?>
+            </div>
+        </div>	
+    </div>
+    
+    
+    <div class="gss_settings_content">
+        <input type="textfield" class="gs_datalist_input" datalist="users" multiple placeholder="Search"/>
+        <datalist id="users">
+            <?  
+                foreach ($this->getApi()->getUserManager()->getAllUsers() as $user) {
+                    echo "<option value=" . $user->id . ">" . $user->fullName . "</option>";
+                }
+            ?>
+        </datalist>
+        <div class="gss_button add_user">Add User</div>
+        <div class="gss_button merge_users">Merge Users</div>
+    </div>
+    
+    <div class="gss_settings_content">
+        <div class="use_description_wrapper">
+            <i class="fa fa-exclamation"></i>
+            <div class="use_description">
+            <?
+            echo $this->__f("Select each property for the new user which will be created after merging. The merged users will be deleted!");
+            ?>
+            </div>
+        </div>
+        <?
+        $variables = array_keys(get_object_vars($this->getApi()->getUserManager()->getLoggedOnUser()));
+        sort($variables);
+        
+        foreach($variables as $userVar) {
+            ?>
+            <div class="property_select_wrapper">
+                <div class="property_description">
+                    <? echo $userVar; ?>
+                </div>
+                <div class="gss_dropdown">
+                    <select class="property_select" id="<? echo $userVar; ?>"/>    
+                </div>
+            </div>
+            <?
+        }
+        ?>
+    </div>
+    
+</div>
+
+<script>
+    app.UserMerge.initUserDatalist();
+</script>

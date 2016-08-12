@@ -229,10 +229,35 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         return $data;
     }
 
+    public function setDiscountType() {
+        $booking = $this->getCurrentBooking();
+        $booking->discountType = $_POST['data']['type'];
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+    }
+        
     public function includeCouponSystem() {
         $coupon = $this->getApi()->getStoreApplicationPool()->getApplication("90cd1330-2815-11e3-8224-0800200c9a66");
+        $type = $this->getCurrentBooking()->discountType;
+        $channels = (array)$this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedName());
+        
+        if(!$coupon && sizeof($channels) == 0) {
+            return;
+        }
+        
+        echo "<h2>Discount</h2>";
+        echo "<div class='discountheader'>";
+        echo "<span class='discountbutton selected' type='none'>No discount</span></span>";
         if($coupon) {
-            if($this->getCurrentBooking()->couponCode) {
+            echo "<span class='discountbutton' type='coupon'>".$this->__w("Campaign code")."</span>";
+        }
+        if(sizeof($channels)) {
+            echo "<span class='discountbutton' type='partnership'>Registered deal</span>";
+        }
+        echo "</div>";
+        
+        if($coupon) {
+            echo "<div class='discounttype' type='coupon'>";
+            if($this->getCurrentBooking()->couponCode && $type == "coupon") {
                 echo "<i class='fa fa-trash-o'  gstype='clicksubmit' method='removeCouponCode' gsname='id' gsvalue='somevalue'></i> ";
                 echo "Coupon code added: " . $this->getCurrentBooking()->couponCode;
             } else {
@@ -245,11 +270,50 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
                 </div>
                 <?php
             }
+            echo "</div>";
+        }
+        echo '<div gstype="form" method="addCouponCode">';
+        echo "<div class='discounttype' type='partnership'>";
+        $curSelected = "";
+        $curCode = "";
+        if($this->getCurrentBooking()->discountType == "partnership") {
+            $code = $this->getCurrentBooking()->couponCode;
+            if($code) {
+                $splitted = explode(":", $code);
+                $curSelected = $splitted[0];
+                $curCode = $splitted[1];
+            }
+        }
+        
+        foreach($channels as $chan => $text) {
+            $checked = "";
+            if($curSelected == $chan) {
+                $checked = "CHECKED";
+            }
+            echo "<input type='radio' value='$chan' gsname='selectedChannel' name='selectedChannel' $checked> $text<br>";
+        }
+        echo "<input type='txt' class='identificationnumberval' gsname='code' value='$curCode'><input type='button' gstype='submit' value='Set identification number' class='setidentificationNumber'>";
+        echo "</div>";
+        
+        if($type) {
+            $type = $this->getCurrentBooking()->discountType;
+            ?>
+            <script>
+                $('.discountheader .discountbutton').removeClass('selected');
+                $('.discountheader .discountbutton[type="<?php echo $type; ?>"]').addClass('selected');
+                
+                $('.discounttype').hide();
+                $('.discounttype[type="<?php echo $type; ?>"]').show();
+            </script>
+            <?php
         }
     }
     
     public function addCouponCode() {
         $code = $_POST['data']['code'];
+        if(isset($_POST['data']['selectedChannel'])) {
+            $code = $_POST['data']['selectedChannel'] . ":" . $code;
+        }
         $curBooking = $this->getCurrentBooking();
         $curBooking->couponCode = $code;
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $curBooking);

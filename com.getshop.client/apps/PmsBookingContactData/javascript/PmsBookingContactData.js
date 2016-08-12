@@ -39,6 +39,13 @@ app.PmsBookingContactData = {
     },
     
     saveForm : function() {
+        var updateSummary = false;
+        if($(this).hasClass('ignoresaveform')) {
+            return;
+        }
+        if($(this).hasClass('alsoupdatesummary')) {
+            updateSummary = true;
+        }
         var form = $('.bookingregistrationform');
 
         if(typeof(savePmsBookingFormContactDataTimeout) === "number") {
@@ -49,15 +56,16 @@ app.PmsBookingContactData = {
             var data = thundashop.framework.createGsArgs(form);
             var event = thundashop.Ajax.createEvent('','savePostedForm',form, data);
             thundashop.Ajax.postWithCallBack(event, function() {
-                $('.PmsBookingSummary .summarizedbooking').each(function() {
-                    var view = $(this);
-                    var event = thundashop.Ajax.createEvent('','reRenderSummary', view, {});
-                    thundashop.Ajax.postWithCallBack(event, function(res) {
-                        view.html(res);
+                if(updateSummary) {
+                    $('.PmsBookingSummary .summarizedbooking').each(function() {
+                        var view = $(this);
+                        var event = thundashop.Ajax.createEvent('','reRenderSummary', view, {});
+                        thundashop.Ajax.postWithCallBack(event, function(res) {
+                            view.html(res);
+                        });
+
                     });
-                    
-                });
-                
+                }
             });
         }, "1000");
     },

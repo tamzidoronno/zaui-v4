@@ -41,6 +41,14 @@ app.PmsPricing = {
             prices[itemid] = itemPriceRow;
         });
         
+        var discountedPrices = {};
+        $('.discountprice').each(function() {
+            console.log('ja: ' + $(this).attr('channel'));
+            discountedPrices[$(this).attr('channel')] = $(this).val();
+        });
+        console.log(discountedPrices);
+        
+        data['channeldiscount'] = discountedPrices;
         data['prices'] = prices;
         data['prices_ex_taxes'] = $('.pricesextaxes').is(':checked');
         data['privatePeopleDoNotPayTaxes'] = $('.privatePeopleDoNotPayTaxes').is(':checked');

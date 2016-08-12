@@ -15,6 +15,7 @@ foreach($bookingitems as $item) {
 }
 
 $this->includeCouponSystem();
+
 switch($configuration->bookingProfile) {
     case "subscription":
         $addonsText = $this->__w("Subscription selected");

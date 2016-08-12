@@ -49,7 +49,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user = $this->getApi()->getUserManager()->getUserById("fastchecking_user");
         if(!$user) {
             $user = new \core_usermanager_data_User();
-            $user->fullName = "Fast checking user";
+            $user->fullName = "Fast checkin user";
             $user->id = "fastchecking_user";
             $this->getApi()->getUserManager()->saveUser($user);
         }

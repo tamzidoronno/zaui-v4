@@ -4,6 +4,8 @@ app.PmsConfiguration = {
         $(document).on('change', '.PmsConfiguration .smstypeselection', app.PmsConfiguration.changeSmsType);
         $(document).on('change', '.PmsConfiguration .admintypeselection', app.PmsConfiguration.changeAdminType);
         $(document).on('click', '.PmsConfiguration .changeview', app.PmsConfiguration.changeview);
+        $(document).on('click', '.PmsConfiguration .addnewchannel', app.PmsConfiguration.addnewchannel);
+        $(document).on('click', '.PmsConfiguration .removeChannel', app.PmsConfiguration.removeChannel);
         $(document).on('click', '.PmsConfiguration #contractfield', function() {
             thundashop.common.activateCKEditor('contractfield', {
                 autogrow : false
@@ -19,6 +21,21 @@ app.PmsConfiguration = {
                 autogrow : false
             });
         });
+    },
+    removeChannel : function() {
+        var channel = $(this).attr('channel');
+        thundashop.Ajax.simplePost($(this), 'removeChannel', {
+            "channel" : channel
+        });
+    },
+    addnewchannel : function() {
+        var channelName = prompt("Id for the new channel");
+        if(!channelName) {
+            return;
+        }
+        thundashop.Ajax.simplePost($(this), "addNewChannel", {
+            "name" : channelName
+        })
     },
     changeEmailType: function() {
         var newType = $('.PmsConfiguration .emailtypeselection').val();

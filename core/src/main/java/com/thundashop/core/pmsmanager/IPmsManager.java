@@ -61,6 +61,12 @@ public interface IPmsManager {
     public void deleteBooking(String bookingId);
     
     @Administrator
+    public void createChannel(String channel);
+    
+    @Administrator
+    public void removeChannel(String channel);
+    
+    @Administrator
     public void saveBooking(PmsBooking booking);
     
     @Administrator
@@ -105,7 +111,6 @@ public interface IPmsManager {
     @Administrator
     public void updateAdditionalInformationOnRooms(PmsAdditionalItemInformation info);
     
-    @Administrator
     public HashMap<String, String> getChannelMatrix();
     
     @Editor

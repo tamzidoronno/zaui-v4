@@ -23,7 +23,7 @@ foreach($booking->rooms as $room) {
     ?>
 <div>
     <label class='col-25'>* <?php echo $this->__w("Number of guests"); ?><br>
-        <select gsname='visitor_numberofguests_<? echo $j;?>'>
+        <select gsname='visitor_numberofguests_<? echo $j;?>' class='alsoupdatesummary'>
         <?php
         for($i = 1; $i <= $items[$room->bookingItemTypeId]->size; $i++) {
             $selected = "";

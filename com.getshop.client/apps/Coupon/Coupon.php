@@ -109,7 +109,7 @@ class Coupon extends \WebshopApplication implements \Application {
             die();
         }
         
-        if (!$this->int_ok($coupon->timesLeft) || $coupon->timesLeft <= 0 || !$this->int_ok($coupon->amount) || $coupon->amount <= 0) {
+        if (!$this->int_ok($coupon->timesLeft) || $coupon->timesLeft <= 0 || !$this->int_ok($coupon->amount) || $coupon->amount < 0) {
             echo "NotInteger";
             die();
         }

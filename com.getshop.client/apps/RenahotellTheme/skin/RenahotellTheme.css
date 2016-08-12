@@ -26,7 +26,6 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
 .PmsBookingSummary .bottomborder { margin-bottom: 10px; }
 .PmsBookingContactData h3.paymentheaders { margin-top: 10px; margin-bottom: 10px; font-size: 16px; }
 .PmsBookingContactData h2.paymentheaders {  margin-bottom: 25px; }
-
 .PmsBookingCalendar .calendar .calendar_header,
 .PmsBookingCalendar .calendar .day.selected,
 .PmsBookingProductList .continue_button,

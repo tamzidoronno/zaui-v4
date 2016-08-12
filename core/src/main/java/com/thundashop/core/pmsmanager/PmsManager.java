@@ -195,7 +195,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.end = end;
             
             String couponcode = getCouponCode("");
-            setPriceOnRoom(room, couponcode, true, PmsBooking.PriceType.daily);
+            PmsBooking booking = new PmsBooking();
+            booking.priceType = PmsBooking.PriceType.daily;
+            setPriceOnRoom(room, true, booking);
             
             roomToAdd.price = room.price;
             result.add(roomToAdd);
@@ -209,9 +211,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.sessionId = getSession().id;
         
         if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
-            Coupon cop = cartManager.getCoupon(booking.couponCode);
-            if(cop == null) {
-                booking.couponCode = "";
+            if(booking.discountType != null && booking.discountType.equals("coupon")) {
+                Coupon cop = cartManager.getCoupon(booking.couponCode);
+                if(cop == null) {
+                    booking.couponCode = "";
+                }
             }
         }
 
@@ -231,7 +235,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             room.count = totalDays;
             String couponCode = getCouponCode(booking.couponCode);
-            setPriceOnRoom(room, couponCode, true, booking.priceType);
+            setPriceOnRoom(room, true, booking);
             room.updateBreakfastCount();
             
             for (PmsGuests guest : room.guests) {
@@ -769,7 +773,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.exitCleaningDate = null;
             room.date.cleaningDate = null;
             if(configuration.updatePriceWhenChangingDates) {
-                setPriceOnRoom(room, "", true, booking.priceType);
+                setPriceOnRoom(room, true, booking);
             }
             saveBooking(booking);
             
@@ -874,6 +878,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         prices.progressivePrices = newPrices.progressivePrices;
         prices.pricesExTaxes = newPrices.pricesExTaxes;
         prices.privatePeopleDoNotPayTaxes = newPrices.privatePeopleDoNotPayTaxes;
+        prices.channelDiscount = newPrices.channelDiscount;
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
             for (String date : priceMap.keySet()) {
@@ -930,6 +935,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void saveConfiguration(PmsConfiguration notifications) {
         this.configuration = notifications;
+        
         saveObject(notifications);
         logEntry("Configuration updated", null, null);
     }
@@ -2024,7 +2030,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.start = start;
         room.date.end = end;
         room.guests.add(new PmsGuests());
-        setPriceOnRoom(room,  "", true, booking.priceType);
+        setPriceOnRoom(room, true, booking);
 
         String res = addBookingToBookingEngine(booking, room);
         if(!res.isEmpty()) {
@@ -3006,9 +3012,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return null;
     }
 
-    private void setPriceOnRoom(PmsBookingRooms room, String couponCode, boolean avgPrice, Integer priceType) {
-        room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, couponCode, priceType);
-        LinkedHashMap<String, Double> priceMatrix = pmsInvoiceManager.buildPriceMatrix(room, couponCode, priceType);
+    private void setPriceOnRoom(PmsBookingRooms room, boolean avgPrice, PmsBooking booking) {
+        room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
+        LinkedHashMap<String, Double> priceMatrix = pmsInvoiceManager.buildPriceMatrix(room, booking);
         LinkedHashMap<String, Double> newMatrix = new LinkedHashMap();
         for(String key : priceMatrix.keySet()) {
             Double value = priceMatrix.get(key);
@@ -3183,7 +3189,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public HashMap<String, String> getChannelMatrix() {
         HashMap<String, String> res = new HashMap();
-        
+        HashMap<String, PmsChannelConfig> getChannels = configuration.getChannels();
+        for(String key : getChannels.keySet()) {
+            res.put(key, getChannels.get(key).channel);
+        }
         for(PmsBooking booking : bookings.values()) {
             if(booking.channel != null && !booking.channel.trim().isEmpty()) {
                 res.put(booking.channel, booking.channel);
@@ -3191,8 +3200,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         for(String key : res.keySet()) {
-            if(configuration.channelTranslations.containsKey(key)) {
-                res.put(key, configuration.channelTranslations.get(key));
+            if(getChannelConfig(key).humanReadableText != null && 
+                    !configuration.getChannelConfiguration(key).humanReadableText.isEmpty()) {
+                res.put(key, configuration.getChannelConfiguration(key).humanReadableText);
             }
         }
         
@@ -3445,5 +3455,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return false;
         }
         return configuration.deleteAllWhenAdded;
+    }
+
+    @Override
+    public void createChannel(String channel) {
+        getChannelConfig(channel);
+    }
+    
+    private PmsChannelConfig getChannelConfig(String channel) {
+        if(!getConfigurationSecure().channelExists(channel)) {
+            getConfigurationSecure().getChannelConfiguration(channel);
+            saveObject(getConfigurationSecure());
+        }
+        return getConfigurationSecure().getChannelConfiguration(channel);
+    }
+
+    @Override
+    public void removeChannel(String channel) {
+        getConfigurationSecure().removeChannel(channel);
     }
 }

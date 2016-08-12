@@ -111,7 +111,6 @@ public interface IPmsManager {
     @Administrator
     public void updateAdditionalInformationOnRooms(PmsAdditionalItemInformation info);
     
-    @Administrator
     public HashMap<String, String> getChannelMatrix();
     
     @Editor

@@ -16,6 +16,7 @@ import com.thundashop.core.usermanager.data.GroupInformation;
 
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @GetShopApi
@@ -437,4 +438,7 @@ public interface IUserManager {
     public void assignMetaDataToVirtualSessionUser(String key, String value);
     
     public User getUserWithPermissionCheck(String userId);
+    
+    @Editor
+    public void mergeUsers(List<String> userIds, HashMap<String,String> properties);
 }

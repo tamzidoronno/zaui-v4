@@ -2,6 +2,7 @@
 /* @var $this ns_1475891a_3154_49f9_a2b4_ed10bfdda1fc\SedoxAdmin */
 /* @var $product core_sedox_SedoxProduct */
 $product = $this->getCurrentProduct();
+$sedoxProduct = $this->getApi()->getSedoxProductManager()->getProductById($product->id);
 $productName = $product->printableName;
 $origRequestType = "";
 $originalExtraRequests = "";
@@ -223,6 +224,25 @@ $user = $this->getApi()->getUserManager()->getUserById($sedoxUser->id);
                             } else {
                                 ?>
                                 <div class="data_value" style="color: #44b215;">
+                                    NO
+                                </div>    
+                                <?
+                            }                           
+                        ?>
+                    </div>
+                    <div class="customer_data">
+                        <div class="data_name">
+                            Withdraw credits:
+                        </div>
+                        <?  if($sedoxProduct->useCreditAccount == "true") {
+                                ?>
+                                <div class="data_value" style="color: #44b215;">
+                                    YES
+                                </div>
+                                <?
+                            } else {
+                                ?>
+                                <div class="data_value" style="color: #c30f10;">
                                     NO
                                 </div>    
                                 <?

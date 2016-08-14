@@ -239,7 +239,6 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         $coupon = $this->getApi()->getStoreApplicationPool()->getApplication("90cd1330-2815-11e3-8224-0800200c9a66");
         $type = $this->getCurrentBooking()->discountType;
         $channels = (array)$this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedName());
-        
         if(!$coupon && sizeof($channels) == 0) {
             return;
         }

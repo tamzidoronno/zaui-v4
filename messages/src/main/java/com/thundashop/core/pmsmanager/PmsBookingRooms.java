@@ -26,7 +26,7 @@ public class PmsBookingRooms implements Serializable {
     public String pmsBookingRoomId = UUID.randomUUID().toString();
     public List<PmsGuests> guests = new ArrayList();
     public PmsBookingDateRange date = new PmsBookingDateRange();
-    public Integer numberOfGuests = 0;
+    public Integer numberOfGuests = 1;
     public double count = 1;
     public Double price = 0.0;
     public LinkedHashMap<String, Double> priceMatrix = new LinkedHashMap();

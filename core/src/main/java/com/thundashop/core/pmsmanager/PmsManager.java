@@ -233,6 +233,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
             }
             
+            pmsInvoiceManager.updateAddonsByDates(room);
             room.count = totalDays;
             String couponCode = getCouponCode(booking.couponCode);
             setPriceOnRoom(room, true, booking);

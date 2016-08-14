@@ -132,7 +132,15 @@ public class PmsConfiguration extends DataCommon {
     void removeChannel(String channel) {
         channelConfiguration.remove(channel);
     }
-
+    
+    PmsBookingAddonItem getAddonFromProductId(String productId) {
+        for(PmsBookingAddonItem item : addonConfiguration.values()) {
+            if(item != null && item.productId != null && item.productId.equals(productId)) {
+                return item;
+            }
+        }
+        return null;
+    }
     
     public boolean hasLockSystem() {
         return (arxHostname != null && !arxHostname.isEmpty());

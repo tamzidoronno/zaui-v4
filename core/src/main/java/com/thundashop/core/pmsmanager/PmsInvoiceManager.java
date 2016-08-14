@@ -356,11 +356,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return "";
     }
     
-    private void updateAddonsByDates(PmsBookingRooms room) {
+    public void updateAddonsByDates(PmsBookingRooms room) {
         List<PmsBookingAddonItem> toRemove = new ArrayList();
         HashMap<Integer, Integer> addTypes = new HashMap();
         for(PmsBookingAddonItem addon : room.addons) {
             if(pmsManager.getConfigurationSecure().addonConfiguration.get(addon.addonType).isSingle) {
+                if(addon.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
+                    addon.date = room.date.end;
+                }
+                if(addon.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
+                    addon.date = room.date.start;
+                }
                 continue;
             }
             if(addon.date.before(room.date.start) || addon.date.after(room.date.end) &&
@@ -419,10 +425,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 checkIfNeedAdditionalEndInvoicing(room, filter);
                 if(itemsToReturn.isEmpty()) {
                     continue;
-                }
-
-                if(!avoidOrderCreation) {
-                    updateAddonsByDates(room);
                 }
             }
         }
@@ -869,10 +871,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(items.size() > 0) {
                 double price = 0;
                 int count = 0;
+                int type = 0;
                 for(PmsBookingAddonItem check : items) {
                     price += check.price * check.count;
                     count += check.count;
+                    type = check.addonType;
                 }
+                if(type == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
+                    endDate = startDate;
+                }
+                if(type == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
+                    startDate = endDate;
+                }
+                
                 if(count > 0) {
                     result.add(createCartItem(productId, null, room, startDate, endDate, price / count, count));
                 } else {
@@ -1059,13 +1070,25 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                if(count == 0) {
                    count = 1;
                }
+               PmsBookingAddonItem addon = pmsManager.getConfigurationSecure().getAddonFromProductId(diffResult.productId);
+               Date startInvoiceDate = room.invoicedFrom;
+               Date endInvoiDate = room.invoicedTo;
+               if(addon != null) {
+                   if(addon.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
+                       startInvoiceDate = endInvoiDate;
+                   }
+                   if(addon.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
+                       endInvoiDate = startInvoiceDate;
+                   }
+               }
+               
                Double price = diffResult.price;
                 if(price.intValue() != 0) {
                     CartItem item = createCartItem(diffResult.productId, 
                             null, 
                             room, 
-                            room.invoicedFrom, 
-                            room.invoicedTo, 
+                            startInvoiceDate, 
+                            endInvoiDate, 
                             price / count, 
                             count);
 

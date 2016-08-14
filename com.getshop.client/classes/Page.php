@@ -59,6 +59,9 @@ class Page {
             $editormodeclass = "gseditormode";
         }
         
+        $userToCheckUserClass = @\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        $userClass = $userToCheckUserClass ? "gs_user_level_".$userToCheckUserClass->type : "";
+        
         if(@\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->canChangeLayout) {
             $canChangeLayout = "gscanchangelayout";
         }
@@ -80,7 +83,7 @@ class Page {
             $this->includeLayoutHistory();
         }
         
-        echo "<div class='gsbody_inner $editormodeclass $canChangeLayout' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn' userTimeout='$timeout'>";
+        echo "<div class='gsbody_inner $editormodeclass $canChangeLayout $userClass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn' userTimeout='$timeout'>";
         
         $this->printCompanySelectList();
         
@@ -93,6 +96,7 @@ class Page {
                 $editedCellid = $edited;
             }
             echo "</div>";
+
             echo "<div class='gsarea' area='body'>";
                 $this->printCurrentLoggedUserId();
                 $leftBarEnabled = $this->javapage->leftSideBar;

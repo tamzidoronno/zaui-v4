@@ -3,9 +3,12 @@
     /* @var $this ns_f65ee7f2_134f_413f_82d2_2606ab8440dd\NewsElements */
     if($this->getPage() && $this->getPage()->javapage && $this->getPage()->javapage->id) {
         $entry = $this->getApi()->getNewsManager()->getNewsForPage($this->getPage()->javapage->id);
+        
+        $user = $this->getApi()->getUserManager()->getUserById($entry->userId);
+        
         if($entry) {
-            if($entry->usersName) {
-                echo "Av: " . $entry->usersName . " / ";
+            if($user) {
+                echo "Av: " . $user->fullName . " / ";
             }
             echo "Dato: " . date("d.", strtotime($entry->rowCreatedDate)) . " " . strtolower($this->__w(date("F", strtotime($entry->rowCreatedDate))));
         }

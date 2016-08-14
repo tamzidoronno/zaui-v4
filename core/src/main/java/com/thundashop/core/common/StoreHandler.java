@@ -10,6 +10,9 @@ import com.getshop.scope.GetShopSessionObject;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thundashop.core.applications.StoreApplicationInstancePool;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -236,6 +239,8 @@ public class StoreHandler {
         } catch (ErrorException ex) {
             session.currentUser = null;
         }
+        
+        setDefaultLanguageIfNotSet(session);
     }
 
     private void clearSessionObject() {
@@ -483,5 +488,15 @@ public class StoreHandler {
         }
 
         return false;
+    }
+
+    private void setDefaultLanguageIfNotSet(Session session) {
+        if (session.language == null) {
+            StoreApplicationPool instancePool = AppContext.appContext.getBean(StoreApplicationPool.class);
+            Application settings = instancePool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+            if (settings != null) {
+                session.language = settings.getSetting("language");
+            }
+        }
     }
 }

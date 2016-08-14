@@ -775,6 +775,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(configuration.updatePriceWhenChangingDates) {
                 setPriceOnRoom(room, true, booking);
             }
+            pmsInvoiceManager.updateAddonsByDates(room);
             saveBooking(booking);
             
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
@@ -3191,7 +3192,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         HashMap<String, String> res = new HashMap();
         HashMap<String, PmsChannelConfig> getChannels = configuration.getChannels();
         for(String key : getChannels.keySet()) {
-            res.put(key, getChannels.get(key).channel);
+            if(getChannels.get(key).channel != null && !getChannels.get(key).channel.isEmpty()) {
+                res.put(key, getChannels.get(key).channel);
+            }
         }
         for(PmsBooking booking : bookings.values()) {
             if(booking.channel != null && !booking.channel.trim().isEmpty()) {

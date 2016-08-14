@@ -8,7 +8,7 @@ $uid = uniqid();
 
 $class = "";
 if($this->hasPDF() == 1) {
-    echo "<a href='generatePDF.php?type=contentmanager&id=$id'>";
+    echo "<a href='scripts/downloadPdfGeneral.php?type=contentmanager&id=$id'>";
     echo '<i class="fa fa-download downloadpdf"></i>';
     echo "</a>";
 }

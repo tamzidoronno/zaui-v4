@@ -10,6 +10,7 @@ package com.thundashop.core.pagemanager.data;
 import com.google.gson.Gson;
 import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.listmanager.data.Entry;
 import java.util.ArrayList;
@@ -94,33 +95,33 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public void dumpLayout() {
-        System.out.println("\n\n PAGE");
+        GetShopLogHandler.logPrintStatic("\n\n PAGE", null);
         for (String area : layout.getAreas().keySet()) {
-            System.out.println("-----------------------------------------------");
-            System.out.println(area);
+            GetShopLogHandler.logPrintStatic("-----------------------------------------------", null);
+            GetShopLogHandler.logPrintStatic(area, null);
             ArrayList<PageCell> rows = layout.getAreas().get(area);
             if(rows != null) {
-                System.out.println("Number of rows: " + rows.size());
+                GetShopLogHandler.logPrintStatic("Number of rows: " + rows.size(), null);
                 dumpRows(rows, 1);
             }
-            System.out.println("-----------------------------------------------\n");
+            GetShopLogHandler.logPrintStatic("-----------------------------------------------\n", null);
         }
     }
 
     private void dumpRows(ArrayList<PageCell> rows, int depth) {
         for (PageCell row : rows) {
             for (int i = 0; i < depth; i++) {
-                System.out.print("\t");
+                GetShopLogHandler.logPrintStaticSingle("\t", null);
             }
-            System.out.print(row.cellId);
-            System.out.print(" subcells: " + row.cells.size());
-            System.out.print(", mode: " + row.mode);
-            System.out.print(", type: " + row.type);
-            System.out.print(", styles: " + row.styles.replaceAll("\\\n", ""));
+            GetShopLogHandler.logPrintStaticSingle(row.cellId, null);
+            GetShopLogHandler.logPrintStaticSingle(" subcells: " + row.cells.size(), null);
+            GetShopLogHandler.logPrintStaticSingle(", mode: " + row.mode, null);
+            GetShopLogHandler.logPrintStaticSingle(", type: " + row.type, null);
+            GetShopLogHandler.logPrintStaticSingle(", styles: " + row.styles.replaceAll("\\\n", ""), null);
             if (row.cellName != null && !row.cellName.isEmpty()) {
-                System.out.println("(" + row.cellName + ")");
+                GetShopLogHandler.logPrintStatic("(" + row.cellName + ")", null);
             }
-            System.out.println();
+            GetShopLogHandler.logPrintStatic("", null);
             if (row.cells.size() > 0) {
                 dumpRows(row.cells, depth + 1);
             }

@@ -343,7 +343,7 @@ public class PmsManagerProcessor {
         }
 
         if (manager.getConfigurationSecure().arxCardFormat == null || manager.getConfigurationSecure().arxCardFormat.isEmpty()) {
-            System.out.println("Card format not set yet");
+            manager.logPrint("Card format not set yet");
             return false;
         }
 
@@ -361,7 +361,7 @@ public class PmsManagerProcessor {
         AccessCategory category = new AccessCategory();
         BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
         if (item == null) {
-            System.out.println("Not able to push to arx, item does not exists");
+            manager.logPrint("Not able to push to arx, item does not exists");
             return false;
         }
         String alias = item.bookingItemAlias;
@@ -664,7 +664,7 @@ public class PmsManagerProcessor {
     private boolean fetchFromGetshopHotelLock(PmsBookingRooms room, boolean deleted) {
         BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
         if (item == null) {
-            System.out.println("Not able to fetch code from getshop hotel lock, no lock is connected to the room");
+            manager.logPrint("Not able to fetch code from getshop hotel lock, no lock is connected to the room");
             return false;
         }
         if(deleted) {

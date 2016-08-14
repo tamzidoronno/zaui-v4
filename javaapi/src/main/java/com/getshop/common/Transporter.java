@@ -2,7 +2,9 @@ package com.getshop.common;
 
 import com.getshop.javaapi.GetShopApi;
 import com.google.gson.Gson;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.JsonObject2;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -48,7 +50,7 @@ public class Transporter {
 
         String jsonMessage = new Gson().toJson(message);
         if (jsonMessage == null) {
-            System.out.println("Failed converting message to json");
+            GetShopLogHandler.logPrintStatic("Failed converting message to json", null);
             System.exit(0);
         }
         if (!connected) {
@@ -74,7 +76,7 @@ public class Transporter {
         connected = false;
         while (true) {
             if(autoReconnect) {
-                System.out.println("Reconnecting to java backend");
+                GetShopLogHandler.logPrintStatic("Reconnecting to java backend", null);
             }
             if (connected) {
                 break;

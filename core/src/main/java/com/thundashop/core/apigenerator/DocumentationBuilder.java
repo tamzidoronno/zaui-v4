@@ -3,6 +3,8 @@ package com.thundashop.core.apigenerator;
 import com.thundashop.core.apigenerator.GenerateApi;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.apigenerator.GenerateApi.ApiMethod;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -163,7 +165,7 @@ public class DocumentationBuilder {
     
     private String genrateDataObjects(String name) {
         name = name.substring(1);
-        System.out.println(name);
+        GetShopLogHandler.logPrintStatic(name, null);
         String html = "<div class='dataObject'>";
         for (Class theClass : messageClasses) {
             if (theClass.getName().toLowerCase().contains(name.toLowerCase())) {
@@ -188,7 +190,7 @@ public class DocumentationBuilder {
     
     public String createDataObjectTable(String name) {
         name = name.substring(1);
-        System.out.println(name);
+        GetShopLogHandler.logPrintStatic(name, null);
         String html = "";
         for (Class theClass : messageClasses) {
             if (theClass.getName().toLowerCase().contains(name.toLowerCase())
@@ -322,7 +324,7 @@ public class DocumentationBuilder {
             }
         }
         if (html.isEmpty()) {
-            System.out.println("Warning example code / integration test for manager: " + managerName + " : method " + methodName + " not found!");
+            GetShopLogHandler.logPrintStatic("Warning example code / integration test for manager: " + managerName + " : method " + methodName + " not found!", null);
             return "No example found.";
         }
 

@@ -13,6 +13,8 @@ if($instances) {
 }
 $avtalegiro = $this->getApi()->getStoreApplicationPool()->getApplication("8f5f7f8f-de42-4867-82cc-63eb0cb55fa1");
 $config = $this->getConfigurationToUse();
+//echo "<pre>";
+//print_r($config);
 ?>
 <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
@@ -30,13 +32,30 @@ $config = $this->getConfigurationToUse();
             if($booking->channel) { echo "Channel : " . $booking->channel . "<br>"; }
             if($booking->wubookchannelreservationcode) { echo "Channel res id : " . $booking->wubookchannelreservationcode . "<br>"; }
             if($booking->wubookreservationid) { echo "Wubook res id : " . $booking->wubookreservationid . "<br>"; }
-            if($booking->channel) { 
+            if($booking->channel) {
                 echo "Wubook no show : ";
                 echo $booking->wubookNoShow ? "Yes" : "no";
                 echo "<br>"; 
             }
-            
-            foreach($booking->registrationData->resultAdded as $key => $value) {
+
+            foreach($config->data as $key => $field) {
+                $key = $field->name;
+                $value = "";
+                if(isset($booking->registrationData->resultAdded->{$key}))
+                    $value = $booking->registrationData->resultAdded->{$key};
+                    
+                if(stristr($key, "user_")) {
+                    continue;
+                }
+                if(stristr($key, "company_")) {
+                    continue;
+                }
+                if($key == "agreetoterms") {
+                    continue;
+                }
+                if($key == "choosetyperadio") {
+                    continue;
+                }
                 $name = "";
                 foreach($booking->registrationData->data as $val) {
                     if($val->name == $key) {
@@ -65,9 +84,13 @@ $config = $this->getConfigurationToUse();
                     continue;
                 }
             ?>
-                <span class='roomprefix'><? echo $name; ?></span>
-                <span class='roompostfix'><? echo $value; ?></span>
-                <div style='clear:both;'></div>
+            <div class='editfieldrow'>
+                <b><i class='fa fa-edit editfield'></i> <? echo $name; ?></b><br>
+                <span style='padding-left: 20px; padding-bottom: 10px;padding-top: 3px;display:block;' class='fieldtoedit'><? echo $value; ?></span>
+                <div style='text-align:right'>
+                    <input type='button' value='Save' class='savenewfielddata' style='display:none;' field='<?php echo $key; ?>'>
+                </div>
+            </div>
             <?php
             }
             ?>            

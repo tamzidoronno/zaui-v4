@@ -9,6 +9,8 @@ import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -160,7 +162,7 @@ public class BookingItemAssignerOptimal {
                     throw new BookingEngineException("Did not find the booking item with id (it possible has been deleted): " + timeLineUsed.bookingItemId);
                 }
                 
-                System.out.println("Assigned: " + getBookingItem(timeLineUsed.bookingItemId).bookingItemName + " to " + booking.getHumanReadableDates());
+                GetShopLogHandler.logPrintStatic("Assigned: " + getBookingItem(timeLineUsed.bookingItemId).bookingItemName + " to " + booking.getHumanReadableDates(), null);
 
                 assignBookingsToItem(booking, item);
             }
@@ -318,9 +320,9 @@ public class BookingItemAssignerOptimal {
     private void printBookingLines(List<OptimalBookingTimeLine> bookingLines) {
         int i = 1;
         for (OptimalBookingTimeLine bookings : bookingLines) {
-            System.out.println("Line " + i);
+            GetShopLogHandler.logPrintStatic("Line " + i, null);
             for (Booking booking : bookings.bookings) {
-                System.out.println("Booking id: " + booking.id + " - Times: " + booking.getHumanReadableDates() + " type: " + booking.bookingItemTypeId + " Item id: " + booking.bookingItemId);
+                GetShopLogHandler.logPrintStatic("Booking id: " + booking.id + " - Times: " + booking.getHumanReadableDates() + " type: " + booking.bookingItemTypeId + " Item id: " + booking.bookingItemId, null);
             }
             i++;
         }
@@ -342,7 +344,7 @@ public class BookingItemAssignerOptimal {
         
         for (Booking booking : bookings) {
             if (booking.bookingItemId != null && booking.bookingItemId.equals(bookingWithItem.bookingItemId) && booking.interCepts(bookingWithItem.startDate, bookingWithItem.endDate)) {
-                System.out.println(booking.getInformation());
+                GetShopLogHandler.logPrintStatic(booking.getInformation(), null);
             }
         }
     }

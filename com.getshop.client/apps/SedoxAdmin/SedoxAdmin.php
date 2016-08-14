@@ -31,7 +31,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $file = $product;
         
         $time = $this->formatJavaDateToTime($file->rowCreatedDate);
-        $date = date("d M Y", $time);
+        $date = date("H:i", $time);
         $user = $this->getApi()->getUserManager()->getUserById($file->firstUploadedByUserId);
         $sedoxUserAccount = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($file->firstUploadedByUserId);
         $balance = $sedoxUserAccount->creditAccount->balance;
@@ -141,6 +141,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     public function markProductAsStarted() {
         $product = $this->getApi()->getSedoxProductManager()->getProductById($_POST['data']['productid']);
         $this->getApi()->getSedoxProductManager()->toggleStartStop($product->id, !$product->started);
+        $this->markRowAsExpanded();
     }
     
     public function markAsFinished() {

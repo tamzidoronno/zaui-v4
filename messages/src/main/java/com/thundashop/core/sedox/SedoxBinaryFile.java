@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.sedox;
 
+import com.thundashop.core.common.GetShopLogHandler;
 import java.io.Serializable;
 
 /**
@@ -37,7 +38,7 @@ public class SedoxBinaryFile implements Serializable {
         String[] productAttributes = fileName.split(";");
         
         if (productAttributes.length != 17 && productAttributes.length != 18) { 
-            System.out.println("WARNING! Cant update attributes, the filename is not the correct parameters. Check winols settings");
+            GetShopLogHandler.logPrintStatic("WARNING! Cant update attributes, the filename is not the correct parameters. Check winols settings", null);
             return;
         }
         
@@ -79,7 +80,7 @@ public class SedoxBinaryFile implements Serializable {
             return 16 + getAddons(type);
         }
         
-        System.out.println("Warning, file price is not registered to this file");
+        GetShopLogHandler.logPrintStatic("Warning, file price is not registered to this file", null);
         return 6;
     }
 

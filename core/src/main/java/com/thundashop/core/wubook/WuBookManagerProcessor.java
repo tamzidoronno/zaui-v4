@@ -11,6 +11,8 @@
 package com.thundashop.core.wubook;
 
 import com.getshop.scope.GetShopSchedulerBase;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.util.List;
 
 public class WuBookManagerProcessor extends GetShopSchedulerBase {
@@ -22,12 +24,12 @@ public class WuBookManagerProcessor extends GetShopSchedulerBase {
     @Override
     public void execute() throws Exception {
         long start = System.currentTimeMillis();
-        System.out.println("Searching for new bookings");
+        GetShopLogHandler.logPrintStatic("Searching for new bookings", null);
 //        getApi().getWubookManager().addNewBookingsPastDays(getMultiLevelName(), 2);
 //        getApi().getWubookManager().updateAvailability(getMultiLevelName());
 //        getApi().getWubookManager().updatePrices(getMultiLevelName());
 //        getApi().getWubookManager().checkForNoShowsAndMark(getMultiLevelName());
-        System.out.println("Wubook operation takes:" + (System.currentTimeMillis() - start));
+        GetShopLogHandler.logPrintStatic("Wubook operation takes:" + (System.currentTimeMillis() - start), null);
         
     }
     

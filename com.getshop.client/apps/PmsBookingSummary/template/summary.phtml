@@ -15,6 +15,7 @@ foreach($bookingitems as $item) {
 }
 
 $this->includeCouponSystem();
+
 switch($configuration->bookingProfile) {
     case "subscription":
         $addonsText = $this->__w("Subscription selected");
@@ -35,6 +36,9 @@ foreach($booking->rooms as $room) {
         continue;
     }
     $canUpdate = $this->getConfigurationSetting("canUpdateText") == "yes";
+    if($this->isEditorMode()) {
+        $canUpdate = true;
+    }
     printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitems, $startingFromText, $canUpdate);
     printAddons($room, $configuration, $this);
 }
@@ -42,7 +46,7 @@ foreach($booking->rooms as $room) {
 if($configuration->supportMoreDates) {
     $this->includefile("addmoredates");
     if($this->hasRoomsThatCanNoBeAdded($booking)) {
-        echo "<span class='unavailableroomwarning'>";
+        echo "<span class='unavailableroomwarning repeatingrowprinted'>";
         echo $this->__w("You got rooms that are not available in the selected time periode.");
         echo "</span>";
         foreach($booking->rooms as $room) {
@@ -57,7 +61,7 @@ if($configuration->supportMoreDates) {
        }
     }
     
-    echo "<div class='repatingroomlist'>";
+    echo "<div class='repatingroomlist repeatingrowprinted'>";
     foreach($booking->rooms as $room) {
         if(!$room->addedByRepeater) {
             continue;
@@ -83,7 +87,7 @@ foreach($booking->rooms as $room) {
         if(!isset($prices[$product->taxGroupObject->taxRate])) {
             $prices[$product->taxGroupObject->taxRate] = 0;
         }
-        $prices[$product->taxGroupObject->taxRate] += $product->price;
+        $prices[$product->taxGroupObject->taxRate] += ($product->price * $addon->count);
     }
     
 }
@@ -156,7 +160,7 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
     echo "<div class='no-room-selected'>Du må minst velge ett rom før du kan fortsette.</div>";
     
     echo "<div class='itemrow $canNotBeAded roomitemrow'>";
-    echo "<i class='fa fa-trash-o removeAddon bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></i> ";
+    echo "<i class='fa fa-trash-o removeAddon bookedaction repeatingentry' itemtypeid='".$room->pmsBookingRoomId."'></i> ";
     $addonsAdded[$room->bookingItemTypeId] = true;
     echo "<span class='itemname'>";
     if($room->bookingItemId) {

@@ -5,7 +5,9 @@
 package com.thundashop.core.start;
 
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -88,9 +90,9 @@ public class GenerateJavascriptApi {
 
                 String path = clazz.getCanonicalName();
                 path =  pathToJavaSource+path.replace(".", "/") + ".java";
-                System.out.println(method.getName());
+                GetShopLogHandler.logPrintStatic(method.getName(), null);
                 if(method.getName().equals("getAllBookings")) {
-                    System.out.println("found");
+                    GetShopLogHandler.logPrintStatic("found", null);
                 }
                 
                 Map<String, Object> parsed = GeneratePhpApiNew.parseMethod(path, method, "JAVA", false);
@@ -137,7 +139,7 @@ public class GenerateJavascriptApi {
 
         
         Files.write(Paths.get(storeFileIn), javascriptFile.getBytes());
-        System.out.println("file stored in : " + storeFileIn );
+        GetShopLogHandler.logPrintStatic("file stored in : " + storeFileIn, null);
     }
 
     public static void main(String[] args) throws ClassNotFoundException, IOException, URISyntaxException {

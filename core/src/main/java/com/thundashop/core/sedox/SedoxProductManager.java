@@ -179,7 +179,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             return;
         }
 
-        System.out.println("Sync done");
+        logPrint("Sync done");
     }
 
     @Override
@@ -864,7 +864,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
         }
 
-        System.out.println("Users updated");
+        logPrint("Users updated");
     }
 
     @Override
@@ -1239,9 +1239,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if(sedoxProduct != null) {
             text = text.replace("{product-id}", sedoxProduct.id);
             text = text.replace("{product-comment}", sedoxProduct.comment != null ? sedoxProduct.comment : "");
+            text = text.replace("{product-withdraw-credit}", sedoxProduct.useCreditAccount == "true" ? "yes" : "no");
             
-            if (sedoxProduct != null 
-                && sedoxProduct.reference != null 
+            if (sedoxProduct.reference != null 
                 && sedoxProduct.reference.get(sedoxProduct.firstUploadedByUserId) != null 
                 && !sedoxProduct.reference.get(sedoxProduct.firstUploadedByUserId).isEmpty()) {
                     text = text.replace("{product-reference}", sedoxProduct.reference.get(sedoxProduct.firstUploadedByUserId));

@@ -22,6 +22,7 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.utils.BrRegEngine;
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -30,11 +31,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -967,7 +971,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             int High = 991881;
             int randomCode = r.nextInt(High-Low) + Low;
             
-            System.out.println("New code: " + randomCode);
+            logPrint("New code: " + randomCode);
             user.pinCode = ""+randomCode;
             collection.addUser(user);
             messageManager.sendSms("plivo", user.cellPhone, "Pincode: " + user.pinCode, "+47");
@@ -1596,4 +1600,30 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
 
+    @Override
+    public void mergeUsers(List<String> userIds, HashMap<String,String> properties) {
+        User mergedUser = new User();
+        Map<String, User> users = new HashMap();
+        
+        for(String userId : userIds) {
+            users.put(userId, this.getUserById(userId));
+            this.deleteUser(userId);
+        }
+        
+        for(Map.Entry<String, String> entry : properties.entrySet()) {
+            try {
+                Field mergedUserField = mergedUser.getClass().getField(entry.getKey());
+                User user = users.get(entry.getValue());
+                Field userField = user.getClass().getField(entry.getKey());
+                
+                mergedUserField.set(mergedUser, userField.get(user));
+            } catch (NoSuchFieldException ex) {
+            } catch (SecurityException ex) {
+            } catch (IllegalArgumentException ex) {
+            } catch (IllegalAccessException ex) {
+            }            
+        }
+        
+        this.saveUser(mergedUser);
+    };
 }

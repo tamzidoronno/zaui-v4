@@ -12,7 +12,22 @@ app.PmsBookingSummary = {
         $(document).on('keyup','.PmsBookingSummary .roomaddedrow', app.PmsBookingSummary.updateRoomRow);
         $(document).on('click','.PmsBookingSummary .removeAddonOnRoom', app.PmsBookingSummary.updateAddonOnRoom);
         $(document).on('click','.PmsBookingSummary .addAddonOnRoom', app.PmsBookingSummary.updateAddonOnRoom);
+        $(document).on('click','.PmsBookingSummary .discountbutton', app.PmsBookingSummary.changePartnerShip);
     },
+    changePartnerShip : function() {
+        $('.discountheader .discountbutton').removeClass('selected');
+        $(this).addClass('selected');
+        var newType = $(this).attr('type');
+        $('.discounttype').hide();
+        $('.discounttype[type="'+newType+'"]').show();
+        var event = thundashop.Ajax.createEvent('','setDiscountType', $(this),{
+            type : newType
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            
+        });
+    },
+    
     updateCountOnAddon : function() {
         var event = thundashop.Ajax.createEvent('','updateCountOnAddon', $(this), {
             roomid: $(this).closest('.itemrow').attr('roomid'),
@@ -98,13 +113,17 @@ app.PmsBookingSummary = {
     },
     removeAddon : function() {
         var data = {
-            itemtypeid : $(this).attr('itemtypeid')
+            itemtypeid : $(this).attr('itemtypeid'),
         };
-        var row = $(this).closest('.itemrow');
         var event = thundashop.Ajax.createEvent('','removeAddon', $(this),data);
-        thundashop.Ajax.postWithCallBack(event, function(res) {
-            $('.PmsBookingSummary .summarizedbooking').html(res);
-        });
+        var row = $(this).closest('.itemrow');
+        if($(this).closest('.repeatingrowprinted')) {
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                row.remove();
+            });
+        } else {
+            thundashop.Ajax.post(event);
+        }
     },
     addAddon : function() {
         var data = {

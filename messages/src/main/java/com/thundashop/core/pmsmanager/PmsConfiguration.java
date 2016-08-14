@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class PmsConfiguration extends DataCommon {
-
-
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;
         public static Integer DAILY = 2;
@@ -104,14 +102,35 @@ public class PmsConfiguration extends DataCommon {
     public String wubookproviderkey = "";
     public String wubooklcode = "";
     
-    public HashMap<String, String> channelTranslations = new HashMap();
-    public HashMap<String, String> channelPaymentTypes = new HashMap();
+    
+    private HashMap<String, PmsChannelConfig> channelConfiguration = new HashMap();
     
     public boolean isGetShopHotelLock() {
         if(locktype != null && !locktype.isEmpty() && locktype.equals("getshophotellock")) {
             return true;
         }
         return false;
+    }
+
+    boolean channelExists(String channel) {
+        return channelConfiguration.containsKey(channel);
+    }
+    
+    HashMap<String, PmsChannelConfig> getChannels() {
+        return channelConfiguration;
+    }
+    
+    public PmsChannelConfig getChannelConfiguration(String channel) {
+        if(!channelConfiguration.containsKey(channel)) {
+            PmsChannelConfig config = new PmsChannelConfig();
+            config.channel = channel;
+            channelConfiguration.put(channel, config);
+        }
+        return channelConfiguration.get(channel);
+    }
+    
+    void removeChannel(String channel) {
+        channelConfiguration.remove(channel);
     }
 
     

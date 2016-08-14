@@ -315,7 +315,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     @Override
     public List<String> createCreditorFile(boolean newOnly) throws Exception {
         if(!config.vendor.equals("svea")) {
-            System.out.println("nothing but svea is supported yet...");
+            logPrint("nothing but svea is supported yet...");
             return new ArrayList();
         }
         
@@ -465,7 +465,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         } else if(type.equals(getBookingComRateManagerType())) {
             createBookingComRateManagerFile();
         } else {
-            System.out.println("Transferring of type... is not supported yet : " + type);
+            logPrint("Transferring of type... is not supported yet : " + type);
             return;
         }
 
@@ -500,7 +500,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         } else if(type.equals(getBookingComRateManagerType())) {
             return createBookingComRateManagerFile();
         } else {
-            System.out.println("Cant get file of type: " + type);
+            logPrint("Cant get file of type: " + type);
         }
         return new ArrayList();
     }

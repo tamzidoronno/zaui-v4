@@ -474,12 +474,41 @@
 }
 
 .SedoxAdmin .commentfield_for_emails {
-    width: 100%;
+    width: 48%;
     height: 100px;
     padding: 10px;
     border: solid 1px #EEE;
     margin-bottom: 20px;
-    
+    display: inline-block;
+    vertical-align: top;
+}
+
+.SedoxAdmin .sedox_user_information {
+    width: 48%;
+    height: 100px;
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 20px;
+    color: #5d6773;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.SedoxAdmin .customer_data {
+    margin-bottom: 5px;
+}
+
+.SedoxAdmin .data_name {
+    display: inline-block;
+}
+
+.SedoxAdmin .data_value {
+    display: inline-block;
+    float: right;
+}
+
+.SedoxAdmin .credit_value {
+    color: #44b215;
 }
 
 .SedoxAdmin .SedoxDownloadHistory .tablecontent .col_row_content .header_content {

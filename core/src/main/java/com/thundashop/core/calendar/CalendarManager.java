@@ -1121,8 +1121,8 @@ public class CalendarManager extends ManagerBase implements ICalendarManager, Us
     public void addUserSilentlyToEvent(String eventId, String userId) throws ErrorException {
         Entry entry = getEntry(eventId);
         User user = userManager.getUserById(userId);
-        System.out.println("user; " + user);
-        System.out.println("entry: " + entry);
+        logPrint("user; " + user);
+        logPrint("entry: " + entry);
         if (entry != null && entry.attendees != null && !entry.attendees.contains(userId) && user != null) {
             entry.attendees.add(userId);
             saveEntry(entry);

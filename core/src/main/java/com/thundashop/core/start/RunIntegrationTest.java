@@ -1,5 +1,7 @@
 package com.thundashop.core.start;
 
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -17,12 +19,12 @@ public class RunIntegrationTest {
         File jarFile = new File("dist/com.thundashop.core.jar");
         long lastBuild = jarFile.lastModified();
         
-        System.out.println("Starting!");
+        GetShopLogHandler.logPrintStatic("Starting!", null);
         boolean doLoop = false;
         do {
             jarFile = new File("dist/com.thundashop.core.jar");
             if (lastBuild < jarFile.lastModified()) {
-                System.out.println("Restarting java backend");
+                GetShopLogHandler.logPrintStatic("Restarting java backend", null);
                 starter.exit();
                 do {
                     starter = test.startJava();
@@ -56,10 +58,10 @@ public class RunIntegrationTest {
         }
 
         if (!starter.started) {
-            System.out.println("Failed to start the java backend.!");
+            GetShopLogHandler.logPrintStatic("Failed to start the java backend.!", null);
             return null;
         }
-        System.out.println("Java backend started");
+        GetShopLogHandler.logPrintStatic("Java backend started", null);
         return starter;
     }
 
@@ -75,7 +77,7 @@ public class RunIntegrationTest {
             BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             String line = reader.readLine();
             while (line != null) {
-                System.out.println(line);
+                GetShopLogHandler.logPrintStatic(line, null);
                 line = reader.readLine();
             }
         } catch (Exception e) {

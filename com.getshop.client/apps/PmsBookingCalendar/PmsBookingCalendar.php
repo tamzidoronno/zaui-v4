@@ -56,21 +56,38 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     
     
     public function selectDay() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         $this->booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
-        
         if($this->isStartDate()) {
             $this->booking->sessionStartDate = $this->convertToJavaDate($_POST['data']['time']);
+            if($config->bookingTimeInterval == 2) {
+                //Daily time interval
+                if(strtotime($this->booking->sessionStartDate) >= strtotime($this->booking->sessionEndDate)) {
+                    $this->booking->sessionEndDate = $this->convertToJavaDate(strtotime($this->booking->sessionStartDate)+86400);
+                }
+                if(date("d.m.Y", strtotime($this->booking->sessionStartDate)) == date("d.m.Y", strtotime($this->booking->sessionEndDate))) {
+                    $this->booking->sessionEndDate = $this->convertToJavaDate(strtotime($this->booking->sessionEndDate)+86400);
+                }
+            }
         } else {
             $this->booking->sessionEndDate = $this->convertToJavaDate($_POST['data']['time']);
+            if($config->bookingTimeInterval == 2) {
+                if(strtotime($this->booking->sessionStartDate) >= strtotime($this->booking->sessionEndDate)) {
+                    $this->booking->sessionStartDate = $this->convertToJavaDate(strtotime($this->booking->sessionEndDate)-86400);
+                }
+                if(date("d.m.Y", strtotime($this->booking->sessionStartDate)) == date("d.m.Y", strtotime($this->booking->sessionEndDate))) {
+                    $this->booking->sessionStartDate = $this->convertToJavaDate(strtotime($this->booking->sessionStartDate)-86400);
+                }
+            }
         }
+        
+        $this->booking->sessionStartDate = $this->convertToJavaDate(strtotime(date("d.m.Y ", strtotime($this->booking->sessionStartDate)) . $config->defaultStart));
+        $this->booking->sessionEndDate = $this->convertToJavaDate(strtotime(date("d.m.Y ", strtotime($this->booking->sessionEndDate)) . $config->defaultEnd));
         
         if(sizeof($this->booking->rooms) > 0) {
             foreach($this->booking->rooms as $room) {
-                if($this->isStartDate()) {
-                    $room->date->start = $this->convertToJavaDate($_POST['data']['time']);
-                } else {
-                    $room->date->end = $this->convertToJavaDate($_POST['data']['time']);
-                }
+                $room->date->start = $this->booking->sessionStartDate;
+                $room->date->end = $this->booking->sessionEndDate;
             }
         }
         

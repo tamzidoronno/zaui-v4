@@ -67,11 +67,9 @@ class Dibs extends \PaymentApplication implements \Application {
         
         $merchid = $this->getConfigurationSetting("merchantid");
         $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
-        $orderId = $this->getOrder()->incrementOrderId;
-        $amount = $this->getApi()->getCartManager()->calculateTotalCost($this->order->cart)*100;
-        if(isset($this->order->shipping) && isset($this->order->shipping->cost)) {
-            $amount += ($this->order->shipping && $this->order->shipping->cost) ? $this->order->shipping->cost : 0;
-        }
+        $order = $this->getOrder();
+        $orderId = $order->incrementOrderId;
+        $amount = $this->getApi()->getOrderManager()->getTotalAmount($order)*100;
         
         $settings = $this->getFactory()->getSettings();
         $language = $this->getFactory()->getSelectedTranslation();

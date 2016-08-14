@@ -10,6 +10,8 @@ package com.thundashop.core.start;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.*;
     import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -130,7 +132,7 @@ public class GeneratePhpApiNew {
         } else if (paths.length == 6) {
             classname = paths[2] + "_" + paths[3] + "_" + paths[4] + "_" + filename;
         } else {
-            System.out.println(entry.getName());
+            GetShopLogHandler.logPrintStatic(entry.getName(), null);
         }
         return classname;
     }
@@ -196,7 +198,7 @@ public class GeneratePhpApiNew {
 
             createFolders(entry);
             String classname = createPhpClassName(entry, filename);
-            System.out.println(classname);
+            GetShopLogHandler.logPrintStatic(classname, null);
         }
     }
 
@@ -208,7 +210,7 @@ public class GeneratePhpApiNew {
      * @throws Exception
      */
     public static void main(String[] args) throws InterruptedException, Exception {
-        System.out.println("This is not in use anymore... please use GenerateApi");
+        GetShopLogHandler.logPrintStatic("This is not in use anymore... please use GenerateApi", null);
         System.exit(0);
         
         
@@ -220,7 +222,7 @@ public class GeneratePhpApiNew {
         writePHPApi(result);
 
         String apiFile = BuildJavaApi(classes);
-        System.out.println(apiFile);
+        GetShopLogHandler.logPrintStatic(apiFile, null);
         writeApiFile(apiFile);
 
         File messages = new File("../com.getshop.messages/build/classes/");
@@ -343,7 +345,7 @@ public class GeneratePhpApiNew {
 
     private static String genrateDataObjects(String name) {
         name = name.substring(1);
-        System.out.println(name);
+        GetShopLogHandler.logPrintStatic(name, null);
         String html = "<div class='dataObject'>";
         for (Class theClass : dataObjects) {
             if (theClass.getName().toLowerCase().contains(name.toLowerCase())) {
@@ -465,7 +467,7 @@ public class GeneratePhpApiNew {
             }
         }
         if (html.isEmpty()) {
-            System.out.println("Warning example code / integration test for manager: " + managerName + " : method " + methodName + " not found!");
+            GetShopLogHandler.logPrintStatic("Warning example code / integration test for manager: " + managerName + " : method " + methodName + " not found!", null);
             return "No example found.";
         }
 
@@ -684,15 +686,15 @@ public class GeneratePhpApiNew {
 
     private static void validateMethod(Method method, String[] splittedArgs) {
         if ((splittedArgs.length / 2) > method.getParameterTypes().length || (splittedArgs.length / 2) < method.getParameterTypes().length) {
-            System.out.println("################################### ERROR ###############################");
-            System.out.println("# The method " + method.getName() + " seems to have invalid parameters, make sure there is not spaces in collections! #");
-            System.out.println("Splitted args:");
+            GetShopLogHandler.logPrintStatic("################################### ERROR ###############################", null);
+            GetShopLogHandler.logPrintStatic("# The method " + method.getName() + " seems to have invalid parameters, make sure there is not spaces in collections! #", null);
+            GetShopLogHandler.logPrintStatic("Splitted args:", null);
             for (String arg : splittedArgs) {
-                System.out.print(arg + " ");
+                GetShopLogHandler.logPrintStaticSingle(arg + " ", null);
             }
-            System.out.println();
-            System.out.println("Number of args supposed to be: " + method.getParameterTypes().length);
-            System.out.println("################################### ERROR ###############################");
+            GetShopLogHandler.logPrintStatic("", null);
+            GetShopLogHandler.logPrintStatic("Number of args supposed to be: " + method.getParameterTypes().length, null);
+            GetShopLogHandler.logPrintStatic("################################### ERROR ###############################", null);
             System.exit(0);
         }
     }
@@ -858,7 +860,7 @@ public class GeneratePhpApiNew {
 
     public static String createDataObjectTable(String name) {
         name = name.substring(1);
-        System.out.println(name);
+        GetShopLogHandler.logPrintStatic(name, null);
         String html = "";
         for (Class theClass : dataObjects) {
             if (theClass.getName().toLowerCase().contains(name.toLowerCase())

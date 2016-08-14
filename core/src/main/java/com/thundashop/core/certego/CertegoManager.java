@@ -186,7 +186,7 @@ public class CertegoManager extends ManagerBase implements ICertegoManager {
             while(iterator.hasNext()) {
                 JsonObject keySetup = iterator.next().getAsJsonObject();
                 String systemNumber = keySetup.get("systemNumber").getAsString();
-                System.out.println(systemNumber);
+                logPrint(systemNumber);
                 if (!hasAccessToSystemNumber(systemNumber)) {
                     throw new ErrorException((26));
                 }
@@ -221,7 +221,7 @@ public class CertegoManager extends ManagerBase implements ICertegoManager {
         }
         
         if (user.groups != null && user.groups.size() > 1) {
-            System.out.println("Warning, user assigned to multiple groups. Can not save order");
+            logPrint("Warning, user assigned to multiple groups. Can not save order");
             return  null;
         }
         

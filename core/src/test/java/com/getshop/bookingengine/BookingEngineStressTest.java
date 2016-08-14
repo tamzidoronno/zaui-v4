@@ -11,6 +11,8 @@ import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.databasemanager.data.Credentials;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,7 +81,7 @@ public class BookingEngineStressTest extends TestCommon {
         // Changing booking id.
         long time = System.currentTimeMillis();
         bookingEngine.changeBookingItemOnBooking(bookingGroup.bookingIds.get(0), bookingItem2.id);
-        System.out.println("Done: " + (System.currentTimeMillis() - time));
+        GetShopLogHandler.logPrintStatic("Done: " + (System.currentTimeMillis() - time), null);
         
     }
     

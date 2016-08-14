@@ -11,6 +11,8 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .doneediting', app.PmsManagement.doneediting);
         $(document).on('click', '.PmsManagement .deletebooking', app.PmsManagement.deletebooking);
         $(document).on('click', '.PmsManagement .resetnotifications', app.PmsManagement.resetnotifications);
+        $(document).on('click', '.PmsManagement .editfield', app.PmsManagement.editfieldrow);
+        $(document).on('click', '.PmsManagement .savenewfielddata', app.PmsManagement.savenewfielddata);
         $(document).on('keyup','.PmsManagement .newroomstartdate', app.PmsManagement.updateRoomList);
         $(document).on('keyup','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
         $(document).on('keyup','.PmsManagement .newroomstarttime', app.PmsManagement.updateRoomList);
@@ -32,15 +34,49 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .repeat_type', app.PmsManagement.changeRepeatType);
         $(document).on('click','.PmsManagement .changeInvoiceTo', app.PmsManagement.changeInvoiceTo);
         $(document).on('click','.PmsManagement .sendpaymentlink', app.PmsManagement.sendpaymentlink);
+        $(document).on('click','.PmsManagement .closesendpaymentlink', app.PmsManagement.sendpaymentlink);
         $(document).on('change','.PmsManagement select[gsname="itemid"]', app.PmsManagement.loadTakenRoomList);
+        $(document).on('change','.PmsManagement .sendlinktouser', app.PmsManagement.changePaymentLinkUser);
         $(document).on('click','.PmsManagement .tab', app.PmsManagement.selectTab);
         $(document).on('click','.PmsManagement .addAddonsButton', app.PmsManagement.addAddon);
         $(document).on('click','.PmsManagement .saveAddons', app.PmsManagement.saveAddons);
         $(document).on('click','.PmsManagement .removeAddons', app.PmsManagement.removeAddons);
+        $(document).on('click','.PmsManagement .toggleColumnFilter', app.PmsManagement.toggleColumnFilter);
         $(document).on('keyup','.PmsManagement .alldayprice', app.PmsManagement.updateDayPrices);
         $(document).on('click','.PmsManagement .updatecardonroom', app.PmsManagement.updatecardonroom);
         $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
         $(document).on('keyup','.PmsManagement .matrixpricealldays', app.PmsManagement.updateRoomPriceMatrix);
+    },
+    savenewfielddata : function() {
+        var saveButton = $(this);
+        var data = {
+            "bookingid" : $('#openedbookingid').val(),
+            "newval": saveButton.closest('.editfieldrow').find('.fieldtoedit').text(),
+            "field" : saveButton.attr('field')
+        };
+        var event = thundashop.Ajax.createEvent('','updateRegistrationData', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            saveButton.closest('.editfieldrow').find('.fieldtoedit').attr('contenteditable',null);
+            saveButton.closest('.editfieldrow').find('.savenewfielddata').hide();
+        });
+    },
+    
+    editfieldrow : function() {
+        $(this).closest('.editfieldrow').find('.fieldtoedit').attr('contenteditable','true');
+        $(this).closest('.editfieldrow').find('.fieldtoedit').focus();
+        $(this).closest('.editfieldrow').find('.savenewfielddata').show();
+    },
+    
+    toggleColumnFilter : function() {
+        $('.PmsManagement .columnfilter').toggle();
+    },
+    changePaymentLinkUser : function() {
+        var val = $(this).val();
+        var splitted = val.split(":");
+        var box = $(this).closest('.sendpaymentlinkbox');
+        box.find('[gsname="bookerPrefix"]').val(splitted[0]);
+        box.find('[gsname="bookerPhone"]').val(splitted[1]);
+        box.find('[gsname="bookerEmail"]').val(splitted[2]);
     },
     showsendinvoice : function() {
         $(this).closest('tr').find('.sendinvoicebox').slideDown();
@@ -177,13 +213,7 @@ app.PmsManagement = {
         localStorage.setItem('selectedbookinginfotab', area);
     },
     sendpaymentlink : function() {
-        var event = thundashop.Ajax.createEvent('','sendPaymentLink', $(this), {
-            "orderid" : $(this).attr('orderid'),
-            "bookingid" : $(this).attr('bookingid')
-        });
-        thundashop.Ajax.postWithCallBack(event, function(res) {
-            thundashop.common.Alert("Success", "Paymentlink has been sent");
-        });
+        $(this).closest('td').find('.sendpaymentlinkbox').toggle();
     },
     
     loadTakenRoomList : function() {

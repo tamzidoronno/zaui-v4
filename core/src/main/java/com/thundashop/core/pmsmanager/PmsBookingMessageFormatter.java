@@ -127,8 +127,17 @@ class PmsBookingMessageFormatter {
 
             }
             for(PmsGuests guest : room.guests) {
-                bookingData += "<br>";
-                bookingData += guest.name + " " + guest.prefix + guest.phone + " " + guest.email + "<br>";
+                if(guest.name != null && !guest.name.isEmpty()) {
+                    bookingData += "<br>";
+                    bookingData += guest.name;
+                    if(guest.phone != null && !guest.phone.isEmpty()) {
+                        bookingData += " " + guest.prefix + guest.phone + " ";
+                    }
+                    if(guest.email != null && !guest.email.isEmpty()) {
+                        bookingData += " " + guest.email;
+                    }
+                    bookingData += "<br>";
+                }
             }
             bookingData += "<br>";
         }

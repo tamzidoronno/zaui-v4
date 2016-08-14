@@ -29,6 +29,13 @@ class PmsPricing extends \WebshopApplication implements \Application {
             $pricingObject->dailyPrices = $prices;
         }
 
+        foreach($_POST['data']['channeldiscount'] as $chan => $discount) {
+                if(!$pricingObject->channelDiscount) {
+                    $pricingObject->channelDiscount = new \stdClass();
+                }
+                $pricingObject->channelDiscount->{$chan} = $discount;
+        }
+        
         $pricingObject->defaultPriceType = $_POST['data']['pricetype'];
         $pricingObject->pricesExTaxes = $_POST['data']['prices_ex_taxes'] == "true";
         $pricingObject->privatePeopleDoNotPayTaxes = $_POST['data']['privatePeopleDoNotPayTaxes'] == "true";

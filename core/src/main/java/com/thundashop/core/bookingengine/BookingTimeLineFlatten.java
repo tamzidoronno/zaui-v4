@@ -7,6 +7,8 @@ package com.thundashop.core.bookingengine;
 
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,7 +68,7 @@ public class BookingTimeLineFlatten implements Serializable {
     boolean canAdd(Booking booking) {
         for (BookingTimeLine itemLine : getTimelines()) {
             if (itemLine.intercepts(booking) && itemLine.getAvailableSpots() < 1) {
-                System.out.println("Booking is full between: " + itemLine.start + " and " + itemLine.end);
+                GetShopLogHandler.logPrintStatic("Booking is full between: " + itemLine.start + " and " + itemLine.end, null);
                 return false;
             }
         }
@@ -79,7 +81,7 @@ public class BookingTimeLineFlatten implements Serializable {
             @Override
             public int compare(Booking o1, Booking o2) {
                 if(o1 == null || o2 == null || o1.startDate == null || o2.startDate == null) {
-                    System.out.println("null date");
+                    GetShopLogHandler.logPrintStatic("null date", null);
                     return 1;
                 }
                 return o1.startDate.compareTo(o2.startDate);

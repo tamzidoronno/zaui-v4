@@ -45,7 +45,7 @@ public class StoreHandler {
         try {
             scope = AppContext.appContext.getBean(GetShopSessionScope.class);
         } catch (BeansException ex) {
-            System.out.println("Throws bean exception?");
+            GetShopLogHandler.logPrintStatic("Throws bean exception?", null);
         }
     }
         
@@ -70,8 +70,6 @@ public class StoreHandler {
             Object result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
             clearSessionObject();
             
-            TranslationHandler handle = new TranslationHandler();
-            handle.updateTranslationOnAll(session.language, result);
 
             result = cloneResult(result, user);
             return result;
@@ -85,7 +83,7 @@ public class StoreHandler {
                     userInfo += " email: " + user.emailAddress;
                 }
 
-                System.out.println("Access denied, store: " + storeId + " , user={" + userInfo + "} method={" + aClass.getSimpleName() + "." + inObject.method + "}");
+                GetShopLogHandler.logPrintStatic("Access denied, store: " + storeId + " , user={" + userInfo + "} method={" + aClass.getSimpleName() + "." + inObject.method + "}", null);
             }
             throw ex;
         }
@@ -145,6 +143,15 @@ public class StoreHandler {
             ManagerSubBase manager = getManager(aClass, getShopInterfaceClass, inObject);
             Object result = executeMethod.invoke(manager, argObjects);
             result = manager.preProcessMessage(result, executeMethod);
+            
+            
+            TranslationHandler handle = new TranslationHandler();
+            String lang = manager.getSession().language;
+            if(lang == null) {
+                lang = manager.getStoreSettingsApplicationKey("language");
+            }
+            handle.updateTranslationOnAll(lang, result);
+            
             return result;
         } catch (IllegalAccessException ex) {
             throw new ErrorException(84);
@@ -204,7 +211,7 @@ public class StoreHandler {
         try {
             messageHandler = new ArrayList<ManagerBase>(AppContext.appContext.getBeansOfType(ManagerBase.class).values());
         } catch (BeansException ex) {
-            System.out.println("Throws bean exception?");
+            GetShopLogHandler.logPrintStatic("Throws bean exception?", null);
         }
         for (ManagerBase base : messageHandler) {
             base.setSession(session);
@@ -217,7 +224,7 @@ public class StoreHandler {
                 base.setSession(session);
             }
         } catch (BeansException ex) {
-            System.out.println("Throws bean exception?");
+            GetShopLogHandler.logPrintStatic("Throws bean exception?", null);
         }
         
         for (GetShopSessionBeanNamed bean : scope.getSessionNamedObjects()) {
@@ -358,7 +365,7 @@ public class StoreHandler {
 //            }
             
         } catch (BeansException ex) {
-            System.out.println("Throws bean exception?");
+            GetShopLogHandler.logPrintStatic("Throws bean exception?", null);
         }
 
         return null;

@@ -2,6 +2,7 @@
 /* @var $this ns_1475891a_3154_49f9_a2b4_ed10bfdda1fc\SedoxAdmin */
 /* @var $product core_sedox_SedoxProduct */
 $product = $this->getCurrentProduct();
+$sedoxProduct = $this->getApi()->getSedoxProductManager()->getProductById($product->id);
 $productName = $product->printableName;
 $origRequestType = "";
 $originalExtraRequests = "";
@@ -21,6 +22,7 @@ $_POST['data']['productId'] = $product->id;
 $_POST['data']['fileId'] = $product->binaryFiles[0]->id;
 
 $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($product->firstUploadedByUserId);
+$user = $this->getApi()->getUserManager()->getUserById($sedoxUser->id);
 
 ?>
 <div class="sedox_internal_view <? echo $expaned; ?>" productid='<? echo $product->id; ?>'>
@@ -183,7 +185,71 @@ $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById(
         ?>
         <div class='creditinformation'>
             <div>
-                <textarea class="commentfield_for_emails" productId="<? echo $product->id; ?>" gsname="comment" placeholder="Comment for emails."></textarea>
+                <textarea class="commentfield_for_emails" productId="<? echo $product->id; ?>" gsname="comment" placeholder="Comment for emails."></textarea
+                ><div class="sedox_user_information">
+                    <div class="customer_data">
+                        <div class="data_name">
+                            Customer Name:
+                        </div>
+                        <div class="data_value">
+                            <? echo $user->fullName; ?>
+                        </div>
+                    </div>
+                    <div class="customer_data">
+                        <div class="data_name">
+                            Email:
+                        </div>
+                        <div class="data_value">
+                            <? echo $user->emailAddress; ?>
+                        </div>
+                    </div>
+                    <div class="customer_data">
+                        <div class="data_name">
+                            Credit:
+                        </div>
+                        <div class="data_value credit_value" <? echo $sedoxUser->creditAccount->balance < 0 ? "style='color: #c30f10;'" : ""; ?>>
+                            <? echo $sedoxUser->creditAccount->balance; ?>
+                        </div>
+                    </div>
+                    <div class="customer_data">
+                        <div class="data_name">
+                            Bad Customer:
+                        </div>
+                        <?  if($sedoxUser->badCustomer) {
+                                ?>
+                                <div class="data_value" style="color: #c30f10;">
+                                    YES
+                                </div>
+                                <?
+                            } else {
+                                ?>
+                                <div class="data_value" style="color: #44b215;">
+                                    NO
+                                </div>    
+                                <?
+                            }                           
+                        ?>
+                    </div>
+                    <div class="customer_data">
+                        <div class="data_name">
+                            Withdraw credits:
+                        </div>
+                        <?  if($sedoxProduct->useCreditAccount == "true") {
+                                ?>
+                                <div class="data_value" style="color: #44b215;">
+                                    YES
+                                </div>
+                                <?
+                            } else {
+                                ?>
+                                <div class="data_value" style="color: #c30f10;">
+                                    NO
+                                </div>    
+                                <?
+                            }                           
+                        ?>
+                    </div>
+                </div>
             </div>
                 
             <div class='product_action_button <? echo $class1; ?>'>

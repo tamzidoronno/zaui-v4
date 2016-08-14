@@ -5,6 +5,8 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -206,7 +208,7 @@ public class TimeRepeaterTest {
         int resultNumber = (12 / interval) +1;
 
         if(resultNumber != result.size()) {
-            System.out.println("Failed to generate correct result: " + result.size() + " ");
+            GetShopLogHandler.logPrintStatic("Failed to generate correct result: " + result.size() + " ", null);
         }
         assertEquals(resultNumber, result.size());
         

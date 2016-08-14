@@ -58,8 +58,6 @@ public class GenerateTranslation extends UpdateScriptBase implements UpdateScrip
                 .filter(app -> app.isFrontend)
                 .collect(Collectors.toList());
         
-//        appsToGetTranslationFor.stream()
-//                .forEach(app -> System.out.println(app.appName));
         try {
             ParseTranslation gt = new ParseTranslation(new ArrayList());
             gt.startParsing();

@@ -146,9 +146,19 @@ $cart = $order->cart;
         if($cartItem->startDate) { $dates .= "<span class='lineStartDate' gstype='startDate'>" . date("d.m.Y H:i", strtotime($cartItem->startDate)) . "</span>"; }
             if($cartItem->endDate) { $dates .= " - <span class='lineEndDate' gstype='endDate'>" . date("d.m.Y H:i", strtotime($cartItem->endDate)) . "</span>"; }
         }
+        if($cartItem->product->sku) {
+            $dates .= " ( SKU: "  . $cartItem->product->sku . ")";
+        }
         echo "<div class='gss_order_line' cartItemId='".$cartItem->cartItemId."'>$editCountButton ".$cartItem->count." x ".$cartItem->product->name." $metaText $variationstext $additionalMetaData $dates<span class='gss_order_line_price'>(".round($cartItem->product->priceExTaxes,1). ") ".$cartItem->product->price." $editButton</span></div>";
 //        echo "</div>";
     }
+    
+
+    if(isset($order->shipping) && $order->shipping->cost > 0) {
+        echo "<div class='gss_order_line' cartItemId='".$cartItem->cartItemId."'>Shipping<span class='gss_order_line_price'>" . $order->shipping->cost . "</span></div>";
+    }
+
+    
     if($this->canChangeOrder($order)) {
     ?>
     <div class='gss_label'>

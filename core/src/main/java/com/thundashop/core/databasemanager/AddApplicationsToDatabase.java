@@ -3,6 +3,8 @@ package com.thundashop.core.databasemanager;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.databasemanager.data.Credentials;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -147,11 +149,11 @@ public class AddApplicationsToDatabase {
 
     public void showLinks() {
         for (Application app : addApplications()) {
-            System.out.println("ln -s ../../../applications/apps/" + app.appName + " " + "ns_" + app.id.replace("-", "_"));
+            GetShopLogHandler.logPrintStatic("ln -s ../../../applications/apps/" + app.appName + " " + "ns_" + app.id.replace("-", "_"), null);
         }
-        System.out.println("Or for kai: ");
+        GetShopLogHandler.logPrintStatic("Or for kai: ", null);
         for (Application app : addApplications()) {
-            System.out.println("ln -s ../../../com.getshop.applications/apps/" + app.appName + " " + "ns_" + app.id.replace("-", "_"));
+            GetShopLogHandler.logPrintStatic("ln -s ../../../com.getshop.applications/apps/" + app.appName + " " + "ns_" + app.id.replace("-", "_"), null);
         }
 
     }

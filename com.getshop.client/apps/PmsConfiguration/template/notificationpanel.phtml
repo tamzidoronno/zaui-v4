@@ -4,7 +4,7 @@ $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this
 /* @var $factory Factory */
 $factory = $this->getFactory();
 $langauge = $factory->getCurrentLanguage();
-$channels = $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedName());
+$channels = (array)$this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedName());
 
 $hasEventCalendar = false;
 $instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("27e174dc-b08c-4bf7-8179-9ea8379c91da");
@@ -775,14 +775,14 @@ $days[7] = "Sunday";
             </span>
             Email to notify to
         </div>
+        <h2>Channel configuration, <span class='addnewchannel' style='color:blue; cursor:pointer;'>add channel</span></h2>
         <?php if(sizeof($channels) > 0 && $this->isHotel($notificationSettings)) { ?>
-            <h2>Channel translations</h2>
             <?php foreach($channels as $chan => $channel) { ?>
                 <div class='configrow'>
                     <span class='configentry'>
-                        <input type='text' gsname='channel_translation_<?php echo $chan; ?>' value='<? echo $channel; ?>'>
+                         <input type='text' gsname='channel_translation_<?php echo $chan; ?>' value='<? echo $channel; ?>'>
                     </span>
-                    <?php echo $chan; ?>
+                    <i class='fa fa-trash-o removeChannel' style='cursor:pointer' channel='<?php echo $chan; ?>'></i> <?php echo $chan; ?>
                 </div>
             <? } ?>
             

@@ -141,7 +141,16 @@ public class PmsConfiguration extends DataCommon {
         }
         return null;
     }
-    
+        
+    boolean hasAddons() {
+        for(PmsBookingAddonItem item : addonConfiguration.values()) {
+            if(item.isActive) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean hasLockSystem() {
         return (arxHostname != null && !arxHostname.isEmpty());
     }

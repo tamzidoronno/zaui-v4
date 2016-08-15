@@ -15,7 +15,7 @@ class RenaTreningsTheme extends \ThemeApplication implements \Application {
     }    
     
     public function addScripts() {
-        echo "<link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic' rel='stylesheet' type='text/css'>";
+        echo "<link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>";
     }
     
     public function render() {

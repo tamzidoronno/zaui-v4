@@ -56,4 +56,7 @@ public interface IGetShopLockManager {
     @Administrator
     public void saveMastercodes(GetShopLockMasterCodes codes);
     
+    @Administrator
+    public List<String> getCodesInUse();
+    
 }

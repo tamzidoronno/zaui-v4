@@ -99,6 +99,27 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         devices.clear();
     }
 
+    @Override
+    public List<String> getCodesInUse() {
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        List<String> codes = new ArrayList();
+        for(GetShopDevice dev : devices.values()) {
+            if(connectedToBookingEngineItem(dev, items) == null) {
+                continue;
+            }
+            for(GetShopLockCode code : dev.codes.values()) {
+                if(code.inUse()) {
+                    codes.add(code.fetchCodeToAddToLock());
+                }
+            }
+        }
+        
+        for(String masterCode : masterCodes.codes.values()) {
+            codes.add(masterCode);
+        }
+        return codes;
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;

@@ -243,14 +243,14 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
             return;
         }
         
-        echo "<h2>Discount</h2>";
+        echo "<h2>".$this->__w("Discount")."</h2>";
         echo "<div class='discountheader'>";
-        echo "<span class='discountbutton selected' type='none'>No discount</span></span>";
+        echo "<span class='discountbutton selected' type='none'>".$this->__w("No discount")."</span>";
         if($coupon) {
             echo "<span class='discountbutton' type='coupon'>".$this->__w("Campaign code")."</span>";
         }
         if(sizeof($channels)) {
-            echo "<span class='discountbutton' type='partnership'>Registered deal</span>";
+            echo "<span class='discountbutton' type='partnership'>".$this->__w("Registered partner")."</span>";
         }
         echo "</div>";
         
@@ -258,14 +258,14 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
             echo "<div class='discounttype' type='coupon'>";
             if($this->getCurrentBooking()->couponCode && $type == "coupon") {
                 echo "<i class='fa fa-trash-o'  gstype='clicksubmit' method='removeCouponCode' gsname='id' gsvalue='somevalue'></i> ";
-                echo "Coupon code added: " . $this->getCurrentBooking()->couponCode;
+                echo $this->__w("Coupon code added") . ": " . $this->getCurrentBooking()->couponCode;
             } else {
                 if(isset($_POST['data']['code'])) {
-                    echo "Invalid code";
+                    echo $this->__w("Invalid code");
                 }
                 ?>
                 <div gstype="form" method="addCouponCode">
-                    <input type='text' gsname='code' gstype='submitenter'><span class='addcouponbutton' gstype='submit'>Add coupon</span>
+                    <input type='text' gsname='code' gstype='submitenter'><span class='addcouponbutton' gstype='submit'><?php echo $this->__w("Add coupon"); ?></span>
                 </div>
                 <?php
             }
@@ -291,7 +291,8 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
             }
             echo "<input type='radio' value='$chan' gsname='selectedChannel' name='selectedChannel' $checked> $text<br>";
         }
-        echo "<input type='txt' class='identificationnumberval' gsname='code' value='$curCode'><input type='button' gstype='submit' value='Set identification number' class='setidentificationNumber'>";
+        echo "<input type='txt' class='identificationnumberval' gsname='code' value='$curCode'><input type='button' gstype='submit' value='".$this->__w("Set identification number")."' class='setidentificationNumber'>";
+        echo "</div>";
         echo "</div>";
         
         if($type) {

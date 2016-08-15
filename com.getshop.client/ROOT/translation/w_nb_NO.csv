@@ -12,6 +12,7 @@ Add another slide;-;Legg til en til slider
 Add another slider;-;Legg inn til slider
 Add another tab;-;Legg inn en til tab
 Add content to slider;-;Innhold på slideren
+Add coupon;-;Legg til kampanjekode
 Add google maps to your page, pin point locatins and restrict it to a given area, and even connect the locations to a given page.;-;Legg inn kart på websiden din, pin lokasjoner og begrens områdene for hvor du kan se, du kan til og med knytte opp lokasjoner mot andre websider.
 Add menus to your page and administrate them. Menus are the root of all pages, adding a new menu entry is the same as creating a new page.;-;Legg til menyer og administrer dem. Menyer er selve roten til alle sidene, det å legge til et nytt meny entry er det samme som å opprette en ny side.
 Add more dates / repeat event;-;Legg til en ekstra dato / gjenta en hendelse
@@ -60,6 +61,7 @@ Breakfast;-;Frokost
 Building your store;-;Lag din webbutikk
 Button;-;Knapp
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
+Campaign code;-;Kampanjekode
 Can not create account, it already exists.;-;Kan ikke opprette konto, denne kontoen er alerede registrert.
 Cancel event;-;Kanseler event
 Cancel order;-;Kanselert ordre
@@ -118,6 +120,7 @@ Count;-;Antall
 Country;-;Land
 Country prefix for mobile phone;-;Land prefix for mobil telefon
 Coupon;-;Kupong
+Coupon code added;-;Rabattkode som er lagt til
 Coupon discount;-;Kupong avslag
 Create a booking item;-;Opprett et booking item
 Create a booking item type;-;Opprett en booking item type
@@ -153,6 +156,7 @@ Delete image;-;Slett bilde
 Delete opening hours;-;Slett åpningstider
 Delete row;-;Slett raden
 Delete selected slide;-;Slett valgte slide
+Discount;-;Rabatt
 Display numbers on dots;-;Vis tall på dottene
 Display product lists in your webshop;-;Vis produkt lister i din nettbutikk.
 Display this cell when logged on (it will always be visible for administrators);-;Vis denne cellen når du er logget på (den vil alltid være synlig for administratorer)
@@ -238,6 +242,7 @@ Insert column;-;Sett inn kolonne
 Insert column to the left;-;Legg inn en kolonne til venstre
 Insert column to the right;-;Legg inn en kolonne til høyre
 Insert row;-;Sett inn rad
+Invalid code;-;Ugyldig kode
 Invalid email address;-;Ugyldig epost adresse
 Invalid payment method;-;Ugyldig betalings metode
 Invalid reset code.;-;Ugyldig tilbakestillings kode
@@ -320,6 +325,7 @@ No available spots left for this event;-;Ingen tilgjengelige plasser på dette e
 No code added yet;-;Ingen kode er lagt til enda
 No companies registered yet!;-;Ingen firma er registrert enda.
 No data available yet.;-;Ingen data tilgjengelig enda.
+No discount;-;Ingen rabatt
 No events available;-;Ingen eventer tilgjenglig.
 No files added.;-;Ingen filer er lagt til.
 No header uploaded for mobile landscape mode yet, please upload one.;-;Ingen header har blitt lastet opp for landskaps modus på mobil enda, vennligst last opp et.
@@ -422,6 +428,7 @@ Reference key;-;Referanse nummer
 Register;-;Registrer
 Register email;-;Registrer epost
 Registered customer;-;Registrert kunde
+Registered partner;-;Registert avtale
 Registration details;-;Registrerings detaljer.
 Related products;-;Relaterte produkter
 Reminder;-;Påminnelse
@@ -474,6 +481,7 @@ Send us mail;-;Send oss en epost
 Sent;-;Sendt
 September;-;September
 Set default opening hours;-;Still inn standard åpningstider
+Set identification number;-;Registrer id nummer
 Set key;-;Sett nøkkel
 Set new password;-;Sett nytt passord
 Settings;-;Instillinger

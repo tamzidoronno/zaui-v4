@@ -33,7 +33,7 @@ app.Aviary = {
                    imageId = imageId.split("&")[0];
                    $(this).addClass("aviary_wrap");
                    $(this).prepend("<div class='aviary_button aviary_revert_button' imageid='" + imageId + "'><i class='fa fa-undo'></i></div>");
-                   $(this).prepend("<div class='aviary_button aviary_edit_background_button' imageid='" + imageId + "' imageurl='" + url.slice(4, -1) + "'><i class='fa fa-instagram'></i></div>");
+                   $(this).prepend("<div class='aviary_button aviary_edit_background_button' imageid='" + imageId + "' imagesrc='" + url.slice(4, -1) + "'><i class='fa fa-instagram'></i></div>");
                 }
             });
             
@@ -64,10 +64,16 @@ app.Aviary = {
     },
     
     editBackgroundImage: function() {
-        featherEditor.launch({
-            image: $(this).attr("imageid"),
-            url: $(this).attr("imageurl"),
-        }); 
+        var imageId = $(this).attr("imageid");
+        
+        app.Aviary.urlToData("/displayImage.php?id=" + $(this).attr("imageid"), function(base64) {
+            featherEditor.launch({
+                image: imageId,
+                url: base64
+            }); 
+        });
+        
+        
     },
     
     saveImage: function(imageId, url) {
@@ -79,7 +85,8 @@ app.Aviary = {
         var event = thundashop.Ajax.createEvent(null, "saveImage", "ns_3405a32a_c82d_4587_825a_36f10890be8e\\Aviary", data);
         
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            thundashop.framework.reprintPage();
+            var image = $("img[id='" + imageId + "']");
+            image.attr("src", image.attr("src") + "?timestamp=" + new Date().getTime());
             featherEditor.close();
         });
     },
@@ -105,7 +112,23 @@ app.Aviary = {
     showAviaryRevertButton: function() {
         var id = $(this).attr("imageid");
         $(".aviary_revert_button[imageid='" + id + "']").toggle();
-    }
+    },
+    
+    urlToData: function(url, callback) {
+        console.log(url);
+        
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = function() {
+          var reader = new FileReader();
+          reader.onloadend = function() {
+            callback(reader.result);
+          }
+          reader.readAsDataURL(xhr.response);
+        };
+        xhr.open('GET', url);
+        xhr.send(); 
+    },
 };
 
 app.Aviary.init();

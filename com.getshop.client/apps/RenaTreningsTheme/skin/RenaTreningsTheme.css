@@ -34,7 +34,6 @@ body { font-size: 16px; font-family: 'Slabo 27px', serif; font-weight: 300; }
 .Contact .shop_button:hover,
 .Login .form .gs_button:hover, .Login .form .loginbutton:hover {
     transition: all 0.5s ease;
-    background-color:#58c931; 
 }
 
 .PmsBookingProductList .selectbutton,
@@ -44,7 +43,7 @@ s.PmsBookingCalendar .calendar .calendar_header,
 .PmsBookingContactData .complete_button,
 .PmsBooking .pmsfront .check_available_button,
 .PmsBooking .pmsfront .fa-calendar {
-    background-color: #585fe7; 
+    background-color:#58c931; 
     text-transform: uppercase;
     color:#fff;
     cursor:pointer;

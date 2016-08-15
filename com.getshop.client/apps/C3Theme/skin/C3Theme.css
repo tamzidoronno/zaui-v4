@@ -215,3 +215,14 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .SimpleFileUpload .filelist tr td:first-child {
     padding-right: 0px;
 }
+
+.gs_language_selection {
+    display: none !important;
+}
+.gsbody_inner.gs_user_level_100 .gs_language_selection {
+    display: inline !important;
+}
+
+.ProductSearch {
+    display: none;
+}

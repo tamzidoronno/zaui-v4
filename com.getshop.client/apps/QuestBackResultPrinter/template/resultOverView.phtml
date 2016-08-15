@@ -14,7 +14,7 @@ foreach ($cats as $cat) {
     
         echo "<div class='trafficlight trafficlight_$class'></div>";
         echo "<div class='category_content'>";
-            echo "<div class='category_title'>".$cat->name." ( $cat->result% riktige ) </div>";
+            echo "<div class='category_title'>".$cat->name." ( $cat->result% ".$this->__w("correct")." ) </div>";
             echo "<div class='cat_text_description'>";
                 echo nl2br($text);  
             echo "</div>";

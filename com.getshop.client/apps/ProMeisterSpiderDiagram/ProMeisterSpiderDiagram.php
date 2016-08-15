@@ -57,7 +57,7 @@ class ProMeisterSpiderDiagram extends \MarketingApplication implements \Applicat
     }
 
     public function translateToSixScore($score) {
-        $foo = (float) $score / ((float) 100 / (float) 6);
+        $foo = ((float) $score /(float) 100) * (float) 6;
         return number_format((float) $foo, 2, '.', '');
     }
 

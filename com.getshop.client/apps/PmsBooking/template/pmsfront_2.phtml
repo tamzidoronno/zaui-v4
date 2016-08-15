@@ -17,7 +17,7 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
     </span>
     <span class='inputblock'>
         <span class='start_date dates'>
-            <div><span class='inputhelpertext'><? echo $this->getText("start_date"); ?></span></div>
+            <div><span class='inputhelpertext'><? echo $this->__w("Check in"); ?></span></div>
             <span class='dates_inner'>
                 <input class='start_date_input' value='<? echo $date; ?>'></input>
                 <span></span>
@@ -28,7 +28,7 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
     <?php if($this->getText("display_end_date") == "yes") { ?>
         <span class='inputblock'>
             <span class='end_date dates'>
-                <div><span class='inputhelpertext'><? echo $this->getText("end_date"); ?></span></div>
+                <div><span class='inputhelpertext'><? echo $this->__w("Check out"); ?></span></div>
                 <span class='dates_inner'>
                     <input class='end_date_input' value='<? echo $date2; ?>'></input>
                     <span></span>
@@ -59,7 +59,7 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
     
     
     <span class='inputblock'>
-        <span class='check_available_button' next_page='<? echo $nextPage; ?>'><? echo $this->getText("check_availability"); ?></span>
+        <span class='check_available_button' next_page='<? echo $nextPage; ?>'><? echo $this->__w("Continue to booking"); ?></span>
     </span>
     <div style='clear:both;'></div>
 </div>

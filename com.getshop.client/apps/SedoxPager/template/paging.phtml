@@ -53,6 +53,12 @@ if ($currentPage < $currentTotalPages) {
 }
 ?>
 
+<div class="hide_finished_wrapper">
+    <div class="checkbox_description">Hide Finished</div>
+    <input type="checkbox" id="hide_finished" name="hide_finished"/>
+    <label for="hide_finished"></label>
+</div>
+
 <div class="pagerbutton prev" go_to_page_number='<? echo $prevPage ?>'><i class="fa fa-chevron-left"></i></div>
 
 <?

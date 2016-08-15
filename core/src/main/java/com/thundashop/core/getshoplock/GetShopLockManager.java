@@ -287,6 +287,10 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     @Override
     public String getCodeForLock(String lockId) {
         GetShopDevice dev = devices.get(lockId);
+        if(dev == null) {
+            logPrint("Lock devie where not found");
+            return "";
+        }
         for(int i = 6; i < dev.maxNumberOfCodes; i++) {
             GetShopLockCode code = dev.codes.get(i);
             if(code.canUse()) {

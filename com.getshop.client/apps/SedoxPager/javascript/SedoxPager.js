@@ -1,6 +1,7 @@
 app.SedoxPager = {
     init: function() {
         $(document).on('click', '.pagerbutton', app.SedoxPager.goToPage);
+        $(document).on('change', '.SedoxPager #hide_finished', app.SedoxPager.toggleFinishedProducts);
     },
     
     goToPage: function() {
@@ -40,6 +41,14 @@ app.SedoxPager = {
 
         var event = thundashop.Ajax.createEvent(null, "setConnectedAppId", application, {appId: appId});
         thundashop.Ajax.post(event);
+    },
+    
+    toggleFinishedProducts: function() {
+        if($(this).is(":checked")) {
+            $(".SedoxAdmin .finished_marker").parents(".col_row_content").css("display", "none");
+        } else {
+            $(".SedoxAdmin .finished_marker").parents(".col_row_content").css("display", "block");
+        }
     }
 };
 

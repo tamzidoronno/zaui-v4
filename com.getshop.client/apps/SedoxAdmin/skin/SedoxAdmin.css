@@ -526,3 +526,16 @@
     background-color: #edeeef !important;
 }
 
+.SedoxAdmin .SedoxDownloadHistory .extra_info_title {
+    display: inline-block;
+    width: 40%;
+    vertical-align: top;
+}
+
+.SedoxAdmin .SedoxDownloadHistory .extra_info_text {
+    display: inline-block;
+    width: 60%;
+    vertical-align: top;
+    float: none !important;
+    text-align: right;
+}

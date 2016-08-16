@@ -108,9 +108,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 continue;
             }
             for(GetShopLockCode code : dev.codes.values()) {
-                if(code.inUse()) {
+//                if(code.inUse()) {
                     codes.add(code.fetchCodeToAddToLock());
-                }
+//                }
             }
         }
         

@@ -204,8 +204,11 @@ public class PmsManagerProcessor {
                         manager.doNotification("room_added_to_arx", booking, room);
                     }
                 }
-
-                if (room.isEnded() && room.addedToArx) {
+            }
+            
+            //Also deleted rooms needs to be removed from arx.
+            for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+                if ((room.isEnded() && room.addedToArx) || (room.deleted && room.addedToArx)) {
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;
@@ -213,6 +216,7 @@ public class PmsManagerProcessor {
                     }
                 }
             }
+            
             if (save) {
                 manager.saveBooking(booking);
             }

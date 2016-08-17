@@ -2,8 +2,8 @@
 .Menu { text-transform: uppercase; text-align: right;  }
 .Menu a div { padding-left: 20px; color:#fff;margin: 1px; margin-bottom: 10px; margin-top: 10px; letter-spacing: 2px; font-family: Sintony; }
 .Menu .entries .entries div { margin: 0px; }
-.gsarea[area="header"] { background-color: #303030; padding-top: 10px; }
-.gsarea[area="footer"] { background-color: #303030; padding-top: 10px; padding-top: 80px; padding-bottom: 80px; color:#fff; }
+.gsarea[area="header"] { background-color: #002636; padding-top: 10px; }
+.gsarea[area="footer"] { background-color: #002636; padding-top: 10px; padding-top: 80px; padding-bottom: 80px; color:#fff; }
 body { font-size: 18px; font-family: verdana,geneva; }
 .PmsBooking .pmsfront {
     background-color: rgba(0,0,0,0.8);
@@ -32,7 +32,7 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
 .PmsBookingContactData .complete_button,
 .PmsBooking .pmsfront .check_available_button,
 .PmsBooking .pmsfront .fa-calendar {
-    background-color: #303030; 
+    background-color: #002636; 
     text-transform: uppercase;
 }
 
@@ -40,7 +40,7 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
 .frontpagebox .gsdepth_2.gscount_0 { border-bottom: solid 1px #ddd; padding-top: 5px; }
 .frontpagebox .gsdepth_2.gscount_1 { padding: 10px; }
 .Login .form .gs_button, .Login .form .loginbutton,
-.shop_button { background: #303030; border-radius: 0px; color:#fff; margin: 5px; }
+.shop_button { background: #002636; border-radius: 0px; color:#fff; margin: 5px; }
 .Login .login_content { text-align: center; }
 
 .PmsBookingCalendar .calendar .day { border-color: #efefef; }

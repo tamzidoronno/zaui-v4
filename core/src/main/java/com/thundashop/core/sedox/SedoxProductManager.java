@@ -1411,7 +1411,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 throw new ErrorException(2000001);
             }
 
-            byte[] data = sedoxCMDEncrypter.decrypt(originalFile, tuningFile);
+            byte[] data = sedoxCMDEncrypter.encrypt(originalFile, tuningFile);
             String fileName = "/tmp/" + product.fileSafeName(sharedProduct.getName()) + ".mod";
             Path path = Paths.get(fileName);
             Files.write(path, data);

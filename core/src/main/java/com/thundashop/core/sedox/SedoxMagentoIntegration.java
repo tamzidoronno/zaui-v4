@@ -4,14 +4,26 @@
  */
 package com.thundashop.core.sedox;
 
+import com.google.gson.Gson;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.sedox.magentoapi.SedoxApiPort;
 import com.thundashop.core.sedox.magentoapi.SedoxApiServiceLocator;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.rpc.ServiceException;
 import javax.xml.soap.SOAPException;
 import org.springframework.stereotype.Component;
@@ -54,6 +66,44 @@ public class SedoxMagentoIntegration {
         }
         
         return groupName;
+    }
+
+    List<String> getAllCustomersNotExists(UserManager userManager) {
+        List<String> retValues = new ArrayList();
+        
+        try {
+            String text = getText( "http://www.tuningfiles.com/sedoxapi/listCustomers.php?code=asdfae4r209345ui1ojt1jkl3541iou45h12k34jh12kl5jh36kl1h346kl1j346h134789hasdihASKDFJQWKERv89ah123NE%C3%B8%C3%A6%C3%A5" );
+            Gson gson = new Gson();
+            List<String> customers = gson.fromJson(text, List.class);
+            for (String cust : customers) {
+                User user = userManager.getUserById(cust);
+                if (user == null) {
+                    retValues.add(cust);
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(SedoxMagentoIntegration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return retValues;
+    }
+    
+    public static String getText(String url) throws Exception {
+        URL website = new URL(url);
+        URLConnection connection = website.openConnection();
+        BufferedReader in = new BufferedReader(
+                                new InputStreamReader(
+                                    connection.getInputStream()));
+
+        StringBuilder response = new StringBuilder();
+        String inputLine;
+
+        while ((inputLine = in.readLine()) != null) 
+            response.append(inputLine);
+
+        in.close();
+
+        return response.toString();
     }
 
     public static class Order {
@@ -104,12 +154,6 @@ public class SedoxMagentoIntegration {
 
     public static void main(String[] args) throws SOAPException, ServiceException, RemoteException {
         SedoxMagentoIntegration inte = new SedoxMagentoIntegration();
-        List<Order> orders = inte.getOrders();
-        for (Order order : orders) {
-            GetShopLogHandler.logPrintStatic(order, null);
-        }
-
-        inte.getUserInformation(3611);
     }
 
     public List<SedoxMagentoIntegration.Order> getOrders() {

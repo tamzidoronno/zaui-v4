@@ -821,23 +821,28 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private void saveUser(SedoxUser user) throws ErrorException {
-        String tmpPassword = "abcd1234-56789ss!"; // 
-
-        User getshopUser = userManager.getUserById(user.magentoId);
-        if (getshopUser == null) {
-            getshopUser = new User();
-            getshopUser.id = user.magentoId;
-            getshopUser.username = user.magentoId;
-            getshopUser.type = 10;
-            getshopUser.password = tmpPassword;
-            getshopUser.storeId = storeId;
-            getshopUser = userManager.createUser(getshopUser);
-        }
+        User getshopUser = saveGetShopUser(user.magentoId);
 
         user.id = getshopUser.id;
         user.storeId = storeId;
         saveObject(user);
         users.put(user.id, user);
+    }
+
+    private User saveGetShopUser(String mangentoUserId) throws ErrorException {
+        String tmpPassword = "abcd1234-56789ss!"; // 
+        User getshopUser = userManager.getUserById(mangentoUserId);
+        
+        if (getshopUser == null) {
+            getshopUser = new User();
+            getshopUser.id = mangentoUserId;
+            getshopUser.username = mangentoUserId;
+            getshopUser.type = 10;
+            getshopUser.password = tmpPassword;
+            getshopUser.storeId = storeId;
+            getshopUser = userManager.createUser(getshopUser);
+        }
+        return getshopUser;
     }
 
 
@@ -854,17 +859,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     public synchronized void updateAllUsers() {
+        List<String> usersNotExists = sedoxMagentoIntegration.getAllCustomersNotExists(userManager);
         int i = 0;
-        for (SedoxUser user : users.values()) {
+        for (String customerId : usersNotExists) {
             i++;
-            try {
-                updateUserFromMagento(user.id, true);
-            } catch (ErrorException | NullPointerException ex) {
-                ex.printStackTrace();
-            }
+            saveGetShopUser(customerId);
+            getSedoxUserById(customerId);
+            updateUserFromMagento(customerId, true);
+            logPrint("Updating user " + i + "/" + usersNotExists.size() + " id: " + customerId);
         }
-
-        logPrint("Users updated");
     }
 
     @Override

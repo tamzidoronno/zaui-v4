@@ -40,6 +40,7 @@ public class SedoxSharedProduct extends DataCommon implements Comparable<SedoxSh
     public boolean saleAble = true;
     public String printableName;
     public String type = "car";
+    public String humanReadableId = "";
     
     public void setParametersBasedOnFileString(String fileName) {
         String[] productAttributes = fileName.split(";");

@@ -130,6 +130,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 users.put(user.id, user);
             }
         }
+        
+        for (SedoxProduct prod : products.values()) {
+            setHumanReadableId(prod);
+        }
     }
 
     @Override
@@ -347,6 +351,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 sedoxProduct.rowCreatedDate = new Date();
                 sedoxProduct.isFinished = true;
                 sedoxProduct.virtual = true;
+                sedoxProduct.humanReadableId = sharedProduct.humanReadableId;
                 finalize(sedoxProduct);
                 return sedoxProduct;
             }
@@ -808,6 +813,28 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         for (SedoxProduct sedoxProduct : products.values()) {
             try {
                 int sedoxId = Integer.parseInt(sedoxProduct.id);
+                if (sedoxId > lowest) {
+                    lowest = sedoxId;
+                }
+            } catch (Exception ex) {
+                // Dont care.
+            }
+        }
+        
+        for (SedoxProduct sedoxProduct : products.values()) {
+            try {
+                int sedoxId = Integer.parseInt(sedoxProduct.humanReadableId);
+                if (sedoxId > lowest) {
+                    lowest = sedoxId;
+                }
+            } catch (Exception ex) {
+                // Dont care.
+            }
+        }
+        
+        for (SedoxSharedProduct sedoxProduct : productsShared.values()) {
+            try {
+                int sedoxId = Integer.parseInt(sedoxProduct.humanReadableId);
                 if (sedoxId > lowest) {
                     lowest = sedoxId;
                 }
@@ -1872,6 +1899,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private void finalize(SedoxProduct product) {
         SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
         product.populate(sharedProduct);
+        setHumanReadableId(product);
     }
 
     @Override
@@ -2217,5 +2245,43 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         
         HashMap<String, String> fileMap = createFileMap(sharedProduct, files, product);
         mailFactory.sendWithAttachments("files@tuningfiles.com", emailAddress, sharedProduct.getName(), content, fileMap, true);
+    }
+
+    private void setHumanReadableId(SedoxProduct product) {
+        
+        SedoxProduct inMemProduct = products.get(product.id);
+        
+        
+        if (product.virtual) {
+            SedoxSharedProduct sedoxSharedProduct = productsShared.get(product.sharedProductId);
+            
+            if (sedoxSharedProduct.humanReadableId == null || sedoxSharedProduct.humanReadableId.isEmpty()) {
+                try { 
+                    int humanId = Integer.parseInt(sedoxSharedProduct.humanReadableId);
+                    sedoxSharedProduct.humanReadableId = "" + humanId;
+                    saveObject(sedoxSharedProduct);
+                } catch (Exception ex) {
+                    sedoxSharedProduct.humanReadableId = getNextProductId();
+                    saveObject(sedoxSharedProduct);
+                }    
+            }
+            
+            product.humanReadableId = sedoxSharedProduct.humanReadableId;
+            return;
+        }
+        
+        if (inMemProduct != null && inMemProduct.humanReadableId == null) {
+            
+            try { 
+                int humanId = Integer.parseInt(product.id);
+                inMemProduct.humanReadableId = "" + humanId;
+                saveObject(inMemProduct);
+            } catch (Exception ex) {
+                
+                inMemProduct.humanReadableId = getNextProductId();
+                saveObject(inMemProduct);
+            }
+            
+        }
     }
 }

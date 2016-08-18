@@ -22,7 +22,7 @@ $orders = $this->getCurrentOrders();
         $productName = $product->printableName;
         
         $time = $this->formatJavaDateToTime($order->dateCreated);
-        $date = date("d M Y", $time);
+        $date = date("d M Y H:m", $time);
         
         echo "<div class='col_row_content'>";
             echo "<div class='col_row_content_inner'>";

@@ -28,7 +28,7 @@ $products = $this->getCurrentUploadedFiles();
         $ligth = "<div class='trafficelight $state'></div>";
         
         $time = $this->formatJavaDateToTime($product->rowCreatedDate);
-        $date = date("d M Y", $time);
+        $date = date("d M Y H:m", $time);
         
         echo "<div class='col_row_content'>";
             echo "<div class='col_row_content_inner'>";

@@ -24,6 +24,11 @@ class SedoxCreditHistory extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxC
                 ->getCurrentUserCreditHistory($this->createFilterData());
         }
     }
+    
+    public function getUserSettingsOrder() {
+        return -2;
+    }
+    
     public function getCreditHistory() {
         $this->loadData();
         return $this->creditHistory;

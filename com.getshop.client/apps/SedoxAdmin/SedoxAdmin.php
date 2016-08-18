@@ -48,17 +48,29 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
             $status = "<div class='current_status_line'><b>Started by</b>: $startedByUser->fullName <div gsclick='markProductAsStarted' productid='$file->id' class='stop_button'><i class='fa fa-stop-circle'></i></div></div>";
         }
 
-        if (array_key_exists("notifyForCustomer", $file->states) || $product->isFinished ) {
-            $startedByUser = $this->getApi()->getUserManager()->getUserById($file->startedByUserId);
-            $finishedByName = $startedByUser ? $startedByUser->fullName : "N/A";
-            $status = "<div class='current_status_line'><b>Notified by</b>: $finishedByName <div class='finished_marker yellow'><i class='fa fa-comment'></i></div></div>";
+        $startedByUser = $this->getApi()->getUserManager()->getUserById($file->startedByUserId);
+        $finishedByName = $startedByUser ? $startedByUser->fullName : "N/A";
+
+        $innerstatus = "";
+        $text = "";
+
+        if (array_key_exists("notifyForCustomer", $file->states)) {
+            $innerstatus = "<div class='finished_marker yellow'><i class='fa fa-comment'></i></div>";
+            $text = "Notified by";
+        } else if (array_key_exists("sendProductByMail", $file->states)) {
+            $innerstatus = "<div class='finished_marker'><i class='fa fa-check'></i></div>";
+            $text = "Finished by";
+        } else if (array_key_exists("purchaseOnlyForCustomer", $file->states)) {
+            $innerstatus = "<div class='finished_marker'><i class='fa fa-dollar'></i></div>";
+            $text = "Purchased by";
+        } else if ($product->isFinished) {
+            $text = "Finised by";
+            $innerstatus = "<div class='finished_marker'><i class='fa fa-check'></i></div>";
         }
 
-        if (array_key_exists("sendProductByMail", $file->states) || $product->isFinished ) {
-            $startedByUser = $this->getApi()->getUserManager()->getUserById($file->startedByUserId);
-            $finishedByName = $startedByUser ? $startedByUser->fullName : "N/A";
-            $status = "<div class='current_status_line'><b>Finished by</b>: $finishedByName <div class='finished_marker'><i class='fa fa-check'></i></div></div>";
-        }
+        if ($innerstatus)
+            $status = "<div class='current_status_line'><b>$text</b>: $finishedByName $innerstatus</div>";
+                    
 
         echo "<div class='col_row_content' productid='$file->id'>";
             echo "<div class='col_row_content_inner'>";

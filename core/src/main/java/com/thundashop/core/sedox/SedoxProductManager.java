@@ -1010,6 +1010,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public SedoxOrder purchaseOnlyForCustomer(String productId, List<Integer> files) throws ErrorException {
         SedoxProduct product = getProductById(productId);
+        
+        if (product.startedByUserId == null || product.startedByUserId.isEmpty()) {
+            product.startedByUserId = getSession().currentUser.id;
+        }
+        
         SedoxUser user = getSedoxUserById(product.firstUploadedByUserId);
         SedoxOrder order = purchaseProductInternalForUser(productId, user, files);
         product.states.put("purchaseOnlyForCustomer", new Date());
@@ -1094,6 +1099,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         HashMap<String, String> fileMap = createFileMap(sharedProduct, files, product);
         mailFactory.sendWithAttachments("files@tuningfiles.com", getshopUser.emailAddress, sharedProduct.getName(), content, fileMap, true);
+        
+        if (product.startedByUserId == null || product.startedByUserId.isEmpty()) {
+            product.startedByUserId = getSession().currentUser.id;
+        }
         
         product.states.put("sendProductByMail", new Date());
 
@@ -1906,6 +1915,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public void markAsFinished(String productId, boolean finished) throws ErrorException {
         SedoxProduct sedoxProduct = getProductById(productId);
         if (sedoxProduct != null) {
+            
+            if (sedoxProduct.startedByUserId == null || sedoxProduct.startedByUserId.isEmpty()) {
+                sedoxProduct.startedByUserId = getSession().currentUser.id;
+            }
+            
             sedoxProduct.isFinished = finished;
             saveObject(sedoxProduct);
         }

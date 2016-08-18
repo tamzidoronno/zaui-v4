@@ -1270,9 +1270,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         
         if(sharedProduct != null) {
-            text = text.replace("{product-fullname}", sharedProduct.getName());
-            text = text.replace("{product-tool}", sharedProduct.tool);
-            text = text.replace("{product-geartype}", sharedProduct.gearType);
+            text = text.replace("{product-fullname}", checkNull(sharedProduct.getName()));
+            text = text.replace("{product-tool}", checkNull(sharedProduct.tool));
+            text = text.replace("{product-geartype}", checkNull(sharedProduct.gearType));
             
             String binaryFiles = "";
             for (SedoxBinaryFile file : sharedProduct.binaryFiles) {
@@ -2302,5 +2302,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             }
             
         }
+    }
+
+    private CharSequence checkNull(String string) {
+        if (string == null)
+            return "";
+        
+        return string;
     }
 }

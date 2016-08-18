@@ -182,8 +182,14 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
         if($room->deleted) {
             $deleted = "roomdeleted";
         }
+        $lastSelectedRoom = $object->getLastSelectedRoom();
+
+        $highlightclass = "";
+        if($room->pmsBookingRoomId == $lastSelectedRoom) {
+            $highlightclass = "highlight";
+        }
         ?>
-        <tr bookingid='<? echo $bookingId; ?>' roomid='<? echo $room->pmsBookingRoomId; ?>' class='<?php echo $deleted; ?>'>
+        <tr bookingid='<? echo $bookingId; ?>' roomid='<? echo $room->pmsBookingRoomId; ?>' class='<?php echo $deleted. " " . $highlightclass; ?>'>
             <td>
                 <span gstype='form' method="removeRoom">
                     <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
@@ -231,7 +237,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                     echo "Not assigned yet";
                                 } else {
                                     $notifications = "notifications: " . join(",", $room->notificationsSent);
-                                    echo "<span title='$notifications'>" . $items[$room->bookingItemId]->bookingItemName . "</span>";
+                                    echo "<span title='Change room'>" . $items[$room->bookingItemId]->bookingItemName . "</span>";
                                 }
                                 if(!$object->getFactory()->isProductionMode()) {
 //                                    echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
@@ -244,7 +250,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                 <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                                 <?php
                                 $now = $room->date->start;
-                                if(strtotime($now) < time()) {
+                                if(strtotime($now) < time() && strtotime($room->date->end) > time()) {
                                     $now = $object->convertToJavaDate(time());
                                 }
                                 ?>
@@ -289,7 +295,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                 ?>
                                     <span class='pmsbutton tiny' gstype='submitToInfoBox' gsvalue='split'>Split change</span>
                                 <?php } ?>
-                                <div class="tiparea">
+                                <div class="tiparea" style="width: 500px;">
                                 </div>
                                 <?php if($splitchange) { ?>
                                     <div>
@@ -308,7 +314,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                             <?php 
                             echo date("d.m.Y H:i", strtotime($date->start));
                             if(date("d.m.Y", strtotime($date->start)) == date("d.m.Y", strtotime($date->end))) {
-                                echo date("H:i", strtotime($date->end));
+                                echo " - " . date("H:i", strtotime($date->end));
                             } else {
                                 echo "<br>" . date("d.m.Y H:i", strtotime($date->end));
                             }

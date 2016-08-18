@@ -131,6 +131,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             $row['visitor'] .= "<br>";
         }
         $row['visitor'] .= "<div class='secondary_text'>" . $room->owner . "</div>";
+        $row['room'] = "";
         if($room->keyIsReturned) {
             $row['room'] .=  '<i class="fa fa-key" title="Key has been returned" style="color:green;"></i> ';
         }

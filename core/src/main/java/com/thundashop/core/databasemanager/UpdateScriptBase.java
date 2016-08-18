@@ -43,9 +43,7 @@ public abstract class UpdateScriptBase implements ApplicationContextAware {
     public UpdateScriptBase() {
         
         if (UpdateScriptBase.sessionId.equals("")) {
-            GetShopLogHandler.logPrintStatic("asdfasdf", null);
             sessionId = UUID.randomUUID().toString();
-
         }
     }
     

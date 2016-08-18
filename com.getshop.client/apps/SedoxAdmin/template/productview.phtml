@@ -236,6 +236,25 @@ $user = $this->getApi()->getUserManager()->getUserById($sedoxUser->id);
                     </div>
                     <div class="customer_data">
                         <div class="data_name">
+                            Norwegian customer:
+                        </div>
+                        <?  if($sedoxUser->isNorwegian) {
+                                ?>
+                                <div class="data_value" style="color: #c30f10;">
+                                    YES
+                                </div>
+                                <?
+                            } else {
+                                ?>
+                                <div class="data_value" style="color: #44b215;">
+                                    NO
+                                </div>    
+                                <?
+                            }                           
+                        ?>
+                    </div>
+                    <div class="customer_data">
+                        <div class="data_name">
                             Withdraw credits:
                         </div>
                         <?  if($sedoxProduct->useCreditAccount == "true") {
@@ -247,6 +266,27 @@ $user = $this->getApi()->getUserManager()->getUserById($sedoxUser->id);
                             } else {
                                 ?>
                                 <div class="data_value" style="color: #c30f10;">
+                                    NO
+                                </div>    
+                                <?
+                            }                           
+                        ?>
+                    </div>
+                    <div class="customer_data">
+                        <div class="data_name">
+                            Used Windows App:
+                        </div>
+                        <?
+                        
+                            if($product->uploadOrigin == "windowsapp") {
+                                ?>
+                                <div class="data_value" style="color: #c30f10;">
+                                    YES
+                                </div>
+                                <?
+                            } else {
+                                ?>
+                                <div class="data_value" style="color: #44b215;">
                                     NO
                                 </div>    
                                 <?

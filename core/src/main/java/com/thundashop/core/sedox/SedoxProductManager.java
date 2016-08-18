@@ -188,6 +188,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public synchronized SedoxUser getSedoxUserAccount() throws ErrorException {
+        SedoxUser sedoxUser = getSedoxUserAccountInternal();
+        return clonedLightVersionSedoxUser(sedoxUser);
+    }
+    
+    public synchronized SedoxUser getSedoxUserAccountInternal() throws ErrorException {
         if (getSession().currentUser == null) {
             throw new ErrorException(26);
         }
@@ -733,7 +738,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     public List<SedoxCreditHistory> getFilteredResult(FilterData filterData) {
-        SedoxUser userAccount = getSedoxUserAccount();
+        SedoxUser userAccount = getSedoxUserAccountInternal();
         
         if (filterData.slaveId != null && !filterData.slaveId.isEmpty()) {
             userAccount = getSlave(filterData.slaveId);
@@ -800,7 +805,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         userManager.checkUserAccess(user);
         
         SedoxSharedProduct sharedProduct = getSharedProductById(sedoxProduct.sharedProductId);
-        SedoxUser sedoxUser = getSedoxUserAccountById(user.id);
+        SedoxUser sedoxUser = getSedoxUserAccountInternalByIdInternal(user.id);
 
         String message = "File: " + sharedProduct.getName();
         message += " | User: " + user.fullName;
@@ -923,6 +928,20 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public SedoxUser getSedoxUserAccountById(String userid) {
+        SedoxUser user = getSedoxUserAccountInternalByIdInternal(userid);
+        return clonedLightVersionSedoxUser(user);
+    }
+
+    private SedoxUser clonedLightVersionSedoxUser(SedoxUser user) {
+        /* Removing order and credit history to improve performance */
+        SedoxUser cloned = deepClone(user);
+        cloned.orders = new ArrayList();
+        cloned.creditAccount = deepClone(cloned.creditAccount);
+        cloned.creditAccount.history = new ArrayList();
+        return cloned;
+    }
+    
+    public SedoxUser getSedoxUserAccountInternalByIdInternal(String userid) {
         return users.get(userid);
     }
 
@@ -1151,7 +1170,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public void changeDeveloperStatus(String userId, boolean disabled) throws ErrorException {
-        SedoxUser user = getSedoxUserAccountById(userId);
+        SedoxUser user = getSedoxUserAccountInternalByIdInternal(userId);
         user.isActiveDelevoper = disabled;
         users.put(user.id, user);
         saveObject(user);
@@ -1163,7 +1182,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
         for (User user : userManager.getAllUsers()) {
             if (user.isAdministrator()) {
-                SedoxUser sedoxUser = getSedoxUserAccountById(user.id);
+                SedoxUser sedoxUser = getSedoxUserAccountInternalByIdInternal(user.id);
                 if (sedoxUser != null) {
                     retUsers.add(sedoxUser);
                 }
@@ -1187,7 +1206,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
 
         User user = getGetshopUser(sedoxProduct.firstUploadedByUserId);
-        SedoxUser sedoxUser = getSedoxUserAccountById(sedoxProduct.firstUploadedByUserId);
+        SedoxUser sedoxUser = getSedoxUserAccountInternalByIdInternal(sedoxProduct.firstUploadedByUserId);
         
         String title = "";
         String content = "";
@@ -1203,7 +1222,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             
             if(special != null) {
                 user = getSession().currentUser;
-                sedoxUser = getSedoxUserAccountById(user.id);
+                sedoxUser = getSedoxUserAccountInternalByIdInternal(user.id);
                 
                 content = app.getSetting("uploadadminspecialemail");
             } else if (special == null) {
@@ -1247,7 +1266,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             text = text.replace("{special-info}", special);
             
             user = getSession().currentUser;
-            sedoxUser = getSedoxUserAccountById(user.id);
+            sedoxUser = getSedoxUserAccountInternalByIdInternal(user.id);
         }
         
         if(sharedProduct != null) {
@@ -1352,14 +1371,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public void toggleAllowNegativeCredit(String userId, boolean allow) throws ErrorException {
-        SedoxUser sedoxUser = getSedoxUserAccountById(userId);
+        SedoxUser sedoxUser = getSedoxUserAccountInternalByIdInternal(userId);
         sedoxUser.creditAccount.allowNegativeCredit = allow;
         saveObject(sedoxUser);
     }
 
     @Override
     public void toggleAllowWindowsApp(String userId, boolean allow) throws ErrorException {
-        SedoxUser sedoxUser = getSedoxUserAccountById(userId);
+        SedoxUser sedoxUser = getSedoxUserAccountInternalByIdInternal(userId);
         sedoxUser.canUseExternalProgram = allow;
         saveObject(sedoxUser);
     }
@@ -1390,18 +1409,18 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public void addSlaveToUser(String masterUserId, String slaveUserId) throws ErrorException {
-        SedoxUser slave = getSedoxUserAccountById(slaveUserId);
+        SedoxUser slave = getSedoxUserAccountInternalByIdInternal(slaveUserId);
         boolean canAdd = true;
         
         if(masterUserId != null) {
-            SedoxUser toBeMaster = getSedoxUserAccountById(masterUserId);
+            SedoxUser toBeMaster = getSedoxUserAccountInternalByIdInternal(masterUserId);
         
             while(toBeMaster != null) {
                 if(slaveUserId.equals(toBeMaster.masterUserId)) {
                     canAdd = false;
                     break;
                 }
-                toBeMaster = getSedoxUserAccountById(toBeMaster.masterUserId);
+                toBeMaster = getSedoxUserAccountInternalByIdInternal(toBeMaster.masterUserId);
             }
         }
         
@@ -1413,7 +1432,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     
     @Override
     public void removeSlaveFromMaster(String slaveId) {
-        SedoxUser slave = getSedoxUserAccountById(slaveId);
+        SedoxUser slave = getSedoxUserAccountInternalByIdInternal(slaveId);
         
         slave.masterUserId = null;
         saveUser(slave);
@@ -1434,7 +1453,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public void addCreditToSlave(String slaveId, double amount) throws ErrorException {
-        SedoxUser user = getSedoxUserAccountById(slaveId);
+        SedoxUser user = getSedoxUserAccountInternalByIdInternal(slaveId);
         if (user != null) {
             user.slaveIncome = amount;
             saveUser(user);
@@ -1443,7 +1462,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     
     @Override
     public void addCommentToUser(String userId, String comment) throws ErrorException {
-        SedoxUser user = getSedoxUserAccountById(userId);
+        SedoxUser user = getSedoxUserAccountInternalByIdInternal(userId);
         if (user != null) {
             user.comment = comment;
             saveUser(user);
@@ -1451,7 +1470,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private void checkIfMasterOfSlave(String forSlaveId, String currentUserId) throws ErrorException {
-        SedoxUser slave = getSedoxUserAccountById(forSlaveId);
+        SedoxUser slave = getSedoxUserAccountInternalByIdInternal(forSlaveId);
 
         if (slave.masterUserId != null && slave.masterUserId.equals(currentUserId)) {
             return;
@@ -1462,7 +1481,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public void togglePassiveSlaveMode(String userId, boolean toggle) throws ErrorException {
-        SedoxUser slave = getSedoxUserAccountById(userId);
+        SedoxUser slave = getSedoxUserAccountInternalByIdInternal(userId);
         if (slave != null) {
             slave.isPassiveSlave = toggle;
             saveUser(slave);
@@ -1478,7 +1497,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 kickbackCreditOrder.amount = creditToAdd;
                 kickbackCreditOrder.magentoOrderId = order.orderId;
 
-                SedoxUser master = getSedoxUserAccountById(sedoxUser.masterUserId);
+                SedoxUser master = getSedoxUserAccountInternalByIdInternal(sedoxUser.masterUserId);
                 master.addCreditOrderUpdate(kickbackCreditOrder, "Added " + kickbackCreditOrder.amount + " credit to your account, your partner " + masterGetshopUser.fullName + " placed order for " + order.credit + " credits");
 
                 saveObject(master);
@@ -1724,7 +1743,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             throw new ErrorException(26);
         }
         
-        SedoxUser sedoxMaster = getSedoxUserAccount();
+        SedoxUser sedoxMaster = getSedoxUserAccountInternal();
         
         if(sedoxMaster.creditAccount.getBalance() < amount) {
             throw new ErrorException(102);
@@ -1851,7 +1870,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public void setFixedPrice(String userId, String price) throws ErrorException {
-        SedoxUser user = getSedoxUserAccountById(userId);
+        SedoxUser user = getSedoxUserAccountInternalByIdInternal(userId);
         if (user != null) {
             user.fixedPrice = price;
             saveObject(user);
@@ -1916,7 +1935,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 continue;
             }
             
-            SedoxUser user = getSedoxUserAccountById(order.customer_id);
+            SedoxUser user = getSedoxUserAccountInternalByIdInternal(order.customer_id);
             if (user == null) {
                 notifyEvcError("Could not add credit to account, user with id: " + order.customer_id, order);
                 return;
@@ -2061,7 +2080,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private List<SedoxOrder> getOrdersInternal(FilterData filterData) {
-            if (getSedoxUserAccount() == null) {
+            if (getSedoxUserAccountInternal() == null) {
             return new ArrayList();
         }
 
@@ -2109,7 +2128,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public Long getUserFileDownloadCount() {
-        return new Long(getSedoxUserAccount().orders.size());
+        return new Long(getSedoxUserAccountInternal().orders.size());
     }
 
     @Override
@@ -2159,14 +2178,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public void setPushoverId(String pushover) {
         String id = getSession().currentUser.id;
-        SedoxUser user = getSedoxUserAccountById(id);
+        SedoxUser user = getSedoxUserAccountInternalByIdInternal(id);
         user.pushoverId = pushover;
         saveObject(user);
     }
 
     @Override
     public void setPushoverIdForUser(String pushover, String userId) {
-        SedoxUser user = getSedoxUserAccountById(userId);
+        SedoxUser user = getSedoxUserAccountInternalByIdInternal(userId);
         user.pushoverId = pushover;
         saveObject(user);
     }
@@ -2174,7 +2193,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     @Override
     public void refreshEvcCredit() {
         User user = getSession().currentUser;
-        SedoxUser sedoxUser = getSedoxUserAccountById(user.id);
+        SedoxUser sedoxUser = getSedoxUserAccountInternalByIdInternal(user.id);
         
         String evcCustomerId = "";
         for (SedoxEvcCreditOrder order : sedoxUser.evcCreditOrders) {

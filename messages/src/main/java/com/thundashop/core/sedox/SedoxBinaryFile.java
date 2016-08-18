@@ -107,4 +107,34 @@ public class SedoxBinaryFile implements Serializable {
         
         return addon;
     }
+
+    String getExtraInfo() {
+        if (options == null)
+            return "";
+        
+        String toAdd = "";
+        
+        if (options.requested_adblue)
+            toAdd += "NOADBLUE,";
+        
+        if (options.requested_decat)
+            toAdd += "NODECAT,";
+        
+        if (options.requested_dpf)
+            toAdd += "NODPF,";
+        
+        if (options.requested_dtc)
+            toAdd += "NODTC,";
+        
+        if (options.requested_egr)
+            toAdd += "NOEGR,";
+        
+        if (options.requested_vmax)
+            toAdd += "NOVMAX,";
+        
+        if (toAdd.isEmpty())
+            return "";
+        
+        return "(" + toAdd.substring(0,toAdd.length()-1) + ")";
+    }
 }

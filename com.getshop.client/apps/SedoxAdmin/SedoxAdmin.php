@@ -247,6 +247,34 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
     public function sendProductToDifferentEmail() {
         $this->getApi()->getSedoxProductManager()->sendProductToDifferentEmail($_POST['data']['productId'], $_POST['data']['email'], [$_POST['data']['fileId']],  $_POST['data']['comment']);
     }
-    
+
+    public function getExtraInfo($binFile) {
+        $extraRequests = "";
+                    
+        if($binFile->options->requested_adblue) {
+            $extraRequests .= "AdBlue, ";
+        }
+        if($binFile->options->requested_decat) {
+            $extraRequests .= "Decat, ";
+        }
+        if($binFile->options->requested_dpf) {
+            $extraRequests .= "DPF, ";
+        }
+        if($binFile->options->requested_dtc) {
+            $extraRequests .= "DTC, ";
+        }
+        if($binFile->options->requested_egr) {
+            $extraRequests .= "EGR, ";
+        }
+        if($binFile->options->requested_vmax) {
+            $extraRequests .= "Vmax, ";
+        }
+        if($extraRequests != "") {
+            $extraRequests = substr($extraRequests, 0, -2);
+        }
+
+        return $extraRequests;
+    }
+
 }
 ?>

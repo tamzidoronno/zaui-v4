@@ -1123,7 +1123,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                     File tmpFile = new File(fileName);
                     copyFile(origFile, tmpFile);
                     String extentions = binFile.fileType != null && binFile.fileType.equals("Original") ? ".orig" : ".mod";
-                    String fileNameInEmail = sharedProduct.getName() + extentions;
+                    
+                    String fileNameInEmail = sharedProduct.getName() + binFile.getExtraInfo() + extentions;
                     fileMap.put(fileName, fileNameInEmail);
                     break;
                 }

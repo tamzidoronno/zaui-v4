@@ -32,7 +32,7 @@ foreach ($product->binaryFiles as $iFile) {
                     foreach($extraTypes as $type) {
                         $checked = "";
                         
-                        if ($file->options->{"requested_".  strtolower($type)} && strtolower($binFile->fileType) != "original") {
+                        if ($file->options->{"requested_".  strtolower($type)} && strtolower($file->fileType) != "original") {
                             $checked = "checked";
                         }
                         

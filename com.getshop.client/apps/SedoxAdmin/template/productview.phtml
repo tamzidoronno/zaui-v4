@@ -295,6 +295,27 @@ $user = $this->getApi()->getUserManager()->getUserById($sedoxUser->id);
                             }                           
                         ?>
                     </div>
+                    <div class="customer_data">
+                        <div class="data_name">
+                            Automatic gearbox: 
+                        </div>
+                        <?
+                        
+                            if($product->gearType != "man") {
+                                ?>
+                                <div class="data_value" style="color: #c30f10;">
+                                    YES
+                                </div>
+                                <?
+                            } else {
+                                ?>
+                                <div class="data_value" style="color: #44b215;">
+                                    NO
+                                </div>    
+                                <?
+                            }                           
+                        ?>
+                    </div>
                 </div>
             </div>
                 

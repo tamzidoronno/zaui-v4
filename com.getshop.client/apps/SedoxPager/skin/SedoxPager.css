@@ -23,7 +23,7 @@
 }
 
 .SedoxPager .hide_finished_wrapper {
-    display: inline-block;
+    display: none;
     position: relative;
 }
 
@@ -79,3 +79,8 @@
     margin-right: 30px;
     line-height: 35px;
 }
+
+.gsbody_inner[pageid="4f35e47e-9905-4f60-82d2-ea63e25e3316"] .SedoxPager .hide_finished_wrapper {
+    display: inline-block;
+}
+

@@ -1490,7 +1490,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     private void addCreditToMaster(SedoxUser sedoxUser, SedoxCreditOrder sedoxCreditOrder, SedoxMagentoIntegration.Order order) throws ErrorException {
         if (sedoxUser.masterUserId != null && !sedoxUser.masterUserId.equals("") && sedoxCreditOrder.amount > 0) {
-            double creditToAdd = sedoxCreditOrder.amount / 100 * sedoxUser.slaveIncome;
+            double creditToAdd = sedoxCreditOrder.amount / 10 * sedoxUser.slaveIncome;
             if (creditToAdd > 0) {
                 User masterGetshopUser = userManager.getUserById(sedoxUser.id);
                 SedoxCreditOrder kickbackCreditOrder = new SedoxCreditOrder();

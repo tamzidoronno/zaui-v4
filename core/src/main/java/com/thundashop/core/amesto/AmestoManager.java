@@ -53,9 +53,10 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
         Product product = productManager.getProduct(productId);
         
         try {
-            JsonObject jsonObj = webManager.htmlGetJson("http://" + hostname + "/api/Articles/" + product.sku + "/StockInfo");
+            String endpoint = "http://" + hostname + "/api/Articles/" + product.sku;
+            JsonObject jsonObj = webManager.htmlGetJson(endpoint + "/StockInfo");
             product.stockQuantity = (int) Float.parseFloat(jsonObj.get("UnitInStock").toString());
-            JsonObject jsonObj2 = webManager.htmlGetJson("http://" + hostname + "/api/Articles/" + product.sku);
+            JsonObject jsonObj2 = webManager.htmlGetJson(endpoint);
             product.price = Float.parseFloat(jsonObj2.get("Price1").toString());
         } catch (Exception ex) {
             logPrint(ex.toString());
@@ -67,12 +68,16 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
     @Override
     public void syncAllStockQuantity(String hostname) {
         List<Product> products = productManager.getAllProducts();
-        
         products
                 .stream()
                 .filter(product -> product.sku != null)
                 .filter(product -> !product.sku.isEmpty())
                 .forEach(product -> syncStockQuantity(hostname, product.id));
+        
+        products
+                .stream()
+                .filter(product -> (product.sku == null || product.sku.isEmpty()))
+                .forEach(product -> warnNoSkuForProduct(product));
     }
     
     @Override
@@ -210,5 +215,9 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
                 }
             }          
         }
+    }
+
+    private void warnNoSkuForProduct(Product product) {
+        logPrint("No sku (articlenumber) set for product: " + product.name);
     }
 }

@@ -201,7 +201,9 @@ public class PmsManagerProcessor {
                     if (pushToLock(room, false)) {
                         room.addedToArx = true;
                         save = true;
-                        manager.doNotification("room_added_to_arx", booking, room);
+                        if(notifyRoomAddedToArx(room.cardformat)) {
+                            manager.doNotification("room_added_to_arx", booking, room);
+                        }
                     }
                 }
             }
@@ -680,6 +682,17 @@ public class PmsManagerProcessor {
             manager.saveBooking(booking);
         }
         
+        return true;
+    }
+
+    private boolean notifyRoomAddedToArx(String format) {
+        if(manager.getConfigurationSecure().arxCardFormatsAvailable != null && !manager.getConfigurationSecure().arxCardFormatsAvailable.isEmpty()) {
+            String[] splitted = manager.getConfigurationSecure().arxCardFormatsAvailable.split(";");
+            if(splitted[0].equals(format)) {
+                return true;
+            }
+            return false;
+        }
         return true;
     }
 }

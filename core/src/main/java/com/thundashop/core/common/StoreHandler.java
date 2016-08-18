@@ -142,8 +142,10 @@ public class StoreHandler {
     }
 
     private Object invokeMethod(Method executeMethod, Class aClass, Object[] argObjects, Class getShopInterfaceClass, JsonObject2 inObject) throws ErrorException {
+        String scopedStoreId = "ALL";
         try {
             ManagerSubBase manager = getManager(aClass, getShopInterfaceClass, inObject);
+            scopedStoreId = manager.storeId;
             Object result = executeMethod.invoke(manager, argObjects);
             result = manager.preProcessMessage(result, executeMethod);
             
@@ -154,7 +156,6 @@ public class StoreHandler {
                 lang = manager.getStoreSettingsApplicationKey("language");
             }
             handle.updateTranslationOnAll(lang, result);
-            
             return result;
         } catch (IllegalAccessException ex) {
             throw new ErrorException(84);
@@ -172,6 +173,13 @@ public class StoreHandler {
             ErrorException aex = new ErrorException(86);
             aex.additionalInformation = cause.getLocalizedMessage() + " <br> " + stackTraceToString(cause);
             throw aex;
+        } catch (Exception ex) {
+            GetShopLogHandler.logPrintStaticSingle(ex.getMessage(), scopedStoreId);
+            StackTraceElement[] stack = ex.getStackTrace();
+            for(StackTraceElement el : stack) {
+                GetShopLogHandler.logPrintStaticSingle("\t" + el.getClassName() + ":"  + el.getLineNumber(), scopedStoreId);
+            }
+            throw ex;
         }
     }
 

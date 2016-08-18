@@ -20,12 +20,15 @@
 .PmsBookingProductList .roomdesc { font-size: 14px; font-weight: normal; margin-top: 10px; }
 
 @media only all and (max-width: 800px) {
+    .PmsBookingProductList .productentry .roomtypeselection { top: 35px; }
     .PmsBookingProductList .selectbutton { top: 0px; right: 0px; height: 25px; line-height: 25px; }
     .PmsBookingProductList .roomdesc {
         position: absolute;
-        right: 0px;
         top: 30px;
         padding-left: 90px;
+        width: 50%;
+        left:0px;
+        display:inline-block;
     }
     .PmsBookingProductList .roomdesc { margin-top: 10px; line-height: 16px; }
     .PmsBookingProductList .productentry .name {

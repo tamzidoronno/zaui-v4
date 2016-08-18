@@ -209,6 +209,25 @@ class Menu extends \SystemApplication implements \Application {
      * @param type $prefix
      */
     public function printEntries($entries, $level, $prefix) {
+        $found = false;
+        foreach ($entries as $entry) {
+            if ($this->isDisabledDueToAccessLevel($entry) && !$this->isDisabledEnabled($entry)) {
+                continue;
+            }
+            
+            if ($this->isDisabledDueToLanaguage($entry)) {
+                continue;
+            }
+            
+            if ($entry->hidden) {
+                continue;
+            }
+            $found = true;
+        }
+        if(!$found) {
+            return;
+        }
+        
         echo "<div class='entries'>";
         
         $i =1;

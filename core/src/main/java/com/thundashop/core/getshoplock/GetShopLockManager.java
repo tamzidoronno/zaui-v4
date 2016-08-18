@@ -405,8 +405,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     @Override
     public void removeCodeOnLock(String lockId, String code) {
         GetShopDevice dev = devices.get(lockId);
-        dev.removeCode(code);
-        saveObject(dev);
+        if(dev == null) {
+            System.out.println("Lock device :" + lockId + " does not exists");
+        } else {
+            dev.removeCode(code);
+            saveObject(dev);
+        }
     }
 
     @Override

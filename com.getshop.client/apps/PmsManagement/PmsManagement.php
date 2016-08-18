@@ -137,12 +137,22 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function loadTakenRoomList() {
         $bookingid = $_POST['data']['bookingid'];
         $roomid = $_POST['data']['roomid'];
+        $newRoom = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $_POST['data']['itemid']);
+
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $roomid) {
+                $name = $this->getSelectedName();
+                $type = $room->bookingItemTypeId;
                 $start = $room->date->start;
                 $end = $room->date->end;
                 
+                $available = (array)$this->getApi()->getBookingEngine()->getAvailbleItems($name, $newRoom->bookingItemTypeId, $start, $end);
+                $incUnnassigned = false;
+                if(sizeof($available) == 0) {
+                    echo "<b><i>This room can not be selected since unassiged bookings are depending on it:</i><br></b>";
+                    $incUnnassigned = true;
+                }
                 $filter = new \core_pmsmanager_PmsBookingFilter();
                 $filter->filterType = "active";
                 $filter->startDate = $start;
@@ -151,15 +161,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $allRooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
                 $toPrint = "";
                 foreach($allRooms as $takenroom) {
-                    if($takenroom->bookingItemId == $_POST['data']['itemid']) {
-                        $toPrint .= $takenroom->owner . " - " . date("d.m.Y H:i", $takenroom->start / 1000) . " - " . date("d.m.Y H:i", $takenroom->end / 1000) . "<br>";
+                    if($takenroom->bookingItemId == $_POST['data']['itemid'] || ($incUnnassigned && !$takenroom->bookingItemId)) {
+                        $toPrint .= $takenroom->owner . " - " . date("d.m.Y H:i", $takenroom->start / 1000) . " - " . date("d.m.Y H:i", $takenroom->end / 1000) . ", <span class='openbooking moreinformationaboutbooking' roomid='".$takenroom->pmsRoomId."' bookingid='".$takenroom->bookingId."' style='color:blue; cursor:pointer;'>open</span><br>";
                     }
                 }
                 if($toPrint) {
                     echo "<i class='fa fa-close' style='float:right; cursor:pointer;' onclick=\"$('.tiparea').hide()\"></i>";
-                    echo "<b>Item is taken by</b><br>";
+                    if(sizeof($available) > 0) {
+                        echo "<b>Item is taken by</b><br>";
+                    }
                     echo $toPrint;
                 }
+                
+
+                
             }
         }
     }
@@ -221,7 +236,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $bid = $_POST['data']['bid'];
         
         $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedName(), $bid);
-        
+        foreach($booking->rooms as $room) {
+            if($room->bookingId == $bid) {
+                $_POST['data']['roomid'] = $room->pmsBookingRoomId;
+            }
+        }
         $_POST['data']['bookingid'] = $booking->id;
                     
         if(isset($_POST['data']['bookingid'])) {
@@ -1484,6 +1503,16 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->fetchedBookings[$bookingId] = $booking;
         }
         return $booking;
+    }
+
+    public function getLastSelectedRoom() {
+        if(isset($_POST['data']['roomid'])) {
+            $_SESSION['lastselectedroom'] = $_POST['data']['roomid'];
+        }
+        if(isset($_SESSION['lastselectedroom'])) {
+            return $_SESSION['lastselectedroom'];
+        }
+        return "";
     }
 
 }

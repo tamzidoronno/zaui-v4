@@ -13,6 +13,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     private $bookingRules = null;
     private $fetchedTypes = false;
     private $appsForPage = false;
+    private $currentRoomId = "";
     
     public function getDescription() {
         return "Calendar view for displaying booked entries in a calendar.";
@@ -134,6 +135,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         $width = 100 / $numberOfSlots;
         for($i = 1; $i <= $numberOfSlots; $i++) {
             $endTime = $start + (60*$minutes*$i);
+            $this->currentRoomId = "";
             $state = $this->getBlockState($room, $day, $startTime, $endTime);
             if(!$lines[$i-1]) {
                 if(!$this->isAdminMode()) {
@@ -154,8 +156,8 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             
             $title = str_replace("\"", "&QUOT;", $title);
             $title = str_replace("'", "&apos;", $title);
-            
-            echo "<span class='$loadBookingOnClick outerblock $size' style='width: $width%' bookingid='$bookingId' instanceid='$instanceId'>";
+            $rid = "";
+            echo "<span class='$loadBookingOnClick outerblock $size' style='width: $width%' bookingid='$bookingId' instanceid='$instanceId' roomid='".$this->currentRoomId."'>";
             echo "<span class='timeblock $state' startTime='$startTime' "
                     . "endTime='$endTime' "
                     . "title='".$title."' "
@@ -450,6 +452,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                     $state = "notconfirmed";
                 }
                 $this->currentTitle .= date("H:i", strtotime($room->date->start)) . " - ". date("H:i",strtotime($room->date->end));
+                $this->currentRoomId = $room->pmsBookingRoomId;
                 return $state;
             }
         }

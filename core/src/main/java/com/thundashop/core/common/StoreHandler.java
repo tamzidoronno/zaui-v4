@@ -145,7 +145,7 @@ public class StoreHandler {
         String scopedStoreId = "ALL";
         try {
             ManagerSubBase manager = getManager(aClass, getShopInterfaceClass, inObject);
-            scopedStoreId = manager.storeId;
+            scopedStoreId = manager.getStoreId();
             Object result = executeMethod.invoke(manager, argObjects);
             result = manager.preProcessMessage(result, executeMethod);
             
@@ -167,6 +167,7 @@ public class StoreHandler {
             if (cause instanceof ErrorException) {
                 throw (ErrorException) cause;
             } else {
+                printStack(ex, scopedStoreId);
                 ex.printStackTrace();
             }
 
@@ -174,11 +175,7 @@ public class StoreHandler {
             aex.additionalInformation = cause.getLocalizedMessage() + " <br> " + stackTraceToString(cause);
             throw aex;
         } catch (Exception ex) {
-            GetShopLogHandler.logPrintStaticSingle(ex.getMessage(), scopedStoreId);
-            StackTraceElement[] stack = ex.getStackTrace();
-            for(StackTraceElement el : stack) {
-                GetShopLogHandler.logPrintStaticSingle("\t" + el.getClassName() + ":"  + el.getLineNumber(), scopedStoreId);
-            }
+            printStack(ex, scopedStoreId);
             throw ex;
         }
     }
@@ -505,6 +502,14 @@ public class StoreHandler {
             if (settings != null) {
                 session.language = settings.getSetting("language");
             }
+        }
+    }
+
+    private void printStack(Exception ex, String scopedStoreId) {
+        GetShopLogHandler.logPrintStatic(ex.getMessage(), scopedStoreId);
+        StackTraceElement[] stack = ex.getStackTrace();
+        for(StackTraceElement el : stack) {
+            GetShopLogHandler.logPrintStatic("\t" + el.getClassName() + ":"  + el.getLineNumber(), scopedStoreId);
         }
     }
 }

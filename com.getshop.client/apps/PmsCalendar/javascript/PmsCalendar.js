@@ -62,7 +62,8 @@ app.PmsCalendar = {
     },
     loadBookingId : function() {
         var data = {
-            "bookingid" : $(this).attr('bookingid')
+            "bookingid" : $(this).attr('bookingid'),
+            "roomid" : $(this).attr('roomid')
         }
         var instanceId = $(this).attr('instanceid');
         var event = thundashop.Ajax.createEvent('','showBookingInformation',instanceId,data);

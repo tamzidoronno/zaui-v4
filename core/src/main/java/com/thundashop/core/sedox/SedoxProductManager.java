@@ -935,6 +935,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     private SedoxUser clonedLightVersionSedoxUser(SedoxUser user) {
         /* Removing order and credit history to improve performance */
         SedoxUser cloned = deepClone(user);
+
+        if (cloned == null)
+            return null;
+        
         cloned.orders = new ArrayList();
         cloned.creditAccount = deepClone(cloned.creditAccount);
         cloned.creditAccount.history = new ArrayList();

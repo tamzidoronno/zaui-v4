@@ -6,6 +6,7 @@ $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById(
 <div class="gss_overrideapp" gss_use_app_id="07c7565c-040d-4425-962d-a326c782bb4e">
 
     <div style="text-align: center;">
+        Current EVC credit balance: <? echo $sedoxUser->evcCurrentBalance; ?><br/>
         Current credit balance: <? echo $sedoxUser->creditAccount->balance; ?>
     </div>
         

@@ -201,11 +201,16 @@ public class PmsManagerProcessor {
                     if (pushToLock(room, false)) {
                         room.addedToArx = true;
                         save = true;
-                        manager.doNotification("room_added_to_arx", booking, room);
+                        if(notifyRoomAddedToArx(room.cardformat)) {
+                            manager.doNotification("room_added_to_arx", booking, room);
+                        }
                     }
                 }
-
-                if (room.isEnded() && room.addedToArx) {
+            }
+            
+            //Also deleted rooms needs to be removed from arx.
+            for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+                if ((room.isEnded() && room.addedToArx) || (room.deleted && room.addedToArx)) {
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;
@@ -213,6 +218,7 @@ public class PmsManagerProcessor {
                     }
                 }
             }
+            
             if (save) {
                 manager.saveBooking(booking);
             }
@@ -676,6 +682,17 @@ public class PmsManagerProcessor {
             manager.saveBooking(booking);
         }
         
+        return true;
+    }
+
+    private boolean notifyRoomAddedToArx(String format) {
+        if(manager.getConfigurationSecure().arxCardFormatsAvailable != null && !manager.getConfigurationSecure().arxCardFormatsAvailable.isEmpty()) {
+            String[] splitted = manager.getConfigurationSecure().arxCardFormatsAvailable.split(";");
+            if(splitted[0].equals(format)) {
+                return true;
+            }
+            return false;
+        }
         return true;
     }
 }

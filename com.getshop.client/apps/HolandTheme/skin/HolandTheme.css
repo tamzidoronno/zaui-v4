@@ -99,3 +99,27 @@ h1:after {
     margin-left: -22px;
     margin-top: 10px;
 }
+
+@media only all and (max-width: 800px) {
+    .gs_page_width { padding-left: 20px; padding-right: 20px; }
+    .gscell_42.gs_page_width,
+    .gsarea[area="header"] .gs_page_width
+    { padding-left: 0px; padding-right: 0px; }
+    .gsarea[area="header"] .ImageDisplayer { width:100%; text-align: center; margin-top: 20px; }
+    .gsarea[area="header"] { height: 155px; }
+    .gsarea[area="header"] .Menu { text-align:center; border-top: solid 1px #c9c9c9; border-bottom: solid 1px #c9c9c9; padding-bottom: 8px; }
+    .gsarea[area="header"] .Menu .menuentries { text-align: left; }
+    .gsarea[area="header"] .Menu .entry div { text-align: left; }
+    .Menu .menuentries.horizontal {
+        left: 0px;
+        top: 35px;
+        width: inherit;
+        padding-right: 30px;
+        padding-left: 30px;
+        background-color: #efefef;
+        width:100%;
+        box-sizing: border-box;
+    }
+    .gsarea[area="header"] .Menu .entry .entries { border: solid 1px #c9c9c9; }
+    .gs_language_selection { width: 100%; text-align: center; }
+}

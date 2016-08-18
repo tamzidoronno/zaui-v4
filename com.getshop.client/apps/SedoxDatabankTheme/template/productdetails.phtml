@@ -13,7 +13,48 @@ $creditPrice = $this->getApi()->getSedoxProductManager()->getPriceForProduct($pr
     foreach ($product->binaryFiles as $binFile) {
         $checksumCorrect = $binFile->checksumCorrected ? "Yes" : "No";
         $extraInfo = sedox_notAvailableCheck($binFile->extraInformation);
-        echo "<option checksumupdated='$checksumCorrect' extrainfo='$binFile->extraInformation' admintools='N/A' value='$binFile->id'>" . $binFile->fileType . "</option>";
+        
+         $extraRequests = "";
+
+            if($binFile->options->requested_adblue) {
+                $extraRequests .= "AdBlue, ";
+            }
+            if($binFile->options->requested_decat) {
+                $extraRequests .= "Decat, ";
+            }
+            if($binFile->options->requested_dpf) {
+                $extraRequests .= "DPF, ";
+            }
+            if($binFile->options->requested_dtc) {
+                $extraRequests .= "DTC, ";
+            }
+            if($binFile->options->requested_egr) {
+                $extraRequests .= "EGR, ";
+            }
+            if($binFile->options->requested_vmax) {
+                $extraRequests .= "Vmax, ";
+            }
+            if($extraRequests != "") {
+                $extraRequests = substr($extraRequests, 0, -2);
+            }
+
+            if($binFile->fileType == "Original") {
+                $origRequestType = $binFile->options->requested_remaptype;
+                $originalExtraRequests = $extraRequests;
+            }
+
+            if ($this->isSelected($product->id, $binFile->id)) {
+                $_POST['data']['fileId'] = $binFile->id;
+            }
+
+            $checksumCorrect = $binFile->checksumCorrected ? "Yes" : "No";
+            $selected = $this->isSelected($product->id, $binFile->id) ? "selected='true'" : "";
+            $extraInfo = $binFile->extraInformation . ($binFile->extraInformation != "" && $extraRequests != "" ? " - " : "") . $extraRequests;
+            if (strtolower($binFile->fileType) == "original") {
+                $extraInfo = "";
+            }
+        
+        echo "<option checksumupdated='$checksumCorrect' extrainfo='$extraInfo' admintools='N/A' value='$binFile->id'>" . $binFile->fileType . "</option>";
     }
     echo "</select>";
     ?>

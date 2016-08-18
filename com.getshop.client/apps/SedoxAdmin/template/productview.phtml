@@ -85,6 +85,10 @@ $user = $this->getApi()->getUserManager()->getUserById($sedoxUser->id);
                     $checksumCorrect = $binFile->checksumCorrected ? "Yes" : "No";
                     $selected = $this->isSelected($product->id, $binFile->id) ? "selected='true'" : "";
                     $extraInfo = $binFile->extraInformation . ($binFile->extraInformation != "" && $extraRequests != "" ? " - " : "") . $extraRequests;
+                    if (strtolower($binFile->fileType) == "original") {
+                        $extraInfo = "";
+                    }
+                    
                     echo "<option $selected checksumupdated='$checksumCorrect' extrainfo='$extraInfo' admintools='N/A' value='$binFile->id'>" . $binFile->fileType . "</option>";
                 }
                 echo "</select>";

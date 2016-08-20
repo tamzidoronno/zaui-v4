@@ -4,8 +4,14 @@
 package com.thundashop.core.accountingmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.getshop.svea.AddressType;
 import com.getshop.svea.CustomerData;
-import com.thundashop.core.bookingengine.CheckSendQuestBackScheduler;
+import com.getshop.svea.CustomerData.Creditor;
+import com.getshop.svea.CustomerData.Creditor.Cases;
+import com.getshop.svea.CustomerData.Creditor.Cases.Case;
+import com.getshop.svea.CustomerData.Creditor.Cases.Case.Debtor;
+import com.getshop.svea.CustomerData.Creditor.Cases.Case.Invoice;
+import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ForStore;
 import com.thundashop.core.common.ManagerBase;
@@ -14,22 +20,28 @@ import com.thundashop.core.ftpmanager.FtpManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.lang.reflect.Constructor;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.transform.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -296,9 +308,12 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         List<String> result = new ArrayList();
         for(Order order : allOrders) {
             if(order.needToBeTranferredToCreditor()) {
-                if(!config.vendor.equals("svea")) {
+                if(config.vendor.equals("svea")) {
                     String res = createSveaCreditorFile(order);
                     result.add(res);
+                    order.transferredToCreditor = new Date();
+                    System.out.println(res);
+                    orderManager.saveOrder(order);
                 }
             }
         }
@@ -352,9 +367,13 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     private String createSveaCreditorFile(Order order) {
         User user = userManager.getUserById(order.userId);
         CustomerData customer = new CustomerData();
-        CustomerData.Creditor creditor = new CustomerData.Creditor();
-        creditor.setName(user.fullName);
-        creditor.setCustomerIdentification(user.customerId + "");
+        
+        Cases cases = createCases(user, order);
+                
+        Creditor creditor = new Creditor();
+        creditor.setCaseFromCreditorWeb(false);
+        creditor.setCases(cases);
+        
         customer.setCreditor(creditor);
         String res = "";
         try {
@@ -365,13 +384,88 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             // output pretty printed
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
+            
+            StringWriter sw = new StringWriter();
             jaxbMarshaller.marshal(customer, file);
-            jaxbMarshaller.marshal(customer, System.out);
-
+            jaxbMarshaller.marshal(customer, sw);
+            String result = sw.toString();
+            return result;
         } catch (JAXBException e) {
             e.printStackTrace();
         }
 
         return res;
+    }
+
+    private Cases createCases(User user, Order order) {
+        Cases cases = new Cases();
+        
+        Case theCase = new Case();
+        Invoice inv = new Invoice();
+        inv.setCid(user.customerId + "");
+        inv.setCurrencyCode("NOK");
+        inv.setClaimTypeInvoice(1 + "");
+        inv.setInvoiceNumber(order.incrementOrderId + "");
+        
+        double total = orderManager.getTotalAmount(order);
+        inv.setInvoiceAmount(new BigDecimal(total));
+        inv.setInvoiceRemainingAmount(new BigDecimal(total));
+
+        List<Invoice> invoices = new ArrayList();
+        invoices.add(inv);
+        
+        Debtor dep = createDeptor(user, order);
+        theCase.setDebtor(dep);
+        theCase.setInvoice(invoices);
+        
+        dep.setName(user.fullName);
+        
+        List<Case> allCases = new ArrayList();
+        allCases.add(theCase);
+        
+        cases.setCases(allCases);
+        
+        return cases;
+    }
+
+    private Debtor createDeptor(User user, Order order) {
+        Debtor deptor = new Debtor();
+        deptor.setName(user.fullName);
+        BigInteger bigInt = new BigInteger(user.customerId.toString());
+        deptor.setCustomerNumber(bigInt);
+        
+        AddressType address = new AddressType();
+        address.setAddress1(user.address.address);
+        address.setAddress2(user.address.address2);
+        address.setPostalPlace(user.address.city);
+        address.setPostalNumber(user.address.postCode);
+        deptor.setAddress(address);
+        
+        if(user.getBirthDate() != null) {
+            try {
+                GregorianCalendar c = new GregorianCalendar();
+                c.setTime(user.getBirthDate());
+                XMLGregorianCalendar date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+                deptor.setBirthDate(date2);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+        Debtor.CellularPhoneNumber cellNumber = new Debtor.CellularPhoneNumber();
+        cellNumber.setValue(user.cellPhone);
+        cellNumber.setIsSMSVerified(false);
+        
+        deptor.setCellularPhoneNumber(cellNumber);
+        deptor.setEmail(user.emailAddress);
+        deptor.setIsFirm(user.company.size() > 0);
+        if(user.companyObject != null) {
+            Company comp = user.companyObject;
+            deptor.setOrgNumberSocialnumber(comp.vatNumber + "");
+            deptor.setIsFirm(true);
+        } else {
+            deptor.setIsFirm(false);
+        }
+        return deptor;
     }
 }

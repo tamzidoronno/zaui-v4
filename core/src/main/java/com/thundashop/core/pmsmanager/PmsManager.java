@@ -1610,6 +1610,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             user.address.countryname = "";
         }
 
+        user.birthDay = result.get("user_birthday");
+        
         return userManager.createUser(user);
     }
 

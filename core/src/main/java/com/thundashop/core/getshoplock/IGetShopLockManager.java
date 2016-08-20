@@ -5,6 +5,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshop.data.GetShopLockMasterCodes;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import java.util.Date;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public interface IGetShopLockManager {
     public boolean pingLock(String lockId);
     
     @Administrator
-    public void removeCodeOnLock(String lockId, String code);
+    public void removeCodeOnLock(String lockId, PmsBookingRooms room);
     
     @Administrator
     public void checkIfAllIsOk();

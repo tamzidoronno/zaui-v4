@@ -674,7 +674,7 @@ public class PmsManagerProcessor {
             return false;
         }
         if(deleted) {
-            manager.getShopLockManager.removeCodeOnLock(item.bookingItemAlias, room.code);
+            manager.getShopLockManager.removeCodeOnLock(item.bookingItemAlias, room);
         } else {
             room.code = manager.getShopLockManager.getCodeForLock(item.bookingItemAlias);
             room.addedToArx = true;

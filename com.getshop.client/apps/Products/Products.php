@@ -74,7 +74,7 @@ class Products extends \WebshopApplication implements \Application {
         $product->name = $_POST['title'];
         $product->shortDescription = $_POST['lisviewdescription'];
         $product->price = $_POST['price'];
-        if(!HelperCart::hasVariations($product)) {
+        if(!\HelperCart::hasVariations($product)) {
             $product->sku = $_POST['sku'];
         }
         $product->taxgroup = $_POST['taxgroup'];

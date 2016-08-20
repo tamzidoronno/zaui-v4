@@ -8,6 +8,7 @@ Already signed up;-;Redan anmäld
 An email has been sent with a code to use in step 2.;-;Ett mail är skickat med en kod som du använder i steg 2
 Available spots;-;Platser kvar
 Book;-;Boka
+Booking;-;Boka
 Button;-;Knapp
 Cancel event;-;Ställ in kurs
 Canceled;-;Inställd
@@ -46,6 +47,7 @@ Event name;-;Kursnamn
 Field is required;-;Detta fält måste fyllas i
 From;-;Från
 Full;-;Fullbokad
+Full name;-;För och efternamn
 I am sorry, but all fields are required before sending a message.;-;Alla fält måste fyllas i innan du kan skicka ditt meddelande
 Image;-;Bild
 Invalid reset code.;-;Ogiltig kod
@@ -67,6 +69,7 @@ Name;-;Namn
 New password;-;Nytt lösenord
 New user;-;Ny användare
 NewsLetter;-;Nyheter
+Next;-;Vidare
 No available spots left for this event;-; Det finns inga lediga platser på denna kurs
 No events available;-;Inga kurstillfällen tillgängliga
 Not participated illegal reason;-;Deltog ej, ogiltig frånvaro
@@ -98,6 +101,7 @@ Send message;-;Skicka meddelande
 Short description;-;Kort beskrivning
 Sign up;-;Anmälan
 Signup waitinglist;-;Anmälan till väntelista
+Singup;-;Boka
 Sorry, this user does not exists, are you sure this is the correct username / email?;-;Användaren existerar inte, kontrollera att du skrivit in rätt användarnamn och epost
 Thank you for your message;-;Tack för ditt meddelande
 The cellphone must be 10 digit;-;Telefonnumret måste bestå av 10 siffror

@@ -83,7 +83,19 @@ public class UserStoreCollection {
         
         setUserSessionCompany(user);
         
+        setUseGroupId(user);
+        
         return user;
+    }
+
+    private void setUseGroupId(User user) {
+        if (user.companyObject != null && user.companyObject.groupId != null && !user.companyObject.groupId.isEmpty()) {
+            user.useGroupId = user.companyObject.groupId;
+        } else {
+            if (user.groups != null && !user.groups.isEmpty()) {
+                user.useGroupId = user.groups.get(0);
+            }
+        }
     }
     
     public UserStoreCollection(String storeId, Credentials credentials, UserManager userManager) {

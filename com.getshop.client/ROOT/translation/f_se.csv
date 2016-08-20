@@ -8,7 +8,7 @@ Cancel;-;Avbryt
 Candidate name;-;Kandidatens namn
 Cellphone;-;Mobil
 Change company settings below;-;Ändra företagsinställningar nedan
-Check this if you administrate your mechanics.;-;Bocka i denna om di vill administrera dina mekaniker
+Check this if you administrate your mechanics.;-;Bocka i denna om du vill administrera dina mekaniker
 Checking;-;Kontrollerar
 Click on me to edit;-;Klicka för att ändra
 Colors;-;Färger
@@ -38,6 +38,7 @@ Event helder;-;Kursledare
 Event statuses;-;Kursstatus
 Extended description;-;Beskrivning
 Freetext event helder;-;Fritext kursledare
+Garage email;-;Verkstadsepost
 Garage leader;-;Verkstadsadministrator
 General company settings;-;Generella företagsinställningar
 Go back;-;Gå tillbaka
@@ -53,6 +54,8 @@ Name of the event;-;Kursens namn
 Name of the test;-;Testets namn
 New company;-;Nytt företag
 No events;-;Inga kurser
+Personal Email;-;Personlig Epost
+Please enter your;-;Ange
 Please enter your companyname in the textfield above;-;Skriv in företagsnamnet I textfältet ovan
 Please search for users.;-;Sök efter användare
 Postcode;-;Postnummer

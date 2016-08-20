@@ -15,10 +15,10 @@ $disabled = $selectedCompany ? "disabled" : "";
             <label>* <? echo $this->__f("Full name"); ?></label>
             <br/><input class="gsniceinput1" mandatory="yes" type="txt" name="fullname"/>
             <br/>
-            <br/><label><? echo $this->__f("Email"); ?></label>
+            <br/><label><? echo $this->__f("Personal Email"); ?></label>
             <br/><input class="gsniceinput1" type="txt" name="email"/>
             <br/>
-            <br/><label>* <? echo $this->__f("Invoice email"); ?></label>
+            <br/><label>* <? echo $this->__f("Garage email"); ?></label>
             <br/><input class="gsniceinput1" type="txt" <? echo $disabled; ?> mandatory="yes" name="invoicemail" value="<? echo $selectedCompany ? $selectedCompany->invoiceEmail : "" ; ?>"/>
             <br/>
             <br/><label>* <? echo $this->__f("Cellphone"); echo $this->getPhoneNumberText(); ?></label>

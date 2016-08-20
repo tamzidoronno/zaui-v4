@@ -246,7 +246,7 @@ public class GeneratePhpApiNew {
         content += "          $data[\"method\"] = \"" + methodName + "\";\r\n";
         content += "          $data[\"interfaceName\"] = \"" + interfaceName + "\";\r\n";
         if (returnClass.contains("data")) {
-            content += "          return $this->transport->cast(API::" + returnClass + "(), $this->transport->sendMessage($data));\r\n";
+            content += "          return $this->transport->sendMessage($data);\r\n";
         } else {
             content += "          return $this->transport->sendMessage($data);\r\n";
         }

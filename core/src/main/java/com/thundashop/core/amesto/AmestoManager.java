@@ -10,6 +10,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.listmanager.ListManager;
+import com.thundashop.core.listmanager.data.JsTreeList;
+import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
@@ -19,6 +22,7 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +45,9 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
     
     @Autowired
     public UserManager userManager;
+    
+    @Autowired
+    public ListManager listManager;
     
     @Override
     public void syncStockQuantity(String hostname, String productId) {
@@ -77,7 +84,7 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
         for(Order order : orders) {
             JsonObject jsonObject = new JsonObject();
             
-            if(order.status != Order.Status.PAYMENT_COMPLETED || order.transferredToAccountingSystem || order.userId == null || userManager.getUserById(order.userId).accountingId == null || userManager.getUserById(order.userId).accountingId.isEmpty()) {
+            if(order.status != Order.Status.PAYMENT_COMPLETED || order.transferredToAccountingSystem ||  order.userId == null || userManager.getUserById(order.userId).accountingId == null || userManager.getUserById(order.userId).accountingId.isEmpty()) {
                 continue;
             }
             
@@ -87,14 +94,28 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
             
             for(CartItem item : order.cart.getItems()) {
                 Product orderProduct = item.getProduct();
+                Map<String, String> map = item.getVariations();
+                String sku = null;
+
+                if(!map.isEmpty()) {
+                    StringBuilder skuId = new StringBuilder("");
                 
-                if(orderProduct.sku == null || orderProduct.sku.isEmpty()) {
+                    for(String value : map.values()) {
+                        skuId.insert(0, value);
+                    }
+
+                    sku = productManager.getProduct(orderProduct.id).variationCombinations.get(skuId.toString());
+                } else {
+                    sku = orderProduct.sku;
+                }
+                
+                if(sku == null || sku.isEmpty()) {
                     continue mainLoop;
                 }
                 
                 JsonObject jsonOrderProduct = new JsonObject();
                         
-                jsonOrderProduct.addProperty("ArticleNo", orderProduct.sku);
+                jsonOrderProduct.addProperty("ArticleNo", sku);
                 jsonOrderProduct.addProperty("Quantity", item.getCount());
                         
                 orderProducts.add(jsonOrderProduct);
@@ -103,7 +124,7 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
             jsonObject.add("Lines", orderProducts);
             
             try {
-                JsonObject jsonResponse = webManager.htmlPostJson("http://" + hostname + "/api/SalesOrders", jsonObject, "iso-8859-1");
+                JsonObject jsonResponse = webManager.htmlPostJson("http://" + hostname + "/api/SalesOrders", jsonObject, null);
                 
                 if(jsonResponse != null && !jsonResponse.toString().isEmpty()) {
                     order.transferredToAccountingSystem = true;

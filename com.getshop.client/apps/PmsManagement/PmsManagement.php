@@ -21,6 +21,67 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function loadOrderInfoOnBooking() {
+         $states = array();
+        $states['0'] = "All";
+        $states['1'] = "Created";
+        $states['2'] = "Waiting for payment";
+        $states['3'] = "Payment failed";
+        $states['4'] = "Completed";
+        $states['5'] = "Canceled";
+        $states['6'] = "Sent";
+        $states['7'] = "Payment completed";
+        $states['8'] = "Collection failed";
+        $states['9'] = "Need collecting";
+        $states['10'] = "Send to invoice";
+        
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
+        echo "<table cellspacing='0'>";
+        echo "<tR>";
+        echo "<th>Created date</th>";
+        echo "<th>Orderid</th>";
+        echo "<th>Price</th>";
+        echo "<th>Status</th>";
+        echo "<th>Paid for</th>";
+        echo "<th>Failed payment <i class='fa fa-close' onclick='$(\".orderinfobox\").hide();' style='cursor:pointer;'></i></th>";
+        echo "</tr>";
+        
+        foreach($booking->orderIds as $orderId) {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+            echo "<td>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)) . "</td>";
+            echo "<td>" . $order->incrementOrderId . " <a class='showorderbutton' orderid='".$order->id."'> - open</a></td>";
+            echo "<td>" . $total . "</td>";
+            echo "<td>" . $states[$order->status] . "</td>";
+            if(@$order->closed) {
+                echo "<td></td>";
+                echo "<td></td>";
+            } else {
+                echo "<td><input type='button' value='Mark paid' gsclick='markOrder' gsarg1='".$order->id."' gsarg2='paidfor' gsarg3='".$booking->id."'></td>";
+                echo "<td><input type='button' value='Mark failed' gsclick='markOrder' gsarg1='".$order->id."' gsarg2='failed' gsarg3='".$booking->id."'></td>";
+            }
+        }
+        echo "</table>";
+    }
+    
+    public function markOrder() {
+        $userName = $this->getApi()->getUserManager()->getLoggedOnUser()->fullName;
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['gsarg3']);
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['gsarg1']);
+        if($_POST['data']['gsarg2'] == "paidfor") {
+            $order->status = 7;
+            $order->payment->transactionLog->{time()*1000} = "Order marked as paid for manually, by: " .$userName;
+            $this->getApi()->getOrderManager()->saveOrder($order);
+            $this->getApi()->getPmsManager()->processor($this->getSelectedName());
+        } else {
+            $order->status = 3;
+            $order->payment->transactionLog->{time()*1000} = "Failed marking as paid for, by: " .$userName;
+            $this->getApi()->getOrderManager()->saveOrder($order);
+            $this->getApi()->getWubookManager()->markCCInvalid($this->getSelectedName(), $booking->wubookreservationid);
+            echo "Order has been marked as failed.<br>";
+        }        
+    }
+    
     public function runProcessor() {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
     }

@@ -1,9 +1,9 @@
 app.PmsManagement = {
     init: function () {
         $(document).on('change', '.PmsManagement .attachedProduct', app.PmsManagement.attachProduct);
-        $(document).on('click', '.PmsManagement .setFilter', app.PmsManagement.setFilter);
         $(document).on('click', '.PmsManagement .moreinformationaboutbooking', app.PmsManagement.showMoreInformation);
         $(document).on('click', '.PmsManagement .viewmode', app.PmsManagement.toggleEditMode);
+        $(document).on('click', '.PmsManagement td.pricecol', app.PmsManagement.showNotPaidInfo);
         $(document).on('click', '.PmsManagement .statisticsrow', app.PmsManagement.loadStatisticsOverview);
         $(document).on('click', '.PmsManagement .editGuestToggle', app.PmsManagement.editGuestToggle);
         $(document).on('change', '.PmsManagement [gsname="numberofguests"]', app.PmsManagement.editGuestToggle);
@@ -47,6 +47,21 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
         $(document).on('keyup','.PmsManagement .matrixpricealldays', app.PmsManagement.updateRoomPriceMatrix);
     },
+    showNotPaidInfo : function() {
+        var event = thundashop.Ajax.createEvent('','loadOrderInfoOnBooking', $(this), {
+            bookingid : $(this).closest('tr').attr('bookingid')
+        });
+        var box = $('.orderinfobox');
+        var button = $(this);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            box.html(res);
+            box.css('position','absolute');
+            box.css('left',button.position().left-box.width());
+            box.css('top',button.position().top+60);
+            box.fadeIn();
+        });
+    },
+    
     savenewfielddata : function() {
         var saveButton = $(this);
         var data = {
@@ -403,17 +418,6 @@ app.PmsManagement = {
         
         var event = thundashop.Ajax.createEvent('','showBookingInformation',$(this), data);
         thundashop.common.showInformationBoxNew(event, 'Booking information');
-    },
-    setFilter : function() {
-        var app = $(this).closest('.app');
-        var data = {
-            "start" : app.find('.pmsinput.start').val(),
-            "end" : app.find('.pmsinput.end').val(),
-            "filterType" : app.find('.filterType').val(),
-            "searchWord" : app.find('.pmsinput.searchword').val()
-        };
-        var event = thundashop.Ajax.createEvent('','setFilter',$(this), data);
-        thundashop.Ajax.post(event);
     },
     attachProduct : function() {
         var event = thundashop.Ajax.createEvent('','attachProduct',$(this), {

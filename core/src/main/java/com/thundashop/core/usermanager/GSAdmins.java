@@ -45,17 +45,6 @@ public class GSAdmins extends ManagerBase {
         user2.password = "839AEB0CCC08E57D476A51F850C58AE49C0A5809CAFC3233D7FBC4A018C9C45C";
         
         admins.put(user2.id, user2);
-        
-        User user3 = new User();
-        user3.id = "gsmilan";
-        user3.fullName = "Milan Sarosac";
-        user3.cellPhone = "5366909";
-        user3.username = user3.id;
-        user3.prefix = "36";
-        user3.type = 100;
-        user3.password = "54D72554F7E5A8B305B8F37907E3F4B3CB1A1A290AC452F7121F6CB2E05F0D9E";
-        
-        admins.put(user3.id, user3);
     }
     
     

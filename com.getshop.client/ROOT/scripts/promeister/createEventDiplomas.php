@@ -7,13 +7,13 @@ $factory = IocContainer::getFactorySingelton();
 $eventId = $_GET['eventId'];
 $manager = $factory->getApi()->getEventBookingManager();
 $event = $manager->getEvent("booking", $eventId);
-$usersUnfiltered = $manager->getUsersForEvent("booking", $eventId);
 
 $users = [];
 if (isset($_GET['userId'])) { 
     $userToUse = $factory->getApi()->getUserManager()->getUserWithPermissionCheck($_GET['userId']);
     $users[] = $userToUse;
 } else {
+    $usersUnfiltered = $manager->getUsersForEvent("booking", $eventId);
     foreach ($usersUnfiltered as $user) {
         $participatedStatus = @$event->participationStatus->{$user->id};
 

@@ -31,7 +31,8 @@ foreach ($product->binaryFiles as $iFile) {
                     $extraTypes = array("DPF", "EGR", "Decat", "Vmax", "AdBlue", "DTC");
                     foreach($extraTypes as $type) {
                         $checked = "";
-                        if ($file->options->{"requested_".  strtolower($type)}) {
+                        
+                        if ($file->options->{"requested_".  strtolower($type)} && strtolower($file->fileType) != "original") {
                             $checked = "checked";
                         }
                         

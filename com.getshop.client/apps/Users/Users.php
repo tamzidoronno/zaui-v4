@@ -22,6 +22,15 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $this->includefile("overview");
     }
 
+    public function renderUserSettings($user) {
+        $this->currentUser = $user;
+        $this->includefile("usersettings");
+    }
+    
+    public function getUserSettingsOrder() {
+        return 0;
+    }
+    
     public function postProcess() {
     }
     
@@ -285,6 +294,12 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
     }
 
+    static function sortApps($a, $b) {
+        $a1 = method_exists($a, "getUserSettingsOrder") ? $a->getUserSettingsOrder() : 1;
+        $b2 = method_exists($b, "getUserSettingsOrder") ? $b->getUserSettingsOrder() : 1;
+        return ($a1 < $b2) ? -1 : 1;
+    }
+    
     public function getAppsWithPrintingToUser() {
         $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
         $retApps = [];
@@ -294,6 +309,8 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
                 $retApps[] = $instance;
             }
         }
+        
+        usort($retApps, array('ns_ba6f5e74_87c7_4825_9606_f2d3c93d292f\Users','sortApps'));
         
         return $retApps;
     }

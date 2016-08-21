@@ -34,6 +34,7 @@ public class SedoxProduct extends SedoxProductCopiedData implements Comparable<S
     public boolean isBuiltFromSpecialRequest = false;
     public boolean duplicate = false;
     public boolean virtual = false;
+    public String humanReadableId = null;
     
     @Override
     public int compareTo(SedoxProduct o) {

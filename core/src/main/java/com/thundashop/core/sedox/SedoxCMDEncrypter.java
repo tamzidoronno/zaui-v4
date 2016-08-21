@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SedoxCMDEncrypter {
-    public FilesMessage decrypt(byte[] data) {
+    public synchronized FilesMessage decrypt(byte[] data) {
         try {
             WebserviceServiceLocator locator = new WebserviceServiceLocator();
             Webservice service = locator.getWebservicePort();
@@ -37,7 +37,7 @@ public class SedoxCMDEncrypter {
         }
     }
     
-    public byte[] decrypt(SedoxBinaryFile originalFile, SedoxBinaryFile tuningFile) throws ErrorException {
+    public synchronized byte[] encrypt(SedoxBinaryFile originalFile, SedoxBinaryFile tuningFile) throws ErrorException {
         try {
             WebserviceServiceLocator locator = new WebserviceServiceLocator();
             Webservice service = locator.getWebservicePort();

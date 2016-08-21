@@ -49,43 +49,28 @@ $user = $this->getApi()->getUserManager()->getUserById($sedoxUser->id);
                 <?
                 echo "<select class='fileselector'>";
                 foreach ($product->binaryFiles as $binFile) {
-                    $extraRequests = "";
+                    $extraRequests = $this->getExtraInfo($binFile);
                     
-                    if($binFile->options->requested_adblue) {
-                        $extraRequests .= "AdBlue, ";
+                    if ($this->isSelected($product->id, $binFile->id)) {
+                        $_POST['data']['fileId'] = $binFile->id;
                     }
-                    if($binFile->options->requested_decat) {
-                        $extraRequests .= "Decat, ";
-                    }
-                    if($binFile->options->requested_dpf) {
-                        $extraRequests .= "DPF, ";
-                    }
-                    if($binFile->options->requested_dtc) {
-                        $extraRequests .= "DTC, ";
-                    }
-                    if($binFile->options->requested_egr) {
-                        $extraRequests .= "EGR, ";
-                    }
-                    if($binFile->options->requested_vmax) {
-                        $extraRequests .= "Vmax, ";
-                    }
-                    if($extraRequests != "") {
-                        $extraRequests = substr($extraRequests, 0, -2);
-                    }
+
+                    $checksumCorrect = $binFile->checksumCorrected ? "Yes" : "No";
+                    $selected = $this->isSelected($product->id, $binFile->id) ? "selected='true'" : "";
+                    $extraInfo = $binFile->extraInformation . ($binFile->extraInformation != "" && $extraRequests != "" ? " - " : "") . $extraRequests;
                     
                     if($binFile->fileType == "Original") {
                         $origRequestType = $binFile->options->requested_remaptype;
                         $originalExtraRequests = $extraRequests;
                     }
                     
-                    if ($this->isSelected($product->id, $binFile->id)) {
-                        $_POST['data']['fileId'] = $binFile->id;
+                    if (strtolower($binFile->fileType) == "original" || strtolower($binFile->fileType) == "cmdencrypted") {
+                        $extraInfo = "";
                     }
                     
-                    $checksumCorrect = $binFile->checksumCorrected ? "Yes" : "No";
-                    $selected = $this->isSelected($product->id, $binFile->id) ? "selected='true'" : "";
-                    $extraInfo = $binFile->extraInformation . ($binFile->extraInformation != "" && $extraRequests != "" ? " - " : "") . $extraRequests;
-                    echo "<option $selected checksumupdated='$checksumCorrect' extrainfo='$extraInfo' admintools='N/A' value='$binFile->id'>" . $binFile->fileType . "</option>";
+                    $starIndicator = $extraInfo ? "*" : "";
+                    
+                    echo "<option $selected checksumupdated='$checksumCorrect' extrainfo='$extraInfo' admintools='N/A' value='$binFile->id'>" .$starIndicator. $binFile->fileType . "</option>";
                 }
                 echo "</select>";
                 ?>
@@ -113,7 +98,7 @@ $user = $this->getApi()->getUserManager()->getUserById($sedoxUser->id);
                     <div class='trash_button smallbutton' gs_confirm="Are you sure you want to delete it?" gsclick="deleteFile" sedox_file_id="" productid="<? echo $product->id; ?>" title="Delete File"><i class='fa fa-trash'></i></div>
                 </div>
                 <div class='priceview'>
-                    <div class='sedox_blue_button sedox_admin_upload_file' extrainfo='<? echo $extraInfo; ?>' productid='<? echo $product->id; ?>' sedox_file_type="<? echo $origRequestType ?>">UPLOAD FILE</div>
+                    <div class='sedox_blue_button sedox_admin_upload_file' extrainfo='<? echo $originalExtraRequests; ?>' productid='<? echo $product->id; ?>' sedox_file_type="<? echo $origRequestType ?>">UPLOAD FILE</div>
                 </div>
             </div>
         </div>
@@ -232,6 +217,25 @@ $user = $this->getApi()->getUserManager()->getUserById($sedoxUser->id);
                     </div>
                     <div class="customer_data">
                         <div class="data_name">
+                            Norwegian customer:
+                        </div>
+                        <?  if($sedoxUser->isNorwegian) {
+                                ?>
+                                <div class="data_value" style="color: #c30f10;">
+                                    YES
+                                </div>
+                                <?
+                            } else {
+                                ?>
+                                <div class="data_value" style="color: #44b215;">
+                                    NO
+                                </div>    
+                                <?
+                            }                           
+                        ?>
+                    </div>
+                    <div class="customer_data">
+                        <div class="data_name">
                             Withdraw credits:
                         </div>
                         <?  if($sedoxProduct->useCreditAccount == "true") {
@@ -243,6 +247,48 @@ $user = $this->getApi()->getUserManager()->getUserById($sedoxUser->id);
                             } else {
                                 ?>
                                 <div class="data_value" style="color: #c30f10;">
+                                    NO
+                                </div>    
+                                <?
+                            }                           
+                        ?>
+                    </div>
+                    <div class="customer_data">
+                        <div class="data_name">
+                            Used Windows App:
+                        </div>
+                        <?
+                        
+                            if($product->uploadOrigin == "windowsapp") {
+                                ?>
+                                <div class="data_value" style="color: #c30f10;">
+                                    YES
+                                </div>
+                                <?
+                            } else {
+                                ?>
+                                <div class="data_value" style="color: #44b215;">
+                                    NO
+                                </div>    
+                                <?
+                            }                           
+                        ?>
+                    </div>
+                    <div class="customer_data">
+                        <div class="data_name">
+                            Automatic gearbox: 
+                        </div>
+                        <?
+                        
+                            if($product->gearType != "man") {
+                                ?>
+                                <div class="data_value" style="color: #c30f10;">
+                                    YES
+                                </div>
+                                <?
+                            } else {
+                                ?>
+                                <div class="data_value" style="color: #44b215;">
                                     NO
                                 </div>    
                                 <?

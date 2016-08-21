@@ -64,10 +64,26 @@ class Sorters {
 
     private Comparator sedoxIdComperator(FilterData filterData) {
         return (Comparator<SedoxOrder>) (SedoxOrder o1, SedoxOrder o2) -> {
+            SedoxProduct p1 = products.get(o1.productId);
+            SedoxProduct p2 = products.get(o2.productId);
+            
+            if (p1 == null && p2 == null) {
+                return 0;
+            }
+            
+            if (p1 == null) {
+                return 1;
+            }
+            
+            if (p2 == null) {
+                return -1;
+            }
+            
+            
             if (filterData.ascending) {
-                return new Integer(o2.productId).compareTo(Integer.parseInt(o1.productId));
+                return new Integer(p2.humanReadableId).compareTo(Integer.parseInt(p1.humanReadableId));
             } else {
-                return new Integer(o1.productId).compareTo(Integer.parseInt(o2.productId));
+                return new Integer(p1.humanReadableId).compareTo(Integer.parseInt(p2.humanReadableId));
             }
         };
     }

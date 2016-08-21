@@ -445,6 +445,9 @@ body {
     display: none;
 }
 
+.extra_info_text {
+    font-weight: bold;
+}
 
 .gsucell[cellid="914c8252-3e8d-4f2a-af4e-5aa3c821c2da"] {display: none;}
 .gsucell[cellid="b7518839-f93f-4dc4-9fec-db6d14463009"] {display: none;}

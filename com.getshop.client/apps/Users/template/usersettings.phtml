@@ -1,0 +1,165 @@
+<?
+$user = $this->currentUser;
+?>
+
+<input type="hidden" gs_model='usermodel' gs_model_attr='userid' value="<? echo $user->id; ?>"/>
+
+<div class="gss_settings_title"><? echo $this->__f("General user informational"); ?></div>
+<div class="textfield gss_setting"  id="name">
+    <span class="title"><?php echo $this->__f("Name"); ?></span>
+    <input type="textfield" gs_model='usermodel' gs_model_attr='name' value="<? echo $user->fullName; ?>">
+    <div class="description">
+        <?php echo $this->__("Name of the person that owns this new account."); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="email">
+    <span class="title"><?php echo $this->__f("Mail address"); ?></span>
+    <input type="textfield" gs_model='usermodel' gs_model_attr='email' value="<? echo $user->emailAddress; ?>">
+    <div class="description">
+        <?php echo $this->__("Email address."); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="phone">
+    <span class="title"><?php echo $this->__f("Phone number"); ?></span>
+    <input type="textfield" gs_model='usermodel' gs_model_attr='phone_number' value="<? echo $user->cellPhone; ?>">
+    <div class="description">
+        <?php echo $this->__("The cell phone number to the owner of this account."); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="prefix">
+    <span class="title"><?php echo $this->__f("Phone prefix"); ?></span>
+    <input type="textfield" gs_model='usermodel' gs_model_attr='prefix' value="<? echo $user->prefix; ?>">
+    <div class="description">
+        <?php echo $this->__("The cell phone number to the owner of this account."); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="referenceKey">
+    <span class="title"><?php echo $this->__f("Ref.nr"); ?></span>
+    <input type="textfield" gs_model='usermodel' gs_model_attr='referenceKey' value="<? echo $user->referenceKey; ?>">
+    <div class="description">
+        <?php echo $this->__("A autogenereted reference number that can be used to identify this user."); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="accountingId">
+    <span class="title"><?php echo $this->__f("Accounting ID"); ?></span>
+    <input type="textfield" gs_model='usermodel' gs_model_attr='accountingId' value="<? echo $user->accountingId; ?>">
+    <div class="description">
+        <?php echo $this->__("ID for identifying the user on accounting systems."); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="admin">
+    <span class="title"><?php echo $this->__f("Administrator"); ?></span>
+    <div class="gss_onoff" gs_model="usermodel" gs_model_attr="isadmin">
+        <?
+        $faclass = $user->type == 100 ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        Off<i class="fa <? echo $faclass; ?>"></i>On
+    </div>
+    <div class="description">
+        <?php echo $this->__("Is this an administrator account"); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="editor">
+    <span class="title"><?php echo $this->__f("Editor"); ?></span>
+    <div class="gss_onoff" gs_model="usermodel" gs_model_attr="iseditor">
+        <?
+        $faclass = $user->type == 50 ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        Off<i class="fa <? echo $faclass; ?> "></i>On
+    </div>
+    <div class="description">
+        <?php echo $this->__("Is this an editor account?"); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="editor">
+    <span class="title"><?php echo $this->__f("Account suspended"); ?></span>
+    <div class="gss_onoff" gs_model="usermodel" gs_model_attr="suspended">
+        <?
+        $faclass = $user->suspended ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        Off<i class="fa <? echo $faclass; ?> "></i>On
+    </div>
+    <div class="description">
+        <?php echo $this->__("If this is activated the account will be locked and the user can not log in."); ?>
+    </div>
+</div>
+
+<?
+if ($user->type == 100) {
+?>
+<div class="textfield gss_setting"  id="showHiddenFields">
+    <span class="title"><?php echo $this->__f("Show hidden fields"); ?></span>
+    <div class="gss_onoff" gs_model="usermodel" gs_model_attr="showHiddenFields">
+        <?
+        $faclass = $user->showHiddenFields ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        Off<i class="fa <? echo $faclass; ?> "></i>On
+    </div>
+    <div class="description">
+        <?php echo $this->__("This must be enabled if the user should be able to see the hidden fields."); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="showHiddenFields">
+    <span class="title"><?php echo $this->__f("Can change layout on page?"); ?></span>
+    <div class="gss_onoff" gs_model="usermodel" gs_model_attr="canChangeLayout">
+        <?
+        $faclass = $user->canChangeLayout ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        Off<i class="fa <? echo $faclass; ?> "></i>On
+    </div>
+    <div class="description">
+        <?php echo $this->__("Activating this on the admin allows him/her to change the layout on the page, this requires more advance knowledge of the GetShop framework."); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  >
+    <span class="title"><?php echo $this->__f("Show logout counter"); ?></span>
+    <div class="gss_onoff" gs_model="usermodel" gs_model_attr="showLogoutCounter">
+        <?
+        $faclass = $user->showLoguotCounter ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        Off<i class="fa <? echo $faclass; ?> "></i>On
+    </div>
+    <div class="description">
+        <?php echo $this->__("Will display how long time it is until you log out, reload needed (press f5) after activation."); ?>
+    </div>
+</div>
+
+<?
+}
+?>
+
+<div class="textfield gss_setting"  >
+    <span class="title"><?php echo $this->__f("Is company owner?"); ?></span>
+    <div class="gss_onoff" gs_model="usermodel" gs_model_attr="isCompanyOwner">
+        <?
+        $faclass = $user->isCompanyOwner ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        Off<i class="fa <? echo $faclass; ?> "></i>On
+    </div>
+    <div class="description">
+        <?php echo $this->__("If activated the user will get insight in other users within the same company."); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="sessionTimeout">
+    <span class="title"><?php echo $this->__f("Minutes session timeout"); ?></span>
+    <input type="textfield" gs_model='usermodel' gs_model_attr='sessionTimeout' value="<? echo $user->sessionTimeOut; ?>">
+    <div class="description">
+        <?php echo $this->__("How many minutes can this user be inactive before logged out?"); ?>
+    </div>
+</div>
+
+<div class='gss_button_area'>
+    <div class="gss_button" gss_method="updateGeneralInformation" gss_model="usermodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+</div>
+

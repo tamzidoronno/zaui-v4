@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author ktonder
  */
-public class SedoxCreditAccount implements Serializable {
+public class SedoxCreditAccount implements Serializable, Cloneable {
     public List<SedoxCreditHistory> history = new ArrayList();
     public boolean allowNegativeCredit = false;
     private int balance;
@@ -50,4 +50,10 @@ public class SedoxCreditAccount implements Serializable {
     void setBalance(double d) {
         this.balance = (int) d;
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 }

@@ -49,6 +49,7 @@ import org.springframework.stereotype.Component;
 public class Database extends StoreComponent {
 
     public static int mongoPort = 27018;
+//    public static int mongoPort = 27015;
 
     private Mongo mongo;
     private Morphia morphia;

@@ -37,6 +37,9 @@ public interface IPmsManager {
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId);
     
     @Editor
+    public PmsBooking getBookingWithOrderId(String orderId);
+    
+    @Editor
     public PmsBooking getBookingFromRoomIgnoreDeleted(String roomId);
     
     

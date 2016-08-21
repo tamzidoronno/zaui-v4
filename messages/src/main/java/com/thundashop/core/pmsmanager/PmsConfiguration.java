@@ -103,7 +103,7 @@ public class PmsConfiguration extends DataCommon {
     public String wubooklcode = "";
     
     
-    private HashMap<String, PmsChannelConfig> channelConfiguration = new HashMap();
+    public HashMap<String, PmsChannelConfig> channelConfiguration = new HashMap();
     
     public boolean isGetShopHotelLock() {
         if(locktype != null && !locktype.isEmpty() && locktype.equals("getshophotellock")) {

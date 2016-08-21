@@ -606,6 +606,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return finalize(booking);
     }
     
+    @Override
     public PmsBooking getBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
         checkSecurity(booking);
@@ -3477,5 +3478,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void removeChannel(String channel) {
         getConfigurationSecure().removeChannel(channel);
+    }
+
+    @Override
+    public PmsBooking getBookingWithOrderId(String orderId) {
+        for(PmsBooking booking : bookings.values()) {
+            for(String oId : booking.orderIds) {
+                if(oId.equals(orderId)) {
+                    return booking;
+                }
+            }
+        }
+        return null;
     }
 }

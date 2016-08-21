@@ -8,7 +8,10 @@ body { background-color:#3a99d7; }
 .innerview .additionalinfobottom { background-color: #2f749f; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; padding: 5px; }
 .roomrow { border-bottom: solid 1px; color:#fff !important; cursor:pointer; padding:0px; }
 .roomrow.notstarted { background-color:#efefef; color:#000 !important; }
-.roomrow.started { background-color:green; color:#fff !important; }
+.roomrow.started a,
+.roomrow.active a,
+.roomrow.started,
+.roomrow.active { background-color:green; color:#fff !important; }
 .roomrow.ended { background-color:#ffe39f; color:#000 !important; }
 .roomrow.waitingforlock { border: solid 1px; background-color:blue;  }
 .roomrow.notpaid { border: solid 1px; background-color:red; color:#fff !important;  }

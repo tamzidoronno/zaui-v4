@@ -112,7 +112,9 @@ public class GetShopApplicationPool extends ManagerBase implements IGetShopAppli
 
     public void giveAccessToStore(String applicationId, String storeId) {
         Application app = get(applicationId);
-        app.storeId = "all";
+        if(app != null) {
+            app.storeId = "all";
+        }
         
         if (app != null && !app.allowedStoreIds.contains(storeId)) {
             app.allowedStoreIds.add(storeId);

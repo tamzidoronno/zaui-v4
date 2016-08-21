@@ -151,11 +151,7 @@ public class StoreHandler {
             
             
             TranslationHandler handle = new TranslationHandler();
-            String lang = manager.getSession().language;
-            if(lang == null) {
-                lang = manager.getStoreSettingsApplicationKey("language");
-            }
-            handle.updateTranslationOnAll(lang, result);
+            updateLanguage(manager, handle, result);
             return result;
         } catch (IllegalAccessException ex) {
             throw new ErrorException(84);
@@ -178,6 +174,17 @@ public class StoreHandler {
             printStack(ex, scopedStoreId);
             throw ex;
         }
+    }
+
+    private void updateLanguage(ManagerSubBase manager, TranslationHandler handle, Object result) {
+        if (manager.getSession() == null)
+            return;
+        
+        String lang = manager.getSession().language;
+        if(lang == null) {
+            lang = manager.getStoreSettingsApplicationKey("language");
+        }
+        handle.updateTranslationOnAll(lang, result);
     }
 
     private String stackTraceToString(Throwable e) {
@@ -506,6 +513,7 @@ public class StoreHandler {
     }
 
     private void printStack(Exception ex, String scopedStoreId) {
+        ex.printStackTrace();
         GetShopLogHandler.logPrintStatic(ex.getMessage(), scopedStoreId);
         StackTraceElement[] stack = ex.getStackTrace();
         for(StackTraceElement el : stack) {

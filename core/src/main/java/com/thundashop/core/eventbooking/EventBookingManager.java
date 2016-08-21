@@ -977,8 +977,19 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return hasUserParticipated(event, getSession().currentUser.id);
     }
 
+    /**
+     * Return true if user has participated, if the event is in the future we assume that 
+     * he/she will participate.
+     * 
+     * @param event
+     * @param userId
+     * @return 
+     */
     private boolean hasUserParticipated(Event event, String userId) {
         String status = event.participationStatus.get(userId);
+        
+        if (event.isInFuture)
+            return true;
         
         if (status == null)
             return true;
@@ -1540,6 +1551,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public Certificate getCertificateForEvent(String eventId, String userId) {
         Event event = getEvent(eventId);
         User user = userManager.getUserById(userId);
+        userManager.checkUserAccess(user);
         BookingItemTypeMetadata metaData = getBookingTypeMetaData(event);
         Company company = user.companyObject;
         Group group = userManager.getGroup(company.groupId);

@@ -629,6 +629,10 @@ public class PmsManagerProcessor {
             }
             boolean needSaving = false;
             for(String orderId : booking.orderIds) {
+                if(booking.orderIds.size() <= 1) {
+                    //No need to warning first order.
+                    continue;
+                }
                 Order order = manager.orderManager.getOrderSecure(orderId);
                 if(order.status == Order.Status.PAYMENT_COMPLETED) {
                     continue;

@@ -10,6 +10,7 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.EventStatistic;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.Database;
@@ -28,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -972,7 +974,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         if (!event.markedAsReady)
             return false;
         
-        String status = event.participationStatus.get(getSession().currentUser.id);
+        return hasUserParticipated(event, getSession().currentUser.id);
+    }
+
+    private boolean hasUserParticipated(Event event, String userId) {
+        String status = event.participationStatus.get(userId);
         
         if (status == null)
             return true;
@@ -1715,5 +1721,79 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         return price;
+    }
+
+    @Override
+    public List<EventStatistic> getStatistic(Date startDate, Date stopDate) {
+        if (stopDate == null || stopDate.before(startDate) || stopDate.equals(startDate))
+            return new ArrayList();
+        
+        List<Event> events = getAllEvents().stream()
+                .filter(event -> isWithinDates(event, startDate, stopDate))
+                .collect(Collectors.toList());
+                
+        List<EventStatistic> stats = new ArrayList();
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        
+        
+        while(true) {
+            Date start = cal.getTime();
+            if (start.after(stopDate)) {
+                break;
+            }
+            
+            Date end = getLastDateOfMonth(start);
+            
+            
+            List<Event> eventsForMonth = events.stream()
+                    .filter(event -> isWithinDates(event, start, end))
+                    .filter(event -> isWithinDates(event, startDate, stopDate))
+                    .collect(Collectors.toList());
+                    
+            
+            cal.add(Calendar.MONTH, 1);
+            
+            EventStatistic stat = new EventStatistic();
+            stat.month = cal.get(Calendar.MONTH);
+            stat.year = cal.get(Calendar.YEAR);
+            stat.count = getActiveParticipators(eventsForMonth, stat);
+            
+            stats.add(stat);
+        }
+        
+        return stats;
+    }
+    
+    public boolean isWithinDates(Event event, Date startDate, Date stopDate) {
+        return (event.mainStartDate.before(stopDate) || event.mainStartDate.equals(stopDate))
+            &&  
+            (event.mainStartDate.after(startDate) || event.mainStartDate.equals(startDate));
+    }
+
+    private Date getLastDateOfMonth(Date start) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        return cal.getTime();
+    }
+
+    private int getActiveParticipators(List<Event> eventsForMonth, EventStatistic stat) {
+        
+        int i = 0;
+        for (Event event : eventsForMonth) {
+            List<Booking> bookings = bookingEngine.getAllBookingsByBookingItem(event.bookingItemId);
+            for (Booking booking : bookings) {
+                User user = userManager.getUserById(booking.userId);
+                if (user != null && hasUserParticipated(event, user.id)) {
+                    stat.addUserId(event.id, user.id);
+                    i++;
+                }
+            }
+        }
+        
+        return i;
     }
 }

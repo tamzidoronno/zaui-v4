@@ -1,0 +1,90 @@
+<?
+/* @var $this ns_a7cb1957_bbc9_42d3_8f79_fa91260c3ebf\EventStatistic */
+
+?>
+
+<div gstype='form' method="doSearch">
+    <div>
+        <div><span class="title"><? echo $this->__f("Start time"); ?> </span><input gsname="starttime" type="input" class="gsniceinput1 starttime" value='<? echo isset($_POST['data']['starttime']) ? $_POST['data']['starttime'] : ""; ?>'/></div>
+        <div><span class="title"><? echo $this->__f("End time"); ?> </span><input gsname="stoptime" type="input" class="gsniceinput1 stopptime" value='<? echo isset($_POST['data']['stoptime']) ? $_POST['data']['stoptime'] : ""; ?>'/></div>
+    </div>
+    
+    <br/>
+    <div class="shop_button" gstype="submit">Search</div>
+</div>
+
+<br/>
+<br/>
+<div id='result'></div>
+<br/>
+<br/>
+<div>
+    <?
+    $stats = $this->getStats();
+    if ($stats) {
+        $data = "[";
+        foreach ($stats as $stat) {
+
+            $yrdata= strtotime("$stat->year-$stat->month-1");
+            $monthName = date('M-Y', $yrdata);
+
+            $data .= "['".$monthName."',".$stat->count."],";
+        
+            echo "<div class='monthstatistic'>";
+                echo "<div class='monthheader'>$monthName</div>";
+                foreach ($stat->users as $eventId => $users) {
+                    $event = $this->getApi()->getEventBookingManager()->getEvent("booking", $eventId);
+                    $date = ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatMainStartDates($event);
+                    echo "<div class='eventtitle'>".$event->bookingItemType->name." ( $date ) </div>";
+                    foreach ($users as $userId) {
+                        $user = $this->getApi()->getUserManager()->getUserById($userId);
+                        $companyName = $user->companyObject ? $user->companyObject->name : "";
+                        echo "<div class='userrow'><span class='candidatename'>".$user->fullName."</span><span class='candidatecompany'>$companyName</span></div>";
+                    }
+                }
+            echo "</div>";
+            
+        }
+        $data .= "]";
+        
+        
+    }
+    ?>
+</div>
+
+<script>
+    function drawIt() {
+        
+        var div = document.getElementById('result');
+        
+        var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Month');
+            data.addColumn('number', 'Participated');
+            data.addRows(<? echo isset($data) ? $data : ""; ?>);
+
+            // Set chart options
+            var options = {
+                'title': 'Event Candidates',
+                'width': 758,
+                'height': 200
+            };
+
+            var chart = new google.visualization.ColumnChart(div);
+            chart.draw(data, options);
+
+        
+    }
+    
+    $('.EventStatistic .starttime').datepicker();
+    $('.EventStatistic .stopptime').datepicker();
+    
+    <?
+    if ($stats) {
+    ?>
+        $(document).ready(drawIt);
+    <?
+    }
+    ?>
+</script>
+    
+    

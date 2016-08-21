@@ -6,6 +6,7 @@
 package com.thundashop.core.eventbooking;
 
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.EventStatistic;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
@@ -197,4 +198,7 @@ public interface IEventBookingManager {
     
     @Editor
     public Double getPriceForEventTypeAndUserId(String eventId, String userId);
+    
+    @Administrator
+    public List<EventStatistic> getStatistic(Date startDate, Date stopDate);
 }

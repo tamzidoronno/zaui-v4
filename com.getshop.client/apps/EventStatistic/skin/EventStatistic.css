@@ -1,0 +1,42 @@
+.EventStatistic .title {
+    width: 150px;
+    display: inline-block;
+}
+
+.EventStatistic .monthstatistic {
+    border: solid 1px #DDD;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.EventStatistic .monthheader {
+    background-color: #0ec600;
+    padding: 5px; 
+    text-align: center;
+}
+
+.EventStatistic .userrow .candidatecompany {
+    display: inline-block;
+    width: 300px;
+}
+
+.EventStatistic .userrow .candidatename {
+    display: inline-block;
+    width: 300px;
+}
+
+.EventStatistic .userrow {
+    padding: 3px;
+    padding-left: 10px;
+}
+
+.EventStatistic .userrow:nth-child(odd) {
+    background-color: #FEFEFE;
+}
+
+.EventStatistic .eventtitle {
+    background-color: #EEE;
+    padding: 5px; 
+    text-align: center;
+    margin-top: 20px;
+}

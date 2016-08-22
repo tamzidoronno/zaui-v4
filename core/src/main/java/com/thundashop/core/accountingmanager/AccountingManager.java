@@ -252,13 +252,21 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         }
         List<SavedOrderFile> filesToTransfer = getAllFilesNotTransferredToAccounting();
         for(SavedOrderFile saved : filesToTransfer) {
-            String path = saveFileToDisk(saved, config.extension);
+            String internalPath = saveFileToDisk(saved, config.extension);
+            String externalPath = config.path;
+            int minutesToWait = 0;
+            if(saved.subtype != null && !saved.subtype.isEmpty() && saved.subtype.equals("invoice")) {
+                externalPath = config.invoice_path;
+            }
+            if(saved.subtype != null && !saved.subtype.isEmpty() && !saved.subtype.equals("invoice")) {
+                externalPath = config.invoice_path;
+                minutesToWait = 5;
+            }
             try {
-                boolean transferred = ftpManager.transferFile(config.username, config.password, config.hostname, path, config.path, config.port, config.useActiveMode);
-                if(transferred) {
-                    saved.transferred = true;
-                    saveObject(saved);
-                }
+                ftpManager.transferFile(config.username, config.password, config.hostname, internalPath, externalPath, config.port, config.useActiveMode, minutesToWait);
+
+                saved.transferred = true;
+                saveObject(saved);
             }catch(Exception e) {
                 e.printStackTrace();
             }
@@ -491,11 +499,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                         path, 
                         ftpconfig.path, 
                         ftpconfig.port, 
-                        ftpconfig.useActiveMode);
-                if(transferred) {
-                    saved.transferred = true;
-                    saveObject(saved);
-                }
+                        ftpconfig.useActiveMode, 0);
+
+                saved.transferred = true;
+                saveObject(saved);
             }catch(Exception e) {
                 e.printStackTrace();
             }
@@ -581,6 +588,11 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         return orders;
     }
 
+    /**
+     * This is used by visma / wilhelmsen house to make sure invoices are transferred to a different directory.
+     * @return
+     * @throws Exception 
+     */
     private List<String> createSepareateCombinedOrderFiles() throws Exception {
         List<Order> orders = getOrdersToTransfer();
         List<Order> invoiceOrders = new ArrayList();
@@ -603,13 +615,13 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         List<String> usersToSave = createUserFileByAdapter(users);
         List<String> invoiceOrderList = createOrderFile(invoiceOrders, false, "invoice");
         List<String> restOrderList = createOrderFile(orders, false, "");
-        usersToSave.addAll(restOrderList);
+        usersToSave.addAll(invoiceOrderList);
         
         if(!users.isEmpty()) {
-            saveFile(usersToSave, getAccountingType(), "ccard");
+            saveFile(usersToSave, getAccountingType(), "invoice");
         }
         if(!invoiceOrderList.isEmpty()) {
-            saveFile(invoiceOrderList, getAccountingType(), "invoice");
+            saveFile(restOrderList, getAccountingType(), "ccard");
         }
         
         return new ArrayList();

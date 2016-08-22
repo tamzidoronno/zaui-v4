@@ -117,7 +117,7 @@ public class WilhelmsenHouse implements AccountingInterface {
            result += "30;"; //Betaling per 30 dag.
            result += "10;"; //Autogiro.
 
-           lines.add(result);
+           lines.add(result + "\r\n");
         }
         return lines;
     }
@@ -152,7 +152,7 @@ public class WilhelmsenHouse implements AccountingInterface {
         result += "H;";
         result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";";
         result += "5;"; // 
-        result += "Overføring fra GetShop";
+        result += "Overføring fra GetShop\r\n";
         lines.add(result);
         
         for (Order order : orders) {
@@ -181,7 +181,7 @@ public class WilhelmsenHouse implements AccountingInterface {
             result += ";"; // R3 Oppdrag ID
             result += ";"+textDesc; // LinjeText hvis nødvendig. f.eks Salg, Betaling, Refnr fra FV. Hvis tomt, hentes tekst fra bilagsart.
             result += ";"+ order.paymentTransactionId; // LinjeText hvis nødvendig. f.eks Salg, Betaling, Refnr fra FV. Hvis tomt, hentes tekst fra bilagsart.
-            lines.add(result);
+            lines.add(result+"\r\n");
 
             for (CartItem item : order.cart.getItems()) {
                 result = "";
@@ -207,28 +207,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                 String roomName = item.getProduct().additionalMetaData;
                 result += roomName +";"; // R4 Gjenstand ID
                 result += textDesc;
-                lines.add(result);
-            }
-            
-            if(order.invoiceNote != null && !order.invoiceNote.isEmpty()) {
-                result = "";
-                result += "L;"; //Fixed value L
-                result += order.incrementOrderId+";"; // Voucher no (If Voucher serie no is used,this can be empty)
-                result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";"; // Voucher date
-                result += ";"; // Value date (Usees from Batch if empty)
-                if(!order.isCreditNote) {
-                    result += ";"; // Debit account
-                    result += "3000;"; // Credit account
-                } else {
-                    result += "3000;"; // Debit account
-                    result += ";"; // Credit account
-                }
-                
-                result += "0;"; // Total amount
-                result += ";"; // R3 Oppdrag ID
-                result += ";"; // R4 Gjenstand ID
-                result += order.invoiceNote;
-                lines.add(result);
+                lines.add(result+"\r\n");
             }
             
             try {
@@ -273,7 +252,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                 ordrehode += "20;"; //Betalingsmåte ( 10 = avtalegiro )
             }
             ordrehode += ";"; // avgiftskode ( tom = bruk fra kunde )
-            result.add(ordrehode);
+            result.add(ordrehode +"\r\n");
 
             for (CartItem item : order.cart.getItems()) {
                 if(item.getProduct() == null || item.getProduct().accountingSystemId == null) {
@@ -290,20 +269,20 @@ public class WilhelmsenHouse implements AccountingInterface {
                 String roomName = item.getProduct().additionalMetaData;
                 orderline += roomName + ";"; // R4 Gjenstand ID
                 orderline += ";"; // 
-                result.add(orderline);
+                result.add(orderline+"\r\n");
             }
             
-            if(order.invoiceNote != null && !order.invoiceNote.isEmpty()) {
+            if(order.invoiceNote.trim() != null && !order.invoiceNote.trim().isEmpty()) {
                 String orderline = "L;"; // Fast L for orderline
                 orderline += ";"; // ProdNO
                 orderline += ";"; // Avgiftskode ( hentes fra kunden )
-                orderline += order.invoiceNote + ";"; // Produkt beskrivelse
+                orderline += order.invoiceNote.trim() + ";"; // Produkt beskrivelse
                 orderline += ";"; // Antall mnder
                 orderline += ";"; // Pris pr antall, hvis blank hentes pris fra Visma
                 orderline += ";"; // ikke i bruk
                 orderline += ";"; // R4 Gjenstand ID
                 orderline += ";"; // 
-                result.add(orderline);                
+                result.add(orderline+"\r\n");                
             }
             
             System.out.println(" - done.");            

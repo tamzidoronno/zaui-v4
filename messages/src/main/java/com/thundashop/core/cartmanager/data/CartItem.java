@@ -36,7 +36,9 @@ public class CartItem implements Serializable {
         if (!this.product.id.equals(productId)) {
             return false;
         }
-        
+        if(this.variations == null) {
+            return false;
+        }
         if (variations.size() != this.variations.size()) {
             return false;
         }

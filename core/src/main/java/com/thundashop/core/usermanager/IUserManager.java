@@ -439,6 +439,8 @@ public interface IUserManager {
     
     public User getUserWithPermissionCheck(String userId);
     
+    public boolean checkIfFieldOnUserIsOkey(String field, String value);
+    
     @Editor
     public void mergeUsers(List<String> userIds, HashMap<String,String> properties);
 }

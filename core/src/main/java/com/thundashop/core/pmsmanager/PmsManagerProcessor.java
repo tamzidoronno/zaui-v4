@@ -629,6 +629,10 @@ public class PmsManagerProcessor {
             }
             boolean needSaving = false;
             for(String orderId : booking.orderIds) {
+                if(booking.orderIds.size() <= 1) {
+                    //No need to warning first order.
+                    continue;
+                }
                 Order order = manager.orderManager.getOrderSecure(orderId);
                 if(order.status == Order.Status.PAYMENT_COMPLETED) {
                     continue;
@@ -674,7 +678,7 @@ public class PmsManagerProcessor {
             return false;
         }
         if(deleted) {
-            manager.getShopLockManager.removeCodeOnLock(item.bookingItemAlias, room.code);
+            manager.getShopLockManager.removeCodeOnLock(item.bookingItemAlias, room);
         } else {
             room.code = manager.getShopLockManager.getCodeForLock(item.bookingItemAlias);
             room.addedToArx = true;

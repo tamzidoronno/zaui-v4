@@ -20,6 +20,7 @@ import com.thundashop.core.getshop.data.GetShopLockCode;
 import com.thundashop.core.getshop.data.GetShopLockMasterCodes;
 import com.thundashop.core.getshop.data.ZWaveDevice;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsManager;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -239,7 +240,8 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 boolean isFailed = new Boolean(result.data.isFailed.value + "");
                 if(isFailed) { 
                     logPrint("No connectivity found for :" + device.name + " (" + device.zwaveid + ")");
-                    return false; }
+                    return false; 
+                }
                 return true;
             } catch (Exception ex) {
                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -403,10 +405,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
 
     @Override
-    public void removeCodeOnLock(String lockId, String code) {
+    public void removeCodeOnLock(String lockId, PmsBookingRooms room) {
+        String code = room.code;
         GetShopDevice dev = devices.get(lockId);
         if(dev == null) {
-            System.out.println("Lock device :" + lockId + " does not exists");
+            BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+            System.out.println("Lock device :" + lockId + " does not exists, room: ( " + item.bookingItemName);
         } else {
             dev.removeCode(code);
             saveObject(dev);

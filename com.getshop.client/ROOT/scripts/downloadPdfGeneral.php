@@ -11,7 +11,6 @@ $id = session_id();
 session_write_close();
 
 $webaddress = $factory->getStore()->webAddressPrimary;
-$webaddress = "promeisterse30.3.0.local.getshop.com";
 $url = "http://$webaddress/renderSingelApplication.php?&id=".$_GET['id'];
 
 $base64 = $factory->getApi()->getGetShop()->getBase64EncodedPDFWebPage($url);

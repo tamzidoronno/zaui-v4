@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.ftpmanager;
 
+import com.thundashop.core.common.GetShopLogHandler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -24,6 +25,7 @@ public class FTPTransferrer extends Thread {
     private Integer port;
     private boolean useActiveMode = false;
     private Integer minutesToSleep = 0;
+    private String storeId;
 
     public FTPTransferrer(String hostname, String password, String username, String filePath, String location, Integer port, Integer minutesToSleep) {
         this.hostname = hostname;
@@ -35,6 +37,9 @@ public class FTPTransferrer extends Thread {
         this.minutesToSleep = minutesToSleep;
     }
     
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
     
     
     @Override
@@ -54,7 +59,7 @@ public class FTPTransferrer extends Thread {
            client.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
            int reply = client.getReplyCode();
            if (!FTPReply.isPositiveCompletion(reply)) {
-               System.out.println("Failed to connect to ftp server: " + hostname + " with username: " + username);
+               GetShopLogHandler.logPrintStatic("Failed to connect to ftp server: " + hostname + " with username: " + username, storeId);
            }
 
            File file = new File(filePath);

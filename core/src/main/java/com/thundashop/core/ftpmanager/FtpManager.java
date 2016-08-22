@@ -21,6 +21,7 @@ public class FtpManager extends ManagerBase implements IFtpManager {
          * THIS IS A MAJOR SECURITY RISK! FILEPATH IS NOT SECURE!!!!!!!
          */
         FTPTransferrer trans = new FTPTransferrer(hostname, password, username, filePath, location, port, minutesToWait);
+        trans.setStoreId(storeId);
         trans.start();
         return true;
     }

@@ -62,10 +62,9 @@ $searchtypes['summary'] = "Summary";
    
     <input type="txt" gsname='searchWord' placeholder="Search" gstype="submitenter" class="pmsinput searchword" value="<? echo @$filter->searchWord; ?>">
     <span gstype="submit" class="pmsbutton addGroupOptions">Search</span>
-</div>
-<br><br>
-
+    <br><br>
 <?php
+echo "<div style='text-align:left;'>";
 $types = $this->getTypes();
 
 if($config->fastCheckIn) {
@@ -80,7 +79,7 @@ foreach($types as $id => $type) {
     if(in_array($id, $filter->typeFilter)) {
         $checked = "CHECKED";
     }
-    echo "<input type='checkbox' gstype='clicksubmitforce' method='addTypeFilter' gsname='id' gsvalue='$id' $checked>";
+    echo "<input type='checkbox' method='addTypeFilter' gsname='filter_$id' $checked>";
     echo $type->name . "</span>";
 }
 $checked = "";
@@ -93,7 +92,10 @@ if($this->isIncludeDeleted()) {
 }
 echo "<input type='checkbox' gstype='clicksubmitforce' method='groupByBooking' gsname='id' gsvalue='' $checked> Group by booking ";
 echo "<input type='checkbox' gstype='clicksubmitforce' method='includeDeleted' gsname='incdelete' $incDeleted class='clicksubmitcheckbox'> Include deleted";
-echo "<br>";
+echo "</div>";
+echo "</div>";
+
+
 echo "<br>";
 
 if($filter->filterType == "stats") {

@@ -49,6 +49,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach($booking->orderIds as $orderId) {
             $order = $this->getApi()->getOrderManager()->getOrder($orderId);
             $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+            echo "<tr>";
             echo "<td>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)) . "</td>";
             echo "<td>" . $order->incrementOrderId . " <a class='showorderbutton' orderid='".$order->id."'> - open</a></td>";
             echo "<td>" . $total . "</td>";
@@ -60,6 +61,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 echo "<td><input type='button' value='Mark paid' gsclick='markOrder' gsarg1='".$order->id."' gsarg2='paidfor' gsarg3='".$booking->id."'></td>";
                 echo "<td><input type='button' value='Mark failed' gsclick='markOrder' gsarg1='".$order->id."' gsarg2='failed' gsarg3='".$booking->id."'></td>";
             }
+            echo "</tr>";
         }
         echo "</table>";
     }
@@ -171,11 +173,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->endDate = $this->convertToJavaDate(strtotime($day));
 
             $bookings = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
-            $this->printSimpleRoomTable($bookings);
+            $this->printSimpleRoomTable($bookings, $day);
         } else {
             $filterOptions = new \core_common_FilterOptions();
             $filterOptions->startDate = $this->convertToJavaDate(strtotime($day));
             $filterOptions->endDate = $this->convertToJavaDate(strtotime($day) + 86400);
+            $filterOptions->pageSize = 223234234;
             $orders = $this->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);
             $this->printOrderTable($orders->datas);
         }
@@ -751,7 +754,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(isset($_POST['data']['channel'])) {
             $filter->channel = $_POST['data']['channel'];
         }
-        
+        $filter->typeFilter = array();
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key,"filter_") && $val == "true") {
+                $filter->typeFilter[] = str_replace("filter_", "", $key);
+            }
+        }
         $this->setCurrentFilter($filter);
     }
     
@@ -1349,7 +1357,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $total;
     }
 
-    public function printSimpleRoomTable($bookings) {
+    public function printSimpleRoomTable($bookings, $day) {
         echo "<table cellspacing='0' cellpadding='0' width='100%'>";
         echo "<tr>";
         echo "<th>Room</th>";
@@ -1358,11 +1366,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "<th>Checkout</th>";
         echo "<th>Daily price</th>";
         echo "<th>State</th>";
+        echo "<th>Test</th>";
         echo "</tr>";
         
         $totalprice = 0;
         foreach($bookings as $booking) {
             /* @var $booking \core_pmsmanager_PmsRoomSimple */
+            if(date("d.m.Y", $booking->end/1000) == date("d.m.Y", strtotime($day))) {
+                continue;
+            }
             $price = round($booking->price);
             $totalprice += $price;
             echo "<tr class='moreinformationaboutbooking' style='cursor:pointer;' bookingid='".$booking->bookingId."'>";
@@ -1372,6 +1384,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
             echo "<td>" . date("d.m.Y", $booking->end/1000) . "</td>";
             echo "<td>" . $price . "</td>";
             echo "<td>" . $booking->progressState . "</td>";
+            if($booking->testReservation) {
+                echo "<td>yes</td>";
+            } else {
+                echo "<td>no</td>";
+            }
             echo "</tr>";
         }
         echo "<tr>";
@@ -1380,6 +1397,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "<td></td>";
         echo "<td></td>";
         echo "<td>$totalprice</td>";
+        echo "<td></td>";
         echo "<td></td>";
         echo "</tr>";
         echo "</table>";
@@ -1409,7 +1427,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $totalprice = 0;
         foreach($orders as $order) {
-            if($order->status != 7) {
+            if($order->status == 3) {
                 continue;
             }
             if($order->testOrder) {

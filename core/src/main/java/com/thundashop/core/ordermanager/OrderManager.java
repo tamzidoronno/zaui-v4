@@ -473,6 +473,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (order.payment != null && order.payment.paymentFee > 0) {
             toPay += order.payment.paymentFee;
         }
+        if(toPay.isNaN()) {
+            logPrint("Nan calc on order: " + order.incrementOrderId);
+            return 0.0;
+        }
         
         return toPay;
     }
@@ -1322,6 +1326,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         GrafanaFeeder feeder = new GrafanaFeeder();
         grafanaManager.addPoint("webdata", "ordercreated", toAdd);
+    }
+
+    @Override
+    public void setExternalRefOnCartItem(String cartItem, String externalId) {
+        for(Order order : orders.values()) {
+            for(CartItem item : order.cart.getItems()) {
+                if(item.getCartItemId().equals(cartItem)) {
+                    item.getProduct().externalReferenceId = externalId;
+                    saveOrder(order);
+                    break;
+                }
+            }
+        }
     }
 
 }

@@ -70,7 +70,7 @@ public class PmsBookingRooms implements Serializable {
     public BookingItem item;
     @Transient
     public BookingItemType type;
-
+    
     void clear() {
         pmsBookingRoomId = UUID.randomUUID().toString();
         date.start = new Date();

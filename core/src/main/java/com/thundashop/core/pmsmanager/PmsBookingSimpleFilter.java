@@ -53,6 +53,7 @@ public class PmsBookingSimpleFilter {
         simple.regDate = booking.rowCreatedDate;
         simple.keyIsReturned = room.keyIsReturned;
         simple.wubookreservationid = booking.wubookreservationid;
+        simple.testReservation = booking.testReservation;
         simple.channel = booking.channel;
         
         if(manager.getConfiguration().hasLockSystem()) {

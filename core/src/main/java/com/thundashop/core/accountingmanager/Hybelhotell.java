@@ -4,7 +4,9 @@ package com.thundashop.core.accountingmanager;
 
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ForStore;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
@@ -18,6 +20,8 @@ import org.joda.time.DateTime;
 public class Hybelhotell implements AccountingInterface {
     
     UserManager userManager;
+    private InvoiceManager invoiceManager;
+    private OrderManager orderManager;
     
     @Override
     public List<String> createUserFile(List<User> users) {
@@ -35,7 +39,7 @@ public class Hybelhotell implements AccountingInterface {
     }
     
     @Override
-    public List<String> createOrderFile(List<Order> allOrders) {
+    public List<String> createOrderFile(List<Order> allOrders, String type) {
         List<String> allOrdersToReturn = new ArrayList();
         for(Order order : allOrders) {
             List<String> lines = createOrderLine(order);
@@ -170,6 +174,16 @@ public class Hybelhotell implements AccountingInterface {
          }
          
         return lineText;
+    }
+
+    @Override
+    public void setInvoiceManager(InvoiceManager manager) {
+        this.invoiceManager = manager;
+    }
+
+    @Override
+    public void setOrderManager(OrderManager manager) {
+        this.orderManager = manager;
     }
 
 }

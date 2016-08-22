@@ -4,7 +4,9 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ForStore;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerSubBase;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
@@ -23,6 +25,8 @@ import org.joda.time.DateTime;
 public class RenaHotell implements AccountingInterface {
 
     private UserManager userManager;
+    private InvoiceManager invoiceManager;
+    private OrderManager orderManager;
 
     @Override
     public void setUserManager(UserManager manager) {
@@ -35,7 +39,7 @@ public class RenaHotell implements AccountingInterface {
     }
 
     @Override
-    public List<String> createOrderFile(List<Order> orders) {
+    public List<String> createOrderFile(List<Order> orders, String type) {
         
         SimpleDateFormat format1 = new SimpleDateFormat("yyMMdd");
         List<String> result = new ArrayList();
@@ -153,6 +157,16 @@ public class RenaHotell implements AccountingInterface {
 
     private boolean isBreakFast(CartItem item) {
         return false;
+    }
+
+    @Override
+    public void setInvoiceManager(InvoiceManager manager) {
+        this.invoiceManager = manager;
+    }
+
+    @Override
+    public void setOrderManager(OrderManager manager) {
+        this.orderManager = manager;
     }
     
 }

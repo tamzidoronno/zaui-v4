@@ -45,7 +45,7 @@ echo "<h2>Downloaded history</h2>";
 foreach($files as $file) {
     $date = $file->rowCreatedDate;
     $fileId = $file->id;
-    $type = $file->type;
+    $type = $file->type . ", " . $file->subtype;
     $transferred = ", not transferred yet.";
     if($file->transferred) {
         $transferred = ", transferred";
@@ -97,6 +97,13 @@ echo "<br>";
         <input type="textfield" gs_model="adminconfig" gs_model_attr="ftppath" value="<?php echo $config->path; ?>">
         <div class="description">
             Ftp path to put the file in
+        </div>
+    </div>
+    <div class="textfield gss_setting" id="ftppath">
+        <span class="title">Invoice path</span>
+        <input type="textfield" gs_model="adminconfig" gs_model_attr="invoice_path" value="<?php echo $config->invoice_path; ?>">
+        <div class="description">
+            When you want to transfer invoice orders to a different location.
         </div>
     </div>
     <div class="textfield gss_setting" id="extension">

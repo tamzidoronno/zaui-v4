@@ -54,6 +54,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -3490,5 +3491,38 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public void mergeBookingsOnOrders() {
+        List<PmsBooking> toRemove = new ArrayList();
+        List<String> processed = new ArrayList();
+        HashSet test = new HashSet();
+        
+        for(PmsBooking booking : bookings.values()) {
+            test.add(booking.id);
+            System.out.println("Merging: " + booking.id);
+            boolean found = false;
+            for(PmsBooking booking1 : bookings.values()) {
+                if(test.contains(booking1.id)) {
+                    continue;
+                }
+                for(String orderId : booking1.orderIds) {
+                    if(booking.orderIds.contains(orderId)) {
+                        booking.rooms.addAll(booking1.getAllRoomsIncInactive());
+                        toRemove.add(booking1);
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if(found) {
+               saveBooking(booking);
+            }
+        }
+        for(PmsBooking book : toRemove) {
+            bookings.remove(book.id);
+            deleteObject(book);
+        }
     }
 }

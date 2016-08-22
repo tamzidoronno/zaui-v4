@@ -20,6 +20,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ftpmanager.FtpManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsManager;
@@ -69,6 +70,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     FtpManager ftpManager;
     
     @Autowired
+    InvoiceManager invoiceManager;
+    
+    @Autowired
     GetShopSessionScope getShopSessionScope;
     
     private List<AccountingInterface> interfaces = new ArrayList();
@@ -95,10 +99,27 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     
     @Override
     public List<String> createUserFile(boolean newOnly) throws Exception {
+        return createUserFileByAdapter(usersToTransfer(newOnly));
+    }
+    
+    public List<String> createUserFileByAdapter(List<User> users) throws Exception {
         getInterfaceForStore();
         
         for(AccountingInterface iface : interfaces) {
-            List<User> users = userManager.getAllUsers();
+            List<String> result = iface.createUserFile(users);
+            
+            for(User usr : users) {
+                usr.isTransferredToAccountSystem = true;
+                userManager.saveUser(usr);
+            }
+            
+            return result;
+        }
+        return new ArrayList();
+    }
+
+    private List<User> usersToTransfer(boolean newOnly) {
+        List<User> users = userManager.getAllUsers();
             List<User> toFetch = new ArrayList();
             if(newOnly) {
                 for(User user : users) {
@@ -113,35 +134,30 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             } else {
                 toFetch.addAll(users);
             }
-            
-            List<String> result = iface.createUserFile(toFetch);
-            
-            for(User usr : toFetch) {
-                usr.isTransferredToAccountSystem = true;
-                userManager.saveUser(usr);
-            }
-            
-            return result;
-        }
-        return new ArrayList();
+            return toFetch;
     }
     
     @Override
     public List<String> createCombinedOrderFile(boolean newUsersOnly) throws Exception {
         getInterfaceForStore();
+        if(config.invoice_path != null && !config.invoice_path.isEmpty()) {
+           return createSepareateCombinedOrderFiles();
+        }
         List<String> users = createUserFile(newUsersOnly);
-        List<String> orders = createOrderFile(false);
-        users.addAll(orders);
-        saveFile(users, getAccountingType());
+        List<Order> orders = getOrdersToTransfer();
+        List<String> result = createOrderFile(orders, false, "");
+        users.addAll(result);
+        saveFile(users, getAccountingType(), "");
         return users;
     }
     
     @Override
     public List<String> createOrderFile() throws Exception {
-        return createOrderFile(true);
+        List<Order> orders = getOrdersToTransfer();
+        return createOrderFile(orders, true, "");
     }
 
-    private void saveFile(List<String> result, String type) {
+    private void saveFile(List<String> result, String type, String subtype) {
         if(result == null || result.isEmpty()) {
             return;
         }
@@ -149,6 +165,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         SavedOrderFile file = new SavedOrderFile();
         file.result = result;
         file.type = type;
+        file.subtype = subtype;
         saveObject(file);
         if(type.equals(getAccountingType())) {
             files.put(file.id, file);
@@ -168,6 +185,8 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 Constructor<?> ctor = myClass.getConstructor();
                 AccountingInterface object = (AccountingInterface) ctor.newInstance();
                 object.setUserManager(userManager);
+                object.setOrderManager(orderManager);
+                object.setInvoiceManager(invoiceManager);
                 interfaces.add(object);
             }
         }
@@ -284,23 +303,14 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         return false;
     }
 
-    private List<String> createOrderFile(boolean save) throws Exception {
+    private List<String> createOrderFile(List<Order> orders, boolean save, String type) throws Exception {
         getInterfaceForStore();
 
         for(AccountingInterface iface : interfaces) {
-            List<Order> orders = new ArrayList();
-            for(Order order : orderManager.getOrders(null, null, null)) {
-                if(!config.statesToInclude.contains(order.status)) {
-                    continue;
-                }
-                if(!order.transferredToAccountingSystem) {
-                    orders.add(order);
-                }
-            }
             if(!orders.isEmpty()) {
-                List<String> result = iface.createOrderFile(orders);
+                List<String> result = iface.createOrderFile(orders, type);
                 if(save) {
-                    saveFile(result, getAccountingType());
+                    saveFile(result, getAccountingType(), "");
                 }
                 for(Order ord : orders) {
                     ord.transferredToAccountingSystem = true;
@@ -337,7 +347,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         }
         
         if(!result.isEmpty()) {
-            saveFile(result, getSveaCreditorType());
+            saveFile(result, getSveaCreditorType(), "");
         }
         
         return result;
@@ -517,7 +527,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         BComRateManager builder = new BComRateManager(bookings, engine.getBookingItemTypes());
         
         List<String> lines = builder.generateLines();
-        saveFile(lines, getBookingComRateManagerType());
+        saveFile(lines, getBookingComRateManagerType(), "");
         
         for(PmsBooking booking : bookings) {
             booking.transferredToRateManager = true;
@@ -556,5 +566,52 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     
     private String getSveaCreditorType() {
         return "sveacreditor";
+    }
+
+    private List<Order> getOrdersToTransfer() {
+        List<Order> orders = new ArrayList();
+        for(Order order : orderManager.getOrders(null, null, null)) {
+            if(!config.statesToInclude.contains(order.status)) {
+                continue;
+            }
+            if(!order.transferredToAccountingSystem) {
+                orders.add(order);
+            }
+        }
+        return orders;
+    }
+
+    private List<String> createSepareateCombinedOrderFiles() throws Exception {
+        List<Order> orders = getOrdersToTransfer();
+        List<Order> invoiceOrders = new ArrayList();
+        for(Order ord : orders) {
+            if(ord.payment.paymentType.toLowerCase().contains("invoice")) {
+                invoiceOrders.add(ord);
+            }
+        }
+        
+        orders.removeAll(invoiceOrders);
+        
+        List<User> users = new ArrayList();
+        for(Order order : orders) {
+            User usr = userManager.getUserById(order.userId);
+            if(usr != null) {
+                users.add(usr);
+            }
+        }
+        
+        List<String> usersToSave = createUserFileByAdapter(users);
+        List<String> invoiceOrderList = createOrderFile(invoiceOrders, false, "invoice");
+        List<String> restOrderList = createOrderFile(orders, false, "");
+        usersToSave.addAll(restOrderList);
+        
+        if(!users.isEmpty()) {
+            saveFile(usersToSave, getAccountingType(), "ccard");
+        }
+        if(!invoiceOrderList.isEmpty()) {
+            saveFile(invoiceOrderList, getAccountingType(), "invoice");
+        }
+        
+        return new ArrayList();
     }
 }

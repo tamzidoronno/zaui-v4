@@ -2,6 +2,7 @@
 body { background-color:#525659; margin-top: 10px; margin-bottom: 10px; font-family: 'Open Sans';}
 .Menu .entry a { font-size: 20px; width:100px; display:inline-block; margin-top: 20px;color: #666666;padding-right: 20px; }
 .Menu { text-align: right; position: absolute; top:110px; right: 100px;font-family: 'Anton', sans-serif; }
+.chooseprivateperson_label { display:none; }
 .gsarea[area="header"] .gs_page_width,
 .gsarea[area="footer"] .gs_page_width { height: 250px; }
 .gsarea[area="header"] img { margin-left: 100px; }

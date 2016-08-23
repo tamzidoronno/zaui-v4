@@ -809,6 +809,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     String createPrePaymentOrder(String bookingId) {
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        if(booking == null) {
+            System.out.println("Creating prepayment order on empty booking");
+        }
         if(booking.avoidCreateInvoice && 
                 getSession() != null && 
                 getSession().currentUser != null && 

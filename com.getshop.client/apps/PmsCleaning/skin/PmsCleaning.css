@@ -1,5 +1,7 @@
 .PmsCleaning .roomNotReady { cursor:pointer; color: red; font-weight: bold; }
 .PmsCleaning .roomIsReady { color: green; font-weight: bold; }
+.PmsCleaning .guestname { display:inline-block; width: 50px; overflow:hidden;  text-overflow: ellipsis; white-space: nowrap; height: 12px; line-height: 12px;
+ }
 
 .PmsCleaning th {
 	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica,

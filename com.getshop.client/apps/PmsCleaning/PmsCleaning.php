@@ -129,7 +129,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
                     $icon = "<i class='fa fa-sign-out'></i>";
                 }
                 $total++;
-                echo $icon . $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - " . $guestName. "<br>";
+                echo $icon . $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - <span class='guestname' title='$guestName'>" . $guestName. "</span><br>";
             }
             
             

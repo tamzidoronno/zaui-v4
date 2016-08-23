@@ -1012,6 +1012,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
      * @param \core_pmsmanager_PmsLog[] $entries
      */
     public function printLog($entries) {
+        if(!$entries) {
+            echo "<br><br><center>No log entries found.</center><br><br>";
+            return;
+        }
         echo "<br><br>";
         echo "<table width='100%' cellspacing='0' cellpadding='0'>";
         echo "<tr>";

@@ -226,3 +226,13 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .ProductSearch {
     display: none;
 }
+
+.gstabcontent {
+    border: solid 1px #DDD;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.gstabbtn  {
+    border-bottom: solid 0px;
+}

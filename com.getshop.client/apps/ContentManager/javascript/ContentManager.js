@@ -39,7 +39,8 @@ app.ContentManager = {
         contentArea.attr('id', id);
         thundashop.common.activateCKEditor(id, {
             "notdestroyonblur" : true,
-            "simpleMode" : simpleMode
+            "simpleMode" : simpleMode,
+            "superSimpleMode" : contentArea.attr('simplemode') === "true"
         });
     },
     

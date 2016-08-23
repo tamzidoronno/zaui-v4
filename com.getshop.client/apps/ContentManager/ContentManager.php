@@ -58,6 +58,10 @@ class ContentManager extends \WebshopApplication implements \Application {
             }
         }
     }
+    
+    public function renderConfig() {
+        $this->includefile("settings");
+    }
 
     public function render() {
         $this->loadContent();
@@ -94,6 +98,14 @@ class ContentManager extends \WebshopApplication implements \Application {
             return true;
         }
         return false;
+    }
+    
+    public function saveGlobalSettings() {
+        $this->setConfigurationSetting("isSimpleModeActivated", $_POST['isSimpleModeActivated']);
+    }
+    
+    public function isSimpleModeActivated() {
+        return $this->getConfigurationSetting("isSimpleModeActivated") == "true";
     }
 
     public function saveContent() {

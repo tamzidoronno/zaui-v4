@@ -380,6 +380,7 @@ thundashop.common.activateCKEditor = function(id, config) {
     var pushToBackend = true;
     var destroyOnSave = true;
     var simpleMode = false;
+    var inputConfig = config;
 
     if (config !== undefined) {
         if (config.autogrow !== undefined)
@@ -484,6 +485,13 @@ thundashop.common.activateCKEditor = function(id, config) {
     if (simpleMode) {
         config.toolbar = [
 		{ name: 'document', items: [ 'Save','FontSize','Format', 'TextColor', 'BGColor','JustifyLeft', 'JustifyCenter', 'JustifyRight' ] }
+        ]
+    }
+    
+    if (inputConfig && typeof(inputConfig.superSimpleMode) !== "undefined" && inputConfig.superSimpleMode) {
+        config.toolbar = [
+            { name: 'document', items: [ 'Save','JustifyLeft', 'JustifyCenter', 'JustifyRight' ] },
+            {name: 'links', items: ['Link', 'Unlink', 'Anchor']}
         ]
     }
     

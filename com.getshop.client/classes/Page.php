@@ -2102,11 +2102,11 @@ class Page {
  
         $allOff = true;
         foreach ($cell->groupAccess->access as $groupId => $access) {
-            if ($access && ($user->group == $groupId || (is_array($user->groups) && in_array($groupId, $user->groups)))) {
+            if ($user && $access && ($user->group == $groupId || (is_array($user->groups) && in_array($groupId, $user->groups)))) {
                 return false;
             }
             
-            if ($access && $user->companyObject  && $user->companyObject->groupId == $groupId) {
+            if ($user && $access && $user->companyObject  && $user->companyObject->groupId == $groupId) {
                 return false;
             }
             

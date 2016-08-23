@@ -35,7 +35,6 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class ListManager extends ManagerBase implements IListManager {
     private Map<String, EntryList> allEntries = new HashMap();
-    private HashMap<String, String> cachedPageIds = new HashMap();
     private Map<String, JsTreeList> jsTreeLists = new HashMap();
     
     /**
@@ -51,7 +50,6 @@ public class ListManager extends ManagerBase implements IListManager {
     
     @Autowired
     private List<ListBadgetAware> badgeAwareManagers;
-    
     
     @PostConstruct
     public void setBadgeAwareManagers() throws Exception {
@@ -223,7 +221,6 @@ public class ListManager extends ManagerBase implements IListManager {
         EntryList entry = allEntries.get(listId);
         entry.storeId = storeId;
         allEntries.put(listId, entry);
-        cachedPageIds.clear();
         saveToDatabase(entry);
     }
 
@@ -367,7 +364,6 @@ public class ListManager extends ManagerBase implements IListManager {
             }
         }
         
-        cachedPageIds.clear();
         return entry;
     }
 
@@ -632,7 +628,6 @@ public class ListManager extends ManagerBase implements IListManager {
         for(Entry entry : entries) {
            addEntry(listId, entry, "");
         }
-        cachedPageIds.clear();
     }
 
     private String getPageIdByName(String name, List<Entry> entries) {
@@ -681,18 +676,12 @@ public class ListManager extends ManagerBase implements IListManager {
     
     @Override
     public String getPageIdByName(String name) {
-        if(cachedPageIds.containsKey(name)) {
-            return cachedPageIds.get(name);
-        }
-        
         String found = "";
         for (EntryList entryList : allEntries.values()) {
             if (found.equals("")) {
                 found = getPageIdByName(name, entryList.entries);
             }
         }
-        
-        cachedPageIds.put(name, found);
         
         return found;
     }

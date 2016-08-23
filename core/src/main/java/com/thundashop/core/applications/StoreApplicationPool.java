@@ -12,7 +12,6 @@ import com.thundashop.core.appmanager.data.SavedApplicationSettings;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.storemanager.data.SettingsRow;
@@ -407,7 +406,7 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     @Override
     public boolean isActivated(String appId) {
-        for(Application app : getApplications()) {
+        for(Application app : activatedApplications) {
             if(app.id.equals(appId)) {
                 return true;
             }

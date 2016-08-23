@@ -643,6 +643,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 continue;
             }
             for (PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room.isEndedDaysAgo(7)) {
+                    //If the room ended one week ago, the code can be reused.
+                    continue;
+                }
                 if (room.code != null && (room.code.equals(newcode) && !room.isEnded())) {
                     return true;
                 }

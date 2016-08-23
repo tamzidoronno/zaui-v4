@@ -12,6 +12,14 @@ class FieldGenerator {
         
     }
     
+    /**
+     * 
+     * @param type $rules
+     * @param Factory $factory
+     * @param type $name
+     * @param type $id
+     * @param type $saveMethod
+     */
     public function setData($rules, $factory, $name, $id, $saveMethod) {
         $this->factory = $factory;
         $this->name = $name;
@@ -354,16 +362,33 @@ class FieldGenerator {
         }
         
         if(isset($_POST['data']['agreetoterms']) && $_POST['data']['agreetoterms'] != "true") {
-            $this->validation['agreetoterms'] = $this->factory->factory->__w("You need to agree to the terms and conditions");
+            $this->validation['agreetoterms'] = $this->factory->__w("You need to agree to the terms and conditions");
         }
         
+        if(isset($_POST['data']['user_username'])) {
+            if(!$this->factory->getApi()->getUserManager()->checkIfFieldOnUserIsOkey("username", $_POST['data']['user_username'])) {
+                $this->validation['user_username'] = $this->factory->__w("Username already taken");
+            }
+        }
+        
+        if(isset($_POST['data']['user_cellPhone'])) {
+            if(!$this->factory->getApi()->getUserManager()->checkIfFieldOnUserIsOkey("cellPhone", $_POST['data']['user_cellPhone'])) {
+                $this->validation['user_cellPhone'] = $this->factory->__w("User with this cell phone already exists");
+            }
+        }
+        
+        if(isset($_POST['data']['user_emailAddress'])) {
+            if(!$this->factory->getApi()->getUserManager()->checkIfFieldOnUserIsOkey("emailAddress", $_POST['data']['user_emailAddress'])) {
+                $this->validation['user_emailAddress'] = $this->factory->__w("User with this email already exists.");
+            }
+        }
         
         if(isset($_POST['data']['user_password']) && isset($_POST['data']['user_repeatpassword'])) {
             if($_POST['data']['user_password'] != $_POST['data']['user_repeatpassword']) {
                 $this->validation['user_password'] = $this->factory->__w("Password does not match confirmed password.");
             }
         }
-        
+
         return $this->validation;
     }
 

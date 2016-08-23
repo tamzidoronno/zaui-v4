@@ -15,8 +15,7 @@ class RegistrationForm extends \WebshopApplication implements \Application {
         <span gstype="form" class="registrationform<?php echo $this->getConfigurationSetting("number"); ?>" method='doRegistration'>
         <?php
         echo "<input type='hidden' gsname='templatenumber' value='".$this->getConfigurationSetting("number")."'>";
-        
-            $this->includefile("registrationform" . $this->getConfigurationSetting("number"));
+        $this->includefile("registrationform" . $this->getConfigurationSetting("number"));
         ?>
         </span>
         <?php
@@ -73,6 +72,7 @@ class RegistrationForm extends \WebshopApplication implements \Application {
             } else {
                 $login->commonLogin($user->emailAddress, $user->password);
             }
+            header("Refresh:0");
         }
     }
 

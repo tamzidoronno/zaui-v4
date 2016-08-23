@@ -37,6 +37,7 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
         $config->hostname = $_POST['ftphostname'];
         $config->path = $_POST['ftppath'];
         $config->useSftp = $_POST['useSftp'];
+        $config->invoice_path = $_POST['invoice_path'];
         $config->port = $_POST['port'];
         $config->useActiveMode = $_POST['useActiveMode'];
         $config->extension = $_POST['extension'];
@@ -51,6 +52,7 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
             $ftpconfig->path = $_POST[$idx.'_ftppath'];
             $ftpconfig->useSftp = $_POST[$idx.'_useSftp'];
             $ftpconfig->port = $_POST[$idx.'_port'];
+            $ftpconfig->invoice_path = $_POST[$idx.'_invoice_path'];
             $ftpconfig->useActiveMode = $_POST[$idx.'_useActiveMode'];
             $ftpconfig->extension = $_POST[$idx.'_extension'];
             $ftpconfig->engineNames = $_POST[$idx.'_engineNames'];

@@ -199,6 +199,9 @@ public class Product extends DataCommon implements Comparable<Product>  {
     }
 
     public void doFinalize() {
+        if(Double.isNaN(discountedPrice)) {
+            discountedPrice = 0.0;
+        }
         if(taxGroupObject != null && taxGroupObject.taxRate != null) {
             priceExTaxes = price / (1 + (taxGroupObject.taxRate/100));
         } else {

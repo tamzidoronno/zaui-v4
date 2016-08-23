@@ -779,4 +779,5 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
     }
+
 }

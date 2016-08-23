@@ -3,6 +3,7 @@
     To use the old version click <b gstype='clicksubmit' style='cursor:pointer;' method='toggleFilterVersion' gsname='id' gsvalue='somevalue'>here</b>.<br>
     We will support the old version until 30.09.2016. Please report any incosistenscy to post@getshop.com.
 </div>
+<div class='orderinfobox'></div>
 <?php
 /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $filter = $this->getSelectedFilter();
@@ -63,7 +64,7 @@ $states['unconfirmed'] = "Unconfirmed";
 $states['active'] = "Active";
 $states['ended'] = "Ended";
 $states['waitingforlock'] = "Waiting for lock";
-
+$channels = $this->getChannelMatrix();
 
 $allFieldsToPrint = array();
 foreach($headers as $key => $val) {
@@ -105,7 +106,11 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
     <tr>
         <?php
         foreach($selectedFields as $header => $value) {
-            echo "<th>" . $value . "</th>";
+            if($header == "actions") {                
+                echo "<th width='10'>" . $value . "</th>";
+            } else {
+                echo "<th>" . $value . "</th>";
+            }
         }
         ?>
     </tr>
@@ -114,7 +119,16 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
     $tableArray = array();
     foreach($rooms as $room) {
         $row = array();
+        $row['bookingid'] = $room->bookingId;
         $row['actions'] = "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsRoomId."' bookingid='".$room->bookingId."'></i>";
+        if($room->channel) {
+            if($room->wubookreservationid) {
+                $row['actions'] .= "<br><a href='https://wubook.net/bookings/".$room->wubookreservationid."' target='_new'>" . $channels->{$room->channel} . "</a>";
+            } else {
+                $row['actions'] .= "<br>" . $channels->{$room->channel};
+            }
+        }
+
         $row['regdate'] = date("d.m.Y H:i", strtotime($room->regDate));
         
         $diff = ($room->end - $room->start)/1000;
@@ -160,10 +174,16 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         $tableArray[] = $row;
     }
     foreach($tableArray as $row) {
-        echo "<tr>";
+        echo "<tr bookingid='".$row['bookingid']."'>";
          foreach($selectedFields as $header => $value) {
-             if($header == "state") {
-                 echo "<td class='".$row[$header]."'>" . $states[$row[$header]] . "</td>";
+             if($header == "actions") {
+                echo "<td align='center'>" . $row[$header] . "</td>";
+             } else if($header == "price") {
+                 echo "<td class='pricecol' align='center'>" . $row[$header] . "</td>";
+             } else if($header == "state") {
+                 echo "<td class='".$row[$header]."' align='center'>";
+                 echo $states[$row[$header]];
+                 echo "</td>";
              } else {
                  echo "<td>" . $row[$header] . "</td>";
              }

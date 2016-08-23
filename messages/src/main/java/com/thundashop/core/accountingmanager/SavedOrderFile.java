@@ -7,4 +7,5 @@ public class SavedOrderFile extends DataCommon {
     public List<String> result;
     public String type = "accounting";
     public boolean transferred = false;
+    String subtype = "";
 }

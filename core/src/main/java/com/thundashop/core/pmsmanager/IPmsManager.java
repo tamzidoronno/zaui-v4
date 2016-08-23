@@ -37,6 +37,9 @@ public interface IPmsManager {
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId);
     
     @Editor
+    public PmsBooking getBookingWithOrderId(String orderId);
+    
+    @Editor
     public PmsBooking getBookingFromRoomIgnoreDeleted(String roomId);
     
     
@@ -212,5 +215,8 @@ public interface IPmsManager {
     
     @Administrator
     public void massUpdatePrices(PmsPricing price, String bookingId) throws Exception;
+    
+    @Administrator
+    public void mergeBookingsOnOrders();
     
 }

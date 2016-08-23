@@ -3,7 +3,9 @@ package com.thundashop.core.accountingmanager;
 
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ForStore;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
@@ -58,6 +60,8 @@ import org.joda.time.DateTime;
 public class Semlagerhotell implements AccountingInterface {
 
     private UserManager userManager;
+    private OrderManager orderManager;
+    private InvoiceManager invoiceManager;
 
     @Override
     public void setUserManager(UserManager manager) {
@@ -109,7 +113,7 @@ public class Semlagerhotell implements AccountingInterface {
     }
 
     @Override
-    public List<String> createOrderFile(List<Order> orders) {
+    public List<String> createOrderFile(List<Order> orders, String type) {
         SimpleDateFormat format1 = new SimpleDateFormat("yyyyMMdd");
         List<String> result = new ArrayList<String>();
         for(Order order : orders) {
@@ -198,4 +202,14 @@ public class Semlagerhotell implements AccountingInterface {
         }
         return lineText;
     }    
+
+    @Override
+    public void setInvoiceManager(InvoiceManager manager) {
+        this.invoiceManager = manager;
+    }
+
+    @Override
+    public void setOrderManager(OrderManager manager) {
+        this.orderManager = manager;
+    }
 }

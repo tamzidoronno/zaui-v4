@@ -20,6 +20,8 @@ public class PmsRoomSimple implements Serializable {
     public String room ="";
     public String roomType = "";
     public String progressState = "";
+    public String channel = "";
+    public String wubookreservationid = "";
     public double price = 0.0;
     public boolean paidFor = false;
     public boolean transferredToArx = false;
@@ -27,5 +29,6 @@ public class PmsRoomSimple implements Serializable {
     public boolean checkedIn;
     public boolean checkedOut;
     public boolean keyIsReturned = false;
+    public boolean testReservation = false;
     public Date regDate;
 }

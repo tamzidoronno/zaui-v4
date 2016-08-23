@@ -845,18 +845,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if(user.emailAddress == null || user.emailAddress.isEmpty()) {
             return false;
         }
-        
-        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
-        
-        if (settingsApplication == null) {
+        if(!doForceUniqueEmails()) {
             return false;
         }
-        
-        String forceUniqueEmail = settingsApplication.getSetting("uniqueusersonemail");
         User retuser = getUserByEmail(user.emailAddress);
         
         if (retuser != null) {
-            return forceUniqueEmail != null && forceUniqueEmail.equals("true");
+            return doForceUniqueEmails();
         }
         
         return false;
@@ -1495,14 +1490,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     private boolean existsUsersWithSameCellphone(User user) {
-        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
         
-        if (settingsApplication == null) {
-            return false;
-        }
-        
-        String forceUniqueCellphones = settingsApplication.getSetting("uniqueusersoncellphone");
-        if (!forceUniqueCellphones.equals("true")) {
+        if (!doForceUniqueCellPhones()) {
             return false;
         }
         
@@ -1626,4 +1615,51 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         this.saveUser(mergedUser);
     };
+
+    @Override
+    public boolean checkIfFieldOnUserIsOkey(String field, String value) {
+        if(field.equals("username")) {
+            for(User user : getAllUsers()) {
+                if(user.username.equalsIgnoreCase(value)) {
+                    return false;
+                }
+            }
+        }
+        
+        if(field.equals("emailAddress") && doForceUniqueEmails()) {
+            for(User user : getAllUsers()) {
+                if(user.emailAddress.equals(value)) {
+                    return false;
+                }
+            }
+        }
+        
+        if(field.equals("cellPhone") && doForceUniqueCellPhones()) {
+            for(User user : getAllUsers()) {
+                if(user.cellPhone != null && user.cellPhone.equals(value)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
+
+    private boolean doForceUniqueCellPhones() {
+        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        if (settingsApplication == null) {
+            return false;
+        }
+        String forceUniqueCellphones = settingsApplication.getSetting("uniqueusersoncellphone");
+        return forceUniqueCellphones != null && forceUniqueCellphones.equals("true");
+    }
+
+    private boolean doForceUniqueEmails() {
+        Application settingsApplication = applicationPool.getApplication("d755efca-9e02-4e88-92c2-37a3413f3f41");
+        if (settingsApplication == null) {
+            return false;
+        }
+        String forceUniqueEmail = settingsApplication.getSetting("uniqueusersonemail");
+        return forceUniqueEmail != null && forceUniqueEmail.equals("true");
+    }
 }

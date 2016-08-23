@@ -246,4 +246,6 @@ public interface IOrderManager {
     
     public Payment getStorePreferredPayementMethod();
 
+    public void setExternalRefOnCartItem(String cartItem, String externalId);
+    
 }

@@ -37,6 +37,9 @@ class PmsStatisticsBuilder {
                 if(!booking.confirmed) {
                     continue;
                 }
+                if(booking.testReservation) {
+                    continue;
+                }
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(room.isActiveOnDay(cal.getTime())) {
                         Double price = room.getDailyPrice(booking.priceType, cal);
@@ -69,27 +72,25 @@ class PmsStatisticsBuilder {
             entry.date = cal.getTime();
             result.add(entry);
 
-            for(PmsBooking booking : bookings) {
-                for(String orderId : booking.orderIds) {
-                    Order order = orderManager.getOrderSecure(orderId);
-                    if(cal.getTime() == null || order == null) {
-                        continue;
-                    }
-                    if(order.status == Order.Status.CANCELED) {
-                        continue;
-                    }
-                    
-                    if(order.createdOnDay(cal.getTime())) {
-                        Double total = orderManager.getTotalAmountExTaxes(order);
-                        GetShopLogHandler.logPrintStatic(order.incrementOrderId + " - " + total, null);
-                        entry.totalPrice += total;
-                        entry.numberOfOrders++;
-                        entry.date = cal.getTime();
-                        entry.addPayment(order.payment.paymentType, total);
-                    }
+            for(Order order : orderManager.getOrders(null, null, null)) {
+                if(cal.getTime() == null || order == null) {
+                    continue;
+                }
+                if(order.status == Order.Status.CANCELED) {
+                    continue;
+                }
+                if(order.testOrder) {
+                    continue;
+                }
+                if(order.createdOnDay(cal.getTime())) {
+                    Double total = orderManager.getTotalAmountExTaxes(order);
+                    GetShopLogHandler.logPrintStatic(order.incrementOrderId + " - " + total, null);
+                    entry.totalPrice += total;
+                    entry.numberOfOrders++;
+                    entry.date = cal.getTime();
+                    entry.addPayment(order.payment.paymentType, total);
                 }
             }
-            
             entry.finalize();
             
             cal.add(Calendar.DAY_OF_YEAR, 1);

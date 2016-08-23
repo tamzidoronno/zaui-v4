@@ -146,7 +146,7 @@ public class ListManager extends ManagerBase implements IListManager {
         }
 		
         String parentListId = getListIdFromEntry(getEntry(entry.parentId));
-        if (parentListId == null || !parentListId.equals(listId)) {
+        if (parentListId == null) {
             entry.parentId = "";
         }
         
@@ -362,6 +362,7 @@ public class ListManager extends ManagerBase implements IListManager {
             }
             for(Entry subentry : subentries) {
                 subentry.parentId = entry.id;
+                //This does not make any sense.
                 addEntry(listId, subentry, entry.pageId);
             }
         }

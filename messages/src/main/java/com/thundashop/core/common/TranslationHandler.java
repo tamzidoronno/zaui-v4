@@ -122,7 +122,7 @@ public class TranslationHandler implements Serializable {
                 
                 String currentKeyLang = translationStrings.get("current_key_lang_"+field.getName());
                 if (currentKeyLang == null) {
-                    currentKeyLang = "";
+                    currentKeyLang = language;
                 }
                 
                 boolean languageHasChanged = !currentKeyLang.equals(language);
@@ -146,12 +146,14 @@ public class TranslationHandler implements Serializable {
                 if (!languageHasChanged && oldValueInCurrentLanguage != null && !oldValueInCurrentLanguage.equals(newValueInCurrentLanguage)) {
                     translationStrings.put(keyindex, newValueInCurrentLanguage); 
                     changed = true;
+                    translationStrings.put("current_key_lang_"+field.getName(), language);
                 }
 
                 if (oldValueInCurrentLanguage == null) {
                     translationStrings.put(keyindex, newValueInCurrentLanguage); 
                     field.set(this, gson.fromJson(newValueInCurrentLanguage, field.getGenericType()));
                     changed = true;
+                    translationStrings.put("current_key_lang_"+field.getName(), language);
                 }
             }
         }

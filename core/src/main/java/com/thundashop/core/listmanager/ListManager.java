@@ -677,6 +677,11 @@ public class ListManager extends ManagerBase implements IListManager {
     public String getPageIdByName(String name) {
         String found = "";
         for (EntryList entryList : allEntries.values()) {
+            
+            if (getSession() != null && getSession().language != null) {
+                entryList.updateTranslation(getSession().language);
+            }
+            
             if (found.equals("")) {
                 found = getPageIdByName(name, entryList.entries);
             }

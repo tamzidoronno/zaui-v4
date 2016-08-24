@@ -13,5 +13,9 @@ class MecaFleetGroupList extends \MarketingApplication implements \Application {
     public function render() {
         $this->includefile("fleetlist");
     }
+    
+    public function delete() {
+        $this->getApi()->getMecaManager()->deleteFleet($_POST['data']['fleetid']);
+    }
 }
 ?>

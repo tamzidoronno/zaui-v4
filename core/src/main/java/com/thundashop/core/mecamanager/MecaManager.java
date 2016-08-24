@@ -690,4 +690,12 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         
         return content;
     }
+
+    @Override
+    public void deleteFleet(String fleetId) {
+        MecaFleet fleet = fleets.remove(fleetId);
+        if (fleet != null) {
+            deleteObject(fleet);
+        }
+    }
 }

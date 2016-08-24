@@ -195,7 +195,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                     <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                     <?php if(!$deleted) { ?>
-                        <i class='fa fa-trash-o' gstype='submitToInfoBox'></i>
+                        <i class='fa fa-trash-o' style="cursor:pointer;" gstype='submitToInfoBox'></i>
                     <?php } else { ?>
                         Deleted <i class='fa fa-undo'  gstype='submitToInfoBox' title="Undelete" style='cursor:pointer;'></i>
                     <?php } ?>

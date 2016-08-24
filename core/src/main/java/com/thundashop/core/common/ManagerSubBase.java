@@ -208,6 +208,7 @@ public class ManagerSubBase {
         data.storeId = storeId;
         if(getSession() != null) {
             String lang = getSession().language;
+            data.validateTranslationMatrix();
             data.updateTranslation(lang);
         }
         database.save(data, credentials);

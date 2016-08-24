@@ -4,6 +4,7 @@ package com.thundashop.core.common;
 import com.google.gson.Gson;
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,16 @@ public class TranslationHandler implements Serializable {
         return saved;
     }
 
+    public void validateTranslationMatrix() {
+        try {
+            Set<TranslationHandler> handlers = getAllTranslationHandlers(this);
+            for(TranslationHandler handler : handlers) {
+                handler.checkTranslationMatrix();
+            }
+        }catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }  
     
     private Set<TranslationHandler> getAllTranslationHandlers(Object inObject) throws IllegalArgumentException, IllegalAccessException {
         Set<TranslationHandler> handlers = new HashSet();
@@ -107,7 +118,7 @@ public class TranslationHandler implements Serializable {
         return saved;
     }
 
-    private boolean update(String language) throws IllegalArgumentException, IllegalAccessException {
+    private boolean update(String language) throws IllegalArgumentException, IllegalAccessException {        
         Gson gson = new Gson();
         boolean changed = false;
         
@@ -193,6 +204,25 @@ public class TranslationHandler implements Serializable {
         }catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void checkTranslationMatrix() {
+        List<String> remove = new ArrayList();
+        for(String key : translationStrings.keySet()) {
+            if(key.contains(" ") ||
+                    key.contains("*") || 
+                    key.contains("&") || 
+                    key.contains(",") || 
+                    key.contains(";") || 
+                    key.contains("'") || 
+                    key.contains("/")) {
+                remove.add(key);
+            }
+        }
+        
+        for(String k : remove) {
+            translationStrings.remove(k);
+        }    
     }
    
 }

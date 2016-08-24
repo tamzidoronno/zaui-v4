@@ -87,7 +87,9 @@ public class CartItem implements Serializable {
     }
 
     public Map<String, String> getVariations() {
-        
+        if(variations == null) {
+            return new HashMap();
+        }
         return variations;
     }
 

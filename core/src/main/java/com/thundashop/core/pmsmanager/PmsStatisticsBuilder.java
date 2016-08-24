@@ -1,6 +1,7 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -46,8 +47,9 @@ class PmsStatisticsBuilder {
                         if(!pricesExTax) {
                             price /= 1 + (room.taxes/100);
                         }
-                        
-                        entry.totalPrice += price;
+                        if(booking.payedFor) {
+                            entry.totalPrice += price;
+                        }
                         entry.roomsRentedOut++;
                     }
                 }
@@ -88,6 +90,9 @@ class PmsStatisticsBuilder {
                     entry.totalPrice += total;
                     entry.numberOfOrders++;
                     entry.date = cal.getTime();
+                    for(CartItem item : order.cart.getItems()) {
+                        entry.nights += item.getCount();
+                    }
                     entry.addPayment(order.payment.paymentType, total);
                 }
             }

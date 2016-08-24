@@ -14,7 +14,6 @@ body {
 }
 
 .PmsBookingSummary .itemname { width: 350px; }
-.PmsBookingProductList .productentry .roomtypeselection { left: 170px; }
 .PmsBooking .pmsfront .fa-calendar,
 .PmsBookingCalendar .calendar .calendar_header,
 .PmsBooking .pmsfront .fa-calendar,

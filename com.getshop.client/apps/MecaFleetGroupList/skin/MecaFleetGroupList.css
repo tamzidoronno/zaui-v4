@@ -38,6 +38,10 @@
     bottom: 45px;
 }
 
+.MecaFleetGroupList .fleet .shop_button.delete {
+    right: 150px;
+}
+
 .MecaFleetGroupList .rightcontent .title {
     border-bottom: solid 1px #DDD;
     padding-left: 10px;

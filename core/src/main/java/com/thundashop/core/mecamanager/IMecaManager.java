@@ -99,4 +99,7 @@ public interface IMecaManager {
     
     @Administrator
     public void sendNotificationToStoreOwner();
+    
+    @Editor
+    public void deleteFleet(String fleetId);
 }

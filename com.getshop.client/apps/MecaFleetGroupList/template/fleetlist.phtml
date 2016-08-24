@@ -16,6 +16,13 @@ foreach ($fleets as $fleet) {
                 </div>
             </div>
 
+            <?
+            if ($carCount == 0) {
+            ?>
+                <div gsclick="delete" fleetid="<? echo $fleet->id; ?>" class="shop_button delete">Slett</div>
+            <?
+            }
+            ?>
             <div class="shop_button">Se mer</div>
         </div>
     </a>

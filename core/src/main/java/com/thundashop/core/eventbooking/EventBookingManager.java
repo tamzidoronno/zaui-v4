@@ -123,6 +123,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             }
         }
         
+        cleanBookingItemsThatDoesNotExsist();
 //        createScheduler("event_questback_checked", "0 * * * *", CheckSendQuestBackScheduler.class);
         stopScheduler("event_booking_scheduler");
         stopScheduler("event_questback_checked");
@@ -171,6 +172,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     private Event finalize(Event event) {
+        bookingEngine.removeBookingsWhereUserHasBeenDeleted(event.bookingItemId);
         setBookingItem(event);
         
         if (event.bookingItem != null) {
@@ -205,7 +207,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         } else {
             event.canBookWaitingList = false;            
         }
-        
+         
         event.price = getPrice(event);
         
         return event;
@@ -1808,4 +1810,16 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         return i;
     }
+
+    private void cleanBookingItemsThatDoesNotExsist() {
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        for (BookingItem item : items) {
+            boolean exists = events.values().stream().filter(event -> event.bookingItemId.equals(item.id)).count() > 0;
+            if (!exists) {
+                bookingEngine.deleteBookingItem(item.id);
+            }
+        }
+    }
+
+    
 }

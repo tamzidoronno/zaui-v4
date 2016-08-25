@@ -482,4 +482,8 @@ public class UserStoreCollection {
         return new ArrayList(users.values());
     }
 
+    boolean doesUserExists(String userId) {
+        return users.containsKey(userId);
+    }
+
 }

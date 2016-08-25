@@ -531,6 +531,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return storeCollection.getUser(id);
     }
 
+    public boolean doesUserExsist(String userId) {
+        return getUserStoreCollection(storeId).doesUserExists(userId);
+    }
+    
     @Override
     public boolean isCaptain(String id) throws ErrorException {
         User user = getUserById(id);

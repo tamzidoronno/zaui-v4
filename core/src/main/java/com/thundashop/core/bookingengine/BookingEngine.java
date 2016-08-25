@@ -82,6 +82,10 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public List<Booking> getAllBookingsByBookingItem(String bookingItemId) {
         return deepClone(bookingEngineAbstract.getAllBookingsByBookingItem(bookingItemId));
     }
+    
+    public void removeBookingsWhereUserHasBeenDeleted(String bookingItemId) {
+        bookingEngineAbstract.removeBookingsWhereUserHasBeenDeleted(bookingItemId);
+    }
 
     @Override
     public void changeTypeOnBooking(String bookingId, String itemTypeId) {

@@ -1747,14 +1747,20 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     @Override
-    public List<EventStatistic> getStatistic(Date startDate, Date stopDate) {
+    public List<EventStatistic> getStatistic(Date startDate, Date stopDate, List<String> groupIds, List<String> eventTypeIds) {
         if (stopDate == null || stopDate.before(startDate) || stopDate.equals(startDate))
             return new ArrayList();
         
         List<Event> events = getAllEvents().stream()
                 .filter(event -> isWithinDates(event, startDate, stopDate))
                 .collect(Collectors.toList());
-                
+        
+        if (eventTypeIds != null && !eventTypeIds.isEmpty()) {
+            events = events.stream()
+                    .filter(event -> eventTypeIds.contains(event.bookingItemType.id))
+                    .collect(Collectors.toList());
+        }
+        
         List<EventStatistic> stats = new ArrayList();
         
         Calendar cal = Calendar.getInstance();
@@ -1782,7 +1788,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             EventStatistic stat = new EventStatistic();
             stat.month = cal.get(Calendar.MONTH);
             stat.year = cal.get(Calendar.YEAR);
-            stat.count = getActiveParticipators(eventsForMonth, stat);
+            stat.count = getActiveParticipators(eventsForMonth, stat, groupIds);
             
             stats.add(stat);
         }
@@ -1803,14 +1809,14 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return cal.getTime();
     }
 
-    private int getActiveParticipators(List<Event> eventsForMonth, EventStatistic stat) {
+    private int getActiveParticipators(List<Event> eventsForMonth, EventStatistic stat, List<String> groupIds) {
         
         int i = 0;
         for (Event event : eventsForMonth) {
             List<Booking> bookings = bookingEngine.getAllBookingsByBookingItem(event.bookingItemId);
             for (Booking booking : bookings) {
                 User user = userManager.getUserById(booking.userId);
-                if (user != null && hasUserParticipated(event, user.id)) {
+                if (user != null && hasUserParticipated(event, user.id) && isInGroup(groupIds, user)) {
                     stat.addUserId(event.id, user.id);
                     i++;
                 }
@@ -1828,6 +1834,17 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 bookingEngine.deleteBookingItem(item.id);
             }
         }
+    }
+
+    private boolean isInGroup(List<String> groupIds, User user) {
+        if (groupIds.isEmpty())
+            return true;
+        
+        if (user.companyObject != null && user.companyObject.groupId != null && groupIds.contains(user.companyObject.groupId)) {
+            return true;
+        }
+        
+        return false;
     }
 
     

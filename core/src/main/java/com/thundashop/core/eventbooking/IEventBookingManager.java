@@ -199,5 +199,5 @@ public interface IEventBookingManager {
     public Double getPriceForEventTypeAndUserId(String eventId, String userId);
     
     @Administrator
-    public List<EventStatistic> getStatistic(Date startDate, Date stopDate);
+    public List<EventStatistic> getStatistic(Date startDate, Date stopDate, List<String> groupIds, List<String> eventTypeIds);
 }

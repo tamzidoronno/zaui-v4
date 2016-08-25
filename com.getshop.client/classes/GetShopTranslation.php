@@ -155,7 +155,7 @@ class GetShopTranslation {
             /* @ $trans StoreTranslationLine */
             $content .= $trans->toString() . "\n";
         }
-        file_put_contents($path, $content);
+        @file_put_contents($path, $content);
     }
 
 }

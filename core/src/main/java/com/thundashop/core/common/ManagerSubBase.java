@@ -190,6 +190,7 @@ public class ManagerSubBase {
                 .replace("\\", "_")
                 .replace("\"", "_")
                 .replace("'", "_")
+                .replace("?", "_")
                 .toLowerCase();
         
         newAddress = prefix + newAddress;

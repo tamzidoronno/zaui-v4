@@ -132,4 +132,10 @@ public class SessionFactory extends DataCommon {
         
         return null;
     }
+    
+    public String getOriginalUserId(String sessionId) {
+        checkSessionIsNotEmpty(sessionId);
+        ThundashopSession session = getSession(sessionId);
+        return session.getObject("user");
+    }
 }

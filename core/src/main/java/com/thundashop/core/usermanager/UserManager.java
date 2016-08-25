@@ -1666,4 +1666,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         String forceUniqueEmail = settingsApplication.getSetting("uniqueusersonemail");
         return forceUniqueEmail != null && forceUniqueEmail.equals("true");
     }
+    
+    public String getImpersonatedOriginalUserId() {
+        if (!isImpersonating()) {
+            return "";
+        }
+        
+        return (String)sessionFactory.getOriginalUserId(getSession().id);
+    }
 }

@@ -27,6 +27,8 @@ public class Booking extends DataCommon implements Comparable<Booking> {
      * Where did this booking come from ?
      */
     public String source = "";
+    public String doneByUserId = "";
+    public String doneByImpersonator = "";
     
     public String getInformation() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM-yyyy HH:mm:ss");

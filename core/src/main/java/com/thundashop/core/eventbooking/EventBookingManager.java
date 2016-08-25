@@ -227,6 +227,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         if (getSession().currentUser != null) {
             logEntry.doneBy = getSession().currentUser.id;
+            logEntry.impersonatorUserId = userManager.getImpersonatedOriginalUserId();
         }
         
         if (action.equals("EVENT_UPDATED")) {
@@ -464,6 +465,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     private void signupUserToEvent(Event event, User user, boolean silent, String source) {
         Booking booking = createBooking(event, user);
         booking.source = source;
+        
+        if (getSession() != null && getSession().currentUser != null) {
+            booking.doneByUserId = getSession().currentUser.id;
+        }
+        
+        booking.doneByImpersonator = userManager.getImpersonatedOriginalUserId();
+        
         List<Booking> bookings = new ArrayList();
         bookings.add(booking);
         bookingEngine.addBookings(bookings);
@@ -1396,6 +1404,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         EventLog log = new EventLog();
         log.action = action;
         log.doneBy = getSession().currentUser.id;
+        log.impersonatorUserId = userManager.getImpersonatedOriginalUserId();
         log.eventId = event.id;
         log.comment = comment;
         log.additional = additional;

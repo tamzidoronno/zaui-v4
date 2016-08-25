@@ -12,6 +12,15 @@ echo "</div>";
 
 foreach ($eventLogs as $eventLog) {
     $doneBy = $this->getApi()->getUserManager()->getUserById($eventLog->doneBy);
+    $impersonated = "";
+    
+    if ($eventLog->impersonatorUserId) {
+        $impersonated = $this->getApi()->getUserManager()->getUserById($eventLog->impersonatorUserId);
+    }
+    
+    if ($impersonated) {
+        $impersonated = ", impersonated by: ".$impersonated->fullName;
+    }
     
     if (!$doneBy) {
         $doneBy = "";
@@ -37,7 +46,7 @@ foreach ($eventLogs as $eventLog) {
     
     echo "<div class='eventlogentry'>";
         echo "<div class='action'>$icon</div>"; 
-        echo "<div class='blame'>".$doneBy."</div>"; 
+        echo "<div class='blame'>".$doneBy."$impersonated</div>"; 
         echo "<div class='comment'>".nl2br($eventLog->comment)."</div>"; 
         echo "<div class='date'>".$eventLog->rowCreatedDate."</div>"; 
     echo "</div>";

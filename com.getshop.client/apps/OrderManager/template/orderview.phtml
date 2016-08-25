@@ -149,7 +149,7 @@ $cart = $order->cart;
         if($cartItem->product->sku) {
             $dates .= " ( SKU: "  . $cartItem->product->sku . ")";
         }
-        echo "<div class='gss_order_line' cartItemId='".$cartItem->cartItemId."'>$editCountButton ".$cartItem->count." x ".$cartItem->product->name." $metaText $variationstext $additionalMetaData $dates<span class='gss_order_line_price'>(".round($cartItem->product->priceExTaxes,1). ") ".$cartItem->product->price." $editButton</span></div>";
+        echo "<div class='gss_order_line' cartItemId='".$cartItem->cartItemId."'>$editCountButton ".$cartItem->count." x ".$cartItem->product->name." $metaText $variationstext $additionalMetaData $dates<span class='gss_order_line_price'>(".round($cartItem->product->priceExTaxes,1). ") ".round($cartItem->product->price,1)." $editButton</span></div>";
 //        echo "</div>";
     }
     

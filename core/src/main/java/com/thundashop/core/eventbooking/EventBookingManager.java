@@ -123,6 +123,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             }
         }
         
+        cleanBookingItemsThatDoesNotExsist();
 //        createScheduler("event_questback_checked", "0 * * * *", CheckSendQuestBackScheduler.class);
         stopScheduler("event_booking_scheduler");
         stopScheduler("event_questback_checked");
@@ -171,6 +172,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     private Event finalize(Event event) {
+        bookingEngine.removeBookingsWhereUserHasBeenDeleted(event.bookingItemId);
         setBookingItem(event);
         
         if (event.bookingItem != null) {
@@ -200,12 +202,12 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             event.canBook = true;
         }
         
-        if ((event.bookingItem.isFull || event.bookingItem.freeSpots < 1) && !event.isCanceled) {
+        if ((event.bookingItem.isFull || event.bookingItem.freeSpots < 1) && !event.isCanceled && event.isInFuture) {
             event.canBookWaitingList = true;
         } else {
             event.canBookWaitingList = false;            
         }
-        
+         
         event.price = getPrice(event);
         
         return event;
@@ -225,6 +227,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         if (getSession().currentUser != null) {
             logEntry.doneBy = getSession().currentUser.id;
+            logEntry.impersonatorUserId = userManager.getImpersonatedOriginalUserId();
         }
         
         if (action.equals("EVENT_UPDATED")) {
@@ -462,6 +465,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     private void signupUserToEvent(Event event, User user, boolean silent, String source) {
         Booking booking = createBooking(event, user);
         booking.source = source;
+        
+        if (getSession() != null && getSession().currentUser != null) {
+            booking.doneByUserId = getSession().currentUser.id;
+        }
+        
+        booking.doneByImpersonator = userManager.getImpersonatedOriginalUserId();
+        
         List<Booking> bookings = new ArrayList();
         bookings.add(booking);
         bookingEngine.addBookings(bookings);
@@ -1394,6 +1404,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         EventLog log = new EventLog();
         log.action = action;
         log.doneBy = getSession().currentUser.id;
+        log.impersonatorUserId = userManager.getImpersonatedOriginalUserId();
         log.eventId = event.id;
         log.comment = comment;
         log.additional = additional;
@@ -1736,14 +1747,20 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     @Override
-    public List<EventStatistic> getStatistic(Date startDate, Date stopDate) {
+    public List<EventStatistic> getStatistic(Date startDate, Date stopDate, List<String> groupIds, List<String> eventTypeIds) {
         if (stopDate == null || stopDate.before(startDate) || stopDate.equals(startDate))
             return new ArrayList();
         
         List<Event> events = getAllEvents().stream()
                 .filter(event -> isWithinDates(event, startDate, stopDate))
                 .collect(Collectors.toList());
-                
+        
+        if (eventTypeIds != null && !eventTypeIds.isEmpty()) {
+            events = events.stream()
+                    .filter(event -> eventTypeIds.contains(event.bookingItemType.id))
+                    .collect(Collectors.toList());
+        }
+        
         List<EventStatistic> stats = new ArrayList();
         
         Calendar cal = Calendar.getInstance();
@@ -1771,7 +1788,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             EventStatistic stat = new EventStatistic();
             stat.month = cal.get(Calendar.MONTH);
             stat.year = cal.get(Calendar.YEAR);
-            stat.count = getActiveParticipators(eventsForMonth, stat);
+            stat.count = getActiveParticipators(eventsForMonth, stat, groupIds);
             
             stats.add(stat);
         }
@@ -1792,14 +1809,14 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return cal.getTime();
     }
 
-    private int getActiveParticipators(List<Event> eventsForMonth, EventStatistic stat) {
+    private int getActiveParticipators(List<Event> eventsForMonth, EventStatistic stat, List<String> groupIds) {
         
         int i = 0;
         for (Event event : eventsForMonth) {
             List<Booking> bookings = bookingEngine.getAllBookingsByBookingItem(event.bookingItemId);
             for (Booking booking : bookings) {
                 User user = userManager.getUserById(booking.userId);
-                if (user != null && hasUserParticipated(event, user.id)) {
+                if (user != null && hasUserParticipated(event, user.id) && isInGroup(groupIds, user)) {
                     stat.addUserId(event.id, user.id);
                     i++;
                 }
@@ -1808,4 +1825,27 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         return i;
     }
+
+    private void cleanBookingItemsThatDoesNotExsist() {
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        for (BookingItem item : items) {
+            boolean exists = events.values().stream().filter(event -> event.bookingItemId.equals(item.id)).count() > 0;
+            if (!exists) {
+                bookingEngine.deleteBookingItem(item.id);
+            }
+        }
+    }
+
+    private boolean isInGroup(List<String> groupIds, User user) {
+        if (groupIds.isEmpty())
+            return true;
+        
+        if (user.companyObject != null && user.companyObject.groupId != null && groupIds.contains(user.companyObject.groupId)) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    
 }

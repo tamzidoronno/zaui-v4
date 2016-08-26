@@ -40,3 +40,16 @@
     text-align: center;
     margin-top: 20px;
 }
+
+.EventStatistic .outerinlinebox {
+    font-size: 0px;
+}
+.EventStatistic .inlineBox {
+    width: 50%;
+    font-size: 13px;
+    display: inline-block; 
+    border: solid 1px #DDD; 
+    box-sizing: border-box;
+    vertical-align: top;
+    padding: 10px;
+}

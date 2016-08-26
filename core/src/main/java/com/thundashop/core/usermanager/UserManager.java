@@ -531,6 +531,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return storeCollection.getUser(id);
     }
 
+    public boolean doesUserExsist(String userId) {
+        return getUserStoreCollection(storeId).doesUserExists(userId);
+    }
+    
     @Override
     public boolean isCaptain(String id) throws ErrorException {
         User user = getUserById(id);
@@ -1661,5 +1665,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         String forceUniqueEmail = settingsApplication.getSetting("uniqueusersonemail");
         return forceUniqueEmail != null && forceUniqueEmail.equals("true");
+    }
+    
+    public String getImpersonatedOriginalUserId() {
+        if (!isImpersonating()) {
+            return "";
+        }
+        
+        return (String)sessionFactory.getOriginalUserId(getSession().id);
     }
 }

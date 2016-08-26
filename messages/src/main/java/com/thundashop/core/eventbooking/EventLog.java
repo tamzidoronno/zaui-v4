@@ -17,4 +17,5 @@ public class EventLog extends DataCommon {
     public String doneBy = "";
     public String action = "";
     public String additional = "";
+    public String impersonatorUserId = "";
 }

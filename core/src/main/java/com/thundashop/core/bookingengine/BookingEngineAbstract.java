@@ -23,6 +23,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,6 +50,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     
     @Autowired
     public MessageManager messageManager;
+    
+    @Autowired
+    public UserManager userManager;
     
     private final Map<String, Booking> bookings = new HashMap();
     private final Map<String, Availability> availabilities = new HashMap();
@@ -557,7 +561,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         BookingItemType type = types.get(id);
         if (type != null) {
             
-            long count = items.values().stream().filter( o -> o.bookingItemTypeId.equals(id)).count();
+            List<BookingItem> itemInUse = items.values().stream().filter( o -> o.bookingItemTypeId.equals(id)).collect(Collectors.toList());
+            long count = itemInUse.size();
             
             if (count > 0) {
                 throw new BookingEngineException("Can not delete a bookingitemtype that already has booking items, Existing items: " + count);
@@ -874,6 +879,15 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         return bookingGroup;
+    }
+    
+    public void removeBookingsWhereUserHasBeenDeleted(String bookingItemId) {
+        List<Booking> bookings = getAllBookingsByBookingItem(bookingItemId);
+        for (Booking booking : bookings) {
+            if (!userManager.doesUserExsist(booking.userId)) {
+                deleteBooking(booking.id);
+            }
+        }
     }
 
     private void finalize(BookingItemType o) {

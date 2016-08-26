@@ -388,6 +388,9 @@ public class PmsBookingRooms implements Serializable {
     }
 
     boolean isEndedDaysAgo(int daysAgo) {
+        if(date.end == null) {
+            return false;
+        }
         daysAgo *= -1;
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, daysAgo);

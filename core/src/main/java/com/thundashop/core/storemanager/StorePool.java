@@ -8,6 +8,7 @@ import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.GrafanaFeeder;
 import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.SessionFactory;

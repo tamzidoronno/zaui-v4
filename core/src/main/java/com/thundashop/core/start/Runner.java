@@ -2,6 +2,8 @@ package com.thundashop.core.start;
 
 
 import com.thundashop.core.common.AppContext;
+import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StorePool;
 import com.thundashop.core.databasemanager.DatabaseUpdater;
@@ -12,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -39,6 +42,8 @@ public class Runner {
         DatabaseUpdater updater = context.getBean(DatabaseUpdater.class);
         updater.check(context);
         
+        setDeveloperMode(context);
+        
         context = new ClassPathXmlApplicationContext("All.xml");
         AppContext.appContext = context;
         Logger log = context.getBean(Logger.class);
@@ -61,6 +66,11 @@ public class Runner {
         
         context.getBean(WebSocketServerImpl.class).start();
         startJettyServer();
+    }
+
+    private static void setDeveloperMode(ApplicationContext context) throws BeansException {
+        FrameworkConfig frameWorkConfig = context.getBean(FrameworkConfig.class);
+        GetShopLogHandler.isDeveloper = !frameWorkConfig.productionMode;
     }
 
     private static void startJettyServer() throws InterruptedException, Exception {

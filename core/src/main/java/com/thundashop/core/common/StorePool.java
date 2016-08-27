@@ -213,7 +213,9 @@ public class StorePool {
         long end = System.currentTimeMillis();
         long diff = end - start;
         if (diff > 40) {
-            GetShopLogHandler.logPrintStatic("" + diff + " : " + object.interfaceName + " method: " + object.method, null);
+            StoreHandler handler = getStoreHandler(object.sessionId);
+            String storeIdToUse = handler != null ? handler.getStoreId() : null;
+            GetShopLogHandler.logPrintStatic("" + diff + " : " + object.interfaceName + " method: " + object.method, storeIdToUse);
         }
         result = (result == null) ? new ArrayList() : result;
 

@@ -18,6 +18,8 @@ import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserPrivilege;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -163,7 +165,7 @@ public class StoreHandler {
             if (cause instanceof ErrorException) {
                 throw (ErrorException) cause;
             } else {
-                printStack(ex, scopedStoreId);
+                printStack(cause, scopedStoreId);
                 ex.printStackTrace();
             }
 
@@ -512,12 +514,17 @@ public class StoreHandler {
         }
     }
 
-    private void printStack(Exception ex, String scopedStoreId) {
+    private synchronized void printStack(Throwable ex, String scopedStoreId) {
         ex.printStackTrace();
-        GetShopLogHandler.logPrintStatic(ex.getMessage(), scopedStoreId);
-        StackTraceElement[] stack = ex.getStackTrace();
-        for(StackTraceElement el : stack) {
-            GetShopLogHandler.logPrintStatic("\t" + el.getClassName() + ":"  + el.getLineNumber(), scopedStoreId);
-        }
+        
+        StringWriter errors = new StringWriter();
+        ex.printStackTrace(new PrintWriter(errors));
+        String stack = errors.toString();
+
+        GetShopLogHandler.logPrintStatic(stack, scopedStoreId);
+    }
+    
+    public String getStoreId() {
+        return storeId;
     }
 }

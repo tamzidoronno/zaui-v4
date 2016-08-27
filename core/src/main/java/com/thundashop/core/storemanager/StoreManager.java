@@ -8,6 +8,7 @@ import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -77,6 +78,8 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                 keyDataStore.put(kdata.datakey, kdata);
             }
         }
+        
+        GetShopLogHandler.logPrintStatic("====================== Initialized store ======================", storeId);
     }
 
     @Override

@@ -16,6 +16,7 @@ if(!$locks || sizeof($locks) == 0) {
     echo "</tr>";
     
     foreach($locks as $lock) {
+        $battery = $this->getBattery($lock);
         echo "<tr>";
         echo "<td>" . $lock->zwaveid;
         if($lock->isFailed) {
@@ -23,7 +24,11 @@ if(!$locks || sizeof($locks) == 0) {
         }
         
         echo "</td>";
-        echo "<td>" . $lock->name . " (" . $lock->type . ")</td>";
+        echo "<td>" . $lock->name . " (" . $lock->type . ")";
+        if($battery) {
+            echo ", battery : $battery%";
+        }
+        echo "</td>";
         echo "<td align='center'>";
         $this->printCodeList($lock);
         echo "</td>";

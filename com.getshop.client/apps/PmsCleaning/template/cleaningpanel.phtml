@@ -2,12 +2,18 @@
  /* @var $this ns_ae42328b_3726_4875_8546_212cd8cc3cde\PmsCleaning */
 $time = strtotime($this->getCleaningDate());
 ?> 
+
 <div gstype="form" method="changeDate">
     <input type='text' gsname="date" value='<? echo $this->getCleaningDate(); ?>'>
     <input gstype="submit" type="button" value='Change date'>
 </div>
 
 <h1>Guests arriving today</h1>
+
+<i class="fa fa-clock-o" style="color:red"></i>  Early check in, priority room.<br>
+<i class="fa fa-clock-o" style="color:green"></i> Late check out, can leave later<br>
+<i class="fa fa-user-plus"></i> Additional bed request<br>
+<i class="fa fa-bed"></i> Addition bed for children requested<br>
 <?php
 $this->print_guests_table($time, true);
 ?>

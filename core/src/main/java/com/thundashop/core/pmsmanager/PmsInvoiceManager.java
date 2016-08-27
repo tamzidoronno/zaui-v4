@@ -69,6 +69,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         HashMap<String, BookingOrderSummary> res = new HashMap();
         for(CartItem item : roomItems) {
             BookingOrderSummary summary = null;
+            if(item == null) {
+                continue;
+            }
             if(!res.containsKey(item.getProduct().id)) {
                 summary = new BookingOrderSummary();
                 res.put(item.getProduct().id, summary);

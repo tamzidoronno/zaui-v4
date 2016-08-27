@@ -14,6 +14,7 @@ public class PmsBookingAddonItem  implements Serializable {
         public static Integer EARLYCHECKIN = 4;
         public static Integer EXTRABED = 5;
         public static Integer CANCELLATION = 6;
+        public static Integer EXTRACHILDBED = 7;
     }
     
     public String addonId = UUID.randomUUID().toString();

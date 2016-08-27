@@ -150,11 +150,20 @@ if(sizeof($booking->registrationData->contactsList) > 0) {
 if(!$user->fullName) {
     $user->fullName = "Unknown name";
 }
-
 ?>
 
 <div class='contactdata'>
     <h2>User data</h2>
+    <?php if($booking->testReservation) { ?>
+    This is in test mode
+    <?php } else { ?>
+    <span gstype='form' method="markTest">
+        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+        <span gstype='submitToInfoBox' style='font-size: 10px;'>(Mark booking as test)</span>
+    </span>
+    <?php } ?>
+
+    
     <div style='padding-left: 10px;'>
         <span class='roomprefix'>User</span>
         <span class='roompostfix'>

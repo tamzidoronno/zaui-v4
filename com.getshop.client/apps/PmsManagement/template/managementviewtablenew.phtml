@@ -64,6 +64,7 @@ $states['unconfirmed'] = "Unconfirmed";
 $states['active'] = "Active";
 $states['ended'] = "Ended";
 $states['waitingforlock'] = "Waiting for lock";
+$states['test'] = "Test";
 $channels = $this->getChannelMatrix();
 
 $allFieldsToPrint = array();
@@ -152,7 +153,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         
         $row['room'] = $room->room;
         $row['room'] .= "<div class='secondary_text'>".$room->roomType."</div>";
-        $row['price'] = $room->price;
+        $row['price'] = round($room->price);
         $row['state'] = $room->progressState;
         
         $booking = $this->getBooking($room->bookingId);

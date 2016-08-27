@@ -1,8 +1,9 @@
 <?php
+
 namespace ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a;
 
 class ExpediaPayment extends \PaymentApplication implements \Application {
-    
+
     public $singleton = true;
 
     public function getDescription() {
@@ -61,4 +62,5 @@ class ExpediaPayment extends \PaymentApplication implements \Application {
     }
 
 }
+
 ?>

@@ -319,7 +319,11 @@ public class ArxDoorManager implements IDoorManager {
                 toPost += "<start_date>" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(category.startDate) + "</start_date>\n";
             }
             if(category.endDate != null) {
-                toPost += "<end_date>" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(category.endDate) + "</end_date>\n";
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(category.endDate);
+                cal.add(Calendar.MINUTE, 20);
+                
+                toPost += "<end_date>" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cal.getTime()) + "</end_date>\n";
             }
             toPost += "</access_category>\n";
         }

@@ -141,7 +141,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
 
     public function buildAddonConfigs() {
         $allAddons = array();
-        for($i = 1; $i <=  6; $i++) {
+        for($i = 1; $i <=  7; $i++) {
             $addon = new \core_pmsmanager_PmsBookingAddonItem();
             $addon->addonType = $i;
             $addon->isActive = $_POST['data']['addon_active_'.$i];

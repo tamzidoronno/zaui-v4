@@ -29,7 +29,6 @@ class Page {
     function loadSkeleton() {
         /* @var $layout core_pagemanager_data_PageLayout */
         $layout = $this->javapage->layout;
-
         $this->printSlavePageHeader();
         $this->printEffectTriggerLoaded();
         

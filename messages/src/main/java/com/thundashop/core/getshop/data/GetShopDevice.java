@@ -19,6 +19,7 @@ public class GetShopDevice extends DataCommon {
     public String type;
     public HashMap<Integer, GetShopLockCode> codes = new HashMap();
     public Date lastTriedUpdate = null;
+    public HashMap<String, Object> instances;
 
     public void setDevice(ZWaveDevice device) {
         zwaveid = device.id;
@@ -30,6 +31,7 @@ public class GetShopDevice extends DataCommon {
         if(device.data != null && device.data.isAwake != null && device.data.isAwake.value != null) {
             isAwake = new Boolean(device.data.isAwake.value + "");
         }
+        instances = device.instances;
     }
     
     public boolean isLock() {

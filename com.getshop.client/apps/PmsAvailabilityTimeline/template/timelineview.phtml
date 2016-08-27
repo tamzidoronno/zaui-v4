@@ -165,6 +165,7 @@ if($compact) {
             }
             if(!$printed) {
                 $name = $this->makeInitials($value->name);
+                $name = htmlentities($name);
                 if($isTaken) {
                     if($toggle) {
                         $free = "full";

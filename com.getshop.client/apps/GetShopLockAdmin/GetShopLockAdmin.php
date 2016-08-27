@@ -89,5 +89,19 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         echo "<span title='$title'>$inuse - $toUpdate - $toRemove - $total</span>";
     }
 
+    public function getBattery($lock) {
+        if(!isset($lock->instances->{0}->{"commandClasses"}->{128}->{"data"}->{"history"})) {
+            return;
+        }
+        
+        $battery = 100;
+        foreach($lock->instances->{0}->{"commandClasses"}->{128}->{"data"}->{"history"} as $k => $val) {
+            if($k < $battery) {
+                $battery = $k;
+            }
+        }
+        return $battery;
+    }
+
 }
 ?>

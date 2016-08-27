@@ -509,6 +509,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 dev.name = gsdevice.name;
                 dev.isAwake = gsdevice.isAwake;
                 dev.isFailed = gsdevice.isFailed;
+                dev.instances = gsdevice.instances;
                 if(dev.name == null || dev.name.equals("null")) {
                     dev.name = "";
                 }

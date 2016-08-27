@@ -78,6 +78,7 @@ public class PmsBookingRooms implements Serializable {
         canBeAdded = true;
         bookingId = "";
         bookingItemId = "";
+        code = "";
     }
     
     public static String getOffsetKey(Calendar calStart, Integer priceType) {

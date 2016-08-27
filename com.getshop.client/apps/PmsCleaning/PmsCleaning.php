@@ -5,6 +5,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
     var $items;
     var $additionalInfo;
     var $counter = 0;
+    var $config;
     
     public function getDescription() {
         
@@ -129,7 +130,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
                     $icon = "<i class='fa fa-sign-out'></i>";
                 }
                 $total++;
-                echo $icon . $room->numberOfGuests . " - " . $items[$room->bookingItemId]->bookingItemName . " - <span class='guestname' title='$guestName'>" . $guestName. "</span><br>";
+                echo $icon . $room->numberOfGuests . " - " . @$items[$room->bookingItemId]->bookingItemName . " - <span class='guestname' title='$guestName'>" . $guestName. "</span><br>";
             }
             
             
@@ -192,14 +193,34 @@ class PmsCleaning extends \WebshopApplication implements \Application {
      * @param \core_pmsmanager_PmsBookingRooms $room
      */
     public function printRoomRow($room) {
+        $config = $this->getPmsConfig();
         $this->counter++;
         $items = $this->getItems();
         $additional = $this->getAdditionalInfo();
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $room->pmsBookingRoomId);
         $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        $hasExtraBed = false;
+        $hasChildBed = false;
+        foreach($room->addons as $addon) {
+            if($addon->addonType == 5) {
+                $hasExtraBed = true;
+            }
+            if($addon->addonType == 7) {
+                $hasChildBed = true;
+            }
+        }
         echo "<tr roomid='".$room->pmsBookingRoomId."'>";
         echo "<td>";
-        echo $room->numberOfGuests . "</td>";
+        echo $room->numberOfGuests . "<br>";
+        $startHour = date("H", strtotime($room->date->start));
+        $endHour = date("H", strtotime($room->date->end));
+        $defaultStartHour = $this->getHour(true);
+        $defaultEndHour = $this->getHour(false);
+        if($startHour < $defaultStartHour) { echo '<i class="fa fa-clock-o" style="color:red"></i>'; }
+        if($endHour > $defaultEndHour) { echo '<i class="fa fa-clock-o" style="color:green"></i>'; }
+        if($hasExtraBed) { echo '<i class="fa fa-user-plus"></i>'; }
+        if($hasChildBed) { echo '<i class="fa fa-bed"></i>'; }
+        echo "</td>";
         echo "<td>";
         
         $icon = "<i class='fa fa-refresh'></i>";
@@ -275,7 +296,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         
         $newArray = array();
         foreach($all as $a) {
-            $newArray[$items[$a->bookingItemId]->bookingItemName] = $a;
+            @$newArray[$items[$a->bookingItemId]->bookingItemName] = $a;
         }
         ksort($newArray);
         
@@ -287,6 +308,26 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             return date("dmy", time() == date("dmy", strtotime($room->date->end)));
         }
         return date("dmy", time() == date("dmy", strtotime($room->date->start)));
+    }
+
+    /**
+     * @return \core_pmsmanager_PmsConfiguration
+     */
+    public function getPmsConfig() {
+        if(!$this->config) {
+            $this->config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        }
+        return $this->config;
+    }
+
+    public function getHour($startHour) {
+        $time = $this->getPmsConfig()->defaultEnd;
+        if($startHour) {
+            $time = $this->getPmsConfig()->defaultStart;
+        }
+        
+        $time = explode(":", $time);
+        return $time[0];
     }
 
 }

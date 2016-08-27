@@ -5,15 +5,10 @@
  */
 package com.thundashop.core.getshop.data;
 
-import java.util.HashMap;
-import java.util.List;
-
 /**
  *
  * @author boggi
  */
-public class ZWaveDevice {
-    HashMap<String, Object> instances;
-    public ZwaveData data;
-    public Integer id;
+public class ZwaveHistory {
+    
 }

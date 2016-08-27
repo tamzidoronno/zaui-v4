@@ -324,7 +324,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         List<Event> eventsConnectedToLocation = getEventsByLocation(locationId);
         
         if (!eventsConnectedToLocation.isEmpty()) {
-//            throw new ErrorException(1036);
+            throw new ErrorException(1036);
         }
         
         Location location = locations.remove(locationId);

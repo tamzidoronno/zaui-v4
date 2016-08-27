@@ -24,12 +24,12 @@ public class ExpediaPayment extends UpdateScriptBase implements UpdateScript {
 
     @Override
     public Date getAddedDate() {
-        return getDate("20/06-2016");
+        return getDate("27/08-2016");
     }
     
     @Override
     public String getId() {
-        return "8e9dfcae-5ed3-48f1-a8a6-f1603e828ebc";
+        return "92bd796f-758e-4e03-bece-7d2dbfa40d7a";
     }
 
     @SuppressWarnings("empty-statement")
@@ -67,7 +67,7 @@ public class ExpediaPayment extends UpdateScriptBase implements UpdateScript {
         credentials.storeid = "all";
 
         Application ExpediaPayment = createSettings("ExpediaPayment",
-        "0b4c0e65-6785-46a1-a91b-63a72999cc37",
+        "92bd796f-758e-4e03-bece-7d2dbfa40d7a",
         allowed2,
         " ",
         Application.Type.Payment, true);

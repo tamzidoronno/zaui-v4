@@ -18,6 +18,10 @@ if (!$event->isInFuture) {
     echo "<div class='event_warning'>";
     echo "<i class='fa fa-warning'></i> ".$this->__w("This event has been canceled");
     echo "</div>";
+} else if ($event->isLocked) {
+    echo "<div class='event_warning'>";
+    echo "<i class='fa fa-warning'></i> ".$this->__w("This event has been locked for signup");
+    echo "</div>";
 } else if ($event->bookingItem->isFull) {
     echo "<div class='event_warning'>";
     echo "<i class='fa fa-warning'></i> ".$this->__w("No available spots left for this event");

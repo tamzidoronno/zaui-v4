@@ -44,6 +44,9 @@ attribute gstypes;
             <textarea class='myclassname1' gsname='moredata1'></textarea>
             <div gsclick="method" gs_also="myclassname2,myclassname1">submit</div>
 
+        Scroll to top on click:
+            <div  gsclick="method" gs_scrollToTop="true"/>
+
         
 
     gs_show_modal:

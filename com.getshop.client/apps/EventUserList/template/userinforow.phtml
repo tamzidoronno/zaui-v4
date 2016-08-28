@@ -83,8 +83,10 @@ $specialInfo = $this->getUserAdditionalInformation($user);
                 <? 
                 echo $sourceIcon;
                 ?>
+                <div class="gs_shop_small_icon" gs_show_modal="transferUserToOtherEvent" userid="<? echo $user->id; ?>" eventid="<? echo $event->id; ?>" title="Transfer user to another events"><i class="fa fa-arrow-circle-o-right"></i></div>
             <? } else { ?>
                 <div class="gs_shop_small_icon" gsclick="moveUserFromWaitinglist" userid="<? echo $user->id; ?>" eventid="<? echo $event->id; ?>" title="Transfer user to event"><i class="fa fa-bullseye"></i></div>
+                <div class="gs_shop_small_icon" gs_show_modal="transferUserToOtherEvent" userid="<? echo $user->id; ?>" eventid="<? echo $event->id; ?>" title="Transfer user to another events"><i class="fa fa-arrow-circle-o-right"></i></div>
             <? } ?>
         </div>
         <?

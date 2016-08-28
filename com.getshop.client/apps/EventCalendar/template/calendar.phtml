@@ -1,0 +1,137 @@
+<? 
+/* @var $this \ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8\Calendar */
+$id = $this->getConfiguration()->id;
+?>
+
+<div class='calendar_tab_content_view' calendar_tab_name="calendar" >
+    <?php
+    
+
+    $month = $this->month;
+    $year = $this->year;
+    
+    $headings = array(
+        $this->__w('Monday', "common"),
+        $this->__w('Tuesday', "common"),
+        $this->__w('Wednesday', "common"),
+        $this->__w('Thursday', "common"),
+        $this->__w('Friday', "common"),
+        $this->__w('Saturday', "common"),
+        $this->__w('Sunday', "common")
+    );
+    
+    $running_day = date('w', mktime(0, 0, 0, $month, 1, $year));
+    $days_in_month = date('t', mktime(0, 0, 0, $month, 1, $year));
+    $days_in_this_week = 1;
+    $day_counter = 0;
+    
+    if ($running_day == 0) {
+        $running_day = 7;
+    }
+
+//////////////////// This are added for the generate translation script to pick it up ///////////////
+    $this->__w("January");
+    $this->__w("February");
+    $this->__w("March");
+    $this->__w("April");
+    $this->__w("May");
+    $this->__w("June");
+    $this->__w("July");
+    $this->__w("August");
+    $this->__w("September");
+    $this->__w("October");
+    $this->__w("November");
+    $this->__w("December");
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+    $monthname = $this->__w(date('F', mktime(0, 0, 0, $month, 1, $year)), 'common');
+    ?>
+    <div class="calendar ">
+        <table cellpadding="0" cellspacing="0" class="calendar">
+
+            <tr class="calendar-row">
+                <td class="calendar-day-head" colspan="2" style="cursor: pointer">
+                    <a href="<?php echo $this->getPrevLink(); ?>">
+                        <center>
+                            <div class="left-arrow"></div>
+                        </center>
+                    </a>
+                </td>
+                <td class="calendar-day-head" colspan="5"><?php echo $monthname . " - " . $year ?></td>
+                <td class="calendar-day-head" style="cursor: pointer">
+                    <a href="<?php echo $this->getNextLink(); ?>">
+                        <center>
+                            <div class="right-arrow"></div>
+                        </center>
+                    </a>
+                </td>
+            </tr>
+            <?
+            $dateweekcheck  = mktime(0, 0, 0, $month, 1, $year);
+            $week  = (int)date('W', $dateweekcheck);
+                        
+            echo '<tr class="calendar-row"><td class="calendar-day-np week"></td><td class="calendar-day-head">' . implode('</td><td class="calendar-day-head">', $headings) . '</td></tr>';
+            echo '<tr class="calendar-row"><td class="calendar-day-np week">'.$week.'</td>';
+
+            for ($x = 0; $x < ($running_day-1); $x++) {
+                echo '<td class="calendar-day-np">&nbsp;</td>';
+                $days_in_this_week++;
+            }
+
+            for ($list_day = 1; $list_day <= $days_in_month; $list_day++) {
+                
+                $events = $this->getEventsForDay($year, $month, $list_day);
+                $containsdata = (count($events) == 0) ? '' : 'containsdata';
+                $data = "";
+
+                foreach ($events as $event) {
+                    $days = count($event->days);
+                    $data .= "<div class='outerdiv'><div days='$days'>" . $event->bookingItemType->name . "</div></div>";
+                }
+                
+                echo "<td class='calendar-day configable $containsdata' >";
+
+                $pageid = $this->getPage()->getId(); 
+                
+                echo "<a href='/?page=$pageid&day=$list_day&scroll_to_dayview=true'>";
+                echo "<div class='calendercontent'>";
+                echo "<div class='day-number'>$list_day</div>";
+                echo "<div class='content'>$data</div>";
+                echo "</div>";
+                echo "</a>";
+                echo '</td>';
+
+                if ($running_day == 7) {
+                    echo '</tr>';
+                    if (($day_counter + 1) != $days_in_month) {
+                        $dateweekcheck  = mktime(0, 0, 0, $month, ($day_counter+2), $year);
+                        $week  = (int)date('W', $dateweekcheck);
+                        echo '<tr class="calendar-row"><td class="calendar-day-np week">'.$week.'</td>';
+                    }
+                    $running_day = 0;
+                    $days_in_this_week = 0;
+                }
+
+                $days_in_this_week++;
+                $running_day++;
+                $day_counter++;
+            }
+
+            if ($days_in_this_week < 8 && $days_in_this_week != 1) {
+                for ($x = 1; $x <= (8 - $days_in_this_week); $x++) {
+                    echo '<td class="calendar-day-np">&nbsp;</td>';
+                }
+            }
+            ?>
+
+            </tr></table>
+    </div>
+
+    <script>
+        Calendar.expandDays();
+    </script>
+    <?
+    if (isset($this->day)) {
+        $this->includefile('day');
+    }
+    ?>
+</div>

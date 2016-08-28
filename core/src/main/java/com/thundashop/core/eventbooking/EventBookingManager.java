@@ -164,6 +164,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             events = filterList(events, locationFilters);
         }
         
+        List<String> eventTypesFilter = getEventTypesFilter();
+        if (!eventTypesFilter.isEmpty()) {
+            events = filterListEventTypes(events, eventTypesFilter);
+        }
+        
         for (Event event : events) {
             retEvents.add(finalize(event));
         }
@@ -196,13 +201,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         event.isInFuture = isInFuture(event);
         
-        if (event.markedAsReady || !isInFuture(event) || event.bookingItem == null || event.bookingItem.isFull || event.bookingItem.freeSpots < 1 || event.isCanceled) {
+        if (event.isLocked || event.markedAsReady || !isInFuture(event) || event.bookingItem == null || event.bookingItem.isFull || event.bookingItem.freeSpots < 1 || event.isCanceled) {
             event.canBook = false;
         } else {
             event.canBook = true;
         }
         
-        if ((event.bookingItem.isFull || event.bookingItem.freeSpots < 1) && !event.isCanceled && event.isInFuture) {
+        if ((event.bookingItem.isFull || event.bookingItem.freeSpots < 1) && !event.isCanceled && event.isInFuture && !event.isLocked) {
             event.canBookWaitingList = true;
         } else {
             event.canBookWaitingList = false;            
@@ -324,7 +329,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         List<Event> eventsConnectedToLocation = getEventsByLocation(locationId);
         
         if (!eventsConnectedToLocation.isEmpty()) {
-//            throw new ErrorException(1036);
+            throw new ErrorException(1036);
         }
         
         Location location = locations.remove(locationId);
@@ -576,6 +581,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public void addLocationFilter(String locationId) {
+        getEventTypesFilter().clear();
+        
         List<String> sessionFilters = getLocationFilters();
         if (sessionFilters.contains(locationId)) {
             sessionFilters.remove(locationId);
@@ -594,6 +601,17 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         return sessionFilters;
     }
+    
+    private List<String> getEventTypesFilter() {
+        List<String> sessionFilters = (List<String>) getSession().get("eventtypefilters");
+        
+        if (sessionFilters == null) {
+            sessionFilters = new ArrayList();
+            getSession().put("eventtypefilters", sessionFilters);
+        }
+        
+        return sessionFilters;
+    }
 
     private List<Event> filterList(List<Event> events, List<String> locationFilters) {
         List<Event> retEvents = new ArrayList();
@@ -601,6 +619,19 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         for (Event event : events) {
             finalize(event);
             if (event.location != null && locationFilters.contains(event.location.id)) {
+                retEvents.add(event);
+            }
+        }
+        
+        return retEvents;
+    }
+    
+    private List<Event> filterListEventTypes(List<Event> events, List<String> evenTypesFilter) {
+        List<Event> retEvents = new ArrayList();
+        
+        for (Event event : events) {
+            finalize(event);
+            if (event.bookingItemType != null && evenTypesFilter.contains(event.bookingItemType.id)) {
                 retEvents.add(event);
             }
         }
@@ -705,17 +736,30 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 if (reminder.type.equals("sms")) {
                     sendReminderSms(reminder.content, user, event, reminder.smsMessageId);
                 } else {
-                    sendReminderMail(reminder.content, reminder.subject, user, event, reminder.userIdMessageId, reminder.userIdInvoiceMessageId);
+                    sendReminderMail(reminder.content, reminder.subject, user, event, reminder.userIdMessageId, reminder.userIdInvoiceMessageId, false);
                 }
             }
         }
+        
+        sendToEventHelder(event, reminder);
         
         saveObject(reminder);
         reminders.put(reminder.id, reminder);
         log("REMINDER_SENT", event, reminder.type);
     }
 
-    private void sendReminderMail(String conent, String subject, User user, Event event, HashMap<String, String> userIdMessageId, HashMap<String, String> userIdInvoiceMessageId) {
+    private void sendToEventHelder(Event event, Reminder reminder) throws ErrorException {
+        User eventUserHelder = userManager.getUserById(event.eventHelderUserId);
+        if (eventUserHelder != null) {
+            if (reminder.type.equals("sms")) {
+                sendReminderSms(reminder.content, eventUserHelder, event, reminder.smsMessageId);
+            } else {
+                sendReminderMail(reminder.content, reminder.subject, eventUserHelder, event, reminder.userIdMessageId, reminder.userIdInvoiceMessageId, true);
+            }
+        }
+    }
+
+    private void sendReminderMail(String conent, String subject, User user, Event event, HashMap<String, String> userIdMessageId, HashMap<String, String> userIdInvoiceMessageId, boolean dontSendToCompany) {
         String email = storePool.getStore(storeId).configuration.emailAdress;
         String content = formatText(conent, user, event);
         subject = formatText(subject, user, event);
@@ -727,7 +771,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             }
         }
         
-        if (user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty() && !user.companyObject.invoiceEmail.equals(user.emailAddress)) {
+        if (!dontSendToCompany && user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty() && !user.companyObject.invoiceEmail.equals(user.emailAddress)) {
             String messageId = messageManager.sendMail(user.companyObject.invoiceEmail, user.fullName, subject, content, email, "");
             if (userIdInvoiceMessageId != null) {
                 userIdInvoiceMessageId.put(user.id, messageId);
@@ -1113,6 +1157,18 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return new ArrayList(retLocs);
     }
 
+    private void sendUserTransferredEventNotification(User user, Event fromEvent, Event toEvent) {
+        Application settingsApp = getSettingsApplication();
+        
+        if (settingsApp.getSetting("transfermail").equals("true")) {
+            transferEmail(settingsApp, user, fromEvent, toEvent, "transferemail_subject", "transferemail_content");
+        }
+        
+        if (settingsApp.getSetting("transfersms").equals("true")) {
+            transferSms(settingsApp, user, fromEvent, toEvent, "transfersms_content");
+        }
+    }
+    
     private void sendUserAddedToEventNotifications(User user, Event event) {
         Application settingsApp = getSettingsApplication();
         
@@ -1152,7 +1208,31 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             logEventEntry(event, "SIGNUP_MAIL_SENT_FAILED", "Couldnot send mail to user " + user.fullName + ", no email registered.", "");
         }
     }
+    
+    private void transferEmail(Application settingsApp, User user, Event fromEvent, Event event, String subjectkey, String contentKey) {
+        String subject = formatText(settingsApp.getSetting(subjectkey), user, event);
+        String content = formatText(settingsApp.getSetting(contentKey), user, event);
+        
+        subject = formatTextTransfer(subject, user, fromEvent);
+        content = formatTextTransfer(content, user, fromEvent);
+        
+        if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
+            String mailId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
+            logEventEntry(event, "TRANSFER_MAIL_SENT", "Signupmail sent to user " + user.fullName + ", email: " + user.emailAddress, mailId);
+        } else {
+            logEventEntry(event, "TRANSFER_MAIL_SENT_FAILED", "Couldnot send mail to user " + user.fullName + ", no email registered.", "");
+        }
+    }
 
+    private String formatTextTransfer(String text, User user, Event event) {
+        text = text.replace("{FromEvent.Name}", checkNull(event.bookingItemType.name));
+        text = text.replace("{FromEvent.Dates}", getDate(event));
+        text = text.replace("{FromEvent.Location}", checkNull(event.location == null ? "" : event.location.name));
+        text = text.replace("{FromEvent.SubLocation}", checkNull(event.subLocation == null ? "" : event.subLocation.name));
+        text = text.replace("\n", "<br/>");
+        return text;
+    }
+    
     private String formatText(String text, User user, Event event) {
         text = text.replace("{User.Name}", checkNull(user.fullName));
         text = text.replace("{User.Email}", checkNull(user.emailAddress));
@@ -1195,6 +1275,22 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             logEventEntry(event, "SMS_SIGNUP_SENT", "Signup sms sent to " + user.fullName, res);
         } else {
             logEventEntry(event, "SMS_SIGNUP_SENT_FAILED", "Failed to send signup sms to use " + user.fullName, "");
+        }
+    }
+    
+    private void transferSms(Application settingsApp, User user, Event fromEvet, Event event, String contentKey) {
+        String content = formatText(settingsApp.getSetting(contentKey), user, event);
+        content = formatTextTransfer(content, user, fromEvet);
+        
+        String prefix = user.prefix;
+        String phoneNumber = user.cellPhone;
+        String storeName = getStoreName();
+        
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            String res = messageManager.sendSms("clickatell", phoneNumber, content, prefix, storeName);
+            logEventEntry(event, "SMS_TRANSFER_SENT", "Signup sms sent to " + user.fullName, res);
+        } else {
+            logEventEntry(event, "SMS_TRANSFER_SENT_FAILED", "Failed to send signup sms to use " + user.fullName, "");
         }
     }
 
@@ -1486,7 +1582,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     private String getGroupLogo(User user) {
-        if (user.company == null) {
+        if (user.companyObject == null) {
             return "";
         }
         
@@ -1847,5 +1943,65 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return false;
     }
 
-    
+    @Override
+    public List<Event> getEventsForDay(int year, int month, int day) {
+        month--;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        Date dayDate = cal.getTime();
+        
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+
+        events.values().stream().forEach(event -> event.setMainDates());
+        
+        List<Event> restEvents = events.values().stream()
+                .filter(o -> fmt.format(o.mainStartDate).equals(fmt.format(dayDate)))
+                .collect(Collectors.toList());
+        
+        restEvents.stream().forEach(event -> finalize(event));
+        
+        return restEvents;
+                        
+    }
+
+    @Override
+    public void addTypeFilter(String bookingItemTypeId) {
+        List<String> sessionFilters = getLocationFilters();
+        sessionFilters.clear();
+        
+
+        List<String> eventTypesFilter = getEventTypesFilter();
+        if (eventTypesFilter.contains(bookingItemTypeId)) {
+            eventTypesFilter.remove(bookingItemTypeId);
+        } else {
+            eventTypesFilter.add(bookingItemTypeId);
+        }
+    }
+
+    @Override
+    public void moveUserToEvent(String userId, String fromEventId, String toEventId) {
+        User user = userManager.getUserById(userId);
+        
+        removeUserFromEvent(fromEventId, userId, true);
+        addUserToEvent(toEventId, userId, true, "transfer");
+        
+        Event fromEvent = getEvent(fromEventId);
+        Event event = getEvent(toEventId);
+        
+        logEventEntry(event, "TRANSFERRED", "User transferred, " + user.fullName + ", from event: " + fromEvent.bookingItemType.name + " to this", user.id);
+        logEventEntry(fromEvent, "TRANSFERRED", "User transferred, " + user.fullName + ", from this event to:" + event.bookingItemType.name, user.id);
+        
+        sendUserTransferredEventNotification(user, fromEvent, event);
+    }
+
+    @Override
+    public void toggleLocked(String eventId) {
+        Event event = getEvent(eventId);
+        event.isLocked = !event.isLocked;
+        saveObject(event);
+        finalize(event);
+    }
 }

@@ -80,6 +80,8 @@ public interface IEventBookingManager {
     public void setParticipationStatus(String eventId, String userId, String status);
     
     public void addLocationFilter(String locationId);
+    
+    public void addTypeFilter(String bookingItemTypeId);
    
     @Administrator
     public List<EventLog> getEventLog(String eventId);
@@ -200,4 +202,12 @@ public interface IEventBookingManager {
     
     @Administrator
     public List<EventStatistic> getStatistic(Date startDate, Date stopDate, List<String> groupIds, List<String> eventTypeIds);
+    
+    @Editor
+    public List<Event> getEventsForDay(int year, int month, int day);
+    
+    @Administrator
+    public void moveUserToEvent(String userId, String fromEventId, String toEventId);
+    
+    public void toggleLocked(String eventId);
 }

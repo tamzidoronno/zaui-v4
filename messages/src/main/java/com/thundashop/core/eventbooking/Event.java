@@ -45,6 +45,8 @@ public class Event extends DataCommon {
     
     public boolean questBackSent = false;
     
+    public boolean isLocked = false;
+    
     public String extraInformation = "";
     
     public List<EntryComment> eventComments = new ArrayList();

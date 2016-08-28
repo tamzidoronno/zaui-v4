@@ -2,14 +2,29 @@
 /* @var $this \ns_f06d0c6a_882e_4592_917c_b74273edfd11\EventLister */
 $groupedEvents = $this->getEvents();
 $locations = $this->getLocations($groupedEvents);
+$eventTypes = $this->getEventTypes($groupedEvents);
 $loggedOnUser = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
 
 
 echo "<div class='locationlist'>";
+    echo "<div class='locationlist_inner'>";
     foreach ($locations as $loc) {
         $extra = $loc->isFiltered ? "<i class='fa fa-check'></i>" : "";
-        echo "<div gsclick='applyFilter' locationId='$loc->id'>$extra $loc->name</div>";
+        echo "<div  gs_scrollToTop='true' gsclick='applyFilter' locationId='$loc->id'>$extra $loc->name</div>";
     }
+    
+    echo "</div>";
+
+    echo "<br/>";
+    echo "<div class='locationlist_inner'>";
+    echo " <h1>Kurs</h1>";
+    foreach ($eventTypes as $type) {
+        $extra = count($eventTypes) == 1 ? "<i class='fa fa-check'></i>" : ""; 
+        echo "<div gs_scrollToTop='true' gsclick='applyEventTypeFilter' typeid='$type->id'>$extra $type->name</div>";
+    }
+    echo "</div>";
+    
+    
 echo "</div>";
 
 

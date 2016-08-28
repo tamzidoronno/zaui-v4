@@ -39,10 +39,10 @@ public class Runner {
         out.close();
 
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
+        setDeveloperMode(context);
+        
         DatabaseUpdater updater = context.getBean(DatabaseUpdater.class);
         updater.check(context);
-        
-        setDeveloperMode(context);
         
         context = new ClassPathXmlApplicationContext("All.xml");
         AppContext.appContext = context;

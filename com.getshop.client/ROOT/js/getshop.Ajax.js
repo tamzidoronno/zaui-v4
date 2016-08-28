@@ -106,8 +106,16 @@ thundashop.Ajax = {
         
         if ($(this).attr('gssilent') == "true") {
             thundashop.Ajax.post(event, null, true, true, true);
+            
+            if ($(this).attr('gs_scrollToTop')) {
+                window.scroll(0,0);
+            }
         } else {
             thundashop.Ajax.simplePost(this, method, data);
+            
+            if ($(this).attr('gs_scrollToTop')) {
+                window.scroll(0,0);
+            }
         }   
     },
     

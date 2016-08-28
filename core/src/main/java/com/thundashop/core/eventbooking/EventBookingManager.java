@@ -201,13 +201,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         event.isInFuture = isInFuture(event);
         
-        if (event.markedAsReady || !isInFuture(event) || event.bookingItem == null || event.bookingItem.isFull || event.bookingItem.freeSpots < 1 || event.isCanceled) {
+        if (event.isLocked || event.markedAsReady || !isInFuture(event) || event.bookingItem == null || event.bookingItem.isFull || event.bookingItem.freeSpots < 1 || event.isCanceled) {
             event.canBook = false;
         } else {
             event.canBook = true;
         }
         
-        if ((event.bookingItem.isFull || event.bookingItem.freeSpots < 1) && !event.isCanceled && event.isInFuture) {
+        if ((event.bookingItem.isFull || event.bookingItem.freeSpots < 1) && !event.isCanceled && event.isInFuture && !event.isLocked) {
             event.canBookWaitingList = true;
         } else {
             event.canBookWaitingList = false;            
@@ -1995,5 +1995,13 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         logEventEntry(fromEvent, "TRANSFERRED", "User transferred, " + user.fullName + ", from this event to:" + event.bookingItemType.name, user.id);
         
         sendUserTransferredEventNotification(user, fromEvent, event);
+    }
+
+    @Override
+    public void toggleLocked(String eventId) {
+        Event event = getEvent(eventId);
+        event.isLocked = !event.isLocked;
+        saveObject(event);
+        finalize(event);
     }
 }

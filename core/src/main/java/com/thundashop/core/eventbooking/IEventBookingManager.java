@@ -208,4 +208,6 @@ public interface IEventBookingManager {
     
     @Administrator
     public void moveUserToEvent(String userId, String fromEventId, String toEventId);
+    
+    public void toggleLocked(String eventId);
 }

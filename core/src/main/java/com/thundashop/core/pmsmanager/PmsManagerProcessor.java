@@ -302,6 +302,7 @@ public class PmsManagerProcessor {
         List<PmsBooking> res = new ArrayList(manager.getBookingMap().values());
         List<PmsBooking> toRemove = new ArrayList();
         for (PmsBooking booking : res) {
+            boolean ignoreNotPaidFor = checkIgnorePaidFor(booking);
             if (booking.getActiveRooms() == null) {
                 toRemove.add(booking);
             }
@@ -315,7 +316,9 @@ public class PmsManagerProcessor {
                 toRemove.add(booking);
             }
             if (!booking.payedFor && !includeNotPaidFor) {
-                toRemove.add(booking);
+                if(!ignoreNotPaidFor) {
+                    toRemove.add(booking);
+                }
             }
         }
         res.removeAll(toRemove);
@@ -698,5 +701,22 @@ public class PmsManagerProcessor {
             return false;
         }
         return true;
+    }
+
+    private boolean checkIgnorePaidFor(PmsBooking booking) {
+        if(booking.channel == null || booking.channel.isEmpty()) {
+            return false;
+        }
+        
+        PmsChannelConfig config = manager.getConfigurationSecure().getChannelConfiguration(booking.channel);
+        if(config == null) {
+            return false;
+        }
+        
+        if(config.ignoreUnpaidForAccess) {
+            return true;
+        }
+        
+        return false;
     }
 }

@@ -21,8 +21,8 @@ $locktype = array();
 $locktype['arx'] = "Arx";
 $locktype['getshop'] = "GetShop";
 $locktype['getshophotellock'] = "GetShop hotel lock";
-
-$hasArx = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName())->arxHostname;
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$hasArx = $config->arxHostname;
 
 $profiles = array();
 $profiles['dining'] = "Dining";
@@ -83,6 +83,8 @@ $days[4] = "Thursday";
 $days[5] = "Friday";
 $days[6] = "Saturday";
 $days[7] = "Sunday";
+
+$channelConfig = $config->channelConfiguration;
 ?>
 
 <h1>Booking notification system</h1>
@@ -783,6 +785,13 @@ $days[7] = "Sunday";
                          <input type='text' gsname='channel_translation_<?php echo $chan; ?>' value='<? echo $channel; ?>'>
                     </span>
                     <i class='fa fa-trash-o removeChannel' style='cursor:pointer' channel='<?php echo $chan; ?>'></i> <?php echo $chan; ?>
+                    <?php
+                        if($channelConfig->{$chan}->ignoreUnpaidForAccess) {
+                            echo ", does not need payment (<span gstype='clicksubmit' method='togglePaymentOnChannel' gsname='id' gsvalue='$chan'>toggle</span>)";
+                        } else {
+                            echo ", need payment (<span gstype='clicksubmit' method='togglePaymentOnChannel' gsname='id' gsvalue='$chan'>toggle</span>)";
+                        }
+                    ?>
                 </div>
             <? } ?>
             

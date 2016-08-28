@@ -101,7 +101,7 @@ public class PmsManagerProcessor {
                 save = true;
                 manager.doNotification(key, booking, room);
                 room.notificationsSent.add(key);
-                if(hoursAhead == 0) {
+                if(hoursAhead == 0 && !manager.getConfigurationSecure().hasLockSystem()) {
                     manager.markRoomAsDirty(room.bookingItemId);
                 }
             }
@@ -183,6 +183,9 @@ public class PmsManagerProcessor {
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room.addedToArx) {
+                    continue;
+                }
                 if (!manager.isClean(room.bookingItemId) && manager.getConfigurationSecure().cleaningInterval > 0) {
                     continue;
                 }
@@ -197,9 +200,10 @@ public class PmsManagerProcessor {
                     }
                 }
 
-                if (room.isStarted() && !room.addedToArx && !room.isEnded()) {
+                if (room.isStarted() && !room.isEnded()) {
                     if (pushToLock(room, false)) {
                         room.addedToArx = true;
+                        manager.markRoomAsDirty(room.bookingItemId);
                         save = true;
                         if(notifyRoomAddedToArx(room.cardformat)) {
                             manager.doNotification("room_added_to_arx", booking, room);

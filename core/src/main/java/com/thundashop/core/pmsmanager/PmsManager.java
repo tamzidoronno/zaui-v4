@@ -2448,7 +2448,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room.isStarted() && !room.isEnded()) {
             room.addedToArx = false;
             PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
-            add.markDirty();
+            if(!getConfigurationSecure().hasLockSystem()) {
+                add.markDirty();
+            }
             saveObject(add);
             doNotification("room_changed", booking, room);
         }
@@ -3190,8 +3192,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void updateAdditionalInformationOnRooms(PmsAdditionalItemInformation info) {
+        List<PmsAdditionalItemInformation> toRemove = new ArrayList();
+        for(PmsAdditionalItemInformation test : addiotionalItemInfo.values()) {
+            if(test.itemId.equals(info.itemId)) {
+                System.out.println("Match: " + info.itemId);
+                toRemove.add(test);
+            }
+        }
+        
+        for(PmsAdditionalItemInformation remove : toRemove) {
+            deleteObject(remove);
+            addiotionalItemInfo.remove(remove.id);
+        }
+        
         saveObject(info);
-        addiotionalItemInfo.put(info.id, info);
+        addiotionalItemInfo.put(info.itemId, info);
     }
 
     @Override

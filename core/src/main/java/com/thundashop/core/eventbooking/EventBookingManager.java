@@ -1847,5 +1847,27 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return false;
     }
 
-    
+    @Override
+    public List<Event> getEventsForDay(int year, int month, int day) {
+        month--;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+        Date dayDate = cal.getTime();
+        
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+
+        events.values().stream().forEach(event -> event.setMainDates());
+        
+        List<Event> restEvents = events.values().stream()
+                .filter(o -> fmt.format(o.mainStartDate).equals(fmt.format(dayDate)))
+                .collect(Collectors.toList());
+        
+        restEvents.stream().forEach(event -> finalize(event));
+        
+        return restEvents;
+                        
+    }
 }

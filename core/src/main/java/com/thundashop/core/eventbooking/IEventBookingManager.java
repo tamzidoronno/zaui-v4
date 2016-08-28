@@ -200,4 +200,7 @@ public interface IEventBookingManager {
     
     @Administrator
     public List<EventStatistic> getStatistic(Date startDate, Date stopDate, List<String> groupIds, List<String> eventTypeIds);
+    
+    @Editor
+    public List<Event> getEventsForDay(int year, int month, int day);
 }

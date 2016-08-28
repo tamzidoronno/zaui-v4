@@ -1,0 +1,21 @@
+<?php 
+namespace ns_6f3bc804_02a1_44b0_a17d_4277f0c6dee8;
+
+/* @var $this \ns_6997a8f0_1724_403b_ab4e_493592ba7665\EventCalendar */ ?>
+<div class="dayevents">
+<?
+$today = new \DateTime($this->year.'-'.$this->month.'-'.$this->day);
+echo "<br/><br/>";
+
+echo "<h2>".$this->day." - ".$this->__w($today->format('l'),'common')."</h2>";
+
+$events = $this->getEventsForDay($this->year, $this->month, $this->day);
+
+foreach ($events as $event) {
+    $name = $event->bookingItemType->name;
+    $location = $event->location->name. " - " .$event->subLocation->name;
+    $pageId = $event->eventPage;
+    echo "<a href='$pageId'><div class='event_row'>$name ($location)</div></a>";
+}
+?>
+</div>

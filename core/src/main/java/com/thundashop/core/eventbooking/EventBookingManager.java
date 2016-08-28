@@ -164,6 +164,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             events = filterList(events, locationFilters);
         }
         
+        List<String> eventTypesFilter = getEventTypesFilter();
+        if (!eventTypesFilter.isEmpty()) {
+            events = filterListEventTypes(events, eventTypesFilter);
+        }
+        
         for (Event event : events) {
             retEvents.add(finalize(event));
         }
@@ -576,6 +581,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public void addLocationFilter(String locationId) {
+        getEventTypesFilter().clear();
+        
         List<String> sessionFilters = getLocationFilters();
         if (sessionFilters.contains(locationId)) {
             sessionFilters.remove(locationId);
@@ -594,6 +601,17 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         return sessionFilters;
     }
+    
+    private List<String> getEventTypesFilter() {
+        List<String> sessionFilters = (List<String>) getSession().get("eventtypefilters");
+        
+        if (sessionFilters == null) {
+            sessionFilters = new ArrayList();
+            getSession().put("eventtypefilters", sessionFilters);
+        }
+        
+        return sessionFilters;
+    }
 
     private List<Event> filterList(List<Event> events, List<String> locationFilters) {
         List<Event> retEvents = new ArrayList();
@@ -601,6 +619,19 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         for (Event event : events) {
             finalize(event);
             if (event.location != null && locationFilters.contains(event.location.id)) {
+                retEvents.add(event);
+            }
+        }
+        
+        return retEvents;
+    }
+    
+    private List<Event> filterListEventTypes(List<Event> events, List<String> evenTypesFilter) {
+        List<Event> retEvents = new ArrayList();
+        
+        for (Event event : events) {
+            finalize(event);
+            if (event.bookingItemType != null && evenTypesFilter.contains(event.bookingItemType.id)) {
                 retEvents.add(event);
             }
         }
@@ -1869,5 +1900,19 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         return restEvents;
                         
+    }
+
+    @Override
+    public void addTypeFilter(String bookingItemTypeId) {
+        List<String> sessionFilters = getLocationFilters();
+        sessionFilters.clear();
+        
+
+        List<String> eventTypesFilter = getEventTypesFilter();
+        if (eventTypesFilter.contains(bookingItemTypeId)) {
+            eventTypesFilter.remove(bookingItemTypeId);
+        } else {
+            eventTypesFilter.add(bookingItemTypeId);
+        }
     }
 }

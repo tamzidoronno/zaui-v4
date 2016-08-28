@@ -80,6 +80,8 @@ public interface IEventBookingManager {
     public void setParticipationStatus(String eventId, String userId, String status);
     
     public void addLocationFilter(String locationId);
+    
+    public void addTypeFilter(String bookingItemTypeId);
    
     @Administrator
     public List<EventLog> getEventLog(String eventId);

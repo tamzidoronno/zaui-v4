@@ -19,23 +19,22 @@
     display: inline-block;
     vertical-align: top;
     box-sizing: border-box;
-    background-color: #F0f0f0;
     
     border: solid 1px #DDD;
 }
 
-.EventLister .locationlist div {
+.EventLister .locationlist .locationlist_inner div {
     line-height: 30px;
     border-bottom: solid 1px #DDD;
     padding: 10px;
     cursor: pointer;
 }
 
-.EventLister .locationlist div:hover {
+.EventLister .locationlist .locationlist_inner div:hover {
     background-color: #DDD;
 }
 
-.EventLister .locationlist div:last-child {
+.EventLister .locationlist .locationlist_inner div:last-child {
     border-bottom: solid 0px;
 }
 
@@ -85,6 +84,10 @@
     padding: 30px;
     margin-bottom: 30px;
     text-align: center;
+}
+
+.EventLister .locationlist_inner {
+    background-color: #F0f0f0;
 }
 
 @media screen and (max-width: 599px) {

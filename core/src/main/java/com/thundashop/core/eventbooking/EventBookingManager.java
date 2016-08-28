@@ -736,17 +736,30 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 if (reminder.type.equals("sms")) {
                     sendReminderSms(reminder.content, user, event, reminder.smsMessageId);
                 } else {
-                    sendReminderMail(reminder.content, reminder.subject, user, event, reminder.userIdMessageId, reminder.userIdInvoiceMessageId);
+                    sendReminderMail(reminder.content, reminder.subject, user, event, reminder.userIdMessageId, reminder.userIdInvoiceMessageId, false);
                 }
             }
         }
+        
+        sendToEventHelder(event, reminder);
         
         saveObject(reminder);
         reminders.put(reminder.id, reminder);
         log("REMINDER_SENT", event, reminder.type);
     }
 
-    private void sendReminderMail(String conent, String subject, User user, Event event, HashMap<String, String> userIdMessageId, HashMap<String, String> userIdInvoiceMessageId) {
+    private void sendToEventHelder(Event event, Reminder reminder) throws ErrorException {
+        User eventUserHelder = userManager.getUserById(event.eventHelderUserId);
+        if (eventUserHelder != null) {
+            if (reminder.type.equals("sms")) {
+                sendReminderSms(reminder.content, eventUserHelder, event, reminder.smsMessageId);
+            } else {
+                sendReminderMail(reminder.content, reminder.subject, eventUserHelder, event, reminder.userIdMessageId, reminder.userIdInvoiceMessageId, true);
+            }
+        }
+    }
+
+    private void sendReminderMail(String conent, String subject, User user, Event event, HashMap<String, String> userIdMessageId, HashMap<String, String> userIdInvoiceMessageId, boolean dontSendToCompany) {
         String email = storePool.getStore(storeId).configuration.emailAdress;
         String content = formatText(conent, user, event);
         subject = formatText(subject, user, event);
@@ -758,7 +771,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             }
         }
         
-        if (user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty() && !user.companyObject.invoiceEmail.equals(user.emailAddress)) {
+        if (!dontSendToCompany && user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty() && !user.companyObject.invoiceEmail.equals(user.emailAddress)) {
             String messageId = messageManager.sendMail(user.companyObject.invoiceEmail, user.fullName, subject, content, email, "");
             if (userIdInvoiceMessageId != null) {
                 userIdInvoiceMessageId.put(user.id, messageId);

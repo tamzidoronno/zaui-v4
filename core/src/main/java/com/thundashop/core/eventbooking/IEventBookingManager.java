@@ -205,4 +205,7 @@ public interface IEventBookingManager {
     
     @Editor
     public List<Event> getEventsForDay(int year, int month, int day);
+    
+    @Administrator
+    public void moveUserToEvent(String userId, String fromEventId, String toEventId);
 }

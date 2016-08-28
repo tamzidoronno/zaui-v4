@@ -1,0 +1,7 @@
+.EventTransferUser .transferrow {
+    border-bottom: solid 1px #DDD;
+}
+
+.EventTransferUser .transferrow:hover {
+    background-color: #DEDEDE;
+}

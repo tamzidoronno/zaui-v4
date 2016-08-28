@@ -82,6 +82,19 @@
     </div>
 </div>
 
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Should send email upon transfer?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="transfermail">
+        <?
+        $class = ($this->getConfigurationSetting("transfermail") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
 <center><h2><? echo $this->__f("Sms?"); ?></h2> </center>
 <div class="textfield gss_setting">
     <span class="title"><?php echo $this->__f("Should send sms when user signs up?"); ?></span>
@@ -161,6 +174,19 @@
     </div>
 </div>
 
+<div class="textfield gss_setting">
+    <span class="title"><?php echo $this->__f("Should send sms upon transfer?"); ?></span>
+    <div class="gss_onoff" gs_model="emailmodel" gs_model_attr="transfersms">
+        <?
+        $class = ($this->getConfigurationSetting("transfersms") == "true") ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+    </div>
+    <div class="description">
+        <?php echo $this->__(""); ?>
+    </div>
+</div>
+
 
 <center><h2><? echo $this->__f("Contents variables that can be used"); ?></h2></center>
 <div>
@@ -180,6 +206,14 @@
     <br/> {Company.Postnumber} = <? echo $this->__f("Company postnumber"); ?>
     <br/> {Company.Country} = <? echo $this->__f("Company country"); ?>
     <br/> {Company.City} = <? echo $this->__f("Company city"); ?>
+    <br/>
+    <br/> Special Transfer Variables:
+    <br/> {FromEvent.Name} = <? echo $this->__f("Name of the event"); ?>
+    <br/> {FromEvent.Dates} = <? echo $this->__f("Date of the event"); ?>
+    <br/> {FromEvent.Location} = <? echo $this->__f("Location of the event"); ?>
+    <br/> {FromEvent.SubLocation} = <? echo $this->__f("Sublocation of the event"); ?>
+    <br/> {FromEvent.SubLocation.Description} = <? echo $this->__f("Description from the sublocation"); ?>
+    
 </div>
 
 <center><h2><? echo $this->__f("Signup emails / sms"); ?></h2></center>
@@ -302,6 +336,30 @@
     <div class="textfield gss_setting"  id="">
         <span class="title"><?php echo $this->__f("SmsContent"); ?></span>
         <textarea gs_model='emailmodel' gs_model_attr='event_canceled_sms_conent' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("event_canceled_sms_conent"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
+
+<center><h2><? echo $this->__f("Event transfer email / sms"); ?></h2></center>
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Event transfer subject"); ?></span>
+        <input type='textfield' gs_model='emailmodel' gs_model_attr='transferemail_subject' value="<? echo $this->getConfigurationSetting("transferemail_subject"); ?>"/>
+        <div class="description">
+            <?php echo $this->__("What should the subject be?"); ?>
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  >
+        <span class="title"><?php echo $this->__f("Mailcontent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='transferemail_content' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("transferemail_content"); ?></textarea>
+        <div class="description">
+        </div>
+    </div>
+
+    <div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("SmsContent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='transfersms_content' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("transfersms_content"); ?></textarea>
         <div class="description">
         </div>
     </div>

@@ -79,6 +79,13 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         $this->setConfigurationSetting("event_canceled_mail_subject", $_POST['event_canceled_mail_subject']);
         $this->setConfigurationSetting("automatic_reminder_template_frequence", $_POST['automatic_reminder_template_frequence']);
         
+        // Transfer
+        $this->setConfigurationSetting("transfermail", $_POST['transfermail']);
+        $this->setConfigurationSetting("transfersms", $_POST['transfersms']);
+        $this->setConfigurationSetting("transferemail_subject", $_POST['transferemail_subject']);
+        $this->setConfigurationSetting("transferemail_content", $_POST['transferemail_content']);
+        $this->setConfigurationSetting("transfersms_content", $_POST['transfersms_content']);
+        
         // Waitinglist removed
         $this->setConfigurationSetting("removedemail_waitinglist", $_POST['removedemail_waitinglist']);
         $this->setConfigurationSetting("removedsms_waitinglist", $_POST['removedsms_waitinglist']);

@@ -1144,6 +1144,18 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return new ArrayList(retLocs);
     }
 
+    private void sendUserTransferredEventNotification(User user, Event fromEvent, Event toEvent) {
+        Application settingsApp = getSettingsApplication();
+        
+        if (settingsApp.getSetting("transfermail").equals("true")) {
+            transferEmail(settingsApp, user, fromEvent, toEvent, "transferemail_subject", "transferemail_content");
+        }
+        
+        if (settingsApp.getSetting("transfersms").equals("true")) {
+            transferSms(settingsApp, user, fromEvent, toEvent, "transfersms_content");
+        }
+    }
+    
     private void sendUserAddedToEventNotifications(User user, Event event) {
         Application settingsApp = getSettingsApplication();
         
@@ -1183,7 +1195,31 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             logEventEntry(event, "SIGNUP_MAIL_SENT_FAILED", "Couldnot send mail to user " + user.fullName + ", no email registered.", "");
         }
     }
+    
+    private void transferEmail(Application settingsApp, User user, Event fromEvent, Event event, String subjectkey, String contentKey) {
+        String subject = formatText(settingsApp.getSetting(subjectkey), user, event);
+        String content = formatText(settingsApp.getSetting(contentKey), user, event);
+        
+        subject = formatTextTransfer(subject, user, fromEvent);
+        content = formatTextTransfer(content, user, fromEvent);
+        
+        if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
+            String mailId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
+            logEventEntry(event, "TRANSFER_MAIL_SENT", "Signupmail sent to user " + user.fullName + ", email: " + user.emailAddress, mailId);
+        } else {
+            logEventEntry(event, "TRANSFER_MAIL_SENT_FAILED", "Couldnot send mail to user " + user.fullName + ", no email registered.", "");
+        }
+    }
 
+    private String formatTextTransfer(String text, User user, Event event) {
+        text = text.replace("{FromEvent.Name}", checkNull(event.bookingItemType.name));
+        text = text.replace("{FromEvent.Dates}", getDate(event));
+        text = text.replace("{FromEvent.Location}", checkNull(event.location == null ? "" : event.location.name));
+        text = text.replace("{FromEvent.SubLocation}", checkNull(event.subLocation == null ? "" : event.subLocation.name));
+        text = text.replace("\n", "<br/>");
+        return text;
+    }
+    
     private String formatText(String text, User user, Event event) {
         text = text.replace("{User.Name}", checkNull(user.fullName));
         text = text.replace("{User.Email}", checkNull(user.emailAddress));
@@ -1226,6 +1262,22 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             logEventEntry(event, "SMS_SIGNUP_SENT", "Signup sms sent to " + user.fullName, res);
         } else {
             logEventEntry(event, "SMS_SIGNUP_SENT_FAILED", "Failed to send signup sms to use " + user.fullName, "");
+        }
+    }
+    
+    private void transferSms(Application settingsApp, User user, Event fromEvet, Event event, String contentKey) {
+        String content = formatText(settingsApp.getSetting(contentKey), user, event);
+        content = formatTextTransfer(content, user, fromEvet);
+        
+        String prefix = user.prefix;
+        String phoneNumber = user.cellPhone;
+        String storeName = getStoreName();
+        
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            String res = messageManager.sendSms("clickatell", phoneNumber, content, prefix, storeName);
+            logEventEntry(event, "SMS_TRANSFER_SENT", "Signup sms sent to " + user.fullName, res);
+        } else {
+            logEventEntry(event, "SMS_TRANSFER_SENT_FAILED", "Failed to send signup sms to use " + user.fullName, "");
         }
     }
 
@@ -1517,7 +1569,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     private String getGroupLogo(User user) {
-        if (user.company == null) {
+        if (user.companyObject == null) {
             return "";
         }
         
@@ -1914,5 +1966,21 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         } else {
             eventTypesFilter.add(bookingItemTypeId);
         }
+    }
+
+    @Override
+    public void moveUserToEvent(String userId, String fromEventId, String toEventId) {
+        User user = userManager.getUserById(userId);
+        
+        removeUserFromEvent(fromEventId, userId, true);
+        addUserToEvent(toEventId, userId, true, "transfer");
+        
+        Event fromEvent = getEvent(fromEventId);
+        Event event = getEvent(toEventId);
+        
+        logEventEntry(event, "TRANSFERRED", "User transferred, " + user.fullName + ", from event: " + fromEvent.bookingItemType.name + " to this", user.id);
+        logEventEntry(fromEvent, "TRANSFERRED", "User transferred, " + user.fullName + ", from this event to:" + event.bookingItemType.name, user.id);
+        
+        sendUserTransferredEventNotification(user, fromEvent, event);
     }
 }

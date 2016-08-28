@@ -109,9 +109,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 continue;
             }
             for(GetShopLockCode code : dev.codes.values()) {
-//                if(code.inUse()) {
+                if(code.inUse()) {
                     codes.add(code.fetchCodeToAddToLock());
-//                }
+                }
             }
         }
         
@@ -510,6 +510,8 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 dev.isAwake = gsdevice.isAwake;
                 dev.isFailed = gsdevice.isFailed;
                 dev.instances = gsdevice.instances;
+                dev.batteryStatus = gsdevice.batteryStatus;
+                dev.batteryLastUpdated = gsdevice.batteryLastUpdated;
                 if(dev.name == null || dev.name.equals("null")) {
                     dev.name = "";
                 }

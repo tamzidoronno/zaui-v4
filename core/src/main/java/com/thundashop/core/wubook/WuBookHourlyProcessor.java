@@ -19,6 +19,7 @@ public class WuBookHourlyProcessor extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
+        getApi().getWubookManager().addNewBookingsPastDays(getMultiLevelName(), 2);
         getApi().getWubookManager().updateAvailability(getMultiLevelName());
         getApi().getWubookManager().updatePrices(getMultiLevelName());
         getApi().getWubookManager().checkForNoShowsAndMark(getMultiLevelName());

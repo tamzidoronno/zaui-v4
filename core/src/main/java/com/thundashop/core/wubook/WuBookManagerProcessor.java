@@ -25,7 +25,7 @@ public class WuBookManagerProcessor extends GetShopSchedulerBase {
     public void execute() throws Exception {
         long start = System.currentTimeMillis();
         GetShopLogHandler.logPrintStatic("Searching for new bookings", null);
-        getApi().getWubookManager().addNewBookingsPastDays(getMultiLevelName(), 2);
+        getApi().getWubookManager().fetchNewBookings(getMultiLevelName());
         GetShopLogHandler.logPrintStatic("Wubook operation takes:" + (System.currentTimeMillis() - start), null);
     }
     

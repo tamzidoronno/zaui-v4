@@ -2704,6 +2704,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this);
         List<PmsRoomSimple> res = filtering.filterRooms(filter);
+        doSorting(res, filter);
         return res;
     }
 
@@ -3542,6 +3543,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBooking book : toRemove) {
             bookings.remove(book.id);
             deleteObject(book);
+        }
+    }
+
+    private void doSorting(List<PmsRoomSimple> res, PmsBookingFilter filter) {
+        if(filter.sorting == null || filter.sorting.isEmpty()) {
+            return;
+        }
+        
+        if(filter.sorting.equals("room")) {
+            Collections.sort(res, new Comparator<PmsRoomSimple>(){
+                public int compare(PmsRoomSimple o1, PmsRoomSimple o2){
+                    return o1.room.compareTo(o2.room);
+                }
+           });
         }
     }
 }

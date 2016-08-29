@@ -40,7 +40,10 @@
         <a ui-sref="guestinfo({ roomid: '{{room.pmsRoomId}}', bookingid: '{{room.bookingId}}' })">
             <span class='col-xs-2 roominfoblock'>
                 <div>
-                    <span class='roominfo'><i class='fa fa-smile-o' ng-show="{{room.checkedIn}}">&nbsp;{{room.room}}</i></span>
+                    <span class='roominfo'>
+                        <i class='fa fa-smile-o' ng-show="{{room.checkedIn}}">&nbsp;{{room.room}}</i>
+                        <i class='fa fa-bell' ng-show="{{room.checkingIntToday}}"></i>
+                    </span>
                     <span ng-show="{{!room.checkedIn}}">{{room.room}}</span>
                     <div><i class='fa fa-users'></i> {{room.numberOfGuests}}</div>
                     <div>{{room.code}}</div>

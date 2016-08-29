@@ -38,12 +38,24 @@ getshop.findguestController = function($scope, $state) {
         filter.startDate = start;
         filter.endDate = end;
         filter.filterType = $scope.filterType;
+        filter.sorting = "room";
         $scope.loading = true;
         $scope.notfound = false;
         var loadBookings = getshopclient.PmsManager.getSimpleRooms(getMultilevelName(), filter);
         loadBookings.done(function(data) {
             $scope.loading = false;
             $scope.rooms = data;
+            
+            var d = new Date();
+            var now = d.getTime();
+            
+            for(var k in data) {
+                var room = data[k];
+                room.checkingIntToday = false;
+                if(room.start > now) {
+                    room.checkingIntToday = true;
+                }
+            }
             if(data.length === 0) {
                 $scope.notfound = true;
             }

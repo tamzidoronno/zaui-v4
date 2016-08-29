@@ -178,7 +178,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     private Event finalize(Event event) {
         bookingEngine.removeBookingsWhereUserHasBeenDeleted(event.bookingItemId);
-        setBookingItem(event);
+        setBookingItem(event, true);
         
         if (event.bookingItem != null) {
             event.bookingItemType = bookingEngine.getBookingItemType(event.bookingItem.bookingItemTypeId);
@@ -218,8 +218,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return event;
     }
 
-    private void setBookingItem(Event event) {
-        event.bookingItem = bookingEngine.getBookingItem(event.bookingItemId);
+    private void setBookingItem(Event event, boolean force) {
+        if (event.bookingItem == null || force)
+            event.bookingItem = bookingEngine.getBookingItem(event.bookingItemId);
     }
     
     private void log(String action, Event event, Object additional) {
@@ -1696,7 +1697,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public Event getEventByPageId(String pageId) {
-        events.values().forEach(o -> setBookingItem(o));
+        events.values().forEach(o -> setBookingItem(o, false));
         
         return events.values().stream()
                 .filter(o -> o.bookingItem.pageId.equals(pageId))

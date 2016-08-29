@@ -28,7 +28,8 @@ if ($reminder->type == "mail") {
     echo "<div class='gs_shop_small_icon mailindicator' mailid='$invoiceMailId' title='Invoice mail delivery status | $invMailStatus' ><i class='fa $classInvMail'></i></div>";
 }
 
-if ($reminder->type == "sms") {
+if ($reminder->type == "sms" && isset($reminder->smsMessageId->{$user->id})) {
+    
     $smsId = @$reminder->smsMessageId->{$user->id};
     
     $inv = $this->getApi()->getMessageManager()->getSmsMessage($smsId);

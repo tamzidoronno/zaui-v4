@@ -179,6 +179,8 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
          foreach($selectedFields as $header => $value) {
              if($header == "actions") {
                 echo "<td align='center'>" . $row[$header] . "</td>";
+             } else if($header == "periode") {
+                 echo "<td width='110'>" . $row[$header] . "</td>";
              } else if($header == "price") {
                  echo "<td class='pricecol' align='center'>" . $row[$header] . "</td>";
              } else if($header == "state") {

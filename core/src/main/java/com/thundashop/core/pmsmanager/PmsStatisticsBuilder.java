@@ -36,10 +36,10 @@ class PmsStatisticsBuilder {
             statics.addEntry(entry);
             for(PmsBooking booking : bookings) {
                 if(!booking.confirmed) {
-                    continue;
+//                    continue;
                 }
                 if(booking.testReservation) {
-                    continue;
+//                    continue;
                 }
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(room.isActiveOnDay(cal.getTime())) {

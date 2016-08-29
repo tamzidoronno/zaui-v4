@@ -330,5 +330,26 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         return $time[0];
     }
 
+    public function printUncleanedRooms() {
+        $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+        $items = $this->indexList($items);
+        $rooms = $this->getApi()->getPmsManager()->getAllAdditionalInformationOnRooms($this->getSelectedName());
+        echo "<table cellspacing='0' cellpadding='0'>";
+        echo "<tr>";
+        echo "<th>Room</th>";
+        echo "<th>Action</th>";
+        echo "</tr>";
+        
+        foreach($rooms as $room) {
+            if(!$room->isClean && !$room->inUse) {
+                echo "<tr>";
+                echo "<td>".$items[$room->itemId]->bookingItemName."</td>";
+                echo "<td><span class='roomNotReady' method=\"markCleaned\" itemid=\"".$room->itemId."\">Mark room as ready</span></td>";
+                echo "</tr>";
+            }
+        }
+        echo "</table>";
+    }
+
 }
 ?>

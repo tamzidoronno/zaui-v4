@@ -2448,7 +2448,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room.isStarted() && !room.isEnded()) {
             room.addedToArx = false;
             PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
-            add.markDirty();
+            if(!getConfigurationSecure().hasLockSystem()) {
+                add.markDirty();
+            }
             saveObject(add);
             doNotification("room_changed", booking, room);
         }
@@ -2702,6 +2704,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this);
         List<PmsRoomSimple> res = filtering.filterRooms(filter);
+        doSorting(res, filter);
         return res;
     }
 
@@ -3190,8 +3193,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void updateAdditionalInformationOnRooms(PmsAdditionalItemInformation info) {
+        List<PmsAdditionalItemInformation> toRemove = new ArrayList();
+        for(PmsAdditionalItemInformation test : addiotionalItemInfo.values()) {
+            if(test.itemId.equals(info.itemId)) {
+                System.out.println("Match: " + info.itemId);
+                toRemove.add(test);
+            }
+        }
+        
+        for(PmsAdditionalItemInformation remove : toRemove) {
+            deleteObject(remove);
+            addiotionalItemInfo.remove(remove.id);
+        }
+        
         saveObject(info);
-        addiotionalItemInfo.put(info.id, info);
+        addiotionalItemInfo.put(info.itemId, info);
     }
 
     @Override
@@ -3527,6 +3543,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBooking book : toRemove) {
             bookings.remove(book.id);
             deleteObject(book);
+        }
+    }
+
+    private void doSorting(List<PmsRoomSimple> res, PmsBookingFilter filter) {
+        if(filter.sorting == null || filter.sorting.isEmpty()) {
+            return;
+        }
+        
+        if(filter.sorting.equals("room")) {
+            Collections.sort(res, new Comparator<PmsRoomSimple>(){
+                public int compare(PmsRoomSimple o1, PmsRoomSimple o2){
+                    return o1.room.compareTo(o2.room);
+                }
+           });
         }
     }
 }

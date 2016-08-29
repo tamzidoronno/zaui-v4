@@ -111,10 +111,15 @@ foreach ($apps as $app) {
     </div>
 </div>
 
-<div class='gss_settings_content'>
-    <div class="gss_settings_title"><? echo $this->__f("Saved cards"); ?></div>
-
-    <?
-    print_r($user->savedCards);
+<?php
+$savedCards = $user->savedCards;
+if($savedCards) {
     ?>
-</div>
+    <div class='gss_settings_content'>
+        <div class="gss_settings_title"><? echo $this->__f("Saved cards"); ?></div>
+
+        <?
+        print_r($user->savedCards);
+        ?>
+    </div>
+<?php } ?>

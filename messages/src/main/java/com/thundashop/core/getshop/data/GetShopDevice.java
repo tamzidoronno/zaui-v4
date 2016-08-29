@@ -20,6 +20,7 @@ public class GetShopDevice extends DataCommon {
     public HashMap<Integer, GetShopLockCode> codes = new HashMap();
     public Date lastTriedUpdate = null;
     public HashMap<String, Object> instances;
+    public Date batteryLastUpdated;
 
     public void setDevice(ZWaveDevice device) {
         zwaveid = device.id;
@@ -28,10 +29,24 @@ public class GetShopDevice extends DataCommon {
         if(device.data != null && device.data.isFailed != null && device.data.isFailed.value != null) {
             isFailed = new Boolean(device.data.isFailed.value + "");
         }
+        if(device.instances != null && device.instances.get("0") != null &&
+                device.instances.get("0").commandClasses.get("128") != null &&
+                device.instances.get("0").commandClasses.get("128").data != null &&
+                device.instances.get("0").commandClasses.get("128").data.last != null &&
+                device.instances.get("0").commandClasses.get("128").data.last.value != null)
+        {
+            batteryStatus = new Double(device.instances.get("0").commandClasses.get("128").data.last.value + "").intValue();
+            Calendar lastupdate = Calendar.getInstance();
+            lastupdate.setTimeInMillis(device.instances.get("0").commandClasses.get("128").data.last.updateTime * 1000);
+            batteryLastUpdated = lastupdate.getTime();
+        } else {
+            batteryStatus = -1;
+        }
+        
         if(device.data != null && device.data.isAwake != null && device.data.isAwake.value != null) {
             isAwake = new Boolean(device.data.isAwake.value + "");
         }
-        instances = device.instances;
+
     }
     
     public boolean isLock() {

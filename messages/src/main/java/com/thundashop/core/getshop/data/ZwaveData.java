@@ -11,4 +11,5 @@ public class ZwaveData {
     public ZwaveData givenName;
     public ZwaveData isFailed;
     public ZwaveData isAwake;
+    public ZwaveData last;
 }

@@ -25,8 +25,12 @@ if(!$locks || sizeof($locks) == 0) {
         
         echo "</td>";
         echo "<td>" . $lock->name . " (" . $lock->type . ")";
-        if($battery) {
-            echo ", battery : $battery%";
+        if($battery >= 0) {
+            $warn = "";
+            if($battery < 20) {
+                $warn = "style='color:red; font-weight:bold;'";
+            }
+            echo ", <span $warn>battery : $battery%</span>, last updated : " . date("d.m H:i", strtotime($lock->batteryLastUpdated));
         }
         echo "</td>";
         echo "<td align='center'>";

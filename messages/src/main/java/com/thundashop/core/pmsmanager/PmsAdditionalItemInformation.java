@@ -56,12 +56,15 @@ public class PmsAdditionalItemInformation extends DataCommon {
 
     public void addCleaningDate(Date date) {
         cleaningDates.add(date);
-        if(lastCleaned == null || lastCleaned.before(date)) {
+        if(lastCleaned == null || lastCleaned.before(date) && date != null) {
             lastCleaned = date;
         }
     }
 
     public Boolean isClean(boolean checkToday) {
+        if(itemId.equals("360059cb-cdcc-41cf-903c-fa564241e9c2")) {
+            System.out.println("check");
+        }
         isClean = false;
         if(lastCleaned == null) {
             return false;
@@ -92,6 +95,10 @@ public class PmsAdditionalItemInformation extends DataCommon {
 
     List<Date> getAllCleaningDates() {
         return cleaningDates;
+    }
+
+    public void setLastUsed(Date lastMarkedAsDirty) {
+        lastUsed = lastMarkedAsDirty;
     }
 
 }

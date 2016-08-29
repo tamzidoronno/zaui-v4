@@ -31,7 +31,7 @@ $config = $this->getConfigurationToUse();
             <?
             if($booking->channel) { echo "Channel : " . $booking->channel . "<br>"; }
             if($booking->wubookchannelreservationcode) { echo "Channel res id : " . $booking->wubookchannelreservationcode . "<br>"; }
-            if($booking->wubookreservationid) { echo "Wubook res id : " . $booking->wubookreservationid . "<br>"; }
+            if($booking->wubookreservationid) { echo "Wubook res id : " . $booking->wubookreservationid . " (<a href='https://wubook.net/bookings/".$booking->wubookreservationid."' target='_new'>open in wubook</a>)<br>"; }
             if($booking->channel) {
                 echo "Wubook no show : ";
                 echo $booking->wubookNoShow ? "Yes" : "no";

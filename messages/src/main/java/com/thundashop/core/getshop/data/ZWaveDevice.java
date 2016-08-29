@@ -13,7 +13,8 @@ import java.util.List;
  * @author boggi
  */
 public class ZWaveDevice {
-    HashMap<String, Object> instances;
+    HashMap<String, ZWaveDevice> instances;
+    HashMap<String, ZWaveDevice> commandClasses;
     public ZwaveData data;
     public Integer id;
 }

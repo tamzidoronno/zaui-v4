@@ -51,6 +51,7 @@ public class PmsBooking extends DataCommon {
     public boolean needCapture;
     public String wubookChannelReservationId;
     public String channel = "";
+    public boolean ignoreCheckChangesInBooking = false;
     
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();
@@ -220,6 +221,46 @@ public class PmsBooking extends DataCommon {
             total += room.getNumberOfDays();
         }
         return total;
+    }
+
+    boolean isBookedAfterOpeningHours() {
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        
+        int today = cal.get(Calendar.HOUR_OF_DAY);
+        int weekDay = cal.get(Calendar.DAY_OF_WEEK);
+        
+        Calendar sameDay = Calendar.getInstance();
+        sameDay.setTime(rowCreatedDate);
+        
+        boolean isSameDay = false;
+
+        if((sameDay.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR)) &&
+                (sameDay.get(Calendar.YEAR) == cal.get(Calendar.YEAR))) {
+            isSameDay = true;
+        }
+        
+        if(!isSameDay) {
+            return false;
+        }
+        
+        if(weekDay == Calendar.SATURDAY || weekDay == Calendar.SUNDAY) {
+            return true;
+        } else if(today > 15) {
+            return true;
+        }
+        
+        if(weekDay == Calendar.FRIDAY && today > 15) {
+            Calendar startCal = Calendar.getInstance();
+            startCal.setTime(rowCreatedDate);
+            startCal.add(Calendar.DAY_OF_YEAR, -2);
+            if(new Date().after(startCal.getTime())) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     public static class PriceType {

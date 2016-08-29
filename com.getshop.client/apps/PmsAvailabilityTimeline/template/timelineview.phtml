@@ -100,13 +100,13 @@ if($compact) {
         /* @var $line core_bookingengine_data_BookingTimeLine */
         echo "<tr>";
         echo "<td>" . $types[$type]->name .  "</td>";
-        foreach($lines as $line) {
+        foreach($lines as $day => $line) {
             $full = "available";
             if($lines[0]->totalAvailableSpots == $line->count) {
                 $full = "full";
             }
             $title = $line->count . " of " . $lines[0]->totalAvailableSpots . " taken";
-            echo "<td align='center' title='$title' class='$full'>" . $line->count . "/" . $line->totalAvailableSpots . "</td>";
+            echo "<td align='center' type='$type' day='".$line->start."' title='$title' class='$full loadBookingList'>" . $line->count . "/" . $line->totalAvailableSpots . "</td>";
         }
         echo "</tr>";
     }

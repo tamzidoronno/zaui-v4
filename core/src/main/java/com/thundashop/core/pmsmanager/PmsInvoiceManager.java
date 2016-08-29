@@ -33,6 +33,9 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsInvoiceManager {
 
+    private boolean avoidChangeInvoicedTo;
+    private boolean avoidChangingInvoicedFrom;
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -191,11 +194,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.invoicedFrom != null && 
                 !room.isSameDay(room.invoicedFrom, room.date.start) && 
                 room.date.start.before(room.invoicedFrom)) {
+            avoidChangeInvoicedTo = true;
             createCartItemsForRoom(room.date.start, room.invoicedFrom, booking, room);
+            avoidChangeInvoicedTo = false;
         }
     }
 
     private void checkIfNeedAdditionalEndInvoicing(PmsBookingRooms room, NewOrderFilter filter) {
+        avoidChangingInvoicedFrom = true;
         PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
 
         Date startDate = room.getInvoiceStartDate();
@@ -218,7 +224,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 item.endDate = cal.getTime();
             }
         }
-
+        avoidChangingInvoicedFrom = false;
     }
 
     private void autoGenerateOrders(PmsBookingRooms room, NewOrderFilter filter) {
@@ -305,6 +311,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
+        avoidChangeInvoicedTo = false;
+        avoidChangingInvoicedFrom = false;
         runningDiffRoutine = false;
         itemsToReturn.clear();
         this.avoidOrderCreation = filter.avoidOrderCreation;
@@ -504,8 +512,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         item.getProduct().price = price;
         item.getProduct().metaData = guestName;
         if(!avoidOrderCreation) {
-            room.invoicedTo = endDate;
-            room.invoicedFrom = room.date.start;
+            if(!avoidChangeInvoicedTo) {
+                room.invoicedTo = endDate;
+            }
+            if(!avoidChangingInvoicedFrom) {
+                room.invoicedFrom = room.date.start;
+            }
             logPrint("\t new end date: " + room.invoicedTo);
         }
         
@@ -975,7 +987,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return;
         }
         PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
-        if(room.invoicedFrom != null && !room.isSameDay(room.invoicedFrom, room.date.start)) {
+        if(room.invoicedFrom != null && room.invoicedFrom.before(room.date.start) && !room.isSameDay(room.invoicedFrom, room.date.start)) {
             creditRoomForPeriode(room.invoicedFrom, room.date.start, booking, room);
             if(!avoidOrderCreation) {
                 room.invoicedFrom = room.date.start;
@@ -1091,7 +1103,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                    if(addon.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
                        endInvoiDate = startInvoiceDate;
                    }
-               }
+               } 
                
                Double price = diffResult.price;
                 if(price.intValue() != 0) {

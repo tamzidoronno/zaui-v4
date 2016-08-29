@@ -31,4 +31,5 @@ public class PmsRoomSimple implements Serializable {
     public boolean keyIsReturned = false;
     public boolean testReservation = false;
     public Date regDate;
+    public String bookingTypeId;
 }

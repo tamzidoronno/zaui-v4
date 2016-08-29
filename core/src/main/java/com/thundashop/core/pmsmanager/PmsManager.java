@@ -1416,6 +1416,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveObject(data);
     }
 
+    
+    @Override
+    public void forceMarkRoomAsCleaned(String itemId) {
+        PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
+        additional.markCleaned();
+        saveAdditionalInfo(additional);
+    }
+    
     @Override
     public void markRoomAsCleaned(String itemId) {
         PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
@@ -2623,6 +2631,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void checkSecurity(PmsBooking booking) {
+        if(booking == null) {
+            logPrint("Nullbooking happened, on checksecurity");
+        }
         User loggedonuser = getSession().currentUser;
         if(booking.sessionId != null && getSession().id.equals(booking.sessionId)) {
             return;

@@ -57,7 +57,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         createScheduler("wubookprocessor", "* * * * *", WuBookManagerProcessor.class);
-        createScheduler("wubookprocessor", "1 2,6,10,14,18,22 * * *", WuBookHourlyProcessor.class);
+        createScheduler("wubookprocessor2", "1 * * * *", WuBookHourlyProcessor.class);
     }
     
     @Override
@@ -743,6 +743,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             boolean found = false;
             for(PmsBooking booking : bookings) {
                 if(booking.wubookreservationid.equals(code + "")) {
+                    if(booking.wubookreservationid.equals("1472405280")) {
+                        System.out.println("Found");
+                    }
                     found = true;
                 }
             }

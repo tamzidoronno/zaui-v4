@@ -1,6 +1,7 @@
 app.PmsAvailabilityTimeline = {
     init : function() {
         $(document).on('click', '.PmsAvailabilityTimeline .valueentry.full', app.PmsAvailabilityTimeline.loadBooking);
+        $(document).on('click', '.PmsAvailabilityTimeline .loadBookingList', app.PmsAvailabilityTimeline.loadBookingList);
         $(document).on('mouseover', '.PmsAvailabilityTimeline .valueentry', app.PmsAvailabilityTimeline.mouseOver);
         $(document).on('mouseout', '.PmsAvailabilityTimeline .valueentry', app.PmsAvailabilityTimeline.mouseOut);
     },
@@ -11,6 +12,14 @@ app.PmsAvailabilityTimeline = {
             clearTimeout(pmsAvailabilityTimelineTimeout);
         }
     },
+    loadBookingList : function() {
+        var event = thundashop.Ajax.createEvent('','loadBookingList', $(this), {
+            "day" : $(this).attr('day'),
+            "type" : $(this).attr('type')
+        });
+        thundashop.common.showInformationBoxNew(event, "Active rooms");
+    },
+    
     mouseOver : function() {
         if($(this).hasClass('available')) {
             return;

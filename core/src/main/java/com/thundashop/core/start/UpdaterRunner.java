@@ -18,5 +18,6 @@ public class UpdaterRunner {
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         DatabaseUpdater updater = context.getBean(DatabaseUpdater.class);
         updater.check(context);
+        System.exit(0);
     }
 }

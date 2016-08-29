@@ -23,6 +23,9 @@ public interface IPmsManager {
     public void markRoomAsCleaned(String itemId);
     
     @Administrator
+    public void forceMarkRoomAsCleaned(String itemId);
+    
+    @Administrator
     public void deleteAllBookings(String code);
     
     @Administrator

@@ -7,7 +7,9 @@ body { background-color:#3a99d7; }
 .innerview .additionalinfo { text-align: center;  border-top-left-radius: 5px; border-top-right-radius: 5px; font-size: 16px; margin-top: 20px; padding: 5px; color:#fff; background-color:#2f749f; }
 .innerview .additionalinfobottom { background-color: #2f749f; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; padding: 5px; }
 .roomrow { border-bottom: solid 1px; color:#fff !important; cursor:pointer; padding:0px; }
-.roomrow.notstarted { background-color:#efefef; color:#000 !important; }
+.roomrow.notstarted,
+.roomrow.confirmed
+{ background-color:#efefef; color:#000 !important; }
 .roomrow.started a,
 .roomrow.active a,
 .roomrow.started,

@@ -14,6 +14,66 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         $this->includefile("settings");
     }
     
+    public function loadBookingList() {
+        $type = $_POST['data']['type'];
+        $day = strtotime(date("d.m.Y 18:00", strtotime($_POST['data']['day'])));
+        $start = $this->convertToJavaDate($day);
+        $end = $this->convertToJavaDate($day+46400);
+        echo "<h1>" . $start . " - " . $end . "</h1>";
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->filterType = "active";
+        $filter->typeFilter = array();
+        $filter->typeFilter[] = $type;
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        
+        $filter->startDate = $start;
+        $filter->endDate = $end;
+        $rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
+        echo "<table width='100%'>";
+        echo "<tr>";
+        echo "<th>Room</th>";
+        echo "<th>Owner</th>";
+        echo "<th>Check in</th>";
+        echo "<th>Check out</th>";
+        echo "<th>Guest</th>";
+        echo "<th></th>";
+        echo "</tr>";
+        foreach($rooms as $room) {
+            if($room->bookingTypeId != $type) {
+//                continue;
+            }
+            $started = "";
+            if($room->start/1000 < time()) {
+                $started = "style='color:red; font-weight:bold;'";
+            }
+            echo "<tr $started>";
+            echo "<td>" . $room->room . "</td>";
+            echo "<td>".$room->owner."<br>".$room->guest[0]->name."</td>";
+            echo "<td>".date("d.m.Y H:i", $room->start/1000)."</td>";
+            echo "<td>".date("d.m.Y H:i", $room->end/1000)."</td>";
+            echo "<td>";
+            if(!$started) {
+                echo "<select>";
+                foreach($types as $type) {
+                    $items = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), 
+                            $type->id, 
+                            $this->convertToJavaDate($room->start/1000), 
+                            $this->convertToJavaDate($room->end/1000));
+                    
+                    if($type->id == $type) {
+                        continue;
+                    }
+                    echo "<option value='".$type->id."'>" . $type->name . " (" . $items .")". "</option>";
+                }
+                echo "</select>";
+                echo "<input type='button' value='change'>";
+            }
+            echo "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    }
+    
     public function getSelectedName() {
         return $this->getConfigurationSetting("engine_name");
     }

@@ -46,6 +46,10 @@ public class PmsBookingSimpleFilter {
         simple.start = room.date.start.getTime();
         simple.end = room.date.end.getTime();
         simple.bookingItemId = room.bookingItemId;
+        simple.bookingTypeId = room.bookingItemTypeId;
+        if(room.booking != null) {
+            simple.bookingTypeId = room.booking.bookingItemTypeId;
+        }
         simple.addons = room.addons;
         simple.price = room.price;
         simple.checkedIn = false;

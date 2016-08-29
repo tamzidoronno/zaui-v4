@@ -1,5 +1,5 @@
 if(getshop === undefined) { getshop = {}; }
-getshop.loginController = function($scope, $state) {
+getshop.loginController = function($scope, $state, $location) {
     $scope.login = {
         "address" : localStorage.getItem("address"),
         "username" : localStorage.getItem("username"),
@@ -35,7 +35,19 @@ getshop.loginController = function($scope, $state) {
             $scope.loading=false;
             alert('Logon failed');
             $scope.$apply();
-        })
+        });
         return logon;
+    };
+
+    var arguments = $location.search();
+    if(arguments.username) {
+        
+        $scope.login = {
+            "address" : arguments.address,
+            "username" : arguments.username,
+            "password" : arguments.password
+        };
+        
+        $scope.doLogin(arguments);
     }
-}
+};

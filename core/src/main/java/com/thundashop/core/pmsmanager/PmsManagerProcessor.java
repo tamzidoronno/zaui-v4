@@ -712,6 +712,10 @@ public class PmsManagerProcessor {
             return false;
         }
         
+        if(!booking.isBookedAfterOpeningHours()) {
+            return false;
+        }
+        
         PmsChannelConfig config = manager.getConfigurationSecure().getChannelConfiguration(booking.channel);
         if(config == null) {
             return false;

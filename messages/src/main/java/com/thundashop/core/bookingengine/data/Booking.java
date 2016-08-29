@@ -97,4 +97,8 @@ public class Booking extends DataCommon implements Comparable<Booking> {
     public int compareTo(Booking o) {
         return startDate.compareTo(o.startDate);
     }
+
+    public boolean isUnassigned() {
+        return bookingItemId == null || bookingItemId.isEmpty();
+    }
 }

@@ -223,17 +223,17 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
 
     @Override
     public List<BookingItem> getAvailbleItems(String typeId, Date start, Date end) {
-        return bookingEngineAbstract.getAvailbleItems(typeId, start, end);
+        return deepClone(bookingEngineAbstract.getAvailbleItems(typeId, start, end));
     }
     
     @Override
     public List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId) {
-        return bookingEngineAbstract.getAvailbleItemsWithBookingConsidered(typeId, start, end, bookingId);
+        return deepClone(bookingEngineAbstract.getAvailbleItemsWithBookingConsidered(typeId, start, end, bookingId));
     }
 
     @Override
     public List<BookingItem> getAllAvailbleItems(Date start, Date end) {
-        return bookingEngineAbstract.getAvailbleItems(start, end);
+        return deepClone(bookingEngineAbstract.getAvailbleItems(start, end));
     }
 
     @Override
@@ -245,7 +245,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
             res.addAll(found);
         }
         
-        return res;
+        return deepClone(res);
     }
 
     @Override

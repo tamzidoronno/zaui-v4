@@ -89,8 +89,20 @@ public class BookingItemAssignerOptimal {
      */
     private List<OptimalBookingTimeLine> makeOptimalTimeLines() {
         List<Booking> bookingsToAssign = new ArrayList(bookings);
-        Collections.sort(bookingsToAssign);
         
+        Collections.sort(bookingsToAssign, (Booking o1, Booking o) -> {
+            
+            if (o1.isUnassigned() && !o.isUnassigned()) {
+                return 1;
+            }
+
+            if (!o1.isUnassigned() && o.isUnassigned()) {
+                return -1;
+            }
+
+            return o1.startDate.compareTo(o.startDate);
+        });
+   
         List<OptimalBookingTimeLine> bookingLines = new ArrayList();
         while(bookingsToAssign.size() > 0) {
             OptimalBookingTimeLine bookingLine = new OptimalBookingTimeLine();
@@ -117,6 +129,12 @@ public class BookingItemAssignerOptimal {
                     }
                     
                     bookingLine.bookings.add(booking);
+                }
+                
+                if (booking.bookingItemId == null || booking.bookingItemId.isEmpty()) {
+                    if (!overlappingBooking(booking, bookingLine.bookings)) {
+                        bookingLine.bookings.add(booking);
+                    }
                 }
             }
             
@@ -221,6 +239,10 @@ public class BookingItemAssignerOptimal {
         return item;
     }
 
+    /*
+    * Checking weather the booking can be on the same booking line, 
+    * basically if the item is the same or not set.
+    */
     private boolean canBeOnTheSameLine(Booking booking, String currentBookingItemId) {
         if (currentBookingItemId == null || currentBookingItemId.isEmpty()) {
             return true;
@@ -330,10 +352,8 @@ public class BookingItemAssignerOptimal {
 
     private boolean overlappingBooking(Booking booking, List<Booking> bookingLine) {
         for (Booking ibooking : bookingLine) {
-            if (ibooking.bookingItemId != null && ibooking.bookingItemId.equals(booking.bookingItemId)) {
-                if (ibooking.interCepts(booking.startDate, booking.endDate)) {
-                    return true;
-                }
+            if (ibooking.interCepts(booking.startDate, booking.endDate)) {
+                return true;
             }
         }
         

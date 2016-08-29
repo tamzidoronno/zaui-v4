@@ -38,6 +38,8 @@ $searchtypes['summary'] = "Summary";
         </select>
         
         <?php  
+        $address = $_SERVER['SERVER_NAME'];
+        $username = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->emailAddress;
         $channels = (array)$channels;
        if(sizeof($channels) > 0) { ?>
             <select class="pmsinput filterType" gsname='channel'>
@@ -57,6 +59,7 @@ $searchtypes['summary'] = "Summary";
         <span  style=' padding-left: 10px; top: 15px;display:inline-block;position:absolute;cursor:pointer;'>
             <i class='fa fa-trash-o' gstype="clicksubmit" method='emptyfilter' gsname="id" gsvalue="somevalue" title='Empty filter'></i>
             <i class='fa fa-refresh' gstype="clicksubmit" method='runProcessor' gsname="id" gsvalue="somevalue" title='Manually run processor'></i>
+            <i class='fa fa-mobile-phone' style='font-size: 16px;' onclick='window.open("http://getshop.express#/login?address=<?php echo $address; ?>&username=<?php echo $username; ?>&password=")'></i>
         </span>
     </span>
    

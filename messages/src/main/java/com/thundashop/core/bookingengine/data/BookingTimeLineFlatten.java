@@ -122,7 +122,7 @@ public class BookingTimeLineFlatten implements Serializable {
      * @param interval Number of seconds intervals.
      * @return 
      */
-    public List<BookingTimeLine> getTimelines(Integer interval) {
+    public List<BookingTimeLine> getTimelines(Integer interval, Integer append) {
         LinkedList<BookingTimeLine> result = new LinkedList();
         List<BookingTimeLine> allLines = getTimelines();
         Calendar cal = Calendar.getInstance();
@@ -131,6 +131,7 @@ public class BookingTimeLineFlatten implements Serializable {
             Date startTime = cal.getTime();
             cal.add(Calendar.SECOND, interval);
             Date endTime = cal.getTime();
+            cal.add(Calendar.SECOND, append);
             
             BookingTimeLine tmpLine = createNewTimeLine(startTime, endTime, new ArrayList());
             BookingTimeLine bookingsFound = allLines.stream()

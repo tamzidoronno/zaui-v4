@@ -7,7 +7,7 @@ package com.getshop.bookingengine;
 
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingEngineAbstract;
-import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
+import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;

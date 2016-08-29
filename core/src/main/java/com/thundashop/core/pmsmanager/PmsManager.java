@@ -18,7 +18,7 @@ import com.thundashop.core.amesto.AmestoManager;
 import com.thundashop.core.amesto.AmestoSync;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
+import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;

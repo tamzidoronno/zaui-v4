@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thundashop.core.bookingengine;
+package com.thundashop.core.bookingengine.data;
 
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.ManagerSubBase;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,8 +31,8 @@ public class BookingTimeLineFlatten implements Serializable {
     private List<Booking> bookings = new ArrayList();
     private final int totalAvailableSpots;
     private final String bookingItemTypeId;
-    Date end;
-    Date start;
+    public  Date end;
+    public  Date start;
 
     public BookingTimeLineFlatten(int totalAvailableSpots, String bookingItemTypeId) {
         this.totalAvailableSpots = totalAvailableSpots;
@@ -65,7 +64,7 @@ public class BookingTimeLineFlatten implements Serializable {
         return timeLines;
     }
 
-    boolean canAdd(Booking booking) {
+    public boolean canAdd(Booking booking) {
         for (BookingTimeLine itemLine : getTimelines()) {
             if (itemLine.intercepts(booking) && itemLine.getAvailableSpots() < 1) {
                 GetShopLogHandler.logPrintStatic("Booking is full between: " + itemLine.start + " and " + itemLine.end, null);

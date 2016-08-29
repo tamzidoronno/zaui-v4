@@ -5,7 +5,7 @@
  */
 package com.getshop.bookingengine;
 
-import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
+import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import java.text.ParseException;

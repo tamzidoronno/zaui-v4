@@ -1,5 +1,6 @@
 package com.thundashop.core.bookingengine;
 
+import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingItem;
@@ -31,6 +32,9 @@ public interface IBookingEngine {
     
     @Administrator
     public BookingItemType getBookingItemType(String id);
+    
+    @Administrator
+    public BookingTimeLineFlatten getTimelines(String id, Date startDate, Date endDate);
     
     @Administrator
     public BookingItemType updateBookingItemType(BookingItemType type);

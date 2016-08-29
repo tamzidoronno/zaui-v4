@@ -16,9 +16,13 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     
     public function loadBookingList() {
         $type = $_POST['data']['type'];
-        $day = strtotime(date("d.m.Y 18:00", strtotime($_POST['data']['day'])));
+        $day = strtotime(date("d.m.Y 14:00", strtotime($_POST['data']['day'])));
         $start = $this->convertToJavaDate($day);
-        $end = $this->convertToJavaDate($day+46400);
+        $end = $this->convertToJavaDate($day+60000);
+        $timeline = $this->getApi()->getBookingEngine()->getTimelines($this->getSelectedName(), $type, $start, $end);
+        echo "<pre>";
+        print_r($timeline);
+        echo "</pre>";
         echo "<h1>" . $start . " - " . $end . "</h1>";
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->filterType = "active";
@@ -39,9 +43,6 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         echo "<th></th>";
         echo "</tr>";
         foreach($rooms as $room) {
-            if($room->bookingTypeId != $type) {
-//                continue;
-            }
             $started = "";
             if($room->start/1000 < time()) {
                 $started = "style='color:red; font-weight:bold;'";
@@ -119,17 +120,20 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     public function getStart() {
         $data = $this->getData();
         if(isset($data['start'])) {
-            return $data['start'];
+            $time = $data['start'];
+        } else {
+            $time = time();
         }
-        return time();
+        return strtotime(date("d.m.Y 14:00", $time));
     }
 
     public function getEnd() {
         $data = $this->getData();
+        $time = time()+(86400*7);
         if(isset($data['end'])) {
-            return $data['end'];
+            $time = $data['end'];
         }
-        return time()+(86400*7);
+        return strtotime(date("d.m.Y 06:00", $time));
     }
     
     public function getInterval() {

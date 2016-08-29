@@ -20,6 +20,11 @@ $this->print_guests_table($time, true);
 <h1>Need cleaning today</h1>
 <?php
 $this->print_interval_cleaning($time);
+
+if(date("N", time()) == 1) {
+    echo "<h1>Sunday cleaning program</h1>";
+    $this->printUncleanedRooms();
+}
 ?>
 <h1>Guests arriving tomorrow</h1>
 <?php

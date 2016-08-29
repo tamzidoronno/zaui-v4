@@ -32,19 +32,22 @@ public class Runner {
         java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
         java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
 
+        ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
+        setDeveloperMode(context);
+        
         invokeApiGenerator();
         
         PrintWriter out = new PrintWriter("../secret.txt") ;
         out.write(OVERALLPASSWORD+"\n");
         out.close();
 
-        ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
-        setDeveloperMode(context);
+        if (GetShopLogHandler.isDeveloper) {
+            DatabaseUpdater updater = context.getBean(DatabaseUpdater.class);
+            updater.check(context);
+
+            context = new ClassPathXmlApplicationContext("All.xml");
+        }
         
-        DatabaseUpdater updater = context.getBean(DatabaseUpdater.class);
-        updater.check(context);
-        
-        context = new ClassPathXmlApplicationContext("All.xml");
         AppContext.appContext = context;
         Logger log = context.getBean(Logger.class);
         
@@ -95,6 +98,8 @@ public class Runner {
                 Method method = cls.getMethod("main", String[].class);
                 String[] params = null; // init params accordingly
                 method.invoke(null, (Object) params);
+                
+                
             }
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -191,7 +191,7 @@ Enter a new password.;-;Skriv inn ditt nye passord
 Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email/sms.;-;Oppgi koden som er sendt til deg på epost/sms
 Event label (google analythics);-;Event label (google analythics)
-Event name;-;Navn på eventet
+Event name;-;Navn på kurs
 Fade;-;Fade
 Fade in when scrolling;-;Fade når du scroller
 Failed;-;Feilet
@@ -269,7 +269,7 @@ Les mer;-;Les mer
 Link this cell;-;Link denne cellen
 Load;-;Last
 Loading;-;Laster
-Location;-;Lokasjon
+Location;-;Sted
 Logged in;-;Innlogget
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?

@@ -75,14 +75,16 @@ $users = $this->getApi()->getEventBookingManager()->getUsersForEvent($this->getB
                 foreach ($reminder->userIds as $id) {
                     @$_POST['data']['userid'] = $id;
                     $user = $this->getApi()->getUserManager()->getUserById($id);
-                    echo "<div class='reminder_user_row_2'>";
-                        echo $user->fullName;
-                            
-                        echo "<div class='indicators' userid='$user->id' reminderid='$reminder->id'>";
-                            $this->includefile("indicator");
+                    if ($user) {
+                        echo "<div class='reminder_user_row_2'>";
+                            echo $user->fullName;
+
+                            echo "<div class='indicators' userid='$user->id' reminderid='$reminder->id'>";
+                                $this->includefile("indicator");
+                            echo "</div>";
+
                         echo "</div>";
-                        
-                    echo "</div>";
+                    }
                 }
             echo "</div>";
         echo "</div>";

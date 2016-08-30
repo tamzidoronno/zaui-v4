@@ -18,7 +18,7 @@ import com.thundashop.core.amesto.AmestoManager;
 import com.thundashop.core.amesto.AmestoSync;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.BookingTimeLineFlatten;
+import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -739,7 +739,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String setNewRoomType(String roomId, String bookingId, String newType) {
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking = null;
+        if(bookingId != null) {
+            booking = getBooking(bookingId);
+        } else {
+            booking = getBookingFromRoom(roomId);
+        }
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
             bookingEngine.changeTypeOnBooking(room.bookingId, newType);
@@ -1365,14 +1370,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsIntervalResult res = new PmsIntervalResult();
         for (BookingItemType type : bookingEngine.getBookingItemTypes()) {
             BookingTimeLineFlatten line = bookingEngine.getTimelines(type.id, filter.start, filter.end);
-            res.typeTimeLines.put(type.id, line.getTimelines(filter.interval));
+            res.typeTimeLines.put(type.id, line.getTimelines(filter.interval-21600, 21600));
         }
 
         List<BookingItem> items = bookingEngine.getBookingItems();
 
         for (BookingItem item : items) {
             BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
-            List<BookingTimeLine> timelines = line.getTimelines(filter.interval);
+            List<BookingTimeLine> timelines = line.getTimelines(filter.interval-21600, 21600);
             LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap();
             for (BookingTimeLine tl : timelines) {
                 IntervalResultEntry tmpres = new IntervalResultEntry();

@@ -62,9 +62,6 @@ public class PmsAdditionalItemInformation extends DataCommon {
     }
 
     public Boolean isClean(boolean checkToday) {
-        if(itemId.equals("360059cb-cdcc-41cf-903c-fa564241e9c2")) {
-            System.out.println("check");
-        }
         isClean = false;
         if(lastCleaned == null) {
             return false;

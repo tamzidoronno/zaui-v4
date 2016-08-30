@@ -7,7 +7,7 @@ import java.util.UUID;
 public class PmsBookingAddonItem  implements Serializable {
 
 
-    static class AddonTypes {
+    public static class AddonTypes {
         public static Integer BREAKFAST = 1;
         public static Integer PARKING = 2;
         public static Integer LATECHECKOUT = 3;

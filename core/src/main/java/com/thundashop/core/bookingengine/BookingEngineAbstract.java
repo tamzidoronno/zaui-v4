@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.bookingengine;
 
+import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.app.contentmanager.data.ContentData;

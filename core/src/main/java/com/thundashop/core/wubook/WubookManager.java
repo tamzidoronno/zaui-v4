@@ -9,6 +9,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmsmanager.CheckPmsProcessing;
 import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.pmsmanager.PmsBookingComment;
 import com.thundashop.core.pmsmanager.PmsBookingDateRange;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
@@ -660,7 +661,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         pmsManager.setBooking(newbooking);
-        
+        if(booking.breakfast) {
+            for(PmsBookingRooms room : newbooking.getActiveRooms()) {
+                pmsManager.addAddonsToBooking(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false);
+
+            }
+        }
         pmsManager.completeCurrentBooking();
         logPrint("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
         return "";

@@ -16,10 +16,13 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     
     public function loadBookingList() {
         $type = $_POST['data']['type'];
-        $day = strtotime(date("d.m.Y 18:00", strtotime($_POST['data']['day'])));
+        $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $type);
+        $day = strtotime(date("d.m.Y 14:00", strtotime($_POST['data']['day'])));
         $start = $this->convertToJavaDate($day);
-        $end = $this->convertToJavaDate($day+46400);
-        echo "<h1>" . $start . " - " . $end . "</h1>";
+        $end = $this->convertToJavaDate($day+60000);
+        $timeline = $this->getApi()->getBookingEngine()->getTimelines($this->getSelectedName(), $type, $start, $end);
+        echo "<h1>" . $start . " - " . $end . "</h1><br>";
+        echo "<h2>" . $item->name . "</h2>";
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->filterType = "active";
         $filter->typeFilter = array();
@@ -39,9 +42,6 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         echo "<th></th>";
         echo "</tr>";
         foreach($rooms as $room) {
-            if($room->bookingTypeId != $type) {
-//                continue;
-            }
             $started = "";
             if($room->start/1000 < time()) {
                 $started = "style='color:red; font-weight:bold;'";
@@ -53,7 +53,11 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
             echo "<td>".date("d.m.Y H:i", $room->end/1000)."</td>";
             echo "<td>";
             if(!$started) {
-                echo "<select>";
+                echo '<div gstype="form" method="changeItemForBooking">';
+                echo "<input type='hidden' gsname='roomid' value='". $room->pmsRoomId . "'>";
+                echo "<input type='hidden' gsname='day' value='". $_POST['data']['day'] . "'>";
+                echo "<input type='hidden' gsname='type' value='". $_POST['data']['type'] . "'>";
+                echo "<select gsname='newtype'>";
                 foreach($types as $type) {
                     $items = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), 
                             $type->id, 
@@ -66,7 +70,8 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
                     echo "<option value='".$type->id."'>" . $type->name . " (" . $items .")". "</option>";
                 }
                 echo "</select>";
-                echo "<input type='button' value='change'>";
+                echo "<input type='button' value='change' gstype='submitToInfoBox'>";
+                echo "</div>";
             }
             echo "</td>";
             echo "</tr>";
@@ -76,6 +81,16 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     
     public function getSelectedName() {
         return $this->getConfigurationSetting("engine_name");
+    }
+    
+    public function changeItemForBooking() {
+        $newType = $_POST['data']['newtype'];
+        $roomId = $_POST['data']['roomid'];
+        $this->getApi()->getPmsManager()->setNewRoomType($this->getSelectedName(), $roomId, null, $newType);
+        $this->loadBookingList();
+        echo "<script>";
+        echo "thundashop.framework.reprintPage();";
+        echo "</script>";
     }
 
     public function saveSettings() {
@@ -119,17 +134,20 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     public function getStart() {
         $data = $this->getData();
         if(isset($data['start'])) {
-            return $data['start'];
+            $time = $data['start'];
+        } else {
+            $time = time();
         }
-        return time();
+        return strtotime(date("d.m.Y 16:00", $time));
     }
 
     public function getEnd() {
         $data = $this->getData();
+        $time = time()+(86400*7);
         if(isset($data['end'])) {
-            return $data['end'];
+            $time = $data['end'];
         }
-        return time()+(86400*7);
+        return strtotime(date("d.m.Y 06:00", $time));
     }
     
     public function getInterval() {

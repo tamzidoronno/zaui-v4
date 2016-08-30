@@ -448,6 +448,7 @@ class ApplicationManager extends FactoryBase {
     }
 
     public function CookieAccepted() {
+        setcookie ( "getshop_cookie_accepted", "true", (time()+60*60*24*30) );
         $_SESSION['getshop_cookie_accepted'] = true;
     }
 

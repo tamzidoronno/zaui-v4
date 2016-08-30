@@ -865,7 +865,7 @@ class Factory extends FactoryBase {
         $settings = $this->getSettings();
 
         if ($this->getSettings()->getConfigurationSetting("cookiewarning") === "true") {
-            if (isset($_SESSION['getshop_cookie_accepted'])) {
+            if (isset($_COOKIE['getshop_cookie_accepted'])) {
                 return;
             }
             echo "<div style='display:none;' id='cookiewarning_overlay'>";

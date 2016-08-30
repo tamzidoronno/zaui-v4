@@ -20,16 +20,6 @@ $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderid']);
         </td>
     </tr>
     <tr>
-        <td><?php echo $this->__w("Payment type"); ?></td>
-        <td>
-            <?php
-            $type = $order->payment->paymentType;
-            $type = substr($type, strpos($type, "\\")+1);
-            echo $this->__w($type); 
-            ?>
-        </td>
-    </tr>
-    <tr>
         <td>Comments</td>
         <td>
             <?php echo $order->invoiceNote; ?>

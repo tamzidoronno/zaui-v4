@@ -99,6 +99,12 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         }
         
         foreach($_POST['data'] as $key => $value) {
+            if($key == "otherinstructions") {
+                continue;
+            }
+            if($key == "fireinstructions") {
+                continue;
+            }
             if(property_exists($notifications, $key)) {
                 $notifications->{$key} = $value;
             }

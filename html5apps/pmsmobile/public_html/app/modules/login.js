@@ -47,7 +47,8 @@ getshop.loginController = function($scope, $state, $location) {
             "username" : arguments.username,
             "password" : arguments.password
         };
-        
-        $scope.doLogin(arguments);
+        if(arguments.password) {
+            $scope.doLogin(arguments);
+        }
     }
 };

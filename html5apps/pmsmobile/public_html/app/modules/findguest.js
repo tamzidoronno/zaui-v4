@@ -48,14 +48,20 @@ getshop.findguestController = function($scope, $state) {
             
             var d = new Date();
             var now = d.getTime();
-            
+            var totalcount = 0;
+            var guestcount = 0;
+            var today = new Date();
             for(var k in data) {
                 var room = data[k];
                 room.checkingIntToday = false;
+                guestcount += room.guest.length;
                 if(room.start > now) {
                     room.checkingIntToday = true;
                 }
+                totalcount++;
             }
+            $scope.totalcount = totalcount;
+            $scope.guestcount = guestcount;
             if(data.length === 0) {
                 $scope.notfound = true;
             }

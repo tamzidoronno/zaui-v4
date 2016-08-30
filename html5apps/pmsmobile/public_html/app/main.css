@@ -10,6 +10,7 @@ body { background-color:#3a99d7; }
 .roomrow.notstarted,
 .roomrow.confirmed
 { background-color:#efefef; color:#000 !important; }
+.roomrow.test { background-color: #e38d13; color:#fff !important; }
 .roomrow.started a,
 .roomrow.active a,
 .roomrow.started,

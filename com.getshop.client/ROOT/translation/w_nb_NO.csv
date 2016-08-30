@@ -287,7 +287,7 @@ Mon;-;Man
 Monday;-;Mandag
 Monthly;-;Månedlig
 More information;-;Mer informasjon
-More information about this event;-;Mer informasjon om dette eventet
+More information about this event;-;Mer informasjon om dette kurset
 Mouse over background;-;Mus over bakgrundsfarge
 Mouse over text color;-;Mus over tekst farge
 Move cell to the left;-;Flytt celle til venstre
@@ -321,7 +321,7 @@ Next;-; Neste
 Nice modern theme. Could be used for clothing, skateboarding, snowboarding etc.;-;Fint moderne tema. Kan bli brukt for klær, skateboards, snowbards, osv.
 Nice modern theme. Suitable for different carmarkeds.;-;Pent og moderne tema. Godt brukbart i bil markedet.
 No;-;Nei
-No available spots left for this event;-;Ingen tilgjengelige plasser på dette eventet
+No available spots left for this event;-;Ingen tilgjengelige plasser på dette kurset
 No code added yet;-;Ingen kode er lagt til enda
 No companies registered yet!;-;Ingen firma er registrert enda.
 No data available yet.;-;Ingen data tilgjengelig enda.
@@ -500,9 +500,9 @@ Sign out;-;Logg ut
 Sign up;-;Registrer deg
 Sign up with facebook;-;Logg inn me facebook
 Sign up with google;-;Logg inn med google
-Signup waitinglist;-;Meldg meg på ventelisten
+Signup waitinglist;-;Meld meg på ventelisten
 Single date;-;Enkeltdato
-Singup;-;Registrering
+Singup;-;Meld på kurset
 Slide left;-;Slide til venstre
 Slide left (px) (negative is from right);-;Slide til venstre (px) (negativt vil være for høyre side)
 Slide right;-;Slide til høyre
@@ -556,8 +556,8 @@ The newsletter application allowes you to send emails to all of your customers w
 The passwords does not match.;-;Passordet stemmer ikke overens.
 The vat number;-;Orgnummer
 There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
-This event has already been passed;-;Dette eventet har allerede passert
-This event has been canceled;-;Dette eventet har blitt kanselert
+This event has already been passed;-;Dette kurset har allerede passert
+This event has been canceled;-;Dette kurset har blitt kanselert
 This event has the following entries;-;Dette kurset finner du i kalenderen på følgende dager
 This is a {} days event.;-;Dette er et {} dagers event.
 This user has not attended any events yet;-;Denne brukeren har ikke deltatt på noen eventer enda
@@ -587,7 +587,10 @@ Use a different email;-;Bruk en annen epost
 Use a predefined layout for cell;-;Bruk en predifinert layout for denne cellen
 User details;-;Informasjon om bruker
 User level for cell;-;Brukernivå for cellen
+User with this cell phone already exists;-;En bruker med dette telefonnummeret eksisterer allerede.
+User with this email already exists.;-;En bruker med denne eposten eksisterer allerede.
 Username / Email;-;Brukernavn / Epost
+Username already taken;-;Brukernavnet er allerede registrert.
 Users in your company;-;Brukere i firmaet
 Waiting for payment;-;Venter på betaling
 Waiting list;-;Venteliste

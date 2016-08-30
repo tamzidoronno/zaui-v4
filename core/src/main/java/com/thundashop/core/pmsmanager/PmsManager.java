@@ -37,6 +37,7 @@ import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
@@ -435,7 +436,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         booking.sessionId = "";
-
+        verifyPhoneOnBooking(booking);
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);
@@ -3574,5 +3575,39 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
            });
         }
+    }
+
+    private boolean verifyPhoneOnBooking(PmsBooking booking) {
+        if(booking.userId != null) {
+            User user = userManager.getUserById(booking.userId);
+            
+            HashMap<String, String> res = SmsHandlerAbstract.validatePhone(user.cellPhone, user.prefix);
+            if(res != null) {
+                String prefix = res.get("prefix");
+                String phone = res.get("phone");
+                if(prefix != null && phone != null) {
+                    boolean save = false;
+                    if(!prefix.equals(user.prefix)) { user.prefix = prefix;save=true; }
+                    if(!phone.equals(user.cellPhone)) { user.cellPhone = prefix;save=true; }
+                    if(save) { userManager.saveUser(user); }
+                }
+            }
+        }
+        
+        boolean save = false;
+        for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            for(PmsGuests guest : room.guests) {
+                HashMap<String, String> res = SmsHandlerAbstract.validatePhone(guest.phone, guest.prefix);
+                if(res != null) {
+                    String prefix = res.get("prefix");
+                    String phone = res.get("phone");
+                    if(prefix != null && phone != null) {
+                        if(!prefix.equals(guest.prefix)) { guest.prefix = prefix;save=true; }
+                        if(!phone.equals(guest.phone)) { guest.phone = phone;save=true; }
+                    }
+                }
+            }
+        }
+        return save;
     }
 }

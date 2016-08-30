@@ -59,7 +59,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
     }
 
     
-    private HashMap<String, String> validatePhone(String phone, String countryCode) {
+    public static HashMap<String, String> validatePhone(String phone, String countryCode) {
         if(phone == null) {
             return null;
         }

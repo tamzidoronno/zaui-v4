@@ -178,6 +178,9 @@ public interface IPmsManager {
     @Administrator
     public void changeInvoiceDate(String roomId, Date newDate);
     
+    @Administrator
+    public void checkIfGuestHasArrived() throws Exception;
+    
     public void addAddonsToBooking(Integer type, String roomId, boolean remove);
     public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
     

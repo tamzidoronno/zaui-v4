@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class PmsConfiguration extends DataCommon {
+
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;
         public static Integer DAILY = 2;
@@ -155,4 +156,15 @@ public class PmsConfiguration extends DataCommon {
         return (arxHostname != null && !arxHostname.isEmpty());
     }
 
+    
+    boolean isArx() {
+        if(!hasLockSystem()) {
+            return true;
+        }
+        if(locktype != null && !locktype.isEmpty() && locktype.equals("arx")) {
+            return true;
+        }
+        
+        return false;
+    }
 }

@@ -16,6 +16,7 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.ibm.icu.util.Calendar; 
 import com.thundashop.core.amesto.AmestoManager;
 import com.thundashop.core.amesto.AmestoSync;
+import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
@@ -158,6 +159,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
          
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
+        createScheduler("pmsprocessor2", "1,5,10,15,20,25,30,35,40,45,50,55 * * * *", CheckPmsFiveMin.class);
         
         if(applicationPool.getAvailableApplications().contains(applicationPool.getApplication("66b4483d-3384-42bb-9058-2ac915c77d80"))) {
             createScheduler("amestosync", "00 08 * * *", AmestoSync.class);
@@ -3609,5 +3611,38 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return save;
+    }
+
+    @Override
+    public void checkIfGuestHasArrived() throws Exception {
+        if(!this.getConfigurationSecure().hasLockSystem()) {
+            return;
+        }
+        if(getConfigurationSecure().isArx()) {
+            long end = System.currentTimeMillis();
+            long start = end - (1000*60*2);
+            HashMap<String, List<AccessLog>> doors = arxManager.getLogForAllDoor(start,end);
+            for(List<AccessLog> log : doors.values()) {
+                for(AccessLog l : log) {
+                    if(l.card != null && !l.card.isEmpty()) {
+                        markAsArrived(l.card);
+                    }
+                }
+            }
+        }
+    }
+
+    private void markAsArrived(String card) {
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.rooms) {
+                if(!room.isStarted()) {
+                    continue;
+                }
+                if(room.code != null && room.code.equals(card) && !room.checkedin) {
+                    room.checkedin = true;
+                    saveBooking(booking);
+                }
+            }
+        }
     }
 }

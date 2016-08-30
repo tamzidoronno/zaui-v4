@@ -734,6 +734,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 
                 if($k == "addons") {
                     $exportLine[$k] = json_encode($val);
+                } else if($k == "orderIds") {
+                    $exportLine[$k] = join(",", $val);
                 } else if($k == "guest") {
                     $toAdd = "";
                     foreach($val as $guest) {
@@ -750,6 +752,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     $exportLine[$k] = $val;
                 }
             }
+            
+            $exportLine['totalex'] = 0.0;
+            $exportLine['totalinc'] = 0.0;
+            foreach($room->orderIds as $orderId) {
+                $exportLine['totalex'] += $this->getApi()->getOrderManager()->getTotalAmountExTaxes($this->getApi()->getOrderManager()->getOrder($orderId));
+                $exportLine['totalinc'] += $this->getApi()->getOrderManager()->getTotalAmount($this->getApi()->getOrderManager()->getOrder($orderId));
+            }
+            
             $export[] = $exportLine;
         }
         

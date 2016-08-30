@@ -515,7 +515,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(!avoidChangeInvoicedTo) {
                 room.invoicedTo = endDate;
             }
-            if(!avoidChangingInvoicedFrom) {
+            if(!avoidChangingInvoicedFrom || room.invoicedFrom == null) {
                 room.invoicedFrom = room.date.start;
             }
             logPrint("\t new end date: " + room.invoicedTo);
@@ -892,6 +892,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         for(String productId : products.keySet()) {
             List<PmsBookingAddonItem> items = room.getAllAddons(productId, startDate, endDate);
             if(items.size() > 0) {
+                Date startDateToAdd = startDate;
+                Date endDateToAdd = endDate;
                 double price = 0;
                 int count = 0;
                 int type = 0;
@@ -901,14 +903,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     type = check.addonType;
                 }
                 if(type == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
-                    endDate = startDate;
+                    endDateToAdd = startDate;
                 }
                 if(type == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
-                    startDate = endDate;
+                    startDateToAdd = endDate;
                 }
                 
                 if(count > 0) {
-                    result.add(createCartItem(productId, null, room, startDate, endDate, price / count, count));
+                    result.add(createCartItem(productId, null, room, startDateToAdd, endDateToAdd, price / count, count));
                 } else {
                     logPrint("Count 0?");
                 }

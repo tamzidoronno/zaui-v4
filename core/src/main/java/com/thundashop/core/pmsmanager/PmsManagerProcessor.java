@@ -48,7 +48,6 @@ public class PmsManagerProcessor {
         try { processEndings(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
         try { processArx(); }catch(Exception e) { e.printStackTrace(); }
-        try { manager.checkIfGuestHasArrived(); }catch(Exception e) { e.printStackTrace(); }
     }
     
     public void hourlyProcessor() {

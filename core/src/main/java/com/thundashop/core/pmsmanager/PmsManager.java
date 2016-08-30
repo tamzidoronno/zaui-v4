@@ -3620,7 +3620,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         if(getConfigurationSecure().isArx()) {
             long end = System.currentTimeMillis();
-            long start = end - (1000*60*60);
+            long start = end - (1000*60*10);
             HashMap<String, List<AccessLog>> doors = arxManager.getLogForAllDoor(start,end);
             for(List<AccessLog> log : doors.values()) {
                 for(AccessLog l : log) {

@@ -206,7 +206,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, daysBack*-1);
         
-        String to = format.format(new Date());
+        Calendar stop = Calendar.getInstance();
+        stop.add(Calendar.DAY_OF_YEAR, 1);
+        
+        String to = format.format(stop.getTime());
         String from = format.format(cal.getTime());
         
         params.addElement(from);

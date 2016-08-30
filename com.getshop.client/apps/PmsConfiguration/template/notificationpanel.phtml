@@ -805,7 +805,7 @@ $channelConfig = $config->channelConfiguration;
                             <?php
                             foreach($payment as $test) {
                                 $selected = "";
-                                if($notificationSettings->channelPaymentTypes->{$chan} == $test->id) {
+                                if($notificationSettings->channelConfiguration->{$chan}->preferredPaymentType == $test->id) {
                                     $selected = "SELECTED";
                                 }
                                 echo "<option value='".$test->id."' $selected>" . $test->appName . "</option>";

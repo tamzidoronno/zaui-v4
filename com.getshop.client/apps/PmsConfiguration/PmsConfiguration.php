@@ -130,10 +130,9 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         foreach($_POST['data'] as $key => $val) {
             if(stristr($key, "channel_payment_")) {
                 $channel = str_replace("channel_payment_", "", $key);
-                $channelPaymentTypes[$channel] = $val;
+                $notifications->channelConfiguration->{$channel}->preferredPaymentType = $val;
             }
         }
-        $notifications->channelPaymentTypes = $channelPaymentTypes;
         
         $notifications->addonConfiguration = $this->buildAddonConfigs();
         $notifications->cleaningPriceConfig = $this->buildCleaningPriceConfig();

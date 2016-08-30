@@ -41,7 +41,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
     private boolean productionMode = false;
     
     public SmsHandlerAbstract(String storeId, Database database, String prefix, String from, String to, String message, boolean productionMode) {
-        HashMap<String, String> res = validatePhone(to, prefix);
+        HashMap<String, String> res = validatePhone("+"+prefix + to, "NO");
         if(res != null) {
             this.prefix = res.get("prefix");
             this.to = res.get("phone");
@@ -116,6 +116,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
                 phone = phonecheck.getNationalNumber() + "";
             }
         } catch (NumberParseException e) {
+//            e.printStackTrace();
             return null;
         }
 

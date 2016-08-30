@@ -3577,7 +3577,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(booking.userId != null) {
             User user = userManager.getUserById(booking.userId);
             
-            HashMap<String, String> res = SmsHandlerAbstract.validatePhone(user.cellPhone, user.prefix);
+            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ user.prefix + user.cellPhone, "NO");
             if(res != null) {
                 String prefix = res.get("prefix");
                 String phone = res.get("phone");
@@ -3593,7 +3593,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         boolean save = false;
         for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             for(PmsGuests guest : room.guests) {
-                HashMap<String, String> res = SmsHandlerAbstract.validatePhone(guest.phone, guest.prefix);
+                HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ guest.prefix + guest.phone, "NO");
                 if(res != null) {
                     String prefix = res.get("prefix");
                     String phone = res.get("phone");

@@ -787,6 +787,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.end = end;
             room.date.exitCleaningDate = null;
             room.date.cleaningDate = null;
+            room.addedToArx = false;
             if(configuration.updatePriceWhenChangingDates) {
                 setPriceOnRoom(room, true, booking);
             }

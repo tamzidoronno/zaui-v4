@@ -57,7 +57,7 @@ public class PmsBookingSimpleFilter {
         simple.regDate = booking.rowCreatedDate;
         simple.keyIsReturned = room.keyIsReturned;
         simple.wubookreservationid = booking.wubookreservationid;
-        simple.wubookchannelid = booking.wubookChannelReservationId;
+        simple.wubookchannelid = booking.wubookchannelreservationcode;
         simple.testReservation = booking.testReservation;
         simple.orderIds = booking.orderIds;
         simple.channel = booking.channel;

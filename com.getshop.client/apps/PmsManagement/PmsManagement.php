@@ -719,6 +719,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 if($k == "bookingId") { continue; }
                 if($k == "pmsRoomId") { continue; }
                 if($k == "bookingItemId") { continue; }
+                if($k == "bookingTypeId") { continue; }
                 
                 if(is_bool($val)) {
                     if($val) {
@@ -755,10 +756,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
             
             $exportLine['totalex'] = 0.0;
             $exportLine['totalinc'] = 0.0;
+            $ids = array();
             foreach($room->orderIds as $orderId) {
-                $exportLine['totalex'] += $this->getApi()->getOrderManager()->getTotalAmountExTaxes($this->getApi()->getOrderManager()->getOrder($orderId));
-                $exportLine['totalinc'] += $this->getApi()->getOrderManager()->getTotalAmount($this->getApi()->getOrderManager()->getOrder($orderId));
+                $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                $ids[] = $order->incrementOrderId;
+                $exportLine['totalex'] += $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
+                $exportLine['totalinc'] += $this->getApi()->getOrderManager()->getTotalAmount($order);
             }
+            $exportLine['orderIds'] = join("," , $ids);
             
             $export[] = $exportLine;
         }

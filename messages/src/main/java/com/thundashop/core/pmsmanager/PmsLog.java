@@ -13,6 +13,7 @@ public class PmsLog extends DataCommon {
     public String bookingItemType = "";
     public String bookingItemId = "";
     public String roomId = "";
+    public String tag = "";
     public boolean includeAll = false;
     
     @Transient

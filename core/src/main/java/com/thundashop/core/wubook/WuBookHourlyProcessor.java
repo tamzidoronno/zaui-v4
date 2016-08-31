@@ -6,6 +6,7 @@
 package com.thundashop.core.wubook;
 
 import com.getshop.scope.GetShopSchedulerBase;
+import com.thundashop.core.common.GetShopLogHandler;
 
 /**
  *
@@ -19,9 +20,10 @@ public class WuBookHourlyProcessor extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
-        getApi().getWubookManager().addNewBookingsPastDays(getMultiLevelName(), 2);
-        getApi().getWubookManager().updateAvailability(getMultiLevelName());
-        getApi().getWubookManager().updatePrices(getMultiLevelName());
-        getApi().getWubookManager().checkForNoShowsAndMark(getMultiLevelName());
+        String storeId = getApi().getStoreManager().getStoreId();
+        try { getApi().getWubookManager().addNewBookingsPastDays(getMultiLevelName(), 2); }catch(Exception e) { GetShopLogHandler.logStack(e, storeId); }
+        try { getApi().getWubookManager().updateAvailability(getMultiLevelName()); }catch(Exception e) { GetShopLogHandler.logStack(e, storeId); }
+        try { getApi().getWubookManager().updatePrices(getMultiLevelName()); }catch(Exception e) { GetShopLogHandler.logStack(e, storeId); }
+        try { getApi().getWubookManager().checkForNoShowsAndMark(getMultiLevelName()); }catch(Exception e) { GetShopLogHandler.logStack(e, storeId); }
     }
 }

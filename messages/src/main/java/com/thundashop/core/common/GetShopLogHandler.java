@@ -3,6 +3,8 @@ package com.thundashop.core.common;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,6 +56,13 @@ public class GetShopLogHandler {
 
     public static void logPrintStaticSingle(Object key, String storeId) {
         logPrintStatic(key, storeId);
+    }
+
+    public static void logStack(Exception ex, String storeId) {
+        StringWriter errors = new StringWriter();
+        ex.printStackTrace(new PrintWriter(errors));
+        String stack = errors.toString();
+        logPrintStatic(stack, storeId);
     }
 
  

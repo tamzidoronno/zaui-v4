@@ -3,6 +3,8 @@
     Other instructions</div>
 <div class='row'>
     <select class="form-control" ng-model='selectedroom' ng-change="updateLogList(selectedroom)" ng-options="item.id as item.bookingItemName for item in items"></select>
+    <textarea class="form-control" ng-model="logentrytext"></textarea>
+    <span class="btn btn-success" style="width:100%;" ng-click="addEntry()">Add log entry</span>
 </div>
 
 <div class='row ng-hide loading' ng-show="loading"><i class="fa fa-spinner fa-spin"></i></div>

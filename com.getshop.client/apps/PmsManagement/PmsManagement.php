@@ -8,11 +8,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $channels = null;
     private $users = array();
     public $errors = array();
+    public $selectedUser;
     private $checkedCanAdd = array();
     public $roomTable = "";
     public $fastAddedCode = null;
     private $fetchedBookings = array();
-    
+     public function getUserSettingsOrder() {
+        return -1;
+    }
     public function toggleFilterVersion() {
         if(!isset($_SESSION['toggleOldFilterVersion'])) {
             $_SESSION['toggleOldFilterVersion'] = true;
@@ -33,6 +36,30 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->getApi()->getOrderManager()->saveOrder($order);
         }
     }
+    
+    /**
+     * @param \core_usermanager_data_User $user
+     */
+    public function renderUserSettings($user) {
+        $this->selectedUser = $user;
+        $this->includefile("pmsusersettings");
+    }
+    
+    public function saveDiscounts() {
+        $engine = $_POST['engine'];
+        $userId = $_POST['userid'];
+        $items = $this->getApi()->getBookingEngine()->getBookingItemTypes($engine);
+        $curConfig = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($engine, $userId);
+        $curConfig->discounts = array();
+        foreach($items as $item) {
+            if($_POST[$item->id]) {
+            $curConfig->discounts[$item->id] = $_POST[$item->id];
+            }
+        }
+        $curConfig->discountType = $_POST['discounttype'];
+        $this->getApi()->getPmsInvoiceManager()->saveDiscounts($engine, $curConfig);
+    }
+    
     
     public function loadOrderInfoOnBooking() {
          $states = array();
@@ -249,9 +276,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     }
                     echo $toPrint;
                 }
-                
-
-                
             }
         }
     }

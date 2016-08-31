@@ -22,4 +22,10 @@ public interface IPmsInvoiceManager {
 
     @Administrator
     public void sendRecieptOrInvoice(String orderId, String email, String bookingId);
+    
+    @Administrator
+    public PmsUserDiscount getDiscountsForUser(String userId);
+    
+    @Administrator
+    public void saveDiscounts(PmsUserDiscount discounts);
 }

@@ -1,0 +1,55 @@
+<div class="gss_overrideapp" gss_use_app_id="7e828cd0-8b44-4125-ae4f-f61983b01e0a">
+<?php
+/* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$discountTypes = array();
+$discountTypes[0] = "Percentage";
+$discountTypes[1] = "Fixed price";
+
+$user = $this->selectedUser;
+$engines = $this->getApi()->getStoreManager()->getMultiLevelNames();
+foreach($engines as $engine) {
+    $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($engine, $user->id);
+    ?>
+    <input type="hidden" gs_model="discount_<?php echo $engine; ?>" value="<?php echo $user->id; ?>" gs_model_attr="userid">
+    <input type="hidden" gs_model="discount_<?php echo $engine; ?>" value="<?php echo $engine; ?>" gs_model_attr="engine">
+    <div class="property_select_wrapper gss_setting">
+        <div class="property_description">
+            Discount type
+        </div>
+        <div class="gss_dropdown">
+            <select class="property_select" gs_model="discount_<?php echo $engine; ?>" gs_model_attr="discounttype">
+                <?php
+                foreach($discountTypes as $type => $name) {
+                    $selected = "";
+                    if($discount->discountType == $type) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='$type' $selected>$name</option>";
+                }
+                ?>
+            </select>    
+        </div>
+    </div>
+    <?php
+    $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($engine);
+    foreach($types as $type) {
+        $typeDiscount = "";
+        if(isset($discount->discounts->{$type->id})) {
+            $typeDiscount = $discount->discounts->{$type->id};
+        }
+        ?>
+            <div class="textfield gss_setting"  id="editor">
+                <span class="title"><?php echo $type->name; ?></span>
+                <input type="textfield" gs_model="discount_<?php echo $engine; ?>" gs_model_attr="<?php echo $type->id; ?>" style='width: 60px;' value="<?php echo $typeDiscount; ?>">
+            </div>
+        <?php
+    }
+    ?>
+    <div style='text-align:right; margin-bottom: 30px;'>
+        <div class="gss_button" gss_method="saveDiscounts" gss_model="discount_<?php echo $engine; ?>" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+    </div>
+
+<?php
+}
+?>
+</div>

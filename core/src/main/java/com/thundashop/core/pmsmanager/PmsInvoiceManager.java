@@ -8,6 +8,8 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -44,6 +46,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     private boolean avoidOrderCreation = false;
     private List<CartItem> itemsToReturn = new ArrayList();
+    private HashMap<String, PmsUserDiscount> discounts = new HashMap();
     
     @Autowired
     PmsManager pmsManager;
@@ -68,6 +71,34 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     private boolean runningDiffRoutine = false;
     
+    public void dataFromDatabase(DataRetreived data) {
+        for (DataCommon dataCommon : data.data) {
+            if(dataCommon instanceof PmsUserDiscount) {
+                PmsUserDiscount res = (PmsUserDiscount)dataCommon;
+                discounts.put(res.userId, res);
+            }
+        }
+    }
+    
+    @Override
+    public PmsUserDiscount getDiscountsForUser(String userId) {
+        PmsUserDiscount discount = discounts.get(userId);
+        if(discount == null) {
+            discount = new PmsUserDiscount();
+            discount.userId = userId;
+            discounts.put(userId, discount);
+            saveObject(discount);
+        }
+        
+        return discount;
+    }
+
+    @Override
+    public void saveDiscounts(PmsUserDiscount discount) {
+        discounts.put(discount.userId, discount);
+        saveObject(discount);
+    }
+
     private List<BookingOrderSummary> summaries(List<CartItem> roomItems) {
         HashMap<String, BookingOrderSummary> res = new HashMap();
         for(CartItem item : roomItems) {

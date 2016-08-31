@@ -129,6 +129,16 @@ echo "<br>";
             Off<i class="fa <? echo $faclass; ?>"></i>On
         </div>
     </div>
+    <div class="textfield gss_setting" id="transferAllUsersConnectedToOrders">
+        <span class="title">When transferring the order, append all users which are in the order.</span>
+        <div class="gss_onoff" gs_model="adminconfig" gs_model_attr="transferAllUsersConnectedToOrders">
+            <?
+            $faclass = $config->transferAllUsersConnectedToOrders ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+    </div>
+    
     <div class="textfield gss_setting" id="useSftp">
         <span class="title">Use sftp</span>
         <div class="gss_onoff" gs_model="adminconfig" gs_model_attr="useSftp">

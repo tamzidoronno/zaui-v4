@@ -40,6 +40,7 @@ class AccountingTransfer extends \WebshopApplication implements \Application {
         $config->invoice_path = $_POST['invoice_path'];
         $config->port = $_POST['port'];
         $config->useActiveMode = $_POST['useActiveMode'];
+        $config->transferAllUsersConnectedToOrders = $_POST['transferAllUsersConnectedToOrders'];
         $config->extension = $_POST['extension'];
         
         $types = $this->getTransferTypes();

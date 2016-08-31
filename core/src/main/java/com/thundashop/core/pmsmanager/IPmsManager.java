@@ -23,6 +23,9 @@ public interface IPmsManager {
     public void markRoomAsCleaned(String itemId);
     
     @Administrator
+    public void logEntryObject(PmsLog log);
+    
+    @Administrator
     public void forceMarkRoomAsCleaned(String itemId);
     
     @Administrator

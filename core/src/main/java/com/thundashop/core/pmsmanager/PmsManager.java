@@ -2162,23 +2162,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void logEntry(String logText, String bookingId, String itemId, String roomId) {
-        String userId = "";
-        if (getSession() != null && getSession().currentUser != null) {
-            userId = getSession().currentUser.id;
-        }
 
         PmsLog log = new PmsLog();
         log.bookingId = bookingId;
         log.bookingItemId = itemId;
-        log.userId = userId;
         log.roomId = roomId;
-        BookingItem item = bookingEngine.getBookingItem(itemId);
-        if (item != null) {
-            log.bookingItemType = item.bookingItemTypeId;
-        }
         log.logText = logText;
-        logentries.add(log);
-        saveObject(log);
+        logEntryObject(log);
     }
 
     @Override
@@ -2187,6 +2177,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsLog> res = new ArrayList();
         if(filter != null) {
             for (PmsLog log : logentries) {
+                if(filter.tag != null && !filter.tag.isEmpty()) {
+                    if(log.tag == null || !log.tag.equals(filter.tag)) {
+                        continue;
+                    }
+                }
                 if(filter.includeAll) {
                     res.add(log);
                 } else if (!filter.bookingId.isEmpty() && filter.bookingId.equals(log.bookingId)) {
@@ -3658,5 +3653,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public void logEntryObject(PmsLog log) {
+        String userId = "";
+        if (getSession() != null && getSession().currentUser != null) {
+            userId = getSession().currentUser.id;
+        }
+        if(log.bookingItemId != null) {
+            BookingItem item = bookingEngine.getBookingItem(log.bookingItemId);
+            if (item != null) {
+                log.bookingItemType = item.bookingItemTypeId;
+            }
+        }
+        log.userId = userId;
+        logentries.add(log);
+        saveObject(log);
     }
 }

@@ -577,6 +577,18 @@ $channelConfig = $config->channelConfiguration;
             </span>
             Payments are required (opens possibility to set prices)
         </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->automarkInvoicesAsPaid) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='automarkInvoicesAsPaid' <? echo $checked; ?>>
+            </span>
+            Automark invoices as paid for.
+        </div>
         <?php if($notificationSettings->requirePayments) { ?>
             <div class='configrow'>
                 <span class='configentry'>

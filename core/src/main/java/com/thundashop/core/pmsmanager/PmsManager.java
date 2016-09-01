@@ -416,9 +416,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!canAdd(bookingsToAdd)) {
             return -2;
         }
-        if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isCustomer()) {
-            booking.userId = getSession().currentUser.id;
-        }
         
         bookingEngine.addBookings(bookingsToAdd);
         booking.attachBookingItems(bookingsToAdd);
@@ -3065,6 +3062,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void createUserForBooking(PmsBooking booking) {
+        if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isCustomer()) {
+            booking.userId = getSession().currentUser.id;
+        }
+        
         if (booking.userId == null || booking.userId.isEmpty()) {
             User newuser = createUser(booking);
             booking.userId = newuser.id;

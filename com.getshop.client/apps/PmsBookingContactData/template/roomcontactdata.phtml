@@ -8,7 +8,6 @@ echo "<div gstype='form' method='submitForm' class='bookingregistrationform'>";
 if($config->includeGuestData) {
     $this->includefile("guestdata");
 }
-echo "<h2 class='paymentheaders'>".$this->__w("Contact information") . "</h2>";
 foreach($config->data as $key => $value) {
     /* @var $value core_bookingengine_data_RegistrationRulesField */
     if(stristr($key, "field_")) {
@@ -41,8 +40,25 @@ if(!$completeText) {
 }
 
 if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
-    echo "<span class='complete_button' gstype='submit'>$completeText</span>";
+    $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+    if($user->preferredPaymentType == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
+        $note = "";
+        if(isset($_POST['data']['invoicenote'])) {
+            $note = $_POST['data']['invoicenote'];
+        }
+        echo "<h1>".$this->__w("Note on invoice")."</h1>";
+        echo "<div style='padding-right: 10px;'>";
+        echo "<textarea class='invoicenottextarea' gsname='invoicenote'>".$note."</textarea>";
+        echo "</div>";
+        if($this->validation) {
+            foreach($this->validation as $error) {
+                echo $error . "<br>";
+            }
+        }
+    }
+    echo "<span class='complete_button'>$completeText</span>";
 } else {
+    echo "<h2 class='paymentheaders'>".$this->__w("Contact information") . "</h2>";
     echo "<div class='chooseregform'>";
     echo "<label class='chooseprivateperson_label'><input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_private' class='ignoresaveform'> ". $this->__w("Private person") . "</label>";
     echo "<label class='choosecompany_label'><input type='radio' name='choosetyperadio' gsname='choosetyperadio' value='registration_company' class='ignoresaveform'> ". $this->__w("Organisation") . "</label>";

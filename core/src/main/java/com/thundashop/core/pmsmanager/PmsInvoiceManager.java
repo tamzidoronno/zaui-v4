@@ -642,6 +642,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 order.payment.captured = true;
             }
         }
+        if(order.isInvoice() && pmsManager.getConfigurationSecure().automarkInvoicesAsPaid) {
+            order.status = Order.Status.PAYMENT_COMPLETED;
+            order.captured = true;
+            order.payment.captured = true;
+        }
         
 
         if (pmsManager.getConfigurationSecure().substractOneDayOnOrder) {

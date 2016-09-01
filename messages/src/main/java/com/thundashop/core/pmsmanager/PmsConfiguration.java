@@ -66,6 +66,7 @@ public class PmsConfiguration extends DataCommon {
     boolean includeGlobalOrderCreationPanel = false;
     public boolean autoSendToCreditor = false;
     public boolean forceRequiredFieldsForEditors = false;
+    public boolean automarkInvoicesAsPaid = false;
     
 
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily

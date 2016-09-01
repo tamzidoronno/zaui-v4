@@ -547,9 +547,7 @@ class CartManager extends \SystemApplication implements \Application {
             $order->payment->paymentType != "ns_542e6a1e_9927_495c_9b6d_bb52af4ea9be\BrainTree" && 
             $order->payment->paymentType != "ns_c7736539_4523_4691_8453_a6aa1e784fc1\\PayPal" && 
             $order->payment->paymentType != "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {
-            echo "<center><br/><br/><br/>";
-            echo "<h1>Dette er en bestilling som ikke kan betales med kort.</h1>";
-            echo "<br/><br/><br/><br/></center>";
+            echo "<script>thundashop.common.goToPage('payment_success');</script>";
         } else if ($order->status == 7) {
             echo "<center><br/><br/><br/>";
             echo "<h1>Betalingen er allerede gjennomført for denne bestillingen.</h1>";

@@ -175,6 +175,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<Room> getAllRoomTypes(Date start, Date end) {
+        System.out.println(start);
+        System.out.println(end);
         List<Room> result = new ArrayList();
         List<BookingItemType> allGroups = bookingEngine.getBookingItemTypes();
 
@@ -2598,8 +2600,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             Booking bookingToAdd = createBooking(room);
             if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
-                room.canBeAdded = false;
-                room.delete();
+                if(getConfigurationSecure().supportRemoveWhenFull) {
+                    room.canBeAdded = false;
+                    room.delete();
+                }
                 BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                 String name = "";
                 if (item != null) {
@@ -2607,7 +2611,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 String text = "Removed room: " + name + " since it can't be added: " + room.date.start + " - " + room.date.end;
                 logEntry(text, booking.id, null);
-                logPrint(text);
+                if(!getConfigurationSecure().supportRemoveWhenFull) {
+                    messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text, null);
+                }
                 continue;
             }
             

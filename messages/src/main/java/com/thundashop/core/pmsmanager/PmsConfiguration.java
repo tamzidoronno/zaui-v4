@@ -7,6 +7,8 @@ import java.util.List;
 
 public class PmsConfiguration extends DataCommon {
 
+    boolean supportRemoveWhenFull;
+
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;
         public static Integer DAILY = 2;

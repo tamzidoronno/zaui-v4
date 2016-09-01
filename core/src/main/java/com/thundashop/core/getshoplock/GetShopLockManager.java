@@ -159,6 +159,15 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         @Override
         public void run() {
             if(hasConnectivity()) {
+                if(device.oldBatteryStatus()) {
+                    try {
+                        checkBatteryStatus();
+                        device.batteryLastUpdated = new Date();
+                        device.needSaving = true;
+                    }catch(Exception e) {
+                        logPrintException(e);
+                    }
+                }
                 for(Integer offset : device.codes.keySet()) {
                     GetShopLockCode code = device.codes.get(offset);
                     if(code.needUpdate()) {
@@ -247,6 +256,14 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
             }
             return false;
+        }
+
+        private void checkBatteryStatus() throws Exception {
+            logPrint("Checking for battery for " + device.name + " (" + device.zwaveid + ")");
+            String postfix = "ZWave.zway/Run/devices["+device.zwaveid+"].instances[0].commandClasses[128].Get()";
+            postfix = URLEncoder.encode(postfix, "UTF-8");
+            String address = "http://"+hostname+":8083/" + postfix;
+            GetshopLockCom.httpLoginRequest(address,username,password);
         }
     }
     

@@ -274,7 +274,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             String postfix = "ZWave.zway/InspectQueue";
             while(true) {
                 try {
-                    postfix = URLEncoder.encode(postfix, "UTF-8");
                     String address = "http://"+hostname+":8083/" + postfix;
                     String res = GetshopLockCom.httpLoginRequest(address,username,password);
                     if(res.equals("[]")) {

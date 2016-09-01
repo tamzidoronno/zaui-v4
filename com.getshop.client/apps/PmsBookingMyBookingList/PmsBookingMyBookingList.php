@@ -31,7 +31,7 @@ class PmsBookingMyBookingList extends \WebshopApplication implements \Applicatio
     
     public function render() {
         if($this->isEditorMode()) {
-            $this->includefile("allusersdropdown");
+//            $this->includefile("allusersdropdown");
         }
         if(!$this->getSelectedName()) {
             echo "Please specify a booking engine first. <br>";

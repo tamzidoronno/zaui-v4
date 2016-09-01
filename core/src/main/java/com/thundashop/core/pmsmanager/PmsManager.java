@@ -612,10 +612,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking getBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
-        checkSecurity(booking);
         if (booking == null) {
             return null;
         }
+        checkSecurity(booking);
         return finalize(booking);
     }
 

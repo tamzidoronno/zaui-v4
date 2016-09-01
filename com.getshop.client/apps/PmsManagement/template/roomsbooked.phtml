@@ -371,6 +371,9 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                         <span class='roompostfix editGuestToggle'>
                             <span class="viewmode">
                                 <?php
+                                if(sizeof((array)$room->guests) == 0) {
+                                    echo "No guest registered";
+                                }
                                 foreach ($room->guests as $guest) {
                                     echo ($guest->name) ? $guest->name : "No name";
                                     echo "<br>";

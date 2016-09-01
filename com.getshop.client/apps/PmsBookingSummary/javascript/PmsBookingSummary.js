@@ -117,7 +117,7 @@ app.PmsBookingSummary = {
         };
         var event = thundashop.Ajax.createEvent('','removeAddon', $(this),data);
         var row = $(this).closest('.itemrow');
-        if($(this).closest('.repeatingrowprinted')) {
+        if($(this).closest('.repeatingrowprinted').length > 0) {
             thundashop.Ajax.postWithCallBack(event, function(res) {
                 row.remove();
             });

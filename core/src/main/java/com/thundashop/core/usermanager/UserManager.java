@@ -347,6 +347,18 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return;
         }
         
+        
+        // New user ? ok, lets save it if it is a customer.
+        if ((user.id  == null || user.id.isEmpty() || getUserById(user.id) == null) && user.type < User.Type.EDITOR) {
+            return;
+        }
+        
+        // Not logged in an have access to a user? not likely.
+        // use saveUserSecure to override this if its saved from a manager.
+        if (getSession().currentUser == null) {
+            throw new ErrorException(26);
+        }
+        
         // Avoid degradation of the same user.
         if (getSession().currentUser != null && getSession().currentUser.id.equals(user.id)) {
             if ((user.type < getSession().currentUser.type) && getSession().currentUser.type < User.Type.GETSHOPADMINISTRATOR) {
@@ -359,6 +371,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             throw new ErrorException(26);
         }
         
+        if (session.currentUser == null) {
+            
+        }
         
         boolean okDueToCompanyAccess = securityCheckCompanyLevel(user);
         

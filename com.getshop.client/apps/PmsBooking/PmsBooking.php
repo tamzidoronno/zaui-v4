@@ -41,7 +41,15 @@ class PmsBooking extends \WebshopApplication implements \Application {
         $booking->sessionStartDate = $range->start;
         $booking->sessionEndDate = $range->end;
         $booking->rooms = array();
-        $booking->rooms[] = $room;
+        $count = $this->getApi()->getBookingEngine()->getAvailbleItems($this->getSelectedName(), 
+                $room->bookingItemTypeId, 
+                $this->convertToJavaDate(strtotime($range->start)), 
+                $this->convertToJavaDate(strtotime($range->end)));
+        if($count > 0) {
+            $booking->rooms[] = $room;
+        }
+        
+        
 
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
         

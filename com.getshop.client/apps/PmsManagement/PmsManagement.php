@@ -33,6 +33,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach($booking->orderIds as $orderId) {
             $order = $this->getApi()->getOrderManager()->getOrder($orderId);
             $order->testOrder = true;
+            $order->status = 7;
             $this->getApi()->getOrderManager()->saveOrder($order);
         }
     }

@@ -68,6 +68,10 @@ public abstract class SmsHandlerAbstract implements Runnable {
             countryCode = "+47";
         }
         
+        if(phone.indexOf("+", 1) > 0) {
+            phone = phone.substring(phone.indexOf("+", 1));
+        }
+        
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         String prefix = "";
         phone = phone.replace("++", "+");

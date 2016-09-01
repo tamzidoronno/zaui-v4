@@ -2283,6 +2283,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId) {
         PmsBooking booking = getBookingFromRoomSecure(pmsBookingRoomId);
+        if(booking == null) {
+            return null;
+        }
         checkSecurity(booking);
         return booking;
     }

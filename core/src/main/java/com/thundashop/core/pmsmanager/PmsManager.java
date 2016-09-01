@@ -2378,7 +2378,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Collections.sort(result, new Comparator<PmsBookingRooms>() {
             public int compare(PmsBookingRooms o1, PmsBookingRooms o2) {
                 if (o1.item == null || o2.item == null) {
-                    logPrint("This is null");
                     return 0;
                 }
                 return o1.item.bookingItemName.compareTo(o2.item.bookingItemName);

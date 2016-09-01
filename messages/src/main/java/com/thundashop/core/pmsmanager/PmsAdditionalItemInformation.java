@@ -98,4 +98,14 @@ public class PmsAdditionalItemInformation extends DataCommon {
         lastUsed = lastMarkedAsDirty;
     }
 
+    Boolean isUsedToday() {
+        if(lastUsed == null) {
+            return false;
+        }
+        if(isToday(lastUsed.getTime())) {
+            return true;
+        }
+        return false;
+    }
+
 }

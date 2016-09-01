@@ -115,6 +115,9 @@ public interface IPmsManager {
     public Boolean isClean(String itemId);
     
     @Editor
+    public Boolean isUsedToday(String itemId);
+    
+    @Editor
     public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms();
     
     @Administrator

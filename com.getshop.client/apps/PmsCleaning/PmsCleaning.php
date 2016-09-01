@@ -243,7 +243,9 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "</td>";
         echo "<td>";
         if($room->bookingItemId) {
-            if($this->getApi()->getPmsManager()->isClean($this->getSelectedName(), $room->bookingItemId)) {
+            $isClean = $this->getApi()->getPmsManager()->isClean($this->getSelectedName(), $room->bookingItemId);
+            $isUsedToday = $this->getApi()->getPmsManager()->isUsedToday($this->getSelectedName(), $room->bookingItemId);
+            if($isClean || $isUsedToday) {
                 echo "<span class='roomIsReady'>Room is marked as ready</span>";
             } else {
                 echo "<span class='roomNotReady' method=\"markCleaned\" itemid=\"".$room->bookingItemId."\">Mark room as ready</span>";

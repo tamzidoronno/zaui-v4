@@ -1416,6 +1416,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsAdditionalItemInformation addiotionalInfo = getAdditionalInfo(itemId);
         return addiotionalInfo.isClean();
     }
+    
+    @Override
+    public Boolean isUsedToday(String itemId) {
+        PmsAdditionalItemInformation addiotionalInfo = getAdditionalInfo(itemId);
+        return addiotionalInfo.isUsedToday();
+    }
 
     private PmsAdditionalItemInformation getAdditionalInfo(String itemId) {
         PmsAdditionalItemInformation result = addiotionalItemInfo.get(itemId);

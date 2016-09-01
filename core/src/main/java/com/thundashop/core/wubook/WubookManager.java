@@ -308,6 +308,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public List<WubookBooking> fetchNewBookings() throws Exception {
+        if(pmsManager.getConfigurationSecure().wubooklcode == null ||
+                pmsManager.getConfigurationSecure().wubooklcode.isEmpty()) {
+            return new ArrayList();
+        }
         connectToApi();
         Vector params = new Vector();
         params.addElement(token);

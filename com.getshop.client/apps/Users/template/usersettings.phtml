@@ -1,5 +1,7 @@
 <?
 $user = $this->currentUser;
+/* @var $this ns_ba6f5e74_87c7_4825_9606_f2d3c93d292f\Users */
+$paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 ?>
 
 <input type="hidden" gs_model='usermodel' gs_model_attr='userid' value="<? echo $user->id; ?>"/>
@@ -10,6 +12,30 @@ $user = $this->currentUser;
     <input type="textfield" gs_model='usermodel' gs_model_attr='name' value="<? echo $user->fullName; ?>">
     <div class="description">
         <?php echo $this->__("Name of the person that owns this new account."); ?>
+    </div>
+</div>
+
+<div class="textfield gss_setting"  id="name">
+    <span class="title"><?php echo $this->__f("Preferred payment type"); ?></span>
+     <div class="gss_dropdown">
+        <select class="property_select" gs_model="usermodel" gs_model_attr="preferredPaymentType">
+            <?php
+            echo "<option value='' $selected></option>";
+            foreach($paymentApps as $id => $type) {
+                $selected = "";
+                $instance = $this->getFactory()->getApplicationPool()->createInstace($type);
+                if($type->id == $user->preferredPaymentType) {
+                    $selected = "SELECTED";
+                }
+                if(method_exists($instance, "getName")) {
+                    echo "<option value='".$type->id."' $selected>".$instance->getName()."</option>";
+                }
+            }
+            ?>
+        </select>
+     </div>
+    <div class="description">
+        <?php echo $this->__("This will be the default payment method for this user."); ?>
     </div>
 </div>
 

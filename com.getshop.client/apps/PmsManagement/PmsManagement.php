@@ -14,7 +14,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public $fastAddedCode = null;
     private $fetchedBookings = array();
      public function getUserSettingsOrder() {
-        return -1;
+        return 1;
     }
     public function toggleFilterVersion() {
         if(!isset($_SESSION['toggleOldFilterVersion'])) {
@@ -857,7 +857,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
             unset($_SESSION['pmfilter'][$this->getSelectedName()]);
         }
         if(isset($_SESSION['pmfilter'][$this->getSelectedName()])) {
-            return unserialize($_SESSION['pmfilter'][$this->getSelectedName()]);
+            $filter = unserialize($_SESSION['pmfilter'][$this->getSelectedName()]);
+            if($filter->searchWord) {
+                $filter->includeDeleted = true;
+            }
+            return $filter;
         }
 
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());

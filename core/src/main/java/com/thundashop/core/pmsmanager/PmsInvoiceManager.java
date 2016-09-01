@@ -747,6 +747,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         
+        
+        if(getSession() != null && getSession().currentUser != null) {
+            PmsUserDiscount discountForUser = getDiscountsForUser(getSession().currentUser.id);
+            Double discount = discountForUser.discounts.get(typeId);
+            if(discount != null) {
+                if(discountForUser.discountType.equals(PmsUserDiscount.PmsUserDiscountType.percentage)) {
+                    price = price - (price * ((double)discount / 100));
+                } else {
+                    price = discount * count;
+                }
+            }
+       }
+        
         if(avgPrice && count != 0) {
             price /= count;
         }

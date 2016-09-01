@@ -1000,6 +1000,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (message2 != null && !message2.isEmpty()) {
             logEntry("Email notification: " + key + " Message: " + message2 + " recipients: " + repemail, booking.id, null);
         }
+        emailToSendTo = null;
     }
 
     private String notify(String key, PmsBooking booking, String type, PmsBookingRooms room) {
@@ -1065,7 +1066,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 messageManager.sendMail(copyadress, user.fullName, title, message, fromEmail, fromName);
             }
 
-            repicientList.add(user.emailAddress);
+            repicientList.add(recipientEmail);
         }
     }
 

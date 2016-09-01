@@ -1231,7 +1231,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Payment payMent = null;
         
         if (user != null ) {
-            payMent =  getPrefferedPaymentMethod(user.id);
+            payMent =  getUserPrefferedPaymentMethod(user.id);
         }
         
         if (payMent == null) {
@@ -1243,21 +1243,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
-    public Payment getPrefferedPaymentMethod(String userId) {
-        User user = userManager.getUserById(userId);
-        
-        if (user == null)
-            return null;
-        
-        if (user.preferredPaymentType == null || user.preferredPaymentType.isEmpty()) {
-            return getStorePreferredPayementMethod();
-        }
-        
-        Payment payment = new Payment();
-        payment.paymentType = user.preferredPaymentType;
-        return payment;
-    }
-    
     public Payment getUserPrefferedPaymentMethod(String userId) {
         User user = userManager.getUserById(userId);
         

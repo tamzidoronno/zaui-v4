@@ -193,6 +193,9 @@ class PmsCleaning extends \WebshopApplication implements \Application {
      * @param \core_pmsmanager_PmsBookingRooms $room
      */
     public function printRoomRow($room) {
+        if($room->deleted) {
+            return;
+        }
         $config = $this->getPmsConfig();
         $this->counter++;
         $items = $this->getItems();

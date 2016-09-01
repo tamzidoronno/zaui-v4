@@ -786,9 +786,19 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(book.payedFor) {
                 continue;
             }
-            
+            boolean arrived = false;
+            for(PmsBookingRooms room : book.getActiveRooms()) {
+                if(room.checkedin) {
+                    arrived = true;
+                }
+            }
+            if(arrived) {
+                continue;
+            }
             if(book.channel != null && book.channel.contains("wubook")) {
                 markNoShow(book.wubookreservationid);
+                book.wubookNoShow = true;
+                pmsManager.saveBooking(book);
             }
         }
     }

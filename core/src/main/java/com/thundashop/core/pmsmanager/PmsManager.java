@@ -61,8 +61,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -293,7 +291,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             setBooking(booking);
         } catch (Exception ex) {
-            Logger.getLogger(PmsManager.class.getName()).log(Level.SEVERE, null, ex);
+            logPrint(ex);
         }
         return booking;
     }

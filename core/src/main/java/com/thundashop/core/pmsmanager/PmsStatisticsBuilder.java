@@ -86,7 +86,6 @@ class PmsStatisticsBuilder {
                 }
                 if(order.createdOnDay(cal.getTime())) {
                     Double total = orderManager.getTotalAmountExTaxes(order);
-                    GetShopLogHandler.logPrintStatic(order.incrementOrderId + " - " + total, null);
                     entry.totalPrice += total;
                     entry.numberOfOrders++;
                     entry.date = cal.getTime();

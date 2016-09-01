@@ -119,6 +119,7 @@ public class WilhelmsenHouse implements AccountingInterface {
 
            lines.add(result + "\r\n");
         }
+        lines = convertEncoding(lines);
         return lines;
     }
 
@@ -216,6 +217,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                 e.printStackTrace();
             }
         }
+        lines = convertEncoding(lines);
         return lines;
                 
     }
@@ -272,21 +274,22 @@ public class WilhelmsenHouse implements AccountingInterface {
                 result.add(orderline+"\r\n");
             }
             
-            if(order.invoiceNote.trim() != null && !order.invoiceNote.trim().isEmpty()) {
-                String orderline = "L;"; // Fast L for orderline
-                orderline += ";"; // ProdNO
-                orderline += ";"; // Avgiftskode ( hentes fra kunden )
-                orderline += order.invoiceNote.trim() + ";"; // Produkt beskrivelse
-                orderline += ";"; // Antall mnder
-                orderline += ";"; // Pris pr antall, hvis blank hentes pris fra Visma
-                orderline += ";"; // ikke i bruk
-                orderline += ";"; // R4 Gjenstand ID
-                orderline += ";"; // 
-                result.add(orderline+"\r\n");                
-            }
+//            if(order.invoiceNote.trim() != null && !order.invoiceNote.trim().isEmpty()) {
+//                String orderline = "L;"; // Fast L for orderline
+//                orderline += ";"; // ProdNO
+//                orderline += ";"; // Avgiftskode ( hentes fra kunden )
+//                orderline += order.invoiceNote.trim() + ";"; // Produkt beskrivelse
+//                orderline += ";"; // Antall mnder
+//                orderline += ";"; // Pris pr antall, hvis blank hentes pris fra Visma
+//                orderline += ";"; // ikke i bruk
+//                orderline += ";"; // R4 Gjenstand ID
+//                orderline += ";"; // 
+//                result.add(orderline+"\r\n");                
+//            }
             
             System.out.println(" - done.");            
         }
+        result = convertEncoding(result);
         return result;
     }
     
@@ -327,5 +330,18 @@ public class WilhelmsenHouse implements AccountingInterface {
     @Override
     public void setOrderManager(OrderManager manager) {
         this.orderManager = manager;
+    }
+
+    private List<String> convertEncoding(List<String> lines) {
+        List<String> converted = new ArrayList();
+        for(String line : lines) {
+               try {
+                line = new String(line.getBytes("ISO-8859-1"),"UTF-8");
+                converted.add(line);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return converted;
     }
 }

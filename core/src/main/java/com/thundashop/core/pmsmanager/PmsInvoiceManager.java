@@ -359,7 +359,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         } else {
             PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
-            allbookings.add(booking);
+            if(booking != null) {
+                allbookings.add(booking);
+            }
         }
         
         
@@ -414,6 +416,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
                 continue;
             }
+            if(addon.date == null) { logPrint("Null date on addon, should not happen"); continue; }
+            if(room.date == null) { logPrint("room null, should not happen"); continue; }
+            if(room.date.start == null) { logPrint("room start date null, should not happen"); continue; }
+            if(room.date.end == null) { logPrint("room start date null, should not happen"); continue; }
+            
             if(addon.date.before(room.date.start) || addon.date.after(room.date.end) &&
                     (!room.isSameDay(addon.date, room.date.start) && !room.isSameDay(addon.date, room.date.end))) {
                 toRemove.add(addon);

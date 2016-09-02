@@ -43,13 +43,16 @@ class ProMeisterSpiderDiagram extends \MarketingApplication implements \Applicat
     }
     
     public function render() {
+        $this->includefile("settings");
         $this->loggedOnUser = $this->getApi()->getUserManager()->getUserById(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id);;
         if ($this->loggedOnUser->isCompanyOwner) {
             $this->includefile('userselection');
         }
         
-        $this->requirement = $this->getApi()->getQuestBackManager()->getResultRequirement();
-        $this->includefile("diagram");
+        if ($this->shouldShowDiagram()) {
+            $this->requirement = $this->getApi()->getQuestBackManager()->getResultRequirement();
+            $this->includefile("diagram");
+        }
     }
 
     public function getRequirements() {
@@ -100,7 +103,6 @@ class ProMeisterSpiderDiagram extends \MarketingApplication implements \Applicat
             $testName = $test->name;
 
             $catScore = $this->getTestScore($user, $testId);
-
             $score = $this->translateToSixScore($catScore);
 
 
@@ -137,11 +139,27 @@ class ProMeisterSpiderDiagram extends \MarketingApplication implements \Applicat
 
     public function getTestScore($user, $testid) {
         if ($this->isCompanySelected()) {
-//            $bestTestResult = $this->getApi()->getQuestBackManager()->getBestCategoryResultForCompany($testid, $catid);
-//            return \ns_4194456a_09b3_4eca_afb3_b3948d1f8767\QuestBackResultPrinter::getResult($bestTestResult, $catid);    
+            return $this->getApi()->getQuestBackManager()->getCompanyScoreForTestForCurrentUser($testid);
         }
         
         return $this->getApi()->getQuestBackManager()->getScoreForTest($user->id, $testid);
+    }
+
+    public function shouldShowSettings() {
+        return \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->showHiddenFields == "true";
+    }
+
+    public function toggleShowDiagram() {
+        if ($this->shouldShowDiagram()) {
+            $this->setConfigurationSetting("showDiagram", "false");
+        } else {
+            $this->setConfigurationSetting("showDiagram", "true");
+        }
+        
+    }
+
+    public function shouldShowDiagram() {
+        return !($this->getConfigurationSetting("showDiagram") === "false");
     }
 
 }

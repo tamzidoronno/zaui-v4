@@ -1,0 +1,11 @@
+<?php
+/* @var $this \ns_b78a42d9_2713_4c89_bb9e_48c3dd363a40\AsanaProjects */
+
+$projects = $this->getApi()->getAsanaManager()->getProjects();
+
+foreach ($projects->data as $project) {
+    echo "<div class='projectLine'>";
+    echo "<div class='shop_button' gs_show_modal='details' projectid='$project->id'>Details</div>";
+    echo " ".$project->name;
+    echo "</div>";
+}

@@ -1,0 +1,17 @@
+.AsanaTasks .completed,
+.AsanaTasks .hours,
+.AsanaTasks .minutes,
+.AsanaTasks .taskname {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+
+.AsanaTasks .taskrow:nth-child(even) {
+    background-color: #EEE;
+}
+.AsanaTasks .taskname { width: 600px; }
+.AsanaTasks .completed { width: 100px; }
+.AsanaTasks .hours { width: 40px; }
+.AsanaTasks .minutes { width: 40px; }

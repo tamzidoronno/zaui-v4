@@ -578,7 +578,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         User user = userManager.getUserById(userId);
         userManager.checkUserAccess(user);
         
-        UserTestResult testResult = getTestResult(testId);
+        UserTestResult testResult = getTestResultForUser(testId, userId);
         if (testResult != null) {
             return testResult.getAverageResult();
         }
@@ -730,5 +730,40 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         
         sentQuestBacks.add(sent);
         saveObject(sent);
+    }
+
+    /**
+     * Returns an avarage value of the test results, does not take into concideration if a user has not 
+     * answered the test.
+     * 
+     * @param testId
+     * @return 
+     */
+    @Override
+    public Integer getCompanyScoreForTestForCurrentUser(String testId) {
+        if (getSession() == null || getSession().currentUser == null || getSession().currentUser.companyObject == null)
+            return 0;
+        
+        List<User> users = userManager.getUsersByCompanyId(getSession().currentUser.companyObject.id);
+        for (User user : users) {
+            userManager.checkUserAccess(user);
+        }
+        
+        HashMap<String, Integer> allResults = new HashMap();
+        for (User user : users) {
+            UserTestResult testResult = getResultTest(testId, user.id);
+            if (testResult == null || testResult.answers.isEmpty())
+                continue;
+            
+            allResults.put(user.id, testResult.getAverageResult());
+        }
+        
+        if (allResults.isEmpty())
+            return 0;
+        
+        int summary = allResults.values().stream().mapToInt(o -> o.intValue()).sum();
+        int avg = summary / allResults.size();
+        
+        return avg;
     }
 }

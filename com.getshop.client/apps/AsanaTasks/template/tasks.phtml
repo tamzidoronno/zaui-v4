@@ -1,0 +1,56 @@
+<?
+/* @var $this \ns_8f873890_b872_421c_8294_77fc2af9be38\AsanaTasks */
+?>
+
+<div gstype="form" method="loadTasks">
+    Year (ex: 2016) <input gstype="submitenter" class="gsniceinput1" gsname="year" value="<? echo isset($_POST['data']['year']) ? $_POST['data']['year'] : ""; ?>">
+    Month (ex: 8) <input gstype="submitenter" class="gsniceinput1" gsname="month" value="<? echo isset($_POST['data']['month']) ? $_POST['data']['month'] : ""; ?>">
+    <div class="shop_button" gstype="submit">Load</div>
+</div>
+
+<?
+if (!isset($_POST['data']['year'])) {
+    return;
+}
+
+$tasks = $this->getApi()->getAsanaManager()->getTasks($this->getModalVariable("projectid"), $_POST['data']['year'], $_POST['data']['month']);
+
+//echo "<pre>";
+//print_r($tasks);
+//echo "</pre>";
+
+$sumMinutes = 0;
+$sumHours = 0;
+
+echo "<br/>";
+echo "<br/>";
+
+echo "<div class='taskrow'>";
+    echo "<div class='completed'></div>";    
+    echo "<div class='taskname'></div>";
+    echo "<div class='hours'>hours</div>";
+    echo "<div class='minutes'>minutes</div>";
+echo "</div>";
+
+foreach ($tasks as $task) {
+    $hours = $this->getHours($task);
+    $minutes = $this->getMinutes($task);
+    $sumHours += $hours;
+    $sumMinutes += $minutes;
+    
+    echo "<div class='taskrow'>";
+        echo "<div class='completed'>".date('d/m-Y', strtotime($task->completed_at))."</div>";    
+        echo "<div class='taskname'>".$task->name."</div>";
+        echo "<div class='hours'>$hours</div>";
+        echo "<div class='minutes'>$minutes</div>";
+    echo "</div>";
+}
+
+$hoursInMinutes = $sumHours * 60;
+$totalMinutes = $hoursInMinutes + $sumMinutes;
+$totalTime = date('H', mktime(0,$totalMinutes)). " hours and  ".date('i', mktime(0,$totalMinutes))." minutes";
+echo "<br/>";
+echo "<div class='taskrow'>";
+    echo "<div class='taskname'>Total: $totalTime</div>";
+echo "</div>";
+?>

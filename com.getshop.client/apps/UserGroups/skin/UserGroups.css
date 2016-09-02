@@ -50,3 +50,12 @@ and open the template in the editor.
     padding: 20px; 
     border: solid 1px #DDD;
 }
+
+.gss_product_inner_desc {
+    border-bottom: dashed 1px #DDD;
+    padding: 5px;
+}
+
+.gss_product_inner_desc:hover {
+    background-color: #EEE;
+}

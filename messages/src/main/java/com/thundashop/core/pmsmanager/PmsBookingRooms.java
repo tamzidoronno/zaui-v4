@@ -178,23 +178,7 @@ public class PmsBookingRooms implements Serializable {
         if(date.start == null) {
             return false;
         }
-        Date now = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(now);
-        if(cal.get(Calendar.HOUR_OF_DAY) < 6) {
-            return false;
-        }
-        
-        Calendar startCal = Calendar.getInstance();
-        startCal.setTime(date.start);
-        String startString = startCal.get(Calendar.DAY_OF_YEAR) + "-" + startCal.get(Calendar.YEAR);
-        String nowString = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
-        
-        if(startString.equals(nowString)) {
-            return true;
-        }
-        
-        return false;
+        return isStartingToday(new Date());
     }
 
     boolean isEndingToday() {
@@ -519,5 +503,24 @@ public class PmsBookingRooms implements Serializable {
                 item.count = count;
             }
         }
+    }
+
+    boolean isStartingToday(Date now) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        if(cal.get(Calendar.HOUR_OF_DAY) < 6) {
+            return false;
+        }
+        
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(date.start);
+        String startString = startCal.get(Calendar.DAY_OF_YEAR) + "-" + startCal.get(Calendar.YEAR);
+        String nowString = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
+        
+        if(startString.equals(nowString)) {
+            return true;
+        }
+        
+        return false;
     }
 }

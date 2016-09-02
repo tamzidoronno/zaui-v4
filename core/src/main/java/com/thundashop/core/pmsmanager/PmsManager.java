@@ -556,9 +556,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         removeInactive(filter, result);
 
         List<PmsBooking> finalized = finalizeList(result);
-
-        finalized = sortList(finalized, filter.sorting);
-
         finalized = filterTypes(finalized, filter.typeFilter);
         finalized = filterByUser(finalized,filter.userId);
         finalized = filterByChannel(finalized,filter.channel);
@@ -1616,56 +1613,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         return attachments;
-    }
-
-    private List<PmsBooking> sortList(List<PmsBooking> result, String sorting) {
-        if (sorting == null) {
-            sorting = "";
-        }
-
-        if (sorting.equals("visitor") || sorting.equals("visitor_desc")) {
-//            Collections.sort(result, new Comparator<PmsBooking>(){
-//                public int compare(PmsBooking o1, PmsBooking o2){
-//                    return o1.rooms.get(0).guests.get(0).name.compareTo(o2.rooms.get(0).guests.get(0).name);
-//                }
-//            });
-        } else if (sorting.equals("periode") || sorting.equals("periode_desc")) {
-            Collections.sort(result, new Comparator<PmsBooking>() {
-                public int compare(PmsBooking o1, PmsBooking o2) {
-                    return o1.getActiveRooms().get(0).date.start.compareTo(o2.getActiveRooms().get(0).date.start);
-                }
-            });
-        } else if (sorting.equals("room") || sorting.equals("room_desc")) {
-            Collections.sort(result, new Comparator<PmsBooking>() {
-                public int compare(PmsBooking o1, PmsBooking o2) {
-                    if (o1.getActiveRooms() == null || o1.getActiveRooms().isEmpty() || o1.getActiveRooms().get(0).item == null) {
-                        return -1;
-                    }
-                    if (o2.getActiveRooms() == null || o2.getActiveRooms().isEmpty() || o2.getActiveRooms().get(0).item == null) {
-                        return -1;
-                    }
-                    return o1.getActiveRooms().get(0).item.bookingItemName.compareTo(o2.getActiveRooms().get(0).item.bookingItemName);
-                }
-            });
-        } else if (sorting.equals("price") || sorting.equals("price_desc")) {
-            Collections.sort(result, new Comparator<PmsBooking>() {
-                public int compare(PmsBooking o1, PmsBooking o2) {
-                    return o1.getActiveRooms().get(0).price.compareTo(o2.getActiveRooms().get(0).price);
-                }
-            });
-        } else {
-            Collections.sort(result, new Comparator<PmsBooking>() {
-                public int compare(PmsBooking o1, PmsBooking o2) {
-                    return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
-                }
-            });
-        }
-
-        if (sorting.contains("_desc")) {
-            Collections.reverse(result);
-        }
-
-        return result;
     }
 
     private List<PmsBooking> filterTypes(List<PmsBooking> finalized, List<String> typeFilter) {
@@ -2729,7 +2676,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
-        return couponCode;
+        return couponCode; 
     }
 
     @Override

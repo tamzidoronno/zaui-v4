@@ -1655,5 +1655,22 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return "";
     }
 
+    public function getTotalAddons($saleStats) {
+        $addonsResult = array();
+        foreach($saleStats->entries as $entries) {
+            foreach($entries->addonsCount as $addonId => $val) {
+                @$addonsResult[$addonId]['count'] += $val;
+            }
+            foreach($entries->addonsPrice as $addonId => $val) {
+                @$addonsResult[$addonId]['price'] += $val;
+            }
+            foreach($entries->addonsPriceEx as $addonId => $val) {
+                @$addonsResult[$addonId]['priceEx'] += $val;
+            }
+        }
+        
+        return $addonsResult;
+    }
+
 }
 ?>

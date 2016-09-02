@@ -287,8 +287,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Order creditedOrder = orderManager.creditOrder(orderId);
         PmsBooking booking = pmsManager.getBooking(bookingId);
         if(currentOrder.closed) {
-            creditedOrder.status = Order.Status.PAYMENT_COMPLETED;
-            creditedOrder.closed = true;
+            creditedOrder.status = currentOrder.status;
+            creditedOrder.closed = currentOrder.closed;
             orderManager.saveOrder(currentOrder);
         }
         

@@ -52,9 +52,6 @@ public class GSAdmins extends ManagerBase {
         return admins.get(userName);
     }
     
-    public static void main(String[] args) {
-    }
-    
     private static String encryptPassword(String password) throws ErrorException {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");

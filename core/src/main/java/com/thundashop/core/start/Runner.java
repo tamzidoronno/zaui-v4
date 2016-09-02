@@ -1,6 +1,9 @@
 package com.thundashop.core.start;
 
 
+import com.google.gson.Gson;
+import com.mashape.unirest.http.ObjectMapper;
+import com.mashape.unirest.http.Unirest;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GetShopLogHandler;
@@ -31,6 +34,8 @@ public class Runner {
     public static void main(String[] args) throws InterruptedException, Exception {  
         java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
         java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
+        
+        setUnirestMapper();
 
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         setDeveloperMode(context);
@@ -104,5 +109,20 @@ public class Runner {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static void setUnirestMapper() {
+        Unirest.setObjectMapper(new ObjectMapper() {
+            Gson gson = new Gson();
+            
+            public <T> T readValue(String value, Class<T> valueType) {
+                return gson.fromJson(value, valueType);
+            }
+
+            public String writeValue(Object value) {
+                return gson.toJson(value);
+            }
+        });
+
     }
 }

@@ -292,15 +292,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             orderManager.saveOrder(currentOrder);
         }
         
-        for(CartItem item : creditedOrder.cart.getItems()) {
-            String roomId = item.getProduct().externalReferenceId;
-            PmsBookingRooms room = booking.getRoom(roomId);
-            if(room == null) {
-                continue;
+        
+        if(!booking.ignoreCheckChangesInBooking) {
+            for(CartItem item : creditedOrder.cart.getItems()) {
+                String roomId = item.getProduct().externalReferenceId;
+                PmsBookingRooms room = booking.getRoom(roomId);
+                if(room == null) {
+                    continue;
+                }
+
+                room.invoicedTo = item.getStartingDate();
             }
-            
-            room.invoicedTo = item.getStartingDate();
+        } else {
+            for(PmsBookingRooms room : booking.rooms) {
+                room.invoicedTo = room.date.start;
+            }
         }
+        
         booking.orderIds.add(creditedOrder.id);
         pmsManager.saveBooking(booking);
     }

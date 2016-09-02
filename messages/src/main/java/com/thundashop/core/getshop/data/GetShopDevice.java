@@ -77,7 +77,7 @@ public class GetShopDevice extends DataCommon {
             }
         }
         
-        return false;
+        return oldBatteryStatus();
     }
 
     public boolean warnAboutCodeNotSet() {
@@ -85,6 +85,19 @@ public class GetShopDevice extends DataCommon {
             if(code.needWarnAboutNotUpdated()) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    public boolean oldBatteryStatus() {
+        if(batteryLastUpdated == null) {
+            return true;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(batteryLastUpdated);
+        cal.add(Calendar.DAY_OF_YEAR, 2);
+        if(cal.getTime().before(new Date())) {
+            return true;
         }
         return false;
     }

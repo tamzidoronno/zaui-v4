@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.DataCommon;
@@ -159,6 +160,15 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         @Override
         public void run() {
             if(hasConnectivity()) {
+                if(device.oldBatteryStatus()) {
+                    try {
+                        checkBatteryStatus();
+                        device.batteryLastUpdated = new Date();
+                        device.needSaving = true;
+                    }catch(Exception e) {
+                        logPrintException(e);
+                    }
+                }
                 for(Integer offset : device.codes.keySet()) {
                     GetShopLockCode code = device.codes.get(offset);
                     if(code.needUpdate()) {
@@ -228,7 +238,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String address = "http://"+hostname+":8083/" + postfix;
                 GetshopLockCom.httpLoginRequest(address,username,password);
                
-                try { Thread.sleep(90000); }catch(Exception e) {}
+                waitForEmptyQueue();
                  
                 postfix = "ZWave.zway/Run/devices["+device.zwaveid+"]";
                 postfix = URLEncoder.encode(postfix, "UTF-8");
@@ -247,6 +257,37 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
             }
             return false;
+        }
+
+        private void checkBatteryStatus() throws Exception {
+            logPrint("Checking for battery for " + device.name + " (" + device.zwaveid + ")");
+            String postfix = "ZWave.zway/Run/devices["+device.zwaveid+"].instances[0].commandClasses[128].Get()";
+            postfix = URLEncoder.encode(postfix, "UTF-8");
+            String address = "http://"+hostname+":8083/" + postfix;
+            GetshopLockCom.httpLoginRequest(address,username,password);
+            waitForEmptyQueue();
+        }
+
+        private void waitForEmptyQueue() {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.SECOND, 360);
+            String postfix = "ZWave.zway/InspectQueue";
+            while(true) {
+                try {
+                    String address = "http://"+hostname+":8083/" + postfix;
+                    String res = GetshopLockCom.httpLoginRequest(address,username,password);
+                    if(res.equals("[]")) {
+                        break;
+                    }
+                    Thread.sleep(2000);
+                }catch(Exception e) {
+                    logPrintException(e);
+                }
+                if(cal.getTime().before(new Date())) {
+                    logPrint("z-way: queue did not empty within timeout.");
+                    return;
+                }
+            }
         }
     }
     

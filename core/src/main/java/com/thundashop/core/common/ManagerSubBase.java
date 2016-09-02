@@ -103,6 +103,10 @@ public class ManagerSubBase {
         logPrintStatic(key, storeId);
     }
     
+    public void logPrintException(Exception ex) {
+        GetShopLogHandler.logStack(ex, storeId);
+    }
+    
     public void createProcessor(GetShopSchedulerBase process) {
         GetShopScheduler gsscheduler = new GetShopScheduler();
         gsscheduler.storeId = storeId;

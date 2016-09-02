@@ -478,10 +478,10 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
 
     public function getImageFromPage($pageId) {
-        if(!$this->appsForPage) {
-            $this->appsForPage = $this->getApi()->getPageManager()->getApplicationsForPage($pageId);
+        if(!isset($this->appsForPage[$pageId])) {
+            $this->appsForPage[$pageId] = $this->getApi()->getPageManager()->getApplicationsForPage($pageId);
         }
-        $apps = $this->appsForPage;
+        $apps = $this->appsForPage[$pageId];
         if(!$apps) {
             $apps = array();
         }

@@ -131,6 +131,12 @@ public class PmsBookingSimpleFilter {
                     return true;
                 }
             }
+             if(booking.wubookreservationid != null && booking.wubookreservationid.equals(filter.searchWord)) {
+                return true;
+            }
+            if(booking.wubookchannelreservationcode != null && booking.wubookchannelreservationcode.equals(filter.searchWord)) {
+                return true;
+            }
         } else if (filter.filterType == null || filter.filterType.equals("registered")) {
             if (filter.startDate == null || (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate))) {
                 return true;

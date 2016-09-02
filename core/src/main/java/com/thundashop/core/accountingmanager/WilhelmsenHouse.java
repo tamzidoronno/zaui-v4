@@ -274,18 +274,18 @@ public class WilhelmsenHouse implements AccountingInterface {
                 result.add(orderline+"\r\n");
             }
             
-//            if(order.invoiceNote.trim() != null && !order.invoiceNote.trim().isEmpty()) {
-//                String orderline = "L;"; // Fast L for orderline
-//                orderline += ";"; // ProdNO
-//                orderline += ";"; // Avgiftskode ( hentes fra kunden )
-//                orderline += order.invoiceNote.trim() + ";"; // Produkt beskrivelse
-//                orderline += ";"; // Antall mnder
-//                orderline += ";"; // Pris pr antall, hvis blank hentes pris fra Visma
-//                orderline += ";"; // ikke i bruk
-//                orderline += ";"; // R4 Gjenstand ID
-//                orderline += ";"; // 
-//                result.add(orderline+"\r\n");                
-//            }
+            if(order.invoiceNote.trim() != null && !order.invoiceNote.trim().isEmpty()) {
+                String orderline = "L;"; // Fast L for orderline
+                orderline += ";"; // ProdNO
+                orderline += ";"; // Avgiftskode ( hentes fra kunden )
+                orderline += order.invoiceNote.trim() + ";"; // Produkt beskrivelse
+                orderline += ";"; // Antall mnder
+                orderline += ";"; // Pris pr antall, hvis blank hentes pris fra Visma
+                orderline += ";"; // ikke i bruk
+                orderline += ";"; // R4 Gjenstand ID
+                orderline += ";"; // 
+                result.add(orderline+"\r\n");                
+            }
             
             System.out.println(" - done.");            
         }

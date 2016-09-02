@@ -36,6 +36,19 @@ public class InvoiceGenerator {
         this.details = details;
     }
     
+    private void addInvoiceNote() throws IOException {
+        writeText("Note", 45,413, true, 8);
+        String[] lines = order.invoiceNote.split("\n");
+        int i = 0;
+        for(String line : lines) {
+            if(line.isEmpty()) {
+                continue;
+            }
+            writeText(line,  45,400-(i*10), false, 8);
+            i++;
+        }
+    }
+    
     public String createInvoice() throws IOException, COSVisitorException {
         PDDocument document = new PDDocument();
         PDPage page = new PDPage(PDPage.PAGE_SIZE_A4);
@@ -336,7 +349,7 @@ public class InvoiceGenerator {
         int i = 0;
         int start = 628;
         int padding = 3;
-        
+        addInvoiceNote();
         if (addShippingLine(start, i, lineHeight, padding)) {
             i = 1;
         }

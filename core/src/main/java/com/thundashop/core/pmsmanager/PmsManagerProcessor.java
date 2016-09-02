@@ -699,6 +699,9 @@ public class PmsManagerProcessor {
     private boolean notifyRoomAddedToArx(String format) {
         if(manager.getConfigurationSecure().arxCardFormatsAvailable != null && !manager.getConfigurationSecure().arxCardFormatsAvailable.isEmpty()) {
             String[] splitted = manager.getConfigurationSecure().arxCardFormatsAvailable.split(";");
+            if(splitted == null || splitted.length == 1) {
+                return true;
+            }
             if(splitted[0].equals(format)) {
                 return true;
             }

@@ -373,7 +373,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         createUserForBooking(booking);
         if (configuration.payAfterBookingCompleted) {
-            createPrepaymentOrder(booking.id);
+             pmsInvoiceManager.createPrePaymentOrder(booking);
         }
         
         List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
@@ -407,7 +407,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String createPrepaymentOrder(String bookingId) {
-        return pmsInvoiceManager.createPrePaymentOrder(bookingId);
+        return pmsInvoiceManager.createPrePaymentOrder(getBooking(bookingId));
     }
 
     private Integer completeBooking(List<Booking> bookingsToAdd, PmsBooking booking) throws ErrorException {
@@ -2137,7 +2137,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 
             }
-            PmsBooking booking = getBookingFromRoom(room.pmsBookingRoomId);
+            PmsBooking booking = getBookingFromRoomSecure(room.pmsBookingRoomId);
             String bookingId = "";
             if (booking != null) {
                 bookingId = booking.id;
@@ -2275,15 +2275,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId) {
-        for (PmsBooking booking : bookings.values()) {
-            for (PmsBookingRooms room : booking.getActiveRooms()) {
-                if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
-                    checkSecurity(booking);
-                    return booking;
-                }
-            }
-        }
-        return null;
+        PmsBooking booking = getBookingFromRoomSecure(pmsBookingRoomId);
+        checkSecurity(booking);
+        return booking;
     }
 
     @Override
@@ -3644,5 +3638,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    private PmsBooking getBookingFromRoomSecure(String pmsBookingRoomId) {
+        for (PmsBooking booking : bookings.values()) {
+            for (PmsBookingRooms room : booking.getActiveRooms()) {
+                if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                    return booking;
+                }
+            }
+        }
+        return null;
     }
 }

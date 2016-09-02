@@ -824,10 +824,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return res;
     }
 
-    String createPrePaymentOrder(String bookingId) {
-        PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+    String createPrePaymentOrder(PmsBooking booking) {
         if(booking == null) {
-            System.out.println("Creating prepayment order on empty booking");
+            logPrint("Creating prepayment order on empty booking");
         }
         if(booking.avoidCreateInvoice && 
                 getSession() != null && 
@@ -839,7 +838,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         filter.prepayment = true;
         filter.endInvoiceAt = booking.getEndDate();
         filter.forceInvoicing = true;
-        createOrder(bookingId, filter);
+        createOrder(booking.id, filter);
         return "";
 
     }

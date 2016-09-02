@@ -30,9 +30,12 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         $evnts = $this->getApi()->getEventBookingManager()->getEventsForUser($this->getBookingEngineName(), $userId);
         
         $events = [];
-        foreach ($evnts as $event) {
-            $event->currentUserId = $userId;
-            $events[] = $event;
+        
+        if (is_array($evnts)) {
+            foreach ($evnts as $event) {
+                $event->currentUserId = $userId;
+                $events[] = $event;
+            }
         }
         
         return $events;

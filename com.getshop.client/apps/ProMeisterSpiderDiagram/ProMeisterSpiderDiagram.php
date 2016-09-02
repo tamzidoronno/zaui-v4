@@ -100,7 +100,6 @@ class ProMeisterSpiderDiagram extends \MarketingApplication implements \Applicat
             $testName = $test->name;
 
             $catScore = $this->getTestScore($user, $testId);
-
             $score = $this->translateToSixScore($catScore);
 
 
@@ -137,8 +136,7 @@ class ProMeisterSpiderDiagram extends \MarketingApplication implements \Applicat
 
     public function getTestScore($user, $testid) {
         if ($this->isCompanySelected()) {
-//            $bestTestResult = $this->getApi()->getQuestBackManager()->getBestCategoryResultForCompany($testid, $catid);
-//            return \ns_4194456a_09b3_4eca_afb3_b3948d1f8767\QuestBackResultPrinter::getResult($bestTestResult, $catid);    
+            return $this->getApi()->getQuestBackManager()->getCompanyScoreForTestForCurrentUser($testid);
         }
         
         return $this->getApi()->getQuestBackManager()->getScoreForTest($user->id, $testid);

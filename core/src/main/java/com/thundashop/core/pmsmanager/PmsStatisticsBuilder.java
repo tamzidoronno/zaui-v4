@@ -52,6 +52,9 @@ class PmsStatisticsBuilder {
                         }
                         entry.roomsRentedOut++;
                         for(PmsBookingAddonItem addon : room.addons) {
+                            if(!room.isSameDay(addon.date, cal.getTime())) {
+                                continue;
+                            }
                             Integer count = entry.addonsCount.get(addon.addonType);
                             Double addonPrice = entry.addonsPrice.get(addon.addonType);
                             Double addonPriceEx = entry.addonsPriceEx.get(addon.addonType);

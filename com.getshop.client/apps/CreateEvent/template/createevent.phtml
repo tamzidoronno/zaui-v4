@@ -109,8 +109,8 @@ if ($eventToUse) {
     }
     
     if ($eventToUse) {
-        $lockText = $eventToUse->isLocked ? "Unlock event" : "Lock event";
-        echo " <div class='shop_button' gsclick='toggleLocked' eventid='$eventToUse->id' >".$this->__w($lockText)."</div>";
+        $lockText = $eventToUse->isLocked ? $this->__f("Unlock event") : $this->__f("Lock event");
+        echo " <div class='shop_button' gsclick='toggleLocked' eventid='$eventToUse->id' >".$lockText."</div>";
     }
     
     if ($eventToUse && $this->hasWriteAccess() && count($eventToUse->bookingItem->bookingIds) == 0) {

@@ -49,6 +49,7 @@ Hos not participated on any events;-;Har inte deltagit på några kurser
 Impersonate;-;Överta person
 Link to page.;-;Länk till sida
 Location of the event;-;Kursort
+Lock event;-;Stäng bokning
 Monday - Friday;-;Måndag - Fredag
 Name of the customer;-;Kundens namn
 Name of the event;-;Kursens namn
@@ -82,6 +83,7 @@ Should send sms when user signs up waitinglist?;-;Skicka SMS när användare sä
 Should send sms when user signs up?;-;Skicka SMS när användare anmäler sig?
 Should users be notified when a new test is available?;-;Ska användare få utskick när ett test finns tillgängligt?
 Step;-;Steg
+Unlock event;-;Öppen booking
 You currently dont have any tests, please contact admin to get access to one;-;Du har ännu inte gjort några tester, kontakta admin för att få tillgång;
 search;-;sök
 

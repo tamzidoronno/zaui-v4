@@ -200,7 +200,7 @@ if($booking->orderIds) {
         } else {
             echo $this->translatePaymenttype($order->payment->paymentType, $instances);
             echo "<br><span style='cursor:pointer; color:blue' class='sendreciept' orderid='".$order->id."' bookingid='".$booking->id."'>Send reciept</span>";
-            echo "<br><a href='/downloadInvoice.php?orderId=8afb7b51-2e86-4fdb-b48e-a3b8e9642208&incrementalOrderId=108460' target='_fdasf'><span style='cursor:pointer; color:blue' class='sendreciept' orderid='".$order->id."' bookingid='".$booking->id."'>download</span></a>";
+            echo "<br><a href='/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."' target='_fdasf'><span style='cursor:pointer; color:blue' orderid='".$order->id."' bookingid='".$booking->id."'>download</span></a>";
         }
         echo "<span class='sendinvoicebox' gstype='form' method='sendInvoice'>";
         echo "<input type='hidden' value='".$booking->id."' gsname='bookingid'>";

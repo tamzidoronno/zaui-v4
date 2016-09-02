@@ -65,6 +65,8 @@ class UserGroups extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon 
         
         $group->isPublic = $_POST['isPublic'];
         $group->isVip= $_POST['isVip'];
+        $group->imageId = $_POST['imageId'];
+        
         $group->usersRequireGroupReferencePlaceholder = $_POST['usersRequireGroupReferencePlaceholder'];
         $group->usersRequireGroupReferenceValidationMin = $_POST['usersRequireGroupReferenceValidationMin'];
         $group->usersRequireGroupReferenceValidationMax = $_POST['usersRequireGroupReferenceValidationMax'];

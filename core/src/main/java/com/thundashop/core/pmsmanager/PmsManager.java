@@ -296,64 +296,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return booking;
     }
 
-    private HashMap<String, String> validatePhone(String phone, String countryCode) {
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-        String prefix = "";
-        phone = phone.replace("++", "+");
-        phone = phone.replace("++", "+");
-        phone = phone.replace("++", "+");
-        phone = phone.replace("++", "+");
-        try {
-            PhoneNumber phonecheck = phoneUtil.parse(phone, countryCode);
-            if (!phoneUtil.isValidNumber(phonecheck)) {
-                String phone2 = phone;
-                if (phone.startsWith("0000")) {
-                    phone2 = phone.substring(4);
-                } else if (phone.startsWith("000")) {
-                    phone2 = phone.substring(3);
-                } else if (phone.startsWith("00")) {
-                    phone2 = phone.substring(2);
-                }
-
-                phonecheck = phoneUtil.parse(phone2, countryCode);
-                prefix = phonecheck.getCountryCode() + "";
-                phone = phonecheck.getNationalNumber() + "";
-
-                if (!phoneUtil.isValidNumber(phonecheck)) {
-                    phone2 = "00" + phone;
-                    phonecheck = phoneUtil.parse(phone2, countryCode);
-
-                    if (!phoneUtil.isValidNumber(phonecheck)) {
-                        if (phone.length() == 10 && phone.startsWith("07")) {
-                            phone = phone.substring(1);
-                            prefix = "46";
-                        } else if (phone.length() == 9 && phone.startsWith("7")) {
-                            prefix = "46";
-                        } else {
-                            return null;
-                        }
-                    } else {
-                        prefix = phonecheck.getCountryCode() + "";
-                        phone = phonecheck.getNationalNumber() + "";
-                    }
-                } else {
-                    prefix = phonecheck.getCountryCode() + "";
-                    phone = phonecheck.getNationalNumber() + "";
-                }
-            } else {
-                prefix = phonecheck.getCountryCode() + "";
-                phone = phonecheck.getNationalNumber() + "";
-            }
-        } catch (NumberParseException e) {
-            return null;
-        }
-
-        HashMap<String, String> result = new HashMap();
-        result.put("prefix", prefix);
-        result.put("phone", phone);
-        return result;
-    }
-
     @Override
     public PmsBooking completeCurrentBooking() {
         PmsBooking booking = getCurrentBooking();
@@ -811,22 +753,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking.id == null || booking.id.isEmpty() || bookings.get(booking.id) == null) {
             throw new ErrorException(1000015);
         }
-        validatePhoneNumbers(booking);
         bookings.put(booking.id, booking);
         saveObject(booking);
     }
 
-    private void validatePhoneNumbers(PmsBooking booking) {
-        for (PmsBookingRooms room : booking.getActiveRooms()) {
-            for (PmsGuests guest : room.guests) {
-                HashMap<String, String> result = validatePhone("+" + guest.prefix + "" + guest.phone, "no");
-                if (result != null) {
-                    guest.prefix = result.get("prefix").replace("+", "");
-                    guest.phone = result.get("phone");
-                }
-            }
-        }
-    }
 
     @Override
     public String setBookingItem(String roomId, String bookingId, String itemId, boolean split) {
@@ -3547,7 +3477,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(booking.userId != null) {
             User user = userManager.getUserById(booking.userId);
             
-            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ user.prefix + user.cellPhone, "NO");
+            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ user.prefix,user.cellPhone, "NO");
             if(res != null) {
                 String prefix = res.get("prefix");
                 String phone = res.get("phone");
@@ -3563,7 +3493,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         boolean save = false;
         for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             for(PmsGuests guest : room.guests) {
-                HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ guest.prefix + guest.phone, "NO");
+                HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ guest.prefix,guest.phone, "NO");
                 if(res != null) {
                     String prefix = res.get("prefix");
                     String phone = res.get("phone");

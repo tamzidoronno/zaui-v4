@@ -3487,6 +3487,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if(!phone.equals(user.cellPhone)) { user.cellPhone = prefix;save=true; }
                     if(save) { userManager.saveUserSecure(user); }
                 }
+            } else {
+                //Warn about wrong phone number.
             }
         }
         
@@ -3501,6 +3503,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         if(!prefix.equals(guest.prefix)) { guest.prefix = prefix;save=true; }
                         if(!phone.equals(guest.phone)) { guest.phone = phone;save=true; }
                     }
+                } else {
+                    //Warn about wrong phone number.
                 }
             }
         }

@@ -6,10 +6,13 @@ $date = $car && $car->lastService ? date('Y-m-d',strtotime($car->lastService)) :
 $nextServiceDate = $car ? date('d/m-Y',strtotime($car->nextService)) : "";
 $nextControll = $car ? date('d/m-Y',strtotime($car->nextControll)) : "";
 
+$kmStatus = date('d/m-Y', strtotime($car->requestKilomters->lastReceivedKilomters));
+$kmStatus = "Nåværende kilmoterstand: ".$car->kilometers.", Sist oppdatert: ".$kmStatus;
+
 ?>
 
 <div gstype='form' method='save'>
-    <div>Når var den inne sist<br/> <input type='date' class='gsniceinput1' gsname='lastservicedate' value='<? echo $date; ?>'/> </div>
+    <div>Når var den inne sist<br/> <input type='text' id='lastservice' class='gsniceinput1' gsname='lastservicedate' value='<? echo $date; ?>'/> </div>
 
     <br/><div>Når var den inne kilometerstand<br/> <input type='textfield' class='gsniceinput1' placeholder='120000' gsname='lastservicekm' value='<? echo $car->lastServiceKilomters; ?>'/> </div>
 
@@ -54,5 +57,13 @@ $nextControll = $car ? date('d/m-Y',strtotime($car->nextControll)) : "";
         Ukjent
     <? } ?>
     
-   
+    <br/>
+    <br/>
+    <b>Nåværende status:</b>
+    <br/> <? echo $kmStatus; ?>
+    
 </div>
+
+<script>
+    $('#lastservice').datepicker({ dateFormat: 'yy-mm-dd' });
+</script>

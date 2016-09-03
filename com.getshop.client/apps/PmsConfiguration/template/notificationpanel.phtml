@@ -420,6 +420,19 @@ $channelConfig = $config->channelConfiguration;
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->notifyGetShopAboutCriticalTransactions) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='notifyGetShopAboutCriticalTransactions' <? echo $checked; ?>>
+            </span>
+            Notify getshop about critical transactions.
+        </div>
+        
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->ignoreTimeIntervalsOnNotification) {
                     $checked = "CHECKED";
                 }

@@ -102,4 +102,7 @@ public interface IMecaManager {
     
     @Editor
     public void deleteFleet(String fleetId);
+    
+    @Editor
+    public void saveMecaFleetSettings(MecaFleetSettings settings);
 }

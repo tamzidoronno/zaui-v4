@@ -63,13 +63,18 @@ public abstract class SmsHandlerAbstract implements Runnable {
         if(phone == null) {
             return null;
         }
-        
+        phone = phone.replaceAll("\\.", "");
+        phone = phone.replaceAll(" ", "");
+        if(phone.startsWith("00")) {
+            phone = "+" + phone.substring(2);
+        }
+
         phonePrefix = phonePrefix.replace("++", "+");
         phonePrefix = phonePrefix.replace("++", "+");
         phonePrefix = phonePrefix.replace("++", "+");
         phonePrefix = phonePrefix.replace("++", "+");
         
-        if(phonePrefix.contains("+")) {
+        if(!phonePrefix.startsWith("+")) {
             phonePrefix = "+" + phonePrefix;
         }
         
@@ -77,8 +82,9 @@ public abstract class SmsHandlerAbstract implements Runnable {
             countryCode = "+47";
         }
         
-        if(phone.indexOf("+", 1) > 0) {
-            phone = phone.substring(phone.indexOf("+", 1));
+        String phoneNumberToCheck = phonePrefix+phone;
+        if(phoneNumberToCheck.indexOf("+", 1) > 0) {
+            phoneNumberToCheck = phoneNumberToCheck.substring(phoneNumberToCheck.indexOf("+", 1));
         }
         
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
@@ -88,7 +94,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
         phone = phone.replace("++", "+");
         phone = phone.replace("++", "+");
         try {
-            Phonenumber.PhoneNumber phonecheck = phoneUtil.parse(phonePrefix+phone, countryCode);
+            Phonenumber.PhoneNumber phonecheck = phoneUtil.parse(phoneNumberToCheck, countryCode);
             if (!phoneUtil.isValidNumber(phonecheck)) {
                 String phone2 = phone;
                 if (phone.startsWith("0000")) {

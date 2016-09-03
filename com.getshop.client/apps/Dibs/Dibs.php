@@ -74,6 +74,11 @@ class Dibs extends \PaymentApplication implements \Application {
         $settings = $this->getFactory()->getSettings();
         $language = $this->getFactory()->getSelectedTranslation();
         $store = $this->getFactory()->getStore();
+    
+        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+            $merchid = "90069173";
+        }
+
         
         $key = $merchid;
         if($this->getApi()->getStoreManager()->isProductMode()) {
@@ -97,6 +102,8 @@ class Dibs extends \PaymentApplication implements \Application {
             if($this->saveCard()) {
                 echo '<INPUT TYPE="hidden" NAME="createTicket" VALUE="1">';
             }
+
+            
         if($this->isTestMode()) {
                 echo '<input type="hidden" name="test" value="1"/>';
                 echo "This is in test mode...";

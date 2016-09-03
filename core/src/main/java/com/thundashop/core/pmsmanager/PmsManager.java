@@ -299,7 +299,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking completeCurrentBooking() {
         PmsBooking booking = getCurrentBooking();
-        
+        if(getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {
+            messageManager.sendErrorNotification("Booking completed.", null);
+        }
         if(booking.getActiveRooms().isEmpty()) {
             return null;
         }

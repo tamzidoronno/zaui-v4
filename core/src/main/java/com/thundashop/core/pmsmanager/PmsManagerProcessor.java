@@ -366,7 +366,7 @@ public class PmsManagerProcessor {
         }
 
         Card card = new Card();
-        card.format = manager.getConfigurationSecure().arxCardFormat;
+        room.cardformat = manager.getConfigurationSecure().arxCardFormat;
         if(room.cardformat != null && !room.cardformat.isEmpty()) {
             card.format = room.cardformat;
         }

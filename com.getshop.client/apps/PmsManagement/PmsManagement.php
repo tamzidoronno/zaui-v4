@@ -836,18 +836,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function groupByBooking() {
-        if(isset($_SESSION['pmsmanagementgroupbybooking'])) {
-            unset($_SESSION['pmsmanagementgroupbybooking']);
-        } else {
-            $_SESSION['pmsmanagementgroupbybooking'] = true;
-        }
+        $filter = $this->getSelectedFilter();
+        $filter->groupByBooking = !$filter->groupByBooking;
+        $this->setCurrentFilter($filter);
     }
     
     public function isGroupedByBooking() {
-        if(isset($_SESSION['pmsmanagementgroupbybooking'])) {
-            return true;
-        }
-        return false;
+        return $this->getSelectedFilter()->groupByBooking;
     }
     
     /**

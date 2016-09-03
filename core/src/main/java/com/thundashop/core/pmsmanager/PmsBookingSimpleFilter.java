@@ -33,6 +33,9 @@ public class PmsBookingSimpleFilter {
             }
         }
         sortList(result, filter.sorting);
+        if(filter.groupByBooking) {
+            result = groupByBooking(result);
+        }
         return result;
     }
 
@@ -43,15 +46,22 @@ public class PmsBookingSimpleFilter {
         }
 
         if (sorting.equals("visitor") || sorting.equals("visitor_desc")) {
-//            Collections.sort(result, new Comparator<PmsBooking>(){
-//                public int compare(PmsBooking o1, PmsBooking o2){
-//                    return o1.rooms.get(0).guests.get(0).name.compareTo(o2.rooms.get(0).guests.get(0).name);
-//                }
-//            });
+            Collections.sort(result, new Comparator<PmsRoomSimple>(){
+                public int compare(PmsRoomSimple o1, PmsRoomSimple o2){
+                    return o1.owner.compareTo(o2.owner);
+                }
+            });
+        } else if (sorting.equals("state") || sorting.equals("state_desc")) {
+            Collections.sort(result, new Comparator<PmsRoomSimple>(){
+                public int compare(PmsRoomSimple o1, PmsRoomSimple o2){
+                    return o1.progressState.compareTo(o2.progressState);
+                }
+            });
+            
         } else if (sorting.equals("periode") || sorting.equals("periode_desc")) {
             Collections.sort(result, new Comparator<PmsRoomSimple>() {
                 public int compare(PmsRoomSimple o1, PmsRoomSimple o2) {
-                    if(o1.start > o2.start) {
+                    if(o1.start < o2.start) {
                         return -1;
                     }
                     return 1;
@@ -66,7 +76,7 @@ public class PmsBookingSimpleFilter {
         } else if (sorting.equals("price") || sorting.equals("price_desc")) {
             Collections.sort(result, new Comparator<PmsRoomSimple>() {
                 public int compare(PmsRoomSimple o1, PmsRoomSimple o2) {
-                    if(o1.price > o2.price) {
+                    if(o1.price < o2.price) {
                         return -1;
                     }
                     return 1;
@@ -109,6 +119,7 @@ public class PmsBookingSimpleFilter {
         simple.orderIds = booking.orderIds;
         simple.channel = booking.channel;
         simple.numberOfNights = room.getNumberOfDays();
+        simple.numberOfRoomsInBooking = booking.getActiveRooms().size();
         
         if(manager.getConfiguration().hasLockSystem()) {
             simple.code = room.code;
@@ -222,6 +233,18 @@ public class PmsBookingSimpleFilter {
             }
         }
         return false;
+    }
+
+    private LinkedList<PmsRoomSimple> groupByBooking(LinkedList<PmsRoomSimple> result) {
+        List<String> bookingsAdded = new ArrayList();
+        LinkedList<PmsRoomSimple> toReturn = new LinkedList();
+        for(PmsRoomSimple simple : result) {
+            if(!bookingsAdded.contains(simple.bookingId)) {
+                toReturn.add(simple);
+                bookingsAdded.add(simple.bookingId);
+            }
+        }
+        return toReturn;
     }
     
 }

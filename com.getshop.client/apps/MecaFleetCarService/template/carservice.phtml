@@ -9,7 +9,7 @@ $nextControll = $car ? date('d/m-Y',strtotime($car->nextControll)) : "";
 ?>
 
 <div gstype='form' method='save'>
-    <div>Når var den inne sist<br/> <input type='date' class='gsniceinput1' gsname='lastservicedate' value='<? echo $date; ?>'/> </div>
+    <div>Når var den inne sist<br/> <input type='text' id='lastservice' class='gsniceinput1' gsname='lastservicedate' value='<? echo $date; ?>'/> </div>
 
     <br/><div>Når var den inne kilometerstand<br/> <input type='textfield' class='gsniceinput1' placeholder='120000' gsname='lastservicekm' value='<? echo $car->lastServiceKilomters; ?>'/> </div>
 
@@ -56,3 +56,7 @@ $nextControll = $car ? date('d/m-Y',strtotime($car->nextControll)) : "";
     
    
 </div>
+
+<script>
+    $('#lastservice').datepicker({ dateFormat: 'yy-mm-dd' });
+</script>

@@ -32,6 +32,11 @@ thundashop.Ajax = {
         $(document).on('click','*[gsclick]', thundashop.Ajax.postgeneral);
         $(document).on('click','*[gs_downloadExcelReport]', thundashop.Ajax.createExcelFile);
         $(document).on('click','*[gs_show_modal]', thundashop.Ajax.showModal);
+        $(document).on('click','*[gs_close_modal]', thundashop.Ajax.closeModal);
+    },
+    
+    closeModal: function() {
+        thundashop.common.closeModal();
     },
     
     showModal: function() {

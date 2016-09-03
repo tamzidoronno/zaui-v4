@@ -113,6 +113,10 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
         return getDoorManager().pmsDoorAction(code, type);
     }
     
+    public void closeAllForTheDay() throws Exception {
+        getDoorManager().closeAllForTheDay();
+    }
+    
     private IDoorManager getDoorManager() {
         if(pmsManager.getConfigurationSecure().isGetShopHotelLock()) {
             GetShopLockDoorManager mgr = new GetShopLockDoorManager();

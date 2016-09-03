@@ -45,5 +45,7 @@ interface IDoorManager {
     @Administrator
     public void clearDoorCache() throws Exception;
     @Administrator
+    public void closeAllForTheDay() throws Exception;
+    @Administrator
     public HashMap<String, List<AccessLog>> generateDoorLogForAllDoorsFromResult(String resultFromArx) throws Exception;
 }

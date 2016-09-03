@@ -42,8 +42,6 @@ public class PmsManagerDoorSurveilance {
             manager.arxManager.closeAllForTheDay();
         } else if(cal.get(com.ibm.icu.util.Calendar.HOUR_OF_DAY) == hour && cal.get(com.ibm.icu.util.Calendar.MINUTE) >= minute) {
             manager.arxManager.closeAllForTheDay();
-        } else {
-            manager.arxManager.clearCloseForToday();
         }
     }
     

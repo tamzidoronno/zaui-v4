@@ -105,5 +105,9 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
         return new HashMap();
     }
 
+    @Override
+    public void closeAllForTheDay() throws Exception {
+    }
+
     
 }

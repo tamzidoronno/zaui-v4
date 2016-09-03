@@ -178,6 +178,11 @@ public class PmsManagerProcessor {
         if (manager.getConfigurationSecure().arxHostname == null || manager.getConfigurationSecure().arxHostname.isEmpty()) { 
             return;
         }
+        try {
+            manager.checkDoorStatusControl();
+        }catch(Exception e) {
+            manager.logPrintException(e);
+        }
         
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
         for (PmsBooking booking : bookings) {

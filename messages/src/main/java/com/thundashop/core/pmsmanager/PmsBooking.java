@@ -69,6 +69,13 @@ public class PmsBooking extends DataCommon {
             }
         }
         
+        if(wubookreservationid != null && wubookreservationid.equals(searchWord)) {
+            return true;
+        }
+        if(wubookchannelreservationcode != null && wubookchannelreservationcode.equals(searchWord)) {
+            return true;
+        }
+        
         return false;
     }
 

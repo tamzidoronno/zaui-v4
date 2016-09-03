@@ -17,9 +17,6 @@ class MailChimp extends \ApplicationBase implements \Application {
             $this->includefile("nokeyset");
         } else {
             $this->includefile("frontend");
-            if($this->hasWriteAccess()) {
-                $this->includefile("emailfilter");
-            }
         }
     }
     

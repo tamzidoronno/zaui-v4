@@ -59,7 +59,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
                 }
                 $items = $this->getItems();
                 $room->booking = $booking;
-                $rooms[$items[$room->bookingItemId]->bookingItemName] = $room;
+                @$rooms[$items[$room->bookingItemId]->bookingItemName] = $room;
             }
         }
         
@@ -266,6 +266,13 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             }
         }
         echo "</td>";
+        echo "<td>";
+        if($room->bookingItemId) {
+            if($additional[$room->bookingItemId]->lastCleaned) {
+                echo date("d.m.Y H:i", strtotime($additional[$room->bookingItemId]->lastUsed));
+            }
+        }
+        echo "</td>";
         echo "<td align='right'>From " .date("d.m.Y H:i", strtotime($room->date->start)). "<br>To ". date("d.m.Y H:i", strtotime($room->date->end)) . "</td>";
         echo "</tr>";
     }
@@ -278,6 +285,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "<th align='left'>Action</th>";
         echo "<th align='left'>Guest information</th>";
         echo "<th align='left'>Last cleaned</th>";
+        echo "<th align='left'>Last used</th>";
         echo "<th align='right'>Duration</th>";
         echo "</tr>";
     }

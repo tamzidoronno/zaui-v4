@@ -836,18 +836,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function groupByBooking() {
-        if(isset($_SESSION['pmsmanagementgroupbybooking'])) {
-            unset($_SESSION['pmsmanagementgroupbybooking']);
-        } else {
-            $_SESSION['pmsmanagementgroupbybooking'] = true;
-        }
+        $filter = $this->getSelectedFilter();
+        $filter->groupByBooking = !$filter->groupByBooking;
+        $this->setCurrentFilter($filter);
     }
     
     public function isGroupedByBooking() {
-        if(isset($_SESSION['pmsmanagementgroupbybooking'])) {
-            return true;
-        }
-        return false;
+        return $this->getSelectedFilter()->groupByBooking;
     }
     
     /**
@@ -1653,6 +1648,23 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return $_SESSION['lastselectedroom'];
         }
         return "";
+    }
+
+    public function getTotalAddons($saleStats) {
+        $addonsResult = array();
+        foreach($saleStats->entries as $entries) {
+            foreach($entries->addonsCount as $addonId => $val) {
+                @$addonsResult[$addonId]['count'] += $val;
+            }
+            foreach($entries->addonsPrice as $addonId => $val) {
+                @$addonsResult[$addonId]['price'] += $val;
+            }
+            foreach($entries->addonsPriceEx as $addonId => $val) {
+                @$addonsResult[$addonId]['priceEx'] += $val;
+            }
+        }
+        
+        return $addonsResult;
     }
 
 }

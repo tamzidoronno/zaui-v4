@@ -36,10 +36,10 @@ class PmsStatisticsBuilder {
             statics.addEntry(entry);
             for(PmsBooking booking : bookings) {
                 if(!booking.confirmed) {
-//                    continue;
+                    continue;
                 }
                 if(booking.testReservation) {
-//                    continue;
+                    continue;
                 }
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(room.isActiveOnDay(cal.getTime())) {
@@ -51,6 +51,24 @@ class PmsStatisticsBuilder {
                             entry.totalPrice += price;
                         }
                         entry.roomsRentedOut++;
+                        for(PmsBookingAddonItem addon : room.addons) {
+                            if(!room.isSameDay(addon.date, cal.getTime())) {
+                                continue;
+                            }
+                            Integer count = entry.addonsCount.get(addon.addonType);
+                            Double addonPrice = entry.addonsPrice.get(addon.addonType);
+                            Double addonPriceEx = entry.addonsPriceEx.get(addon.addonType);
+                            if(count == null) { count = 0; }
+                            if(addonPrice == null) { addonPrice = 0.0; }
+                            if(addonPriceEx == null) { addonPriceEx = 0.0; }
+                            count += addon.count;
+                            addonPrice += addon.price;
+//                            addonPriceEx += addon.priceExTaxes;
+                            
+                            entry.addonsCount.put(addon.addonType, count);
+                            entry.addonsPrice.put(addon.addonType, addonPrice);
+//                            entry.addonsPriceEx.put(addon.addonType, addonPriceEx);
+                        }
                     }
                 }
             }

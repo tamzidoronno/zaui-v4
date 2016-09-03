@@ -225,6 +225,8 @@ if($booking->orderIds) {
         
         if(@!$order->closed) {
             echo "<td><input type='button' value='Update' class='updateorderrow'></td>";
+        } else {
+            echo "<td></td>";
         }
         
         echo "</tr>";

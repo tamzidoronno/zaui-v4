@@ -32,15 +32,72 @@ public class PmsBookingSimpleFilter {
                 }
             }
         }
-        
-        Collections.sort(result, new Comparator<PmsRoomSimple>(){
-            public int compare(PmsRoomSimple o1, PmsRoomSimple o2){
-                return o2.regDate.compareTo(o1.regDate);
-            }
-        });
+        sortList(result, filter.sorting);
+        if(filter.groupByBooking) {
+            result = groupByBooking(result);
+        }
         return result;
     }
 
+    
+    private List<PmsRoomSimple> sortList(List<PmsRoomSimple> result, String sorting) {
+        if (sorting == null) {
+            sorting = "";
+        }
+
+        if (sorting.equals("visitor") || sorting.equals("visitor_desc")) {
+            Collections.sort(result, new Comparator<PmsRoomSimple>(){
+                public int compare(PmsRoomSimple o1, PmsRoomSimple o2){
+                    return o1.owner.compareTo(o2.owner);
+                }
+            });
+        } else if (sorting.equals("state") || sorting.equals("state_desc")) {
+            Collections.sort(result, new Comparator<PmsRoomSimple>(){
+                public int compare(PmsRoomSimple o1, PmsRoomSimple o2){
+                    return o1.progressState.compareTo(o2.progressState);
+                }
+            });
+            
+        } else if (sorting.equals("periode") || sorting.equals("periode_desc")) {
+            Collections.sort(result, new Comparator<PmsRoomSimple>() {
+                public int compare(PmsRoomSimple o1, PmsRoomSimple o2) {
+                    if(o1.start < o2.start) {
+                        return -1;
+                    }
+                    return 1;
+                }
+            });
+        } else if (sorting.equals("room") || sorting.equals("room_desc")) {
+            Collections.sort(result, new Comparator<PmsRoomSimple>() {
+                public int compare(PmsRoomSimple o1, PmsRoomSimple o2) {
+                    return o1.room.compareTo(o2.room);
+                }
+            });
+        } else if (sorting.equals("price") || sorting.equals("price_desc")) {
+            Collections.sort(result, new Comparator<PmsRoomSimple>() {
+                public int compare(PmsRoomSimple o1, PmsRoomSimple o2) {
+                    if(o1.price < o2.price) {
+                        return -1;
+                    }
+                    return 1;
+                }
+            });
+        } else {
+            Collections.sort(result, new Comparator<PmsRoomSimple>() {
+                public int compare(PmsRoomSimple o1, PmsRoomSimple o2) {
+                    return o2.regDate.compareTo(o1.regDate);
+                }
+            });
+        }
+
+        if (sorting.contains("_desc")) {
+            Collections.reverse(result);
+        }
+
+        return result;
+    }
+
+    
     private PmsRoomSimple convertRoom(PmsBookingRooms room, PmsBooking booking) {
         PmsRoomSimple simple = new PmsRoomSimple();
         simple.start = room.date.start.getTime();
@@ -62,6 +119,7 @@ public class PmsBookingSimpleFilter {
         simple.orderIds = booking.orderIds;
         simple.channel = booking.channel;
         simple.numberOfNights = room.getNumberOfDays();
+        simple.numberOfRoomsInBooking = booking.getActiveRooms().size();
         
         if(manager.getConfiguration().hasLockSystem()) {
             simple.code = room.code;
@@ -131,8 +189,22 @@ public class PmsBookingSimpleFilter {
                     return true;
                 }
             }
+             if(booking.wubookreservationid != null && booking.wubookreservationid.equals(filter.searchWord)) {
+                return true;
+            }
+            if(booking.wubookchannelreservationcode != null && booking.wubookchannelreservationcode.equals(filter.searchWord)) {
+                return true;
+            }
         } else if (filter.filterType == null || filter.filterType.equals("registered")) {
             if (filter.startDate == null || (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate))) {
+                return true;
+            }
+        } else if (filter.filterType.equals("activecheckin")) {
+            if((room.isActiveInPeriode(filter.startDate, filter.endDate) || room.isStartingToday(filter.startDate)) && !room.isEndingToday(filter.startDate)) {
+                return true;
+            }
+        } else if (filter.filterType.equals("activecheckout")) {
+            if((room.isActiveInPeriode(filter.startDate, filter.endDate) || room.isEndingToday(filter.endDate)) && !room.isStartingToday(filter.startDate)) {
                 return true;
             }
         } else if (filter.filterType.equals("inhouse")) {
@@ -161,6 +233,18 @@ public class PmsBookingSimpleFilter {
             }
         }
         return false;
+    }
+
+    private LinkedList<PmsRoomSimple> groupByBooking(LinkedList<PmsRoomSimple> result) {
+        List<String> bookingsAdded = new ArrayList();
+        LinkedList<PmsRoomSimple> toReturn = new LinkedList();
+        for(PmsRoomSimple simple : result) {
+            if(!bookingsAdded.contains(simple.bookingId)) {
+                toReturn.add(simple);
+                bookingsAdded.add(simple.bookingId);
+            }
+        }
+        return toReturn;
     }
     
 }

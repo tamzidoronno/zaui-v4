@@ -8,6 +8,16 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedN
 
 $saleStats = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedName(), $filter);
 $slept = $this->getTotalSlept($saleStats);
+$addons = $this->getTotalAddons($saleStats);
+
+$items = array();
+$items[1] = "BREAKFAST";
+$items[2] = "PARKING";
+$items[3] = "LATECHECKOUT";
+$items[4] = "EARLYCHECKIN";
+$items[5] = "EXTRABED";
+$items[6] = "CANCELATION FEE";
+$items[7] = "EXTRA CHILD BED";
 
 $totals = array();
 foreach($config->channelTranslations as $channel => $name) {
@@ -182,12 +192,19 @@ $total = 0;
         <td>Cleaning cost</td>
         <td><?php echo $totalCleaningCost; ?></td>
     </tr>
-    <tr>
-        <td>Compensation to booking.com and expedia</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Number of breakfasts</td>
-        <td></td>
-    </tr>
+    
+    <?php 
+    foreach($addons as $id => $val) {
+        ?>
+        <tr>
+            <td><?php echo $items[$id]; ?> count</td>
+            <td><?php echo $val['count']; ?></td>
+        </tr>
+        <tr>
+            <td><?php echo $items[$id]; ?></td>
+            <td><?php echo $val['price']; ?></td>
+        </tr>
+        <?php
+    }
+    ?>
 </table>

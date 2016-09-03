@@ -59,6 +59,8 @@ public class ArxDoorManager implements IDoorManager {
     PmsManager pmsManager;
     DoorManager doorManager;
     BookingEngine bookingEngine;
+    private boolean doneClosedForToday;
+    private Date lastClosed;
     
     public void setManager(StoreManager store, PmsManager pms, DoorManager door, BookingEngine be) {
         storeManager = store;
@@ -684,5 +686,33 @@ String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
             }
         }
         return result;
+    }
+
+    @Override
+    public void closeAllForTheDay() throws Exception {
+        if(isClosedToday()) {
+            return;
+        }
+        List<Door> doors = getAllDoors();
+        for(Door door : doors) {
+            doorAction(door.externalId, "forceOpenOff");
+        }
+        lastClosed = new Date();
+    }
+
+    private boolean isClosedToday() {
+        if(lastClosed == null) {
+            return false;
+        }
+        
+        Calendar now = Calendar.getInstance();
+        Calendar closed = Calendar.getInstance();
+        closed.setTime(lastClosed);
+        
+        if(now.get(Calendar.DAY_OF_YEAR) == closed.get(Calendar.DAY_OF_YEAR)) {
+            return true;
+        }
+        
+        return false;
     }
 }

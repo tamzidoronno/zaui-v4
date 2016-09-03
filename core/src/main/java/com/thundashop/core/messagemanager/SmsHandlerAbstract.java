@@ -41,7 +41,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
     private boolean productionMode = false;
     
     public SmsHandlerAbstract(String storeId, Database database, String prefix, String from, String to, String message, boolean productionMode) {
-        HashMap<String, String> res = validatePhone("+"+prefix + to, "NO");
+        HashMap<String, String> res = validatePhone("+"+prefix, to, "NO");
         if(res != null) {
             this.prefix = res.get("prefix");
             this.to = res.get("phone");
@@ -59,9 +59,18 @@ public abstract class SmsHandlerAbstract implements Runnable {
     }
 
     
-    public static HashMap<String, String> validatePhone(String phone, String countryCode) {
+    public static HashMap<String, String> validatePhone(String phonePrefix, String phone, String countryCode) {
         if(phone == null) {
             return null;
+        }
+        
+        phonePrefix = phonePrefix.replace("++", "+");
+        phonePrefix = phonePrefix.replace("++", "+");
+        phonePrefix = phonePrefix.replace("++", "+");
+        phonePrefix = phonePrefix.replace("++", "+");
+        
+        if(phonePrefix.contains("+")) {
+            phonePrefix = "+" + phonePrefix;
         }
         
         if(countryCode == null) {
@@ -79,7 +88,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
         phone = phone.replace("++", "+");
         phone = phone.replace("++", "+");
         try {
-            Phonenumber.PhoneNumber phonecheck = phoneUtil.parse(phone, countryCode);
+            Phonenumber.PhoneNumber phonecheck = phoneUtil.parse(phonePrefix+phone, countryCode);
             if (!phoneUtil.isValidNumber(phonecheck)) {
                 String phone2 = phone;
                 if (phone.startsWith("0000")) {
@@ -90,7 +99,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
                     phone2 = phone.substring(2);
                 }
 
-                phonecheck = phoneUtil.parse(phone2, countryCode);
+                phonecheck = phoneUtil.parse(phonePrefix+phone2, countryCode);
                 prefix = phonecheck.getCountryCode() + "";
                 phone = phonecheck.getNationalNumber() + "";
 

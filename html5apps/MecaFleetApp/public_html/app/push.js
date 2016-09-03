@@ -38,4 +38,8 @@ var initPush = function() {
     });
 
     push.on('error', function(e) {});
+    
+    push.on('notification', function(data) {
+        pushNotificationReceived();
+    });
 }

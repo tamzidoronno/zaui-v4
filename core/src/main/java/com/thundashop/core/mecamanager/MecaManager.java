@@ -6,12 +6,15 @@
 package com.thundashop.core.mecamanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.Setting;
+import com.thundashop.core.common.Settings;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.ListBadgetAware;
 import com.thundashop.core.listmanager.data.Entry;
@@ -51,6 +54,9 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
 
     @Autowired
     public StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    public StoreApplicationInstancePool instancePool;
     
     private Map<String, MecaFleet> fleets = new HashMap();
     private Map<String, MecaCar> cars = new HashMap();
@@ -697,5 +703,29 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         if (fleet != null) {
             deleteObject(fleet);
         }
+    }
+
+    @Override
+    public void saveMecaFleetSettings(MecaFleetSettings settings) {
+        instancePool.getApplicationInstance("");
+        setConfigurationSetting("openinghours", settings.openinghours);
+        setConfigurationSetting("contact_name", settings.contact_name);
+        setConfigurationSetting("contact_email", settings.contact_email);
+        setConfigurationSetting("contact_cell", settings.contact_cell);
+        setConfigurationSetting("roadmap", settings.roadmap);
+    }
+
+    private void setConfigurationSetting(String key, String value) {
+        Setting setting = new Setting();
+        setting.id = key;
+        setting.value = value;
+        setting.name = key;
+        setting.secure = false;
+        
+        Settings settings = new Settings();
+        settings.settings = new ArrayList();
+        settings.settings.add(setting);
+        
+        instancePool.setApplicationSettings(settings);
     }
 }

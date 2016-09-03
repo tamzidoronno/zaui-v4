@@ -15,11 +15,15 @@ class MecaFleetSettings extends \MarketingApplication implements \Application {
     }
     
     public function save() {
-        $this->setConfigurationSetting("openinghours", $_POST['data']['openinghours']);
-        $this->setConfigurationSetting("contact_name", $_POST['data']['contact_name']);
-        $this->setConfigurationSetting("contact_email", $_POST['data']['contact_email']);
-        $this->setConfigurationSetting("contact_cell", $_POST['data']['contact_cell']);
-        $this->setConfigurationSetting("roadmap", $_POST['data']['roadmap']);
+        $mecaFleetSettings = new \core_mecamanager_MecaFleetSettings();
+        
+        $mecaFleetSettings->openinghours = $_POST['data']['openinghours'];
+        $mecaFleetSettings->contact_name = $_POST['data']['contact_name'];
+        $mecaFleetSettings->contact_email = $_POST['data']['contact_email'];
+        $mecaFleetSettings->contact_cell = $_POST['data']['contact_cell'];
+        $mecaFleetSettings->roadmap = $_POST['data']['roadmap'];
+        
+        $this->getApi()->getMecaManager()->saveMecaFleetSettings($mecaFleetSettings);
     }
     
         

@@ -4,6 +4,7 @@ import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -91,7 +92,11 @@ public class PmsAdditionalItemInformation extends DataCommon {
     }
 
     List<Date> getAllCleaningDates() {
-        return cleaningDates;
+        HashMap<Long, Date> test = new HashMap();
+        for(Date cleaning : cleaningDates) {
+            test.put(cleaning.getTime(), cleaning);
+        }
+        return new ArrayList(test.values());
     }
 
     public void setLastUsed(Date lastMarkedAsDirty) {

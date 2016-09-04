@@ -9,6 +9,8 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedN
 $saleStats = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedName(), $filter);
 $slept = $this->getTotalSlept($saleStats);
 $addons = $this->getTotalAddons($saleStats);
+$month = date("m", strtotime($filter->endDate));
+$budget = $config->budget->{(int)$month}->budget_amount;
 
 $items = array();
 $items[1] = "BREAKFAST";
@@ -30,7 +32,7 @@ $cleaningprices = array();
 
 ?>
 <h1>Cleaning count</h1>
-<table cellspacing='0' cellpadding='0'>
+<table cellspacing='0' cellpadding='0' width='100%'>
     <tr>
         <th>Type</th>
         <th>Ma</th>
@@ -78,7 +80,7 @@ $cleaningprices = array();
 </table>
 <br><br>
 <h1>Cleaning cost</h1>
-<table cellspacing='0' cellpadding='0'>
+<table cellspacing='0' cellpadding='0' width='100%'>
     <tr>
         <th>Type</th>
         <th>Ma</th>
@@ -137,74 +139,90 @@ $cleaningprices = array();
     ?>
 </table>
 
-<br><br>
-<table cellspacing='0' cellpadding='0'>
-    <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
 <?php
-$total = 0;
-    foreach($config->extraCleaningCost as $key => $val) {
-        echo "<tr>";
-        echo "<td>" . $key . "</td>";
-        echo "<td>" . $val . "</td>";
-        echo "<td>" . $val * $itemsCount . "</td>";
-        $total += $val * $itemsCount;
-        echo "</tr>";
-    }
-    echo "<tr>";
-    echo "<td></td>";
-    echo "<td></td>";
-    echo "<td>$total</td>";
-    echo "</tr>";
+$cleanAccs = array();
+$cleanAccs['pute'] = "Pillow";
+$cleanAccs['dyne'] = "Duvet";
+$cleanAccs['handkle_stort'] = "Towel large";
+$cleanAccs['handkle_lite'] = "Towel small";
 ?>
-</table>
-<br>
-<br>
-<br>
-<table cellspacing='0' cellpadding='0'>
+<br><br>
+<h1>Other information</h1>
+<table width='100%'>
     <tr>
-        <th></td>
-        <th></td>
-    </tr>
+        <td width='50%'>
+            <table cellspacing='0' cellpadding='0' width='100%'>
+                <tr>
+                    <th></th>
+                    <th>Count</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            <?php
+            $total = 0;
+                foreach($config->extraCleaningCost as $key => $val) {
+                    echo "<tr>";
+                    echo "<td>" . $cleanAccs[$key] . "</td>";
+                    echo "<td>" . $itemsCount . "</td>";
+                    echo "<td>" . $val . "</td>";
+                    echo "<td>" . $val * $itemsCount . "</td>";
+                    $total += $val * $itemsCount;
+                    echo "</tr>";
+                }
+                echo "<tr>";
+                echo "<td></td>";
+                echo "<td></td>";
+                echo "<td></td>";
+                echo "<td>$total</td>";
+                echo "</tr>";
+            ?>
+            </table>
+        </td>
+        <td width='50%'>
+            <table cellspacing='0' cellpadding='0' width='100%'>
+                <tr>
+                    <th></th>
+                    <th>Value</th>
+                </tr>
 
-    <tr>
-        <td>Budget</td>
-        <td></td>
+                <tr>
+                    <td>Budget</td>
+                    <td><?php echo $budget; ?></td>
+                </tr>
+                <tr>
+                    <td>Slept for in total</td>
+                    <td><?php echo $slept; ?></td>
+                </tr>
+                <?php
+                foreach($totals as $name => $val) {
+                    ?>
+                    <tr>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $name; ?></td>
+                        <td><?php echo $val; ?></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+                <tr>
+                    <td>Cleaning cost</td>
+                    <td><?php echo $totalCleaningCost; ?></td>
+                </tr>
+
+                <?php 
+                foreach($addons as $id => $val) {
+                    ?>
+                    <tr>
+                        <td><?php echo $items[$id]; ?> count</td>
+                        <td><?php echo $val['count']; ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo $items[$id]; ?></td>
+                        <td><?php echo $val['price']; ?></td>
+                    </tr>
+                    <?php
+                }
+                ?>
+            </table>
+        </td>
     </tr>
-    <tr>
-        <td>Slept for in total</td>
-        <td><?php echo $slept; ?></td>
-    </tr>
-    <?php
-    foreach($totals as $name => $val) {
-        ?>
-        <tr>
-            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $name; ?></td>
-            <td><?php echo $val; ?></td>
-        </tr>
-        <?php
-    }
-    ?>
-    <tr>
-        <td>Cleaning cost</td>
-        <td><?php echo $totalCleaningCost; ?></td>
-    </tr>
-    
-    <?php 
-    foreach($addons as $id => $val) {
-        ?>
-        <tr>
-            <td><?php echo $items[$id]; ?> count</td>
-            <td><?php echo $val['count']; ?></td>
-        </tr>
-        <tr>
-            <td><?php echo $items[$id]; ?></td>
-            <td><?php echo $val['price']; ?></td>
-        </tr>
-        <?php
-    }
-    ?>
 </table>

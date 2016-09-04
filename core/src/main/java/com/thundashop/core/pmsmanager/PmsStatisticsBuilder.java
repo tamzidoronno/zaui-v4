@@ -8,6 +8,7 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 class PmsStatisticsBuilder {
     private final List<PmsBooking> bookings;
     private final boolean pricesExTax;
+    private HashMap<Integer, PmsBudget> budget;
 
     PmsStatisticsBuilder(List<PmsBooking> allBookings, boolean pricesExTax) {
         this.bookings = allBookings;
@@ -26,13 +28,19 @@ class PmsStatisticsBuilder {
 
     PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms) {
         PmsStatistics statics = new PmsStatistics();
-        
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
         while(true) {
             StatisticsEntry entry = buildStatsEntry(cal);
             entry.date = cal.getTime();
             entry.totalRooms = totalRooms;
+            entry.bugdet = 0.0;
+            int month = cal.get(Calendar.MONTH);
+            month++;
+            System.out.println(month);
+            if(budget.containsKey(month)) {
+                entry.bugdet = budget.get(month).coverage_percentage.doubleValue();
+            }
             statics.addEntry(entry);
             for(PmsBooking booking : bookings) {
                 if(!booking.confirmed) {
@@ -57,17 +65,14 @@ class PmsStatisticsBuilder {
                             }
                             Integer count = entry.addonsCount.get(addon.addonType);
                             Double addonPrice = entry.addonsPrice.get(addon.addonType);
-                            Double addonPriceEx = entry.addonsPriceEx.get(addon.addonType);
                             if(count == null) { count = 0; }
                             if(addonPrice == null) { addonPrice = 0.0; }
-                            if(addonPriceEx == null) { addonPriceEx = 0.0; }
                             count += addon.count;
-                            addonPrice += addon.price;
+                            addonPrice += (addon.price*addon.count);
 //                            addonPriceEx += addon.priceExTaxes;
-                            
+
                             entry.addonsCount.put(addon.addonType, count);
                             entry.addonsPrice.put(addon.addonType, addonPrice);
-//                            entry.addonsPriceEx.put(addon.addonType, addonPriceEx);
                         }
                     }
                 }
@@ -128,6 +133,10 @@ class PmsStatisticsBuilder {
         StatisticsEntry entry = new StatisticsEntry();
         
         return entry;
+    }
+
+    void setBudget(HashMap<Integer, PmsBudget> budget) {
+        this.budget = budget;
     }
     
 }

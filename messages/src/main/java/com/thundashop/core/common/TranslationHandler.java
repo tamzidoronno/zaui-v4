@@ -78,25 +78,29 @@ public class TranslationHandler implements Serializable {
             if(field.isAnnotationPresent(Translation.class) && !(inObject instanceof TranslationHandler)) {
                 GetShopLogHandler.logPrintStatic("WARNING:::: translation annotiation added without extending translation handler, object: " + inObject.getClass().getCanonicalName(), null);
             }
-            
-            Object dataObject = field.get(inObject);
-            
-            if (dataObject instanceof TranslationHandler) {
-                handlers.add((TranslationHandler)dataObject);
-            }
-            if (dataObject instanceof List) {
-                List list = (List)dataObject;
-                for (Object check : list) {
-                    handlers.addAll(getAllTranslationHandlers(check));
+            try {
+                Object dataObject = field.get(inObject);
+
+                if (dataObject instanceof TranslationHandler) {
+                    handlers.add((TranslationHandler)dataObject);
                 }
-            } else if(dataObject instanceof Map) {
-                Map map = (Map)dataObject;
-                for(Object dobject : map.values()) {
-                    handlers.addAll(getAllTranslationHandlers(dobject));
+                if (dataObject instanceof List) {
+                    List list = (List)dataObject;
+                    for (Object check : list) {
+                        handlers.addAll(getAllTranslationHandlers(check));
+                    }
+                } else if(dataObject instanceof Map) {
+                    Map map = (Map)dataObject;
+                    for(Object dobject : map.values()) {
+                        handlers.addAll(getAllTranslationHandlers(dobject));
+                    }
+                } else {
+                    handlers.addAll(getAllTranslationHandlers(dataObject));
                 }
-            } else {
-                handlers.addAll(getAllTranslationHandlers(dataObject));
+            }catch(Exception e) {
+                return handlers;
             }
+
         }
         
         return handlers;

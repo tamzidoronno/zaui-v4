@@ -17,14 +17,17 @@ public class PmsStatistics implements Serializable {
 
     void buildTotal() {
         StatisticsEntry total = new StatisticsEntry();
+        double budget = 0;
         for(StatisticsEntry entry : entries) {
             total.totalPrice += entry.totalPrice;
             total.avgPrice = -1.0;
+            budget = entry.bugdet;
             
             total.roomsRentedOut = -1;
             total.spearRooms = -1;
             total.coverage += entry.coverage;
         }
+        total.bugdet = budget;
         total.coverage = total.coverage / entries.size();
         entries.add(total);
     }

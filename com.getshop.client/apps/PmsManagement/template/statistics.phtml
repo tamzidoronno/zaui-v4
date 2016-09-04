@@ -48,7 +48,11 @@ $intervaloptions['yearly'] = "Yearly";
             echo "<td>"; if($entry->avgPrice >= 0) { echo $entry->avgPrice; } echo "</td>";
             echo "<td>"; if($entry->totalPrice >= 0) { echo $entry->totalPrice; } echo "</td>";
             echo "<td>" . $entry->bugdet . "%</td>";
-            echo "<td>" . $entry->coverage . "%</td>";
+            if($entry->bugdet < $entry->coverage) {
+                echo "<td><i class='fa fa-check' style='float:right;'></i> " . $entry->coverage . "%</td>";
+            } else {
+                echo "<td><i class='fa fa-close' style='float:right;'></i> " . $entry->coverage . "%</td>";
+            }
             echo "</tr>";
         }
         ?>

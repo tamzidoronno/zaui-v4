@@ -8,7 +8,6 @@ body {
 .gs_page_width {
     margin: auto;
     max-width: 1160px;
-    min-width: 1000px;
     padding-left: 10px;
     padding-right: 25px;
 }
@@ -253,4 +252,16 @@ body { font-size: 12px; line-height: 18px; background-color:#E8DCCC; }
     border: solid 0px;
     position: absolute;
     right: 10px;
+}
+@media only all and (max-width: 800px) {
+    .gsarea[area="header"] .ImageDisplayer .displayimagecontainer { text-align: center; }
+    .gsarea[area="header"] .ImageDisplayer .imagecontainer img { width: 200px; }
+    .PmsBooking .fa-bed { display:none; }
+    .PmsBooking .pmsfront .fa-calendar { float: right; padding: 8px; }
+    .gsinner.gscell_7.gsuicell { padding-top: 0px !important; padding-bottom: 10px; }
+    .PmsBooking .pmsfront .check_available_button,
+    .PmsBooking .inputblock,
+    .PmsBooking .pmsfront .dates.start_date,
+    .PmsBooking .pmsfront .dates.end_date,
+    .PmsBooking .pmsfront .dates .dates_inner { width:100%; }
 }

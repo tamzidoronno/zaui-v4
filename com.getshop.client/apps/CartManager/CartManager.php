@@ -543,10 +543,7 @@ class CartManager extends \SystemApplication implements \Application {
             echo "<center><br/><br/><br/>";
             echo "<h1>Fant ikke denne bestillingen, ta kontakt med oss.</h1>";
             echo "<br/><br/><br/><br/></center>";
-        } else if ($order->payment && ($order->payment->paymentType != "ns_def1e922_972f_4557_a315_a751a9b9eff1\Netaxept" && 
-            $order->payment->paymentType != "ns_542e6a1e_9927_495c_9b6d_bb52af4ea9be\BrainTree" && 
-            $order->payment->paymentType != "ns_c7736539_4523_4691_8453_a6aa1e784fc1\\PayPal" && 
-            $order->payment->paymentType != "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {
+        } else if ($order->payment && ($order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment")) {
             echo "<script>thundashop.common.goToPage('payment_success');</script>";
         } else if ($order->status == 7) {
             echo "<center><br/><br/><br/>";

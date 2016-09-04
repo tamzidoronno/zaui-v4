@@ -84,7 +84,6 @@ public interface IBookingEngine {
     @Editor
     List<BookingItem> getAllAvailbleItems(Date start, Date end);
     
-    @Administrator
     public List<BookingItem> getAvailbleItems(String typeId, Date start, Date end);    
     
     @Administrator

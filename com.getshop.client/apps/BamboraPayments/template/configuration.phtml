@@ -1,0 +1,43 @@
+<?
+/* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
+
+$access_token = $this->getConfigurationSetting("access_token");
+$secret_token = $this->getConfigurationSetting("secret_token");
+$merchant_id = $this->getConfigurationSetting("merchant_id");
+?>
+
+<div class='gss_settings_header'>
+    <i class='fa fa-cc-visa'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <?php echo $this->getName(); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?php echo $this->getDescription(); ?>
+            ?>	
+        </div>
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting">
+            <span class="title"><?php echo $this->__f("Merchant id"); ?></span>
+            <input type="textfield" gs_model='bamboramodel' gs_model_attr='merchant_id' value="<? echo $merchant_id; ?>">
+        </div>
+        <div class="textfield gss_setting">
+            <span class="title"><?php echo $this->__f("Access token"); ?></span>
+            <input type="textfield" gs_model='bamboramodel' gs_model_attr='access_token' value="<? echo $access_token; ?>">
+        </div>
+        <div class="textfield gss_setting">
+            <span class="title"><?php echo $this->__f("Secret token"); ?></span>
+            <input type="textfield" gs_model='bamboramodel' gs_model_attr='secret_token' value="<? echo $secret_token; ?>">
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="bamboramodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
+    </div>
+</div>

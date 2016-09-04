@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.webmanager;
 
+import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Component;
 public class WebManager extends ManagerBase implements IWebManager {
     
     private final String USER_AGENT = "Mozilla/5.0";
+    
+    
     
     @Override
     public String htmlGet(String url) throws Exception {
@@ -54,6 +57,16 @@ public class WebManager extends ManagerBase implements IWebManager {
     
     @Override
     public String htmlPost(String url, String data, boolean jsonPost, String encoding) throws Exception {
+        return htmlPostBasicAuth(url, data, jsonPost, encoding, "");
+    }       
+    
+    @Override
+    public JsonObject htmlPostJson(String url, JsonObject jsonObject, String encoding) throws Exception {
+        return new JsonParser().parse(htmlPost(url, jsonObject.toString(), true, encoding)).getAsJsonObject();
+    }
+
+    @Override
+    public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth) throws Exception {
         if(encoding == null || encoding.isEmpty()) {
             encoding = "UTF-8";
         }
@@ -63,6 +76,11 @@ public class WebManager extends ManagerBase implements IWebManager {
         
         connection.setRequestMethod("POST");
         connection.setRequestProperty("User-Agent", USER_AGENT);
+        
+        if(auth != null && !auth.isEmpty()) {
+            String encoded = Base64.encodeBase64String(auth.getBytes());
+            connection.setRequestProperty("Authorization", "Basic "+encoded);
+        }
         
         if(jsonPost) {
             connection.setRequestProperty("Content-Type", "application/json");
@@ -83,11 +101,5 @@ public class WebManager extends ManagerBase implements IWebManager {
             responseBuffer.append(responseLine);
         }
         
-        return responseBuffer.toString();
-    }       
-    
-    @Override
-    public JsonObject htmlPostJson(String url, JsonObject jsonObject, String encoding) throws Exception {
-        return new JsonParser().parse(htmlPost(url, jsonObject.toString(), true, encoding)).getAsJsonObject();
-    }
+        return responseBuffer.toString();    }
 }

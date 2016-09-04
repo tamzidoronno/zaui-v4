@@ -22,5 +22,7 @@ public interface IWebManager {
     
     public String htmlPost(String url, String data, boolean jsonPost, String encoding) throws Exception;
     
+    public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth) throws Exception;
+    
     public JsonObject htmlPostJson(String url, JsonObject data, String encoding) throws Exception;
 }

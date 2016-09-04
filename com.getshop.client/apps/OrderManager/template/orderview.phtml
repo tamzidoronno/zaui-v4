@@ -76,7 +76,6 @@ $cart = $order->cart;
         <div class='gss_label_content'>
             <?
             $changeText = $canChangeOrder ? "<i class='fa fa-edit gss_changePaymentType'></i> " : "";
-            echo $changeText;
             if ($order->payment->paymentType) {
                 $paymentApp = new $order->payment->paymentType();
                 echo $paymentApp->getName();
@@ -95,7 +94,7 @@ $cart = $order->cart;
                 echo "</div>";
             }
             
-            if($order->status == 2 || $order->status == 5 || $order->status == 3) {
+            if($order->status < 7) {
                 echo " - <a class='gsspayorder' style='color:blue; cursor:pointer;' orderid='".$order->id."'>pay order with payment link</a>";
             }
             ?>

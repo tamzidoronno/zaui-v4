@@ -235,6 +235,13 @@ public class PmsBooking extends DataCommon {
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
         
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(rowCreatedDate);
+        cal2.add(Calendar.DAY_OF_YEAR, 3);
+        if(cal2.getTime().before(new Date())) {
+            return false;
+        }
+        
         int today = cal.get(Calendar.HOUR_OF_DAY);
         int weekDay = cal.get(Calendar.DAY_OF_WEEK);
         
@@ -247,14 +254,10 @@ public class PmsBooking extends DataCommon {
                 (sameDay.get(Calendar.YEAR) == cal.get(Calendar.YEAR))) {
             isSameDay = true;
         }
-        
-        if(!isSameDay) {
-            return false;
-        }
-        
+
         if(weekDay == Calendar.SATURDAY || weekDay == Calendar.SUNDAY) {
             return true;
-        } else if(today > 15) {
+        } else if(today > 15 && isSameDay) {
             return true;
         }
         

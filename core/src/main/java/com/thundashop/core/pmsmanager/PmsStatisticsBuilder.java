@@ -50,6 +50,9 @@ class PmsStatisticsBuilder {
                     continue;
                 }
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    if(!filter.typeFilter.isEmpty() && !filter.typeFilter.contains(room.bookingItemTypeId)) {
+                        continue;
+                    }
                     if(room.isActiveOnDay(cal.getTime())) {
                         Double price = room.getDailyPrice(booking.priceType, cal);
                         if(!pricesExTax) {

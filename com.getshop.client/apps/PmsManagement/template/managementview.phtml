@@ -100,22 +100,7 @@ echo "</div>";
 
 
 echo "<br>";
-
-if($filter->filterType == "stats") {
-    $this->includefile("statistics");
-} else if($filter->filterType == "summary") {
-    $this->includefile("summary");
-} else {
-    if(isset($_SESSION['toggleOldFilterVersion'])) {
-        $this->includefile("managementviewtable");
-    } else {
-        $this->includefile("managementviewtablenew");
-    }
-    if($config->includeGlobalOrderCreationPanel) {
-        $this->includefile("generateinvoicepanel");
-    }
-}
-
+$this->includeManagementViewResult();
  ?>
 
 <script>

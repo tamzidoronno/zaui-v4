@@ -1129,7 +1129,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $app = $this->getApi()->getStoreApplicationPool()->getApplication("932810f4-5bd1-4b56-a259-d5bd2e071be1");
         return $app;
     }
-    
+    public function getChannels() {
+        return $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName())->channelConfiguration;
+    }
     public function addRepeatingDates() {
         $repeat = new \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary();
         $data = $repeat->createRepeatingDateObject();
@@ -1662,6 +1664,26 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         return $addonsResult;
+    }
+
+    
+    public function includeManagementViewResult() {
+        $filter = $this->getSelectedFilter();
+        if($filter->filterType == "stats") {
+            $this->includefile("statistics");
+        } else if($filter->filterType == "summary") {
+            $this->includefile("summary");
+        } else {
+            if(isset($_SESSION['toggleOldFilterVersion'])) {
+                $this->includefile("managementviewtable");
+            } else {
+                $this->includefile("managementviewtablenew");
+            }
+            if($config->includeGlobalOrderCreationPanel) {
+                $this->includefile("generateinvoicepanel");
+            }
+        }
+
     }
 
 }

@@ -8,7 +8,7 @@ $intervaloptions['weekly'] = "Weekly";
 $intervaloptions['monthly'] = "Monthly";
 $intervaloptions['yearly'] = "Yearly";
 ?>
-<div style='clear:both;'>
+<div style='clear:both;' class='changeintervalrow'>
     <select class='changestatisticsinterval'>
         <?php
         foreach($intervaloptions as $type => $value) {
@@ -49,9 +49,9 @@ $intervaloptions['yearly'] = "Yearly";
             echo "<td>"; if($entry->totalPrice >= 0) { echo $entry->totalPrice; } echo "</td>";
             echo "<td>" . $entry->bugdet . "%</td>";
             if($entry->bugdet < $entry->coverage) {
-                echo "<td><i class='fa fa-check' style='float:right;'></i> " . $entry->coverage . "%</td>";
+                echo "<td class='budget_success'><i class='fa fa-check' style='float:right;'></i> " . $entry->coverage . "%</td>";
             } else {
-                echo "<td><i class='fa fa-close' style='float:right;'></i> " . $entry->coverage . "%</td>";
+                echo "<td class='budget_fail'><i class='fa fa-close' style='float:right;'></i> " . $entry->coverage . "%</td>";
             }
             echo "</tr>";
         }

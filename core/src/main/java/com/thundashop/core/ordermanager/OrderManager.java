@@ -1121,6 +1121,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(order.cart.getTotal(true) <= 0) {
             return false;
         }
+        if(order.status == Order.Status.PAYMENT_FAILED) {
+            return false;
+        }
         if(order.status >= Order.Status.PAYMENT_COMPLETED) {
             logPrint("Not waiting for payment");
             return false;

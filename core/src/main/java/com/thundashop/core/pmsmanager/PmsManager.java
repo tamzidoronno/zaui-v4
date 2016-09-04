@@ -3202,10 +3202,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(BookingItemType type : types) {
             HashMap<Integer, Double> result = new HashMap();
             for(BookingItem item : items) {
-                if(item.bookingItemTypeId != null && !item.bookingItemTypeId.equals(type.id)) {
+                if(item.bookingItemTypeId == null || !item.bookingItemTypeId.equals(type.id)) {
                     continue;
                 }
-                
+                System.out.println(item.id);
                 PmsAdditionalItemInformation additional = getAdditionalInfo(item.id);
                 List<Date> cleaningDates = additional.getAllCleaningDates();
                 for(Date date : cleaningDates) {
@@ -3217,6 +3217,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     cal.setTime(date);
                     int weekday = cal.get(Calendar.DAY_OF_WEEK);
+                    System.out.println(weekday + " : " + date.getTime() + " : " + type.id + " : " + item.id + " : " + date);
                     Double tmpCount = 0.0;
                     if(result.containsKey(weekday)) {
                         tmpCount = result.get(weekday);

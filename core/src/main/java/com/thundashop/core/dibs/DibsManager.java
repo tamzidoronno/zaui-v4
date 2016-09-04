@@ -386,6 +386,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             String transactionId = result.get("transactionId");
             order.payment.callBackParameters.put("transaction", transactionId);
             captureOrder(order, toTicket);
+            messageManager.sendErrorNotification("Paid with saved card, just to be on the safe side, check it up until we are safe on this one; orderid: " + order.incrementOrderId, null);
         } else if(order.payment.triedAutoPay.size() >= 3) {
             order.status = Order.Status.PAYMENT_FAILED;
        }
@@ -394,7 +395,6 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         String toLog = gson.toJson(result);
         order.payment.transactionLog.put(System.currentTimeMillis(), toLog);
         orderManager.saveObject(order);
-        messageManager.sendErrorNotification("Paid with saved card, just to be on the safe side, check it up until we are safe on this one; orderid: " + order.incrementOrderId, null);
     }
     
     

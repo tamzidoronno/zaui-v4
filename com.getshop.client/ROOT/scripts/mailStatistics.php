@@ -46,12 +46,12 @@ if(!$doit) {
 $_POST['data']['periode'] = "daily";
 $startdate = strtotime(date('01-m-Y'));
 $enddate = strtotime(date("Y-m-t"));
-
 if(isset($_GET['timeperiode']) && $_GET['timeperiode'] == "yearly" && date('t') == date('d')) {
     $startdate = strtotime(date('01-01-Y'));
     $enddate = strtotime(date("Y-12-t"));
     $_POST['data']['periode'] = "monthly";
 }
+$enddate = strtotime(date("d.m.Y 23:00", $enddate));
     
 
 $instances = $factory->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("7e828cd0-8b44-4125-ae4f-f61983b01e0a");
@@ -70,7 +70,9 @@ foreach($instances as $instance) {
     $app->includeManagementViewResult();
     echo "</div>";
     
-    $filter->typeFilter = array();
+    $filter = new core_pmsmanager_PmsBookingFilter();
+    $filter->startDate = $app->convertToJavaDate($startdate);
+    $filter->endDate = $app->convertToJavaDate($enddate);
     $filter->filterType = "stats";
     $app->setCurrentFilter($filter);
     echo "<div class='pageheight'>";

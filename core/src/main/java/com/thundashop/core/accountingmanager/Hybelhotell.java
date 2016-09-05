@@ -166,12 +166,6 @@ public class Hybelhotell implements AccountingInterface {
         } else {
             lineText = item.getProduct().name + " " + item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
         }
-    
-         try {
-             lineText = new String(lineText.getBytes("ISO-8859-1"),"UTF-8");
-         }catch(Exception e) {
-             e.printStackTrace();
-         }
          
         return lineText;
     }

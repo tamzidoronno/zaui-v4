@@ -119,7 +119,7 @@ public class WilhelmsenHouse implements AccountingInterface {
 
            lines.add(result + "\r\n");
         }
-        lines = convertEncoding(lines);
+
         return lines;
     }
 
@@ -175,6 +175,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                 result += user.customerId+";"; // Credit account
             }
             double amount = orderManager.getTotalAmount(order);
+            amount = Math.round(amount * 100) / 100;
             if(amount < 0) {
                 amount *= -1;
             }
@@ -199,6 +200,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                 }
                 
                 amount = item.getProduct().priceExTaxes * item.getCount();
+                amount = Math.round(amount * 100) / 100;
                 if(amount < 0) {
                     amount *= -1;
                 }
@@ -217,7 +219,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                 e.printStackTrace();
             }
         }
-        lines = convertEncoding(lines);
+
         return lines;
                 
     }
@@ -266,7 +268,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                 orderline += ";"; // Avgiftskode ( hentes fra kunden )
                 orderline += createLineText(item) + ";"; // Produkt beskrivelse
                 orderline += item.getCount() + ";"; // Antall mnder
-                orderline += item.getProduct().priceExTaxes+ ";"; // Pris pr antall, hvis blank hentes pris fra Visma
+                orderline += Math.round(item.getProduct().priceExTaxes*100)/100+ ";"; // Pris pr antall, hvis blank hentes pris fra Visma
                 orderline += ";"; // ikke i bruk
                 String roomName = item.getProduct().additionalMetaData;
                 orderline += roomName + ";"; // R4 Gjenstand ID
@@ -289,7 +291,7 @@ public class WilhelmsenHouse implements AccountingInterface {
             
             System.out.println(" - done.");
         }
-        result = convertEncoding(result);
+
         return result;
     }
     
@@ -315,7 +317,13 @@ public class WilhelmsenHouse implements AccountingInterface {
         if(!item.getProduct().additionalMetaData.isEmpty()) {
             lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + startEnd;
         } else {
-            lineText = item.getProduct().name + " " + item.getProduct().metaData + startEnd;
+            String mdata = item.getProduct().metaData;
+            if(mdata != null && mdata.startsWith("114")) {
+                mdata = "";
+            } else {
+                mdata = ", " + mdata;
+            }
+            lineText = item.getProduct().name + mdata + startEnd;
         }
     
         return lineText;
@@ -331,16 +339,4 @@ public class WilhelmsenHouse implements AccountingInterface {
         this.orderManager = manager;
     }
 
-    private List<String> convertEncoding(List<String> lines) {
-        List<String> converted = new ArrayList();
-        for(String line : lines) {
-               try {
-                line = new String(line.getBytes("ISO-8859-1"),"UTF-8");
-                converted.add(line);
-            }catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return converted;
-    }
 }

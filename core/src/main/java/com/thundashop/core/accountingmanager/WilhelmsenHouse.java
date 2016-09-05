@@ -71,7 +71,7 @@ public class WilhelmsenHouse implements AccountingInterface {
            if(user.emailAddress == null) {
                user.emailAddress = "";
            }
-           if(user.cellPhone == null) {
+           if(user.cellPhone == null || user.cellPhone.contains("+")) {
                user.cellPhone = "";
            }
            if(user.birthDay == null) {
@@ -198,7 +198,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                     result += ";"; // Credit account
                 }
                 
-                amount = item.getProduct().priceExTaxes;
+                amount = item.getProduct().priceExTaxes * item.getCount();
                 if(amount < 0) {
                     amount *= -1;
                 }
@@ -274,20 +274,20 @@ public class WilhelmsenHouse implements AccountingInterface {
                 result.add(orderline+"\r\n");
             }
             
-            if(order.invoiceNote.trim() != null && !order.invoiceNote.trim().isEmpty()) {
-                String orderline = "L;"; // Fast L for orderline
-                orderline += ";"; // ProdNO
-                orderline += ";"; // Avgiftskode ( hentes fra kunden )
-                orderline += order.invoiceNote.trim() + ";"; // Produkt beskrivelse
-                orderline += ";"; // Antall mnder
-                orderline += ";"; // Pris pr antall, hvis blank hentes pris fra Visma
-                orderline += ";"; // ikke i bruk
-                orderline += ";"; // R4 Gjenstand ID
-                orderline += ";"; // 
-                result.add(orderline+"\r\n");                
-            }
+//            if(order.invoiceNote.trim() != null && !order.invoiceNote.trim().isEmpty()) {
+//                String orderline = "L;"; // Fast L for orderline
+//                orderline += ";"; // ProdNO
+//                orderline += ";"; // Avgiftskode ( hentes fra kunden )
+//                orderline += order.invoiceNote.trim() + ";"; // Produkt beskrivelse
+//                orderline += ";"; // Antall mnder
+//                orderline += ";"; // Pris pr antall, hvis blank hentes pris fra Visma
+//                orderline += ";"; // ikke i bruk
+//                orderline += ";"; // R4 Gjenstand ID
+//                orderline += ";"; // 
+//                result.add(orderline+"\r\n");                
+//            }
             
-            System.out.println(" - done.");            
+            System.out.println(" - done.");
         }
         result = convertEncoding(result);
         return result;
@@ -307,18 +307,17 @@ public class WilhelmsenHouse implements AccountingInterface {
             endDate = end.toString("dd.MM.yy");
         }
         
+        String startEnd = "";
+        if(startDate != null && endDate != null && !endDate.isEmpty() && !startDate.isEmpty()) {
+            startEnd = " (" + startDate + " - " + endDate + ")";
+        }
+        
         if(!item.getProduct().additionalMetaData.isEmpty()) {
-            lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + " (" + startDate + " - " + endDate + ")";
+            lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + startEnd;
         } else {
-            lineText = item.getProduct().name + " " + item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
+            lineText = item.getProduct().name + " " + item.getProduct().metaData + startEnd;
         }
     
-         try {
-             lineText = new String(lineText.getBytes("ISO-8859-1"),"UTF-8");
-         }catch(Exception e) {
-             e.printStackTrace();
-         }
-         
         return lineText;
     }
 

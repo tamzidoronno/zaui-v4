@@ -11,6 +11,7 @@ public class PmsRoomSimple implements Serializable {
     public String pmsRoomId = "";
     public String bookingItemId = "";
     public String owner = "";
+    public String ownersEmail = "";
     public List<PmsGuests> guest = new ArrayList();
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public long start;

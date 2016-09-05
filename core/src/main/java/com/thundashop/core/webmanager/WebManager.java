@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 import com.thundashop.core.common.ManagerBase;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -84,6 +85,7 @@ public class WebManager extends ManagerBase implements IWebManager {
         
         if(jsonPost) {
             connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
         }
         
         connection.setDoOutput(true);
@@ -92,14 +94,29 @@ public class WebManager extends ManagerBase implements IWebManager {
         outputStream.flush();
         outputStream.close();
         
-        BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));    
+        try {
+            BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         
-        String responseLine;
-        StringBuilder responseBuffer = new StringBuilder();
+            String responseLine;
+            StringBuilder responseBuffer = new StringBuilder();
+
+            while((responseLine = responseStream.readLine()) != null) {
+                responseBuffer.append(responseLine);
+            }
+            return responseBuffer.toString();    
+        }catch(IOException ex) {
+            BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
         
-        while((responseLine = responseStream.readLine()) != null) {
-            responseBuffer.append(responseLine);
+            String responseLine;
+            StringBuilder responseBuffer = new StringBuilder();
+
+            while((responseLine = responseStream.readLine()) != null) {
+                responseBuffer.append(responseLine);
+            }
+            String res = responseBuffer.toString();
+            System.out.println(res);
+            
+            throw ex;
         }
-        
-        return responseBuffer.toString();    }
+    }
 }

@@ -40,7 +40,7 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
     @Autowired
     StoreApplicationPool storeApplicationPool;
     
-    public void getCheckoutUrl(String orderId) {
+    public String getCheckoutUrl(String orderId) {
         Order order = orderManager.getOrder(orderId);
         User user = userManager.getUserById(order.userId);
         
@@ -54,6 +54,7 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
         data.setCallbacks("webaddr.no", "a92d56c0-04c7-4b8e-a02d-ed79f020bcca", orderId, getMerchantId(), storeId);
         Gson test = new Gson();
         String url = createCheckoutUrl(data);
+        return url;
     }
 
     private String getAccessToken() {
@@ -79,19 +80,20 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
         String access_token = getAccessToken();
         String secret_token = getSecretToken();
         String merchant_id = getMerchantId();
+        
+        String tokenToUse = access_token + "@" + merchant_id + ":" + secret_token;
         data.customer.email = "test@jaaj.no";
         
         Gson gson = new Gson();
         String toPost = gson.toJson(data);
-        System.out.println(toPost);
         try {
-            String res = webManager.htmlPostBasicAuth(endpoint, toPost, true, "UTF-8", access_token);
-            System.out.println(res);
+            String res = webManager.htmlPostBasicAuth(endpoint, toPost, true, "UTF-8", tokenToUse);
+            BamboraResponse gsonResp = gson.fromJson(res, BamboraResponse.class);
+            return gsonResp.url;
         }catch(Exception ex) {
             logPrintException(ex);
             return "";
         }
-        return "";
     }
 
 }

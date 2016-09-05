@@ -601,19 +601,29 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private String addBookingToPms(WubookBooking booking) throws Exception {
-        PmsBooking newbooking = pmsManager.startBooking();
+        PmsBooking newbooking = null;
 
         long start = System.currentTimeMillis();
+        boolean isUpdate = false;
         if(booking.modifiedReservation.size() > 0) {
             List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
             boolean found = false;
             for(PmsBooking pmsbook : allbookings) {
-                if(pmsbook.wubookreservationid != null && pmsbook.wubookreservationid.equals(booking.modifiedReservation.get(0) + "")) {
-                    pmsManager.logEntry("Modified by channel manager", pmsbook.id, null);
-                    for(PmsBookingRooms room : pmsbook.getActiveRooms()) {
-                        pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
+                if(pmsbook.wubookreservationid != null) {
+                    for(Integer oldCode : booking.modifiedReservation) {
+                        if(pmsbook.wubookreservationid.equals(oldCode+"")) {
+                            pmsManager.logEntry("Modified by channel manager", pmsbook.id, null);
+                            for(PmsBookingRooms room : pmsbook.getActiveRooms()) {
+                                pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
+                            }
+                            newbooking = pmsManager.getBooking(pmsbook.id);
+                            isUpdate = true;
+                            break;
+                        }
                     }
-                    newbooking = pmsbook;
+                    if(newbooking != null) {
+                        break;
+                    }
                 }
             }
         } else if(booking.delete) {
@@ -632,9 +642,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return "";
         }
         
+        if(newbooking == null) {
+            newbooking = pmsManager.startBooking();
+        }
+        
         newbooking.channel = "wubook_" + booking.channelId;
         newbooking.wubookchannelreservationcode = booking.channel_reservation_code;
-        newbooking.wubookreservationid = booking.reservationCode;
+        if(!isUpdate) {
+            newbooking.wubookreservationid = booking.reservationCode;
+        }
         newbooking.countryCode = booking.countryCode;
         if(booking.customerNotes != null && !booking.customerNotes.isEmpty()) {
             PmsBookingComment comment = new PmsBookingComment();
@@ -666,7 +682,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             room.guests.add(guest);
             newbooking.addRoom(room);
         }
-        
+
         pmsManager.setBooking(newbooking);
         if(booking.breakfast) {
             for(PmsBookingRooms room : newbooking.getActiveRooms()) {

@@ -450,7 +450,7 @@ public class PmsBookingRooms implements Serializable {
         deletedDate = null;
     }
 
-    void delete() {
+    public void delete() {
         deleted = true;
         deletedDate = new Date();
     }

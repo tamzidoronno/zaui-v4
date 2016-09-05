@@ -763,22 +763,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 if(discount != null) {
                     price = price - (price * ((double)discount / 100));
                 }
-                System.out.println("TESRT");
             }
         }
         
         
-        if(getSession() != null && getSession().currentUser != null) {
-            PmsUserDiscount discountForUser = getDiscountsForUser(getSession().currentUser.id);
-            Double discount = discountForUser.discounts.get(typeId);
-            if(discount != null) {
-                if(discountForUser.discountType.equals(PmsUserDiscount.PmsUserDiscountType.percentage)) {
-                    price = price - (price * ((double)discount / 100));
-                } else {
-                    price = discount * count;
-                }
-            }
-       }
+        price = getUserPrice(typeId, price, count);
         
         if(avgPrice && count != 0) {
             price /= count;
@@ -792,6 +781,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return price;
     }
 
+    
+    private Double getUserPrice(String typeId, Double price, int count) {
+        if(getSession() != null && getSession().currentUser != null) {
+            PmsUserDiscount discountForUser = getDiscountsForUser(getSession().currentUser.id);
+            Double discount = discountForUser.discounts.get(typeId);
+            if(discount != null) {
+                if(discountForUser.discountType.equals(PmsUserDiscount.PmsUserDiscountType.percentage)) {
+                    price = price - (price * ((double)discount / 100));
+                } else {
+                    price = discount * count;
+                }
+            }
+       }
+       return price;
+    }
+
+    
     private LinkedHashMap<String, Double> calculateDailyPricing(String typeId, Date start, Date end) {
         HashMap<String, Double> priceRange = pmsManager.getPriceObject().dailyPrices.get(typeId);
 
@@ -1101,8 +1107,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         } else {
             price = room.price;
         }
-        
+        price = getUserPrice(room.bookingItemTypeId, price, 1);
 
+        
         if(pmsManager.getPriceObject().privatePeopleDoNotPayTaxes) {
             User user = userManager.getUserById(booking.userId);
             if(user.company.isEmpty()) {
@@ -1118,6 +1125,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             //Order price needs to be inc taxes.. 
             price *= tax;
         }
+        
+        
+        
         logPrint(price);
         return price;
     }

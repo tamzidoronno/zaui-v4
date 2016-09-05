@@ -13,13 +13,13 @@ $month = date("m", strtotime($filter->endDate));
 $budget = $config->budget->{(int)$month}->budget_amount;
 
 $items = array();
-$items[1] = "BREAKFAST";
-$items[2] = "PARKING";
-$items[3] = "LATECHECKOUT";
-$items[4] = "EARLYCHECKIN";
-$items[5] = "EXTRABED";
-$items[6] = "CANCELATION FEE";
-$items[7] = "EXTRA CHILD BED";
+$items[1] = "Breakfast";
+$items[2] = "Parking";
+$items[3] = "Late checkout";
+$items[4] = "Early checkin";
+$items[5] = "Extra bed";
+$items[6] = "Cancelation fee";
+$items[7] = "Extra child bed";
 
 $totals = array();
 
@@ -125,7 +125,7 @@ foreach($stats as $cleaningstat) {
                         <td><?php echo $val['count']; ?></td>
                     </tr>
                     <tr>
-                        <td><?php echo $items[$id]; ?></td>
+                        <td><?php echo $items[$id]; ?> total sales</td>
                         <td><?php echo $val['price']; ?></td>
                     </tr>
                     <?php

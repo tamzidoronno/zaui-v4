@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class BamboraCustomer implements Serializable {
     public String email;
-    public String phoneNumber;
+    public String phonenumber;
     public String phonenumbercountrycode;
 
 }

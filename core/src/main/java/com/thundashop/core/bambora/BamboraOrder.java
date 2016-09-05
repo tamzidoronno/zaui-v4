@@ -2,6 +2,7 @@ package com.thundashop.core.bambora;
 
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.usermanager.data.User;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,14 @@ public class BamboraOrder implements Serializable {
             lines.add(line);
             lineNumber++;
         }
+    }
+
+    void setAddresses(User user) {
+        billingaddress = new BamboraAddress();
+        billingaddress.setAddress(user);
+        
+        shippingaddress = new BamboraAddress();
+        shippingaddress.setAddress(user);
     }
 
     

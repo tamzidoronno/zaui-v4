@@ -65,10 +65,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
         }
         phone = phone.replaceAll("\\.", "");
         phone = phone.replaceAll(" ", "");
-        if(phone.startsWith("00")) {
-            phone = "+" + phone.substring(2);
-        }
-
+        
         phonePrefix = phonePrefix.replace("++", "+");
         phonePrefix = phonePrefix.replace("++", "+");
         phonePrefix = phonePrefix.replace("++", "+");

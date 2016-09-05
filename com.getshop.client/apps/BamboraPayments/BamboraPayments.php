@@ -10,6 +10,13 @@ class BamboraPayments extends \PaymentApplication implements \Application {
     public function getName() {
         return "BamboraPayments";
     }
+    public function paymentCallback() {
+        header('Location: ' . "/?page=".$_GET['nextpage']);
+    }
+    
+    public function testCheckCapture() {
+        $this->getApi()->getBamboraManager()->checkForOrdersToCapture();
+    }
     
     public function addPaymentMethods() {
         $namespace = __NAMESPACE__;
@@ -19,7 +26,13 @@ class BamboraPayments extends \PaymentApplication implements \Application {
     public function simplePayment() {
         $orderId = $this->getOrder()->id;
         $url = $this->getApi()->getBamboraManager()->getCheckoutUrl($orderId);
-        echo "URL : " . $url . "(" . $orderId . ")";
+        echo $this->__w("You are being transferred to the payment window, please wait.");
+        echo "<script>";
+        echo "window.location.href='$url';";
+        echo "</script>";
+        $order = $this->order;
+        $order->payment->transactionLog->{time()*1000} = "Transferred to payment window";
+        $this->getApi()->getOrderManager()->saveOrder($order);
     }
     
     /**
@@ -34,6 +47,7 @@ class BamboraPayments extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("merchant_id", $_POST['merchant_id']);
         $this->setConfigurationSetting("access_token", $_POST['access_token']);
         $this->setConfigurationSetting("secret_token", $_POST['secret_token']);
+        $this->setConfigurationSetting("callback_id", $_POST['callback_id']);
     }
     
     public function render() {

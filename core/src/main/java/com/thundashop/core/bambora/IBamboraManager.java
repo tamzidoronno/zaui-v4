@@ -10,4 +10,5 @@ import org.springframework.beans.factory.annotation.Autowired;
 @GetShopApi
 public interface IBamboraManager {
     public String getCheckoutUrl(String orderId);
+    public void checkForOrdersToCapture();
 }

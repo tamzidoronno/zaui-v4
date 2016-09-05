@@ -6,18 +6,22 @@
 package com.thundashop.core.bambora;
 
 import com.braintreegateway.Environment;
+import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.dibs.IDibsManager;
+import com.thundashop.core.getshop.GetShopPullService;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +44,32 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
     @Autowired
     StoreApplicationPool storeApplicationPool;
     
+    @Autowired
+    FrameworkConfig frameworkConfig;
+    
+    @Autowired
+    private GetShopPullService getShopPullService; 
+    
+    @Override
+    public void checkForOrdersToCapture() {
+        String pollKey = getCallBackId();
+        if(frameworkConfig.productionMode) {
+            pollKey += "-prod";
+        } else {
+            pollKey += "-debug";
+        }
+        try {
+            //First check for polls.
+            long start = System.currentTimeMillis();
+            List<PullMessage> messages = getShopPullService.getMessages(pollKey, storeId);
+            for(PullMessage msg : messages) {
+                System.out.println("Found");
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+    }
+
     public String getCheckoutUrl(String orderId) {
         Order order = orderManager.getOrder(orderId);
         User user = userManager.getUserById(order.userId);
@@ -51,7 +81,10 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
         Double totalEx = orderManager.getTotalAmountExTaxes(order);
         Double total = orderManager.getTotalAmount(order);
         data.setTotal(totalEx, total);
-        data.setCallbacks("webaddr.no", "a92d56c0-04c7-4b8e-a02d-ed79f020bcca", orderId, getMerchantId(), storeId);
+        
+        String addr = getStoreDefaultAddress();
+        
+        data.setCallbacks(addr, "a92d56c0-04c7-4b8e-a02d-ed79f020bcca", getCallBackId(), storeId, frameworkConfig.productionMode);
         Gson test = new Gson();
         String url = createCheckoutUrl(data);
         return url;
@@ -60,6 +93,12 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
     private String getAccessToken() {
         Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings("a92d56c0-04c7-4b8e-a02d-ed79f020bcca");
         Setting setting = bamboraApp.settings.get("access_token");
+        return setting.value;
+    }
+
+    private String getCallBackId() {
+        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings("a92d56c0-04c7-4b8e-a02d-ed79f020bcca");
+        Setting setting = bamboraApp.settings.get("callback_id");
         return setting.value;
     }
 
@@ -82,11 +121,11 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
         String merchant_id = getMerchantId();
         
         String tokenToUse = access_token + "@" + merchant_id + ":" + secret_token;
-        data.customer.email = "test@jaaj.no";
         
         Gson gson = new Gson();
         String toPost = gson.toJson(data);
         try {
+            System.out.println(toPost);
             String res = webManager.htmlPostBasicAuth(endpoint, toPost, true, "UTF-8", tokenToUse);
             BamboraResponse gsonResp = gson.fromJson(res, BamboraResponse.class);
             return gsonResp.url;

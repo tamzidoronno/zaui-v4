@@ -33,10 +33,15 @@ public class BamboraData implements Serializable {
         order.vatamount = convertedTotal - convertedEx;
     }
 
-    void setCallbacks(String webAddress, String appId, String orderId, String merchantId, String storeId) {
-        
-        String callback = "http://pullserver_"+storeId+"_"+merchantId+".nettmannen.no";
-        String returnTo = "http://" + webAddress + "/callback.php?app=" + appId + "&orderId=" + orderId + "&nextpage=";
+    void setCallbacks(String webAddress, String appId, String merchantId, String storeId, boolean prodMode) {
+        String key = merchantId;
+        if(prodMode) {
+            key = key + "-prod";
+        } else {
+            key = key + "-debug";
+        }
+        String callback = "http://pullserver_"+key+"_"+storeId+".nettmannen.no";
+        String returnTo = "http://" + webAddress + "/callback.php?app=" + appId + "&nextpage=";
         
         CallBackUrl callbackurl = new CallBackUrl();
         callbackurl.url = callback;

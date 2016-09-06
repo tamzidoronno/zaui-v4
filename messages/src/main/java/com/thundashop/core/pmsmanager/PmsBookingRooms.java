@@ -318,6 +318,7 @@ public class PmsBookingRooms implements Serializable {
     }
 
     boolean containsSearchWord(String searchWord) {
+        searchWord = searchWord.toLowerCase();
         for(PmsGuests guest : guests) {
             if(searchWord != null && searchWord.contains("@")) {
                 if(guest.email != null && guest.email.toLowerCase().contains(searchWord)) {

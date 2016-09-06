@@ -121,6 +121,12 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
     <?php
     $tableArray = array();
     foreach($rooms as $room) {
+        $booking = $this->getBooking($room->bookingId);
+        $comments = "";
+        foreach($booking->comments as $time => $val) {
+            $comments .= $val->comment . "<br>";
+        }
+        
         $row = array();
         $row['bookingid'] = $room->bookingId;
         $row['actions'] = "<i class='fa fa-info moreinformationaboutbooking actions' roomid='".$room->pmsRoomId."' bookingid='".$room->bookingId."'></i>";
@@ -141,6 +147,15 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             $row['periode'] =  date("d.m.Y H:i", $room->start/1000) . "<br>" . date("d.m.Y H:i", $room->end/1000);
         }
         $row['visitor'] = "";
+        
+        if(trim($comments)) {
+            $row['visitor'] .= "<i class='fa fa-comment' title='$comments'></i> ";
+        }
+        
+        if($this->hasAddon($room, 1)) {
+            $row['visitor'] .= "<i class='fa fa-cutlery' title='Breakfast included'></i> ";
+        }
+        
         foreach($room->guest as $guest) {
             $row['visitor'] .= $guest->name;
             if($guest->email) { $row['visitor'] .= " - " . $guest->email; }
@@ -160,7 +175,6 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         $row['price'] = round($room->price);
         $row['state'] = $room->progressState;
         
-        $booking = $this->getBooking($room->bookingId);
         foreach($registrationRules->data as $key => $data) {
             if(stristr($key, "user_")) {
                 continue;

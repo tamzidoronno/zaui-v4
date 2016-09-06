@@ -14,11 +14,12 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
     $scope.changeRoom = function(newroom) {
         var bookingid = $scope.booking.id;
         var roomid = $scope.room.pmsBookingRoomId;
-        var changing = getshopclient.PmsManager.setBookingItem(getMultilevelName(), roomid, bookingid, newroom);
+        var changing = getshopclient.PmsManager.setBookingItem(getMultilevelName(), roomid, bookingid, newroom, true);
         changing.done(function(res) {
             if(!res) {
                 alert('Updated');
             } else {
+                console.log(res);
                 alert(res);
             }
         });

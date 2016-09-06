@@ -1,11 +1,15 @@
 
 package com.thundashop.core.accountingmanager;
 
+import com.thundashop.core.applications.StoreApplicationInstancePool;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ForStore;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
@@ -28,6 +32,7 @@ public class WilhelmsenHouse implements AccountingInterface {
     private UserManager userManager;
     private InvoiceManager invoiceManager;
     private OrderManager orderManager;
+    private StoreApplicationPool storeApplicationPool;
 
     @Override
     public void setUserManager(UserManager manager) {
@@ -141,6 +146,22 @@ public class WilhelmsenHouse implements AccountingInterface {
         Files.write(Paths.get(targetFile), bytes);
     }
     
+    private String getProductDebitNumber(Product product, Application app) {
+        
+        int taxGroup = product.taxgroup;
+        if (taxGroup == -1) {
+            taxGroup = 0;
+        }
+        
+        String accountId = app.getSetting("product_"+product.id+"_"+taxGroup);
+        if (accountId != null && !accountId.isEmpty()) {
+            return accountId;
+        }
+        
+        return "";
+    }
+
+    
     public List<String> createCreditCardFile(List<Order> orders) {
         
         if (orders.isEmpty()) {
@@ -149,6 +170,7 @@ public class WilhelmsenHouse implements AccountingInterface {
         
         List<String> lines = new ArrayList();
         
+        Application app = storeApplicationPool.getApplication("37d409be-1207-45e8-bf3b-6465442b58d9");
         String result = "";        
         result += "H;";
         result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";";
@@ -193,9 +215,9 @@ public class WilhelmsenHouse implements AccountingInterface {
                 result += ";"; // Value date (Usees from Batch if empty)
                 if(!order.isCreditNote) {
                     result += ";"; // Debit account
-                    result += "3000;"; // Credit account
+                    result += getProductDebitNumber(item.getProduct(), app) +";"; // Credit account
                 } else {
-                    result += "3000;"; // Debit account
+                    result += getProductDebitNumber(item.getProduct(), app) + ";"; // Debit account
                     result += ";"; // Credit account
                 }
                 
@@ -325,6 +347,10 @@ public class WilhelmsenHouse implements AccountingInterface {
             }
             lineText = item.getProduct().name + mdata + startEnd;
         }
+        
+        lineText = lineText.replace("Dobbeltrom", "");
+        lineText = lineText.replace("Kjøkken", "kj. ");
+        lineText = lineText.trim();
     
         return lineText;
     }
@@ -337,6 +363,11 @@ public class WilhelmsenHouse implements AccountingInterface {
     @Override
     public void setOrderManager(OrderManager manager) {
         this.orderManager = manager;
+    }
+
+    @Override
+    public void setStoreApplication(StoreApplicationPool manager) {
+        this.storeApplicationPool = manager;
     }
 
 }

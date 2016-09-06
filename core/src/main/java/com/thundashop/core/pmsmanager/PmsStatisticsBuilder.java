@@ -37,7 +37,7 @@ class PmsStatisticsBuilder {
             entry.bugdet = 0.0;
             int month = cal.get(Calendar.MONTH);
             month++;
-            if(budget.containsKey(month)) {
+            if(budget.containsKey(month) && budget.get(month).coverage_percentage != null) {
                 entry.bugdet = budget.get(month).coverage_percentage.doubleValue();
             }
             statics.addEntry(entry);

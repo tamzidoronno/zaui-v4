@@ -2,6 +2,8 @@
  */
 package com.thundashop.core.accountingmanager;
 
+import com.thundashop.core.applications.StoreApplicationInstancePool;
+import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ForStore;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -178,6 +180,10 @@ public class Hybelhotell implements AccountingInterface {
     @Override
     public void setOrderManager(OrderManager manager) {
         this.orderManager = manager;
+    }
+
+    @Override
+    public void setStoreApplication(StoreApplicationPool manager) {
     }
 
 }

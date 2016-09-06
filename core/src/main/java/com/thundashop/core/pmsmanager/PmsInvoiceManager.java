@@ -390,7 +390,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     orderManager.saveOrder(order);
                 } else {
                     updateCart();
-                    order = createOrderFromCart(booking);
+                    order = createOrderFromCart(booking, filter);
                     if (order == null) {
                         return "Could not create order.";
                     }
@@ -615,7 +615,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return true;
     }
 
-    private Order createOrderFromCart(PmsBooking booking) {
+    private Order createOrderFromCart(PmsBooking booking, NewOrderFilter filter) {
        
         User user = userManager.getUserById(booking.userId);
         if (user == null) {
@@ -628,7 +628,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         order.userId = booking.userId;
 
         Payment preferred = orderManager.getStorePreferredPayementMethod();
-        Payment preferredChannel = getChannelPreferredPaymentMethod(booking);
+        Payment preferredChannel = null;
+        if(filter.fromAdministrator) {
+            preferredChannel = getChannelPreferredPaymentMethod(booking);
+        }
         Payment preferredUser = orderManager.getUserPrefferedPaymentMethod(order.userId);
         
         if(preferredChannel != null) {

@@ -853,6 +853,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(configuration.autoCreateInvoices && !filter.autoGeneration) {
             filter.maxAutoCreateDate = filter.endInvoiceAt;
             filter.autoGeneration = true;
+            filter.fromAdministrator = true;
             filter.increaseUnits = configuration.increaseUnits;
             filter.prepayment = configuration.prepayment;
         }

@@ -16,4 +16,5 @@ public class NewOrderFilter implements Serializable {
     public Integer increaseUnits = -1;
     public Integer prepaymentDaysAhead = -1;
     public boolean createNewOrder = false;
+    public boolean fromAdministrator = false;
 }

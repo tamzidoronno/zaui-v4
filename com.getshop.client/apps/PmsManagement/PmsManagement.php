@@ -285,6 +285,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $orderid = $_POST['data']['orderid'];
         $bookingid = $_POST['data']['bookingid'];
         $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderid, $bookingid);
+        $this->showBookingInformation();
     }
     
     public function getDescription() {
@@ -789,7 +790,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $exportLine['totalinc'] += $this->getApi()->getOrderManager()->getTotalAmount($order);
             }
             $exportLine['orderIds'] = join("," , $ids);
-            
             $export[] = $exportLine;
         }
         

@@ -450,6 +450,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                                 result.add(booking);
                             }
                         }
+                        if(room.containsSearchWord(filter.searchWord)) {
+                            result.add(booking);
+                        }
                     }
                 }
             }
@@ -853,10 +856,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(configuration.autoCreateInvoices && !filter.autoGeneration) {
             filter.maxAutoCreateDate = filter.endInvoiceAt;
             filter.autoGeneration = true;
-            filter.fromAdministrator = true;
             filter.increaseUnits = configuration.increaseUnits;
             filter.prepayment = configuration.prepayment;
         }
+        filter.fromAdministrator = true;
         
         return pmsInvoiceManager.createOrder(bookingId, filter);
     }

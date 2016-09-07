@@ -233,43 +233,6 @@ if(!$user->fullName) {
             ?>
         <? } ?>
         <div style='clear:both;'></div>
-        <? if($instances) { ?>
-            <span class='roomattribute'>
-                    <span class='roomprefix'>
-                        Payment type
-                    </span>
-                <span class='roompostfix'>
-                <span class="viewmode">
-                        <?
-                        if(!$user->preferredPaymentType || !isset($instances[$user->preferredPaymentType])) {
-                            $payment = $this->getApi()->getOrderManager()->getStorePreferredPayementMethod();
-                            $appSettings = $instances[$payment->paymentType];
-                            $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);
-                        } else {
-                            $appSettings = $instances[$user->preferredPaymentType];
-                            $instance = $this->getFactory()->getApplicationPool()->createInstace($appSettings);
-                        }
-                        ?>
-                    </span>
-                    <span class="editmode" gstype='form' method="setNewPaymentType">
-                        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-                        <select gsname="newtype">
-                            <?php 
-                            foreach($instances  as $ns => $instance) {
-                                $selected = "";
-                                if($ns == $user->preferredPaymentType) {
-                                    $selected = "SELECTED";
-                                }
-                                echo "<option value='".$ns."' $selected>".$instance->appName."</option>";
-                            }
-                            ?>
-                        </select>
-                        <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-                    </span>
-                </span>
-            </span>
-            <div style='clear:both;'></div>
-        <? } ?>
     </div>
 </div>
 <?php

@@ -15,6 +15,15 @@ class Company extends \SystemApplication implements \Application {
         return "Company";
     }
     
+    public function getBackendName() {
+        // C3 
+        if ($this->isC3()) {
+            return "Partners";
+        }
+        
+        return $this->getName();
+    }
+    
     public function updateUser() {
         $user = $this->getApi()->getUserManager()->getUserById($_POST['userid']);
         $user->company = array();
@@ -90,6 +99,32 @@ class Company extends \SystemApplication implements \Application {
     public function renderExtraGroupList($group) {
         $count = $this->getApi()->getUserManager()->getCompaniesConnectedToGroupCount($group->id);
         echo "<div style='font-size: 13px; font-style: italic;'>Companies: $count </div>";
+    }
+    
+    public function getNewText() {
+        if ($this->isC3()) {
+            return "New partner";
+        }
+        return $this->__f("New company");
+    }
+    
+    public function getListNames() {
+        if ($this->isC3()) {
+            return "All partners";
+        }
+        return $this->__f("New partner");
+    }
+
+    public function isC3() {
+        return $this->getFactory()->getStore()->id == "f2d0c13c-a0f7-41a7-8584-3c6fa7eb68d1";
+    }
+
+    public function getCompanySearchText() {
+        if ($this->isC3()) {
+            return "Search for partners";
+        }
+        
+        return "Search for company";
     }
 }
 ?>

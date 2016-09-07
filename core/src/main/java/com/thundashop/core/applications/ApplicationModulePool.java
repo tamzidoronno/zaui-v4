@@ -107,6 +107,15 @@ class ApplicationModulePool {
         mecaFleetModule.description = "Special apps for meca fleet system.";
         modules.put(mecaFleetModule.id, mecaFleetModule);
         
+        ApplicationModule c3AccountingModule = new ApplicationModule();
+        c3AccountingModule.id = "c3accountingmodule";
+        c3AccountingModule.moduleName = "Timesystem";
+        c3AccountingModule.faIcon = "fa-gears";
+        c3AccountingModule.needToShowInMenu = true;
+        c3AccountingModule.allowedStoreIds.add("f2d0c13c-a0f7-41a7-8584-3c6fa7eb68d1");
+        c3AccountingModule.description = "Special apps for C3, accounting stuff.";
+        modules.put(c3AccountingModule.id, c3AccountingModule);
+        
     }
     
     public ApplicationModule getModule(String id) {

@@ -625,6 +625,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                                 pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
                             }
                             newbooking = pmsManager.getBooking(pmsbook.id);
+                            newbooking.wubookModifiedResId.add(booking.reservationCode);
                             isUpdate = true;
                             break;
                         }
@@ -779,10 +780,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         for(Integer code : codes) {
             boolean found = false;
             for(PmsBooking booking : bookings) {
-                if(booking.wubookreservationid.equals(code + "")) {
-                    if(booking.wubookreservationid.equals("1472405280")) {
-                        System.out.println("Found");
-                    }
+                String codeToCheck = code+"";
+                if(booking.wubookreservationid.equals(codeToCheck)) {
+                    found = true;
+                }
+                if(booking.wubookModifiedResId.contains(codeToCheck)) {
                     found = true;
                 }
             }

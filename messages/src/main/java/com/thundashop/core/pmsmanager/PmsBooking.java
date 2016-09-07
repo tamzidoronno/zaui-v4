@@ -43,6 +43,7 @@ public class PmsBooking extends DataCommon {
     public String wubookchannelid = "";
     public String wubookchannelreservationcode = "";
     public String wubookreservationid = "";
+    public List<String> wubookModifiedResId = new ArrayList();
     public boolean wubookNoShow = false;
     public boolean transferredToRateManager = false;
     

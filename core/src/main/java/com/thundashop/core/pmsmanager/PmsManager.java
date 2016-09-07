@@ -2499,7 +2499,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<Booking> bookingsToAdd = new ArrayList();
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             Booking bookingToAdd = createBooking(room);
-            System.out.println(bookingToAdd.getHumanReadableDates() + " " + bookingEngine.getBookingItemType(bookingToAdd.bookingItemTypeId).name);
+            if(getConfigurationSecure().hasNoEndDate) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(room.date.start);
+                cal.add(Calendar.YEAR, 100);
+                room.date.end = cal.getTime();
+            }
             if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
                 if(getConfigurationSecure().supportRemoveWhenFull) {
                     room.canBeAdded = false;

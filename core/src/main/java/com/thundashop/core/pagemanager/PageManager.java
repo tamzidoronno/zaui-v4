@@ -13,6 +13,7 @@ import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
 import com.thundashop.core.pagemanager.data.PageCellSettings;
+import com.thundashop.core.pagemanager.data.PageComment;
 import com.thundashop.core.pagemanager.data.SavedCommonPageData;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Component;
 public class PageManager extends ManagerBase implements IPageManager {
 
     HashMap<String, Page> pages = new HashMap();
+    HashMap<String, PageComment> comments = new HashMap();
     CommonPageData commonPageData = new CommonPageData();
     SavedCommonPageData savedCommonPageData = new SavedCommonPageData();
 
@@ -94,6 +96,9 @@ public class PageManager extends ManagerBase implements IPageManager {
             }
             if (obj instanceof CommonPageData) {
                 commonPageData = (CommonPageData) obj;
+            }
+            if (obj instanceof PageComment) {
+                comments.put(obj.id, (PageComment)obj);
             }
             if (obj instanceof SavedCommonPageData) {
                 savedCommonPageData = (SavedCommonPageData) obj;
@@ -894,5 +899,29 @@ public class PageManager extends ManagerBase implements IPageManager {
     public void startLoadPage() {
         HashMap<String, Object> toAdd = new HashMap();
         grafanaManager.addPoint("webdata", "pageload", toAdd);
+    }
+
+    @Override
+    public void addComment(PageComment pageComment) {
+        if (getSession() != null && getSession().currentUser != null)
+            pageComment.addedByUserId = getSession().currentUser.id;
+        
+        saveObject(pageComment);
+        comments.put(pageComment.id, pageComment);
+    }
+
+    @Override
+    public void deleteComment(String commentId) {
+        PageComment comment = comments.remove(commentId);
+        if (comment != null) {
+            deleteObject(comment);
+        }
+    }
+
+    @Override
+    public List<PageComment> getComments(String pageId) {
+        return comments.values().stream()
+                .filter(comment -> comment.pageId.equals(pageId))
+                .collect(Collectors.toList());
     }
 }

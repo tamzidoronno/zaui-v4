@@ -7,6 +7,7 @@ import com.thundashop.core.pagemanager.data.FloatingData;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
 import com.thundashop.core.pagemanager.data.PageCellSettings;
+import com.thundashop.core.pagemanager.data.PageComment;
 import java.util.HashMap;
 import java.util.List;
 
@@ -382,4 +383,12 @@ public interface IPageManager {
     public String getMobileLink();
     
     public void startLoadPage();
+    
+    @Editor
+    public void addComment(PageComment pageComment);
+    
+    @Editor
+    public void deleteComment(String commentId);
+    
+    public List<PageComment> getComments(String pageId);
 }

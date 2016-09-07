@@ -204,7 +204,7 @@ public class PmsManagerProcessor {
                         room.guests.add(guest);
                     }
                 }
-
+                
                 if (room.isStarted() && !room.isEnded()) {
                     if (pushToLock(room, false)) {
                         room.addedToArx = true;

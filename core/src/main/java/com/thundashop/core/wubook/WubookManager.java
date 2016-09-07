@@ -76,18 +76,21 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             roomToUpdate.put("id", rdata.wubookroomid);
 
             Calendar startcal = Calendar.getInstance();
-            startcal.set(Calendar.HOUR_OF_DAY, 18);
+            Calendar endCal = Calendar.getInstance();
+            startcal.set(Calendar.HOUR_OF_DAY, 16);
             Vector days = new Vector();
             for (int i = 0; i < 365; i++) {
                 Date start = startcal.getTime();
-                startcal.add(Calendar.DAY_OF_YEAR, 1);
+                endCal.setTime(startcal.getTime());
+                endCal.add(Calendar.HOUR_OF_DAY, 16);
                 Date end = startcal.getTime();
-                int count = bookingEngine.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end);
+                int count = bookingEngine.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
 
                 Hashtable result = new Hashtable();
                 result.put("avail", count);
                 result.put("no_ota", 0);
                 days.add(result);
+                startcal.add(Calendar.DAY_OF_YEAR, 1);
             }
             roomToUpdate.put("days", days);
             tosend.add(roomToUpdate);

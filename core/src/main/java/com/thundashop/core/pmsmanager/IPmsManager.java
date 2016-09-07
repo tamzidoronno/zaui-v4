@@ -23,6 +23,9 @@ public interface IPmsManager {
     public void markRoomAsCleaned(String itemId);
     
     @Administrator
+    public void tryAddToEngine(String pmsBookingRoomId);
+    
+    @Administrator
     public void logEntryObject(PmsLog log);
     
     @Administrator

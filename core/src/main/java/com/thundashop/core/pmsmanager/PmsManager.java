@@ -691,6 +691,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
+            bookingEngine.changeBookingItemOnBooking(room.bookingId, "");
             bookingEngine.changeTypeOnBooking(room.bookingId, newType);
             room.bookingItemTypeId = newType;
             saveBooking(booking);
@@ -3579,5 +3580,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         log.userId = userId;
         logentries.add(log);
         saveObject(log);
+    }
+
+    @Override
+    public void tryAddToEngine(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        addBookingToBookingEngine(booking, room);
     }
 }

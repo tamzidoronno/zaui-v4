@@ -1361,6 +1361,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return false;
     }
     
+    public function tryAddToBookingEngine() {
+       $this->getApi()->getPmsManager()->tryAddToEngine($this->getSelectedName(), $_POST['data']['id']);
+    }
+    
     public function splitToSingleBooking() {
         $roomId = $_POST['data']['roomid'];
         $this->getApi()->getPmsManager()->splitBooking($this->getSelectedName(), $roomId);

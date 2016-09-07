@@ -1,0 +1,33 @@
+.PageComment .add_text_area {
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px #888;
+    height: 100px;
+    padding: 20px;
+}
+
+.PageComment .comment {
+    border-bottom: dashed 1px #DDD;
+    padding: 10px;
+    padding-left: 50px;
+    position: relative;
+}
+
+.PageComment .comment:last-child {
+    border-bottom: solid 0px;
+}
+
+.PageComment .comment .info-row {
+    color: #BBB;
+    font-size: 12px;
+}
+
+.PageComment .comment .gs_shop_small_icon {
+    position: absolute;
+    left: 0px;
+    top: 10px;
+}
+.PageComment .comment .info-row .name {
+    margin-left: 0px;
+    
+}

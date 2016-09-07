@@ -1,0 +1,46 @@
+<?
+/* @var $this \ns_c0f2b792_479c_49ad_8e46_34e50f7f4e88\WorkPackages */
+$projects = $this->getApi()->getC3Manager()->getProjects();
+?>
+
+<div class='gss_settings_header'>
+    <i class='fa fa-info'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Projects"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("Below you see a list of all the projects that are added to your system").".";
+            ?>	
+        </div>
+    </div>	
+</div>
+
+<div class='gss_outer_searchresult gss_settings_content'>
+    <?
+    foreach ($projects as $project) {
+        $id = $project->id;
+        ?>
+        <div class='user_entry_row' gss_fragment="editproject" gss_view="gs_c3project_workarea" gss_value="<? echo $id; ?>">
+            <div class="image">
+                <span class="fa-stack fa-lg">
+                    <i style="color: #2ac32a;" class="fa fa-line-chart fa-stack-1x"></i>
+                </span>
+            </div>
+
+            <div class='addresscontent' style='position:absolute; left:500px; display:inline-block; width: 400px; top: 20px;'>
+
+            </div>
+
+            <div class="content">
+                <div class="name"><? echo $project->name; ?></div>
+            </div>
+
+        </div>
+        <?
+    }
+    ?>
+</div>
+

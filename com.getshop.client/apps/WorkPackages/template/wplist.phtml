@@ -1,0 +1,37 @@
+<?
+/* @var $this \ns_c0f2b792_479c_49ad_8e46_34e50f7f4e88\WorkPackages */
+
+?>
+
+<div class='gss_settings_header'>
+    <i class='fa fa-info'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Work Packages"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("Below you see a list of all the workpackages that are added to your system").".";
+            ?>	
+        </div>
+    </div>	
+</div>
+
+<!--<div class="gss_settings_header">
+    <i class="fa fa-search"></i>
+
+    <div class="gss_settings_header_description" >
+        <div class="gss_settings_header_title"><? echo $this->__f("Search (leave blank to see all)"); ?></div>
+        <div class="gss_settings_header_description_inner" style="position: relative; width: 868px;">
+            <input id='gss_order_filter_search_text' gs_model='orders' gs_model_attr='order_filter' type="textfield" style="left: 0px; top: 0px;" placeholder="<? echo $this->__f("Filter users"); ?>" value=''/>
+           
+            <div id='gss_order_filter_search_button' gss_method='searchWorkPackages' gss_view='gss_outer_searchresult' gss_fragment='wpsearclist' gss_model='orders' style='position: absolute; right: 0px;height: 11px;line-height: 11px;top: 2px;' class='gss_button'><? echo $this->__f("Search"); ?></div>
+        </div>
+    </div>	
+</div>-->
+
+<div class='gss_outer_searchresult gss_settings_content'>
+    <? $this->includefile("wpsearclist"); ?>
+</div>
+

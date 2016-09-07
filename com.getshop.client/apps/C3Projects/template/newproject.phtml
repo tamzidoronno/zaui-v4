@@ -1,0 +1,46 @@
+<?
+/* @var $this \ns_c0f2b792_479c_49ad_8e46_34e50f7f4e88\WorkPackages */
+?>
+
+<div class='gss_settings_header'>
+
+    <span class="fa-stack fa-lg" style="margin-right: 50px;">
+        <i class="fa fa-briefcase fa-stack-1x"></i>
+    </span>
+
+
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Create new workpackage"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("Fill out the form below to create a new workpackage.");
+            ?>	
+        </div>
+
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+    <div class="textfield gss_setting"  id="name">
+        <span class="title"><?php echo $this->__f("Name"); ?></span>
+        <input type="textfield" gs_model='projectmodel' gs_model_attr='name' value="" placeholder="Project name">
+        <div class="description">
+            <?php echo $this->__("Name of the project."); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="projectid">
+        <span class="title"><?php echo $this->__f("Projectnumber"); ?></span>
+        <input type="textfield" gs_model='projectmodel' gs_model_attr='projectid' value="" placeholder="XXXXXX">
+        <div class="description">
+            <?php echo $this->__("Project number."); ?>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_fragment="editproject" gss_view="gs_c3project_workarea" gss_method="createProject" gss_model="projectmodel"><i class='fa fa-plus'></i><?php echo $this->__("Create project"); ?></div>
+    </div>
+</div>

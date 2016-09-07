@@ -438,21 +438,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 User user = userManager.getUserById(booking.userId);
                 if (user != null && user.fullName != null && user.fullName.toLowerCase().contains(filter.searchWord.toLowerCase())) {
                     result.add(booking);
+                    continue;
                 } else if (booking.containsSearchWord(filter.searchWord)) {
                     result.add(booking);
+                    continue;
                 }
 
                 for (PmsBookingRooms room : booking.getActiveRooms()) {
+                    boolean found = false;
                     if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                         BookingItem item = bookingEngine.getBookingItemUnfinalized(room.bookingItemId);
                         if (item != null && item.bookingItemName != null && item.bookingItemName.contains(filter.searchWord)) {
                             if(!result.contains(booking)) {
                                 result.add(booking);
+                                found = true;
                             }
                         }
                         if(room.containsSearchWord(filter.searchWord)) {
                             result.add(booking);
+                                found = true;
                         }
+                    }
+                    if(found) {
+                       continue; 
                     }
                 }
             }
@@ -691,6 +699,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
+            bookingEngine.changeBookingItemOnBooking(room.bookingId, "");
             bookingEngine.changeTypeOnBooking(room.bookingId, newType);
             room.bookingItemTypeId = newType;
             saveBooking(booking);
@@ -3581,5 +3590,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         log.userId = userId;
         logentries.add(log);
         saveObject(log);
+    }
+
+    @Override
+    public void tryAddToEngine(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        addBookingToBookingEngine(booking, room);
     }
 }

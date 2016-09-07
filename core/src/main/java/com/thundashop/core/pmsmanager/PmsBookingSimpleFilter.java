@@ -106,6 +106,7 @@ public class PmsBookingSimpleFilter {
         if(room.booking != null) {
             simple.bookingTypeId = room.booking.bookingItemTypeId;
         }
+        simple.bookingEngineId = room.bookingId;
         simple.addons = room.addons;
         simple.price = room.price;
         simple.checkedIn = false;

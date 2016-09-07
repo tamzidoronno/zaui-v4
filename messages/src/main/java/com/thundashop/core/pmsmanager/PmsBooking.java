@@ -199,7 +199,9 @@ public class PmsBooking extends DataCommon {
     }
 
     public void addRoom(PmsBookingRooms room) {
-        rooms.add(room);
+        if(!rooms.contains(room)) {
+            rooms.add(room);
+        }
     }
 
     void addRooms(List<PmsBookingRooms> allToAdd) {

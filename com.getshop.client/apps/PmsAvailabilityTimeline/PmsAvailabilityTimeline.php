@@ -86,7 +86,12 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     public function changeItemForBooking() {
         $newType = $_POST['data']['newtype'];
         $roomId = $_POST['data']['roomid'];
-        $this->getApi()->getPmsManager()->setNewRoomType($this->getSelectedName(), $roomId, null, $newType);
+        $error = $this->getApi()->getPmsManager()->setNewRoomType($this->getSelectedName(), $roomId, null, $newType);
+        if($error) {
+            echo "<hr>";
+            echo $error;
+            echo "<hr>";
+        }
         $this->loadBookingList();
         echo "<script>";
         echo "thundashop.framework.reprintPage();";

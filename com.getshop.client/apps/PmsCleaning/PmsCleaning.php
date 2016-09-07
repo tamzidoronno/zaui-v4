@@ -42,12 +42,12 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->filterType = "checkin";
         $filter->startDate = $this->convertToJavaDate($time);
-        $filter->endDate = $this->convertToJavaDate($time+86499);
-
+        $filter->endDate = $this->convertToJavaDate($time+85499);
         $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
         if(!$bookings) {
             $bookings = array();
         }
+
         echo "<table width='100%' cellspacing='0' cellpadding='0'>";
         $this->printRowHeader();
 
@@ -55,6 +55,9 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         foreach($bookings as $booking) {
             foreach($booking->rooms as $room) {
                 if(!$this->isSameDay(strtotime($room->date->start), $time)) {
+                    continue;
+                }
+                if($room->deleted) {
                     continue;
                 }
                 $items = $this->getItems();
@@ -80,9 +83,9 @@ class PmsCleaning extends \WebshopApplication implements \Application {
     
     public function getCleaningDate() {
         if(isset($_SESSION['cleaningdateselected'])) {
-            return date("d.m.Y 00:00", $_SESSION['cleaningdateselected']);
+            return date("d.m.Y 01:00", $_SESSION['cleaningdateselected']);
         }
-        return date("d.m.Y 00:00", time());
+        return date("d.m.Y 01:00", time());
     }
 
     public function changeDate() {

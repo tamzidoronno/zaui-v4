@@ -8,7 +8,7 @@ class BamboraPayments extends \PaymentApplication implements \Application {
     }
 
     public function getName() {
-        return "BamboraPayments";
+        return $this->__w("Cards / Bambora");
     }
     public function paymentCallback() {
         header('Location: ' . "/?page=".$_GET['nextpage']);

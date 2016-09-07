@@ -2,7 +2,7 @@
 /* @var $this ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings */
 
 $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-
+$toChooseFrom = $this->fetchPaymethodsToChooseFrom();
 ?>
 <div class='gss_settings_header'>
     <i class='fa fa-info'></i>
@@ -225,6 +225,23 @@ $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymen
         </div>        
     </div>
 
+    <?php
+    foreach($paymentMethods as $pmethod) {
+        ?>
+        <div class="textfield gss_setting">
+            <span class="title"><?php echo $pmethod->appName; ?></span>
+            <div class="gss_onoff" gs_model="ecommercesettings" gs_model_attr="<?php echo "canbechosen_payment_app_".$pmethod->id; ?>">
+                <? $faclass = in_array($pmethod->id, $toChooseFrom) ? "fa-toggle-on" : "fa-toggle-off"; ?>
+                <? echo $this->__f("Off"); ?><i class="fa <?php echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+            </div>
+            <div class="description">
+                <?php echo $this->__("Should this payment application be a choice for your customer to select?"); ?>
+            </div>
+        </div>
+
+        <?php
+    }
+    ?>
     
     <div class="textfield gss_setting">
         <span class="title"><?php echo $this->__f("Cookie warning"); ?></span>

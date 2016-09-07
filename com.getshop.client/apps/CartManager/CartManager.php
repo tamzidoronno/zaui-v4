@@ -165,10 +165,25 @@ class CartManager extends \SystemApplication implements \Application {
             }
         }
     }
+    
+    public function selectPaymentType() {
+        $_GET['payorder'] = $_POST['data']['orderid'];
+        
+        $orderId = $_GET['payorder'];
+        
+        $this->startAdminImpersonation("OrderManager", "changeOrderType");
+        $this->getApi()->getOrderManager()->changeOrderType($orderId, $_POST['data']['paymentmethod']);
+        $this->stopImpersionation();
+    }
         
     public function render() {
         if(isset($_GET['payorder'])) {
-            $this->payOrderDirect();
+            $toChooseFrom = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchPaymethodsToChooseFrom();
+            if(!isset($_POST['data']['paymentmethod']) && sizeof($toChooseFrom) > 0) {
+                $this->includefile("choosepaymentmethod");
+            } else {
+                $this->payOrderDirect();
+            }
             return;
         }
         
@@ -530,6 +545,7 @@ class CartManager extends \SystemApplication implements \Application {
 
     public function requestAdminRights() {
         $this->requestAdminRight("OrderManager", "getOrder", $this->__o("Need to fetch order to require payment."));
+        $this->requestAdminRight("OrderManager", "changeOrderType", $this->__o("Need to change payment types on orders."));
     }
     
     public function payOrderDirect() {

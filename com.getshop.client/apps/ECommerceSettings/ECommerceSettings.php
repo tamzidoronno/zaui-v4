@@ -98,6 +98,18 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
         $this->getStoreSettingsApp()->setConfigurationSetting("registrationRequired", $_POST['registrationRequired']);
         $this->setConfigurationSetting("defaultPaymentMethod", $_POST['defaultPaymentMethod']);
         $this->setConfigurationSetting("numberOfDecimals", $_POST['numberOfDecimals']);
+        
+        $selected = array();
+        foreach($_POST as $key => $val) {
+            if(stristr($key, "canbechosen_payment_app_")) {
+                if($val == "true") {
+                    $selected[] = str_replace("canbechosen_payment_app_", "", $key);
+                }
+            }
+        }
+        echo join(",", $selected);
+        $this->setConfigurationSetting("paymentapps_available_for_choosing", join(",", $selected));
+        
     }
     
     public function isCurrency($currency) {
@@ -134,6 +146,19 @@ class ECommerceSettings extends \ApplicationBase implements \Application {
 
     public static function fetchStockQuantity() {
         
+    }
+
+    public static function fetchPaymethodsToChooseFrom() {
+        
+        ECommerceSettings::setApplicationInstance();
+        $toChooseFrom = ECommerceSettings::$staticEcommerceApp->getConfigurationSetting("paymentapps_available_for_choosing");
+        
+        if($toChooseFrom) {
+            $toChooseFrom = explode(",", $toChooseFrom);
+        } else {
+            $toChooseFrom = array();
+        }
+        return $toChooseFrom;
     }
 
 }

@@ -67,6 +67,7 @@ Cancel event;-;Kanseler event
 Cancel order;-;Kanselert ordre
 Cancelation possibility;-;Mulighet for avbestilling
 Canceled;-;Kanselert
+Cards / Bambora;-;Kort / Bambora
 Carousel menu;-;Karusell meny
 Carousel settings;-;Instillinger for karusellen
 Cart overview;-;Handlekurv oversikt
@@ -394,6 +395,7 @@ Please check your delivery options.;-;Vennligst sjekk dine leveringsmetoder.
 Please check your invoice email address;-;Sjekk faktura epostaddressen din
 Please check your room number, you can only order cleaning while you are checked in.;-;Sjekk om romnret du har oppgitt er korrekt. Du kan kun bestille vask mens du holder til hos Wilhelmsen House.
 Please check your the invoice email address;-;Sjekk faktura epostaddressen din
+Please choose your desired payment method;-;Vennligst velg foretrukket metode å betale på
 Please enter correct number of chars, min: {min}, max: {max};-;Vennligst oppgi nok tegn, min {min}, max {max}
 Please enter your email address or cellphone number:;-;Oppgi epostaddresse eller mobilnr.
 Please enter your room number;-;Skriv inn nom nummeret ditt
@@ -610,6 +612,7 @@ What's on your mind?;-;Hva ønsker du å formidle?
 Wrong delivery method;-;Feil forsendelses metode.
 Xledger is a economy system.;-;Xledger er et økenomisystem.
 Yes;-;Ja
+You are being transferred to the payment window, please wait.;-;Du blir nå overført til betalingsvinduet, vennligst vent.
 You are here:;-;Du er her:
 You are now in edit mode for this row, from this manipulate your row by adding more columns or add a row above / below, and much more.;-;Du er nå i edit modus for denne raden, du kan nå legge til kolonner, rader over og under, og mye mer.
 You do not have any products in your cart;-;Du har ingen produkter i din handlekurv

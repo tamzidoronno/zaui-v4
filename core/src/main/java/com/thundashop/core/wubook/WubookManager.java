@@ -6,6 +6,7 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmsmanager.CheckPmsProcessing;
 import com.thundashop.core.pmsmanager.PmsBooking;
@@ -49,6 +50,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Autowired
     BookingEngine bookingEngine;
     
+    @Autowired
+    FrameworkConfig frameworkConfig;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
@@ -64,7 +68,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Override
     public String updateAvailability() throws Exception {
         if(!connectToApi()) { return "Faield to connect to api"; }
-
+        if(!frameworkConfig.productionMode) { return ""; }
         Vector<Hashtable> tosend = new Vector();
         
         for (WubookRoomData rdata : wubookdata.values()) {
@@ -376,6 +380,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(!connectToApi()) {
             return "failed to connect to api";
         }
+        if(!frameworkConfig.productionMode) { return ""; }
         Hashtable table = new Hashtable();
         
         String pattern = "dd/MM/yyyy";

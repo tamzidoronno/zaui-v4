@@ -9,6 +9,8 @@ import com.braintreegateway.Environment;
 import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.FrameworkConfig;
@@ -16,12 +18,17 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.dibs.IDibsManager;
 import com.thundashop.core.getshop.GetShopPullService;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
+import java.lang.reflect.Type;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,6 +57,9 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
     @Autowired
     private GetShopPullService getShopPullService; 
     
+    @Autowired
+    MessageManager messageManager;
+    
     @Override
     public void checkForOrdersToCapture() {
         String pollKey = getCallBackId();
@@ -62,8 +72,37 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
             //First check for polls.
             long start = System.currentTimeMillis();
             List<PullMessage> messages = getShopPullService.getMessages(pollKey, storeId);
+            Gson gson = new Gson();
             for(PullMessage msg : messages) {
-                System.out.println("Found");
+                try {
+                    BamboraResponse resp = gson.fromJson(msg.getVariables, BamboraResponse.class);
+                    Order order = orderManager.getOrderByincrementOrderId(resp.orderid);
+                    order.payment.transactionLog.put(System.currentTimeMillis(), msg.getVariables);
+                    boolean valid = true;
+                    if(!validCallBack(msg.getVariables)) {
+                        order.payment.transactionLog.put(System.currentTimeMillis(), "Invalid callback from bambora callback: " + msg.id + " : " + msg.getVariables);
+                        messageManager.sendErrorNotification("Invalid callback from bambora callback: " + msg.id + " : " + msg.getVariables, null);
+                        valid = false;
+                    }
+                    
+                    Double amount = new Double(resp.amount) / 100;
+                    Double total = orderManager.getTotalAmount(order);
+                    if(!amount.equals(total)) {
+                        order.payment.transactionLog.put(System.currentTimeMillis(), "Amount does not match the order (security problem): " + msg.id + " : " + msg.getVariables);
+                        messageManager.sendErrorNotification("Amount does not match the order (security problem): " + msg.id + " : " + msg.getVariables, null);
+                        valid = false;
+                    }
+                    if(valid) {
+                        order.payment.transactionLog.put(System.currentTimeMillis(), "Payment completion (BAMBORA) : " + resp.refrence);
+                        order.status = Order.Status.PAYMENT_COMPLETED;
+                        order.captured = true;
+                        orderManager.saveObject(order);
+                    }
+//                    getShopPullService.markMessageAsReceived(msg.id, storeId);
+                }catch(Exception e) {
+                    messageManager.sendErrorNotification("Failed to parse json for bambora callback: " + msg.id + " : " + msg.getVariables, e);
+//                    getShopPullService.markMessageAsReceived(msg.id, storeId);
+                }
             }
         }catch(Exception e) {
             logPrintException(e);
@@ -102,6 +141,12 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
         return setting.value;
     }
 
+    private String getMd5() {
+        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings("a92d56c0-04c7-4b8e-a02d-ed79f020bcca");
+        Setting setting = bamboraApp.settings.get("md5");
+        return setting.value;
+    }
+
     private String getSecretToken() {
         Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings("a92d56c0-04c7-4b8e-a02d-ed79f020bcca");
         Setting setting = bamboraApp.settings.get("secret_token");
@@ -122,17 +167,53 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
         
         String tokenToUse = access_token + "@" + merchant_id + ":" + secret_token;
         
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String toPost = gson.toJson(data);
         try {
             System.out.println(toPost);
-            String res = webManager.htmlPostBasicAuth(endpoint, toPost, true, "UTF-8", tokenToUse);
+            String res = webManager.htmlPostBasicAuth(endpoint, toPost, true, "ISO-8859-1", tokenToUse);
             BamboraResponse gsonResp = gson.fromJson(res, BamboraResponse.class);
             return gsonResp.url;
         }catch(Exception ex) {
             logPrintException(ex);
             return "";
         }
+    }
+
+    private boolean validCallBack(String variables) {
+        Gson gson = new Gson();
+        Type typeOfHashMap = new TypeToken<Map<String, String>>() { }.getType();
+        Map<String, String> newMap = gson.fromJson(variables, typeOfHashMap);
+        String toCheck = "";
+        String hash = "";
+        for(String key : newMap.keySet()) {
+            if(key.equals("hash")) {
+                hash = newMap.get(key);
+                continue;
+            }
+            toCheck += newMap.get(key);
+        }
+        toCheck += getMd5();
+        
+        try {
+            MessageDigest m = MessageDigest.getInstance("MD5");
+            m.reset();
+            m.update(toCheck.getBytes());
+            byte[] digest = m.digest();
+            BigInteger bigInt = new BigInteger(1,digest);
+            String hashtext = bigInt.toString(16);
+            // Now we need to zero pad it if you actually want the full 32 chars.
+            while(hashtext.length() < 32 ){
+              hashtext = "0"+hashtext;
+            }
+            
+            if(hashtext.equals(hash)) {
+                return true;
+            }
+        }catch(Exception e) {
+            return false;
+        }
+        return false;
     }
 
 }

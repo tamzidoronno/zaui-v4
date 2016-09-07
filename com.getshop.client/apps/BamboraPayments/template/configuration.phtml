@@ -4,7 +4,7 @@
 $access_token = $this->getConfigurationSetting("access_token");
 $secret_token = $this->getConfigurationSetting("secret_token");
 $callback_id = $this->getConfigurationSetting("callback_id");
-$merchant_id = $this->getConfigurationSetting("merchant_id");
+$md5 = $this->getConfigurationSetting("md5");
 ?>
 
 <div class='gss_settings_header'>
@@ -39,6 +39,10 @@ $merchant_id = $this->getConfigurationSetting("merchant_id");
         <div class="textfield gss_setting">
             <span class="title"><?php echo $this->__f("Secret token"); ?></span>
             <input type="textfield" gs_model='bamboramodel' gs_model_attr='secret_token' value="<? echo $secret_token; ?>">
+        </div>
+        <div class="textfield gss_setting">
+            <span class="title"><?php echo $this->__f("Md5 for callback validation"); ?></span>
+            <input type="textfield" gs_model='bamboramodel' gs_model_attr='md5' value="<? echo $md5; ?>">
         </div>
     </div>
 

@@ -27,11 +27,15 @@ class BamboraPayments extends \PaymentApplication implements \Application {
         $orderId = $this->getOrder()->id;
         $url = $this->getApi()->getBamboraManager()->getCheckoutUrl($orderId);
         echo $this->__w("You are being transferred to the payment window, please wait.");
-        echo "<script>";
-        echo "window.location.href='$url';";
-        echo "</script>";
         $order = $this->order;
-        $order->payment->transactionLog->{time()*1000} = "Transferred to payment window";
+        if($url) {
+            echo "<script>";
+            echo "window.location.href='$url';";
+            echo "</script>";
+            $order->payment->transactionLog->{time()*1000} = "Transferred to payment window : $url";
+        } else {
+            $order->payment->transactionLog->{time()*1000} = "Failed transferring to payment window";
+        }
         $this->getApi()->getOrderManager()->saveOrder($order);
     }
     
@@ -48,6 +52,7 @@ class BamboraPayments extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("access_token", $_POST['access_token']);
         $this->setConfigurationSetting("secret_token", $_POST['secret_token']);
         $this->setConfigurationSetting("callback_id", $_POST['callback_id']);
+        $this->setConfigurationSetting("md5", $_POST['md5']);
     }
     
     public function render() {

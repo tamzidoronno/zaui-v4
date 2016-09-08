@@ -187,23 +187,23 @@
     <div class='col-xs-8 othercontactdata'><input type="number" class="form-control" ng-model="room.numberOfGuests" ng-change="changeRoomCount(room.numberOfGuests)"></div>
 </div>
 <div ng-repeat="guest in room.guests" class='guestrow row no-gutter'>
-    <div class='col-xs-3'>
+    <div class='col-xs-3 nospacing'>
         <label>Guest name
             <input class='form-control' ng-model='guest.name'>
         </label>
     </div>
-    <div class='col-xs-2'>
+    <div class='col-xs-1 nospacing'>
         <label>Prefix
             <input class='form-control' ng-model='guest.prefix'>
         </label>
     </div>
-    <div class='col-xs-3'>
+    <div class='col-xs-2 nospacing'>
         <label>Phone
             <input class='form-control' ng-model='guest.phone'>
         </label>
     </div>
-    <div class='col-xs-4'>
-        <label>Email
+    <div class='col-xs-6 nospacing'>
+        <label style='width:100%; box-sizing: border-box; padding-right: 15px;'>Email
             <input class='form-control' ng-model='guest.email'>
         </label>
     </div>

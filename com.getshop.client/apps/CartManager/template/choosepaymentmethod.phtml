@@ -1,0 +1,18 @@
+<?php
+/* @var $this ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager */
+?>
+<div class="choosepaymentmethod">
+    <h1><?php echo $this->__w("Please choose your desired payment method"); ?></h1>
+    <?php
+    $toChooseFrom = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchPaymethodsToChooseFrom();
+    $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+    foreach($paymentMethods as $method) {
+        if(in_array($method->id, $toChooseFrom)) {
+            echo "<div class='selectpaymentmethod' gsclick='selectPaymentType' paymentmethod='".$method->id."' orderid='".$_GET['payorder']."'>";
+            echo "<span class='paymentappheading choosepaymentapp'>" . $this->__w($method->appName) . "</span>";
+            echo "<img src='/skin/default/paymentlogos/".$method->appName.".png' style='margin-top: 10px;'>";
+            echo "</div>";
+        }
+    }
+    ?>
+</div>

@@ -240,6 +240,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function loadTakenRoomList() {
+        if(!$_POST['data']['itemid']) {
+            return;
+        }
         $bookingid = $_POST['data']['bookingid'];
         $roomid = $_POST['data']['roomid'];
         $newRoom = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $_POST['data']['itemid']);

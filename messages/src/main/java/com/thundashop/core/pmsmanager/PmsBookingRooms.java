@@ -160,7 +160,7 @@ public class PmsBookingRooms implements Serializable {
     }
     
     boolean isStarted(Date when) {
-        return date.start.before(when);
+        return (date.start.before(when) || date.start.equals(when));
     }
 
     public void clearAddonType(int type) {

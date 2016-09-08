@@ -2100,6 +2100,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         Collections.sort(res, new Comparator<PmsLog>() {
             public int compare(PmsLog o1, PmsLog o2) {
+                if(o2.rowCreatedDate != null && o1.rowCreatedDate != null) {
+                   return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+                }
                 return o2.dateEntry.compareTo(o1.dateEntry);
             }
         });

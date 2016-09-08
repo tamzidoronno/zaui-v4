@@ -3608,7 +3608,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             List<String> emailsToNotify = configuration.emailsToNotify.get("applogentry");
             if(emailsToNotify != null) {
                 for(String email : emailsToNotify) {
-                    messageManager.sendMailWithDefaults(email, email, "App log entry added", log.logText);
+                    String text = "";
+                    text += "<br/>Store email: " + getStoreEmailAddress();
+                    text += "<br/>Store name: " + getStoreName();
+                    text += "<br/>Store default address: " + getStoreDefaultAddress();
+                    text += "<br/>Entry added:<br>"+log.logText;
+                    
+                    messageManager.sendMailWithDefaults(email, email, "App log entry added", text);
                 }
             }
         }

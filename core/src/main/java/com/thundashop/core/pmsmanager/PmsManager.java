@@ -3586,6 +3586,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void logEntryObject(PmsLog log) {
+        if(log.logText == null || log.logText.trim().isEmpty()) {
+            return;
+        }
         String userId = "";
         if (getSession() != null && getSession().currentUser != null) {
             userId = getSession().currentUser.id;
@@ -3599,6 +3602,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         log.userId = userId;
         logentries.add(log);
         saveObject(log);
+        
+        
+        if(log.tag != null && log.tag.equals("mobileapp")) {
+            List<String> emailsToNotify = configuration.emailsToNotify.get("applogentry");
+            if(emailsToNotify != null) {
+                for(String email : emailsToNotify) {
+                    messageManager.sendMailWithDefaults(email, email, "App log entry added", log.logText);
+                }
+            }
+        }
+
     }
 
     @Override

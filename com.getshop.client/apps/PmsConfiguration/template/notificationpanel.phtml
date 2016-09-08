@@ -127,6 +127,9 @@ $channelConfig = $config->channelConfiguration;
 </div>
 
 <div gstype="form" method="saveNotifications">
+    <div class='budgets emails_to_notify'>
+        <?php $this->includefile("emailstonotify"); ?>
+    </div>
     <div class='budgets notificationpanel'>
         <?php
         echo "<table>";

@@ -1283,6 +1283,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         booking.isDeleted = true;
+        logEntry("Deleted booking", bookingId, null);
         saveBooking(booking);
     }
 

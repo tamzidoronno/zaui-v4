@@ -11,6 +11,10 @@ $metaData = $this->getApi()->getEventBookingManager()->getBookingTypeMetaData($t
     <label>Name</label><input type="txt" class="gsniceinput1" gsname="name" value="<? echo $eventType->name; ?>">
     <br/>
     <br/>
+    <label>Description</label>
+    <textarea class="gsniceinput1 eventdescription" gsname="descrption"><? echo $eventType->description; ?></textarea>
+    <br/>
+    <br/>
     <br/>
     
     <div class="groupinformation">

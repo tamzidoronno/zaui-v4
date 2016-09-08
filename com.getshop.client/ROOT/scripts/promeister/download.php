@@ -16,7 +16,14 @@ $factory = IocContainer::getFactorySingelton();
 $id = session_id();
 session_write_close();
 
-$url = "http://$_SERVER[HTTP_HOST]/scripts/promeister/createEventDiplomas.php?id=".  session_id()."&eventId=".$_GET['eventId'];
+$generator = "createEventDiplomas";
+
+if ($factory->getStore()->id == "17f52f76-2775-4165-87b4-279a860ee92c") {
+    $generator = "createEventDiplomasNo";
+}
+    
+$url = "http://$_SERVER[HTTP_HOST]/scripts/promeister/$generator.php?id=".  session_id()."&eventId=".$_GET['eventId'];
+
 if (isset($_GET['userId'])) {
     $url .= "&userId=".$_GET['userId'];
 }

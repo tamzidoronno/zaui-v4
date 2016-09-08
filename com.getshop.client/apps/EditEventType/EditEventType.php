@@ -23,6 +23,7 @@ class EditEventType extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
     public function saveEvent() {
         $type = $this->getEventType();
         $type->name = $_POST['data']['name'];
+        $type->description = $_POST['data']['descrption'];
         
         $this->getApi()->getBookingEngine()->updateBookingItemType($this->getBookingEngineName(), $type);
         

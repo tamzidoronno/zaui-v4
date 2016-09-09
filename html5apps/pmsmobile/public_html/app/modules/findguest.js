@@ -14,7 +14,11 @@ getshop.findguestController = function($scope, $state) {
             box.addClass('checked');
         }
     },
-            
+
+    $scope.forceCleaning = function(room) {
+        getshopclient.PmsManager.forceMarkRoomAsCleaned(getMultilevelName(), room.bookingItemId);
+        room.progressState="active";
+    },
     $scope.convertDate = function(time) {
         var d = new Date();
         d.setTime(time);

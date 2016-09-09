@@ -613,6 +613,7 @@ public class PmsManagerProcessor {
                         continue;
                     }
                     if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+                        manager.pmsInvoiceManager.autoSendInvoice(order, booking.id);
                         continue;
                     }
                     if(!order.captured && order.status == Order.Status.PAYMENT_COMPLETED) {

@@ -112,17 +112,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['gsarg3']);
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['gsarg1']);
         if($_POST['data']['gsarg2'] == "paidfor") {
-            $order->status = 7;
-            $order->payment->transactionLog->{time()*1000} = "Order marked as paid for manually, by: " .$userName;
-            $this->getApi()->getOrderManager()->saveOrder($order);
-            $this->getApi()->getPmsManager()->processor($this->getSelectedName());
+            $this->getApi()->getPmsInvoiceManager()->markOrderAsPaid($this->getSelectedName(), $booking->id, $order->id);
         } else {
             $order->status = 3;
             $order->payment->transactionLog->{time()*1000} = "Failed marking as paid for, by: " .$userName;
             $this->getApi()->getOrderManager()->saveOrder($order);
             $this->getApi()->getWubookManager()->markCCInvalid($this->getSelectedName(), $booking->wubookreservationid);
             echo "Order has been marked as failed.<br>";
-        }        
+        }
     }
     
     public function runProcessor() {

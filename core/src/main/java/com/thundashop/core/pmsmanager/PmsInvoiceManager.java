@@ -38,6 +38,40 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private boolean avoidChangeInvoicedTo;
     private boolean avoidChangingInvoicedFrom;
 
+    @Override
+    public void markOrderAsPaid(String bookingId, String orderId) {
+        Order order = orderManager.getOrder(orderId);
+        order.status = Order.Status.PAYMENT_COMPLETED;
+        order.payment.transactionLog.put(System.currentTimeMillis(), "Mark as paid for by pms");
+        orderManager.saveOrder(order);
+        pmsManager.logEntry("Order marked as paid for : " + order.incrementOrderId, bookingId, null);
+        sendRecieptOnOrder(order, bookingId);
+        pmsManager.processor();
+    }
+
+    public void autoSendInvoice(Order order, String bookingId) {
+        if(!pmsManager.getConfigurationSecure().autoSendInvoice) {
+            return;
+        }
+        if(order.sentToCustomer) {
+            return;
+        }
+        if(order.payment != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+            sendRecieptOnOrder(order, bookingId);
+        }
+    }
+
+    public void sendRecieptOnOrder(Order order, String bookingId) {
+        User user = userManager.getUserById(order.userId);
+        String usersEmail = user.emailAddress;
+        if(user.emailAddressToInvoice != null && !user.emailAddressToInvoice.isEmpty()) {
+            usersEmail = user.emailAddressToInvoice;
+        }
+        sendRecieptOrInvoice(order.id, usersEmail, bookingId);
+        pmsManager.logEntry("Reciept / invoice sent to : " + usersEmail + " orderid: " + order.incrementOrderId, bookingId, null);
+        
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -340,6 +374,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     @Override
     public void sendRecieptOrInvoice(String orderId, String email, String bookingId) {
         Order order = orderManager.getOrder(orderId);
+        order.sentToCustomer = true;
+        orderManager.saveObject(order);
         pmsManager.setOrderIdToSend(orderId);
         pmsManager.setEmailToSendTo(email);
         if(order.status == Order.Status.PAYMENT_COMPLETED) {
@@ -394,6 +430,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     if (order == null) {
                         return "Could not create order.";
                     }
+                    autoSendInvoice(order, booking.id);
                     booking.orderIds.add(order.id);
                 }
                 if(getSession() != null && getSession().currentUser != null && 

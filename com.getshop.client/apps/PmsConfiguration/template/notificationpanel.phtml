@@ -634,6 +634,18 @@ $channelConfig = $config->channelConfiguration;
             </span>
             Automark invoices as paid for.
         </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->autoSendInvoice) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoSendInvoice' <? echo $checked; ?>>
+            </span>
+            Automatically send invoices when they are created.
+        </div>
         <?php if($notificationSettings->requirePayments) { ?>
             <div class='configrow'>
                 <span class='configentry'>

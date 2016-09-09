@@ -772,7 +772,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             throw new ErrorException(1000015);
         }
         bookings.put(booking.id, booking);
+        try {
+            verifyPhoneOnBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
         saveObject(booking);
+        
     }
 
 

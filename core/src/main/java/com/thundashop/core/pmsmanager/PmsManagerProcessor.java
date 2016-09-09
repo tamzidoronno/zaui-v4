@@ -207,20 +207,20 @@ public class PmsManagerProcessor {
                 
                 
                 //If it is possible to let customers check in earlier than specified, do it.
-//                int hourNow = Calendar.get(Calendar.HOUR_OF_DAY);
+//                int hourNow = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 //                int boardingHour = manager.getConfigurationSecure().hourOfDayToStartBoarding;
+//                int defaultStart = getDefaultStartTime();
 //                if(boardingHour >= 0) {
-//                    int boardingStarted = hourNow >= boardingHour;
+//                    boolean boardingStarted = (hourNow >= boardingHour);
 //                    if(!room.isStarted() && boardingStarted && room.isStartingToday()) {
-//                        Calendar cal = Calendar.getInstance();
-//                        cal.setTime(room.date.start);
-//                        if(cal.get(Calendar.HOUR_OF_DAY) > boardingHour) {
-//                            cal.set(Calendar.HOUR_OF_DAY, boardingHour);
-//                            cal.set(Calendar.MINUTE, 0);
-//
-//                            if(manager.bookingEngine.canChangeDatesOnBooking(room.bookingId, cal.getTime(), room.date.end)) {
-//                                manager.bookingEngine.changeDatesOnBooking(room.bookingId, cal.getTime(), room.date.end);
+//                        Calendar startCal = Calendar.getInstance();
+//                        startCal.setTime(room.date.start);
+//                        if(startCal.get(Calendar.HOUR_OF_DAY) > boardingHour) {
+//                            try {
+//                                manager.bookingEngine.changeDatesOnBooking(room.bookingId, new Date(), room.date.end);
 //                                manager.finalize(booking);
+//                            }catch(Exception e) {
+//                                
 //                            }
 //                        }
 //                    }

@@ -173,8 +173,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<Room> getAllRoomTypes(Date start, Date end) {
-        System.out.println(start);
-        System.out.println(end);
+        User loggedon = userManager.getLoggedOnUser();
+        boolean isAdmin = false;
+        if(loggedon != null) {
+            isAdmin = (loggedon.isAdministrator() || loggedon.isEditor());
+        }
+        
         List<Room> result = new ArrayList();
         List<BookingItemType> allGroups = bookingEngine.getBookingItemTypes();
 
@@ -185,7 +189,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         });
 
         for (BookingItemType type : allGroups) {
-            if (!type.visibleForBooking) {
+            if (!type.visibleForBooking && !isAdmin) {
                 continue;
             }
             

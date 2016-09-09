@@ -46,6 +46,7 @@ public class PmsBooking extends DataCommon {
     public List<String> wubookModifiedResId = new ArrayList();
     public boolean wubookNoShow = false;
     public boolean transferredToRateManager = false;
+    public boolean forceGrantAccess = false;
     
     public String countryCode = "";
     public boolean avoidAutoDelete = false;

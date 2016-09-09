@@ -15,7 +15,23 @@
         <span class='btn btn-success' ng-show='order.status !== 7' ng-click="doPayOrder(order)">Make payment</span>
     </div>
 </div>
-    
+
+<div class="row" ng-show='booking.forceGrantAccess && !loading'>
+    <div class='col-xs-12'>
+        Access has been forced. The guests for this booking will be granted access regarding if they have paid for it or not.
+    </div>
+</div>
+
+<div class="row" ng-show='!booking.forceGrantAccess && !booking.payedFor && !loading'>
+    <div class='col-xs-8'>
+        If there is unpaid orders and you want to grant access anyway. 
+        You can force grant access, the code will be given out even if booking is not fully paid.
+    </div>
+    <div class='col-xs-4' style='text-align:right;'>
+        <span class='btn alert btn-danger' ng-click="forceGrantAccess()">Grant access</span>
+    </div>
+</div>
+
 <div ng-show='sendRecieptProcess'>
     <div class='additionalinfo row'>Send reciept for order {{recieptOrder.incrementOrderId}}</div>
     <div class='row'>

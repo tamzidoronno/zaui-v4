@@ -738,6 +738,10 @@ public class PmsManagerProcessor {
     }
 
     private boolean checkIgnorePaidFor(PmsBooking booking) {
+        if(booking.forceGrantAccess) {
+            return true;
+        }
+        
         if(booking.channel == null || booking.channel.isEmpty()) {
             return false;
         }

@@ -27,6 +27,7 @@ getshop.breakfastController = function ($scope, $state, $stateParams) {
 
         filter.startDate = start;
         filter.endDate = end;
+        filter.sorting = "room";
         $scope.loading = true;
         $scope.breakfastCount = 0;
         var loadBookings = getshopclient.PmsManager.getSimpleRooms(getMultilevelName(), filter);

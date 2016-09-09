@@ -16,15 +16,16 @@
             Sorry, no entries where found for this date.
         </div>
 </div>
-
-
-<div class='row ng-hide' ng-show="!loading">
-    <div  ng-repeat="breakfast in breakfastlist" class="col-xs-12">
-        {{breakfast.count}} - {{breakfast.name}}, room {{breakfast.room}}
+<div class='row' style="border-bottom: solid 1px #bbb;"></div>
+<div class='row ng-hide breakfastlistrow' ng-show="!loading" ng-repeat="breakfast in breakfastlist">
+    <div class="col-xs-1 info">{{breakfast.room}}<br>
+    {{breakfast.count}}x</div>
+    <div class="col-xs-11">
+        {{breakfast.name}}
     </div>
 </div>
 <div class='row ng-hide' ng-show="!loading">
-    <div class="col-xs-12">
+    <div class="col-xs-10">
         <b>Total number of breakfasts {{breakfastCount}}</b>
     </div>
 </div>

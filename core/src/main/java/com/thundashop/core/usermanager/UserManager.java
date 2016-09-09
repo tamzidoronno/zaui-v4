@@ -445,7 +445,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 String phone = res.get("phone");
                 if(prefix != null && phone != null) {
                     if(!prefix.equals(user.prefix)) { user.prefix = prefix; }
-                    if(!phone.equals(user.cellPhone)) { user.cellPhone = prefix; }
+                    if(!phone.equals(user.cellPhone)) { user.cellPhone = phone; }
                 }
             }
         }catch(Exception e) {

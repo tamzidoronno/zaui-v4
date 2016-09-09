@@ -3523,7 +3523,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(prefix != null && phone != null) {
                     boolean save = false;
                     if(!prefix.equals(user.prefix)) { user.prefix = prefix;save=true; }
-                    if(!phone.equals(user.cellPhone)) { user.cellPhone = prefix;save=true; }
+                    if(!phone.equals(user.cellPhone)) { user.cellPhone = phone;save=true; }
                     if(save) { userManager.saveUserSecure(user); }
                 }
             } else {

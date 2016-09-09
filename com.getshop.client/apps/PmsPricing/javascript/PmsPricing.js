@@ -4,6 +4,26 @@ app.PmsPricing = {
         $(document).on('click', '.PmsPricing .setnewprices', app.PmsPricing.setnewprices);
         $(document).on('keyup', '.PmsPricing .dateinput', app.PmsPricing.updateDate);
         $(document).on('change', '.PmsPricing .dateinput', app.PmsPricing.updateDate);
+        $(document).on('click', '.PmsPricing .selectcol', app.PmsPricing.selectCol);
+        $(document).on('click', '.PmsPricing .selectrow', app.PmsPricing.selectRow);
+    },
+    selectRow : function() {
+        var selected = $(this).is(':checked');
+        var row = $(this).closest('tr');
+        if(selected) {
+            row.find('input[type="checkbox"]').attr('checked','checked');
+        } else {
+            row.find('input[type="checkbox"]').attr('checked',null);
+        }
+    },
+    selectCol : function() {
+        var selected = $(this).is(':checked');
+        var wday = $(this).attr('weekday');
+        if(selected) {
+            $('input[weekday="'+wday+'"]').attr('checked','checked');
+        } else {
+            $('input[weekday="'+wday+'"]').attr('checked',null);
+        }
     },
     updateDate : function() {
         var date = $(this).val();

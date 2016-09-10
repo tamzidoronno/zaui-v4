@@ -42,7 +42,6 @@ getshop.logController = function($scope, $state) {
             filter.bookingItemId = item;
         }
         filter.tag="mobileapp";
-        console.log(filter);
         $scope.loading = true;
         var loading = getshopclient.PmsManager.getLogEntries(getMultilevelName(), filter);
         loading.done(function(res) {

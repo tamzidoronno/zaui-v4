@@ -7,8 +7,6 @@ import java.util.List;
 
 public class PmsConfiguration extends DataCommon {
 
-    boolean supportRemoveWhenFull;
-
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;
         public static Integer DAILY = 2;
@@ -48,10 +46,13 @@ public class PmsConfiguration extends DataCommon {
     public boolean fastCheckIn = false;
     public HashMap<Integer, PmsBookingAddonItem> addonConfiguration = new HashMap();
     public HashMap<String, CleaningStatistics> cleaningPriceConfig = new HashMap();
+    public HashMap<String, List<String>> emailsToNotify = new HashMap();
     public HashMap<String, Double> extraCleaningCost = new HashMap();
     public String bookingProfile = "hotel";
 
     /* Invoice creation options */
+    public boolean supportRemoveWhenFull = false;
+    public boolean autoSendInvoice = false;
     public boolean autoCreateInvoices = false;
     public boolean usePriceMatrixOnOrder = false;
     public Integer whenInfinteDateFirstOrderTimeUnits = 1;

@@ -207,20 +207,20 @@ public class PmsManagerProcessor {
                 
                 
                 //If it is possible to let customers check in earlier than specified, do it.
-//                int hourNow = Calendar.get(Calendar.HOUR_OF_DAY);
+//                int hourNow = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 //                int boardingHour = manager.getConfigurationSecure().hourOfDayToStartBoarding;
+//                int defaultStart = getDefaultStartTime();
 //                if(boardingHour >= 0) {
-//                    int boardingStarted = hourNow >= boardingHour;
+//                    boolean boardingStarted = (hourNow >= boardingHour);
 //                    if(!room.isStarted() && boardingStarted && room.isStartingToday()) {
-//                        Calendar cal = Calendar.getInstance();
-//                        cal.setTime(room.date.start);
-//                        if(cal.get(Calendar.HOUR_OF_DAY) > boardingHour) {
-//                            cal.set(Calendar.HOUR_OF_DAY, boardingHour);
-//                            cal.set(Calendar.MINUTE, 0);
-//
-//                            if(manager.bookingEngine.canChangeDatesOnBooking(room.bookingId, cal.getTime(), room.date.end)) {
-//                                manager.bookingEngine.changeDatesOnBooking(room.bookingId, cal.getTime(), room.date.end);
+//                        Calendar startCal = Calendar.getInstance();
+//                        startCal.setTime(room.date.start);
+//                        if(startCal.get(Calendar.HOUR_OF_DAY) > boardingHour) {
+//                            try {
+//                                manager.bookingEngine.changeDatesOnBooking(room.bookingId, new Date(), room.date.end);
 //                                manager.finalize(booking);
+//                            }catch(Exception e) {
+//                                
 //                            }
 //                        }
 //                    }
@@ -240,7 +240,7 @@ public class PmsManagerProcessor {
             
             //Also deleted rooms needs to be removed from arx.
             for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
-                if ((room.isEnded() && room.addedToArx) || (room.deleted && room.addedToArx)) {
+                if (((room.isEnded() || !room.isStarted()) && room.addedToArx) || (room.deleted && room.addedToArx)) {
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;
@@ -613,6 +613,7 @@ public class PmsManagerProcessor {
                         continue;
                     }
                     if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+                        manager.pmsInvoiceManager.autoSendInvoice(order, booking.id);
                         continue;
                     }
                     if(!order.captured && order.status == Order.Status.PAYMENT_COMPLETED) {
@@ -737,6 +738,10 @@ public class PmsManagerProcessor {
     }
 
     private boolean checkIgnorePaidFor(PmsBooking booking) {
+        if(booking.forceGrantAccess) {
+            return true;
+        }
+        
         if(booking.channel == null || booking.channel.isEmpty()) {
             return false;
         }

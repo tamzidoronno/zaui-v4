@@ -99,6 +99,7 @@ $channelConfig = $config->channelConfiguration;
 <span class="changeview pmsbutton" data-panel='other_config'>Other</span>
 <span class="changeview pmsbutton" data-panel='cleaning'>Cleaning</span>
 <span class="changeview pmsbutton" data-panel='addons'>Addons</span>
+<span class="changeview pmsbutton" data-panel='emails_to_notify'>Emails to notify</span>
 <span class="changeview pmsbutton" data-panel='budgets'>Bugdets</span>
 <div style='padding-top: 20px;'>
     Variables: {code},
@@ -126,6 +127,9 @@ $channelConfig = $config->channelConfiguration;
 </div>
 
 <div gstype="form" method="saveNotifications">
+    <div class='emails_to_notify notificationpanel'>
+        <?php $this->includefile("emailstonotify"); ?>
+    </div>
     <div class='budgets notificationpanel'>
         <?php
         echo "<table>";
@@ -629,6 +633,18 @@ $channelConfig = $config->channelConfiguration;
                 <input type='checkbox' gsname='automarkInvoicesAsPaid' <? echo $checked; ?>>
             </span>
             Automark invoices as paid for.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->autoSendInvoice) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoSendInvoice' <? echo $checked; ?>>
+            </span>
+            Automatically send invoices when they are created.
         </div>
         <?php if($notificationSettings->requirePayments) { ?>
             <div class='configrow'>

@@ -3,7 +3,9 @@
     Other instructions</div>
 <div class='row'>
     <select class="form-control" ng-model='selectedroom' ng-change="updateLogList(selectedroom)" ng-options="item.id as item.bookingItemName for item in items"></select>
+    <br>
     <textarea class="form-control" ng-model="logentrytext"></textarea>
+    <br>
     <span class="btn btn-success" style="width:100%;" ng-click="addEntry()">Add log entry</span>
 </div>
 
@@ -11,13 +13,17 @@
 
 
 <div class='row'>
-    <div ng-repeat="log in logs" class='col-sm-12'>
-        <div class='col-sm-3'>
-            <b>{{log.roomName}}</b><br>
+    <div ng-repeat="log in logs" class='col-sm-12 logenty'>
+        <div class='col-sm-3 logname'>
+            <b>{{log.roomName}}</b>
+            <b ng-show="!log.roomName">General enquiry</b>
+            <br>
         </div>
-        <div class='col-sm-9'>
+        <div class='col-sm-9 logtext'>
             <div>{{log.logText}}</div>
-            <b>{{log.userName}}</b> - {{log.dateEntry}}<br>
+            <div class='addedbytext'>
+                <b>{{log.userName}}</b> - {{log.dateEntry}}
+            </div>
             <br>
         </div>
     </div>

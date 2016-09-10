@@ -173,8 +173,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<Room> getAllRoomTypes(Date start, Date end) {
-        System.out.println(start);
-        System.out.println(end);
+        User loggedon = userManager.getLoggedOnUser();
+        boolean isAdmin = false;
+        if(loggedon != null) {
+            isAdmin = (loggedon.isAdministrator() || loggedon.isEditor());
+        }
+        
         List<Room> result = new ArrayList();
         List<BookingItemType> allGroups = bookingEngine.getBookingItemTypes();
 
@@ -185,7 +189,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         });
 
         for (BookingItemType type : allGroups) {
-            if (!type.visibleForBooking) {
+            if (!type.visibleForBooking && !isAdmin) {
                 continue;
             }
             
@@ -768,7 +772,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             throw new ErrorException(1000015);
         }
         bookings.put(booking.id, booking);
+        try {
+            verifyPhoneOnBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
         saveObject(booking);
+        
     }
 
 
@@ -1283,6 +1293,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         booking.isDeleted = true;
+        logEntry("Deleted booking", bookingId, null);
         saveBooking(booking);
     }
 
@@ -2099,6 +2110,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         Collections.sort(res, new Comparator<PmsLog>() {
             public int compare(PmsLog o1, PmsLog o2) {
+                if(o2.rowCreatedDate != null && o1.rowCreatedDate != null) {
+                   return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+                }
                 return o2.dateEntry.compareTo(o1.dateEntry);
             }
         });
@@ -3509,7 +3523,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(prefix != null && phone != null) {
                     boolean save = false;
                     if(!prefix.equals(user.prefix)) { user.prefix = prefix;save=true; }
-                    if(!phone.equals(user.cellPhone)) { user.cellPhone = prefix;save=true; }
+                    if(!phone.equals(user.cellPhone)) { user.cellPhone = phone;save=true; }
                     if(save) { userManager.saveUserSecure(user); }
                 }
             } else {
@@ -3582,6 +3596,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void logEntryObject(PmsLog log) {
+        if(log.logText == null || log.logText.trim().isEmpty()) {
+            return;
+        }
         String userId = "";
         if (getSession() != null && getSession().currentUser != null) {
             userId = getSession().currentUser.id;
@@ -3595,6 +3612,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         log.userId = userId;
         logentries.add(log);
         saveObject(log);
+        
+        
+        if(log.tag != null && log.tag.equals("mobileapp")) {
+            List<String> emailsToNotify = configuration.emailsToNotify.get("applogentry");
+            if(emailsToNotify != null) {
+                for(String email : emailsToNotify) {
+                    String text = "";
+                    text += "<br/>Store email: " + getStoreEmailAddress();
+                    text += "<br/>Store name: " + getStoreName();
+                    text += "<br/>Store default address: " + getStoreDefaultAddress();
+                    text += "<br/>Entry added:<br>"+log.logText;
+                    
+                    messageManager.sendMailWithDefaults(email, email, "App log entry added", text);
+                }
+            }
+        }
+
     }
 
     @Override

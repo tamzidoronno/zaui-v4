@@ -28,4 +28,7 @@ public interface IPmsInvoiceManager {
     
     @Administrator
     public void saveDiscounts(PmsUserDiscount discounts);
+    
+    @Administrator
+    public void markOrderAsPaid(String bookingId, String orderId);
 }

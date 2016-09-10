@@ -9,6 +9,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.start.Runner;
 import com.thundashop.core.storemanager.StoreManager;
@@ -437,6 +438,20 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         checkUserAccess(user);
         preventOverwriteOfData(user, savedUser);
 
+        try {
+            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ user.prefix,user.cellPhone, "NO");
+            if(res != null) {
+                String prefix = res.get("prefix");
+                String phone = res.get("phone");
+                if(prefix != null && phone != null) {
+                    if(!prefix.equals(user.prefix)) { user.prefix = prefix; }
+                    if(!phone.equals(user.cellPhone)) { user.cellPhone = phone; }
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
         collection.addUser(user);
     }
 

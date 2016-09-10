@@ -24,6 +24,10 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             }
         });
     };
+    $scope.forceGrantAccess = function() {
+        $scope.booking.forceGrantAccess = true;
+        getshopclient.PmsManager.saveBooking(getMultilevelName(), $scope.booking);
+    },
     
     $scope.markOrderAsInvoice = function() {
         var orderId = $scope.payOrder.id;
@@ -57,10 +61,13 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
     }
     
     $scope.roomIsStarted = function() {
+        if($scope.room && $scope.room.addedToArx) {
+            return true;
+        }
         if($scope.booking && !$scope.booking.payedFor) {
             return false;
         }
-        if(!$scope.room.addedToArx) {
+        if($scope.room && !$scope.room.addedToArx) {
             return false;
         }
         return $scope.isStarted;
@@ -138,9 +145,10 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         $scope.payOrder = order;
         $scope.payOrderProcess = true;
     }
-    
+    $scope.loading = true;
     var booking = getshopclient.PmsManager.getBooking(getMultilevelName(), bookingid);
     booking.done(function(res) {
+        $scope.loading = false;
         $scope.orders = [];
         for(var key in res.orderIds) {
             var orderId = res.orderIds[key];

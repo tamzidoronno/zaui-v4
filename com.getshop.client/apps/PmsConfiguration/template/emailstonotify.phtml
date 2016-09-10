@@ -1,0 +1,21 @@
+<?php
+/* @var $this \ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+$types = array();
+$types["report"] = "Emails to send statistics report to";
+$types["applogentry"] = "Emails to send app log entries to";
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+
+foreach($types as $type => $heading) {
+    echo "<div style='display:inline-block; float:left; margin-right: 20px;'>";
+    echo "<h3>$heading</h3>";
+    for($i = 1; $i <= 10; $i++) {
+        $value = "";
+        if(isset($config->emailsToNotify->{$type}[$i-1])) {
+            $value = $config->emailsToNotify->{$type}[$i-1];
+        }
+        echo "$i. <input type='txt' gsname='emailtonotify_".$type."_$i' value='$value'><br>";
+    }
+    echo "</div>";
+}
+?>
+<div style='clear:both;'></div>

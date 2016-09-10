@@ -7,6 +7,19 @@ body {
 
 
 
+.PmsBookingCalendar .calendar .calendar_header,
+.PmsBookingCalendar .calendar .day.selected,
+.PmsBooking .pmsfront .fa-calendar {
+    background-color: #f9b233; 
+    text-transform: uppercase;
+}
+.PmsBookingProductList .continue_button,
+.PmsBookingContactData .complete_button,
+.PmsBooking .pmsfront .check_available_button {
+    background-color:#00cc66;
+    color:#fff;
+}
+
 .gsarea[area="footer"] {
     background-color: #EEE;
     padding-top: 20px;

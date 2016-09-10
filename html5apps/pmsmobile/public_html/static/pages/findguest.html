@@ -59,6 +59,7 @@
                 
             </span>
         </a>
+        <i title='Force cleaning' class='fa fa-play' ng-show="room.progressState == 'waitingforlock'" style='position:absolute;left: 60px; top: 5px; font-size: 30px; margin-top: 10px;' ng-click="forceCleaning(room)"></i>
         <span class='col-xs-2 firecheck' ng-class="{'active': isActive}" ng-click="toggleFireCheck($event)">
                 Mark
             </span>

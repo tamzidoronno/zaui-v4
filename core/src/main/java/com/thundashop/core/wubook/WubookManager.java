@@ -89,7 +89,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 endCal.add(Calendar.HOUR_OF_DAY, 16);
                 Date end = startcal.getTime();
                 int count = bookingEngine.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
-
+                
                 Hashtable result = new Hashtable();
                 result.put("avail", count);
                 result.put("no_ota", 0);
@@ -613,7 +613,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
         long start = System.currentTimeMillis();
         boolean isUpdate = false;
-        if(booking.modifiedReservation.size() > 0) {
+        if(booking.modifiedReservation.size() > 0 && !booking.delete) {
             List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
             boolean found = false;
             for(PmsBooking pmsbook : allbookings) {
@@ -643,6 +643,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     pmsManager.logEntry("Deleted by channel manager", pmsbook.id, null);
                     pmsManager.deleteBooking(pmsbook.id);
                     found = true;
+                }
+                for(Integer oldCode : booking.modifiedReservation) {
+                    if(pmsbook.wubookreservationid.equals(oldCode+"")) {
+                        pmsManager.logEntry("Deleted by channel manager", pmsbook.id, null);
+                        pmsManager.deleteBooking(pmsbook.id);
+                        found = true;
+                    }
                 }
             }
             if(!found) {

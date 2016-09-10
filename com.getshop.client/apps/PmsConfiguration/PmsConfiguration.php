@@ -98,6 +98,22 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             }
         }
         
+        $emailsToNotify = array();
+        foreach($_POST['data'] as $key => $value) {
+            if(!$value) {
+                continue;
+            }
+            if(stristr($key, "emailtonotify_")) {
+                $indexed = explode("_", $key);
+                $type = $indexed[1];
+                if(!isset($emailsToNotify[$type])) {
+                    $emailsToNotify[$type] = array();
+                }
+                $emailsToNotify[$type][] = $value;
+            }
+        }
+        $notifications->emailsToNotify = $emailsToNotify;
+        
         foreach($_POST['data'] as $key => $value) {
             if($key == "otherinstructions") {
                 continue;

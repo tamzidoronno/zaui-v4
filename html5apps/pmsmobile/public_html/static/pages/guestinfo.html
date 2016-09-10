@@ -15,7 +15,23 @@
         <span class='btn btn-success' ng-show='order.status !== 7' ng-click="doPayOrder(order)">Make payment</span>
     </div>
 </div>
-    
+
+<div class="row" ng-show='booking.forceGrantAccess && !loading'>
+    <div class='col-xs-12'>
+        Access has been forced. The guests for this booking will be granted access regarding if they have paid for it or not.
+    </div>
+</div>
+
+<div class="row" ng-show='!booking.forceGrantAccess && !booking.payedFor && !loading'>
+    <div class='col-xs-8'>
+        If there is unpaid orders and you want to grant access anyway. 
+        You can force grant access, the code will be given out even if booking is not fully paid.
+    </div>
+    <div class='col-xs-4' style='text-align:right;'>
+        <span class='btn alert btn-danger' ng-click="forceGrantAccess()">Grant access</span>
+    </div>
+</div>
+
 <div ng-show='sendRecieptProcess'>
     <div class='additionalinfo row'>Send reciept for order {{recieptOrder.incrementOrderId}}</div>
     <div class='row'>
@@ -187,23 +203,23 @@
     <div class='col-xs-8 othercontactdata'><input type="number" class="form-control" ng-model="room.numberOfGuests" ng-change="changeRoomCount(room.numberOfGuests)"></div>
 </div>
 <div ng-repeat="guest in room.guests" class='guestrow row no-gutter'>
-    <div class='col-xs-3'>
+    <div class='col-xs-3 nospacing'>
         <label>Guest name
             <input class='form-control' ng-model='guest.name'>
         </label>
     </div>
-    <div class='col-xs-2'>
+    <div class='col-xs-1 nospacing'>
         <label>Prefix
             <input class='form-control' ng-model='guest.prefix'>
         </label>
     </div>
-    <div class='col-xs-3'>
+    <div class='col-xs-2 nospacing'>
         <label>Phone
             <input class='form-control' ng-model='guest.phone'>
         </label>
     </div>
-    <div class='col-xs-4'>
-        <label>Email
+    <div class='col-xs-6 nospacing'>
+        <label style='width:100%; box-sizing: border-box; padding-right: 15px;'>Email
             <input class='form-control' ng-model='guest.email'>
         </label>
     </div>

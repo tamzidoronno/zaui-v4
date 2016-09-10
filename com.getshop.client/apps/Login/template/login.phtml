@@ -34,10 +34,15 @@ $alsoLoginWithPhonenumber = $this->getExtraLoginText();
 <? if (!Login::getUserObject()) { 
         echo $this->__w("Please enter your username and password");
         ?>
+        
         <div class="form">
-            <div class="username"><input class="tstextfield" name="username" type="textfield" placeholder='<?php echo $this->__w('Username / Email'); echo $alsoLoginWithPhonenumber?>'></input></div>
-            <div class="password"><input class="tstextfield" name="password" type="password" placeholder="<?php echo $this->__w('Password'); ?>"></input></div>
+            <br/>
+            <?php echo $this->__w('Username / Email'); echo $alsoLoginWithPhonenumber?>:
+            <div class="username"><input class="tstextfield" name="username" type="textfield" placeholder=''></input></div>
+            <br/><?php echo $this->__w('Password'); ?>
+            <div class="password"><input class="tstextfield" name="password" type="password" placeholder=""></input></div>
             <input type="hidden" name="loginbutton" value="true"/>
+            <br/>
             <span class="loginbutton gs_button" type="submit"><? echo $this->__f("Login"); ?></span>
             <br><span class="recoverpassword gs_button"><?php echo $this->__w('Recover password'); ?></span>
         </div>

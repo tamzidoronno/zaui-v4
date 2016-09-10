@@ -1,6 +1,6 @@
 app.ProMeisterUserTestList = {
     init: function() {
-        $(document).on('click', '.ProMeisterUserTestList .test', app.ProMeisterUserTestList.startTest);
+        $(document).on('click', '.ProMeisterUserTestList .test.dotest', app.ProMeisterUserTestList.startTest);
     },
     
     startTest: function() {

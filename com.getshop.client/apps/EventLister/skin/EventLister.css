@@ -90,6 +90,10 @@
     background-color: #F0f0f0;
 }
 
+.EventLister .eventline.hidden a {
+    color: #BBB !important;
+}
+
 @media screen and (max-width: 599px) {
     
     .EventLister .col { display: inline-block; width: 100% !important;  padding: 4px; box-sizing: border-box; }   

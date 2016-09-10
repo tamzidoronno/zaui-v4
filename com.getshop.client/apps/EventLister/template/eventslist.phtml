@@ -84,8 +84,9 @@ echo "<div class='eventlist'>";
                 $canSignUp = false;
             }
             
+            $hiddenClass = $event->isHidden ? "hidden" : "";
             ?>
-            <div class='eventline' style='display: inline-block;'>
+            <div class='eventline <? echo $hiddenClass; ?>' style='display: inline-block;'>
             <?
             
             echo "<a href='/$pageId'>";

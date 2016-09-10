@@ -7,7 +7,8 @@ $userid = $_POST['userid'];
 
 foreach ($companies as $company) {
     $companyId = $company->id;
-    echo "<div gss_method='addCompanyToUser' gss_fragment='companies' gss_view='gss_view_of_companies_user_has' gss_value='$userid' gss_value_2='$companyId' class='gss_company_search_row'> $company->name <i class='fa fa-plus'></i></div>";
+    $reference = $company->reference ? "- ".$company->reference : "";
+    echo "<div gss_method='addCompanyToUser' gss_fragment='companies' gss_view='gss_view_of_companies_user_has' gss_value='$userid' gss_value_2='$companyId' class='gss_company_search_row'> $company->name $reference<i class='fa fa-plus'></i></div>";
 }
 ?>
 

@@ -27,15 +27,30 @@ class C3Projects extends \MarketingApplication implements \Application {
         $this->getApi()->getC3Manager()->deleteProject($_POST['value']);
     }
     
-    public function saveProject(\core_c3_C3Project $project) {
+    public function saveProject() {
         $project = $this->getApi()->getC3Manager()->getProject($_POST['value']);
+        $this->addWorkPackages($project);
         $this->saveProjectInternal($project);
     }
     
     public function saveProjectInternal(\core_c3_C3Project $project) {
         $project->name = $_POST['name'];
         $project->projectNumber = $_POST['projectid'];
-        $this->getApi()->getC3Manager()->saveProject($project);
+        $project->projectOwner = $_POST['projectOwner'];
+        $savedProject = $this->getApi()->getC3Manager()->saveProject($project);
+        $_POST['value'] = $savedProject->id;
+    }
+
+    public function addWorkPackages(\core_c3_C3Project $project) {
+        $workPackages = $this->getApi()->getC3Manager()->getWorkPackages();
+        $workPackagesToAdd = [];
+        foreach ($workPackages as $workPackage) {
+            if ($_POST['wp_'.$workPackage->id] == "true") {
+                $workPackagesToAdd[] = $workPackage->id;
+            }
+        }
+        
+        $project->workPackages = $workPackagesToAdd;
     }
 
 }

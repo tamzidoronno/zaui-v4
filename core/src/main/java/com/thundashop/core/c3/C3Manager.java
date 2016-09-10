@@ -73,9 +73,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     }
 
     @Override
-    public void saveProject(C3Project project) {
+    public C3Project saveProject(C3Project project) {
         saveObject(project);
         projects.put(project.id, project);
+        
+        finalizeProject(project);
+        return project;
     }
 
     @Override

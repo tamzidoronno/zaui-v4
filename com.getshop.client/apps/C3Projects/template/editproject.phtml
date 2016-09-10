@@ -1,27 +1,28 @@
 <?
 /* @var $this ns_74d458f4_3203_4488_813d_65741a0213c9\C3Projects */
 $project = $this->getApi()->getC3Manager()->getProject($_POST['value']);
+$companies = $this->getApi()->getC3Manager()->getProjects();
 ?>
 
 <div class='gss_settings_header'>
 
     <input gs_model='projectmodel' type='hidden' value='<? echo $project->id; ?>' gs_model_attr='value'>
-    
+
     <span class="fa-stack fa-lg" style="margin-right: 50px;">
-        <i class="fa fa-briefcase fa-stack-1x"></i>
+        <i class="fa fa-line-chart fa-stack-1x"></i>
     </span>
 
     <div class='gss_settings_header_description'>
         <div class='gss_settings_header_title'>
-            <? echo $this->__f("Create new workpackage"); ?>
+            <? echo $this->__f("Project settings"); ?>
         </div>
         <div class='gss_settings_header_description_inner'>
             <?
-            echo $this->__f("Fill out the form below to create a new workpackage.");
+            echo $this->__f("Enter the information in the fields below.");
             ?>	
         </div>
-
     </div>	
+
 </div>
 
 <div class='gss_settings_content'>
@@ -32,7 +33,7 @@ $project = $this->getApi()->getC3Manager()->getProject($_POST['value']);
             <?php echo $this->__("Name of the project."); ?>
         </div>
     </div>
-    
+
     <div class="textfield gss_setting"  id="projectid">
         <span class="title"><?php echo $this->__f("Projectnumber"); ?></span>
         <input type="textfield" gs_model='projectmodel' gs_model_attr='projectid' value="<? echo $project->projectNumber; ?>" placeholder="XXXXXX">
@@ -40,11 +41,26 @@ $project = $this->getApi()->getC3Manager()->getProject($_POST['value']);
             <?php echo $this->__("Project number."); ?>
         </div>
     </div>
+    
+    <div class="gss_setting" id="language">
+        <div class="text inline title">Prosjektansvarlig</div>
 
-    <div class='gss_button_area'>
-        <div class="gss_button" gss_fragment="projectlist" gss_view="gs_c3project_workarea" gss_method="deleteProject" gss_model="projectmodel"><i class='fa fa-remove'></i><?php echo $this->__("Delete project"); ?></div>
-        <div class="gss_button" gss_fragment="editproject" gss_view="gs_c3project_workarea" gss_method="saveProject" gss_model="projectmodel"><i class='fa fa-plus'></i><?php echo $this->__("Create project"); ?></div>
+        <div class="gss_dropdown">
+            <select class="config" gs_model="projectmodel" gs_model_attr="projectOwner">
+                <?
+                $selected = !$project->projectOwner ? "selected='true'" : "";
+                ?>
+                <option <? echo $selected; ?> value="none">Ingen</option>
+                <?
+                foreach ($companies as $company) {
+                    $selected = $company->id == $project->projectOwner ? "selected='true'" : "";
+                    echo '<option '.$selected.' value="' . $company->id . '">' . $company->name . '</option>';
+                }
+                ?>
+            </select>
+        </div>
     </div>
+    
 </div>
 
 <div class='gss_settings_content'>
@@ -54,18 +70,24 @@ $project = $this->getApi()->getC3Manager()->getProject($_POST['value']);
         ?>
         <div class="textfield gss_setting"  id="editor">
             <span class="title"><?php echo $package->name; ?></span>
-            <div class="gss_onoff" gs_model="usermodel" gs_model_attr="iseditor">
+            <div class="gss_onoff" gs_model="projectmodel" gs_model_attr="wp_<? echo $package->id; ?>">
                 <?
-//                $faclass = $user->type == 50 ? "fa-toggle-on" : "fa-toggle-off";
-                $faclass = "fa-toggle-off";
+                $faclass = in_array($package->id, $project->workPackages) ? "fa-toggle-on" : "fa-toggle-off";
                 ?>
                 Off<i class="fa <? echo $faclass; ?> "></i>On
             </div>
             <div class="description">
-                <?php echo $package->description; ?>
+    <?php echo $package->description; ?>
             </div>
         </div>
-        <?
-    }
-    ?>
+    <?
+}
+?>
+</div>
+
+<div class='gss_settings_content'>
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_fragment="projectlist" gss_view="gs_c3project_workarea" gss_method="deleteProject" gss_model="projectmodel"><i class='fa fa-remove'></i><?php echo $this->__("Delete project"); ?></div>
+        <div class="gss_button" gss_fragment="editproject" gss_view="gs_c3project_workarea" gss_method="saveProject" gss_model="projectmodel"><i class='fa fa-plus'></i><?php echo $this->__("Save project"); ?></div>
+    </div>
 </div>

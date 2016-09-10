@@ -6,6 +6,8 @@
 package com.thundashop.core.c3;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,5 +16,6 @@ import com.thundashop.core.common.DataCommon;
 public class C3Project extends DataCommon {
     public String name = "";
     public String projectNumber = "";
-    
+    public String projectOwner = "";
+    public List<String> workPackages = new ArrayList();
 }

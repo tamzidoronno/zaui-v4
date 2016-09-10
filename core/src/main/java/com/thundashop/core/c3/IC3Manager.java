@@ -26,7 +26,7 @@ interface IC3Manager {
     public WorkPackage getWorkPackage(String id);
     
     @Administrator
-    public void saveProject(C3Project project);
+    public C3Project saveProject(C3Project project);
     
     @Administrator
     public void deleteProject(String projectId);

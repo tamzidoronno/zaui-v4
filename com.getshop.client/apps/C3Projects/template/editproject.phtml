@@ -88,6 +88,6 @@ $companies = $this->getApi()->getC3Manager()->getProjects();
 <div class='gss_settings_content'>
     <div class='gss_button_area'>
         <div class="gss_button" gss_fragment="projectlist" gss_view="gs_c3project_workarea" gss_method="deleteProject" gss_model="projectmodel"><i class='fa fa-remove'></i><?php echo $this->__("Delete project"); ?></div>
-        <div class="gss_button" gss_fragment="editproject" gss_view="gs_c3project_workarea" gss_method="saveProject" gss_model="projectmodel"><i class='fa fa-plus'></i><?php echo $this->__("Save project"); ?></div>
+        <div class="gss_button" gss_fragment="editproject" gss_view="gs_c3project_workarea" gss_method="saveProject" gss_success_message="Saved" gss_model="projectmodel"><i class='fa fa-plus'></i><?php echo $this->__("Save project"); ?></div>
     </div>
 </div>

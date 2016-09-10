@@ -1,0 +1,35 @@
+<?
+/* @var $this ns_2ed184ce_36b6_4462_950d_e1451496c384\C3FinanceTypes */
+$group = $this->getGroup();
+$groupInfo = $this->getApi()->getC3Manager()->getGroupInformation($group->id);
+?>
+
+<div class='gss_settings_content gss_overrideapp' style="position: relative;" gss_use_app_id="2ed184ce-36b6-4462-950d-e1451496c384">
+
+    <input type="hidden" gs_model="c3fin" gs_model_attr="groupid" value="<? echo $group->id; ?>"/>
+    <div class="textfield gss_setting" id="">
+        <span class="title"><?php echo $this->__f("Forskningsrådet"); ?></span>
+        <div class="gss_onoff" gs_model="c3fin" gs_model_attr="forskning">
+            <? $faclass = $groupInfo->financalForskning ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("Har denne gruppen tilgang til å føre kostnader på forskningsrådet?"); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting" id="">
+        <span class="title"><?php echo $this->__f("Egenfinansiering"); ?></span>
+        <div class="gss_onoff" gs_model="c3fin" gs_model_attr="egen">
+            <? $faclass = $groupInfo->financalEgen == "true" ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+        <div class="description">
+            <?php echo $this->__("Har denne gruppen tilgang til å føre kostnader på egenfinansiering?"); ?>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveFinance" gss_model="c3fin" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+    </div>
+</div>

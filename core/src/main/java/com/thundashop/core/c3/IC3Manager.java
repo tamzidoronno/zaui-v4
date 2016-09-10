@@ -16,7 +16,7 @@ import java.util.List;
 @GetShopApi
 interface IC3Manager {
     @Administrator
-    public void saveWorkPackage(WorkPackage workPackage);
+    public WorkPackage saveWorkPackage(WorkPackage workPackage);
     
     @Administrator
     public void deleteWorkPackage(String workPackageId);
@@ -34,5 +34,31 @@ interface IC3Manager {
     public List<C3Project> getProjects();
     
     public C3Project getProject(String id);
+
+    @Administrator
+    public List<C3Project> search(String searchText);
     
+    @Administrator
+    public void assignProjectToCompany(String companyId, String projectId);
+    
+    @Administrator
+    public List<C3Project> getAllProjectsConnectedToCompany(String compnayId);
+    
+    @Administrator
+    public void removeCompanyAccess(String projectId, String companyId);
+    
+    @Administrator
+    public void setProjectAccess(String companyId, String projectId, String workPackageId, boolean value);
+    
+    @Administrator
+    public void setProjectCust(String companyId, String projectId, String workPackageId, int year, int price);
+
+    public List<UserProjectAccess> getAccessList();
+    
+    public int getPercentage(String companyId, String workPackageId, String projectId, int year);
+    
+    @Administrator
+    public void saveGroupInfo(String groupId, String type, boolean value);
+    
+    public C3GroupInformation getGroupInformation(String groupId);
 }

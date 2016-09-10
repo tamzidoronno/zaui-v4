@@ -1,0 +1,67 @@
+<?
+/* @var $this \ns_74d458f4_3203_4488_813d_65741a0213c9\C3Projects */
+$company = $this->getCurrentCompany();
+$projects = $this->getApi()->getC3Manager()->getAllProjectsConnectedToCompany($company->id);
+
+if (!count($projects)) {
+    echo "No projects connected yet";
+    return;
+}
+
+?>
+<div style="padding: 20px;">
+    Activate workpackages for the projects below that the company should have access to. Also set the project/contract values as this is used for calculating the difference percentage load for each workpackage. To add more projects you can search below.
+</div>
+<?
+
+foreach ($projects as $project) {
+    $startDate = date('Y', strtotime($project->rowCreatedDate));
+    $futureDate = date('Y-m-d', strtotime('+3 year'));
+
+    ?>
+    <div class='gss_c3_company_project'>
+        <div class='gss_c3_project_title'><? echo $project->name; ?></div>
+        <div class='gss_c3_workpackages'>
+            <b>Workpackages:</b>
+            <?
+            foreach ($project->workPackages as $packageId) {
+                $workPackage = $this->getApi()->getC3Manager()->getWorkPackage($packageId);
+                ?>
+                <div class="textfield gss_setting" id="">
+                    <span class="title"><?php echo $workPackage->name; ?></span>
+                    <div class="gss_onoff" c3projectcompany="true" companyId="<? echo $company->id;?>" wpId="<? echo $workPackage->id; ?>" projectId="<? echo $project->id; ?>" gs_model="storesettings" gs_model_attr="wp_<? echo $packageId."_".$project->id; ?>">
+                        <? $faclass = $this->hasProjectWorkPackage($packageId, @$project->activatedCompanies->{$company->id}->activeWorkPackaged) ? "fa-toggle-on" : "fa-toggle-off"; ?>
+                        <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+                    </div>
+                    <div class="description">
+                        <?php echo $workPackage->description ?>
+                    </div>
+                
+                    <div>
+                        <?
+                        $settings = @$project->activatedCompanies->{$company->id}->activeWorkPackaged->{$workPackage->id};
+                        if ($settings) {
+                        ?>
+                            Contract/Project value:
+                            <?
+                            
+                            for ($i=$startDate; $i<=$futureDate; $i++) {
+                                $cost = isset($settings->projectCost->{$i}) ? $settings->projectCost->{$i} : 0;
+                                echo "<div style='padding-left: 10px;'> <span class='gss_c3_changeCost' year='$i' companyId='$company->id' projectId='$project->id' wpId='$packageId' currentValue='$cost'>(Change)</span> ".$i.": Kr $cost,-</div>";
+                            }
+                            
+                        }
+                        ?>
+                    </div>
+                </div>
+                <?
+            }
+            ?>
+            
+            <br/>
+            <div gss_method="removeAccess" gss_value="<? echo $project->id; ?>" gss_view="c3projects_connected_companies" gss_fragment="connectedProjects" gss_value_2="<? echo $company->id; ?>" class="gs_shop_small_icon"><i class="fa fa-remove"></i>Fjern tilgang</div>
+        </div>
+    </div>
+    <?
+}
+?>

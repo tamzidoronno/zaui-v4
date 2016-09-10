@@ -126,5 +126,20 @@ class Company extends \SystemApplication implements \Application {
         
         return "Search for company";
     }
+    
+    public function getAppsWithPrintingToCompany() {
+        $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
+        $retApps = [];
+        foreach ($apps as $appSetting) {
+            $instance = $this->getFactory()->getApplicationPool()->createInstace($appSetting);
+            if (method_exists($instance, "renderCompanySettings")) {
+                $retApps[] = $instance;
+            }
+        }
+        
+        return $retApps;
+    }
+
+    
 }
 ?>

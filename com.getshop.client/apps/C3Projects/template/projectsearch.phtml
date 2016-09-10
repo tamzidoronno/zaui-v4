@@ -1,0 +1,15 @@
+<?
+/* @var $this \ns_74d458f4_3203_4488_813d_65741a0213c9\C3Projects */
+
+
+$projects = $this->getApi()->getC3Manager()->search($_POST['value']);
+foreach ($projects as $project) {
+    echo "<div>";
+        ?>
+        <div class='gs_shop_small_icon' gss_view='c3projects_connected_companies' gss_value='<? echo $project->id; ?>' gss_value_2='<? echo $_POST['companyid']; ?>' gss_fragment='connectedProjects' gss_method='addCompany'><i class='fa fa-plus'></i></div>
+        <?
+
+        echo $project->name;
+    echo "</div>";
+}
+?>

@@ -2,6 +2,9 @@
 namespace ns_74d458f4_3203_4488_813d_65741a0213c9;
 
 class C3Projects extends \MarketingApplication implements \Application {
+
+    private $company;
+
     public function getDescription() {
         
     }
@@ -53,5 +56,51 @@ class C3Projects extends \MarketingApplication implements \Application {
         $project->workPackages = $workPackagesToAdd;
     }
 
+    public function renderCompanySettings($company) {
+        $this->company = $company;
+        $this->includefile("companysettings");
+    }
+    
+    function getCurrentCompany() {
+        if (isset($_POST['value2'])) {
+            return $this->getApi()->getUserManager()->getCompany($_POST['value2']);
+        }
+        return $this->company;
+    }
+    
+    public function searchforprojects() {
+    }
+    
+    public function addCompany() {
+        $projectId = $_POST['value'];
+        $companyId = $_POST['value2'];
+        
+        $this->getApi()->getC3Manager()->assignProjectToCompany($companyId, $projectId);
+    }
+    
+    public function updateWorkPackageProjectCompany() {
+        $this->getApi()->getC3Manager()->setProjectAccess($_POST['companyId'], $_POST['projectId'], $_POST['wpId'], $_POST['val']);
+    }
+    
+    public function removeAccess() {
+        $projectId = $_POST['value'];
+        $companyId = $_POST['value2'];
+        
+        $this->getApi()->getC3Manager()->removeCompanyAccess($projectId, $companyId);
+    }
+
+    public function hasProjectWorkPackage($packageId, $workPackages) {
+        foreach ($workPackages as $id => $pack) {
+            if ($packageId == $id) {
+                return true;
+            } 
+        }
+        
+        return false;
+    }
+
+    public function updateProjectCost() {
+        $this->getApi()->getC3Manager()->setProjectCust($_POST['companyId'], $_POST['projectId'], $_POST['wpId'], $_POST['year'], $_POST['price']);
+    }
 }
 ?>

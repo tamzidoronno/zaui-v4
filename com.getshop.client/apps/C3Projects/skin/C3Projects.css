@@ -32,3 +32,24 @@
     width: 1000px;
 
 }
+
+.gss_c3_company_project .gss_c3_project_title {
+    text-align: center;
+    border-bottom: solid 1px #DDD;
+    background-color: #EEE;
+    line-height: 25px;
+}
+.gss_c3_company_project .gss_c3_workpackages {
+    padding: 20px;
+    
+}
+
+.gss_c3_company_project {
+    border: solid 1px #DDD;
+    margin-bottom: 20px;
+}
+
+.gss_c3_changeCost {
+    color: blue;
+    cursor: pointer;
+}

@@ -12,8 +12,9 @@ import java.io.Serializable;
  * @author ktonder
  */
 public class GroupLocationInformation implements Serializable {
-    public String yourName = "";
-    public String Email = "";
+    public String name = "";
+    public String email = "";
     public String cellPhone = "";
     public String other = ""; 
+    public String groupId = "";
 }

@@ -260,6 +260,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
 
         private void checkBatteryStatus() throws Exception {
+            Calendar cal = Calendar.getInstance();
+            int hour = cal.get(Calendar.HOUR_OF_DAY);
+            if(hour > 10) {
+                return;
+            }
             logPrint("Checking for battery for " + device.name + " (" + device.zwaveid + ")");
             String postfix = "ZWave.zway/Run/devices["+device.zwaveid+"].instances[0].commandClasses[128].Get()";
             postfix = URLEncoder.encode(postfix, "UTF-8");

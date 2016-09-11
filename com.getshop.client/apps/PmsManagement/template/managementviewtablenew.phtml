@@ -172,7 +172,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         if($room->keyIsReturned) {
             $row['room'] .=  '<i class="fa fa-key" title="Key has been returned" style="color:green;"></i> ';
         }
-        $row['room'] = $room->room;
+        $row['room'] .= $room->room;
         $row['room'] .= "<div class='secondary_text'>".$room->roomType."</div>";
         $row['price'] = round($room->price);
         $row['state'] = $room->progressState;

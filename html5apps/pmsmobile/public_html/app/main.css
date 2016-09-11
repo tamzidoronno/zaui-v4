@@ -21,7 +21,7 @@ body { background-color:#3a99d7; }
 .roomrow { border-bottom: solid 1px; color:#fff !important; cursor:pointer; padding:0px; }
 .roomrow.notstarted,
 .roomrow.confirmed
-{ background-color:#efefef; color:#000 !important; }
+{ background-color:#fff; color:#000 !important; }
 .roomrow.test { background-color: #e38d13; color:#fff !important; }
 .roomrow.started a,
 .roomrow.active a,

@@ -27,6 +27,6 @@
 .PmsAvailabilityTimeline .detailedview .valueentry_item,
 .PmsAvailabilityTimeline .detailedview .valueentry_placeholder
 { width: 100px; }
-
+.PmsAvailabilityTimeline .needcleaning { background-color: #efefef;}
 .PmsAvailabilityTimeline .detailedview .room_desc { font-size: 8px; }
 .PmsAvailabilityTimeline .available { background-color: #a4ffa4;color: black; border-color:#bbb; }

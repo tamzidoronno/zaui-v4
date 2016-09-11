@@ -1354,9 +1354,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 tmpres.time = tl.start.getTime();
                 
                 if(!tmpres.bookingIds.isEmpty()) {
-                    PmsBooking booking = getBookingFromBookingEngineId(tmpres.bookingIds.get(0));
-                    User user = userManager.getUserById(booking.userId);
-                    tmpres.name = user.fullName;
+                    Booking bookingEngineBooking = bookingEngine.getBooking(tmpres.bookingIds.get(0));
+                    if(bookingEngineBooking.source != null && !bookingEngineBooking.source.isEmpty()) {
+                        tmpres.name = bookingEngineBooking.source;
+                    } else {
+                        PmsBooking booking = getBookingFromBookingEngineId(tmpres.bookingIds.get(0));
+                        User user = userManager.getUserById(booking.userId);
+                        tmpres.name = user.fullName;
+                    }
                 }
                 
                 itemCountLine.put(tl.start.getTime(), tmpres);
@@ -3651,5 +3656,58 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsMailStatistics mailer = new PmsMailStatistics(webAddress, user.username, user.metaData.get("password"), null, "");
         Thread t = new Thread(mailer, "My Thread");
         t.start();
+    }
+
+    public void checkForRoomsToClose() {
+        Date start = new Date();
+        Calendar cal = Calendar.getInstance();
+        int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
+        if(hourOfDay < 16 || hourOfDay > 20) {
+            return;
+        }
+        
+        cal.setTime(start);
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        cal.set(Calendar.HOUR, 8);
+        cal.set(Calendar.MINUTE, 0);
+        Date end = cal.getTime();
+        
+        
+        
+        List<BookingItem> items = bookingEngine.getAllAvailbleItems(start, end);
+        
+        List<PmsAdditionalItemInformation> additionals = getAllAdditionalInformationOnRooms();
+        HashMap<String, PmsAdditionalItemInformation> additionalMap = new HashMap();
+        for(PmsAdditionalItemInformation t : additionals) {
+            additionalMap.put(t.itemId, t);
+        }
+        
+        for(BookingItem item : items) {
+            PmsAdditionalItemInformation additional = additionalMap.get(item.id);
+            if(!additional.isClean()) {
+                System.out.println("We need to close down room: " + item.bookingItemName);
+                closeItem(item.id, start, end, "cleaning");
+            }
+        }
+    }
+
+    public boolean closeItem(String id, Date start, Date end, String source) {
+        BookingItem item = bookingEngine.getBookingItem(id);
+        
+        Booking booking = new Booking();
+        booking.source = source;
+        booking.startDate = start;
+        booking.endDate = end;
+        booking.bookingItemId = id;
+        booking.bookingItemTypeId = item.bookingItemTypeId;
+        
+        List<Booking> toAdd = new ArrayList();
+        toAdd.add(booking);
+        if(!bookingEngine.canAdd(booking)) {
+            return false;
+        }
+        
+        bookingEngine.addBookings(toAdd);
+        return true;
     }
 }

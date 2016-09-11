@@ -10,15 +10,13 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
 foreach($types as $type) {
     $types[$type->id] = $type;
 }
-$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
-foreach($items as $item) {
-    $items[$item->id] = $item;
-}
+$items = $this->indexList($this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName()));
 $viewtype = array();
 $viewtype['types'] = "Types";
 $viewtype['items'] = "Rooms";
 
 $printTypeOverview = $this->printTypes();
+
 
 /* @var $this ns_176ea989_c7bb_4cef_a4bd_0c8421567e0b\PmsAvailabilityTimeline */
 $start = date("d.m.Y", $this->getStart());
@@ -45,7 +43,27 @@ if($compact) {
         }
         ?>
     </select>
-    <input gstype="submit" type="button" value="<? echo $this->__w("Load"); ?>">
+    <input gstype="submit" type="button" value="<? echo $this->__w("Show"); ?>">
+    <input type='button' style='float:right;' onclick="$('.closeRoomOption').show();" value="Close a room">
+</div>
+<br>
+<div gstype="form" method="closeRoom" style='display:none;' class='closeRoomOption'>
+    Choose a room to close down: <br>
+    <select gsname='itemid'>
+        <?php
+        foreach($items as $item) {
+            echo "<option value='".$item->id."'>" . $item->bookingItemName . "</option>";
+        }
+        ?>
+    </select>
+    <input type="text" gsname='start' value='<? echo $start; ?>'>
+    <input type="text" gsname='end' value='<? echo $end; ?>'>
+    <input gstype="submit" type="button" value="<? echo $this->__w("Close room"); ?>">
+    <?php
+    if($this->roomWhereNotClosed) {
+        echo "<div style='color:red; font-size: 20px;'>* Can not close this room since there are booking depending on it, this needs to be cleared out first.</div>";
+    }
+    ?>
 </div>
 <input type='hidden' value='<?php echo $this->getConfigurationSetting("pmsmanagerinstanceid"); ?>' id='bookinginstanceid'>
 <div class='timelineresult'>
@@ -163,6 +181,7 @@ if($compact) {
                     $printed = false;
                 }
             }
+            
             if(!$printed) {
                 $name = $this->makeInitials($value->name);
                 $name = htmlentities($name);
@@ -174,6 +193,18 @@ if($compact) {
                     }
                 }
             }
+            
+            if($value->name == "cleaning") {
+                $free = "needcleaning";
+                if($name)
+                    $name = "<i class='fa fa-trash-o' gstype='clicksubmit' method='deletebooking' gsvalue='".$id."' gsname='id'></i>";
+            }
+            if($value->name == "closed") {
+                $free = "closedroom";
+                if($name)
+                    $name = "<i class='fa fa-trash-o' gstype='clicksubmit' method='deletebooking' gsvalue='".$id."' gsname='id'></i>";
+            }
+            
             echo "<span class='valueentry $free' time='$time' itemid='".$itemId."' bid='$id'>&nbsp;&nbsp;$name</span>";
             if($isTaken) {
                 $printed = true;

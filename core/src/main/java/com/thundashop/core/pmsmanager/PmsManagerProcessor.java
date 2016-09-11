@@ -12,6 +12,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import org.joda.time.DateTime;
 
@@ -57,6 +58,7 @@ public class PmsManagerProcessor {
         try { createPeriodeInvoices(); }catch(Exception e) { e.printStackTrace(); }
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
         try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
+        try { checkForRoomToClose(); }catch(Exception e) {}
     }
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
@@ -581,6 +583,9 @@ public class PmsManagerProcessor {
         }
         
         for(Booking test : allBookings) {
+            if(test.source != null && !test.source.isEmpty()) {
+                continue;
+            }
             if(!allBookingIds.contains(test.id)) {
                 manager.messageManager.sendErrorNotification(test.id + " this is missing on the bookingengine, the booking engine and the pms manager is out of sync: " + test.startDate + " - " + test.endDate + ", created: " + test.rowCreatedDate, null);
                 manager.bookingEngine.deleteBooking(test.id);
@@ -760,5 +765,9 @@ public class PmsManagerProcessor {
         }
         
         return false;
+    }
+
+    private void checkForRoomToClose() {
+        manager.checkForRoomsToClose();
     }
 }

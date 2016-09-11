@@ -237,4 +237,9 @@ public interface IPmsManager {
     @Administrator
     public void mergeBookingsOnOrders();
     
+    @Administrator
+    public void checkForRoomsToClose();
+    
+    @Administrator
+    public boolean closeItem(String id, Date start, Date end, String source);
 }

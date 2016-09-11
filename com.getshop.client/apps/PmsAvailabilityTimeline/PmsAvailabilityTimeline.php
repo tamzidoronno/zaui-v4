@@ -2,6 +2,7 @@
 namespace ns_176ea989_c7bb_4cef_a4bd_0c8421567e0b;
 
 class PmsAvailabilityTimeline extends \WebshopApplication implements \Application {
+    public $roomWhereNotClosed = false;
     public function getDescription() {
         
     }
@@ -124,6 +125,18 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     
     public function loadHover() {
         $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedName(), $_POST['data']['bookingid']);
+        if(!$booking) {
+            $bookingfromengine = $this->getApi()->getBookingEngine()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
+            $source  = $bookingfromengine->source;
+            if($source == "cleaning") {
+                echo "This room is marked as unavailable because it has not been cleaned.";
+            } else if($source == "closed") {
+                echo "This has been closed off.";
+            } else {
+                echo "This booking is a placeholder booking for source: " . $bookingfromengine->source;
+            }
+            return;
+        }
         $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
         echo "<b>" . $user->fullName . "</b><br>";
         foreach($booking->rooms as $room) {
@@ -146,6 +159,10 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         return strtotime(date("d.m.Y 16:00", $time));
     }
 
+    public function deletebooking() {
+        $this->getApi()->getBookingEngine()->deleteBooking($this->getSelectedName(), $_POST['data']['id']);
+    }
+    
     public function getEnd() {
         $data = $this->getData();
         $time = time()+(86400*7);
@@ -193,6 +210,15 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
             return false;
         }
         return $data['compactmode'];
+    }
+
+    
+    public function closeRoom() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $item = $_POST['data']['itemid'];
+        $closed = $this->getApi()->getPmsManager()->closeItem($this->getSelectedName(), $item, $start, $end, "closed");
+        $this->roomWhereNotClosed = !$closed;
     }
 
 }

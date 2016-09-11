@@ -29,6 +29,10 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function checkForRoomsToClose() {
+        $this->getApi()->getPmsManager()->checkForRoomsToClose($this->getSelectedName());
+    }
+    
     public function setNewSorting() {
         $i = 1;
         foreach($_POST['data']['sortlist'] as $itemid) {

@@ -43,10 +43,11 @@
             <span class='col-xs-2 roominfoblock'>
                 <div>
                     <span class='roominfo'>
-                        <i class='fa fa-smile-o' ng-show="{{room.checkedIn}}">&nbsp;{{room.room}}</i>
+                        <i class='fa fa-smile-o' ng-show="room.transferredToArx && !room.checkedIn" style='color:black;'>&nbsp;</i>
+                        <i class='fa fa-smile-o' ng-show="{{room.checkedIn}}">&nbsp;</i>
                         <i class='fa fa-bell' ng-show="{{room.checkingIntToday}}"></i>
                     </span>
-                    <span ng-show="{{!room.checkedIn}}">{{room.room}}</span>
+                    {{room.room}}
                     <div><i class='fa fa-users'></i> {{room.numberOfGuests}}</div>
                     <div>{{room.code}}</div>
                 </div>

@@ -32,8 +32,8 @@
             }
             var hostToUse = localStorage.getItem("address");
             if(hostToUse) {
-//                getshopclient = new GetShopApiWebSocket(hostToUse, "31332"); //Online
-                getshopclient = new GetShopApiWebSocket(hostToUse, "31330"); //Local
+                getshopclient = new GetShopApiWebSocket(hostToUse, "31332"); //Online
+//                getshopclient = new GetShopApiWebSocket(hostToUse, "31330"); //Local
                 getshopclient.connect();
                 getshopclient.setConnectedEvent(function () {
                     $('.disconnectedPage').fadeOut();

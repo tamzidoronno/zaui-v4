@@ -90,10 +90,16 @@ public class GetShopDevice extends DataCommon {
     }
 
     public boolean oldBatteryStatus() {
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        if(hour > 10) {
+            return false;
+        }
+
+            
         if(batteryLastUpdated == null) {
             return true;
         }
-        Calendar cal = Calendar.getInstance();
         cal.setTime(batteryLastUpdated);
         cal.add(Calendar.DAY_OF_YEAR, 2);
         if(cal.getTime().before(new Date())) {

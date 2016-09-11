@@ -427,7 +427,6 @@ Order number;-;Ordre nummer
 Order subject;-;Emne på eposten
 OrderId;-;Orderid
 OrderManager;-;Ordrebehandling
-Orders;-;Ordrer
 Orders added;-;Ordrer lagt til
 Orders created summary;-;Oppsummering over ordrer opprettet
 Orders done by this user;-;Ordrer gjennomført av denne brukeren

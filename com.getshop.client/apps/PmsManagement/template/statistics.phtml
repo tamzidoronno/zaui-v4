@@ -28,13 +28,13 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
         <tr>
             <th>
                 <i gs_downloadexcelreport="exportBookingStats" title="Download to excel" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="bookingdataexport"></i>
-                Date</th>
-            <th>Spare<br>rooms</th>
-            <th>Rented<br>out</th>
-            <th>Avg.<br>price</th>
-            <th>Total</th>
-            <th>Budget</th>
-            <th>Coverage</th>
+                <?php echo $this->__w("Date"); ?></th>
+            <th><?php echo $this->__w("Spare<br>rooms"); ?></th>
+            <th><?php echo $this->__w("Rented<br>out"); ?></th>
+            <th><?php echo $this->__w("Avg.<br>price"); ?></th>
+            <th><?php echo $this->__w("Total"); ?></th>
+            <th><?php echo $this->__w("Budget"); ?></th>
+            <th><?php echo $this->__w("Coverage"); ?></th>
         </tr>
         <?
         foreach ($stats->entries as $entry) {
@@ -68,11 +68,11 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
             <tr>
                 <th>
                     <i gs_downloadexcelreport="exportSaleStats" title="Download to excel" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="salestats"></i>
-                    Date</th>
-                <th>Nights</th>
-                <th>Orders</th>
-                <th>Avg.<br> order</th>
-                <th>Total</th>
+                    <?php echo $this->__w("Date"); ?></th>
+                <th><?php echo $this->__w("Nights"); ?></th>
+                <th><?php echo $this->__w("Orders"); ?></th>
+                <th><?php echo $this->__w("Avg."); ?><br> order</th>
+                <th><?php echo $this->__w("Total"); ?></th>
             </tr>
             <?
             foreach ($stats->salesEntries as $saleEntry) {

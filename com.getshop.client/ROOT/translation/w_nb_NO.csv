@@ -45,6 +45,8 @@ August;-;August
 Availability;-;Tilgjengelighet
 Available positions;-;Ledige plasser
 Available spots;-;Ledige plasser
+Avg.;-;Gj.snitt
+Avg.<br>price;-;Gjsnitt<br>pris
 Back to page;-;Tilbake til siden
 Background color;-;Bakgrundsfarge
 Background image / styling;-;Bakgrunnsbilde / Styling
@@ -58,6 +60,7 @@ Booking engine name;-;Bookingengine navn
 Bottom spacing;-;Nedre spacing
 BrainTree is a international payment method offering VISA / MasterCard / PayPal etc. Very simple to use and gets you started with visa payment immediatly;-;BrainTree er en internasjonal betalingsmetode som eies av PayPal. De tilbyr betaling med Visa, MasterCard, PayPal, osv. Veldig enkel å bruke og gir det mulighet til å ta imot betaling online med gang.
 Breakfast;-;Frokost
+Budget;-;Budsjett
 Building your store;-;Lag din webbutikk
 Button;-;Knapp
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
@@ -86,6 +89,8 @@ Checkout;-;Utsjekking
 Children;-;Barn
 Choose;-;Velg
 City;-;By
+Cleaning cost;-;Vaskekostnader
+Cleaning count;-;Antall vask
 Click here if you need to add more contacts;-;Trykk her hvis du vil legge til flere kontaktpersoner
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
 Clone cell;-;Klon cellen
@@ -123,6 +128,7 @@ Country prefix for mobile phone;-;Land prefix for mobil telefon
 Coupon;-;Kupong
 Coupon code added;-;Rabattkode som er lagt til
 Coupon discount;-;Kupong avslag
+Coverage;-;Belegg
 Create a booking item;-;Opprett et booking item
 Create a booking item type;-;Opprett en booking item type
 Create a new account;-;Opprett en ny konto
@@ -171,6 +177,7 @@ Download the terms and conditions;-;Last ned bruksvilkårene
 Du har deltatt på følgende kurs;-;Du har deltatt på følgende kurs
 Du skal delta på;-;Du skal delta på
 Duraction (ms);-;Tid (ms)
+Duvet;-;Dyne
 Early checkin;-;Tidlig innsjekk
 Ecommerce settings;-;Netthandel instillinger
 Edit input fields;-;Endre input felter
@@ -321,6 +328,7 @@ NewsLetter;-;Nyhetsbrev
 Next;-; Neste
 Nice modern theme. Could be used for clothing, skateboarding, snowboarding etc.;-;Fint moderne tema. Kan bli brukt for klær, skateboards, snowbards, osv.
 Nice modern theme. Suitable for different carmarkeds.;-;Pent og moderne tema. Godt brukbart i bil markedet.
+Nights;-;Netter
 No;-;Nei
 No available spots left for this event;-;Ingen tilgjengelige plasser på dette kurset
 No code added yet;-;Ingen kode er lagt til enda
@@ -361,6 +369,7 @@ Order history;-;Ordrehistorikk
 Order id;-;Ordreid
 Orderid;-;Ordreid
 Orderlines;-;Ordrelinjer
+Orders;-;Bestillinger
 Organisation;-;Organisasjon
 Organisation name;-;Selskapnavn
 Original (hp);-;Orginal hp
@@ -388,6 +397,7 @@ Payment information;-;Betalings informasjon
 Payment successfully completed;-;Betalingen gjennomført
 Phone;-;Telefon
 Phone number for company;-;Tlf nummer for firmaet
+Pillow;-;Putetrekk
 Pin area;-;Pin til område
 PixelateTheme1;-;PixelateTheme1
 Place order;-;Legg inn ordre
@@ -436,6 +446,7 @@ Reminder;-;Påminnelse
 Reminder sent by email;-;En påmindelse har blitt sendt per epost.
 Remove item;-;Fjern vare
 Remove selected tab;-;Fjern valgte tab
+Rented<br>out;-;Utleid
 Repeat event;-;Repiterende event
 Repeat every;-;Gjenta hver
 Repeat new password;-;Gjenta passord
@@ -488,6 +499,7 @@ Set new password;-;Sett nytt passord
 Settings;-;Instillinger
 Setup and manage your products;-;Legg inn og administrer dine produkter.
 Setup for norwegian avtalegiro.;-;Oppsett for norsk avtalegiro
+Sheet;-;Laken
 Shipment address;-;Forsendelseadresse
 Shipment information;-;Forsendelse informasjon
 Shipment settings;-;Forsendelse
@@ -511,6 +523,7 @@ Slide top (px) (negative is from bottom);-;Slide til toppen (px) (negativt vil v
 Sorry;-;Beklager
 Sorry, but the selected time periode is not available, or incorrect;-;Beklager, men tidsrommet du har valgt er ikke tilgjengelig eller inneholder feil.
 Sorry, this user does not exists, are you sure this is the correct username / email?;-;Beklager, men denne brukereren eksisterer ikke, er du sikker på at det er riktig brukernavn og passord?
+Spare<br>rooms;-;Ledige<br>rom
 Stage 1 (hp):;-;Stage 1 hp:
 Stage 1 (nm):;-;Stage 1 nm:
 Stage 2 (hp):;-;Stage 2 hp:
@@ -531,6 +544,7 @@ Su;-;Sø
 Subject to recipient;-;Tittel på motaker
 Subscription selected;-;Abonnement som er valgt
 Success;-;Success
+Summary;-;Oppsummering
 Sun;-;Søn
 Sunday;-;Søndag
 Tab name;-;Tab navn
@@ -574,6 +588,8 @@ Toggle garage leader;-;Skru av/på firma-eier funksjonen.
 Top spacing;-;Øvre spacing
 Top speed;-;Topp hastighet
 Total;-;Total
+Towel large;-;Håndkle stort
+Towel small;-;Håndkle smått
 Tu;-;Ti
 Tue;-;Tir
 Tuesday;-;Tirsdag

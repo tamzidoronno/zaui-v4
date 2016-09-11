@@ -29,10 +29,11 @@ $cleaningprices = array();
 
 <?php
 $cleanAccs = array();
-$cleanAccs['pute'] = "Pillow";
-$cleanAccs['dyne'] = "Duvet";
-$cleanAccs['handkle_stort'] = "Towel large";
-$cleanAccs['handkle_lite'] = "Towel small";
+$cleanAccs['pute'] = $this->__w("Pillow");
+$cleanAccs['dyne'] = $this->__w("Duvet");
+$cleanAccs['handkle_stort'] = $this->__w("Towel large");
+$cleanAccs['handkle_lite'] = $this->__w("Towel small");
+$cleanAccs['laken'] = $this->__w("Sheet");
 
 $itemsCount = 0;
 $totalCleaningCost = 0;
@@ -56,10 +57,10 @@ foreach($stats as $cleaningstat) {
 
 ?>
 <br><br>
-<h1>Summary</h1>
+<h1><?php echo $this->__w("Summary"); ?></h1>
 <table width='100%' cellspacing='0' cellpadding='0'>
     <tr>
-        <td width='50%'>
+        <td width='50%' valign='top'>
             <table cellspacing='0' cellpadding='0' width='100%'>
                 <tr>
                     <th></th>
@@ -87,7 +88,7 @@ foreach($stats as $cleaningstat) {
             ?>
             </table>
         </td>
-        <td width='50%'>
+        <td width='50%' valign='top'>
             <table cellspacing='0' cellpadding='0' width='100%'>
                 <tr>
                     <th></th>
@@ -136,18 +137,18 @@ foreach($stats as $cleaningstat) {
     </tr>
 </table>
 
-<h1>Cleaning count</h1>
+<h1><?php echo $this->__w("Cleaning count"); ?></h1>
 <table cellspacing='0' cellpadding='0' width='100%'>
     <tr>
         <th>Type</th>
-        <th>Ma</th>
-        <th>Ti</th>
-        <th>On</th>
-        <th>To</th>
-        <th>Fe</th>
-        <th>Lø</th>
-        <th>Sø</th>
-        <th>Total</th>
+        <th><?php echo $this->__w("Mo"); ?></th>
+        <th><?php echo $this->__w("Tu"); ?></th>
+        <th><?php echo $this->__w("We"); ?></th>
+        <th><?php echo $this->__w("Th"); ?></th>
+        <th><?php echo $this->__w("Fr"); ?></th>
+        <th><?php echo $this->__w("Sa"); ?></th>
+        <th><?php echo $this->__w("Su"); ?></th>
+        <th><?php echo $this->__w("Total"); ?></th>
     </tr>
     <?php
     $total = array();
@@ -184,18 +185,18 @@ foreach($stats as $cleaningstat) {
     ?>
 </table>
 <br><br>
-<h1>Cleaning cost</h1>
+<h1><?php echo $this->__w("Cleaning cost"); ?></h1>
 <table cellspacing='0' cellpadding='0' width='100%'>
     <tr>
         <th>Type</th>
-        <th>Ma</th>
-        <th>Ti</th>
-        <th>On</th>
-        <th>To</th>
-        <th>Fe</th>
-        <th>Lø</th>
-        <th>Sø</th>
-        <th>Total</th>
+        <th><?php echo $this->__w("Mo"); ?></th>
+        <th><?php echo $this->__w("Tu"); ?></th>
+        <th><?php echo $this->__w("We"); ?></th>
+        <th><?php echo $this->__w("Th"); ?></th>
+        <th><?php echo $this->__w("Fr"); ?></th>
+        <th><?php echo $this->__w("Sa"); ?></th>
+        <th><?php echo $this->__w("Su"); ?></th>
+        <th><?php echo $this->__w("Total"); ?></th>
     </tr>
     <?php
     $total = array();

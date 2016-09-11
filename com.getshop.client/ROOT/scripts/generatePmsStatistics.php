@@ -79,7 +79,7 @@ foreach($instances as $instance) {
     $filter->filterType = "stats";
     $app->setCurrentFilter($filter);
     echo "<div class='pageheight'>";
-    echo "<h2>Total coverage</h2>";
+    echo "<h2>".$factory->__w("Total coverage")."</h2>";
     $app->includeManagementViewResult();
     echo "</div>";
     

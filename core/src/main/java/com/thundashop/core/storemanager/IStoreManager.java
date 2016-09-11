@@ -47,6 +47,8 @@ public interface IStoreManager {
     public String getKey(String key);
     public String getKeySecure(String key, String password);
     
+    @Administrator
+    public String getCurrentSession() throws Exception;
     
     /**
      * A user can set a different language for its session.

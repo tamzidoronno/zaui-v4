@@ -190,6 +190,9 @@ public interface IPmsManager {
     @Administrator
     public void checkIfGuestHasArrived() throws Exception;
     
+    @Administrator
+    public void sendStatistics() throws Exception;
+    
     public void addAddonsToBooking(Integer type, String roomId, boolean remove);
     public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
     

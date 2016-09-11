@@ -449,4 +449,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             storePool.saveStore(store);
         }
     }
+
+    @Override
+    public String getCurrentSession() throws Exception {
+        return getSession().id;
+    }
 }

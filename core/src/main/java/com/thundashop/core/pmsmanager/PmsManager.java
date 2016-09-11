@@ -36,6 +36,7 @@ import com.thundashop.core.common.GrafanaFeeder;
 import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
@@ -119,6 +120,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     GrafanaManager grafanaManager;
     
+    @Autowired
+    GetShop getShop;
+    
     private String specifiedMessage = "";
     Date lastOrderProcessed;
     private List<PmsLog> logentries = new ArrayList();
@@ -155,6 +159,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
          
+        createScheduler("pmsmailstats", "1 23 * * *", PmsMailStatistics.class);
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
         createScheduler("pmsprocessor3", "1,5,10,15,20,25,30,35,40,45,50,55 * * * *", CheckPmsFiveMin.class);
@@ -3636,5 +3641,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         addBookingToBookingEngine(booking, room);
+    }
+
+    @Override
+    public void sendStatistics() throws Exception {
+        User user = userManager.getInternalApiUser();
+        String webAddress = storePool.getStore(storeId).getDefaultWebAddress();
+        
+        PmsMailStatistics mailer = new PmsMailStatistics(webAddress, user.username, user.metaData.get("password"), null, "");
+        Thread t = new Thread(mailer, "My Thread");
+        t.start();
     }
 }

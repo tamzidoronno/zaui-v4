@@ -26,6 +26,13 @@ public abstract class GetShopSchedulerBase implements Runnable {
     private String multiLevelName;
     private String webAddress;
     
+    public String getUsername() {
+        return username;
+    }
+    public String getPassword() {
+        return password;
+    }
+    
     public GetShopSchedulerBase(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
         this.username = username;
         this.password = password;

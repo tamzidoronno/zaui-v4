@@ -3293,8 +3293,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public List<PmsBooking> getAllBookingsFlat() {
-        return new ArrayList(bookings.values());
-    }
+        return new ArrayList(bookings.values()); 
+   }
 
     private Product getProduct(String productId) {
         if(fetchedProducts.containsKey(productId)) {

@@ -3676,7 +3676,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         cal.setTime(start);
         cal.add(Calendar.DAY_OF_YEAR, 1);
-        cal.set(Calendar.HOUR, 8);
+        cal.set(Calendar.HOUR_OF_DAY, 8);
         cal.set(Calendar.MINUTE, 0);
         Date end = cal.getTime();
         

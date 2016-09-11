@@ -221,5 +221,9 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         $this->roomWhereNotClosed = !$closed;
     }
 
+    public function createDeleteBookingIcon($id) {
+        return "<i class='fa fa-trash-o' gstype='clicksubmit' method='deletebooking' gsvalue='".$id."' gsname='id' style='cursor:pointer;float:left; padding-left: 5px; padding-top: 3px;'></i>";
+    }
+
 }
 ?>

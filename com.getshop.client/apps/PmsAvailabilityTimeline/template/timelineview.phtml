@@ -197,12 +197,12 @@ if($compact) {
             if($value->name == "cleaning") {
                 $free = "needcleaning";
                 if($name)
-                    $name = "<i class='fa fa-trash-o' gstype='clicksubmit' method='deletebooking' gsvalue='".$id."' gsname='id'></i>";
+                    $name = $this->createDeleteBookingIcon($id);
             }
             if($value->name == "closed") {
                 $free = "closedroom";
                 if($name)
-                    $name = "<i class='fa fa-trash-o' gstype='clicksubmit' method='deletebooking' gsvalue='".$id."' gsname='id'></i>";
+                    $name = $this->createDeleteBookingIcon($id);
             }
             
             echo "<span class='valueentry $free' time='$time' itemid='".$itemId."' bid='$id'>&nbsp;&nbsp;$name</span>";

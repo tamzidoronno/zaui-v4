@@ -895,6 +895,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         User loggedOnUser = userManager.getLoggedOnUser();
         
+        if (o.isHidden && (loggedOnUser == null || loggedOnUser.type < 100)) {
+            return false;
+        }
+        
         if (loggedOnUser == null || metaData.publicVisible) {
             return metaData.publicVisible;
         }
@@ -2002,6 +2006,14 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public void toggleLocked(String eventId) {
         Event event = getEvent(eventId);
         event.isLocked = !event.isLocked;
+        saveObject(event);
+        finalize(event);
+    }
+
+    @Override
+    public void toggleHide(String eventId) {
+        Event event = getEvent(eventId);
+        event.isHidden = !event.isHidden;
         saveObject(event);
         finalize(event);
     }

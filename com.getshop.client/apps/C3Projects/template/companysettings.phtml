@@ -1,0 +1,22 @@
+<?
+/* @var $this \ns_74d458f4_3203_4488_813d_65741a0213c9\C3Projects */
+$company = $this->getCurrentCompany();
+
+?>
+<div class="gss_overrideapp" gss_use_app_id="74d458f4-3203-4488-813d-65741a0213c9">
+    
+    <div class='c3projects_connected_companies'>
+        <? $this->includefile("connectedProjects"); ?>
+    </div>
+    
+    <input type='hidden' gs_model='companymodel' gs_model_attr='companyid' value='<?php echo $company->id; ?>'>
+    
+    <div style='position: relative; padding-top: 57px;'>
+        <input style='right: 30px' gs_model='c3projectsearch' gs_model_attr='value' type="textfield" placeholder="" class='gss_search_user_company' /> 
+        <input type='hidden' gs_model="c3projectsearch" gs_model_attr="companyid" value="<? echo $company->id; ?>" />
+        <div id='gss_startSearchForCompany' style='position: absolute; padding: 5px; top: 11px; right: 0px; border: solid 1px #DDD; border-radius: 5px;' gss_method='searchForProjects' gss_model='c3projectsearch' gss_fragment='projectsearch' gss_view='gss_c3project_project_search_result'><i class='fa fa-search'></i></div>
+            
+        <div class='gss_c3project_project_search_result'></div>
+    </div>
+
+</div>

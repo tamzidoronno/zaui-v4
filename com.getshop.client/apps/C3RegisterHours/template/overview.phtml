@@ -1,0 +1,61 @@
+<?
+/* @var $this ns_f1f2c4f4_fc7d_4bec_89ec_973ff192ff6d\C3RegisterHours */
+
+$accessList = $this->getApi()->getC3Manager()->getAccessList();
+$user = $this->getApi()->getUserManager()->getLoggedOnUser();
+
+$groupName = "Ikke tilknyttet";
+$foundGroup = false;
+
+if ($user->companyObject && $user->companyObject->groupId) {
+    $group = $this->getApi()->getUserManager()->getGroup($user->companyObject->groupId);
+    if ($group) {
+        $groupName  = $group->groupName;
+        $foundGroup = true;
+    }
+}
+?>
+<div>
+    Navn: <? echo $user->fullName; ?>
+    <br/>Partner: <? echo $user->companyObject ? $user->companyObject->name : "Ikke tilknyttet"; ?>
+    <br/>Brukergruppe: <? echo  $groupName; ?>
+    
+    <?
+    if ($foundGroup) {
+        echo "<br>";
+        $groupInfo = $this->getApi()->getC3Manager()->getGroupInformation($user->companyObject->groupId);
+        echo "<br/>Kan føre kostnader på forskningsrådets midler? ";
+        echo $groupInfo->financalForskning ? "Ja" : "Nei";
+        
+        echo "<br/>Kan føre kostnader på egenfinaniserte midler? ";
+        echo $groupInfo->financalEgen ? "Ja" : "Nei";
+    }
+    ?>
+</div>
+<br/>
+<?
+
+if (!count($accessList)) {
+    echo "No access";
+    return;
+}
+
+foreach ($accessList as $access) {
+    echo "<div>";
+        $project = $this->getApi()->getC3Manager()->getProject($access->projectId);
+        echo $project->name;
+        
+        echo "<div>";
+            foreach ($access->workPackageIds as $packageId) {
+                $package = $this->getApi()->getC3Manager()->getWorkPackage($packageId);
+                $percentage = $this->getApi()->getC3Manager()->getPercentage($user->companyObject->id, $packageId, $project->id, 2016);
+                echo "<div> &nbsp;&nbsp;&nbsp; ".$package->name."  | Fordeling 2016: ($percentage %)</div>";
+            }
+        echo "</div>";
+        
+    echo "</div>";
+    echo "<br/>";
+}
+
+?>
+

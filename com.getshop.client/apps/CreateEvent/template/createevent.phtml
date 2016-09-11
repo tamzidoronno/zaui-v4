@@ -113,8 +113,20 @@ if ($eventToUse) {
         echo " <div class='shop_button' gsclick='toggleLocked' eventid='$eventToUse->id' >".$lockText."</div>";
     }
     
+    if ($eventToUse) {
+        $lockText = $eventToUse->isHidden ? $this->__f("Unhide event") : $this->__f("Hide event");
+        $hideClass = $eventToUse->isHidden ? "eventhidden" : "";
+        echo " <div class='shop_button $hideClass' gsclick='toggleHide' eventid='$eventToUse->id' >".$lockText."</div>";
+    }
+    
     if ($eventToUse && $this->hasWriteAccess() && count($eventToUse->bookingItem->bookingIds) == 0) {
         echo " <div class='shop_button' style='background-color: red; background: red; color: #FFF;' gsclick='deleteEvent' eventid='$eventToUse->id' gs_confirm='Are you sure you want to delete this event?'>Delete event</div>";
+    }
+    ?>
+    
+    <?
+    if ($eventToUse && $eventToUse->isHidden) {
+        echo "<div style='padding: 10px; padding-top: 0px;'>* This event is hidden, only visible for administrators</div>";
     }
     ?>
 </div>

@@ -23,12 +23,13 @@ if (!count($users) && $this->currentlyLoading != "favor") {
         $group = $company ? $this->getApi()->getUserManager()->getGroup($company->groupId) : "";
         $groupName = $group != null ? $group->groupName : "N/A";
         $companyId = $company ? "companyId='$company->id'" : "";
+        $reference = $company && $company->reference ? " - ".$company->reference : "";
         
         echo "<div class='companyname' $companyId>";
             if ($company) {
                 echo '<i class="fa fa-star-o" gsclick="addToFav" userid="'.$company->id.'"></i>';
             }
-            echo "&nbsp; $companyName ( $groupName )</div>";
+            echo "&nbsp; $companyName ( $groupName $reference)</div>";
 
             echo "<div class='companyUsers' style='$blocked'>";
                 foreach ($users as $user) {

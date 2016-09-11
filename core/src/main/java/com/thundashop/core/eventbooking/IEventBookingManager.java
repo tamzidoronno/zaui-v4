@@ -209,5 +209,9 @@ public interface IEventBookingManager {
     @Administrator
     public void moveUserToEvent(String userId, String fromEventId, String toEventId);
     
+    @Editor
     public void toggleLocked(String eventId);
+    
+    @Editor
+    public void toggleHide(String eventId);
 }

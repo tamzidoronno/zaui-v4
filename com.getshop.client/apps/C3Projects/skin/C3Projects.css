@@ -1,7 +1,55 @@
 
 
+#backsidesettings .gs_c3project_workarea .c3project {
+    position: relative;
+}
+
+#backsidesettings .gs_c3project_workarea .workpackages div {
+    font-size: 30px;
+    
+}
+
+#backsidesettings .gs_c3project_workarea .workpackages {
+    position: absolute;
+    right: 10px;
+    width: 90px;
+    height: 90px;
+    border-radius: 100px;
+    background-color: #DDD;
+    text-align: center;
+    top: 10px;
+    box-sizing: border-box;
+    padding-top: 20px;
+}
+
+
+#backsidesettings .gs_c3project_workarea .user_entry_row .image i {
+    font-size: 70px;
+}
+
 #backsidesettings .gs_c3project_workarea {
     display: inline-block; 
     width: 1000px;
 
+}
+
+.gss_c3_company_project .gss_c3_project_title {
+    text-align: center;
+    border-bottom: solid 1px #DDD;
+    background-color: #EEE;
+    line-height: 25px;
+}
+.gss_c3_company_project .gss_c3_workpackages {
+    padding: 20px;
+    
+}
+
+.gss_c3_company_project {
+    border: solid 1px #DDD;
+    margin-bottom: 20px;
+}
+
+.gss_c3_changeCost {
+    color: blue;
+    cursor: pointer;
 }

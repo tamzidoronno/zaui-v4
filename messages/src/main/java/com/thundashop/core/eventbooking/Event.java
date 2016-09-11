@@ -47,6 +47,8 @@ public class Event extends DataCommon {
     
     public boolean isLocked = false;
     
+    public boolean isHidden = false;
+    
     public String extraInformation = "";
     
     public List<EntryComment> eventComments = new ArrayList();

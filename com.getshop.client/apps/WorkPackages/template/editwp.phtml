@@ -1,6 +1,7 @@
 <?
 /* @var $this \ns_c0f2b792_479c_49ad_8e46_34e50f7f4e88\WorkPackages */
 $package = $this->getApi()->getC3Manager()->getWorkPackage($_POST['value']);
+$companies = $this->getApi()->getUserManager()->getAllCompanies();
 
 ?>
 
@@ -30,10 +31,29 @@ $package = $this->getApi()->getC3Manager()->getWorkPackage($_POST['value']);
 
 <div class='gss_settings_content'>
     <div class="textfield gss_setting"  id="name" >
-        <span class="title"><?php echo $this->__f("Name"); ?></span>
+        <span class="title"><?php echo $this->__f("Arbeidspakke"); ?></span>
         <input type="textfield" gs_model='wpmodel' gs_model_attr='name' placeholder="wp" value="<? echo $package->name; ?>">
         <div class="description">
             <?php echo $this->__("Name of the workpackage that owns this new account."); ?>
+        </div>
+    </div>
+    
+    <div class="gss_setting" id="">
+        <div class="text inline title">Ansvarlig for denne arbeidspakken</div>
+
+        <div class="gss_dropdown">
+            <select class="config" gs_model="wpmodel" gs_model_attr="owner">
+                <?
+                $selected = !$package->owner ? "selected='true'" : "";
+                ?>
+                <option <? echo $selected; ?> value="none">Ingen</option>
+                <?
+                foreach ($companies as $company) {
+                    $selected = $company->id == $package->owner ? "selected='true'" : "";
+                    echo '<option '.$selected.' value="' . $company->id . '">' . $company->name . '</option>';
+                }
+                ?>
+            </select>
         </div>
     </div>
     
@@ -41,7 +61,7 @@ $package = $this->getApi()->getC3Manager()->getWorkPackage($_POST['value']);
         <span class="title">Description of workpackage</span>
         <textarea gs_model="wpmodel" gs_model_attr="description" style="position: initial; width: 945px; height: 300px;"><? echo $package->description; ?></textarea>
     </div>
-
+    
     <div class='gss_button_area'>
         <div class="gss_button" gss_fragment="wplist" gss_view="gs_wp_workarea" gss_method="deleteWorkPackage" gss_model="wpmodel"><i class='fa fa-remove'></i><?php echo $this->__("Delete"); ?></div>
         <div class="gss_button" gss_success_message="Saved" gss_fragment="editwp" gss_view="gs_wp_workarea" gss_method="saveWorkPackage" gss_model="wpmodel"><i class='fa fa-plus'></i><?php echo $this->__("Save workpackage"); ?></div>

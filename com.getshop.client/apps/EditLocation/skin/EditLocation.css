@@ -33,3 +33,21 @@
     padding: 10px;
     box-sizing: border-box;
 }
+.EditLocation .groupLocInformation {
+    border: solid 1px #DDD;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #EEE;
+}
+
+.EditLocation .groupLocInformation .groupname {
+    line-height: 30px;
+    text-align: center;
+    background-color: #FEFEFE;
+    margin-bottom: 10px;
+}
+
+.EditLocation .groupLocInformation .gsniceinput1 {
+    width: 100%;
+    box-sizing: border-box;
+}

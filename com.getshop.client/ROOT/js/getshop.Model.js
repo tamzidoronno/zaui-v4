@@ -22,15 +22,15 @@ getshop.Models = {
         }
 
         if (silent !== true) {
-            getshop.Models.onOffChanged(this);
+            getshop.Models.onOffChanged(this, true);
         }
     },
-    onOffChanged: function (field) {
+    onOffChanged: function (field, toggledByUser) {
         var model = $(field).attr('gs_model');
         var attr = $(field).attr('gs_model_attr');
         var val = $(field).find('i').hasClass('fa-toggle-on');
         this.setAttr(model, attr, val);
-        PubSub.publish("GS_TOGGLE_CHANGED", { model : model, attr: attr, val : val });
+        PubSub.publish("GS_TOGGLE_CHANGED", { model : model, attr: attr, val : val, field: field, toggledByUser: toggledByUser });
     },
     selectChanged: function (field) {
         if (!$(field).is('select')) {

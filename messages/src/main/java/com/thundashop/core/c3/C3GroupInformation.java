@@ -11,8 +11,7 @@ import com.thundashop.core.common.DataCommon;
  *
  * @author ktonder
  */
-public class WorkPackage extends DataCommon {
-    public String name = "";
-    public String description = "";
-    public String owner = "";
+public class C3GroupInformation extends DataCommon {
+    public boolean financalEgen = false;
+    public boolean financalForskning = false;
 }

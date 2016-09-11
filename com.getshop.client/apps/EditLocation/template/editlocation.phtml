@@ -2,6 +2,8 @@
 /* @var $this ns_3cea6008_1b87_4a2e_aeb2_1c7fa2069279\EditLocation */
 $location = $this->getLocation();
 $subLocations = $location->locations;
+$groups = $this->getApi()->getUserManager()->getAllGroups();
+
 ?>
 <div gstype="form" method="saveall" style="border: solid 1px #DDD; padding: 20px;">
     <input type="hidden" gsname="locationId" value="<? echo $location->id; ?>"/>
@@ -23,16 +25,31 @@ $subLocations = $location->locations;
         echo "</select>";
         foreach ($subLocations as $loc) {
         ?>
-        <div class="sublocation" sublocationid="<? echo $loc->id; ?>">
-            <br/><label>Name</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>name" value="<? echo $loc->name;?>"></input>
-            <br/><br/><label>Description</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>description" value="<? echo $loc->description;?>"></input>
-            <br/><br/><label>Contact person</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>contactperson" value="<? echo $loc->contactPerson;?>"></input>
-            <br/><br/><label>Cellphone</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>cellphone" value="<? echo $loc->cellPhone;?>"></input>
-            <br/><br/><label>Lat</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lat" value="<? echo $loc->lat;?>"></input>
-            <br/><br/><label>Lon</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lon" value="<? echo $loc->lon;?>"></input>    
-            <br/><br/>
-            <textarea class='extradescription' placeholder='Extra description' gsname="<? echo $loc->id."_"; ?>extradescription"><? echo $loc->extraDescription; ?></textarea>
-        </div>
+            <div class="sublocation" sublocationid="<? echo $loc->id; ?>">
+                <br/><label>Name</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>name" value="<? echo $loc->name;?>"></input>
+                <br/><br/><label>Description</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>description" value="<? echo $loc->description;?>"></input>
+                <br/><br/><label>Contact person</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>contactperson" value="<? echo $loc->contactPerson;?>"></input>
+                <br/><br/><label>Cellphone</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>cellphone" value="<? echo $loc->cellPhone;?>"></input>
+                <br/><br/><label>Lat</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lat" value="<? echo $loc->lat;?>"></input>
+                <br/><br/><label>Lon</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lon" value="<? echo $loc->lon;?>"></input>    
+                <br/><br/>
+                <textarea class='extradescription' placeholder='Extra description' gsname="<? echo $loc->id."_"; ?>extradescription"><? echo $loc->extraDescription; ?></textarea>
+            
+            <?
+                foreach ($groups as $group) {
+                    $groupId = $group->id;
+                    $groupInfo = @$loc->groupLocationInformation->{$groupId};
+
+                    echo "<div class='groupLocInformation'>"; 
+                        echo "<div class='groupname'>$group->groupName</div>";
+                        echo "Name: <input class='gsniceinput1' gsname='".$groupId."_".$loc->id."_name' value='".@$groupInfo->name."'/>";
+                        echo "<br/>Cellphone: <input class='gsniceinput1' gsname='".$groupId."_".$loc->id."_cellPhone' value='".@$groupInfo->cellPhone."'/>";
+                        echo "<br/>Email: <input class='gsniceinput1' gsname='".$groupId."_".$loc->id."_email' value='".@$groupInfo->email."'/>";
+                        echo "<br/>Other: <input class='gsniceinput1' gsname='".$groupId."_".$loc->id."_other' value='".@$groupInfo->other."'/>";
+                    echo "</div>";
+                }
+            ?>
+            </div>
         <?
         }
         ?>

@@ -74,5 +74,9 @@ class CreateEvent extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
     public function toggleLocked() {
         $this->getApi()->getEventBookingManager()->toggleLocked($this->getBookingEgineName(), $_POST['data']['eventid']);
     }
+    
+    public function toggleHide() {
+        $this->getApi()->getEventBookingManager()->toggleHide($this->getBookingEgineName(), $_POST['data']['eventid']);
+    }
 }
 ?>

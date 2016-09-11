@@ -229,6 +229,10 @@ getshop.Settings = {
                     data['appid'] = appId;
                 }
             }
+            
+            if (typeof(field.gss_overrideapp) !== "undefined" && field.gss_overrideapp) {
+                data['appid'] = field.gss_overrideapp;
+            }
         }
         
         

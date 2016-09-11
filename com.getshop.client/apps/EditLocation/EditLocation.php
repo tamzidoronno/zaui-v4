@@ -47,6 +47,7 @@ class EditLocation extends \ns_83df5ae3_ee55_47cf_b289_f88ca201be6e\EngineCommon
     public function saveall() {
         $location = $this->getLocation();
         $location->name = $_POST['data']['name'];
+        $groups = $this->getApi()->getUserManager()->getAllGroups();
         
         foreach ($location->locations as $subLocation) {
             $id = $subLocation->id;
@@ -57,8 +58,24 @@ class EditLocation extends \ns_83df5ae3_ee55_47cf_b289_f88ca201be6e\EngineCommon
             $subLocation->lon = $_POST['data'][$id."_lon"];
             $subLocation->cellPhone = $_POST['data'][$id."_cellphone"];
             $subLocation->extraDescription = $_POST['data'][$id."_extradescription"];
+            
+//            $subLocation->groupLocationInformation = [];
+            $groupInfos = new \stdClass();
+            foreach ($groups as $group) {
+                $groupInfo = new \core_eventbooking_GroupLocationInformation();
+                $key = $group->id."_".$subLocation->id."_";
+                $groupInfo->name = $_POST['data'][$key."name"];
+                $groupInfo->cellPhone = $_POST['data'][$key."cellPhone"];
+                $groupInfo->email = $_POST['data'][$key."email"];
+                $groupInfo->other = $_POST['data'][$key."other"];
+                $groupInfo->groupId = $group->id;
+                $groupInfos->{$group->id} = $groupInfo;
+            }
+            
+            $subLocation->groupLocationInformation = $groupInfos;
         }
 
+        
         $this->getApi()->getEventBookingManager()->saveLocation($this->getBookingEgineName(), $location);
     }
     

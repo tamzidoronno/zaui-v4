@@ -179,3 +179,16 @@ $company = $this->getApi()->getUserManager()->getCompany($_POST['value']);
     }
     ?>
 </div>
+
+<?
+$apps = $this->getAppsWithPrintingToCompany();
+foreach ($apps as $app) {
+    $name = method_exists($app, "getBackendName") ? $app->getBackendName() : $app->getName();
+    ?>
+        <div class='gss_settings_content gss_settings_user_address'>
+            <div class="gss_settings_title"><? echo $name; ?></div>
+            <? $app->renderCompanySettings($company); ?>
+        </div>
+    <?
+}
+?>

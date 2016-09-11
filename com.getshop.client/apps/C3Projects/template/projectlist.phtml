@@ -18,7 +18,7 @@ $projects = $this->getApi()->getC3Manager()->getProjects();
     </div>	
 </div>
 
-<div class='gss_outer_searchresult gss_settings_content'>
+<div class='gss_outer_searchresult gss_settings_content gss_c3_projectlist'>
     <?
     foreach ($projects as $project) {
         $id = $project->id;
@@ -34,8 +34,16 @@ $projects = $this->getApi()->getC3Manager()->getProjects();
 
             </div>
 
-            <div class="content">
+            <div class="content c3project">
                 <div class="name"><? echo $project->name; ?></div>
+                <div class="projectnumber">Prosjektnr: <? echo $project->projectNumber; ?></div>
+                <div class="createdDate">Opprettet: <? echo $project->rowCreatedDate; ?></div>
+                <div class="workpackages">
+                    Wp(s)
+                    <div>
+                        <? echo count($project->workPackages); ?>
+                    </div>
+                </div>
             </div>
 
         </div>

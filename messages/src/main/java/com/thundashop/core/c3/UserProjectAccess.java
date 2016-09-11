@@ -5,14 +5,14 @@
  */
 package com.thundashop.core.c3;
 
-import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author ktonder
  */
-public class WorkPackage extends DataCommon {
-    public String name = "";
-    public String description = "";
-    public String owner = "";
+public class UserProjectAccess {
+    public String projectId;
+    public List<String> workPackageIds = new ArrayList();
 }

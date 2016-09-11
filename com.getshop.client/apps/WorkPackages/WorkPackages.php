@@ -34,12 +34,14 @@ class WorkPackages extends \MarketingApplication implements \Application {
     public function saveWorkPackage() {
         $wp = $this->getApi()->getC3Manager()->getWorkPackage($_POST['value']);
         $wp->description = $_POST['description'];
+        $wp->owner = $_POST['owner'];
         $this->savePackage($wp);
     }
 
     public function savePackage($wp) {
         $wp->name = $_POST['name'];
-        $this->getApi()->getC3Manager()->saveWorkPackage($wp);
+        $package = $this->getApi()->getC3Manager()->saveWorkPackage($wp);
+        $_POST['value'] = $package->id;
     }
 
 }

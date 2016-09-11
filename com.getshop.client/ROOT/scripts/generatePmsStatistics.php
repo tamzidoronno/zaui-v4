@@ -188,7 +188,7 @@ if(!isset($_GET['generatingePdf'])) {
         $app = $factory->getFactory()->getApplicationPool()->createAppInstance($instance);
         $emails = $config->emailsToNotify->{'report'};
         foreach($emails as $email) {
-            $api->getMessageManager()->sendMailWithAttachments($email, $email, $emailtitle, $res, "post@wh.no", "post@wh.no", $attachment);
+            $api->getMessageManager()->sendMailWithAttachments($email, $email, $emailtitle, "Attached you will find the statistics for this periode.", "post@wh.no", "post@wh.no", $attachment);
         }
     }
 }

@@ -1,4 +1,5 @@
 <?
+
 if(isset($_GET['generatingePdf'])) {
     $storeId = $_GET['storeid'];
     echo file_get_contents("/tmp/tmpstats_$storeId.pdf");
@@ -12,7 +13,9 @@ include '../loader.php';
 
 $factory = IocContainer::getFactorySingelton();
 $api = $factory->getApi();
-
+if(isset($_GET['sessid'])) {
+    session_id($_GET['sessid']);
+}
 if(isset($_GET['username'])) {
     $username = $_GET['username'];
     $password = $_GET['password'];
@@ -154,13 +157,13 @@ tr:nth-child(2) {
 
 <?php
 if(!isset($_GET['generatingePdf'])) {
-     $pageURL = 'http';
+    $pageURL = 'http';
     if (@$_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
-    $pageURL .= "://";
+        $pageURL .= "://";
     if ($_SERVER["SERVER_PORT"] != "80") {
-     $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+        $pageURL .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
     } else {
-     $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+        $pageURL .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
     }
 
     
@@ -168,13 +171,26 @@ if(!isset($_GET['generatingePdf'])) {
     $res = ob_get_contents();
     ob_end_clean();
     file_put_contents("/tmp/tmpstats_$storeId.pdf", $res);
-    $addr = $pageURL."?generatingePdf=true&sessid=".  session_id()."&storeid=$storeId";
+    if(strpos($pageURL, "?") > 0) {
+        $addr = substr($pageURL, 0, strpos($pageURL, "?"));
+    }
+    $addr = $addr."?generatingePdf=true&sessid=".  session_id()."&storeid=$storeId";
     $pdf = $api->getGetShop()->getBase64EncodedPDFWebPage($addr);
-//    echo $addr;
     
-    header("Content-type:application/pdf");
-    header("Content-Disposition:attachment;filename='downloaded.pdf'");
-    echo base64_decode($pdf);
+    $attachment = array();
+    $attachment['statistics.pdf'] = $pdf;
+
+    $instances = $factory->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("7e828cd0-8b44-4125-ae4f-f61983b01e0a");
+    $emailtitle = "Weekly update on monthly statistic";
+    foreach($instances as $instance) {
+        /* @var $instance ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+        $config = $api->getPmsManager()->getConfiguration($app->getSelectedName());
+        $app = $factory->getFactory()->getApplicationPool()->createAppInstance($instance);
+        $emails = $config->emailsToNotify->{'report'};
+        foreach($emails as $email) {
+            $api->getMessageManager()->sendMailWithAttachments($email, $email, $emailtitle, $res, "post@wh.no", "post@wh.no", $attachment);
+        }
+    }
 }
 
 ?>

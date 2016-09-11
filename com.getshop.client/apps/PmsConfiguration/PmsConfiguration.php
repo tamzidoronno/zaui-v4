@@ -10,6 +10,10 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         return "PmsConfiguration";
     }
 
+    public function sendStatistics() {
+        $this->getApi()->getPmsManager()->sendStatistics($this->getSelectedName());
+    }
+    
     public function togglePaymentOnChannel() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         foreach($config->channelConfiguration as $key => $chanConfig) {

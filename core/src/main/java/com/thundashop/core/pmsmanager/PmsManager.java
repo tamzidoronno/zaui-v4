@@ -748,9 +748,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.cleaningDate = null;
             if(room.addedToArx) {
                 if(room.isStarted() && !room.isEnded()) {
-                    PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
-                    additional.markCleaned();
-                    saveObject(additional);
+                    forceMarkRoomAsCleaned(room.bookingItemId);
                     room.addedToArx = false;
                 }
             }
@@ -1406,6 +1404,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
         additional.markCleaned();
         saveAdditionalInfo(additional);
+        List<Booking> allBookings = bookingEngine.getAllBookingsByBookingItem(itemId);
+        List<Booking> bookingsToDelete = new ArrayList();
+        for(Booking book : allBookings) {
+            if(book.source != null && book.source.equals("cleaning")) {
+                bookingsToDelete.add(book);
+            }
+        }
+        for(Booking remove : bookingsToDelete) {
+            bookingEngine.deleteBooking(remove.id);
+        }
     }
     
     @Override
@@ -1419,7 +1427,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         if (bookingStartingToday || !itemInUse) {
             //Only mark room cleaned if a new booking is 
-            additional.markCleaned();
+            forceMarkRoomAsCleaned(itemId);
         } else {
             additional.addCleaningDate();
         }

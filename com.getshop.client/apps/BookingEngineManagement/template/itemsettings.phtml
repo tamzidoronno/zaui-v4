@@ -35,6 +35,20 @@ $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedNa
             <td width="50%">Description</td>
             <td width="50%"><input type="text" gsname="description" style='width:100%;' value="<? echo $item->description; ?>"></td>
         </tr>
+        <tr>
+            <td width="50%">Type</td>
+            <td width="50%">
+                <select gsname='bookingitemtype'>
+                    <?
+                    $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+                    foreach ($types as $type) {
+                        $checked = $type->id == $item->bookingItemTypeId ? "selected='true'" : "";
+                        echo "<option $checked value='$type->id'>".$type->name."</option>";
+                    }
+                    ?>
+                </select>
+            </td>
+        </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

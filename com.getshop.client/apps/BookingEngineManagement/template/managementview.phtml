@@ -116,15 +116,7 @@ $products=$products2;
                                 echo "<tr entryid='" . $item->id . "'type='item'>";
                                 echo "<td><i class='fa fa-trash-o deletetype' bookingitemid='" . $item->id . "'></i></td><td><span class='currentname'>" . $item->bookingItemName . " (" . $item->bookingSize . ")" . "</span></td>";
                                 echo "<td align='right'>";
-                                echo "<select class='itemTypeSelector'>";
-                                foreach($bookingtypes as $type) {
-                                    $selected = "";
-                                    if($type->id == $item->bookingItemTypeId) {
-                                        $selected = "SELECTED";
-                                    }
-                                    echo "<option value='".$type->id."' $selected>" . $type->name . "</option>";
-                                }
-                                echo "</select>";
+                                echo $this->getType($item->bookingItemTypeId, $bookingtypes)->name;
                                 echo  "</td>";
                                 
                                 echo "<td align='right' width='10'><span class='pmsbutton editBookingItemButton pmsbuttonsmall'>Edit</span> ";

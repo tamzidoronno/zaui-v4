@@ -187,7 +187,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                     logPrint("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")");
                                     for(int j = 0; j < 24; j++) {
                                         setCode(offset, code.fetchCodeToAddToLock(), false);
-                                        Thread.sleep(5000);
+                                        waitForEmptyQueue();
                                         GetShopHotelLockCodeResult res = getSetCodeResult(offset);
                                         if(res != null && res.hasCode != null && res.hasCode.value != null && res.hasCode.value.equals(true)) {
                                             code.setAddedToLock();

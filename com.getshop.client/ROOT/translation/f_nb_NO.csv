@@ -444,6 +444,7 @@ Page layout;-;Side layout
 Page name;-;Side navn
 Page view summary;-;Sidevisning oppsummering.
 Page views;-;Side visninger
+Participator name;-;Kursdeltakers navn (Fornavn og Etternavn)
 Pay on delivery;-;Betal ved levering
 PayPal email address;-;PayPal epostaddresse
 PayPal settings;-;PayPal instillinger
@@ -456,6 +457,7 @@ Place;-;Sted
 Please activate this if you want to use taxes in the e-commerce solution;-;Vennligst aktiver denne hvis du ønsker å benytte deg av skatter og avgifter
 Please enter the accounts password.;-;Legg inn passordet til kontoen
 Please enter the address you wish this button should direct you to;-;Skriv inn adressen du ønsker denne knappen skal sendes til
+Please enter your companyname in the textfield above;-;Legg inn firmanavnet ditt over og trykk på søkeknappen til høyre
 Please search for a page;-;Vennligst søk etter en side
 Please search for product;-;Vennlist søk etter et produkt
 Please select a list from the the list first;-;Vennligst velg en liste fra listen først
@@ -522,6 +524,7 @@ Save your settings;-;Lagre dine instillinger
 Saved;-;Lagre
 Search;-;Søk
 Search (leave blank to see all);-;Søk (la stå tomt dersom du ønsker å se alle)
+Search for company;-;Søk etter firma
 Search for users;-;Søk etter kandidater
 Search youtube;-;Søk i youtube
 Secondary domain name;-;Andrevalgs domenenavn

@@ -128,7 +128,33 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return types.get(bookingTypeId);
     }
     
-
+    public void changeBookingItemType(String itemId, String newTypeId) {
+        BookingItem item = items.get(itemId);
+        if (item == null)
+            throw new BookingEngineException("Bookingitem you are trying to change does not exists");
+        
+        BookingItemType type = types.get(newTypeId);
+        if (type == null) {
+            throw new BookingEngineException("BookingitemType you are trying to change does not exists");
+        }
+        
+        List<Booking> assignedBookings = assignAllBookingsThatHasType(item.bookingItemTypeId);
+        
+        List<Booking> bookingsWithType = bookings.values().stream()
+                .filter(booking -> booking.bookingItemTypeId.equals(item.bookingItemTypeId))
+                .collect(Collectors.toList());
+        
+        for (Booking booking : bookingsWithType) {
+            booking.bookingItemTypeId = newTypeId;
+            saveObject(booking);
+        }
+        
+        item.bookingItemTypeId = newTypeId;
+        saveObject(item);
+                
+        unassignBookings(assignedBookings);
+    }
+    
     public BookingItem saveBookingItem(BookingItem item) {
         ensureNotOverwritingParameters(item);
         validate(item);
@@ -933,5 +959,23 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 }
             }
         }
+    }
+
+    private List<Booking> assignAllBookingsThatHasType(String typeId) {
+        List<Booking> unassignedBookings = bookings.values().stream()
+                .filter(booking -> booking.bookingItemTypeId.equals(typeId))
+                .filter(booking -> booking.isUnassigned())
+                .collect(Collectors.toList());
+        
+        for (Booking booking : unassignedBookings) {
+            List<BookingItem> canUseItems = getAvailbleItemsWithBookingConsidered(booking.bookingItemTypeId, booking.startDate, booking.endDate, booking.id);
+            changeBookingItemOnBooking(booking.id, canUseItems.get(0).id);
+        }
+        
+        return unassignedBookings;
+    }
+
+    private void unassignBookings(List<Booking> assignedBookings) {
+        assignedBookings.stream().forEach(booking -> changeBookingItemOnBooking(booking.id, ""));
     }
 }

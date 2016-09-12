@@ -267,4 +267,9 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public BookingItem getBookingItemUnfinalized(String id) {
         return deepClone(bookingEngineAbstract.getBookingItemUnfinalized(id));
     }
+
+    @Override
+    public void changeBookingItemType(String itemId, String newTypeId) {
+        bookingEngineAbstract.changeBookingItemType(itemId, newTypeId);
+    }
 }

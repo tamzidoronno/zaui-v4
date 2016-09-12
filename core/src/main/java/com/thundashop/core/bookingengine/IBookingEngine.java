@@ -104,4 +104,7 @@ public interface IBookingEngine {
     public List<Booking> getAllBookingsByBookingItem(String bookingItemId);
     
     public void checkConsistency();
+    
+    @Administrator
+    public void changeBookingItemType(String itemId, String newTypeId);
 }

@@ -643,6 +643,10 @@ public class PmsManagerProcessor {
                     needSaving = true;
                 }
             }
+            if(config.prepayment && booking.orderIds.isEmpty()) {
+                payedfor = false;
+            }
+            
             if(needSaving || booking.payedFor != payedfor) {
                 booking.payedFor = payedfor;
                 if(payedfor == true && booking.orderIds.size() == 1) {

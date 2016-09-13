@@ -607,6 +607,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
+        $this->getManager()->processor($this->getSelectedName());
         $this->showBookingInformation();
     }
     

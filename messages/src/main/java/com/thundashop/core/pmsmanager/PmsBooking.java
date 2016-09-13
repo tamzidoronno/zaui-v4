@@ -26,6 +26,7 @@ public class PmsBooking extends DataCommon {
     public RegistrationRules registrationData = new RegistrationRules();
     public String language = "nb_NO";
     public String userId = "";
+    public String bookedByUserId = "";
     public Integer state = 0;
     public List<String> orderIds = new ArrayList();
     public Integer priceType = 1;
@@ -49,7 +50,6 @@ public class PmsBooking extends DataCommon {
     public boolean forceGrantAccess = false;
     
     public String countryCode = "";
-    public boolean avoidAutoDelete = false;
     public boolean needCapture;
     public String wubookChannelReservationId;
     public String channel = "";
@@ -275,6 +275,13 @@ public class PmsBooking extends DataCommon {
         }
         
         return false;
+    }
+
+    boolean isOld(int minute) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(rowCreatedDate);
+        cal.add(Calendar.MINUTE, (minute));
+        return cal.getTime().before(new Date());
     }
 
     public static class PriceType {

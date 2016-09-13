@@ -433,10 +433,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     autoSendInvoice(order, booking.id);
                     booking.orderIds.add(order.id);
                 }
-                if(getSession() != null && getSession().currentUser != null && 
-                        (getSession().currentUser.isEditor() || getSession().currentUser.isAdministrator())) {
-                    booking.avoidAutoDelete = true;
-                }
                 pmsManager.saveBooking(booking);
             }
         }

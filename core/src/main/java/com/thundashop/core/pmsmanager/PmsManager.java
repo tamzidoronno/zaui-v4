@@ -428,6 +428,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(java.util.Calendar.YEAR, 2016);
+        System.out.println(cal.get(java.util.Calendar.MONTH));
+        
         if (!initFinalized) {
             finalizeList(new ArrayList(bookings.values()));
             initFinalized = true;
@@ -626,15 +630,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
-        if (!booking.payedFor && configuration.autoDeleteUnpaidBookings && 
-                !booking.avoidAutoDelete &&
-                booking.rowCreatedDate.before(nowCal.getTime())) {
-                hardDeleteBooking(booking);
-                return null;
-        }
-        
-        
-        
         if (booking.isDeleted) {
             booking.state = 2;
             return booking;
@@ -781,7 +776,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrintException(e);
         }
         saveObject(booking);
-        
     }
 
 
@@ -3010,6 +3004,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void createUserForBooking(PmsBooking booking) {
+        if(getSession() != null && getSession().currentUser != null) {
+            booking.bookedByUserId = getSession().currentUser.id;
+        }
+        
         if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isCustomer()) {
             booking.userId = getSession().currentUser.id;
         }

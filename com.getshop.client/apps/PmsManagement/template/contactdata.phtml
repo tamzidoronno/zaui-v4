@@ -182,6 +182,16 @@ if(!$user->fullName) {
             </span>
         </span>
         <div style='clear:both;'></div>
+        <?php $booking->bookedByUserId;  if($booking->bookedByUserId) { ?>
+            <span class='roomprefix'>Booked by</span>
+            <span class='roompostfix'>
+                <?php
+                $booker = $this->getApi()->getUserManager()->getUserById($booking->bookedByUserId);
+                echo $booker->fullName;
+                ?>
+            </span>
+            <div style='clear:both;'></div>
+        <?php } ?>
         <? if($user->company && sizeof($user->company) > 0) { ?>
             <span class='roomprefix'>Company</span>
             <span class='roompostfix'>

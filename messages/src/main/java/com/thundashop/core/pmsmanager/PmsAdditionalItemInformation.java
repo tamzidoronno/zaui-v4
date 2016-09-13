@@ -107,10 +107,16 @@ public class PmsAdditionalItemInformation extends DataCommon {
         if(lastUsed == null) {
             return false;
         }
-        if(isToday(lastUsed.getTime())) {
-            return true;
+        
+        Calendar now = Calendar.getInstance();
+        Calendar timeToCheck = Calendar.getInstance();
+        timeToCheck.setTime(lastUsed);
+        int hourOfDay = timeToCheck.get(Calendar.HOUR_OF_DAY);
+        if(hourOfDay < 6) {
+            return false;
         }
-        return false;
+        return (now.get(Calendar.YEAR) == timeToCheck.get(Calendar.YEAR)
+                && now.get(Calendar.DAY_OF_YEAR) == timeToCheck.get(Calendar.DAY_OF_YEAR));
     }
 
 }

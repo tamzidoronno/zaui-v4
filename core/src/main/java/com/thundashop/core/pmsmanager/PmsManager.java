@@ -3539,7 +3539,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private boolean verifyPhoneOnBooking(PmsBooking booking) {
         if(booking.userId != null) {
             User user = userManager.getUserById(booking.userId);
-            
+            if(user == null) {
+                return false;
+            }
             HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ user.prefix,user.cellPhone, "NO");
             if(res != null) {
                 String prefix = res.get("prefix");

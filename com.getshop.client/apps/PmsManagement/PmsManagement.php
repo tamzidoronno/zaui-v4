@@ -118,6 +118,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $order->payment->transactionLog->{time()*1000} = "Failed marking as paid for, by: " .$userName;
             $this->getApi()->getOrderManager()->saveOrder($order);
             $this->getApi()->getWubookManager()->markCCInvalid($this->getSelectedName(), $booking->wubookreservationid);
+            $this->getApi()->getPmsManager()->failedChargeCard($this->getSelectedName(), $order->id, $booking->id);
             echo "Order has been marked as failed.<br>";
         }
     }

@@ -2822,6 +2822,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
+    public void failedChargeCard(String orderId, String bookingId) {
+        orderIdToSend = orderId;
+        doNotification("booking_unabletochargecard", bookingId);
+    }
+    
+    @Override
     public void sendMissingPayment(String orderId, String bookingId) {
         orderIdToSend = orderId;
         doNotification("booking_paymentmissing", bookingId);

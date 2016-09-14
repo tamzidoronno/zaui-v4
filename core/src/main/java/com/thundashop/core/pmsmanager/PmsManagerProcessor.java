@@ -642,7 +642,7 @@ public class PmsManagerProcessor {
                     booking.needCapture = needCapture;
                     needSaving = true;
                 }
-                if(config.prepayment && booking.orderIds.isEmpty()) {
+                if(config.markBookingsWithNoOrderAsUnpaid && config.prepayment && booking.orderIds.isEmpty()) {
                     payedfor = false;
                 }
             }

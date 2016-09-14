@@ -33,7 +33,7 @@
     display:none;
 }
 .PmsManagement .highlight td { background-color:#deff9f !important; }
-.PmsManagement .viewmode:hover { font-weight: bold; cursor: pointer; }
+.PmsManagement .viewmode:hover { color: green; cursor: pointer; }
 .PmsManagement .guestoverviewtable  td .roompostfix { font-size: 12px; position:relative; }
 .PmsManagement .actions:hover {
      -moz-transition: all 0.2s ease-in;

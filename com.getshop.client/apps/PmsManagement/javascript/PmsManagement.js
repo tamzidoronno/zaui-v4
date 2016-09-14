@@ -12,6 +12,7 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .deletebooking', app.PmsManagement.deletebooking);
         $(document).on('click', '.PmsManagement .resetnotifications', app.PmsManagement.resetnotifications);
         $(document).on('click', '.PmsManagement .editfield', app.PmsManagement.editfieldrow);
+        $(document).on('click', '.PmsManagement .loadedituser', app.PmsManagement.loadedituser);
         $(document).on('click', '.PmsManagement .savenewfielddata', app.PmsManagement.savenewfielddata);
         $(document).on('keyup','.PmsManagement .newroomstartdate', app.PmsManagement.updateRoomList);
         $(document).on('keyup','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
@@ -46,6 +47,15 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .updatecardonroom', app.PmsManagement.updatecardonroom);
         $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
         $(document).on('keyup','.PmsManagement .matrixpricealldays', app.PmsManagement.updateRoomPriceMatrix);
+    },
+    loadedituser : function() {
+        var event = thundashop.Ajax.createEvent('','renderEditUserView', $(this), {
+            bookingid : $('#openedbookingid').val()
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('#edituserview').html(res);
+            $(".PmsManagement .edituserbox").fadeIn(function() {$(".edituserbox select").chosen(); });
+        })
     },
     showNotPaidInfo : function() {
         var event = thundashop.Ajax.createEvent('','loadOrderInfoOnBooking', $(this), {

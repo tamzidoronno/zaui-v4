@@ -38,6 +38,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function renderEditUserView() {
+        $this->includefile("edituserview");
+    }
+    
+    
     /**
      * @param \core_usermanager_data_User $user
      */

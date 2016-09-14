@@ -37,6 +37,9 @@ public interface IPmsManager {
     @Administrator
     public List<CleaningStatistics> getCleaningStatistics(Date start, Date end);
     
+    @Administrator
+    public String generateNewCodeForRoom(String roomId);
+    
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
     @Editor

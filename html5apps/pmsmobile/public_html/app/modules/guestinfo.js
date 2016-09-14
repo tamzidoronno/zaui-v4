@@ -24,6 +24,17 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             }
         });
     };
+    $scope.doRecreateCode = function() {
+        var roomId = $scope.room.pmsBookingRoomId;
+        var confirmed = confirm("Are you sure you want to generate a new code for this room?");
+        if(!confirmed) {
+            return;
+        }
+        var generated = getshopclient.PmsManager.generateNewCodeForRoom(getMultilevelName(), roomId);
+        generated.done(function(res) {
+            $scope.room.code = res;
+        });
+    },
     $scope.forceGrantAccess = function() {
         $scope.booking.forceGrantAccess = true;
         getshopclient.PmsManager.saveBooking(getMultilevelName(), $scope.booking);

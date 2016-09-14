@@ -432,6 +432,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                     autoSendInvoice(order, booking.id);
                     booking.orderIds.add(order.id);
+                    Double total = orderManager.getTotalAmount(order);
+                    if(total < 0) {
+                        order.status = Order.Status.PAYMENT_COMPLETED;
+                        order.closed = true;
+                        orderManager.saveOrder(order);
+                    }
                 }
                 pmsManager.saveBooking(booking);
             }

@@ -3659,6 +3659,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         addBookingToBookingEngine(booking, room);
+        saveBooking(booking);
     }
 
     @Override

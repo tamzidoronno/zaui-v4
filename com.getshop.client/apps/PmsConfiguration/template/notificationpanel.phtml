@@ -652,6 +652,18 @@ $channelConfig = $config->channelConfiguration;
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->markBookingsWithNoOrderAsUnpaid) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='markBookingsWithNoOrderAsUnpaid' <? echo $checked; ?>>
+            </span>
+            If a booking has no order, mark it as unpaid.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->autoSendInvoice) {
                     $checked = "CHECKED";
                 }

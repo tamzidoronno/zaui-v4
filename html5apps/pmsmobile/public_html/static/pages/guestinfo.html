@@ -152,9 +152,9 @@
 
 <div class='additionalinfo row'>Room information</div>
 <div class='row'>
-    <div class='col-xs-4 contactdata'>Code</div>
-    <div class='col-xs-4 othercontactdata'>{{ room.code }}</div>
-    <div class='col-xs-4 ng-hide' ng-show='roomIsStarted()'>
+    <div class='col-md-4 col-xs-2 contactdata'>Code</div>
+    <div class='col-md-4 col-xs-2 othercontactdata'>{{ room.code }}</div>
+    <div class='col-md-4 col-xs-8 ng-hide' ng-show='roomIsStarted()'>
         <span class='btn btn-warning' ng-click="doRecreateCode()" style='width:50%; float:left;'>New code</span>
         <span class='btn btn-success' ng-click="doResendCode()" style='width:50%; float:left;'>Resend</span>
     </div>

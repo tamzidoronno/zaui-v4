@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="vendors.css"/>
     <link rel="stylesheet" href="main.css"/>
     <title>Pms Management</title>
@@ -12,12 +12,8 @@
   </div>
   
   <body ng-app="app">
-<div class='row'>
-    <div class='col-md-2 col-xs-1 col-lg-4'></div>
-    <div class='col-md-8 col-xs-12 col-lg-4'>
+<div class='row no-gutter'>
         <div class='innerview' ui-view></div>
-    </div>
-   <div class='col-md-2 col-xs-1 col-lg-4'></div>
 </div>
 
     <script src="vendors.js"></script>
@@ -32,8 +28,8 @@
             }
             var hostToUse = localStorage.getItem("address");
             if(hostToUse) {
-//                getshopclient = new GetShopApiWebSocket(hostToUse, "31332"); //Online
-                getshopclient = new GetShopApiWebSocket(hostToUse, "31330"); //Local
+                getshopclient = new GetShopApiWebSocket(hostToUse, "31332"); //Online
+//                getshopclient = new GetShopApiWebSocket(hostToUse, "31330"); //Local
                 getshopclient.connect();
                 getshopclient.setConnectedEvent(function () {
                     $('.disconnectedPage').fadeOut();

@@ -1,4 +1,4 @@
-body { background-color:#3a99d7; }
+body { background-color:#3a99d7; box-sizing: border-box; }
 .logenty { border-bottom: solid 1px #bbb; margin-top: 20px; }
 .innerview .row { background-color:#efefef; padding: 10px; }
 .addedbytext { color:#bbb;  margin-top: 5px; }
@@ -8,7 +8,7 @@ body { background-color:#3a99d7; }
     padding-right: 0 !important;
     margin-right: 0 !important;
 }
-.innerview { padding-left: 20px; padding-right: 20px; }
+.innerview { padding-left: 10px; padding-right:10px; }
 
 .breakfastlistrow { border-bottom: solid 1px #bbb; background-color:#fff; padding: 0px !important; }
 .breakfastlistrow .info { border-right: solid 1px #bbb; }

@@ -177,7 +177,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         $row['price'] = round($room->price);
         $row['state'] = $room->progressState;
         $row['stateadditional'] = "";
-        if(sizeof($room->orderIds) == 0 && $config->prepayment) {
+        if(sizeof($room->orderIds) == 0 && $config->markBookingsWithNoOrderAsUnpaid) {
             $row['stateadditional'] = "<span style='font-weight:bold; color:red;' title='No orders has been created for this booking yet'><i class='fa fa-warning'></i> orders</span>";
         }
         foreach($registrationRules->data as $key => $data) {

@@ -89,7 +89,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 endCal.add(Calendar.HOUR_OF_DAY, 16);
                 Date end = startcal.getTime();
                 int count = bookingEngine.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
-                
+                if(count > 0) {
+                    count--;
+                }
                 Hashtable result = new Hashtable();
                 result.put("avail", count);
                 result.put("no_ota", 0);

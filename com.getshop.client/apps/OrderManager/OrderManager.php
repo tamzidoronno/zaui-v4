@@ -157,6 +157,13 @@ class OrderManager extends GSTableCommon implements \Application {
         $order->status = 7;
         $this->getApi()->getOrderManager()->saveOrder($order);
     }
+    
+    public function resendToAccounting() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['value']);
+        $order->transferedToAccountingSystem = false;
+        $order->transferredToAccountingSystem = false;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
 
     public function loadData() {
         if (!$this->filteredData) {

@@ -64,7 +64,7 @@ $cart = $order->cart;
         <div class='gss_label'><? echo $this->__f("Incremental order id"); ?></div>
         <div class='gss_label_content'><? echo $order->incrementOrderId; ?></div>
         <div class='gss_label'><? echo $this->__f("Transferred to accounting"); ?></div>
-        <div class='gss_label_content'><? echo $order->transferredToAccountingSystem ? $this->__f("Yes") : $this->__f("No"); ?></div>
+        <div class='gss_label_content'><? echo $order->transferredToAccountingSystem ? "<i class='fa fa-refresh gss_mark_resendtoaccounting' orderId='".$order->id."'></i> " . $this->__f("Yes") : $this->__f("No"); ?></div>
         <div class='gss_label'><? echo $this->__f("Email"); ?></div>
         <div class='gss_label_content'><? echo $address->emailAddress; ?></div>
         <div class='gss_label'><? echo $this->__f("Phone"); ?></div>

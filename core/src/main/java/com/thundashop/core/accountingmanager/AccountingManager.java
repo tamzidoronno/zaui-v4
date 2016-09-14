@@ -634,7 +634,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         if(!users.isEmpty()) {
             saveFile(usersToSave, getAccountingType(), "invoice");
         }
-        if(!invoiceOrderList.isEmpty()) {
+        if(!restOrderList.isEmpty()) {
             saveFile(restOrderList, getAccountingType(), "ccard");
         }
         

@@ -4,10 +4,12 @@
  */
 package com.thundashop.core.pdf;
 
+import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.usermanager.data.Address;
 import java.awt.Color;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -209,6 +211,13 @@ public class InvoiceGenerator {
         int lineHeight = 13;
         int startTop = 790;
         // Name and address top
+        if(order.cart == null) {
+            order.cart = new Cart();
+        }
+        if(order.cart.address == null) {
+            order.cart.address = new Address();
+        }
+        
         writeText(order.cart.address.fullName, 45, startTop, false, 11);
         writeText(order.cart.address.address, 45, startTop-lineHeight, false, 11);
         writeText(order.cart.address.postCode + " " + order.cart.address.city, 45, startTop-lineHeight*2, false, 11);

@@ -9,6 +9,7 @@ app.OrderManager = {
         $(document).on('click', '.gss_addOrderItem', app.OrderManager.addOrderItem);   
         $(document).on('click', '.gss_order_view_select_payement_method', app.OrderManager.changePaymentType);   
         $(document).on('click', '.gss_mark_order_as_paid', app.OrderManager.markOrderAsPaid);   
+        $(document).on('click', '.gss_mark_resendtoaccounting', app.OrderManager.resendToAccounting);   
         $(document).on('click', '.gsscheckallorders', app.OrderManager.checkallorders);   
         $(document).on('click', '.creditinvoice', app.OrderManager.creditOrder);   
         $(document).on('click', '.gss_setneworderstate', app.OrderManager.setNewOrderState);   
@@ -134,6 +135,20 @@ app.OrderManager = {
         }
         
         getshop.Settings.post(data, "markOrderAsPaid");
+    },
+    resendToAccounting: function() {
+        var confirmed = confirm("Are you sure you want to resend this order to the accounting system?");
+        if(!confirmed) {
+            return;
+        }
+        var orderId = $(this).attr('orderId');
+        var data = {
+            gss_fragment: 'orderview',
+            gss_view: 'gss_orderview',
+            value: orderId
+        }
+        
+        getshop.Settings.post(data, "resendToAccounting");
     },
     
     changePaymentType: function() {

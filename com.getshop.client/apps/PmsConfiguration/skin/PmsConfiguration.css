@@ -28,4 +28,4 @@
     display:block;
 }
 .PmsConfiguration .configentry { float:right; }
-.PmsConfiguration .configrow { clear:both; padding-bottom: 10px; }
+.PmsConfiguration .configrow { clear:both; padding-bottom: 10px; border-bottom: solid 1px #bbb; margin-bottom: 10px; }

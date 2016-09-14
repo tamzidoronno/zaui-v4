@@ -169,7 +169,8 @@ public class WilhelmsenHouse implements AccountingInterface {
         }
         
         List<String> lines = new ArrayList();
-        
+        double debet = 0;
+        double credit = 0;
         Application app = storeApplicationPool.getApplication("37d409be-1207-45e8-bf3b-6465442b58d9");
         String result = "";        
         result += "H;";
@@ -189,22 +190,29 @@ public class WilhelmsenHouse implements AccountingInterface {
             result += order.incrementOrderId+";"; // Voucher no (If Voucher serie no is used,this can be empty)
             result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";"; // Voucher date
             result += ";"; // Value date (Usees from Batch if empty)
-            if(!order.isCreditNote) {
+            double amount = orderManager.getTotalAmount(order);
+            if(order.incrementOrderId == 108605) {
+                System.out.println("found");
+            }
+            amount = (double)Math.round(amount * 100) / 100.0;
+            boolean doCredit = false;
+            if(amount < 0) {
+                doCredit = true;
+                amount *= -1;
+            }
+            if(!doCredit) {
                 result += user.customerId+";"; // Debit account
                 result += ";"; // Credit account
+                debet += amount;
             } else {
                 result += ";"; // Debit account
                 result += user.customerId+";"; // Credit account
-            }
-            double amount = orderManager.getTotalAmount(order);
-            amount = Math.round(amount * 100) / 100;
-            if(amount < 0) {
-                amount *= -1;
+                credit += amount;
             }
             result += amount+";"; // Total amount
             result += ";"; // R3 Oppdrag ID
             result += ";"+textDesc; // LinjeText hvis nødvendig. f.eks Salg, Betaling, Refnr fra FV. Hvis tomt, hentes tekst fra bilagsart.
-            result += ";"+ order.paymentTransactionId; // LinjeText hvis nødvendig. f.eks Salg, Betaling, Refnr fra FV. Hvis tomt, hentes tekst fra bilagsart.
+            result += ";"; // LinjeText hvis nødvendig. f.eks Salg, Betaling, Refnr fra FV. Hvis tomt, hentes tekst fra bilagsart.
             lines.add(result+"\r\n");
 
             for (CartItem item : order.cart.getItems()) {
@@ -213,34 +221,41 @@ public class WilhelmsenHouse implements AccountingInterface {
                 result += order.incrementOrderId+";"; // Voucher no (If Voucher serie no is used,this can be empty)
                 result += new SimpleDateFormat("yyyyMMdd").format(new Date())+";"; // Voucher date
                 result += ";"; // Value date (Usees from Batch if empty)
-                if(!order.isCreditNote) {
+                
+                amount = item.getProduct().price * item.getCount();
+                amount = Math.round(amount * 100) / 100.0;
+                doCredit = false;
+                if(amount < 0) {
+                    amount *= -1;
+                    doCredit = true;
+                }
+                if(!order.isCreditNote && !doCredit) {
                     result += ";"; // Debit account
                     result += getProductDebitNumber(item.getProduct(), app) +";"; // Credit account
+                    credit += amount;
                 } else {
                     result += getProductDebitNumber(item.getProduct(), app) + ";"; // Debit account
                     result += ";"; // Credit account
+                    debet += amount;
                 }
                 
-                amount = item.getProduct().priceExTaxes * item.getCount();
-                amount = Math.round(amount * 100) / 100;
-                if(amount < 0) {
-                    amount *= -1;
-                }
                 
                 result += amount+";"; // Total amount
                 result += ";"; // R3 Oppdrag ID
                 String roomName = item.getProduct().additionalMetaData;
                 result += roomName +";"; // R4 Gjenstand ID
                 result += textDesc;
+                result += ";";
                 lines.add(result+"\r\n");
             }
-            
             try {
                 savePdfInvoice(order);
             }catch(Exception e) {
                 e.printStackTrace();
             }
         }
+        double diff = debet - credit;
+        System.out.println("failed on : " +  " " + debet + " - " + credit + " = " + diff);
 
         return lines;
                 
@@ -290,7 +305,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                 orderline += ";"; // Avgiftskode ( hentes fra kunden )
                 orderline += createLineText(item) + ";"; // Produkt beskrivelse
                 orderline += item.getCount() + ";"; // Antall mnder
-                orderline += Math.round(item.getProduct().priceExTaxes*100)/100+ ";"; // Pris pr antall, hvis blank hentes pris fra Visma
+                orderline += Math.round(item.getProduct().priceExTaxes*100)/100.0+ ";"; // Pris pr antall, hvis blank hentes pris fra Visma
                 orderline += ";"; // ikke i bruk
                 String roomName = item.getProduct().additionalMetaData;
                 orderline += roomName + ";"; // R4 Gjenstand ID

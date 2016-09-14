@@ -428,6 +428,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(java.util.Calendar.YEAR, 2016);
+        System.out.println(cal.get(java.util.Calendar.MONTH));
+        
         if (!initFinalized) {
             finalizeList(new ArrayList(bookings.values()));
             initFinalized = true;
@@ -626,15 +630,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
-        if (!booking.payedFor && configuration.autoDeleteUnpaidBookings && 
-                !booking.avoidAutoDelete &&
-                booking.rowCreatedDate.before(nowCal.getTime())) {
-                hardDeleteBooking(booking);
-                return null;
-        }
-        
-        
-        
         if (booking.isDeleted) {
             booking.state = 2;
             return booking;
@@ -781,7 +776,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrintException(e);
         }
         saveObject(booking);
-        
     }
 
 
@@ -2547,12 +2541,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (item != null) {
                     name = item.name;
                 }
-                String text = "Removed room: " + name + " since it can't be added: " + room.date.start + " - " + room.date.end;
+                String text = "Removed room: " + name + " since it can't be added: " + room.date.start + " - " + room.date.end + ", channel: " + booking.channel;
                 logEntry(text, booking.id, null);
                 if(!getConfigurationSecure().supportRemoveWhenFull) {
                     messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text, null);
                 }
-                continue;
             }
             
             
@@ -2822,6 +2815,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
+    public void failedChargeCard(String orderId, String bookingId) {
+        orderIdToSend = orderId;
+        doNotification("booking_unabletochargecard", bookingId);
+    }
+    
+    @Override
     public void sendMissingPayment(String orderId, String bookingId) {
         orderIdToSend = orderId;
         doNotification("booking_paymentmissing", bookingId);
@@ -3004,6 +3003,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void createUserForBooking(PmsBooking booking) {
+        if(getSession() != null && getSession().currentUser != null) {
+            booking.bookedByUserId = getSession().currentUser.id;
+        }
+        
         if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isCustomer()) {
             booking.userId = getSession().currentUser.id;
         }
@@ -3533,7 +3536,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private boolean verifyPhoneOnBooking(PmsBooking booking) {
         if(booking.userId != null) {
             User user = userManager.getUserById(booking.userId);
-            
+            if(user == null) {
+                return false;
+            }
             HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ user.prefix,user.cellPhone, "NO");
             if(res != null) {
                 String prefix = res.get("prefix");

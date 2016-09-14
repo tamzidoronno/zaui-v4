@@ -153,6 +153,9 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     }
     
     public function render() {
+        if($this->needToBeCleared()) {
+            $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
+        }
         if(!$this->getSelectedName()) {
             echo "Please specify a booking engine first";
             return;
@@ -169,6 +172,18 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
             $this->booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
         }
         return $this->booking;
+    }
+
+    public function needToBeCleared() {
+        $booking = $this->getBooking();
+        $res = (array)$booking->registrationData->resultAdded;
+        if(sizeof($res) > 0) {
+            return true;
+        }
+        if($booking->userId) {
+            return true;
+        }
+        return false;
     }
 
 }

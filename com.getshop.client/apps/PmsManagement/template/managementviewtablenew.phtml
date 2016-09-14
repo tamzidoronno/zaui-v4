@@ -176,7 +176,10 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         $row['room'] .= "<div class='secondary_text'>".$room->roomType."</div>";
         $row['price'] = round($room->price);
         $row['state'] = $room->progressState;
-        
+        $row['stateadditional'] = "";
+        if(sizeof($room->orderIds) == 0 && $config->markBookingsWithNoOrderAsUnpaid) {
+            $row['stateadditional'] = "<span style='font-weight:bold; color:red;' title='No orders has been created for this booking yet'><i class='fa fa-warning'></i> orders</span>";
+        }
         foreach($registrationRules->data as $key => $data) {
             if(stristr($key, "user_")) {
                 continue;
@@ -205,7 +208,8 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
                  echo "<td class='pricecol' align='center'>" . $row[$header] . "</td>";
              } else if($header == "state") {
                  echo "<td class='".$row[$header]."' align='center'>";
-                 echo $states[$row[$header]];
+                 echo $states[$row[$header]] . "<br>";
+                 echo $row['stateadditional'];
                  echo "</td>";
              } else {
                  echo "<td>" . $row[$header] . "</td>";

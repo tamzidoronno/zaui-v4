@@ -31,6 +31,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
@@ -145,6 +146,18 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         }
         List<String> users = createUserFile(newUsersOnly);
         List<Order> orders = getOrdersToTransfer();
+        List<Integer> added = new ArrayList();
+        if(config.transferAllUsersConnectedToOrders) {
+            List<User> usersToAdd = new ArrayList();
+            for(Order ord : orders) {
+                User user = userManager.getUserById(ord.userId);
+                if(!added.contains(user.customerId)) {
+                    usersToAdd.add(user);
+                    added.add(user.customerId);
+                }
+            }
+            users = createUserFileByAdapter(usersToAdd);
+        }
         List<String> result = createOrderFile(orders, false, "");
         users.addAll(result);
         saveFile(users, getAccountingType(), "");
@@ -187,6 +200,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 object.setUserManager(userManager);
                 object.setOrderManager(orderManager);
                 object.setInvoiceManager(invoiceManager);
+                object.setStoreApplication(applicationPool);
                 interfaces.add(object);
             }
         }
@@ -258,8 +272,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             if(saved.subtype != null && !saved.subtype.isEmpty() && saved.subtype.equals("invoice")) {
                 externalPath = config.invoice_path;
             }
-            if(saved.subtype != null && !saved.subtype.isEmpty() && !saved.subtype.equals("invoice")) {
-                externalPath = config.invoice_path;
+            if(saved.subtype != null && !saved.subtype.isEmpty() && saved.subtype.equals("ccard")) {
                 minutesToWait = 5;
             }
             try {
@@ -277,20 +290,17 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         try {
 
             String filename = "orders_" + new SimpleDateFormat("yyyyMMdd-k_m").format(saved.rowCreatedDate) + extension;
+            if(saved.subtype != null && !saved.subtype.isEmpty()) {
+                filename = saved.subtype + "_" + filename;
+            }
 
             File file = new File("/tmp/"+filename);
 
-            // if file doesnt exists, then create it
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter writer = new PrintWriter(file.getAbsolutePath(), "ISO-8859-1");
             for(String line : saved.result) {
-                bw.write(line);
+                writer.print(line);
             }
-            bw.close();
+            writer.close();
 
             return file.getAbsolutePath();
         } catch (IOException e) {
@@ -582,6 +592,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 continue;
             }
             if(!order.transferredToAccountingSystem) {
+                double total = orderManager.getTotalAmount(order);
+                if(total == 0.0) {
+                    continue;
+                }
                 orders.add(order);
             }
         }
@@ -597,7 +611,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         List<Order> orders = getOrdersToTransfer();
         List<Order> invoiceOrders = new ArrayList();
         for(Order ord : orders) {
-            if(ord.payment.paymentType.toLowerCase().contains("invoice")) {
+            if(ord.payment.paymentType.toLowerCase().contains("invoice") || ord.payment.paymentType.toLowerCase().contains("expedia")) {
                 invoiceOrders.add(ord);
             }
         }
@@ -607,7 +621,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         List<User> users = new ArrayList();
         for(Order order : orders) {
             User usr = userManager.getUserById(order.userId);
-            if(usr != null) {
+            if(usr != null && !users.contains(usr)) {
                 users.add(usr);
             }
         }
@@ -620,7 +634,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         if(!users.isEmpty()) {
             saveFile(usersToSave, getAccountingType(), "invoice");
         }
-        if(!invoiceOrderList.isEmpty()) {
+        if(!restOrderList.isEmpty()) {
             saveFile(restOrderList, getAccountingType(), "ccard");
         }
         

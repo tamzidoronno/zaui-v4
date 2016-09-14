@@ -22,6 +22,7 @@ public class AccountingManagerConfig extends DataCommon {
     public String extension = "";
     public boolean useSftp = false;
     public boolean useActiveMode = false;
+    public boolean transferAllUsersConnectedToOrders = false;
     public Integer port = 21;
     
     public TransferFtpConfig getCreditorConfig() {

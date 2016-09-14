@@ -48,6 +48,7 @@ public class PmsManagerProcessor {
         try { processEndings(0, 24 * 1); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
+        try { processAutoDeletion(); }catch(Exception e) { e.printStackTrace(); }
         try { processArx(); }catch(Exception e) { e.printStackTrace(); }
     }
     
@@ -641,7 +642,11 @@ public class PmsManagerProcessor {
                     booking.needCapture = needCapture;
                     needSaving = true;
                 }
+                if(config.markBookingsWithNoOrderAsUnpaid && config.prepayment && booking.orderIds.isEmpty()) {
+                    payedfor = false;
+                }
             }
+            
             if(needSaving || booking.payedFor != payedfor) {
                 booking.payedFor = payedfor;
                 if(payedfor == true && booking.orderIds.size() == 1) {
@@ -769,5 +774,37 @@ public class PmsManagerProcessor {
 
     private void checkForRoomToClose() {
         manager.checkForRoomsToClose();
+    }
+
+    private void processAutoDeletion() {
+        long start = System.currentTimeMillis();
+        PmsConfiguration configuration = manager.getConfigurationSecure();
+        if(!configuration.autoDeleteUnpaidBookings) {
+            return;
+        }
+        
+        List<PmsBooking> allNotDeleted = getAllConfirmedNotDeleted(true);
+        for(PmsBooking booking : allNotDeleted) {
+            if(booking.payedFor) {
+                continue;
+            }
+            if(booking.channel != null && !booking.channel.isEmpty()) {
+                continue;
+            }
+            if(booking.bookedByUserId != null && !booking.bookedByUserId.isEmpty()) {
+                continue;
+            }
+            if(!booking.isOld(20)) {
+                continue;
+            }
+            if(booking.isOld(240)) {
+                continue;
+            }
+            System.out.println("Running autodelete: Autodeleted because it has expired" + " " + booking.rowCreatedDate);
+            manager.logEntry("Autodeleted because it has expired.", booking.id, null);
+            manager.deleteBooking(booking.id);
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("Check takes : " + (end-start));
     }
 }

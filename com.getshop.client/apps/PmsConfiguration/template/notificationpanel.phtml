@@ -54,6 +54,7 @@ $notifications['sendinvoice_'.$langauge] = "When sending an invoice";
 if($notificationSettings->requirePayments) {
     $notifications['booking_paymentmissing_'.$langauge] = "When payment is missing";
     $notifications['booking_sendpaymentlink_'.$langauge] = "Sending the payment link";
+    $notifications['booking_unabletochargecard_'.$langauge] = "Not able to charge card";
 }
 if($notificationSettings->runAutoPayWithCard) {
     $notifications['order_unabletopaywithsavecardwarning_'.$langauge] = "Warning sent 3 days before order expire (unable to pay with saved card)";
@@ -358,6 +359,19 @@ $channelConfig = $config->channelConfiguration;
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->autoDeleteUnpaidBookings) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoDeleteUnpaidBookings' <? echo $checked; ?>>
+            </span>
+            Automatically delete unpaid bookings
+        </div>
+        
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->hasNoEndDate) {
                     $checked = "CHECKED";
                 }
@@ -633,6 +647,18 @@ $channelConfig = $config->channelConfiguration;
                 <input type='checkbox' gsname='automarkInvoicesAsPaid' <? echo $checked; ?>>
             </span>
             Automark invoices as paid for.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->markBookingsWithNoOrderAsUnpaid) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='markBookingsWithNoOrderAsUnpaid' <? echo $checked; ?>>
+            </span>
+            If a booking has no order, mark it as unpaid.
         </div>
         <div class='configrow'>
             <span class='configentry'>

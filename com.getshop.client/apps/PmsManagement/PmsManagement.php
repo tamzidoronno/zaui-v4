@@ -118,6 +118,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $order->payment->transactionLog->{time()*1000} = "Failed marking as paid for, by: " .$userName;
             $this->getApi()->getOrderManager()->saveOrder($order);
             $this->getApi()->getWubookManager()->markCCInvalid($this->getSelectedName(), $booking->wubookreservationid);
+            $this->getApi()->getPmsManager()->failedChargeCard($this->getSelectedName(), $order->id, $booking->id);
             echo "Order has been marked as failed.<br>";
         }
     }
@@ -165,11 +166,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $this->convertToJavaDate($starttime), 
                 $this->convertToJavaDate($endtime));
         
-        $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
-        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $booking->id);
-        
-        foreach($booking->rooms as $room) {
-            $this->fastAddedCode = $room->code;
+        $booking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
+        if($booking) {
+            foreach($booking->rooms as $room) {
+                $this->fastAddedCode = $room->code;
+            }
+        } else {
+            $this->fastAddedCode = "Unavailable";
         }
     }
     
@@ -606,6 +609,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
+        $this->getManager()->processor($this->getSelectedName());
         $this->showBookingInformation();
     }
     

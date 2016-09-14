@@ -18,13 +18,13 @@ public class Address extends DataCommon {
         public static String MAIN = "main";
     }
     
-    public String phone;
-    public String emailAddress;
-    public String fullName;
-    public String postCode;
-    public String address;
+    public String phone = "";
+    public String emailAddress = "";
+    public String fullName = "";
+    public String postCode = "";
+    public String address = "";
     public String address2;
-    public String city;
+    public String city = "";
     public String type;
     public String countrycode;
     public String countryname;

@@ -6,7 +6,7 @@ $factory = IocContainer::getFactorySingelton();
 echo "<div style='padding: 20px;'>";
 
 // ProMeister Logo :D
-if ($factory->getStore()->id == "6524eb45-fa17-4e8c-95a5-7387d602a69b") {
+if ($factory->getStore()->id == "6524eb45-fa17-4e8c-95a5-7387d602a69b" || $factory->getStore()->id == "6524eb45-fa17-4e8c-95a5-7387d602a69b") {
     echo "<img src='http://promeisterse30.getshop.com/displayImage.php?id=b67ff4c6-8759-44a8-a1ce-68276013bce0&width=247'/>";
     echo "<br/>";
     echo "<br/>";

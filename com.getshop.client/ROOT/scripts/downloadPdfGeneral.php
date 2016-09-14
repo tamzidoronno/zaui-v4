@@ -11,6 +11,10 @@ $id = session_id();
 session_write_close();
 
 $webaddress = $factory->getStore()->webAddressPrimary;
+
+if (!strstr($webaddress, "www")) {
+    $webaddress = "www.".$webaddress;
+}
 $url = "http://$webaddress/renderSingelApplication.php?&id=".$_GET['id'];
 
 $base64 = $factory->getApi()->getGetShop()->getBase64EncodedPDFWebPage($url);

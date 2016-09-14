@@ -99,6 +99,7 @@ public class PmsConfiguration extends DataCommon {
     public Integer numberOfIntervalCleaning = 0;
     public boolean cleaningNextDay = false;
     boolean unsetCleaningIfJustSetWhenChangingRooms = false;
+    boolean automaticallyCloseRoomIfDirtySameDay = false;
     
     /* Mail settings */
     public String senderName = "";

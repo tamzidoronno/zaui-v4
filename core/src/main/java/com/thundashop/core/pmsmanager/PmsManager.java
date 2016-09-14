@@ -3673,6 +3673,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public void checkForRoomsToClose() {
+        if(!getConfigurationSecure().automaticallyCloseRoomIfDirtySameDay) {
+            return;
+        }
+        
         Date start = new Date();
         Calendar cal = Calendar.getInstance();
         int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);

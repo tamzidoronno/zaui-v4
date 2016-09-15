@@ -326,10 +326,11 @@ app.PmsManagement = {
             "userid" : $(this).val(),
             "bookingid" : $(this).attr('bookingid')
         };
-        var corScroll = $('.informationbox-outer').scrollTop();
         var event = thundashop.Ajax.createEvent('','changeBookingOnEvent', $(this), data);
-        thundashop.common.showInformationBoxNew(event);
-        $('.informationbox-outer').scrollTop(corScroll);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('#edituserview').html(res);
+            $(".PmsManagement .edituserbox").show();
+        })
         
     },
     changecompanyonuser : function() {

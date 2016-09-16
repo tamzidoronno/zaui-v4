@@ -33,12 +33,16 @@ if(isset($_POST['fetchorders'])) {
     $orders = $_POST['orderIds'];
     $orders = explode("\n", $orders);
     $comments = array();
+    $total = array();
+    $totalEx = array();
     foreach($orders as $orderId) {
         $order = $factory->getApi()->getOrderManager()->getOrderByincrementOrderId($orderId);
         if(!$orderId) {
             continue;
         }
         $comments[$orderId] = $order->invoiceNote;
+        $total[$orderId] = $factory->getApi()->getOrderManager()->getTotalAmount($order);
+        $totalEx[$orderId] = $factory->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
         $first = true;
         
         
@@ -46,11 +50,13 @@ if(isset($_POST['fetchorders'])) {
     
     echo "<h1>Comments</h1>";
     echo "<table border='1' width='70%'>";
-    echo "<tr><th>OrderId</th><th>Comment</th></tr>";
+    echo "<tr><th>OrderId</th><th>Comment</th><th>Total</th><th>Total ex</th></tr>";
     foreach($comments as $orderId => $comment) {
         echo "<tr>";
         echo "<td>" . $orderId . "</td>";
         echo "<td>" . $comment . "</td>";
+        echo "<td>" . $total[$orderId] . "</td>";
+        echo "<td>" . $totalEx[$orderId] . "</td>";
         
         echo "</tr>";
     }

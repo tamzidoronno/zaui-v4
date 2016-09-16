@@ -8,8 +8,10 @@ package com.thundashop.core.c3;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -20,6 +22,11 @@ public class C3Project extends DataCommon {
     public String projectNumber = "";
     public String projectOwner = "";
     public List<String> workPackages = new ArrayList();
+    public Date startDate = null;
+    public Date endDate = null;
+   
+    @Transient
+    public C3ProjectPeriode currentProjectPeriode;
     
     /**
      * Key = companyid
@@ -73,5 +80,9 @@ public class C3Project extends DataCommon {
             return 100;
         
         return wp.getPercentage(workPackageId, companyId, year);
+    }
+
+    public void addHour(String companyId, C3Hour hour) {
+        activatedCompanies.get(companyId).addHours(hour);
     }
 }

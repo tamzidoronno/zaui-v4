@@ -31,6 +31,10 @@ $eventHelderId = "";
 if ($eventHelder) {
     $eventHelderId = $eventHelder->id;
     $eventHelderName = $eventHelder->fullName;
+} else {
+    if ($event->freeTextEventHelder) {
+        $eventHelderName = $event->freeTextEventHelder;
+    }
 }
 
 ?>
@@ -91,7 +95,10 @@ if ($eventHelder) {
     <?
     foreach ($users as $user) {
         $certificate = $factory->getApi()->getEventBookingManager()->getCertificateForEvent("booking", $eventId, $user->id);
-        $signatureImageId = @$certificate->signatures->{$eventHelderId} ? $certificate->signatures->{$eventHelderId} : "";
+        $signatureImageId = false;
+        if ($certificate->signatures && isset($certificate->signatures->{$eventHelderId})) {
+            $signatureImageId = @$certificate->signatures->{$eventHelderId} ? $certificate->signatures->{$eventHelderId} : "";
+        }
     ?>
         <div class="page">
             <div class="row title1"> Kursintyg <? echo $event->bookingItemType->name; ?></div>    

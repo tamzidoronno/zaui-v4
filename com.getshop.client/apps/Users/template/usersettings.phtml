@@ -177,6 +177,19 @@ if ($user->type == 100) {
     </div>
 </div>
 
+<div class="textfield gss_setting"  id="disableSms">
+    <span class="title"><?php echo $this->__f("Disable sms"); ?></span>
+    <div class="gss_onoff" gs_model="usermodel" gs_model_attr="smsDisabled">
+        <?
+        $faclass = $user->smsDisabled ? "fa-toggle-on" : "fa-toggle-off";
+        ?>
+        Off<i class="fa <? echo $faclass; ?> "></i>On
+    </div>
+    <div class="description">
+        <?php echo $this->__("If this is activated the user will never receive any sms'es from the system."); ?>
+    </div>
+</div>
+
 <div class="textfield gss_setting"  id="sessionTimeout">
     <span class="title"><?php echo $this->__f("Minutes session timeout"); ?></span>
     <input type="textfield" gs_model='usermodel' gs_model_attr='sessionTimeout' value="<? echo $user->sessionTimeOut; ?>">

@@ -1,0 +1,50 @@
+<?
+/* @var $this \ns_4a4d17cc_7691_4851_998a_10fae57efcee\C3Hour */
+$projectId = $this->getModalVariable("projectid");
+
+
+$projectAccess = $this->getApi()->getC3Manager()->getAccessListByProjectId($projectId);
+
+$hourObject = null;
+if ($this->getModalVariable("hourid")) {
+    $hourObject = $this->getApi()->getC3Manager()->getHourById($this->getModalVariable("hourid"));
+}
+
+$from = $hourObject ? date('d.m.Y', strtotime($hourObject->from)) : "";
+$to = $hourObject ? date('d.m.Y', strtotime($hourObject->to)) : "";
+$hours = $hourObject ? $hourObject->hours : "";
+
+?>
+
+<div gstype='form' method='saveHours'>
+
+    Periode:
+    <br/><input class='gsniceinput1' type='text' gsname='from' id='from' value='<? echo $from; ?>'/> - <input class='gsniceinput1' type='text' gsname='to' id='to' value='<? echo $to; ?>'/> 
+    <br/>
+    <br/>Timer:
+    <br/><input class='gsniceinput1' type='text' gsname='hours' value='<? echo $hours; ?>'/> 
+    <br/>
+    <?
+    if (count($projectAccess->workPackageIds) == 1) {
+        $wpId = $projectAccess->workPackageIds[0];
+        echo "<input type='hidden' gsname='workpackage' value='$wpId'/>";
+    } else {
+        ?>
+        <select class='gsniceselect1' gsname='workpackage'>
+            <?
+            foreach ($projectAccess->workPackageIds as $wpId) {
+                $workPackage = $this->getApi()->getC3Manager()->getWorkPackage($wpId);
+                echo "<option value='$wpId'>".$workPackage->name."</option>";
+            }
+            ?>
+        </select> 
+        <?
+    }
+    ?>
+    <br/> <div class='shop_button' gstype='submit'> Lagre </div>
+</div>
+
+<script>
+    $('#from').datepicker({dateFormat: "dd.mm.yy"});
+    $('#to').datepicker({dateFormat: "dd.mm.yy"});
+</script>

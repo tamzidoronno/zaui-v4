@@ -247,3 +247,5 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     border-bottom: solid 0px #DDD;
     color: #000;
 }
+
+.ui-datepicker { z-index: 111113 !important; }

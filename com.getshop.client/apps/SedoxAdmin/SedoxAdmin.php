@@ -192,6 +192,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $requests .= $options->requested_dtc == "1" ? " DTC" : "";
         $requests .= $options->requested_egr == "1" ? " EGR" : "";
         $requests .= $options->requested_vmax == "1" ? " Vmax" : "";
+        $requests .= $options->requested_flaps == "1" ? " Flaps" : "";
         
         return $requests;
     }
@@ -284,6 +285,9 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         }
         if($binFile->options->requested_vmax) {
             $extraRequests .= "Vmax, ";
+        }
+        if($binFile->options->requested_flaps) {
+            $extraRequests .= "Flaps, ";
         }
         if($extraRequests != "") {
             $extraRequests = substr($extraRequests, 0, -2);

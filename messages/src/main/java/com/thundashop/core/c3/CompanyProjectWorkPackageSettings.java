@@ -6,13 +6,18 @@
 package com.thundashop.core.c3;
 
 import java.util.HashMap;
-import java.util.stream.IntStream;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author ktonder
  */
 public class CompanyProjectWorkPackageSettings {
+    
+    public Set<String> hourListIds = new HashSet();
+    public Set<String> otherCostsIds = new HashSet();
+   
     /**
      * Key = year
      * Value = projectcost

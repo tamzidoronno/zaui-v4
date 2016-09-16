@@ -40,6 +40,8 @@ class C3Projects extends \MarketingApplication implements \Application {
         $project->name = $_POST['name'];
         $project->projectNumber = $_POST['projectid'];
         $project->projectOwner = $_POST['projectOwner'];
+        $project->startDate = $this->convertToJavaDate(strtotime($_POST['startdate']));
+        $project->endDate = $this->convertToJavaDate(strtotime($_POST['enddate']));
         $savedProject = $this->getApi()->getC3Manager()->saveProject($project);
         $_POST['value'] = $savedProject->id;
     }
@@ -102,5 +104,11 @@ class C3Projects extends \MarketingApplication implements \Application {
     public function updateProjectCost() {
         $this->getApi()->getC3Manager()->setProjectCust($_POST['companyId'], $_POST['projectId'], $_POST['wpId'], $_POST['year'], $_POST['price']);
     }
+
+    public function convertTime($javaDate) {
+        $time = strtotime($javaDate);
+        return date('d.m.Y', $time);
+    }
+
 }
 ?>

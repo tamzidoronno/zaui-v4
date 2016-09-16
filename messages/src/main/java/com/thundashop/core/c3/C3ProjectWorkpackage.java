@@ -5,7 +5,6 @@
  */
 package com.thundashop.core.c3;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -59,5 +58,9 @@ public class C3ProjectWorkpackage {
         
         return (totalForPackage*100 / total); 
         
+    }
+
+    void addHours(C3Hour hour) {
+        activeWorkPackaged.get(hour.workPackageId).hourListIds.add(hour.id);
     }
 }

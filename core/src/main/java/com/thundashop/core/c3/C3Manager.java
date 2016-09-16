@@ -11,6 +11,8 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class C3Manager extends ManagerBase implements IC3Manager {
     
+    public HashMap<String, C3Hour> hours = new HashMap();
     public HashMap<String, C3GroupInformation> groupInfos = new HashMap();
     public HashMap<String, WorkPackage> workPackages = new HashMap();
     public HashMap<String, C3Project> projects = new HashMap();
@@ -42,6 +45,9 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         if (data instanceof C3GroupInformation)
             groupInfos.put(data.id, ((C3GroupInformation)data));
+        
+        if (data instanceof C3Hour)
+            hours.put(data.id, ((C3Hour)data));
     }    
     
     @Override
@@ -110,7 +116,17 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     }
 
     private void finalizeProject(C3Project project) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2016);
+        cal.set(Calendar.MONTH, 0);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         
+        C3ProjectPeriode tempPeriode = new C3ProjectPeriode();
+        tempPeriode.from = cal.getTime();
+        cal.set(Calendar.MONTH, 11);
+        tempPeriode.to = cal.getTime();
+        
+        project.currentProjectPeriode = tempPeriode;
     }
 
     @Override
@@ -236,5 +252,44 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         }
         
         return groupInfos.get(groupId);
+    }
+
+    @Override
+    public void addHour(C3Hour hour) {
+        C3Project project = projects.get(hour.projectId);
+        if (project == null) {
+            throw new NullPointerException("Can not add hours to a project that does not exists");
+        }
+        
+        hour.registeredByUserId = getSession().currentUser.id;
+        saveObject(hour);
+        hours.put(hour.id, hour);
+        
+        String companyId = getSession().currentUser.companyObject.id;
+        
+        project.addHour(companyId, hour);
+        
+    }
+
+    @Override
+    public UserProjectAccess getAccessListByProjectId(String projectId) {
+        return getAccessList().stream()
+                .filter(accessList -> accessList.projectId.equals(projectId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public List<C3Hour> getHoursForCurrentUser(String projectId, Date from, Date to ) {
+        return hours.values().stream()
+                .filter(hour -> hour.registeredByUserId != null && hour.registeredByUserId.equals(getSession().currentUser.id))
+                .filter(hour -> hour.projectId != null && hour.projectId.equals(projectId))
+                .filter(hour -> hour.within(from, to))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public C3Hour getHourById(String hourId) {
+        return hours.get(hourId);
     }
 }

@@ -1,0 +1,20 @@
+.C3RegisterHours .projectoverview {
+    border: solid 1px #DDD;
+    padding: 20px;
+    background-color: #EEE;
+}
+
+.C3RegisterHours .hourrow .editbutton,
+.C3RegisterHours .hourrow .fromdate,
+.C3RegisterHours .hourrow .hour,
+.C3RegisterHours .hourrow .todate {
+    font-size: 18px;
+}
+
+.C3RegisterHours .hourrow .editbutton { display: inline-block; width: 80px; }
+.C3RegisterHours .hourrow .fromdate { display: inline-block; width: 150px; }
+.C3RegisterHours .hourrow .todate { display: inline-block; width: 150px; }
+
+.C3RegisterHours .hourrow { border-bottom: solid 1px #DDD; padding-bottom: 5px; padding-top: 5px;}
+
+.C3RegisterHours .hourrow.summary { border-bottom: solid 0px; margin-bottom: 50px; }

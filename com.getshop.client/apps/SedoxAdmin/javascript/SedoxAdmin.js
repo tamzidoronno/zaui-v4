@@ -75,6 +75,7 @@ app.SedoxAdmin = {
                 requested_egr : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #egr').is(':checked'),
                 requested_decat : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #decat').is(':checked'),
                 requested_vmax : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #vmax').is(':checked'),
+                requested_flaps : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #flaps').is(':checked'),
                 requested_adblue : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #adblue').is(':checked'),
                 requested_dtc : $('.SedoxAdmin .uploadfilemodal .information_radio_buttons #dtc').is(':checked'),
             }

@@ -1,0 +1,44 @@
+<?
+/* @var $this ns_f1f2c4f4_fc7d_4bec_89ec_973ff192ff6d\C3RegisterHours */
+$accessList = $this->getApi()->getC3Manager()->getAccessList();
+
+
+if (!count($accessList)) {
+    echo "Beklager, du har ikke tilgang til noen prosjekter enda. Kontakt administrator for tilgang til prosjekter";
+    return;
+}
+
+foreach ($accessList as $access) {
+    $project = $this->getApi()->getC3Manager()->getProject($access->projectId);
+    $projectPeriodeToShow = $project->currentProjectPeriode;
+    
+    echo "<div class='projectoverview'>";
+        echo "<h1>$project->name</h1>";
+        echo "( Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to)).")";
+        echo "<br/>";
+        echo "<br/>";
+        $hours = $this->getApi()->getC3Manager()->getHoursForCurrentUser($project->id, $projectPeriodeToShow->from, $projectPeriodeToShow->to);
+        
+        if ($hours) {
+            $totalHours = 0;
+            echo "<div class='hourrow'><span class='editbutton'></span><span class='fromdate'>Fra</span><span class='todate'>Til</span><span class='hour'>Timer</span></div>";
+            
+            foreach ($hours as $hour) {
+                $from = date('d.m.Y', strtotime($hour->from));
+                $to = date('d.m.Y', strtotime($hour->to));
+                $editButton = "<span hourid='$hour->id' projectid='$project->id' gs_show_modal='hours' class='gs_shop_small_icon fa fa-edit'></span>";
+                $totalHours += $hour->hours;
+                echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'>$hour->hours</span></div>";
+            }
+            
+            echo "<div class='hourrow summary'><span class='editbutton'></span><span class='fromdate'></span><span class='todate'></span><span class='hour'>$totalHours</span></div>";
+        }
+        echo "<div class='buttons'>";
+            echo "Registrer ny linje: ";
+            echo " <div projectid='$project->id' gs_show_modal='hours' class='shop_button'>Ny timeregistrering</div>";
+            echo " <div class='shop_button'>Andre kostnader</div>";
+        echo "</div>";
+    echo "</div>";
+}
+?>
+

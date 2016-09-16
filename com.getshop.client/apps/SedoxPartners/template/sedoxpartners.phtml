@@ -14,6 +14,7 @@ if (!$partners) {
         <div class="col_header col2">Date </div>
         <div class="col_header col3">File </div>
         <div class="col_header col4">Credit each / 100 </div>
+        <div class="col_header col5">Balance </div>
         
     </div>
 
@@ -30,6 +31,7 @@ if (!$partners) {
                     echo "<div class='col_content col2'>$date</div>";
                     echo "<div class='col_content col3'>$user->fullName ($user->emailAddress)</div>";
                     echo "<div class='col_content col4 normaltext'>$partner->slaveIncome</div>";
+                    echo "<div class='col_content col5 '>".$partner->creditAccount->balance."</div>";
                 echo "</div>";
                 $this->setCurrentProduct($partner);
                 $this->includefile("productview");

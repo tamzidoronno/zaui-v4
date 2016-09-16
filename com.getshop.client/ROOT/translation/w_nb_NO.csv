@@ -155,6 +155,7 @@ Days;-;Dager
 Dec;-;Des
 December;-;Desember
 Default contact person for company;-;Default kontakt person
+Delayed;-;Utsatt
 Delete;-;Slett
 Delete area;-;Slett området
 Delete booking;-;Slett booking
@@ -571,7 +572,7 @@ The passwords does not match.;-;Passordet stemmer ikke overens.
 The vat number;-;Orgnummer
 There is no entries for this event;-;Finnes inne noe for akkurat dette kurset
 This event has already been passed;-;Dette kurset har allerede passert
-This event has been canceled;-;Dette kurset har blitt kanselert
+This event has been canceled;-;Dette kurset har blitt utsatt
 This event has the following entries;-;Dette kurset finner du i kalenderen på følgende dager
 This is a {} days event.;-;Dette er et {} dagers event.
 This user has not attended any events yet;-;Denne brukeren har ikke deltatt på noen eventer enda

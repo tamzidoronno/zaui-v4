@@ -18,6 +18,7 @@ public class SedoxBinaryFileOptions implements Serializable {
     public boolean requested_vmax = false;
     public boolean requested_adblue = false;
     public boolean requested_dtc = false;
+    public boolean requested_flaps = false;
     public String requested_remaptype = "";
 
     boolean isEmpty() {

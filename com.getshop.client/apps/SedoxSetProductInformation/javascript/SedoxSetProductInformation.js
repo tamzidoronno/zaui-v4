@@ -11,6 +11,7 @@ app.SedoxSetProductInformation = {
         var vmax = $(".checkbox #vmax").is(":checked");
         var adblue = $(".checkbox #adblue").is(":checked");
         var dtc = $(".checkbox #dtc").is(":checked");
+        var flaps = $(".checkbox #flaps").is(":checked");
         var data = {
             info: information,
             dpf: dpf,
@@ -19,6 +20,7 @@ app.SedoxSetProductInformation = {
             vmax: vmax,
             adblue: adblue,
             dtc: dtc,
+            flaps: flaps,
             productId : $(this).attr('productid'),
             fileId : $(this).attr('sedox_file_id')
         }

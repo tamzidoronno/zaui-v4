@@ -7,6 +7,7 @@ package com.thundashop.core.c3;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -15,4 +16,10 @@ import java.util.List;
 public class UserProjectAccess {
     public String projectId;
     public List<String> workPackageIds = new ArrayList();
+    
+    @Transient
+    public List<C3Hour> hours = new ArrayList();
+    
+    @Transient
+    public List<C3OtherCosts> otherCosts = new ArrayList();
 }

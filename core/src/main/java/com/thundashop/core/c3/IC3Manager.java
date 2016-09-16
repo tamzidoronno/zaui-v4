@@ -7,6 +7,7 @@ package com.thundashop.core.c3;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,4 +62,12 @@ interface IC3Manager {
     public void saveGroupInfo(String groupId, String type, boolean value);
     
     public C3GroupInformation getGroupInformation(String groupId);
+    
+    public void addHour(C3Hour hour);
+    
+    public UserProjectAccess getAccessListByProjectId(String projectId);
+    
+    public List<C3Hour> getHoursForCurrentUser(String projectId, Date from, Date to);
+    
+    public C3Hour getHourById(String hourId);
 }

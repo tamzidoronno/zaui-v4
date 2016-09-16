@@ -64,7 +64,7 @@ echo "<div class='eventlist'>";
                 $buttonText = $this->__w("Full");
                 $canSignUp = false;
             } else if ($event->isCanceled) {
-                $buttonText = $this->__w("Canceled");
+                $buttonText = $this->__w("Delayed");
                 $canSignUp = false;
             } else if ($event->bookingItem->isFull) {
                 $buttonText = $this->__w("Full");
@@ -80,7 +80,7 @@ echo "<div class='eventlist'>";
             }
             
             if ($event->isCanceled) {
-                $buttonText = $this->__w("Canceled");
+                $buttonText = $this->__w("Delayed");
                 $canSignUp = false;
             }
             

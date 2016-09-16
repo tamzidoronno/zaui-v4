@@ -6,3 +6,17 @@
     margin-right: 10px;
     margin-top: 2px;
 }
+
+.SedoxPartners .header .col_header.col3,
+.SedoxPartners .tablecontent .col_content.col3 {
+    width: calc(100% - 600px);  
+}
+
+.SedoxPartners .header .col_header.col4,
+.SedoxPartners .tablecontent .col_content.col4 {
+    width: 200px;
+}
+
+.SedoxPartners .header .col_header.col5 {
+    text-align: left;
+}

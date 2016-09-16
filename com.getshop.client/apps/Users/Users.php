@@ -93,6 +93,7 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $user->isCompanyOwner = $_POST['isCompanyOwner'];
         $user->sessionTimeOut = $_POST['sessionTimeout'];
         $user->preferredPaymentType = $_POST['preferredPaymentType'];
+        $user->smsDisabled = $_POST['smsDisabled'];
         
         if ($_POST['iseditor'] == "true") {
             $user->type = 50;

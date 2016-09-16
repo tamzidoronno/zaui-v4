@@ -159,6 +159,7 @@ public class User extends DataCommon implements Comparable<User> {
     public Integer invoiceDuePeriode = 14;
     public int sessionTimeOut = 180;
     public boolean canChangeLayout = false;
+    public boolean smsDisabled = false;
     public String couponId = "";
     public String profilePicutreId = "";
     

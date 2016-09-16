@@ -1695,4 +1695,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return (String)sessionFactory.getOriginalUserId(getSession().id);
     }
+
+    public User getUserByCellphone(String to) {
+        if (to == null)
+            return null;
+        
+        return getAllUsers().stream()
+                .filter(o -> o.cellPhone != null && o.cellPhone.toLowerCase().trim().equals(to.trim().toLowerCase()))
+                .findFirst()
+                .orElse(null);
+    }
 }

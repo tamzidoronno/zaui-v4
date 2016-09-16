@@ -248,6 +248,11 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         SmsHandler handler = null;
         String res = "";
         
+        User user = userManager.getUserByCellphone(to);
+        if (user != null && user.smsDisabled) {
+            return "";
+        }
+        
         if (provider.equals("plivo")) {
             handler = new PlivoSmsHandler(storeId, database, prefix, from, to, message, frameworkConfig.productionMode);
         }

@@ -38,6 +38,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function renderEditUserView() {
+        $this->includefile("edituserview");
+    }
+    
+    
     /**
      * @param \core_usermanager_data_User $user
      */
@@ -434,14 +439,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         } else {
             $booking->userId = $_POST['data']['userid'];
         }
-        
-//        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
-        $this->showBookingInformation();
 
-        echo "<script>";
-        echo "$('.edituserbox').show();";
-        echo "</script>";
-        
+        $this->renderEditUserView();
     }
     
     public function saveUser() {

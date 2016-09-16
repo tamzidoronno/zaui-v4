@@ -115,7 +115,7 @@
     <div class='col-xs-8'><input type="txt" ng-model="user.prefix" class="form-control"></div>
 </div>
 <div class='row'>
-    <div class='col-xs-4'>Phone</div>
+    <div class='col-xs-4'><a href="tel:+{{user.prefix}}{{user.cellPhone}}"><i class="fa fa-phone" style="color:blue; font-size: 20px;"></i></a> Phone</div>
     <div class='col-xs-8'><input type="txt" ng-model="user.cellPhone" class="form-control"></div>
 </div>
 <div class='row'>
@@ -152,9 +152,12 @@
 
 <div class='additionalinfo row'>Room information</div>
 <div class='row'>
-    <div class='col-xs-4 contactdata'>Code</div>
-    <div class='col-xs-4 othercontactdata'>{{ room.code }}</div>
-    <div class='col-xs-4 ng-hide' ng-show='roomIsStarted()'><span class='btn btn-success' ng-click="doResendCode()" style='width:100%;'>Resend code</span></div>
+    <div class='col-md-4 col-xs-2 contactdata'>Code</div>
+    <div class='col-md-4 col-xs-2 othercontactdata'>{{ room.code }}</div>
+    <div class='col-md-4 col-xs-8 ng-hide' ng-show='roomIsStarted()'>
+        <span class='btn btn-warning' ng-click="doRecreateCode()" style='width:50%; float:left;'>New code</span>
+        <span class='btn btn-success' ng-click="doResendCode()" style='width:50%; float:left;'>Resend</span>
+    </div>
     <div class='col-xs-4' ng-show='!roomIsStarted()'>Unable to send code, see status</div>
 </div>
 <div class='row' ng-show="resendcode">
@@ -203,22 +206,22 @@
     <div class='col-xs-8 othercontactdata'><input type="number" class="form-control" ng-model="room.numberOfGuests" ng-change="changeRoomCount(room.numberOfGuests)"></div>
 </div>
 <div ng-repeat="guest in room.guests" class='guestrow row no-gutter'>
-    <div class='col-xs-3 nospacing'>
+    <div class='col-xs-3 col-md-3 nospacing'>
         <label>Guest name
             <input class='form-control' ng-model='guest.name'>
         </label>
     </div>
-    <div class='col-xs-1 nospacing'>
+    <div class='col-xs-2 col-md-1 nospacing'>
         <label>Prefix
             <input class='form-control' ng-model='guest.prefix'>
         </label>
     </div>
-    <div class='col-xs-2 nospacing'>
-        <label>Phone
+    <div class='col-xs-3 col-md-2 nospacing'>
+        <label><a href="tel:+{{guest.prefix}}{{guest.phone}}"><i class="fa fa-phone" style="color:blue; font-size: 20px;"></i></a> Phone
             <input class='form-control' ng-model='guest.phone'>
         </label>
     </div>
-    <div class='col-xs-6 nospacing'>
+    <div class='col-xs-4 col-md-6 nospacing'>
         <label style='width:100%; box-sizing: border-box; padding-right: 15px;'>Email
             <input class='form-control' ng-model='guest.email'>
         </label>

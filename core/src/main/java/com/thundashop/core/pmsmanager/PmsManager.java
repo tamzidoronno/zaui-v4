@@ -3659,6 +3659,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         addBookingToBookingEngine(booking, room);
+        saveBooking(booking);
     }
 
     @Override
@@ -3672,6 +3673,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public void checkForRoomsToClose() {
+        if(!getConfigurationSecure().automaticallyCloseRoomIfDirtySameDay) {
+            return;
+        }
+        
         Date start = new Date();
         Calendar cal = Calendar.getInstance();
         int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
@@ -3722,5 +3727,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         bookingEngine.addBookings(toAdd);
         return true;
+    }
+
+    @Override
+    public String generateNewCodeForRoom(String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = booking.findRoom(roomId);
+        room.code = generateCode();
+        room.addedToArx = false;
+        if(room.isStarted() && !room.isEnded()) {
+            forceMarkRoomAsCleaned(room.bookingItemId);
+        }
+        saveBooking(booking);
+        return room.code;
     }
 }

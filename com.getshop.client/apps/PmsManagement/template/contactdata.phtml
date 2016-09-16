@@ -177,8 +177,8 @@ if(!$user->fullName) {
             }
             ?>
             <span style="font-size:12px">
-                <a onclick='$(".PmsManagement .edituserbox").fadeIn(function() {$(".edituserbox select").chosen(); });'><i class='fa fa-edit'></i> <? echo $user->fullName; ?></a>, <? echo $user->emailAddress . ", phone +" . $user->prefix . $user->cellPhone; ?>
-                <?php $this->includefile("edituserview"); ?>
+                <i class='fa fa-edit loadedituser'></i> <? echo $user->fullName; ?>, <? echo $user->emailAddress . ", phone +" . $user->prefix . $user->cellPhone; ?>
+                <span id='edituserview'></span>
             </span>
         </span>
         <div style='clear:both;'></div>

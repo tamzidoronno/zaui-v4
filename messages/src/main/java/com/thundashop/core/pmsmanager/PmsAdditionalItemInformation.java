@@ -1,6 +1,10 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.DataCommon;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,9 +39,15 @@ public class PmsAdditionalItemInformation extends DataCommon {
     }
 
     private boolean isCleanedToday() {
-        for(Date date : cleaningDates) {
-            if(isToday(date.getTime())) {
+        if(lastCleaned != null) {
+            if(isToday(lastCleaned.getTime())) {
                 return true;
+            }
+        } else {
+            for(Date date : cleaningDates) {
+                if(isToday(date.getTime())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -70,7 +80,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
         
         if(lastUsed == null) {
             isClean = true;
-        } else if(isCleanedToday() && checkToday) {
+        } else if(checkToday && isCleanedToday()) {
             isClean = true;
         } else {
             isClean = lastCleaned.after(lastUsed);

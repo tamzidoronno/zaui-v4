@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  *
  * @author ktonder
  */
-class C3Hour extends DataCommon {
+public class C3Hour extends DataCommon {
     public Date from;
     public Date to;
     public double hours;

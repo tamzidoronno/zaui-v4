@@ -1576,7 +1576,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
     
     @Override
-    public void setSpecialRequestsForFile(String productId, int fileId, boolean dpf, boolean egr, boolean decat, boolean vmax, boolean adblue, boolean dtc) throws ErrorException {
+    public void setSpecialRequestsForFile(String productId, int fileId, boolean dpf, boolean egr, boolean decat, boolean vmax, boolean adblue, boolean dtc, boolean flaps) throws ErrorException {
         SedoxProduct product = getProductById(productId);
         SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
         
@@ -1589,6 +1589,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                     binFile.options.requested_vmax = vmax;
                     binFile.options.requested_adblue = adblue;
                     binFile.options.requested_dtc = dtc;
+                    binFile.options.requested_flaps = flaps;
                 }
             }
 

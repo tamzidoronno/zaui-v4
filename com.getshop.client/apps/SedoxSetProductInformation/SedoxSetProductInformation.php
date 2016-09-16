@@ -22,7 +22,8 @@ class SedoxSetProductInformation extends \MarketingApplication implements \Appli
             filter_var($_POST['data']['decat'], FILTER_VALIDATE_BOOLEAN), 
             filter_var($_POST['data']['vmax'], FILTER_VALIDATE_BOOLEAN), 
             filter_var($_POST['data']['adblue'], FILTER_VALIDATE_BOOLEAN), 
-            filter_var($_POST['data']['dtc'], FILTER_VALIDATE_BOOLEAN)
+            filter_var($_POST['data']['dtc'], FILTER_VALIDATE_BOOLEAN),
+            filter_var($_POST['data']['flaps'], FILTER_VALIDATE_BOOLEAN)
         );
     }
 }

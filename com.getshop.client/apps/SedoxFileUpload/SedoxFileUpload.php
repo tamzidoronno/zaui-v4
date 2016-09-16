@@ -61,6 +61,7 @@ class SedoxFileUpload extends \MarketingApplication implements \Application {
         $options->requested_egr = $_POST['data']['upload_egr'] == "true";
         $options->requested_vmax = $_POST['data']['upload_vmax'] == "true";
         $options->requested_remaptype = $_POST['data']['upload_remaptype'];
+        $options->requested_flaps = $_POST['data']['upload_flaps'];
         
         $reference = isset($_POST['data']['upload_reference']) && $_POST['data']['upload_reference'] != "" ? $_POST['data']['upload_reference'] : "";
         $this->getApi()->getSedoxProductManager()->createSedoxProduct($sedoxProduct, $filecontent, $filename, $slave, "webpage", $_POST['data']['upload_comment'], $useCredit, $options, $reference);

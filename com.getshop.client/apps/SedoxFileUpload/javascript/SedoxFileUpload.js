@@ -59,6 +59,7 @@ app.SedoxFileUpload = {
             upload_vmax : $('input[name="sedox_checkbox_vmax"]').is(':checked'),
             upload_adblue : $('input[name="sedox_checkbox_adblue"]').is(':checked'),
             upload_dtc : $('input[name="sedox_checkbox_dtc"]').is(':checked'),
+            upload_flaps : $('input[name="sedox_checkbox_flaps"]').is(':checked')
             
         }
         

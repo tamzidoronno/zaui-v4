@@ -315,6 +315,18 @@ $channelConfig = $config->channelConfiguration;
             </span>
             Support manual checkin and checkout?
         </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->denyUpdateUserWhenTransferredToAccounting) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='denyUpdateUserWhenTransferredToAccounting' <? echo $checked; ?>>
+            </span>
+            When a user has been transferred to accounting, deny more updates on this user.
+        </div>
         
         <div class='configrow'>
             <span class='configentry'>

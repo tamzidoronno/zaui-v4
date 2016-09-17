@@ -576,6 +576,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return user.fullName.equalsIgnoreCase("Jean-Luc Picard");
     }
+    
+    
+    @Override
+    public User logonUsingRefNumber(String refCode) throws ErrorException { 
+        User user = getUserByReference(refCode);
+        logonEncrypted(user.emailAddress, user.password);
+        return user;
+    }
 
     @Override
     public User logonUsingKey(String logonKey) throws ErrorException {

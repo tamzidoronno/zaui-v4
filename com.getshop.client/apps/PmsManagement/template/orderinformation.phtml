@@ -98,10 +98,9 @@ if($booking->orderIds) {
     
     echo "<table cellspacing='0' cellpadding='0' width='100%'>";
     echo "<tr>";
-    echo "<th>Orderid</th>";
     echo "<th>Order</th>";
     echo "<th>Price</th>";
-    echo "<th>Payment status</th>";
+    echo "<th width='80'>Payment status</th>";
     echo "<th>Payment type</th>";
     echo "<th>Closed</th>";
     echo "<th>Credit</th>";
@@ -127,11 +126,15 @@ if($booking->orderIds) {
                 $guests = array_merge($guests, $room->guests);
             }
         }
-        
+        $user = $this->getApi()->getUserManager()->getUserById($user->id);
+        $addr = $user->fullName . "<br>";
+        $addr .= $user->address->address . "<br>";
+        $addr .= $user->address->postCode . " " . $user->address->city . "<br>";
+        $addr .= $user->emailAddressToInvoice ? $user->emailAddressToInvoice : $user->emailAddress;
         
         echo "<tr orderid='".$order->id."'>";
-        echo "<td><a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a></td>";
-        echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate))  . "</td>";
+        echo "<td> <a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a> - ".date("d.m.Y", strtotime($order->rowCreatedDate));
+        echo "<br><span style='color:#bbb; width: 127px;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='$addr'>".$user->fullName."</span></td>";
         echo "<td>" . round($totalEx) . "<br><span style='color:#bbb'>" . round($total) . "</span></td>";
         echo "<td>";
         if(@!$order->closed) {

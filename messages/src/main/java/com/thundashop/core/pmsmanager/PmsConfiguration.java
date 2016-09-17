@@ -45,6 +45,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean manualcheckincheckout = false;
     public boolean markBookingsWithNoOrderAsUnpaid = false;
     public boolean fastCheckIn = false;
+    public boolean denyUpdateUserWhenTransferredToAccounting = false;
     public HashMap<Integer, PmsBookingAddonItem> addonConfiguration = new HashMap();
     public HashMap<String, CleaningStatistics> cleaningPriceConfig = new HashMap();
     public HashMap<String, List<String>> emailsToNotify = new HashMap();

@@ -115,7 +115,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                result += user.birthDay + ";"; //Kunde Org nr el fødselsnr.
            }
            if(user.companyObject != null && user.companyObject.vatRegisterd) {
-               result += "1;"; //Kunde avgiftskode hvis tom = mva pliktig
+               result += ";"; //Kunde avgiftskode hvis tom = mva pliktig
            } else {
                result += ";"; //ingen avgift.
            }

@@ -292,7 +292,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function sendPaymentLink() {
         $orderid = $_POST['data']['orderid'];
         $bookingid = $_POST['data']['bookingid'];
-        $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderid, $bookingid);
+        $email = $_POST['data']['bookerEmail'];
+        $prefix = $_POST['data']['bookerPrefix'];
+        $phone = $_POST['data']['bookerPhone'];
+        
+        $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderid, $bookingid, $email, $prefix, $phone);
         $this->showBookingInformation();
     }
     

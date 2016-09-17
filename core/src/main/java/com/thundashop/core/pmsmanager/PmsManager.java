@@ -130,6 +130,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String orderIdToSend;
     private Date lastCheckForIncosistent;
     private String emailToSendTo;
+    private String phoneToSend;
+    private String prefixToSend;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -981,8 +983,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void notifyBooker(PmsBooking booking, String message, String type, String key) throws ErrorException {
         User user = userManager.getUserById(booking.userId);
         if (type.equals("sms")) {
-            messageManager.sendSms("sveve", user.cellPhone, message, user.prefix, configuration.smsName);
-            repicientList.add(user.cellPhone);
+            String phone = user.cellPhone;
+            String prefix = user.prefix;
+            if(phoneToSend != null) {
+                phone = phoneToSend;
+                prefix = prefixToSend;
+            }
+            messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
+            repicientList.add(phone);
         } else {
             String title = configuration.emailTitles.get(key);
             String fromName = getFromName();
@@ -2809,8 +2817,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void sendPaymentLink(String orderId, String bookingId) {
+    public void sendPaymentLink(String orderId, String bookingId, String email, String prefix, String phone) {
         orderIdToSend = orderId;
+        emailToSendTo = email;
+        prefixToSend = prefix;
+        phoneToSend = phone;
         doNotification("booking_sendpaymentlink", bookingId);
     }
 

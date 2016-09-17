@@ -156,7 +156,7 @@ public interface IPmsManager {
     public String createPrepaymentOrder(String bookingId);
     
     @Administrator
-    public void sendPaymentLink(String orderId, String bookingId);
+    public void sendPaymentLink(String orderId, String bookingId, String email, String prefix, String phone);
     
     @Administrator
     public void failedChargeCard(String orderId, String bookingId);

@@ -336,7 +336,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             result = completeBooking(bookingsToAdd, booking);
 
             if (result == 0) {
-                if (!configuration.payAfterBookingCompleted) {
+                if (!configuration.payAfterBookingCompleted || (booking.channel != null && !booking.channel.isEmpty())) {
                     if (bookingIsOK(booking)) {
                         if (!booking.confirmed) {
                             doNotification("booking_completed", booking, null);

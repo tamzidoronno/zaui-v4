@@ -104,6 +104,44 @@ $this->includeManagementViewResult();
  ?>
 
 <script>
-    $('.start.pmsinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
-    $('.end.pmsinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.start.pmsinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+    onSelect: function(dateText) {
+        var date = moment(dateText, "DD.MM.YYYY");
+        var month = (moment(date).get('month')+1);
+        if(month < 10) {
+            month = "0" + month;
+        }
+        var currentEnd = $('.end.pmsinput').val();
+        var endMoment = moment(currentEnd, "DD.MM.YYYY");
+        
+        var diff = endMoment.diff(date, "minutes");
+        if(diff < 0) {
+            var day = moment(date).get('date');
+            if(day < 10) {
+                day = "0" + day;
+            }
+            $('.end.pmsinput').val(day + "." + month + "." + moment(date).get('year'));
+        }
+      }
+    });
+    $('.end.pmsinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            var date = moment(dateText, "DD.MM.YYYY");
+            var month = (moment(date).get('month')+1);
+            if(month < 10) {
+                month = "0" + month;
+            }
+            var currentEnd = $('.start.pmsinput').val();
+            var endMoment = moment(currentEnd, "DD.MM.YYYY");
+
+            var diff = endMoment.diff(date, "minutes");
+            if(diff > 0) {
+                var day = moment(date).get('date');
+                if(day < 10) {
+                    day = "0" + day;
+                }
+                $('.start.pmsinput').val(day + "." + month + "." + moment(date).get('year'));
+            }
+        }
+    });
 </script>

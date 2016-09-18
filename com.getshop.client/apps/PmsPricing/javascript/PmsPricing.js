@@ -6,6 +6,15 @@ app.PmsPricing = {
         $(document).on('change', '.PmsPricing .dateinput', app.PmsPricing.updateDate);
         $(document).on('click', '.PmsPricing .selectcol', app.PmsPricing.selectCol);
         $(document).on('click', '.PmsPricing .selectrow', app.PmsPricing.selectRow);
+        $(document).on('keyup', '.PmsPricing .priceinput', app.PmsPricing.priceinput);
+    },
+    loadpriceinput : function() {
+        $('.priceinput').each(function() {
+            $(this).val(localStorage.getItem("priceinput_" + $(this).attr('itemid')));
+        });
+    },
+    priceinput : function() {
+        localStorage.setItem("priceinput_" + $(this).attr('itemid'), $(this).val());
     },
     selectRow : function() {
         var selected = $(this).is(':checked');

@@ -19,6 +19,17 @@ class MecaFleetServiceList extends \MarketingApplication implements \Application
         $this->getApi()->getMecaManager()->resetServiceInterval($_POST['data']['carid'], $date, 125000);
     }
     
+    public function pkkCompleted() {
+        $date = $this->convertToJavaDate(time());
+        $this->getApi()->getMecaManager()->markControlAsCompleted($_POST['data']['carid']);
+    }
+    
+    public function serviceAndCompleted() {
+        $date = $this->convertToJavaDate(time());
+        $this->getApi()->getMecaManager()->resetServiceInterval($_POST['data']['carid'], $date, 125000);
+        $this->getApi()->getMecaManager()->markControlAsCompleted($_POST['data']['carid']);
+    }
+    
     public function noShow() {
         $this->getApi()->getMecaManager()->noShowService($_POST['data']['carid']);
     }

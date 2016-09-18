@@ -148,6 +148,13 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         $this->includefile("calendar");
     }
     
+    public function changeMonthSpecified() {
+        $month = explode("-", $_POST['data']['month']);
+        $_SESSION[$this->getAppInstanceId()]['selected_month'] = $month[0];
+        $_SESSION[$this->getAppInstanceId()]['selected_year'] = $month[1];
+        $this->includefile("calendar");
+    }
+    
     public function  isStartDate() {
         return $this->getConfigurationSetting("date_type") == "start_date";
     }
@@ -180,7 +187,7 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         if(sizeof($res) > 0) {
             return true;
         }
-        if($booking->userId) {
+        if(@$booking->userId) {
             return true;
         }
         return false;

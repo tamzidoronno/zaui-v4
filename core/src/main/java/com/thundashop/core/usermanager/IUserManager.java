@@ -79,6 +79,8 @@ public interface IUserManager {
      */
     public User logonUsingKey(String logonKey) throws ErrorException;
     
+    public User logonUsingRefNumber(String refCode) throws ErrorException;
+    
     /**
      * Logout the currently logged on user.
      * @return

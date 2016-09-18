@@ -1,0 +1,15 @@
+<?
+namespace ns_e8159b67_815e_4c78_8723_cedf3678f5b8;
+/* @var $this \ns_e8159b67_815e_4c78_8723_cedf3678f5b8\LoginWithRefCode */
+
+if($this->getApi()->getUserManager()->isLoggedIn()) {
+    echo "Logged in";
+} else if(isset($_POST['data']['refcode'])) {
+    echo "Login failed";
+}
+?>
+<div  gstype="form" method="loginWithKey">
+    <input class="tstextfield" gsname="refcode" type="password" placeholder="Code"></input>
+    <br/>
+    <span class="loginbutton gs_button" gstype="submit"><? echo $this->__f("Login with code"); ?></span>
+</div>

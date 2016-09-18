@@ -29,6 +29,7 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .changestatisticsinterval', app.PmsManagement.changeSummaryView);
         $(document).on('click','.PmsManagement .updateorderrow', app.PmsManagement.updateorderrow);
         $(document).on('click','.PmsManagement .sendinvoice, .PmsManagement .sendreciept', app.PmsManagement.showsendinvoice);
+        $(document).on('click','.PmsManagement .loadExcelExportOptions', app.PmsManagement.loadExcelExportOptions);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -48,6 +49,10 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
         $(document).on('keyup','.PmsManagement .matrixpricealldays', app.PmsManagement.updateRoomPriceMatrix);
     },
+    loadExcelExportOptions : function() {
+        $('.excelexportoptions').show();
+    },
+    
     loadedituser : function() {
         var event = thundashop.Ajax.createEvent('','renderEditUserView', $(this), {
             bookingid : $('#openedbookingid').val()

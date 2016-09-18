@@ -3,8 +3,14 @@
 $booking = $this->getSelectedBooking();
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 $allUsers = $this->getApi()->getUserManager()->getAllUsers();
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+
 if(!$user->address) {
     $user->address = new core_usermanager_data_Address();
+}
+$disabled = "";
+if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferredToAccounting) {
+    $disabled = "DISABLED";
 }
 ?>
 <div class="edituserbox" gstype='form' method='saveUser'>
@@ -33,21 +39,26 @@ if(!$user->address) {
                 </select>
             </td>
         </tr>
-        <tr><td>Fullname</td><td><input type="txt" gsname="fullName" value="<?php echo $user->fullName; ?>"></td><tr>
-        <tr><td>Prefix</td><td><input type="txt" gsname="prefix" value="<?php echo $user->prefix; ?>"></td><tr>
-        <tr><td>Phone</td><td><input type="txt" gsname="cellPhone" value="<?php echo $user->cellPhone; ?>"></td><tr>
-        <tr><td>Email</td><td><input type="txt" gsname="emailAddress" value="<?php echo $user->emailAddress; ?>"></td><tr>
-        <tr><td>Address</td><td><input type="txt" gsname="address.address" value="<?php echo $user->address->address; ?>"></td><tr>
-        <tr><td>Postcode</td><td><input type="txt" gsname="address.postCode" value="<?php echo $user->address->postCode; ?>"></td><tr>
-        <tr><td>City</td><td><input type="txt" gsname="address.city" value="<?php echo $user->address->city; ?>"></td><tr>
-        <tr><td>Birthdate</td><td><input type="txt" gsname="birthDay" value="<?php echo $user->birthDay; ?>"></td><tr>
+        <tr><td>Fullname</td><td><input type="txt" gsname="fullName" value="<?php echo $user->fullName; ?>" <?php echo $disabled; ?>></td><tr>
+        <tr><td>Prefix</td><td><input type="txt" gsname="prefix" value="<?php echo $user->prefix; ?>" <?php echo $disabled; ?>></td><tr>
+        <tr><td>Phone</td><td><input type="txt" gsname="cellPhone" value="<?php echo $user->cellPhone; ?>" <?php echo $disabled; ?>></td><tr>
+        <tr><td>Email</td><td><input type="txt" gsname="emailAddress" value="<?php echo $user->emailAddress; ?>" <?php echo $disabled; ?>></td><tr>
+        <tr><td>Address</td><td><input type="txt" gsname="address.address" value="<?php echo $user->address->address; ?>" <?php echo $disabled; ?>></td><tr>
+        <tr><td>Postcode</td><td><input type="txt" gsname="address.postCode" value="<?php echo $user->address->postCode; ?>" <?php echo $disabled; ?>></td><tr>
+        <tr><td>City</td><td><input type="txt" gsname="address.city" value="<?php echo $user->address->city; ?>" <?php echo $disabled; ?>></td><tr>
+        <tr><td>Birthdate</td><td><input type="txt" gsname="birthDay" value="<?php echo $user->birthDay; ?>" <?php echo $disabled; ?>></td><tr>
             <?php 
                 if($this->hasAccountingTransfer()) {
                     ?>
-                    <tr><td>Accounting id</td><td><input type="txt" gsname="accountingId" value="<?php echo $user->accountingId; ?>"></td><tr>
+                    <tr><td>Accounting id</td><td><input type="txt" gsname="accountingId" value="<?php echo $user->accountingId ? $user->accountingId : $user->customerId; ?>"></td><tr>
                     <?php
                 }
             ?>
+        <?php
+        if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferredToAccounting) {
+            echo "<tr><td colspan='2'>This user has been transferred to accounting, and can not be updated anymore.</td></tr>";
+        }
+        ?>
         <tr><td></td><td><span class='pmsbutton closeadduser' style='background-color:red;'>Close</span> <span class='pmsbutton' gstype='submitToInfoBox'>Save changes</span></td><tr>
     </table>
 </div>

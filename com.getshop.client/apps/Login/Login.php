@@ -69,7 +69,6 @@ class Login extends \SystemApplication implements \Application {
             $userLoggedIn = $this->getApi()->getUserManager()->logOn($username, $password);
         }
 
-        
         if ($userLoggedIn != null && isset($userLoggedIn)) {
             unset($_SESSION['tempaddress']);
             unset($_SESSION['gs_currently_showing_modal']);

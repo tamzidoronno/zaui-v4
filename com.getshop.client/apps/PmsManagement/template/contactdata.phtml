@@ -166,7 +166,11 @@ if(!$user->fullName) {
     
     <div style='padding-left: 10px;'>
         <span class='roomprefix'>User</span>
-        <span class='roompostfix'>
+        <span class='roompostfix' style='width: 227px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;' >
             <?php
             if(!$user->cellPhone) {
                 $user->prefix = "";
@@ -184,7 +188,11 @@ if(!$user->fullName) {
         <div style='clear:both;'></div>
         <?php $booking->bookedByUserId;  if($booking->bookedByUserId) { ?>
             <span class='roomprefix'>Booked by</span>
-            <span class='roompostfix'>
+            <span class='roompostfix' style='width: 227px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;'>
                 <?php
                 $booker = $this->getApi()->getUserManager()->getUserById($booking->bookedByUserId);
                 echo $booker->fullName;

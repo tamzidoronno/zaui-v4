@@ -811,6 +811,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public void checkForNoShowsAndMark() throws Exception {
+        if(!frameworkConfig.productionMode) { return; }
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.filterType = "checkout";
         

@@ -292,7 +292,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function sendPaymentLink() {
         $orderid = $_POST['data']['orderid'];
         $bookingid = $_POST['data']['bookingid'];
-        $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderid, $bookingid);
+        $email = $_POST['data']['bookerEmail'];
+        $prefix = $_POST['data']['bookerPrefix'];
+        $phone = $_POST['data']['bookerPhone'];
+        
+        $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderid, $bookingid, $email, $prefix, $phone);
         $this->showBookingInformation();
     }
     
@@ -733,6 +737,40 @@ class PmsManagement extends \WebshopApplication implements \Application {
         array_unshift($arr, array_keys((array)$arr[0]));
         echo json_encode($arr);
     }
+    
+    public function exportBookingExpediaDataToExcel() {
+        $filter = $this->getSelectedFilter();
+        $res = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
+        if(!$res) {
+            echo "[]";
+            return;
+        }
+        $export = array();
+        foreach($res as $room) {
+            foreach($room->orderIds as $orderId) {
+                $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                if(stristr($order->payment->paymentType, "expedia")) {
+                    $start = $order->cart->items[0]->startDate;
+                    $end = $order->cart->items[0]->endDate;
+                    $totalEx = round($this->getApi()->getOrderManager()->getTotalAmountExTaxes($order));
+                    $total = round($this->getApi()->getOrderManager()->getTotalAmount($order));
+                    $row = array();
+                    $row[] = $room->guest[0]->name;
+                    $row[] = $order->incrementOrderId;
+                    $row[] = $room->wubookchannelid;
+                    $row[] = date("d/m/Y", strtotime($start));
+                    $row[] = date("d/m/Y", strtotime($end));
+                    $row[] = round((strtotime($end) - strtotime($start))/86400);
+                    $row[] = $totalEx;
+                    $row[] = $total - $totalEx;
+                    $row[] = $total;
+                    $export[] = $row;
+                }
+            }
+        }
+        echo json_encode($export);
+    }
+    
     
     public function exportBookingDataToExcel() {
         $filter = $this->getSelectedFilter();

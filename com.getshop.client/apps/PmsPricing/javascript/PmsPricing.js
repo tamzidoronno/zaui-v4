@@ -6,10 +6,10 @@ app.PmsPricing = {
         $(document).on('change', '.PmsPricing .dateinput', app.PmsPricing.updateDate);
         $(document).on('click', '.PmsPricing .selectcol', app.PmsPricing.selectCol);
         $(document).on('click', '.PmsPricing .selectrow', app.PmsPricing.selectRow);
-        $(document).on('keyup', '.PmsPricing .priceinput', app.PmsPricing.priceinput);
+        $(document).on('keyup', '.PmsPricing .priceinputsetter', app.PmsPricing.priceinput);
     },
     loadpriceinput : function() {
-        $('.priceinput').each(function() {
+        $('.priceinputsetter').each(function() {
             $(this).val(localStorage.getItem("priceinput_" + $(this).attr('itemid')));
         });
     },

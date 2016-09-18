@@ -284,6 +284,25 @@ public class PmsBooking extends DataCommon {
         return cal.getTime().before(new Date());
     }
 
+    boolean hasSentNotification(String notice) {
+        notice = notice.toLowerCase();
+        for(String sent : notificationsSent) {
+            if(sent == null) {
+                continue;
+            }
+            sent = sent.toLowerCase();
+            if(sent.contains(notice)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean isRegisteredToday() {
+        PmsBookingRooms room = new PmsBookingRooms();
+        return room.isSameDay(rowCreatedDate, new Date());
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

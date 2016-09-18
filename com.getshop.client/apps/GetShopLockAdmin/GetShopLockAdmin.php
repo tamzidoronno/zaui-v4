@@ -59,6 +59,10 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         
         $this->includefile("locklist");
     }
+    
+    public function toggleLockUpdate() {
+        $this->getApi()->getGetShopLockManager()->stopUpdatesOnLock($this->getSelectedName());
+    }
 
     /**
      * @param \core_getshop_data_GetShopLock $lock

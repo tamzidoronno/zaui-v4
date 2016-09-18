@@ -22,10 +22,11 @@
 .MecaFleetServiceList .servicerow div:nth-child(1) { width: 30px; padding-left: 10px; text-align: center;}
 .MecaFleetServiceList .servicerow div:nth-child(2) { width: 50px; padding-left: 10px;}
 .MecaFleetServiceList .servicerow div:nth-child(3) { width: 150px; padding-left: 10px;}
-.MecaFleetServiceList .servicerow div:nth-child(4) { width: 250px; }
-.MecaFleetServiceList .servicerow div:nth-child(5) { width: 250px; }
-.MecaFleetServiceList .servicerow div:nth-child(6) { width: 200px; }
-.MecaFleetServiceList .servicerow div:nth-child(7) { width: 200px; text-align: right;}
+.MecaFleetServiceList .servicerow div:nth-child(4) { width: 150px; }
+.MecaFleetServiceList .servicerow div:nth-child(5) { width: 210px; }
+.MecaFleetServiceList .servicerow div:nth-child(6) { width: 150px; }
+.MecaFleetServiceList .servicerow div:nth-child(7) { width: 230px;}
+.MecaFleetServiceList .servicerow div:nth-child(8) { width: 150px; text-align: right;}
 
 
 .MecaFleetServiceList .servicerow.red {

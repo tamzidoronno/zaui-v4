@@ -562,15 +562,10 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
                 finalize(car);
                 if (car.needAttentionToService()) {
                     i++;
-                }
-            }
-        }
-        
-        if (mecaControl != null) {
-            for (MecaCar car : getCarsServiceList()) {
-                finalize(car);
-                if (car.needAttentionToControl()) {
-                    i++;
+                } else {
+                    if (car.needAttentionToControl()) {
+                        i++;
+                    }
                 }
             }
         }

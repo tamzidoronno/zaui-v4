@@ -8,6 +8,7 @@ $cars = $this->getApi()->getMecaManager()->getCarsServiceList();
     <div>Regnr </div>
     <div>KM til neste service</div>
     <div>Måneder til neste service</div>
+    <div>Dato for kontroll</div>
     <div>Flåte</div>
     <div></div>
 </div>
@@ -21,11 +22,24 @@ foreach ($cars as $car) {
     $agreementStatus = isset($car->nextServiceAgreed) && $car->nextServiceAgreed != null && !@$car->nextServiceAcceptedByCarOwner ? "yellow" : $agreementStatus;
     $agreementStatus = isset($car->nextServiceAgreed) && $car->nextServiceAgreed != null && @$car->nextServiceAcceptedByCarOwner ? "green" : $agreementStatus;
     
+    $agreementStatusBullseye = $agreementStatus;
     
+    $canAgreePkk = isset($car->canAgreeControlDate) && $car->canAgreeControlDate;
+    
+    $agreementStatusPkk = "disabled";
+    $agreementStatusPkk = $canAgreePkk ? "red" : $agreementStatusPkk;
+    $agreementStatusPkk = isset($car->nextControlAgreed) && $car->nextControlAgreed != null && !@$car->nextControlAcceptedByCarOwner ? "yellow" : $agreementStatusPkk;
+    $agreementStatusPkk = isset($car->nextControlAgreed) && $car->nextControlAgreed != null && @$car->nextControlAcceptedByCarOwner ? "green" : $agreementStatusPkk;
+    
+    $pkkStyleColor = "";
+    if ($agreementStatusPkk === "red") {
+        $pkkStyleColor =  "color: red";
+        $agreementStatusBullseye = "red";
+    }
     ?>
         <div class='servicerow'>
             <div>
-                <i class="fa fa-bullseye <? echo $agreementStatus; ?>"></i>
+                <i class="fa fa-bullseye <? echo $agreementStatusBullseye; ?>"></i>
             </div>
             <div>
                 <a href='/?page=<? echo $car->pageId;?>'><i class='gs_shop_small_icon fa fa-edit'></i></a>
@@ -33,16 +47,27 @@ foreach ($cars as $car) {
             <div><? echo $car->licensePlate; ?></div>
             <div><? echo isset($car->kilometersToNextService) ? $car->kilometersToNextService: 'N/A'; ?></div>
             <div><? echo isset($car->monthsToNextService) ? $car->monthsToNextService." ( $nextServiceDate ) " : "N/A"; ?> </div>
+            <div style="<? echo $pkkStyleColor; ?>"><? echo isset($car->nextControll) ? date('d/m-Y', strtotime($car->nextControll)) : 'N/A'; ?></div>
             <div><? echo isset($fleet->name) ? $fleet->name : "N/A"; ?> </div>
             
             <div>
                 <?
+                $used = false;
                 if ($agreementStatus === "red") {
-                    echo "<span class='shop_button' gs_show_modal='agreeForService' carid='$car->id' type='service'>Kall inn til service</span>";
+                    echo "<span class='shop_button' gs_show_modal='agreeForService' carid='$car->id' type='service'>Foreslå dato</span>";
+                    $used = true;
                 }
                 
-                if ($agreementStatus === "yellow") {
+                if ($agreementStatus === "yellow" && !$used) {
                     echo "<span class='shop_button' gs_show_modal='agreeForService' carid='$car->id' type='service'>Bytt dato</span>";
+                    $used = true;
+                }
+                
+                if ($agreementStatusPkk == "red" && !$used) {
+                    $used = true;
+                ?>
+                    <span class="shop_button" gs_show_modal='agreeForService' carid='<? echo $car->id; ?>' type='service'>Foreslå dato</span>
+                <?
                 }
                 ?>
             </div>
@@ -63,6 +88,8 @@ foreach ($cars as $car) {
                 echo '<div class="details">';
                 echo "Bileier har bekreftet servicedato: ".date('d/m-Y H:i', strtotime($car->nextServiceAgreed));
                 echo "<br/><span class='shop_button' gsclick='serviceCompleted' carid='$car->id'> Service gjennomført</span>";
+                echo " <span class='shop_button' gsclick='pkkCompleted' carid='$car->id'> PKK Gjennomført</span>";
+                echo " <span class='shop_button' gsclick='serviceAndCompleted' carid='$car->id'> Service og PKK Gjennomført</span>";
                 ?>
                 <span style='margin-top: 5px;' class="shop_button" gsclick='noShow' carid='<? echo $car->id; ?>' type='control'>Ikke møtt</span>
                 <?

@@ -1534,7 +1534,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return false;
         }
         int days = Days.daysBetween(new LocalDate(room.date.cleaningDate), new LocalDate(day)).getDays();
-        if (days == 0) {
+        if (days == 0 && room.isSameDay(room.date.start, room.date.cleaningDate)) {
             return false;
         }
         int interval = configuration.cleaningInterval;

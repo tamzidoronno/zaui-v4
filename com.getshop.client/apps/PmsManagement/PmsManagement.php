@@ -403,6 +403,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 (int)$_POST['data']['interval']);
     }
     
+    public function updateCleaningDate() {
+        $roomid = $_POST['data']['roomid'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomid) {
+                $room->date->cleaningDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+                echo $room->date->cleaningDate;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
+    }
+    
     public function addComment() {
         $id = $_POST['data']['bookingid'];
         $comment = $_POST['data']['comment'];

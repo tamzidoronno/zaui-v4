@@ -130,7 +130,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
                 $guestName = $room->guests[0]->name;
                 $icon = "<i class='fa fa-refresh'></i>";
                 if($room->isCheckout) {
-                    $icon = "<i class='fa fa-sign-out'></i>";
+                    $icon = "<i class='fa fa-sign-out'></i> ";
                 }
                 $total++;
                 echo $icon . $room->numberOfGuests . " - " . @$items[$room->bookingItemId]->bookingItemName . " - <span class='guestname' title='$guestName'>" . $guestName. "</span><br>";
@@ -229,15 +229,12 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "</td>";
         echo "<td>";
         
-        $icon = "<i class='fa fa-refresh'></i>";
-        if($this->isCheckout($room, true)) {
-            $icon = "<i class='fa fa-sign-out'></i>";
+        $isInterval = false;
+        if(!$this->isCheckout($room, true) && !$this->isCheckout($room,false)) {
+            echo "<i class='fa fa-refresh'></i> ";
+            $isInterval = true;
         }
-        if($this->isCheckout($room,false)) {
-            $icon = "";
-        }
-        echo $icon . " ";
-        
+
         if($room->bookingItemId) {
             echo $items[$room->bookingItemId]->bookingItemName;
         } else {
@@ -268,6 +265,9 @@ class PmsCleaning extends \WebshopApplication implements \Application {
                 echo date("d.m.Y H:i", strtotime($additional[$room->bookingItemId]->lastCleaned));
             }
         }
+        if($isInterval) {
+            echo "<div style='color:red; font-weight:bold; cursor:pointer;' class='posponeuntiltomorrow'>Pospone</div>";
+        }
         echo "</td>";
         echo "<td>";
         if($room->bookingItemId) {
@@ -280,16 +280,27 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "</tr>";
     }
 
+    public function pospone() {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $cdate = strtotime($this->getCleaningDate())+86400;
+                $room->date->cleaningDate = $this->convertToJavaDate($cdate);
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+    }
+    
     public function printRowHeader() {
         $this->counter = 0;
         echo "<tr>";
         echo "<th align='left'></th>";
-        echo "<th align='left'>Room</th>";
-        echo "<th align='left'>Action</th>";
+        echo "<th align='left' width='50'>Room</th>";
+        echo "<th align='left' width='150'>Action</th>";
         echo "<th align='left'>Guest information</th>";
-        echo "<th align='left'>Last cleaned</th>";
-        echo "<th align='left'>Last used</th>";
-        echo "<th align='right'>Duration</th>";
+        echo "<th align='left' width='130'>Last cleaned</th>";
+        echo "<th align='left' width='130'>Last used</th>";
+        echo "<th align='right' width='150'>Duration</th>";
         echo "</tr>";
     }
 
@@ -321,9 +332,9 @@ class PmsCleaning extends \WebshopApplication implements \Application {
 
     public function isCheckout($room, $checkout) {
         if($checkout) {
-            return date("dmy", time() == date("dmy", strtotime($room->date->end)));
+            return date("dmy", time()) == date("dmy", strtotime($room->date->end));
         }
-        return date("dmy", time() == date("dmy", strtotime($room->date->start)));
+        return date("dmy", time()) == date("dmy", strtotime($room->date->start));
     }
 
     /**

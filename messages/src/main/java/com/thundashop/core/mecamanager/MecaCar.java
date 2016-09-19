@@ -211,6 +211,11 @@ public class MecaCar extends DataCommon {
         this.agreeDateControl = false;
         this.nextControlAgreed = null;
         this.nextControlAcceptedByCarOwner = null;
+        
+        // Reset innkallelse
+        this.agreeDate = false;
+        this.nextServiceAgreed = null;
+        this.nextServiceAcceptedByCarOwner = null;
     }
 
     void noShowService() {

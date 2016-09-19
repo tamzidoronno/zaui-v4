@@ -1,0 +1,98 @@
+<?
+/* @var $this \ns_e913b056_a5e1_4ca8_83b6_92f192e2a06b\C3Management */
+?>
+<div class='gss_settings_content'>
+    
+    <h1> Rundsummer </h1>
+    <div class="textfield gss_setting"  id="mainemailaddress">
+        <span class="title"><?php echo $this->__f("2015"); ?></span>
+        <input type="textfield" gs_model='roundsummodel' gs_model_attr='2015' value="<? echo $this->getRoundSum(2015); ?>">
+        <div class="description"></div>
+    </div>
+    <div class="textfield gss_setting"  id="mainemailaddress">
+        <span class="title"><?php echo $this->__f("2016"); ?></span>
+        <input type="textfield" gs_model='roundsummodel' gs_model_attr='2016' value="<? echo $this->getRoundSum(2016); ?>">
+        <div class="description"></div>
+    </div>
+    <div class="textfield gss_setting"  id="mainemailaddress">
+        <span class="title"><?php echo $this->__f("2017"); ?></span>
+        <input type="textfield" gs_model='roundsummodel' gs_model_attr='2017' value="<? echo $this->getRoundSum(2017); ?>">
+        <div class="description"></div>
+    </div>
+    <div class="textfield gss_setting"  id="mainemailaddress">
+        <span class="title"><?php echo $this->__f("2018"); ?></span>
+        <input type="textfield" gs_model='roundsummodel' gs_model_attr='2018' value="<? echo $this->getRoundSum(2018); ?>">
+        <div class="description"></div>
+    </div>
+    <div class="textfield gss_setting"  id="mainemailaddress">
+        <span class="title"><?php echo $this->__f("2019"); ?></span>
+        <input type="textfield" gs_model='roundsummodel' gs_model_attr='2019' value="<? echo $this->getRoundSum(2019); ?>">
+        <div class="description"></div>
+    </div>
+    <div class="textfield gss_setting"  id="mainemailaddress">
+        <span class="title"><?php echo $this->__f("2020"); ?></span>
+        <input type="textfield" gs_model='roundsummodel' gs_model_attr='2020' value="<? echo $this->getRoundSum(2020); ?>">
+        <div class="description"></div>
+    </div>
+    <div class="textfield gss_setting"  id="mainemailaddress">
+        <span class="title"><?php echo $this->__f("2021"); ?></span>
+        <input type="textfield" gs_model='roundsummodel' gs_model_attr='2021' value="<? echo $this->getRoundSum(2021); ?>">
+        <div class="description"></div>
+    </div>
+    <div class="textfield gss_setting"  id="mainemailaddress">
+        <span class="title"><?php echo $this->__f("2022"); ?></span>
+        <input type="textfield" gs_model='roundsummodel' gs_model_attr='2022' value="<? echo $this->getRoundSum(2022); ?>">
+        <div class="description"></div>
+    </div>
+    
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveRoundSums" gss_model="roundsummodel" gss_view="gss_c3_management_content" gss_fragment="content"><i class='fa fa-save'></i>Lagre</div>
+    </div>
+</div>
+
+<div class='gss_settings_content'>
+    <h1>Timerater</h1>
+    <?
+    $rates = $this->getApi()->getC3Manager()->getTimeRates();
+    foreach ($rates as $rate) {
+        ?>
+            <div class="textfield gss_setting"  id="mainemailaddress">
+                <span class="title"><div class="gs_shop_small_icon"  gss_method="deleteTimeRate" gss_model="savetimerate" gss_view="gss_c3_management_content" gss_fragment="content" gss_value="<? echo $rate->id; ?>" ><i class="fa fa-trash"></i></div> <? echo $rate->name; ?></span>
+                <input type="textfield" gs_model='savetimerate' gs_model_attr='timerate_<? echo $rate->id;?>' value="<? echo $rate->rate; ?>">
+                <div class="description"></div>
+            </div>
+        <?
+    }
+    ?>
+    
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveTimeRates" gss_model="savetimerate" gss_view="gss_c3_management_content" gss_fragment="content"><i class='fa fa-save'></i>Lagre</div>
+    </div>
+    
+</div>
+
+<div class='gss_settings_content'>
+    <h1>Legg til ny timerate</h1>
+    
+    <div class="textfield gss_setting"  id="mainemailaddress">
+        <span class="title">Navn på timeraten</span>
+        <input type="textfield" gs_model='addtimeratemodel' gs_model_attr='timeratenavn' value="">
+        <div class="description"></div>
+    </div>
+    
+    <div class="textfield gss_setting"  id="mainemailaddress">
+        <span class="title">Rate pr time</span>
+        <input type="textfield" gs_model='addtimeratemodel' gs_model_attr='timeratekr' value="">
+        <div class="description"></div>
+    </div>
+    
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="addTimeRate" gss_model="addtimeratemodel" gss_view="gss_c3_management_content" gss_fragment="content"><i class='fa fa-plus'></i>Legg til</div>
+    </div>
+    
+</div>
+
+<div class='gss_settings_content'>
+    <h1>Perioder</h1>
+    <div class="gss_button addTimeRate" ><i class='fa fa-language'></i><?php echo $this->__("Legg til ny periode"); ?></div>
+</div>

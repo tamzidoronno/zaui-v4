@@ -30,7 +30,10 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     public HashMap<String, C3GroupInformation> groupInfos = new HashMap();
     public HashMap<String, WorkPackage> workPackages = new HashMap();
     public HashMap<String, C3Project> projects = new HashMap();
-
+    public HashMap<String, C3TimeRate> timeRates = new HashMap();
+    public HashMap<String, C3RoundSum> roundSums = new HashMap();
+    public HashMap<String, C3UserMetadata> usersMetaData = new HashMap();
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         data.data.stream().forEach(idata -> addData(idata));
@@ -48,6 +51,15 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         if (data instanceof C3Hour)
             hours.put(data.id, ((C3Hour)data));
+        
+        if (data instanceof C3TimeRate)
+            timeRates.put(data.id, ((C3TimeRate)data));
+        
+        if (data instanceof C3RoundSum)
+            roundSums.put(data.id, ((C3RoundSum)data));
+        
+        if (data instanceof C3UserMetadata)
+            usersMetaData.put(data.id, ((C3UserMetadata)data));
     }    
     
     @Override
@@ -291,5 +303,81 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     @Override
     public C3Hour getHourById(String hourId) {
         return hours.get(hourId);
+    }
+
+    @Override
+    public void addTimeRate(String name, int rateKr) {
+        C3TimeRate rate = new C3TimeRate();
+        rate.name = name;
+        rate.rate = rateKr;
+        
+        saveObject(rate);
+        timeRates.put(rate.id, rate);
+    }
+
+    @Override
+    public List<C3TimeRate> getTimeRates() {
+        return new ArrayList(timeRates.values());
+    }
+
+    @Override
+    public void deleteTimeRate(String id) {
+        C3TimeRate rate = timeRates.remove(id);
+        if (rate != null) {
+            deleteObject(rate);
+        }
+    }
+
+    @Override
+    public void saveRate(C3TimeRate rate) {
+        saveObject(rate);
+        timeRates.put(rate.id, rate);
+    }
+
+    @Override
+    public void setC3RoundSum(int year, int sum) {
+        C3RoundSum roundSum = roundSums.values().stream()
+                .filter(r -> r.year == year)
+                .findFirst()
+                .orElse(new C3RoundSum());
+        
+        roundSum.sum = sum;
+        roundSum.year = year;
+        
+        saveObject(roundSum);
+        
+        roundSums.put(roundSum.id, roundSum);
+    }
+
+    @Override
+    public C3RoundSum getRoundSum(int year) {
+        return roundSums.values().stream()
+                .filter(r -> r.year == year)
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public void setRateToUser(String userId, String rateId) {
+        C3UserMetadata meta = usersMetaData.values().stream()
+                .filter(c3 -> c3.userId.equals(userId))
+                .findFirst()
+                .orElse(new C3UserMetadata());
+        
+        meta.userId = userId;
+        meta.timeRateId = rateId;
+        
+        saveObject(meta);
+        usersMetaData.put(meta.id, meta);
+    }
+
+    @Override
+    public C3TimeRate getTimeRate(String userId) {
+        C3UserMetadata meta = usersMetaData.values().stream()
+                .filter(c3 -> c3.userId.equals(userId))
+                .findFirst()
+                .orElse(new C3UserMetadata());
+        
+        return timeRates.get(meta.timeRateId);
     }
 }

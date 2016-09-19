@@ -25,7 +25,8 @@ class C3Hour extends \MarketingApplication implements \Application {
         $c3Hour->to = $this->convertToJavaDate(strtotime($_POST['data']['to']));
         $c3Hour->projectId = $this->getModalVariable("projectid");
         $c3Hour->hours = $_POST['data']['hours'];
-        $c3Hour->workPackageId = $_POST['data']['workpackage'];
+        $c3Hour->bidragstype = $_POST['data']['bidragstype'];
+        
         $this->getApi()->getC3Manager()->addHour($c3Hour);
     }
 }

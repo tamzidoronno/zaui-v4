@@ -689,6 +689,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         List<Booking> allBookings = bookingEngine.getAllBookings();
         for (Booking booking : allBookings) {
+            if(booking.source != null && !booking.source.isEmpty()) {
+                continue;
+            }
             if (!added.contains(booking.id)) {
                 bookingEngine.deleteBooking(booking.id);
             }

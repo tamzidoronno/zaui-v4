@@ -17,6 +17,7 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
@@ -661,6 +662,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return null;
         }
 
+        if(user.address == null) {
+            user.address = new Address();
+        }
         user.address.fullName = user.fullName;
 
         Order order = orderManager.createOrder(user.address);

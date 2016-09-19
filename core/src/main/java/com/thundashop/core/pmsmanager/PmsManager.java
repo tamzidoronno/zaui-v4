@@ -1410,7 +1410,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<Booking> bookingsToDelete = new ArrayList();
         for(Booking book : allBookings) {
             if(book.source != null && book.source.equals("cleaning")) {
-                bookingsToDelete.add(book);
+                if(book.bookingItemId.equals(itemId)) {
+                    bookingsToDelete.add(book);
+                }
             }
         }
         for(Booking remove : bookingsToDelete) {

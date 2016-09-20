@@ -13,7 +13,7 @@ import java.util.stream.Stream;
  *
  * @author ktonder
  */
-class C3ProjectPeriode extends DataCommon {
+public class C3ProjectPeriode extends DataCommon {
     public Date from;
     public Date to;
     public boolean isLocked = false;

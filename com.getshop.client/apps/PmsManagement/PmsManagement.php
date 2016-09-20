@@ -163,6 +163,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
         $booking->userId = $user->id;
+        $booking->avoidCreateInvoice = true;
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
         
         $this->getApi()->getPmsManager()->addBookingItem($this->getSelectedName(), 
@@ -170,7 +171,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $room,
                 $this->convertToJavaDate($starttime), 
                 $this->convertToJavaDate($endtime));
-        
         $booking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
         if($booking) {
             foreach($booking->rooms as $room) {
@@ -401,6 +401,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->setNewCleaningIntervalOnRoom($this->getSelectedName(), 
                 $_POST['data']['roomid'], 
                 (int)$_POST['data']['interval']);
+    }
+    
+    public function updateCleaningDate() {
+        $roomid = $_POST['data']['roomid'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomid) {
+                $room->date->cleaningDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+                echo $room->date->cleaningDate;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
     }
     
     public function addComment() {

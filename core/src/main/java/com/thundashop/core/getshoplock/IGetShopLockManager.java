@@ -60,4 +60,12 @@ public interface IGetShopLockManager {
     @Administrator
     public List<String> getCodesInUse();
     
+    @Administrator
+    public void stopUpdatesOnLock();
+    
+    @Administrator
+    public boolean getUpdatesOnLock();
+    
+    
+    
 }

@@ -1,0 +1,38 @@
+<?php
+/* @var $this \ns_8e6f79e0_754f_443f_b699_5a493964d8e9\PmsFastBooking */
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+?>
+<div gstype="form" method="saveAppInstanceSettings">
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%">Name</td>
+        <td width="50%">
+            <input type='text' gsname="setting_buttontext" value="<?php echo $this->getConfigurationSetting("buttontext"); ?>">
+        </td>
+    </tr>
+    <tr>
+        <td width="50%">Type to book</td>
+        <td width="50%">
+            <select gsname="setting_type">
+            <?php
+            $cur = $this->getConfigurationSetting("type");
+            foreach($types as $type) {
+                $selected = "";
+                if($cur == $type->id) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='" . $type->id."' $selected>" . $type->name . "</option>";
+            }
+            ?>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td width="50%">Number of minutes to book</td>
+        <td width="50%">
+            <input type='text' gsname="setting_minutes" value="<?php echo $this->getConfigurationSetting("minutes"); ?>">
+        </td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save'>
+</div>

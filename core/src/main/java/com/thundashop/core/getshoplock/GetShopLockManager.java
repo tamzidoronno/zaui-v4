@@ -54,6 +54,7 @@ import org.springframework.stereotype.Component;
 public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetShopLockManager {
     private HashMap<String, GetShopDevice> devices = new HashMap();
     private GetShopLockMasterCodes masterCodes = new GetShopLockMasterCodes();
+    private boolean stopUpdatesOnLock = false;
     
         
     @Autowired
@@ -122,6 +123,16 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         return codes;
     }
 
+    @Override
+    public void stopUpdatesOnLock() {
+        stopUpdatesOnLock = !stopUpdatesOnLock;
+    }
+
+    @Override
+    public boolean getUpdatesOnLock() {
+        return stopUpdatesOnLock;
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;
@@ -130,13 +141,15 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         private String username = "";
         private String password = "";
         private List<BookingItem> items;
+        private boolean stopUpdatesOnLock;
 
-        public GetshopLockCodeManagemnt(GetShopDevice device, String username, String password, String hostname, List<BookingItem> items) {
+        public GetshopLockCodeManagemnt(GetShopDevice device, String username, String password, String hostname, List<BookingItem> items, boolean stopUpdatesOnLock) {
             this.device = device;
             this.hostname = hostname;
             this.password = password;
             this.username = username;
             this.items = items;
+            this.stopUpdatesOnLock = stopUpdatesOnLock;
         }
         
         public void setCode(Integer offset, String code, boolean remove) {
@@ -159,6 +172,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         @Override
         public void run() {
+            if(stopUpdatesOnLock) { return; }
             if(hasConnectivity()) {
                 if(device.oldBatteryStatus()) {
                     try {
@@ -170,6 +184,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     }
                 }
                 for(Integer offset : device.codes.keySet()) {
+                    if(stopUpdatesOnLock) { return; }
                     GetShopLockCode code = device.codes.get(offset);
                     if(code.needUpdate()) {
                         if(code.needToBeRemoved()) {
@@ -460,6 +475,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
 
     @Override
     public void checkIfAllIsOk() {
+        if(stopUpdatesOnLock) {
+            logPrint("Lock updates stopped");
+        }
         if(!frameworkConfig.productionMode) {
             return;
         }
@@ -499,7 +517,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String pass = getPassword();
                 String host = getHostname();
                 
-                GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(dev, user, pass, host, items);
+                GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(dev, user, pass, host, items, stopUpdatesOnLock);
                 mgr.start();
                 return;
             }

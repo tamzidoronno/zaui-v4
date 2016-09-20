@@ -3,6 +3,17 @@ app.PmsBookingCalendar = {
         $(document).on('click', '.PmsBookingCalendar .fa-arrow-left', app.PmsBookingCalendar.decreaseMonth);
         $(document).on('click', '.PmsBookingCalendar .fa-arrow-right', app.PmsBookingCalendar.decreaseMonth);
         $(document).on('click', '.PmsBookingCalendar .calendar .day', app.PmsBookingCalendar.selectDay);
+        $(document).on('change', '.PmsBookingCalendar .monthSelected', app.PmsBookingCalendar.monthSelected);
+    },
+    monthSelected : function() {
+         var event = thundashop.Ajax.createEvent('','changeMonthSpecified',$(this), {
+            "month" : $(this).val()
+        });
+        var box = $(this).closest('.applicationinner .calendar');
+        
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            box.html(result);
+        });
     },
     selectDay : function() {
          var event = thundashop.Ajax.createEvent('','selectDay',$(this), {

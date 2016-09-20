@@ -47,7 +47,7 @@ foreach($itemTypes as $item) {
     echo "<td><input type='checkbox' weekday='5' class='pricecheckbox'></td>";
     echo "<td><input type='checkbox' weekday='6' class='pricecheckbox'></td>";
     echo "<td><input type='checkbox' weekday='0' class='pricecheckbox'></td>";
-    echo "<td><input type='txt' class='priceinput'></td>";
+    echo "<td><input type='txt' class='priceinput priceinputsetter' itemid='".$item->id."'></td>";
     echo "</tr>";
 }
 ?>
@@ -92,4 +92,5 @@ foreach($itemTypes as $item) {
 <script>
     $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
     $('input[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    app.PmsPricing.loadpriceinput();
 </script>

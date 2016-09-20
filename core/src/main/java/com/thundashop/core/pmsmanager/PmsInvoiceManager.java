@@ -17,6 +17,7 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
@@ -661,6 +662,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return null;
         }
 
+        if(user.address == null) {
+            user.address = new Address();
+        }
         user.address.fullName = user.fullName;
 
         Order order = orderManager.createOrder(user.address);
@@ -792,6 +796,24 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         Double price = totalPrice;
+        price = calculateDiscountCouponPrice(booking, price);
+        
+        
+        price = getUserPrice(typeId, price, count);
+        
+        if(avgPrice && count != 0) {
+            price /= count;
+        }
+        
+        if(price.isNaN() || price.isInfinite()) {
+            logPrint("Nan price or infinite price... this is not good");
+            price = 0.0;
+        }
+        
+        return price;
+    }
+
+    private Double calculateDiscountCouponPrice(PmsBooking booking, Double price) {
         if(booking.discountType != null && booking.discountType.equals("coupon")) {
             if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
                 price = cartManager.calculatePriceForCoupon(booking.couponCode, price);
@@ -807,19 +829,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
             }
         }
-        
-        
-        price = getUserPrice(typeId, price, count);
-        
-        if(avgPrice && count != 0) {
-            price /= count;
-        }
-        
-        if(price.isNaN() || price.isInfinite()) {
-            logPrint("Nan price or infinite price... this is not good");
-            price = 0.0;
-        }
-        
         return price;
     }
 
@@ -1147,9 +1156,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             price /= count;
         } else {
-            price = room.price;
+            price = room.price; 
         }
-        price = getUserPrice(room.bookingItemTypeId, price, 1);
+        double newprice = calculateDiscountCouponPrice(booking, price);
+        if(newprice != price) {
+            price = newprice;
+        } else {
+            price = getUserPrice(room.bookingItemTypeId, price, 1);
+        }
 
         
         if(pmsManager.getPriceObject().privatePeopleDoNotPayTaxes) {

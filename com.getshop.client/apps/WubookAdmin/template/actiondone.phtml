@@ -60,6 +60,9 @@ if($action == "testConnection") {
 } else if($action == "fetchNewBookings") {
     $res = $wubookmgr->fetchNewBookings($name);
     $this->printBookingTable($res);
+} else if($action == "deleteAllRooms") {
+    $res = $wubookmgr->deleteAllRooms($name);
+    $this->printBookingTable($res);
 } else if($action == "addBooking") {
     $id = $_POST['data']['id'];
     $res = $wubookmgr->addBooking($name, $id);

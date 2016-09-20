@@ -646,13 +646,18 @@ public class PmsManagerProcessor {
                     payedfor = false;
                 }
             }
-            
-            if(needSaving || booking.payedFor != payedfor) {
+            boolean forceSend = (booking.channel != null && !booking.channel.isEmpty()) && booking.isRegisteredToday();
+            if(booking.payedFor != payedfor || forceSend) {
                 booking.payedFor = payedfor;
-                if(payedfor == true && booking.orderIds.size() == 1) {
-                    manager.doNotification("booking_completed", booking.id);
+                if(!booking.hasSentNotification("booking_completed")) {
+                    if((payedfor == true || forceSend) && booking.orderIds.size() == 1) {
+                        manager.doNotification("booking_completed", booking.id);
+                        booking.notificationsSent.add("booking_completed");
+                        needSaving = true;
+                    }
                 }
-                
+            }
+            if(needSaving) {
                 manager.saveBooking(booking);
             }
         }
@@ -726,7 +731,7 @@ public class PmsManagerProcessor {
         } else {
             room.code = manager.getShopLockManager.getCodeForLock(item.bookingItemAlias);
             room.addedToArx = true;
-            PmsBooking booking = manager.getBookingFromRoom(room.pmsBookingRoomId);
+            PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
             manager.saveBooking(booking);
         }
         

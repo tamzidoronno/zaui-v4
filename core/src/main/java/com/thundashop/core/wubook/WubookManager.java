@@ -67,8 +67,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Override
     public String updateAvailability() throws Exception {
-        if(!connectToApi()) { return "Faield to connect to api"; }
         if(!frameworkConfig.productionMode) { return ""; }
+        if(!connectToApi()) { return "Faield to connect to api"; }
         Vector<Hashtable> tosend = new Vector();
         
         for (WubookRoomData rdata : wubookdata.values()) {
@@ -489,15 +489,21 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(res == null) {
             WubookRoomData newData = new WubookRoomData();
             newData.bookingEngineTypeId = typeid;
+            wubookdata.put(newData.id, newData);
+            res = newData;
+            saveObject(newData);
+        }
+        
+        if(res.code < 0) {
             for(int i = 10; i < 1000; i++) {
                 if(!codeInUse(i)) {
-                    newData.code = i;
-                    saveObject(newData);
-                    wubookdata.put(newData.id, newData);
-                    return newData;
+                    res.code = i;
+                    saveObject(res);
+                    break;
                 }
             }
         }
+        
         return res;
     }
 
@@ -510,7 +516,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return false;
     }
 
-    private String insertRoom(BookingItemType type) throws XmlRpcException, IOException {
+    private String insertRoom(BookingItemType type) throws XmlRpcException, IOException, Exception {
+        if(!connectToApi()) { return "Faield to connect to api"; }
         List<BookingItem> items = bookingEngine.getBookingItemsByType(type.id);
         WubookRoomData rdata = getWubookRoomData(type.id);
         Vector<String> params = new Vector<String>();
@@ -518,7 +525,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         params.addElement("0");
         params.addElement(type.name);
-        params.addElement(type.capacity + "");
+        params.addElement(type.size + "");
         params.addElement("9999");
         params.addElement(items.size() + "");
         params.addElement("r" + rdata.code);
@@ -841,6 +848,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 pmsManager.saveBooking(book);
             }
         }
+    }
+
+    @Override
+    public void deleteAllRooms() throws Exception {
+        for(WubookRoomData room : wubookdata.values()) {
+            deleteObject(room);
+        }
+        wubookdata = new HashMap();
     }
 
 }

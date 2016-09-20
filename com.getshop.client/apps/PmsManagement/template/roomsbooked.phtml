@@ -224,8 +224,14 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 $object->includeLegacyStuffForSemlagerhotell($booking, $room);
 
                 echo $types[$room->bookingItemTypeId]->name; ?>
-                <?php if($config->cleaningInterval) { ?>
-                <?php echo "<div title='Cleaning interval' class='change_cleaning_interval' roomid='".$room->pmsBookingRoomId."'>CI: <span class='intervalset'>" . $roomCleaningInterval . "</span></div>"; ?>
+                <?php if($config->cleaningInterval) { 
+                    $startCleaning = $room->date->cleaningDate;
+                    if(!$startCleaning) {
+                        $startCleaning = $room->date->start;
+                    }
+                    $startCleaning = date("d.m.Y", strtotime($startCleaning));
+                    ?>
+                <?php echo "<div title='Cleaning interval' >CI: <span class='intervalset change_cleaning_interval' roomid='".$room->pmsBookingRoomId."' style='cursor:pointer;'>" . $roomCleaningInterval . "</span> from <span class='change_cleaning_date'  style='cursor:pointer;' roomid='".$room->pmsBookingRoomId."'>$startCleaning</span></div>"; ?>
                 <?php } ?>
             </td>
             <td>

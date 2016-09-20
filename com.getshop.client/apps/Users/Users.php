@@ -90,6 +90,7 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $user->prefix = $_POST['prefix'];
         $user->accountingId = $_POST['accountingId'];
         $user->type = 10;
+        $user->referenceKey = $_POST['referenceKey'];
         $user->isCompanyOwner = $_POST['isCompanyOwner'];
         $user->sessionTimeOut = $_POST['sessionTimeout'];
         $user->preferredPaymentType = $_POST['preferredPaymentType'];

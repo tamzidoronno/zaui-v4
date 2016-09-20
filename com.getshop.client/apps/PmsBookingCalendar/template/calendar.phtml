@@ -5,7 +5,7 @@ $month = $this->getSelectedMonth();
 $year = $this->getSelectedYear();
 
 $number = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-
+$curMonth = date("m", time());
 $dates = $this->getDates($year);
 $dates = $dates[$month];
 
@@ -21,7 +21,26 @@ if($this->isEditorMode()) {
 
 <div class='calendar_header'>
     <i class='fa fa-arrow-left'></i>
-    <? echo $month . "/" . $year; ?>
+    <? 
+    if($this->isAdminMode()) {
+        $time = time();
+        echo "<select class='monthSelected'>";
+        for($i = $curMonth; $i <= $month+36; $i++) {
+            $mnth = date("m", $time);
+            $yr = date("Y", $time);
+            $selected = "";
+            if($yr == $year && $mnth == $month) {
+                $selected = "SELECTED";
+            }
+            echo "<option value='$mnth-$yr' $selected>".$mnth."/".$yr."</option>";
+            $time = strtotime("+1 month", $time);
+        }
+        echo "</select>";
+    } else {
+        echo $month . "/" . $year;
+    }
+    
+    ?>
     <i class='fa fa-arrow-right' <? echo $marginRight; ?>></i>
 </div>
 <?php

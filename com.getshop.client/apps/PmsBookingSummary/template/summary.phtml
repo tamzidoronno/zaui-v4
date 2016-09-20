@@ -14,7 +14,9 @@ foreach($bookingitems as $item) {
     $bookingitems[$item->id] = $item;
 }
 
-//$this->includeCouponSystem();
+if($configuration->supportDiscounts) {
+    $this->includeCouponSystem();
+}
 
 switch($configuration->bookingProfile) {
     case "subscription":

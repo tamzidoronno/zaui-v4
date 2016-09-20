@@ -54,6 +54,7 @@ public class PmsConfiguration extends DataCommon {
 
     /* Invoice creation options */
     public boolean supportRemoveWhenFull = false;
+    public boolean supportDiscounts = false;
     public boolean autoSendInvoice = false;
     public boolean autoCreateInvoices = false;
     public boolean usePriceMatrixOnOrder = false;

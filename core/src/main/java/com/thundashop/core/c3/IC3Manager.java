@@ -60,7 +60,13 @@ interface IC3Manager {
     
     @Administrator
     public void saveGroupInfo(String groupId, String type, boolean value);
-    
+
+    @Administrator
+    public void addTimeRate(String name, int rate);
+            
+    @Administrator
+    public void deleteTimeRate(String id);
+            
     public C3GroupInformation getGroupInformation(String groupId);
     
     public void addHour(C3Hour hour);
@@ -69,5 +75,34 @@ interface IC3Manager {
     
     public List<C3Hour> getHoursForCurrentUser(String projectId, Date from, Date to);
     
+    public List<C3TimeRate> getTimeRates();
+    
     public C3Hour getHourById(String hourId);
+    
+    @Administrator
+    public void saveRate(C3TimeRate rate);
+    
+    @Administrator
+    public void setC3RoundSum(int year, int sum);
+    
+    public C3RoundSum getRoundSum(int year);
+    
+    @Administrator
+    public void setRateToUser(String userId, String rateId);
+    
+    public C3TimeRate getTimeRate(String userId);
+    
+    @Administrator
+    public void savePeriode(C3ProjectPeriode periode);
+    
+    public List<C3ProjectPeriode> getPeriodes();
+    
+    public C3ProjectPeriode getActivePeriode();
+    
+    @Administrator
+    public void setActivePeriode(String periodeId);
+    
+    public String canAdd(C3Hour hour);
+    
+    public List<C3ProjectPeriode> getPeriodesForProject(String projectId);
 }

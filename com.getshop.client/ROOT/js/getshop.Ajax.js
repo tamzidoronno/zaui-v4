@@ -11,8 +11,14 @@ thundashop.handleAjaxError = function(error, textstatus, status, content) {
     
     if (error.status === 400) {
         var errorObject = JSON.parse(error.responseText);
-        var errorText = errorObject.error_text ? errorObject.error_text : errorObject.error;
-        thundashop.common.Alert(__f("Failed"), errorText, true);
+        
+        if (typeof(errorObject) !== "undefined" && typeof(errorObject.version) !== "undefined" && errorObject.version === 2) {
+            thundashop.Ajax.handleImprovedErrorHandling(errorObject);
+        } else {
+            var errorText = errorObject.error_text ? errorObject.error_text : errorObject.error;
+            thundashop.common.Alert(__f("Failed"), errorText, true);    
+        }
+        
     };
     
     if (error.status === 402) {
@@ -37,6 +43,21 @@ thundashop.Ajax = {
     
     closeModal: function() {
         thundashop.common.closeModal();
+    },
+    
+    handleImprovedErrorHandling: function(errorObject) {
+        var apps = $('.'+errorObject.appName);
+        $(apps).each(function() {
+            for (var i in errorObject.gsfield) {
+                $(this).find('[gsname="'+i+'"]').addClass('gserrorinput');
+                $(this).find('#'+i).addClass('gserrorinput');
+            }
+            
+            for (var i in errorObject.fields) {
+                $(this).find('#'+i).html(errorObject.fields[i]);
+                $(this).find('#'+i).show();
+            }
+        });
     },
     
     showModal: function() {
@@ -175,6 +196,9 @@ thundashop.Ajax = {
         return true;
     },
     post: function(data, callback, extraArg, dontUpdate, dontShowLoaderBox, xtra) {
+        $('.gserrorfield').hide();
+        $('.gserrorinput').removeClass('gserrorinput');
+        
         PubSub.publish("POSTED_DATA", "");
 
         var file = this.ajaxFile;

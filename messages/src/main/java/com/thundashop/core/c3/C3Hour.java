@@ -7,7 +7,6 @@ package com.thundashop.core.c3;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.Date;
-import java.util.stream.Stream;
 
 /**
 /**
@@ -19,7 +18,6 @@ public class C3Hour extends DataCommon {
     public Date to;
     public double hours;
     public String registeredByUserId;
-    public String workPackageId;
     public String projectId;
 
     public boolean within(Date startDate, Date endDate) { 

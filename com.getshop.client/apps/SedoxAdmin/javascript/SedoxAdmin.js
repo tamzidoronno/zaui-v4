@@ -7,6 +7,7 @@ app.SedoxAdmin = {
         $(document).on('click', '.SedoxAdmin .filetype', app.SedoxAdmin.fileTypeSelected);
         $(document).on('click', '.SedoxAdmin .setChecksum', app.SedoxAdmin.setChecksum);
         $(document).on('click', '.SedoxAdmin .sedoxadmin_see_user_button', app.SedoxAdmin.showUser);
+        $(document).on('click', '.SedoxInvoicingList .sedoxadmin_see_user_button', app.SedoxAdmin.showUser);
         $(document).on('click', '.SedoxAdmin .sendProductToDifferentEmail', app.SedoxAdmin.sendProductToDifferentEmail);
         
         $(document).on('dragover', '.SedoxAdmin #dragdropfilesareas', app.SedoxAdmin.handleDragOver);

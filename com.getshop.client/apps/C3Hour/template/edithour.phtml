@@ -1,7 +1,8 @@
 <?
 /* @var $this \ns_4a4d17cc_7691_4851_998a_10fae57efcee\C3Hour */
 $projectId = $this->getModalVariable("projectid");
-
+$user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+$groupInfo = $this->getApi()->getC3Manager()->getGroupInformation($user->companyObject->groupId);
 
 $projectAccess = $this->getApi()->getC3Manager()->getAccessListByProjectId($projectId);
 
@@ -14,31 +15,34 @@ $from = $hourObject ? date('d.m.Y', strtotime($hourObject->from)) : "";
 $to = $hourObject ? date('d.m.Y', strtotime($hourObject->to)) : "";
 $hours = $hourObject ? $hourObject->hours : "";
 
+if (!$groupInfo->financalEgen && !$groupInfo->financalForskning) {
+    echo "Du har ikke tilgang til å føre timer på dette prosjektet, kontakt admin for å få tildelt rettigheter for å føre på egenbidrag eller forskningsbidrag";
+    return;
+}
+
 ?>
 
 <div gstype='form' method='saveHours'>
-
     Periode:
+    <div class='gserrorfield' id='errorMessage'></div>
     <br/><input class='gsniceinput1' type='text' gsname='from' id='from' value='<? echo $from; ?>'/> - <input class='gsniceinput1' type='text' gsname='to' id='to' value='<? echo $to; ?>'/> 
     <br/>
     <br/>Timer:
-    <br/><input class='gsniceinput1' type='text' gsname='hours' value='<? echo $hours; ?>'/> 
+    <br/>
+    <div class='gserrorfield' id='errorMessageTimer'></div>
+    <input class='gsniceinput1' type='text' gsname='hours' value='<? echo $hours; ?>'/> 
     <br/>
     <?
-    if (count($projectAccess->workPackageIds) == 1) {
-        $wpId = $projectAccess->workPackageIds[0];
-        echo "<input type='hidden' gsname='workpackage' value='$wpId'/>";
-    } else {
-        ?>
-        <select class='gsniceselect1' gsname='workpackage'>
-            <?
-            foreach ($projectAccess->workPackageIds as $wpId) {
-                $workPackage = $this->getApi()->getC3Manager()->getWorkPackage($wpId);
-                echo "<option value='$wpId'>".$workPackage->name."</option>";
-            }
-            ?>
-        </select> 
-        <?
+    if ($groupInfo->financalEgen && $groupInfo->financalForskning) {
+//        echo '<br/>Bidragstype:';
+//        echo "<br/><select class='gsniceselect1' gsname='bidragstype'>";
+//            echo "<option>Egenbidrag</option>";
+//            echo "<option>Forskningsbidrag</option>";
+//        echo "</select><br/>";
+    } elseif ($groupInfo->financalEgen) {
+        echo "<input type='hidden' gsname='bidragstype' value='egen'/>";
+    } elseif ($groupInfo->financalForskning) {
+        echo "<input type='hidden' gsname='bidragstype' value='forskning'/>";
     }
     ?>
     <br/> <div class='shop_button' gstype='submit'> Lagre </div>

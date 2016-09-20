@@ -243,4 +243,7 @@ public interface ISedoxProductManager  {
     
     @Administrator
     public void sendProductToDifferentEmail(String productId, String emailAddress, List<Integer> files, String extraText);
+    
+    @Administrator
+    public void setCreditAllowedLimist(String userId, int creditlimit);
 }

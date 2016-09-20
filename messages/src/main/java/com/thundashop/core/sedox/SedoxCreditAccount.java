@@ -16,6 +16,7 @@ public class SedoxCreditAccount implements Serializable, Cloneable {
     public List<SedoxCreditHistory> history = new ArrayList();
     public boolean allowNegativeCredit = false;
     private int balance;
+    public Integer creditLimit = null;
 
     void addOrderToCreditHistory(SedoxOrder order, SedoxSharedProduct sedoxProduct, int transactionSedoxId) {
         SedoxCreditHistory historyEntry = new SedoxCreditHistory();

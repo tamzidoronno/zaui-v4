@@ -51,7 +51,11 @@ public class DatabaseUpdater {
             
             if (!database.exists("GetShop", "dbscripts", dbScript)) {
                 GetShopLogHandler.logPrintStatic("DB UPDATING... " + script.getClass().getSimpleName(), null);
-                script.run();
+                try {
+                    script.run();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 database.save("GetShop", "dbscripts", dbScript);
             }
             

@@ -2719,3 +2719,5 @@ select.gsniceselect1:active {
 
 .gsarea[area="body"] { position: relative; }
 .gs_toggleLeftSideBar { display: none; }
+.gserrorfield { display: none; color: red; }
+.gserrorinput { border-color: red !important; }

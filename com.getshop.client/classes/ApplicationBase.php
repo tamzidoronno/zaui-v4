@@ -644,5 +644,22 @@ class ApplicationBase extends FactoryBase {
     public function getWrapAppReference() {
         return $this->wrapAppRefernce;
     }
+    
+    public function getStdErrorObject() {
+        $obj = new \stdClass();
+        $obj->fields = new stdClass();
+        $obj->gsfield = new stdClass();
+        
+        $obj->version = 2;
+        $obj->appName = $this->getApplicationSettings()->appName;
+        
+        return $obj;
+    }
+    
+    public function doError(\stdClass $obj) {
+        http_response_code(400);
+        echo json_encode($obj);
+        die();
+    }
 }
 ?>

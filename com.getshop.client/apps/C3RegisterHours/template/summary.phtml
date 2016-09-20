@@ -11,11 +11,12 @@ if (!count($accessList)) {
 foreach ($accessList as $access) {
     $project = $this->getApi()->getC3Manager()->getProject($access->projectId);
     $projectPeriodeToShow = $project->currentProjectPeriode;
+    $periodes = $this->getApi()->getC3Manager()->getPeriodesForProject($project->id);
     
     echo "<div class='projectoverview'>";
         echo "<h1>$project->name</h1>";
         echo "( Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to)).")";
-        echo "<br/>";
+        echo "<br/>Prosjekt periode: ".date('d.m.Y', strtotime($project->startDate))." - ".date('d.m.Y', strtotime($project->endDate));
         echo "<br/>";
         $hours = $this->getApi()->getC3Manager()->getHoursForCurrentUser($project->id, $projectPeriodeToShow->from, $projectPeriodeToShow->to);
         
@@ -24,7 +25,7 @@ foreach ($accessList as $access) {
             echo "<div class='hourrow'><span class='editbutton'></span><span class='fromdate'>Fra</span><span class='todate'>Til</span><span class='hour'>Timer</span></div>";
             
             foreach ($hours as $hour) {
-                $from = date('d.m.Y', strtotime($hour->from));
+                $from = date('d.m.Y', strtotime($hour->from)); 
                 $to = date('d.m.Y', strtotime($hour->to));
                 $editButton = "<span hourid='$hour->id' projectid='$project->id' gs_show_modal='hours' class='gs_shop_small_icon fa fa-edit'></span>";
                 $totalHours += $hour->hours;

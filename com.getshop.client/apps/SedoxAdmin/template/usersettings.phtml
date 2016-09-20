@@ -78,6 +78,19 @@ $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById(
             Is this customer allowed to use windows app ?
         </div>
     </div>
+    
+    <div class="textfield gss_setting"  >
+        <span class="title">Allowed negative credit?</span>
+        <div class="gss_onoff" gs_model="sedoxusermodel" gs_model_attr="allowedNegativeCredit">
+            <?
+            $faclass = $sedoxUser->creditAccount->allowNegativeCredit ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+        <div class="description">
+            Can use negative credit ?
+        </div>
+    </div>
 
     <div class="textfield gss_setting" >
         <span class="title"><?php echo $this->__f("Id"); ?></span>
@@ -92,6 +105,14 @@ $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById(
         <input type="textfield" gs_model='sedoxusermodel' gs_model_attr='fixedrate' value="<? echo $sedoxUser->fixedPrice; ?>">
         <div class="description">
             <?php echo $this->__("Set the amount the customer should be able to buy files for. Blank = default values."); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting" >
+        <span class="title"><?php echo $this->__f("Credit limit"); ?></span>
+        <input type="textfield" gs_model='sedoxusermodel' gs_model_attr='creditlimit' value="<? echo $sedoxUser->creditAccount->creditLimit; ?>">
+        <div class="description">
+            <?php echo $this->__("How low is the user allowed to go for credit?, example -100"); ?>
         </div>
     </div>
 

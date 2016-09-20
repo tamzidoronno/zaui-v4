@@ -708,6 +708,10 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         if (newBalance < 0 && !user.creditAccount.allowNegativeCredit) {
             throw new ErrorException(1027);
         }
+        
+        if (user.creditAccount.creditLimit != null && newBalance < user.creditAccount.creditLimit.intValue()) {
+            throw new ErrorException(1027);
+        }
     }
     
     private SedoxOrder getOrder(SedoxProduct sedoxProduct, List<Integer> files, SedoxUser user) throws ErrorException {
@@ -2329,5 +2333,14 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             return "";
         
         return string;
+    }
+
+    @Override
+    public void setCreditAllowedLimist(String userId, int creditlimit) {
+        SedoxUser user = getSedoxUserAccountInternalByIdInternal(userId);
+        if (user != null) {
+            user.creditAccount.creditLimit = creditlimit;
+            saveObject(user);   
+        }
     }
 }

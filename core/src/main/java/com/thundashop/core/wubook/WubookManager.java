@@ -844,4 +844,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
     }
 
+    @Override
+    public void deleteAllRooms() throws Exception {
+        for(WubookRoomData room : wubookdata.values()) {
+            deleteObject(room);
+        }
+        wubookdata = new HashMap();
+    }
+
 }

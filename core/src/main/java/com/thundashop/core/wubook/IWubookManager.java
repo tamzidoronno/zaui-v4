@@ -44,6 +44,8 @@ public interface IWubookManager {
     @Administrator
     public List<String> insertAllRooms() throws Exception;
     @Administrator
+    public void deleteAllRooms() throws Exception;
+    @Administrator
     public String deleteBooking(String rcode) throws Exception;
     
     @Administrator

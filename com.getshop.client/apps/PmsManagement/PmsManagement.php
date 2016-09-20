@@ -163,6 +163,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
         $booking->userId = $user->id;
+        $booking->avoidCreateInvoice = true;
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
         
         $this->getApi()->getPmsManager()->addBookingItem($this->getSelectedName(), 
@@ -170,7 +171,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $room,
                 $this->convertToJavaDate($starttime), 
                 $this->convertToJavaDate($endtime));
-        $booking->avoidCreateInvoice = true;
         $booking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
         if($booking) {
             foreach($booking->rooms as $room) {

@@ -25,6 +25,11 @@ $products = $this->getCurrentUploadedFiles();
         
         $productName = $product->printableName;
         
+        if ($product->reference && isset($product->reference->{ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id})) {
+            print_r($product->reference);
+            $productName = $productName." / ref: ".$product->reference->{ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id}."";
+        }
+        
         $ligth = "<div class='trafficelight $state'></div>";
         
         $time = $this->formatJavaDateToTime($product->rowCreatedDate);

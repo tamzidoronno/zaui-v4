@@ -489,15 +489,21 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(res == null) {
             WubookRoomData newData = new WubookRoomData();
             newData.bookingEngineTypeId = typeid;
+            wubookdata.put(newData.id, newData);
+            res = newData;
+            saveObject(newData);
+        }
+        
+        if(res.code < 0) {
             for(int i = 10; i < 1000; i++) {
                 if(!codeInUse(i)) {
-                    newData.code = i;
-                    saveObject(newData);
-                    wubookdata.put(newData.id, newData);
-                    return newData;
+                    res.code = i;
+                    saveObject(res);
+                    break;
                 }
             }
         }
+        
         return res;
     }
 

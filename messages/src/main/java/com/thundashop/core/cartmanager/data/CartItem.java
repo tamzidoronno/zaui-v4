@@ -95,6 +95,12 @@ public class CartItem implements Serializable {
 
     public void doFinalize() {
         product.doFinalize();
+        //Negative values on the price should never happen, the count should be negative instead.
+        if(product.price < 0) {
+            count *= -1;
+            product.price *= -1;
+            product.priceExTaxes *= -1;
+        }
     }
 
     public Date getStartingDate() {

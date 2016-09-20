@@ -46,8 +46,11 @@ echo "</tr>";
 if(!$bookings) {
     $bookings = array();
 }
-
+$orderIds = array();
 foreach($bookings as $booking) {
+    foreach($booking->orderIds as $id) {
+        $orderIds[] = $id;
+    }
     foreach($booking->rooms as $room) {
         echo "<tr bookingid='".$booking->id."' roomid='".$room->pmsBookingRoomId ."'>";
         if($this->getConfigurationSetting("can_not_change") != "true") {
@@ -136,6 +139,9 @@ if($config->requirePayments) {
     $total = 0;
     $totalTaxes = 0;
     foreach($orders as $order) {
+        if(!in_array($order->id, $orderIds)) {
+            continue;
+        }
         echo "<tr>";
         echo "<td valign='top'>";
         if($this->isEditorMode()) {

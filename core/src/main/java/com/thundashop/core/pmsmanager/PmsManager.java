@@ -3623,7 +3623,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
-    private PmsBooking getBookingFromRoomSecure(String pmsBookingRoomId) {
+    public PmsBooking getBookingFromRoomSecure(String pmsBookingRoomId) {
         for (PmsBooking booking : bookings.values()) {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {

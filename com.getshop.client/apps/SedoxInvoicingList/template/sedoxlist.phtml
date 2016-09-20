@@ -1,0 +1,16 @@
+<?
+/* @var $this ns_1af1d50d_13b3_4664_8b1c_edfbfaab0269\SedoxInvoicingList */
+$users = $this->getApi()->getSedoxProductManager()->getAllUsersWithNegativeCreditLimit();
+
+
+echo "<div style='border-bottom: solid 1px #DDD; padding: 8px;'><span style='width: 200px; display: inline-block;'>Name</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Balance</div>";
+
+foreach ($users as $user) {
+    if (!$user->isNorwegian)
+        continue;
+    
+    $normalUser = $this->getApi()->getUserManager()->getUserById($user->id);
+    echo "<div style='border-bottom: solid 1px #DDD; padding: 8px;'><div class='gs_shop_small_icon sedoxadmin_see_user_button' userid='$user->id'><i class='fa fa-edit'></i></div> &nbsp;&nbsp;<span style='width: 200px; display: inline-block;'>".@$normalUser->fullName. "</span> ".$user->creditAccount->balance."</div>";
+    
+}
+?>

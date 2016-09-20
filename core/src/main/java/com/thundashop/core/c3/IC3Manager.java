@@ -91,4 +91,18 @@ interface IC3Manager {
     public void setRateToUser(String userId, String rateId);
     
     public C3TimeRate getTimeRate(String userId);
+    
+    @Administrator
+    public void savePeriode(C3ProjectPeriode periode);
+    
+    public List<C3ProjectPeriode> getPeriodes();
+    
+    public C3ProjectPeriode getActivePeriode();
+    
+    @Administrator
+    public void setActivePeriode(String periodeId);
+    
+    public String canAdd(C3Hour hour);
+    
+    public List<C3ProjectPeriode> getPeriodesForProject(String projectId);
 }

@@ -1,16 +1,20 @@
 app.C3Management = {
     init: function() {
-        $(document).on('click', '.addTimeRate', app.C3Management.addTimeRate)
-        
+        PubSub.subscribe('GS_TOGGLE_CHANGED', app.C3Management.periodeChanged);
     },
     
-    addTimeRate: function() {
-     
-//        var ans = $('[gs_model_attr="language"]').val();
-//        var data = {
-//            value : ans
-//        }
-//        getshop.Settings.post(data, "addLanguage");
+    periodeChanged: function(event, data) {
+        if ($(data.field).attr('c3periodeonoff') === "true" && data.toggledByUser) {
+            $('.c3periodeclass').each(function() {
+                if (this === data.field)
+                    return;
+                
+                $(this).find('i').removeClass('fa-toggle-on');
+                $(this).find('i').addClass('fa-toggle-off');
+                getshop.Model.activeperiodes[$(this).attr('gs_model_attr')] = false
+            })
+            
+        }
     }
 };
 

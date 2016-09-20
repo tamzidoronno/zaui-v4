@@ -19,7 +19,6 @@ public class C3Hour extends DataCommon {
     public double hours;
     public String registeredByUserId;
     public String projectId;
-    public String bidragstype = "";
 
     public boolean within(Date startDate, Date endDate) { 
         if (startDate == null || endDate == null || this.from == null || this.to == null) {

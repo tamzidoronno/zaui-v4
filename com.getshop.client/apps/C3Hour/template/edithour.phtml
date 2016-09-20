@@ -23,20 +23,22 @@ if (!$groupInfo->financalEgen && !$groupInfo->financalForskning) {
 ?>
 
 <div gstype='form' method='saveHours'>
-
     Periode:
+    <div class='gserrorfield' id='errorMessage'></div>
     <br/><input class='gsniceinput1' type='text' gsname='from' id='from' value='<? echo $from; ?>'/> - <input class='gsniceinput1' type='text' gsname='to' id='to' value='<? echo $to; ?>'/> 
     <br/>
     <br/>Timer:
-    <br/><input class='gsniceinput1' type='text' gsname='hours' value='<? echo $hours; ?>'/> 
+    <br/>
+    <div class='gserrorfield' id='errorMessageTimer'></div>
+    <input class='gsniceinput1' type='text' gsname='hours' value='<? echo $hours; ?>'/> 
     <br/>
     <?
     if ($groupInfo->financalEgen && $groupInfo->financalForskning) {
-        echo '<br/>Bidragstype:';
-        echo "<br/><select class='gsniceselect1' gsname='bidragstype'>";
-            echo "<option>Egenbidrag</option>";
-            echo "<option>Forskningsbidrag</option>";
-        echo "</select><br/>";
+//        echo '<br/>Bidragstype:';
+//        echo "<br/><select class='gsniceselect1' gsname='bidragstype'>";
+//            echo "<option>Egenbidrag</option>";
+//            echo "<option>Forskningsbidrag</option>";
+//        echo "</select><br/>";
     } elseif ($groupInfo->financalEgen) {
         echo "<input type='hidden' gsname='bidragstype' value='egen'/>";
     } elseif ($groupInfo->financalForskning) {

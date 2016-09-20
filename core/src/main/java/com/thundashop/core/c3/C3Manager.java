@@ -7,11 +7,13 @@ package com.thundashop.core.c3;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +35,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     public HashMap<String, C3TimeRate> timeRates = new HashMap();
     public HashMap<String, C3RoundSum> roundSums = new HashMap();
     public HashMap<String, C3UserMetadata> usersMetaData = new HashMap();
+    public HashMap<String, C3ProjectPeriode> periodes = new HashMap();
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -60,6 +63,9 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         if (data instanceof C3UserMetadata)
             usersMetaData.put(data.id, ((C3UserMetadata)data));
+       
+        if (data instanceof C3ProjectPeriode)
+            periodes.put(data.id, ((C3ProjectPeriode)data));
     }    
     
     @Override
@@ -128,17 +134,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     }
 
     private void finalizeProject(C3Project project) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 2016);
-        cal.set(Calendar.MONTH, 0);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        
-        C3ProjectPeriode tempPeriode = new C3ProjectPeriode();
-        tempPeriode.from = cal.getTime();
-        cal.set(Calendar.MONTH, 11);
-        tempPeriode.to = cal.getTime();
-        
-        project.currentProjectPeriode = tempPeriode;
+        project.currentProjectPeriode = getActivePeriode();
     }
 
     @Override
@@ -273,14 +269,16 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             throw new NullPointerException("Can not add hours to a project that does not exists");
         }
         
+        if (!canAdd(hour).isEmpty()) {
+            throw new IllegalAccessError("Tried to add hours to a project outside of leagal hours");
+        }
+        
         hour.registeredByUserId = getSession().currentUser.id;
         saveObject(hour);
         hours.put(hour.id, hour);
         
         String companyId = getSession().currentUser.companyObject.id;
-        
         project.addHour(companyId, hour);
-        
     }
 
     @Override
@@ -379,5 +377,78 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 .orElse(new C3UserMetadata());
         
         return timeRates.get(meta.timeRateId);
+    }
+
+    @Override
+    public void savePeriode(C3ProjectPeriode periode) {
+        saveObject(periode);
+        periodes.put(periode.id, periode);
+    }
+
+    @Override
+    public List<C3ProjectPeriode> getPeriodes() {
+        List<C3ProjectPeriode> ret = new ArrayList(periodes.values());
+        
+        Collections.sort(ret, (o1, o2) -> {
+            return o1.from.compareTo(o2.from);
+        });
+        
+        return ret;
+    }
+
+    @Override
+    public C3ProjectPeriode getActivePeriode() {
+        return periodes.values().stream()
+                .filter(per -> per.isActive())
+                .findFirst()
+                .orElse(null);
+    }
+    
+    public void setActivePeriode(String periodeId) {
+        periodes.values().stream()
+                .forEach(periode -> deactivateAndSave(periode));
+        
+        C3ProjectPeriode per = periodes.get(periodeId);
+        if (per != null) {
+            per.isActive = true;
+            saveObject(per);
+        }
+        
+        
+    }
+
+    private void deactivateAndSave(C3ProjectPeriode periode) {
+        periode.isActive = false;
+        saveObject(periode);
+    }
+
+    @Override
+    public String canAdd(C3Hour hour) {
+        C3Project project = getProject(hour.projectId);
+        
+        if (!hour.within(project.startDate, project.endDate)) {
+            return "PROJECT_PERIODE_INVALIDE";
+        }
+        
+        if (project.currentProjectPeriode == null) {
+            return "OUTSIDE_OF_OPEN_PERIODE";
+        }
+        
+        if (!hour.within(project.currentProjectPeriode.from, project.currentProjectPeriode.to)) {
+            return "OUTSIDE_OF_OPEN_PERIODE";
+        }
+        
+        return "";
+    }
+
+    @Override
+    public List<C3ProjectPeriode> getPeriodesForProject(String projectId) {
+        C3Project project = projects.get(projectId);
+        
+        List<C3ProjectPeriode> retPeriodes = periodes.values().stream()
+                .filter(per -> per.isDateWithin(project.startDate))
+                .collect(Collectors.toList());
+        
+        return retPeriodes;
     }
 }

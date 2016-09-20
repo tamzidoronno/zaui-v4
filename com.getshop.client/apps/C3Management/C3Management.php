@@ -77,5 +77,34 @@ class C3Management extends \MarketingApplication implements \Application {
         return false;
     }
 
+    public function addPeriode() {
+        $periode = new \core_c3_C3ProjectPeriode();
+        $periode->from = $this->convertToJavaDate(strtotime($_POST['from']));
+        $periode->to = $this->convertToJavaDate(strtotime($_POST['to']));
+        $this->getApi()->getC3Manager()->savePeriode($periode);
+    }
+
+    public function getActivePeriodeId() {
+        if (!isset($this->activePeriodeId)) {
+            $activePeriode = $this->getApi()->getC3Manager()->getActivePeriode();
+            if ($activePeriode) {
+                $this->activePeriodeId = $activePeriode->id;
+            } else {
+                $this->activePeriodeId = "";
+            }
+        }
+        
+        return $this->activePeriodeId;
+    }
+    
+    public function saveActivePeriode() {
+        $periodes = $this->getApi()->getC3Manager()->getPeriodes();
+        foreach ($periodes as $periode) {
+            if ($_POST['active_periode_'.$periode->id] === "true") {
+                $this->getApi()->getC3Manager()->setActivePeriode($periode->id);
+            }
+        }
+    }
+
 }
 ?>

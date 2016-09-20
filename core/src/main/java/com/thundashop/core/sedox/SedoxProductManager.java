@@ -508,10 +508,15 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         sedoxBinaryFile.updateParametersFromFileName(fileName);
                 
         SedoxProduct sedoxProduct = getProductById(productId);
-        
+       
         SedoxSharedProduct sharedProduct = getSharedProductById(sedoxProduct.sharedProductId);
         sharedProduct.binaryFiles.add(sedoxBinaryFile);
         sharedProduct.setParametersBasedOnFileString(fileName);
+        
+        if (fileType != null && fileType.toLowerCase().equals("original")) {
+            sharedProduct.softwareSize = getFileSize(sedoxBinaryFile) + " KB";
+        }
+        
         sedoxProduct.addFileAddedHistory(getSession().currentUser.id, fileType);
         saveObject(sharedProduct);
         saveObject(sedoxProduct);
@@ -2342,5 +2347,13 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             user.creditAccount.creditLimit = creditlimit;
             saveObject(user);   
         }
+    }
+
+    private int getFileSize(SedoxBinaryFile sedoxBinaryFile) {
+        File file = new File("/opt/files/"+sedoxBinaryFile.md5sum);
+        if (file.exists()) {
+            return (int)(file.length() / 1024);
+        }
+        return 0;
     }
 }

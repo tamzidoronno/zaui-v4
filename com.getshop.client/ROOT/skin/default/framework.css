@@ -2517,6 +2517,8 @@ select.gsniceselect1 {
     background-transparency: 0.5;
     background-position: right 8px top 10px;
     background-size: 18px 18px;
+    
+    height: 51px;
 }
 select.gsniceselect1:active {
     border: 1px solid #000;

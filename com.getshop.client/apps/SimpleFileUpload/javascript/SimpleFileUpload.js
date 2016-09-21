@@ -89,6 +89,32 @@ app.SimpleFileUpload = {
             });
         }
         $('.SimpleFileUpload #file_upload_selector').val('');
+    },
+    
+    setSortingAlphaDescending: function(extra, application) {
+        thundashop.Ajax.simplePost(application, "setSortingAlphaDesc", {});
+    },
+    
+    loadSettings : function(element, application) {
+         var config = {
+            draggable: true,
+            app : true,
+            application: application,
+            title: "Settings",
+            items: [
+                {
+                    icontype: "awesome",
+                    icon: "fa-sort",
+                    iconsize : "30",
+                    title: __f("Set sorting alpha descending"),
+                    click: app.SimpleFileUpload.setSortingAlphaDescending
+                }
+            ]
+        }
+
+        var toolbox = new GetShopToolbox(config, application);
+        toolbox.show();
+        toolbox.attachToElement(application, 2);
     }
 };
 

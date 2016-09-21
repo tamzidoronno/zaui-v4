@@ -12,6 +12,10 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         return "SimpleFileUpload";
     }
     
+    public function renderConfig() {
+        $this->includefile("config");
+    }
+    
     public function render() {
         $withWriteAccess = "";
         if($this->hasWriteAccess()) {
@@ -141,6 +145,14 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         $this->notifyParent("fileUplaoded", $arrayres);
     }
     
+    public function setSortingAlphaDesc() {
+        $this->setConfigurationSetting("isInvertedAlpaSortingActivatedOverride", "true");
+    }
+    
+    public static function sortAlphaDescending($a, $b) {
+        return strcmp($b->name, $a->name);
+    }
+    
     /**
      * @return \core_filemanager_FileEntry[]
      */
@@ -149,6 +161,11 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         if(!$files) {
             $files = array();
         }
+        
+        if ($this->getConfigurationSetting("isInvertedAlpaSortingActivatedOverride") === "true" || $this->getConfigurationSetting("isInvertedAlpaSortingActivated") === "true") {
+            usort($files, array("ns_994d7fed_d0cf_4a78_a5ff_4aad16b9bcab\SimpleFileUpload", "sortAlphaDescending"));
+        }
+        
         return $files;
     }
 
@@ -183,5 +200,8 @@ class SimpleFileUpload extends \MarketingApplication implements \Application {
         return implode(".", $fileName);
     }
 
+    public function saveSettings() {
+        $this->setConfigurationSetting("isInvertedAlpaSortingActivated", $_POST['isInvertedAlpaSortingActivated']);
+    }
 }
 ?>

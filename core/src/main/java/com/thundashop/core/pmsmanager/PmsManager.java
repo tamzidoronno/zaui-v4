@@ -139,6 +139,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
+//                if(booking.deleted != null && (booking.sessionId== null || booking.sessionId.isEmpty()) && booking.orderIds.isEmpty() && !booking.userId.isEmpty()) {
+//                    for(PmsBookingRooms r : booking.rooms) {
+//                        r.bookingId = "";
+//                    }
+//                    System.out.println("Found deleted booking : " + booking.rowCreatedDate + " - " + userManager.getUserById(booking.userId).fullName);
+//                } else if(booking.deleted != null) {
+//                    continue;
+//                }
 //                dumpBooking(booking);
                 bookings.put(booking.id, booking);
             }

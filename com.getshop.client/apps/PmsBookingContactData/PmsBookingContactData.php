@@ -165,7 +165,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 echo "<script>";
                 if($config->payAfterBookingCompleted) {
                     if(!isset($curBooking->orderIds[0])) {
-                        echo 'thundashop.common.goToPage("payment_success");';
+                        echo 'thundashop.common.goToPage("payment_failed");';
                     } else {
                         echo 'thundashop.common.goToPageLink("?page=cart&payorder='.$curBooking->orderIds[0].'");';
                     }
@@ -178,8 +178,8 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 }
                 echo "</script>";
             } else {
-                $this->validation[] = "An unknown error occured, could not complete the booking.";
-                $this->unknownError = "An unknown error occured, could not complete the booking.";
+                $this->validation[] = "Someone booked your room before you where able to complete the booking process, please try again with a different room.";
+                $this->unknownError = "Someone booked your room before you where able to complete the booking process, please try again with a different room.";
             }
         }
         $this->includefile("roomcontactdata");

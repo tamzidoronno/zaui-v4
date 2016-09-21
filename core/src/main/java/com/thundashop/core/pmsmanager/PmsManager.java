@@ -3176,6 +3176,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     from = configuration.smsName;
                 }
                 messageManager.sendSms("sveve", phoneNumber, "Code: " + room.code, "", from);
+                logEntry("Resent code to number : " + phoneNumber, booking.id, roomId);
             }
         }
     }

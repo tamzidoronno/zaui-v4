@@ -1237,18 +1237,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                } 
                
                Double price = diffResult.price;
+               int countToDivide = count;
                 if(price.intValue() != 0) {
+                    if(price < 0) {
+                        price *= -1;
+                        count *= -1;
+                    }
                     CartItem item = createCartItem(diffResult.productId, 
                             null, 
                             room, 
                             startInvoiceDate, 
                             endInvoiDate, 
-                            price / count, 
+                            price / countToDivide, 
                             count);
-
-                    if(price < 0) {
-                        price *= -1;
-                    }
                
                     if(item != null && diffResult.price != 0.0) {
                         returnresult.add(item);

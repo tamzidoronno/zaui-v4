@@ -1133,9 +1133,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
 
         //Order has started, its too late.
+        Calendar yesterday = Calendar.getInstance();
+        yesterday.add(Calendar.DAY_OF_YEAR, -1);
         for(CartItem item : order.cart.getItems()) {
             if(item.startDate != null && new Date().after(item.startDate)) {
-                return false;
+                if(yesterday.getTime().after(order.rowCreatedDate)) {
+                    return false;
+                }
             }
         }
         

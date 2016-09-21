@@ -62,6 +62,13 @@ public class RenaHotell implements AccountingInterface {
                 String account = item.getProduct().sku;
                 String mvaKode = item.getProduct().accountingSystemId;
                 
+                if(account == null) {
+                    account = "-1";
+                }
+                if(mvaKode == null) {
+                    mvaKode = "-1";
+                }
+                
                 if(order.payment.paymentType.toLowerCase().contains("invoice")) {
                     account = user.customerId + "";
                 }
@@ -69,13 +76,19 @@ public class RenaHotell implements AccountingInterface {
                 int count = item.getCount();
                 
                 if(count > 0) {
-                    fieldsInLine.put(9, account); //Debet konto frokost
+                    fieldsInLine.put(9, account); //Debet konto
                 } else {
                     count = count * -1;
-                    fieldsInLine.put(10, account); //Kredit konto frokost
+                    fieldsInLine.put(10, account); //Kredit konto
                 }
                 
                 Address address = user.address;
+                if(address  == null) {
+                     address = new Address();
+                }
+                if(user.address == null) {
+                    user.address = new Address();
+                }
                 if(address.address2 == null) { address.address2="";}
                 if(address.address == null) { address.address="";}
                 if(address.city == null) { address.city="";}
@@ -84,9 +97,6 @@ public class RenaHotell implements AccountingInterface {
                 double price = item.getProduct().priceExTaxes;
                 DecimalFormat df = new DecimalFormat("#.##");      
                 price = Double.valueOf(df.format(price)); 
-                if(price < 0) {
-                    price *= -1;
-                }
                 
                 fieldsInLine.put(11, mvaKode);
                 fieldsInLine.put(12, "000");

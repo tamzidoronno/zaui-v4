@@ -238,14 +238,43 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     padding-left: 20px;
     padding-right: 20px;
     background-color: #efefef;
-    color: #000;
+    color: #696969;
+    padding: 20px;
 }
 
-.gstabbtn  {
+.gstabbtn {
     border-bottom: solid 0px;
     border: solid 1px #DDD;
     border-bottom: solid 0px #DDD;
-    color: #000;
+    color: #FFF;
+    padding: 10px;
+    background-color: #ef7f3e;
 }
 
+.gstabbtn.gsactivetab {
+    background-color: #EFEFEF;
+    color: #696969;
+}
+
+.gstabcontent .ImageDisplayer {
+    border: solid 5px;
+    border-radius: 20px;
+    margin-left: 40px;
+    margin-right: 40px;
+    background-color: #FFF;
+    padding: 20px;
+    width: 100px;
+    margin-bottom: 20px; 
+}
 .ui-datepicker { z-index: 111113 !important; }
+
+.gsbody_inner[pageId="d0213319-1b19-4187-a6cd-aba065bdf30f"] table td {
+    font-size: 18px;
+}
+.gsbody_inner[pageId="d0213319-1b19-4187-a6cd-aba065bdf30f"] table td:first-child {
+    width: 20px;
+}
+
+.gsbody_inner[pageId="d0213319-1b19-4187-a6cd-aba065bdf30f"] .filelist tr:last-child td {
+    padding: 10px
+}

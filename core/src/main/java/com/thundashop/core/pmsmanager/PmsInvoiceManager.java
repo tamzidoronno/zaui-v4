@@ -659,6 +659,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
        
         User user = userManager.getUserById(booking.userId);
         if (user == null) {
+            logPrint("User does not exists: " + booking.userId + " for booking : " + booking.id);
+            Exception ex = new Exception();
+            logPrintException(ex);
+            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed.", ex);
             return null;
         }
 
@@ -956,6 +960,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return "";
         }
         NewOrderFilter filter = new NewOrderFilter();
+        logPrint("Creating prepayment order: " + booking.id + ", userid: " + booking.userId);
         filter.prepayment = true;
         filter.endInvoiceAt = booking.getEndDate();
         filter.forceInvoicing = true;

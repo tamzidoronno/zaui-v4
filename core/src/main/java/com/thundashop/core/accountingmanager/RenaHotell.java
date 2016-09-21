@@ -29,7 +29,7 @@ public class RenaHotell implements AccountingInterface {
     private UserManager userManager;
     private InvoiceManager invoiceManager;
     private OrderManager orderManager;
-
+    
     @Override
     public void setUserManager(UserManager manager) {
         this.userManager = manager;
@@ -43,21 +43,21 @@ public class RenaHotell implements AccountingInterface {
     @Override
     public List<String> createOrderFile(List<Order> orders, String type) {
         
-        SimpleDateFormat format1 = new SimpleDateFormat("yyMMdd");
+        SimpleDateFormat format1 = new SimpleDateFormat("ddMMyy");
         List<String> result = new ArrayList();
         for(Order order : orders) {
             User user = userManager.getUserById(order.userId);
             for(CartItem item : order.cart.getItems()) {
                 HashMap<Integer, String> fieldsInLine = new HashMap();
-                fieldsInLine.put(1, "97");
+                fieldsInLine.put(1, "\"97");
                 fieldsInLine.put(2, format1.format(order.rowCreatedDate));
                 fieldsInLine.put(3, order.incrementOrderId + "");
                 fieldsInLine.put(4, format1.format(order.rowCreatedDate));
-                fieldsInLine.put(5, "45");
+                fieldsInLine.put(5, "0045");
                 
                 String lineText = createLineText(item);
                 
-                fieldsInLine.put(6, lineText);
+                fieldsInLine.put(6, "\"\"" + stripText(lineText) + "\"\"");
                 fieldsInLine.put(8, order.invoiceNote);
                 String account = item.getProduct().sku;
                 String mvaKode = item.getProduct().accountingSystemId;
@@ -70,10 +70,14 @@ public class RenaHotell implements AccountingInterface {
                 }
                 
                 if(order.payment.paymentType.toLowerCase().contains("invoice")) {
-                    account = user.customerId + "";
+                    if(user.customerId < 100000) {
+                        account = "0" + user.customerId + "";
+                    } else {
+                        account = user.customerId + "";
+                    }
                 }
                 
-                int count = item.getCount();
+                Integer count = item.getCount();
                 
                 if(count > 0) {
                     fieldsInLine.put(9, account); //Debet konto
@@ -96,20 +100,28 @@ public class RenaHotell implements AccountingInterface {
                 
                 double price = item.getProduct().priceExTaxes;
                 DecimalFormat df = new DecimalFormat("#.##");      
-                price = Double.valueOf(df.format(price)); 
-                
+                String priceToSend = df.format(price); 
+                priceToSend = prependZeros(priceToSend, 14);
                 fieldsInLine.put(11, mvaKode);
                 fieldsInLine.put(12, "000");
-                fieldsInLine.put(15, price + "");
+                fieldsInLine.put(15, priceToSend + "");
                 fieldsInLine.put(17, format1.format(order.rowCreatedDate));
-                fieldsInLine.put(19, count + "");
+                String counter = count + ".00";
+                counter = prependZeros(counter, 11);
+                fieldsInLine.put(19, counter);
+                fieldsInLine.put(20, "\"\"" + "\"\"");
                 fieldsInLine.put(21, user.customerId + "");
-                fieldsInLine.put(23, user.fullName + "");
-                fieldsInLine.put(24, address.address + "");
-                fieldsInLine.put(25, address.address2 + "");
-                fieldsInLine.put(26, address.postCode + "");
-                fieldsInLine.put(27, user.address.city + "");
-                fieldsInLine.put(29, user.cellPhone + "");
+                fieldsInLine.put(23, "\"\"" + stripText(user.fullName) + "\"\"" + "");
+                fieldsInLine.put(24, "\"\"" + stripText(address.address) + "\"\"" + "");
+                fieldsInLine.put(25, "\"\"" + stripText(address.address2) + "\"\"" + "");
+                fieldsInLine.put(26, "\"\"" + stripText(address.postCode) + "\"\"" + "");
+                fieldsInLine.put(27, "\"\"" + stripText(user.address.city) + "");
+                fieldsInLine.put(28, "\"\"" + "\"\"");
+                fieldsInLine.put(29, "\"\"" + stripText(user.cellPhone) + "\"\"");
+                for(int i = 30; i < 40; i++) {
+                    fieldsInLine.put(i, "\"\"" + "\"\"");
+                }
+                fieldsInLine.put(46,"\"");
                 String line = createLine(fieldsInLine);
                 result.add(line);
             }
@@ -137,7 +149,10 @@ public class RenaHotell implements AccountingInterface {
         } else {
             lineText = item.getProduct().name + " " + item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
         }
-         
+        
+        if(lineText.length() > 30) {
+            lineText = lineText.substring(0, 30);
+        }
         return lineText;
     }
     
@@ -150,13 +165,12 @@ public class RenaHotell implements AccountingInterface {
                     if(text == null) {
                         GetShopLogHandler.logPrintStatic("Null on: " + i, "null");
                     }
-                    text = text.replaceAll(",", "");
-                    text = text.replaceAll("\n", "");
                     resultLine += text + ",";
                 } else {
                     resultLine += ",";
                 }
             }
+            resultLine = resultLine.substring(0, resultLine.length()-1);
             resultLine += "\r\n";
             return resultLine;
     }
@@ -177,6 +191,26 @@ public class RenaHotell implements AccountingInterface {
 
     @Override
     public void setStoreApplication(StoreApplicationPool manager) {
+    }
+
+    private String prependZeros(String counter, int i) {
+        int diff = i - counter.length();
+        String toPrepend = "";
+        for(i = 0; i < diff; i++) {
+            toPrepend += "0";
+        }
+        return toPrepend + counter;
+    }
+
+    private String stripText(String text) {
+        if(text == null) {
+            return "";
+        }
+        text = text.replaceAll(",", "");
+        text = text.replaceAll("\n", "");
+        text = text.replaceAll("\"", "");
+        
+        return text;
     }
     
 }

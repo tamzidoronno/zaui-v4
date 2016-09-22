@@ -264,6 +264,9 @@ public class WilhelmsenHouse implements AccountingInterface {
     public List<String> createInvoiceFile(List<Order> orders) {
         List<String> result = new ArrayList();
         for(Order order : orders) {
+            if(order.incrementOrderId == 105669) {
+                System.out.println("Found");
+            }
             System.out.print("Transferring: " + order.incrementOrderId);
             User user = userManager.getUserById(order.userId);
             

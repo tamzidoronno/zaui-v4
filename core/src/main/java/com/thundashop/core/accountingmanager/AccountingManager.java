@@ -620,8 +620,6 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
         }
         
-        orders.removeAll(invoiceOrders);
-        
         List<User> users = new ArrayList();
         for(Order order : orders) {
             User usr = userManager.getUserById(order.userId);
@@ -629,6 +627,8 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 users.add(usr);
             }
         }
+        
+        orders.removeAll(invoiceOrders);
         
         List<String> usersToSave = createUserFileByAdapter(users);
         List<String> invoiceOrderList = createOrderFile(invoiceOrders, false, "invoice");
@@ -643,5 +643,17 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         }
         
         return new ArrayList();
+    }
+
+    private List<Integer> getOrdersToInclude() {
+        
+        List<Integer> tmpOrderList = new ArrayList();
+        String numbers = "108489,108455,108385,108370,108006,107730,107729,107729,107718,107714,107714,107642,107273,107144,107063,106769,106530,106494,106468,106445,106445,106443,106402,106402,106387,106386,106161,106089,105773,105528,105362,105353,105353,105174,105174,105124,104906,104824,104823,104735,104734,104729,104725,104717,104710,104708,104677,104674,104673,104624,104621,104591,104550,104547,104464,104230,104116,104097,103966,103917,103804,103803,103688,103469,103466,103466,103444,103415,103337,103333,103268,103262,103132,103084,102865,102397,102381,102357,102355,102354,102353,102336,102335,102271,102136,102090,102089,102071,102061,101978,101968,101940,101846,101846,101844,101844,101805,101787,101733,101631,101390,101280,100544,100543,100507,100453,100428,100397,100352,100343,100330,100219,100171,100144,100089,100078,100075,100036,100023,100020,100015,100010";
+
+        List<Integer> list = new ArrayList<Integer>();
+        for (String s : numbers.split(","))
+            list.add(Integer.parseInt(s));
+        
+        return list;
     }
 }

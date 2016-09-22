@@ -54,7 +54,7 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
         
         try {
             String endpoint = "http://" + hostname + "/api/Articles/" + product.sku;
-            JsonObject jsonObj = webManager.htmlGetJson(endpoint + "/StockInfo");
+            JsonObject jsonObj = webManager.htmlGetJson(endpoint + "/StockInfo?warehouseId=1");
             product.stockQuantity = (int) Float.parseFloat(jsonObj.get("UnitInStock").toString());
             JsonObject jsonObj2 = webManager.htmlGetJson(endpoint);
             product.price = Float.parseFloat(jsonObj2.get("Price1").toString());

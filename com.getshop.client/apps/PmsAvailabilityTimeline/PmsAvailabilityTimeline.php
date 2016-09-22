@@ -214,8 +214,8 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
 
     
     public function closeRoom() {
-        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 15:00"));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " 09:00"));
         $item = $_POST['data']['itemid'];
         $closed = $this->getApi()->getPmsManager()->closeItem($this->getSelectedName(), $item, $start, $end, "closed");
         $this->roomWhereNotClosed = !$closed;

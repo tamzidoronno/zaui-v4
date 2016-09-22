@@ -591,6 +591,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             if(!config.statesToInclude.contains(order.status)) {
                 continue;
             }
+            if(order.testOrder) {
+                continue;
+            }
+
             if(!order.transferredToAccountingSystem) {
                 double total = orderManager.getTotalAmount(order);
                 if(total == 0.0) {

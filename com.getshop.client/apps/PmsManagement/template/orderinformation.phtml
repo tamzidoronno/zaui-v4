@@ -126,7 +126,7 @@ if($booking->orderIds) {
                 $guests = array_merge($guests, $room->guests);
             }
         }
-        $user = $this->getApi()->getUserManager()->getUserById($user->id);
+        $user = $this->getApi()->getUserManager()->getUserById($order->userId);
         $addr = $user->fullName . "<br>";
         $addr .= $user->address->address . "<br>";
         $addr .= $user->address->postCode . " " . $user->address->city . "<br>";
@@ -134,7 +134,7 @@ if($booking->orderIds) {
         
         echo "<tr orderid='".$order->id."'>";
         echo "<td> <a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a> - ".date("d.m.Y", strtotime($order->rowCreatedDate));
-        echo "<br><span style='color:#bbb; width: 127px;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='$addr'>".$user->fullName."</span></td>";
+        echo "<br><span style='color:#bbb; width: 127px;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='$addr'>".$user->fullName . "(" . $user->customerId . ")</span></td>";
         echo "<td>" . round($totalEx) . "<br><span style='color:#bbb'>" . round($total) . "</span></td>";
         echo "<td>";
         if(@!$order->closed) {

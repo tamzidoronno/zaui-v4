@@ -815,7 +815,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 room = splitBookingIfNesesary(booking, room);
             }
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
-            if(room.bookingId != null && !room.bookingId.isEmpty()) {
+            if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
                 bookingEngine.changeBookingItemOnBooking(room.bookingId, itemId);
                 resetBookingItem(room, itemId, booking);
             } else {

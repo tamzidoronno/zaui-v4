@@ -2566,7 +2566,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (item != null) {
                     name = item.name;
                 }
-                String text = "Removed room: " + name + " since it can't be added: " + room.date.start + " - " + room.date.end + ", channel: " + booking.channel;
+                String text = "Removed room: " + name + " since it can't be added: " + room.date.start + " - " + room.date.end + ", channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
+                text += "<br>";
+                text += "<br>";
+                text += booking.createSummary();
+                if(booking.userId != null) {
+                    text += "User : " + userManager.getUserById(booking.userId).fullName;
+                }
                 logEntry(text, booking.id, null);
                 if(!getConfigurationSecure().supportRemoveWhenFull) {
                     messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text, null);

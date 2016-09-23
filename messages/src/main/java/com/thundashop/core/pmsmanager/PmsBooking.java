@@ -104,6 +104,24 @@ public class PmsBooking extends DataCommon {
         return result;
     }
 
+    public String createSummary() {
+        String res = "Reg data: <br>";
+        try {
+            for(String field : registrationData.resultAdded.keySet()) {
+                res += field + " : " + registrationData.resultAdded.get(field) + "<br>";
+            }
+
+            res += "<br>Rooms:<br>";
+            for(PmsBookingRooms room : getAllRoomsIncInactive()) {
+                res += room.date.start + " - " + room.date.end + " - " + room.bookingItemTypeId + "<br>";
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        return res;
+    }
+    
     boolean hasStayAfter(Date startInvoiceFrom) {
         for(PmsBookingRooms room : rooms) {
             if(room.date.end.after(startInvoiceFrom)) {

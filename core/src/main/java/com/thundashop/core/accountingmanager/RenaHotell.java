@@ -57,8 +57,9 @@ public class RenaHotell implements AccountingInterface {
                 
                 String lineText = createLineText(item);
                 
-                fieldsInLine.put(6, "\"\"" + stripText(lineText) + "\"\"");
-                fieldsInLine.put(8, order.invoiceNote);
+                fieldsInLine.put(6, "\"\"" + stripText(lineText, 30) + "\"\"");
+                fieldsInLine.put(7, "0000");
+                fieldsInLine.put(8, stripText(order.invoiceNote, 5));
                 String account = item.getProduct().sku;
                 String mvaKode = item.getProduct().accountingSystemId;
                 
@@ -104,24 +105,44 @@ public class RenaHotell implements AccountingInterface {
                 priceToSend = prependZeros(priceToSend, 14);
                 fieldsInLine.put(11, mvaKode);
                 fieldsInLine.put(12, "000");
+                fieldsInLine.put(13, "000000.0000");
+                fieldsInLine.put(14, "00000000000.00");
                 fieldsInLine.put(15, priceToSend + "");
+                fieldsInLine.put(16, "000000");
                 fieldsInLine.put(17, format1.format(order.rowCreatedDate));
                 String counter = count + ".00";
                 counter = prependZeros(counter, 11);
+                fieldsInLine.put(18, "0000000000");
                 fieldsInLine.put(19, counter);
-                fieldsInLine.put(20, "\"\"" + "\"\"");
+                fieldsInLine.put(20, "\"\"" + stripText("", 25) + "\"\"");
                 fieldsInLine.put(21, user.customerId + "");
-                fieldsInLine.put(23, "\"\"" + stripText(user.fullName) + "\"\"" + "");
-                fieldsInLine.put(24, "\"\"" + stripText(address.address) + "\"\"" + "");
-                fieldsInLine.put(25, "\"\"" + stripText(address.address2) + "\"\"" + "");
-                fieldsInLine.put(26, "\"\"" + stripText(address.postCode) + "\"\"" + "");
-                fieldsInLine.put(27, "\"\"" + stripText(user.address.city) + "");
-                fieldsInLine.put(28, "\"\"" + "\"\"");
-                fieldsInLine.put(29, "\"\"" + stripText(user.cellPhone) + "\"\"");
-                for(int i = 30; i < 40; i++) {
-                    fieldsInLine.put(i, "\"\"" + "\"\"");
-                }
-                fieldsInLine.put(46,"\"");
+                fieldsInLine.put(22, "000000");
+                fieldsInLine.put(23, "\"\"" + stripText(user.fullName, 30) + "\"\"" + "");
+                fieldsInLine.put(24, "\"\"" + stripText(address.address, 30) + "\"\"" + "");
+                fieldsInLine.put(25, "\"\"" + stripText(address.address2, 30) + "\"\"" + "");
+                fieldsInLine.put(26, "\"\"" + stripTextPrependNumber(address.postCode, 6) + "\"\"" + "");
+                fieldsInLine.put(27, "\"\"" + stripText(user.address.city, 25) + "");
+                fieldsInLine.put(28, "\"\"" + stripText("", 30) + "\"\"");
+                fieldsInLine.put(29, "\"\"" + stripText(user.cellPhone, 15) + "\"\"");
+                
+                fieldsInLine.put(30, "\"\"" + stripText("", 15) + "\"\"");
+                fieldsInLine.put(31, "\"\"" + stripText("", 5) + "\"\"");
+                fieldsInLine.put(32, "\"\"" + stripText("", 15) + "\"\"");
+                fieldsInLine.put(33, "\"\"" + stripText("", 15) + "\"\"");
+                fieldsInLine.put(34, "00000000000.00");
+                fieldsInLine.put(35, "\"\"" + stripText("", 30) + "\"\"");
+                fieldsInLine.put(36, "\"\"" + stripText("", 30) + "\"\"");
+                fieldsInLine.put(37, "\"\"" + stripText("", 30) + "\"\"");
+                fieldsInLine.put(38, "\"\"" + stripText("", 6) + "\"\"");
+                fieldsInLine.put(39, "\"\"" + stripText("", 25) + "\"\"");
+                
+                fieldsInLine.put(40, "000");
+                fieldsInLine.put(41, "0000");
+                fieldsInLine.put(42, "00");
+                fieldsInLine.put(43, "00");
+                fieldsInLine.put(44, "000");
+                fieldsInLine.put(45, "000");
+                fieldsInLine.put(46,"00\"");
                 String line = createLine(fieldsInLine);
                 result.add(line);
             }
@@ -202,15 +223,40 @@ public class RenaHotell implements AccountingInterface {
         return toPrepend + counter;
     }
 
-    private String stripText(String text) {
+    private String stripText(String text, int length) {
+        if(text == null) {
+            text = "";
+        }
+        text = text.replaceAll(",", "");
+        text = text.replaceAll("\r", "");
+        text = text.replaceAll("\n", "");
+        text = text.replaceAll("\"", "");
+        if(text.length() > length) {
+            text = text.substring(0, length);
+        }
+        String padding = "";
+        for(int i = text.length(); i < length; i++) {
+            padding += " ";
+        }
+        return text + padding;
+    }
+    
+    private String stripTextPrependNumber(String text, int length) {
         if(text == null) {
             return "";
         }
         text = text.replaceAll(",", "");
         text = text.replaceAll("\n", "");
         text = text.replaceAll("\"", "");
+        if(text.length() > length) {
+            text = text.substring(0, length);
+        }        
         
-        return text;
+        String padding = "";
+        for(int i = text.length(); i < length; i++) {
+            padding += "0";
+        }
+        return padding + text;
     }
     
 }

@@ -983,6 +983,19 @@ $channelConfig = $config->channelConfiguration;
                 </span>
                 Wubook lcode
             </div>
+            <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->usePricesFromChannelManager) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='usePricesFromChannelManager' <? echo $checked; ?>>
+            </span>
+            When transferring bookings, use the prices set from channel manager.
+        </div>
+                    
         <? } ?>
         <div style='text-align: right;'>
             <span gstype="form" method="deleteAllBookings">

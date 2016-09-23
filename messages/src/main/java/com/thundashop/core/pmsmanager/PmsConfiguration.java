@@ -113,7 +113,8 @@ public class PmsConfiguration extends DataCommon {
     public String wubookpassword = "";
     public String wubookproviderkey = "";
     public String wubooklcode = "";
-    
+    public boolean usePricesFromChannelManager = false;
+
     
     public HashMap<String, PmsChannelConfig> channelConfiguration = new HashMap();
     

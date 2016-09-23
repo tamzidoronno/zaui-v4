@@ -9,6 +9,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmsmanager.CheckPmsProcessing;
+import com.thundashop.core.pmsmanager.NewOrderFilter;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.pmsmanager.PmsBookingComment;
@@ -16,6 +17,7 @@ import com.thundashop.core.pmsmanager.PmsBookingDateRange;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsGuests;
+import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.core.pmsmanager.PmsRoomSimple;
@@ -46,6 +48,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Autowired
     PmsManager pmsManager;
+    
+    @Autowired
+    PmsInvoiceManager pmsInvoiceManager;
     
     @Autowired
     BookingEngine bookingEngine;
@@ -291,7 +296,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
         booking.arrivalDate = arrivalDate;
         booking.depDate = depDate;
-
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Vector bookedRooms = (Vector) table.get("booked_rooms");
 
         Iterator roomIterator = bookedRooms.iterator();
@@ -309,6 +314,23 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             room.guest = guest;
             room.roomId = roomId;
             booking.rooms.add(room);
+            
+            if(pmsManager.getConfigurationSecure().usePricesFromChannelManager) {
+                Vector roomdays = (Vector) roomtable.get("roomdays");
+                Iterator roomDaysIterator = roomdays.iterator();
+                SimpleDateFormat intoDate = new SimpleDateFormat("dd-MM-yyyy");
+                while(roomDaysIterator.hasNext()) {
+                    Hashtable roomday = (Hashtable) roomDaysIterator.next();
+                    Double dayprice = (Double) roomday.get("price");
+                    String day = (String) roomday.get("day");
+                    try {
+                        Date date = sdf.parse(day);
+                        room.priceMatrix.put(date, dayprice);
+                    }catch(Exception e) {
+                        logPrintException(e);
+                    }
+                }
+            }
             roomNumber++;
         }
         return booking;
@@ -692,6 +714,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         newbooking.registrationData.resultAdded.put("user_emailAddress", booking.email);
         newbooking.registrationData.resultAdded.put("user_address_postCode", booking.postCode);
         
+        Calendar calStart = Calendar.getInstance();
+        
+        HashMap<String,HashMap<Date, Double>> pricestoset = new HashMap();
+        
         for(WubookBookedRoom r : booking.rooms) {
             PmsBookingRooms room = new PmsBookingRooms();
             room.date = new PmsBookingDateRange();
@@ -699,7 +725,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             room.date.end = setCorrectTime(booking.depDate, false);
             room.numberOfGuests = r.guest;
             room.bookingItemTypeId = getTypeFromWubookRoomId(r.roomId);
-            
+            pricestoset.put(room.pmsBookingRoomId, r.priceMatrix);
             PmsGuests guest = new PmsGuests();
             guest.email = booking.email;
             guest.name = booking.name;
@@ -715,7 +741,35 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             }
         }
-        pmsManager.completeCurrentBooking();
+        newbooking = pmsManager.completeCurrentBooking();
+        
+        if(pmsManager.getConfigurationSecure().usePricesFromChannelManager && newbooking != null) {
+            Date end = new Date();
+            for(String pmsId : pricestoset.keySet()) {
+                PmsBookingRooms pmsroom = newbooking.findRoom(pmsId);
+                if(pmsroom.date.end.after(end)) {
+                    end = pmsroom.date.end;
+                }
+                HashMap<Date, Double> priceMatrix = pricestoset.get(pmsId);
+                double total = 0.0;
+                int count = 0;
+                for(Date daydate : priceMatrix.keySet()) {
+                    calStart.setTime(daydate);
+                    String offset = PmsBookingRooms.getOffsetKey(calStart, PmsBooking.PriceType.daily);
+                    pmsroom.priceMatrix.put(offset, priceMatrix.get(daydate));
+                    total += priceMatrix.get(daydate);
+                    count++;
+                }
+                pmsroom.price = (total / (double)count);
+            }
+            pmsManager.saveBooking(newbooking);
+            NewOrderFilter filter = new NewOrderFilter();
+            filter.createNewOrder = false;
+            filter.prepayment = true;
+            filter.endInvoiceAt = end;
+            pmsInvoiceManager.createOrder(newbooking.id, filter);
+        }
+        
         logPrint("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
         return "";
     }

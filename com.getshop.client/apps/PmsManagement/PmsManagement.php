@@ -772,8 +772,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     $row[] = $room->guest[0]->name;
                     $row[] = $order->incrementOrderId;
                     $row[] = $room->wubookchannelid;
-                    $row[] = date("d/m/Y", strtotime($start));
-                    $row[] = date("d/m/Y", strtotime($end));
+                    $row[] = date("m/d/Y", strtotime($start));
+                    $row[] = date("m/d/Y", strtotime($end));
                     $row[] = round((strtotime($end) - strtotime($start))/86400);
                     $row[] = $totalEx;
                     $row[] = $total - $totalEx;

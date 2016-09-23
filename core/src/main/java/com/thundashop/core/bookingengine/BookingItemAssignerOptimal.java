@@ -289,7 +289,7 @@ public class BookingItemAssignerOptimal {
     private BookingItemTimeline getBookingItemTimeline(Booking booking, List<BookingItemTimeline> bookingItemsFlatten, OptimalBookingTimeLine optimalTimeLine) {
         List<BookingItemTimeline> timeLines = bookingItemsFlatten.stream().filter(o -> o.bookingItemId.equals(booking.bookingItemId)).collect(Collectors.toList());
 
-        if (timeLines.isEmpty()) {
+        if (timeLines.isEmpty() && throwException) {
             throw new BookingEngineException("Is there a booking assigned to an item that does not exists?");
         }
         

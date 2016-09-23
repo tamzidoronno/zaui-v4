@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.GetShopLogHandler;
@@ -104,7 +105,7 @@ public class PmsBooking extends DataCommon {
         return result;
     }
 
-    public String createSummary() {
+    public String createSummary(List<BookingItemType> types) {
         String res = "Reg data: <br>";
         try {
             for(String field : registrationData.resultAdded.keySet()) {
@@ -113,7 +114,20 @@ public class PmsBooking extends DataCommon {
 
             res += "<br>Rooms:<br>";
             for(PmsBookingRooms room : getAllRoomsIncInactive()) {
-                res += room.date.start + " - " + room.date.end + " - " + room.bookingItemTypeId + "<br>";
+                BookingItemType typeToUse = null;
+                if(room.bookingItemTypeId != null) {
+                    for(BookingItemType type : types) {
+                        if(type.id.equals(room.bookingItemTypeId)) {
+                            typeToUse = type;
+                        }
+                    }
+                }
+                res += room.date.start + " - " + room.date.end + " - ";
+                if(typeToUse != null) {
+                    res += " type: " + typeToUse.name;
+                }
+                res += " deleted, " + room.deleted;
+                res += "<br>";
             }
         }catch(Exception e) {
             e.printStackTrace();

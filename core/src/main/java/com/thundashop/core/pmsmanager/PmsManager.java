@@ -2566,12 +2566,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (item != null) {
                     name = item.name;
                 }
-                String text = "Removed room: " + name + " since it can't be added: " + room.date.start + " - " + room.date.end + ", channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
+                String text = "Removed room: " + name + " since it can't be added: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
                 text += "<br>";
                 text += "<br>";
-                text += booking.createSummary();
+                text += booking.createSummary(bookingEngine.getBookingItemTypes());
                 if(booking.userId != null) {
-                    text += "User : " + userManager.getUserById(booking.userId).fullName;
+                    User user = userManager.getUserById(booking.userId);
+                    if(user != null) {
+                        text += "User : " + userManager.getUserById(booking.userId).fullName;
+                    }
                 }
                 logEntry(text, booking.id, null);
                 if(!getConfigurationSecure().supportRemoveWhenFull) {

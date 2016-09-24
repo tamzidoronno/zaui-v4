@@ -70,6 +70,7 @@ class Dibs extends \PaymentApplication implements \Application {
         $order = $this->getOrder();
         $orderId = $order->incrementOrderId;
         $amount = $this->getApi()->getOrderManager()->getTotalAmount($order)*100;
+        $amount = round($amount);
         
         $settings = $this->getFactory()->getSettings();
         $language = $this->getFactory()->getSelectedTranslation();

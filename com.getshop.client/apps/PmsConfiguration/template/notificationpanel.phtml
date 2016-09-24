@@ -664,6 +664,18 @@ $channelConfig = $config->channelConfiguration;
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->autoSendPaymentReminder) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoSendPaymentReminder' <? echo $checked; ?>>
+            </span>
+            When payment are missing, automatically send payment link to booker.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->automarkInvoicesAsPaid) {
                     $checked = "CHECKED";
                 }

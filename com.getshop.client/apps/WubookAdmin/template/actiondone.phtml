@@ -30,6 +30,8 @@ if($action == "testConnection") {
     } else {
         echo $res;
     }
+} else if($action == "doubleCheckDeletions") {
+    $wubookmgr->doubleCheckDeletedBookings($name);
 } else if($action == "fetchBookingCodes") {
     $res = $wubookmgr->fetchBookingCodes($name, 2);
     echo "<pre>";

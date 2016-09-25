@@ -133,6 +133,9 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
 
     public void doFinalize() {
+        if(cart == null || cart.getItems() == null) {
+            return;
+        }
         for(CartItem item : cart.getItems()) {
             item.doFinalize();
         }

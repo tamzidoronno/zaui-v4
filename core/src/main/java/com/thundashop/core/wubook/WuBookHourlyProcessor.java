@@ -29,5 +29,6 @@ public class WuBookHourlyProcessor extends GetShopSchedulerBase {
         try { getApi().getWubookManager().updateAvailability(getMultiLevelName()); }catch(Exception e) { GetShopLogHandler.logStack(e, storeId); }
         try { getApi().getWubookManager().updatePrices(getMultiLevelName()); }catch(Exception e) { GetShopLogHandler.logStack(e, storeId); }
         try { getApi().getWubookManager().checkForNoShowsAndMark(getMultiLevelName()); }catch(Exception e) { GetShopLogHandler.logStack(e, storeId); }
+        try { getApi().getWubookManager().doubleCheckDeletedBookings(getMultiLevelName()); }catch(Exception e) { GetShopLogHandler.logStack(e, storeId); }
     }
 }

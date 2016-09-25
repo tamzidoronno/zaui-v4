@@ -168,35 +168,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             daysBack = 10;
         }
         
+        daysBack *= -1;
+        
         logPrint("Verifying all bookings");
-        Vector params = new Vector();
-        params.addElement(token);
-        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
-        
-        String pattern = "dd/MM/yyyy";
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, daysBack*-1);
-        
-        String to = format.format(new Date());
-        String from = format.format(cal.getTime());
-        
-        params.addElement(from);
-        params.addElement(to);
-        logPrint("Finding bookings from: " + from + " to -> " + to);
-        Vector result = (Vector) client.execute("fetch_bookings", params);
-        List<WubookBooking> toReturn = new ArrayList();
-        if((Integer)result.get(0) != 0) {
-            logPrint("Failed to fetch all reservations: " + result.get(1));
-        } else {
-            Vector getAllBookings = (Vector) result.get(1);
-            
-            for(int bookcount = 0; bookcount < getAllBookings.size(); bookcount++) {
-                Hashtable reservation = (Hashtable) getAllBookings.get(bookcount);
-                WubookBooking wubooking = buildBookingResult(reservation);
-                toReturn.add(wubooking);
-            }
-        }
+        List<WubookBooking> toReturn = fetchBookings(daysBack, true);
         return toReturn;
     }
 
@@ -910,6 +885,79 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             deleteObject(room);
         }
         wubookdata = new HashMap();
+    }
+
+    @Override
+    public void doubleCheckDeletedBookings() throws Exception {
+        if(!connectToApi()) {
+            return;
+        }
+        
+        List<WubookBooking> nextBookings = fetchBookings(3, false);
+        for(WubookBooking booking : nextBookings) {
+            if(booking.delete) {
+                PmsBooking pmsbooking = getPmsBooking(booking.reservationCode);
+                if(pmsbooking == null) {
+                    continue;
+                }
+                if(!pmsbooking.isDeleted) {
+                    System.out.println("Not deleted");
+                    pmsManager.deleteBooking(pmsbooking.id);
+                }
+            }
+        }
+    }
+
+    private List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws XmlRpcException, IOException {
+         Vector params = new Vector();
+        params.addElement(token);
+        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+        
+        String pattern = "dd/MM/yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, daysBack);
+        
+        String to = format.format(new Date());
+        String from = format.format(cal.getTime());
+        if(daysBack > 0) {
+            params.addElement(to);
+            params.addElement(from);
+        } else {
+            params.addElement(from);
+            params.addElement(to);
+        }
+        
+        if(registrations) {
+            params.addElement(1);
+        } else {
+            params.addElement(0);
+        }
+        logPrint("Finding bookings from: " + from + " to -> " + to);
+        Vector result = (Vector) client.execute("fetch_bookings", params);
+        List<WubookBooking> toReturn = new ArrayList();
+        if((Integer)result.get(0) != 0) {
+            logPrint("Failed to fetch all reservations: " + result.get(1));
+        } else {
+            Vector getAllBookings = (Vector) result.get(1);
+            
+            for(int bookcount = 0; bookcount < getAllBookings.size(); bookcount++) {
+                Hashtable reservation = (Hashtable) getAllBookings.get(bookcount);
+                WubookBooking wubooking = buildBookingResult(reservation);
+                toReturn.add(wubooking);
+            }
+        }
+        return toReturn;
+    }
+
+    private PmsBooking getPmsBooking(String reservationCode) {
+        List<PmsBooking> allBookings = pmsManager.getAllBookings(null);
+        for(PmsBooking book : allBookings) {
+            if(book.wubookreservationid != null && book.wubookreservationid.equals(reservationCode)) {
+                return book;
+            }
+        }
+        return null;
     }
 
 }

@@ -167,7 +167,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(getSession() != null && getSession().currentUser != null) {
                 name = getSession().currentUser.fullName;
             }
-            order.payment.transactionLog.put(System.currentTimeMillis(), "Order marked paid for by : " + name);
+            if(order.payment != null && order.payment.transactionLog != null) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Order marked paid for by : " + name);
+            }
         }
         orders.put(order.id, order);
     }

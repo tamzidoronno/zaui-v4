@@ -49,6 +49,12 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .updatecardonroom', app.PmsManagement.updatecardonroom);
         $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
         $(document).on('keyup','.PmsManagement .matrixpricealldays', app.PmsManagement.updateRoomPriceMatrix);
+        $(document).on('click','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
+        $(document).on('focus','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
+        $(document).on('keyup','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
+    },
+    showSaveButton : function() {
+        $('.saveAddons').fadeIn();
     },
     changeCleaningDate : function() {
         var newDate = prompt("Specify a new date", $(this).text());

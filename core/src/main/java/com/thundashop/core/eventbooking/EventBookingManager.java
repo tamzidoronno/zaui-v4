@@ -894,6 +894,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         BookingItemTypeMetadata metaData = getBookingTypeMetaData(o);
         
         User loggedOnUser = userManager.getLoggedOnUser();
+        if (loggedOnUser != null && loggedOnUser.isAdministrator())
+            return true;
         
         if (o.isHidden && (loggedOnUser == null || loggedOnUser.type < 100)) {
             return false;

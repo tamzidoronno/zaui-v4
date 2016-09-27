@@ -44,3 +44,15 @@
 .PmsBookingSummary .addonitemrow .fa-check-square-o
 { padding-left: 25px; }
 .PmsBookingSummary .addoncompletedprint { height: 10px; }
+
+@media only all and (max-width: 800px) {
+    .PmsBookingSummary .roomdatedesc { font-size: 15px; padding-left: 28px; }
+    .PmsBookingSummary .addAddonOnRoom { font-size: 15px; }
+    .PmsBookingSummary .addonitemrow .fa-square-o, .PmsBookingSummary .addonitemrow .fa-check-square-o { font-size: 15px; padding-left: 5px; }
+    
+    .PmsBookingSummary .discountbutton { display:block; width: 100%; }
+    .PmsBookingSummary .addcouponbutton,
+    .PmsBookingSummary .setidentificationNumber,
+    .PmsBookingSummary input[gsname="code"] { display:block; width:100%; box-sizing: border-box; }
+    
+}

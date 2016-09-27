@@ -30,8 +30,8 @@
         left:0px;
         display:inline-block;
     }
-    .PmsBookingProductList .productentry .roomtypeselectioncount i { font-size: 30px; }
-    .PmsBookingProductList .roomdesc { margin-top: 10px; line-height: 16px; }
+    .PmsBookingProductList .productentry .roomtypeselectioncount i { font-size: 30px; padding: 10px !important; display:inline-block; }
+   .PmsBookingProductList .roomdesc { margin-top: 10px; line-height: 16px; }
     .PmsBookingProductList .productentry .name {
         font-size: 14px;
         font-weight: bold;

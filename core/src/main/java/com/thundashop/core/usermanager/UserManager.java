@@ -423,10 +423,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public void saveUser(User user) throws ErrorException {
-        
         UserStoreCollection collection = getUserStoreCollection(storeId);
         User savedUser = collection.getUser(user.id);
-        
         
         // Save the first user
         if (collection.getAllUsers().size() == 0) {
@@ -438,6 +436,16 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         checkUserAccess(user);
         preventOverwriteOfData(user, savedUser);
 
+        validatePhoneNumber(user);
+        
+        collection.addUser(user);
+    }
+
+    private void validatePhoneNumber(User user) {
+        if (getStoreSettingsApplicationKey("automaticPhoneValidationActivated").equals("false")) {
+            return;
+        }
+        
         try {
             HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ user.prefix,user.cellPhone, "NO");
             if(res != null) {
@@ -451,8 +459,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }catch(Exception e) {
             logPrintException(e);
         }
-        
-        collection.addUser(user);
     }
 
     @Override

@@ -58,6 +58,7 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
             product.stockQuantity = (int) Float.parseFloat(jsonObj.get("UnitInStock").toString());
             JsonObject jsonObj2 = webManager.htmlGetJson(endpoint);
             product.price = Float.parseFloat(jsonObj2.get("Price1").toString());
+            addTaxes(product);
         } catch (Exception ex) {
             logPrint(ex.toString());
         }
@@ -219,5 +220,11 @@ public class AmestoManager extends ManagerBase implements IAmestoManager {
 
     private void warnNoSkuForProduct(Product product) {
         logPrint("No sku (articlenumber) set for product: " + product.name);
+    }
+
+    private void addTaxes(Product product) {
+        if(product.taxGroupObject != null && product.taxGroupObject.taxRate != null) {
+            product.price = product.price * (1 + product.taxGroupObject.getTaxRate());
+        }
     }
 }

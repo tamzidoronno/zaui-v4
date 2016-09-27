@@ -124,6 +124,7 @@ class Settings extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("autonavigatetocart", $_POST['autonavigatetocart']);
         $this->setConfigurationSetting("seo",  $_POST['seo']);
         $this->setConfigurationSetting("cookiewarning",  $_POST['cookiewarning']);
+        $this->setConfigurationSetting("automaticPhoneValidationActivated",  $_POST['automaticPhoneValidationActivated']);
         
         $this->getApi()->getStoreManager()->setStoreIdentifier($_POST['identifier']);
     }

@@ -50,6 +50,7 @@ public class PmsManagerProcessor {
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoDeletion(); }catch(Exception e) { e.printStackTrace(); }
         try { processArx(); }catch(Exception e) { e.printStackTrace(); }
+        try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { e.printStackTrace(); }
     }
     
     public void hourlyProcessor() {
@@ -811,5 +812,49 @@ public class PmsManagerProcessor {
         }
         long end = System.currentTimeMillis();
         System.out.println("Check takes : " + (end-start));
+    }
+
+    private void sendPaymentLinkOnUnpaidBookings() {
+        if(!manager.getConfigurationSecure().autoSendPaymentReminder) {
+            return;
+        }
+        
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = "checkin";
+        filter.startDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 2);
+        filter.endDate = cal.getTime();
+        
+        List<PmsBooking> bookingsCheckingIn = manager.getAllBookings(filter);
+        for(PmsBooking book : bookingsCheckingIn) {
+            if(book.payedFor) {
+                continue;
+            }
+            if(book.isDeleted) {
+                continue;
+            }
+            if(book.isRegisteredToday() && (book.channel == null || book.channel.isEmpty())) {
+                continue;
+            }
+            
+            for(String orderId : book.orderIds) {
+                Order order = manager.orderManager.getOrder(orderId);
+                if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                   continue; 
+                }
+                if(order.payment != null && order.payment.paymentType != null && 
+                        order.payment.paymentType.contains("invoice")) {
+                    continue;
+                }
+                String key = "autosendmissingpayment_" + book.id;
+                if(book.notificationsSent.contains(key)) {
+                    continue;
+                }
+
+                book.notificationsSent.add(key);
+                manager.sendMissingPayment(orderId, book.id);
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.GetShopLogHandler;
@@ -104,6 +105,37 @@ public class PmsBooking extends DataCommon {
         return result;
     }
 
+    public String createSummary(List<BookingItemType> types) {
+        String res = "Reg data: <br>";
+        try {
+            for(String field : registrationData.resultAdded.keySet()) {
+                res += field + " : " + registrationData.resultAdded.get(field) + "<br>";
+            }
+
+            res += "<br>Rooms:<br>";
+            for(PmsBookingRooms room : getAllRoomsIncInactive()) {
+                BookingItemType typeToUse = null;
+                if(room.bookingItemTypeId != null) {
+                    for(BookingItemType type : types) {
+                        if(type.id.equals(room.bookingItemTypeId)) {
+                            typeToUse = type;
+                        }
+                    }
+                }
+                res += room.date.start + " - " + room.date.end + " - ";
+                if(typeToUse != null) {
+                    res += " type: " + typeToUse.name;
+                }
+                res += " deleted, " + room.deleted;
+                res += "<br>";
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        return res;
+    }
+    
     boolean hasStayAfter(Date startInvoiceFrom) {
         for(PmsBookingRooms room : rooms) {
             if(room.date.end.after(startInvoiceFrom)) {
@@ -330,7 +362,7 @@ public class PmsBooking extends DataCommon {
         }
     }
     
-    PmsBookingRooms findRoom(String roomId) {
+    public PmsBookingRooms findRoom(String roomId) {
         for(PmsBookingRooms room : rooms) {
             if(room.pmsBookingRoomId.equals(roomId)) {
                 return room;

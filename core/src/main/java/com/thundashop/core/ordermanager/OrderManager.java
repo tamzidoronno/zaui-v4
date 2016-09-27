@@ -161,7 +161,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(order.incrementOrderId > incrementingOrderId) {
             incrementingOrderId = order.incrementOrderId;
         }
-
+        if(order.status == Order.Status.PAYMENT_COMPLETED && order.paymentDate == null) {
+            order.paymentDate = new Date();
+            String name = "";
+            if(getSession() != null && getSession().currentUser != null) {
+                name = getSession().currentUser.fullName;
+            }
+            if(order.payment != null && order.payment.transactionLog != null) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Order marked paid for by : " + name);
+            }
+        }
         orders.put(order.id, order);
     }
     

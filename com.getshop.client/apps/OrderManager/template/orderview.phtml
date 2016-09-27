@@ -31,10 +31,14 @@ $cart = $order->cart;
 <div class='orderoverview' orderId='<? echo $_POST['value']; ?>'>
     <div class='customerdetails'>
         <?
-        $address = $order->cart->address;
+        $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+        $addr = "Name: " . $user->fullName . "<br>";
+        $addr .= "Address:<br>" . $user->address->address . "<br>";
+        $addr .= $user->address->postCode . " " . $user->address->city . "<br>";
+        $addr .= $user->emailAddressToInvoice ? $user->emailAddressToInvoice : $user->emailAddress;
+        echo $addr;
         ?>
-        <div class='gss_label'><? echo $this->__f("Name"); ?></div>
-        <div class='gss_label_content'><? echo $address->fullName; ?></div>
+        <br>
         <div class='gss_label'><? echo $this->__f("Invoice information"); ?></div>
         <div class='gss_label_content'><textarea id="invoiceinformationbox" style="position:relative;height: 100px; width: 100%;"><? echo $order->invoiceNote; ?></textarea><br><br>
         <? if($this->canChangeOrder($order)) { ?>

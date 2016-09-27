@@ -23,6 +23,9 @@ public class WuBookManagerProcessor extends GetShopSchedulerBase {
     
     @Override
     public void execute() throws Exception {
+        if(!getApi().getStoreManager().isProductMode()) {
+            return;
+        }
         long start = System.currentTimeMillis();
         GetShopLogHandler.logPrintStatic("Searching for new bookings", null);
         getApi().getWubookManager().fetchNewBookings(getMultiLevelName());

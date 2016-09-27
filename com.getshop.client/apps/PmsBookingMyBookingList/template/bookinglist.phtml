@@ -139,7 +139,7 @@ if($config->requirePayments) {
     $total = 0;
     $totalTaxes = 0;
     foreach($orders as $order) {
-        if(!in_array($order->id, $orderIds)) {
+        if(!in_array($order->id, $orderIds) && $order->status != 7) {
             continue;
         }
         echo "<tr>";

@@ -261,7 +261,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 !room.isSameDay(room.invoicedFrom, room.date.start) && 
                 room.date.start.before(room.invoicedFrom)) {
             avoidChangeInvoicedTo = true;
-            createCartItemsForRoom(room.date.start, room.invoicedFrom, booking, room);
+            Date start = room.date.start;
+            Date end = room.invoicedFrom;
+            if(end.after(room.date.end)) {
+                end = room.date.end;
+            }
+            
+            createCartItemsForRoom(start, end, booking, room);
             avoidChangeInvoicedTo = false;
         }
     }
@@ -440,6 +446,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         orderManager.saveOrder(order);
                     }
                 }
+                
+                for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+                    if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
+                        if(!room.pmsBookingRoomId.equals(filter.pmsRoomId)) {
+                            continue;
+                        }
+                    }
+                    
+                    room.invoicedFrom = room.date.start;
+                    if(room.date.end.before(filter.endInvoiceAt)) {
+                        room.invoicedTo = room.date.end;
+                    } else {
+                        room.invoicedTo = filter.endInvoiceAt;
+                    }
+                    
+                }
+                
                 pmsManager.saveBooking(booking);
             }
         }
@@ -597,16 +620,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         item.getProduct().discountedPrice = price;
         item.getProduct().price = price;
         item.getProduct().metaData = guestName;
-        if(!avoidOrderCreation) {
-            if(!avoidChangeInvoicedTo) {
-                room.invoicedTo = endDate;
-            }
-            if(!avoidChangingInvoicedFrom || room.invoicedFrom == null) {
-                room.invoicedFrom = room.date.start;
-            }
-            logPrint("\t new end date: " + room.invoicedTo);
-        }
-        
         return item;
     }
 
@@ -659,6 +672,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
        
         User user = userManager.getUserById(booking.userId);
         if (user == null) {
+            logPrint("User does not exists: " + booking.userId + " for booking : " + booking.id);
+            Exception ex = new Exception();
+            logPrintException(ex);
+            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed.", ex);
             return null;
         }
 
@@ -956,6 +973,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return "";
         }
         NewOrderFilter filter = new NewOrderFilter();
+        logPrint("Creating prepayment order: " + booking.id + ", userid: " + booking.userId);
         filter.prepayment = true;
         filter.endInvoiceAt = booking.getEndDate();
         filter.forceInvoicing = true;
@@ -1110,14 +1128,22 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
         if(room.invoicedFrom != null && room.invoicedFrom.before(room.date.start) && !room.isSameDay(room.invoicedFrom, room.date.start)) {
-            creditRoomForPeriode(room.invoicedFrom, room.date.start, booking, room);
-            if(!avoidOrderCreation) {
-                room.invoicedFrom = room.date.start;
-                saveObject(booking);
+            Date invoiceStart = room.invoicedFrom;
+            Date invoiceEnd = room.date.start;
+            if(room.date.start.after(room.invoicedTo)) {
+                invoiceStart = room.invoicedFrom;
+                invoiceEnd = room.invoicedTo;
             }
+            creditRoomForPeriode(invoiceStart, invoiceEnd, booking, room);
         }
         if(room.invoicedTo != null && room.invoicedTo.after(room.date.end) && !room.isSameDay(room.invoicedTo, room.date.end)) {
-            creditRoomForPeriode(room.date.end, room.invoicedTo, booking, room);
+            Date invoiceStart = room.date.end;
+            Date invoiceEnd = room.invoicedTo;
+            if(room.date.end.before(room.invoicedFrom)) {
+                invoiceStart = room.invoicedFrom;
+                invoiceEnd = room.invoicedTo;
+            }
+            creditRoomForPeriode(invoiceStart, invoiceEnd, booking, room);
             if(!avoidOrderCreation) {
                 room.invoicedTo = room.date.end;
                 saveObject(booking);

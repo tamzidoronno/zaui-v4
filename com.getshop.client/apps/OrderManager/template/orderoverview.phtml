@@ -42,7 +42,7 @@ $searchtext = $this->getSearchText();
                         $states['9'] = "Need collecting";
                         $states['10'] = "Send to invoice";
                 
-                        foreach ($states as $key => $lang) { 
+                        foreach ($states as $key => $lang) {
                             $selected = $this->getFactory()->getMainLanguage() == $key ? "selected='true'" : "";
                             ?>
                             <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>

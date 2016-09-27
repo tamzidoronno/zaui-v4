@@ -39,7 +39,6 @@ foreach($config->addonConfiguration as $addonConfig) {
 echo "</select> ";
 echo "<span class='pmsbutton addAddonsButton'>Add addon</span> ";
 echo "<span class='pmsbutton removeAddons' style='background-color:red'>Remove addon</span>";
-echo "<span class='pmsbutton saveAddons' style='float:right;'>Save addons</span>";
 
 echo "<br><br>";
 foreach($booking->rooms as $room) {
@@ -48,7 +47,7 @@ foreach($booking->rooms as $room) {
         $roomName .= " (" . $bookingItems[$room->bookingItemId]->bookingItemName . ") " . $room->guests[0]->name;
     }
     echo "<h2>" . $roomName . " - " . date("d.m.Y H:i" , strtotime($room->date->start)) . " - " . date("d.m.Y H:i" , strtotime($room->date->end)) . "</h2>";
-    echo "<table cellspacing='0' cellpadding='0' width='100%'>";
+    echo "<table cellspacing='0' cellpadding='0' width='100%' class='addonstable'>";
     echo "<tr>";
     echo "<th>Type</th>";
     echo "<th>Room</th>";
@@ -71,4 +70,5 @@ foreach($booking->rooms as $room) {
     }
     echo "</table>";
 }
+echo "<span class='pmsbutton saveAddons' style='float:right; display:none;'>Save addons</span>";
 ?>

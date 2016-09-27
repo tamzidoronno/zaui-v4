@@ -50,6 +50,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean isCreditNote = false;
     public Date startDate = null;
     public Date endDate = null;
+    public Date paymentDate = null;
     public Integer paymentTerms = 15;
     public String parentOrder = "";
     public boolean sentToCustomer = false;
@@ -132,6 +133,9 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
 
     public void doFinalize() {
+        if(cart == null || cart.getItems() == null) {
+            return;
+        }
         for(CartItem item : cart.getItems()) {
             item.doFinalize();
         }

@@ -29,7 +29,7 @@ public class RenaHotell implements AccountingInterface {
     private UserManager userManager;
     private InvoiceManager invoiceManager;
     private OrderManager orderManager;
-
+    
     @Override
     public void setUserManager(UserManager manager) {
         this.userManager = manager;
@@ -43,22 +43,23 @@ public class RenaHotell implements AccountingInterface {
     @Override
     public List<String> createOrderFile(List<Order> orders, String type) {
         
-        SimpleDateFormat format1 = new SimpleDateFormat("yyMMdd");
+        SimpleDateFormat format1 = new SimpleDateFormat("ddMMyy");
         List<String> result = new ArrayList();
         for(Order order : orders) {
             User user = userManager.getUserById(order.userId);
             for(CartItem item : order.cart.getItems()) {
                 HashMap<Integer, String> fieldsInLine = new HashMap();
-                fieldsInLine.put(1, "97");
+                fieldsInLine.put(1, "\"97");
                 fieldsInLine.put(2, format1.format(order.rowCreatedDate));
                 fieldsInLine.put(3, order.incrementOrderId + "");
                 fieldsInLine.put(4, format1.format(order.rowCreatedDate));
-                fieldsInLine.put(5, "45");
+                fieldsInLine.put(5, "0045");
                 
                 String lineText = createLineText(item);
                 
-                fieldsInLine.put(6, lineText);
-                fieldsInLine.put(8, order.invoiceNote);
+                fieldsInLine.put(6, "\"\"" + stripText(lineText, 30) + "\"\"");
+                fieldsInLine.put(7, "0000");
+                fieldsInLine.put(8, stripText(order.invoiceNote, 5));
                 String account = item.getProduct().sku;
                 String mvaKode = item.getProduct().accountingSystemId;
                 
@@ -70,10 +71,14 @@ public class RenaHotell implements AccountingInterface {
                 }
                 
                 if(order.payment.paymentType.toLowerCase().contains("invoice")) {
-                    account = user.customerId + "";
+                    if(user.customerId < 100000) {
+                        account = "0" + user.customerId + "";
+                    } else {
+                        account = user.customerId + "";
+                    }
                 }
                 
-                int count = item.getCount();
+                Integer count = item.getCount();
                 
                 if(count > 0) {
                     fieldsInLine.put(9, account); //Debet konto
@@ -96,20 +101,48 @@ public class RenaHotell implements AccountingInterface {
                 
                 double price = item.getProduct().priceExTaxes;
                 DecimalFormat df = new DecimalFormat("#.##");      
-                price = Double.valueOf(df.format(price)); 
-                
+                String priceToSend = df.format(price); 
+                priceToSend = prependZeros(priceToSend, 14);
                 fieldsInLine.put(11, mvaKode);
                 fieldsInLine.put(12, "000");
-                fieldsInLine.put(15, price + "");
+                fieldsInLine.put(13, "000000.0000");
+                fieldsInLine.put(14, "00000000000.00");
+                fieldsInLine.put(15, priceToSend + "");
+                fieldsInLine.put(16, "000000");
                 fieldsInLine.put(17, format1.format(order.rowCreatedDate));
-                fieldsInLine.put(19, count + "");
+                String counter = count + ".00";
+                counter = prependZeros(counter, 11);
+                fieldsInLine.put(18, "0000000000");
+                fieldsInLine.put(19, counter);
+                fieldsInLine.put(20, "\"\"" + stripText("", 25) + "\"\"");
                 fieldsInLine.put(21, user.customerId + "");
-                fieldsInLine.put(23, user.fullName + "");
-                fieldsInLine.put(24, address.address + "");
-                fieldsInLine.put(25, address.address2 + "");
-                fieldsInLine.put(26, address.postCode + "");
-                fieldsInLine.put(27, user.address.city + "");
-                fieldsInLine.put(29, user.cellPhone + "");
+                fieldsInLine.put(22, "000000");
+                fieldsInLine.put(23, "\"\"" + stripText(user.fullName, 30) + "\"\"" + "");
+                fieldsInLine.put(24, "\"\"" + stripText(address.address, 30) + "\"\"" + "");
+                fieldsInLine.put(25, "\"\"" + stripText(address.address2, 30) + "\"\"" + "");
+                fieldsInLine.put(26, "\"\"" + stripTextPrependNumber(address.postCode, 6) + "\"\"" + "");
+                fieldsInLine.put(27, "\"\"" + stripText(user.address.city, 25) + "");
+                fieldsInLine.put(28, "\"\"" + stripText("", 30) + "\"\"");
+                fieldsInLine.put(29, "\"\"" + stripText(user.cellPhone, 15) + "\"\"");
+                
+                fieldsInLine.put(30, "\"\"" + stripText("", 15) + "\"\"");
+                fieldsInLine.put(31, "\"\"" + stripText("", 5) + "\"\"");
+                fieldsInLine.put(32, "\"\"" + stripText("", 15) + "\"\"");
+                fieldsInLine.put(33, "\"\"" + stripText("", 15) + "\"\"");
+                fieldsInLine.put(34, "00000000000.00");
+                fieldsInLine.put(35, "\"\"" + stripText("", 30) + "\"\"");
+                fieldsInLine.put(36, "\"\"" + stripText("", 30) + "\"\"");
+                fieldsInLine.put(37, "\"\"" + stripText("", 30) + "\"\"");
+                fieldsInLine.put(38, "\"\"" + stripText("", 6) + "\"\"");
+                fieldsInLine.put(39, "\"\"" + stripText("", 25) + "\"\"");
+                
+                fieldsInLine.put(40, "000");
+                fieldsInLine.put(41, "0000");
+                fieldsInLine.put(42, "00");
+                fieldsInLine.put(43, "00");
+                fieldsInLine.put(44, "000");
+                fieldsInLine.put(45, "000");
+                fieldsInLine.put(46,"00\"");
                 String line = createLine(fieldsInLine);
                 result.add(line);
             }
@@ -137,7 +170,10 @@ public class RenaHotell implements AccountingInterface {
         } else {
             lineText = item.getProduct().name + " " + item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
         }
-         
+        
+        if(lineText.length() > 30) {
+            lineText = lineText.substring(0, 30);
+        }
         return lineText;
     }
     
@@ -150,13 +186,12 @@ public class RenaHotell implements AccountingInterface {
                     if(text == null) {
                         GetShopLogHandler.logPrintStatic("Null on: " + i, "null");
                     }
-                    text = text.replaceAll(",", "");
-                    text = text.replaceAll("\n", "");
                     resultLine += text + ",";
                 } else {
                     resultLine += ",";
                 }
             }
+            resultLine = resultLine.substring(0, resultLine.length()-1);
             resultLine += "\r\n";
             return resultLine;
     }
@@ -177,6 +212,51 @@ public class RenaHotell implements AccountingInterface {
 
     @Override
     public void setStoreApplication(StoreApplicationPool manager) {
+    }
+
+    private String prependZeros(String counter, int i) {
+        int diff = i - counter.length();
+        String toPrepend = "";
+        for(i = 0; i < diff; i++) {
+            toPrepend += "0";
+        }
+        return toPrepend + counter;
+    }
+
+    private String stripText(String text, int length) {
+        if(text == null) {
+            text = "";
+        }
+        text = text.replaceAll(",", "");
+        text = text.replaceAll("\r", "");
+        text = text.replaceAll("\n", "");
+        text = text.replaceAll("\"", "");
+        if(text.length() > length) {
+            text = text.substring(0, length);
+        }
+        String padding = "";
+        for(int i = text.length(); i < length; i++) {
+            padding += " ";
+        }
+        return text + padding;
+    }
+    
+    private String stripTextPrependNumber(String text, int length) {
+        if(text == null) {
+            return "";
+        }
+        text = text.replaceAll(",", "");
+        text = text.replaceAll("\n", "");
+        text = text.replaceAll("\"", "");
+        if(text.length() > length) {
+            text = text.substring(0, length);
+        }        
+        
+        String padding = "";
+        for(int i = text.length(); i < length; i++) {
+            padding += "0";
+        }
+        return padding + text;
     }
     
 }

@@ -53,6 +53,7 @@ public class PmsConfiguration extends DataCommon {
     public String bookingProfile = "hotel";
 
     /* Invoice creation options */
+    public boolean autoSendPaymentReminder;
     public boolean supportRemoveWhenFull = false;
     public boolean supportDiscounts = false;
     public boolean autoSendInvoice = false;
@@ -113,7 +114,8 @@ public class PmsConfiguration extends DataCommon {
     public String wubookpassword = "";
     public String wubookproviderkey = "";
     public String wubooklcode = "";
-    
+    public boolean usePricesFromChannelManager = false;
+
     
     public HashMap<String, PmsChannelConfig> channelConfiguration = new HashMap();
     

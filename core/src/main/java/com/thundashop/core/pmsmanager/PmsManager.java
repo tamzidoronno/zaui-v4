@@ -628,7 +628,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     //If the room ended one week ago, the code can be reused.
                     continue;
                 }
-                if (room.code != null && (room.code.equals(newcode) && !room.isEnded())) {
+                if (room.code != null && (room.code.equals(newcode + ""))) {
                     return true;
                 }
             }

@@ -50,7 +50,7 @@ if(!$res) {
 }
 
 foreach($res as $r) {
-    echo $r;
+    echo mb_convert_encoding($r, "ISO-8859-1", "UTF-8");
 }
 ?>
 

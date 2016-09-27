@@ -9,4 +9,5 @@ public class WubookBookedRoom implements Serializable {
     int guest = 0;
     int roomId = 0;
     HashMap<Date, Double> priceMatrix = new HashMap();
+    int breakfasts;
 }

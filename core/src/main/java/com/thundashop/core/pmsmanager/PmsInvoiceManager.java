@@ -444,6 +444,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         order.status = Order.Status.PAYMENT_COMPLETED;
                         order.closed = true;
                         orderManager.saveOrder(order);
+                        
+                        if(booking.channel != null && !booking.channel.isEmpty()) {
+                            List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
+                            if(emails != null) {
+                                for(String email : emails) {
+                                    messageManager.sendMail(email, email, "Credited order", "Order " + order.incrementOrderId + " has been credited from external channel, total amount: " + total, email, email);
+                                }
+                            }
+                        }
                     }
                 }
                 

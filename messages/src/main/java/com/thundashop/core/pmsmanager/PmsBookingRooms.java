@@ -374,7 +374,7 @@ public class PmsBookingRooms implements Serializable {
     }
 
     boolean isEndedDaysAgo(int daysAgo) {
-        if(date.end == null) {
+        if(date == null || date.end == null) {
             return false;
         }
         daysAgo *= -1;

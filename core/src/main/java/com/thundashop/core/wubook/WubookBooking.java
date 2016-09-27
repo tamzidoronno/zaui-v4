@@ -21,7 +21,6 @@ public class WubookBooking implements Serializable {
     public String name;
     public Date depDate;
     public Date arrivalDate;
-    public boolean breakfast;
     public List<WubookBookedRoom> rooms = new ArrayList();
     public List<Integer> modifiedReservation = new ArrayList();
     public String countryCode;

@@ -51,7 +51,7 @@ public class RenaHotell implements AccountingInterface {
                 HashMap<Integer, String> fieldsInLine = new HashMap();
                 fieldsInLine.put(1, "\"97");
                 fieldsInLine.put(2, format1.format(order.rowCreatedDate));
-                fieldsInLine.put(3, order.incrementOrderId + "");
+                fieldsInLine.put(3, prependZeros(new Long(order.incrementOrderId-100000).intValue() + "", 6));
                 fieldsInLine.put(4, format1.format(order.rowCreatedDate));
                 fieldsInLine.put(5, "0045");
                 
@@ -59,7 +59,7 @@ public class RenaHotell implements AccountingInterface {
                 
                 fieldsInLine.put(6, "\"\"" + stripText(lineText, 30) + "\"\"");
                 fieldsInLine.put(7, "0000");
-                fieldsInLine.put(8, stripText(order.invoiceNote, 5));
+                fieldsInLine.put(8, "000000");
                 String account = item.getProduct().sku;
                 String mvaKode = item.getProduct().accountingSystemId;
                 
@@ -71,7 +71,7 @@ public class RenaHotell implements AccountingInterface {
                 }
                 
                 if(order.payment.paymentType.toLowerCase().contains("invoice")) {
-                    if(user.customerId < 100000) {
+                    if(user.customerId < 10000) {
                         account = "0" + user.customerId + "";
                     } else {
                         account = user.customerId + "";
@@ -82,8 +82,10 @@ public class RenaHotell implements AccountingInterface {
                 
                 if(count > 0) {
                     fieldsInLine.put(9, account); //Debet konto
+                    fieldsInLine.put(10, "000000"); //Debet konto
                 } else {
                     count = count * -1;
+                    fieldsInLine.put(9, "000000"); //Debet konto
                     fieldsInLine.put(10, account); //Kredit konto
                 }
                 
@@ -120,8 +122,8 @@ public class RenaHotell implements AccountingInterface {
                 fieldsInLine.put(23, "\"\"" + stripText(user.fullName, 30) + "\"\"" + "");
                 fieldsInLine.put(24, "\"\"" + stripText(address.address, 30) + "\"\"" + "");
                 fieldsInLine.put(25, "\"\"" + stripText(address.address2, 30) + "\"\"" + "");
-                fieldsInLine.put(26, "\"\"" + stripTextPrependNumber(address.postCode, 6) + "\"\"" + "");
-                fieldsInLine.put(27, "\"\"" + stripText(user.address.city, 25) + "");
+                fieldsInLine.put(26, "\"\"" + stripText(address.postCode, 6) + "\"\"" + "");
+                fieldsInLine.put(27, "\"\"" + stripText(user.address.city, 25) + "\"\""  + "");
                 fieldsInLine.put(28, "\"\"" + stripText("", 30) + "\"\"");
                 fieldsInLine.put(29, "\"\"" + stripText(user.cellPhone, 15) + "\"\"");
                 

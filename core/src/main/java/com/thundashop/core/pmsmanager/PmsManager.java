@@ -617,10 +617,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private boolean codeExist(int newcode) {
         for(PmsBooking booking : bookings.values()) {
-            if(booking.getActiveRooms() == null) {
+            if(booking == null || booking.getActiveRooms() == null) {
                 continue;
             }
             for (PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room == null) {
+                    continue;
+                }
                 if(room.isEndedDaysAgo(7)) {
                     //If the room ended one week ago, the code can be reused.
                     continue;
@@ -3819,5 +3822,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 System.out.println("\t" + ord.incrementOrderId + "\t\t\t" + ord.rowCreatedDate + "\t" + ord.testOrder + "\t" + total);
         }
         System.exit(0);
+    }
+
+    public void addAddonsToBookingWithCount(Integer type, String pmsBookingRoomId, boolean b, int count) {
+        addAddonsToBooking(type, pmsBookingRoomId, b);
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            if(room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                for(PmsBookingAddonItem item : room.addons) {
+                    if(item.addonType.equals(type)) {
+                        item.count = count;
+                    }
+                }
+            }
+        }
+        saveBooking(booking);
     }
 }

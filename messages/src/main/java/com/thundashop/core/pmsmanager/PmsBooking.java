@@ -154,7 +154,7 @@ public class PmsBooking extends DataCommon {
         return true;
     }
 
-    Date getEndDate() {
+    public Date getEndDate() {
         Date endDate = null;
         for(PmsBookingRooms room : rooms) {
             if(endDate == null || room.date.end.after(endDate)) {

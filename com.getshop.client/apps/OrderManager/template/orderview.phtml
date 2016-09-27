@@ -41,9 +41,7 @@ $cart = $order->cart;
         <br>
         <div class='gss_label'><? echo $this->__f("Invoice information"); ?></div>
         <div class='gss_label_content'><textarea id="invoiceinformationbox" style="position:relative;height: 100px; width: 100%;"><? echo $order->invoiceNote; ?></textarea><br><br>
-        <? if($this->canChangeOrder($order)) { ?>
-            <input type="button" value="Update invoice information" id="updateinvoiceinfo">
-        <? } ?>
+           <input type="button" value="Update invoice information" id="updateinvoiceinfo">
         </div>
         
         <div class='gss_label_content'>

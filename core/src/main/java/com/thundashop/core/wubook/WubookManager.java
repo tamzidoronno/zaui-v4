@@ -249,7 +249,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         booking.wasModified = (Integer)table.get("was_modified");
         booking.phone = (String) table.get("customer_phone");
         booking.customerNotes = getCustomerNotes(table);
-        booking.breakfast = checkForBreakfast(table);
 
         String countryCode = (String) table.get("customer_country");
         if (countryCode == null || countryCode.equals("--") || countryCode.isEmpty()) {
@@ -288,6 +287,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Integer roomId = (Integer) roomtable.get("room_id");
             room.guest = guest;
             room.roomId = roomId;
+            room.breakfasts = checkForBreakfast(roomtable, table, guest);
             booking.rooms.add(room);
             
             if(pmsManager.getConfigurationSecure().usePricesFromChannelManager) {
@@ -566,24 +566,25 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     
-    private boolean checkForBreakfast(Hashtable table) {
-        Vector addons = (Vector) table.get("addons_list");
-        Iterator itr = addons.iterator();
-        while(itr.hasNext()) {
-            Hashtable addontable = (Hashtable) itr.next();
-            if(addontable.containsKey("name")) {
-                String name = (String) addontable.get("name");
-                if(name.toLowerCase().contains("breakfast")) {
-                    return true;
+    private int checkForBreakfast(Hashtable table, Hashtable bookingtable, int guests) {
+        Hashtable addons = (Hashtable) table.get("ancillary");
+        Vector addonsList = (Vector) addons.get("addons");
+        if(addonsList != null) {
+            Iterator roomIterator = addonsList.iterator();
+            while (roomIterator.hasNext()) {
+                Hashtable addon = (Hashtable) roomIterator.next();
+                String name = (String) addon.get("name");
+                if(name != null && name.toLowerCase().contains("breakfast")) {
+                    return (int) addon.get("persons");
                 }
             }
         }
         
-        if((int)table.get("id_channel") == 1 && (int)table.get("booked_rate") == -1) {
-            return true;
+        if((int)bookingtable.get("id_channel") == 1 && (int)bookingtable.get("booked_rate") == -1) {
+            return guests;
         }
         
-        return false;
+        return 0;
     }
     
     private String getCustomerNotes(Hashtable table) {
@@ -644,23 +645,34 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         } else if(booking.delete) {
             List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
             boolean found = false;
+            PmsBooking foundbooking = null;
             for(PmsBooking pmsbook : allbookings) {
                 if(pmsbook.wubookreservationid != null && pmsbook.wubookreservationid.equals(booking.reservationCode)) {
                     pmsManager.logEntry("Deleted by channel manager", pmsbook.id, null);
                     pmsManager.deleteBooking(pmsbook.id);
+                    foundbooking = pmsbook;
                     found = true;
                 }
                 for(Integer oldCode : booking.modifiedReservation) {
                     if(pmsbook.wubookreservationid.equals(oldCode+"")) {
                         pmsManager.logEntry("Deleted by channel manager", pmsbook.id, null);
                         pmsManager.deleteBooking(pmsbook.id);
+                        foundbooking = pmsbook;
                         found = true;
                     }
                 }
             }
             if(!found) {
                 return "Did not find booking to delete.";
-            } 
+            }
+            
+            NewOrderFilter filter = new NewOrderFilter();
+            filter.avoidOrderCreation = false;
+            filter.createNewOrder = true;
+            filter.prepayment = true;
+            filter.endInvoiceAt = foundbooking.getEndDate();
+            pmsInvoiceManager.createOrder(foundbooking.id,filter);
+            
             return "";
         }
         
@@ -710,11 +722,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
 
         pmsManager.setBooking(newbooking);
-        if(booking.breakfast) {
-            for(PmsBookingRooms room : newbooking.getActiveRooms()) {
-                pmsManager.addAddonsToBooking(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false);
-
+        int i = 0;
+        for(PmsBookingRooms room : newbooking.getActiveRooms()) {
+            WubookBookedRoom r = booking.rooms.get(i);
+            if(r.breakfasts > 0) {
+                pmsManager.addAddonsToBookingWithCount(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false, r.breakfasts);
             }
+            i++;
         }
         newbooking = pmsManager.completeCurrentBooking();
         

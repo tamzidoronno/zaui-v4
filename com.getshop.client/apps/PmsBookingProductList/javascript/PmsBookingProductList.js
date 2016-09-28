@@ -11,11 +11,12 @@ app.PmsBookingProductList = {
         if(app.PmsBookingProductList.setRoomCountTimeout) {
             clearTimeout(app.PmsBookingProductList.setRoomCountTimeout);
         }
+        console.log($(this).val());
         var current = $(this).closest('.productentry');
         var typeid = current.attr('typeid');
         var currentInput = current.find('.productcount');
-        var currentCount = currentInput.val();
-        var max = currentInput.attr('max');
+        var currentCount = parseInt(currentInput.val());
+        var max =  parseInt(currentInput.attr('max'));
         if(!$(this).hasClass('productcount')) {
             if($(this).hasClass('fa-plus')) {
                 currentCount++;
@@ -23,6 +24,7 @@ app.PmsBookingProductList = {
                 currentCount--;
             }
         }
+        
         if(currentCount < 0) {
             currentCount = 0;
         }
@@ -39,7 +41,7 @@ app.PmsBookingProductList = {
             console.log(data);
             var event = thundashop.Ajax.createEvent('','selectRoomCount',currentInput, data);
             thundashop.Ajax.post(event);
-        }, 500);
+        }, 1500);
     },
     
     continueToPage : function() {

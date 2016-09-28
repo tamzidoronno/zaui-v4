@@ -20,7 +20,7 @@
 .PmsBookingProductList .roomdesc { font-size: 14px; font-weight: normal; margin-top: 10px; }
 
 @media only all and (max-width: 800px) {
-    .PmsBookingProductList .productentry .roomtypeselection { top: 35px; }
+    .PmsBookingProductList .productentry .roomtypeselection { top: 35px; font-size: 13px; line-height: 18px;}
     .PmsBookingProductList .selectbutton { top: 0px; right: 0px; height: 25px; line-height: 25px; }
     .PmsBookingProductList .roomdesc {
         position: absolute;
@@ -30,7 +30,8 @@
         left:0px;
         display:inline-block;
     }
-    .PmsBookingProductList .roomdesc { margin-top: 10px; line-height: 16px; }
+    .PmsBookingProductList .productentry .roomtypeselectioncount i { font-size: 30px; padding: 10px !important; display:inline-block; }
+   .PmsBookingProductList .roomdesc { margin-top: 10px; line-height: 16px; }
     .PmsBookingProductList .productentry .name {
         font-size: 14px;
         font-weight: bold;
@@ -44,7 +45,6 @@
         line-height: 35px;
         padding-left: 10px;
     }
-    .PmsBookingProductList .roomimg { max-width: 80px; }
     .PmsBookingProductList .continue_button { width: 100%; box-sizing: border-box; }
     .PmsBookingProductList .imgcontainer { top: 34px; }
     .PmsBookingProductList .productentry { height: 110px; margin-bottom: 30px; }

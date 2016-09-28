@@ -3,6 +3,7 @@
 $types = array();
 $types["report"] = "Emails to send statistics report to";
 $types["applogentry"] = "Emails to send app log entries to";
+$types["creditorder"] = "When orders are credited";
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 
 foreach($types as $type => $heading) {

@@ -57,7 +57,7 @@ echo "<div class='eventlist'>";
             $buttonText = $this->__w("Book");
             $canSignUp = true;
             
-            if ($event->markedAsReady) {
+            if ($event->markedAsReady || !$event->isInFuture) {
                 $buttonText = $this->__w("Closed");
                 $canSignUp = false;
             } else if (!$event->bookingItem->freeSpots) {

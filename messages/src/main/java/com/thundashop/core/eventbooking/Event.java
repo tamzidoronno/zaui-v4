@@ -137,4 +137,16 @@ public class Event extends DataCommon {
         
         return true;
     }
+    
+    public boolean isInFuture() {
+        boolean isInfure = false;
+        for (Day day : days) {
+            if (day.isInFuture()) {
+                isInfure = true;
+            }
+        }
+        
+        return isInfure;    
+    }
+
 }

@@ -1,4 +1,5 @@
 <?
+/* @var $this ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager */
 
 $searchtext = $this->getSearchText();
 ?>
@@ -26,8 +27,8 @@ $searchtext = $this->getSearchText();
                 <input id='gss_order_filter_startdate' gs_model='orders' gs_model_attr='start_date' type="textfield" style="left: 300px; top: 0px; width: 150px;" placeholder="<? echo $this->__f("From"); ?>" value=''/>
                 <input id='gss_order_filter_enddate' gs_model='orders' gs_model_attr='end_date' type="textfield" style="left: 480px; top: 0px; width: 150px;" placeholder="<? echo $this->__f("To"); ?>" value=''/>
                 
-                <div class="gss_dropdown" style='top: 1px; right: 50px;'>
-                    <select class="config" gs_model='orders' gs_model_attr='status'>
+                <div class="gss_dropdown" style='top: 1px; right: 50px;width: 150px;'>
+                    <select class="config" gs_model='orders' gs_model_attr='status' style=''>
                         <? 
                         $states = array();
                         $states['0'] = "All";
@@ -47,6 +48,23 @@ $searchtext = $this->getSearchText();
                             ?>
                             <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>
                         <? } ?>
+                    </select>
+                </div>
+                <div class="gss_dropdown" style='top: 1px; right:200px;width: 150px; '>
+                    <select class="config" gs_model='orders' gs_model_attr='paymenttype'>
+                        <option value="">Payment method</option>
+                        <? 
+                        $states = array();
+                        $states['0'] = "All payment types";
+                        
+                        $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+                        foreach ($paymentMethods as $key => $method) {
+                            $selected = $this->getConfigurationSetting("defaultPaymentMethod") == $method->id ? "SELECTED" : "";
+                            ?>
+                            <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $method->appName; ?></option>
+                            <?php
+                         }
+                        ?>
                     </select>
                 </div>
                 <div id='gss_order_filter_search_button' gss_method='filterOrders' gss_view='gss_outer_orderoverview' gss_fragment='ordersearchresult' gss_model='orders' style='position: absolute; right: 0px;height: 11px;line-height: 11px;top: 2px;' class='gss_button'><? echo $this->__f("Search"); ?></div>

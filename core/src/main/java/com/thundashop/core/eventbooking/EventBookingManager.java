@@ -71,7 +71,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public UserManager userManager;
     
     @Autowired
-    public MessageManager messageManager;
+    public ProMeisterMessageManager messageManager;
     
     @Autowired
     public StorePool storePool;
@@ -199,9 +199,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             event.eventPage = "?page="+event.bookingItem.pageId+"&eventId="+event.id;
         }
         
-        event.isInFuture = isInFuture(event);
+        event.isInFuture = event.isInFuture();
         
-        if (event.isLocked || event.markedAsReady || !isInFuture(event) || event.bookingItem == null || event.bookingItem.isFull || event.bookingItem.freeSpots < 1 || event.isCanceled) {
+        if (event.isLocked || event.markedAsReady || !event.isInFuture() || event.bookingItem == null || event.bookingItem.isFull || event.bookingItem.freeSpots < 1 || event.isCanceled) {
             event.canBook = false;
         } else {
             event.canBook = true;
@@ -368,7 +368,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         for (BookingItem item : items) {
             retEvents.addAll(events.values().stream()
                 .filter(event -> event.bookingItemId.equals(item.id))
-                .filter(event -> showOnlyNew && isInFuture(event))
+                .filter(event -> showOnlyNew && event.isInFuture())
                 .collect(Collectors.toList()));
         }
         
@@ -389,17 +389,6 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             
             return o1.mainStartDate.compareTo(o2.mainStartDate);
         });
-    }
-
-    private boolean isInFuture(Event event) {
-        boolean isInfure = false;
-        for (Day day : event.days) {
-            if (day.isInFuture()) {
-                isInfure = true;
-            }
-        }
-        
-        return isInfure;    
     }
 
     private SubLocation getSubLocation(String subLocationId) {
@@ -766,14 +755,14 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         subject = formatText(subject, user, event);
         
         if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
-            String messageId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, email, "");
+            String messageId = messageManager.sendMail(event, user.emailAddress, user.fullName, subject, content, email, "");
             if (userIdInvoiceMessageId != null) {
                 userIdMessageId.put(user.id, messageId);
             }
         }
         
         if (!dontSendToCompany && user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty() && !user.companyObject.invoiceEmail.equals(user.emailAddress)) {
-            String messageId = messageManager.sendMail(user.companyObject.invoiceEmail, user.fullName, subject, content, email, "");
+            String messageId = messageManager.sendMail(event, user.companyObject.invoiceEmail, user.fullName, subject, content, email, "");
             if (userIdInvoiceMessageId != null) {
                 userIdInvoiceMessageId.put(user.id, messageId);
             }
@@ -796,7 +785,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     private String sendReminderSms(String content, User user, Event event, HashMap<String, String> smsMessageId) {
         content = formatText(content, user, event);
         if (user.cellPhone != null && !user.cellPhone.isEmpty()) {
-            String smsId = messageManager.sendSms("clickatell", user.cellPhone, content, user.prefix);
+            String smsId = messageManager.sendSms(event, "clickatell", user.cellPhone, content, user.prefix);
             if (smsMessageId != null) {
                 smsMessageId.put(user.id, smsId);
             }
@@ -1209,7 +1198,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String content = formatText(settingsApp.getSetting(contentKey), user, event);
         
         if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
-            String mailId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
+            String mailId = messageManager.sendMail(event, user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
             logEventEntry(event, "SIGNUP_MAIL_SENT", "Signupmail sent to user " + user.fullName + ", email: " + user.emailAddress, mailId);
         } else {
             logEventEntry(event, "SIGNUP_MAIL_SENT_FAILED", "Couldnot send mail to user " + user.fullName + ", no email registered.", "");
@@ -1224,7 +1213,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         content = formatTextTransfer(content, user, fromEvent);
         
         if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
-            String mailId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
+            String mailId = messageManager.sendMail(event, user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
             logEventEntry(event, "TRANSFER_MAIL_SENT", "Signupmail sent to user " + user.fullName + ", email: " + user.emailAddress, mailId);
         } else {
             logEventEntry(event, "TRANSFER_MAIL_SENT_FAILED", "Couldnot send mail to user " + user.fullName + ", no email registered.", "");
@@ -1278,7 +1267,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String storeName = getStoreName();
         
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            String res = messageManager.sendSms("clickatell", phoneNumber, content, prefix, storeName);
+            String res = messageManager.sendSms(event, "clickatell", phoneNumber, content, prefix, storeName);
             logEventEntry(event, "SMS_SIGNUP_SENT", "Signup sms sent to " + user.fullName, res);
         } else {
             logEventEntry(event, "SMS_SIGNUP_SENT_FAILED", "Failed to send signup sms to use " + user.fullName, "");
@@ -1294,7 +1283,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String storeName = getStoreName();
         
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            String res = messageManager.sendSms("clickatell", phoneNumber, content, prefix, storeName);
+            String res = messageManager.sendSms(event, "clickatell", phoneNumber, content, prefix, storeName);
             logEventEntry(event, "SMS_TRANSFER_SENT", "Signup sms sent to " + user.fullName, res);
         } else {
             logEventEntry(event, "SMS_TRANSFER_SENT_FAILED", "Failed to send signup sms to use " + user.fullName, "");
@@ -1330,7 +1319,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String content = formatText(settingsApp.getSetting(contentKey), user, event);
         
         if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
-            String mailId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
+            String mailId = messageManager.sendMail(event, user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
             logEventEntry(event, "REMOVED_MAIL_SENT", "Removed mail sent to user " + user.fullName + ", email: " + user.emailAddress, mailId);
         } else {
             logEventEntry(event, "SIGNUP_MAIL_SENT_FAILED", "Couldnot send remove mail to user " + user.fullName + ", no email registered.", "");
@@ -1344,7 +1333,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String storeName = getStoreName();
         
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            String res = messageManager.sendSms("clickatell", phoneNumber, content, prefix, storeName);
+            String res = messageManager.sendSms(event, "clickatell", phoneNumber, content, prefix, storeName);
             logEventEntry(event, "SMS_REMOVED_SENT", "Sms removed notification sent to user " + user.fullName + " cellphone, " + phoneNumber + ", prefix: " + prefix, res);
         } else {
             logEventEntry(event, "SMS_REMOVED_SENT_FAILED", "Failed to send removed sms to user " + user.fullName, "");
@@ -1368,7 +1357,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String content = formatText(settingsApp.getSetting("event_canceled_mail_content"), user, event);
         
         if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
-            String mailId = messageManager.sendMail(user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
+            String mailId = messageManager.sendMail(event, user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
             logEventEntry(event, "CANCELED_MAIL_SENT", "Canceled mail sent to user " + user.fullName + ", email: " + user.emailAddress, mailId);
         } else {
             logEventEntry(event, "CANCELED_MAIL_SENT_FAILED", "Couldnot send canceled mail to user " + user.fullName + ", no email registered.", "");
@@ -1382,7 +1371,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String storeName = getStoreName();
         
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            String res = messageManager.sendSms("clickatell", phoneNumber, content, prefix, storeName);
+            String res = messageManager.sendSms(event, "clickatell", phoneNumber, content, prefix, storeName);
             logEventEntry(event, "SMS_CANCELED_SENT", "Sms canceled notification sent to user " + user.fullName + " cellphone, " + phoneNumber + ", prefix: " + prefix, res);
         } else {
             logEventEntry(event, "SMS_CANCELED_SENT_FAILED", "Failed to send canceled sms to user " + user.fullName + ", phonenumber: " + phoneNumber + ", prefix: " + prefix, "");
@@ -1495,7 +1484,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         if (emailToUser != null && !user.emailAddress.isEmpty()) {
-            String mailId = messageManager.sendMail(emailToUser, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
+            String mailId = messageManager.sendMail(event, emailToUser, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
             String logMsg = "Reminder has been sent to " + user.fullName + ", email: " + emailToUser;
             logEventEntry(event, "AUOTMATIC_REMINDER_MAIL_SENT", logMsg, mailId);
         } else {

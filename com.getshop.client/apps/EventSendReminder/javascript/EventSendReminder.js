@@ -42,13 +42,27 @@ app.EventSendReminder = {
         if (!id) {
             name = prompt("Please enter name of template");
         }
-
-        thundashop.Ajax.simplePost(this, "saveTemplate", {
+        
+        var data = {
             id: id,
             name: name,
             subject: $('.EventSendReminder .subject').val(),
             content: $('.EventSendReminder textarea').val()
-        });
+        };
+        
+        $(this).prepend("<span class='gs_loader_icon'><i class='fa fa-spinner fa-spin'/> </span>");
+        var event = thundashop.Ajax.createEvent(null, "saveTemplate", this, data);
+        var me = this;
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            var load = $(me).find('.fa-spinner');
+            load.removeClass("fa-spinner");
+            load.removeClass("fa-spin");
+            load.addClass("fa-check");
+            setTimeout(function() {
+                load.remove();
+            }, 2000);
+        })
     },
     
     sendMail: function() {

@@ -668,7 +668,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             
             NewOrderFilter filter = new NewOrderFilter();
             filter.avoidOrderCreation = false;
-            filter.createNewOrder = true;
+            filter.createNewOrder = false;
             filter.prepayment = true;
             filter.endInvoiceAt = foundbooking.getEndDate();
             pmsInvoiceManager.createOrder(foundbooking.id,filter);

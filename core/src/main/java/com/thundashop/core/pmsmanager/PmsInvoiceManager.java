@@ -58,6 +58,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return;
         }
         if(order.payment != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+            order.closed = true;
+            orderManager.saveOrder(order);
             sendRecieptOnOrder(order, bookingId);
         }
     }

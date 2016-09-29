@@ -1009,7 +1009,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return "";
         }
         
-        if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing") || key.startsWith("order_")) {
+        if(key.startsWith("booking_sendpaymentlink") || 
+                key.startsWith("booking_unabletochargecard") || 
+                key.startsWith("booking_paymentmissing") || 
+                key.startsWith("order_")) {
             message = message.replace("{orderid}", this.orderIdToSend);
         }
         

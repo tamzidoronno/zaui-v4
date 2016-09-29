@@ -124,7 +124,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->getApi()->getOrderManager()->saveOrder($order);
             $this->getApi()->getWubookManager()->markCCInvalid($this->getSelectedName(), $booking->wubookreservationid);
             $this->getApi()->getPmsManager()->failedChargeCard($this->getSelectedName(), $order->id, $booking->id);
-            echo "Order has been marked as failed.<br>";
         }
     }
     

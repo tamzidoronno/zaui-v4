@@ -55,6 +55,7 @@ if($user->emailAddressToInvoice) {
 $phonePrefix = $user->prefix;
 $phoneNumber = $user->cellPhone;
 $bookerName = $user->fullName;
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 ?>
 
 <div class='orderinformation'>
@@ -254,12 +255,14 @@ if($booking->orderIds) {
 
 ?>
 <br>
-<h2>Invoice information</h2>
-<div gstype="form" method="updateInvoiceNote" style='text-align:right;'>
-    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-    <textarea gsname='invoicenote' style="width:100%;height: 50px;"><?php echo $booking->invoiceNote; ?></textarea><br>
-    <span class='pmsbutton' gstype="submitToInfoBox">Update invoice note</span>
-</div>
+<?php if(!$config->prepayment) { ?>
+    <h2>Invoice information</h2>
+    <div gstype="form" method="updateInvoiceNote" style='text-align:right;'>
+        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+        <textarea gsname='invoicenote' style="width:100%;height: 50px;"><?php echo $booking->invoiceNote; ?></textarea><br>
+        <span class='pmsbutton' gstype="submitToInfoBox">Update invoice note</span>
+    </div>
+<?php } ?>
 <div gstype="form" method="createNewOrder">
     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
 
@@ -280,7 +283,6 @@ if($booking->orderIds) {
     
     $endingAt = date("d.m.Y", $endDate);
     
-    $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
     $filter = new \core_pmsmanager_NewOrderFilter();
     $filter->onlyEnded = false;
     $filter->prepayment = $config->prepayment;

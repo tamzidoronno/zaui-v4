@@ -1727,6 +1727,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     
     public function includeManagementViewResult() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         $filter = $this->getSelectedFilter();
         if($filter->filterType == "stats") {
             $this->includefile("statistics");

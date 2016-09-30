@@ -235,7 +235,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         boolean delete = false;
         Integer status = (Integer) table.get("status");
-        if(status == 5) {
+        Integer wasModifield = (Integer)table.get("was_modified");
+        if(status == 5 && wasModifield == 0) {
             delete = true;
         }
         booking.delete = delete;
@@ -915,7 +916,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     continue;
                 }
                 if(!pmsbooking.isDeleted) {
-                    System.out.println("Not deleted");
                     pmsManager.deleteBooking(pmsbooking.id);
                 }
             }

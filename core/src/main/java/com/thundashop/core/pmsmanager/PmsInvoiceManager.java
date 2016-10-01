@@ -63,6 +63,36 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             sendRecieptOnOrder(order, bookingId);
         }
     }
+    
+    @Override
+    public List<CartItem> removeOrderLinesOnOrdersForBooking(String id, List<String> roomIds) {
+        PmsBooking booking = pmsManager.getBooking(id);
+        
+        cartManager.clear();
+        List<CartItem> allItemsToMove = new ArrayList();
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            if(order.closed) {
+                continue;
+            }
+            for(String roomId : roomIds) {
+                List<CartItem> itemsToRemove = new ArrayList();
+                for(CartItem item : order.cart.getItems()) {
+                    String refId = item.getProduct().externalReferenceId;
+                    if(refId != null && refId.equals(roomId)) {
+                        itemsToRemove.add(item);
+                    }
+                }
+                for(CartItem toRemove : itemsToRemove) {
+                    order.cart.removeItem(toRemove.getCartItemId());
+                }
+                allItemsToMove.addAll(itemsToRemove);
+            }
+            orderManager.saveOrder(order);
+        }
+        
+        return allItemsToMove;
+    }
 
     public void sendRecieptOnOrder(Order order, String bookingId) {
         User user = userManager.getUserById(order.userId);
@@ -417,7 +447,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         
-        
+        String lastOrderId = "";
         for(PmsBooking booking : allbookings) {
             clearCart();
             addBookingToCart(booking, filter);
@@ -473,13 +503,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                     
                 }
-                
+                lastOrderId = order.id;
                 pmsManager.saveBooking(booking);
             }
         }
         
         updateCart();
-        return "";
+        return lastOrderId;
     }
     
     public void updateAddonsByDates(PmsBookingRooms room) {

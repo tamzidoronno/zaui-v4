@@ -637,6 +637,11 @@ public class PmsManagerProcessor {
                             payedfor = false;
                         }
                     }
+                    if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {
+                        if(!order.captured) {
+                            payedfor = false;
+                        }
+                    }
                 }
 
                 if(booking.needCapture != needCapture) {

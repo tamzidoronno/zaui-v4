@@ -3101,51 +3101,32 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void splitBooking(String roomId) {
-        PmsBooking booking = getBookingFromRoom(roomId);
+    public void splitBooking(List<String> roomIds) {
+        PmsBooking booking = getBookingFromRoom(roomIds.get(0));
         if(booking.getActiveRooms().size() == 1) {
             return;
         }
         PmsBooking copy = booking.copy();
-        PmsBookingRooms roomToSplit = null;
-        for(PmsBookingRooms room : booking.getActiveRooms()) {
-            if(room.pmsBookingRoomId.equals(roomId)) {
-                roomToSplit = room;
-                break;
+        List<PmsBookingRooms> roomsToSplit = new ArrayList();
+        for(String roomId : roomIds) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room.pmsBookingRoomId.equals(roomId)) {
+                    roomsToSplit.add(room);
+                    break;
+                }
             }
         }
         
-        if(roomToSplit == null) {
+        if(roomsToSplit.isEmpty()) {
             return;
         }
         
         User user = userManager.getUserById(booking.userId);
-        
-        cartManager.clear();
-        List<CartItem> allItemsToMove = new ArrayList();
-        Order firstOrder = null;
-        for(String orderId : booking.orderIds) {
-            Order order = orderManager.getOrder(orderId);
-            if(order.closed) {
-                continue;
-            }
-            firstOrder = order;
-            List<CartItem> itemsToRemove = new ArrayList();
-            for(CartItem item : order.cart.getItems()) {
-                String refId = item.getProduct().externalReferenceId;
-                if(refId != null && refId.equals(roomId)) {
-                    itemsToRemove.add(item);
-                }
-            }
-            for(CartItem toRemove : itemsToRemove) {
-                order.cart.removeItem(toRemove.getCartItemId());
-            }
-            allItemsToMove.addAll(itemsToRemove);
-            orderManager.saveOrder(order);
-        }
+        Order firstOrder = orderManager.getOrder(booking.orderIds.get(0));
+        List<CartItem> allItemsToMove = pmsInvoiceManager.removeOrderLinesOnOrdersForBooking(booking.id, roomIds);
         
         copy.removeAllRooms();
-        copy.addRoom(roomToSplit);
+        copy.addRooms(roomsToSplit);
         copy.id = null;
         copy.orderIds.clear();
         copy.rowCreatedDate = new Date();
@@ -3158,7 +3139,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             copy.orderIds.add(order.id);
         }
         
-        booking.removeRoom(roomToSplit);
+        booking.removeRooms(roomsToSplit);
         saveObject(copy);
         bookings.put(copy.id, copy);
         

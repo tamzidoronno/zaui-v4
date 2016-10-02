@@ -1306,6 +1306,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private Order getUnpaidOrder(PmsBooking booking) {
         for(String key : booking.orderIds) {
             Order ord = orderManager.getOrder(key);
+            if(ord.closed) {
+                continue;
+            }
             if(ord.status != Order.Status.PAYMENT_COMPLETED && !ord.transferredToAccountingSystem) {
                 return ord;
             }

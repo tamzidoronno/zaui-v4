@@ -688,6 +688,18 @@ $channelConfig = $config->channelConfiguration;
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->autoMarkCreditNotesAsPaidFor) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='autoMarkCreditNotesAsPaidFor' <? echo $checked; ?>>
+            </span>
+            Automark creditnotes as paid for.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->grantAccessEvenWhenNotPaid) {
                     $checked = "CHECKED";
                 }

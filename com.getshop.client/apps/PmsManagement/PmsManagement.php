@@ -24,6 +24,52 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function doRoomsBookedAction() {
+        $action = $_POST['data']['action'];
+        $bookingId = $_POST['data']['bookingid'];
+        if($action == "delete") {
+            foreach($_POST['data']['rooms'] as $roomid) {
+                $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedName(), $bookingId, $roomid);
+            }
+        } else if($action == "split") {
+            $this->getApi()->getPmsManager()->splitBooking($this->getSelectedName(), $_POST['data']['rooms']);
+        } else if($action == "singlepayments") {
+            $this->getApi()->getPmsInvoiceManager()->removeOrderLinesOnOrdersForBooking($this->getSelectedName(), $bookingId, $_POST['data']['rooms']);
+            foreach($_POST['data']['rooms'] as $roomid) {
+                $booking = $this->getSelectedBooking();
+                $selectedroom = null;
+                foreach($booking->rooms as $room) {
+                    if($room->pmsBookingRoomId == $roomid) {
+                        $selectedroom = $room;
+                        break;
+                    }
+                }
+                
+                if(!$selectedroom) {
+                    return;
+                }
+                
+                /* @var $selectedRoom core_pmsmanager_PmsBookingRooms */
+                $filter = new \core_pmsmanager_NewOrderFilter();
+                $bookingId = $_POST['data']['bookingid'];
+                $filter->endInvoiceAt = $selectedroom->date->end;
+                $filter->avoidOrderCreation = $_POST['data']['preview'] == "true";
+                $filter->pmsRoomId = $selectedroom->pmsBookingRoomId;
+                $filter->prepayment = true;
+                $filter->createNewOrder = true;
+
+                $newOrderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
+                $email = $room->guests[0]->email;
+                $prefix = $room->guests[0]->prefix;
+                $phone = $room->guests[0]->phone;
+                $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $newOrderId, $bookingId, $email, $prefix, $phone);
+                $this->selectedBooking = null;
+            }
+        }
+
+        $this->showBookingInformation();
+    }
+    
     public function markTest() {
         $booking = $this->getSelectedBooking();
         $booking->testReservation = true;

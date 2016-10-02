@@ -1035,7 +1035,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 phone = phoneToSend;
                 prefix = prefixToSend;
             }
-            messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
+            if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
+                messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
+            } else {
+                messageManager.sendSms("nexmo", phone, message, prefix, configuration.smsName);
+            }
             repicientList.add(phone);
         } else {
             String title = configuration.emailTitles.get(key);
@@ -1094,7 +1098,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 } else {
                     String phone = userManager.getUserById(booking.userId).cellPhone;
                     String prefix = userManager.getUserById(booking.userId).prefix;
-                    messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
+                    if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
+                        messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
+                    } else {
+                        messageManager.sendSms("nexmo", phone, message, prefix, configuration.smsName);
+                    }
                     repicientList.add(phone);
                 }
             } else {
@@ -1119,7 +1127,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             continue;
                         }
 
-                        messageManager.sendSms("sveve", phone, message, guest.prefix, configuration.smsName);
+                        if(guest.prefix != null && (guest.prefix.equals("47") || guest.prefix.equals("+47"))) {
+                            messageManager.sendSms("sveve", phone, message, guest.prefix, configuration.smsName);
+                        } else {
+                            messageManager.sendSms("nexmo", phone, message, guest.prefix, configuration.smsName);
+                        }
                         repicientList.add(phone);
                     }
                 }
@@ -2760,7 +2772,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         for(PmsRoomSimple simple : allRooms) {
             for(PmsGuests guest : simple.guest) {
-                messageManager.sendSms("sveve", guest.phone, message, guest.prefix);
+                if(guest.prefix.equals("47") || guest.prefix.equals("+47")) {
+                    messageManager.sendSms("sveve", guest.phone, message, guest.prefix);
+                } else {
+                    messageManager.sendSms("nexmo", guest.phone, message, guest.prefix);
+                }
             }
         }
     }

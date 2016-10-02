@@ -688,6 +688,18 @@ $channelConfig = $config->channelConfiguration;
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->grantAccessEvenWhenNotPaid) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='grantAccessEvenWhenNotPaid' <? echo $checked; ?>>
+            </span>
+            If booked outside of opening hours, grant access anyway..
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->supportDiscounts) {
                     $checked = "CHECKED";
                 }

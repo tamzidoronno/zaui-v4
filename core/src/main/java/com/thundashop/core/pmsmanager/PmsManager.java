@@ -3138,19 +3138,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         User user = userManager.getUserById(booking.userId);
-        Order firstOrder = orderManager.getOrder(booking.orderIds.get(0));
+        Order firstOrder = null;
+        if(!booking.orderIds.isEmpty()) {
+            firstOrder = orderManager.getOrder(booking.orderIds.get(0));
+        }
         List<CartItem> allItemsToMove = pmsInvoiceManager.removeOrderLinesOnOrdersForBooking(booking.id, roomIds);
         
         copy.removeAllRooms();
         copy.addRooms(roomsToSplit);
         copy.id = null;
-        copy.orderIds.clear();
+        copy.orderIds.clear(); 
         copy.rowCreatedDate = new Date();
         
         if(!allItemsToMove.isEmpty()) {
             cartManager.getCart().addCartItems(allItemsToMove);
             Order order = orderManager.createOrder(user.address);
-            order.payment = firstOrder.payment;
+            if(firstOrder != null) {
+                order.payment = firstOrder.payment;
+            }
             orderManager.saveOrder(order);
             copy.orderIds.add(order.id);
         }

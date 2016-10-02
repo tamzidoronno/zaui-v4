@@ -231,7 +231,12 @@ public class PmsManagerProcessor {
 //                }
                 
                 if (room.isStarted() && !room.isEnded()) {
-                    if(manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
+                    boolean payedfor = manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
+                    boolean grantEven = manager.getConfigurationSecure().grantAccessEvenWhenNotPaid;
+                    if(!payedfor && (grantEven && booking.isBookedAfterOpeningHours()) || booking.forceGrantAccess) {
+                        payedfor = true;
+                    }
+                    if(payedfor && !room.deleted) {
                         if (pushToLock(room, false)) {
                             room.addedToArx = true;
                             manager.markRoomAsDirty(room.bookingItemId);

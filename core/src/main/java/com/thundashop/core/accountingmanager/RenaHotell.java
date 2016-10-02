@@ -128,6 +128,15 @@ public class RenaHotell implements AccountingInterface {
                 double price = item.getProduct().priceExTaxes;
                 DecimalFormat df = new DecimalFormat("#.##");      
                 String priceToSend = df.format(price); 
+                if(!priceToSend.contains(".")) {
+                    priceToSend = priceToSend + ".00";
+                } else {
+                    String[] splitted = priceToSend.split("\\.");
+                    if(splitted[1].length() == 1) {
+                        priceToSend = priceToSend + "0";
+                    }
+                }
+                
                 priceToSend = prependZeros(priceToSend, 14);
                 fieldsInLine.put(11, mvaKode);
                 fieldsInLine.put(12, "000");

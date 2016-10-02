@@ -167,7 +167,12 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
         <?php } ?>
         <?php if($hasArx) { ?>
             <th>To lock</th>
-        <?php } ?>
+        <?php } 
+        if($config->requirePayments) {
+            echo "<th>Paid</th>";
+        }
+        
+        ?>
     </tr>
 
     <?php
@@ -474,6 +479,11 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
             <?php if($hasArx) { ?>
             <td align='center'>
                 <? echo ($room->addedToArx) ? "yes" : "no"; ?>
+            </td>
+            <td align='center'>
+                <? 
+                $paidFor = $object->getApi()->getPmsInvoiceManager()->isRoomPaidFor($object->getSelectedName(), $room->pmsBookingRoomId);
+                echo ($paidFor) ? "yes" : "no"; ?>
             </td>
             <? } ?>
         </tr>

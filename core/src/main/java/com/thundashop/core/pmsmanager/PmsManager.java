@@ -2738,7 +2738,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
-        PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this);
+        PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
         List<PmsRoomSimple> res = filtering.filterRooms(filter);
         doSorting(res, filter);
         return res;

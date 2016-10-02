@@ -188,7 +188,7 @@ public class PmsManagerProcessor {
             manager.logPrintException(e);
         }
         
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -231,12 +231,14 @@ public class PmsManagerProcessor {
 //                }
                 
                 if (room.isStarted() && !room.isEnded()) {
-                    if (pushToLock(room, false)) {
-                        room.addedToArx = true;
-                        manager.markRoomAsDirty(room.bookingItemId);
-                        save = true;
-                        if(notifyRoomAddedToArx(room.cardformat)) {
-                            manager.doNotification("room_added_to_arx", booking, room);
+                    if(manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
+                        if (pushToLock(room, false)) {
+                            room.addedToArx = true;
+                            manager.markRoomAsDirty(room.bookingItemId);
+                            save = true;
+                            if(notifyRoomAddedToArx(room.cardformat)) {
+                                manager.doNotification("room_added_to_arx", booking, room);
+                            }
                         }
                     }
                 }

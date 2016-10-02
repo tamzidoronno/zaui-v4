@@ -12,9 +12,11 @@ import java.util.List;
 public class PmsBookingSimpleFilter {
 
     private final PmsManager manager;
+    private final PmsInvoiceManager pmsInvoiceManager;
 
-    PmsBookingSimpleFilter(PmsManager aThis) {
+    PmsBookingSimpleFilter(PmsManager aThis, PmsInvoiceManager pmsInvoiceManager) {
         this.manager = aThis;
+        this.pmsInvoiceManager = pmsInvoiceManager;
     }
 
     LinkedList<PmsRoomSimple> filterRooms(PmsBookingFilter filter) {
@@ -139,7 +141,7 @@ public class PmsBookingSimpleFilter {
             simple.roomType = manager.bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
         }
         
-        simple.paidFor = booking.payedFor;
+        simple.paidFor = pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
         if(room.isDeleted() || booking.isDeleted) {
             simple.progressState = "deleted";
         } else if(room.isStarted() && !room.isEnded()) {
@@ -156,7 +158,7 @@ public class PmsBookingSimpleFilter {
             simple.progressState = "confirmed";
         }
         
-        if(!booking.payedFor && 
+        if(!simple.paidFor && 
                 manager.getConfigurationSecure().requirePayments && 
                 !simple.progressState.equals("deleted")) {
             simple.progressState = "notpaid";

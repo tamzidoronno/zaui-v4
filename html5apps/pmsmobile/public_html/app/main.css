@@ -1,5 +1,6 @@
 body { background-color:#3a99d7; box-sizing: border-box; }
 .logenty { border-bottom: solid 1px #bbb; margin-top: 20px; }
+.innerview { max-width: 1000px; margin: auto; }
 .innerview .row { background-color:#efefef; padding: 10px; }
 .addedbytext { color:#bbb;  margin-top: 5px; }
 .nospacing {

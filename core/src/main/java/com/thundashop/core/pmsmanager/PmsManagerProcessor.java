@@ -61,6 +61,7 @@ public class PmsManagerProcessor {
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
         try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
         try { checkForRoomToClose(); }catch(Exception e) {}
+        try { updateInvoices(); }catch(Exception e) {}
     }
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
@@ -866,6 +867,29 @@ public class PmsManagerProcessor {
 
                 book.notificationsSent.add(key);
                 manager.sendMissingPayment(orderId, book.id);
+            }
+        }
+    }
+
+    private void updateInvoices() {
+        PmsConfiguration config = manager.getConfigurationSecure();
+        if(!config.autoMarkCreditNotesAsPaidFor && !config.automarkInvoicesAsPaid) {
+            return;
+        }
+        
+        List<Order> orders = manager.orderManager.getOrders(null, null, null);
+        for(Order ord : orders) {
+            if(ord.isCreditNote && ord.status != Order.Status.PAYMENT_COMPLETED && config.autoMarkCreditNotesAsPaidFor) {
+                ord.status = Order.Status.PAYMENT_COMPLETED;
+                ord.captured = true;
+                ord.payment.captured = true;
+                manager.orderManager.saveOrder(ord);
+            }
+            if(ord.isInvoice()&& ord.status != Order.Status.PAYMENT_COMPLETED && config.automarkInvoicesAsPaid) {
+                ord.status = Order.Status.PAYMENT_COMPLETED;
+                ord.captured = true;
+                ord.payment.captured = true;
+                manager.orderManager.saveOrder(ord);
             }
         }
     }

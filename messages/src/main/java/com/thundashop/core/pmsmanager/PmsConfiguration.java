@@ -57,6 +57,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean supportRemoveWhenFull = false;
     public boolean supportDiscounts = false;
     public boolean autoSendInvoice = false;
+    public boolean autoMarkCreditNotesAsPaidFor = false;
     public boolean autoCreateInvoices = false;
     public boolean usePriceMatrixOnOrder = false;
     public Integer whenInfinteDateFirstOrderTimeUnits = 1;

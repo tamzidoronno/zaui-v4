@@ -57,10 +57,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(order.sentToCustomer) {
             return;
         }
+        
+        
         if(order.payment != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
-            order.closed = true;
-            orderManager.saveOrder(order);
-            sendRecieptOnOrder(order, bookingId);
+            if(!order.createdOnDay(new Date())) {
+                order.closed = true;
+                orderManager.saveOrder(order);
+                sendRecieptOnOrder(order, bookingId);
+            }
         }
     }
     

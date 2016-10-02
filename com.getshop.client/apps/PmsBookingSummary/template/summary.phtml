@@ -257,6 +257,9 @@ function printAddons($room, $config, $object) {
         }
         $printed = true;
         $type = $addon->addonType;
+        if(!isset($addonsText[$type])) {
+            continue;
+        }
         $addon = $config->addonConfiguration->{$type};
         $product = $object->getProduct($addon->productId);
         echo "<div class='itemrow addonitemrow' roomid='".$room->pmsBookingRoomId."' addontype='$type'>";

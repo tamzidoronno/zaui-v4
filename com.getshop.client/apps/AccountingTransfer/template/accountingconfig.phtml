@@ -20,8 +20,17 @@ foreach($files as $file) {
     $newfile[strtotime($file->rowCreatedDate)] = $file;
 }
 ksort($newfile);
-$newfile = array_reverse($newfile);
-$files = $newfile;
+
+$finalFiles = array();
+foreach($newfile as $time => $entry) {
+    foreach($files as $file) {
+        if(strtotime($file->rowCreatedDate) == $time) {
+            $finalFiles[] = $file;
+        }
+    }
+}
+$finalFiles = array_reverse($finalFiles);
+$files = $finalFiles;
 $config = $this->getApi()->getAccountingManager()->getAccountingManagerConfig();
 ?>
 

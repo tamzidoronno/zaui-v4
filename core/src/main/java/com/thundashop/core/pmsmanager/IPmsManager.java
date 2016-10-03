@@ -64,7 +64,7 @@ public interface IPmsManager {
     public void endRoom(String roomId);
     
     @Administrator
-    public void splitBooking(String roomId);
+    public void splitBooking(List<String> roomIds);
     
     @Administrator
     public String setBookingItem(String roomId, String bookingId, String itemId, boolean split);

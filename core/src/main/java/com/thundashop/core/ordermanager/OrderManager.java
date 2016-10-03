@@ -1170,6 +1170,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(filterOrdersBySearchWord(filterOptions))
                 .filter(filterOrdersByStatus(filterOptions))
                 .collect(Collectors.toList());
+        
+        if(filterOptions.extra.containsKey("paymenttype")) {
+            String type = filterOptions.extra.get("paymenttype");
+            List<Order> newOrderList = new ArrayList();
+            if(type != null) {
+                type = type.replace("-", "_");
+                for(Order order : allOrders) {
+                    if(order.payment != null && order.payment.paymentType != null) {
+                        if(order.payment.paymentType.contains(type)) {
+                            newOrderList.add(order);
+                        }
+                    }
+                }
+            }
+            allOrders = newOrderList;
+        }
+        
         sortOrderList(allOrders);
         finalize(allOrders);
         return pageIt(allOrders, filterOptions);

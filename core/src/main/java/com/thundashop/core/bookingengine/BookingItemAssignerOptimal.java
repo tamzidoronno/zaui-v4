@@ -179,8 +179,6 @@ public class BookingItemAssignerOptimal {
                 if (item == null) {
                     throw new BookingEngineException("Did not find the booking item with id (it possible has been deleted): " + timeLineUsed.bookingItemId);
                 }
-                
-                GetShopLogHandler.logPrintStatic("Assigned: " + getBookingItem(timeLineUsed.bookingItemId).bookingItemName + " to " + booking.getHumanReadableDates(), null);
 
                 assignBookingsToItem(booking, item);
             }

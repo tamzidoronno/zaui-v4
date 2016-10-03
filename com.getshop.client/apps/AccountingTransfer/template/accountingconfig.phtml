@@ -15,6 +15,13 @@ $states[10] = "Send to invoice";
 $transfertypes = $this->getTransferTypes();
 
 $files = $this->getApi()->getAccountingManager()->getAllFiles();
+$newfile = array();
+foreach($files as $file) {
+    $newfile[strtotime($file->rowCreatedDate)] = $file;
+}
+ksort($newfile);
+$newfile = array_reverse($newfile);
+$files = $newfile;
 $config = $this->getApi()->getAccountingManager()->getAccountingManagerConfig();
 ?>
 
@@ -42,16 +49,38 @@ $config = $this->getApi()->getAccountingManager()->getAccountingManagerConfig();
 <?php
 echo "<br>";
 echo "<h2>Downloaded history</h2>";
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th align='left'>Created date</th>";
+echo "<th align='left'>Download</th>";
+echo "<th align='left'>Type</th>";
+echo "<th align='left'>Subtype</th>";
+echo "<th align='left'>Transferred</th>";
+echo "<th align='left'>Ex taxes</th>";
+echo "<th align='left'>Inc taxes</th>";
+echo "<th align='left'>Orders</th>";
+echo "</tr>";
+
 foreach($files as $file) {
+    echo "<tr>";
     $date = $file->rowCreatedDate;
     $fileId = $file->id;
-    $type = $file->type . ", " . $file->subtype;
-    $transferred = ", not transferred yet.";
+    $transferred = "no";
     if($file->transferred) {
-        $transferred = ", transferred";
+        $transferred = "yes";
     }
-    echo date("d.m.Y - H:i", strtotime($date)) . ", <a style='color:blue;cursor:pointer;' onclick=\"window.open('/scripts/accounting.php?id=".$fileId."');\">download</a> - ($type)$transferred<br>";
+    echo "<td>" . date("d.m.Y - H:i", strtotime($date)) . "</td>";
+    echo "<td><a style='color:blue;cursor:pointer;' onclick=\"window.open('/scripts/accounting.php?id=".$fileId."');\">download</a></td>";
+    echo "<td>".$file->type."</td>";
+    echo "<td>".$file->subtype."</td>";
+    echo "<td>$transferred</td>";
+    echo "<td>".round($file->amountEx)."</td>";
+    echo "<td>".round($file->amountInc)."</td>";
+    echo "<td>".sizeof($file->orders)."</td>";
+    echo "</tr>";
 }
+echo "</table>";
+
 echo "<br>";
 echo "<br>";
 ?>

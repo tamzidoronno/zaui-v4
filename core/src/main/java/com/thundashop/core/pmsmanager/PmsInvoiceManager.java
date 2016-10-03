@@ -57,9 +57,89 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(order.sentToCustomer) {
             return;
         }
+        
+        
         if(order.payment != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
-            sendRecieptOnOrder(order, bookingId);
+            if(!order.createdOnDay(new Date())) {
+                order.closed = true;
+                orderManager.saveOrder(order);
+                sendRecieptOnOrder(order, bookingId);
+            }
         }
+    }
+    
+    @Override
+    public boolean isRoomPaidFor(String pmsRoomId) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
+        if(booking == null) {
+            return false;
+        }
+        if(booking.payedFor) {
+            return true;
+        }
+        
+        boolean payedfor = true;
+        boolean hasOrders = false;
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrderSecure(orderId);
+            if(!hasRoomItems(pmsRoomId, order)) {
+                continue;
+            }
+            hasOrders = true;
+            if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                continue;
+            }
+            payedfor = false;
+        }
+        
+        if(!hasOrders && pmsManager.getConfigurationSecure().markBookingsWithNoOrderAsUnpaid) {
+            payedfor = false;
+        }
+        
+        return payedfor;
+    }
+    
+    private boolean hasRoomItems(String pmsRoomId, Order order) {
+        for(CartItem item : order.cart.getItems()) {
+            if(item.getProduct().externalReferenceId == null) {
+                continue;
+            }
+            String refId = item.getProduct().externalReferenceId;
+            if(refId != null && refId.equals(pmsRoomId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public List<CartItem> removeOrderLinesOnOrdersForBooking(String id, List<String> roomIds) {
+        PmsBooking booking = pmsManager.getBooking(id);
+        
+        cartManager.clear();
+        List<CartItem> allItemsToMove = new ArrayList();
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            if(order.closed) {
+                continue;
+            }
+            for(String roomId : roomIds) {
+                List<CartItem> itemsToRemove = new ArrayList();
+                for(CartItem item : order.cart.getItems()) {
+                    String refId = item.getProduct().externalReferenceId;
+                    if(refId != null && refId.equals(roomId)) {
+                        itemsToRemove.add(item);
+                    }
+                }
+                for(CartItem toRemove : itemsToRemove) {
+                    order.cart.removeItem(toRemove.getCartItemId());
+                }
+                allItemsToMove.addAll(itemsToRemove);
+            }
+            orderManager.saveOrder(order);
+        }
+        
+        return allItemsToMove;
     }
 
     public void sendRecieptOnOrder(Order order, String bookingId) {
@@ -415,7 +495,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         
-        
+        String lastOrderId = "";
         for(PmsBooking booking : allbookings) {
             clearCart();
             addBookingToCart(booking, filter);
@@ -471,13 +551,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                     
                 }
-                
+                lastOrderId = order.id;
                 pmsManager.saveBooking(booking);
             }
         }
         
         updateCart();
-        return "";
+        return lastOrderId;
     }
     
     public void updateAddonsByDates(PmsBookingRooms room) {
@@ -722,12 +802,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 order.payment.captured = true;
             }
         }
-        if(order.isInvoice() && pmsManager.getConfigurationSecure().automarkInvoicesAsPaid) {
-            order.status = Order.Status.PAYMENT_COMPLETED;
-            order.captured = true;
-            order.payment.captured = true;
-        }
-        
 
         if (pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
             Calendar cal = Calendar.getInstance();
@@ -1226,6 +1300,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private Order getUnpaidOrder(PmsBooking booking) {
         for(String key : booking.orderIds) {
             Order ord = orderManager.getOrder(key);
+            if(ord.closed) {
+                continue;
+            }
             if(ord.status != Order.Status.PAYMENT_COMPLETED && !ord.transferredToAccountingSystem) {
                 return ord;
             }

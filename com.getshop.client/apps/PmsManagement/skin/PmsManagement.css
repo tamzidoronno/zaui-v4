@@ -4,6 +4,8 @@
 .PmsManagement .secondary_text { color:#aaa; font-size: 12px; margin-top: 2px; }
 .PmsManagement .bookinginfo h2 { border-bottom: solid 1px #efefef; padding-bottom: 5px; }
 .PmsManagement .errorlist { font-size: 16px; color: red; padding-left: 20px; }
+.PmsManagement .roomsbookedactions { top: 10px; background-color:#CAE8EA; position: relative; padding: 10px; box-sizing: border-box; width: 100%; display:block; }
+.PmsManagement .roomsbookedactions .fa { position: absolute; left: 14px; top: -12px; color:#CAE8EA; }
 .PmsManagement .showorderbutton { color: blue; cursor:pointer; }
 .PmsManagement .bookinginfo a { color: blue; }
 .PmsManagement .guestrow input { width: 20%; float:left; }
@@ -11,6 +13,8 @@
 .PmsManagement .toggleColumnFilter { cursor:pointer; }
 .PmsManagement .ended { color: #aaa; }
 .PmsManagement .changeSorting { cursor:pointer; }
+.PmsManagement .roomactionstip { display:none; }
+.PmsManagement .roomactionstip[type="delete"] { display:block; }
 .PmsManagement .pricecol { cursor:pointer; }
 .PmsManagement .Confirmed,
 .PmsManagement .active,

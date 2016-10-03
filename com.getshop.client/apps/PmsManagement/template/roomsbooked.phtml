@@ -103,7 +103,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
     ?>
 <table width='100%' cellspacing='0' cellpadding='0' class='guestoverviewtable'>
     <tr>
-        <th width='10'></th>
+        <th width='10'><input type='checkbox' class='checkallbookedrooms'></th>
         <th>Type</th>
         <th>Room</th>
         <th>Time periode</th>
@@ -167,7 +167,12 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
         <?php } ?>
         <?php if($hasArx) { ?>
             <th>To lock</th>
-        <?php } ?>
+        <?php } 
+        if($config->requirePayments) {
+            echo "<th>Paid</th>";
+        }
+        
+        ?>
     </tr>
 
     <?php
@@ -195,9 +200,9 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                     <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                     <?php if(!$deleted) { ?>
-                        <i class='fa fa-trash-o' style="cursor:pointer;" gstype='submitToInfoBox'></i>
+                        <input type='checkbox' class='checkboxforbookedroom' roomid='<?php echo $room->pmsBookingRoomId; ?>'>
                     <?php } else { ?>
-                        Deleted <i class='fa fa-undo'  gstype='submitToInfoBox' title="Undelete" style='cursor:pointer;'></i>
+                        <i class='fa fa-trash-o'></i><i class='fa fa-undo'  gstype='submitToInfoBox' title="Undelete" style='cursor:pointer;'></i>
                     <?php } ?>
                 </span>
                     <?php
@@ -211,13 +216,6 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                         <?php
                     }
                     ?>
-                <?php if(!$deleted) { ?>
-                    <span gstype='form' method="splitToSingleBooking">
-                        <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
-                        <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                        <i class='fa fa-random' gstype='submitToInfoBox' title='Split into single booking' style='cursor:pointer;'></i>
-                    </span>
-                <?php } ?>
             </td>
             <td>
                 <? 
@@ -482,6 +480,11 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
             <td align='center'>
                 <? echo ($room->addedToArx) ? "yes" : "no"; ?>
             </td>
+            <td align='center'>
+                <? 
+                $paidFor = $object->getApi()->getPmsInvoiceManager()->isRoomPaidFor($object->getSelectedName(), $room->pmsBookingRoomId);
+                echo ($paidFor) ? "yes" : "no"; ?>
+            </td>
             <? } ?>
         </tr>
     <?php } ?>
@@ -489,6 +492,20 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
 <?php
 }
 ?>
+<span class='roomsbookedactions'>
+    <i class='fa-caret-up fa'></i>
+    <select class='roomsbookedactionsselection'>
+        <option value='delete'>Delete selected room(s)</option>
+        <option value='split'>Split selected room(s) into a new booking</option>
+        <option value='singlepayments'>Create unique orders for each selected room(s) and send payment link</option>
+    </select>
+    <input type='button' value='Excecute action' class='executeroomsbookedaction'>
+    <div style='font-size: 12px;'>
+        <span class='roomactionstip' type='delete'>* This will remove the selected rooms from the booking.</span>
+        <span class='roomactionstip' type='split'>* This action will move the selected rooms into a new booking with the same booker as owner.</span>
+        <span class='roomactionstip' type='singlepayments'>* When doing this, each selected room will be payed for individually, the guest for each room will recieve a payment link.</span>
+    </div>
+</span>
 
 <script>
     $('.calinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });

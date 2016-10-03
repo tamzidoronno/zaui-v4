@@ -785,6 +785,32 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
+//        if(codeExist(9473)) {
+//            System.out.println("Exists");
+//        }
+//        Calendar end = Calendar.getInstance();
+//        for(PmsBooking b1 : bookings.values()) {
+//            for(PmsBookingRooms r1 : b1.getActiveRooms()) {
+//                if(r1.isEnded()) {
+//                    continue;
+//                }
+//                for(PmsBooking b2 : bookings. values()) {
+//                    for(PmsBookingRooms r2 : b2.getActiveRooms()) {
+//                        if(r2.isEnded()) {
+//                            continue;
+//                        }
+//                        if(r1.equals(r2)) {
+//                            continue;
+//                        }
+//                        if(r2.code.equals(r1.code)) {
+//                            System.out.println("Found problem : " + r1.date.start + " - " + r1.date.end + " : " + r1.code);
+//                            System.out.println("Found problem : " + r2.date.start + " - " + r2.date.end + " : " + r1.code);
+//                            System.out.println("--------------");
+//                        }
+//                    }
+//                }
+//            }
+//        }
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }
@@ -983,7 +1009,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return "";
         }
         
-        if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing") || key.startsWith("order_")) {
+        if(key.startsWith("booking_sendpaymentlink") || 
+                key.startsWith("booking_unabletochargecard") || 
+                key.startsWith("booking_paymentmissing") || 
+                key.startsWith("order_")) {
             message = message.replace("{orderid}", this.orderIdToSend);
         }
         
@@ -1006,7 +1035,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 phone = phoneToSend;
                 prefix = prefixToSend;
             }
-            messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
+            if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
+                messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
+            } else {
+                messageManager.sendSms("nexmo", phone, message, prefix, configuration.smsName);
+            }
             repicientList.add(phone);
         } else {
             String title = configuration.emailTitles.get(key);
@@ -1065,7 +1098,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 } else {
                     String phone = userManager.getUserById(booking.userId).cellPhone;
                     String prefix = userManager.getUserById(booking.userId).prefix;
-                    messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
+                    if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
+                        messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
+                    } else {
+                        messageManager.sendSms("nexmo", phone, message, prefix, configuration.smsName);
+                    }
                     repicientList.add(phone);
                 }
             } else {
@@ -1090,7 +1127,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             continue;
                         }
 
-                        messageManager.sendSms("sveve", phone, message, guest.prefix, configuration.smsName);
+                        if(guest.prefix != null && (guest.prefix.equals("47") || guest.prefix.equals("+47"))) {
+                            messageManager.sendSms("sveve", phone, message, guest.prefix, configuration.smsName);
+                        } else {
+                            messageManager.sendSms("nexmo", phone, message, guest.prefix, configuration.smsName);
+                        }
                         repicientList.add(phone);
                     }
                 }
@@ -2697,7 +2738,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
-        PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this);
+        PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
         List<PmsRoomSimple> res = filtering.filterRooms(filter);
         doSorting(res, filter);
         return res;
@@ -2731,7 +2772,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         for(PmsRoomSimple simple : allRooms) {
             for(PmsGuests guest : simple.guest) {
-                messageManager.sendSms("sveve", guest.phone, message, guest.prefix);
+                if(guest.prefix.equals("47") || guest.prefix.equals("+47")) {
+                    messageManager.sendSms("sveve", guest.phone, message, guest.prefix);
+                } else {
+                    messageManager.sendSms("nexmo", guest.phone, message, guest.prefix);
+                }
             }
         }
     }
@@ -3072,64 +3117,50 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void splitBooking(String roomId) {
-        PmsBooking booking = getBookingFromRoom(roomId);
+    public void splitBooking(List<String> roomIds) {
+        PmsBooking booking = getBookingFromRoom(roomIds.get(0));
         if(booking.getActiveRooms().size() == 1) {
             return;
         }
         PmsBooking copy = booking.copy();
-        PmsBookingRooms roomToSplit = null;
-        for(PmsBookingRooms room : booking.getActiveRooms()) {
-            if(room.pmsBookingRoomId.equals(roomId)) {
-                roomToSplit = room;
-                break;
+        List<PmsBookingRooms> roomsToSplit = new ArrayList();
+        for(String roomId : roomIds) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room.pmsBookingRoomId.equals(roomId)) {
+                    roomsToSplit.add(room);
+                    break;
+                }
             }
         }
         
-        if(roomToSplit == null) {
+        if(roomsToSplit.isEmpty()) {
             return;
         }
         
         User user = userManager.getUserById(booking.userId);
-        
-        cartManager.clear();
-        List<CartItem> allItemsToMove = new ArrayList();
         Order firstOrder = null;
-        for(String orderId : booking.orderIds) {
-            Order order = orderManager.getOrder(orderId);
-            if(order.closed) {
-                continue;
-            }
-            firstOrder = order;
-            List<CartItem> itemsToRemove = new ArrayList();
-            for(CartItem item : order.cart.getItems()) {
-                String refId = item.getProduct().externalReferenceId;
-                if(refId != null && refId.equals(roomId)) {
-                    itemsToRemove.add(item);
-                }
-            }
-            for(CartItem toRemove : itemsToRemove) {
-                order.cart.removeItem(toRemove.getCartItemId());
-            }
-            allItemsToMove.addAll(itemsToRemove);
-            orderManager.saveOrder(order);
+        if(!booking.orderIds.isEmpty()) {
+            firstOrder = orderManager.getOrder(booking.orderIds.get(0));
         }
+        List<CartItem> allItemsToMove = pmsInvoiceManager.removeOrderLinesOnOrdersForBooking(booking.id, roomIds);
         
         copy.removeAllRooms();
-        copy.addRoom(roomToSplit);
+        copy.addRooms(roomsToSplit);
         copy.id = null;
-        copy.orderIds.clear();
+        copy.orderIds.clear(); 
         copy.rowCreatedDate = new Date();
         
         if(!allItemsToMove.isEmpty()) {
             cartManager.getCart().addCartItems(allItemsToMove);
             Order order = orderManager.createOrder(user.address);
-            order.payment = firstOrder.payment;
+            if(firstOrder != null) {
+                order.payment = firstOrder.payment;
+            }
             orderManager.saveOrder(order);
             copy.orderIds.add(order.id);
         }
         
-        booking.removeRoom(roomToSplit);
+        booking.removeRooms(roomsToSplit);
         saveObject(copy);
         bookings.put(copy.id, copy);
         

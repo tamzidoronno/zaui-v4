@@ -6,6 +6,7 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement td.pricecol', app.PmsManagement.showNotPaidInfo);
         $(document).on('click', '.PmsManagement .statisticsrow', app.PmsManagement.loadStatisticsOverview);
         $(document).on('click', '.PmsManagement .editGuestToggle', app.PmsManagement.editGuestToggle);
+        $(document).on('click', '.PmsManagement .checkallbookedrooms', app.PmsManagement.checkallbookedrooms);
         $(document).on('change', '.PmsManagement [gsname="numberofguests"]', app.PmsManagement.editGuestToggle);
         $(document).on('click', '.PmsManagement .showorderbutton', app.PmsManagement.showOrder);
         $(document).on('click', '.PmsManagement .doneediting', app.PmsManagement.doneediting);
@@ -48,13 +49,46 @@ app.PmsManagement = {
         $(document).on('keyup','.PmsManagement .alldayprice', app.PmsManagement.updateDayPrices);
         $(document).on('click','.PmsManagement .updatecardonroom', app.PmsManagement.updatecardonroom);
         $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
+        $(document).on('click','.PmsManagement .executeroomsbookedaction', app.PmsManagement.executeroomsbookedaction);
         $(document).on('keyup','.PmsManagement .matrixpricealldays', app.PmsManagement.updateRoomPriceMatrix);
         $(document).on('click','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('focus','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('keyup','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
+        $(document).on('change','.PmsManagement .roomsbookedactionsselection', app.PmsManagement.updateRoomActionSelection);
+    },
+    executeroomsbookedaction : function() {
+        var action = $('.roomsbookedactionsselection').val();
+        var rooms = [];
+        $('.checkboxforbookedroom').each(function() {
+            if($(this).is(':checked')) {
+                rooms.push($(this).attr('roomid'));
+            }
+        });
+        
+        var data = {
+            "rooms" : rooms,
+            "action" : action,
+            "bookingid" : $('#openedbookingid').val()
+        };
+        
+        var event = thundashop.Ajax.createEvent('','doRoomsBookedAction',$(this), data);
+        thundashop.common.showInformationBoxNew(event);
+    },
+    updateRoomActionSelection : function() {
+        var type = $(this).val();
+        $('.PmsManagement .roomactionstip').hide();
+        $('.PmsManagement .roomactionstip[type="'+type+'"]').show();
+        
     },
     showSaveButton : function() {
         $('.saveAddons').fadeIn();
+    },
+    checkallbookedrooms : function() {
+        if($(this).is(':checked')) {
+            $('.checkboxforbookedroom').attr('checked','checked');
+        } else {
+            $('.checkboxforbookedroom').attr('checked',null);
+        }
     },
     changeCleaningDate : function() {
         var newDate = prompt("Specify a new date", $(this).text());

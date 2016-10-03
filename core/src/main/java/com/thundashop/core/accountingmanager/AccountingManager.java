@@ -94,8 +94,6 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 }
             }
         }
-        
-        createScheduler("autotransferfiles", "0 0 * * *", AutoTransferFiles.class);
     }
     
     @Override
@@ -160,7 +158,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         }
         List<String> result = createOrderFile(orders, false, "");
         users.addAll(result);
-        saveFile(users, getAccountingType(), "");
+        saveFile(users, getAccountingType(), "", orders);
         return users;
     }
     
@@ -170,12 +168,24 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         return createOrderFile(orders, true, "");
     }
 
-    private void saveFile(List<String> result, String type, String subtype) {
+    private void saveFile(List<String> result, String type, String subtype, List<Order> orders) {
         if(result == null || result.isEmpty()) {
             return;
         }
+        Double amountEx = 0.0;
+        Double amountInc = 0.0;
+        List<String> orderIds = new ArrayList();
+        
+        for(Order ord : orders) {
+            amountEx += orderManager.getTotalAmountExTaxes(ord);
+            amountInc += orderManager.getTotalAmount(ord);
+            orderIds.add(ord.id);
+        }
         
         SavedOrderFile file = new SavedOrderFile();
+        file.amountEx = amountEx;
+        file.amountInc = amountInc;
+        file.orders = orderIds;
         file.result = result;
         file.type = type;
         file.subtype = subtype;
@@ -328,7 +338,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             if(!orders.isEmpty()) {
                 List<String> result = iface.createOrderFile(orders, type);
                 if(save) {
-                    saveFile(result, getAccountingType(), "");
+                    saveFile(result, getAccountingType(), "", orders);
                 }
                 for(Order ord : orders) {
                     ord.transferredToAccountingSystem = true;
@@ -353,6 +363,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         
         List<Order> allOrders = orderManager.getOrders(null, null, null);
         List<String> result = new ArrayList();
+        List<Order> orders = new ArrayList();
         for(Order order : allOrders) {
             if(order.needToBeTranferredToCreditor()) {
                 if(config.vendor.equals("svea")) {
@@ -360,12 +371,13 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                     result.add(res);
                     order.transferredToCreditor = new Date();
                     orderManager.saveOrder(order);
+                    orders.add(order);
                 }
             }
         }
         
         if(!result.isEmpty()) {
-            saveFile(result, getSveaCreditorType(), "");
+            saveFile(result, getSveaCreditorType(), "", orders);
         }
         
         return result;
@@ -544,7 +556,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         BComRateManager builder = new BComRateManager(bookings, engine.getBookingItemTypes());
         
         List<String> lines = builder.generateLines();
-        saveFile(lines, getBookingComRateManagerType(), "");
+        saveFile(lines, getBookingComRateManagerType(), "", new ArrayList());
         
         for(PmsBooking booking : bookings) {
             booking.transferredToRateManager = true;
@@ -636,10 +648,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         usersToSave.addAll(invoiceOrderList);
         
         if(!users.isEmpty()) {
-            saveFile(usersToSave, getAccountingType(), "invoice");
+            saveFile(usersToSave, getAccountingType(), "invoice", invoiceOrders);
         }
         if(!restOrderList.isEmpty()) {
-            saveFile(restOrderList, getAccountingType(), "ccard");
+            saveFile(restOrderList, getAccountingType(), "ccard", orders);
         }
         
         return new ArrayList();

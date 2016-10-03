@@ -21,6 +21,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.joda.time.DateTime;
 
 /**
  *
@@ -165,7 +166,6 @@ public class InvoiceGenerator {
         writeText("BESKRIVELSE", 45, 645, true, 8);
         writeText("PRIS", 335, 645, true, 8);
         writeText("ANTALL", 385, 645, true, 8);
-        writeText("RABATT", 425, 645, true, 8);
         writeText("MVA", 475, 645, true, 8);
         writeText("OPPSUMMERING", 443, 420, true, 8);
         
@@ -354,7 +354,7 @@ public class InvoiceGenerator {
     }
 
     private void addDescriptions() throws IOException {
-        int lineHeight = 10;
+        int lineHeight = 8;
         int i = 0;
         int start = 628;
         int padding = 3;
@@ -378,12 +378,9 @@ public class InvoiceGenerator {
             
             writeText(String.format("%.2f", (cartItem.getCount() * cartItem.getProduct().price))+"", 560, pos, false, 8, true);
             
-            String name = cartItem.getProduct().name;
+            String name = createLineText(cartItem);
             
-            if (cartItem.startDate != null && cartItem.endDate != null) {
-                name += " " + formatDates(cartItem.startDate, cartItem.endDate);
-            }
-            int linebreakchars = 60;
+            int linebreakchars = 80;
             if (name.length() > linebreakchars) {
                 int rounds = name.length() / linebreakchars + 1;
                 for (int j=0; j<rounds; j++) {
@@ -438,10 +435,42 @@ public class InvoiceGenerator {
         writeText(String.format("%.2f", (total)), (int) 560, 404-(i*11), false, 9, true);
     }
 
-    private String formatDates(Date startDate, Date endDate) {
-        SimpleDateFormat dt = new SimpleDateFormat("dd.MM.yy");
-        String sstartDate = dt.format(startDate);
-        String sendDate = dt.format(endDate);
-        return "("+sstartDate+"-"+sendDate+")";
+     private String createLineText(CartItem item) {
+        if(item == null) {
+            return "";
+        }
+        
+        String lineText = "";
+        String startDate = "";
+        if(item.startDate != null) {
+            DateTime start = new DateTime(item.startDate);
+            startDate = start.toString("dd.MM.yy");
+        }
+
+        String endDate = "";
+        if(item.endDate != null) {
+            DateTime end = new DateTime(item.endDate);
+            endDate = end.toString("dd.MM.yy");
+        }
+        
+        lineText = "";
+        if(item.getProduct() != null && 
+                item.getProduct().additionalMetaData != null && 
+                !item.getProduct().additionalMetaData.isEmpty()) {
+            lineText = item.getProduct().additionalMetaData;
+        }
+        
+        lineText += " " + item.getProduct().name;
+        
+        if(item.getProduct() != null && item.getProduct().metaData != null && !item.getProduct().metaData.isEmpty()) {
+            lineText += " " + item.getProduct().metaData;
+        }
+        if(!startDate.isEmpty() && !endDate.isEmpty()) {
+            lineText += " (" + startDate + " - " + endDate + ")";
+        }
+        
+        return lineText;
     }
+
+    
 }

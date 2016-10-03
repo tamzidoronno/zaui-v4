@@ -44,8 +44,13 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         var orderId = $scope.payOrder.id;
         var marking = getshopclient.OrderManager.markAsInvoicePayment(orderId);
         marking.done(function() {
-            getshopclient.OrderManager.saveOrder($scope.payOrder);
-            $scope.changeOrderStatus(7);
+            var newOrder = getshopclient.OrderManager.getOrder(orderId);
+            newOrder.done(function(order) {
+                order.invoiceNote = $scope.payOrder.invoiceNote;
+                $scope.payOrder = order;
+                getshopclient.OrderManager.saveOrder($scope.payOrder);
+                $scope.changeOrderStatus(7);
+            });
         });
     };
     

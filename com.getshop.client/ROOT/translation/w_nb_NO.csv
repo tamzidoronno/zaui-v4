@@ -235,15 +235,15 @@ I am sorry, but all fields are required before sending a message.;-;Beklager, me
 If you enable this, the parallex effect will be enabled. The background will scroll faster then the cell on top;-;Hvis du aktiverer dette vil du aktivere paralaxx effekter, bakgrunnen vil da scrolle raskere enn cellen over.
 Image;-;Bilde
 Image text;-;Bildetekst
-Include breakfast for {price} per night per guest;-;Inkluder frokost for {price} kr per natt per gjest.
+Include breakfast for {price} per night per guest;-;Legg til frokost for {price} kr per natt per gjest.
 Include breakfast for {price} per night per room;-;Legg til frokost for {price}kr per natt / per rom.
 Include early checkin for {price};-;Legg inn tidlig innsjekk for {price}kr.
-Include extra bed for {price} per night;-;Inkluder ekstra seng for {price} kr per natt.
+Include extra bed for {price} per night;-;Legg til en ekstra seng for {price} kr per natt.
 Include extra bed for {price} per night per room;-;Legg til en ekstra seng for {price}kr per rom.
 Include late checkout for {price};-;Legg til sen utsjekk for {price}kr per rom.
-Include parking for {price} per night;-;Inkluder parkering for {price} kr per natt.
+Include parking for {price} per night;-;Legg til parkering for {price} kr per natt.
 Include parking for {price} per night per room;-;Legg til parkering for {price}kr per natt per / per rom. 
-Include the possibility to cancel your stay for {price} per night;-;Inkluder muligheten for avbestilling for {price} per natt.
+Include the possibility to cancel your stay for {price} per night;-;Legg til muligheten for avbestilling for {price} per natt.
 Include the possibility to cancel your stay for {price} per night per room;-;Legg til mulighet for avbestilling for {price}kr per natt per rom.
 Information;-;Informasjon
 Inner background;-;Indre bakgrunn

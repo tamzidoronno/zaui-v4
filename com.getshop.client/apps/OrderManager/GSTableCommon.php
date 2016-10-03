@@ -62,6 +62,9 @@ class GSTableCommon extends \WebshopApplication {
         
         if (isset($_POST['status']))
             $_SESSION[$this->getSessionName('gss_orders_status')] = $_POST['status'];
+        
+        if (isset($_POST['paymenttype']))
+            $_SESSION[$this->getSessionName('gss_orders_paymenttype')] = $_POST['paymenttype'];
     }
     
     public function setPageSize() {
@@ -88,6 +91,9 @@ class GSTableCommon extends \WebshopApplication {
         
         if (isset($_SESSION[$this->getSessionName('gss_orders_status')]) && $_SESSION[$this->getSessionName('gss_orders_status')]) {
             $filter->extra["orderstatus"] = $_SESSION[$this->getSessionName('gss_orders_status')];
+        }
+        if (isset($_SESSION[$this->getSessionName('gss_orders_paymenttype')]) && $_SESSION[$this->getSessionName('gss_orders_paymenttype')]) {
+            $filter->extra["paymenttype"] = $_SESSION[$this->getSessionName('gss_orders_paymenttype')];
         }
         
         

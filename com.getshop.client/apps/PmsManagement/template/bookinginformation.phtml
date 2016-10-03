@@ -47,10 +47,10 @@ if(!$booking->confirmed) {
 if($booking->isDeleted) {
     ?>
     <div style='background-color:red; color: white; padding: 10px; margin-bottom: 10px; text-align:center;'>
-    This booking is deleted,
+    This booking is deleted
     <span gstype="form" method="undeleteBooking">
         <input type='hidden' gsname='bookingid' value='<? echo $booking->id; ?>'>
-        <span gstype="submitToInfoBox" type="button" style='color:yellow; cursor:pointer;'>undelete it?</span>
+        <span gstype="submitToInfoBox" type="button" style='color:yellow; cursor:pointer; display:none;'>undelete it?</span>
     </span>
 
                                    
@@ -126,7 +126,6 @@ if(!$booking->confirmed) { ?>
 <?php } ?>
 <br><br><br>
 <span class='pmsbutton doneediting' style='float:right;'><? echo $this->__w("Done editing"); ?></span> 
-<span class='pmsbutton deletebooking' bookingid='<? echo $booking->id; ?>' style=' background-color:red;'><? echo $this->__w("Delete booking"); ?></span>
 <span class='pmsbutton showlog' bookingid='<? echo $booking->id; ?>' style='background-color:yellow; color:#000;'><? echo $this->__w("Show log"); ?></span>
 <div style='clear:both;'></div>
 <div id="logarea"></div>

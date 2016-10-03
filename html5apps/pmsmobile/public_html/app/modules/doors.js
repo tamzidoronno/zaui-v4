@@ -22,5 +22,5 @@ getshop.doorsController = function($scope, $state) {
             alert('Action sent');
         });
     }
-    $scope.loadDoors();
+    $scope.clearCache();
 };

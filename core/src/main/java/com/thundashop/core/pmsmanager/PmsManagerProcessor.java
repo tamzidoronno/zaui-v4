@@ -61,6 +61,7 @@ public class PmsManagerProcessor {
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
         try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
         try { checkForRoomToClose(); }catch(Exception e) {}
+        try { updateInvoices(); }catch(Exception e) {}
     }
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
@@ -188,7 +189,7 @@ public class PmsManagerProcessor {
             manager.logPrintException(e);
         }
         
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -231,12 +232,19 @@ public class PmsManagerProcessor {
 //                }
                 
                 if (room.isStarted() && !room.isEnded()) {
-                    if (pushToLock(room, false)) {
-                        room.addedToArx = true;
-                        manager.markRoomAsDirty(room.bookingItemId);
-                        save = true;
-                        if(notifyRoomAddedToArx(room.cardformat)) {
-                            manager.doNotification("room_added_to_arx", booking, room);
+                    boolean payedfor = manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
+                    boolean grantEven = manager.getConfigurationSecure().grantAccessEvenWhenNotPaid;
+                    if(!payedfor && (grantEven && booking.isBookedAfterOpeningHours()) || booking.forceGrantAccess) {
+                        payedfor = true;
+                    }
+                    if(payedfor && !room.deleted) {
+                        if (pushToLock(room, false)) {
+                            room.addedToArx = true;
+                            manager.markRoomAsDirty(room.bookingItemId);
+                            save = true;
+                            if(notifyRoomAddedToArx(room.cardformat)) {
+                                manager.doNotification("room_added_to_arx", booking, room);
+                            }
                         }
                     }
                 }
@@ -637,6 +645,11 @@ public class PmsManagerProcessor {
                             payedfor = false;
                         }
                     }
+                    if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {
+                        if(!order.captured) {
+                            payedfor = false;
+                        }
+                    }
                 }
 
                 if(booking.needCapture != needCapture) {
@@ -854,6 +867,29 @@ public class PmsManagerProcessor {
 
                 book.notificationsSent.add(key);
                 manager.sendMissingPayment(orderId, book.id);
+            }
+        }
+    }
+
+    private void updateInvoices() {
+        PmsConfiguration config = manager.getConfigurationSecure();
+        if(!config.autoMarkCreditNotesAsPaidFor && !config.automarkInvoicesAsPaid) {
+            return;
+        }
+        
+        List<Order> orders = manager.orderManager.getOrders(null, null, null);
+        for(Order ord : orders) {
+            if(ord.isCreditNote && ord.status != Order.Status.PAYMENT_COMPLETED && config.autoMarkCreditNotesAsPaidFor) {
+                ord.status = Order.Status.PAYMENT_COMPLETED;
+                ord.captured = true;
+                ord.payment.captured = true;
+                manager.orderManager.saveOrder(ord);
+            }
+            if(ord.isInvoice()&& ord.status != Order.Status.PAYMENT_COMPLETED && config.automarkInvoicesAsPaid) {
+                ord.status = Order.Status.PAYMENT_COMPLETED;
+                ord.captured = true;
+                ord.payment.captured = true;
+                manager.orderManager.saveOrder(ord);
             }
         }
     }

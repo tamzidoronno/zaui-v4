@@ -31,4 +31,9 @@ public interface IPmsInvoiceManager {
     
     @Administrator
     public void markOrderAsPaid(String bookingId, String orderId);
+    
+    @Administrator
+    public List<CartItem> removeOrderLinesOnOrdersForBooking(String id, List<String> roomIds);    
+    
+    public boolean isRoomPaidFor(String pmsRoomId);
 }

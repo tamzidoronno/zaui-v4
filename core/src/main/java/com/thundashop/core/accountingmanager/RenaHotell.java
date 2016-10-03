@@ -21,6 +21,14 @@ import org.joda.time.DateTime;
 
 /**
  * Documentation found in google disk under file renahotell_import.pdf
+ * 
+ * 
+    OK : Begynner på : 12000
+    OK : Overfør ordrer på motpost referanser.
+    OK : Kortbetalinger : 10900
+    Fakturagebyr : 100
+    OK : Ved kreditering: Bytt om felt 9 med felt 21
+ * 
  * @author boggi
  */
 @ForStore(storeId="87cdfab5-db67-4716-bef8-fcd1f55b770b")
@@ -55,9 +63,7 @@ public class RenaHotell implements AccountingInterface {
                 fieldsInLine.put(4, format1.format(order.rowCreatedDate));
                 fieldsInLine.put(5, "0045");
                 
-                String lineText = createLineText(item);
-                
-                fieldsInLine.put(6, "\"\"" + stripText(lineText, 30) + "\"\"");
+                fieldsInLine.put(6, "\"\"" + stripText("", 30) + "\"\"");
                 fieldsInLine.put(7, "0000");
                 fieldsInLine.put(8, "000000");
                 String account = item.getProduct().sku;
@@ -70,24 +76,42 @@ public class RenaHotell implements AccountingInterface {
                     mvaKode = "-1";
                 }
                 
-                if(order.payment.paymentType.toLowerCase().contains("invoice")) {
-                    if(user.customerId < 10000) {
-                        account = "0" + user.customerId + "";
-                    } else {
-                        account = user.customerId + "";
-                    }
+                //Cancelation
+                if(item.getProduct().id.equals("6087e72e-dc6a-48b5-b5d5-63da4ee7346e")) {
+                    account = "003912";
+                    mvaKode = "03";
                 }
+                //Room
+                if(item.getProduct().id.equals("92b6a16a-a7da-4e3b-83d9-41c90f5bc0bb")) {
+                    account = "001920";
+                    mvaKode = "08";
+                }
+                //Room
+                if(item.getProduct().id.equals("9eb99519-b277-4a09-bf3d-327b1971d568")) {
+                    account = "003052";
+                    mvaKode = "03";
+                }
+                
+                
+                String costumerId = (user.customerId+2000) + "";
+                if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {
+                    costumerId = "010900";
+                }
+                
+                account = prependZeros(account, 6);
+                costumerId = prependZeros(costumerId, 6);
                 
                 Integer count = item.getCount();
                 
                 if(count > 0) {
-                    fieldsInLine.put(9, account); //Debet konto
-                    fieldsInLine.put(10, "000000"); //Debet konto
+                    fieldsInLine.put(9, account + "");
+                    fieldsInLine.put(21, costumerId + ""); //Debet konto
                 } else {
                     count = count * -1;
-                    fieldsInLine.put(9, "000000"); //Debet konto
-                    fieldsInLine.put(10, account); //Kredit konto
+                    fieldsInLine.put(9, costumerId + ""); //Debet konto
+                    fieldsInLine.put(21, account); //Kredit konto
                 }
+                fieldsInLine.put(10, "000000"); //Debet konto
                 
                 Address address = user.address;
                 if(address  == null) {
@@ -104,6 +128,15 @@ public class RenaHotell implements AccountingInterface {
                 double price = item.getProduct().priceExTaxes;
                 DecimalFormat df = new DecimalFormat("#.##");      
                 String priceToSend = df.format(price); 
+                if(!priceToSend.contains(".")) {
+                    priceToSend = priceToSend + ".00";
+                } else {
+                    String[] splitted = priceToSend.split("\\.");
+                    if(splitted[1].length() == 1) {
+                        priceToSend = priceToSend + "0";
+                    }
+                }
+                
                 priceToSend = prependZeros(priceToSend, 14);
                 fieldsInLine.put(11, mvaKode);
                 fieldsInLine.put(12, "000");
@@ -114,10 +147,9 @@ public class RenaHotell implements AccountingInterface {
                 fieldsInLine.put(17, format1.format(order.rowCreatedDate));
                 String counter = count + ".00";
                 counter = prependZeros(counter, 11);
-                fieldsInLine.put(18, "0000000000");
+                fieldsInLine.put(18, prependZeros(order.incrementOrderId + "", 10));
                 fieldsInLine.put(19, counter);
                 fieldsInLine.put(20, "\"\"" + stripText("", 25) + "\"\"");
-                fieldsInLine.put(21, user.customerId + "");
                 fieldsInLine.put(22, "000000");
                 fieldsInLine.put(23, "\"\"" + stripText(user.fullName, 30) + "\"\"" + "");
                 fieldsInLine.put(24, "\"\"" + stripText(address.address, 30) + "\"\"" + "");

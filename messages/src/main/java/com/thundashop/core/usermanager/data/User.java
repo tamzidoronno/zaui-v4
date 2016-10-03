@@ -121,6 +121,47 @@ public class User extends DataCommon implements Comparable<User> {
         
         return null;
     }
+
+    public String getCompanyName() {
+        if (companyObject == null) {
+            return "";
+        }
+        
+        return companyObject.name;
+    }
+    
+    public String getCompanyVatNumber() {
+        if (companyObject == null) {
+            return "";
+        }
+        
+        return companyObject.vatNumber;
+    }
+
+    public String getCompanyAddress() {
+        if (companyObject == null) {
+            return "";
+        }
+        
+        if (companyObject.address == null) {
+            return "";
+        }
+        
+        return companyObject.address.address + ", " + companyObject.address.postCode + " " + companyObject.city;
+    }
+
+    public String getCompanyEmail() {
+        if (companyObject == null) {
+            return "";
+        }
+        
+        if (companyObject.email != null && !companyObject.email.isEmpty()) {
+            return companyObject.email;
+        }
+        
+        
+        return companyObject.invoiceEmail;
+    }
  
     public static class Type {
         public static int GETSHOPADMINISTRATOR = 200;

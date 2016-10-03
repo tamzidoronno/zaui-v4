@@ -702,7 +702,6 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
 
     @Override
     public void saveMecaFleetSettings(MecaFleetSettings settings) {
-        instancePool.getApplicationInstance("");
         setConfigurationSetting("openinghours", settings.openinghours);
         setConfigurationSetting("contact_name", settings.contact_name);
         setConfigurationSetting("contact_email", settings.contact_email);
@@ -720,6 +719,8 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         Settings settings = new Settings();
         settings.settings = new ArrayList();
         settings.settings.add(setting);
+        
+        settings.appId = "c4998fc1-29bc-4bcd-877a-9a9fcafedad2";
         
         instancePool.setApplicationSettings(settings);
     }

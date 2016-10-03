@@ -24,6 +24,9 @@ class MecaFleetSettings extends \MarketingApplication implements \Application {
         $mecaFleetSettings->roadmap = $_POST['data']['roadmap'];
         
         $this->getApi()->getMecaManager()->saveMecaFleetSettings($mecaFleetSettings);
+        
+        $conf = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstance($this->getAppInstanceId());
+        $this->setConfiguration($conf);
     }
     
         

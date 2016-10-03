@@ -17,8 +17,8 @@ $date = date("d.m.Y 08:00");
 <div>
     <div>
         Neste PKK: <? echo isset($car->nextControll) ? date('d/m-Y', strtotime($car->nextControll)) : 'N/A'; ?> 
-        <br/> Kilometers til neste service: <? echo isset($car->kilometersToNextService) ? $car->kilometersToNextService: 'N/A'; ?>
-        <br/> Måneder til neste service: <? echo $nextServiceDate; ?>
+        <br/> Kilometer gjenstående til neste service: <? echo isset($car->kilometersToNextService) ? $car->kilometersToNextService: 'N/A'; ?>
+        <br/> Måneder gjenstående til neste service: <? echo $nextServiceDate; ?>
     </div>
     <br/>
     Dato:

@@ -1719,4 +1719,26 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .findFirst()
                 .orElse(null);
     }
+
+    private void printUsers() {
+        for (User user : getAllUsers()) {
+            finalizeUser(user);
+            System.out.println(
+                    csvsave(user.fullName)+";"
+                    +csvsave(user.emailAddress)+";"
+                    +csvsave(user.cellPhone)+";"
+                    +csvsave(user.getCompanyName())+";"
+                    +csvsave(user.getCompanyVatNumber())+";"
+                    +csvsave(user.getCompanyAddress())+";"
+                    +csvsave(user.getCompanyEmail())
+            );
+        }
+    }
+
+    private String csvsave(String fullName) {
+        if (fullName != null)
+            fullName = fullName.replace(";", "");
+        
+        return fullName;
+    }
 }

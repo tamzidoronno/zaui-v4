@@ -67,10 +67,12 @@ $cart = $order->cart;
         <div class='gss_label_content'><? echo $order->incrementOrderId; ?></div>
         <div class='gss_label'><? echo $this->__f("Transferred to accounting"); ?></div>
         <div class='gss_label_content'><? echo $order->transferredToAccountingSystem ? "<i class='fa fa-refresh gss_mark_resendtoaccounting' orderId='".$order->id."'></i> " . $this->__f("Yes") : $this->__f("No"); ?></div>
+        <?php if(isset($address)) { ?>
         <div class='gss_label'><? echo $this->__f("Email"); ?></div>
         <div class='gss_label_content'><? echo $address->emailAddress; ?></div>
         <div class='gss_label'><? echo $this->__f("Phone"); ?></div>
         <div class='gss_label_content'><? echo $address->phone; ?></div>
+        <?php } ?>
         <div class='gss_label'><? echo $this->__f("Order date"); ?></div>
         <div class='gss_label_content'><? echo $order->createdDate; ?></div>
         
@@ -115,15 +117,16 @@ $cart = $order->cart;
             </div>
         </div>
         
-        
-        <div class='gss_label'><? echo $this->__f("Shipping"); ?></div>
-        <div class='gss_label_content'>
-            <? 
-            echo $address->fullName."<br/>";
-            echo $address->address."<br/>"; 
-            echo $address->postCode." ".$address->city."<br/>"; 
-            ?>
-        </div>
+        <?php if(isset($address)) { ?>
+            <div class='gss_label'><? echo $this->__f("Shipping"); ?></div>
+            <div class='gss_label_content'>
+                <? 
+                echo $address->fullName."<br/>";
+                echo $address->address."<br/>"; 
+                echo $address->postCode." ".$address->city."<br/>"; 
+                ?>
+            </div>
+        <?php } ?>
     </div>
     
     <div class='gss_label'>

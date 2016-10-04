@@ -338,7 +338,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
         
         createUserForBooking(booking);
-        if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd)) {
+        if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
              pmsInvoiceManager.createPrePaymentOrder(booking);
         }
         try {
@@ -353,12 +353,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             doNotification("booking_confirmed", booking, null);
                         }
                     }
-                }
-
-                try {
-                    processor();
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
                 return booking;
             }
@@ -3113,6 +3107,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         } else {
             booking.registrationData.resultAdded = new LinkedHashMap();
+        }
+        
+        PmsUserDiscount disc = pmsInvoiceManager.getDiscountsForUser(booking.userId);
+        if(disc != null && disc.supportInvoiceAfter) {
+            booking.createOrderAfterStay = true;
         }
     }
 

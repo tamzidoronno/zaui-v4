@@ -165,7 +165,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 echo "<script>";
                 if($config->payAfterBookingCompleted) {
                     if(!isset($curBooking->orderIds[0])) {
-                        if($this->isAdminMode()) {
+                        if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
                         echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
                         } else {
                             echo 'thundashop.common.goToPage("payment_failed");';

@@ -13,9 +13,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public $roomTable = "";
     public $fastAddedCode = null;
     private $fetchedBookings = array();
-     public function getUserSettingsOrder() {
+    
+    public function getUserSettingsOrder() {
         return 1;
     }
+    
     public function toggleFilterVersion() {
         if(!isset($_SESSION['toggleOldFilterVersion'])) {
             $_SESSION['toggleOldFilterVersion'] = true;
@@ -113,6 +115,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         $curConfig->discountType = $_POST['discounttype'];
+        $curConfig->supportInvoiceAfter = $_POST['supportInvoiceAfter'] == "true";
         $this->getApi()->getPmsInvoiceManager()->saveDiscounts($engine, $curConfig);
     }
     

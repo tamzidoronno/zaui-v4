@@ -11,5 +11,6 @@ public class PmsUserDiscount extends DataCommon {
     
     public String userId;
     public Integer discountType = 0;
+    public boolean supportInvoiceAfter = false;
     public HashMap<String, Double> discounts = new HashMap();
 }

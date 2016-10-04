@@ -56,12 +56,16 @@ $phonePrefix = $user->prefix;
 $phoneNumber = $user->cellPhone;
 $bookerName = $user->fullName;
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$createdAfter = "";
+if($booking->createOrderAfterStay) {
+    $createdAfter = "CHECKED";
+}
 ?>
 
 <div class='orderinformation'>
     <h2>Orders</h2>
 </div>
-<input type='checkbox' class='createorderafterstaycheckbox'> Create order after stay has been completed.
+<input type='checkbox' class='createorderafterstaycheckbox' <?php echo $createdAfter; ?>> Create order after stay has been completed.
 <div style='clear:both;'></div>
 
 

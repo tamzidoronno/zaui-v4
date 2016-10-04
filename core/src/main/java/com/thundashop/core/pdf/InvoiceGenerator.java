@@ -32,7 +32,9 @@ public class InvoiceGenerator {
     private final Order order;
     private int cornerSize = 7;
     private PDPageContentStream contentStream;
+    private PDPageContentStream attachment;
     private final AccountingDetails details;
+    private int writeToPage = 1;
 
     public InvoiceGenerator(Order order, AccountingDetails details) {
         this.order = order;
@@ -58,7 +60,6 @@ public class InvoiceGenerator {
         
         document.addPage(page);
 
-        PDFont font = PDType1Font.HELVETICA_BOLD;
         contentStream = new PDPageContentStream(document, page);
         
         if (order.status != Order.Status.PAYMENT_COMPLETED) {
@@ -67,7 +68,6 @@ public class InvoiceGenerator {
         }
         addTexts();
         addOrderText();
-        addDescriptions();
         addSummary();
         
         if (order.status != Order.Status.PAYMENT_COMPLETED) {
@@ -80,12 +80,26 @@ public class InvoiceGenerator {
         }
         
         drawLines();
-        
+        writeText("OPPSUMMERING", 443, 420, true, 8);
+        if(order.cart.getItems().size() <= 19) {
+            addDescriptions();
+        } else {
+            writeText("Se vedlegg for detaljert informasjon", 40, 600, true, 16);
+        }
         contentStream.close();
+        if(order.cart.getItems().size() > 19) {
+            PDPage page2 = new PDPage(PDPage.PAGE_SIZE_A4);
+            document.addPage(page2);
+            attachment = new PDPageContentStream(document, page2);
+            addDescriptions();
+            attachment.close();
+        }
+
+        
         String fileName = "/tmp/"+order.id+".pdf";
         document.save(fileName);
         document.close();
-        
+
         return fileName;
     }
     
@@ -163,11 +177,6 @@ public class InvoiceGenerator {
         
         
         writeText(INVOICEORRECEIPT, 485, 810, true, 15);
-        writeText("BESKRIVELSE", 45, 645, true, 8);
-        writeText("PRIS", 335, 645, true, 8);
-        writeText("ANTALL", 385, 645, true, 8);
-        writeText("MVA", 475, 645, true, 8);
-        writeText("OPPSUMMERING", 443, 420, true, 8);
         
         if (order.status != Order.Status.PAYMENT_COMPLETED) {
             writeText(details.accountNumber, 40, 303, false, 12);
@@ -179,7 +188,6 @@ public class InvoiceGenerator {
             writeText("Betalt av", 40, 180, true, 8);
             writeText("Betalingsinformasjon", 40, 280, true, 8);
             writeText("Kvittering", 40, 333, false, 12);
-            writeText("BELØP", 525, 645, true, 8);
             writeText("Betalerens kontonummer", 360, 328, true, 8);
             writeText("Betalings-", 450, 280, true, 8);
             writeText("frist", 450, 270, true, 8);
@@ -189,15 +197,21 @@ public class InvoiceGenerator {
     }
     
     private void writeText( String text, int x, int y, boolean bold, int fontSize, boolean alignRight) throws IOException {
+        
+        PDPageContentStream stream = contentStream;
+        if(writeToPage == 2) {
+            stream = attachment;
+        }
+        
         PDType1Font font = bold ? PDType1Font.HELVETICA_BOLD : PDType1Font.HELVETICA;
-        contentStream.beginText();
-        contentStream.setFont(font, fontSize);
+        stream.beginText();
+        stream.setFont(font, fontSize);
         if (alignRight) {
             x = x - (int) (font.getStringWidth(text) / 1000 * 9);
         }
-        contentStream.moveTextPositionByAmount(x, y);
-        contentStream.drawString(text);
-        contentStream.endText();
+        stream.moveTextPositionByAmount(x, y);
+        stream.drawString(text);
+        stream.endText();
     }
     
     private void writeText( String text, int x, int y, boolean bold, int fontSize) throws IOException {
@@ -326,7 +340,6 @@ public class InvoiceGenerator {
         contentStream.setStrokingColor(Color.GRAY);
         contentStream.drawLine(340, 805, 560, 805);
         contentStream.drawLine(340, 720, 560, 720);
-        contentStream.drawLine(40, 640, 560, 640);
         contentStream.drawLine(443, 416, 560, 416);
     }
     
@@ -362,7 +375,26 @@ public class InvoiceGenerator {
         if (addShippingLine(start, i, lineHeight, padding)) {
             i = 1;
         }
-
+        if(order.cart.getItems().size() > 19) {
+            writeToPage = 2; 
+            start = 750;
+            attachment.setNonStrokingColor(new Color(0, 0, 0));
+            attachment.drawLine(40, 760, 560, 760);
+            writeText("BESKRIVELSE", 45, 765, true, 8);
+            writeText("PRIS", 335, 765, true, 8);
+            writeText("ANTALL", 385, 765, true, 8);
+            writeText("MVA", 475, 765, true, 8);
+            writeText("BELØP", 525, 765, true, 8);
+        } else {
+            contentStream.setNonStrokingColor(new Color(0, 0, 0));
+            contentStream.drawLine(40, 640, 560, 640);
+            writeText("BESKRIVELSE", 45, 645, true, 8);
+            writeText("PRIS", 335, 645, true, 8);
+            writeText("ANTALL", 385, 645, true, 8);
+            writeText("MVA", 475, 645, true, 8);
+            writeText("OPPSUMMERING", 443, 420, true, 8);
+        }
+        
         
         for (CartItem cartItem : order.cart.getItems()) {
             int pos = start - (i*lineHeight) - (i*padding);
@@ -392,13 +424,13 @@ public class InvoiceGenerator {
                     writeText(subString, 45, pos, false, 8);
                     i++;
                     pos = pos - lineHeight;
-                }
+                } 
             } else {
                 writeText(name, 45, pos, false, 8);
                 i++;
             }
-            
         }
+        writeToPage = 1;
     }
 
     private double getNetto() {
@@ -457,7 +489,7 @@ public class InvoiceGenerator {
         if(item.getProduct() != null && 
                 item.getProduct().additionalMetaData != null && 
                 !item.getProduct().additionalMetaData.isEmpty()) {
-            lineText = item.getProduct().additionalMetaData;
+            lineText = item.getProduct().additionalMetaData; 
         }
         
         lineText += " " + item.getProduct().name;

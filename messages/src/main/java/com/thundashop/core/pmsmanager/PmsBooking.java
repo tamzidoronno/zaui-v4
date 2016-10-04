@@ -38,7 +38,6 @@ public class PmsBooking extends DataCommon {
     public boolean payedFor = false;
     public boolean avoidCreateInvoice = false;
     public boolean createOrderAfterStay = false;
-    public Date orderCreatedAfterStay = null;
     public boolean testReservation = false;
     public PmsRepeatingData lastRepeatingData = null;
     public String invoiceNote = "";

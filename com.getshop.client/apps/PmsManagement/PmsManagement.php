@@ -23,7 +23,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
             unset($_SESSION['toggleOldFilterVersion']);
         }
     }
-    
+    public function setSendInvoiceAfter() {
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
+        $booking->createOrderAfterStay = $_POST['data']['checked'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+    }
     public function doRoomsBookedAction() {
         $action = $_POST['data']['action'];
         $bookingId = $_POST['data']['bookingid'];

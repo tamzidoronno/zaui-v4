@@ -421,8 +421,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 if(room == null) {
                     continue;
                 }
-
-                room.invoicedTo = item.getStartingDate();
+                if(room.isSameDay(item.getStartingDate(), room.date.start)) {
+                    room.invoicedTo = null;
+                    room.invoicedFrom = null;
+                } else {
+                    room.invoicedTo = item.getStartingDate();
+                }
             }
         } else {
             for(PmsBookingRooms room : booking.rooms) {

@@ -7,6 +7,9 @@
 .gss_overview_order:hover {
     background-color: #EEE;
 }
+.gss_credited_order {
+    color: #bbb;
+}
 
 .gss_overview_order {
     border-bottom: solid 1px #EEE;

@@ -9,7 +9,7 @@
 #backsidesettings {
     font-family: 'PT Sans', sans-serif;
     display: none;
-    z-index: 111112;
+    z-index: 300;
     position: absolute;
     top: 0px;
     left: 0px;

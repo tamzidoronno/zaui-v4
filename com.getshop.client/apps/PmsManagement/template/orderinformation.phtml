@@ -61,28 +61,7 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedN
 <div class='orderinformation'>
     <h2>Orders</h2>
 </div>
-
-<span class='roomattribute'>
-    <span class='roomprefix'>
-        <i class='fa fa-edit'></i> Price type
-    </span>
-    <span class='roompostfix'>
-        <span class='viewmode'>
-            <? echo $pricetypes[$booking->priceType]; ?>
-        </span>
-        <span class='editmode' gstype='form' method='changePriceType'>
-            <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-            <?php
-            echo "<select gsname='pricetype'>";
-            foreach($pricetypes as $idx => $value) {
-                echo "<option value='$idx'>$value</option>";
-            }
-            echo "</select>";
-            ?>
-            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
-        </span>
-    </span>
-</span>
+<input type='checkbox' class='createorderafterstaycheckbox'> Create order after stay has been completed.
 <div style='clear:both;'></div>
 
 

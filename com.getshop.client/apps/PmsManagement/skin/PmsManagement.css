@@ -27,7 +27,7 @@
 .PmsManagement .sendinvoicebox { position:absolute; padding: 10px; border: solid 1px; background-color: #fff; display:none; }
 .PmsManagement .sendinvoicebox input { font-size: 20px; }
 .PmsManagement .doCreditOrder:hover { font-weight: bold; cursor: pointer; }
-.PmsManagement .statisticsrow:hover { cursor:pointer; font-weight: bold; }
+.PmsManagement .statisticsrow:hover td { cursor:pointer; color:green; }
 .PmsManagement .massupdatepricesfield { position:absolute; background-color:#fff; border: solid 2px; border-radius: 3px; z-index: 1; display:none; }
 .PmsManagement .tiparea {
     position: absolute;

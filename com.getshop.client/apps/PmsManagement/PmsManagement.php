@@ -1785,6 +1785,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->includefile("statistics");
         } else if($filter->filterType == "summary") {
             $this->includefile("summary");
+        } else if($filter->filterType == "orderstats") {
+            $this->includefile("orderstats");
         } else {
             if(isset($_SESSION['toggleOldFilterVersion'])) {
                 $this->includefile("managementviewtable");

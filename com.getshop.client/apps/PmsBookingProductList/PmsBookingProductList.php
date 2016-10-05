@@ -35,8 +35,8 @@ class PmsBookingProductList extends \WebshopApplication implements \Application 
         if(!$this->isAdminMode()) {
             $diff = ($this->getStartDate() - time());
             $days = ($diff/86400);
-            if($days > 300) {
-                echo "<div style='font-size:20px;'>Sorry, you can not more then 10 months ahead of time. Please contact us for this kind of bookings.</div>";
+            if($days > 336) {
+                echo "<div style='font-size:20px;'>Sorry, you can not more then 11 months ahead of time. Please contact us for this kind of bookings.</div>";
                 return;
             }
         }

@@ -122,6 +122,7 @@ public class PmsBookingSimpleFilter {
         simple.channel = booking.channel;
         simple.numberOfNights = room.getNumberOfDays();
         simple.numberOfRoomsInBooking = booking.getActiveRooms().size();
+        simple.createOrderAfterStay = booking.createOrderAfterStay;
         
         if(manager.getConfiguration().hasLockSystem()) {
             simple.code = room.code;

@@ -36,21 +36,53 @@ echo "<div class='gss_order_col gss_col_5'>" . $this->__f("State") . "</div>";
 echo "</div>";
 $totalTaxes = 0;
 foreach ($orders as $order) {
+    $status = @$this->filteredData->filterOptions->extra->orderstatus;
+    
     $this->setCurrentOrder($order);
     $orderPaid = $order->status == 7 ? "<i style='color: green;' class='fa fa-check' title='Paid'></i>" : "" ;
     $orderPaid = $order->status == 5 ? "<i style='color: blue;' class='fa fa-times' title='Cancled'></i>" : $orderPaid ;
     $orderPaid = $order->status == 3 ? "<i style='color: red;' class='fa fa-frown-o' title='Paiment failed'></i>" : $orderPaid ;
     $orderPaid = $order->status == 2 ? "<i style='color: #c18800;' class='fa fa-circle-o-notch' title='Waiting for payment'></i>" : $orderPaid ;
+    $credited = "";
+    $creditedorder = "";
+    $creditPrice = 0;
+    $creditPriceEx = 0;
+    
+    if(sizeof($order->creditOrderId) > 0) {
+        $creditedorder  = "gss_credited_order";
+        foreach($order->creditOrderId as $creditId) {
+            $creditedOrder = $this->getApi()->getOrderManager()->getOrder($creditId);
+            $creditedOrderId = $creditedOrder->incrementOrderId . ",";
+            $creditPriceEx += $this->getApi()->getOrderManager()->getTotalAmountExTaxes($creditedOrder);
+            $creditPrice += $this->getApi()->getOrderManager()->getTotalAmount($creditedOrder);
+        }
+        $credited = "<span title='$creditedOrderId'>c</span>";
+    }
+    
     $price = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
     $priceIncTax = $this->getApi()->getOrderManager()->getTotalAmount($order);
+    
+    $isCredit = false;
+    if(($price + $creditPriceEx) == 0) {
+        $creditedorder  = "gss_credited_order";
+    }
     if(!isset($order->cart->address->fullName)) {
         $name = $this->__w("Unknown name");
     } else {
         $name = $order->cart->address->fullName;
     }
-    echo "<div class='gss_overview_order_outer'>";
+    if(@$order->isCreditNote) {
+        $credited = "cn";
+        $creditedorder  = "gss_credited_order";
+    }
+    if($status && $creditedorder) {
+        continue;
+    }
+
+    
+    echo "<div class='gss_overview_order_outer $creditedorder'>";
         echo "<div class='gss_overview_order'>";
-        echo "<div class='gss_order_col gss_col_0'><input type='checkbox' class='gssordercheckbox' orderid='".$order->id."'></input></div>";
+        echo "<div class='gss_order_col gss_col_0'><input type='checkbox' class='gssordercheckbox' orderid='".$order->id."'></input> $credited</div>";
         echo "<div class='gss_order_col gss_col_1'>$order->incrementOrderId</div>";
         echo "<div class='gss_order_col gss_col_2'>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)) . "</div>";
         echo "<div class='gss_order_col gss_col_3'>" . $name . "</div>";

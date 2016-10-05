@@ -13,9 +13,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public $roomTable = "";
     public $fastAddedCode = null;
     private $fetchedBookings = array();
-     public function getUserSettingsOrder() {
+    
+    public function getUserSettingsOrder() {
         return 1;
     }
+    
     public function toggleFilterVersion() {
         if(!isset($_SESSION['toggleOldFilterVersion'])) {
             $_SESSION['toggleOldFilterVersion'] = true;
@@ -23,7 +25,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
             unset($_SESSION['toggleOldFilterVersion']);
         }
     }
-    
+    public function setSendInvoiceAfter() {
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
+        $booking->createOrderAfterStay = $_POST['data']['checked'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+    }
     public function doRoomsBookedAction() {
         $action = $_POST['data']['action'];
         $bookingId = $_POST['data']['bookingid'];
@@ -109,9 +115,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         $curConfig->discountType = $_POST['discounttype'];
+        $curConfig->supportInvoiceAfter = $_POST['supportInvoiceAfter'] == "true";
         $this->getApi()->getPmsInvoiceManager()->saveDiscounts($engine, $curConfig);
     }
     
+    
+    public function loadOrderStats() {
+        $this->includefile("orderstatsresult");
+    }
     
     public function loadOrderInfoOnBooking() {
          $states = array();
@@ -1778,6 +1789,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->includefile("statistics");
         } else if($filter->filterType == "summary") {
             $this->includefile("summary");
+        } else if($filter->filterType == "orderstats") {
+            $this->includefile("orderstats");
         } else {
             if(isset($_SESSION['toggleOldFilterVersion'])) {
                 $this->includefile("managementviewtable");
@@ -1789,6 +1802,27 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
 
+    }
+
+    /**
+     * 
+     * @return \core_pmsmanager_PmsOrderStatsFilter
+     */
+    public function getOrderStatsFilter() {
+        $filter = new \core_pmsmanager_PmsOrderStatsFilter();
+        if(isset($_POST['data']['paymentmethod'])) {
+            $filter->paymentMethod = $_POST['data']['paymentmethod'];
+            $filter->paymentStatus = $_POST['data']['paymentstatus'];
+            $filter->displayType = $_POST['data']['viewtype'];
+            $filter->priceType = $_POST['data']['priceType'];
+            $_SESSION['pmsorderstatsfilter'] = serialize($filter);
+        } elseif(isset($_SESSION['pmsorderstatsfilter'])) {
+            $filter = unserialize($_SESSION['pmsorderstatsfilter']);
+        }
+        $filter->start = $this->getSelectedFilter()->startDate;
+        $filter->end = $this->getSelectedFilter()->endDate;
+        return $filter;
+        
     }
 
 }

@@ -65,7 +65,7 @@ public class RenaHotell implements AccountingInterface {
                 
                 fieldsInLine.put(6, "\"\"" + stripText("", 30) + "\"\"");
                 fieldsInLine.put(7, "0000");
-                fieldsInLine.put(8, "000000");
+                fieldsInLine.put(8, "00000");
                 String account = item.getProduct().sku;
                 String mvaKode = item.getProduct().accountingSystemId;
                 
@@ -79,12 +79,12 @@ public class RenaHotell implements AccountingInterface {
                 //Cancelation
                 if(item.getProduct().id.equals("6087e72e-dc6a-48b5-b5d5-63da4ee7346e")) {
                     account = "003912";
-                    mvaKode = "03";
+                    mvaKode = "08";
                 }
                 //Room
                 if(item.getProduct().id.equals("92b6a16a-a7da-4e3b-83d9-41c90f5bc0bb")) {
                     account = "001920";
-                    mvaKode = "08";
+                    mvaKode = "00";
                 }
                 //Room
                 if(item.getProduct().id.equals("9eb99519-b277-4a09-bf3d-327b1971d568")) {
@@ -105,13 +105,13 @@ public class RenaHotell implements AccountingInterface {
                 
                 if(count > 0) {
                     fieldsInLine.put(9, account + "");
-                    fieldsInLine.put(21, costumerId + ""); //Debet konto
+                    fieldsInLine.put(10, "000000"); //Debet konto
                 } else {
                     count = count * -1;
-                    fieldsInLine.put(9, costumerId + ""); //Debet konto
-                    fieldsInLine.put(21, account); //Kredit konto
+                    fieldsInLine.put(9, "000000"); //Debet konto
+                    fieldsInLine.put(10, account + "");
                 }
-                fieldsInLine.put(10, "000000"); //Debet konto
+                fieldsInLine.put(21, costumerId + ""); //Debet konto
                 
                 Address address = user.address;
                 if(address  == null) {

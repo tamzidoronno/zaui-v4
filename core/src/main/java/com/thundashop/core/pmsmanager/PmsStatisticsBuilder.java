@@ -48,6 +48,9 @@ class PmsStatisticsBuilder {
                 if(booking.testReservation) {
                     continue;
                 }
+                if(booking.isDeleted) {
+                    continue;
+                }
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(!filter.typeFilter.isEmpty() && !filter.typeFilter.contains(room.bookingItemTypeId)) {
                         continue;
@@ -57,9 +60,9 @@ class PmsStatisticsBuilder {
                         if(!pricesExTax) {
                             price /= 1 + (room.taxes/100);
                         }
-                        if(booking.payedFor) {
-                            entry.totalPrice += price;
-                        }
+
+                        entry.totalPrice += price;
+                        
                         entry.roomsRentedOut++;
                         for(PmsBookingAddonItem addon : room.addons) {
                             if(!room.isSameDay(addon.date, cal.getTime())) {

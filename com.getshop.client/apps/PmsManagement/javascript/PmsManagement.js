@@ -32,6 +32,8 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .updateorderrow', app.PmsManagement.updateorderrow);
         $(document).on('click','.PmsManagement .sendinvoice, .PmsManagement .sendreciept', app.PmsManagement.showsendinvoice);
         $(document).on('click','.PmsManagement .loadExcelExportOptions', app.PmsManagement.loadExcelExportOptions);
+        $(document).on('click','.PmsManagement .createorderafterstaycheckbox', app.PmsManagement.createorderafterstaycheckbox);
+        $(document).on('click','.PmsManagement .loadorderstatistics', app.PmsManagement.loadorderstatistics);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -55,6 +57,23 @@ app.PmsManagement = {
         $(document).on('focus','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('keyup','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('change','.PmsManagement .roomsbookedactionsselection', app.PmsManagement.updateRoomActionSelection);
+    },
+    loadorderstatistics : function() {
+        var data = thundashop.framework.createGsArgs($('.statsorderfilter'));
+        var event = thundashop.Ajax.createEvent('','loadOrderStats',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.orderstatsres').html(res);
+        });
+    },
+    createorderafterstaycheckbox : function() {
+        var data = {
+            checked : $(this).is(':checked'),
+            bookingid : $('#openedbookingid').val()
+        }
+        var event = thundashop.Ajax.createEvent('','setSendInvoiceAfter', $(this),data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            thundashop.common.Alert("Success", "Card data has been updated.");
+        });
     },
     executeroomsbookedaction : function() {
         var action = $('.roomsbookedactionsselection').val();

@@ -12,6 +12,20 @@ foreach($engines as $engine) {
     ?>
     <input type="hidden" gs_model="discount_<?php echo $engine; ?>" value="<?php echo $user->id; ?>" gs_model_attr="userid">
     <input type="hidden" gs_model="discount_<?php echo $engine; ?>" value="<?php echo $engine; ?>" gs_model_attr="engine">
+    
+    <div class="textfield gss_setting"  id="supportInvoiceAfter">
+        <span class="title"><?php echo $this->__f("Create order after stay"); ?></span>
+        <div class="gss_onoff" gs_model="discount_<?php echo $engine; ?>" gs_model_attr="supportInvoiceAfter">
+            <?
+            $faclass = $discount->supportInvoiceAfter ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?>"></i>On
+        </div>
+        <div class="description">
+            <?php echo $this->__("Does this user create the order after the stay has been completed?"); ?>
+        </div>
+    </div>
+    
     <div class="property_select_wrapper gss_setting">
         <div class="property_description">
             Discount type

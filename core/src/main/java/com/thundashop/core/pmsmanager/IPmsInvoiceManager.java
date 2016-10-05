@@ -35,5 +35,8 @@ public interface IPmsInvoiceManager {
     @Administrator
     public List<CartItem> removeOrderLinesOnOrdersForBooking(String id, List<String> roomIds);    
     
+    @Administrator
+    public PmsOrderStatistics generateStatistics(PmsOrderStatsFilter filter);
+    
     public boolean isRoomPaidFor(String pmsRoomId);
 }

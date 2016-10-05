@@ -616,6 +616,14 @@ public class PmsManagerProcessor {
                 continue;
             }
 
+            if(config.requirePayments && booking.createOrderAfterStay && booking.isEnded()) {
+                NewOrderFilter filter = new NewOrderFilter();
+                filter.createNewOrder = true;
+                filter.endInvoiceAt = booking.getEndDate();
+                manager.pmsInvoiceManager.createOrder(booking.id, filter);
+                booking.createOrderAfterStay = false;
+                manager.saveBooking(booking);
+            }
             
             boolean needSaving = false;
             boolean payedfor = true; 
@@ -813,10 +821,10 @@ public class PmsManagerProcessor {
             if(booking.bookedByUserId != null && !booking.bookedByUserId.isEmpty()) {
                 continue;
             }
-            if(!booking.isOld(20)) {
+            if(!booking.isOld(40)) {
                 continue;
             }
-            if(booking.isOld(240)) {
+            if(booking.isOld(50)) {
                 continue;
             }
             System.out.println("Running autodelete: Autodeleted because it has expired" + " " + booking.rowCreatedDate);
@@ -885,7 +893,7 @@ public class PmsManagerProcessor {
                 ord.payment.captured = true;
                 manager.orderManager.saveOrder(ord);
             }
-            if(ord.isInvoice()&& ord.status != Order.Status.PAYMENT_COMPLETED && config.automarkInvoicesAsPaid) {
+            if(ord.isInvoice() && ord.status != Order.Status.PAYMENT_COMPLETED && config.automarkInvoicesAsPaid) {
                 ord.status = Order.Status.PAYMENT_COMPLETED;
                 ord.captured = true;
                 ord.payment.captured = true;

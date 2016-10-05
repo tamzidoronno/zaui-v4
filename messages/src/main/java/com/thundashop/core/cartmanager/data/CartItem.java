@@ -7,6 +7,7 @@ package com.thundashop.core.cartmanager.data;
 import com.google.gson.Gson;
 import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -123,5 +124,25 @@ public class CartItem implements Serializable {
         CartItem newItem = gson.fromJson(res, CartItem.class);
         newItem.cartItemId = UUID.randomUUID().toString();
         return newItem;
+    }
+
+    public boolean startsOnDate(Date time, Date rowCreatedDate) {
+        Date startToUse = startDate;
+        if(startToUse == null) {
+            startToUse = rowCreatedDate;
+        }
+        if(startToUse == null) {
+            return false;
+        }
+        Calendar createdCal = Calendar.getInstance();
+        createdCal.setTime(startToUse);
+        Calendar timeCal = Calendar.getInstance();
+        timeCal.setTime(time);
+        
+        if((createdCal.get(Calendar.YEAR) == timeCal.get(Calendar.YEAR)) && 
+            (createdCal.get(Calendar.DAY_OF_YEAR) == timeCal.get(Calendar.DAY_OF_YEAR))) {
+            return true;
+        }
+        return false;
     }
 }

@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author ktonder
  */
-class C3OtherCosts extends ProjectCost {
+public class C3OtherCosts extends ProjectCost {
     public String costType = "other";
     public String type;
     public String comment;

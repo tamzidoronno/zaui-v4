@@ -14,6 +14,7 @@
 .PmsManagement .ended { color: #aaa; }
 .PmsManagement .changeSorting { cursor:pointer; }
 .PmsManagement .roomactionstip { display:none; }
+.PmsManagement .orderstatsres { margin-top: 15px; }
 .PmsManagement .roomactionstip[type="delete"] { display:block; }
 .PmsManagement .pricecol { cursor:pointer; }
 .PmsManagement .Confirmed,

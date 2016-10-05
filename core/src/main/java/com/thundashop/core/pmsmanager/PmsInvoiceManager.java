@@ -153,6 +153,45 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
     }
 
+    @Override
+    public PmsOrderStatistics generateStatistics(PmsOrderStatsFilter filter) {
+        List<Order> orders = orderManager.getOrders(null, null, null);
+        List<Order> ordersToUse = new ArrayList();
+        for(Order order : orders) {
+            if(order.testOrder) {
+                continue;
+            }
+            if(filter.paymentMethod != null && !filter.paymentMethod.isEmpty()) {
+                if(order.payment == null) {
+                    continue;
+                }
+                String method = filter.paymentMethod.replace("-", "_");
+                if(!order.payment.paymentType.contains(method)) {
+                    continue;
+                }
+            }
+            
+            if(filter.paymentStatus != null) {
+                if(filter.paymentStatus == -10) {
+                    if(!order.transferredToAccountingSystem) {
+                        continue;
+                    }
+                }
+
+                if(filter.paymentStatus > 0) {
+                    if(order.status != filter.paymentStatus) {
+                        continue;
+                    }
+                }
+            }
+            
+            ordersToUse.add(order);
+        }
+        PmsOrderStatistics stats = new PmsOrderStatistics();
+        stats.createStatistics(ordersToUse, filter);
+        return stats;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;

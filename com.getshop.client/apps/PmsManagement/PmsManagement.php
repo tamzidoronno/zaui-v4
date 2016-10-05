@@ -120,6 +120,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     
+    public function loadOrderStats() {
+        $this->includefile("orderstatsresult");
+    }
+    
     public function loadOrderInfoOnBooking() {
          $states = array();
         $states['0'] = "All";

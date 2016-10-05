@@ -68,7 +68,7 @@ $searchtypes['orderstats'] = "Order statistics";
     <span gstype="submit" class="pmsbutton addGroupOptions">Search</span>
     <br><br>
 <?php
-echo "<div style='text-align:left;'>";
+echo "<div style='text-align:left;' class='roomfilter'>";
 $types = $this->getTypes();
 
 if($config->fastCheckIn) {
@@ -97,10 +97,9 @@ if($this->isIncludeDeleted()) {
 echo "<input type='checkbox' gstype='clicksubmitforce' method='groupByBooking' gsname='id' gsvalue='' $checked> Group by booking ";
 echo "<input type='checkbox' gstype='clicksubmitforce' method='includeDeleted' gsname='incdelete' $incDeleted class='clicksubmitcheckbox'> Include deleted";
 echo "</div>";
+echo "<br>";
 echo "</div>";
 
-
-echo "<br>";
 $this->includeManagementViewResult();
  ?>
 

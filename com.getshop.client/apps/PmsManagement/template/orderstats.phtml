@@ -1,1 +1,50 @@
-stats built for orders.
+<?php
+$states = \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager::getOrderStatuses();
+
+?>
+<style>
+    .PmsManagement .booking_options .roomfilter { display:none; }
+</style>
+<hr>
+<div class='statsorderfilter'>
+    <select gsname='paymentmethod'>
+        <option value="">All payment methods</option>
+        <? 
+        $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        foreach ($paymentMethods as $key => $method) {
+            $selected = $this->getConfigurationSetting("defaultPaymentMethod") == $method->id ? "SELECTED" : "";
+            ?>
+            <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $method->appName; ?></option>
+            <?php
+         }
+        ?>
+    </select>
+    <select gsname='paymentstatus'>
+        <option value="">All statuses</option>
+        <?
+        $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        foreach ($states as $id => $status) {
+            ?>
+            <option value="<? echo $id; ?>"><? echo $status; ?></option>
+            <?php
+         }
+        ?>
+        <option value="-10">Everything transferred to accounting</option>
+    </select>
+    <select gsname='priceType'>
+        <option value="inctaxes">Prices inc taxes</option>
+        <option value="extaxes">Prices ex tases</option>
+    </select>
+    <select gsname='viewtype'>
+        <option value="dayregistered">Display as day registered</option>
+        <option value="dayslept">Display as day spent</option>
+        <option value="daypaid">Display as day paid</option>
+    </select>
+
+    <input type='button' value='Load data' style='float:right;' class='loadorderstatistics'>
+</div>
+<div class='orderstatsres'>
+    <script>
+        $('.loadorderstatistics').click();
+    </script>
+</div>

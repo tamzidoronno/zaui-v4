@@ -9,6 +9,20 @@ class OrderManager extends GSTableCommon implements \Application {
         
     }
 
+    public static function getOrderStatuses() {
+        $states[1] = "Created";
+        $states[2] = "Waiting for payment";
+        $states[3] = "Payment failed";
+        $states[4] = "Completed";
+        $states[5] = "Canceled";
+        $states[6] = "Sent";
+        $states[7] = "Payment completed";
+        $states[8] = "Collection failed";
+        $states[9] = "Need collecting";
+        $states[10] = "Send to invoice";
+        return $states;
+    }
+    
     public function getName() {
         return $this->__f("OrderManager");
     }

@@ -1804,5 +1804,26 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     }
 
+    /**
+     * 
+     * @return \core_pmsmanager_PmsOrderStatsFilter
+     */
+    public function getOrderStatsFilter() {
+        $filter = new \core_pmsmanager_PmsOrderStatsFilter();
+        if(isset($_POST['data']['paymentmethod'])) {
+            $filter->paymentMethod = $_POST['data']['paymentmethod'];
+            $filter->paymentStatus = $_POST['data']['paymentstatus'];
+            $filter->displayType = $_POST['data']['viewtype'];
+            $filter->priceType = $_POST['data']['priceType'];
+            $_SESSION['pmsorderstatsfilter'] = serialize($filter);
+        } elseif(isset($_SESSION['pmsorderstatsfilter'])) {
+            $filter = unserialize($_SESSION['pmsorderstatsfilter']);
+        }
+        $filter->start = $this->getSelectedFilter()->startDate;
+        $filter->end = $this->getSelectedFilter()->endDate;
+        return $filter;
+        
+    }
+
 }
 ?>

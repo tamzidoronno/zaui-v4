@@ -18,6 +18,15 @@ public class PmsOrderStatistics implements Serializable  {
     }
     
     public void createStatistics(List<Order> ordersToUse, PmsOrderStatsFilter filter) {
+        for(Order test : ordersToUse) {
+            for(CartItem item : test.cart.getItems()) {
+                if(item.startDate == null || item.endDate == null) {
+                    if(item.getProduct().name.contains("Dobbeltrom")) {
+                        System.out.println("Fuck missing date: " + item.getCartItemId() + " : " + test.rowCreatedDate + " : " + item.getCount() + " - " + item.getProduct().name + " - " + item.getProduct().externalReferenceId + " - " + item.startDate + " - " + item.endDate + " - " + test.incrementOrderId);
+                    }
+                }
+            }
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.start);
         while(true) {
@@ -54,9 +63,47 @@ public class PmsOrderStatistics implements Serializable  {
                     priceInc.put(item.getProduct().id, inc);
                     priceEx.put(item.getProduct().id, ex);
                 }
+            } else if(filter.displayType.equals("firstdayslept")) {
+                for(CartItem item : order.cart.getItems()) {
+                    if(!item.startsOnDate(cal.getTime(), order.rowCreatedDate)) {
+                        continue;
+                    }
+                    Double inc = priceInc.get(item.getProduct().id);
+                    Double ex = priceEx.get(item.getProduct().id);
+                    
+                    if(inc == null) { 
+                        inc = 0.0;
+                    }
+                    if(ex == null) {
+                        ex = 0.0;
+                    }
+                    inc += (item.getProduct().price * item.getCount());
+                    ex += (item.getProduct().priceExTaxes * item.getCount());
+                    
+                    priceInc.put(item.getProduct().id, inc);
+                    priceEx.put(item.getProduct().id, ex);
+                }
             } else if(filter.displayType.equals("dayslept")) {
             } else if(filter.displayType.equals("daypaid")) {
-                
+                if(!order.paidOnDay(cal.getTime())) {
+                    continue;
+                }
+                for(CartItem item : order.cart.getItems()) {
+                    Double inc = priceInc.get(item.getProduct().id);
+                    Double ex = priceEx.get(item.getProduct().id);
+                    
+                    if(inc == null) {
+                        inc = 0.0;
+                    }
+                    if(ex == null) {
+                        ex = 0.0;
+                    }
+                    inc += (item.getProduct().price * item.getCount());
+                    ex += (item.getProduct().priceExTaxes * item.getCount());
+                    
+                    priceInc.put(item.getProduct().id, inc);
+                    priceEx.put(item.getProduct().id, ex);
+                }
             }
         }
         

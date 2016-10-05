@@ -131,6 +131,22 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return false;
     }
+    
+    public boolean paidOnDay(Date time) {
+        if(paymentDate == null) {
+            return false;
+        }
+        Calendar createdCal = Calendar.getInstance();
+        createdCal.setTime(paymentDate);
+        Calendar timeCal = Calendar.getInstance();
+        timeCal.setTime(time);
+        
+        if((createdCal.get(Calendar.YEAR) == timeCal.get(Calendar.YEAR)) && 
+            (createdCal.get(Calendar.DAY_OF_YEAR) == timeCal.get(Calendar.DAY_OF_YEAR))) {
+            return true;
+        }
+        return false;
+    }
 
     public void doFinalize() {
         if(cart == null || cart.getItems() == null) {

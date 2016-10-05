@@ -17,6 +17,7 @@
 .PmsManagement .orderstatsres { margin-top: 15px; }
 .PmsManagement .roomactionstip[type="delete"] { display:block; }
 .PmsManagement .pricecol { cursor:pointer; }
+.PmsManagement tr.compressed td { padding: 2px 6px 2px 12px; }
 .PmsManagement .Confirmed,
 .PmsManagement .active,
 .PmsManagement .confirmed { color:green; }

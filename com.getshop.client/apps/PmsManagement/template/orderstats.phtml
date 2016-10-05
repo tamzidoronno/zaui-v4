@@ -1,7 +1,20 @@
 <?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $states = \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager::getOrderStatuses();
+$states[-10] = "Everything transferred to accounting";
+$filter = $this->getOrderStatsFilter();
+$periodeTypes = array();
+$periodeTypes['dayregistered'] = "Display as day registered";
+$periodeTypes['dayslept'] = "Display as day slept";
+$periodeTypes['firstdayslept'] = "Display as first day slept";
+$periodeTypes['daypaid'] = "Display as day paid";
+
+$pricetypes = array();
+$pricetypes['inctaxes'] = "Prices inc taxes";
+$pricetypes['extaxes'] = "Prices ex taxes";
 
 ?>
+
 <style>
     .PmsManagement .booking_options .roomfilter { display:none; }
 </style>
@@ -12,7 +25,7 @@ $states = \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager::getOrderStatuse
         <? 
         $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
         foreach ($paymentMethods as $key => $method) {
-            $selected = $this->getConfigurationSetting("defaultPaymentMethod") == $method->id ? "SELECTED" : "";
+            $selected = $filter->paymentMethod == $method->id ? "SELECTED" : "";
             ?>
             <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $method->appName; ?></option>
             <?php
@@ -24,21 +37,28 @@ $states = \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager::getOrderStatuse
         <?
         $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
         foreach ($states as $id => $status) {
+            $selected = $filter->paymentStatus == $id ? "SELECTED" : "";
             ?>
-            <option value="<? echo $id; ?>"><? echo $status; ?></option>
+            <option value="<? echo $id; ?>" <?php echo $selected; ?>><? echo $status; ?></option>
             <?php
          }
         ?>
-        <option value="-10">Everything transferred to accounting</option>
     </select>
     <select gsname='priceType'>
-        <option value="inctaxes">Prices inc taxes</option>
-        <option value="extaxes">Prices ex tases</option>
+        <?php
+        foreach($pricetypes as $id => $type) {
+            $selected = $filter->priceType == $id ? "SELECTED" : "";
+            echo "<option value='$id' $selected>$type</option>";
+        }
+        ?>
     </select>
     <select gsname='viewtype'>
-        <option value="dayregistered">Display as day registered</option>
-        <option value="dayslept">Display as day spent</option>
-        <option value="daypaid">Display as day paid</option>
+        <?php
+        foreach($periodeTypes as $type => $name) {
+            $selected = $filter->displayType == $type ? "SELECTED" : "";
+            echo "<option value='$type' $selected>$name</option>";
+        }
+        ?>
     </select>
 
     <input type='button' value='Load data' style='float:right;' class='loadorderstatistics'>

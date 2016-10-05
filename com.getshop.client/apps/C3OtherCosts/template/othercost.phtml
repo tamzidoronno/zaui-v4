@@ -1,0 +1,48 @@
+<?
+/* @var $this ns_fe5ceb57_c8ea_4032_a5e2_04b8b86dc38c\C3OtherCosts */
+$otherCostObject = null;
+
+if ($this->getModalVariable("otherid")) {
+    $otherCostObject = $this->getApi()->getC3Manager()->getOtherCost($this->getModalVariable("otherid"));
+}
+
+
+$from = $otherCostObject ? date('d.m.Y', strtotime($otherCostObject->from)) : "";
+$to = $otherCostObject ? date('d.m.Y', strtotime($otherCostObject->to)) : "";
+$cost = $otherCostObject ? $otherCostObject->cost : "";
+$type = $otherCostObject ? $otherCostObject->type : "";
+$comment = $otherCostObject ? $otherCostObject->comment : "";
+?>
+
+<div>
+    <h1>Andre kostnader</h1>
+    <div gstype='form' method='saveCost'>
+        Periode:
+        <div class='gserrorfield' id='errorMessage'></div>
+        <br/><input class='gsniceinput1' type='text' gsname='from' id='from' value='<? echo $from; ?>'/> - <input class='gsniceinput1' type='text' gsname='to' id='to' value='<? echo $to; ?>'/> 
+        <br/>
+        <br/>Type:
+        <br/>
+        <select class='gsniceselect1' gsname='type'  style="width: 100%; box-sizing: border-box;">
+            <option value='travel' <? echo $type == "travel" ? "selected='true'" : ""; ?>>Reise</option>
+            <option value='meeting' <? echo $type == "meeting" ? "selected='true'" : ""; ?>>Møter</option>
+            <option value='other' <? echo $type == "other" ? "selected='true'" : ""; ?>>Andre driftskostnader</option>
+        </select>
+        <br/>
+        <br/> Kostnad (Kr):
+        <div class='gserrorfield' id='errorMessageTimer'></div>
+        <br/><input type='text' gsname='cost' class='gsniceinput1'  style="width: 100%; box-sizing: border-box;" value="<? echo $cost; ?>"/>
+        
+        <br/>
+        <br/> Kommentar:
+        <br/><input type='text' gsname='comment' class='gsniceinput1' style="width: 100%; box-sizing: border-box;" value='<? echo $comment; ?>'/>
+        <br/>
+        
+        <br/> <div class='shop_button' gstype='submit'> Lagre </div>
+    </div>
+
+    <script>
+        $('#from').datepicker({dateFormat: "dd.mm.yy"});
+        $('#to').datepicker({dateFormat: "dd.mm.yy"});
+    </script>
+</div>

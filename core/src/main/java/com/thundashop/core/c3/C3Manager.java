@@ -7,12 +7,10 @@ package com.thundashop.core.c3;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,6 +34,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     public HashMap<String, C3RoundSum> roundSums = new HashMap();
     public HashMap<String, C3UserMetadata> usersMetaData = new HashMap();
     public HashMap<String, C3ProjectPeriode> periodes = new HashMap();
+    public HashMap<String, C3OtherCosts> otherCosts = new HashMap();
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -66,6 +65,9 @@ public class C3Manager extends ManagerBase implements IC3Manager {
        
         if (data instanceof C3ProjectPeriode)
             periodes.put(data.id, ((C3ProjectPeriode)data));
+        
+        if (data instanceof C3OtherCosts)
+            otherCosts.put(data.id, ((C3OtherCosts)data));
     }    
     
     @Override
@@ -123,7 +125,20 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     @Override
     public List<C3Project> getProjects() {
         projects.values().stream().forEach(project -> finalizeProject(project));
-        return new ArrayList(projects.values());
+        
+        List<C3Project> retList = new ArrayList(projects.values());
+        Collections.sort(retList, (o1, o2) -> {
+            try {
+                Integer projectnumber1 = Integer.parseInt(o1.projectNumber);
+                Integer projectnumber2 = Integer.parseInt(o2.projectNumber);
+                
+                return projectnumber1.compareTo(projectnumber2);
+            } catch (Exception ex) {
+                return 0;
+            }
+        });
+        
+        return retList;
     }
 
     @Override
@@ -289,13 +304,15 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 .orElse(null);
     }
 
-    @Override
     public List<C3Hour> getHoursForCurrentUser(String projectId, Date from, Date to ) {
-        return hours.values().stream()
+        List<C3Hour> retHours = hours.values().stream()
                 .filter(hour -> hour.registeredByUserId != null && hour.registeredByUserId.equals(getSession().currentUser.id))
                 .filter(hour -> hour.projectId != null && hour.projectId.equals(projectId))
                 .filter(hour -> hour.within(from, to))
                 .collect(Collectors.toList());
+        
+        retHours.stream().forEach(o -> finalize(o));
+        return retHours;
     }
 
     @Override
@@ -423,10 +440,11 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     }
 
     @Override
-    public String canAdd(C3Hour hour) {
+    public String canAdd(ProjectCost hour) {
         C3Project project = getProject(hour.projectId);
         
-        if (!hour.within(project.startDate, project.endDate)) {
+        
+        if (!hour.completlyWithin(project.startDate, project.endDate)) {
             return "PROJECT_PERIODE_INVALIDE";
         }
         
@@ -434,7 +452,11 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             return "OUTSIDE_OF_OPEN_PERIODE";
         }
         
-        if (!hour.within(project.currentProjectPeriode.from, project.currentProjectPeriode.to)) {
+        System.out.println("Current periode: " + project.currentProjectPeriode.from + " - " + project.currentProjectPeriode.to);
+        System.out.println(hour.from + " - " + hour.to);
+        
+        
+        if (!hour.completlyWithin(project.currentProjectPeriode.from, project.currentProjectPeriode.to)) {
             return "OUTSIDE_OF_OPEN_PERIODE";
         }
         
@@ -450,5 +472,65 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 .collect(Collectors.toList());
         
         return retPeriodes;
+    }
+
+    @Override
+    public C3OtherCosts saveOtherCosts(C3OtherCosts otherCost) {
+        
+        C3Project project = projects.get(otherCost.projectId);
+        if (project == null) {
+            throw new NullPointerException("Can not add hours to a project that does not exists");
+        }
+        
+        if (!canAdd(otherCost).isEmpty()) {
+            throw new IllegalAccessError("Tried to add hours to a project outside of leagal hours");
+        }
+        
+        otherCost.registeredByUserId = getSession().currentUser.id;
+        saveObject(otherCost);
+        otherCosts.put(otherCost.id, otherCost);
+        finalize(otherCost);
+        return otherCost;
+    }
+
+    private void finalize(C3OtherCosts otherCost) {
+        // TODO.
+    }
+
+    @Override
+    public List<ProjectCost> getProjectCostsForCurrentUser(String projectId, Date from, Date to) {
+        List<ProjectCost> projectCosts = new ArrayList();
+        
+        projectCosts.addAll(getHoursForCurrentUser(projectId, from, to));
+        projectCosts.addAll(getOtherCostsForCurrentUser(projectId, from, to));
+        
+        Collections.sort(projectCosts, (o1, o2) -> {
+            return o1.from.compareTo(o2.from);
+        });
+        
+        return projectCosts;
+    }
+
+    private List<ProjectCost> getOtherCostsForCurrentUser(String projectId, Date from, Date to) {
+        return otherCosts.values().stream()
+            .filter(hour -> hour.registeredByUserId != null && hour.registeredByUserId.equals(getSession().currentUser.id))
+            .filter(hour -> hour.projectId != null && hour.projectId.equals(projectId))
+            .filter(hour -> hour.within(from, to))
+            .collect(Collectors.toList());
+    }
+
+    private void finalize(C3Hour o) {
+        C3TimeRate timeRate = getTimeRate(o.registeredByUserId);
+        
+        if (timeRate != null) {
+            o.cost = o.hours * timeRate.rate;
+        }
+    }
+
+    @Override
+    public C3OtherCosts getOtherCost(String otherCostId) {
+        C3OtherCosts otherCost = otherCosts.get(otherCostId);
+        finalize(otherCost);
+        return otherCost;
     }
 }

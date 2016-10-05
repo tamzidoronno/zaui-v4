@@ -1,7 +1,7 @@
 <?
 /* @var $this ns_74d458f4_3203_4488_813d_65741a0213c9\C3Projects */
 $project = $this->getApi()->getC3Manager()->getProject($_POST['value']);
-$companies = $this->getApi()->getC3Manager()->getProjects();
+$companies = $this->getApi()->getUserManager()->getAllCompanies();
 ?>
 
 <div class='gss_settings_header'>

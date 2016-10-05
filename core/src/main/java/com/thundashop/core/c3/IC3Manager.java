@@ -73,8 +73,6 @@ interface IC3Manager {
     
     public UserProjectAccess getAccessListByProjectId(String projectId);
     
-    public List<C3Hour> getHoursForCurrentUser(String projectId, Date from, Date to);
-    
     public List<C3TimeRate> getTimeRates();
     
     public C3Hour getHourById(String hourId);
@@ -102,7 +100,13 @@ interface IC3Manager {
     @Administrator
     public void setActivePeriode(String periodeId);
     
-    public String canAdd(C3Hour hour);
+    public String canAdd(ProjectCost hour);
     
     public List<C3ProjectPeriode> getPeriodesForProject(String projectId);
+    
+    public C3OtherCosts saveOtherCosts(C3OtherCosts otherCost);
+    
+    public List<ProjectCost> getProjectCostsForCurrentUser(String projectId, Date from, Date to);
+    
+    public C3OtherCosts getOtherCost(String otherCostId);
 }

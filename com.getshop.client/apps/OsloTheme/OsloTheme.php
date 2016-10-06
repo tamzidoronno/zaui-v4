@@ -18,9 +18,15 @@ class OsloTheme extends \ThemeApplication implements \Application {
         ?>
         <style>
             .gsarea[area="header"],.gsarea[area="footer"] { display: none; }
-            .gsarea[area="body"] .gs_page_width { box-shadow: none; }
             .gs_page_width { max-width: 1024px; width: inherit; }
-            body { 
+            @media only all and (min-width: 1000px) {
+                .gs_page_width {
+                    -webkit-box-shadow: -1px 0px 15px 0px rgba(0,0,0,0.82);
+                    -moz-box-shadow: -1px 0px 15px 0px rgba(0,0,0,0.82);
+                    box-shadow: -1px 0px 15px 0px rgba(0,0,0,0.82);
+                }
+            }
+            body {
                 background-color: #fff;
             }
         </style>

@@ -328,11 +328,12 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     
-    
+    @Administrator
     public Coupon getCoupon(String couponCode) {
         return coupons.get(couponCode);
     }
 
+    @Administrator
     public Coupon getCouponById(String couponId) {
         for(Coupon cop :getCoupons()) {
             if(cop.id.equals(couponId)) {

@@ -180,6 +180,17 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         
         $notifications->defaultMessage->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['defaultmessage'];
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $notifications);
+        
+        //Save coupons.
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "coupon_")) {
+                $couponid = str_replace("coupon_", "", $key);
+                $coupon = $this->getApi()->getCartManager()->getCouponById($couponid);
+                $coupon->channel = $val;
+                $this->getApi()->getCartManager()->addCoupon($coupon);
+            }
+        }
+        
     }
     
     function endsWith($haystack, $needle) {

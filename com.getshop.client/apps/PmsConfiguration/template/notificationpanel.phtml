@@ -4,7 +4,6 @@ $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this
 /* @var $factory Factory */
 $factory = $this->getFactory();
 $langauge = $factory->getCurrentLanguage();
-$channels = (array)$this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedName());
 
 $hasEventCalendar = false;
 $instances = $this->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("27e174dc-b08c-4bf7-8179-9ea8379c91da");
@@ -76,15 +75,6 @@ $whenToPay[2] = "On confirmation";
 $whenToPay[3] = "At check in date";
 $whenToPay[4] = "After stay";
 
-$days = array();
-$days[1] = "Monday";
-$days[2] = "Tuesday";
-$days[3] = "Wednesday";
-$days[4] = "Thursday";
-$days[5] = "Friday";
-$days[6] = "Saturday";
-$days[7] = "Sunday";
-
 $channelConfig = $config->channelConfiguration;
 ?>
 
@@ -102,6 +92,8 @@ $channelConfig = $config->channelConfiguration;
 <span class="changeview pmsbutton" data-panel='addons'>Addons</span>
 <span class="changeview pmsbutton" data-panel='emails_to_notify'>Emails to notify</span>
 <span class="changeview pmsbutton" data-panel='budgets'>Bugdets</span>
+<span class="changeview pmsbutton" data-panel='discounts'>Discounts</span>
+<span class="changeview pmsbutton" data-panel='channels'>Channels</span>
 <div style='padding-top: 20px;'>
     Variables: {code},
     {roomName}, 
@@ -152,6 +144,8 @@ $channelConfig = $config->channelConfiguration;
         ?>
     </div>
     
+    <div class='discounts notificationpanel'><?php $this->includeFile("discounts"); ?></div>
+    <div class='channels notificationpanel'><?php $this->includeFile("channelconfiguration"); ?></div>
     <div class='email_notifcations notificationpanel'>
         
         <br>
@@ -568,81 +562,7 @@ $channelConfig = $config->channelConfiguration;
             </span>
             Sms name
         </div>
-        
-        <?php if($this->isHotel($notificationSettings)) { ?>
-             <h2>
-                 Cleaning configuration
-             </h2>
-             <div class='configrow'>
-                 <span class='configentry'>
-                     <input type='number' style='width: 40px;' gsname='cleaningInterval' value='<? echo $notificationSettings->cleaningInterval; ?>'>
-                 </span>
-                 Cleaning interval default (0, disabled)
-             </div>
-             <div class='configrow'>
-                 <span class='configentry'>
-                     <input type='number' style='width: 40px;' gsname='numberOfCheckoutCleanings' value='<? echo $notificationSettings->numberOfCheckoutCleanings; ?>'>
-                 </span>
-                 Max number of checkout cleaning possible to do for a day (0, disabled)
-             </div>
-             <div class='configrow'>
-                 <span class='configentry'>
-                     <input type='number' style='width: 40px;' gsname='numberOfIntervalCleaning' value='<? echo $notificationSettings->numberOfIntervalCleaning; ?>'>
-                 </span>
-                 Max number of interval cleaning possible to do for a day (0, disabled)
-             </div>
-             <?php for($i=1;$i<=7;$i++) { ?>
-                 <div class='configrow'>
-                     <span class='configentry'>
-                     <?
-                         $checked = "";
-                         if(isset($notificationSettings->cleaningDays->{$i}) && $notificationSettings->cleaningDays->{$i}) {
-                             $checked = "CHECKED";
-                         }
-                     ?>
-                     <input type='checkbox' gsname='cleaningDays_<?php echo $i; ?>' <? echo $checked; ?>>
-                     </span>
-                     Cleaning on <?php echo $days[$i]; ?>
-                 </div>
-             <?php } ?>
-             <div class='configrow'>
-                 <span class='configentry'>
-                 <?
-                     $checked = "";
-                     if(isset($notificationSettings->cleaningNextDay) && $notificationSettings->cleaningNextDay) {
-                         $checked = "CHECKED";
-                     }
-                 ?>
-                 <input type='checkbox' gsname='cleaningNextDay' <? echo $checked; ?>>
-                 </span>
-                 Cleaning is done the day after the stay
-             </div>
-             <div class='configrow'>
-                 <span class='configentry'>
-                 <?
-                     $checked = "";
-                     if(isset($notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) && $notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) {
-                         $checked = "CHECKED";
-                     }
-                 ?>
-                 <input type='checkbox' gsname='unsetCleaningIfJustSetWhenChangingRooms' <? echo $checked; ?>>
-                 </span>
-                 Unset rooms marked as dirty when a room is changed within one our (recommended to be switched off)
-             </div>
-             <div class='configrow'>
-                 <span class='configentry'>
-                 <?
-                     $checked = "";
-                     if(isset($notificationSettings->automaticallyCloseRoomIfDirtySameDay) && $notificationSettings->automaticallyCloseRoomIfDirtySameDay) {
-                         $checked = "CHECKED";
-                     }
-                 ?>
-                 <input type='checkbox' gsname='automaticallyCloseRoomIfDirtySameDay' <? echo $checked; ?>>
-                 </span>
-                 If room where not cleaned during day hours, mark the room as unavailable for the rest of the day
-             </div>
-        <? } ?>
-        
+       
         <br><br>
         <h2>
             Payment and order creations
@@ -957,52 +877,7 @@ $channelConfig = $config->channelConfiguration;
             </span>
             Email to notify to
         </div>
-        <h2>Channel configuration, <span class='addnewchannel' style='color:blue; cursor:pointer;'>add channel</span></h2>
-        <?php if(sizeof($channels) > 0 && $this->isHotel($notificationSettings)) { ?>
-            <?php foreach($channels as $chan => $channel) { ?>
-                <div class='configrow'>
-                    <span class='configentry'>
-                         <input type='text' gsname='channel_translation_<?php echo $chan; ?>' value='<? echo $channel; ?>'>
-                    </span>
-                    <i class='fa fa-trash-o removeChannel' style='cursor:pointer' channel='<?php echo $chan; ?>'></i> <?php echo $chan; ?>
-                    <?php
-                        if($channelConfig->{$chan}->ignoreUnpaidForAccess) {
-                            echo ", does not need payment (<span gstype='clicksubmit' method='togglePaymentOnChannel' gsname='id' gsvalue='$chan'>toggle</span>)";
-                        } else {
-                            echo ", need payment (<span gstype='clicksubmit' method='togglePaymentOnChannel' gsname='id' gsvalue='$chan'>toggle</span>)";
-                        }
-                        if($channelConfig->{$chan}->displayOnBookingProcess) {
-                            echo ", is visible booking process (<span gstype='clicksubmit' method='toggleVisibleInBooking' gsname='id' gsvalue='$chan'>toggle</span>)";
-                        } else {
-                            echo ", is not visible booking process (<span gstype='clicksubmit' method='toggleVisibleInBooking' gsname='id' gsvalue='$chan'>toggle</span>)";
-                        }
-                    ?>
-                </div>
-            <? } ?>
-            
-            <h2>Channel preferred payment methods</h2>
-            <?php 
-            $payment = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-            foreach($channels as $chan => $channel) { ?>
-                <div class='configrow'>
-                    <span class='configentry'>
-                        <select gsname='channel_payment_<?php echo $chan; ?>'>
-                            <?php
-                            foreach($payment as $test) {
-                                $selected = "";
-                                if($notificationSettings->channelConfiguration->{$chan}->preferredPaymentType == $test->id) {
-                                    $selected = "SELECTED";
-                                }
-                                echo "<option value='".$test->id."' $selected>" . $test->appName . "</option>";
-                            }
-                            ?>
-                        </select>
-                    </span>
-                    <?php echo $chan; ?>
-                </div>
-            <? } ?>
         
-        <? } ?>
         <?php if($this->isHotel($notificationSettings)) { ?>
             <h2>Wubook settings</h2>
             <br><br>

@@ -1,0 +1,52 @@
+<?php
+$channels = (array)$this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedName());
+/* @var $this \ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+$notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$channelConfig = $notificationSettings->channelConfiguration;
+
+if(sizeof($channels) > 0 && $this->isHotel($notificationSettings)) { ?>
+    <h2>Channel configuration, <span class='addnewchannel' style='color:blue; cursor:pointer;'>add channel</span></h2>
+    <?php foreach($channels as $chan => $channel) { ?>
+        <div class='configrow'>
+            <span class='configentry'>
+                 <input type='text' gsname='channel_translation_<?php echo $chan; ?>' value='<? echo $channel; ?>'>
+            </span>
+            <i class='fa fa-trash-o removeChannel' style='cursor:pointer' channel='<?php echo $chan; ?>'></i> <?php echo $chan; ?>
+            <?php
+                if($channelConfig->{$chan}->ignoreUnpaidForAccess) {
+                    echo ", does not need payment (<span gstype='clicksubmit' method='togglePaymentOnChannel' gsname='id' gsvalue='$chan'>toggle</span>)";
+                } else {
+                    echo ", need payment (<span gstype='clicksubmit' method='togglePaymentOnChannel' gsname='id' gsvalue='$chan'>toggle</span>)";
+                }
+                if($channelConfig->{$chan}->displayOnBookingProcess) {
+                    echo ", is visible booking process (<span gstype='clicksubmit' method='toggleVisibleInBooking' gsname='id' gsvalue='$chan'>toggle</span>)";
+                } else {
+                    echo ", is not visible booking process (<span gstype='clicksubmit' method='toggleVisibleInBooking' gsname='id' gsvalue='$chan'>toggle</span>)";
+                }
+            ?>
+        </div>
+    <? } ?>
+    <br><br>
+    <h2>Channel preferred payment methods</h2>
+    <?php 
+    $payment = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+    foreach($channels as $chan => $channel) { ?>
+        <div class='configrow'>
+            <span class='configentry'>
+                <select gsname='channel_payment_<?php echo $chan; ?>'>
+                    <?php
+                    foreach($payment as $test) {
+                        $selected = "";
+                        if($notificationSettings->channelConfiguration->{$chan}->preferredPaymentType == $test->id) {
+                            $selected = "SELECTED";
+                        }
+                        echo "<option value='".$test->id."' $selected>" . $test->appName . "</option>";
+                    }
+                    ?>
+                </select>
+            </span>
+            <?php echo $chan; ?>
+        </div>
+    <? } ?>
+
+<? } ?>

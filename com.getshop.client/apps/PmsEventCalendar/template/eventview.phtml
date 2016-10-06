@@ -56,12 +56,12 @@ if($fileid && !$event->imageId) {
     $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
 }
 
+echo nl2br($event->description);
+echo "<div style='clear:both;'></div>";
+
 if($event->imageId) {
     echo "<img id='imgtodisplay' src='/displayImage.php?id=" . $event->imageId . "' style='width: 100%;'>";
 }
-
-echo nl2br($event->description);
-echo "<div style='clear:both;'></div>";
 if(sizeof($event->lenker) > 0) {
     echo "<h2>Lenker</h2>";
     foreach($event->lenker as $link) {

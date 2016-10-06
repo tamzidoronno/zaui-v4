@@ -5,7 +5,7 @@ $states[-10] = "Everything transferred to accounting";
 $filter = $this->getOrderStatsFilter();
 $periodeTypes = array();
 $periodeTypes['dayregistered'] = "Display as day registered";
-//$periodeTypes['dayslept'] = "Display as day slept";
+$periodeTypes['dayslept'] = "Display as day slept";
 $periodeTypes['firstdayslept'] = "Display as first day slept";
 $periodeTypes['daypaid'] = "Display as day paid";
 
@@ -67,4 +67,7 @@ $pricetypes['extaxes'] = "Prices ex taxes";
     <script>
         $('.loadorderstatistics').click();
     </script>
+    <center style='font-size: 50px;'>
+        <i class='fa fa-spin fa-spinner'></i>
+    </center>
 </div>

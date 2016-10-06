@@ -34,13 +34,13 @@ public class ProjectCost extends DataCommon {
     }
     
     
-    public boolean completlyWithin(Date start, Date end) {
-        if (start == null || end == null || this.from == null || this.to == null) {
+    public boolean completlyWithin(Date startDate, Date endDate) {
+        Date start = this.from;
+        Date end = this.to;
+        
+        if (start == null || end == null || startDate == null || endDate == null) {
             return false;
         }
-        
-        Date startDate = this.from;
-        Date endDate = this.to;
         
         if (startDate.equals(start) && endDate.equals(end))
             return true;

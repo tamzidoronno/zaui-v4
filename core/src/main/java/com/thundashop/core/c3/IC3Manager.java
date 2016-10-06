@@ -109,4 +109,15 @@ interface IC3Manager {
     public List<ProjectCost> getProjectCostsForCurrentUser(String projectId, Date from, Date to);
     
     public C3OtherCosts getOtherCost(String otherCostId);
+    
+    public List<UserProjectAccess> getAcceListForUser(String userId);
+    
+    @Administrator
+    public void addForskningsUserPeriode(C3ForskningsUserPeriode periode);
+    
+    @Administrator
+    public List<C3ForskningsUserPeriode> getForskningsPeriodesForUser(String userId);
+    
+    @Administrator
+    public void deleteForskningsUserPeriode(String periodeId);
 }

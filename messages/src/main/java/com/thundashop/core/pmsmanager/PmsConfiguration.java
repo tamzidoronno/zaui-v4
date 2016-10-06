@@ -1,5 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,7 +89,9 @@ public class PmsConfiguration extends DataCommon {
     
     public String locktype = "";
     public String arxHostname = "";
+    @Administrator
     public String arxUsername = "";
+    @Administrator
     public String arxPassword = "";
     public String arxCardFormat = "";
     public String arxCardFormatsAvailable = "";
@@ -113,6 +116,7 @@ public class PmsConfiguration extends DataCommon {
     
     /* Wubook settings */
     public String wubookusername = "";
+    @Administrator
     public String wubookpassword = "";
     public String wubookproviderkey = "";
     public String wubooklcode = "";

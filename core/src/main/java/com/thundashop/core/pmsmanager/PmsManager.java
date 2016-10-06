@@ -239,8 +239,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 Coupon cop = cartManager.getCoupon(booking.couponCode);
                 if(cop == null) {
                     booking.couponCode = "";
+                } else if(cop.channel != null && !cop.channel.isEmpty()) {
+                    booking.channel = cop.channel;
                 }
             }
+        }
+        
+        if(booking.couponCode != null && booking.couponCode.contains(":")) {
+            booking.channel = booking.couponCode.split(":")[0];
         }
 
         booking.priceType = prices.defaultPriceType;

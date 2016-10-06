@@ -61,6 +61,7 @@ app.PmsManagement = {
     loadorderstatistics : function() {
         var data = thundashop.framework.createGsArgs($('.statsorderfilter'));
         var event = thundashop.Ajax.createEvent('','loadOrderStats',$(this), data);
+        $('.orderstatsres').html("<center style='font-size: 50px;'><i class='fa fa-spin fa-spinner'></i></center>");
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.orderstatsres').html(res);
         });

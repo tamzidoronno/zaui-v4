@@ -106,6 +106,15 @@ public interface ICartManager {
     public void addCoupon(Coupon coupon) throws ErrorException;
     
     /**
+     * Get a speicific coupon.
+     */
+    @Administrator
+    public Coupon getCoupon(String couponCode);
+    
+    @Administrator
+    public Coupon getCouponById(String couponId);
+    
+    /**
      * Apply the coupon to the cart.
      */
     public void applyCouponToCurrentCart(String code) throws ErrorException;

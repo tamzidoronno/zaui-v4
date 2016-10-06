@@ -238,7 +238,14 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
     public function includeCouponSystem() {
         $coupon = $this->getApi()->getStoreApplicationPool()->getApplication("90cd1330-2815-11e3-8224-0800200c9a66");
         $type = $this->getCurrentBooking()->discountType;
-        $channels = (array)$this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedName());
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $channelconfigs = $config->channelConfiguration;
+        $channels = array();
+        foreach($channelconfigs as $key => $chan) {
+            if($chan->displayOnBookingProcess) {
+                $channels[$key] = $chan->humanReadableText;
+            }
+        }
         if(!$coupon && sizeof($channels) == 0) {
             return;
         }
@@ -271,29 +278,31 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
             }
             echo "</div>";
         }
-        echo '<div gstype="form" method="addCouponCode">';
-        echo "<div class='discounttype' type='partnership'>";
-        $curSelected = "";
-        $curCode = "";
-        if($this->getCurrentBooking()->discountType == "partnership") {
-            $code = $this->getCurrentBooking()->couponCode;
-            if($code) {
-                $splitted = explode(":", $code);
-                $curSelected = $splitted[0];
-                $curCode = $splitted[1];
+        if(sizeof($channels) > 0) {
+            echo '<div gstype="form" method="addCouponCode">';
+            echo "<div class='discounttype' type='partnership'>";
+            $curSelected = "";
+            $curCode = "";
+            if($this->getCurrentBooking()->discountType == "partnership") {
+                $code = $this->getCurrentBooking()->couponCode;
+                if($code) {
+                    $splitted = explode(":", $code);
+                    $curSelected = $splitted[0];
+                    $curCode = $splitted[1];
+                }
             }
-        }
-        
-        foreach($channels as $chan => $text) {
-            $checked = "";
-            if($curSelected == $chan) {
-                $checked = "CHECKED";
+
+            foreach($channels as $chan => $text) {
+                $checked = "";
+                if($curSelected == $chan) {
+                    $checked = "CHECKED";
+                }
+                echo "<input type='radio' value='$chan' gsname='selectedChannel' name='selectedChannel' $checked> $text<br>";
             }
-            echo "<input type='radio' value='$chan' gsname='selectedChannel' name='selectedChannel' $checked> $text<br>";
+            echo "<input type='txt' class='identificationnumberval' gsname='code' value='$curCode'><input type='button' gstype='submit' value='".$this->__w("Set identification number")."' class='setidentificationNumber'>";
+            echo "</div>";
+            echo "</div>";
         }
-        echo "<input type='txt' class='identificationnumberval' gsname='code' value='$curCode'><input type='button' gstype='submit' value='".$this->__w("Set identification number")."' class='setidentificationNumber'>";
-        echo "</div>";
-        echo "</div>";
         
         if($type) {
             $type = $this->getCurrentBooking()->discountType;

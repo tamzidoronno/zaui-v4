@@ -25,6 +25,17 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
     }
     
+    public function toggleVisibleInBooking() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        foreach($config->channelConfiguration as $key => $chanConfig) {
+            if($key != $_POST['data']['id']) {
+                continue;
+            }
+            $config->channelConfiguration->{$key}->displayOnBookingProcess = !$config->channelConfiguration->{$key}->displayOnBookingProcess;
+        }
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
     public function render() {
         if(!$this->getSelectedName()) {
             echo "Please specify a booking engine first";
@@ -169,6 +180,17 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         
         $notifications->defaultMessage->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['defaultmessage'];
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $notifications);
+        
+        //Save coupons.
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "coupon_")) {
+                $couponid = str_replace("coupon_", "", $key);
+                $coupon = $this->getApi()->getCartManager()->getCouponById($couponid);
+                $coupon->channel = $val;
+                $this->getApi()->getCartManager()->addCoupon($coupon);
+            }
+        }
+        
     }
     
     function endsWith($haystack, $needle) {

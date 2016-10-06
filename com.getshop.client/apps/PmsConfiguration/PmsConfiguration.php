@@ -25,6 +25,17 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
     }
     
+    public function toggleVisibleInBooking() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        foreach($config->channelConfiguration as $key => $chanConfig) {
+            if($key != $_POST['data']['id']) {
+                continue;
+            }
+            $config->channelConfiguration->{$key}->displayOnBookingProcess = !$config->channelConfiguration->{$key}->displayOnBookingProcess;
+        }
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
     public function render() {
         if(!$this->getSelectedName()) {
             echo "Please specify a booking engine first";

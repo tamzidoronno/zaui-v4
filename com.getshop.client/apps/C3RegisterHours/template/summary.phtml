@@ -18,26 +18,55 @@ foreach ($accessList as $access) {
         echo "( Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to)).")";
         echo "<br/>Prosjekt periode: ".date('d.m.Y', strtotime($project->startDate))." - ".date('d.m.Y', strtotime($project->endDate));
         echo "<br/>";
-        $hours = $this->getApi()->getC3Manager()->getHoursForCurrentUser($project->id, $projectPeriodeToShow->from, $projectPeriodeToShow->to);
+        $hours = $this->getApi()->getC3Manager()->getProjectCostsForCurrentUser($project->id, $projectPeriodeToShow->from, $projectPeriodeToShow->to);
         
         if ($hours) {
             $totalHours = 0;
-            echo "<div class='hourrow'><span class='editbutton'></span><span class='fromdate'>Fra</span><span class='todate'>Til</span><span class='hour'>Timer</span></div>";
+            $totalCost = 0;
+            echo "<div class='hourrow'><span class='editbutton'></span><span class='fromdate'>Fra</span><span class='todate'>Til</span><span class='hour'>Timer</span><span class='othercost'>Kr</span><span class='comment'>Kommentar</span></div>";
             
             foreach ($hours as $hour) {
+                
                 $from = date('d.m.Y', strtotime($hour->from)); 
                 $to = date('d.m.Y', strtotime($hour->to));
-                $editButton = "<span hourid='$hour->id' projectid='$project->id' gs_show_modal='hours' class='gs_shop_small_icon fa fa-edit'></span>";
-                $totalHours += $hour->hours;
-                echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'>$hour->hours</span></div>";
+                
+                if ($hour->costType === "hour") {
+                    $editButton = "<span hourid='$hour->id' projectid='$project->id' gs_show_modal='hours' class='gs_shop_small_icon fa fa-edit'></span>";
+                    $totalHours += $hour->hours;
+                    $cost = $hour->cost;
+                    $totalCost += $cost;
+                    echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'>$hour->hours</span><span class='othercost'>$cost</span></div>";
+                }
+                
+                if ($hour->costType === "other") {
+                    $editButton = "<span otherid='$hour->id' projectid='$project->id' gs_show_modal='othercosts' class='gs_shop_small_icon fa fa-edit'></span>";
+                    $cost = $hour->cost;
+                    $type = $hour->type;
+                    
+                    if ($type == "meeting")
+                        $type = "(Møte)";
+                    
+                    if ($type == "travel")
+                        $type = "(Reise)";
+                    
+                    if ($type == "other")
+                        $type = "(Annet)";
+                    
+                    if ($hour->comment) {
+                        $type .= " - ".$hour->comment;
+                    }
+                    
+                    $totalCost += $cost;
+                    echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'></span><span class='othercost'>$cost</span><span class='comment'>$type</span></div>";
+                }
             }
             
-            echo "<div class='hourrow summary'><span class='editbutton'></span><span class='fromdate'></span><span class='todate'></span><span class='hour'>$totalHours</span></div>";
+            echo "<div class='hourrow summary'><span class='editbutton'></span><span class='fromdate'></span><span class='todate'></span><span class='hour'>$totalHours</span><span class='othercost'>$totalCost</span></div>";
         }
         echo "<div class='buttons'>";
             echo "Registrer ny linje: ";
-            echo " <div projectid='$project->id' gs_show_modal='hours' class='shop_button'>Ny timeregistrering</div>";
-            echo " <div class='shop_button'>Andre kostnader</div>";
+            echo " <div projectid='$project->id' gs_show_modal='hours' class='shop_button'>1.1 Ny timeregistrering</div>";
+            echo " <div projectid='$project->id' class='shop_button' gs_show_modal='othercosts'>1.4 Andre kostnader</div>";
         echo "</div>";
     echo "</div>";
 }

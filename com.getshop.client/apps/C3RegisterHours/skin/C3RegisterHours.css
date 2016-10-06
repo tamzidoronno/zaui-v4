@@ -14,6 +14,8 @@
 .C3RegisterHours .hourrow .editbutton { display: inline-block; width: 80px; }
 .C3RegisterHours .hourrow .fromdate { display: inline-block; width: 150px; }
 .C3RegisterHours .hourrow .todate { display: inline-block; width: 150px; }
+.C3RegisterHours .hourrow .hour { display: inline-block; width: 150px; }
+.C3RegisterHours .hourrow .othercost { display: inline-block; width: 150px; }
 
 .C3RegisterHours .hourrow { border-bottom: solid 1px #DDD; padding-bottom: 5px; padding-top: 5px;}
 

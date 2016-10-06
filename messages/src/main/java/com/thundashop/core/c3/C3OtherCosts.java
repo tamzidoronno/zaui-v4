@@ -12,11 +12,9 @@ import java.util.Date;
  *
  * @author ktonder
  */
-class C3OtherCosts extends DataCommon {
-    public Date from;
-    public Date to;
+public class C3OtherCosts extends ProjectCost {
+    public String costType = "other";
+    public String type;
+    public String comment;
     public double cost;
-    public String registeredByUserId;
-    public String workPackageId;
-    public String projectId;
 }

@@ -6,6 +6,17 @@ app.EventUserList = {
         $(document).on('change', '.EventUserList .participationstatus', app.EventUserList.participationStatusChanged);
         $(document).on('mouseenter', '.EventUserList .showspecialinfo', app.EventUserList.showspecialinfo);
         $(document).on('mouseleave', '.EventUserList .showspecialinfo', app.EventUserList.hidespecialinfo);
+        
+        $(document).on('mouseenter', '.EventUserList .companyInfoSpan', app.EventUserList.showExtraCompanyInfo);
+        $(document).on('mouseleave', '.EventUserList .companyInfoSpan', app.EventUserList.hideExtraCompanyInfo);
+    },
+    
+    showExtraCompanyInfo: function() {
+        $(this).find('.companyextrainfo').show();
+    },
+    
+    hideExtraCompanyInfo: function() {
+        $(this).find('.companyextrainfo').hide();
     },
     
     downloadReport: function() {

@@ -60,7 +60,11 @@ $specialInfo = $this->getUserAdditionalInformation($user);
 
     echo $user->fullName;
     if ($company) {
-        echo " - " . $company->name;
+        $companyInfo = "<b>".$this->__f("Company email")."</b>: ".$company->invoiceEmail."<br/>";
+        
+        $companyInfo .= "<br/><b>Owners:</b><br/>";
+        $companyInfo .= $this->getCompanyOwners($company);
+        echo " - <span class='companyInfoSpan'>" . $company->name ." <div class='companyextrainfo'>$companyInfo</div></span>";
     } else {
         echo " - N/A";
     }

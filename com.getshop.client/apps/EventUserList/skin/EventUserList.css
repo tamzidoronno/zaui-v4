@@ -80,3 +80,21 @@
     text-align: center;
     font-size: 20px;
 }
+
+.EventUserList .companyextrainfo {
+    position: absolute;
+    background-color: #FFF;
+    left: 0px;
+    top: 20px;
+    border: solid 1px #DDD;
+    white-space: nowrap;
+    min-width: 200px;
+    padding: 10px;
+    min-height: 100px;
+    display: none;
+    z-index: 1;
+}
+
+.EventUserList .companyInfoSpan {
+    position: relative;
+}

@@ -299,5 +299,21 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         return "";
     }
 
+    public function getCompanyOwners($company) {
+        $users = $this->getApi()->getUserManager()->getUsersByCompanyId($company->id);
+        $owners = "";
+        foreach ($users as $user) {
+            if ($user->isCompanyOwner) {
+                $owners .= $user->fullName." / ".$user->emailAddress . " / " .$user->cellPhone."<br/>";
+            }
+        }
+        
+        if (!$owners) {
+            $owners = "None";
+        }
+        
+        return $owners;
+    }
+
 }
 ?>

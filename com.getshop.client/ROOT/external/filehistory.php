@@ -50,6 +50,7 @@ foreach ($orders as $product) {
     $data['gear'] = $product->gearType;
     $data['started'] = $product->started == true;
     $data['originalChecksum'] = $product->originalChecksum;
+    $data['upload_type'] = $product->type;
     $files[] = $data;
 }
 

@@ -6,9 +6,11 @@
 package com.thundashop.core.c3;
 
 import com.getshop.scope.GetShopSession;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,6 +38,10 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     public HashMap<String, C3UserMetadata> usersMetaData = new HashMap();
     public HashMap<String, C3ProjectPeriode> periodes = new HashMap();
     public HashMap<String, C3OtherCosts> otherCosts = new HashMap();
+    public HashMap<String, C3ForskningsUserPeriode> forskningUsersPeriodes = new HashMap();
+    
+    @Autowired
+    private UserManager userManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -68,6 +75,9 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         if (data instanceof C3OtherCosts)
             otherCosts.put(data.id, ((C3OtherCosts)data));
+        
+        if (data instanceof C3ForskningsUserPeriode)
+            forskningUsersPeriodes.put(data.id, ((C3ForskningsUserPeriode)data));
     }    
     
     @Override
@@ -218,6 +228,14 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             return null;
         
         User user = getSession().currentUser;
+        
+        return getAcceListForUser(user.id);
+    }
+
+    @Override
+    public List<UserProjectAccess> getAcceListForUser(String userId) {
+        User user = userManager.getUserById(userId);
+        userManager.checkUserAccess(user);
         
         ArrayList<UserProjectAccess> retList = new ArrayList();
         
@@ -532,5 +550,43 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         C3OtherCosts otherCost = otherCosts.get(otherCostId);
         finalize(otherCost);
         return otherCost;
+    }
+
+    @Override
+    public void addForskningsUserPeriode(C3ForskningsUserPeriode periode) {
+        saveObject(periode);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(periode.start);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        periode.start = cal.getTime();
+        
+        
+        cal.setTime(periode.end);
+        cal.set(Calendar.HOUR, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        periode.end = cal.getTime();
+        
+        forskningUsersPeriodes.put(periode.id, periode);
+    }
+    
+    @Override
+    public List<C3ForskningsUserPeriode> getForskningsPeriodesForUser(String userId) {
+        List<C3ForskningsUserPeriode> retArray = forskningUsersPeriodes.values().stream()
+                .filter(periode -> periode.userId != null && periode.userId.equals(userId))
+                .collect(Collectors.toList());
+        
+        return retArray;
+    }
+
+    @Override
+    public void deleteForskningsUserPeriode(String periodeId) {
+        C3ForskningsUserPeriode periode = forskningUsersPeriodes.remove(periodeId);
+        if (periode != null) {
+            deleteObject(periode);
+        }
     }
 }

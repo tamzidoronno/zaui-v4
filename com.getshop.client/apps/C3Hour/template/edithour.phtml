@@ -15,11 +15,6 @@ $from = $hourObject ? date('d.m.Y', strtotime($hourObject->from)) : "";
 $to = $hourObject ? date('d.m.Y', strtotime($hourObject->to)) : "";
 $hours = $hourObject ? $hourObject->hours : "";
 
-if (!$groupInfo->financalEgen && !$groupInfo->financalForskning) {
-    echo "Du har ikke tilgang til å føre timer på dette prosjektet, kontakt admin for å få tildelt rettigheter for å føre på egenbidrag eller forskningsbidrag";
-    return;
-}
-
 ?>
 
 <div gstype='form' method='saveHours'>

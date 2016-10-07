@@ -1034,6 +1034,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(phoneToSend != null) {
                 phone = phoneToSend;
                 prefix = prefixToSend;
+                phoneToSend = null;
             }
             if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
                 messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);

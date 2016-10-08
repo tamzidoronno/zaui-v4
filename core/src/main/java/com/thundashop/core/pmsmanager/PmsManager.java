@@ -375,27 +375,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private Integer completeBooking(List<Booking> bookingsToAdd, PmsBooking booking) throws ErrorException {
-        if (!canAdd(bookingsToAdd)) {
+        boolean canAdd = canAdd(bookingsToAdd);
+        if (!canAdd && !configuration.deleteAllWhenAdded) {
             return -2;
         }
-        
-        bookingEngine.addBookings(bookingsToAdd);
-        booking.attachBookingItems(bookingsToAdd);
-        booking.sessionId = null;
-        if (booking.registrationData.resultAdded.get("company_invoicenote") != null) {
-            booking.invoiceNote = booking.registrationData.resultAdded.get("company_invoicenote");
-        }
+        if(canAdd) {
+            bookingEngine.addBookings(bookingsToAdd);
+            booking.attachBookingItems(bookingsToAdd);
+            booking.sessionId = null;
+            if (booking.registrationData.resultAdded.get("company_invoicenote") != null) {
+                booking.invoiceNote = booking.registrationData.resultAdded.get("company_invoicenote");
+            }
 
-        if (!configuration.needConfirmation) {
-            booking.confirmed = true;
-        }
+            if (!configuration.needConfirmation) {
+                booking.confirmed = true;
+            }
 
-        User loggedonuser = userManager.getLoggedOnUser();
-        if (loggedonuser != null && configuration.autoconfirmRegisteredUsers) {
-            booking.confirmed = true;
-        }
-       if(loggedonuser != null && (loggedonuser.isAdministrator() || loggedonuser.isEditor())) {
-            booking.confirmed = true;
+            User loggedonuser = userManager.getLoggedOnUser();
+            if (loggedonuser != null && configuration.autoconfirmRegisteredUsers) {
+                booking.confirmed = true;
+            }
+           if(loggedonuser != null && (loggedonuser.isAdministrator() || loggedonuser.isEditor())) {
+                booking.confirmed = true;
+            }
         }
         
         booking.sessionId = "";

@@ -401,6 +401,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         booking.sessionId = "";
+        booking.verifyDayPricesAgainstAvgPrice();
+        
         verifyPhoneOnBooking(booking);
         saveBooking(booking);
         feedGrafana(booking);

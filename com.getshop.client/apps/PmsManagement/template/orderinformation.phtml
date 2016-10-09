@@ -294,6 +294,10 @@ if($booking->orderIds) {
     $cart = $this->getApi()->getCartManager()->getCart();
 
     echo "<br><h2>Next order preview (invoice until $endingAt)</h2>";
+    if($booking->ignoreCheckChangesInBooking) {
+        echo "<b style='color:red; font-size: 20px;'>This booking is old and does not support autopricing since not enough data where connected to it when registering.</b><br><br>";
+    }
+    
     $this->includeOrderGenerationPreview();
 
     echo "<br><label><input type='checkbox' gsname='preview'> Update preview only</label><br>";

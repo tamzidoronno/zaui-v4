@@ -888,7 +888,7 @@ public class PmsManagerProcessor {
             if(ord.createdOnDay(new Date())) {
                 continue;
             }
-            if(ord.isCreditNote && ord.status != Order.Status.PAYMENT_COMPLETED && config.autoMarkCreditNotesAsPaidFor) {
+            if(ord.status != Order.Status.PAYMENT_COMPLETED && config.autoMarkCreditNotesAsPaidFor && manager.orderManager.getTotalAmount(ord) < 0) {
                 ord.status = Order.Status.PAYMENT_COMPLETED;
                 ord.captured = true;
                 ord.payment.captured = true;

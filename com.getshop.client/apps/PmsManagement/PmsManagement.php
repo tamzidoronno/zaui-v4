@@ -186,6 +186,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function runProcessor() {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
+        $this->getApi()->getPmsManager()->hourlyProcessor($this->getSelectedName());
     }
     
     public function updateRegistrationData() {

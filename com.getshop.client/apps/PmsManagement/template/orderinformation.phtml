@@ -83,6 +83,7 @@ if($booking->orderIds) {
     echo "<table cellspacing='0' cellpadding='0' width='100%'>";
     echo "<tr>";
     echo "<th>Order</th>";
+    echo "<th>Guest</th>";
     echo "<th>Price</th>";
     echo "<th width='80'>Payment status</th>";
     echo "<th>Payment type</th>";
@@ -100,7 +101,8 @@ if($booking->orderIds) {
         $totalAmountEx += $totalEx;
         
         $roomIds = array();
-        foreach($order->cart->items as $item) {
+        $items = (array)@$order->cart->items;
+        foreach($items as $item) {
             if(isset($item->product->externalReferenceId)) {
                 $roomIds[] = $item->product->externalReferenceId;
             }
@@ -121,6 +123,18 @@ if($booking->orderIds) {
         echo "<tr orderid='".$order->id."'>";
         echo "<td> <a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a> - ".date("d.m.Y", strtotime($order->rowCreatedDate));
         echo "<br><span style='color:#bbb; width: 127px;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='$addr'>".$user->fullName . "(" . $user->customerId . ")</span></td>";
+        echo "<td>";
+        $names = "";
+        $name = "";
+        foreach($guests as $guest) {
+            if(!$name) {
+                $name = $guest->name;
+            }
+            $names .= $guest->name . "<br>";
+        }
+        
+        echo "<span style='width: 50px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;display:inline-block;' title='$names'>$name</span>";
+        echo "</td>";
         echo "<td>" . round($totalEx) . "<br><span style='color:#bbb'>" . round($total) . "</span></td>";
         echo "<td>";
         if(@!$order->closed) {

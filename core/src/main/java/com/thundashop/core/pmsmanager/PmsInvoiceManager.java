@@ -351,11 +351,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     
 
-    private void updatePriceMatrix(PmsBookingRooms room, Date startDate, Date endDate, Integer priceType) {
+    public void updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Date startDate, Date endDate, Integer priceType) {
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, startDate, endDate, priceType);
         for(String key : priceMatrix.keySet()) {
-            if(!room.priceMatrix.containsKey(key)) {
-                room.priceMatrix.put(key, priceMatrix.get(key));
+            if(!room.priceMatrix.containsKey(key) || !booking.isCompletedBooking()) {
+                Double price = priceMatrix.get(key);
+                price = calculateDiscountCouponPrice(booking, price);
+                price = getUserPrice(room.bookingItemTypeId, price, 1);
+                room.priceMatrix.put(key, price);
             }
         }
     }
@@ -936,13 +939,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         Double price = totalPrice;
         
-        boolean isinit = false;
-        if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
-            isinit = true;
-        }
-        
         price = calculateDiscountCouponPrice(booking, price);
-        price = getUserPrice(typeId, price, count, isinit);
+        price = getUserPrice(typeId, price, count);
         
         if(avgPrice && count != 0) {
             price /= count;
@@ -957,10 +955,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private Double calculateDiscountCouponPrice(PmsBooking booking, Double price) {
-        if(booking.sessionId == null || booking.sessionId.isEmpty()) {
-            return price;
-        }
-
         if(booking.discountType != null && booking.discountType.equals("coupon")) {
             if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
                 price = cartManager.calculatePriceForCoupon(booking.couponCode, price);
@@ -980,15 +974,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     
-    private Double getUserPrice(String typeId, Double price, int count, boolean isInitalBooking) {
+    private Double getUserPrice(String typeId, Double price, int count) {
         if(getSession() != null && getSession().currentUser != null) {
             PmsUserDiscount discountForUser = getDiscountsForUser(getSession().currentUser.id);
             Double discount = discountForUser.discounts.get(typeId);
             if(discount != null) {
                 if(discountForUser.discountType.equals(PmsUserDiscount.PmsUserDiscountType.percentage)) {
-                    if(isInitalBooking) {
-                        price = price - (price * ((double)discount / 100));
-                    }
+                    price = price - (price * ((double)discount / 100));
                 } else {
                     price = discount * count;
                 }
@@ -1293,7 +1285,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Double price = 0.0;
         if(pmsManager.getConfigurationSecure().usePriceMatrixOnOrder) {
             Calendar calStart = Calendar.getInstance();
-            updatePriceMatrix(room, startDate, endDate, priceType);
+            updatePriceMatrix(booking, room, startDate, endDate, priceType);
             calStart.setTime(startDate);
             int count = 0;
             while(true) {
@@ -1315,20 +1307,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             price /= count;
         } else {
             price = room.price; 
+            price = calculateDiscountCouponPrice(booking, price);
+            price = getUserPrice(room.pmsBookingRoomId, price, 1);
         }
-        double newprice = calculateDiscountCouponPrice(booking, price);
-        
-        boolean isinit = false;
-        if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
-            isinit = true;
-        }
-        
-        if(newprice != price) {
-            price = newprice;
-        } else {
-            price = getUserPrice(room.bookingItemTypeId, price, 1, isinit);
-        }
-
         
         if(pmsManager.getPriceObject().privatePeopleDoNotPayTaxes) {
             User user = userManager.getUserById(booking.userId);

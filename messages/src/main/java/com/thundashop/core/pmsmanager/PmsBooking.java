@@ -336,26 +336,6 @@ public class PmsBooking extends DataCommon {
         return room.isSameDay(rowCreatedDate, new Date());
     }
 
-    void verifyDayPricesAgainstAvgPrice() {
-        for(PmsBookingRooms room: getActiveRooms()) {
-            double avgPrice = room.price;
-            if(room == null || room.priceMatrix == null) {
-                continue;
-            }
-            
-            double total = 0.0;
-            for(Double dayprice : room.priceMatrix.values()) {
-                total += dayprice;
-            }
-            double daypriceavg = total / room.priceMatrix.size();
-            double diff = daypriceavg - avgPrice;
-            if(diff > 2.0 || diff < -2.0) {
-                for(String offset : room.priceMatrix.keySet()) {
-                    room.priceMatrix.put(offset, avgPrice);
-                }
-            }
-        }
-    }
 
     public static class PriceType {
         public static Integer daily = 1;

@@ -401,8 +401,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         booking.sessionId = "";
-        booking.verifyDayPricesAgainstAvgPrice();
-        
         verifyPhoneOnBooking(booking);
         saveBooking(booking);
         feedGrafana(booking);
@@ -3079,16 +3077,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void setPriceOnRoom(PmsBookingRooms room, boolean avgPrice, PmsBooking booking) {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
-        LinkedHashMap<String, Double> priceMatrix = pmsInvoiceManager.buildPriceMatrix(room, booking);
-        LinkedHashMap<String, Double> newMatrix = new LinkedHashMap();
-        for(String key : priceMatrix.keySet()) {
-            Double value = priceMatrix.get(key);
-            if(room.priceMatrix.containsKey(key)) {
-                value = room.priceMatrix.get(key);
-            }
-            newMatrix.put(key, value);
+        if(getConfigurationSecure().usePriceMatrixOnOrder) {
+            pmsInvoiceManager.updatePriceMatrix(booking, room, room.date.start, room.date.end, booking.priceType);
         }
-        room.priceMatrix = newMatrix;
         room.taxes = pmsInvoiceManager.calculateTaxes(room.bookingItemTypeId);
     }
 

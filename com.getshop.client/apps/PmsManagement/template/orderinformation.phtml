@@ -87,7 +87,9 @@ if($booking->orderIds) {
     echo "<th width='80'>Payment status</th>";
     echo "<th>Payment type</th>";
     echo "<th>Closed</th>";
-    echo "<th>Credit</th>";
+    if(!$config->prepayment) {
+        echo "<th>Credit</th>";
+    }
     echo "<th>Update</th>";
     echo "</tr>";
     foreach($result as $order) {
@@ -204,10 +206,12 @@ if($booking->orderIds) {
             echo "<i class='fa fa-close'>";
         }
         echo "</td>";
-        if(@$order->closed && !@$order->isCreditNote) {
-            echo "<td class='doCreditOrder'>Credit order</td>";
-        } else {
-            echo "<td></td>";
+        if(!$config->prepayment) {
+            if(@$order->closed && !@$order->isCreditNote) {
+                echo "<td class='doCreditOrder'>Credit order</td>";
+            } else {
+                echo "<td></td>";
+            }
         }
         
         if(@!$order->closed) {

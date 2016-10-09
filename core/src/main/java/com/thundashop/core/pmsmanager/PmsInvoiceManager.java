@@ -930,10 +930,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         Double price = totalPrice;
+        
+        boolean isinit = false;
+        if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
+            isinit = true;
+        }
+        
         price = calculateDiscountCouponPrice(booking, price);
-        
-        
-        price = getUserPrice(typeId, price, count);
+        price = getUserPrice(typeId, price, count, isinit);
         
         if(avgPrice && count != 0) {
             price /= count;
@@ -948,6 +952,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private Double calculateDiscountCouponPrice(PmsBooking booking, Double price) {
+        if(booking.sessionId == null || booking.sessionId.isEmpty()) {
+            return price;
+        }
+
         if(booking.discountType != null && booking.discountType.equals("coupon")) {
             if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
                 price = cartManager.calculatePriceForCoupon(booking.couponCode, price);
@@ -967,13 +975,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     
-    private Double getUserPrice(String typeId, Double price, int count) {
+    private Double getUserPrice(String typeId, Double price, int count, boolean isInitalBooking) {
         if(getSession() != null && getSession().currentUser != null) {
             PmsUserDiscount discountForUser = getDiscountsForUser(getSession().currentUser.id);
             Double discount = discountForUser.discounts.get(typeId);
             if(discount != null) {
                 if(discountForUser.discountType.equals(PmsUserDiscount.PmsUserDiscountType.percentage)) {
-                    price = price - (price * ((double)discount / 100));
+                    if(isInitalBooking) {
+                        price = price - (price * ((double)discount / 100));
+                    }
                 } else {
                     price = discount * count;
                 }
@@ -1302,10 +1312,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             price = room.price; 
         }
         double newprice = calculateDiscountCouponPrice(booking, price);
+        
+        boolean isinit = false;
+        if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
+            isinit = true;
+        }
+        
         if(newprice != price) {
             price = newprice;
         } else {
-            price = getUserPrice(room.bookingItemTypeId, price, 1);
+            price = getUserPrice(room.bookingItemTypeId, price, 1, isinit);
         }
 
         

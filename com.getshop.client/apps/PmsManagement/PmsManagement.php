@@ -678,9 +678,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->pmsRoomId = $_POST['data']['roomId'];
         $filter->prepayment = true;
         $filter->createNewOrder = true;
-        if($_POST['data']['appendToExisting'] == "true") {
-            $filter->createNewOrder = false;
-        }
+        $filter->addToOrderId = $_POST['data']['appendToOrderId'];
         
         $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
         $this->getManager()->processor($this->getSelectedName());

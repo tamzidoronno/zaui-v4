@@ -283,7 +283,6 @@ if($booking->orderIds) {
     $this->includeOrderGenerationPreview();
 
     echo "<br><label><input type='checkbox' gsname='preview'> Update preview only</label><br>";
-    echo "<label><input type='checkbox' gsname='appendToExisting' CHECKED> Append to existing order if possible.</label><br>";
     echo "<select gsname='roomId'>";
     echo "<option value=''>All rooms</option>";
     foreach($booking->rooms as $room) {
@@ -301,8 +300,16 @@ if($booking->orderIds) {
     if(isset($booking->invoicedTo) && !$booking->invoicedTo) {
         $booking->invoicedTo = $booking->rooms[0]->date->start;
     }
-    echo "<label style='display:inline-block;'><input type='text' gsname='endingAt' value='$endingAt' style='font-size: 18px; width: 100px;padding: 4px;' /></label>";
-    echo "<span class='pmsbutton' gstype=\"submitToInfoBox\">Create new order</span>";
+    echo "<label style='display:inline-block;'><input type='text' gsname='endingAt' value='$endingAt' style='font-size: 14px; width: 100px;padding: 1px;' /></label>";
+    echo "<select gsname='appendToOrderId'>";
+    foreach($result as $order) {
+        if(!$order->closed) {
+            echo "<option value='" . $order->id . "'>Add to order " . $order->incrementOrderId . "</option>";
+        }
+    }
+    echo "<option value=''>Create a new order</option>";
+    echo "</select>";
+    echo "<span class='pmsbutton' gstype=\"submitToInfoBox\" style='padding: 1px; padding-left: 20px; padding-right: 20px; border-radius: 0px;'>Update</span>";
     ?>
 </div>
 

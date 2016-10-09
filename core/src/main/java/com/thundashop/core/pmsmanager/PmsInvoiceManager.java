@@ -543,7 +543,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
                 Order order = null;
                 order = getUnpaidOrder(booking);
-                if(filter.createNewOrder) {
+                if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+                    order = orderManager.getOrder(filter.addToOrderId);
+                    if(order.closed) {
+                        order = null;
+                    }
+                } else if(filter.createNewOrder) {
                     order = null;
                 }
                 if(order != null) {

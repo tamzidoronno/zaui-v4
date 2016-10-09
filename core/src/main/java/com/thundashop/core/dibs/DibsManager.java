@@ -242,9 +242,15 @@ public class DibsManager extends ManagerBase implements IDibsManager {
 
     public void captureOrder(Order order, int amount) throws Exception {
         String merchantId = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("merchantid");
-        
+
         
         String secretMacKey = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("hmac");
+       
+        if(!frameworkConfig.productionMode) {
+            merchantId = "90069173";
+            secretMacKey = "7e546521244050365a355b2376305248695e3f2e7d467b754c7074635d563a366f302e256338473569756547456f732856376c412b3225454b5a4d6a6d5a5277";
+        }
+        
         String transaction = order.payment.callBackParameters.get("transaction");
         order.payment.transactionLog.put(System.currentTimeMillis(), "Starting capture of transaction (DIBS) : " + transaction);
         orderManager.saveOrder(order);
@@ -297,7 +303,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         if(frameworkConfig.productionMode) {
             pollKey += "-prod";
         } else {
-            pollKey += "-debug";
+            pollKey = "90069173-debug";
         }
         try {
             //First check for polls.

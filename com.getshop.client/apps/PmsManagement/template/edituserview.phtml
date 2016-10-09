@@ -50,7 +50,15 @@ if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferred
             <?php 
                 if($this->hasAccountingTransfer()) {
                     ?>
-                    <tr><td>Accounting id</td><td><input type="txt" gsname="accountingId" value="<?php echo $user->accountingId ? $user->accountingId : $user->customerId; ?>"></td><tr>
+                    <?php $accId = $user->customerId; 
+                    if($user->accountingId) {
+                        $accId = $user->accountingId;
+                    }
+                    if($accId == -1 || $accId == "-1") {
+                        $accId = "";
+                    }
+                    ?>
+                    <tr><td>Accounting id</td><td><input type="txt" gsname="accountingId" value="<?php echo $accId; ?>"></td><tr>
                     <?php
                 }
             ?>

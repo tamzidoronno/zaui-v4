@@ -49,7 +49,7 @@ class Dibs extends \PaymentApplication implements \Application {
         if (isset($_GET['orderId'])) {
             if($nextPage == "payment_success") {
                 $order = $this->getApi()->getOrderManager()->getOrder($_GET['orderId']);
-                $order->status = 7;
+                $order->status = 9;
                 $order->payment->transactionLog->{time()*1000} = "Payment completed, capturing needed.";
                 $this->getApi()->getOrderManager()->saveOrder($order);
                 header('Location: ' . "/?page=payment_success");

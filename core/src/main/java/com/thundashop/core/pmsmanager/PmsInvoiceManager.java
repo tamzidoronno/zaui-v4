@@ -446,11 +446,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Order currentOrder = orderManager.getOrder(orderId);
         Order creditedOrder = orderManager.creditOrder(orderId);
         PmsBooking booking = pmsManager.getBooking(bookingId);
-        if(currentOrder.closed) {
-            creditedOrder.status = currentOrder.status;
-            creditedOrder.closed = currentOrder.closed;
-            orderManager.saveOrder(currentOrder);
-        }
         
         
         if(!booking.ignoreCheckChangesInBooking) {
@@ -564,10 +559,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     booking.orderIds.add(order.id);
                     Double total = orderManager.getTotalAmount(order);
                     if(total < 0) {
-                        order.status = Order.Status.PAYMENT_COMPLETED;
-                        order.closed = true;
-                        orderManager.saveOrder(order);
-                        
                         if(booking.channel != null && !booking.channel.isEmpty()) {
                             List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
                             if(emails != null) {

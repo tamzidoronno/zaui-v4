@@ -624,7 +624,6 @@ public class PmsManagerProcessor {
                 booking.createOrderAfterStay = false;
                 manager.saveBooking(booking);
             }
-            
             boolean needSaving = false;
             boolean payedfor = true; 
             boolean firstDate = true;
@@ -643,6 +642,10 @@ public class PmsManagerProcessor {
                         needCapture = true;
                     }
                     
+                    double total = manager.orderManager.getTotalAmount(order);
+                    if(total <= 0.0) {
+                        continue;
+                    }
                     if(order.status != Order.Status.PAYMENT_COMPLETED) {
                         for(CartItem item : order.cart.getItems()) {
                             if(!firstDate && item.startDate != null && item.startDate.after(new Date())) {
@@ -650,11 +653,6 @@ public class PmsManagerProcessor {
                                 continue;
                             }
                             firstDate = false;
-                            payedfor = false;
-                        }
-                    }
-                    if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {
-                        if(!order.captured) {
                             payedfor = false;
                         }
                     }
@@ -821,10 +819,10 @@ public class PmsManagerProcessor {
             if(booking.bookedByUserId != null && !booking.bookedByUserId.isEmpty()) {
                 continue;
             }
-            if(!booking.isOld(40)) {
+            if(!booking.isOld(90)) {
                 continue;
             }
-            if(booking.isOld(50)) {
+            if(booking.isOld(100)) {
                 continue;
             }
             System.out.println("Running autodelete: Autodeleted because it has expired" + " " + booking.rowCreatedDate);
@@ -887,6 +885,9 @@ public class PmsManagerProcessor {
         
         List<Order> orders = manager.orderManager.getOrders(null, null, null);
         for(Order ord : orders) {
+            if(ord.createdOnDay(new Date())) {
+                continue;
+            }
             if(ord.isCreditNote && ord.status != Order.Status.PAYMENT_COMPLETED && config.autoMarkCreditNotesAsPaidFor) {
                 ord.status = Order.Status.PAYMENT_COMPLETED;
                 ord.captured = true;

@@ -38,6 +38,10 @@ public class PmsOrderStatistics implements Serializable  {
                 if(!order.createdOnDay(cal.getTime())) {
                     continue;
                 }
+                
+                if (order.cart == null)
+                    continue;
+                
                 for(CartItem item : order.cart.getItems()) {
                     Double inc = priceInc.get(item.getProduct().id);
                     Double ex = priceEx.get(item.getProduct().id);

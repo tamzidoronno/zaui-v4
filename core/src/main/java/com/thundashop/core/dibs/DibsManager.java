@@ -321,7 +321,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                         try {
                             order.payment.callBackParameters = polledResult;
 
-                            Double amount = cartManager.calculateTotalCost(order.cart);
+                            Double amount = orderManager.getTotalAmount(order);
                             int toCapture = new Double(amount*100).intValue();
                             order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to capture this order");
                             

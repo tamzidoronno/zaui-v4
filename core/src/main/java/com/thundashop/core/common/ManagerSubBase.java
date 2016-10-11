@@ -100,7 +100,11 @@ public class ManagerSubBase {
     }
     
     public void logPrint(Object key) {
-        logPrintStatic(key, storeId);
+        if (key instanceof Exception) {
+            logPrintException((Exception)key);
+        } else {
+            logPrintStatic(key, storeId);
+        }
     }
     
     public void logPrintException(Exception ex) {

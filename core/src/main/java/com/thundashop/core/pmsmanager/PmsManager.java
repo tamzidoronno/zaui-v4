@@ -317,7 +317,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             setBooking(booking);
         } catch (Exception ex) {
-            logPrint(ex);
+            logPrintException(ex);
         }
         return booking;
     }

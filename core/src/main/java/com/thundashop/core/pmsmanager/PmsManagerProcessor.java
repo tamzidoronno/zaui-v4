@@ -399,9 +399,10 @@ public class PmsManagerProcessor {
         }
 
         Card card = new Card();
-        room.cardformat = manager.getConfigurationSecure().arxCardFormat;
         if(room.cardformat != null && !room.cardformat.isEmpty()) {
             card.format = room.cardformat;
+        } else {
+            room.cardformat = manager.getConfigurationSecure().arxCardFormat;
         }
         card.cardid = room.code;
 

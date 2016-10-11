@@ -112,6 +112,9 @@ class PmsStatisticsBuilder {
                 if(order.testOrder) {
                     continue;
                 }
+                if(order.cart == null) {
+                    continue;
+                }
                 if(order.createdOnDay(cal.getTime())) {
                     Double total = orderManager.getTotalAmountExTaxes(order);
                     entry.totalPrice += total;

@@ -1910,7 +1910,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 User user = userManager.getUserById(booking.userId);
                 if (user != null && hasUserParticipated(event, user.id) && isInGroup(groupIds, user)) {
                     stat.addUserId(event.id, user.id);
-                    i++;
+                    i += event.days.size();
                 }
             }
         }

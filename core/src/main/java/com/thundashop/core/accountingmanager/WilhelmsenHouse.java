@@ -229,7 +229,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                     amount *= -1;
                     doCredit = true;
                 }
-                if(!order.isCreditNote && !doCredit) {
+                if(!doCredit) {
                     result += ";"; // Debit account
                     result += getProductDebitNumber(item.getProduct(), app) +";"; // Credit account
                     credit += amount;

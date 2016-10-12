@@ -120,4 +120,7 @@ interface IC3Manager {
     
     @Administrator
     public void deleteForskningsUserPeriode(String periodeId);
+    
+    @Administrator
+    public C3Report getReportForUserProject(String userId, String projectId, Date start, Date end);
 }

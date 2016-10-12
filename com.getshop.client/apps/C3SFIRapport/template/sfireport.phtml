@@ -1,0 +1,92 @@
+<?
+/* @var $this \ns_00c40488_e21c_4e54_bed4_8043df326268\C3SFIRapport */
+
+$startDateString = "01/01-2016";
+$endDateString = "12/31-2016";
+
+$companyId = $_SESSION['selected_partner'];
+$projectId = $_SESSION['selected_projectid'];
+
+$startDate = $this->convertToJavaDate(strtotime($startDateString));
+$endDate = $this->convertToJavaDate(strtotime($endDateString));
+
+$users = $this->getApi()->getUserManager()->getUsersByCompanyId($companyId);
+
+
+?>
+
+<h1>SFI - Rapportering av prosjektkostnader</h1>
+Navn på partner: <? echo $this->getPartnerName(); ?>
+<br/> Navn på SFI: C3 – Centre for Connected Care 
+<br/> Prosjektnr SFI:
+<br/> Delprosjekt: WP0?
+<br/> Periode: <? echo $startDateString." - ".$endDateString ?>
+
+<br/>
+<br/>
+<div class='hourrows sfibox' style="border: solid 1px #DDD;">
+    <div class="boxtitle"> Personal og indirekte kostnader (1.1) </div>
+    
+    <br/>
+    <div class='row'><div class='name col'>Navn</div><div class='hours col'>Timer</div><div class='timesats col'>Timesats</div><div class='totalCost col'>Totalt</div></div>
+    <?
+    
+    $summaryHours = 0;
+    $summaryCost = 0;
+    foreach ($users as $user) {
+        $report = $this->getApi()->getC3Manager()->getReportForUserProject($user->id, $projectId, $startDate, $endDate);
+        $user = $this->getApi()->getUserManager()->getUserById($user->id);
+        
+        $hours = 0;
+        $totalCost = 0;
+        $timesats = $this->getApi()->getC3Manager()->getTimeRate($user->id);
+        $timesats = $timesats ? $timesats->rate : 0;
+        
+        foreach ($report->hours as $hour) {
+            $hours += $hour->hours;
+            $totalCost += $hour->cost;
+        }
+        
+        if ($hours) {
+            echo "<div class='row'><div class='name col'>".$user->fullName."</div><div class='hours col'>$hours</div><div class='timesats col'>$timesats</div><div class='totalCost col'>$totalCost</div></div>";
+        }
+        
+        if ($report->roundSum) {
+            $totalCost += $report->roundSum;
+            echo "<div class='row'><div class='name col'>".$user->fullName."</div><div class='hours col'></div><div class='timesats col'></div><div class='totalCost col'>$report->roundSum</div></div>";
+        }
+        
+        $summaryHours += $hours; 
+        $summaryCost += $totalCost; 
+    }
+    ?>
+    
+    <div class='row'><div class='name col'>Sum</div><div class='hours col'><? echo $summaryHours; ?></div><div class='timesats col'></div><div class='totalCost col'><? echo $summaryCost; ?></div></div>
+    
+</div>
+
+<div class='othercosts sfibox'>
+    <div class="boxtitle"> Andre driftskostnader (1.4) </div>
+    <?
+    $totalCost = 0;
+    
+    foreach ($users as $user) {
+        $report = $this->getApi()->getC3Manager()->getReportForUserProject($user->id, $projectId, $startDate, $endDate);
+        $user = $this->getApi()->getUserManager()->getUserById($user->id);
+     
+        foreach ($report->otherCosts as $otherCost) {
+            $totalCost += $otherCost->cost;
+            echo "<div class='row'><div class='name col'>".$otherCost->comment."</div><div class='hours col'></div><div class='timesats col'></div><div class='totalCost col'>$otherCost->cost</div></div>";
+        }
+    }
+    ?>
+    
+    <div class='row'><div class='name col'>Sum</div><div class='hours col'></div><div class='timesats col'></div><div class='totalCost col'><? echo $totalCost; ?></div></div>
+</div>
+
+
+<div class='totalCosts sfibox'>
+    <div class="boxtitle"> Oppsummering </div>
+    
+    <div class='row'><div class='name col'>Totale kostnader</div><div class='hours col'></div><div class='timesats col'></div><div class='totalCost col'><? echo $totalCost + $summaryCost; ?></div></div>
+</div>

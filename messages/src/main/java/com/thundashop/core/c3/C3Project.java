@@ -85,4 +85,16 @@ public class C3Project extends DataCommon {
     public void addHour(String companyId, C3Hour hour) {
         activatedCompanies.get(companyId).addHours(hour);
     }
+    
+    public boolean interCepts(Date startDate, Date endDate) {
+        if (startDate == null || endDate == null || this.startDate == null || this.endDate == null) {
+            return false;
+        }
+        
+        long StartDate1 = startDate.getTime();
+        long StartDate2 = this.startDate.getTime()+1;
+        long EndDate1 = endDate.getTime();
+        long EndDate2 = this.endDate.getTime()-1;
+        return (StartDate1 <= EndDate2) && (StartDate2 <= EndDate1);
+    }
 }

@@ -1,0 +1,15 @@
+<?
+/* @var $this \ns_00c40488_e21c_4e54_bed4_8043df326268\C3SFIRapport */
+
+$projects = $this->getApi()->getC3Manager()->getAllProjectsConnectedToCompany($_SESSION['selected_partner']);
+
+if (!$projects) {
+    echo "Denne partneren har ikke noen prosjekter knyttet til seg";
+    return;
+}
+
+foreach ($projects as $project) {
+    echo "<div class='selectButton' gsclick='setSelectedProject' value='".$project->id."'>".$project->projectNumber." - ".$project->name."</div>";    
+}
+
+?>

@@ -2,10 +2,6 @@
     display: none;
 }
 
-.SedoxLastProducts .sedox_internal_view:nth-child(2) {
-    display: block;
-}
-
 .SedoxLastProducts .sedox_internal_view .fileinfo {
     width: calc(100% - 421px);
 }

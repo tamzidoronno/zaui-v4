@@ -11,7 +11,10 @@ app.SedoxLastProducts = {
             clearTimeout(app.SedoxLastProducts.currenTimer);
         }
         
-        app.SedoxLastProducts.currenTimer = setTimeout(app.SedoxLastProducts.slideToNext, app.SedoxLastProducts.switchTime);
+        app.SedoxLastProducts.slideToNext();
+//        app.SedoxLastProducts.currenTimer = setTimeout(app.SedoxLastProducts.slideToNext, app.SedoxLastProducts.switchTime);
+        
+        
     },
     
     slideToNext: function() {
@@ -41,6 +44,11 @@ app.SedoxLastProducts = {
                 next = $($(this).find('.sedox_internal_view')[0]);
             }
             
+            if (!current) {
+                $($(this).find('.sedox_internal_view')[0]).show();
+                app.SedoxLastProducts.currenTimer = setTimeout(app.SedoxLastProducts.slideToNext, app.SedoxLastProducts.switchTime);
+                return;
+            }
             
             current.fadeOut(300, function() {
                 next.fadeIn(300);

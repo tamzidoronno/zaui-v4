@@ -1,0 +1,24 @@
+.SedoxLastProducts .sedox_internal_view {
+    display: none;
+}
+
+.SedoxLastProducts .sedox_internal_view:nth-child(2) {
+    display: block;
+}
+
+.SedoxLastProducts .sedox_internal_view .fileinfo {
+    width: calc(100% - 421px);
+}
+
+.SedoxLastProducts .productcounter {
+    background-color: #3ead0d;
+    font-size: 20px;
+    text-align: center;
+    
+    line-height: 60px;
+    color: #FFF;
+}
+
+.SedoxLastProducts .creditinformation {
+    display : none;
+}

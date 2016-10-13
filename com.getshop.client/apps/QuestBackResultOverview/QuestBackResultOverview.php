@@ -34,7 +34,7 @@ class QuestBackResultOverview extends \MarketingApplication implements \Applicat
         $count = 0;
         
         foreach ($values as $key => $value) {
-            if ($value === $id) {
+            if ($value->answer === $id) {
                 $count++;
             }
         }

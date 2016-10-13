@@ -17,3 +17,8 @@
 .QuestBackResultOverview .question .subanswer:last-child {
     border-bottom: solid 0px #EEE;
 }
+
+.QuestBackResultOverview .result_user_info {
+    text-align: right;
+    color: #888;
+}

@@ -14,7 +14,6 @@ if (!$found) {
     return;
 } 
 
-
 foreach ($results->answers as $questionId => $values) {
     $question = $this->getApi()->getQuestBackManager()->getQuestion($questionId);
     
@@ -27,9 +26,17 @@ foreach ($results->answers as $questionId => $values) {
         echo "<div class='answer'>";
             if ($type == "3") {
                 foreach ($values as $value) {
-                    if ($value) {
+                    if ($value->answer) {
                         echo "<div class='subanswer'>";
-                        echo nl2br($value);
+                        echo nl2br(htmlspecialchars($value->answer));
+                        
+                        if ($value->userId) {
+                            $user = $this->getApi()->getUserManager()->getUserById($value->userId);
+                            echo "<div class='result_user_info'>";
+                            echo $user->fullName. " / ".$user->prefix." ".$user->cellPhone." / ".$user->emailAddress;
+                            echo "</div>";
+                        }
+                        
                         echo "</div>";
                     }
                 }

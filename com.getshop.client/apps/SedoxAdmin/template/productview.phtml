@@ -196,105 +196,39 @@ $user = $this->getApi()->getUserManager()->getUserById($sedoxUser->id);
                             <? echo $sedoxUser->creditAccount->balance; ?>
                         </div>
                     </div>
-                    <div class="customer_data">
-                        <div class="data_name">
-                            Bad Customer:
-                        </div>
+                    <div class="customer_data_icons">
                         <?  if($sedoxUser->badCustomer) {
                                 ?>
-                                <div class="data_value" style="color: #c30f10;">
-                                    YES
-                                </div>
+                                <div class="data_value badcustomer" style="color: #c30f10;" title="Bad customer :("></div>
                                 <?
-                            } else {
-                                ?>
-                                <div class="data_value" style="color: #44b215;">
-                                    NO
-                                </div>    
-                                <?
-                            }                           
-                        ?>
-                    </div>
-                    <div class="customer_data">
-                        <div class="data_name">
-                            Norwegian customer:
-                        </div>
-                        <?  if($sedoxUser->isNorwegian) {
-                                ?>
-                                <div class="data_value" style="color: #c30f10;">
-                                    YES
-                                </div>
-                                <?
-                            } else {
-                                ?>
-                                <div class="data_value" style="color: #44b215;">
-                                    NO
-                                </div>    
-                                <?
-                            }                           
-                        ?>
-                    </div>
-                    <div class="customer_data">
-                        <div class="data_name">
-                            Withdraw credits:
-                        </div>
-                        <?  if($sedoxProduct->useCreditAccount == "true") {
-                                ?>
-                                <div class="data_value" style="color: #44b215;">
-                                    YES
-                                </div>
-                                <?
-                            } else {
-                                ?>
-                                <div class="data_value" style="color: #c30f10;">
-                                    NO
-                                </div>    
-                                <?
-                            }                           
-                        ?>
-                    </div>
-                    <div class="customer_data">
-                        <div class="data_name">
-                            Used Windows App:
-                        </div>
-                        <?
+                            }
                         
+                            if($sedoxUser->isNorwegian) {
+                                ?>
+                                <div class="data_value norwegiancustomer" style="color: #c30f10;" title="Norwegian customer"></div>
+                                <?
+                            }     
+                            
+                            if($sedoxProduct->useCreditAccount == "true") {
+                                ?>
+                                <div class="data_value usecreditaccount" style="color: #44b215;" title="Withdraw credit"></div>
+                                <?
+                            }
+                            
                             if($product->uploadOrigin == "windowsapp") {
                                 ?>
-                                <div class="data_value" style="color: #c30f10;">
-                                    YES
-                                </div>
+                                <div class="data_value windowsapp" title="Uploaded from windows app" style="color: #c30f10;"></div>
                                 <?
-                            } else {
-                                ?>
-                                <div class="data_value" style="color: #44b215;">
-                                    NO
-                                </div>    
-                                <?
-                            }                           
-                        ?>
-                    </div>
-                    <div class="customer_data">
-                        <div class="data_name">
-                            Automatic gearbox: 
-                        </div>
-                        <?
-                        
+                            }
+                            
                             if($product->gearType != "man") {
                                 ?>
-                                <div class="data_value" style="color: #c30f10;">
-                                    YES
-                                </div>
+                                <div class="data_value automaticgear" style="color: #c30f10;" title="This is automatic gear"></div>
                                 <?
-                            } else {
-                                ?>
-                                <div class="data_value" style="color: #44b215;">
-                                    NO
-                                </div>    
-                                <?
-                            }                           
+                            } 
                         ?>
                     </div>
+               
                 </div>
             </div>
                 

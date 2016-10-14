@@ -18,3 +18,7 @@
 .SedoxLastProducts .creditinformation {
     display : none;
 }
+
+.SedoxLastProducts .product_comment {
+    display: none;
+}

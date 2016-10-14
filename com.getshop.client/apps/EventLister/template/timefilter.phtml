@@ -16,7 +16,8 @@ if ($from) {
 <div class='datefilter'>
     <? echo $this->__f("Datefilter (blank = only new ones)"); ?>
     <br/>
-    <br/><input type='txt' class='gsniceinput1 from' value='<? echo $from; ?>'/> - <input type='txt' class='gsniceinput1 to'  value='<? echo $to; ?>'/> 
+    <br/><input type='txt' class='gsniceinput1 from' id="time_filter_from" value='<? echo $from; ?>'/> - <input type='txt' class='gsniceinput1 to'  id='time_filter_to' value='<? echo $to; ?>'/> 
+    <div class='gs_shop_small_icon' title='Clear filter' gsclick='clearFilters'><i class='fa fa-eraser'></i></div>
 </div>
 
 <script>

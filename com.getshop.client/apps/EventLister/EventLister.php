@@ -69,6 +69,8 @@ class EventLister extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
             $to = $this->convertToJavaDate(strtotime($_POST['data']['to']));
             $this->getApi()->getEventBookingManager()->setTimeFilter($this->getBookingEngineName(), $from, $to);
         }
+        
+        $this->getApi()->getEventBookingManager()->clearLocationFilters($this->getBookingEngineName());
     }
 
     public function getEventTypes($events) {

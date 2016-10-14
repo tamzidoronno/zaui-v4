@@ -30,6 +30,7 @@ $config = $this->getConfigurationToUse();
         <td valign="top">
             <?
             if($booking->channel) { echo "Channel : " . $booking->channel . "<br>"; }
+            if($booking->couponCode) { echo "Discount coupon code :  " . $booking->couponCode . "<br>"; }
             if($booking->wubookchannelreservationcode) { echo "Channel res id : " . $booking->wubookchannelreservationcode . "<br>"; }
             if($booking->wubookreservationid) { echo "Wubook res id : " . $booking->wubookreservationid . " (<a href='https://wubook.net/bookings/".$booking->wubookreservationid."' target='_new'>open in wubook</a>)<br>"; }
             if($booking->channel) {

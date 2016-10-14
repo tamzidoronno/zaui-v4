@@ -173,6 +173,11 @@ $company = $this->getApi()->getUserManager()->getCompany($_POST['value']);
     foreach ($users as $user) {
         ?>
     <div class='gss_company_userrow' onclick="app.Users.gssinterface.showUser('<? echo $user->id; ?>')">
+        <?
+        if ($user->isCompanyOwner) {
+            echo "<i class='fa fa-building-o'></i>";
+        }
+        ?>
             <? echo $user->fullName; ?>
         </div>
         <?

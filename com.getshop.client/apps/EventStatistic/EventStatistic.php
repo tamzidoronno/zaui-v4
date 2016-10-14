@@ -13,6 +13,21 @@ class EventStatistic extends \MarketingApplication implements \Application {
     public function render() {
         $this->includefile("statistic");
     }
+    
+    public function downloadStatistic() {
+        $_POST = $_SESSION['searchcriterias'];
+        $stats = $this->getStats();
+        $data = [];
+        
+        foreach ($stats as $stat) {
+            $yrdata= strtotime("$stat->year-$stat->month-1");
+            $monthName = date('M-Y', $yrdata);
+            $data[] = [$monthName,$stat->count];
+        }
+        
+        echo json_encode($data);
+        die();
+    }
 
     public function getInterval() {
         if (isset($_SESSION['EventStatistic_interval']))
@@ -27,7 +42,7 @@ class EventStatistic extends \MarketingApplication implements \Application {
     }
 
     public function doSearch() {
-        
+        $_SESSION['searchcriterias'] = $_POST;
     }
     
     public function getStats() {

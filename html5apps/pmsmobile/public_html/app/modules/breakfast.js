@@ -37,6 +37,11 @@ getshop.breakfastController = function ($scope, $state, $stateParams) {
                 var room = res[key];
                 for(var addonkey in room.addons) {
                     var addon = room.addons[addonkey];
+                    
+                    if(addon.addonType != 1) {
+                        continue;
+                    }
+                    
                     var addonDate = new Date(addon.date);
                     var addonTime = addonDate.getTime() + (86400*1000);
                     addonDate.setTime(addonTime);

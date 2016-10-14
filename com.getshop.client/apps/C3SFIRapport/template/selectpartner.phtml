@@ -1,0 +1,11 @@
+<?
+/* @var $this \ns_00c40488_e21c_4e54_bed4_8043df326268\C3SFIRapport */
+
+$companies  = $this->getApi()->getUserManager()->getAllCompanies();
+
+foreach ($companies as $company) {
+    ?>
+    <div class='selectButton' gsclick='setSelectedCompany' value='<? echo $company->id; ?>'><? echo $company->name; ?></div>
+    <?
+}
+?>

@@ -28,6 +28,7 @@ import com.thundashop.core.questback.data.QuestBackSendt;
 import com.thundashop.core.questback.data.QuestTest;
 import com.thundashop.core.questback.data.QuestionTreeItem;
 import com.thundashop.core.questback.data.ResultRequirement;
+import com.thundashop.core.questback.data.ResultUserAnswer;
 import com.thundashop.core.questback.data.UserQuestionAnswer;
 import com.thundashop.core.questback.data.UserTestResult;
 import com.thundashop.core.usermanager.UserManager;
@@ -618,8 +619,14 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         QuestBackResult res = new QuestBackResult();
         
         for (UserTestResult testResult : testResults) {
+            String referenceId = getReference(testResult.userId);
+            final User user = userManager.getUserById(referenceId);
+            
             for (UserQuestionAnswer ans : testResult.answers) {
-                res.addAnswers(ans.questionId, ans.answers);
+                List<ResultUserAnswer> addAnswers = ans.answers.stream()
+                        .map(ians -> new ResultUserAnswer(ians, user))
+                        .collect(Collectors.toList());
+                res.addAnswers(ans.questionId, addAnswers);
             }
         }
                  
@@ -669,11 +676,24 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         
         for (UserTestResult testResult : testResults) {
             for (UserQuestionAnswer ans : testResult.answers) {
-                res.addAnswers(ans.questionId, ans.answers);
+                
+                List<ResultUserAnswer> addAnswers = ans.answers.stream()
+                        .map(ians -> new ResultUserAnswer(ians, null))
+                        .collect(Collectors.toList());
+                
+                res.addAnswers(ans.questionId, addAnswers);
             }
         }
                 
         return res;
+    }
+    
+    private String getReference(String userId) {
+        User user = userManager.getUserById(userId);
+        if (user == null)
+            return null;
+        
+        return user.metaData.get("questback_referenceId");
     }
 
     private boolean hasReference(String userId, String referenceId) {

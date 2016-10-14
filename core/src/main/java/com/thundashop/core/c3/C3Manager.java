@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import static org.joda.time.format.ISODateTimeFormat.date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -323,8 +324,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     }
 
     public List<C3Hour> getHoursForCurrentUser(String projectId, Date from, Date to ) {
+        return getHoursForUser(projectId, from, to, getSession().currentUser.id);
+    }
+
+    private List<C3Hour> getHoursForUser(String projectId, Date from, Date to, String userId) {
         List<C3Hour> retHours = hours.values().stream()
-                .filter(hour -> hour.registeredByUserId != null && hour.registeredByUserId.equals(getSession().currentUser.id))
+                .filter(hour -> hour.registeredByUserId != null && hour.registeredByUserId.equals(userId))
                 .filter(hour -> hour.projectId != null && hour.projectId.equals(projectId))
                 .filter(hour -> hour.within(from, to))
                 .collect(Collectors.toList());
@@ -411,7 +416,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 .findFirst()
                 .orElse(new C3UserMetadata());
         
-        return timeRates.get(meta.timeRateId);
+        C3TimeRate rate = timeRates.get(meta.timeRateId);
+        
+        if (rate == null)
+            return new C3TimeRate();
+        
+        return rate;
     }
 
     @Override
@@ -529,12 +539,16 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         return projectCosts;
     }
 
-    private List<ProjectCost> getOtherCostsForCurrentUser(String projectId, Date from, Date to) {
+    private List<C3OtherCosts> getOtherCostsForCurrentUser(String projectId, Date from, Date to) {
+        return getOtherCostsForUser(projectId, from, to, getSession().currentUser.id);
+    }
+
+    private List<C3OtherCosts> getOtherCostsForUser(String projectId, Date from, Date to, String userId) {
         return otherCosts.values().stream()
-            .filter(hour -> hour.registeredByUserId != null && hour.registeredByUserId.equals(getSession().currentUser.id))
-            .filter(hour -> hour.projectId != null && hour.projectId.equals(projectId))
-            .filter(hour -> hour.within(from, to))
-            .collect(Collectors.toList());
+                .filter(hour -> hour.registeredByUserId != null && hour.registeredByUserId.equals(userId))
+                .filter(hour -> hour.projectId != null && hour.projectId.equals(projectId))
+                .filter(hour -> hour.within(from, to))
+                .collect(Collectors.toList());
     }
 
     private void finalize(C3Hour o) {
@@ -588,5 +602,80 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         if (periode != null) {
             deleteObject(periode);
         }
+    }
+
+    @Override
+    public C3Report getReportForUserProject(String userId, String projectId, Date start, Date end) {
+        C3Report report = new C3Report();
+        
+        report.startDate = start;
+        report.endDate = end;
+        report.hours.addAll(getHoursForUser(projectId, start, end, userId));
+        report.otherCosts.addAll(getOtherCostsForUser(projectId, start, end, userId));
+        report.userId = userId;
+        
+        report.roundSum = calculateRoundSum(userId, projectId, start, end);
+        
+        report.hours.stream()
+                .forEach(hour -> finalize(hour));
+        
+        report.sumHours = report.hours.stream()
+                .mapToInt(hour -> (int)hour.hours).sum();
+        
+        report.sumPost11 = report.hours.stream()
+                .mapToInt(hour -> (int)hour.hours * getTimeRate(userId).rate).sum();
+        
+        return report;
+    }
+
+    private double calculateRoundSum(String userId, String projectId, Date start, Date end) {
+        int year = getYear(start);
+        C3RoundSum roundSumForYear = getRoundSum(year);
+        C3Project project = getProject(projectId);
+        List<C3ForskningsUserPeriode> forskningsPeriodes = getForskningsPeriodesForUser(userId);
+        
+        int totalForPeriode = 0;
+        for (C3ForskningsUserPeriode forskningsPeriode : forskningsPeriodes) {
+            if (!project.interCepts(forskningsPeriode.start, forskningsPeriode.end)) {
+                continue;
+            }
+            
+            Date toCalclateFrom = getHighestDate(project.startDate, forskningsPeriode.start);
+            Date toCalculateTo = getLowestDate(project.endDate, forskningsPeriode.end);
+            int days = daysBetween(toCalclateFrom, toCalculateTo);
+            double priceEachDay = (double)roundSumForYear.sum / (double)365;
+            double fullPrice = (priceEachDay * days);
+            totalForPeriode += fullPrice * ((double)forskningsPeriode.percents/(double)100);
+        }
+        
+        return totalForPeriode;
+    }
+    
+    private int daysBetween(Date d1, Date d2){
+        return (int)( (d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+    }
+
+    private int getYear(Date start) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        int year = cal.get(Calendar.YEAR);
+        return year;
+    }
+
+    private Date getHighestDate(Date start, Date startDate) {
+        if (start.after(startDate))
+            return start;
+        
+        return startDate;
+    }
+
+    private Date getLowestDate(Date endDate, Date end) {
+        if (end.equals(endDate))
+            return end;
+        
+        if (endDate.before(end))
+            return endDate;
+        
+        return end;
     }
 }

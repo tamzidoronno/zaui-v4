@@ -87,6 +87,9 @@ public class SedoxBinaryFile implements Serializable {
     private int getAddons(String type) {
         int addon = 0;
         
+        if (fileType != null && fileType.toLowerCase().equals("other"))
+            return 0;
+        
         if (options.requested_dpf && type.equals("car"))
             addon += 5;
         

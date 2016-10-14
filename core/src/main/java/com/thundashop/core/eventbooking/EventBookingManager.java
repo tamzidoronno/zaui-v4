@@ -1140,6 +1140,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         getSession().put("from", null);
         getSession().put("to", null);
     }
+    
+    @Override
+    public void clearLocationFilters() {
+        getSession().put("sessionfilters", new ArrayList());
+    }
 
     @Override
     public List<Location> getFilteredLocations() {
@@ -1706,11 +1711,17 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 .filter(event -> event.isInFuture)
                 .collect(Collectors.toList());
         
+        if (getSession().get("from") != null && getSession().get("to") != null) {
+            activeEvents = getEvents();
+        }
+        
+        
         activeEvents.forEach(o -> finalize(o));
                 
         List<Location> activeLocations = activeEvents.stream()
                 .map(event -> event.location)
                 .distinct()
+                .filter(o -> o != null && o.name != null)
                 .sorted( (o1, o2) -> { return o1.name.compareTo(o2.name); })
                 .collect(Collectors.toList());
         
@@ -1910,7 +1921,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
                 User user = userManager.getUserById(booking.userId);
                 if (user != null && hasUserParticipated(event, user.id) && isInGroup(groupIds, user)) {
                     stat.addUserId(event.id, user.id);
-                    i++;
+                    i += event.days.size();
                 }
             }
         }

@@ -15,10 +15,10 @@ import java.util.List;
  * @author ktonder
  */
 public class QuestBackResult implements Serializable {
-    private HashMap<String, List<String>> answers = new HashMap();
+    private HashMap<String, List<ResultUserAnswer>> answers = new HashMap();
     
-    public void addAnswers(String questionId, List<String> addAnswers) {
-        List<String> memAns = answers.get(questionId);
+    public void addAnswers(String questionId, List<ResultUserAnswer> addAnswers) {
+        List<ResultUserAnswer> memAns = answers.get(questionId);
 
         if (memAns == null) {
             memAns = new ArrayList();

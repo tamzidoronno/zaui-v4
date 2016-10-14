@@ -1,0 +1,54 @@
+.C3SFIRapport .selectButton {
+    border: solid 1px #DDD;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.C3SFIRapport .selectButton:hover {
+    background-color: #eee;
+}
+
+.C3SFIRapport .col {
+    display: inline-block;
+}
+
+.C3SFIRapport .row {
+    border-bottom: solid 1px #DDD;
+    padding: 5px;
+    margin-top: 5px;
+}
+
+
+.C3SFIRapport .row:last-child {
+    border-bottom: solid 0px;
+}
+
+.C3SFIRapport .col:nth-child(1) {
+    padding-left: 10px;
+}
+
+.C3SFIRapport .col:nth-child(2),
+.C3SFIRapport .col:nth-child(3),
+.C3SFIRapport .col:nth-child(4) {
+    border-left: solid 1px #DDD;
+    padding-left: 10px;
+}
+
+.C3SFIRapport .col.name { width: 200px; }
+.C3SFIRapport .col.hours { width: 200px; }
+.C3SFIRapport .col.timesats { width: 200px; }
+
+.C3SFIRapport .boxtitle {
+    background-color: #EEE;
+    padding: 5px;
+}
+
+.C3SFIRapport .sfibox {
+    border: solid 1px #DDD;
+}
+
+.C3SFIRapport .totalCosts, 
+.C3SFIRapport .othercosts {
+    margin-top: 30px;
+}

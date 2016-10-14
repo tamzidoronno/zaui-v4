@@ -11,7 +11,7 @@ class C3RegisterHours extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        $this->includefile("overview");
+//        $this->includefile("overview");
         $this->includefile("summary");
     }
 }

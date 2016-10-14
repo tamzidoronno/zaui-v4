@@ -48,7 +48,11 @@ foreach ($tasks as $task) {
 
 $hoursInMinutes = $sumHours * 60;
 $totalMinutes = $hoursInMinutes + $sumMinutes;
-$totalTime = date('H', mktime(0,$totalMinutes)). " hours and  ".date('i', mktime(0,$totalMinutes))." minutes";
+
+$fhours = floor($totalMinutes / 60);
+$fminutes = $totalMinutes % 60;
+
+$totalTime = $fhours. " hours and  ".$fminutes." minutes";
 echo "<br/>";
 echo "<div class='taskrow'>";
     echo "<div class='taskname'>Total: $totalTime</div>";

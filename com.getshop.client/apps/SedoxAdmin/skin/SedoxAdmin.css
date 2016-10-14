@@ -136,6 +136,7 @@
 
 .SedoxAdmin .creditinformation  {
     font-size: 0px !important;
+    position: relative;
 }
 .SedoxAdmin .creditinformation .product_action_button {
     display: inline-block;
@@ -491,6 +492,23 @@
     color: #5d6773;
     font-weight: bold;
     font-size: 14px;
+}
+
+.SedoxAdmin .customer_data_icons {
+    position: absolute;
+    right: 10px; 
+    top: 10px;
+}
+.SedoxAdmin .customer_data_icons .data_value.badcustomer { background-image: url('{IMAGEFOLDER}/badcustomer.png'); }
+.SedoxAdmin .customer_data_icons .data_value.norwegiancustomer { background-image: url('{IMAGEFOLDER}/norwegian.png'); }
+.SedoxAdmin .customer_data_icons .data_value.usecreditaccount { background-image: url('{IMAGEFOLDER}/usecredit.png'); }
+.SedoxAdmin .customer_data_icons .data_value.windowsapp { background-image: url('{IMAGEFOLDER}/windowsapp.png'); }
+.SedoxAdmin .customer_data_icons .data_value.automaticgear { background-image: url('{IMAGEFOLDER}/automaticgear.png'); }
+
+.SedoxAdmin .customer_data_icons .data_value {
+    height: 30px;
+    width: 34px;
+    display: inline-block;
 }
 
 .SedoxAdmin .customer_data {

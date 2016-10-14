@@ -28,7 +28,7 @@ $forskningsperiodes = $this->getApi()->getC3Manager()->getForskningsPeriodesForU
             </select>
         </div>
         <div class="description">
-            Benytt timerate.
+            Dersom brukeren registerer timer skal denne timeraten benyttes, velg til høyre.
         </div>
     </div>
     
@@ -36,6 +36,10 @@ $forskningsperiodes = $this->getApi()->getC3Manager()->getForskningsPeriodesForU
         <div class="gss_button" gss_method="saveHourRate" gss_model="c3manmodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i>Lagre</div>
     </div>
 
+    <div style="border-bottom: dashed 2px #DDD; margin-bottom: 20px;"></div>
+    <center><h3>Forskingsbrukere (arbeidsperiode + stillingsprosent)</h3></center>
+    <center> Dersom brukeren er en forskingsbruker, så kan du legge til arbeidsperioder under. Disse periodene brukes for å beregne kostnader ut fra rundsummen.</center>
+    <br/>
     <?
     if ($forskningsperiodes) {
         echo "<div style='background-color: #FCFCFC; padding: 20px; box-sizing: border-box; border: solid 1px #DDD;'>";

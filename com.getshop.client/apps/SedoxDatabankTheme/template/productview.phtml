@@ -6,6 +6,8 @@ $product = $this->getCurrentProduct();
 $productName = $product->printableName;
 $creditPrice = $this->getApi()->getSedoxProductManager()->getPriceForProduct($product->id, [$product->binaryFiles[0]->id]);
 
+$loggedIn = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null;
+
 if (!function_exists("sedox_notAvailableCheck")) {
     function sedox_notAvailableCheck($input) {
         if (!$input) {
@@ -20,7 +22,12 @@ if (!function_exists("sedox_notAvailableCheck")) {
     <div class="innerview" productid="<? echo $product->id; ?>">
         <div class='title boldFont'>
             <i class='fa fa-file'></i> <? echo $productName; ?>
-            <div class='product_comment'><b> Comment: </b><? echo !@$product->comment ? "N/A" : $product->comment; ?></div>
+            
+            <div class='product_comment'>
+                <? if ($loggedIn) { ?>
+                    <b> Comment: </b><? echo !@$product->comment ? "N/A" : $product->comment; ?>
+                <? } ?>
+            </div>
         </div>
         <div class='downloadinfo'>
             <? $this->includefile("productdetails", "ns_4f89c95c_99dc_4ed7_9352_1e1c51f4630c"); ?>
@@ -42,7 +49,7 @@ if (!function_exists("sedox_notAvailableCheck")) {
 
                 <div class='row_type2'>
                     Reference:
-                    <div class='row_subinfo'><? echo sedox_notAvailableCheck(@$product->reference->{ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id}); ?></div>
+                    <div class='row_subinfo'><? echo sedox_notAvailableCheck($loggedIn ? @$product->reference->{ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id} : null); ?></div>
                 </div>
 
                 <div class='row_type2'>

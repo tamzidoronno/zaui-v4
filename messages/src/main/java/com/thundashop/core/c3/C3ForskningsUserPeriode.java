@@ -18,4 +18,5 @@ public class C3ForskningsUserPeriode extends DataCommon {
     public String projectId;
     public int percents;
     public String userId;
+
 }

@@ -14,7 +14,7 @@ foreach ($accessList as $access) {
     $periodes = $this->getApi()->getC3Manager()->getPeriodesForProject($project->id);
     
     echo "<div class='projectoverview'>";
-        echo "<h1>$project->name</h1>";
+        echo "<h1>$project->projectNumber - $project->name</h1>";
         echo "( Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to)).")";
         echo "<br/>Prosjekt periode: ".date('d.m.Y', strtotime($project->startDate))." - ".date('d.m.Y', strtotime($project->endDate));
         echo "<br/>";

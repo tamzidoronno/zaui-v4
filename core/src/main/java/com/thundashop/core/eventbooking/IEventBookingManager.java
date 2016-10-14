@@ -214,4 +214,6 @@ public interface IEventBookingManager {
     
     @Editor
     public void toggleHide(String eventId);
+    
+    public void clearLocationFilters();
 }

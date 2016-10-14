@@ -51,132 +51,15 @@ public class RenaHotell implements AccountingInterface {
     @Override
     public List<String> createOrderFile(List<Order> orders, String type) {
         
-        SimpleDateFormat format1 = new SimpleDateFormat("ddMMyy");
         List<String> result = new ArrayList();
         for(Order order : orders) {
             User user = userManager.getUserById(order.userId);
+            HashMap<Integer, String> fieldsInLine = createItemLine(null, order, user);
+            String headerline = createLine(fieldsInLine);
+            result.add(headerline);
+            
             for(CartItem item : order.cart.getItems()) {
-                HashMap<Integer, String> fieldsInLine = new HashMap();
-                fieldsInLine.put(1, "\"97");
-                fieldsInLine.put(2, format1.format(order.rowCreatedDate));
-                fieldsInLine.put(3, prependZeros(new Long(order.incrementOrderId-100000).intValue() + "", 6));
-                fieldsInLine.put(4, format1.format(order.rowCreatedDate));
-                fieldsInLine.put(5, "0045");
-                
-                fieldsInLine.put(6, "\"\"" + stripText("", 30) + "\"\"");
-                fieldsInLine.put(7, "0000");
-                fieldsInLine.put(8, "00000");
-                String account = item.getProduct().sku;
-                String mvaKode = item.getProduct().accountingSystemId;
-                
-                if(account == null) {
-                    account = "-1";
-                }
-                if(mvaKode == null) {
-                    mvaKode = "-1";
-                }
-                
-                //Cancelation
-                if(item.getProduct().id.equals("6087e72e-dc6a-48b5-b5d5-63da4ee7346e")) {
-                    account = "003912";
-                    mvaKode = "08";
-                }
-                //Room
-                if(item.getProduct().id.equals("92b6a16a-a7da-4e3b-83d9-41c90f5bc0bb")) {
-                    account = "001920";
-                    mvaKode = "00";
-                }
-                //Room
-                if(item.getProduct().id.equals("9eb99519-b277-4a09-bf3d-327b1971d568")) {
-                    account = "003052";
-                    mvaKode = "03";
-                }
-                
-                
-                String costumerId = (user.customerId+2000) + "";
-                if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {
-                    costumerId = "010900";
-                }
-                
-                account = prependZeros(account, 6);
-                costumerId = prependZeros(costumerId, 6);
-                
-                Integer count = item.getCount();
-                
-                if(count > 0) {
-                    fieldsInLine.put(9, account + "");
-                    fieldsInLine.put(10, "000000"); //Debet konto
-                } else {
-                    count = count * -1;
-                    fieldsInLine.put(9, "000000"); //Debet konto
-                    fieldsInLine.put(10, account + "");
-                }
-                fieldsInLine.put(21, costumerId + ""); //Debet konto
-                
-                Address address = user.address;
-                if(address  == null) {
-                     address = new Address();
-                }
-                if(user.address == null) {
-                    user.address = new Address();
-                }
-                if(address.address2 == null) { address.address2="";}
-                if(address.address == null) { address.address="";}
-                if(address.city == null) { address.city="";}
-                if(address.postCode == null) { address.postCode="";}
-                
-                double price = item.getProduct().priceExTaxes;
-                DecimalFormat df = new DecimalFormat("#.##");      
-                String priceToSend = df.format(price); 
-                if(!priceToSend.contains(".")) {
-                    priceToSend = priceToSend + ".00";
-                } else {
-                    String[] splitted = priceToSend.split("\\.");
-                    if(splitted[1].length() == 1) {
-                        priceToSend = priceToSend + "0";
-                    }
-                }
-                
-                priceToSend = prependZeros(priceToSend, 14);
-                fieldsInLine.put(11, mvaKode);
-                fieldsInLine.put(12, "000");
-                fieldsInLine.put(13, "000000.0000");
-                fieldsInLine.put(14, "00000000000.00");
-                fieldsInLine.put(15, priceToSend + "");
-                fieldsInLine.put(16, "000000");
-                fieldsInLine.put(17, format1.format(order.rowCreatedDate));
-                String counter = count + ".00";
-                counter = prependZeros(counter, 11);
-                fieldsInLine.put(18, prependZeros(order.incrementOrderId + "", 10));
-                fieldsInLine.put(19, counter);
-                fieldsInLine.put(20, "\"\"" + stripText("", 25) + "\"\"");
-                fieldsInLine.put(22, "000000");
-                fieldsInLine.put(23, "\"\"" + stripText(user.fullName, 30) + "\"\"" + "");
-                fieldsInLine.put(24, "\"\"" + stripText(address.address, 30) + "\"\"" + "");
-                fieldsInLine.put(25, "\"\"" + stripText(address.address2, 30) + "\"\"" + "");
-                fieldsInLine.put(26, "\"\"" + stripText(address.postCode, 6) + "\"\"" + "");
-                fieldsInLine.put(27, "\"\"" + stripText(user.address.city, 25) + "\"\""  + "");
-                fieldsInLine.put(28, "\"\"" + stripText("", 30) + "\"\"");
-                fieldsInLine.put(29, "\"\"" + stripText(user.cellPhone, 15) + "\"\"");
-                
-                fieldsInLine.put(30, "\"\"" + stripText("", 15) + "\"\"");
-                fieldsInLine.put(31, "\"\"" + stripText("", 5) + "\"\"");
-                fieldsInLine.put(32, "\"\"" + stripText("", 15) + "\"\"");
-                fieldsInLine.put(33, "\"\"" + stripText("", 15) + "\"\"");
-                fieldsInLine.put(34, "00000000000.00");
-                fieldsInLine.put(35, "\"\"" + stripText("", 30) + "\"\"");
-                fieldsInLine.put(36, "\"\"" + stripText("", 30) + "\"\"");
-                fieldsInLine.put(37, "\"\"" + stripText("", 30) + "\"\"");
-                fieldsInLine.put(38, "\"\"" + stripText("", 6) + "\"\"");
-                fieldsInLine.put(39, "\"\"" + stripText("", 25) + "\"\"");
-                
-                fieldsInLine.put(40, "000");
-                fieldsInLine.put(41, "0000");
-                fieldsInLine.put(42, "00");
-                fieldsInLine.put(43, "00");
-                fieldsInLine.put(44, "000");
-                fieldsInLine.put(45, "000");
-                fieldsInLine.put(46,"00\"");
+                fieldsInLine = createItemLine(item, order, user);
                 String line = createLine(fieldsInLine);
                 result.add(line);
             }
@@ -291,6 +174,151 @@ public class RenaHotell implements AccountingInterface {
             padding += "0";
         }
         return padding + text;
+    }
+
+    private HashMap<Integer, String> createItemLine(CartItem item, Order order, User user) {
+        SimpleDateFormat format1 = new SimpleDateFormat("ddMMyy");
+        HashMap<Integer, String> fieldsInLine = new HashMap();
+        fieldsInLine.put(1, "\"97");
+        fieldsInLine.put(2, format1.format(order.rowCreatedDate));
+        fieldsInLine.put(3, prependZeros(new Long(order.incrementOrderId-100000).intValue() + "", 6));
+        fieldsInLine.put(4, format1.format(order.rowCreatedDate));
+        fieldsInLine.put(5, "0045");
+
+        fieldsInLine.put(6, "\"\"" + stripText("", 30) + "\"\"");
+        fieldsInLine.put(7, "0000");
+        fieldsInLine.put(8, "00000");
+        String account = null;
+        String mvaKode = null;
+
+        if(item != null) {
+            account = item.getProduct().sku;
+            mvaKode = item.getProduct().accountingSystemId;
+
+                        //Cancelation
+            if(item.getProduct().id.equals("6087e72e-dc6a-48b5-b5d5-63da4ee7346e")) {
+                account = "003912";
+                mvaKode = "08";
+            }
+            //Room
+            if(item.getProduct().id.equals("92b6a16a-a7da-4e3b-83d9-41c90f5bc0bb")) {
+                account = "003410";
+                mvaKode = "08";
+            }
+            //Late checkout, frokost
+            if(item.getProduct().id.equals("9eb99519-b277-4a09-bf3d-327b1971d568")) {
+                account = "003052";
+                mvaKode = "03";
+            }
+        } else {
+            account = "001920";
+            mvaKode = "00";
+        }
+        
+        if(account == null) {
+            account = "-1";
+        }
+        if(mvaKode == null) {
+            mvaKode = "-1";
+        }
+
+
+
+        String costumerId = (user.customerId+2000) + "";
+        if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {
+            costumerId = "010900";
+        }
+
+        account = prependZeros(account, 6);
+        costumerId = prependZeros(costumerId, 6);
+
+        Integer count = -1;
+        if(item != null) {
+            count = item.getCount();
+        }
+
+        if(count > 0) {
+            fieldsInLine.put(9, "000000"); //Debet konto
+            fieldsInLine.put(10, account + "");//Kredit konto
+        } else {
+            count = count * -1;
+            fieldsInLine.put(9, account + "");//Debet konto
+            fieldsInLine.put(10, "000000"); //Kredit konto
+        }
+        fieldsInLine.put(21, costumerId + ""); //Debet konto
+
+        Address address = user.address;
+        if(address  == null) {
+             address = new Address(); 
+        }
+        if(user.address == null) {
+            user.address = new Address();
+        }
+        if(address.address2 == null) { address.address2="";}
+        if(address.address == null) { address.address="";}
+        if(address.city == null) { address.city="";}
+        if(address.postCode == null) { address.postCode="";}
+
+        Double price = null;
+        if(item != null) {
+            price = item.getProduct().price * item.getCount();
+        } else {
+            price = orderManager.getTotalAmount(order);
+        }
+        
+        DecimalFormat df = new DecimalFormat("#.##");      
+        String priceToSend = df.format(price); 
+        if(!priceToSend.contains(".")) {
+            priceToSend = priceToSend + ".00";
+        } else {
+            String[] splitted = priceToSend.split("\\.");
+            if(splitted[1].length() == 1) {
+                priceToSend = priceToSend + "0";
+            }
+        }
+
+        priceToSend = prependZeros(priceToSend, 14);
+        fieldsInLine.put(11, mvaKode);
+        fieldsInLine.put(12, "000");
+        fieldsInLine.put(13, "000000.0000");
+        fieldsInLine.put(14, "00000000000.00");
+        fieldsInLine.put(15, priceToSend + "");
+        fieldsInLine.put(16, "000000");
+        fieldsInLine.put(17, format1.format(order.rowCreatedDate));
+        String counter = count + ".00";
+        counter = prependZeros(counter, 11);
+        fieldsInLine.put(18, prependZeros(order.incrementOrderId + "", 10));
+        fieldsInLine.put(19, counter);
+        fieldsInLine.put(20, "\"\"" + stripText("", 25) + "\"\"");
+        fieldsInLine.put(22, "000000");
+        fieldsInLine.put(23, "\"\"" + stripText(user.fullName, 30) + "\"\"" + "");
+        fieldsInLine.put(24, "\"\"" + stripText(address.address, 30) + "\"\"" + "");
+        fieldsInLine.put(25, "\"\"" + stripText(address.address2, 30) + "\"\"" + "");
+        fieldsInLine.put(26, "\"\"" + stripText(address.postCode, 6) + "\"\"" + "");
+        fieldsInLine.put(27, "\"\"" + stripText(user.address.city, 25) + "\"\""  + "");
+        fieldsInLine.put(28, "\"\"" + stripText("", 30) + "\"\"");
+        fieldsInLine.put(29, "\"\"" + stripText(user.cellPhone, 15) + "\"\"");
+
+        fieldsInLine.put(30, "\"\"" + stripText("", 15) + "\"\"");
+        fieldsInLine.put(31, "\"\"" + stripText("", 5) + "\"\"");
+        fieldsInLine.put(32, "\"\"" + stripText("", 15) + "\"\"");
+        fieldsInLine.put(33, "\"\"" + stripText("", 15) + "\"\"");
+        fieldsInLine.put(34, "00000000000.00");
+        fieldsInLine.put(35, "\"\"" + stripText("", 30) + "\"\"");
+        fieldsInLine.put(36, "\"\"" + stripText("", 30) + "\"\"");
+        fieldsInLine.put(37, "\"\"" + stripText("", 30) + "\"\"");
+        fieldsInLine.put(38, "\"\"" + stripText("", 6) + "\"\"");
+        fieldsInLine.put(39, "\"\"" + stripText("", 25) + "\"\"");
+
+        fieldsInLine.put(40, "000");
+        fieldsInLine.put(41, "0000");
+        fieldsInLine.put(42, "00");
+        fieldsInLine.put(43, "00");
+        fieldsInLine.put(44, "000");
+        fieldsInLine.put(45, "000");
+        fieldsInLine.put(46,"00\"");
+        
+        return fieldsInLine;
     }
     
 }

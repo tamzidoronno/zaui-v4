@@ -31,6 +31,15 @@ public interface IAccountingManager {
     public void setAccountingManagerConfig(AccountingManagerConfig config);
     
     @Administrator
+    public List<AccountingTransferConfig> getAllConfigs();
+    
+    @Administrator
+    public void saveConfig(AccountingTransferConfig config);
+    
+    @Administrator
+    public void removeTransferConfig(String id);
+    
+    @Administrator
     public void transferFilesToAccounting();
     
     @Administrator

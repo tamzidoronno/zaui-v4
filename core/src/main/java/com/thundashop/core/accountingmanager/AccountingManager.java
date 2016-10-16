@@ -79,11 +79,21 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     private List<AccountingInterface> interfaces = new ArrayList();
     private AccountingManagerConfig config = new AccountingManagerConfig();
     
+    private HashMap<String, AccountingTransferConfig> configs = new HashMap();
+    
+    @Override
+    public List<AccountingTransferConfig> getAllConfigs() {
+        return new ArrayList(configs.values());
+    }
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for(DataCommon obj : data.data) {
             if(obj instanceof AccountingManagerConfig) {
                 this.config = (AccountingManagerConfig) obj;
+            }
+            if(obj instanceof AccountingTransferConfig) {
+                configs.put(obj.id, (AccountingTransferConfig) obj);
             }
             if(obj instanceof SavedOrderFile) {
                 SavedOrderFile file = (SavedOrderFile) obj;
@@ -613,7 +623,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                     continue;
                 }
                 orders.add(order);
-            }
+        }
         }
         return orders;
     }
@@ -667,5 +677,18 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             list.add(Integer.parseInt(s));
         
         return list;
+    }
+
+    @Override
+    public void saveConfig(AccountingTransferConfig config) {
+        saveObject(config);
+        configs.put(config.id, config);
+    }
+
+    @Override
+    public void removeTransferConfig(String id) {
+        AccountingTransferConfig objcet = configs.get(id);
+        deleteObject(objcet);
+        configs.remove(id);
     }
 }

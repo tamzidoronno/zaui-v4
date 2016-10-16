@@ -68,6 +68,7 @@ class PmsBookingMessageFormatter {
             if(guest.prefix != null) { message = message.replace("{prefix}", guest.prefix); }
             if(guest.phone != null) { message = message.replace("{phone}", guest.phone); }
         } else if(user != null) {
+            if(user.id != null) { message = message.replace("{userid}", user.id); }
             if(user.fullName != null) { message = message.replace("{name}", user.fullName); }
             if(user.emailAddress != null) { message = message.replace("{email}", user.emailAddress); }
             if(user.prefix != null) { message = message.replace("{prefix}", user.prefix); }

@@ -576,7 +576,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             while (roomIterator.hasNext()) {
                 Hashtable addon = (Hashtable) roomIterator.next();
                 String name = (String) addon.get("name");
-                if(name != null && name.toLowerCase().contains("breakfast")) {
+                String type = (String) addon.get("type");
+                
+                if(type != null && (type.toLowerCase().contains("breakfast") || type.toLowerCase().contains("frokost"))) {
+                    return (int) addon.get("persons");
+                }
+                
+                if(name != null && (name.toLowerCase().contains("breakfast") || name.toLowerCase().contains("frokost"))) {
                     return (int) addon.get("persons");
                 }
             }

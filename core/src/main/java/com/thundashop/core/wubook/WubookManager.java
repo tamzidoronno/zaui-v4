@@ -287,6 +287,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Hashtable roomtable = (Hashtable) roomIterator.next();
             Integer roomId = (Integer) roomtable.get("room_id");
             room.guest = guest;
+            room.guestName = getGuestName(roomNumber, table);
             room.roomId = roomId;
             room.breakfasts = checkForBreakfast(roomtable, table, guest);
             booking.rooms.add(room);
@@ -575,7 +576,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             while (roomIterator.hasNext()) {
                 Hashtable addon = (Hashtable) roomIterator.next();
                 String name = (String) addon.get("name");
-                if(name != null && name.toLowerCase().contains("breakfast")) {
+                String type = (String) addon.get("type");
+                
+                if(type != null && (type.toLowerCase().contains("breakfast") || type.toLowerCase().contains("frokost"))) {
+                    return (int) addon.get("persons");
+                }
+                
+                if(name != null && (name.toLowerCase().contains("breakfast") || name.toLowerCase().contains("frokost"))) {
                     return (int) addon.get("persons");
                 }
             }
@@ -718,6 +725,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             guest.email = booking.email;
             guest.name = booking.name;
             guest.phone = booking.phone;
+            
+            if(r.guestName != null && !r.guestName.isEmpty()) {
+                guest.name = r.guestName;
+            }
             room.guests.add(guest);
             newbooking.addRoom(room);
         }
@@ -972,6 +983,35 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         return null;
+    }
+
+    private String getGuestName(int roomNumber, Hashtable table) {
+        try {
+            Hashtable addons = (Hashtable) table.get("ancillary");
+            if(addons == null) {
+                return "";
+            }
+
+
+            for(Object key : addons.keySet()) {
+                if(key == null) {
+                    continue;
+                }
+                if(key.toString().contains("Room (" + roomNumber + ")")) {
+                    Hashtable roomAnc = (Hashtable) addons.get(key);
+                    if(roomAnc != null) {
+                        String guest = (String) roomAnc.get("Guest");
+                        if(guest != null) {
+                            return guest;
+                        }
+                    }
+                }
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        return "";
     }
 
 }

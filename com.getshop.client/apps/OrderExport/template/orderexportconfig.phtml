@@ -1,0 +1,270 @@
+<?php
+namespace ns_13270e94_258d_408d_b9a1_0ed3bbb1f6c9;
+/* @var $this \ns_932810f4_5bd1_4b56_a259_d5bd2e071be1\AccountingTransfer */
+$states = \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager::getOrderStatuses();
+$transfertypes = $this->getTransferTypes();
+
+$newArray = array();
+$newArray[-1] = "Credit notes";
+$newArray[0] = "All states";
+$states = $newArray + $states;
+
+$files = $this->getApi()->getAccountingManager()->getAllFiles();
+$newfile = array();
+foreach($files as $file) {
+    $newfile[strtotime($file->rowCreatedDate)] = $file;
+}
+ksort($newfile);
+
+$finalFiles = array();
+foreach($newfile as $time => $entry) {
+    foreach($files as $file) {
+        if(strtotime($file->rowCreatedDate) == $time) {
+            $finalFiles[] = $file;
+        }
+    }
+}
+$finalFiles = array_reverse($finalFiles);
+$files = $finalFiles;
+
+$availableTypes = array();
+$availableTypes['poweroffice'] = "Power Office Go";
+$availableTypes['rubicon'] = "Rubicon";
+$availableTypes['vismaordersr'] = "Visma ordersr";
+$availableTypes['vismadirdbr'] = "Visma dirdbr";
+$availableTypes['xledger'] = "Xledger";
+$availableTypes['amesto'] = "Amesto";
+$availableTypes['tripletex'] = "TripleTex";
+$availableTypes['fiken'] = "Fiken";
+$availableTypes['sveve'] = "Sveve creditor";
+$availableTypes['getsop'] = "GetShop";
+$availableTypes['bcomratemanager'] = "Booking.com rate manager";
+
+$userIncludeTypes = array();
+$userIncludeTypes[0] = "No users included";
+$userIncludeTypes[1] = "All users included";
+$userIncludeTypes[2] = "Only new users included";
+$userIncludeTypes[3] = "All users connected to orders selected";
+$userIncludeTypes[4] = "All users connected not transferred orders";
+
+$subtypes = array();
+$subtypes['order'] = "Transfer orders";
+$subtypes['booking'] = "Transfer bookings";
+
+
+$paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+?>
+
+<div class="gss_settings_header">
+    <i class="fa fa-dollar"></i>
+
+    <div class="gss_settings_header_description">
+        <div class="gss_settings_header_title"> <? echo $this->__f("Accounting transfer"); ?></div>
+
+        <div class="gss_settings_header_description_inner">
+            <? echo $this->getDescription(); ?>
+        </div>
+    </div>
+</div>
+
+
+<div class='gss_settings_content'>
+<?php
+echo "<br>";
+echo "<h2>Downloaded history</h2>";
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th align='left'>Created date</th>";
+echo "<th align='left'>Download</th>";
+echo "<th align='left'>Type</th>";
+echo "<th align='left'>Subtype</th>";
+echo "<th align='left'>Transferred</th>";
+echo "<th align='left'>Ex taxes</th>";
+echo "<th align='left'>Inc taxes</th>";
+echo "<th align='left'>Orders</th>";
+echo "</tr>";
+
+foreach($files as $file) {
+    echo "<tr>";
+    $date = $file->rowCreatedDate;
+    $fileId = $file->id;
+    $transferred = "no";
+    if($file->transferred) {
+        $transferred = "yes";
+    }
+    echo "<td>" . date("d.m.Y - H:i", strtotime($date)) . "</td>";
+    echo "<td><a style='color:blue;cursor:pointer;' onclick=\"window.open('/scripts/accounting.php?id=".$fileId."');\">download</a></td>";
+    echo "<td>".$file->type."</td>";
+    echo "<td>".$file->subtype."</td>";
+    echo "<td>$transferred</td>";
+    echo "<td>".round($file->amountEx)."</td>";
+    echo "<td>".round($file->amountInc)."</td>";
+    echo "<td>".sizeof($file->orders)."</td>";
+    echo "</tr>";
+}
+echo "</table>";
+
+echo "<br>";
+echo "<br>";
+
+echo "<select class='gssaddaccountingtype'>";
+foreach($availableTypes as $type => $name) {
+    echo "<option value='$type'>" . $name . "</option>"; 
+}
+echo "</select>";
+echo "<input type='button' class='gssaddaccounting' value='Add integration'></option>";
+echo "<br><br><div style='clear:both;'></div>";
+
+$configs = (array)$this->getApi()->getAccountingManager()->getAllConfigs();
+
+$first = true;
+foreach($configs as $config) {
+    $selected = "";
+    if($first) {
+        $selected = "selectedintegration";
+        $first = false;
+    }
+    echo "<span class='integrationselection $selected' type='".$config->transferType."'><i class='fa fa-trash-o deletetransferconfig' configid='".$config->id."'></i> " .  $availableTypes[$config->transferType] . "</span>";
+}
+echo "<br><br><div style='clear:both;'></div><hr>";
+
+$show = true;
+foreach($configs as $config) {
+    /* @var $config core_accountingmanager_AccountingTransferConfig */
+    $hidestyle = "display:none";
+    if($show) {
+        $hidestyle = "";
+    }
+    $show = false;
+    $ftp = $config->ftp;
+    if(!$ftp) {
+        $ftp = new \core_accountingmanager_TransferFtpConfig();
+    }
+        ?>
+    <div class='configfield' type='<?php echo $config->transferType; ?>' style='<?php echo $hidestyle; ?>'>
+        <div style='clear:both;'></div>
+        <?php
+        echo "<h2>States to include in the ".$availableTypes[$config->transferType]." file </h2>";
+        ?>
+        <div class='gssaddpaymentcontainer'>
+            <select class='gsspaymentmethod'>
+                <? 
+                foreach ($paymentMethods as $key => $method) {
+                    $selected = $filter->paymentMethod == $method->id ? "SELECTED" : "";
+                    ?>
+                    <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $method->appName; ?></option>
+                    <?php
+                 }
+                ?>
+            </select>
+        <?php
+
+            echo "<select class='gsspaymentstatus'>";
+            foreach($states as $type => $name) {
+                echo "<option value='$type'>$name</option>";
+            }
+            echo "</select>";
+            ?>
+            <input type='button' value='Add filter' class='gss_addfiltertoconfig' configid='<?php echo $config->id; ?>'>
+            
+            <br><br>
+            <?php
+            $conftypes = (array)$config->paymentTypes;
+            foreach($conftypes as $type) {
+                foreach ($paymentMethods as $key => $method) {
+                    if($method->id == $type->paymentType) {
+                        echo "<i class='fa fa-trash-o gssremovepaymenttype' type='".$type->paymentType."' configid='".$config->id."' status='".$type->status."'></i> " . $method->appName . " - " . $states[$type->status] . "<br>";
+                    }
+                }
+            }
+            ?>
+        </div>
+        <br><br><br>
+        <h2>Additional config</h2>
+
+        <div class="textfield gss_setting"  id="name">
+            <span class="title"><?php echo $this->__f("Users to include"); ?></span>
+             <div class="gss_dropdown">
+                <select class="property_select" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="includeUsers">
+                    <?php
+                    foreach($userIncludeTypes as $id => $type) {
+                        $selected = "";
+                        if($config->includeUsers == $id) {
+                            $selected = "SELECTED";
+                        }
+                        echo "<option value='".$id."' $selected>".$type."</option>";
+                    }
+                    ?>
+                </select>
+             </div>
+        </div>
+        
+        <h2>Ftp transfer setup to accounting system</h2>
+        <div class="textfield gss_setting" id="ftpuser">
+            <span class="title">Ftp username</span>
+            <input type="hidden" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="configid" value="<?php echo $config->id; ?>">
+            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="ftpuser" value="<?php echo $ftp->username; ?>">
+        </div>
+        <div class="textfield gss_setting" id="ftppassword">
+            <span class="title">Ftp password</span>
+            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="ftppassword" value="<?php echo $ftp->password; ?>">
+        </div>
+        <div class="textfield gss_setting" id="hostname">
+            <span class="title">Ftp hostname</span>
+            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="ftphostname" value="<?php echo $ftp->hostname; ?>">
+        </div>
+        <div class="textfield gss_setting" id="ftppath">
+            <span class="title">Ftp path to put the file in</span>
+            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="ftppath" value="<?php echo $ftp->path; ?>">
+        </div>
+        <div class="textfield gss_setting" id="extension">
+            <span class="title">File extension (Example: .edi)</span>
+            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="extension" value="<?php echo $ftp->extension; ?>">
+        </div>
+        <div class="textfield gss_setting" id="port"><span class="title">Port</span>
+            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="port" value="<?php echo $ftp->port; ?>">
+        </div>
+        <div class="textfield gss_setting" id="delay">
+            <span class="title">Minutes delayed</span>
+            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="delay" value="<?php echo $config->delay; ?>">
+            <div class="description">
+
+            </div>
+        </div>
+        <div class="textfield gss_setting" id="useActiveMode">
+            <span class="title">Use active transfer mode</span>
+            <div class="gss_onoff" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="useActiveMode">
+                <?
+                $faclass = @$ftp->useActiveMode ? "fa-toggle-on" : "fa-toggle-off";
+                ?>
+                Off<i class="fa <? echo $faclass; ?>"></i>On
+            </div>
+        </div>
+
+        <div class="textfield gss_setting" id="useSftp">
+            <span class="title">Use sftp</span>
+            <div class="gss_onoff" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="useSftp">
+                <?
+                $faclass = @$ftp->useSftp ? "fa-toggle-on" : "fa-toggle-off";
+                ?>
+                Off<i class="fa <? echo $faclass; ?>"></i>On
+            </div>
+        </div>
+
+        <div class='gss_button_area'>
+            <?php if($ftp->username) { ?>
+                <div class="gss_button" gss_method="transferNewFiles" gss_model="adminconfig" gss_success_message="Transfer started"><i class='fa fa-save'></i><?php echo $this->__("Transfer new files to ftp"); ?></div>
+            <?php } ?>
+            <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=user&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Download file"); ?></div>
+            <div class="gss_button" gss_method="saveAccountingConfig" gss_model="adminconfig_<?php echo $config->id; ?>" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save settings"); ?></div>
+        </div>
+    </div>
+<? } ?>
+</div>
+
+<script>
+    var item = localStorage.getItem("savedTabOrderExport");
+    if(item) {
+        $('.integrationselection[type="'+item+'"]').click();
+    }
+</script>

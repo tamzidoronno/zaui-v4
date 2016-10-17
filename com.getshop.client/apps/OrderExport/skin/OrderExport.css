@@ -1,0 +1,4 @@
+.integrationselection { display:inline-block; border: solid 1px; border-radius: 3px; margin-right: 5px; padding: 3px; padding-left: 20px; padding-right: 20px; }
+.integrationselection:hover { cursor: pointer; background-color: #bbb; }
+.selectedintegration { background-color: green; font-weight: bold; color:#fff; }
+.gssremovepaymenttype { cursor:pointer; }

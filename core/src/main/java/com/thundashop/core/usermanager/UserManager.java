@@ -564,7 +564,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public User getUserById(String id) throws ErrorException {
         UserStoreCollection storeCollection = getUserStoreCollection(storeId);
-        return storeCollection.getUser(id);
+        User user = storeCollection.getUser(id);
+        if(user != null) {
+            finalizeUser(user);
+        }
+        return user;
     }
 
     public boolean doesUserExsist(String userId) {

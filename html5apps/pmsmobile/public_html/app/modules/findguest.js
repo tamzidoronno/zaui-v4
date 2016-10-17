@@ -35,7 +35,7 @@ getshop.findguestController = function($scope, $state) {
         start.setMinutes(00);
         start.setSeconds(00);
 
-        var end = $scope.listDate;
+        var end = new Date($scope.listDate);
         end.setHours(23);
         end.setMinutes(59);
         end.setSeconds(59);

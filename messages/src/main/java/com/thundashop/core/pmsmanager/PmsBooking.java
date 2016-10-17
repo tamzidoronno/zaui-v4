@@ -22,6 +22,7 @@ public class PmsBooking extends DataCommon {
     public String sessionId;
     public Date sessionStartDate = null;
     public Date sessionEndDate = null;
+    public boolean silentNotification = false;
     
     public List<String> bookingEngineAddons = new ArrayList();
     public RegistrationRules registrationData = new RegistrationRules();
@@ -193,7 +194,7 @@ public class PmsBooking extends DataCommon {
         return fmt.format(date1).equals(fmt.format(date2));
     }
 
-    boolean isCompletedBooking() {
+    public boolean isCompletedBooking() {
         if(sessionId == null || sessionId.isEmpty()) {
             return true;
         }

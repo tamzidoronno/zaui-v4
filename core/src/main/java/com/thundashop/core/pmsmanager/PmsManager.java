@@ -997,6 +997,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private String notify(String key, PmsBooking booking, String type, PmsBookingRooms room) {
+        if(booking != null && booking.silentNotification) {
+            return "Not notified, silent booking: " + type;
+        }
         String message = configuration.smses.get(key);
         
         if (type.equals("email")) {

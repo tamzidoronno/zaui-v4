@@ -2,7 +2,7 @@
 /* @var $this \ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-
+$notificationSettings = $config;
 $days = array();
 $days[1] = "Monday";
 $days[2] = "Tuesday";

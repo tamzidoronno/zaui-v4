@@ -5,19 +5,13 @@
  */
 package com.thundashop.core.c3;
 
-import java.util.Date;
-import org.mongodb.morphia.annotations.Transient;
-
-/**
 /**
  *
  * @author ktonder
  */
-public class C3Hour extends ProjectCost {
-    public String costType = "hour";
-    public double hours;
-    
-    @Transient
-    public double cost;
-    boolean nfr;
+public class SFIExcelReportDataPost13 {
+    public String navn = "";
+    public double totalt;
+    public double nfr;
+    public double inkind;
 }

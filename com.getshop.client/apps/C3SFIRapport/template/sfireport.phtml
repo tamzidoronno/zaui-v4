@@ -12,7 +12,6 @@ $endDate = $this->convertToJavaDate(strtotime($endDateString));
 
 $users = $this->getApi()->getUserManager()->getUsersByCompanyId($companyId);
 
-
 ?>
 
 <h1>SFI - Rapportering av prosjektkostnader</h1>
@@ -90,3 +89,7 @@ Navn på partner: <? echo $this->getPartnerName(); ?>
     
     <div class='row'><div class='name col'>Totale kostnader</div><div class='hours col'></div><div class='timesats col'></div><div class='totalCost col'><? echo $totalCost + $summaryCost; ?></div></div>
 </div>
+
+<br/>
+
+<div class="shop_button" gsclick="downloadReport">Last ned rapport (Excel)</div>

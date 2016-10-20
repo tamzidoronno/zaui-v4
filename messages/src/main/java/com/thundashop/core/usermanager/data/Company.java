@@ -34,4 +34,6 @@ public class Company extends DataCommon {
     public String invoiceReference = "";
     
     public List<Company> subCompanies = new ArrayList();
+    
+    public String companyLeaderUserId = "";
 }

@@ -12,13 +12,14 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
-import static org.joda.time.format.ISODateTimeFormat.date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +41,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     public HashMap<String, C3ProjectPeriode> periodes = new HashMap();
     public HashMap<String, C3OtherCosts> otherCosts = new HashMap();
     public HashMap<String, C3ForskningsUserPeriode> forskningUsersPeriodes = new HashMap();
+    public HashMap<String, C3UserNfrAccess> nfrAccess = new HashMap();
     
     @Autowired
     private UserManager userManager;
@@ -79,6 +81,9 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         if (data instanceof C3ForskningsUserPeriode)
             forskningUsersPeriodes.put(data.id, ((C3ForskningsUserPeriode)data));
+        
+        if (data instanceof C3UserNfrAccess)
+            nfrAccess.put(data.id, ((C3UserNfrAccess)data));
     }    
     
     @Override
@@ -305,6 +310,10 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         if (!canAdd(hour).isEmpty()) {
             throw new IllegalAccessError("Tried to add hours to a project outside of leagal hours");
+        }
+        
+        if (hour.nfr && !allowedNfrHourCurrentUser()) {
+            throw new IllegalAccessError("Not allowed to put hours without access");
         }
         
         hour.registeredByUserId = getSession().currentUser.id;
@@ -678,4 +687,182 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         return end;
     }
+
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    @Override
+    public String getBase64SFIExcelReport(String companyId, Date start, Date end) {
+        List<C3Project> projectsToUse = getAllProjectsConnectedToCompany(companyId);
+        List<User> users = userManager.getUsersByCompanyId(companyId);
+        
+        SFIExcelReportData reportData = new SFIExcelReportData();
+        List<WorkPackage> workPackages = getWorkPackages(projectsToUse, users, start, end);
+        
+        HashMap<String, Double> roundsums = getRoundSums(projectsToUse, users, start, end);
+        HashMap<String, Double> hoursInKind = getHours(projectsToUse, users, start, end, false);
+        HashMap<String, Double> hoursNfr = getHours(projectsToUse, users, start, end, true);
+        
+        for (String userId : hoursNfr.keySet()) {
+            SFIExcelReportDataPost11 post11 = createPost11(userId);
+            post11.timer = hoursNfr.get(userId);
+            post11.totalt = post11.timer * getTimeRate(userId).rate;
+            post11.nfr = post11.totalt;
+            if (post11.totalt > 0) {
+                reportData.post11.add(post11);
+            }
+        }
+        
+        for (String userId : roundsums.keySet()) {
+            SFIExcelReportDataPost11 post11 = createPost11(userId);
+            post11.totalt = roundsums.get(userId);
+            post11.nfr = post11.totalt;
+            post11.timesats = 0;
+            if (post11.totalt > 0) {
+                reportData.post11.add(post11);
+            }
+        }
+        
+        for (String userId : hoursInKind.keySet()) {
+            SFIExcelReportDataPost11 post11 = createPost11(userId);
+            post11.timer = hoursInKind.get(userId);
+            post11.totalt = post11.timer * getTimeRate(userId).rate;
+            post11.inkind = post11.totalt;
+            if (post11.totalt > 0) {
+                reportData.post11.add(post11);
+            }
+        }
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM-yyyy");
+        
+        reportData.delprosjekter = workPackages.stream().filter(wp -> wp != null).map(wp -> wp.name).collect(Collectors.joining(","));
+        reportData.nameOfPartner = userManager.getCompany(companyId).name;
+        reportData.ansvarlig = userManager.getCompany(companyId).contactPerson;
+        reportData.periode = sdf.format(start) + " - " + sdf.format(end);
+        
+        for (C3Project project : projectsToUse) {
+            for (User user : users) {
+                C3Report report = getReportForUserProject(user.id, project.id, start, end);
+                report.otherCosts.stream().filter(cost -> cost.nfr).forEach(cost -> addOtherCost(cost, reportData));
+            }
+            for (User user : users) {
+                C3Report report = getReportForUserProject(user.id, project.id, start, end);
+                report.otherCosts.stream().filter(cost -> !cost.nfr).forEach(cost -> addOtherCost(cost, reportData));
+            }
+        }
+        
+        SFIExcelReport report = new SFIExcelReport(reportData);
+        return report.getBase64Encoded();
+    }
+
+    private void addOtherCost(C3OtherCosts cost, SFIExcelReportData reportData) {
+        SFIExcelReportDataPost14 data = new SFIExcelReportDataPost14();
+        data.navn = cost.comment;
+        data.totalt = cost.cost;
+        if (cost.nfr) {
+            data.nfr = data.totalt;
+        } else {
+            data.inkind = data.totalt;
+        }
+        
+        reportData.post14.add(data);
+    }
+
+    private void addSum(HashMap<String, Double> map, double hours, String userId) {
+        Double sum = map.get(userId);
+        if (sum == null) {
+            map.put(userId, hours);
+        } else {
+            map.put(userId, hours + map.get(userId));
+        }
+    }
+
+    private SFIExcelReportDataPost11 createPost11(String userId) {
+        User user = userManager.getUserById(userId);
+        SFIExcelReportDataPost11 data = new SFIExcelReportDataPost11();
+        data.navn = user.fullName;
+        data.timesats = getTimeRate(user.id).rate;
+        return data;
+    }
+    
+    private HashMap<String, Double> getRoundSums(List<C3Project> projectsToUse, List<User> users, Date start, Date end) {
+        HashMap<String, Double> roundsums = new HashMap();
+        
+        for (C3Project project : projectsToUse) {
+            for (User user : users) {
+                C3Report report = getReportForUserProject(user.id, project.id, start, end);
+                
+                if (report.roundSum > 0) {
+                    addSum(roundsums, report.roundSum, user.id);
+                }
+            }
+        }
+        
+        return roundsums;
+    }
+
+    private HashMap<String, Double> getHours(List<C3Project> projectsToUse, List<User> users, Date start, Date end, boolean isNfr) {
+        HashMap<String, Double> retMap = new HashMap();
+        
+        for (C3Project project : projectsToUse) {
+            for (User user : users) {
+                C3Report report = getReportForUserProject(user.id, project.id, start, end);
+                double addHours = report.hours.stream()
+                        .filter(hour -> hour.nfr == isNfr)
+                        .mapToDouble(hour -> hour.hours).sum();
+                addSum(retMap, addHours, user.id);
+            }
+        }
+        
+        return retMap;
+    }
+
+    private List<WorkPackage> getWorkPackages(List<C3Project> projectsToUse, List<User> users, Date start, Date end) {
+        TreeSet<String> wpIds = new TreeSet();
+        
+        for (C3Project project : projectsToUse) {
+            for (String wpId : project.workPackages) {
+                wpIds.add(wpId);
+            }
+        }
+        
+        return wpIds.stream().map(wpId -> workPackages.get(wpId)).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean allowedNfrHour(String userId) {
+        if (nfrAccess.get(userId) == null) {
+            return false;
+        }
+        
+        return nfrAccess.get(userId).hour;
+    }
+
+    @Override
+    public boolean allowedNfrOtherCost(String userId) {
+        if (nfrAccess.get(userId) == null) {
+            return false;
+        }
+        
+        return nfrAccess.get(userId).otherCost;
+    }
+
+    @Override
+    public void setNfrAccess(C3UserNfrAccess access) {
+        access.id = access.userId;
+        saveObject(access);
+        nfrAccess.put(access.id, access);
+    }
+
+    @Override
+    public boolean allowedNfrHourCurrentUser() {
+        return allowedNfrHour(getSession().currentUser.id);
+    }
+
+    @Override
+    public boolean allowedNfrOtherCostCurrentUser() {
+        return allowedNfrOtherCost(getSession().currentUser.id);
+    }
+    
 }

@@ -6,16 +6,13 @@
 package com.thundashop.core.c3;
 
 import com.thundashop.core.common.DataCommon;
-import java.util.Date;
 
 /**
  *
  * @author ktonder
  */
-public class C3OtherCosts extends ProjectCost {
-    public String costType = "other";
-    public String type;
-    public String comment;
-    public double cost;
-    public boolean nfr;
+public class C3UserNfrAccess extends DataCommon {
+    public String userId = "";
+    public boolean hour = false;
+    public boolean otherCost = false;
 }

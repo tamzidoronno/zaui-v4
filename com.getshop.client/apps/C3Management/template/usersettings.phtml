@@ -13,6 +13,23 @@ $forskningsperiodes = $this->getApi()->getC3Manager()->getForskningsPeriodesForU
 
 <div class="gss_overrideapp view_c3management" gss_use_app_id="e913b056-a5e1-4ca8-83b6-92f192e2a06b">
     
+    <div class="textfield gss_setting">
+        <span class="title"><?php echo $this->__f("Post 1.1 - Tilatt føre timer på forskningsrådets midler."); ?></span>
+        <div class="gss_onoff" gs_model="c3manmodel" gs_model_attr="nfrhour">
+            <? $faclass = $this->getApi()->getC3Manager()->allowedNfrHour($user->id) ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+    </div>
+    
+    <div class="textfield gss_setting">
+        <span class="title"><?php echo $this->__f("Post 1.4 - Tilatt andre kostnader på forskningsrådets midler."); ?></span>
+        <div class="gss_onoff" gs_model="c3manmodel" gs_model_attr="nfrother">
+            <? $faclass = $this->getApi()->getC3Manager()->allowedNfrOtherCost($user->id) ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+    </div>
+
+    
     <input type="hidden" gs_model="c3manmodel" gs_model_attr="userid" value="<? echo $user->id; ?>"/>
     <div class="textfield gss_setting"  id="name">
         <span class="title"><?php echo $this->__f("Timerate"); ?></span>

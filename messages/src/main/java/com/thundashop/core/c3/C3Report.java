@@ -26,4 +26,5 @@ public class C3Report {
     
     public int sumPost11;
     public int sumHours;
+    public String workpackages = "";
 }

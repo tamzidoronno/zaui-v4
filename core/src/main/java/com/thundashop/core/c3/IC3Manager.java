@@ -123,4 +123,19 @@ interface IC3Manager {
     
     @Administrator
     public C3Report getReportForUserProject(String userId, String projectId, Date start, Date end);
+    
+    @Administrator
+    public String getBase64SFIExcelReport(String companyId, Date start, Date end);
+    
+    public boolean allowedNfrHour(String userId);
+    
+    public boolean allowedNfrOtherCost(String userId);
+    
+    public boolean allowedNfrHourCurrentUser();
+    
+    public boolean allowedNfrOtherCostCurrentUser();
+    
+    @Administrator
+    public void setNfrAccess(C3UserNfrAccess access);
+    
 }

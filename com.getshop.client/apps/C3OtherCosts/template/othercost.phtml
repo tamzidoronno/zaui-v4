@@ -38,6 +38,15 @@ $comment = $otherCostObject ? $otherCostObject->comment : "";
         <br/><input type='text' gsname='comment' class='gsniceinput1' style="width: 100%; box-sizing: border-box;" value='<? echo $comment; ?>'/>
         <br/>
         
+        <?
+        if ($this->getApi()->getC3Manager()->allowedNfrOtherCostCurrentUser()) {
+            ?>
+            <br/>
+            <input type='checkbox' gsname='nfr'/> Er dette forskningsrådets midler?
+            <br/>
+            <?
+        }
+        ?>
         <br/> <div class='shop_button' gstype='submit'> Lagre </div>
     </div>
 

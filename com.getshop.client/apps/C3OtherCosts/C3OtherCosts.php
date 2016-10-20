@@ -27,7 +27,7 @@ class C3OtherCosts extends \MarketingApplication implements \Application {
         $otherCost->cost = $_POST['data']['cost'];
         $otherCost->type = $_POST['data']['type'];
         $otherCost->comment = $_POST['data']['comment'];
-        
+        $otherCost->nfr = isset($_POST['data']['nfr']) ? $_POST['data']['nfr'] : false;
         
         $this->validate($otherCost);
         $this->getApi()->getC3Manager()->saveOtherCosts($otherCost);

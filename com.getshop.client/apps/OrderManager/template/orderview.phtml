@@ -82,7 +82,7 @@ $cart = $order->cart;
             $changeText = $canChangeOrder ? "<i class='fa fa-edit gss_changePaymentType'></i> " : "";
             if ($order->payment->paymentType) {
                 $paymentApp = new $order->payment->paymentType();
-                echo $paymentApp->getName();
+                echo $changeText . " " . $paymentApp->getName();
                 echo "<br/>";
             }
 

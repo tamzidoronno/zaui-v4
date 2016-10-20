@@ -35,7 +35,12 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             echo "Please specify a booking engine first";
             return;
         }
-        $this->includefile("cleaningpanel");
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        if($config->cleaningInterval == 0) {
+            echo "Cleaning interval is set to 0, this means it is disabled and need to be configured.";
+        } else {
+            $this->includefile("cleaningpanel");
+        }
     }
     
     function print_guests_table($time, $arriving) {
@@ -215,7 +220,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
                 $hasChildBed = true;
             }
         }
-        echo "<tr roomid='".$room->pmsBookingRoomId."'>";
+        echo "<tr roomid='".$room->pmsBookingRoomId."' itemid='".$room->bookingItemId."'>";
         echo "<td>";
         echo $room->numberOfGuests . "<br>";
         $startHour = date("H", strtotime($room->date->start));

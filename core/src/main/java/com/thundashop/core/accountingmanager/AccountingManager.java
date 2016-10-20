@@ -183,23 +183,18 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         if(result == null || result.isEmpty()) {
             return;
         }
-        Double amountEx = 0.0;
-        Double amountInc = 0.0;
         List<String> orderIds = new ArrayList();
         
         for(Order ord : orders) {
-            amountEx += orderManager.getTotalAmountExTaxes(ord);
-            amountInc += orderManager.getTotalAmount(ord);
             orderIds.add(ord.id);
         }
         
         SavedOrderFile file = new SavedOrderFile();
-        file.amountEx = amountEx;
-        file.amountInc = amountInc;
         file.orders = orderIds;
         file.result = result;
         file.type = type;
         file.subtype = subtype;
+        sumOrders(file);
         saveObject(file);
         if(type.equals(getAccountingType())) {
             files.put(file.id, file);
@@ -724,15 +719,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         transfer.setUsers(users);
         
         SavedOrderFile res = transfer.generateFile();
-        Double priceEx = 0.0;
-        Double priceInc = 0.0;
-        for(String orderid : res.orders) {
-            Order order = orderManager.getOrder(orderid);
-            priceEx += orderManager.getTotalAmountExTaxes(order);
-            priceInc += orderManager.getTotalAmount(order);
-        }
-        res.amountEx = priceEx;
-        res.amountInc = priceInc;
+        sumOrders(res);
         res.subtype = configToUse.subType;
         res.type = configToUse.transferType;
         
@@ -848,5 +835,40 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     @Override
     public AccountingTransferConfig getAccountingConfig(String configId) {
         return configs.get(configId);
+    }
+
+    private void sumOrders(SavedOrderFile res) {
+        Double amountEx = 0.0;
+        Double amountInc = 0.0;
+        Double amountExDebet = 0.0;
+        Double amountIncDebet = 0.0;
+        List<String> orderIds = new ArrayList();
+        
+        for(String order : res.orders) {
+            Order ord = orderManager.getOrder(order);
+            Double sumEx = orderManager.getTotalAmountExTaxes(ord);
+            Double sumInc = orderManager.getTotalAmount(ord);
+            amountEx += sumEx;
+            amountInc += sumInc;
+            
+            if(sumEx < 0) {
+                amountExDebet += (sumEx * -1);
+            } else {
+                amountExDebet += sumEx;
+            }
+            
+            if(sumInc < 0) {
+                amountIncDebet += (sumInc * -1);
+            } else {
+                amountIncDebet += sumInc;
+            }
+            orderIds.add(ord.id);
+        }
+        
+        res.amountEx = amountEx;
+        res.amountInc = amountInc;
+        res.amountExDebet = amountExDebet;
+        res.amountIncDebet = amountIncDebet;
+
     }
 }

@@ -56,8 +56,10 @@ echo "<th align='left'>Download</th>";
 echo "<th align='left'>Type</th>";
 echo "<th align='left'>Subtype</th>";
 echo "<th align='left'>Transferred</th>";
-echo "<th align='left'>Ex taxes</th>";
-echo "<th align='left'>Inc taxes</th>";
+echo "<th align='left'>Ex tax</th>";
+echo "<th align='left'>Inc tax</th>";
+echo "<th align='left'>Ex tax (debet)</th>";
+echo "<th align='left'>Inc tax (debet)</th>";
 echo "<th align='left'>Orders</th>";
 echo "</tr>";
 
@@ -76,6 +78,8 @@ foreach($files as $file) {
     echo "<td>$transferred</td>";
     echo "<td>".round($file->amountEx)."</td>";
     echo "<td>".round($file->amountInc)."</td>";
+    echo "<td>".round($file->amountExDebet)."</td>";
+    echo "<td>".round($file->amountIncDebet)."</td>";
     echo "<td>".sizeof($file->orders)."</td>";
     echo "</tr>";
 }

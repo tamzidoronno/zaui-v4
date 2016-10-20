@@ -112,13 +112,13 @@ public class RubiCon implements AccountingTransferInterface {
     private HashMap<Integer, String> createItemLine(CartItem item, Order order, User user) {
         SimpleDateFormat format1 = new SimpleDateFormat("ddMMyy");
         HashMap<Integer, String> fieldsInLine = new HashMap();
-        fieldsInLine.put(1, "\"97");
+        fieldsInLine.put(1, "97");
         fieldsInLine.put(2, format1.format(order.rowCreatedDate));
         fieldsInLine.put(3, prependZeros(new Long(order.incrementOrderId-100000).intValue() + "", 6));
         fieldsInLine.put(4, format1.format(order.rowCreatedDate));
         fieldsInLine.put(5, "0045");
 
-        fieldsInLine.put(6, "\"\"" + stripText("", 30) + "\"\"");
+        fieldsInLine.put(6, "\"" + stripText("", 30) + "\"");
         fieldsInLine.put(7, "0000");
         fieldsInLine.put(8, "00000");
         String account = null;
@@ -222,26 +222,26 @@ public class RubiCon implements AccountingTransferInterface {
         counter = prependZeros(counter, 11);
         fieldsInLine.put(18, prependZeros(order.incrementOrderId + "", 10));
         fieldsInLine.put(19, counter);
-        fieldsInLine.put(20, "\"\"" + stripText("", 25) + "\"\"");
+        fieldsInLine.put(20, "\"" + stripText("", 25) + "\"");
         fieldsInLine.put(22, "000000");
-        fieldsInLine.put(23, "\"\"" + stripText(user.fullName, 30) + "\"\"" + "");
-        fieldsInLine.put(24, "\"\"" + stripText(address.address, 30) + "\"\"" + "");
-        fieldsInLine.put(25, "\"\"" + stripText(address.address2, 30) + "\"\"" + "");
-        fieldsInLine.put(26, "\"\"" + stripText(address.postCode, 6) + "\"\"" + "");
-        fieldsInLine.put(27, "\"\"" + stripText(user.address.city, 25) + "\"\""  + "");
-        fieldsInLine.put(28, "\"\"" + stripText("", 30) + "\"\"");
-        fieldsInLine.put(29, "\"\"" + stripText(user.cellPhone, 15) + "\"\"");
+        fieldsInLine.put(23, "\"" + stripText(user.fullName, 30) + "\"" + "");
+        fieldsInLine.put(24, "\"" + stripText(address.address, 30) + "\"" + "");
+        fieldsInLine.put(25, "\"" + stripText(address.address2, 30) + "\"" + "");
+        fieldsInLine.put(26, "\"" + stripText(address.postCode, 6) + "\"" + "");
+        fieldsInLine.put(27, "\"" + stripText(user.address.city, 25) + "\""  + "");
+        fieldsInLine.put(28, "\"" + stripText("", 30) + "\"");
+        fieldsInLine.put(29, "\"" + stripText(user.cellPhone, 15) + "\"");
 
-        fieldsInLine.put(30, "\"\"" + stripText("", 15) + "\"\"");
-        fieldsInLine.put(31, "\"\"" + stripText("", 5) + "\"\"");
-        fieldsInLine.put(32, "\"\"" + stripText("", 15) + "\"\"");
-        fieldsInLine.put(33, "\"\"" + stripText("", 15) + "\"\"");
+        fieldsInLine.put(30, "\"" + stripText("", 15) + "\"");
+        fieldsInLine.put(31, "\"" + stripText("", 5) + "\"");
+        fieldsInLine.put(32, "\"" + stripText("", 15) + "\"");
+        fieldsInLine.put(33, "\"" + stripText("", 15) + "\"");
         fieldsInLine.put(34, "00000000000.00");
-        fieldsInLine.put(35, "\"\"" + stripText("", 30) + "\"\"");
-        fieldsInLine.put(36, "\"\"" + stripText("", 30) + "\"\"");
-        fieldsInLine.put(37, "\"\"" + stripText("", 30) + "\"\"");
-        fieldsInLine.put(38, "\"\"" + stripText("", 6) + "\"\"");
-        fieldsInLine.put(39, "\"\"" + stripText("", 25) + "\"\"");
+        fieldsInLine.put(35, "\"" + stripText("", 30) + "\"");
+        fieldsInLine.put(36, "\"" + stripText("", 30) + "\"");
+        fieldsInLine.put(37, "\"" + stripText("", 30) + "\"");
+        fieldsInLine.put(38, "\"" + stripText("", 6) + "\"");
+        fieldsInLine.put(39, "\"" + stripText("", 25) + "\"");
 
         fieldsInLine.put(40, "000");
         fieldsInLine.put(41, "0000");
@@ -249,7 +249,7 @@ public class RubiCon implements AccountingTransferInterface {
         fieldsInLine.put(43, "00");
         fieldsInLine.put(44, "000");
         fieldsInLine.put(45, "000");
-        fieldsInLine.put(46,"00\"");
+        fieldsInLine.put(46,"00");
         
         return fieldsInLine;
     }

@@ -337,12 +337,12 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                         }catch(Exception d) {
                             messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
                             order.payment.transactionLog.put(System.currentTimeMillis(), "Failed capturing order: " + d.getMessage());
-                            d.printStackTrace();
+                            logPrintException(d);
                         }
                     }
                 }catch(Exception ex) {
                     messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
-                    ex.printStackTrace();
+                    logPrintException(ex);
                 }
                 getShopPullService.markMessageAsReceived(msg.id, storeId);
             }
@@ -350,7 +350,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         } catch (Exception ex) {
             messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed to fetch from pull server", "Is pull server down: " + ex.getMessage(), "post@getshop.com", "post@getshop.com");
             sentPollFailed = true;
-            ex.printStackTrace();
+            logPrintException(ex);
         }
     }
 

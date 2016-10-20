@@ -9,7 +9,12 @@ class FastHotelsTheme extends \ThemeApplication implements \Application {
     public function getName() {
         return "FastHotelsTheme";
     }
-
+    public function addScripts() {
+        $text = "";
+        $text .= "\n"."<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>";
+        return $text;
+    }
+    
     public function render() {
         
     }

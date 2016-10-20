@@ -37,6 +37,9 @@ public interface IAccountingManager {
     public void saveConfig(AccountingTransferConfig config);
     
     @Administrator
+    public AccountingTransferConfig getAccountingConfig(String configId);
+    
+    @Administrator
     public void removeTransferConfig(String id);
     
     @Administrator
@@ -47,6 +50,12 @@ public interface IAccountingManager {
     
     @Administrator
     public List<String> getNewFile(String type) throws Exception;
+    
+    @Administrator
+    public SavedOrderFile downloadOrderFileNewType(String configId) throws Exception;
+    
+    @Administrator
+    public void transferOrdersNewType(String configId) throws Exception;
     
     @Administrator
     public AccountingManagerConfig getAccountingManagerConfig();

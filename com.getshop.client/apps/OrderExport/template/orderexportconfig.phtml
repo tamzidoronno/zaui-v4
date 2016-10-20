@@ -255,7 +255,7 @@ foreach($configs as $config) {
             <?php if($ftp->username) { ?>
                 <div class="gss_button" gss_method="transferNewFiles" gss_model="adminconfig" gss_success_message="Transfer started"><i class='fa fa-save'></i><?php echo $this->__("Transfer new files to ftp"); ?></div>
             <?php } ?>
-            <div class="gss_button" onclick="window.open('/scripts/accounting.php?type=user&onlynew=true');"><i class='fa fa-save'></i><?php echo $this->__("Download file"); ?></div>
+            <div class="gss_button" onclick="window.open('/scripts/accountingnew.php?configid=<?php echo $config->id; ?>');"><i class='fa fa-save'></i><?php echo $this->__("Download file"); ?></div>
             <div class="gss_button" gss_method="saveAccountingConfig" gss_model="adminconfig_<?php echo $config->id; ?>" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save settings"); ?></div>
         </div>
     </div>

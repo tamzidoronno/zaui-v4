@@ -42,10 +42,16 @@ foreach($rooms as $room) {
         <?php
         if($this->getText("hideimages") != "true") {
             $imgs = $this->getImagesFromPage($room->type->pageId);
+            $first = true;
             foreach($imgs as $img) {
+                if($first) {
+                    $first = false;
+                    continue;
+                }
                 echo "<span class='imgcontainer'>";
                 echo "<img class='roomimg' src='displayImage.php?id=" . $img."'>";
                 echo "</span>";
+                break;
             }
         }
         

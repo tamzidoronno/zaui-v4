@@ -1,0 +1,20 @@
+.gs_page_width { max-width: 1100px; margin: auto; }
+body { font-family: roboto, Helvetica, Tahoma, Geneva, Arial, sans-serif; background-color:#fff !important; }
+.gsarea[area="header"] { background-color:#fff !important; border-bottom: solid 50px rgb(103, 60, 77); }
+.gsarea[area="footer"] { background-color:rgb(103, 60, 77) !important; }
+
+.Menu { text-align: center; }
+.Menu .entry div { margin-left: 10px; margin-right: 10px; padding-bottom: 20px; }
+.Menu .entry .entries { background-color:rgb(103, 60, 77); }
+.Menu .entry .entries div {  color: #fff; padding: 5px; text-align: left; width: 200px; display:block; padding-bottom: 5px;}
+
+.PmsBookingCalendar .calendar .calendar_header,
+.PmsBookingCalendar .calendar .day.selected,
+.PmsBookingProductList .continue_button,
+.PmsBookingContactData .complete_button,
+.PmsBooking .pmsfront .check_available_button,
+.PmsBooking .pmsfront .fa-calendar {
+    background-color: rgb(103, 60, 77);
+    text-transform: uppercase;
+}
+.shop_button { background:none; background-color:rgb(103, 60, 77); border-radius: 0px; color:#fff; margin: 5px; }

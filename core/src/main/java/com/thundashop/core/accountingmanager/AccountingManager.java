@@ -14,6 +14,7 @@ import com.getshop.svea.CustomerData.Creditor.Cases.Case.Debtor;
 import com.getshop.svea.CustomerData.Creditor.Cases.Case.Invoice;
 import com.thundashop.core.bookingengine.BookingEngineAbstract;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ForAccountingSystem;
 import com.thundashop.core.common.ForStore;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -690,5 +691,162 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         AccountingTransferConfig objcet = configs.get(id);
         deleteObject(objcet);
         configs.remove(id);
+    }
+
+    @Override
+    public void transferOrdersNewType(String configId) throws Exception {
+        AccountingTransferConfig configToUse = configs.get(configId);
+        SavedOrderFile saved = downloadOrderFileNewType(configId);
+        String internalPath = saveFileToDisk(saved, config.extension);
+           String externalPath = config.path;
+           int minutesToWait = configToUse.delay;
+           try {
+               ftpManager.transferFile(config.username, config.password, config.hostname, internalPath, externalPath, config.port, config.useActiveMode, minutesToWait);
+               saved.transferred = true;
+               saveObject(saved);
+           }catch(Exception e) {
+               e.printStackTrace();
+           }
+    }
+
+    @Override
+    public SavedOrderFile downloadOrderFileNewType(String configId) throws Exception {
+        AccountingTransferConfig configToUse = configs.get(configId);
+        List<Order> orders = getOrdersFromNewFilter(configToUse);
+        if(orders.isEmpty()) {
+            return null;
+        }
+        
+        List<User> users = getUsersFromNewFilter(configToUse, orders);
+        
+        AccountingTransferInterface transfer = getAccoutingInterface(configToUse.transferType);
+        transfer.setOrders(orders);
+        transfer.setUsers(users);
+        
+        SavedOrderFile res = transfer.generateFile();
+        Double priceEx = 0.0;
+        Double priceInc = 0.0;
+        for(String orderid : res.orders) {
+            Order order = orderManager.getOrder(orderid);
+            priceEx += orderManager.getTotalAmountExTaxes(order);
+            priceInc += orderManager.getTotalAmount(order);
+        }
+        res.amountEx = priceEx;
+        res.amountInc = priceInc;
+        res.subtype = configToUse.subType;
+        res.type = configToUse.transferType;
+        
+        files.put(res.id, res);
+        saveObject(res);
+        
+        return res;
+    }
+
+    private List<User> getUsersFromNewFilter(AccountingTransferConfig configToUse, List<Order> selectedOrders) {
+        List<User> users = userManager.getAllUsers();
+        if(configToUse.includeUsers == null || configToUse.includeUsers == 0) {
+            return new ArrayList();
+        }
+        
+        if(configToUse.includeUsers == 1) {
+            return users;
+        }
+        
+        List<User> userList = new ArrayList();
+        if(configToUse.includeUsers == 2) {
+            for(User user : users) {
+                if(!user.isTransferredToAccountSystem) {
+                    userList.add(user);
+                }
+            }
+            return userList;
+        }
+        
+        if(configToUse.includeUsers == 3) {
+            for(Order order : selectedOrders) {
+                userList.add(userManager.getUserById(order.userId));
+            }
+            return userList;
+        }
+        
+        if(configToUse.includeUsers == 4) {
+            List<Order> orders = orderManager.getOrders(null, null, null);
+            for(Order order : orders) {
+                if(!order.transferredToAccountingSystem) {
+                    userList.add(userManager.getUserById(order.userId));
+                }
+            }
+            return userList;
+        }
+        
+        return new ArrayList();
+    }
+
+    private List<Order> getOrdersFromNewFilter(AccountingTransferConfig configToUse) {
+        List<Order> orders = orderManager.getOrders(null, null, null);
+        List<Order> result = new ArrayList();
+        List<String> ordersAdded = new ArrayList();
+        for(Order order : orders) {
+            if(order.transferredToAccountingSystem) {
+                continue;
+            }
+            if(order.testOrder) {
+                continue;
+            }
+            if(order.payment == null || order.payment.paymentType == null || order.payment.paymentType.isEmpty()) {
+                continue;
+            }
+            Double amount = orderManager.getTotalAmount(order);
+            if(amount == 0.0) {
+                continue;
+            }
+            
+            for(AccountingTransferConfigTypes actype : configToUse.paymentTypes) {
+                String paymentMethod = actype.paymentType;
+                paymentMethod = paymentMethod.replace("-", "_");
+                if(order.payment.paymentType.contains(paymentMethod)) {
+                    if(order.status == actype.status || actype.status == 0) {
+                        if(!ordersAdded.contains(order.id)) {
+                            result.add(order);
+                            ordersAdded.add(order.id);
+                        }
+                    }
+                    if(actype.status == -1 && amount < 0) {
+                        if(!ordersAdded.contains(order.id)) {
+                            result.add(order);
+                            ordersAdded.add(order.id);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private AccountingTransferInterface getAccoutingInterface(String type) throws Exception {
+        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+        scanner.addIncludeFilter(new AnnotationTypeFilter(ForAccountingSystem.class));
+        interfaces.clear();
+        for (BeanDefinition bd : scanner.findCandidateComponents("com.thundashop.core.accountingmanager")) {
+            Class myClass = Class.forName(bd.getBeanClassName());
+            ForAccountingSystem res = (ForAccountingSystem) myClass.getAnnotation(ForAccountingSystem.class);
+            if(res != null && res.accountingSystem().equals(type)) {
+                Constructor<?> ctor = myClass.getConstructor();
+                AccountingTransferInterface object = (AccountingTransferInterface) ctor.newInstance();
+                AccountingManagers mgrs = new AccountingManagers();
+                mgrs.userManager = userManager;
+                mgrs.invoiceManager = invoiceManager;
+                mgrs.orderManager = orderManager;
+                mgrs.userManager = userManager;
+                object.setManagers(mgrs);
+                return object;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public AccountingTransferConfig getAccountingConfig(String configId) {
+        return configs.get(configId);
     }
 }

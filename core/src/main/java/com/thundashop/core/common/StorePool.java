@@ -171,8 +171,9 @@ public class StorePool {
             ex.printStackTrace();
             return null;
         }
-        
-        object.multiLevelName = gson.fromJson(object.multiLevelName, String.class);
+        if(object.multiLevelName != null) {
+            object.multiLevelName = gson.fromJson(object.multiLevelName, String.class);
+        }
 
         int i = 0;
         Object[] executeArgs = new Object[object.args.size()];

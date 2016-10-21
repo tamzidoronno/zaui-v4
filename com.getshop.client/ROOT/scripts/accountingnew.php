@@ -3,10 +3,13 @@ chdir("../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
-$file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($_GET['configid']);
+$start = date("M d, Y h:i:s A", strtotime($_GET['start']));
+$end = date("M d, Y h:i:s A", strtotime($_GET['end']));
+$file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($_GET['configid'], $start, $end);
 if(!$file) {
     return;
 }
+
 $config = $factory->getApi()->getAccountingManager()->getAccountingConfig($_GET['configid']);
 
 $date = date("d.m.Y_H_i", time());

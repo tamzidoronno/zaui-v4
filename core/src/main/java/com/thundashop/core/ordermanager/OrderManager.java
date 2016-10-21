@@ -157,7 +157,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.session = getSession().id;
         
         order.storeId = storeId;
-        saveObject(order);
         if(order.incrementOrderId > incrementingOrderId) {
             incrementingOrderId = order.incrementOrderId;
         }
@@ -171,6 +170,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 order.payment.transactionLog.put(System.currentTimeMillis(), "Order marked paid for by : " + name);
             }
         }
+        saveObject(order);
         orders.put(order.id, order);
     }
     

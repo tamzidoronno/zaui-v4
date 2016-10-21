@@ -2,6 +2,7 @@ package com.thundashop.core.accountingmanager;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,10 +53,7 @@ public interface IAccountingManager {
     public List<String> getNewFile(String type) throws Exception;
     
     @Administrator
-    public SavedOrderFile downloadOrderFileNewType(String configId) throws Exception;
-    
-    @Administrator
-    public void transferOrdersNewType(String configId) throws Exception;
+    public SavedOrderFile downloadOrderFileNewType(String configId, Date start, Date end) throws Exception;
     
     @Administrator
     public AccountingManagerConfig getAccountingManagerConfig();

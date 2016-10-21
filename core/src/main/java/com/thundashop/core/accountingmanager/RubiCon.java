@@ -201,6 +201,10 @@ public class RubiCon implements AccountingTransferInterface {
             price = managers.orderManager.getTotalAmount(order);
         }
         
+        if(price < 0) {
+            price *= -1;
+        }
+        
         DecimalFormat df = new DecimalFormat("#.##");      
         String priceToSend = df.format(price); 
         if(!priceToSend.contains(".")) {

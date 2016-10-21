@@ -9,5 +9,6 @@ public class AccountingTransferConfig extends DataCommon {
     public List<AccountingTransferConfigTypes> paymentTypes;
     public TransferFtpConfig ftp;
     public String transferType;
+    public String orderFilterPeriode = "";
     public String subType = "orders";
 }

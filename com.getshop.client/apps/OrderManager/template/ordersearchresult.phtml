@@ -84,7 +84,11 @@ foreach ($orders as $order) {
         echo "<div class='gss_overview_order'>";
         echo "<div class='gss_order_col gss_col_0'><input type='checkbox' class='gssordercheckbox' orderid='".$order->id."'></input> $credited</div>";
         echo "<div class='gss_order_col gss_col_1'>$order->incrementOrderId</div>";
-        echo "<div class='gss_order_col gss_col_2'>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)) . "</div>";
+        echo "<div class='gss_order_col gss_col_2'>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate));
+        if(isset($order->paymentDate)) {
+            echo "<br>" . date("d.m.Y H:i", @strtotime($order->paymentDate));
+        }
+        echo "</div>";
         echo "<div class='gss_order_col gss_col_3'>" . $name . "</div>";
         echo "<div class='gss_order_col gss_col_4'>" . round($price,1) . "<br><span style='color:gray'>".round($priceIncTax, 1)."</span>" . "</div>";
         echo "<div class='gss_order_col gss_col_5'>".$states[$order->status]."</div>";

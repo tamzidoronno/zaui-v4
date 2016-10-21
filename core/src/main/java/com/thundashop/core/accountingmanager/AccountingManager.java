@@ -688,29 +688,16 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         configs.remove(id);
     }
 
-    @Override
-    public void transferOrdersNewType(String configId) throws Exception {
-        AccountingTransferConfig configToUse = configs.get(configId);
-        SavedOrderFile saved = downloadOrderFileNewType(configId);
-        String internalPath = saveFileToDisk(saved, config.extension);
-           String externalPath = config.path;
-           int minutesToWait = configToUse.delay;
-           try {
-               ftpManager.transferFile(config.username, config.password, config.hostname, internalPath, externalPath, config.port, config.useActiveMode, minutesToWait);
-               saved.transferred = true;
-               saveObject(saved);
-           }catch(Exception e) {
-               e.printStackTrace();
-           }
-    }
 
     @Override
-    public SavedOrderFile downloadOrderFileNewType(String configId) throws Exception {
+    public SavedOrderFile downloadOrderFileNewType(String configId, Date start, Date end) throws Exception {
         AccountingTransferConfig configToUse = configs.get(configId);
         List<Order> orders = getOrdersFromNewFilter(configToUse);
         if(orders.isEmpty()) {
             return null;
         }
+        
+        orders = filterOrders(orders, start, end, configToUse);
         
         List<User> users = getUsersFromNewFilter(configToUse, orders);
         
@@ -759,9 +746,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         if(configToUse.includeUsers == 4) {
             List<Order> orders = orderManager.getOrders(null, null, null);
             for(Order order : orders) {
-                if(!order.transferredToAccountingSystem) {
-                    userList.add(userManager.getUserById(order.userId));
-                }
+                userList.add(userManager.getUserById(order.userId));
             }
             return userList;
         }
@@ -774,9 +759,6 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         List<Order> result = new ArrayList();
         List<String> ordersAdded = new ArrayList();
         for(Order order : orders) {
-            if(order.transferredToAccountingSystem) {
-                continue;
-            }
             if(order.testOrder) {
                 continue;
             }
@@ -870,5 +852,26 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         res.amountExDebet = amountExDebet;
         res.amountIncDebet = amountIncDebet;
 
+    }
+
+    private List<Order> filterOrders(List<Order> orders, Date start, Date end, AccountingTransferConfig configToUse) {
+        List<Order> toReturn = new ArrayList();
+        String filterDateByType = configToUse.orderFilterPeriode;
+        
+        for(Order order : orders) {
+            Date dateToUse = null;
+            if(filterDateByType.equals("created")) { dateToUse = order.rowCreatedDate; }
+            if(filterDateByType.equals("started")) { dateToUse = order.getStartDateByItems(); }
+            if(filterDateByType.equals("ended")) { dateToUse = order.getEndDateByItems(); }
+            if(filterDateByType.equals("paymentdate")) { dateToUse = order.paymentDate; }
+            if(dateToUse == null) {
+                continue;
+            }
+            
+            if(dateToUse.after(start) && (dateToUse.before(end) || dateToUse.equals(end))) {
+                toReturn.add(order);
+            }
+        }
+        return toReturn;
     }
 }

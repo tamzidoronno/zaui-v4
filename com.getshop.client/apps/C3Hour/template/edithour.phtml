@@ -28,17 +28,13 @@ $hours = $hourObject ? $hourObject->hours : "";
     <input class='gsniceinput1' type='text' gsname='hours' value='<? echo $hours; ?>'/> 
     <br/>
     <?
-    if ($groupInfo->financalEgen && $groupInfo->financalForskning) {
-//        echo '<br/>Bidragstype:';
-//        echo "<br/><select class='gsniceselect1' gsname='bidragstype'>";
-//            echo "<option>Egenbidrag</option>";
-//            echo "<option>Forskningsbidrag</option>";
-//        echo "</select><br/>";
-    } elseif ($groupInfo->financalEgen) {
-        echo "<input type='hidden' gsname='bidragstype' value='egen'/>";
-    } elseif ($groupInfo->financalForskning) {
-        echo "<input type='hidden' gsname='bidragstype' value='forskning'/>";
+    
+    if ($this->getApi()->getC3Manager()->allowedNfrHourCurrentUser()) {
+        echo "<br/>";
+        echo "<input type='checkbox' gsname='nfr'/> Er dette forskningsrådets midler?";
+        echo "<br/>";
     }
+    
     ?>
     <br/> <div class='shop_button' gstype='submit'> Lagre </div>
 </div>

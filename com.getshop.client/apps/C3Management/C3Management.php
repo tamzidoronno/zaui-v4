@@ -65,6 +65,13 @@ class C3Management extends \MarketingApplication implements \Application {
     }
     
     public function saveHourRate() {
+        
+        $access = new \core_c3_C3UserNfrAccess();
+        $access->userId = $_POST['userid'];
+        $access->hour = $_POST['nfrhour'];
+        $access->otherCost = $_POST['nfrother'];
+        
+        $this->getApi()->getC3Manager()->setNfrAccess($access);
         $this->getApi()->getC3Manager()->setRateToUser($_POST['userid'], $_POST['hourrate']);
     }
 

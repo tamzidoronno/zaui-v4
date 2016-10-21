@@ -17,4 +17,5 @@ public class C3OtherCosts extends ProjectCost {
     public String type;
     public String comment;
     public double cost;
+    public boolean nfr;
 }

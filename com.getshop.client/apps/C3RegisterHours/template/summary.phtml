@@ -35,7 +35,8 @@ foreach ($accessList as $access) {
                     $totalHours += $hour->hours;
                     $cost = $hour->cost;
                     $totalCost += $cost;
-                    echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'>$hour->hours</span><span class='othercost'>$cost</span></div>";
+                    $comment = $hour->nfr ? "(NFR)" : "";
+                    echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'>$hour->hours</span><span class='othercost'>$cost</span><span class='comment'>$comment</span></div>";
                 }
                 
                 if ($hour->costType === "other") {
@@ -52,6 +53,9 @@ foreach ($accessList as $access) {
                     if ($type == "other")
                         $type = "(Annet)";
                     
+                    if ($hour->nfr) {
+                        $type .= " (NFR)";
+                    }
                     if ($hour->comment) {
                         $type .= " - ".$hour->comment;
                     }

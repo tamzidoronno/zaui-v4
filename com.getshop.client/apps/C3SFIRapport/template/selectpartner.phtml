@@ -3,9 +3,27 @@
 
 $companies  = $this->getApi()->getUserManager()->getAllCompanies();
 
+?>
+<div class='timeframe'>
+    Velg tidsperiode:
+    <br/><input class='gsniceinput1 ' id='from' placeholder="Fra"/>
+    - <input class='gsniceinput1' id='to' placeholder="Til"/>
+</div>
+<?
 foreach ($companies as $company) {
     ?>
-    <div class='selectButton' gsclick='setSelectedCompany' value='<? echo $company->id; ?>'><? echo $company->name; ?></div>
+    <div class='selectButton'>
+        <div class="shop_button downloadReport" filename='SFIReport_<? echo $company->name; ?>.xlsx' companyId='<? echo $company->id; ?>'>Last ned Excel</div>
+        <div style='display: inline-block;' gsclick='setSelectedCompany' value='<? echo $company->id; ?>'>
+            <? echo $company->name; ?>
+        </div>
+    </div>
+    
     <?
 }
 ?>
+
+<script>
+    $('#from').datepicker({dateFormat: "dd.mm.yy"});
+    $('#to').datepicker({dateFormat: "dd.mm.yy"});
+</script>

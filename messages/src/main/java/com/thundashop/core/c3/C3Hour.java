@@ -19,4 +19,5 @@ public class C3Hour extends ProjectCost {
     
     @Transient
     public double cost;
+    boolean nfr;
 }

@@ -26,10 +26,10 @@ class C3Hour extends \MarketingApplication implements \Application {
         $c3Hour->to = $this->convertToJavaDate(strtotime($_POST['data']['to']));
         $c3Hour->projectId = $this->getModalVariable("projectid");
         $c3Hour->hours = $_POST['data']['hours'];
+        $c3Hour->nfr = isset($_POST['data']['nfr']) ? $_POST['data']['nfr'] : false;
         
         $this->validate($c3Hour);
         $this->getApi()->getC3Manager()->addHour($c3Hour);
-        
     }
     
     public function validate($hour) {

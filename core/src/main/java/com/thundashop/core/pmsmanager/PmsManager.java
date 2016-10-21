@@ -232,8 +232,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void setBooking(PmsBooking booking) throws Exception {
-        booking.sessionId = getSession().id;
-        
         if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
             if(booking.discountType != null && booking.discountType.equals("coupon")) {
                 Coupon cop = cartManager.getCoupon(booking.couponCode);
@@ -309,12 +307,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking currentBooking = findBookingForSession();
 
         if (currentBooking != null) {
-            hardDeleteBooking(currentBooking);
+            hardDeleteBooking(currentBooking, "startbooking");
         }
 
         PmsBooking booking = new PmsBooking();
 
         try {
+            booking.sessionId = getSession().id;
             setBooking(booking);
         } catch (Exception ex) {
             logPrintException(ex);
@@ -419,7 +418,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return null;
         }
         String sessionId = getSession().id;
-        if (sessionId == null) {
+        if (sessionId == null || sessionId.isEmpty()) {
             return null;
         }
 
@@ -643,7 +642,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         nowCal.add(Calendar.HOUR_OF_DAY, -1);
         if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
             if (!booking.rowCreatedDate.after(nowCal.getTime())) {
-                hardDeleteBooking(booking);
+                hardDeleteBooking(booking, "finalize");
                 return null;
             }
         }
@@ -1368,9 +1367,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     
-    private void hardDeleteBooking(PmsBooking booking) {
+    private void hardDeleteBooking(PmsBooking booking, String source) {
         bookings.remove(booking.id);
-        deleteObject(booking);
+        booking.deletedBySource = source;
+        if(booking.sessionId == null || booking.sessionId.isEmpty()) {
+            String text = "Booking which should not be deleted where tried deleted: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
+            text += "<br>";
+            text += "<br>";
+            text += booking.createSummary(bookingEngine.getBookingItemTypes());
+            messageManager.sendErrorNotification(text, null);
+        } else {
+            deleteObject(booking);
+        }
 }
     
     private void removeDeleted(PmsBookingFilter filter, List<PmsBooking> result) {
@@ -3180,7 +3188,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         for(PmsBooking booking : bookings.values()) {
-            deleteObject(booking);
+            hardDeleteBooking(booking, "deleteallbookings");
         }
         
         for(Booking booking : bookingEngine.getAllBookings()) {
@@ -3591,7 +3599,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         for(PmsBooking book : toRemove) {
             bookings.remove(book.id);
-            deleteObject(book);
+            hardDeleteBooking(book, "mergebooking");
         }
     }
 

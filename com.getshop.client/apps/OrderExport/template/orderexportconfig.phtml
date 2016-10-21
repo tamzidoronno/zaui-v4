@@ -37,7 +37,7 @@ $availableTypes['amesto'] = "Amesto";
 $availableTypes['tripletex'] = "TripleTex";
 $availableTypes['fiken'] = "Fiken";
 $availableTypes['sveve'] = "Sveve creditor";
-$availableTypes['getsop'] = "GetShop";
+$availableTypes['getshop'] = "GetShop";
 $availableTypes['bcomratemanager'] = "Booking.com rate manager";
 
 $userIncludeTypes = array();
@@ -202,59 +202,24 @@ foreach($configs as $config) {
                 </select>
              </div>
         </div>
+
+        <div class="textfield gss_setting"  id="name">
+            <span class="title"><?php echo $this->__f("Users to include"); ?></span>
+             <div class="gss_dropdown">
+                <select class="property_select" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="includeUsers">
+                    <?php
+                    foreach($userIncludeTypes as $id => $type) {
+                        $selected = "";
+                        if($config->includeUsers == $id) {
+                            $selected = "SELECTED";
+                        }
+                        echo "<option value='".$id."' $selected>".$type."</option>";
+                    }
+                    ?>
+                </select>
+             </div>
+        </div>
         
-        <h2>Ftp transfer setup to accounting system</h2>
-        <div class="textfield gss_setting" id="ftpuser">
-            <span class="title">Ftp username</span>
-            <input type="hidden" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="configid" value="<?php echo $config->id; ?>">
-            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="ftpuser" value="<?php echo $ftp->username; ?>">
-        </div>
-        <div class="textfield gss_setting" id="ftppassword">
-            <span class="title">Ftp password</span>
-            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="ftppassword" value="<?php echo $ftp->password; ?>">
-        </div>
-        <div class="textfield gss_setting" id="hostname">
-            <span class="title">Ftp hostname</span>
-            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="ftphostname" value="<?php echo $ftp->hostname; ?>">
-        </div>
-        <div class="textfield gss_setting" id="ftppath">
-            <span class="title">Ftp path to put the file in</span>
-            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="ftppath" value="<?php echo $ftp->path; ?>">
-        </div>
-        <div class="textfield gss_setting" id="extension">
-            <span class="title">File extension (Example: .edi)</span>
-            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="extension" value="<?php echo $ftp->extension; ?>">
-        </div>
-        <div class="textfield gss_setting" id="port"><span class="title">Port</span>
-            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="port" value="<?php echo $ftp->port; ?>">
-        </div>
-        <div class="textfield gss_setting" id="delay">
-            <span class="title">Minutes delayed</span>
-            <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="delay" value="<?php echo $config->delay; ?>">
-            <div class="description">
-
-            </div>
-        </div>
-        <div class="textfield gss_setting" id="useActiveMode">
-            <span class="title">Use active transfer mode</span>
-            <div class="gss_onoff" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="useActiveMode">
-                <?
-                $faclass = @$ftp->useActiveMode ? "fa-toggle-on" : "fa-toggle-off";
-                ?>
-                Off<i class="fa <? echo $faclass; ?>"></i>On
-            </div>
-        </div>
-
-        <div class="textfield gss_setting" id="useSftp">
-            <span class="title">Use sftp</span>
-            <div class="gss_onoff" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="useSftp">
-                <?
-                $faclass = @$ftp->useSftp ? "fa-toggle-on" : "fa-toggle-off";
-                ?>
-                Off<i class="fa <? echo $faclass; ?>"></i>On
-            </div>
-        </div>
-
         <div class='gss_button_area'>
             <?php if($ftp->username) { ?>
                 <div class="gss_button" gss_method="transferNewFiles" gss_model="adminconfig" gss_success_message="Transfer started"><i class='fa fa-save'></i><?php echo $this->__("Transfer new files to ftp"); ?></div>

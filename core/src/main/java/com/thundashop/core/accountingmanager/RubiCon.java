@@ -144,7 +144,7 @@ public class RubiCon implements AccountingTransferInterface {
                 mvaKode = "03";
             }
         } else {
-            account = "001920";
+            account = "001920"; //Kort 10200, faktura: 
             mvaKode = "00";
         }
         
@@ -160,6 +160,8 @@ public class RubiCon implements AccountingTransferInterface {
         String costumerId = (user.customerId+2000) + "";
         if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {
             costumerId = "010900";
+        } else {
+            costumerId = "010200";
         }
 
         account = prependZeros(account, 6);

@@ -19,7 +19,7 @@ public class PmsBooking extends DataCommon {
     public List<PmsBookingRooms> rooms = new ArrayList(); 
     public List<String> notificationsSent = new ArrayList();
     public HashMap<Long, PmsBookingComment> comments = new HashMap(); 
-    public String sessionId;
+    public String sessionId = null;
     public Date sessionStartDate = null;
     public Date sessionEndDate = null;
     public boolean silentNotification = false;
@@ -57,6 +57,7 @@ public class PmsBooking extends DataCommon {
     public String wubookChannelReservationId;
     public String channel = "";
     public boolean ignoreCheckChangesInBooking = false;
+    public String deletedBySource = "";
     
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();

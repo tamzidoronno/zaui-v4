@@ -1,6 +1,7 @@
 
 package com.thundashop.core.pmsmanager;
 
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
@@ -99,7 +100,9 @@ public class PmsBookingSimpleFilter {
     }
 
     
-    private PmsRoomSimple convertRoom(PmsBookingRooms room, PmsBooking booking) {
+    public PmsRoomSimple convertRoom(PmsBookingRooms room, PmsBooking booking) {
+        PmsConfiguration config = manager.getConfigurationSecure();
+        
         PmsRoomSimple simple = new PmsRoomSimple();
         simple.start = room.date.start.getTime();
         simple.end = room.date.end.getTime();
@@ -174,6 +177,13 @@ public class PmsBookingSimpleFilter {
         
         simple.numberOfGuests = room.numberOfGuests;
         simple.transferredToArx = room.addedToArx;
+        
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) { simple.latecheckout = true; }
+            if(item.addonType == PmsBookingAddonItem.AddonTypes.EXTRABED) { simple.extrabed = true; }
+            if(item.addonType == PmsBookingAddonItem.AddonTypes.EXTRACHILDBED) { simple.extrabed = true; }
+            if(item.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) { simple.earlycheckin = true; }
+        }
         return simple;
     }
 

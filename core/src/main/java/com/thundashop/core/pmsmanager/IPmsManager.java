@@ -59,6 +59,9 @@ public interface IPmsManager {
     public String setNewRoomType(String roomId, String bookingId, String newType);
     
     @Administrator
+    public List<PmsRoomSimple> getRoomsNeedingIntervalCleaningSimple(Date day);
+    
+    @Administrator
     public void sendMessage(String bookingId, String email, String title, String message);
     
     public void endRoom(String roomId);

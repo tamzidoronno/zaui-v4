@@ -2766,6 +2766,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return res;
     }
 
+
+    @Override
+    public List<PmsRoomSimple> getRoomsNeedingIntervalCleaningSimple(Date day) {
+        PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
+        List<PmsBookingRooms> rooms = getRoomsNeedingIntervalCleaning(day);
+        List<PmsRoomSimple> res = new ArrayList();
+        for(PmsBookingRooms r : rooms) {
+            PmsBooking booking = getBookingFromRoom(r.pmsBookingRoomId);
+            PmsRoomSimple converted = filtering.convertRoom(r, booking);
+            converted.roomCleaned = isClean(r.bookingItemId);
+            converted.hasBeenCleaned = (converted.roomCleaned || isUsedToday(r.bookingItemId));
+
+            res.add(converted);
+        }
+        return res;
+    }
+    
     @Override
     public void setGuestOnRoom(List<PmsGuests> guests, String bookingId, String roomId) {
         PmsBooking booking = getBooking(bookingId);

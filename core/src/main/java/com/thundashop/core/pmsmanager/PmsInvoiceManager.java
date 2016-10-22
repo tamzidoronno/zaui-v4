@@ -100,6 +100,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     private boolean hasRoomItems(String pmsRoomId, Order order) {
+        if(order == null || order.cart == null) {
+            return false;
+        }
         for(CartItem item : order.cart.getItems()) {
             if(item.getProduct().externalReferenceId == null) {
                 continue;

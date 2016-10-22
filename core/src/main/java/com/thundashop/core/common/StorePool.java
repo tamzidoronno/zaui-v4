@@ -171,8 +171,10 @@ public class StorePool {
             ex.printStackTrace();
             return null;
         }
-        if(object.multiLevelName != null) {
+        try {
             object.multiLevelName = gson.fromJson(object.multiLevelName, String.class);
+        }catch(Exception e) {
+            //invalid mulitlevelname.
         }
 
         int i = 0;

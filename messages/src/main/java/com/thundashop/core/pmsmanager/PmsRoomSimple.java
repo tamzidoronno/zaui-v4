@@ -39,4 +39,5 @@ public class PmsRoomSimple implements Serializable {
     List<String> orderIds;
     public Integer numberOfNights;
     boolean createOrderAfterStay;
+    boolean hasBeenCleaned = false;
 }

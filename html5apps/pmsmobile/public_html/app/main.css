@@ -31,6 +31,10 @@ body { background-color:#3a99d7; box-sizing: border-box; }
 .roomrow.ended { background-color:#ffe39f; color:#000 !important; }
 .roomrow.waitingforlock { border: solid 1px; background-color:blue;  }
 .roomrow.notpaid { background-color:red; color:#fff !important;  }
+.roombox { border: solid 1px; border-radius: 3px; margin: 3px; text-align: center; padding: 3px;  }
+.roombox.notclean { background-color:red; color:#000; }
+.roombox.clean {background-color:green; color:#fff; }
+.roombox.inUse {background-color:purple; color:#fff; }
 .roomrow.notpaid a, 
 .roomrow.started a,
 .roomrow.waitingforlock a
@@ -49,6 +53,11 @@ a, a:hover { color:#000; }
 .guestinfocol,.firecheck { border-left: solid 1px; height: 85px; text-align: center;}
 .firecheck {  line-height: 85px; padding-left:0px; padding-right:0px; }
 .firecheck.checked { background-color: #000; color:#fff; }
+
+.cleaningrow { border-bottom: solid 1px #bbb; padding-top: 10px; padding-bottom: 10px; cursor:pointer; }
+.cleaningrow.init { background-color:#fff !important }
+.cleaningrow.clean { background-color:green !important; color:#fff; }
+.cleaningrow.notclean { background-color:red !important; color:#fff; }
 
 
 @media only all and (max-width: 500px) {

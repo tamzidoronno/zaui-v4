@@ -29,6 +29,16 @@ angular.module('app', ['ui.router'])
       templateUrl: "pages/fire.html",
       controller: getshop.fireController
     })
+    .state('cleaning', {
+      url: "/cleaning",
+      templateUrl: "pages/cleaning.html",
+      controller: getshop.cleaningController
+    })
+    .state('caretaker', {
+      url: "/caretaker",
+      templateUrl: "pages/caretaker.html",
+      controller: getshop.careTakerController
+    })
     .state('sms', {
       url: "/sms",
       templateUrl: "pages/sms.html",

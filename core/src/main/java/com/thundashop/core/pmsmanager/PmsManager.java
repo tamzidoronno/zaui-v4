@@ -2755,6 +2755,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
         List<PmsRoomSimple> res = filtering.filterRooms(filter);
         doSorting(res, filter);
+        if(filter.includeCleaningInformation) {
+            for(PmsRoomSimple r : res) {
+                if(r.bookingItemId != null && !r.bookingItemId.isEmpty()) {
+                    r.roomCleaned = isClean(r.bookingItemId);
+                    r.hasBeenCleaned = (r.roomCleaned || isUsedToday(r.bookingItemId));
+                }
+            }
+        }
         return res;
     }
 

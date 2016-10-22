@@ -5,6 +5,8 @@ getshop.mainpageController = function($scope, $state) {
     $scope.hasOtherInstructions = false;
     $scope.hasFireInstructions = false;
     $scope.hasDoorControl = false;
+    $scope.hasCleaning = true;
+    $scope.hasCaretaker = true;
     
     
     $scope.LoadConfig = function() {

@@ -1,36 +1,33 @@
 <div class='additionalinfo row'>
     <a ui-sref="mainpage"><i class='fa fa-arrow-left' style='color:#fff; float:left;'></i></a>
     Cleaning program</div>
-<div class='row'>
-<br>
-    <div class='col-md-10'><span style='font-size: 16px;'><b>Guest checking in today</b></span></div>
-    <div class='col-md-2'><span class='btn btn-success'>Report problem</span></div>
-<br><br>
-</div>
-<div style='border-bottom: solid 1px #bbb;'></div>
-<div class="row">
-    <div ng-repeat="guest in checkInGuests" class='col-xs-12 cleaningrow {{guest.cleaningState}}'>
-        {{guest.room}}
-        {{guest.guest[0].name}}
-        <i class="fa fa-arrow-right" style='float:right;'></i>
-        <span style='float:right; padding-right: 20px;' ng-show='guest.hasBeenCleaned'>Ready</span>
-        <span style='float:right; padding-right: 20px;' ng-show='!guest.hasBeenCleaned'>Not ready</span>
-    </div>
-</div>
 
-<div class='row'>
-<br>
-    <div class='col-md-12'><span style='font-size: 16px;'><b>Guests checking out</b></span></div>
-<br><br>
-</div>
-<div style='border-bottom: solid 1px #bbb;'></div>
-<div class="row">
-    <div ng-repeat="guest in checkOutGuests" class='col-xs-12 cleaningrow {{guest.cleaningState}}'>
-        {{guest.room}}
-        {{guest.guest[0].name}}
-        <i class="fa fa-arrow-right" style='float:right;'></i>
-        <span style='float:right; padding-right: 20px;' ng-show='guest.hasBeenCleaned'>Ready</span>
-        <span style='float:right; padding-right: 20px;' ng-show='!guest.hasBeenCleaned'>Not ready</span>
+<div ng-repeat="cleaningList in cleaningLists">
+    <div class='row'>
+    <br>
+        <div class='col-md-12' ng-show="cleaningList.type=='checkin'"><span style='font-size: 16px;'><b>Guest checking in today</b></span></div>
+        <div class='col-md-12' ng-show="cleaningList.type=='interval'"><span style='font-size: 16px;'><b>Guest needs interval cleaning</b></span></div>
+        <div class='col-md-12' ng-show="cleaningList.type=='checkout'"><span style='font-size: 16px;'><b>Guest checking out today</b></span></div>
+    <br><br>
+    </div>
+    <div style='border-bottom: solid 1px #bbb;'></div>
+    <div class="row">
+        <div ng-repeat="guest in cleaningList.list" class='col-xs-12 cleaningrow {{guest.cleaningState}}'>
+
+            <i class="fa fa-clock-o" ng-show="guest.earlycheckin && cleaningList.type=='checkin'"></i> 
+            <i class="fa fa-home" ng-show="guest.latecheckout && cleaningList.type=='checkout'"></i>
+            <i class="fa fa-user-plus" ng-show="guest.extrabed"></i>
+            <i class="fa fa-bed" ng-show="guest.childbed"></i>
+
+             {{guest.room}}
+             <span ng-show="cleaningList.type=='checkin'">{{getCheckinTime(guest.start, guest, false) }}</span>
+            <span ng-show="cleaningList.type=='checkout'">{{getCheckinTime(guest.end, guest, true) }}</span>
+             {{guest.guest[0].name}} 
+            <i class="fa fa-arrow-right" style='float:right;'></i>
+            <span style='float:right; padding-right: 20px;' ng-show='guest.hasBeenCleaned'>Ready</span>
+            <span style='float:right; padding-right: 20px;' ng-show='!guest.hasBeenCleaned'>Not ready</span>
+        </div>
+        <div class='col-md-12' ng-show="!cleaningList.list.length" style="border-bottom: solid 1px #bbb; padding: 10px; padding-left: 30px;"><b>No activity for today</b></div>
     </div>
 </div>
 
@@ -41,7 +38,7 @@
 </div>
 <div class='row'>
     <div ng-repeat="room in rooms" class='col-md-2 col-xs-6'>
-        <div class='roombox {{room.inUseState}}'>
+        <div class='roombox {{room.inUseState}}' ng-click="toggleCleaningOnRoom(room)">
             <i class="fa fa-check" style="float:left; margin-left: 5px;margin-top: 3px;" ng-show="room.inUseState === 'clean'"></i>
             <i class="fa fa-ban" style="float:left; margin-left: 5px;margin-top: 3px;" ng-show="room.inUseState === 'inuse'"></i>
             <i class="fa fa-warning" style="float:left; margin-left: 5px;margin-top: 3px;" ng-show="room.inUseState === 'notclean'"></i>
@@ -50,8 +47,16 @@
 </div>
 <div class='row'><br></div>
 
+<div class='row' style='padding: 10px;'>
+    <i class="fa fa-clock-o"></i>  Early check in, priority room.<br>
+    <i class="fa fa-home"></i> Late check out, can leave later<br>
+    <i class="fa fa-user-plus"></i> Additional bed request<br>
+    <i class="fa fa-bed"></i> Addition bed for children requested<br>
+</div>
+
 <div class='additionalinfobottom row'>
     <div style='text-align:center; font-size: 20px; padding: 10px; color:#fff;'>
         <a ui-sref="mainpage"><i class='fa fa-home' style='color:#fff;'></i></a>
     </div>
 </div>
+

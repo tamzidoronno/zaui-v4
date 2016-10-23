@@ -111,6 +111,9 @@ public interface IPmsManager {
     @Administrator
     public PmsStatistics getStatistics(PmsBookingFilter filter);
     
+    @Administrator
+    public List<PmsBookingAddonItem> getAddonsAvailable();
+    
     @Customer
     public String removeFromBooking(String bookingId, String roomId) throws Exception;
     
@@ -201,6 +204,12 @@ public interface IPmsManager {
     
     @Administrator
     public void sendStatistics() throws Exception;
+    
+    @Administrator
+    public void addAddonsToBookingById(String addonId, String roomId, boolean remove);
+    
+    @Administrator
+    public List<PmsBookingAddonItem> getAddonsForRoom(String roomId);
     
     public void addAddonsToBooking(Integer type, String roomId, boolean remove);
     public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);

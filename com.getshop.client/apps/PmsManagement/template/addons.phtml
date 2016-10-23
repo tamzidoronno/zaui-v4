@@ -59,8 +59,12 @@ foreach($booking->rooms as $room) {
         echo "No addons added to this room.";
     } else {
         foreach($room->addons as $addon) {
+            $addonName = $addon->name;
+            if(isset($items[$addon->addonType]) && $items[$addon->addonType]) {
+                $addonName = $items[$addon->addonType];
+            }
             echo "<tr addonid='".$addon->addonId."' roomid='".$room->pmsBookingRoomId."' class='addonrow'>";
-            echo "<td>" . $items[$addon->addonType] . "</td>";
+            echo "<td>" . $addonName . "</td>";
             echo "<td>" . $roomName . "</td>";
             echo "<td width='10'><input type='text' value='" . $addon->count . "' style='width:70px;' class='addoncount'></td>";
             echo "<td width='10'><input type='text' value='" .  $addon->price . "' style='width:70px;' class='addonprice'></td>";

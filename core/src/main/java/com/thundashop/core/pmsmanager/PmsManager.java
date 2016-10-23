@@ -3042,6 +3042,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.priceExTaxes = product.priceExTaxes;
         toReturn.productId = product.id;
         toReturn.date = date;
+        toReturn.isAvailableForBooking = addonConfig.isAvailableForBooking;
+        toReturn.isAvailableForCleaner = addonConfig.isAvailableForCleaner;
+        toReturn.isActive = addonConfig.isActive;
+        if(addonConfig.price > 0) {
+            toReturn.price = addonConfig.price;
+        }
+        
         if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST) {
             toReturn.count = room.numberOfGuests;
         }
@@ -3866,6 +3873,62 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         System.exit(0);
     }
 
+    public List<PmsBookingAddonItem> getAddonsForRoom(String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.productId != null && !item.productId.isEmpty()) {
+                Product product = productManager.getProduct(item.productId);
+                product.updateTranslation(getSession().language);
+                item.name = product.name;
+            }
+        }
+        return room.addons;
+    }
+
+    
+    @Override
+    public void addAddonsToBookingById(String addonId, String roomId, boolean remove) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = booking.findRoom(roomId);
+        if(remove) {
+            PmsBookingAddonItem toRemove = null;
+            for(PmsBookingAddonItem item : room.addons) {
+                if(item.addonId.equals(addonId)) {
+                    toRemove = item;
+                }
+            }
+            if(toRemove != null) {
+                room.addons.remove(toRemove);
+            }
+        } else {
+            PmsBookingAddonItem item = new PmsBookingAddonItem();
+            for(PmsBookingAddonItem test : getConfigurationSecure().addonConfiguration.values()) {
+                if(test.addonId.equals(addonId)) {
+                    item = test;
+                    break;
+                }
+            }
+            if(item.isSingle) {
+                PmsBookingAddonItem newAddon = createAddonToAdd(item, room, new Date());
+                room.addons.add(newAddon);
+            } else {
+                Date start = pmsInvoiceManager.normalizeDate(room.date.start, true);
+                Date end = pmsInvoiceManager.normalizeDate(room.date.end, false);
+
+                while(true) {
+                    PmsBookingAddonItem toAdd = createAddonToAdd(item, room, start);
+                    room.addons.add(toAdd);
+                    start = addTimeUnit(start, booking.priceType);
+                    if(start.after(end)) {
+                        break;
+                    }
+                }
+            }
+        }
+        saveBooking(booking);
+    }
+    
     public void addAddonsToBookingWithCount(Integer type, String pmsBookingRoomId, boolean b, int count) {
         addAddonsToBooking(type, pmsBookingRoomId, b);
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
@@ -3880,4 +3943,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         saveBooking(booking);
     }
+
+    @Override
+    public List<PmsBookingAddonItem> getAddonsAvailable() {
+        HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
+        List<PmsBookingAddonItem> result = new ArrayList();
+        for(PmsBookingAddonItem item : addons.values()) {
+            if(item.productId != null && !item.productId.isEmpty()) {
+                Product product = productManager.getProduct(item.productId);
+                product.updateTranslation(getSession().language);
+                item.name = product.name;
+                result.add(item);
+            }
+        }
+        return result;
+    }
+
 }

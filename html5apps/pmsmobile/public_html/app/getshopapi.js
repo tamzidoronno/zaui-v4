@@ -7051,6 +7051,20 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'addAddonsToBookingById' : function(multilevelname, addonId,roomId,remove, gs_silent) {
+        var data = {
+            args : {
+                addonId : JSON.stringify(addonId),
+                roomId : JSON.stringify(roomId),
+                remove : JSON.stringify(remove),
+            },
+            method: 'addAddonsToBookingById',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'addBookingItem' : function(multilevelname, bookingId,item,start,end, gs_silent) {
         var data = {
             args : {
@@ -7346,6 +7360,29 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 typeId : JSON.stringify(typeId),
             },
             method: 'getAdditionalTypeInformationById',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getAddonsAvailable' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getAddonsAvailable',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getAddonsForRoom' : function(multilevelname, roomId, gs_silent) {
+        var data = {
+            args : {
+                roomId : JSON.stringify(roomId),
+            },
+            method: 'getAddonsForRoom',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };

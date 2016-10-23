@@ -37,7 +37,7 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
     }
     $scope.loadGuest = function(type) {
         var filter = {};
-        if(type == "checkin") { 
+        if(type == "checkin") {
             filter.filterType = "checkin";
             filter.sorting = "room";
             filter.startDate = new Date();
@@ -94,6 +94,7 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
         var confirmed = confirm("Are you sure you want to toggle cleaning on this room?");
         if(confirmed) {
             getshopclient.PmsManager.forceMarkRoomAsCleaned(getMultilevelName(), room.id);
+            $scope.loadRooms();
         }
     }
     

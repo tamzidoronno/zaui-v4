@@ -19,6 +19,11 @@ angular.module('app', ['ui.router'])
         templateUrl: "pages/guestinfo.html",
         controller: getshop.guestInfoController
     })
+    .state('cleaningCheckout', {
+        url: '/cleaning/checkout/:roomName',
+        templateUrl: "pages/cleaningcheckout.html",
+        controller: getshop.cleaningCheckoutController
+    })
     .state('findguest', {
       url: "/findguest",
       templateUrl: "pages/findguest.html",

@@ -58,7 +58,7 @@ a, a:hover { color:#000; }
 .cleaningrow.init { background-color:#fff !important }
 .cleaningrow.clean { background-color:green !important; color:#fff; }
 .cleaningrow.notclean { background-color:red !important; color:#fff; }
-
+.cleaningrow a { text-decoration: none; color:#fff !important;}
 
 @media only all and (max-width: 500px) {
 .truncate {

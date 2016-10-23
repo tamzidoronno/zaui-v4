@@ -13,21 +13,26 @@
     <div style='border-bottom: solid 1px #bbb;'></div>
     <div class="row">
         <div ng-repeat="guest in cleaningList.list" class='col-xs-12 cleaningrow {{guest.cleaningState}}'>
+            <a ui-sref="cleaningCheckout({  roomName : '{{guest.room}}' })">
+                <div>
+                    <i class="fa fa-clock-o" ng-show="guest.earlycheckin && cleaningList.type=='checkin'"></i> 
+                    <i class="fa fa-home" ng-show="guest.latecheckout && cleaningList.type=='checkout'"></i>
+                    <i class="fa fa-user-plus" ng-show="guest.extrabed"></i>
+                    <i class="fa fa-bed" ng-show="guest.childbed"></i>
 
-            <i class="fa fa-clock-o" ng-show="guest.earlycheckin && cleaningList.type=='checkin'"></i> 
-            <i class="fa fa-home" ng-show="guest.latecheckout && cleaningList.type=='checkout'"></i>
-            <i class="fa fa-user-plus" ng-show="guest.extrabed"></i>
-            <i class="fa fa-bed" ng-show="guest.childbed"></i>
-
-             {{guest.room}}
-             <span ng-show="cleaningList.type=='checkin'">{{getCheckinTime(guest.start, guest, false) }}</span>
-            <span ng-show="cleaningList.type=='checkout'">{{getCheckinTime(guest.end, guest, true) }}</span>
-             {{guest.guest[0].name}} 
-            <i class="fa fa-arrow-right" style='float:right;'></i>
-            <span style='float:right; padding-right: 20px;' ng-show='guest.hasBeenCleaned'>Ready</span>
-            <span style='float:right; padding-right: 20px;' ng-show='!guest.hasBeenCleaned'>Not ready</span>
+                     {{guest.room}}
+                     <span ng-show="cleaningList.type=='checkin'">{{getCheckinTime(guest.start, guest, false) }}</span>
+                    <span ng-show="cleaningList.type=='checkout'">{{getCheckinTime(guest.end, guest, true) }}</span>
+                     {{guest.guest[0].name}} 
+                    <i class="fa fa-arrow-right" style='float:right;'></i>
+                    <span style='float:right; padding-right: 20px;' ng-show='guest.hasBeenCleaned'>Ready</span>
+                    <span style='float:right; padding-right: 20px;' ng-show='!guest.hasBeenCleaned'>Not ready</span>
+                </div>
+            </a>
         </div>
         <div class='col-md-12' ng-show="!cleaningList.list.length" style="border-bottom: solid 1px #bbb; padding: 10px; padding-left: 30px;"><b>No activity for today</b></div>
+    </a>
+
     </div>
 </div>
 

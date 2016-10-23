@@ -109,13 +109,13 @@ public class PmsBooking extends DataCommon {
     }
 
     public String createSummary(List<BookingItemType> types) {
-        String res = "Reg data: <br>";
+        String res = "Reg data: <br>\r\n";
         try {
             for(String field : registrationData.resultAdded.keySet()) {
-                res += field + " : " + registrationData.resultAdded.get(field) + "<br>";
+                res += field + " : " + registrationData.resultAdded.get(field) + "<br>\r\n";
             }
 
-            res += "<br>Rooms:<br>";
+            res += "<br>Rooms:<br>\r\n";
             for(PmsBookingRooms room : getAllRoomsIncInactive()) {
                 BookingItemType typeToUse = null;
                 if(room.bookingItemTypeId != null) {
@@ -130,7 +130,7 @@ public class PmsBooking extends DataCommon {
                     res += " type: " + typeToUse.name;
                 }
                 res += " deleted, " + room.deleted;
-                res += "<br>";
+                res += "<br>\r\n";
             }
         }catch(Exception e) {
             e.printStackTrace();

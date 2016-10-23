@@ -786,32 +786,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
-//        if(codeExist(9473)) {
-//            System.out.println("Exists");
-//        }
-//        Calendar end = Calendar.getInstance();
-//        for(PmsBooking b1 : bookings.values()) {
-//            for(PmsBookingRooms r1 : b1.getActiveRooms()) {
-//                if(r1.isEnded()) {
-//                    continue;
-//                }
-//                for(PmsBooking b2 : bookings. values()) {
-//                    for(PmsBookingRooms r2 : b2.getActiveRooms()) {
-//                        if(r2.isEnded()) {
-//                            continue;
-//                        }
-//                        if(r1.equals(r2)) {
-//                            continue;
-//                        }
-//                        if(r2.code.equals(r1.code)) {
-//                            System.out.println("Found problem : " + r1.date.start + " - " + r1.date.end + " : " + r1.code);
-//                            System.out.println("Found problem : " + r2.date.start + " - " + r2.date.end + " : " + r1.code);
-//                            System.out.println("--------------");
-//                        }
-//                    }
-//                }
-//            }
-//        }
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }
@@ -1348,7 +1322,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String getCurrenctContract() throws Exception {
-        PmsBooking current = getCurrentBooking();
+        PmsBooking current = getCurrentBooking(); 
         return getContract(current.id);
     }
 
@@ -1361,7 +1335,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 room.delete();
             }
         }
-        booking.isDeleted = true;
+        
         logEntry("Deleted booking", bookingId, null);
         saveBooking(booking);
     }

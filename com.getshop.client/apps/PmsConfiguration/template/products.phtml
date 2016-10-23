@@ -1,0 +1,56 @@
+<?php
+/* @var $this ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+$products = $this->getApi()->getProductManager()->getAllProducts();
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$addonConfig = $config->addonConfiguration;
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th align='left'>Product</th>";
+echo "<th align='center'>Cleaning</th>";
+echo "<th align='center'>Webpage</th>";
+echo "<th align='center'>One time cost</th>";
+echo "<th align='left'>Description</th>";
+echo "<th align='left'>Price</th>";
+echo "<th align='left'>Account</th>";
+echo "<th align='left'>Taxcode</th>";
+echo "</tr>";
+
+foreach($products as $product) {
+    $selectedAddonConfig = null;
+    foreach($addonConfig as $conf) {
+        if($conf->productId == $product->id) {
+            $selectedAddonConfig = $conf;
+            break;
+        }
+    }
+    
+    if(!$selectedAddonConfig) {
+        $selectedAddonConfig = new core_pmsmanager_PmsBookingAddonItem();
+    }
+    
+    $prodid = $product->id;
+    
+    echo "<tr>";
+    echo "<td><input type='text' value='".$product->name."' gsname='addonconfig_".$prodid."_name'></input></td>";
+    $checked = $selectedAddonConfig->isAvailableForCleaner ? "CHECKED" : "";
+    echo "<td align='center'><input type='checkbox' gsname='addonconfig_".$prodid."_isAvailableForCleaner' $checked></input></td>";
+    $checked = $selectedAddonConfig->isAvailableForBooking ? "CHECKED" : "";
+    echo "<td align='center'><input type='checkbox' gsname='addonconfig_".$prodid."_isAvailableForBooking' $checked></input></td>";
+    $checked = $selectedAddonConfig->isSingle ? "CHECKED" : "";
+    echo "<td align='center'><input type='checkbox' gsname='addonconfig_".$prodid."_isSingle' $checked></input></td>";
+    echo "<td><input type='txt' gsname='addonconfig_".$prodid."_description' value='".$product->description."'></input></td>";
+    echo "<td><input type='txt' style='width:50px;' value='".$conf->price."' gsname='addonconfig_".$prodid."_price'></input></td>";
+    echo "<td><input type='txt' style='width:50px;' value='".$product->accountingAccount."' gsname='addonconfig_".$prodid."_account'></input></td>";
+    echo "<td><input type='txt' style='width:50px;' value='".$product->sku."' gsname='addonconfig_".$prodid."_taxcode'></input></td>";
+    echo "</tr>";
+}
+echo "</table>";
+        
+?>
+
+<hr>
+Create a new product<br>
+<div gstype="form" method="createProduct">
+    <input type='text' placeholder='Name of product' gsname='name'>
+    <span class='pmsbutton' gstype='submit'>Create product</span>
+</div>

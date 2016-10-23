@@ -25,6 +25,12 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
     }
     
+    public function createProduct() {
+        $product = $this->getApi()->getProductManager()->createProduct();
+        $product->name = $_POST['data']['name'];
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
+    
     public function toggleVisibleInBooking() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         foreach($config->channelConfiguration as $key => $chanConfig) {
@@ -179,6 +185,37 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $notifications->extraCleaningCost = $this->buildExtraCleaningCost();
         
         $notifications->defaultMessage->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['defaultmessage'];
+        
+        //Save addonsfromproduct
+        $prods = $this->getApi()->getProductManager()->getAllProducts();
+        foreach($prods as $prod) {
+            $conf = new \core_pmsmanager_PmsBookingAddonItem();
+            $found = false;
+            foreach($notifications->addonConfiguration as $tmpaddon) {
+                if($tmpaddon->productId == $prod->id) {
+                    $conf = $tmpaddon;
+                    $found = true;
+                }
+            }
+            
+            if(!$found) {
+                $notifications->addonConfiguration[] = $conf;
+            }
+            
+            $conf->productId = $prod->id;
+            $conf->isAvailableForCleaner = $_POST['data']['addonconfig_' . $prod->id . "_isAvailableForCleaner"];
+            $conf->isAvailableForBooking = $_POST['data']['addonconfig_' . $prod->id . "_isAvailableForBooking"];
+            $conf->isSingle = $_POST['data']['addonconfig_' . $prod->id . "_isSingle"];
+            $conf->description = $_POST['data']['addonconfig_' . $prod->id . "_description"];
+            $conf->price = $_POST['data']['addonconfig_' . $prod->id . "_price"];
+            
+            $prod->sku = $_POST['data']['addonconfig_' . $prod->id . "_taxcode"];
+            $prod->accountingAccount = $_POST['data']['addonconfig_' . $prod->id . "_account"];
+            $prod->name = $_POST['data']['addonconfig_' . $prod->id . "_name"];
+            $this->getApi()->getProductManager()->saveProduct($prod);
+        }
+        
+        
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $notifications);
         
         //Save coupons.
@@ -190,7 +227,6 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 $this->getApi()->getCartManager()->addCoupon($coupon);
             }
         }
-        
     }
     
     function endsWith($haystack, $needle) {

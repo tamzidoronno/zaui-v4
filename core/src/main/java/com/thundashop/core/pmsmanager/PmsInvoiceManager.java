@@ -1176,7 +1176,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 for(PmsBookingAddonItem check : items) {
                     price += check.price * check.count;
                     count += check.count;
-                    type = check.addonType;
+                    if(check.addonType != null) {
+                        type = check.addonType;
+                    }
                 }
                 if(type == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
                     endDateToAdd = startDate;
@@ -1187,8 +1189,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 
                 if(count > 0) {
                     result.add(createCartItem(productId, null, room, startDateToAdd, endDateToAdd, price / count, count));
-                } else {
-                    logPrint("Count 0?");
                 }
             }
         }

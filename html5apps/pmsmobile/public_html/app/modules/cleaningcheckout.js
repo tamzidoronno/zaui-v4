@@ -25,6 +25,9 @@ getshop.cleaningCheckoutController = function ($scope, $state, $stateParams, $lo
         loadguests.done(function(res) {
             var newList = [];
             for(var k in res) {
+                if(res[k].start < tonightTime && res[k].end > tonightTime) {
+                    newList.push(res[k]);
+                }
                 if(res[k].end > tonightTime) {
                     continue;
                 }

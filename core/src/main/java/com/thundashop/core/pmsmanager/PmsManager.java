@@ -3034,6 +3034,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsBookingAddonItem createAddonToAdd(PmsBookingAddonItem addonConfig, PmsBookingRooms room, Date date) {
+        if(date.after(room.date.end)) {
+            date = room.date.end;
+        }
+        if(date.before(room.date.start)) {
+            date = room.date.start;
+        }
+        
         Product product = productManager.getProduct(addonConfig.productId);
         
         PmsBookingAddonItem toReturn = new PmsBookingAddonItem();

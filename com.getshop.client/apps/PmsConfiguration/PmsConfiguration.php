@@ -212,6 +212,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             $prod->sku = $_POST['data']['addonconfig_' . $prod->id . "_taxcode"];
             $prod->accountingAccount = $_POST['data']['addonconfig_' . $prod->id . "_account"];
             $prod->name = $_POST['data']['addonconfig_' . $prod->id . "_name"];
+            $prod->taxgroup = $_POST['data']['addonconfig_' . $prod->id . "_taxgroup"];
             $this->getApi()->getProductManager()->saveProduct($prod);
         }
         

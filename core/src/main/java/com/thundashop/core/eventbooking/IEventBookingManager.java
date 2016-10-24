@@ -216,4 +216,8 @@ public interface IEventBookingManager {
     public void toggleHide(String eventId);
     
     public void clearLocationFilters();
+    
+    @Administrator
+    public List<EventStatistic> getStatisticGroupedByLocations(Date startDate, Date stopDate, List<String> groupIds, List<String> eventTypeIds);
+        
 }

@@ -50,7 +50,7 @@ class EventStatistic extends \MarketingApplication implements \Application {
         $_SESSION['searchcriterias'] = $_POST;
     }
     
-    public function getStats() {
+    public function getStats($byLocation=false) {
         $groups = [];
         $allGroups = $this->getApi()->getUserManager()->getAllGroups();
         
@@ -72,6 +72,11 @@ class EventStatistic extends \MarketingApplication implements \Application {
         if (isset($_POST['data']['starttime']) && isset($_POST['data']['stoptime'])) {
             $start = $this->convertToJavaDate(strtotime($_POST['data']['starttime']));
             $stop = $this->convertToJavaDate(strtotime($_POST['data']['stoptime']));
+            
+            if ($byLocation) {
+                return $this->getApi()->getEventBookingManager()->getStatisticGroupedByLocations("booking", $start, $stop, $groups, $events);
+            }
+            
             return $this->getApi()->getEventBookingManager()->getStatistic("booking", $start, $stop, $groups, $events);
         }
         
@@ -79,18 +84,20 @@ class EventStatistic extends \MarketingApplication implements \Application {
     }
 
     public function getGroupedByLocations() {
-        $stats = $this->getStats();
+        $stats = $this->getStats(true);
         $loc = [];
         
         foreach ($stats as $stat) {
-            foreach ($stat->users as $eventId => $users) {
-                $event = $this->getApi()->getEventBookingManager()->getEvent("booking", $eventId);
-                
-                if (isset($loc[$event->location->id])) {
-                    $loc[$event->location->id] = $loc[$event->location->id] + count($users);
-                } else {
-                    $loc[$event->location->id] = count($users);
-                }
+
+            $locationId = $stat->locationId;
+            
+            if (!$stat->count)
+                continue;
+            
+            if (isset($loc[$locationId])) {
+                $loc[$locationId] = $loc[$locationId] + $stat->count;
+            } else {
+                $loc[$locationId] = $stat->count;
             }
         }
         

@@ -26,7 +26,9 @@ class PmsFastBooking extends \WebshopApplication implements \Application {
         $room->bookingItemTypeId = $type;
         $room->date = new \core_pmsmanager_PmsBookingDateRange();
         $room->date->start = $this->convertToJavaDate(time());
-        $room->date->end = $this->convertToJavaDate(time()+($minutes*60));
+        if($minutes) {
+            $room->date->end = $this->convertToJavaDate(time()+($minutes*60));
+        }
         $booking->rooms = array();
         $booking->rooms[] = $room;
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);

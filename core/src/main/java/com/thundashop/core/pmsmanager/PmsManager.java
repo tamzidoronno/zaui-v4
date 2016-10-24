@@ -716,6 +716,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBookingRooms changeDates(String roomId, String bookingId, Date start, Date end) {
+        if(start.after(end)) {
+            return null;
+        }
         PmsBooking booking = getBooking(bookingId);
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
@@ -784,6 +787,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String setBookingItemAndDate(String roomId, String itemId, boolean split, Date start, Date end) {
+        if(start.after(end)) {
+            return "Date range is invalid, the date starts after it ends.";
+        }
         PmsBooking booking = getBookingFromRoom(roomId);
         if (booking == null) {
             return "Booking does not exists";
@@ -3945,7 +3951,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
-    public PmsBooking doCompleteBooking(PmsBooking booking) { 
+    public PmsBooking doCompleteBooking(PmsBooking booking) {
         if(getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {
             messageManager.sendErrorNotification("Booking completed.", null);
         }

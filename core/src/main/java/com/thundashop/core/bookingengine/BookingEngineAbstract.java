@@ -603,15 +603,15 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         newBooking.startDate = start;
         newBooking.endDate = end;
-        newBooking.bookingItemId = "";
+        newBooking.bookingItemId = itemId;
         
         validateChange(newBooking);
         
         booking.bookingItemId = itemId;
+        booking.startDate = start;
+        booking.endDate = end;
         if (bookingItem != null) {
             booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
-            booking.startDate = start;
-            booking.endDate = end;
         }
         
         

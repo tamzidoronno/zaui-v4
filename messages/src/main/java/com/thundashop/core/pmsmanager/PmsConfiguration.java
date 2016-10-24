@@ -32,6 +32,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean needToAgreeOnContract = false;
     public boolean exposeUnsecureBookings = false;
     public boolean autoconfirmRegisteredUsers = false;
+    public Integer numberOfHoursToExtendLateCheckout = 3;
     public Integer minStay = 1;
     public Integer defaultNumberOfDaysBack = 3;
     public Integer hourOfDayToStartBoarding = 12;

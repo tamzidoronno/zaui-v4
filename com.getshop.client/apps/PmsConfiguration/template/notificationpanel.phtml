@@ -514,6 +514,12 @@ $channelConfig = $config->channelConfiguration;
         </div>
         <div class='configrow'>
             <span class='configentry'>
+                 <input type='number' style='width: 40px;' gsname='numberOfHoursToExtendLateCheckout' value='<? echo $notificationSettings->numberOfHoursToExtendLateCheckout; ?>'>
+            </span>
+            How many hours should late checkout add to stay?
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
                  <input type='number' style='width: 40px;' gsname='defaultNumberOfDaysBack' value='<? echo $notificationSettings->defaultNumberOfDaysBack; ?>'>
             </span>
             Default number of days selected back in time

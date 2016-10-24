@@ -65,6 +65,9 @@ public interface IBookingEngine {
     @Administrator
     public List<Booking> getAllBookings();
     
+    @Administrator
+    public void changeBookingItemAndDateOnBooking(String booking, String item, Date start, Date end);
+    
     public Integer getNumberOfAvailable(String itemType, Date start, Date end);
     
     @Administrator

@@ -583,6 +583,41 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         saveObject(booking);
     }
+    
+    public void changeBookingItemAndDateOnBooking(String bookingId, String itemId, Date start, Date end) {
+        Booking booking = getBooking(bookingId);
+        
+        if (booking == null) {
+            throw new BookingEngineException("Can not change bookingitem, the booking does not exists");
+        }
+        
+        BookingItem bookingItem = getBookingItem(itemId);
+        if (bookingItem == null && !itemId.isEmpty()) {
+            throw new BookingEngineException("Can not change to a bookingItem that does not exists");
+        }
+        
+        Booking newBooking = deepClone(booking);
+        newBooking.bookingItemId = itemId;
+        if (bookingItem != null)
+            newBooking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+        
+        newBooking.startDate = start;
+        newBooking.endDate = end;
+        newBooking.bookingItemId = "";
+        
+        validateChange(newBooking);
+        
+        booking.bookingItemId = itemId;
+        if (bookingItem != null) {
+            booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+            booking.startDate = start;
+            booking.endDate = end;
+        }
+        
+        
+        saveObject(booking);
+    }
+    
 
     public void deleteBookingItemType(String id) {
         BookingItemType type = types.get(id);

@@ -54,6 +54,8 @@ public interface IPmsManager {
     @Editor
     public PmsBooking getBookingFromRoomIgnoreDeleted(String roomId);
     
+    @Administrator
+    public String setBookingItemAndDate(String roomId, String itemId, boolean split, Date start, Date end);
     
     @Administrator
     public String setNewRoomType(String roomId, String bookingId, String newType);

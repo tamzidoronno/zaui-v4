@@ -314,8 +314,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
             if($room->pmsBookingRoomId == $roomid) {
                 $name = $this->getSelectedName();
                 $type = $room->bookingItemTypeId;
-                $start = $room->date->start;
-                $end = $room->date->end;
+                $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+                $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
                 
                 $available = (array)$this->getApi()->getBookingEngine()->getAvailbleItems($name, $newRoom->bookingItemTypeId, $start, $end);
                 $incUnnassigned = false;
@@ -992,11 +992,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function setBookingItem() {
-        $error = $this->getManager()->setBookingItem($this->getSelectedName(),
+        $error = $this->getManager()->setBookingItemAndDate($this->getSelectedName(),
                 $_POST['data']['roomid'], 
-                $_POST['data']['bookingid'], 
                 $_POST['data']['itemid'],
-                $_POST['data']['clicksubmit'] == "split");
+                $_POST['data']['clicksubmit'] == "split",
+                $this->convertToJavaDate(strtotime($_POST['data']['start']. " " . $_POST['data']['starttime'])),
+                $this->convertToJavaDate(strtotime($_POST['data']['end']. " " . $_POST['data']['endtime'])));
         if($error) {
             $this->errors[] = $error;
         }

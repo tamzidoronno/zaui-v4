@@ -103,6 +103,11 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         bookingEngineAbstract.changeBookingItemOnBooking(booking, item);
     }
 
+    @Override
+    public void changeBookingItemAndDateOnBooking(String booking, String item, Date start, Date end) {
+        bookingEngineAbstract.changeBookingItemAndDateOnBooking(booking, item,start,end);
+    }
+
     public boolean isConfirmationRequired() {
         return bookingEngineAbstract.isConfirmationRequired();
     }

@@ -124,11 +124,12 @@ public class RubiCon implements AccountingTransferInterface {
         String account = null;
         String mvaKode = null;
 
+        //This is the configuration
         if(item != null) {
             account = item.getProduct().sku;
             mvaKode = item.getProduct().accountingSystemId;
 
-                        //Cancelation
+            //Cancelation
             if(item.getProduct().id.equals("6087e72e-dc6a-48b5-b5d5-63da4ee7346e")) {
                 account = "003912";
                 mvaKode = "08";
@@ -144,9 +145,15 @@ public class RubiCon implements AccountingTransferInterface {
                 mvaKode = "03";
             }
         } else {
-            account = "001920"; //Kort 10200, faktura: 
+            if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {
+                account = "010900";
+            } else {
+                account = user.customerId + "";
+            }
             mvaKode = "00";
         }
+        //End of configuration
+        double total = managers.orderManager.getTotalAmount(order);
         
         if(account == null) {
             account = "-1";
@@ -155,21 +162,11 @@ public class RubiCon implements AccountingTransferInterface {
             mvaKode = "-1";
         }
 
-
-
-        String costumerId = (user.customerId+2000) + "";
-        if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {
-            costumerId = "010900";
-        } else {
-            costumerId = "010200";
-        }
-
-        account = prependZeros(account, 6);
-        costumerId = prependZeros(costumerId, 6);
-
         Integer count = -1;
         if(item != null) {
             count = item.getCount();
+        } else if(total < 0) {
+            count = 1;
         }
 
         if(count > 0) {
@@ -180,7 +177,9 @@ public class RubiCon implements AccountingTransferInterface {
             fieldsInLine.put(9, account + "");//Debet konto
             fieldsInLine.put(10, "000000"); //Kredit konto
         }
-        fieldsInLine.put(21, costumerId + ""); //Debet konto
+
+        
+        fieldsInLine.put(21, account + ""); //Debet konto
 
         Address address = user.address;
         if(address  == null) {

@@ -734,7 +734,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             room.guests.add(guest);
             newbooking.addRoom(room);
         }
-
         pmsManager.setBooking(newbooking);
         int i = 0;
         for(PmsBookingRooms room : newbooking.getActiveRooms()) {
@@ -744,7 +743,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             i++;
         }
-        newbooking = pmsManager.completeCurrentBooking();
+        newbooking = pmsManager.doCompleteBooking(newbooking);
         
         if(pmsManager.getConfigurationSecure().usePricesFromChannelManager && newbooking != null) {
             Date end = new Date();

@@ -129,6 +129,10 @@ public class PmsBooking extends DataCommon {
                 if(typeToUse != null) {
                     res += " type: " + typeToUse.name;
                 }
+                if(!room.guests.isEmpty()) {
+                    res += ", guest: " + room.guests.get(0).name + " - ";
+                }
+                
                 res += " deleted, " + room.deleted;
                 res += "<br>\r\n";
             }

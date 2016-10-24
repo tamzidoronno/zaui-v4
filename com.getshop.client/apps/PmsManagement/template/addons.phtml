@@ -20,6 +20,9 @@ $items[7] = "EXTRA CHILDBED";
 echo "<select id='roomsForAddons'>";
 echo "<option value=''>All rooms</option>";
 foreach($booking->rooms as $room) {
+    if($room->deleted) {
+        continue;
+    }
     $roomName = $types[$room->bookingItemTypeId]->name;
     if($room->bookingItemId) {
         $roomName .= " (" . $bookingItems[$room->bookingItemId]->bookingItemName . ") " . $room->guests[0]->name;
@@ -42,6 +45,9 @@ echo "<span class='pmsbutton removeAddons' style='background-color:red'>Remove a
 
 echo "<br><br>";
 foreach($booking->rooms as $room) {
+    if($room->deleted) {
+        continue;
+    }
     $roomName = $types[$room->bookingItemTypeId]->name;
     if($room->bookingItemId) {
         $roomName .= " (" . $bookingItems[$room->bookingItemId]->bookingItemName . ") " . $room->guests[0]->name;

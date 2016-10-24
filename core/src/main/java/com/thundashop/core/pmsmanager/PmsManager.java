@@ -139,6 +139,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
+                if(booking.isDeleted && booking.getActiveRooms().size() > 0 && !booking.isEnded()) {
+                    System.out.println("channel : " + booking.channel);
+                    System.out.println(booking.createSummary(new ArrayList()));
+                    System.out.println("---------------");
+                }
+                
 //                if(booking.deleted != null && (booking.sessionId== null || booking.sessionId.isEmpty()) && booking.orderIds.isEmpty() && !booking.userId.isEmpty()) {
 //                    for(PmsBookingRooms r : booking.rooms) {
 //                        r.bookingId = "";
@@ -148,6 +154,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 //                    continue;
 //                }
 //                dumpBooking(booking);
+                if(booking.userId.equals("789dc5fc-a47e-42a4-9d09-d8f3281d8e63")) {
+                    continue;
+                }
+  
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof PmsPricing) {
@@ -284,6 +294,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
 
+        if(booking.isDeleted && booking.getActiveRooms().size() > 0) {
+            booking.isDeleted = false;
+        }
+        
         saveObject(booking);
         bookings.put(booking.id, booking);
     }
@@ -324,48 +338,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking completeCurrentBooking() {
         PmsBooking booking = getCurrentBooking();
-        if(getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {
-            messageManager.sendErrorNotification("Booking completed.", null);
-        }
-        if(booking.getActiveRooms().isEmpty()) {
-            return null;
-        }
-        notifyAdmin("booking_completed_" + booking.language, booking);
-        if (!bookingEngine.isConfirmationRequired()) {
-            bookingEngine.setConfirmationRequired(true);
-        }
-        
-        checkForMissingEndDate(booking);
-        
-        Integer result = 0;
-        booking.isDeleted = false;
-        
-        List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
-        
-        createUserForBooking(booking);
-        if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
-             pmsInvoiceManager.createPrePaymentOrder(booking);
-        }
-        try {
-            result = completeBooking(bookingsToAdd, booking);
-
-            if (result == 0) {
-                if (!configuration.payAfterBookingCompleted) {
-                    if (bookingIsOK(booking)) {
-                        if (!booking.confirmed) {
-                            doNotification("booking_completed", booking, null);
-                        } else {
-                            doNotification("booking_confirmed", booking, null);
-                        }
-                    }
-                }
-                return booking;
-            }
-        } catch (Exception e) {
-            messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id, e);
-            e.printStackTrace();
-        }
-        return null; 
+        return doCompleteBooking(booking);
     }
 
     @Override
@@ -3964,6 +3937,51 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return result;
+    }
+
+    public PmsBooking doCompleteBooking(PmsBooking booking) { 
+        if(getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {
+            messageManager.sendErrorNotification("Booking completed.", null);
+        }
+        if(booking.getActiveRooms().isEmpty()) {
+            return null;
+        }
+        notifyAdmin("booking_completed_" + booking.language, booking);
+        if (!bookingEngine.isConfirmationRequired()) {
+            bookingEngine.setConfirmationRequired(true);
+        }
+        
+        checkForMissingEndDate(booking);
+        
+        Integer result = 0;
+        booking.isDeleted = false;
+        
+        List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
+        
+        createUserForBooking(booking);
+        if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
+             pmsInvoiceManager.createPrePaymentOrder(booking);
+        }
+        try {
+            result = completeBooking(bookingsToAdd, booking);
+
+            if (result == 0) {
+                if (!configuration.payAfterBookingCompleted) {
+                    if (bookingIsOK(booking)) {
+                        if (!booking.confirmed) {
+                            doNotification("booking_completed", booking, null);
+                        } else {
+                            doNotification("booking_confirmed", booking, null);
+                        }
+                    }
+                }
+                return booking;
+            }
+        } catch (Exception e) {
+            messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id, e);
+            e.printStackTrace();
+        }
+        return null; 
     }
 
 }

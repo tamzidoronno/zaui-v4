@@ -11,7 +11,12 @@ class EventStatistic extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        $this->includefile("statistic");
+        if (isset($_POST["data"]["submit"]) && $_POST["data"]["submit"] == "locations") {
+            $this->includefile("locations");
+        } else {
+            $this->includefile("statistic");
+        }
+        
     }
     
     public function downloadStatistic() {
@@ -72,5 +77,25 @@ class EventStatistic extends \MarketingApplication implements \Application {
         
         return null;
     }
+
+    public function getGroupedByLocations() {
+        $stats = $this->getStats();
+        $loc = [];
+        
+        foreach ($stats as $stat) {
+            foreach ($stat->users as $eventId => $users) {
+                $event = $this->getApi()->getEventBookingManager()->getEvent("booking", $eventId);
+                
+                if (isset($loc[$event->location->id])) {
+                    $loc[$event->location->id] = $loc[$event->location->id] + count($users);
+                } else {
+                    $loc[$event->location->id] = count($users);
+                }
+            }
+        }
+        
+        return $loc;
+    }
+
 }
 ?>

@@ -1,0 +1,11 @@
+<?
+/* @var $this \ns_a7cb1957_bbc9_42d3_8f79_fa91260c3ebf\EventStatistic */
+
+$this->includefile("form");
+$groupedByLocations = $this->getGroupedByLocations();
+
+foreach ($groupedByLocations as $locationId => $count) {
+    $loc = $this->getApi()->getEventBookingManager()->getLocation("booking", $locationId);
+    echo "<div>".$loc->name." : ".$count."</div>";
+}
+?>

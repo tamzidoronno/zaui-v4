@@ -3746,11 +3746,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!getConfigurationSecure().automaticallyCloseRoomIfDirtySameDay) {
             return;
         }
-        
+        Integer closeHour = getConfigurationSecure().closeRoomNotCleanedAtHour;
         Date start = new Date();
         Calendar cal = Calendar.getInstance();
         int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
-        if(hourOfDay < 16 || hourOfDay > 20) {
+        if(hourOfDay < closeHour || hourOfDay > 20) {
             return;
         }
         

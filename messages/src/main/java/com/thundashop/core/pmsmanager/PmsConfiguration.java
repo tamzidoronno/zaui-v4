@@ -101,6 +101,7 @@ public class PmsConfiguration extends DataCommon {
 
     
     //Cleaning options
+    public Integer closeRoomNotCleanedAtHour = 16;
     public Integer cleaningInterval = 0;
     public HashMap<Integer, Boolean> cleaningDays = new HashMap();
     public Integer numberOfCheckoutCleanings = 0;

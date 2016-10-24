@@ -832,8 +832,6 @@ public class PmsManagerProcessor {
             manager.logEntry("Autodeleted because it has expired.", booking.id, null);
             manager.deleteBooking(booking.id);
         }
-        long end = System.currentTimeMillis();
-        System.out.println("Check takes : " + (end-start));
     }
 
     private void sendPaymentLinkOnUnpaidBookings() {

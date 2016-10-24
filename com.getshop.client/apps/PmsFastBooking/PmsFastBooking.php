@@ -29,7 +29,7 @@ class PmsFastBooking extends \WebshopApplication implements \Application {
         $room->date->end = $this->convertToJavaDate(time()+($minutes*60));
         $booking->rooms = array();
         $booking->rooms[] = $room;
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
     }
     
     public function render() {

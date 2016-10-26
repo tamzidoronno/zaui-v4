@@ -78,7 +78,7 @@ if($config->requirePayments) {
 echo "<span class='tab' area='messagearea'>Messaging</span>";
 $hasAddons = false;
 foreach($config->addonConfiguration as $addonConfig) {
-    if($addonConfig->isActive) {
+    if($addonConfig->isActive || $addonConfig->isAvailableForBooking || $addonConfig->isAvailableForCleaner) {
         $hasAddons = true;
     }
 }

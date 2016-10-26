@@ -25,6 +25,7 @@ import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
@@ -73,6 +74,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     
     @Autowired
     InvoiceManager invoiceManager;
+    
+    @Autowired
+    ProductManager productManager;
     
     @Autowired
     GetShopSessionScope getShopSessionScope;
@@ -709,9 +713,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         sumOrders(res);
         res.subtype = configToUse.subType;
         res.type = configToUse.transferType;
+        saveObject(res);
         
         files.put(res.id, res);
-        saveObject(res);
         
         return res;
     }
@@ -807,6 +811,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 mgrs.invoiceManager = invoiceManager;
                 mgrs.orderManager = orderManager;
                 mgrs.userManager = userManager;
+                mgrs.productManager = productManager;
                 object.setManagers(mgrs);
                 return object;
             }

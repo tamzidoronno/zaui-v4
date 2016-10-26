@@ -45,6 +45,9 @@ public class CartItem implements Serializable {
         }
         long diff = endDate.getTime() - startDate.getTime();
         long mins = diff / 60000;
+        if(mins == 0) {
+            return 0.0;
+        }
         return (getProduct().priceExTaxes * getCount()) / mins;
     }
     
@@ -53,6 +56,9 @@ public class CartItem implements Serializable {
             return 0.0;
         }
         long mins = getSeconds();
+        if(mins == 0) {
+            return 0.0;
+        }
         return (getProduct().price * getCount()) / mins;
     }
     
@@ -169,53 +175,65 @@ public class CartItem implements Serializable {
         return false;
     }
 
-    public double getSecondsForDay(Calendar time) {
+    public int getSecondsForDay(Calendar time) {
         if(startDate == null || endDate == null) {
             return -1;
         }
         
-        int counter = 0;
-        Calendar startOfDay = (Calendar) time.clone();
-        startOfDay.set(Calendar.HOUR_OF_DAY, 0);
-        startOfDay.set(Calendar.MINUTE, 0);
-        startOfDay.set(Calendar.SECOND, 0);
-
-        Calendar endCal = (Calendar) time.clone();
-        endCal.setTime(endDate);
-        endCal.set(Calendar.SECOND, 0);
-        endCal.set(Calendar.MILLISECOND, 0);
-        Date endDateToCheck = endCal.getTime();
-        
-        if(startOfDay.getTime().after(endDate)) {
-            return 0.0;
-        }
-        
-        Calendar endOfDay = (Calendar) time.clone();
-        endOfDay.add(Calendar.DAY_OF_YEAR, 1);
-        
-        if(endOfDay.getTime().before(startDate)) {
-            return 0.0;
-        }
-        
-        if(startDate != null && endDate != null && startDate.equals(endDate)) {
+        if(startDate.equals(endDate)) {
             return -1;
         }
-
         
-        
-        
-        for(int i = 0; i < (60*60*24); i++) {
-            Date currentToCheck = startOfDay.getTime();
-            if((currentToCheck.after(startDate) || currentToCheck.equals(startDate)) && ((currentToCheck.before(endDateToCheck)))) {
-                counter++;
-            }
-            if(currentToCheck.after(endDateToCheck)) {
-                break;
-            }
-            startOfDay.add(Calendar.SECOND, 1);
+        if(startDate.after(endDate)) {
+            return -1;
         }
         
-        return counter;
+        if(sameDay(startDate, endDate)) {
+            return -1;
+        }
+        
+        Date dayToCheckAgainst = time.getTime();
+        int seconds = 0;
+        if(sameDay(dayToCheckAgainst, startDate)) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(startDate);
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+            
+            LocalDateTime start = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
+            LocalDateTime end = LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault());
+
+            seconds = (int) Duration.between(start, end).getSeconds();
+        } else if(sameDay(dayToCheckAgainst, endDate)) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(endDate);
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+            
+            LocalDateTime start = LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault());
+            LocalDateTime end = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
+
+            seconds = (int) Duration.between(start, end).getSeconds();
+        } else if(dayToCheckAgainst.before(startDate)) {
+            seconds = 0;
+        } else if(dayToCheckAgainst.after(endDate)) {
+            seconds = 0;
+        } else {
+            seconds = (60*60*24);
+        }
+        
+        return seconds;
+    }
+    
+    public boolean sameDay(Date date1, Date date2) {
+        LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localDate1.equals(localDate2);
     }
 
     public long getSeconds() {

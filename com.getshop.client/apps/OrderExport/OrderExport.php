@@ -20,29 +20,18 @@ class OrderExport extends \WebshopApplication implements \Application {
     public function renderConfig() {
         $this->includefile("orderexportconfig");
     }
-    
     public function removeTransferConfig() {
         $this->getApi()->getAccountingManager()->removeTransferConfig($_POST['data']['configid']);
     }
     
     public function saveAccountingConfig() {
-        $ftpConfig = new \core_accountingmanager_TransferFtpConfig();
-        $ftpConfig->username = $_POST['ftpuser'];
-        $ftpConfig->password = $_POST['ftppassword'];
-        $ftpConfig->hostname = $_POST['ftphostname'];
-        $ftpConfig->path = $_POST['ftppath'];
-        $ftpConfig->useSftp = $_POST['useSftp'];
-        $ftpConfig->port = $_POST['port'];
-        $ftpConfig->useActiveMode = $_POST['useActiveMode'];
-        $ftpConfig->extension = $_POST['extension'];
-        
-        
         $configs = $this->getApi()->getAccountingManager()->getAllConfigs();
         foreach($configs as $conf) {
             if($conf->id == $_POST['configid']) {
                 $conf->ftp = $ftpConfig;
                 $conf->delay = $_POST['delay'];
                 $conf->includeUsers = $_POST['includeUsers'];
+                $conf->orderFilterPeriode = $_POST['orderFilterPeriode'];
                 $this->getApi()->getAccountingManager()->saveConfig($conf);
                 break;
             }

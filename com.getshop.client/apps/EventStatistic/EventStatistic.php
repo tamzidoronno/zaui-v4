@@ -11,7 +11,12 @@ class EventStatistic extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        $this->includefile("statistic");
+        if (isset($_POST["data"]["submit"]) && $_POST["data"]["submit"] == "locations") {
+            $this->includefile("locations");
+        } else {
+            $this->includefile("statistic");
+        }
+        
     }
     
     public function downloadStatistic() {
@@ -45,7 +50,7 @@ class EventStatistic extends \MarketingApplication implements \Application {
         $_SESSION['searchcriterias'] = $_POST;
     }
     
-    public function getStats() {
+    public function getStats($byLocation=false) {
         $groups = [];
         $allGroups = $this->getApi()->getUserManager()->getAllGroups();
         
@@ -67,10 +72,37 @@ class EventStatistic extends \MarketingApplication implements \Application {
         if (isset($_POST['data']['starttime']) && isset($_POST['data']['stoptime'])) {
             $start = $this->convertToJavaDate(strtotime($_POST['data']['starttime']));
             $stop = $this->convertToJavaDate(strtotime($_POST['data']['stoptime']));
+            
+            if ($byLocation) {
+                return $this->getApi()->getEventBookingManager()->getStatisticGroupedByLocations("booking", $start, $stop, $groups, $events);
+            }
+            
             return $this->getApi()->getEventBookingManager()->getStatistic("booking", $start, $stop, $groups, $events);
         }
         
         return null;
     }
+
+    public function getGroupedByLocations() {
+        $stats = $this->getStats(true);
+        $loc = [];
+        
+        foreach ($stats as $stat) {
+
+            $locationId = $stat->locationId;
+            
+            if (!$stat->count)
+                continue;
+            
+            if (isset($loc[$locationId])) {
+                $loc[$locationId] = $loc[$locationId] + $stat->count;
+            } else {
+                $loc[$locationId] = $stat->count;
+            }
+        }
+        
+        return $loc;
+    }
+
 }
 ?>

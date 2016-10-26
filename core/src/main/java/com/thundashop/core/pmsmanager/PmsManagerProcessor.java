@@ -212,24 +212,26 @@ public class PmsManagerProcessor {
                 
                 
                 //If it is possible to let customers check in earlier than specified, do it.
-//                int hourNow = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-//                int boardingHour = manager.getConfigurationSecure().hourOfDayToStartBoarding;
-//                int defaultStart = getDefaultStartTime();
-//                if(boardingHour >= 0) {
-//                    boolean boardingStarted = (hourNow >= boardingHour);
-//                    if(!room.isStarted() && boardingStarted && room.isStartingToday()) {
-//                        Calendar startCal = Calendar.getInstance();
-//                        startCal.setTime(room.date.start);
-//                        if(startCal.get(Calendar.HOUR_OF_DAY) > boardingHour) {
-//                            try {
-//                                manager.bookingEngine.changeDatesOnBooking(room.bookingId, new Date(), room.date.end);
-//                                manager.finalize(booking);
-//                            }catch(Exception e) {
-//                                
-//                            }
-//                        }
-//                    }
-//                }
+                if(manager.getStoreId() != null && manager.getStoreId().equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")) {
+                    //This is being tested for renahotell.
+                    int hourNow = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                    int boardingHour = manager.getConfigurationSecure().hourOfDayToStartBoarding;
+                    if(boardingHour >= 0) {
+                        boolean boardingStarted = (hourNow >= boardingHour);
+                        if(!room.isStarted() && boardingStarted && room.isStartingToday()) {
+                            Calendar startCal = Calendar.getInstance();
+                            startCal.setTime(room.date.start);
+                            if(startCal.get(Calendar.HOUR_OF_DAY) > boardingHour) {
+                                try {
+                                    manager.bookingEngine.changeDatesOnBooking(room.bookingId, new Date(), room.date.end);
+                                    manager.finalize(booking);
+                                }catch(Exception e) {
+
+                                }
+                            }
+                        }
+                    }
+                }
                 
                 if (room.isStarted() && !room.isEnded()) {
                     boolean payedfor = manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
@@ -830,8 +832,6 @@ public class PmsManagerProcessor {
             manager.logEntry("Autodeleted because it has expired.", booking.id, null);
             manager.deleteBooking(booking.id);
         }
-        long end = System.currentTimeMillis();
-        System.out.println("Check takes : " + (end-start));
     }
 
     private void sendPaymentLinkOnUnpaidBookings() {

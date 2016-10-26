@@ -24,6 +24,7 @@ public class EventStatistic {
      * Value = users
      */
     public Map<String, List<String>> users = new HashMap();
+    public String locationId;
     
     public void addUserId(String eventId, String userId) {
         List<String> userList = users.get(eventId);

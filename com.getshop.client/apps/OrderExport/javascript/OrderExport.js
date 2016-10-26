@@ -5,6 +5,13 @@ app.OrderExport = {
         $(document).on('click', '.gss_addfiltertoconfig', app.OrderExport.addfiltertoconfig);
         $(document).on('click', '.gssremovepaymenttype', app.OrderExport.removepaymenttype);
         $(document).on('click', '.deletetransferconfig', app.OrderExport.deletetransferconfig);
+        $(document).on('click', '.gss_downloadaccountingfile', app.OrderExport.downloadFile);
+    },
+    downloadFile : function() {
+        var configid = $(this).attr('configid');
+        var start = $(".gss_accdownloadstart[configid='"+configid+"']").val();
+        var end = $(".gss_accdownloadend[configid='"+configid+"']").val();
+        window.open('/scripts/accountingnew.php?configid=' + configid + "&start=" + start + "&end=" + end);
     },
     refresh : function() {
         $('[gss_goto_app="13270e94-258d-408d-b9a1-0ed3bbb1f6c9"]').click();

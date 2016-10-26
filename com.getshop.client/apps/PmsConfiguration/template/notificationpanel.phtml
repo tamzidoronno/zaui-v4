@@ -94,6 +94,7 @@ $channelConfig = $config->channelConfiguration;
 <span class="changeview pmsbutton" data-panel='budgets'>Bugdets</span>
 <span class="changeview pmsbutton" data-panel='discounts'>Discounts</span>
 <span class="changeview pmsbutton" data-panel='channels'>Channels</span>
+<span class="changeview pmsbutton" data-panel='products'>Products</span>
 <div style='padding-top: 20px;'>
     Variables: {code},
     {roomName}, 
@@ -121,6 +122,9 @@ $channelConfig = $config->channelConfiguration;
 </div>
 
 <div gstype="form" method="saveNotifications">
+    <div class='products notificationpanel'>
+        <?php $this->includefile("products"); ?>
+    </div>
     <div class='emails_to_notify notificationpanel'>
         <?php $this->includefile("emailstonotify"); ?>
     </div>
@@ -507,6 +511,12 @@ $channelConfig = $config->channelConfiguration;
                  <input type='number' style='width: 40px;' gsname='minStay' value='<? echo $notificationSettings->minStay; ?>'>
             </span>
             Minimum stay
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                 <input type='number' style='width: 40px;' gsname='numberOfHoursToExtendLateCheckout' value='<? echo $notificationSettings->numberOfHoursToExtendLateCheckout; ?>'>
+            </span>
+            How many hours should late checkout add to stay?
         </div>
         <div class='configrow'>
             <span class='configentry'>

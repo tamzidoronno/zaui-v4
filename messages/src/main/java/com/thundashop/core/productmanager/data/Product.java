@@ -61,6 +61,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public boolean privateExcluded = false;
     
     public String accountingSystemId;
+    public String accountingAccount;
     
     public HashMap<String, AttributeItem> addedAttributes = new HashMap();
     

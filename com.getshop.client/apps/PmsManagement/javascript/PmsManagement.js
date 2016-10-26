@@ -42,6 +42,9 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .sendpaymentlink', app.PmsManagement.sendpaymentlink);
         $(document).on('click','.PmsManagement .closesendpaymentlink', app.PmsManagement.sendpaymentlink);
         $(document).on('change','.PmsManagement select[gsname="itemid"]', app.PmsManagement.loadTakenRoomList);
+        $(document).on('change','.PmsManagement .changebookingitempanel input', app.PmsManagement.loadTakenRoomList);
+        $(document).on('blur','.PmsManagement .changebookingitempanel input', app.PmsManagement.loadTakenRoomList);
+        $(document).on('keyup','.PmsManagement .changebookingitempanel input', app.PmsManagement.loadTakenRoomList);
         $(document).on('change','.PmsManagement .sendlinktouser', app.PmsManagement.changePaymentLinkUser);
         $(document).on('click','.PmsManagement .tab', app.PmsManagement.selectTab);
         $(document).on('click','.PmsManagement .addAddonsButton', app.PmsManagement.addAddon);
@@ -324,10 +327,13 @@ app.PmsManagement = {
         var row = $(this).closest('tr');
         var bookingid = row.attr('bookingid');
         var roomid = row.attr('roomid');
+        var panel = $(this).closest('.editmode');
         var event = thundashop.Ajax.createEvent('','loadTakenRoomList', $(this), {
             "bookingid" : bookingid,
             "roomid" : roomid,
-            "itemid" : $(this).val()
+            "start" : panel.find('[gsname="start"]').val() + " " + panel.find('[gsname="starttime"]').val(),
+            "end" : panel.find('[gsname="end"]').val() + " " + panel.find('[gsname="endtime"]').val(),
+            "itemid" : panel.find('[gsname="itemid"]').val()
         });
         
         thundashop.Ajax.postWithCallBack(event, function(result) {

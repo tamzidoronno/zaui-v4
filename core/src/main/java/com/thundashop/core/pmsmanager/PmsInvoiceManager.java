@@ -100,6 +100,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     private boolean hasRoomItems(String pmsRoomId, Order order) {
+        if(order == null || order.cart == null) {
+            return false;
+        }
         for(CartItem item : order.cart.getItems()) {
             if(item.getProduct().externalReferenceId == null) {
                 continue;
@@ -567,12 +570,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     booking.orderIds.add(order.id);
                     Double total = orderManager.getTotalAmount(order);
                     if(total < 0) {
-                        if(booking.channel != null && !booking.channel.isEmpty()) {
-                            List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
-                            if(emails != null) {
-                                for(String email : emails) {
-                                    messageManager.sendMail(email, email, "Credited order", "Order " + order.incrementOrderId + " has been credited from external channel, total amount: " + total, email, email);
-                                }
+
+                    List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
+                        String message = "Order " + order.incrementOrderId + " has been credited from external channel, total amount: " + total + "<br><br>";
+                        try {
+                            User user = userManager.getUserById(order.userId);
+                            message += "Name: " + user.fullName + ", " + user.emailAddress + ", " + "(" + user.prefix + ") " + user.cellPhone + "<br>";
+                            message += "Other orders connected to booking:<br>";
+                            for(String orderId : booking.orderIds) {
+                                Order otherOrder = orderManager.getOrder(orderId);
+                                message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(order) + ")<br>";
+                            }
+                        }catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                        if(emails != null) {
+                            for(String email : emails) {
+                                messageManager.sendMail(email, email, "Credited order", message, email, email);
                             }
                         }
                     }
@@ -609,7 +623,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<PmsBookingAddonItem> toRemove = new ArrayList();
         HashMap<Integer, Integer> addTypes = new HashMap();
         for(PmsBookingAddonItem addon : room.addons) {
-            if(pmsManager.getConfigurationSecure().addonConfiguration.get(addon.addonType).isSingle) {
+            if(addon.addonType != null && pmsManager.getConfigurationSecure().addonConfiguration.get(addon.addonType).isSingle) {
                 if(addon.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
                     addon.date = room.date.end;
                 }
@@ -1162,7 +1176,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 for(PmsBookingAddonItem check : items) {
                     price += check.price * check.count;
                     count += check.count;
-                    type = check.addonType;
+                    if(check.addonType != null) {
+                        type = check.addonType;
+                    }
                 }
                 if(type == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
                     endDateToAdd = startDate;
@@ -1173,8 +1189,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 
                 if(count > 0) {
                     result.add(createCartItem(productId, null, room, startDateToAdd, endDateToAdd, price / count, count));
-                } else {
-                    logPrint("Count 0?");
                 }
             }
         }

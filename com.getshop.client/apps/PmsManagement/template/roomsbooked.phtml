@@ -249,7 +249,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
 
                                 ?>
                             </span>
-                            <span class="editmode" gstype='form' method='setBookingItem' >
+                            <span class="editmode changebookingitempanel" gstype='form' method='setBookingItem' >
                                 <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                                 <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                                 <?php
@@ -258,6 +258,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                     $now = $object->convertToJavaDate(time());
                                 }
                                 ?>
+                                <b>Room selected</b><br>
                                 <select gsname='itemid'>
                                     <?php 
                                     $isAvailableItem = $object->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($object->getSelectedName(), $now, $room->date->end, $room->bookingId);
@@ -287,6 +288,19 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                     }
                                     ?>
                                 </select><br>
+                                
+                                <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
+                                <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                                <b>For selected time periode</b><br>
+                                <span style='display:inline-block; width: 80px;'>Start</span> 
+                                    <input type='text' gsname='start' value='<? echo date("d.m.Y", strtotime($room->date->start)); ?>' style='width:80px;' class='calinput'>
+                                    <input type='text' gsname='starttime' value='<? echo date("H:i", strtotime($room->date->start)); ?>'  style='width:40px;'>
+                                    <br>
+                                <span style='display:inline-block; width: 80px;'>End</span> 
+                                <input type='text' gsname='end' value='<? echo date("d.m.Y", strtotime($room->date->end)); ?>' style='width:80px;' class='calinput'>
+                                <input type='text' gsname='endtime' value='<? echo date("H:i", strtotime($room->date->end)); ?>' style='width:40px;'>
+                                <br>
+                                
                                 <span class='pmsbutton tiny' gstype='submitToInfoBox' gsvalue='notsplit'>Change</span>
                                 <?php
                                 $start = strtotime($room->date->start);

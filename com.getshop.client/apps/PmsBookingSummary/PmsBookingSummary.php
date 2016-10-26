@@ -321,6 +321,9 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
     public function addCouponCode() {
         $code = $_POST['data']['code'];
         if(isset($_POST['data']['selectedChannel'])) {
+            if(!$code) {
+                return;
+            }
             $code = $_POST['data']['selectedChannel'] . ":" . $code;
         }
         $curBooking = $this->getCurrentBooking();

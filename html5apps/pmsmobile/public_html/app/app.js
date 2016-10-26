@@ -19,6 +19,11 @@ angular.module('app', ['ui.router'])
         templateUrl: "pages/guestinfo.html",
         controller: getshop.guestInfoController
     })
+    .state('cleaningCheckout', {
+        url: '/cleaning/checkout/:roomName',
+        templateUrl: "pages/cleaningcheckout.html",
+        controller: getshop.cleaningCheckoutController
+    })
     .state('findguest', {
       url: "/findguest",
       templateUrl: "pages/findguest.html",
@@ -28,6 +33,16 @@ angular.module('app', ['ui.router'])
       url: "/fire",
       templateUrl: "pages/fire.html",
       controller: getshop.fireController
+    })
+    .state('cleaning', {
+      url: "/cleaning",
+      templateUrl: "pages/cleaning.html",
+      controller: getshop.cleaningController
+    })
+    .state('caretaker', {
+      url: "/caretaker",
+      templateUrl: "pages/caretaker.html",
+      controller: getshop.careTakerController
     })
     .state('sms', {
       url: "/sms",

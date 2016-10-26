@@ -8,8 +8,10 @@ public class SavedOrderFile extends DataCommon {
     public List<String> result;
     public String type = "accounting";
     public boolean transferred = false;
-    public String subtype = "";
+    public String subtype = ""; 
     public Double amountEx = 0.0;
     public Double amountInc = 0.0;
+    public Double amountExDebet = 0.0;
+    public Double amountIncDebet = 0.0;
     public List<String> orders = new ArrayList();
 }

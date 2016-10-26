@@ -19,7 +19,7 @@ public class PmsBooking extends DataCommon {
     public List<PmsBookingRooms> rooms = new ArrayList(); 
     public List<String> notificationsSent = new ArrayList();
     public HashMap<Long, PmsBookingComment> comments = new HashMap(); 
-    public String sessionId;
+    public String sessionId = null;
     public Date sessionStartDate = null;
     public Date sessionEndDate = null;
     public boolean silentNotification = false;
@@ -57,6 +57,7 @@ public class PmsBooking extends DataCommon {
     public String wubookChannelReservationId;
     public String channel = "";
     public boolean ignoreCheckChangesInBooking = false;
+    public String deletedBySource = "";
     
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();
@@ -108,13 +109,13 @@ public class PmsBooking extends DataCommon {
     }
 
     public String createSummary(List<BookingItemType> types) {
-        String res = "Reg data: <br>";
+        String res = "Reg data: <br>\r\n";
         try {
             for(String field : registrationData.resultAdded.keySet()) {
-                res += field + " : " + registrationData.resultAdded.get(field) + "<br>";
+                res += field + " : " + registrationData.resultAdded.get(field) + "<br>\r\n";
             }
 
-            res += "<br>Rooms:<br>";
+            res += "<br>Rooms:<br>\r\n";
             for(PmsBookingRooms room : getAllRoomsIncInactive()) {
                 BookingItemType typeToUse = null;
                 if(room.bookingItemTypeId != null) {
@@ -128,8 +129,12 @@ public class PmsBooking extends DataCommon {
                 if(typeToUse != null) {
                     res += " type: " + typeToUse.name;
                 }
+                if(!room.guests.isEmpty()) {
+                    res += ", guest: " + room.guests.get(0).name + " - ";
+                }
+                
                 res += " deleted, " + room.deleted;
-                res += "<br>";
+                res += "<br>\r\n";
             }
         }catch(Exception e) {
             e.printStackTrace();

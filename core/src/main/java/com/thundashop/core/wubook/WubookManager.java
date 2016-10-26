@@ -630,24 +630,26 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         boolean isUpdate = false;
         if(booking.modifiedReservation.size() > 0 && !booking.delete) {
             List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
-            boolean found = false;
+
             for(PmsBooking pmsbook : allbookings) {
+                List<String> resIdInPmsBooking = getAllResCodesForPmsBooking(pmsbook);
                 if(pmsbook.wubookreservationid != null) {
                     for(Integer oldCode : booking.modifiedReservation) {
-                        if(pmsbook.wubookreservationid.equals(oldCode+"")) {
-                            pmsManager.logEntry("Modified by channel manager", pmsbook.id, null);
-                            for(PmsBookingRooms room : pmsbook.getActiveRooms()) {
-                                pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
+                        for(String pmsWubookResId : resIdInPmsBooking) {
+                            if(pmsWubookResId.equals(oldCode+"")) {
+                                pmsManager.logEntry("Modified by channel manager", pmsbook.id, null);
+                                for(PmsBookingRooms room : pmsbook.getActiveRooms()) {
+                                    pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
+                                }
+                                newbooking = pmsManager.getBooking(pmsbook.id);
+                                newbooking.wubookModifiedResId.add(booking.reservationCode);
+                                isUpdate = true;
                             }
-                            newbooking = pmsManager.getBooking(pmsbook.id);
-                            newbooking.wubookModifiedResId.add(booking.reservationCode);
-                            isUpdate = true;
-                            break;
+                            if(newbooking != null) { break; }
                         }
+                        if(newbooking != null) { break; }
                     }
-                    if(newbooking != null) {
-                        break;
-                    }
+                    if(newbooking != null) { break; }
                 }
             }
         } else if(booking.delete) {
@@ -732,7 +734,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             room.guests.add(guest);
             newbooking.addRoom(room);
         }
-
         pmsManager.setBooking(newbooking);
         int i = 0;
         for(PmsBookingRooms room : newbooking.getActiveRooms()) {
@@ -742,7 +743,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             i++;
         }
-        newbooking = pmsManager.completeCurrentBooking();
+        newbooking = pmsManager.doCompleteBooking(newbooking);
         
         if(pmsManager.getConfigurationSecure().usePricesFromChannelManager && newbooking != null) {
             Date end = new Date();
@@ -1012,6 +1013,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         return "";
+    }
+
+    private List<String> getAllResCodesForPmsBooking(PmsBooking pmsbook) {
+        List<String> result = pmsbook.wubookModifiedResId;
+        result.add(pmsbook.wubookreservationid);
+        return result;
     }
 
 }

@@ -71,6 +71,12 @@ echo "</table>";
 </div>
 <div class='configrow'>
     <span class='configentry'>
+        <input type='number' style='width: 40px;' gsname='closeRoomNotCleanedAtHour' value='<? echo $notificationSettings->closeRoomNotCleanedAtHour; ?>'>
+    </span>
+    If room is not cleaned at hour of day, make it unavailable for booking
+</div>
+<div class='configrow'>
+    <span class='configentry'>
         <input type='number' style='width: 40px;' gsname='numberOfCheckoutCleanings' value='<? echo $notificationSettings->numberOfCheckoutCleanings; ?>'>
     </span>
     Max number of checkout cleaning possible to do for a day (0, disabled)

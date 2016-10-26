@@ -163,6 +163,9 @@ public class Order extends DataCommon implements Comparable<Order> {
                 closed = true;
             }
         }
+        if(status == Order.Status.PAYMENT_COMPLETED && paymentDate == null) {
+            paymentDate = rowCreatedDate;
+        }
     }
 
     public boolean needToBeTranferredToCreditor() {

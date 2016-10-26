@@ -54,9 +54,14 @@ public interface IPmsManager {
     @Editor
     public PmsBooking getBookingFromRoomIgnoreDeleted(String roomId);
     
+    @Administrator
+    public String setBookingItemAndDate(String roomId, String itemId, boolean split, Date start, Date end);
     
     @Administrator
     public String setNewRoomType(String roomId, String bookingId, String newType);
+    
+    @Administrator
+    public List<PmsRoomSimple> getRoomsNeedingIntervalCleaningSimple(Date day);
     
     @Administrator
     public void sendMessage(String bookingId, String email, String title, String message);
@@ -107,6 +112,9 @@ public interface IPmsManager {
     
     @Administrator
     public PmsStatistics getStatistics(PmsBookingFilter filter);
+    
+    @Administrator
+    public List<PmsBookingAddonItem> getAddonsAvailable();
     
     @Customer
     public String removeFromBooking(String bookingId, String roomId) throws Exception;
@@ -198,6 +206,12 @@ public interface IPmsManager {
     
     @Administrator
     public void sendStatistics() throws Exception;
+    
+    @Administrator
+    public void addAddonsToBookingById(String addonId, String roomId, boolean remove);
+    
+    @Administrator
+    public List<PmsBookingAddonItem> getAddonsForRoom(String roomId);
     
     public void addAddonsToBooking(Integer type, String roomId, boolean remove);
     public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);

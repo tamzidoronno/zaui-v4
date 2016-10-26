@@ -1850,6 +1850,35 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     @Override
+    public List<EventStatistic> getStatisticGroupedByLocations (Date startDate, Date stopDate, List<String> groupIds, List<String> eventTypeIds) {
+        List<Event> events = getAllEvents().stream()
+                .filter(event -> isWithinDates(event, startDate, stopDate))
+                .collect(Collectors.toList());
+        
+        
+        List<EventStatistic> stats = new ArrayList();
+        
+        
+        for (Location loc : getAllLocations()) {
+            
+            List<Event> eventsForLocation = events.stream()
+                    .filter(event -> event.location.id.equals(loc.id))
+                    .collect(Collectors.toList());
+            
+            if (eventsForLocation.isEmpty()) {
+                continue;
+            }
+            
+            EventStatistic stat = new EventStatistic();
+            stat.count = getActiveParticipators(eventsForLocation, stat, groupIds);
+            stat.locationId = loc.id;
+            stats.add(stat);
+        }
+        
+        return stats;
+    }
+    
+    @Override
     public List<EventStatistic> getStatistic(Date startDate, Date stopDate, List<String> groupIds, List<String> eventTypeIds) {
         if (stopDate == null || stopDate.before(startDate) || stopDate.equals(startDate))
             return new ArrayList();

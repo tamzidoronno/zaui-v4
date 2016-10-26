@@ -286,9 +286,15 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             }            
             
             
-            if (car1 == null || car2 == null || car1.nextService == null || car2.nextService == null) 
-                return 0;
+            if (car1 == null || car1.nextService == null )  {
+                car1.licensePlate = "-";
+                return (car2 == null || car2.nextService == null) ? 0 : 1;
+            }
             
+            if (car2 == null || car2.nextService == null)  {
+                car2.licensePlate = "-";
+                return -1;
+            }
             
             return car1.nextService.compareTo(car2.nextService);
             

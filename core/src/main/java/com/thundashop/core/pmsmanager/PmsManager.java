@@ -601,7 +601,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     return true;
                 }
             }
-        }
+        } 
         return false;
     }
     
@@ -910,7 +910,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void saveConfiguration(PmsConfiguration notifications) {
         this.configuration = notifications;
-        
+        notifications.finalize();
         saveObject(notifications);
         logEntry("Configuration updated", null, null);
     }

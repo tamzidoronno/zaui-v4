@@ -7,6 +7,12 @@ package com.thundashop.core.cartmanager.data;
 import com.google.gson.Gson;
 import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,6 +45,9 @@ public class CartItem implements Serializable {
         }
         long diff = endDate.getTime() - startDate.getTime();
         long mins = diff / 60000;
+        if(mins == 0) {
+            return 0.0;
+        }
         return (getProduct().priceExTaxes * getCount()) / mins;
     }
     
@@ -46,8 +55,10 @@ public class CartItem implements Serializable {
         if(startDate == null || endDate == null) {
             return 0.0;
         }
-        long diff = endDate.getTime() - startDate.getTime();
-        long mins = diff / 60000;
+        long mins = getSeconds();
+        if(mins == 0) {
+            return 0.0;
+        }
         return (getProduct().price * getCount()) / mins;
     }
     
@@ -164,42 +175,74 @@ public class CartItem implements Serializable {
         return false;
     }
 
-    public double getNumberOfMinutesForDay(Calendar time) {
-        if(startDate == null) {
+    public int getSecondsForDay(Calendar time) {
+        if(startDate == null || endDate == null) {
             return -1;
         }
         
-        int counter = 0;
-        Calendar startOfDay = (Calendar) time.clone();
-        startOfDay.set(Calendar.HOUR_OF_DAY, 0);
-        startOfDay.set(Calendar.MINUTE, 0);
-        startOfDay.set(Calendar.SECOND, 0);
-        
-        if(startOfDay.getTime().after(endDate)) {
-            return 0.0;
+        if(startDate.equals(endDate)) {
+            return -1;
         }
         
-        Calendar endOfDay = (Calendar) time.clone();
-        endOfDay.add(Calendar.DAY_OF_YEAR, 1);
-        
-        if(endOfDay.getTime().before(startDate)) {
-            return 0.0;
-        }
-        if(endOfDay.getTime().before(startDate)) {
-//            return 0.0;
+        if(startDate.after(endDate)) {
+            return -1;
         }
         
-        for(int i = 0; i < 1440; i++) {
-            Date currentToCheck = startOfDay.getTime();
-            if(currentToCheck.after(startDate) && currentToCheck.before(endDate)) {
-                counter++;
-            }
-            if(currentToCheck.after(endDate)) {
-                break;
-            }
-            startOfDay.add(Calendar.MINUTE, 1);
+        if(sameDay(startDate, endDate)) {
+            return -1;
         }
         
-        return counter;
+        Date dayToCheckAgainst = time.getTime();
+        int seconds = 0;
+        if(sameDay(dayToCheckAgainst, startDate)) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(startDate);
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+            
+            LocalDateTime start = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
+            LocalDateTime end = LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault());
+
+            seconds = (int) Duration.between(start, end).getSeconds();
+        } else if(sameDay(dayToCheckAgainst, endDate)) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(endDate);
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+            
+            LocalDateTime start = LocalDateTime.ofInstant(c.getTime().toInstant(), ZoneId.systemDefault());
+            LocalDateTime end = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
+
+            seconds = (int) Duration.between(start, end).getSeconds();
+        } else if(dayToCheckAgainst.before(startDate)) {
+            seconds = 0;
+        } else if(dayToCheckAgainst.after(endDate)) {
+            seconds = 0;
+        } else {
+            seconds = (60*60*24);
+        }
+        
+        return seconds;
+    }
+    
+    public boolean sameDay(Date date1, Date date2) {
+        LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localDate1.equals(localDate2);
+    }
+
+    public long getSeconds() {
+        
+        LocalDateTime start = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
+        LocalDateTime end = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
+        
+        long minutes = Duration.between(start, end).getSeconds();
+
+        return minutes;
     }
 }

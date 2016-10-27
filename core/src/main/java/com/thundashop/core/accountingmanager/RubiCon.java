@@ -126,24 +126,8 @@ public class RubiCon implements AccountingTransferInterface {
 
         //This is the configuration
         if(item != null) {
-            account = item.getProduct().sku;
-            mvaKode = item.getProduct().accountingSystemId;
-
-            //Cancelation
-            if(item.getProduct().id.equals("6087e72e-dc6a-48b5-b5d5-63da4ee7346e")) {
-                account = "003912";
-                mvaKode = "08";
-            }
-            //Room
-            if(item.getProduct().id.equals("92b6a16a-a7da-4e3b-83d9-41c90f5bc0bb")) {
-                account = "003410";
-                mvaKode = "08";
-            }
-            //Late checkout, frokost
-            if(item.getProduct().id.equals("9eb99519-b277-4a09-bf3d-327b1971d568")) {
-                account = "003052";
-                mvaKode = "03";
-            }
+            account = managers.productManager.getProduct(item.getProduct().id).accountingAccount;
+            mvaKode = managers.productManager.getProduct(item.getProduct().id).sku;
         } else {
             if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {
                 account = "010900";
@@ -225,9 +209,9 @@ public class RubiCon implements AccountingTransferInterface {
         fieldsInLine.put(17, format1.format(order.rowCreatedDate));
         String counter = count + ".00";
         counter = prependZeros(counter, 11);
-        fieldsInLine.put(18, prependZeros(order.incrementOrderId + "", 10));
+        fieldsInLine.put(18, prependZeros("", 10));
         fieldsInLine.put(19, counter);
-        fieldsInLine.put(20, "\"" + stripText("", 25) + "\"");
+        fieldsInLine.put(20, "\"" + stripText(order.incrementOrderId + "", 25) + "\"");
         fieldsInLine.put(22, "000000");
         fieldsInLine.put(23, "\"" + stripText(user.fullName, 30) + "\"" + "");
         fieldsInLine.put(24, "\"" + stripText(address.address, 30) + "\"" + "");

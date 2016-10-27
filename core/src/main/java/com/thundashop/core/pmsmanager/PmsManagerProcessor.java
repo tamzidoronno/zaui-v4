@@ -822,6 +822,9 @@ public class PmsManagerProcessor {
             if(booking.bookedByUserId != null && !booking.bookedByUserId.isEmpty()) {
                 continue;
             }
+            if(booking.orderIds.size() > 1) {
+                continue;
+            }
             if(!booking.isOld(90)) {
                 continue;
             }

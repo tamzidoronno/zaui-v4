@@ -125,7 +125,7 @@ class OrderManager extends GSTableCommon implements \Application {
         if($order->transferedToAccountingSystem || $order->transferredToAccountingSystem) {
             return false;
         }
-        return $order->closed;
+        return !$order->closed;
     }
     
     public function creditOrder() {

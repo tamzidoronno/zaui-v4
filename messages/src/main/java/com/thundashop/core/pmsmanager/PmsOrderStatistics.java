@@ -32,7 +32,9 @@ public class PmsOrderStatistics implements Serializable  {
 
     private void createStatsEntry(Calendar cal,List<Order> ordersToUse, PmsOrderStatsFilter filter) {
         HashMap<String, Double> priceInc = new HashMap();
+        HashMap<String, Double> priceIncOrder = new HashMap();
         HashMap<String, Double> priceEx = new HashMap();
+
         for(Order order : ordersToUse) {
             if(filter.displayType == null || filter.displayType.equals("dayregistered")) {
                 if(!order.createdOnDay(cal.getTime())) {
@@ -66,12 +68,9 @@ public class PmsOrderStatistics implements Serializable  {
                     Double inc = priceInc.get(item.getProduct().id);
                     Double ex = priceEx.get(item.getProduct().id);
                     
-                    if(inc == null) { 
-                        inc = 0.0;
-                    }
-                    if(ex == null) {
-                        ex = 0.0;
-                    }
+                    if(inc == null) { inc = 0.0; }
+                    if(ex == null) { ex = 0.0; }
+                    
                     inc += (item.getProduct().price * item.getCount());
                     ex += (item.getProduct().priceExTaxes * item.getCount());
                     
@@ -80,30 +79,38 @@ public class PmsOrderStatistics implements Serializable  {
                 }
             } else if(filter.displayType.equals("dayslept")) {
                 for(CartItem item : order.cart.getItems()) {
-                    double minutesInDay = item.getNumberOfMinutesForDay(cal);
-                    if(minutesInDay == 0.0) {
+                    double secondsInDay = item.getSecondsForDay(cal);
+                    if(order.incrementOrderId == 103977 && secondsInDay > 0 || secondsInDay < -1) {
+                        System.out.println("Secondprice: " + item.getPriceIncForMinutes());
+                        System.out.println("Seconds: " + secondsInDay + " - " + cal.getTime() + " : " + (secondsInDay * item.getPriceIncForMinutes()));
+                        System.out.println("-----------------");
+                    }
+                    if(secondsInDay == 0.0) {
                         continue;
                     }
                     Double inc = priceInc.get(item.getProduct().id);
                     Double ex = priceEx.get(item.getProduct().id);
                     
-                    if(inc == null) { 
-                        inc = 0.0;
-                    }
-                    if(ex == null) {
-                        ex = 0.0;
-                    }
+                    Double totalCalc = priceIncOrder.get(order.id);
+                    if(totalCalc == null) { totalCalc = 0.0; }
+                    if(inc == null) { inc = 0.0; }
+                    if(ex == null) { ex = 0.0; }
                     
-                    if(minutesInDay == -1 && item.startsOnDate(cal.getTime(), order.rowCreatedDate)) {
-                        inc += (item.getProduct().price * item.getCount());
-                        ex += (item.getProduct().priceExTaxes * item.getCount());
+                    if(secondsInDay == -1) {
+                        if(item.startsOnDate(cal.getTime(), order.rowCreatedDate)) {
+                            totalCalc += (item.getProduct().price * item.getCount());
+                            inc += (item.getProduct().price * item.getCount());
+                            ex += (item.getProduct().priceExTaxes * item.getCount());
+                        }
                     } else {
-                        inc += item.getPriceIncForMinutes() * minutesInDay;
-                        ex += item.getPriceExForMinutes() * minutesInDay;
+                        totalCalc += item.getPriceIncForMinutes() * secondsInDay;
+                        inc += item.getPriceIncForMinutes() * secondsInDay;
+                        ex += item.getPriceExForMinutes() * secondsInDay;
                     }
                     
                     priceInc.put(item.getProduct().id, inc);
                     priceEx.put(item.getProduct().id, ex);
+                    priceIncOrder.put(order.id, totalCalc);
                 }
             } else if(filter.displayType.equals("daypaid")) {
                 if(!order.paidOnDay(cal.getTime())) {
@@ -132,7 +139,19 @@ public class PmsOrderStatistics implements Serializable  {
         entry.day = cal.getTime();
         entry.priceEx = priceEx;
         entry.priceInc = priceInc;
+        entry.priceIncOnOrder = priceIncOrder;
         entries.add(entry);
+    }
+
+    double getTotalForOrder(String id) {
+        double total = 0.0;
+        for(PmsOrderStatisticsEntry entry : entries) {
+            Double extra = entry.priceIncOnOrder.get(id);
+            if(extra != null) {
+                total += entry.priceIncOnOrder.get(id);
+            }
+        }
+        return total;
     }
     
 }

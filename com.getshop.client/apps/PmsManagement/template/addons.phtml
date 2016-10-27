@@ -34,10 +34,15 @@ echo "</select> ";
 echo "<select id='addontypeselection'>";
 foreach($config->addonConfiguration as $addonConfig) {
     /* @var $addonConfig core_pmsmanager_PmsBookingAddonItem */
-    if(!$addonConfig->isActive) {
-        continue;
+    if($addonConfig->isActive || $addonConfig->isAvailableForBooking || $addonConfig->isAvailableForCleaner) {
+        if($addonConfig->productId) {
+            $name = $this->getApi()->getProductManager()->getProduct($addonConfig->productId)->name;
+        }
+        if(isset($items[$addonConfig->addonType])) {
+            $name = $items[$addonConfig->addonType];
+        }
+        echo "<option value='" . $addonConfig->addonType . "'>" . $name . "</option>";
     }
-    echo "<option value='" . $addonConfig->addonType . "'>" . $items[$addonConfig->addonType] . "</option>";
 }
 echo "</select> ";
 echo "<span class='pmsbutton addAddonsButton'>Add addon</span> ";
@@ -65,12 +70,15 @@ foreach($booking->rooms as $room) {
         echo "No addons added to this room.";
     } else {
         foreach($room->addons as $addon) {
-            $addonName = $addon->name;
-            if(isset($items[$addon->addonType]) && $items[$addon->addonType]) {
-                $addonName = $items[$addon->addonType];
+            $name = "";
+            if($addon->productId) {
+                $name = $this->getApi()->getProductManager()->getProduct($addon->productId)->name;
+            }
+            if(isset($items[$addon->addonType])) {
+                $name = $items[$addon->addonType];
             }
             echo "<tr addonid='".$addon->addonId."' roomid='".$room->pmsBookingRoomId."' class='addonrow'>";
-            echo "<td>" . $addonName . "</td>";
+            echo "<td>" . $name . "</td>";
             echo "<td>" . $roomName . "</td>";
             echo "<td width='10'><input type='text' value='" . $addon->count . "' style='width:70px;' class='addoncount'></td>";
             echo "<td width='10'><input type='text' value='" .  $addon->price . "' style='width:70px;' class='addonprice'></td>";

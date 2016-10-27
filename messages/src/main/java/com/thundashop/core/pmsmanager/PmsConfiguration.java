@@ -138,6 +138,26 @@ public class PmsConfiguration extends DataCommon {
         return channelConfiguration.containsKey(channel);
     }
     
+    public void finalize() {
+        for(PmsBookingAddonItem item : addonConfiguration.values()) {
+            int next = 100;
+            if(item.addonType == null) {
+                for(PmsBookingAddonItem item2 : addonConfiguration.values()) {
+                    if(item2.addonType != null && item2.addonType >= next) {
+                        next = item2.addonType + 1;
+                    }
+                }
+                item.addonType = next;
+            }
+        }
+        HashMap<Integer, PmsBookingAddonItem> newAddons = new HashMap();
+        for(PmsBookingAddonItem item : addonConfiguration.values()) {
+            newAddons.put(item.addonType, item);
+        }
+        addonConfiguration = newAddons;
+        
+    }
+    
     HashMap<String, PmsChannelConfig> getChannels() {
         return channelConfiguration;
     }

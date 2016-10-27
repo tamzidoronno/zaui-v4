@@ -269,30 +269,28 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         List<MecaCar> allCars = new ArrayList(cars.values());
         
         Collections.sort(allCars, (MecaCar car1, MecaCar car2) -> {
-            if (car1.needAttentionToService) {
-                return -1;
-            }
-
-            if (car2.needAttentionToService) {
-                return 1;
-            }
-    
-            if (car1.nextServiceAgreed != null && car1.nextServiceAcceptedByCarOwner != null && !car1.nextServiceAcceptedByCarOwner) {
-                return -1;
-            }            
-            
-            if (car2.nextServiceAgreed != null && car2.nextServiceAcceptedByCarOwner != null && !car2.nextServiceAcceptedByCarOwner) {
-                return 1;
-            }            
+//            if (car1.needAttentionToService) {
+//                return -1;
+//            }
+//
+//            if (car2.needAttentionToService) {
+//                return 1;
+//            }
+//    
+//            if (car1.nextServiceAgreed != null && car1.nextServiceAcceptedByCarOwner != null && !car1.nextServiceAcceptedByCarOwner) {
+//                return -1;
+//            }            
+//            
+//            if (car2.nextServiceAgreed != null && car2.nextServiceAcceptedByCarOwner != null && !car2.nextServiceAcceptedByCarOwner) {
+//                return 1;
+//            }            
             
             
             if (car1 == null || car1.nextService == null )  {
-                car1.licensePlate = "-";
                 return (car2 == null || car2.nextService == null) ? 0 : 1;
             }
             
             if (car2 == null || car2.nextService == null)  {
-                car2.licensePlate = "-";
                 return -1;
             }
             

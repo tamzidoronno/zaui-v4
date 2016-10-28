@@ -7,6 +7,11 @@ $nextServiceDate = $car ? date('d/m-Y',strtotime($car->nextService)) : "";
 $nextControll = $car ? date('d/m-Y',strtotime($car->nextControll)) : "";
 
 $kmStatus = date('d/m-Y', strtotime($car->requestKilomters->lastReceivedKilomters));
+
+if ($kmStatus == "01/01-1970") {
+    $kmStatus = "ukjent";
+}
+
 $kmStatus = "Nåværende kilmoterstand: ".$car->kilometers.", Sist oppdatert: ".$kmStatus;
 
 ?>

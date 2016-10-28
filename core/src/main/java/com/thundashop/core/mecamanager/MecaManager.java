@@ -262,30 +262,21 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     }
 
     @Override
-    public List<MecaCar> getCarsServiceList() {
+    public List<MecaCar> getCarsServiceList(boolean needService) {
         cars.values().stream()
                 .forEach(car -> finalize(car));
         
-        List<MecaCar> allCars = new ArrayList(cars.values());
+        List<MecaCar> allCars = cars.values().stream()
+                .filter(car -> car.needAttention())
+                .collect(Collectors.toList());
         
-        Collections.sort(allCars, (MecaCar car1, MecaCar car2) -> {
-//            if (car1.needAttentionToService) {
-//                return -1;
-//            }
-//
-//            if (car2.needAttentionToService) {
-//                return 1;
-//            }
-//    
-//            if (car1.nextServiceAgreed != null && car1.nextServiceAcceptedByCarOwner != null && !car1.nextServiceAcceptedByCarOwner) {
-//                return -1;
-//            }            
-//            
-//            if (car2.nextServiceAgreed != null && car2.nextServiceAcceptedByCarOwner != null && !car2.nextServiceAcceptedByCarOwner) {
-//                return 1;
-//            }            
-            
-            
+        if (!needService) {
+            allCars = cars.values().stream()
+                .filter(car -> !car.needAttention())
+                .collect(Collectors.toList());
+        }
+        
+        Collections.sort(allCars, (MecaCar car1, MecaCar car2) -> {            
             if (car1 == null || car1.nextService == null )  {
                 return (car2 == null || car2.nextService == null) ? 0 : 1;
             }
@@ -562,16 +553,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         int i = 0;
         
         if (mecaFleetService != null) {
-            for (MecaCar car : getCarsServiceList()) {
-                finalize(car);
-                if (car.needAttentionToService()) {
-                    i++;
-                } else {
-                    if (car.needAttentionToControl()) {
-                        i++;
-                    }
-                }
-            }
+            i = getCarsServiceList(true).size();
         }
         
         return i;

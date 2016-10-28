@@ -11,6 +11,9 @@ class MecaFleetServiceList extends \MarketingApplication implements \Application
     }
 
     public function render() {
+        $this->mode = "attentioncars";
+        $this->includefile("servicelist");
+        $this->mode = "othercars";
         $this->includefile("servicelist");
     }
     
@@ -33,5 +36,17 @@ class MecaFleetServiceList extends \MarketingApplication implements \Application
     public function noShow() {
         $this->getApi()->getMecaManager()->noShowService($_POST['data']['carid']);
     }
+
+    public function getCarList() {
+        if ($this->mode == "attentioncars") {
+            return $this->getApi()->getMecaManager()->getCarsServiceList(true);
+        }
+        
+        if ($this->mode == "othercars") {
+            return $this->getApi()->getMecaManager()->getCarsServiceList(false);
+        }
+        
+    }
+
 }
 ?>

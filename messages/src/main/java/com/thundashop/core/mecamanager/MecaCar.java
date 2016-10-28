@@ -237,6 +237,10 @@ public class MecaCar extends DataCommon {
     }
 
     boolean needAttentionToControl() {
-        return canAgreeControlDate && nextControlAgreed == null;
+        return canAgreeControlDate && nextControlAgreed == null || controlDateRejected;
+    }
+    
+    boolean needAttention() {
+        return needAttentionToService() || needAttentionToControl();
     }
 }

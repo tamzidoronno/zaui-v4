@@ -269,10 +269,10 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     }
 
     @Override
-    public double getPercentage(String companyId, String workPackageId, String projectId, int year) {
+    public Double getPercentage(String companyId, String workPackageId, String projectId, int year) {
         C3Project project = getProject(projectId);
         if (project == null)
-            return 0;
+            return new Double(0);
         
         return project.getPercentage(workPackageId, companyId, year);
     }

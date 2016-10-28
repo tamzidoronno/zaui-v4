@@ -131,11 +131,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
-                if(order.deleted != null) {
-                    if(order.incrementOrderId > 0) {
-                        System.out.println("db[\"col_123865ea-3232-4b3b-9136-7df23cf896c6\"].update({\"_id\" : \""+order.id+"\"}, { $set: { deleted : null }})");
-                    }
+                if (order.cleanMe()) {
+                    saveObject(order);
                 }
+                
                 if (order.cart == null) {
                     continue;
                 }

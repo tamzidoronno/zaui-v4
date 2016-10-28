@@ -857,6 +857,10 @@ public class PmsManagerProcessor {
             if(book.isDeleted) {
                 continue;
             }
+            if(book.getActiveRooms().isEmpty()) {
+                continue;
+            }
+            
             if(book.isRegisteredToday() && (book.channel == null || book.channel.isEmpty())) {
                 continue;
             }

@@ -1,12 +1,10 @@
-<div class='topinfobox'>Ønsker du at vi skal ringe deg?</div>
+<div class='topinfobox'>Trykk på knappen under for å ringe verkstedet</div>
 
-<br/><br/>
-Dersom du hjelp eller ønsker å prate med en av oss så kan du trykke på knappen under så tar vi kontakt med deg på telefon {{ cellphone }}
 
 <br/>
 <br/>
 <br/>
-<div class='button' ng-click='askToBeContacted()'>Trykk for å bli oppringt</div>
+<a  ng-href='tel:{{settings.contact_cell.value}}'><div class='button' >Ring verksted</div></a>
 <br/>
 <br/>
 <div class='button' onclick="window.history.back()"> Tilbake </div>

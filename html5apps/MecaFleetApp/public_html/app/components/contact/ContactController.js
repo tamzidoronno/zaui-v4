@@ -28,7 +28,7 @@ controllers.ContactController = function($scope, $api) {
                 $scope.settings = res.settings;
                 
                 $scope.$apply();
-                console.log($scope.settings.openinghours.value);
+                console.log($scope.settings);
             }
         })
     }

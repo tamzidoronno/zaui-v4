@@ -56,7 +56,7 @@ interface IC3Manager {
 
     public List<UserProjectAccess> getAccessList();
     
-    public double getPercentage(String companyId, String workPackageId, String projectId, int year);
+    public Double getPercentage(String companyId, String workPackageId, String projectId, int year);
     
     @Administrator
     public void saveGroupInfo(String groupId, String type, boolean value);

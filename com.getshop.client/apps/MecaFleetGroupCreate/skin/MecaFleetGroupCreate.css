@@ -1,0 +1,9 @@
+.MecaFleetGroupCreate .warning {
+    border: solid 1px red;
+    padding: 5px;
+    text-align: center;
+    color: red;
+    margin-bottom: 10px;
+    width: 250px;
+    display: inline-block;
+}

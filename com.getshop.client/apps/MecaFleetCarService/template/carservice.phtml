@@ -7,6 +7,11 @@ $nextServiceDate = $car ? date('d/m-Y',strtotime($car->nextService)) : "";
 $nextControll = $car ? date('d/m-Y',strtotime($car->nextControll)) : "";
 
 $kmStatus = date('d/m-Y', strtotime($car->requestKilomters->lastReceivedKilomters));
+
+if ($kmStatus == "01/01-1970") {
+    $kmStatus = "ukjent";
+}
+
 $kmStatus = "Nåværende kilmoterstand: ".$car->kilometers.", Sist oppdatert: ".$kmStatus;
 
 ?>
@@ -14,7 +19,7 @@ $kmStatus = "Nåværende kilmoterstand: ".$car->kilometers.", Sist oppdatert: ".
 <div gstype='form' method='save'>
     <div>Når var den inne sist<br/> <input type='text' id='lastservice' class='gsniceinput1' gsname='lastservicedate' value='<? echo $date; ?>'/> </div>
 
-    <br/><div>Når var den inne kilometerstand<br/> <input type='textfield' class='gsniceinput1' placeholder='120000' gsname='lastservicekm' value='<? echo $car->lastServiceKilomters; ?>'/> </div>
+    <br/><div>Kilometerstand ved siste service<br/> <input type='textfield' class='gsniceinput1' placeholder='120000' gsname='lastservicekm' value='<? echo $car->lastServiceKilomters; ?>'/> </div>
 
     <br/><div>Hvor mange kilometer mellom hver service?<br/> <input type='textfield' class='gsniceinput1' placeholder='12000' gsname='servicekm' value='<? echo $car->kilometersBetweenEachService; ?>'/> </div>
 

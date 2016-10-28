@@ -173,7 +173,9 @@ public class Database extends StoreComponent {
     }
 
     private List<DataCommon> getData(DBCollection collection) {
-        DBCursor cur = collection.find();
+        BasicDBObject query = createQuery();
+        
+        DBCursor cur = collection.find(query);
         List<DataCommon> all = new ArrayList<DataCommon>();
         while (cur.hasNext()) {
             DBObject dbObject = cur.next();
@@ -204,6 +206,25 @@ public class Database extends StoreComponent {
         }
         cur.close();
         return all;
+    }
+
+    private BasicDBObject createQuery() {
+        BasicDBObject andQuery = new BasicDBObject();
+        List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+        obj.add(new BasicDBObject("deleted", null));
+        
+        obj.add(addBannedClass("com.thundashop.core.messagemanager.SmsLogEntry"));
+        obj.add(addBannedClass("com.thundashop.core.messagehandler.data.MailSent"));
+        andQuery.put("$and", obj);
+        
+        return andQuery;
+        
+    }
+
+    private BasicDBObject addBannedClass(String bannedClassName) {
+        BasicDBObject neQuery = new BasicDBObject();
+        neQuery.put("className", new BasicDBObject("$ne", bannedClassName));
+        return neQuery;
     }
 
     public synchronized void delete(Class mangagerClass, DataCommon data) {

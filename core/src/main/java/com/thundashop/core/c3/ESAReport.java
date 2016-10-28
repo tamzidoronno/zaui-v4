@@ -1,0 +1,393 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.thundashop.core.c3;
+
+import com.braintreegateway.org.apache.commons.codec.binary.Base64;
+import com.thundashop.core.common.DoubleKeyMap;
+import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.usermanager.data.Company;
+import java.awt.Color;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ *
+ * @author ktonder
+ */
+public class ESAReport {
+    private XSSFWorkbook workbook;
+    private XSSFSheet sheet;
+    private int rownumber = 0;
+    private final List<Company> companies;
+    private final List<WorkPackage> workPackages;
+//    private DoubleKeyMap<String, String, Double> totalCosts;
+//    private DoubleKeyMap<String, String, Double> inKind;
+
+    public ESAReport(List<Company> companies, List<WorkPackage> workPackages, DoubleKeyMap<String, String, Double> totalCosts, DoubleKeyMap<String, String, Double> inKind) {
+        
+//        this.totalCosts = totalCosts;
+        this.companies = companies;
+        this.workPackages = workPackages;
+        
+        for (Company comp : companies) {
+            System.out.println(comp.name);
+        }
+       
+        createSheetAndWorkbook();
+        setColumnWidth();
+        addTitles();
+        writeCompanyRow(true);
+        writeWorkPackages(totalCosts, true);
+        writeExplenations();
+        
+        rownumber++;
+        writeCompanyRow(false);
+        writeTypeOfPartnerRow();
+        writeWorkPackages(inKind, false);
+        writeExplenations2();
+    }
+    
+    public static void main(String[] args) {
+        
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
+        Database db = context.getBean(Database.class);
+        List<Company> allUserManagerData = db.getAll("UserManager", "f2d0c13c-a0f7-41a7-8584-3c6fa7eb68d1")
+                .filter(data -> data.className.equals(Company.class.getCanonicalName()))
+                .map(data -> (Company)data)
+                .collect(Collectors.toList());
+        
+        List<WorkPackage> workPackages = db.getAll("C3Manager", "f2d0c13c-a0f7-41a7-8584-3c6fa7eb68d1")
+                .filter(data -> data.className.equals(WorkPackage.class.getCanonicalName()))
+                .map(data -> (WorkPackage)data)
+                .collect(Collectors.toList());
+        
+//        fo
+        
+        DoubleKeyMap<String, String, Double> totalCosts = new DoubleKeyMap();
+        
+        double j = 0;
+        for (WorkPackage wp : workPackages) {
+            for (Company comp : allUserManagerData) {
+                totalCosts.put(wp.id, comp.id, j);
+                j++;
+            }
+            
+        }
+        
+        DoubleKeyMap<String, String, Double> inKind = new DoubleKeyMap();
+        
+        for (WorkPackage wp : workPackages) {
+            for (Company comp : allUserManagerData) {
+                inKind.put(wp.id, comp.id, j);
+                j++;
+            }
+         
+            inKind.put(wp.id, "rcngrant", j);
+            j++;
+        }
+        
+        ESAReport report = new ESAReport(allUserManagerData, workPackages, totalCosts, inKind);
+        report.writeFile();
+        System.exit(0);
+    } 
+
+    private void writeFile() {
+
+        try {
+            FileOutputStream out = new FileOutputStream(new File("/tmp/tmp_esa_report.xlsx"));
+            workbook.write(out);
+            out.close();
+            System.out.println("Excel written successfully..");
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void createSheetAndWorkbook() {
+        workbook = new XSSFWorkbook();
+        sheet = workbook.createSheet("ESA Report");
+    }
+
+    private void addTitles() {
+        rownumber++;
+        XSSFRow row = sheet.createRow(rownumber++);
+        XSSFCell cell = createCell(row, 0);
+        cell.setCellValue("SFI Excel-template");
+        
+        
+        row = sheet.createRow(rownumber++);
+        cell = row.createCell(0);
+        cell.setCellValue("Mandatory enclosure for Annual work plan and Annual accounting report");
+    }
+
+    private void writeCompanyRow(boolean first) {
+        XSSFRow row = sheet.createRow(rownumber++);
+        
+        XSSFCell cell1 = createCellAndAddText(row, 0, "Item");
+        setBorder(cell1, true, true, true, true);
+        
+        if (first) {
+            cell1 = createCellAndAddText(row, 1, "Collaboration project *");
+            rotateText(cell1, (short)90);
+            setBorder(cell1, true, true, true, true);
+
+            cell1 = createCellAndAddText(row, 2, "Type of  Research**");
+            rotateText(cell1, (short)90);
+            setBorder(cell1, true, true, true, true);
+
+            cell1 = createCellAndAddText(row, 3, "Incentive effect***");
+            rotateText(cell1, (short)90);
+            setBorder(cell1, true, true, true, true);
+        } else {
+            cell1 = createCellAndAddText(row, 1, "Aid Intensity Limit*****");
+            rotateText(cell1, (short)90);
+            setBorder(cell1, true, true, true, true);
+        }
+        
+        
+        cell1 = createCell(row, 4);
+        XSSFColor myColor = new XSSFColor(Color.LIGHT_GRAY);
+        cell1.getCellStyle().setFillForegroundColor(myColor);
+        cell1.getCellStyle().setFillBackgroundColor(myColor);
+        cell1.getCellStyle().setFillPattern(CellStyle.SOLID_FOREGROUND);
+        setBorder(cell1, true, true, true, true);
+        
+        int i = 5;
+        for (Company comp : companies) {
+            XSSFCell cell = createCell(row, i);
+            cell.setCellValue(comp.name);
+            rotateText(cell, (short)90);
+            cell.getCellStyle().setWrapText(true);
+            setBorder(cell, true, true, true, true);
+            i++;
+        }
+        
+        if (first) {
+            XSSFCell cell = createCell(row, i);
+            cell.setCellValue("Total cost");
+            rotateText(cell, (short)90);
+            cell.getCellStyle().setWrapText(true);
+            setBorder(cell, true, true, true, true);
+        } else {
+            
+            XSSFCell cell = createCell(row, i++);
+            cell.setCellValue("RCN Grant");
+            rotateText(cell, (short)90);
+            cell.getCellStyle().setWrapText(true);
+            setBorder(cell, true, true, true, true);
+            
+            cell = createCell(row, i++);
+            cell.setCellValue("Other Public funding");
+            rotateText(cell, (short)90);
+            cell.getCellStyle().setWrapText(true);
+            setBorder(cell, true, true, true, true);
+            
+            cell = createCell(row, i++);
+            cell.setCellValue("Total funding");
+            rotateText(cell, (short)90);
+            cell.getCellStyle().setWrapText(true);
+            setBorder(cell, true, true, true, true);
+            
+            cell = createCell(row, i++);
+            cell.setCellValue("Indirect state aid ******");
+            rotateText(cell, (short)90);
+            cell.getCellStyle().setWrapText(true);
+            setBorder(cell, true, true, true, true);
+        }
+    }
+    
+    private void rotateText(XSSFCell cell, short degree) {
+        cell.getCellStyle().setRotation((short)degree);
+    }
+
+    private XSSFCell createCell(XSSFRow row, int i) {
+        XSSFCell cell = row.createCell(i);
+        
+        XSSFCellStyle myStyle = workbook.createCellStyle();
+        cell.setCellStyle(myStyle);
+
+        return cell;
+    }
+
+    private void setBorder(XSSFCell cell, boolean b, boolean b0, boolean b1, boolean b2) {
+        if (b) 
+            cell.getCellStyle().setBorderLeft(BorderStyle.THIN);
+        
+        if (b0) 
+            cell.getCellStyle().setBorderTop(BorderStyle.THIN);
+        
+        if (b1) 
+            cell.getCellStyle().setBorderRight(BorderStyle.THIN);
+        
+        if (b2) 
+            cell.getCellStyle().setBorderBottom(BorderStyle.THIN);
+    }
+
+    private XSSFCell createCellAndAddText(XSSFRow row, int i, String item) {
+        XSSFCell cell = createCell(row, i);
+        cell.setCellValue(item);
+        return cell;
+    }
+
+    private void writeWorkPackages(DoubleKeyMap<String, String, Double> totalCosts, boolean first) {
+        for (WorkPackage wp : workPackages) {
+            XSSFRow row = sheet.createRow(rownumber++);
+            XSSFCell cell = createCellAndAddText(row, 0, wp.name);
+            cell.getCellStyle().setWrapText(true);
+            setBorder(cell, true, true, true, true);
+            
+            int j = 5;
+            for (Company company : companies) {
+                writeTotal(row, wp, company.id, j, totalCosts);
+                j++;
+            }
+            
+            // TODO Add This 
+           if (totalCosts.keyExists(wp.id, "rcngrant")) {
+                writeTotal(row, wp, "rcngrant", j, totalCosts);
+                j++;
+                j++;
+            }
+            
+            writeWpSum(row, wp, j, totalCosts);
+        }
+        
+        XSSFRow row = sheet.createRow(rownumber++);
+        XSSFCell cell = createCellAndAddText(row, 0, "Totalt Budget");
+        setBorder(cell, true, true, true, true);
+        
+        double overAll = 0;
+        
+        int j = 5;
+        for (Company company : companies) {
+            overAll += writeTotalForCompany(row, j, company.id, totalCosts);
+            j++;
+        }
+        
+        
+        if (!first) {
+            overAll += writeTotalForCompany(row, j, "rcngrant", totalCosts);
+            j++;
+            j++;
+        }
+        
+        cell = createCell(row, j);
+        cell.setCellValue(overAll);
+        setBorder(cell, true, true, true, true);
+    }
+
+    private void setColumnWidth() {
+        sheet.setColumnWidth(0, 8000);
+    }
+
+    private void writeTotal(XSSFRow row, WorkPackage wp, String companyId, int j, DoubleKeyMap<String, String, Double> totalCosts) {
+        XSSFCell cell = createCell(row, j);
+        if (totalCosts.get(wp.id, companyId) != null) {
+            cell.setCellValue(totalCosts.get(wp.id, companyId));
+        }
+        setBorder(cell, true, true, true, true);
+    }
+
+    private double writeTotalForCompany(XSSFRow row, int j, String inCompanyId, DoubleKeyMap<String, String, Double> totalCosts) {
+        double totalForCompany = 0;
+        for (String wpId : totalCosts.keySet()) {
+            for (String companyId : totalCosts.innerKeySet(wpId)) {
+                if (companyId.equals(inCompanyId)) {
+                    totalForCompany += totalCosts.get(wpId, companyId);
+                }
+            }
+        }
+        
+        XSSFCell cell = createCell(row, j);
+        cell.setCellValue(totalForCompany);
+        setBorder(cell, true, true, true, true);
+        
+        return totalForCompany;
+    }
+
+    private void writeWpSum(XSSFRow row, WorkPackage wp, int j, DoubleKeyMap<String, String, Double> totalCosts) {
+        double totalForWorkpackage = 0;
+        
+        for (String wpId : totalCosts.keySet()) {
+            for (String companyId : totalCosts.innerKeySet(wpId)) {
+                if (wpId.equals(wp.id)) {
+                    totalForWorkpackage += totalCosts.get(wpId, companyId);
+                }
+            }
+        }
+        
+        XSSFCell cell = createCell(row, j);
+        cell.setCellValue(totalForWorkpackage);
+        setBorder(cell, true, true, true, true);
+    }
+
+    private void writeExplenations() {
+        createCellAndAddText(sheet.createRow(rownumber++), 0, "* Collaboration project: YES / NO. If NO, explain the reasons in a separate annex (see the guidelines).");
+        createCellAndAddText(sheet.createRow(rownumber++), 0, "** Type of Research: F= Fundamental research, I=Industrial Research ");
+        createCellAndAddText(sheet.createRow(rownumber++), 0, "*** Incentive effect, 1=Present, 0=Not present. First digit: New R&D activity triggered, Second digit: Increase in size of related R&D activity, Third digit: Enhanced scope of related R&D activity, Fourth digit: Increased speed in execution of related R&D activity ");
+    }
+
+    private void writeExplenations2() {
+        createCellAndAddText(sheet.createRow(rownumber++), 0, "**** Type of partner: R=Research organisation, P=Other public, L=Large Enterprise, SME=Small and medium sized enterprise");
+        createCellAndAddText(sheet.createRow(rownumber++), 0, "***** Aid Intensity Limit: Indicate percentage as follows: Fundamental research 100 %. Industrial research 65 % for collaboration projects, 75 % if only SMEs included in the collaboration project .");
+        createCellAndAddText(sheet.createRow(rownumber++), 0, "****** State aid: If no indirect state aid, cf. paragraph 28 and the consortium agreement: specify which condition a) - d)  is fulfilled. If none of the conditions are fullfilled, leave the column blank and include a separate calculation of indirect aid as annex (see the guidelines).");
+    }
+    
+    
+    public String getBase64Encoded() {
+        writeFile();
+        
+        File file = new File("/tmp/tmp_esa_report.xlsx");
+        
+        byte[] bytes;
+        try {
+            bytes = InvoiceManager.loadFile(file);
+            byte[] encoded = Base64.encodeBase64(bytes);
+            String encodedString = new String(encoded);
+            file.delete();
+            return encodedString;
+        } catch (IOException ex) {
+            throw new ErrorException(1033);
+        }
+        
+    }
+    
+
+    private void writeTypeOfPartnerRow() {
+        XSSFRow row = sheet.createRow(rownumber++);
+        XSSFCell cell = createCellAndAddText(row, 0, "Type of partner****");
+        setBorder(cell, true, true, true, true);
+        
+        int j = 5;
+        for (Company company : companies) {
+            cell = createCell(row, j);
+            cell.setCellValue("");
+            setBorder(cell, true, true, true, true);
+            j++;
+        }
+    }
+    
+}

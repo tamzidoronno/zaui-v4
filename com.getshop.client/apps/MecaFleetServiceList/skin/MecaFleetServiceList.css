@@ -51,3 +51,8 @@
 .MecaFleetServiceList .servicerow .red { color: red; }
 .MecaFleetServiceList .servicerow .yellow { color: yellow; }
 .MecaFleetServiceList .servicerow .green { color: green; }
+
+.MecaFleetServiceList .fleetlist {
+    border: solid 1px #DDD; 
+    margin-bottom: 30px;
+}

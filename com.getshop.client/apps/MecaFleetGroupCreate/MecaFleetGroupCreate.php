@@ -15,9 +15,11 @@ class MecaFleetGroupCreate extends \MarketingApplication implements \Application
     }
     
     public function createFleet() {
-        $fleet = new \core_mecamanager_MecaFleet();
-        $fleet->name = $_POST['data']['fleetName'];
-        $this->getApi()->getMecaManager()->createFleet($fleet);
+        if (isset($_POST['data']['fleetName']) && $_POST['data']['fleetName']) {
+            $fleet = new \core_mecamanager_MecaFleet();
+            $fleet->name = $_POST['data']['fleetName'];
+            $this->getApi()->getMecaManager()->createFleet($fleet);
+        }
     }
 }
 ?>

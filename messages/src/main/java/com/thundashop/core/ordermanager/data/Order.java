@@ -54,6 +54,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Integer paymentTerms = 15;
     public String parentOrder = "";
     public boolean sentToCustomer = false;
+    private boolean cleaned = false;
     
     public Order jsonClone() {
         Gson gson = new Gson();
@@ -202,6 +203,26 @@ public class Order extends DataCommon implements Comparable<Order> {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Added because there was lots of bogus data added to translation, causing the orders to become huge objects.
+     * 
+     * @return 
+     */
+    public boolean cleanMe() {
+        if (cart == null)
+            return false;
+        
+        if (cleaned)
+            return false;
+        
+        for (CartItem cartItem : cart.getItems()) {
+            cartItem.getProduct().validateTranslationMatrix();
+        }
+        
+        cleaned = true;
+        return true;
     }
 
     public static class Status  {

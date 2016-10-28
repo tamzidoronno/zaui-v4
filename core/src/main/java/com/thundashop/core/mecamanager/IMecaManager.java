@@ -50,7 +50,7 @@ public interface IMecaManager {
     public MecaFleet getFleetByCar(MecaCar car);
     
     @Editor
-    public List<MecaCar> getCarsServiceList();
+    public List<MecaCar> getCarsServiceList(boolean needService);
     
     public List<MecaCar> getCarsByCellphone(String cellPhone);
     

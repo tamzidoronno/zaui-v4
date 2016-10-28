@@ -4,28 +4,33 @@ $fleets = $this->getApi()->getMecaManager()->getFleets();
 foreach ($fleets as $fleet) {
     $carCount = count($fleet->cars);
     ?>
-    <a href="/index.php?page=<? echo $fleet->pageId; ?>">
-        <div class="fleet">
-            <div class="leftcontent">
-                <? echo $carCount; ?>
-            </div>
-            <div class="rightcontent">
-                <div class="title"><? echo $fleet->name; ?></div>    
-                <div class="description">
-                    Det er <? echo $carCount; ?> bil(er) i denne gruppen. 
+    <div class="fleet">
+        <?
+        if ($carCount == 0) {
+        ?>
+            <div gsclick="delete" fleetid="<? echo $fleet->id; ?>" class="shop_button delete">Slett</div>
+        <?
+        }
+        ?>
+            
+        <a href="/index.php?page=<? echo $fleet->pageId; ?>">
+            <div>
+                <div class="leftcontent">
+                    <? echo $carCount; ?>
                 </div>
-            </div>
+                <div class="rightcontent">
+                    <div class="title"><? echo $fleet->name; ?></div>    
+                    <div class="description">
+                        Det er <? echo $carCount; ?> bil(er) i denne gruppen. 
+                    </div>
+                </div>
 
-            <?
-            if ($carCount == 0) {
-            ?>
-                <div gsclick="delete" fleetid="<? echo $fleet->id; ?>" class="shop_button delete">Slett</div>
-            <?
-            }
-            ?>
-            <div class="shop_button">Se mer</div>
-        </div>
-    </a>
+
+                <div class="shop_button">Se mer</div>
+            </div>
+        </a>
+    </div>
+    
     <?  
 }
 ?>

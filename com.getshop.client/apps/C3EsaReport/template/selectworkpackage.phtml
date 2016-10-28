@@ -1,0 +1,19 @@
+<?
+/* @var $this  \ns_b904a342_9321_4f1f_a69f_2c7a87b10258\C3EsaReport */
+
+$workPakcages = $this->getApi()->getC3Manager()->getWorkPackages();
+
+?>
+<div class='timeframe'>
+    Velg tidsperiode:
+    <br/><input class='gsniceinput1 ' id='from' placeholder="Fra"/>
+    - <input class='gsniceinput1' id='to' placeholder="Til"/>
+</div>
+
+<br/>
+<div class="shop_button downloadReport" filename='ESAReport.xlsx' >Last ned Excel</div>
+
+<script>
+    $('#from').datepicker({dateFormat: "dd.mm.yy"});
+    $('#to').datepicker({dateFormat: "dd.mm.yy"});
+</script>

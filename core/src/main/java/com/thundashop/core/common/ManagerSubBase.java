@@ -123,7 +123,7 @@ public class ManagerSubBase {
         startScheduler(gsscheduler, true);
     }
     
-    public void initialize() {
+    public void initialize() throws SecurityException {
         Credentials credentials = new Credentials(this.getClass());
         credentials.manangerName = this.getClass().getSimpleName();
         credentials.password = UUID.randomUUID().toString();
@@ -140,7 +140,9 @@ public class ManagerSubBase {
             throw new NullPointerException("No database saver?");
         }
         
-        if (database != null && !credentials.manangerName.equals("LoggerManager")) {
+        boolean databaseFunctionInUse = isDatabaseMethodInUse();
+                
+        if (database != null && !credentials.manangerName.equals("LoggerManager") && databaseFunctionInUse) {
             DataRetreived dataRetreived = new DataRetreived();
             dataRetreived.data = database.retreiveData(credentials);
             
@@ -161,6 +163,18 @@ public class ManagerSubBase {
         }
 
         this.ready = true;
+    }
+
+    private boolean isDatabaseMethodInUse() throws SecurityException {
+        boolean dataFromDatabaseOverridden = false;
+        try {
+            Class[] cArg = new Class[1];
+            cArg[0] = DataRetreived.class;
+            dataFromDatabaseOverridden = this.getClass().getMethod("dataFromDatabase", cArg).getDeclaringClass() != ManagerSubBase.class;
+        } catch (NoSuchMethodException ex) {
+            ex.printStackTrace();
+        }
+        return dataFromDatabaseOverridden;
     }
 
     public Session getSession() {

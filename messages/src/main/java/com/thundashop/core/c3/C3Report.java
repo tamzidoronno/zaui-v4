@@ -5,9 +5,12 @@
  */
 package com.thundashop.core.c3;
 
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -27,4 +30,46 @@ public class C3Report {
     public int sumPost11;
     public int sumHours;
     public String workpackages = "";
+
+    void recalcuate(double percent) {
+        
+        cloneIt();
+        
+        double newPercent = (double)percent  / 100;
+        sumPost11 = (int) (sumPost11 * newPercent);
+        sumHours = (int) (sumHours * newPercent);
+        roundSum = (int) (roundSum * newPercent);
+        
+        for (C3Hour hour : hours) {
+            hour.cost = hour.cost * newPercent;
+            hour.hours = hour.hours * newPercent;
+        }
+        
+        for (C3OtherCosts otherCost : otherCosts) {
+            otherCost.cost = otherCost.cost * newPercent;
+        }
+    }
+
+    private void cloneIt() {
+        List<C3Hour> newHours = new ArrayList();
+        for (C3Hour i : hours) {
+            try {
+                newHours.add((C3Hour)i.clone());
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(C3Report.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        List<C3OtherCosts> newOtherCosts = new ArrayList();
+        for (C3OtherCosts i : otherCosts) {
+            try {
+                newOtherCosts.add((C3OtherCosts)i.clone());
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(C3Report.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        hours = newHours;
+        otherCosts = newOtherCosts;
+    }
 }

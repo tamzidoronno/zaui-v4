@@ -8,9 +8,11 @@ package com.thundashop.core.c3;
 import com.getshop.scope.GetShopSession;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.DoubleKeyMap;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,6 +169,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
 
     private void finalizeProject(C3Project project) {
         project.currentProjectPeriode = getActivePeriode();
+        project.finalize();
     }
 
     @Override
@@ -265,10 +269,10 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     }
 
     @Override
-    public int getPercentage(String companyId, String workPackageId, String projectId, int year) {
+    public double getPercentage(String companyId, String workPackageId, String projectId, int year) {
         C3Project project = getProject(projectId);
         if (project == null)
-            return 100;
+            return 0;
         
         return project.getPercentage(workPackageId, companyId, year);
     }
@@ -614,7 +618,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     }
 
     @Override
-    public C3Report getReportForUserProject(String userId, String projectId, Date start, Date end) {
+    public C3Report getReportForUserProject(String userId, String projectId, Date start, Date end, String forWorkPackageId) {
         C3Report report = new C3Report();
         
         report.startDate = start;
@@ -634,6 +638,15 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         report.sumPost11 = report.hours.stream()
                 .mapToInt(hour -> (int)hour.hours * getTimeRate(userId).rate).sum();
         
+        if (forWorkPackageId != null) {
+            User user = userManager.getUserById(userId);
+            if (user == null || user.companyObject == null) {
+                throw new RuntimeException("Generating a report with users that are not connected to a company");
+            }
+            
+            double percent = getPercentage(user.companyObject.id, forWorkPackageId, projectId, getYear(start));
+            report.recalcuate(percent);
+        }
         return report;
     }
 
@@ -694,15 +707,20 @@ public class C3Manager extends ManagerBase implements IC3Manager {
 
     @Override
     public String getBase64SFIExcelReport(String companyId, Date start, Date end) {
+        SFIExcelReportData reportData = createReportData(start, end, companyId, null);
+        SFIExcelReport report = new SFIExcelReport(reportData);
+        return report.getBase64Encoded();
+    }
+
+    private SFIExcelReportData createReportData(Date start, Date end, String companyId, String forWorkPackageId) {
         List<C3Project> projectsToUse = getAllProjectsConnectedToCompany(companyId);
         List<User> users = userManager.getUsersByCompanyId(companyId);
-        
         SFIExcelReportData reportData = new SFIExcelReportData();
         List<WorkPackage> workPackages = getWorkPackages(projectsToUse, users, start, end);
         
-        HashMap<String, Double> roundsums = getRoundSums(projectsToUse, users, start, end);
-        HashMap<String, Double> hoursInKind = getHours(projectsToUse, users, start, end, false);
-        HashMap<String, Double> hoursNfr = getHours(projectsToUse, users, start, end, true);
+        HashMap<String, Double> roundsums = getRoundSums(projectsToUse, users, start, end, forWorkPackageId);
+        HashMap<String, Double> hoursInKind = getHours(projectsToUse, users, start, end, false, forWorkPackageId);
+        HashMap<String, Double> hoursNfr = getHours(projectsToUse, users, start, end, true, forWorkPackageId);
         
         for (String userId : hoursNfr.keySet()) {
             SFIExcelReportDataPost11 post11 = createPost11(userId);
@@ -713,7 +731,6 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 reportData.post11.add(post11);
             }
         }
-        
         for (String userId : roundsums.keySet()) {
             SFIExcelReportDataPost11 post11 = createPost11(userId);
             post11.totalt = roundsums.get(userId);
@@ -723,7 +740,6 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 reportData.post11.add(post11);
             }
         }
-        
         for (String userId : hoursInKind.keySet()) {
             SFIExcelReportDataPost11 post11 = createPost11(userId);
             post11.timer = hoursInKind.get(userId);
@@ -733,27 +749,22 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 reportData.post11.add(post11);
             }
         }
-        
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM-yyyy");
-        
         reportData.delprosjekter = workPackages.stream().filter(wp -> wp != null).map(wp -> wp.name).collect(Collectors.joining(","));
         reportData.nameOfPartner = userManager.getCompany(companyId).name;
         reportData.ansvarlig = userManager.getCompany(companyId).contactPerson;
         reportData.periode = sdf.format(start) + " - " + sdf.format(end);
-        
         for (C3Project project : projectsToUse) {
             for (User user : users) {
-                C3Report report = getReportForUserProject(user.id, project.id, start, end);
+                C3Report report = getReportForUserProject(user.id, project.id, start, end, forWorkPackageId);
                 report.otherCosts.stream().filter(cost -> cost.nfr).forEach(cost -> addOtherCost(cost, reportData));
             }
             for (User user : users) {
-                C3Report report = getReportForUserProject(user.id, project.id, start, end);
+                C3Report report = getReportForUserProject(user.id, project.id, start, end, forWorkPackageId);
                 report.otherCosts.stream().filter(cost -> !cost.nfr).forEach(cost -> addOtherCost(cost, reportData));
             }
         }
-        
-        SFIExcelReport report = new SFIExcelReport(reportData);
-        return report.getBase64Encoded();
+        return reportData;
     }
 
     private void addOtherCost(C3OtherCosts cost, SFIExcelReportData reportData) {
@@ -786,12 +797,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         return data;
     }
     
-    private HashMap<String, Double> getRoundSums(List<C3Project> projectsToUse, List<User> users, Date start, Date end) {
+    private HashMap<String, Double> getRoundSums(List<C3Project> projectsToUse, List<User> users, Date start, Date end, String forWorkPackageId) {
         HashMap<String, Double> roundsums = new HashMap();
         
         for (C3Project project : projectsToUse) {
             for (User user : users) {
-                C3Report report = getReportForUserProject(user.id, project.id, start, end);
+                C3Report report = getReportForUserProject(user.id, project.id, start, end, forWorkPackageId);
                 
                 if (report.roundSum > 0) {
                     addSum(roundsums, report.roundSum, user.id);
@@ -802,12 +813,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         return roundsums;
     }
 
-    private HashMap<String, Double> getHours(List<C3Project> projectsToUse, List<User> users, Date start, Date end, boolean isNfr) {
+    private HashMap<String, Double> getHours(List<C3Project> projectsToUse, List<User> users, Date start, Date end, boolean isNfr, String forWorkPackageId) {
         HashMap<String, Double> retMap = new HashMap();
         
         for (C3Project project : projectsToUse) {
             for (User user : users) {
-                C3Report report = getReportForUserProject(user.id, project.id, start, end);
+                C3Report report = getReportForUserProject(user.id, project.id, start, end, forWorkPackageId);
                 double addHours = report.hours.stream()
                         .filter(hour -> hour.nfr == isNfr)
                         .mapToDouble(hour -> hour.hours).sum();
@@ -863,6 +874,49 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     @Override
     public boolean allowedNfrOtherCostCurrentUser() {
         return allowedNfrOtherCost(getSession().currentUser.id);
+    }
+
+    @Override
+    public String getBase64ESAExcelReport(Date start, Date end) {
+        Set<String> allCompaniesIds = new TreeSet();
+        List<Company> allCompanies = new ArrayList();
+        
+        DoubleKeyMap<String, String, Double> totalCosts = new DoubleKeyMap();
+        DoubleKeyMap<String, String, Double> inKind = new DoubleKeyMap();
+        
+        for (WorkPackage workPackage : workPackages.values()) {
+            List<Company> companies = getAllCompaniesThatHasRelationToWorkpackage(workPackage);
+            allCompaniesIds.addAll(companies.stream().map(comp -> comp.id).collect(Collectors.toList()));
+        }
+        
+        allCompanies = allCompaniesIds.stream().map(o -> userManager.getCompany(o)).collect(Collectors.toList());
+        
+        for (WorkPackage workPackage : workPackages.values()) {
+            for (Company company : allCompanies) {
+                SFIExcelReportData reportData = createReportData(start, end, company.id, workPackage.id);
+                if (reportData.getTotal() > 0) {
+                    System.out.println(reportData.getTotal());
+                }
+                
+                totalCosts.put(workPackage.id, company.id, reportData.getTotal());
+            }
+        }
+        
+        
+        ESAReport report = new ESAReport(allCompanies, getWorkPackages(), totalCosts, inKind);
+        return report.getBase64Encoded();
+    }
+
+    private List<Company> getAllCompaniesThatHasRelationToWorkpackage(WorkPackage workPackage) {
+        Set<String> companyIds = new TreeSet();
+        
+        for (C3Project project : projects.values()) {
+            if (project.workPackages.contains(workPackage.id)) {
+                companyIds.addAll(project.getCompanyIds());
+            }
+        }
+        
+        return companyIds.stream().map(companyId -> userManager.getCompany(companyId)).collect(Collectors.toList());
     }
     
 }

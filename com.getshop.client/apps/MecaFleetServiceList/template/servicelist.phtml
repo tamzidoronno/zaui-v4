@@ -5,11 +5,11 @@ $cars = $this->getApi()->getMecaManager()->getCarsServiceList();
 <div class='servicerow header'>
     <div></div>
     <div></div>
+    <div>Flåte</div>
     <div>Regnr </div>
     <div>KM til neste service</div>
     <div>Måneder til neste service</div>
     <div>Dato for PKK</div>
-    <div>Flåte</div>
     <div></div>
 </div>
 <?
@@ -44,11 +44,12 @@ foreach ($cars as $car) {
             <div>
                 <a href='/?page=<? echo $car->pageId;?>'><i class='gs_shop_small_icon fa fa-edit'></i></a>
             </div>
+            <div><? echo isset($fleet->name) ? $fleet->name : "N/A"; ?> </div>
             <div><? echo $car->licensePlate; ?></div>
             <div><? echo isset($car->kilometersToNextService) ? $car->kilometersToNextService: 'N/A'; ?></div>
             <div><? echo isset($car->monthsToNextService) ? $car->monthsToNextService." ( $nextServiceDate ) " : "N/A"; ?> </div>
             <div style="<? echo $pkkStyleColor; ?>"><? echo isset($car->nextControll) ? date('d/m-Y', strtotime($car->nextControll)) : 'N/A'; ?></div>
-            <div><? echo isset($fleet->name) ? $fleet->name : "N/A"; ?> </div>
+            
             
             <div>
                 <?

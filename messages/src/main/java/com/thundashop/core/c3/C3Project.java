@@ -74,10 +74,10 @@ public class C3Project extends DataCommon {
         return new ArrayList(activatedCompanies.get(user.companyObject.id).activeWorkPackaged.keySet());
     }
 
-    public int getPercentage(String workPackageId, String companyId, int year) {
+    public double getPercentage(String workPackageId, String companyId, int year) {
         C3ProjectWorkpackage wp = activatedCompanies.get(companyId);
         if (wp == null)
-            return 100;
+            return 0;
         
         return wp.getPercentage(workPackageId, companyId, year);
     }
@@ -96,5 +96,14 @@ public class C3Project extends DataCommon {
         long EndDate1 = endDate.getTime();
         long EndDate2 = this.endDate.getTime()-1;
         return (StartDate1 <= EndDate2) && (StartDate2 <= EndDate1);
+    }
+
+    public List<String> getCompanyIds() {
+        return new ArrayList(activatedCompanies.keySet());
+    }
+    
+    public void finalize() {
+        activatedCompanies.values().stream()
+                .forEach(c3prowp -> c3prowp.checkWps(workPackages));
     }
 }

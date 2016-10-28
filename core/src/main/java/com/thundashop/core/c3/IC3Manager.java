@@ -56,7 +56,7 @@ interface IC3Manager {
 
     public List<UserProjectAccess> getAccessList();
     
-    public int getPercentage(String companyId, String workPackageId, String projectId, int year);
+    public double getPercentage(String companyId, String workPackageId, String projectId, int year);
     
     @Administrator
     public void saveGroupInfo(String groupId, String type, boolean value);
@@ -122,7 +122,7 @@ interface IC3Manager {
     public void deleteForskningsUserPeriode(String periodeId);
     
     @Administrator
-    public C3Report getReportForUserProject(String userId, String projectId, Date start, Date end);
+    public C3Report getReportForUserProject(String userId, String projectId, Date start, Date end, String forWorkPackageId);
     
     @Administrator
     public String getBase64SFIExcelReport(String companyId, Date start, Date end);
@@ -137,5 +137,8 @@ interface IC3Manager {
     
     @Administrator
     public void setNfrAccess(C3UserNfrAccess access);
+    
+    @Administrator
+    public String getBase64ESAExcelReport(Date start, Date end);
     
 }

@@ -40,6 +40,9 @@ public interface IPmsManager {
     @Administrator
     public String generateNewCodeForRoom(String roomId);
     
+    @Administrator
+    public PmsAdditionalItemInformation getAdditionalInfo(String itemId);
+        
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
     @Editor

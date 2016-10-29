@@ -20,9 +20,17 @@
     border-color:darkgreen;
 }
 
+.PmsConfiguration .cloneroompanel { position:absolute; border: solid 5px; padding: 5px; display:none; background-color: #fff; }
+
 .PmsConfiguration .notificationpanel {
     display:none;
 }
+
+.PmsConfiguration .inventoryitem:hover { border-bottom:solid 1px #000; }
+
+.PmsConfiguration .inventoryitem { border: solid 1px #bbb; padding: 5px; border-top: solid 0px; }
+
+.PmsConfiguration .productinventoryitem { border: solid 1px #bbb; padding: 2px; margin-right: 5px; border-radius: 3px; font-size: 12px; padding-left: 5px; padding-right: 5px; }
 
 .PmsConfiguration .notificationpanel.email_notifcations {
     display:block;

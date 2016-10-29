@@ -1,0 +1,75 @@
+<?php
+/* @var $this ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+?>
+<h2>Room inventory</h2>
+Tip: In order to work more efficient, set up the inventory for your first room, then clone it to the rest of the room of the same type.<br>
+
+<div style='width:50%;display:block; float:left; box-sizing: border-box;'>
+    <div style='margin-right: 10px; padding: 5px;'>
+        <div gstype="form" method="createInventory">
+            <input type="text" gsname="itemname" style="padding: 6px; width: 50%;"> <span class="pmsbutton" gstype="submit">Create inventory</span>
+        </div>
+        <div style='border-top: solid 1px #bbb; margin-top: 10px;'>
+            <?php $this->printInventory(); ?>
+        </div>
+    </div>
+</div>
+
+<div style='width:50%;display:block; float:left; box-sizing: border-box;'>
+    <div style='margin-left: 10px; padding: 5px;'>Inventory added</div>
+    <select style='padding: 5px; width: 100%; background-color:#fff; border: solid 1px #bbb;' class="changeItemForRoom">
+        <option value="">Select a room</option>
+        <?php
+            $selectedItem = $this->getSelectedItem();
+            $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+            foreach($items as $item) {
+                $selected = "";
+                if($item->id == $selectedItem) {
+                    $selected = "SELECTED";
+                }
+                echo "<option value='". $item->id . "' $selected>" . $item->bookingItemName . "</option>";
+            }
+        ?>
+    </select>
+    <br>
+    <br>
+    <div class='inventoryaddedlist' style="border-top: solid 1px #bbb;">
+        <?php $this->printInventoryForSelectedRoom(); ?>
+    </div>
+</div>
+
+<div style="clear:both;"></div>
+<div class="cloneroompanel" gstype="form" method="cloneRooms">
+    <select style='padding: 5px; width: 100%; background-color:#fff; border: solid 1px #bbb;' gsname="basisroom">
+        <option value="">Select a basis room</option>
+        <?php
+            foreach($items as $item) {
+                echo "<option value='". $item->id . "'>" . $item->bookingItemName . "</option>";
+            }
+        ?>
+    </select>
+    <h3>Select rooms to clone</h3>
+    <table width="100%">
+    <?php
+    $i = 0;
+    echo "<tr>";
+    foreach($items as $item) {
+        echo "<td width='10'><input type='checkbox' gsname='room_".$item->id."'></td>";
+        echo "<td>" . $item->bookingItemName . "</td>";
+        $i++;
+        if($i % 6 == 0) {
+            echo "</tr><tr>";
+        }
+    }
+    echo "</tr>";
+    ?>
+    </table>
+    <span class="pmsbutton" gstype="submit">Clone rooms</span>
+    <span onclick="$('.PmsConfiguration .cloneroompanel').toggle()" style="float:right; background-color:red;" class="pmsbutton">Close panel</span>
+</div>
+<h2>All room list overview</h2>
+<div class="allroominventorylist">
+<?php
+    $this->printRoomInventoryList();
+?>
+</div>

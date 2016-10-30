@@ -14,7 +14,6 @@ getshop.careTakerController = function ($scope, $state, $stateParams) {
     $scope.loadCareTakerTasks = function() {
         var loading = getshopclient.PmsManager.getCareTakerJobs(getMultilevelName());
         loading.done(function(res) {
-            console.log(res);
             var result = [];
             for(var k in res) {
                 if(!res[k].completed) {

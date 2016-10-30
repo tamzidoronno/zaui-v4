@@ -221,6 +221,15 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 object.setOrderManager(orderManager);
                 object.setInvoiceManager(invoiceManager);
                 object.setStoreApplication(applicationPool);
+                
+                AccountingManagers mgr = new AccountingManagers();
+                mgr.ftpManager = ftpManager;
+                mgr.invoiceManager = invoiceManager;
+                mgr.orderManager = orderManager;
+                mgr.productManager = productManager;
+                mgr.userManager = userManager;
+                object.setManagers(mgr);
+                
                 interfaces.add(object);
             }
         }

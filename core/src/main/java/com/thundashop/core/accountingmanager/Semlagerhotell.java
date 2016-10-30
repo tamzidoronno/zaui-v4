@@ -64,6 +64,7 @@ public class Semlagerhotell implements AccountingInterface {
     private UserManager userManager;
     private OrderManager orderManager;
     private InvoiceManager invoiceManager;
+    private AccountingManagers managers;
 
     @Override
     public void setUserManager(UserManager manager) {
@@ -218,4 +219,10 @@ public class Semlagerhotell implements AccountingInterface {
     @Override
     public void setStoreApplication(StoreApplicationPool manager) {
     }
+    
+    @Override
+    public void setManagers(AccountingManagers mgr) {
+        this.managers = mgr;
+    }
+    
 }

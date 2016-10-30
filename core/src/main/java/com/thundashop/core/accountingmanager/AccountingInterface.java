@@ -16,6 +16,7 @@ public interface AccountingInterface {
     public void setInvoiceManager(InvoiceManager manager);
     public void setOrderManager(OrderManager manager);
     public void setStoreApplication(StoreApplicationPool manager);
+    public void setManagers(AccountingManagers mgr);
     public List<String> createUserFile(List<User> users);
     public List<String> createOrderFile(List<Order> orders, String type);
 }

@@ -4,6 +4,7 @@ $types = array();
 $types["report"] = "Emails to send statistics report to";
 $types["applogentry"] = "Emails to send app log entries to";
 $types["creditorder"] = "When orders are credited";
+$types["caretaker"] = "When caretaker tasks are added";
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 
 foreach($types as $type => $heading) {

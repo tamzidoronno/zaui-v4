@@ -4029,14 +4029,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(SimpleInventory simple : inventories) {
             if(getConfigurationSecure().autoAddMissingItemsToRoom && roomId != null) {
                 addProductToRoom(simple.productId, roomId, 0);
-                removeCaretakerMissingInventory(itemId, simple.productId);
                 if(simple.missingCount > 0) {
-                    addProductToRoom(simple.productId, roomId, simple.missingCount);
-                    PmsCareTaker newEntry = new PmsCareTaker();
-                    newEntry.description = "Missing inventory";
-                    newEntry.inventoryProductId = simple.productId;
-                    newEntry.roomId = itemId;
-                    saveCareTakerJob(newEntry);
+                    if(!hasCaretakerTask(itemId, simple.productId)) {
+                        addProductToRoom(simple.productId, roomId, simple.missingCount);
+                        PmsCareTaker newEntry = new PmsCareTaker();
+                        newEntry.description = "Missing inventory";
+                        newEntry.inventoryProductId = simple.productId;
+                        newEntry.roomId = itemId;
+                        saveCareTakerJob(newEntry);
+                    }
+                } else {
+                    removeCaretakerMissingInventory(itemId, simple.productId);
                 }
             }
         }
@@ -4060,6 +4063,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveCareTakerJob(PmsCareTaker job) {
+        if(job.id == null || job.id.isEmpty()) {
+            List<String> emails = getConfigurationSecure().emailsToNotify.get("caretaker");
+            if(emails != null) {
+                finalizeCareTakerJob(job);
+                for(String email : emails) {
+                    String msg = "Task: " + job.description;
+                    if(job.productName != null) {
+                        msg += ", " + job.productName;
+                    }
+                    if(job.roomName != null) {
+                        msg += ", " + job.roomName;
+                    }
+                    messageManager.sendMail(email, email, "Caretaker task added", msg, email, email);
+                }
+            }
+        }
+        
         saveObject(job);
         careTaker.put(job.id, job);
     }
@@ -4074,15 +4094,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<PmsCareTaker> getCareTakerJobs() {
         List<PmsCareTaker> res = new ArrayList(careTaker.values());
         for(PmsCareTaker taker : res) {
-            if(taker.inventoryProductId != null) {
-                taker.productName = productManager.getProduct(taker.inventoryProductId).name;
-            }
-            if(taker.roomId != null) {
-                taker.roomName = bookingEngine.getBookingItem(taker.roomId).bookingItemName;
-            }
-            if(taker.dateCompleted != null) {
-                taker.completed = true;
-            }
+            finalizeCareTakerJob(taker);
         }
         return res;
     }
@@ -4118,6 +4130,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsCareTaker job = getCareTakerJob(id);
         job.dateCompleted = new Date();
         saveObject(job);
+    }
+
+    private void finalizeCareTakerJob(PmsCareTaker taker) {
+        if(taker.inventoryProductId != null) {
+            taker.productName = productManager.getProduct(taker.inventoryProductId).name;
+        }
+        if(taker.roomId != null) {
+            taker.roomName = bookingEngine.getBookingItem(taker.roomId).bookingItemName;
+        }
+        if(taker.dateCompleted != null) {
+            taker.completed = true;
+        }
+    }
+
+    private boolean hasCaretakerTask(String itemId, String productId) {
+        if(itemId == null || productId == null) {
+            return false;
+        }
+        for(PmsCareTaker taker : careTaker.values()) {
+            if(taker.dateCompleted == null && taker.inventoryProductId.equals(productId) && taker.roomId.equals(itemId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

@@ -19,6 +19,16 @@ app.YouTube = {
         var appid = app.attr('appid');
         thundashop.Skeleton.removeApplication(appid, 'middle');
     },
+    
+    setDirectUrl: function() {
+        var url = prompt("Please enter URL");
+        if (url) {
+            thundashop.Ajax.simplePost(this, "setUrlDirectly", {
+                url: url
+            });
+        }
+    },
+    
     loadSettings: function(element, application) {
         var config = {
             draggable: true,
@@ -30,6 +40,12 @@ app.YouTube = {
                     iconsize: "30",
                     title: __f("Change movie"),
                     click: app.YouTube.startSearch
+                }, {
+                    icontype: "awesome",
+                    icon: "fa-link",
+                    iconsize: "30",
+                    title: __f("Direct url"),
+                    click: app.YouTube.setDirectUrl
                 }]
         }
 

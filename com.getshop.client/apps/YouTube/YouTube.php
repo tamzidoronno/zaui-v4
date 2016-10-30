@@ -21,6 +21,10 @@ class YouTube extends \ApplicationBase implements \Application {
         return "YouTube";
     }
     
+    public function setUrlDirectly() {
+        $this->setConfigurationSetting("youtubeid", $_POST['data']['url']);
+    }
+    
     public function search() {
         $this->includefile("searchresult");
     }

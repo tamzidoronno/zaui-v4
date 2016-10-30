@@ -2,6 +2,18 @@
     <a ui-sref="mainpage"><i class='fa fa-arrow-left' style='color:#fff; float:left;'></i></a>
     Cleaning program</div>
 
+<div class='row' style='text-align: right; padding-top: 5px; padding-right: 5px;'>
+    <span class='btn btn-success' ng-click='showReportPanel()'>Message to caretaker</span>
+</div>
+
+<div class='row' ng-show='reportPanel'>
+    <div class='col-xs-12'>
+        <select class='form-control' ng-model="selectedRoom" ng-options="item as item.bookingItemName for item in items"></select>
+        <textarea ng-model="caretakermsg" class='form-control'></textarea>
+        <span class='btn btn-success' class='form-control' ng-click="reportToCareTaker()">Send report</span>
+    </div>
+</div>
+
 <div ng-repeat="cleaningList in cleaningLists">
     <div class='row'>
     <br>

@@ -5,6 +5,7 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
     $scope.checkInGuests = [];
     $scope.checkOutGuests = [];
     $scope.defaultStart = 14;
+    $scope.reportPanel = false;
     $scope.defaultEnd = 12;
     
     $scope.loadList = function(wtf) {
@@ -35,6 +36,9 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
         }
         return hour + ":" + minute;
     }
+    $scope.showReportPanel = function() {
+        $scope.reportPanel = !$scope.reportPanel;
+    },
     $scope.loadGuest = function(type) {
         var filter = {};
         if(type == "checkin") {
@@ -113,6 +117,26 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
         });
     }
     
+    $scope.loadBookingItems = function() {
+        var loading = getshopclient.BookingEngine.getBookingItems(getMultilevelName());
+        loading.done(function(res){
+            $scope.items = res;
+        });
+    }
+    
+    $scope.reportToCareTaker = function() {
+        var job = {};
+        job['description'] = $scope.caretakermsg;
+        job['roomId'] = $scope.selectedRoom.id;
+        
+        var saving = getshopclient.PmsManager.saveCareTakerJob(getMultilevelName(), job);
+        saving.done(function() {
+            $scope.reportPanel = false;
+            $scope.caretakermsg = "";
+            $scope.$apply();
+        });
+    }
+    
     var loadConfig = getshopclient.PmsManager.getConfiguration(getMultilevelName());
     loadConfig.done(function(config) {
         $scope.defaultStart = parseInt(config.defaultStart.split(":")[0]);
@@ -124,5 +148,7 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
         $scope.loadRooms();
         $scope.loadIntervalCleaning();
     });
+    
+    $scope.loadBookingItems();
     
 };

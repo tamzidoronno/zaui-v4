@@ -111,6 +111,8 @@ public class PmsConfiguration extends DataCommon {
     public boolean cleaningNextDay = false;
     boolean unsetCleaningIfJustSetWhenChangingRooms = false;
     boolean automaticallyCloseRoomIfDirtySameDay = false;
+    public boolean autoAddMissingItemsToRoom = false;
+
     
     /* Mail settings */
     public String senderName = "";

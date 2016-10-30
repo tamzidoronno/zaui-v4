@@ -3881,29 +3881,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     
     @Override
-    public void addAddonsToBookingById(String addonId, String roomId, boolean remove) {
-        PmsBooking booking = getBookingFromRoom(roomId);
-        PmsBookingRooms room = booking.findRoom(roomId);
-        if(remove) {
-            PmsBookingAddonItem toRemove = null;
+    public void addProductToRoom(String productId, String pmsRoomId, Integer count) {
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.findRoom(pmsRoomId);
+        if(count == 0) {
+            List<PmsBookingAddonItem> toRemove = new ArrayList();
             for(PmsBookingAddonItem item : room.addons) {
-                if(item.addonId.equals(addonId)) {
-                    toRemove = item;
+                if(item.productId.equals(productId)) {
+                    toRemove.add(item);
                 }
             }
-            if(toRemove != null) {
-                room.addons.remove(toRemove);
+            if(!toRemove.isEmpty()) {
+                room.addons.removeAll(toRemove);
             }
         } else {
             PmsBookingAddonItem item = new PmsBookingAddonItem();
             for(PmsBookingAddonItem test : getConfigurationSecure().addonConfiguration.values()) {
-                if(test.addonId.equals(addonId)) {
+                if(test.productId != null && test.productId.equals(productId)) {
                     item = test;
                     break;
                 }
             }
             if(item.isSingle) {
                 PmsBookingAddonItem newAddon = createAddonToAdd(item, room, new Date());
+                newAddon.count = count;
                 room.addons.add(newAddon);
             } else {
                 Date start = pmsInvoiceManager.normalizeDate(room.date.start, true);
@@ -3911,6 +3912,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
                 while(true) {
                     PmsBookingAddonItem toAdd = createAddonToAdd(item, room, start);
+                    toAdd.count = count;
                     room.addons.add(toAdd);
                     start = addTimeUnit(start, booking.priceType);
                     if(start.after(end)) {
@@ -3995,6 +3997,53 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             e.printStackTrace();
         }
         return null; 
+    }
+
+    @Override
+    public List<SimpleInventory> getSimpleInventoryList(String roomName) {
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        String itemId = null;
+        for(BookingItem item : items) {
+            if(item.bookingItemName.equals(roomName)) {
+                itemId = item.id;
+            }
+        }
+        List<SimpleInventory> res = new ArrayList();
+        PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
+        for(PmsInventory inv : additional.inventory.values()) {
+            SimpleInventory simpleInventory = new SimpleInventory();
+            simpleInventory.name = productManager.getProduct(inv.productId).name;
+            simpleInventory.productId = inv.productId;
+            simpleInventory.originalCount = inv.count;
+            res.add(simpleInventory);
+        }
+        return res;
+    }
+
+    @Override
+    public void reportMissingInventory(List<SimpleInventory> inventories, String itemId, String roomId) {
+        for(SimpleInventory simple : inventories) {
+//            if(getConfigurationSecure().autoAddMissingItemsToRoom && roomId != null) {
+                addProductToRoom(simple.productId, roomId, 0); 
+                addProductToRoom(simple.productId, roomId, simple.missingCount);
+//            }
+        }
+    }
+
+    @Override
+    public void removeAddonFromRoomById(String addonId, String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = booking.findRoom(roomId);
+        for(PmsBookingAddonItem item : room.addons) {
+            PmsBookingAddonItem toRemove = null;
+            if(item.addonId.equals(addonId)) {
+                toRemove = item;
+            }
+            if(toRemove != null) {
+                room.addons.remove(toRemove);
+            }
+        }
+        saveBooking(booking);
     }
 
 }

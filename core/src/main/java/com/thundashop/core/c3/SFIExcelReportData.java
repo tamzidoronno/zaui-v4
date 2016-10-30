@@ -33,6 +33,15 @@ public class SFIExcelReportData {
         
         return Math.round(total);
     }
+
+    public double getTotalInkind() {
+        double total = 0;
+        total += post11.stream().mapToDouble(post -> post.inkind).sum();
+        total += post13.stream().mapToDouble(post -> post.inkind).sum();
+        total += post14.stream().mapToDouble(post -> post.inkind).sum();
+        
+        return Math.round(total);
+    }
     
     
 }

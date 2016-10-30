@@ -891,14 +891,24 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         allCompanies = allCompaniesIds.stream().map(o -> userManager.getCompany(o)).collect(Collectors.toList());
         
+        HashMap<String, Double> rcnGrantWorkPackage = new HashMap();
+        
         for (WorkPackage workPackage : workPackages.values()) {
             for (Company company : allCompanies) {
                 SFIExcelReportData reportData = createReportData(start, end, company.id, workPackage.id);
-                if (reportData.getTotal() > 0) {
-                    System.out.println(reportData.getTotal());
+
+                totalCosts.put(workPackage.id, company.id, reportData.getTotal());
+                inKind.put(workPackage.id, company.id, reportData.getTotalInkind());
+                
+                double rcnGrant = reportData.getTotal() - reportData.getTotalInkind();
+                
+                if (inKind.get(workPackage.id, "rcngrant") == null) {
+                    inKind.put(workPackage.id, "rcngrant", rcnGrant);
+                } else {
+                    double addedRcnGrant = inKind.get(workPackage.id, "rcngrant");
+                    inKind.put(workPackage.id, "rcngrant", rcnGrant + addedRcnGrant);
                 }
                 
-                totalCosts.put(workPackage.id, company.id, reportData.getTotal());
             }
         }
         

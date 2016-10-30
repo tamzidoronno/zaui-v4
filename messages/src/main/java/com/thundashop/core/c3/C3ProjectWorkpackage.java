@@ -43,10 +43,6 @@ public class C3ProjectWorkpackage {
         if (activeWorkPackaged.get(workPackageId) == null)
             return 0;
         
-        if (companyId.equals("cbbb8244-50fb-4e9c-bd2a-4ab21f42e298") && workPackageId.equals("01cf0d97-9440-4f78-8458-c65e40cf319a") ) {
-            System.out.println("found");
-        }
-        
         int total = activeWorkPackaged.values().stream()
                 .mapToInt(active -> active.getCost(year))
                 .sum();

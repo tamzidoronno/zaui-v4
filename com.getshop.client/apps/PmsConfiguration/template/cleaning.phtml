@@ -117,6 +117,30 @@ echo "</table>";
     <span class='configentry'>
     <?
         $checked = "";
+        if($notificationSettings->autoNotifyCareTakerForMissingInventory) {
+            $checked = "CHECKED";
+        }
+    ?>
+    <input type='checkbox' gsname='autoNotifyCareTakerForMissingInventory' <? echo $checked; ?>>
+    </span>
+    Automatically notify caretaker about missing inventory.
+</div>
+<div class='configrow'>
+    <span class='configentry'>
+    <?
+        $checked = "";
+        if($notificationSettings->autoAddMissingItemsToRoom) {
+            $checked = "CHECKED";
+        }
+    ?>
+    <input type='checkbox' gsname='autoAddMissingItemsToRoom' <? echo $checked; ?>>
+    </span>
+    Automatically create orders for missing invoice.
+</div>
+<div class='configrow'>
+    <span class='configentry'>
+    <?
+        $checked = "";
         if(isset($notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) && $notificationSettings->unsetCleaningIfJustSetWhenChangingRooms) {
             $checked = "CHECKED";
         }

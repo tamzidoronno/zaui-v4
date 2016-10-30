@@ -50,6 +50,21 @@ public interface IPmsManager {
     public void removeAddonFromRoomById(String addonId, String roomId);
     
     @Administrator
+    public void saveCareTakerJob(PmsCareTaker job);
+    
+    @Administrator
+    public void removeCareTakerJob(String jobId);
+    
+    @Administrator
+    public List<PmsCareTaker> getCareTakerJobs();
+    
+    @Administrator
+    public PmsCareTaker getCareTakerJob(String id);
+    
+    @Administrator
+    public void completeCareTakerJob(String id);
+    
+    @Administrator
     public PmsAdditionalItemInformation getAdditionalInfo(String itemId);
         
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);

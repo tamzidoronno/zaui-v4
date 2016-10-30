@@ -74,6 +74,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private HashMap<String, PmsBooking> bookings = new HashMap();
     private HashMap<String, Product> fetchedProducts = new HashMap();
+    private HashMap<String, PmsCareTaker> careTaker = new HashMap();
     private HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
     private PmsPricing prices = new PmsPricing();
     private PmsConfiguration configuration = new PmsConfiguration();
@@ -136,7 +137,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        for (DataCommon dataCommon : data.data) {
+        for (DataCommon dataCommon : data.data) { 
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
                 
@@ -157,6 +158,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsPricing) {
                 prices = (PmsPricing) dataCommon;
+            }
+            if (dataCommon instanceof PmsCareTaker) {
+                careTaker.put(dataCommon.id, (PmsCareTaker) dataCommon);
             }
             if (dataCommon instanceof PmsConfiguration) {
                 configuration = (PmsConfiguration) dataCommon;
@@ -4023,10 +4027,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void reportMissingInventory(List<SimpleInventory> inventories, String itemId, String roomId) {
         for(SimpleInventory simple : inventories) {
-//            if(getConfigurationSecure().autoAddMissingItemsToRoom && roomId != null) {
-                addProductToRoom(simple.productId, roomId, 0); 
-                addProductToRoom(simple.productId, roomId, simple.missingCount);
-//            }
+            if(getConfigurationSecure().autoAddMissingItemsToRoom && roomId != null) {
+                addProductToRoom(simple.productId, roomId, 0);
+                removeCaretakerMissingInventory(itemId, simple.productId);
+                if(simple.missingCount > 0) {
+                    addProductToRoom(simple.productId, roomId, simple.missingCount);
+                    PmsCareTaker newEntry = new PmsCareTaker();
+                    newEntry.description = "Missing inventory";
+                    newEntry.inventoryProductId = simple.productId;
+                    newEntry.roomId = itemId;
+                    saveCareTakerJob(newEntry);
+                }
+            }
         }
     }
 
@@ -4044,6 +4056,68 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         saveBooking(booking);
+    }
+
+    @Override
+    public void saveCareTakerJob(PmsCareTaker job) {
+        saveObject(job);
+        careTaker.put(job.id, job);
+    }
+
+    @Override
+    public void removeCareTakerJob(String jobId) {
+        PmsCareTaker object = careTaker.get(jobId);
+        deleteObject(object);
+    }
+
+    @Override
+    public List<PmsCareTaker> getCareTakerJobs() {
+        List<PmsCareTaker> res = new ArrayList(careTaker.values());
+        for(PmsCareTaker taker : res) {
+            if(taker.inventoryProductId != null) {
+                taker.productName = productManager.getProduct(taker.inventoryProductId).name;
+            }
+            if(taker.roomId != null) {
+                taker.roomName = bookingEngine.getBookingItem(taker.roomId).bookingItemName;
+            }
+            if(taker.dateCompleted != null) {
+                taker.completed = true;
+            }
+        }
+        return res;
+    }
+
+    @Override
+    public PmsCareTaker getCareTakerJob(String id) {
+        return careTaker.get(id);
+    }
+
+    private void removeCaretakerMissingInventory(String itemId, String productId) {
+        if(itemId == null) {
+            return;
+        }
+        
+        List<PmsCareTaker> toRemove = new ArrayList();
+        for(PmsCareTaker taker : careTaker.values()) {
+            if(taker.dateCompleted != null) {
+                continue;
+            }
+            if(taker.inventoryProductId.equals(productId) && taker.roomId.equals(itemId)) {
+                toRemove.add(taker);
+            }
+        }
+        
+        for(PmsCareTaker remove : toRemove) {
+            deleteObject(remove);
+            careTaker.remove(remove.id);
+        }
+    }
+
+    @Override
+    public void completeCareTakerJob(String id) {
+        PmsCareTaker job = getCareTakerJob(id);
+        job.dateCompleted = new Date();
+        saveObject(job);
     }
 
 }

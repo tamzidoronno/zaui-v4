@@ -50,7 +50,7 @@ getshop.cleaningCheckoutController = function ($scope, $state, $stateParams, $lo
     }
     
     $scope.removeAddon = function(addonId) {
-        var adding = getshopclient.PmsManager.addAddonsToBookingById(getMultilevelName(), addonId, $scope.selectedGuest.pmsRoomId, true);
+        var adding = getshopclient.PmsManager.removeAddonFromRoomById(getMultilevelName(), addonId, $scope.selectedGuest.pmsRoomId);
         adding.done(function() {
             $scope.loadAddedServices();
         });
@@ -61,18 +61,51 @@ getshop.cleaningCheckoutController = function ($scope, $state, $stateParams, $lo
         loading.done(function(list) {
             $scope.guestAddonList = [];
             for(var k in list) {
-                if(list[k].isAvailableForCleaner) {
-                    $scope.guestAddonList.push(list[k]);
-                }
+                $scope.guestAddonList.push(list[k]);
             }
             $scope.$apply();
         });
     },
-    
+    $scope.reportInventory = function() {
+        var reporting = getshopclient.PmsManager.reportMissingInventory(getMultilevelName(), $scope.inventoryList, $scope.selectedGuest.bookingItemId, $scope.selectedGuest.pmsRoomId);
+        reporting.done(function() {
+            $scope.loadAddedServices();
+        });
+    },
+    $scope.increaseCounter = function(productId) {
+        for(var key in $scope.inventoryList) {
+            if($scope.inventoryList[key].productId === productId) {
+                $scope.inventoryList[key].missingCount++;
+                if($scope.inventoryList[key].missingCount > $scope.inventoryList[key].originalCount) {
+                    $scope.inventoryList[key].missingCount = $scope.inventoryList[key].originalCount;
+                }
+            }
+        }
+        $scope.reportInventory();
+    },
+    $scope.decreaseCounter = function(productId) {
+        for(var key in $scope.inventoryList) {
+            if($scope.inventoryList[key].productId === productId) {
+                $scope.inventoryList[key].missingCount--;
+                if($scope.inventoryList[key].missingCount < 0) {
+                    $scope.inventoryList[key].missingCount = 0;
+                }
+            }
+        }
+        $scope.reportInventory();
+    },
     $scope.addServiceToRoom = function() {
-        var adding = getshopclient.PmsManager.addAddonsToBookingById(getMultilevelName(), $scope.selectedService.addonId, $scope.selectedGuest.pmsRoomId, false);
+        var adding = getshopclient.PmsManager.addProductToRoom(getMultilevelName(), $scope.selectedService.productId, $scope.selectedGuest.pmsRoomId, 1);
         adding.done(function() {
             $scope.loadAddedServices();
+        });
+    },
+            
+    $scope.loadInventoryList = function() {
+        var loading = getshopclient.PmsManager.getSimpleInventoryList(getMultilevelName(), $scope.roomName);
+        loading.done(function(res) {
+            $scope.inventoryList = res;
+            $scope.$apply();
         });
     },
     
@@ -93,4 +126,5 @@ getshop.cleaningCheckoutController = function ($scope, $state, $stateParams, $lo
     
     $scope.loadGuestList();
     $scope.loadServiceList();
+    $scope.loadInventoryList();
 };

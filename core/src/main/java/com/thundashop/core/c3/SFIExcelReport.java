@@ -17,6 +17,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -152,8 +153,6 @@ public class SFIExcelReport {
             FileOutputStream out = new FileOutputStream(new File("/tmp/tmp_excel_sfi_report.xlsx"));
             workbook.write(out);
             out.close();
-            System.out.println("Excel written successfully..");
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -181,10 +180,8 @@ public class SFIExcelReport {
         setFontSize(cell1, 12, true);
         setFontSize(cell2, 12, true);
         
-        setBorder(cell2);
-        
         sheet.addMergedRegion(new CellRangeAddress(1, 1, 1, 5));
-        addLeftBorderToRegion(row, 6);
+        addLeftBorderToRegion(1, 1, 1, 5);
     }
 
     private void addNavnSfi() {
@@ -198,9 +195,8 @@ public class SFIExcelReport {
         setFontSize(cell1, 12, true);
         setFontSize(cell2, 12, true);
         
-        setBorder(cell2);
         sheet.addMergedRegion(new CellRangeAddress(2, 2, 1, 5));
-        addLeftBorderToRegion(row, 6);
+        addLeftBorderToRegion(2, 2, 1, 5);
     }
 
     private void addSFIProjectNumber() {
@@ -214,9 +210,8 @@ public class SFIExcelReport {
         setFontSize(cell1, 12, true);
         setFontSize(cell2, 12, true);
         
-        setBorder(cell2);
         sheet.addMergedRegion(new CellRangeAddress(3, 3, 1, 5));
-        addLeftBorderToRegion(row, 6);
+        addLeftBorderToRegion(3, 3, 1, 5);
     }
 
     private void addWps() {
@@ -230,9 +225,8 @@ public class SFIExcelReport {
         setFontSize(cell1, 12, true);
         setFontSize(cell2, 12, true);
         
-        setBorder(cell2);
         sheet.addMergedRegion(new CellRangeAddress(4, 4, 1, 5));
-        addLeftBorderToRegion(row, 6);
+        addLeftBorderToRegion(4, 4, 1, 5);
     }
     
     private void addPeriode() {
@@ -246,9 +240,8 @@ public class SFIExcelReport {
         setFontSize(cell1, 12, true);
         setFontSize(cell2, 12, true);
         
-        setBorder(cell2);
         sheet.addMergedRegion(new CellRangeAddress(5, 5, 1, 5));
-        addLeftBorderToRegion(row, 6);
+        addLeftBorderToRegion(5, 5, 1, 5);
     }
 
     private void addPost1Header() {
@@ -259,11 +252,11 @@ public class SFIExcelReport {
         
         setFontSize(cell1, 10, true);
         
-        addLeftBorderToRegion(row, 6);
+        addLeftBorderToRegion(3, 3, 1, 5);
         
         sheet.addMergedRegion(new CellRangeAddress((rownum-1), (rownum-1), 0, 5));
-        setBorder(cell1);
         
+        addLeftBorderToRegion((rownum-1), (rownum-1), 0, 5);
         XSSFRow rowh = sheet.createRow(rownum++);
         XSSFCell cell_1 = rowh.createCell(0);
         XSSFCell cell_2 = rowh.createCell(1);
@@ -407,16 +400,20 @@ public class SFIExcelReport {
         setFontSize(cell1, 10, true);
         
         sheet.addMergedRegion(new CellRangeAddress((rownum-1), (rownum-1), 0, 5));
-        setBorder(cell1);
-        
-        addLeftBorderToRegion(row, 6);
+       
+        addLeftBorderToRegion((rownum-1), (rownum-1), 0, 5);
     }
 
-    private void addLeftBorderToRegion(XSSFRow row, int cellNumber) {
-        XSSFCell cell7 = row.createCell(cellNumber);
-        cell7.setCellValue(" ");
-        setFontSize(cell7, 10, true);
-        setBorderLeft(cell7);
+    private void addLeftBorderToRegion(int a, int b, int c, int d) {
+        RegionUtil.setBorderTop(CellStyle.BORDER_THIN, new CellRangeAddress(a,b,c,d), sheet);
+        RegionUtil.setBorderLeft(CellStyle.BORDER_THIN, new CellRangeAddress(a,b,c,d), sheet);
+        RegionUtil.setBorderRight(CellStyle.BORDER_THIN, new CellRangeAddress(a,b,c,d), sheet);
+        RegionUtil.setBorderBottom(CellStyle.BORDER_THIN, new CellRangeAddress(a,b,c,d), sheet);
+
+//        XSSFCell cell7 = row.createCell(cellNumber);
+//        cell7.setCellValue(" ");
+//        setFontSize(cell7, 10, true);
+//        setBorderLeft(cell7);
     }
 
     private void addPost3Content() {
@@ -509,9 +506,8 @@ public class SFIExcelReport {
         setFontSize(cell1, 10, true);
         
         sheet.addMergedRegion(new CellRangeAddress((rownum-1), (rownum-1), 0, 5));
-        setBorder(cell1);
         
-        addLeftBorderToRegion(row, 6);
+        addLeftBorderToRegion((rownum-1), (rownum-1), 0, 5);
     }
 
     private void addPost4Content() {
@@ -606,10 +602,8 @@ public class SFIExcelReport {
         setFontSize(cell1, 10, true);
         setFontSize(cell2, 10, true);
         
-        setBorder(cell2);
-        
         sheet.addMergedRegion(new CellRangeAddress((rownum-1), (rownum-1), 1, 5));
-        addLeftBorderToRegion(row, 6);
+        addLeftBorderToRegion((rownum-1), (rownum-1), 1, 5);
     }
     
     private void addDateLine() {
@@ -626,10 +620,8 @@ public class SFIExcelReport {
         setFontSize(cell1, 10, true);
         setFontSize(cell2, 10, true);
         
-        setBorder(cell2);
-        
         sheet.addMergedRegion(new CellRangeAddress((rownum-1), (rownum-1), 1, 5));
-        addLeftBorderToRegion(row, 6);
+        addLeftBorderToRegion((rownum-1), (rownum-1), 1, 5);
     }
 
     private void addCommentField() {
@@ -641,13 +633,9 @@ public class SFIExcelReport {
         cell1.getCellStyle().setVerticalAlignment(XSSFCellStyle.VERTICAL_TOP);
         
         sheet.addMergedRegion(new CellRangeAddress((rownum-1), (rownum+2), 0, 5));
-        setBorder(cell1);
         
         XSSFRow lastRow = sheet.createRow(rownum+2);
-        addLeftBorderToRegion(row, 6);
-        addLeftBorderToRegion(sheet.createRow(rownum), 6);
-        addLeftBorderToRegion(sheet.createRow(rownum+1), 6);
-        addLeftBorderToRegion(lastRow, 6);
+        addLeftBorderToRegion((rownum-1), (rownum+2), 0, 5);
         
         rownum = rownum + 4;
         sheet.addMergedRegion(new CellRangeAddress((rownum-1), (rownum-1), 0, 5));
@@ -657,7 +645,6 @@ public class SFIExcelReport {
         
         cell2.setCellValue("*Andre driftskostnader: Direkte prosjektrelaterte kostnader som ikke inngår i timesats: reiseutgifter, evt. utstyrsleie, materialer og komponenter knyttet til eksperimentelt arbeid");
         setFontSize(cell2, 10, false);
-        setBorder(cell2);
         
         cell2.getCellStyle().setWrapText(true);
         row2.setHeight((short)600);
@@ -665,7 +652,7 @@ public class SFIExcelReport {
         cell2.getCellStyle().setWrapText(true);
         cell2.getCellStyle().setVerticalAlignment(XSSFCellStyle.VERTICAL_TOP);
         
-        addLeftBorderToRegion(row2, 6);
+        addLeftBorderToRegion((rownum-1), (rownum-1), 0, 5);
     }
 
     private void addTotalRow() {

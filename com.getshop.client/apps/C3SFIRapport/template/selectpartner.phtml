@@ -14,7 +14,7 @@ foreach ($companies as $company) {
     ?>
     <div class='selectButton'>
         <div class="shop_button downloadReport" filename='SFIReport_<? echo $company->name; ?>.xlsx' companyId='<? echo $company->id; ?>'>Last ned Excel</div>
-        <div style='display: inline-block;' gsclick='setSelectedCompany' value='<? echo $company->id; ?>'>
+        <div style='display: inline-block;'  value='<? echo $company->id; ?>'>
             <? echo $company->name; ?>
         </div>
     </div>

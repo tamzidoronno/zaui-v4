@@ -39,19 +39,14 @@ public class ESAReport {
     private int rownumber = 0;
     private final List<Company> companies;
     private final List<WorkPackage> workPackages;
-//    private DoubleKeyMap<String, String, Double> totalCosts;
-//    private DoubleKeyMap<String, String, Double> inKind;
 
     public ESAReport(List<Company> companies, List<WorkPackage> workPackages, DoubleKeyMap<String, String, Double> totalCosts, DoubleKeyMap<String, String, Double> inKind) {
-        
-//        this.totalCosts = totalCosts;
         this.companies = companies;
         this.workPackages = workPackages;
-        
-        for (Company comp : companies) {
-            System.out.println(comp.name);
-        }
        
+        totalCosts = devideAllNumbersOn1000(totalCosts);
+        inKind = devideAllNumbersOn1000(inKind);
+        
         createSheetAndWorkbook();
         setColumnWidth();
         addTitles();
@@ -165,14 +160,17 @@ public class ESAReport {
             cell1 = createCellAndAddText(row, 1, "Aid Intensity Limit*****");
             rotateText(cell1, (short)90);
             setBorder(cell1, true, true, true, true);
+            
+            for (int i = 2; i<5; i++) {
+                XSSFCell cell = createCellAndAddText(row, i, "");
+                setBorder(cell, true, true, true, true);
+            }
+    
         }
         
         
         cell1 = createCell(row, 4);
-        XSSFColor myColor = new XSSFColor(Color.LIGHT_GRAY);
-        cell1.getCellStyle().setFillForegroundColor(myColor);
-        cell1.getCellStyle().setFillBackgroundColor(myColor);
-        cell1.getCellStyle().setFillPattern(CellStyle.SOLID_FOREGROUND);
+        setBackgroundColor(cell1, Color.LIGHT_GRAY);
         setBorder(cell1, true, true, true, true);
         
         int i = 5;
@@ -191,6 +189,7 @@ public class ESAReport {
             rotateText(cell, (short)90);
             cell.getCellStyle().setWrapText(true);
             setBorder(cell, true, true, true, true);
+            setBackgroundColor(cell, Color.CYAN);
         } else {
             
             XSSFCell cell = createCell(row, i++);
@@ -210,6 +209,7 @@ public class ESAReport {
             rotateText(cell, (short)90);
             cell.getCellStyle().setWrapText(true);
             setBorder(cell, true, true, true, true);
+            setBackgroundColor(cell, Color.CYAN);
             
             cell = createCell(row, i++);
             cell.setCellValue("Indirect state aid ******");
@@ -217,6 +217,13 @@ public class ESAReport {
             cell.getCellStyle().setWrapText(true);
             setBorder(cell, true, true, true, true);
         }
+    }
+
+    private void setBackgroundColor(XSSFCell cell1, Color color) {
+        XSSFColor myColor = new XSSFColor(color);
+        cell1.getCellStyle().setFillForegroundColor(myColor);
+        cell1.getCellStyle().setFillBackgroundColor(myColor);
+        cell1.getCellStyle().setFillPattern(CellStyle.SOLID_FOREGROUND);
     }
     
     private void rotateText(XSSFCell cell, short degree) {
@@ -259,27 +266,45 @@ public class ESAReport {
             cell.getCellStyle().setWrapText(true);
             setBorder(cell, true, true, true, true);
             
+            for (int i = 1; i<5; i++) {
+                cell = createCellAndAddText(row, i, "");
+                setBorder(cell, true, true, true, true);
+                if (i == 4) {
+                    setBackgroundColor(cell, Color.LIGHT_GRAY);
+                }
+            }
+            
             int j = 5;
             for (Company company : companies) {
                 writeTotal(row, wp, company.id, j, totalCosts);
                 j++;
             }
             
-            // TODO Add This 
            if (totalCosts.keyExists(wp.id, "rcngrant")) {
                 writeTotal(row, wp, "rcngrant", j, totalCosts);
                 j++;
+                createEmptyCellWithBorder(row, j);
                 j++;
             }
             
             writeWpSum(row, wp, j, totalCosts);
+            if (!first) {
+                j++;
+                createEmptyCellWithBorder(row, j);
+            }
         }
         
         XSSFRow row = sheet.createRow(rownumber++);
         XSSFCell cell = createCellAndAddText(row, 0, "Totalt Budget");
         setBorder(cell, true, true, true, true);
+        setBackgroundColor(cell, Color.LIGHT_GRAY);
         
         double overAll = 0;
+        
+        for (int i=1; i<5; i++) {
+            cell = createEmptyCellWithBorder(row, i);
+            setBackgroundColor(cell, Color.LIGHT_GRAY);
+        }
         
         int j = 5;
         for (Company company : companies) {
@@ -289,14 +314,22 @@ public class ESAReport {
         
         
         if (!first) {
+            
             overAll += writeTotalForCompany(row, j, "rcngrant", totalCosts);
             j++;
+            createEmptyCellWithBorder(row, j);
             j++;
         }
         
         cell = createCell(row, j);
         cell.setCellValue(overAll);
         setBorder(cell, true, true, true, true);
+        setBackgroundColor(cell, Color.CYAN);
+        
+        if (!first) {
+            j++;
+            createEmptyCellWithBorder(row, j);
+        }
     }
 
     private void setColumnWidth() {
@@ -342,6 +375,7 @@ public class ESAReport {
         XSSFCell cell = createCell(row, j);
         cell.setCellValue(totalForWorkpackage);
         setBorder(cell, true, true, true, true);
+        setBackgroundColor(cell, Color.CYAN);
     }
 
     private void writeExplenations() {
@@ -381,13 +415,35 @@ public class ESAReport {
         XSSFCell cell = createCellAndAddText(row, 0, "Type of partner****");
         setBorder(cell, true, true, true, true);
         
-        int j = 5;
-        for (Company company : companies) {
-            cell = createCell(row, j);
-            cell.setCellValue("");
-            setBorder(cell, true, true, true, true);
-            j++;
+        for (int j = 1; j < companies.size() + 9; j++) {
+            cell = createEmptyCellWithBorder(row, j);
+            if (j == 4) {
+                setBackgroundColor(cell, Color.LIGHT_GRAY);
+            }
+            
+            if (j == companies.size() + 7) {
+                setBackgroundColor(cell, Color.CYAN);
+            }
         }
+    }
+
+    private XSSFCell createEmptyCellWithBorder(XSSFRow row, int j) {
+        XSSFCell cell = createCellAndAddText(row, j, "");
+        setBorder(cell, true, true, true, true);
+        return cell;
+    }
+
+    private DoubleKeyMap<String, String, Double> devideAllNumbersOn1000(DoubleKeyMap<String, String, Double> totalCosts) {
+        DoubleKeyMap<String, String, Double> newKeySet = new DoubleKeyMap();
+        
+        for (String wpId : totalCosts.keySet()) {
+            for (String companyId : totalCosts.innerKeySet(wpId)) {
+                double newValue = (int)(totalCosts.get(wpId, companyId) / 1000);
+                newKeySet.put(wpId, companyId, newValue);
+            }
+        }
+        
+        return newKeySet;
     }
     
 }

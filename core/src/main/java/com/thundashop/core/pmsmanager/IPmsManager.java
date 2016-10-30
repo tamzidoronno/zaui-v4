@@ -40,6 +40,33 @@ public interface IPmsManager {
     @Administrator
     public String generateNewCodeForRoom(String roomId);
     
+    @Administrator
+    public List<SimpleInventory> getSimpleInventoryList(String roomName);
+    
+    @Administrator
+    public void reportMissingInventory(List<SimpleInventory> inventories, String itemId, String roomId);
+    
+    @Administrator
+    public void removeAddonFromRoomById(String addonId, String roomId);
+    
+    @Administrator
+    public void saveCareTakerJob(PmsCareTaker job);
+    
+    @Administrator
+    public void removeCareTakerJob(String jobId);
+    
+    @Administrator
+    public List<PmsCareTaker> getCareTakerJobs();
+    
+    @Administrator
+    public PmsCareTaker getCareTakerJob(String id);
+    
+    @Administrator
+    public void completeCareTakerJob(String id);
+    
+    @Administrator
+    public PmsAdditionalItemInformation getAdditionalInfo(String itemId);
+        
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
     @Editor
@@ -208,7 +235,7 @@ public interface IPmsManager {
     public void sendStatistics() throws Exception;
     
     @Administrator
-    public void addAddonsToBookingById(String addonId, String roomId, boolean remove);
+    public void addProductToRoom(String productId, String pmsRoomId, Integer count);
     
     @Administrator
     public List<PmsBookingAddonItem> getAddonsForRoom(String roomId);

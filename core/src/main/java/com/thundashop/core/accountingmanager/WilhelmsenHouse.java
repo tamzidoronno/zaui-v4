@@ -33,6 +33,7 @@ public class WilhelmsenHouse implements AccountingInterface {
     private InvoiceManager invoiceManager;
     private OrderManager orderManager;
     private StoreApplicationPool storeApplicationPool;
+    private AccountingManagers managers;
 
     @Override
     public void setUserManager(UserManager manager) {
@@ -384,4 +385,10 @@ public class WilhelmsenHouse implements AccountingInterface {
         this.storeApplicationPool = manager;
     }
 
+    @Override
+    public void setManagers(AccountingManagers mgr) {
+        this.managers = mgr;
+    }
+
+    
 }

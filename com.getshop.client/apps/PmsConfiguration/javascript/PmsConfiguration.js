@@ -5,7 +5,13 @@ app.PmsConfiguration = {
         $(document).on('change', '.PmsConfiguration .admintypeselection', app.PmsConfiguration.changeAdminType);
         $(document).on('click', '.PmsConfiguration .changeview', app.PmsConfiguration.changeview);
         $(document).on('click', '.PmsConfiguration .addnewchannel', app.PmsConfiguration.addnewchannel);
+        $(document).on('click', '.PmsConfiguration .addnewchannel', app.PmsConfiguration.addnewchannel);
+        $(document).on('click', '.PmsConfiguration .removeInventoryForRoom', app.PmsConfiguration.removeInventoryForRoom);
         $(document).on('click', '.PmsConfiguration .removeChannel', app.PmsConfiguration.removeChannel);
+        $(document).on('click', '.PmsConfiguration .inventoryitem .fa-plus-circle', app.PmsConfiguration.loadAllItemsAdded);
+        $(document).on('click', '.PmsConfiguration .addInventoryItem', app.PmsConfiguration.addInventory);
+        $(document).on('change', '.PmsConfiguration .changeItemForRoom', app.PmsConfiguration.changeItemForRoom);
+        $(document).on('keyup', '.PmsConfiguration .inventoryonroomcount', app.PmsConfiguration.updateInventoryOnRoomCount);
         $(document).on('click', '.PmsConfiguration #contractfield', function() {
             thundashop.common.activateCKEditor('contractfield', {
                 autogrow : false
@@ -20,6 +26,66 @@ app.PmsConfiguration = {
             thundashop.common.activateCKEditor('fireinstructions', {
                 autogrow : false
             });
+        });
+    },
+    
+    loadAllItemsAdded : function() {
+        var event = thundashop.Ajax.createEvent('','loadRoomsAddedToList', $(this), {
+            "productid" : $(this).attr('productid')
+        });
+        
+        var panel = $(this).closest('.inventoryitem').find('.itemaddedtoroomlist');
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            panel.html(res);
+        });
+    },
+    
+    removeInventoryForRoom : function() {
+        var event = thundashop.Ajax.createEvent('','removeInventoryForRoom', $(this), {
+            "id" : $(this).attr('productid')
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.PmsConfiguration.refreshRoomList();
+        });
+    },
+    updateInventoryOnRoomCount : function() {
+        var event = thundashop.Ajax.createEvent('','updateInventoryOnRoomCount', $(this), {
+            "productid" : $(this).attr('productid'),
+            "count" : $(this).val()
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.PmsConfiguration.refreshRoomList();
+        });
+    },
+    addInventory : function() {
+        var event = thundashop.Ajax.createEvent('','addItemToSelectedRoom', $(this), {
+            "id" : $(this).attr('itemid')
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.PmsConfiguration.refreshRoomList();
+        });
+    },
+    
+    changeItemForRoom : function() {
+        var event = thundashop.Ajax.createEvent('','setItem', $(this), {
+            "item" : $(this).val()
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.PmsConfiguration.refreshRoomList();
+        });
+    },
+    refreshRoomList : function() {
+        var event = thundashop.Ajax.createEvent('','printInventoryForSelectedRoom', $('.PmsConfiguration'), {});
+        thundashop.Ajax.postWithCallBack(event, function(data) {
+            $('.inventoryaddedlist').html(data);
+        });
+        var event = thundashop.Ajax.createEvent('','printRoomInventoryList', $('.PmsConfiguration'), {});
+        thundashop.Ajax.postWithCallBack(event, function(data) {
+            $('.allroominventorylist').html(data);
         });
     },
     removeChannel : function() {
@@ -59,6 +125,11 @@ app.PmsConfiguration = {
         $('.notificationpanel').hide();
         var newpanel = $(this).attr('data-panel');
         $('.'+newpanel).show();
+        if($(this).attr('data-type') === "new") {
+            $('.PmsConfiguration [data-include-for-type="old"]').hide();
+        } else {
+            $('.PmsConfiguration [data-include-for-type="old"]').show();
+        }
         localStorage.setItem("pmsconfigtabselected", newpanel);
     },
     showSettings : function() {

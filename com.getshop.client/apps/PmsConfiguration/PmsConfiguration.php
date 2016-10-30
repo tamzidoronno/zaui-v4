@@ -287,8 +287,247 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         return $res;
     }
 
+    public function setItem() {
+        $_SESSION['PMSCONFIG_ITEMID'] = $_POST['data']['item'];
+    }
+    
     public function isHotel($notificationSettings) {
         return $notificationSettings->bookingProfile == "hotel";
+    }
+    
+    function createInventory() {
+        if(!$_POST['data']['itemname']) {
+            return;
+        }
+        $inventoryProduct = $this->getApi()->getProductManager()->createProduct();
+        $inventoryProduct->name = $_POST['data']['itemname'];
+        $this->getApi()->getProductManager()->saveProduct($inventoryProduct);
+        
+        $newInventory = new \core_pmsmanager_PmsInventory();
+        $newInventory->productId = $inventoryProduct->id;
+        $newInventory->count = 1;
+        
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config->inventoryList->{$inventoryProduct->id} = $newInventory;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
+    public function addItemToSelectedRoom() {
+        $inventory = new \core_pmsmanager_PmsInventory();
+        $inventory->count = 1;
+        $inventory->productId = $_POST['data']['id'];
+        
+        echo $this->getSelectedItem();
+        if(!$this->getSelectedItem()) {
+            return;
+        }
+        
+        $additonal = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $this->getSelectedItem());
+        $additonal->inventory->{$inventory->productId} = $inventory;
+        $this->getApi()->getPmsManager()->updateAdditionalInformationOnRooms($this->getSelectedName(), $additonal);
+    }
+    
+    public function removeInventoryForRoom() {
+        if(!$this->getSelectedItem()) {
+            return;
+        }
+        
+        $prodId = $_POST['data']['id'];
+        
+        $additonal = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $this->getSelectedItem());
+        unset($additonal->inventory->{$prodId});
+        $this->getApi()->getPmsManager()->updateAdditionalInformationOnRooms($this->getSelectedName(), $additonal);
+    }
+
+    public function printInventoryForSelectedRoom() {
+        $itemId = $this->getSelectedItem();
+        if(!$itemId) {
+            echo "<div class='inventoryitem'>Please select a room to add inventory to from the list above.</div>";
+            return;
+        }
+        
+        $additonal = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $itemId);
+
+        $found = false;
+        foreach($additonal->inventory as $inv) {
+            $product = $this->getApi()->getProductManager()->getProduct($inv->productId);
+            echo "<div class='inventoryitem'>";
+            echo "<i class='fa fa-trash-o removeInventoryForRoom' productid='".$inv->productId."'></i> ";
+            echo $product->name;
+            echo "<input type='txt' style='width: 30px; border: solid 1px;text-align:center; float:right;' class='inventoryonroomcount' productid='".$inv->productId."' value='".$inv->count."'></input>";
+            echo "</div>";
+            $found = true;
+        }
+        
+        if(!$found) {
+            $room = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $this->getSelectedItem());
+            echo "<div class='inventoryitem'>No inventory added to room ".$room->bookingItemName . ", when done you can clone room " . $room->bookingItemName . " by using the clone room function below.";
+            echo "</div>";
+        }
+    }
+    
+    public function updateInventoryOnRoomCount() {
+         if(!$this->getSelectedItem()) {
+            return;
+        }
+        
+        $prodId = $_POST['data']['productid'];
+        $count = $_POST['data']['count'];
+        
+        $additonal = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $this->getSelectedItem());
+        $additonal->inventory->{$prodId}->count = $count;
+        $this->getApi()->getPmsManager()->updateAdditionalInformationOnRooms($this->getSelectedName(), $additonal);
+    }
+    
+    public function removeInventory() {
+        $productId = $_POST['data']['attr1'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        unset($config->inventoryList->{$productId});
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+        
+        $allAdditional = $this->getApi()->getPmsManager()->getAllAdditionalInformationOnRooms($this->getSelectedName());
+        foreach($allAdditional as $additionalInfo) {
+            if(isset($additionalInfo->inventory->{$productId})) {
+                unset($additionalInfo->inventory->{$productId});
+                $this->getApi()->getPmsManager()->updateAdditionalInformationOnRooms($this->getSelectedName(), $additionalInfo);
+            }
+        }
+    }
+    
+    public function printInventory() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        foreach($config->inventoryList as $productId => $inventory) {
+            
+            $product = $this->getApi()->getProductManager()->getProduct($productId);
+            echo "<div class='inventoryitem'><i class='fa fa-trash-o' gsclick='removeInventory' gs_confirm='Are you sure' attr1='".$product->id."'></i> ";
+            echo $product->name;
+            echo "<span style='float:right;'>";
+            echo "<i class='fa fa-plus-circle' title='All rooms having this item' style='cursor:pointer;' productid='".$product->id."'></i> ";
+            echo "<i class='fa fa-arrow-right addInventoryItem' itemid='".$productId."'></i>";
+            echo "</span>";
+            echo "<div class='itemaddedtoroomlist'></div>";
+            echo "</div>";
+        }
+    }
+    
+    public function updateInventoryForAllRooms() {
+        $product = $_POST['data']['product'];
+        
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "room_")) {
+                $item = str_replace("room_", "", $key);
+                $existingAddditional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $item);
+                if($val === "true" && isset($existingAddditional->inventory->{$product})) {
+                    continue;
+                }
+                if($val !== "true" && !isset($existingAddditional->inventory->{$product})) {
+                    continue;
+                }
+                if($val === "true") {
+                    $inventory = new \core_pmsmanager_PmsInventory();
+                    $inventory->count = 1;
+                    $inventory->productId = $product;
+                    $existingAddditional->inventory->{$product} = $inventory;
+                } else {
+                    unset($existingAddditional->inventory->{$product});
+                }
+                $this->getApi()->getPmsManager()->updateAdditionalInformationOnRooms($this->getSelectedName(), $existingAddditional);
+            }
+        }
+    }
+    
+    public function loadRoomsAddedToList() {
+        $allItemTypes = $this->getApi()->getPmsManager()->getAllAdditionalInformationOnRooms($this->getSelectedName());
+        $items = $this->indexList($this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName()));
+        $product = $this->indexList($this->getApi()->getProductManager()->getAllProducts());
+        
+        $additionalItems = array();
+        foreach($allItemTypes as $type) {
+            $additionalItems[$type->itemId] = $type;
+        }
+        
+        echo "<span gstype='form' method='updateInventoryForAllRooms'>";
+        echo "<input type='hidden' gsname='product' value='".$_POST['data']['productid']."'>";
+        echo "<table width='100%'>";
+        echo "<tr>";
+        $i = 0;
+        foreach($items as $item) {
+            $i++;
+            $checked = "";
+            
+            if(isset($additionalItems[$item->id])) {
+                if(isset($additionalItems[$item->id]->inventory->{$_POST['data']['productid']})) {
+                    $checked = "CHECKED";
+                }
+            }
+            
+            echo "<td width='10'><input type='checkbox' gsname='room_".$item->id."' $checked></input>";
+            echo "<td>" . $item->bookingItemName . "</td>";
+            if($i % 6 == 0) {
+                echo "</tr><tr>";
+            }
+        }
+        echo "</tr>";
+        echo "</table>";
+        echo "<input type='button' gstype='submit' value='Update'>";
+        echo "</span>";
+    }
+
+    public function getSelectedItem() {
+        if(isset($_SESSION['PMSCONFIG_ITEMID'])) {
+            return $_SESSION['PMSCONFIG_ITEMID'];
+        }
+        return "";
+    }
+    
+    public function cloneRooms() {
+        $basis = $_POST['data']['basisroom'];
+        $additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $basis);
+        
+        foreach($_POST['data'] as $key => $val) {
+            if($val !== "true") {
+                continue;
+            }
+            if(stristr($key, "room_")) {
+                $item = str_replace("room_", "", $key);
+                $toClone = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $item);
+                $toClone->inventory = $additional->inventory;
+                $this->getApi()->getPmsManager()->updateAdditionalInformationOnRooms($this->getSelectedName(), $toClone);
+            }
+        }
+    }
+    
+
+    public function printRoomInventoryList() {
+        $allItemTypes = $this->getApi()->getPmsManager()->getAllAdditionalInformationOnRooms($this->getSelectedName());
+        $items = $this->indexList($this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName()));
+        $product = $this->indexList($this->getApi()->getProductManager()->getAllProducts());
+
+        $additionalItems = array();
+        foreach($allItemTypes as $type) {
+            $additionalItems[$type->itemId] = $type;
+        }
+
+        echo "<table>";
+        echo "<tr>";
+        echo "<th align='left'>Room</th>";
+        echo "<th align='left'>Inventory (<span class='roomcloning'  style='color:blue; cursor:pointer;' onclick='$(\".PmsConfiguration .cloneroompanel\").toggle();'>clone room</span>)</th>";
+        echo "</tr>";
+        foreach($items as $item) {
+            $inventory = $additionalItems[$item->id]->inventory;
+            echo "<tr>";
+            echo "<td>" . $item->bookingItemName . "</td>";
+            echo "<td>";
+            foreach($inventory as $inv) {
+                if(!$inv->productId) {
+                    continue;
+                }
+                echo "<span class='productinventoryitem'>" . $inv->count . "x". $product[$inv->productId]->name . "</span>";
+            }
+            echo "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
     }
 
 }

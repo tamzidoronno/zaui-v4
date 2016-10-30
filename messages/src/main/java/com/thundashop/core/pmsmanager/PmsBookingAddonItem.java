@@ -24,6 +24,7 @@ public class PmsBookingAddonItem  implements Serializable {
     public double priceExTaxes;
     public String productId;
     public Integer addonType;
+    public String addonSubType = "";
     public Integer count = 1;
     public boolean isActive = false;
     public boolean isSingle = false;

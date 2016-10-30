@@ -27,10 +27,19 @@
 
 <div class='row'><br></div>
 
-<div class='row'><div class='col-md-12'><span style='font-size: 16px;'><b>Inventory (verify that all the inventory exists)</b></span></div></div>
+<div class='row'><div class='col-md-12'><span style='font-size: 16px;'><b>Report missing inventory</b></span></div></div>
 <div class='row'><br></div>
-
-<div class='row'><div class='col-md-12'><span style='font-size: 16px;'><b>Usage (soap, etc)</b></span></div></div>
+<div class='row' ng-repeat="inventory in inventoryList" style='padding-bottom: 10px;'>
+    <div class='col-md-12 inventoryrow'>
+        {{inventory.originalCount}} x {{inventory.name}}
+        
+        <span style='float:right;'>
+            <i class="fa fa-minus" ng-click='decreaseCounter(inventory.productId)'></i> 
+            <input type="text" style='width: 30px; text-align:center;' ng-model="inventory.missingCount" DISABLED> 
+            <i class="fa fa-plus" ng-click='increaseCounter(inventory.productId)'></i>
+        </span>
+    </div>
+</div>
 <div class='row'><br></div>
 
 <div class='row'>
@@ -48,7 +57,7 @@
 <div class='row'><br></div>
 
 <div class='row' ng-repeat="addon in guestAddonList" style='padding-bottom: 10px;'>
-    <div class='col-md-6'><span class='btn btn-danger' ng-click="removeAddon(addon.addonId)"><i class='fa fa-trash-o'></i></span> {{addon.name}}</div>
+    <div class='col-md-6'><span class='btn btn-danger' ng-click="removeAddon(addon.addonId)"><i class='fa fa-trash-o'></i></span> {{addon.name}} ({{addon.count}})</div>
     <div class='col-md-6' style='text-align: right;'>{{addon.price}}</div>
 </div>
 

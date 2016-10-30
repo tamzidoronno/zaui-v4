@@ -24,6 +24,7 @@ public class Hybelhotell implements AccountingInterface {
     UserManager userManager;
     private InvoiceManager invoiceManager;
     private OrderManager orderManager;
+    private AccountingManagers managers;
     
     @Override
     public List<String> createUserFile(List<User> users) {
@@ -68,12 +69,12 @@ public class Hybelhotell implements AccountingInterface {
             toAdd.put(6, format1.format(order.rowCreatedDate));
             toAdd.put(7, user.customerId + "");
             toAdd.put(16, "NOK");
-            toAdd.put(17, "100"); //Product code.
+            toAdd.put(17, managers.productManager.getProduct(item.getProduct().id).accountingAccount); //Product code.
             toAdd.put(19, lineText);
             toAdd.put(22, "døgn");
             toAdd.put(23, item.getCount() + "");
             toAdd.put(25, item.getProduct().priceExTaxes+ "");
-            toAdd.put(28, "22N");
+            toAdd.put(28, managers.productManager.getProduct(item.getProduct().id).sku);
             toAdd.put(32, order.invoiceNote);
             
             String resultLine = "";
@@ -184,6 +185,11 @@ public class Hybelhotell implements AccountingInterface {
 
     @Override
     public void setStoreApplication(StoreApplicationPool manager) {
+    }
+
+    @Override
+    public void setManagers(AccountingManagers mgr) {
+        this.managers = mgr;
     }
 
 }

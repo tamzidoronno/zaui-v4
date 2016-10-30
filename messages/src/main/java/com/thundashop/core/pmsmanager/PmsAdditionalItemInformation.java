@@ -16,6 +16,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
     private Date lastUsed = null;
     private Date lastCleaned = null;
     private List<Date> cleaningDates = new ArrayList();
+    public HashMap<String, PmsInventory> inventory = new HashMap();
     public String itemId = "";
     
     @Transient

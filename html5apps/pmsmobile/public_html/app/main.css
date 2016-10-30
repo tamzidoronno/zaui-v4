@@ -10,7 +10,7 @@ body { background-color:#3a99d7; box-sizing: border-box; }
 }
 .innerview { padding-left: 10px; padding-right:10px; }
 .inventoryrow { border-bottom: solid 1px #bbb; padding-bottom: 5px; }
-
+.caretakerrow { border-bottom: solid 1px #bbb; padding: 10px;  }
 .row { margin-left: 0px !important; margin-right: 0px !important; }
 .breakfastlistrow { border-bottom: solid 1px #bbb; background-color:#fff; padding: 0px !important; }
 .breakfastlistrow .info { border-right: solid 1px #bbb; }

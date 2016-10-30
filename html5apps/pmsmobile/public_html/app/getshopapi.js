@@ -7240,6 +7240,18 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'completeCareTakerJob' : function(multilevelname, id, gs_silent) {
+        var data = {
+            args : {
+                id : JSON.stringify(id),
+            },
+            method: 'completeCareTakerJob',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'completeCurrentBooking' : function(multilevelname, gs_silent) {
         var data = {
             args : {
@@ -7573,6 +7585,29 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 orderId : JSON.stringify(orderId),
             },
             method: 'getBookingWithOrderId',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getCareTakerJob' : function(multilevelname, id, gs_silent) {
+        var data = {
+            args : {
+                id : JSON.stringify(id),
+            },
+            method: 'getCareTakerJob',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getCareTakerJobs' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getCareTakerJobs',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
@@ -7950,6 +7985,18 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'removeCareTakerJob' : function(multilevelname, jobId, gs_silent) {
+        var data = {
+            args : {
+                jobId : JSON.stringify(jobId),
+            },
+            method: 'removeCareTakerJob',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'removeChannel' : function(multilevelname, channel, gs_silent) {
         var data = {
             args : {
@@ -8031,6 +8078,18 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 booking : JSON.stringify(booking),
             },
             method: 'saveBooking',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'saveCareTakerJob' : function(multilevelname, job, gs_silent) {
+        var data = {
+            args : {
+                job : JSON.stringify(job),
+            },
+            method: 'saveCareTakerJob',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };

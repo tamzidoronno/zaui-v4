@@ -15,6 +15,7 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
@@ -1355,6 +1356,42 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 }
             }
         }
+    }
+
+    @Override
+    public List<CartItemDates> getItemDates(Date start, Date end) {
+        List<CartItemDates> toreturn = new ArrayList();
+        List<String> ordersAdded = new ArrayList();
+        for(Order order : orders.values()) {
+            if(order.incrementOrderId == 100347) {
+                System.out.println("Test");
+            }
+            if(order.cart == null) {
+                continue;
+            }
+            for(CartItem item : order.cart.getItems()) {
+                if(item.startDate == null || item.endDate == null) {
+                    continue;
+                }
+                
+                
+                CartItemDates res = new CartItemDates();
+                res.start = item.startDate;
+                res.end = item.endDate;
+                res.item = item.getCartItemId();
+                res.externalId = item.getProduct().externalReferenceId;
+                res.price = item.getProduct().priceExTaxes * item.getCount();
+                res.metaData = item.getProduct().additionalMetaData;
+                res.orderId = (int)order.incrementOrderId;
+
+                toreturn.add(res);
+                ordersAdded.add(order.id);
+                if(res.metaData.equals("413")) {
+                    System.out.println(res.start + " - " + res.end);
+                }
+            }
+        }
+        return toreturn;
     }
 
 }

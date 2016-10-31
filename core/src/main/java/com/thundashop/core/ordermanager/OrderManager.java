@@ -1363,9 +1363,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<CartItemDates> toreturn = new ArrayList();
         List<String> ordersAdded = new ArrayList();
         for(Order order : orders.values()) {
-            if(order.incrementOrderId == 100347) {
-                System.out.println("Test");
-            }
             if(order.cart == null) {
                 continue;
             }

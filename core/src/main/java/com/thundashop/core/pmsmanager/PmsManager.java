@@ -2475,8 +2475,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
 
-        if (booking.getActiveRooms() == null || booking.getActiveRooms().isEmpty()) {
-            return false;
+        boolean deleteWhenAdded = getConfigurationSecure().deleteAllWhenAdded;
+        if(!deleteWhenAdded) {
+            if (booking.getActiveRooms() == null || booking.getActiveRooms().isEmpty()) {
+                return false;
+            }
         }
         return true;
     }

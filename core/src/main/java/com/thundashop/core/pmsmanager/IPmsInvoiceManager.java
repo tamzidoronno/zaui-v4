@@ -39,7 +39,7 @@ public interface IPmsInvoiceManager {
     public PmsOrderStatistics generateStatistics(PmsOrderStatsFilter filter);
     
     @Administrator
-    public void validateAllInvoiceToDates();
+    public List<String> validateAllInvoiceToDates();
     
     public boolean isRoomPaidFor(String pmsRoomId);
 }

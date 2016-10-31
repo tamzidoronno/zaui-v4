@@ -1386,9 +1386,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
                 toreturn.add(res);
                 ordersAdded.add(order.id);
-                if(res.metaData.equals("413")) {
-                    System.out.println(res.start + " - " + res.end);
-                }
             }
         }
         return toreturn;

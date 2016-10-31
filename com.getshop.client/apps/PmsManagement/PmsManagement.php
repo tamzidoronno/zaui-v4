@@ -788,6 +788,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
             $this->includefile("managementview");
         }
+        if(isset($_GET['runcheck'])) {
+            $this->getApi()->getPmsInvoiceManager()->validateAllInvoiceToDates($this->getSelectedName());
+        }
     }
     
     public function exportBookingStats() {

@@ -15,7 +15,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.ibm.icu.util.Calendar; 
 import com.thundashop.core.amesto.AmestoManager;
-import com.thundashop.core.amesto.AmestoSync;
+import com.thundashop.core.amesto.AmestoSync; 
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;

@@ -195,6 +195,56 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return stats;
     }
 
+    @Override
+    public void validateAllInvoiceToDates() {
+        List<PmsBooking> all = pmsManager.getAllBookings(null);
+        for(PmsBooking booking : all) {
+            for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+                if(room.isEnded()) {
+                    continue;
+                }
+                Date invoicedTo = null;
+                Long incordertouse = null;
+                if(room.invoicedTo != null) {
+                    for(String orderId : booking.orderIds) {
+                        Order order = orderManager.getOrder(orderId);
+                        if(order.cart == null) {
+                            continue;
+                        }
+                        for(CartItem item : order.cart.getItems()) {
+                            if(!item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                                continue;
+                            }
+                            if(item.endDate == null) {
+                                continue;
+                            }
+                            Date orderDateTo = item.endDate;
+                            if(invoicedTo == null || invoicedTo.before(orderDateTo)) {
+                                invoicedTo = orderDateTo;
+                                incordertouse = order.incrementOrderId;
+                            }
+                        }
+                    }
+                    if(invoicedTo == null) {
+                        continue;
+                    }
+                    
+                    if(pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(invoicedTo);
+                        cal.add(Calendar.DAY_OF_YEAR, 1);
+                        invoicedTo = cal.getTime();
+                    }
+                    if(!room.isSameDay(room.invoicedTo, invoicedTo)) {
+                       String item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+                       String userName = userManager.getUserById(booking.userId).fullName;
+                       System.out.println(item + " marked as invoiced to: " + new SimpleDateFormat("dd-MM-yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd-MM-yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName);
+                    }
+                }
+            }
+        }
+    }
+ 
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;

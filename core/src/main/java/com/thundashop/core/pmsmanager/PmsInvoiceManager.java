@@ -200,7 +200,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<PmsBooking> all = pmsManager.getAllBookings(null);
         List<String> result = new ArrayList();
         for(PmsBooking booking : all) {
-            for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
                 if(room.isEnded()) {
                     continue;
                 }
@@ -237,11 +237,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         invoicedTo = cal.getTime();
                     }
                     if(!room.isSameDay(room.invoicedTo, invoicedTo)) {
-                       String item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+                       String item = "";
+                       if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+                           item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+                       }
                        String userName = userManager.getUserById(booking.userId).fullName;
                        String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
                        result.add(msg);
-                       System.out.println(msg);
+//                       room.invoicedTo = invoicedTo;
+//                       messageManager.sendErrorNotification(item, null);
+//                       pmsManager.saveBooking(booking);
                     }
                 }
             }
@@ -289,6 +294,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 discounts.put(res.userId, res);
             }
         }
+        createScheduler("checkinvoicedtodate", "1 04 * * *", DailyInvoiceChecker.class);
     }
     
     @Override

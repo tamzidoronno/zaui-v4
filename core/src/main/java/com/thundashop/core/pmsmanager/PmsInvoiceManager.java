@@ -208,7 +208,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 Long incordertouse = null;
                 if(room.invoicedTo != null) {
                     for(String orderId : booking.orderIds) {
+                        if(!orderManager.orderExists(orderId)) {
+                            continue;
+                        }
                         Order order = orderManager.getOrder(orderId);
+                        if(order.isCreditNote) {
+                            continue;
+                        }
+                        if(order.creditOrderId.size() > 0) {
+                            continue;
+                        }
                         if(order.cart == null) {
                             continue;
                         }
@@ -244,9 +253,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                        String userName = userManager.getUserById(booking.userId).fullName;
                        String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
                        result.add(msg);
-//                       room.invoicedTo = invoicedTo;
-//                       messageManager.sendErrorNotification(item, null);
-//                       pmsManager.saveBooking(booking);
+                       room.invoicedTo = invoicedTo;
+                       messageManager.sendErrorNotification(item, null);
+                       pmsManager.saveBooking(booking);
                     }
                 }
             }

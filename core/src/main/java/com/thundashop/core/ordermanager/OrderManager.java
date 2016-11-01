@@ -1388,4 +1388,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return toreturn;
     }
 
+    public boolean orderExists(String orderId) {
+        return orders.containsKey(orderId);
+    }
+
 }

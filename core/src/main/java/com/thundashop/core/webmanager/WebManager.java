@@ -68,6 +68,10 @@ public class WebManager extends ManagerBase implements IWebManager {
 
     @Override
     public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth) throws Exception {
+        return htmlPostBasicAuth(url, data, jsonPost, encoding, auth, "Basic", true, "POST");
+    }
+
+    public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth, String basic, boolean base64EncodeAuth, String htmlType)  throws Exception {
         if(encoding == null || encoding.isEmpty()) {
             encoding = "UTF-8";
         }
@@ -75,12 +79,15 @@ public class WebManager extends ManagerBase implements IWebManager {
         URL urlObj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
         
-        connection.setRequestMethod("POST");
+        connection.setRequestMethod(htmlType);
         connection.setRequestProperty("User-Agent", USER_AGENT);
         
         if(auth != null && !auth.isEmpty()) {
-            String encoded = Base64.encodeBase64String(auth.getBytes());
-            connection.setRequestProperty("Authorization", "Basic "+encoded);
+            String encoded = auth;
+            if(base64EncodeAuth) {
+                encoded = Base64.encodeBase64String(auth.getBytes());
+            }
+            connection.setRequestProperty("Authorization",basic+ " " + encoded);
         }
         
         if(jsonPost) {
@@ -117,6 +124,5 @@ public class WebManager extends ManagerBase implements IWebManager {
             System.out.println(res);
             
             throw ex;
-        }
-    }
+        }    }
 }

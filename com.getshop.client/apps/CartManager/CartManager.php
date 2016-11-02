@@ -584,6 +584,8 @@ class CartManager extends \SystemApplication implements \Application {
                 } else {
                     echo "En feil oppstod, ordren kunne ikke bli funnet. (" . $_GET['orderId'] . ")";
                 }
+            } else {
+                echo "En feil oppstod, betalingsmetoden kan ikke bli funnet.";
             }
         }
     }

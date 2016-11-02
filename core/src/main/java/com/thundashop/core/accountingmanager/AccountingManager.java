@@ -29,6 +29,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.webmanager.WebManager;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -80,6 +81,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     
     @Autowired
     GetShopSessionScope getShopSessionScope;
+    
+    @Autowired
+    WebManager webManager;
     
     private List<AccountingInterface> interfaces = new ArrayList();
     private AccountingManagerConfig config = new AccountingManagerConfig();
@@ -821,6 +825,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 mgrs.orderManager = orderManager;
                 mgrs.userManager = userManager;
                 mgrs.productManager = productManager;
+                mgrs.webManager = webManager;
                 object.setManagers(mgrs);
                 return object;
             }

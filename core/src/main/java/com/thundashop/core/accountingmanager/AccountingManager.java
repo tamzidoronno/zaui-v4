@@ -13,6 +13,7 @@ import com.getshop.svea.CustomerData.Creditor.Cases.Case;
 import com.getshop.svea.CustomerData.Creditor.Cases.Case.Debtor;
 import com.getshop.svea.CustomerData.Creditor.Cases.Case.Invoice;
 import com.thundashop.core.bookingengine.BookingEngineAbstract;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ForAccountingSystem;
 import com.thundashop.core.common.ForStore;
@@ -244,6 +245,11 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         List<SavedOrderFile> result = new ArrayList();
         result.addAll(files.values());
         result.addAll(otherFiles.values());
+        
+        for(SavedOrderFile saved : result) {
+            finalizeFile(saved);
+        }
+        
         return result;
     }
     
@@ -892,5 +898,30 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
         }
         return toReturn;
+    }
+
+    private void finalizeFile(SavedOrderFile saved) {
+        saved.sumAmountExOrderLines = 0.0;
+        saved.sumAmountIncOrderLines = 0.0;
+        for(String orderId : saved.orders) {
+            Order order = orderManager.getOrder(orderId);
+            if(order.cart == null) {
+                continue;
+            }
+            for(CartItem item : order.cart.getItems()) {
+                int count = item.getCount();
+                if(count < 0) {
+                    count *= -1;
+                }
+                saved.sumAmountExOrderLines += (item.getProduct().priceExTaxes*count);
+                saved.sumAmountIncOrderLines += (item.getProduct().price*count);
+            }
+            double total = orderManager.getTotalAmount(order);
+            double totalEx = orderManager.getTotalAmount(order);
+            if(total < 0) { total *= -1; }
+            if(totalEx < 0) { totalEx *= -1; }
+            saved.sumAmountIncOrderLines += total;
+            saved.sumAmountExOrderLines += totalEx;
+        }
     }
 }

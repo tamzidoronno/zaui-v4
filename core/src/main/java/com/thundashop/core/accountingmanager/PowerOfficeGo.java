@@ -9,10 +9,15 @@ import com.google.gson.Gson;
 import com.powerofficego.data.AccessToken;
 import com.powerofficego.data.ApiCustomerResponse;
 import com.powerofficego.data.Customer;
+import com.powerofficego.data.PowerOfficeGoProduct;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ForAccountingSystem;
 import com.thundashop.core.common.GetShopLogging;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @ForAccountingSystem(accountingSystem="poweroffice")
@@ -54,32 +59,51 @@ public class PowerOfficeGo implements AccountingTransferInterface {
         }
         
         System.out.println("Access token: " + token);
+        HashMap<String, User> users = new HashMap();
+        HashMap<String, Product> products = new HashMap();
+        
         for(Order order : orders) {
             User user = managers.userManager.getUserById(order.userId);
+            users.put(user.id, user);
+        }
+        
+        for(Order order : orders) {
+            if(order.cart == null) {
+                continue;
+            }
+            for(CartItem item : order.cart.getItems()) {
+                Product product = managers.productManager.getProduct(item.getProduct().id);
+                products.put(product.id, product);
+            }
+        }
+        
+        for(Product product : products.values()) {
+            createUpdateProduct(product);
+        }
+        
+        for(User user : users.values()) {
             System.out.println("Need to transfer / update user : " + user.fullName);
             createUpdateUser(user);
+        }
+
+        for(Order order : orders) {
             transferOrder(order);
         }
+        
         return new SavedOrderFile();
     }
 
     private void createUpdateUser(User user) {
-        String type = "POST";
         String endpoint = "http://api.poweroffice.net/customer/";
-        if(!user.accountingId.isEmpty()) {
-            type = "PUT";
-        }
         Customer customer = new Customer();
         customer.setUser(user);
 
         Gson gson = new Gson();
         try {
             String htmlType = "POST";
-            if(user.accountingId != null && !user.accountingId.isEmpty()) {
-                htmlType = "PUT";
-            }
+            customer.code = (new Integer(customer.code) + 1000) + "";
             String data = gson.toJson(customer);
-            String result = managers.webManager.htmlPostBasicAuth(endpoint, data, true, "UTF-8", token, "Bearer", false, htmlType);
+            String result = managers.webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, htmlType);
             ApiCustomerResponse resp = gson.fromJson(result, ApiCustomerResponse.class);
             if(resp.success) {
                 user.accountingId = resp.data.id + "";
@@ -108,7 +132,32 @@ public class PowerOfficeGo implements AccountingTransferInterface {
     }
 
     private void transferOrder(Order order) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void createUpdateProduct(Product product) {
+        String endpoint = "http://api.poweroffice.net/Product/";
+        
+        PowerOfficeGoProduct toUpdate = new PowerOfficeGoProduct();
+        toUpdate.insertProduct(product);
+
+        Gson gson = new Gson();
+        try {
+            String htmlType = "POST";
+
+            String data = gson.toJson(toUpdate);
+            String result = managers.webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, htmlType);
+            ApiCustomerResponse resp = gson.fromJson(result, ApiCustomerResponse.class);
+            if(resp.success) {
+                product.accountingSystemId = resp.data.id + "";
+                managers.productManager.saveProduct(product);
+            } else {
+                /* @TODO HANDLE PROPER WARNING */
+                System.out.println("Failed to transfer customer: " + result);
+            }
+        }catch(Exception e) {
+            /* @TODO HANDLE PROPER WARNING */
+            e.printStackTrace();
+        }
     }
     
 }

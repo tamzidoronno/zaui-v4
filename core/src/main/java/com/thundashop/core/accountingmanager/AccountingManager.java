@@ -907,7 +907,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             Order order = orderManager.getOrder(orderId);
             if(order.cart == null) {
                 continue;
-            }
+            } 
             for(CartItem item : order.cart.getItems()) {
                 int count = item.getCount();
                 if(count < 0) {

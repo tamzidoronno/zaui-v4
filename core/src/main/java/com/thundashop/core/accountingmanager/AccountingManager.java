@@ -876,7 +876,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         res.amountInc = amountInc;
         res.amountExDebet = amountExDebet;
         res.amountIncDebet = amountIncDebet;
-
+        finalizeFile(res);
     }
 
     private List<Order> filterOrders(List<Order> orders, Date start, Date end, AccountingTransferConfig configToUse) {

@@ -8,17 +8,25 @@ package com.thundashop.core.accountingmanager;
 import com.google.gson.Gson;
 import com.powerofficego.data.AccessToken;
 import com.powerofficego.data.ApiCustomerResponse;
+import com.powerofficego.data.ApiOrderTransferResponse;
 import com.powerofficego.data.Customer;
+import com.powerofficego.data.PowerOfficeGoOrder;
 import com.powerofficego.data.PowerOfficeGoProduct;
+import com.powerofficego.data.PowerOfficeGoSalesOrderLines;
+import com.powerofficego.data.SalesOrderTransfer;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ForAccountingSystem;
 import com.thundashop.core.common.GetShopLogging;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import static org.apache.poi.hssf.usermodel.HeaderFooter.file;
 
 @ForAccountingSystem(accountingSystem="poweroffice")
 public class PowerOfficeGo implements AccountingTransferInterface {
@@ -78,22 +86,32 @@ public class PowerOfficeGo implements AccountingTransferInterface {
         }
         
         for(Product product : products.values()) {
-            createUpdateProduct(product);
+            if(!createUpdateProduct(product)) {
+                System.out.println("Failed to transfer products");
+                return null;
+            }
         }
         
         for(User user : users.values()) {
             System.out.println("Need to transfer / update user : " + user.fullName);
-            createUpdateUser(user);
+            if(!createUpdateUser(user)) {
+                System.out.println("faield to transfer user");
+                return null;
+            }
         }
 
-        for(Order order : orders) {
-            transferOrder(order);
+        SavedOrderFile file = new SavedOrderFile();
+        if(transferOrders(orders)) {
+            file.orders= new ArrayList();
+            for(Order ord : orders) {
+                file.orders.add(ord.id);
+            }
         }
         
-        return new SavedOrderFile();
+        return file;
     }
 
-    private void createUpdateUser(User user) {
+    private boolean createUpdateUser(User user) {
         String endpoint = "http://api.poweroffice.net/customer/";
         Customer customer = new Customer();
         customer.setUser(user);
@@ -108,6 +126,7 @@ public class PowerOfficeGo implements AccountingTransferInterface {
             if(resp.success) {
                 user.accountingId = resp.data.id + "";
                 managers.userManager.saveUser(user);
+                return true;
             } else {
                 /* @TODO HANDLE PROPER WARNING */
                 System.out.println("Failed to transfer customer: " + result);
@@ -116,6 +135,7 @@ public class PowerOfficeGo implements AccountingTransferInterface {
             /* @TODO HANDLE PROPER WARNING */
             e.printStackTrace();
         }
+        return false;
     }
 
     private String createAccessToken() {
@@ -131,10 +151,76 @@ public class PowerOfficeGo implements AccountingTransferInterface {
         }
     }
 
-    private void transferOrder(Order order) {
+    private boolean transferOrders(List<Order> orders) {
+        String endpoint = "http://api.poweroffice.net/Import/";
+        List<PowerOfficeGoOrder> ordersToTransfer = new ArrayList();
+        for(Order order : orders) {
+            User user = managers.userManager.getUserById(order.userId);
+            PowerOfficeGoOrder goOrder = new PowerOfficeGoOrder();
+            goOrder.customerCode = new Integer(user.accountingId);
+            goOrder.mergeWithPreviousOrder = false;
+            goOrder.salesOrderLines = new ArrayList();
+            if(order.cart != null) {
+                for(CartItem item : order.cart.getItems()) {
+                    PowerOfficeGoSalesOrderLines line = new PowerOfficeGoSalesOrderLines();
+                    line.description = createLineText(item);
+                    line.productCode = managers.productManager.getProduct(item.getProduct().id).accountingSystemId;
+                    line.quantity = item.getCount();
+                    line.salesOrderLineUnitPrice = item.getProduct().priceExTaxes;
+                }
+            }
+            ordersToTransfer.add(goOrder);
+        }
+        SalesOrderTransfer transferObject = new SalesOrderTransfer();
+        transferObject.salesOrders = ordersToTransfer;
+        
+        Gson gson = new Gson();
+        String data = gson.toJson(transferObject);
+        try {
+            String result = managers.webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, "POST");
+            ApiOrderTransferResponse resp = gson.fromJson(result, ApiOrderTransferResponse.class);
+            if(resp.success) {
+                for(Order order : orders) {
+                    order.transferredToAccountingSystem = true;
+                    order.dateTransferredToAccount = new Date();
+                    managers.orderManager.saveOrder(order);
+                    return true;
+                }
+            } else {
+                /* @TODO HANDLE PROPER WARNING */
+                System.out.println("Failed to transfer customer: " + result);
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
+    
+    
+    private String createLineText(CartItem item) {
+        String lineText = "";
+        String startDate = "";
+        DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
+        if(item.startDate != null) {
+            startDate = sourceFormat.format(item.startDate);
+        }
 
-    private void createUpdateProduct(Product product) {
+        String endDate = "";
+        if(item.endDate != null) {
+            endDate = sourceFormat.format(item.endDate);
+        }
+        
+        if(!item.getProduct().additionalMetaData.isEmpty()) {
+            lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + " (" + startDate + " - " + endDate + ")";
+        } else {
+            lineText = item.getProduct().name + " " + item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";
+        }
+         
+        return lineText;
+    }
+    
+
+    private boolean createUpdateProduct(Product product) {
         String endpoint = "http://api.poweroffice.net/Product/";
         
         PowerOfficeGoProduct toUpdate = new PowerOfficeGoProduct();
@@ -150,6 +236,7 @@ public class PowerOfficeGo implements AccountingTransferInterface {
             if(resp.success) {
                 product.accountingSystemId = resp.data.id + "";
                 managers.productManager.saveProduct(product);
+                return true;
             } else {
                 /* @TODO HANDLE PROPER WARNING */
                 System.out.println("Failed to transfer customer: " + result);
@@ -158,6 +245,7 @@ public class PowerOfficeGo implements AccountingTransferInterface {
             /* @TODO HANDLE PROPER WARNING */
             e.printStackTrace();
         }
+        return false;
     }
     
 }

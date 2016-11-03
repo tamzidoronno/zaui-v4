@@ -1516,7 +1516,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         end.add(Calendar.DAY_OF_YEAR, 1);
 
         additionalInfo.isClean();
+        additionalInfo.inUseByCleaning = false;
         additionalInfo.inUse = bookingEngine.itemInUseBetweenTime(start.getTime(), end.getTime(), additionalInfo.itemId);
+        if(additionalInfo.inUse) {
+            BookingTimeLineFlatten timeline = bookingEngine.getTimeLinesForItem(start.getTime(), end.getTime(), additionalInfo.itemId);
+            for(Booking book : timeline.getBookings()) {
+                if(book.source != null && book.source.equals("cleaning")) {
+                    additionalInfo.inUseByCleaning = true;
+                }
+            }
+        }
         return additionalInfo;
     }
 

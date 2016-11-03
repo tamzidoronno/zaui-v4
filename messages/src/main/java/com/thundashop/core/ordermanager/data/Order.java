@@ -55,6 +55,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String parentOrder = "";
     public boolean sentToCustomer = false;
     private boolean cleaned = false;
+    public Date dateTransferredToAccount;
     
     public Order jsonClone() {
         Gson gson = new Gson();

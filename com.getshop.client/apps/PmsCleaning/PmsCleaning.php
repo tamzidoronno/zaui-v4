@@ -161,7 +161,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             if($add->isClean) {
                 $isClean = "clean";
             }
-            if($add->inUse) {
+            if($add->inUse && !$add->inUseByCleaning) {
                 $isClean = "inUse roomNotReady";
             }
             echo "<span class='roombox cleaningbox $isClean' itemid='".$add->itemId."'>" . $items[$add->itemId]->bookingItemName . "</span>";

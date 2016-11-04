@@ -18,9 +18,9 @@
         $key .= "-debug";
     }
     
-    $callBack = "http://pullserver_".$key."_".$store->id.".getshop.com";
+    $callBack = 'http://'.$_SERVER['HTTP_HOST']. "?merchant=".$merchid;
     $redirect_url = "http://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
-    
+    $callBack = str_replace(".3.0.local.", ".", $callBack);
 ?>
 
 <script charset="UTF-8" src="https://ssl.ditonlinebetalingssystem.dk/integration/ewindow/paymentwindow.js" type="text/javascript"></script>

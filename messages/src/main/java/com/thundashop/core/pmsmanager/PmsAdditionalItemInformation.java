@@ -24,6 +24,9 @@ public class PmsAdditionalItemInformation extends DataCommon {
     
     @Transient
     boolean inUse;
+    
+    @Transient
+    boolean inUseByCleaning;
 
     Boolean isClean() {
         return isClean(true);

@@ -1,0 +1,124 @@
+<?php
+$start = date("d.m.Y", $this->getStart());
+$end = date("d.m.Y", $this->getEnd());
+?>
+
+<div gstype="form" method="showTimeLine">
+    <input type="text" gsname='start' value='<? echo $start; ?>'>
+    <input type="text" gsname='end' value='<? echo $end; ?>'>
+    <input gstype="submit" type="button" value="<? echo $this->__w("Show"); ?>">
+</div>
+
+<?php
+/* @var $this \ns_176ea989_c7bb_4cef_a4bd_0c8421567e0b\PmsAvailabilityTimeline */
+
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->startDate = $this->convertToJavaDate($this->getStart());
+$filter->endDate = $this->convertToJavaDate($this->getEnd());
+$filter->filterType = "active";
+
+$result = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
+
+$cartitems = $this->getApi()->getOrderManager()->getItemDates($this->convertToJavaDate($this->getStart()), $this->convertToJavaDate($this->getEnd()));
+
+$itemsToPrint = array();
+foreach($cartitems as $item) {
+    if(!isset($itemsToPrint[$item->metaData])) {
+        $itemsToPrint[$item->metaData] = array();
+    }
+    $itemsToPrint[$item->metaData][] = $item;
+}
+
+$itemsToAdd = array();
+foreach($result as $res) {
+    if(!isset($itemsToAdd[$res->bookingItemId])) {
+        $itemsToAdd[$res->bookingItemId] = array();
+    }
+    
+    if($res->start < ($this->getStart()*1000)) {
+        $res->start = ($this->getStart()*1000);
+    }
+    if($res->end > ($this->getEnd()*1000)) {
+        $res->end = $this->getEnd()*1000;
+    }
+    
+    if($res->end > $res->start) {
+        $itemsToAdd[$res->bookingItemId][] = $res;
+    }
+}
+?>
+
+<script type="text/javascript">
+  function drawChart() {
+      var container = document.getElementById('example5');
+      var chart = new google.visualization.Timeline(container);
+      var dataTable = new google.visualization.DataTable();
+      var rows = [];
+      dataTable.addColumn({ type: 'string', id: 'Room' });
+      dataTable.addColumn({ type: 'string', id: 'Name' });
+      dataTable.addColumn({ type: 'date', id: 'Start' });
+      dataTable.addColumn({ type: 'date', id: 'End' });
+        <?php
+        foreach($items as $item) {
+            if(!isset($itemsToAdd[$item->id])) {
+                continue;
+            }
+            if(isset($itemsToPrint[$item->bookingItemName])) {
+                foreach($itemsToPrint[$item->bookingItemName] as $test) {
+                    $start = strtotime(date("d.m.Y 12:00", strtotime($test->start)))*1000;
+                    $end = strtotime(date("d.m.Y 12:00", strtotime($test->end)))*1000;
+                    
+                    if($start < ($this->getStart()*1000)) {
+                        $start = ($this->getStart()*1000);
+                    }
+                    if($end > ($this->getEnd()*1000)) {
+                        $end = $this->getEnd()*1000;
+                    }
+                    
+                    if($start > $end) {
+                        continue;
+                    }
+                    ?>
+                    rows.push([ '<?php echo $item->bookingItemName; ?>', '<?php echo $test->orderId . "(" . $test->price . ")"; ?>', new Date(<?php echo $start; ?>), new Date(<?php echo $end; ?>)]);
+                    <?php 
+                }
+            }
+            foreach($itemsToAdd[$item->id] as $room) {
+                    $roomStart = strtotime(date("d.m.Y 12:00", $room->start/1000))*1000;
+                    $roomEnd = strtotime(date("d.m.Y 12:00", $room->end/1000))*1000;
+                    if($roomStart < ($this->getStart()*1000)) { $roomStart = ($this->getStart()*1000); }
+                    if($roomEnd > ($this->getEnd()*1000)) { $roomEnd = $this->getEnd()*1000; }
+                    ?>
+                    rows.push([ '<?php echo $item->bookingItemName; ?>', '<?php echo $room->owner; ?>', new Date(<?php echo $roomStart; ?>), new Date(<?php echo $roomEnd; ?>)]);
+                    <?php 
+            }
+        }
+        ?>
+      dataTable.addRows(rows);
+
+      var options = {
+        timeline: { 
+        },
+        colors: ['#cbb69d'],
+          backgroundColor: '#ffd',
+        avoidOverlappingGridLines: true
+      };
+      
+      
+       var rowHeight = 41;
+      var chartHeight = (dataTable.getNumberOfRows() + 1) * rowHeight;
+
+        options['height'] = chartHeight;
+      
+      chart.draw(dataTable, options);
+}
+drawChart();
+</script>
+
+<div id="example5" ></div>
+<script>
+     $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('input[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

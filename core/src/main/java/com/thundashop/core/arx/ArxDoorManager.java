@@ -104,9 +104,6 @@ public class ArxDoorManager implements IDoorManager {
         NodeList nodeList = document.getDocumentElement().getChildNodes();
         List<Door> doors = recursiveFindDoors(nodeList, 0);
         
-        for(Door door : doors) {
-            saveDoor(door);
-        }
         return doors;
     }
 
@@ -191,7 +188,6 @@ public class ArxDoorManager implements IDoorManager {
                 hostName += "forceOpen&value=on";
                 door.forcedOpen = true;
             }
-            doorManager.saveObject(door);
         } else if(state.equals("forceClose")) {
             if(door.forcedClose) {
                 hostName += "forceClose&value=off";
@@ -200,7 +196,6 @@ public class ArxDoorManager implements IDoorManager {
                 hostName += "forceClosev&alue=on";
                 door.forcedClose = true;
             }
-            doorManager.saveObject(door);
         } else {
             hostName += "pulseOpen";
         }
@@ -472,11 +467,6 @@ String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
         return null;
     }
     
-    private void saveDoor(Door door) {
-        doorManager.saveObject(door);
-        doorManager.getDoorList().add(door);
-    }
-
     private Person createPerson(PersonType person) throws UnsupportedEncodingException, ParseException {
         Person tmpPerson = new Person();
 

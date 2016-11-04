@@ -15,7 +15,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.ibm.icu.util.Calendar; 
 import com.thundashop.core.amesto.AmestoManager;
-import com.thundashop.core.amesto.AmestoSync;
+import com.thundashop.core.amesto.AmestoSync; 
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
@@ -726,6 +726,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(bookingId);
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
+            Date now = new Date();
+            if(!room.isStartingToday() && room.isStarted() && (!room.isEnded() || room.isEndingToday())
+                    && (start.before(now) && end.after(now))) {
+                //This is extending a stay, we need to remove cleaning and mark it as cleaned.
+                forceMarkRoomAsCleaned(room.bookingItemId);
+            }
             if(room.bookingId != null && !room.bookingId.isEmpty()) {
                 bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
             }
@@ -1510,7 +1516,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         end.add(Calendar.DAY_OF_YEAR, 1);
 
         additionalInfo.isClean();
+        additionalInfo.inUseByCleaning = false;
         additionalInfo.inUse = bookingEngine.itemInUseBetweenTime(start.getTime(), end.getTime(), additionalInfo.itemId);
+        if(additionalInfo.inUse) {
+            BookingTimeLineFlatten timeline = bookingEngine.getTimeLinesForItem(start.getTime(), end.getTime(), additionalInfo.itemId);
+            for(Booking book : timeline.getBookings()) {
+                if(book.source != null && book.source.equals("cleaning")) {
+                    additionalInfo.inUseByCleaning = true;
+                }
+            }
+        }
         return additionalInfo;
     }
 
@@ -2475,8 +2490,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
 
-        if (booking.getActiveRooms() == null || booking.getActiveRooms().isEmpty()) {
-            return false;
+        boolean deleteWhenAdded = getConfigurationSecure().deleteAllWhenAdded;
+        if(!deleteWhenAdded) {
+            if (booking.getActiveRooms() == null || booking.getActiveRooms().isEmpty()) {
+                return false;
+            }
         }
         return true;
     }

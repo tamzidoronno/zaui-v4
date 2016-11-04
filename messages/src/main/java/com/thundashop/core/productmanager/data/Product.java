@@ -36,6 +36,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     public Double overriddenPrice;
     
+    public String tag = "";
+    
     /**
      * Specified in seconds.
      */

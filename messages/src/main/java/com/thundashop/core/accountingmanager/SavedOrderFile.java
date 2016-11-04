@@ -13,5 +13,7 @@ public class SavedOrderFile extends DataCommon {
     public Double amountInc = 0.0;
     public Double amountExDebet = 0.0;
     public Double amountIncDebet = 0.0;
+    public Double sumAmountExOrderLines = 0.0;
+    public Double sumAmountIncOrderLines = 0.0;
     public List<String> orders = new ArrayList();
 }

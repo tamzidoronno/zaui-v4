@@ -28,6 +28,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     public function createProduct() {
         $product = $this->getApi()->getProductManager()->createProduct();
         $product->name = $_POST['data']['name'];
+        $product->tag = "addon";
         $this->getApi()->getProductManager()->saveProduct($product);
     }
     
@@ -300,6 +301,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             return;
         }
         $inventoryProduct = $this->getApi()->getProductManager()->createProduct();
+        $inventoryProduct->tag = "inventory";
         $inventoryProduct->name = $_POST['data']['itemname'];
         $this->getApi()->getProductManager()->saveProduct($inventoryProduct);
         

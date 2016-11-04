@@ -23,7 +23,7 @@ if($this->isEditorMode()) {
     <i class='fa fa-arrow-left'></i>
     <? 
     if($this->isAdminMode()) {
-        $time = time();
+        $time = strtotime(date("15-m-Y", time()));
         echo "<select class='monthSelected'>";
         for($i = $curMonth; $i <= $month+36; $i++) {
             $mnth = date("m", $time);

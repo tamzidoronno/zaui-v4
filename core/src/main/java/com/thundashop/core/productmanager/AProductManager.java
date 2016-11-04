@@ -85,6 +85,8 @@ public abstract class AProductManager extends ManagerBase {
             }
         }
         
+        product.doFinalize();
+        
 //        updateTranslation(product);
         return product;
     }

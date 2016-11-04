@@ -60,6 +60,8 @@ echo "<th align='left'>Ex tax</th>";
 echo "<th align='left'>Inc tax</th>";
 echo "<th align='left'>Ex tax (positive)</th>";
 echo "<th align='left'>Inc tax (positive)</th>";
+echo "<th align='left'>Orderlines (positive)</th>";
+echo "<th align='left'>Orderlines ex (positive)</th>";
 echo "<th align='left'>Orders</th>";
 echo "</tr>";
 
@@ -80,6 +82,8 @@ foreach($files as $file) {
     echo "<td>".round($file->amountInc)."</td>";
     echo "<td>".round($file->amountExDebet)."</td>";
     echo "<td>".round($file->amountIncDebet)."</td>";
+    echo "<td>".round($file->sumAmountIncOrderLines)."</td>";
+    echo "<td>".round($file->sumAmountExOrderLines)."</td>";
     echo "<td>".sizeof($file->orders)."</td>";
     echo "</tr>";
 }

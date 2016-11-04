@@ -44,6 +44,10 @@ public class BookingTimeLineFlatten implements Serializable {
             bookings.add(booking);
         }
     } 
+    
+    public List<Booking> getBookings() {
+        return bookings;
+    }
 
     public List<BookingTimeLine> getTimelines() {
         sortBookings();

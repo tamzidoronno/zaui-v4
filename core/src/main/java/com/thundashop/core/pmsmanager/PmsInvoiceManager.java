@@ -195,6 +195,74 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return stats;
     }
 
+    @Override
+    public List<String> validateAllInvoiceToDates() {
+        List<PmsBooking> all = pmsManager.getAllBookings(null);
+        List<String> result = new ArrayList();
+        for(PmsBooking booking : all) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room.isEnded()) {
+                    continue;
+                }
+                Date invoicedTo = null;
+                Long incordertouse = null;
+                if(room.invoicedTo != null) {
+                    for(String orderId : booking.orderIds) {
+                        if(!orderManager.orderExists(orderId)) {
+                            continue;
+                        }
+                        Order order = orderManager.getOrder(orderId);
+                        if(order.isCreditNote) {
+                            continue;
+                        }
+                        if(order.creditOrderId.size() > 0) {
+                            continue;
+                        }
+                        if(order.cart == null) {
+                            continue;
+                        }
+                        for(CartItem item : order.cart.getItems()) {
+                            if(!item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                                continue;
+                            }
+                            if(item.endDate == null) {
+                                continue;
+                            }
+                            Date orderDateTo = item.endDate;
+                            if(invoicedTo == null || invoicedTo.before(orderDateTo)) {
+                                invoicedTo = orderDateTo;
+                                incordertouse = order.incrementOrderId;
+                            }
+                        }
+                    }
+                    if(invoicedTo == null) {
+                        continue;
+                    }
+                    
+                    if(pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(invoicedTo);
+                        cal.add(Calendar.DAY_OF_YEAR, 1);
+                        invoicedTo = cal.getTime();
+                    }
+                    if(!room.isSameDay(room.invoicedTo, invoicedTo)) {
+                       String item = "";
+                       if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+                           item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+                       }
+                       String userName = userManager.getUserById(booking.userId).fullName;
+                       String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
+                       result.add(msg);
+                       room.invoicedTo = invoicedTo;
+                       messageManager.sendErrorNotification(msg, null);
+                       pmsManager.saveBooking(booking);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+ 
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -235,6 +303,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 discounts.put(res.userId, res);
             }
         }
+        createScheduler("checkinvoicedtodate", "1 04 * * *", DailyInvoiceChecker.class);
     }
     
     @Override

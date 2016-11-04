@@ -8,12 +8,14 @@ import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Internal;
+import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,6 +175,8 @@ public interface IOrderManager {
      */
     public Double getTotalAmount(Order order);
     public Double getTotalAmountExTaxes(Order order);
+    
+    public List<CartItemDates> getItemDates(Date start, Date end);
     
     
     /**

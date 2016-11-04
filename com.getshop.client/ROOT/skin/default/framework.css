@@ -2723,3 +2723,4 @@ select.gsniceselect1:active {
 .gs_toggleLeftSideBar { display: none; }
 .gserrorfield { display: none; color: red; }
 .gserrorinput { border-color: red !important; }
+.cancelImpersonation { cursor: pointer; }

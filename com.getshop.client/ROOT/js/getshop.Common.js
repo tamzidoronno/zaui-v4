@@ -1383,6 +1383,12 @@ thundashop.common.setSelectedCompany = function() {
     thundashop.Ajax.simplePost(this, "setSessionCompany", {company : $(this).val() });
 }
 
+thundashop.common.cancelImpersonation = function() {
+    var pageId = $('.gsbody_inner').attr('pageId');
+    window.location = "/impersonate.php?action=cancel&page=" + pageId;
+}
+
+$(document).on('click', '.cancelImpersonation', thundashop.common.cancelImpersonation)
 $(document).on('change', '.gs_select_session_company', thundashop.common.setSelectedCompany)
 
 $(document).ready(function() {

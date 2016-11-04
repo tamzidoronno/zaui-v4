@@ -1,0 +1,41 @@
+<?
+/* @var $this ns_f6117018_449b_4bba_96a3_b775be089f86\CompanyOwnerChangeUserList */
+
+$editorOrAbove = $this->getUser()->type >= 50;
+
+
+if ($editorOrAbove) {
+    $users = $this->getApi()->getUserManager()->getAllUsers();
+} else {
+    $companyId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->companyObject->id;
+    $users = $this->getApi()->getUserManager()->getUsersByCompanyId($companyId);
+}
+
+if ($users < 2) {
+    return;
+}
+
+echo "<div class='changeuser'>";
+echo $this->__w("Change to another user");
+?>
+
+: <select class="gsniceselect1" id='changetouserid'>
+    <?
+    foreach ($users as $user) {
+        if ($user->id === \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id) {
+            continue;
+        }
+        $companyname = "";
+        if ($user->companyObject) {
+            $companyname = " (".$user->companyObject->name.")";
+        }
+        echo "<option value='$user->id'>".$user->fullName.$companyname."</option>";
+    }
+    ?>
+</select>
+
+<div class="shop_button changeuserbutton"><? echo $this->__f("Change"); ?> </div>
+
+<?
+echo "</div>";
+?>

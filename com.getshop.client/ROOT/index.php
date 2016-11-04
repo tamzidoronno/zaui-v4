@@ -274,7 +274,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
                 echo $factory->__f("You are currently impersonating");
                 echo "&nbsp;";
                 echo $factory->getApi()->getUserManager()->getLoggedOnUser()->fullName; 
-                echo "<a href='/impersonate.php?action=cancel'> ( cancel ) </a>";
+                echo "<span class='cancelImpersonation'> ( cancel ) </span>";
                 ?>
             </div>
         <? } ?>

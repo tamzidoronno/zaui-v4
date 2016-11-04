@@ -6,18 +6,9 @@ $factory = IocContainer::getFactorySingelton();
 $storeId = $factory->getStore()->id;
 
 $gets = http_build_query($_GET);
-$key = $_GET['merchant'];
-
-if($factory->getApi()->getStoreManager()->isProductMode()) {
-    $key .= "-prod";
-} else {
-    $key .= "-debug";
-}
-
+$key = $_GET['key'];
 
 $addr = "http://pullserver_" . $key . "_" . $storeId . ".nettmannen.no?" . $gets;
-
-echo $addr;
 
 $ch = curl_init($addr);
 curl_setopt($ch, CURLOPT_POST, 1);

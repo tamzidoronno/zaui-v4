@@ -58,10 +58,7 @@ class Epay extends \PaymentApplication implements \Application {
 
     public function saveSettings() {
         $this->setConfigurationSetting("merchantid", $_POST['merchantid']);
-        $this->setConfigurationSetting("paymentsuccess", $_POST['paymentsuccess']);
-        $this->setConfigurationSetting("paymentfailed", $_POST['paymentfailed']);
-        $this->setConfigurationSetting("paymentcancelled", $_POST['paymentcancelled']);
-        $this->setConfigurationSetting("hmac", $_POST['hmac']);
+        $this->setConfigurationSetting("md5secret", $_POST['md5secret']);
         $this->setConfigurationSetting("savecard", $_POST['savecard']);
         $this->setConfigurationSetting("testmode", $_POST['testmode']);
     }

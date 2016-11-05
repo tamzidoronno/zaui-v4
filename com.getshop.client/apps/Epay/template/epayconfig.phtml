@@ -2,10 +2,7 @@
 /* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
 
 $dibs = $this->getConfigurationSetting("merchantid");
-$paymentsuccess = $this->getConfigurationSetting("paymentsuccess");
-$paymentfailed = $this->getConfigurationSetting("paymentfailed");
-$paymentcancelled = $this->getConfigurationSetting("paymentcancelled");
-$hmac = $this->getConfigurationSetting("hmac");
+$md5secret = $this->getConfigurationSetting("md5secret");
 ?>
 
 <div class='gss_settings_header'>
@@ -26,22 +23,22 @@ $hmac = $this->getConfigurationSetting("hmac");
     <div class="gss_simple_shipping">
         <div class="textfield gss_setting"  id="merchantid">
             <span class="title"><?php echo $this->__f("Merchant Id"); ?></span>
-            <input type="textfield" gs_model='dibsmodel' gs_model_attr='merchantid' value="<? echo $dibs; ?>">
+            <input type="textfield" gs_model='epaymodel' gs_model_attr='merchantid' value="<? echo $dibs; ?>">
             <div class="description">
-                <?php  echo $this->__f("The Merchant-ID is provided by Dibs, please contact us for more information."); ?>
+                <?php  echo $this->__f("The Merchant-ID is provided by Epay, please contact us for more information."); ?>
             </div>
         </div>
-        <div class="textfield gss_setting"  id="hmac">
-            <span class="title"><?php echo $this->__f("HMAC key provided by dibs"); ?></span>
-            <input type="textfield" gs_model='dibsmodel' gs_model_attr='hmac' value="<? echo $hmac; ?>">
+        <div class="textfield gss_setting"  id="md5secret">
+            <span class="title"><?php echo $this->__f("MD5 Secret key"); ?></span>
+            <input type="textfield" gs_model='epaymodel' gs_model_attr='md5secret' value="<? echo $md5secret; ?>">
             <div class="description">
-                <?php  echo $this->__f("The Merchant-ID is provided by Dibs, please contact us for more information."); ?>
+                <?php  echo $this->__f("The secret key to validate callbacks for, created in the epay admin panel."); ?>
             </div>
         </div>
         
         <div class="textfield gss_setting"  id="savecard">
                <span class="title"><?php echo $this->__f("Save card"); ?></span>
-               <div class="gss_onoff" gs_model="dibsmodel" gs_model_attr="savecard">
+               <div class="gss_onoff" gs_model="epaymodel" gs_model_attr="savecard">
                    <?
                    $class = $this->getConfigurationSetting("savecard") == "true" ? "fa-toggle-on" : "fa-toggle-off";
                    ?>
@@ -54,7 +51,7 @@ $hmac = $this->getConfigurationSetting("hmac");
         
         <div class="textfield gss_setting"  id="testmode">
                <span class="title"><?php echo $this->__f("Test mode"); ?></span>
-               <div class="gss_onoff" gs_model="dibsmodel" gs_model_attr="testmode">
+               <div class="gss_onoff" gs_model="epaymodel" gs_model_attr="testmode">
                    <?
                    $class = $this->getConfigurationSetting("testmode") == "true" ? "fa-toggle-on" : "fa-toggle-off";
                    ?>
@@ -67,6 +64,6 @@ $hmac = $this->getConfigurationSetting("hmac");
     </div>
 
     <div class='gss_button_area'>
-        <div class="gss_button" gss_method="saveSettings" gss_model="dibsmodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
+        <div class="gss_button" gss_method="saveSettings" gss_model="epaymodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
     </div>
 </div>

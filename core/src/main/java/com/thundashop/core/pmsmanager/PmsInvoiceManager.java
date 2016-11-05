@@ -1377,6 +1377,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 if(priceType == PmsBooking.PriceType.daily || priceType == PmsBooking.PriceType.progressive || priceType == PmsBooking.PriceType.interval) {
                     calStart.add(Calendar.DAY_OF_YEAR,1);
                 }
+                if(priceType == PmsBooking.PriceType.monthly) {
+                    calStart.add(Calendar.MONTH,1);
+                }
                 if(!room.priceMatrix.containsKey(offset)) {
                     logPrint("Huston, we have a problem: " + offset);
                 } else {

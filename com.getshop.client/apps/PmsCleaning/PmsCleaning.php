@@ -263,6 +263,12 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             break;
         }
         echo "<span style='color:#bbb'>" . $user->fullName . "</span>";
+        
+        if($room->cleaningComment) {
+            echo "<div style='color:red; font-weight: bold;'><i class='fa fa-warning'></i> " . $room->cleaningComment . "</div>";
+        }
+
+        
         echo "</td>";
         echo "<td>";
         if($room->bookingItemId) {

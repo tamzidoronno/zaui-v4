@@ -101,6 +101,7 @@ if(sizeof($addons) > 0) {
 function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasArx, $config, $object) {
     $bookingId = $booking->id;
     ?>
+
 <table width='100%' cellspacing='0' cellpadding='0' class='guestoverviewtable'>
     <tr>
         <th width='10'><input type='checkbox' class='checkallbookedrooms'></th>
@@ -228,9 +229,15 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                         $startCleaning = $room->date->start;
                     }
                     $startCleaning = date("d.m.Y", strtotime($startCleaning));
-                    ?>
-                <?php echo "<div title='Cleaning interval' >CI: <span class='intervalset change_cleaning_interval' roomid='".$room->pmsBookingRoomId."' style='cursor:pointer;'>" . $roomCleaningInterval . "</span> from <span class='change_cleaning_date'  style='cursor:pointer;' roomid='".$room->pmsBookingRoomId."'>$startCleaning</span></div>"; ?>
-                <?php } ?>
+                    $comment = "Add a comment to the cleaner";
+                    echo "<div>";
+                    echo "<i class='fa fa-paint-brush setcleaningcomment' title='$comment' roomid='".$room->pmsBookingRoomId."' comment='".$room->cleaningComment."'></i> ";
+                    echo "<span title='Cleaning interval' >CI: <span class='intervalset change_cleaning_interval' roomid='".$room->pmsBookingRoomId."' style='cursor:pointer;'>" . $roomCleaningInterval . "</span> from <span class='change_cleaning_date'  style='cursor:pointer;' roomid='".$room->pmsBookingRoomId."'>$startCleaning</span></span>";
+                    if($room->cleaningComment) {
+                        echo "<div style='font-size: 11px; font-weight:bold'>To cleaner:<br>" . $room->cleaningComment . "</div>";
+                    }
+                    echo "</div>";
+                } ?>
             </td>
             <td>
                     <span class='roomattribute'>

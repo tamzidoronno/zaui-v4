@@ -45,4 +45,5 @@ public class PmsRoomSimple implements Serializable {
     boolean latecheckout = false;
     boolean extrabed = false;
     boolean childbed = false;
+    String cleaningComment = "";
 }

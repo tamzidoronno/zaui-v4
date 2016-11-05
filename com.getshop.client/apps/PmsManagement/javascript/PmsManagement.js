@@ -20,6 +20,7 @@ app.PmsManagement = {
         $(document).on('keyup','.PmsManagement .newroomstarttime', app.PmsManagement.updateRoomList);
         $(document).on('keyup','.PmsManagement .newroomendtime', app.PmsManagement.updateRoomList);
         $(document).on('click','.PmsManagement .change_cleaning_date', app.PmsManagement.changeCleaningDate);
+        $(document).on('click','.PmsManagement .setcleaningcomment', app.PmsManagement.setCleaningComment);
         $(document).on('change','.PmsManagement .newroomstartdate', app.PmsManagement.updateRoomList);
         $(document).on('change','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
         $(document).on('click','.PmsManagement .showlog', app.PmsManagement.showlog);
@@ -61,6 +62,17 @@ app.PmsManagement = {
         $(document).on('keyup','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('change','.PmsManagement .roomsbookedactionsselection', app.PmsManagement.updateRoomActionSelection);
     },
+    setCleaningComment : function() {
+        var comment = prompt("Comment", $(this).attr('comment'));
+        var data = {
+            comment : comment,
+            roomid : $(this).attr('roomid'),
+            bookingid : $('#openedbookingid').val()
+        }
+        var event = thundashop.Ajax.createEvent('','setCleaningComment', $(this),data);
+        thundashop.common.showInformationBoxNew(event);
+    },
+    
     loadorderstatistics : function() {
         var data = thundashop.framework.createGsArgs($('.statsorderfilter'));
         var event = thundashop.Ajax.createEvent('','loadOrderStats',$(this), data);

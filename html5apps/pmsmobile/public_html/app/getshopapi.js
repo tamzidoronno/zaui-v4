@@ -3302,6 +3302,22 @@ GetShopApiWebSocket.DibsManager.prototype = {
     },
 
 }
+GetShopApiWebSocket.EpayManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.EpayManager.prototype = {
+    'checkForOrdersToCapture' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'checkForOrdersToCapture',
+            interfaceName: 'core.epay.IEpayManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
 GetShopApiWebSocket.EventBookingManager = function(communication) {
     this.communication = communication;
 }
@@ -5728,6 +5744,18 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getItemDates' : function(start,end, gs_silent) {
+        var data = {
+            args : {
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getItemDates',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getMostSoldProducts' : function(numberOfProducts, gs_silent) {
         var data = {
             args : {
@@ -7057,6 +7085,17 @@ GetShopApiWebSocket.PmsInvoiceManager.prototype = {
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'sendRecieptOrInvoice',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsInvoiceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'validateAllInvoiceToDates' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'validateAllInvoiceToDates',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsInvoiceManager',
         };
@@ -12005,6 +12044,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.ChatManager = new GetShopApiWebSocket.ChatManager(this);
     this.DBBackupManager = new GetShopApiWebSocket.DBBackupManager(this);
     this.DibsManager = new GetShopApiWebSocket.DibsManager(this);
+    this.EpayManager = new GetShopApiWebSocket.EpayManager(this);
     this.EventBookingManager = new GetShopApiWebSocket.EventBookingManager(this);
     this.FileManager = new GetShopApiWebSocket.FileManager(this);
     this.FtpManager = new GetShopApiWebSocket.FtpManager(this);

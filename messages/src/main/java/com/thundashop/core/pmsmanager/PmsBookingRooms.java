@@ -34,6 +34,7 @@ public class PmsBookingRooms implements Serializable {
     public String bookingId;
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public String currency = "NOK";
+    public String cleaningComment = "";
     
     public boolean checkedin = false;
     public boolean checkedout = false;

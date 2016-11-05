@@ -1,6 +1,8 @@
-var GetShopApiWebSocket = function(address, port, identifier) {
+var GetShopApiWebSocket = function(address, port, identifier, persistMessages) {
     this.sentMessages =  [];
+    this.messagesToSendJson =  [];
     this.address = address;
+    this.persistMessages = persistMessages;
 
     if (typeof(port) === "undefined" || !port) {
         this.port = "31330";
@@ -22,7 +24,7 @@ GetShopApiWebSocket.prototype = {
     transferStarted: null,
     shouldConnect: true,
     sessionId: false,
-    initialConnect :false,
+    unsentMessageLoaded: false,
     
     connect: function() {
         if (!this.shouldConnect)
@@ -61,16 +63,14 @@ GetShopApiWebSocket.prototype = {
         var data = msg.data;
         var jsonObject = JSON.parse(data);
         var corrolatingMessage = this.getMessage(jsonObject.messageId);
-        corrolatingMessage.resolve(jsonObject.object);
+        
+        corrolatingMessage.resolveWith({ 'messageId': jsonObject.messageId }, [jsonObject.object]);
         if (this.sentMessages.length === 0 && this.transferCompleted) {
             this.transferCompleted();
         }
     },
             
     reconnect: function() {
-        if(!this.initialConnect) {
-            return;
-        }
         var me = this;
         this.shouldConnect = true;
         exec = function() {
@@ -89,7 +89,27 @@ GetShopApiWebSocket.prototype = {
         this.initializeStore();
         this.fireConnectedEvent();
         this.connectionEstablished = true;
-        this.initialConnect = true;
+        this.sendUnsentMessages();
+    },
+    
+    sendUnsentMessages: function() {
+        if (!this.persistMessages) {
+            this.unsentMessageLoaded = false;
+            return;
+        }
+        
+        try {
+            this.messagesToSendJson = JSON.parse(localStorage.getItem("gs_api_messagetopush"));
+        } catch (Ex) {
+            this.messagesToSendJson = [];
+        }
+
+        this.unsentMessageLoaded = true;
+
+        for (var i in this.messagesToSendJson) {
+            var msg = this.messagesToSendJson[i];
+            this.send(msg);
+        }
     },
     
     setSessionId: function() {
@@ -108,26 +128,16 @@ GetShopApiWebSocket.prototype = {
           
     disconnected: function() {
         this.sentMessages = [];
-        if(this.connectionEstablished) {
-            this.fireDisconnectedEvent();
-            this.connectionEstablished = false;
-            this.reconnect();
-        } else {
-            this.fireFailedInitialConnectEvent();
-        }
-    },
-            
-    fireFailedInitialConnectEvent: function() {
-        if (this.initConnectionFailed === null || this.initConnectionFailed && typeof(this.initConnectionFailed) === "function") {
-            if (this.initConnectionFailed) {
-                this.initConnectionFailed();
-            }
-        }
+        
+        this.fireDisconnectedEvent();
+        this.connectionEstablished = false;
+        this.reconnect();
     },
 
     setInitConnectionFailed: function(callback) {
         this.initConnectionFailed = callback;
     },
+    
     fireDisconnectedEvent: function() {
         if (this.connectionEstablished === null || this.connectionEstablished && typeof(this.disconnectedCallback) === "function") {
             if (this.disconnectedCallback) {
@@ -154,12 +164,21 @@ GetShopApiWebSocket.prototype = {
         
     send: function(message, silent) {
         var deferred = $.Deferred();
+        
         message.messageId = this.makeid();
+            
         deferred.messageId = message.messageId;
         var messageJson = JSON.stringify(message);
+        
+        if (this.unsentMessageLoaded) {
+            this.messagesToSendJson.push(message);
+            localStorage.setItem("gs_api_messagetopush", JSON.stringify(this.messagesToSendJson));
+        }
+        
         if (this.sentMessages.length === 0 && this.transferStarted && silent !== true) {
             this.transferStarted();
         }
+        
         this.sentMessages.push(deferred);
         var sendFunc = function(messageJson, me) {
             if (me.socket.readyState !== 1) {
@@ -177,6 +196,14 @@ GetShopApiWebSocket.prototype = {
     },
 
     getMessage: function(id) {
+        for (var i=0;i<this.messagesToSendJson.length; i++) {
+            if (this.messagesToSendJson[i].messageId === id) {
+                this.messagesToSendJson.splice(i, 1);
+            }
+        }
+        
+        localStorage.setItem("gs_api_messagetopush", JSON.stringify(this.messagesToSendJson));
+        
         for (var i=0;i<this.sentMessages.length; i++) {
             if (this.sentMessages[i].messageId === id) {
                 var message = this.sentMessages[i];
@@ -5728,6 +5755,18 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getItemDates' : function(start,end, gs_silent) {
+        var data = {
+            args : {
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getItemDates',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getMostSoldProducts' : function(numberOfProducts, gs_silent) {
         var data = {
             args : {
@@ -7057,6 +7096,17 @@ GetShopApiWebSocket.PmsInvoiceManager.prototype = {
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'sendRecieptOrInvoice',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsInvoiceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'validateAllInvoiceToDates' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'validateAllInvoiceToDates',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsInvoiceManager',
         };
@@ -10621,17 +10671,6 @@ GetShopApiWebSocket.TrackAndTraceManager = function(communication) {
 }
 
 GetShopApiWebSocket.TrackAndTraceManager.prototype = {
-    'getDestination' : function(destinationId, gs_silent) {
-        var data = {
-            args : {
-                destinationId : JSON.stringify(destinationId),
-            },
-            method: 'getDestination',
-            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
-        };
-        return this.communication.send(data, gs_silent);
-    },
-
     'getMyRoutes' : function(gs_silent) {
         var data = {
             args : {
@@ -10653,29 +10692,23 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'markHasArrived' : function(dateArrived,destinationId,lon,lat, gs_silent) {
+    'saveDestination' : function(destination, gs_silent) {
         var data = {
             args : {
-                dateArrived : JSON.stringify(dateArrived),
-                destinationId : JSON.stringify(destinationId),
-                lon : JSON.stringify(lon),
-                lat : JSON.stringify(lat),
+                destination : JSON.stringify(destination),
             },
-            method: 'markHasArrived',
+            method: 'saveDestination',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);
     },
 
-    'startRoute' : function(startRouteDate,routeId,lon,lat, gs_silent) {
+    'saveRoute' : function(route, gs_silent) {
         var data = {
             args : {
-                startRouteDate : JSON.stringify(startRouteDate),
-                routeId : JSON.stringify(routeId),
-                lon : JSON.stringify(lon),
-                lat : JSON.stringify(lat),
+                route : JSON.stringify(route),
             },
-            method: 'startRoute',
+            method: 'saveRoute',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);

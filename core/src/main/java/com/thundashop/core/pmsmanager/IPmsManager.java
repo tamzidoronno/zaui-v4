@@ -44,6 +44,9 @@ public interface IPmsManager {
     public List<SimpleInventory> getSimpleInventoryList(String roomName);
     
     @Administrator
+    public void sendConfirmation(String email, String bookingId);
+    
+    @Administrator
     public void reportMissingInventory(List<SimpleInventory> inventories, String itemId, String roomId);
     
     @Administrator

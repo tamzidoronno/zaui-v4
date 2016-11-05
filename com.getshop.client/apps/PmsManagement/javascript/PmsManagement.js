@@ -25,6 +25,7 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
         $(document).on('click','.PmsManagement .showlog', app.PmsManagement.showlog);
         $(document).on('click','.PmsManagement .closeadduser', app.PmsManagement.closeadduser);
+        $(document).on('click','.PmsManagement .sendconfirmation', app.PmsManagement.sendconfirmation);
         $(document).on('click','.PmsManagement .massupdatepricesfield .fa-close', app.PmsManagement.toggleMassUpdatePrices);
         $(document).on('click','.PmsManagement .showmassupdatepricesfield', app.PmsManagement.toggleMassUpdatePrices);
         $(document).on('change','.PmsManagement .changeuseronbooking', app.PmsManagement.changeuseronbooking);
@@ -62,6 +63,16 @@ app.PmsManagement = {
         $(document).on('keyup','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('change','.PmsManagement .roomsbookedactionsselection', app.PmsManagement.updateRoomActionSelection);
     },
+    
+    sendconfirmation : function() {
+        var data = {
+            "bookingid" : $('#openedbookingid').val(),
+            "email" : $('.emailtosendconfirmationto').val()
+        }
+        var event = thundashop.Ajax.createEvent('','resendConfirmation', $(this),data);
+        thundashop.common.showInformationBoxNew(event);
+    },
+    
     setCleaningComment : function() {
         var comment = prompt("Comment", $(this).attr('comment'));
         var data = {
@@ -452,6 +463,7 @@ app.PmsManagement = {
         var event = thundashop.Ajax.createEvent('','showLog',$(this), data);
         thundashop.Ajax.postWithCallBack(event, function(result) {
             $('#logarea').html(result);
+            $('.informationbox-outer').scrollTop($('.informationbox-outer').scrollTop()+100);
         });
     },
     resetnotifications : function() {

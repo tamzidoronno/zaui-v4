@@ -25,6 +25,18 @@ class PmsManagement extends \WebshopApplication implements \Application {
             unset($_SESSION['toggleOldFilterVersion']);
         }
     }
+    
+    public function resendConfirmation() {
+        $email = $_POST['data']['email'];
+        $bookingId = $_POST['data']['bookingid'];
+        $this->getApi()->getPmsManager()->sendConfirmation($this->getSelectedName(), $email, $bookingId);
+        echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
+        echo "<i class='fa fa-info'></i> Confirmation has been sent.";
+        echo "</div>";
+        echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
+        $this->showBookingInformation();
+    }
+    
     public function setCleaningComment() {
         $comment = $_POST['data']['comment'];
         $roomid = $_POST['data']['roomid'];
@@ -213,6 +225,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $bookingId = $_POST['data']['bookingid'];
         $orderid = $_POST['data']['orderid'];
         $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderid, $email, $bookingId);
+
+        echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
+        echo "<i class='fa fa-info'></i> Invoice has been sent.";
+        echo "</div>";
+        echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
+
         $this->showBookingInformation();
     }
     
@@ -365,6 +383,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $email = $_POST['data']['bookerEmail'];
         $prefix = $_POST['data']['bookerPrefix'];
         $phone = $_POST['data']['bookerPhone'];
+
+        echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
+        echo "<i class='fa fa-info'></i> Paymentlink has been sent.";
+        echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
+        echo "</div>";
         
         $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderid, $bookingid, $email, $prefix, $phone);
         $this->showBookingInformation();

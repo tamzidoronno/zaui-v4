@@ -4174,4 +4174,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
+    @Override
+    public void sendConfirmation(String email, String bookingId) {
+        emailToSendTo = email;
+        doNotification("booking_completed", bookingId);
+    }
+
 }

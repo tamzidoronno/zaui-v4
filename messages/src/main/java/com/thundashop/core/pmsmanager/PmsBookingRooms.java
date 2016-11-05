@@ -327,8 +327,24 @@ public class PmsBookingRooms implements Serializable {
                 }
             }
             if(searchWord != null && searchWord.length() > 6) {
-                if(guest.phone != null && guest.phone.toLowerCase().contains(searchWord)) {
-                    return true;
+                if(guest.phone != null) {
+                    if(guest.phone.toLowerCase().contains(searchWord)) {
+                        return true;
+                    }
+                    if(guest.prefix != null) {
+                        String testSearchWord = searchWord;
+                        if(testSearchWord.startsWith("+")) {
+                            testSearchWord = testSearchWord.substring(1);
+                        }
+                        
+                        String toCheck = guest.prefix + guest.phone;
+                        if(toCheck.startsWith("+")) {
+                            toCheck = toCheck.substring(1);
+                        }
+                        if(toCheck.toLowerCase().contains(testSearchWord)) {
+                            return true;
+                        }
+                    }
                 }
             }
             if(guest.name != null && guest.name.toLowerCase().contains(searchWord)) {

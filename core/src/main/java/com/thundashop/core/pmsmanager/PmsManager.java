@@ -412,6 +412,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        
+        if(filter.searchWord != null) {
+            filter.searchWord = filter.searchWord.trim();
+        }
         java.util.Calendar cal = java.util.Calendar.getInstance();
         cal.set(java.util.Calendar.YEAR, 2016);
         System.out.println(cal.get(java.util.Calendar.MONTH));

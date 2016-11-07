@@ -2,9 +2,15 @@
 /* @var $this ns_13e03ff7_8334_45eb_a280_c772c3262325\MecaFleetCars */
 $cars = $this->getApi()->getMecaManager()->getCarsForMecaFleet($this->getPage()->getId());
 
+
+
 if (!count($cars)) {
     return;
 }
+
+
+
+usort($cars,  array('\\ns_13e03ff7_8334_45eb_a280_c772c3262325\\MecaFleetCars','sortByDate'));
 
 foreach ($cars as $car) {
 ?>
@@ -15,7 +21,7 @@ foreach ($cars as $car) {
                 
                     <div><? echo $car->licensePlate; ?></div>
                     <div>Telefonnr: <? echo $car->cellPhone; ?></div>
-                    <div>Nåværende kilometerstand: <? echo $car->kilometers; ?></div>        
+                    <div>Nåværende kilometerstand: <? echo $car->kilometers; ?></div>
                 </div>
             </a>
             

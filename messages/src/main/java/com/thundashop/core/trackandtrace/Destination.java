@@ -28,17 +28,15 @@ public class Destination extends DataCommon {
     
     public StartInfo startInfo = new StartInfo();
     
+    public List<String> taskIds = new ArrayList();
+    
+    @Transient
     public List<Task> tasks = new ArrayList();
-
-    public boolean haveArrived = false;
     
     public SkipInfo skipInfo = new SkipInfo();
     
     public String note = "";
    
-    @Transient
-    public String destinationState = "";
-    
     public Destination() {
         id = UUID.randomUUID().toString();
         
@@ -46,36 +44,12 @@ public class Destination extends DataCommon {
         company.address = new Address();
         company.address.address = "Storewille street 1";
         company.contactPerson = "Jennifer Lopez";
-        
-        for (int i = 0; i<3; i++) {
-            PickupTask task = new PickupTask();
-            tasks.add(task);
-        }
     }
-
-    public void calculateDestinationState() {
-        if (!startInfo.started) {
-            destinationState = "not_arrived";
-            return;
-        }
-        
-        if (!skipInfo.skippedReasonId.equals("")) {
-            destinationState = "destination_skipped";
-            return;
-        }
-        
-        if (startInfo.completed) {
-            destinationState = "completed";
-            return;
-        }
-        
-        destinationState = "normal";
-    }
-
-    public void markHasArrived(User currentUser, double lon, double lat, Date dateArrived) {
-        startInfo.lat = lat;
-        startInfo.lon = lon;
-        startInfo.started = true;
-        startInfo.startedTimeStamp = dateArrived;
+    
+    public void markHasArrived(Destination destination) {
+        startInfo.lat = destination.startInfo.lat;
+        startInfo.lon = destination.startInfo.lon;
+        startInfo.started = destination.startInfo.started;
+        startInfo.startedTimeStamp = destination.startInfo.startedTimeStamp;
     }
 }

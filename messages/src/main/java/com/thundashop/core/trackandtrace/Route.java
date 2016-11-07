@@ -45,4 +45,17 @@ public class Route extends DataCommon {
         destinations.removeIf(o -> o.id.equals(dest.id));
         destinations.add(dest);
     }
+
+    void markAsStarted(Route route, String userId) {
+        startInfo.started = true;
+        startInfo.startedTimeStamp = route.startInfo.startedTimeStamp;
+        startInfo.startedByUserId = userId;
+        startInfo.lon = route.startInfo.lon;
+        startInfo.lat = route.startInfo.lat;   
+    }
+
+    public List<Destination> getDestinations() {
+        return destinations;
+    }
+
 }

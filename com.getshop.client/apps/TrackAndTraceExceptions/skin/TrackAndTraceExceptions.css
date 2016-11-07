@@ -1,0 +1,28 @@
+.TrackAndTraceExceptions .exception_box {
+    border:solid 1px #DDD;
+    margin-bottom: 20px;
+}
+.TrackAndTraceExceptions .exceptiontype {
+    border: solid 1px #FAFAFA;
+}
+
+.TrackAndTraceExceptions .exceptiontype .title {
+    text-align: center;
+    background-color: #FAFAFA;
+    line-height: 40px;
+}
+
+.TrackAndTraceExceptions .exceptionline {
+    border-bottom: solid 1px #DDD;
+    line-height: 30px;
+    padding-left: 10px;
+    padding: 5px;
+}
+
+.TrackAndTraceExceptions .exceptionline:nth-child(odd) {
+    background-color: #FAFAFA;
+}
+
+.TrackAndTraceExceptions .buttonarea {
+    text-align: right;
+}

@@ -1,0 +1,72 @@
+body {
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    color: #222;
+}
+
+.gs_page_width {
+    max-width: 1160px;
+    margin: 0 auto;
+}
+
+.gsarea[area="footer"],
+.gsarea[area="header"] {
+    
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #888;
+}
+
+
+.gsarea[area="header"] .Menu {
+    background-color: #FAFAFA;
+    border: solid 1px #CCC;
+}
+
+.gsarea[area="header"] .Menu .entry a {
+    padding: 10px;
+    margin-left: 10px;
+    padding-right: 10px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.gsarea[area="header"] .Menu .entry {
+    border-left: solid 1px #FFF;
+    border-right: solid 1px #CCC;
+}
+
+.gsarea[area="header"] .Menu .entry:last-child {
+    border-right: 0px;
+}
+
+.gsarea[area="header"] .Menu .entry:first-child {
+    border-left: 0px;
+}
+
+.gsarea[area="header"] .Menu .entry.active {
+    background-color: #EEE;
+}
+    
+.gsarea[area="body"] {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.Login form {
+    text-align: center !important;
+}
+.Login {
+    padding: 30px;
+    background-color: #FEFEFE;
+    border: solid 1px #DDD;
+}
+
+.shop_button {
+    border-radius: 0px;
+    color: #FFF;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: none;
+    background-color: #44c767;
+}

@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.GetShopApi;
 import java.util.Date;
@@ -21,14 +22,19 @@ public interface ITrackAndTraceManager {
     public List<Route> getMyRoutes();
     
     @Customer
-    public void startRoute(Date startRouteDate, String routeId, double lon, double lat);
-    
-    @Customer
     public Route getRouteById(String routeId);
     
     @Customer
-    public Destination getDestination(String destinationId);
+    public Destination saveDestination(Destination destination);
     
     @Customer
-    public Destination markHasArrived(Date dateArrived, String destinationId, double lon, double lat);
+    public void saveTask(Task task);
+    
+    @Customer
+    public void saveRoute(Route route);
+    
+    public List<TrackAndTraceException> getExceptions();
+    
+    @Administrator
+    public void saveException(TrackAndTraceException exception);
 }

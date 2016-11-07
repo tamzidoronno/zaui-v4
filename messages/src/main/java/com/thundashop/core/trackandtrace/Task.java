@@ -5,15 +5,13 @@
  */
 package com.thundashop.core.trackandtrace;
 
-import com.thundashop.core.usermanager.data.Company;
-import java.io.Serializable;
-import java.util.UUID;
+import com.thundashop.core.common.DataCommon;
 
 /**
  *
  * @author ktonder
  */
-public class Task implements Serializable {
-    public String id = UUID.randomUUID().toString();
-    
+public class Task extends DataCommon {
+    public boolean completed = false;
+    public String exceptionId = "";
 }

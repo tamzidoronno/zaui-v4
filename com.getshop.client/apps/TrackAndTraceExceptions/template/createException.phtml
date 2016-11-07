@@ -1,0 +1,16 @@
+<?
+/* @var $this \ns_ba031207_4b03_4248_a0dd_9c2d150a5679\TrackAndTraceExceptions */
+
+$ex = $this->getException($this->getModalVariable("exid"));
+
+$name = $ex ? $ex->name : "";
+$id = $ex ? $ex->id : "";
+?>
+
+Name of exception:
+<div gstype='form' method='createException'>
+    <input type='hidden' gsname='type' value='<? echo $this->getModalVariable("type");?>'/>
+    <input type='hidden' gsname='exid' value='<? echo $id;?>'/>
+    <br/><input class='gsniceinput1' gsname='name' style='width: 100%; box-sizing: border-box;' value="<? echo $name; ?>"></input>
+    <br/><br/><div class='shop_button' gstype='submit' gs_close_modal='true' ><? echo $ex ? "Save" : "Create"; ?></div>    
+</div>

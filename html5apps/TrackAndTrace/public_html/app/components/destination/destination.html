@@ -1,0 +1,48 @@
+<b>{{ destination.company.name }}</b>
+<br/> {{ destination.company.address.address }}
+<br/> {{ destination.company.address.postCode }} {{ destination.company.address.city }} 
+
+<div ng-if="destination.note">
+    <br/>
+    <b>Note</b>
+    <br/> {{ destination.note }}
+</div>
+
+<br/>   
+
+<div ng-if="destinationState() == 'started'" >
+    <b>Tasks</b>
+    
+    <a ng-href="#/destination/{{destination.id}}/{{route.id}}/{{task.id}}" ng-repeat="task in destination.tasks">
+        <div class='destination_task'>
+            {{ getTaskName(task) }}
+
+            <div class='dest_status'>
+                <div ng-if="getStatus(task) === 'completed'">
+                    <i class='fa fa-check' style="color: green"></i>
+                </div>
+
+                <div ng-if="getStatus(task) === 'exception'">
+                    <i class='fa fa-exclamation' style='color: red;'></i>
+                </div>
+
+                <div ng-if="getStatus(task) === 'unknown'">
+                    -
+                </div>
+            </div>
+        </div>
+    </a>
+    
+    <div class='destination_task addTask'>
+        <i class='fa fa-plus'></i> New task
+    </div>
+    
+    <div class='button'>Departing</div>
+</div>
+
+<div ng-if="destinationState() == 'unkown'">    
+    <div>
+        <div class='button' ng-click="markAsArrived()">I have arrived!</div>
+        <div class='button'>Skip delivery</div>
+    </div>
+</div>

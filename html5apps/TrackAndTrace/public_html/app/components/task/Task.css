@@ -1,0 +1,56 @@
+.task_delivery {
+    text-align: center;
+}
+
+.deliveryamount {
+    border: solid 5px rgba(255,255,255,0.2);
+    margin-left: 18px;
+    margin-right: 18px;
+    font-size: 50px;
+    color: #bf510e;
+    border-radius: 0px 0px 10px 10px;
+}
+
+.task_titleheader {
+    background-color: rgba(255,255,255,0.2);
+    margin-left: 18px;
+    margin-right: 18px;
+    padding-top: 5px;
+    border-radius: 10px 10px 0px 0px ;
+}
+
+.deliveredbutton,
+.exceptionbutton {
+    width: calc(50% - 20px);
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.exbuttontoselect {
+    background: #ffa84c; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ffa84c 0%, #ff7b0d 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #ffa84c 0%,#ff7b0d 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #ffa84c 0%,#ff7b0d 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', endColorstr='#ff7b0d',GradientType=0 ); /* IE6-9 */
+}
+
+.exceptionbutton {
+    background: #ffa84c; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ffa84c 0%, #ff7b0d 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #ffa84c 0%,#ff7b0d 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #ffa84c 0%,#ff7b0d 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', endColorstr='#ff7b0d',GradientType=0 ); /* IE6-9 */
+}
+
+.textfield {
+    font-size: 20px;
+    margin: 10px;
+    padding: 5px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.pickup_parcels .deliveryamount {
+    text-align: center;
+}
+

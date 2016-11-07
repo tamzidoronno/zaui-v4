@@ -72,13 +72,20 @@ app.PmsPricing = {
         
         var discountedPrices = {};
         $('.discountprice').each(function() {
-            console.log('ja: ' + $(this).attr('channel'));
             discountedPrices[$(this).attr('channel')] = $(this).val();
         });
-        console.log(discountedPrices);
+        
+        var derivedPrices = {};
+        $('.derivedprices').each(function() {
+            if(typeof(derivedPrices[$(this).attr('bookingtype')]) === "undefined") {
+                derivedPrices[$(this).attr('bookingtype')] = {};
+            }
+            derivedPrices[$(this).attr('bookingtype')][$(this).attr('guestcount')] = $(this).val();
+        });
         
         data['channeldiscount'] = discountedPrices;
         data['prices'] = prices;
+        data['derivedPrices'] = derivedPrices;
         data['prices_ex_taxes'] = $('.pricesextaxes').is(':checked');
         data['privatePeopleDoNotPayTaxes'] = $('.privatePeopleDoNotPayTaxes').is(':checked');
         data['pricetype'] = $('.pricetypeselection').val();

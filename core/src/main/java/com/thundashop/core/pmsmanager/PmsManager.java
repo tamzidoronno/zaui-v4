@@ -867,6 +867,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         prices.pricesExTaxes = newPrices.pricesExTaxes;
         prices.privatePeopleDoNotPayTaxes = newPrices.privatePeopleDoNotPayTaxes;
         prices.channelDiscount = newPrices.channelDiscount;
+        prices.derivedPrices = newPrices.derivedPrices;
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
             for (String date : priceMap.keySet()) {
@@ -3124,6 +3125,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
         if(getConfigurationSecure().usePriceMatrixOnOrder) {
             pmsInvoiceManager.updatePriceMatrix(booking, room, room.date.start, room.date.end, booking.priceType);
+            room.price = pmsInvoiceManager.generatePriceFromPriceMatrix(room.priceMatrix, avgPrice, booking, room.bookingItemTypeId);
         }
         room.taxes = pmsInvoiceManager.calculateTaxes(room.bookingItemTypeId);
     }

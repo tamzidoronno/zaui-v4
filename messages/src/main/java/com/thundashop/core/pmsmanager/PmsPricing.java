@@ -13,7 +13,8 @@ public class PmsPricing extends DataCommon {
     public boolean pricesExTaxes = false;
     public boolean privatePeopleDoNotPayTaxes = false;
     public HashMap<String, Integer> channelDiscount = new HashMap();
-    
+    /* ItemtypeId, Map<NumberOfGuests, Price>> */
+    public HashMap<String, HashMap<Integer, Double>> derivedPrices = new HashMap();
     public Double price_mon;
     public Double price_tue;
     public Double price_wed;

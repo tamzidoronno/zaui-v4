@@ -39,7 +39,20 @@ $cleaningInterval = $config->cleaningInterval;
     <input type='text' class='newroomstarttime' style='width: 40px;text-align: center;' value='<?php echo date("H:i", strtotime($start)); ?>' gsname='starttime'> - 
     <input type='text' class='newroomenddate' style='width: 80px;' value='<?php echo date("d.m.Y", strtotime($end)); ?>' gsname='end'>
     <input type='text' class='newroomendtime' style='margin-right: 10px; width: 40px;text-align: center;' value='<?php echo date("H:i", strtotime($end)); ?>' gsname='endtime'>
-    <? $this->includeAddRoomOptions($items, $start, $end, $defaultType); ?>
+    <span class='additemtypeoptions'>
+        <? $this->includeAddRoomOptions($items, $start, $end, $defaultType); ?>
+    </span>
+    <select gsname='guestinfofromroom' style='width: 200px;'>
+        <option value=''>No guest info added</option>
+        <?php
+        foreach($booking->rooms as $room) {
+            if($room->guests[0]->name) {
+                echo "<option value='". $room->pmsBookingRoomId . "'>" . $room->guests[0]->name . " - (+" . $room->guests[0]->prefix . $room->guests[0]->phone . ")</option>";
+            }
+        }
+        ?>
+    </select>
+    
     <span class='pmsbutton' gstype='submitToInfoBox'>
         <?php
         switch($config->bookingProfile) {

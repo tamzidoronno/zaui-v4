@@ -23,6 +23,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .setcleaningcomment', app.PmsManagement.setCleaningComment);
         $(document).on('change','.PmsManagement .newroomstartdate', app.PmsManagement.updateRoomList);
         $(document).on('change','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
+        $(document).on('change','.PmsManagement .addroomselectiontype', app.PmsManagement.updateRoomList);
         $(document).on('click','.PmsManagement .showlog', app.PmsManagement.showlog);
         $(document).on('click','.PmsManagement .closeadduser', app.PmsManagement.closeadduser);
         $(document).on('click','.PmsManagement .sendconfirmation', app.PmsManagement.sendconfirmation);
@@ -482,7 +483,7 @@ app.PmsManagement = {
         };
         var event = thundashop.Ajax.createEvent('','updateItemList', $(this), data);
         thundashop.Ajax.postWithCallBack(event, function(result) {
-            $('.addroomselectiontype').replaceWith(result);
+            $('.additemtypeoptions').html(result);
         });
     },
     

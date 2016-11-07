@@ -2038,7 +2038,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public String addBookingItemType(String bookingId, String type, Date start, Date end) {
+    public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom) {
         PmsBooking booking = getBooking(bookingId);
         PmsBookingRooms room = new PmsBookingRooms();
         BookingItemType typeToAdd = bookingEngine.getBookingItemType(type);
@@ -2049,6 +2049,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.guests.add(new PmsGuests());
         setPriceOnRoom(room, true, booking);
 
+        
+        if(guestInfoFromRoom != null && !guestInfoFromRoom.isEmpty()) {
+            PmsBooking bookingforguest = getBookingFromRoom(guestInfoFromRoom);
+            PmsBookingRooms roomforGuest = bookingforguest.findRoom(guestInfoFromRoom);
+            Gson gson = new Gson();
+            String copyroom = gson.toJson(roomforGuest);
+            PmsBookingRooms copiedRoom = gson.fromJson(copyroom, PmsBookingRooms.class);
+            room.guests = copiedRoom.guests;
+        }
+        
         String res = addBookingToBookingEngine(booking, room);
         if(!res.isEmpty()) {
             return res;

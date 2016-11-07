@@ -616,10 +616,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . $_POST['data']['endtime']));
         $bookingId = $_POST['data']['bookingid'];
         $type = $_POST['data']['item'];
+        $guestInfoRoom = $_POST['data']['guestinfofromroom'];
         
-        $errors = $this->getApi()->getPmsManager()->addBookingItemType($this->getSelectedName(), $bookingId, $type, $start, $end);
-        if($errors) {
-            $this->errors[] = $errors;
+        for($i = 0; $i < $_POST['data']['itemcount']; $i++) {
+            $errors = $this->getApi()->getPmsManager()->addBookingItemType($this->getSelectedName(), $bookingId, $type, $start, $end, $guestInfoRoom);
+            if($errors) {
+                $this->errors[] = $errors;
+            }
         }
         $this->showBookingInformation();
     }
@@ -1181,10 +1184,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function includeAddRoomOptions($items, $start, $end, $defaultType) {
         $types = $this->getTypes();
         ?>
-            <select style='margin-right: 10px;' gsname='item' class='addroomselectiontype'>
+            <select style='width: 250px;' gsname='item' class='addroomselectiontype'>
                 <?php 
                 foreach($types as $type) {
                     /* @var $item core_bookingengine_data_BookingItem */
+                    if(!$defaultType) {
+                        $defaultType = $type->id;
+                    }
                     $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $type->id, $start, $end);
                     $selected = "";
                     if($type->id == $defaultType) {
@@ -1199,6 +1205,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 ?>
             </select>
         <?php
+        $this->addRoomCount($start, $end, $defaultType);
     }
     
     public function showLog() {
@@ -1860,6 +1867,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->end = $this->getSelectedFilter()->endDate;
         return $filter;
         
+    }
+
+    public function addRoomCount($start, $end, $typeId) {
+        $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $typeId, $start, $end);
+
+        if($number <= 0) {
+            return;
+        }
+        echo "<select gsname='itemcount'>";
+        for($i = 1;$i <= $number; $i++) {
+            echo "<option value='$i'>$i</option>";
+        }
+        echo "</select>";
     }
 
 }

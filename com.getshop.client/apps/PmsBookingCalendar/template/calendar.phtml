@@ -9,7 +9,6 @@ $curMonth = date("m", time());
 $dates = $this->getDates($year);
 $dates = $dates[$month];
 
-
 if(!$this->getConfigurationSetting("date_type")) {
     echo "Warning no date type set yet.. configure it";
 }

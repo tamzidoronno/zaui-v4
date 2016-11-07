@@ -278,3 +278,8 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 .gsbody_inner[pageId="d0213319-1b19-4187-a6cd-aba065bdf30f"] .filelist tr:last-child td {
     padding: 10px
 }
+
+.CompanyOwnerChangeUserList .changeuser {
+    background-color: #EEE;
+    padding: 10px;
+}

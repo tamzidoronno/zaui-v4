@@ -1,0 +1,37 @@
+<?
+/* @var $this \ns_ba031207_4b03_4248_a0dd_9c2d150a5679\TrackAndTraceExceptions */
+$types = ['delivery', 'pickup_parcels', 'pickup_money', 'pickup_valuedparcel'];
+
+$exceptions = $this->getApi()->getTrackAndTraceManager()->getExceptions();
+
+foreach ($types as $type) {
+    ?>
+    <div class='exception_box'>
+
+        <div class='exceptiontype'>
+            <div class='title'><? echo $type; ?></div>
+        </div>
+        <?
+        foreach ($exceptions as $ex) {
+            if ($ex->type != $type) {
+                continue;
+            }
+            
+            echo "<div class='exceptionline'>";
+                echo "&nbsp;&nbsp;&nbsp;<div class='gs_shop_small_icon' gs_show_modal='createexception' type='$type' exid='$ex->id'><i class='fa fa-edit'></i></div>";
+                echo "&nbsp;&nbsp;&nbsp;".$ex->name;
+            echo "</div>";
+        }
+        ?>
+
+        <div class='buttonarea'>
+            
+            <div class='shop_button' gs_show_modal="createexception" type='<? echo $type; ?>'><i class='fa fa-plus'></i> Add new exception</div>
+        </div>
+
+    </div>
+    <?
+    
+}
+?>
+

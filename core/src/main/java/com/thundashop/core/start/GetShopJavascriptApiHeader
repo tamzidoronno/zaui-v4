@@ -1,6 +1,8 @@
-var GetShopApiWebSocket = function(address, port, identifier) {
+var GetShopApiWebSocket = function(address, port, identifier, persistMessages) {
     this.sentMessages =  [];
+    this.messagesToSendJson =  [];
     this.address = address;
+    this.persistMessages = persistMessages;
 
     if (typeof(port) === "undefined" || !port) {
         this.port = "31330";
@@ -22,7 +24,9 @@ GetShopApiWebSocket.prototype = {
     transferStarted: null,
     shouldConnect: true,
     sessionId: false,
-    initialConnect :false,
+    unsentMessageLoaded: false,
+    messageCountChangedEvent: null,
+    firstResendOfUnsentMessages: false,
     
     connect: function() {
         if (!this.shouldConnect)
@@ -61,16 +65,14 @@ GetShopApiWebSocket.prototype = {
         var data = msg.data;
         var jsonObject = JSON.parse(data);
         var corrolatingMessage = this.getMessage(jsonObject.messageId);
-        corrolatingMessage.resolve(jsonObject.object);
+        
+        corrolatingMessage.resolveWith({ 'messageId': jsonObject.messageId }, [jsonObject.object]);
         if (this.sentMessages.length === 0 && this.transferCompleted) {
             this.transferCompleted();
         }
     },
             
     reconnect: function() {
-        if(!this.initialConnect) {
-            return;
-        }
         var me = this;
         this.shouldConnect = true;
         exec = function() {
@@ -89,7 +91,37 @@ GetShopApiWebSocket.prototype = {
         this.initializeStore();
         this.fireConnectedEvent();
         this.connectionEstablished = true;
-        this.initialConnect = true;
+    },
+    
+    getUnsentMessageCount: function() {
+        try {
+            return JSON.parse(localStorage.getItem("gs_api_messagetopush")).length;
+        } catch (Ex) {
+            return 0;
+        }
+    },
+    
+    sendUnsentMessages: function() {
+        if (!this.persistMessages) {
+            this.unsentMessageLoaded = false;
+            return;
+        }
+        
+        try {
+            this.messagesToSendJson = JSON.parse(localStorage.getItem("gs_api_messagetopush"));
+        } catch (Ex) {
+            this.messagesToSendJson = [];
+        }
+
+        this.unsentMessageLoaded = true;
+        this.firstResendOfUnsentMessages = true;
+        
+        for (var i in this.messagesToSendJson) {
+            var msg = this.messagesToSendJson[i];
+            this.send(msg);
+        }
+        
+        this.firstResendOfUnsentMessages = false;
     },
     
     setSessionId: function() {
@@ -108,21 +140,10 @@ GetShopApiWebSocket.prototype = {
           
     disconnected: function() {
         this.sentMessages = [];
-        if(this.connectionEstablished) {
-            this.fireDisconnectedEvent();
-            this.connectionEstablished = false;
-            this.reconnect();
-        } else {
-            this.fireFailedInitialConnectEvent();
-        }
-    },
-            
-    fireFailedInitialConnectEvent: function() {
-        if (this.initConnectionFailed === null || this.initConnectionFailed && typeof(this.initConnectionFailed) === "function") {
-            if (this.initConnectionFailed) {
-                this.initConnectionFailed();
-            }
-        }
+        
+        this.fireDisconnectedEvent();
+        this.connectionEstablished = false;
+        this.reconnect();
     },
 
     setInitConnectionFailed: function(callback) {
@@ -143,6 +164,16 @@ GetShopApiWebSocket.prototype = {
             }
         }
     },
+    
+    fireMessageCountChanged: function() {
+        if (this.messageCountChangedEvent) {
+            this.messageCountChangedEvent();
+        }
+    },
+    
+    setMessageCountChangedEvent: function(func) {
+        this.messageCountChangedEvent = func;
+    },
             
     setDisconnectedEvent: function(callback) {
         this.disconnectedCallback = callback;
@@ -157,6 +188,13 @@ GetShopApiWebSocket.prototype = {
         message.messageId = this.makeid();
         deferred.messageId = message.messageId;
         var messageJson = JSON.stringify(message);
+        
+        if (this.unsentMessageLoaded && !this.firstResendOfUnsentMessages) {
+            this.messagesToSendJson.push(message);
+            localStorage.setItem("gs_api_messagetopush", JSON.stringify(this.messagesToSendJson));
+            this.fireMessageCountChanged();
+        }
+        
         if (this.sentMessages.length === 0 && this.transferStarted && silent !== true) {
             this.transferStarted();
         }
@@ -177,6 +215,17 @@ GetShopApiWebSocket.prototype = {
     },
 
     getMessage: function(id) {
+        for (var i=0;i<this.messagesToSendJson.length; i++) {
+            if (this.messagesToSendJson[i].messageId === id) {
+                this.messagesToSendJson.splice(i, 1);
+            }
+        }
+        
+        if (this.persistMessages) {
+            localStorage.setItem("gs_api_messagetopush", JSON.stringify(this.messagesToSendJson));
+            this.fireMessageCountChanged();
+        }
+        
         for (var i=0;i<this.sentMessages.length; i++) {
             if (this.sentMessages[i].messageId === id) {
                 var message = this.sentMessages[i];

@@ -1,19 +1,50 @@
-angular.module('MecaFleetApp').factory('$api', [ '$state', '$rootScope', function ($state, $rootScope) {
+angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', function ($state, $rootScope) {
     
     var getApiWrapper = function(state) {
         this.$state = state;
         
         
         this.setConnectionDetails = function(identifier) {
-            this.api = new GetShopApiWebSocket('55377cf3-a5bc-459a-bd96-f00300db4df9.getshop.com.getshop.com', '31332', identifier);
-//            this.api = new GetShopApiWebSocket('no.3.0.local.getshop.com', '31330', identifier);
-//            this.api = new GetShopApiWebSocket('no.3.0.mpal.getshop.com', '31330', identifier);
+//            this.api = new GetShopApiWebSocket('trackandtrace.getshop.com', '31332');
+            this.api = new GetShopApiWebSocket('trackandtrace.3.0.local.getshop.com', '31330', identifier, true);
+            
+            this.api.setMessageCountChangedEvent(function() {
+                $rootScope.$broadcast("messageCountChanged", "");
+            });
+            
+            var me = this;
             
             this.api.setConnectedEvent(function() {
                 $rootScope.$broadcast("connectionEstablished", "");
                 $rootScope.$digest();
+                
+                me.logon(false);
             });
-        }
+        },
+                
+        this.logon = function(fromLogin) {
+            var username = localStorage.getItem("username");
+            var password = localStorage.getItem("password");
+            
+            $getShopApi = this.getApi();
+            var me = this;
+            
+            $getShopApi.UserManager.logOn(username, password).done(function(user) {
+                if (user.errorCode) {
+                    alert("Wrong username or password, please try again.");
+                    me.$state.transitionTo('base.login');
+                } else {
+                    $getShopApi.sendUnsentMessages();
+                    localStorage.setItem("loggedInUserId", JSON.stringify(user));
+                    if (fromLogin)
+                        me.$state.transitionTo('base.home');
+                }
+            });
+        },
+        
+        this.getLoggedOnUser = function() {
+            return JSON.parse(localStorage.getItem("loggedInUserId"));
+        },
         
         /**
          * 
@@ -24,38 +55,29 @@ angular.module('MecaFleetApp').factory('$api', [ '$state', '$rootScope', functio
         }
         
         this.reconnect = function(fromLogin) {
-            var identifier = localStorage.getItem("identifier");
-            var cellphone = localStorage.getItem("cellphone");
+            var username = localStorage.getItem("username");
+            var password = localStorage.getItem("password");
+            var company = localStorage.getItem("company");
             
-            if (!identifier || !cellphone) {
+            if (!username || !password) {
                 if (fromLogin) {
-                    alert("Feil verksted eller telefonnr, prøv igjen");
+                    alert("Wrong username or password, please try again.");
                 }
                 
                 this.$state.transitionTo('base.login');
                 return;
             }
             
-            this.setConnectionDetails(identifier);
+            this.setConnectionDetails(company);
+            
             $getShopApi = this.getApi();
             $getShopApi.connect();
             var me = this;
             
-            $getShopApi.MecaManager.getCarsByCellphone(cellphone).done(function(res) {
-                if (res.length > 0) {
-                    localStorage.setItem("loggedInUserId", cellphone);
-                    if (fromLogin)
-                        me.$state.transitionTo('base.home');
-                } else {
-                    alert("Feil verksted eller telefonnr, prøv igjen");
-                    me.$state.transitionTo('base.login');
-                }
-            });
+            this.logon(fromLogin);
         }
     }
     
     var apiWrapperRet = new getApiWrapper($state);
     return apiWrapperRet;
 }]);
-
-

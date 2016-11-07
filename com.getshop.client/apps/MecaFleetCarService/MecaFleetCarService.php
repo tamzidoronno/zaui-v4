@@ -17,6 +17,7 @@ class MecaFleetCarService extends \MarketingApplication implements \Application 
     public function save() {
         $mecaCar = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
         $mecaCar->lastService = $this->convertToJavaDate(strtotime($_POST['data']['lastservicedate']));
+        $mecaCar->mecaVeihjelpExpiry = $this->convertToJavaDate(strtotime($_POST['data']['mecaVeihjelpExpiry']));
         $mecaCar->kilometersBetweenEachService = $_POST['data']['servicekm'];
         $mecaCar->monthsBetweenServices = $_POST['data']['months'];
         $mecaCar->lastServiceKilomters = $_POST['data']['lastservicekm'];

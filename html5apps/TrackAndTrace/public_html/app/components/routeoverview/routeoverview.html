@@ -1,0 +1,30 @@
+<div class="gsview routeoverview">
+    
+    <b>{{ route.name }}</b>
+    <br/> {{ route.shortDescription }}
+    <br/>
+   
+    <div class='button hidefinishedtasksbutton'>Hide finished</div>
+    <div class='destionations'>
+        <div style='padding-bottom: 10px;'><b>Destinations (tap one to see more)</b></div>
+        
+        <div class='destination' ng-repeat="destination in route.destinations">
+            <a ng-href='#/destination/{{destination.id}}/{{route.id}}'>
+                {{ destination.company.name }}
+                <br/>{{ destination.company.address.address }}
+
+                <div class='tasks'> Tasks: {{ destination.tasks.length }}</div>
+
+                <div class='destinationtypes'>
+                    <div class='indicator_pickup' style='display: none;'>P</div>
+                    <div class='indicator_delivery' style='display: none;'>D</div>
+                    <div class='indicator_pickup_and_delivery'><span>P</span> <span></span> <span>D</span></div>
+                </div>
+
+                <div class='status'>
+                    <div class='statusind red'></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

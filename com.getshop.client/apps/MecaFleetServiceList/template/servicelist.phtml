@@ -15,6 +15,8 @@ $cars = $this->getCarList();
     </div>
     <?
     foreach ($cars as $car) {
+        
+        $monthToNextService = $car->monthsToNextService;
         $fleet = $this->getApi()->getMecaManager()->getFleetByCar($car);
         $nextServiceDate = isset($car->nextService) ? date('d/m-Y', strtotime($car->nextService)) : "";
 
@@ -37,6 +39,8 @@ $cars = $this->getCarList();
             $pkkStyleColor = "color: red";
             $agreementStatusBullseye = "red";
         }
+        
+        $serviceStyleColor = isset($car->needAttentionToService) && $car->needAttentionToService ? "color:red;" : "";
         ?>
         <div class='servicerow'>
             <div>
@@ -48,7 +52,7 @@ $cars = $this->getCarList();
             <div><? echo isset($fleet->name) ? $fleet->name : "N/A"; ?> </div>
             <div><? echo $car->licensePlate; ?></div>
             <div><? echo isset($car->kilometersToNextService) ? $car->kilometersToNextService : 'N/A'; ?></div>
-            <div><? echo isset($car->monthsToNextService) ? $car->monthsToNextService . " ( $nextServiceDate ) " : "N/A"; ?> </div>
+            <div style="<? echo $serviceStyleColor; ?>"><? echo isset($monthToNextService) ? $monthToNextService . " ( $nextServiceDate ) " : "N/A";  ?> </div>
             <div style="<? echo $pkkStyleColor; ?>"><? echo isset($car->nextControll) ? date('d/m-Y', strtotime($car->nextControll)) : 'N/A'; ?></div>
 
 

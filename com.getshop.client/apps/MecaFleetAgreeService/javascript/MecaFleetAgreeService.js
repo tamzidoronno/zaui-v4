@@ -19,6 +19,7 @@ app.MecaFleetAgreeService = {
         var event = thundashop.Ajax.createEvent(null, "requestDate", this, data);
         
         thundashop.Ajax.post(event, function(res) {
+            alert("Din forespørsel er nå sendt");
             thundashop.common.closeModal();
         });
     }

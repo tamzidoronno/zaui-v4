@@ -10,5 +10,6 @@ package com.thundashop.core.trackandtrace;
  * @author ktonder
  */
 public class PickupTask extends Task {
-    
+    /* parcels, money, valuedparcel */
+    public String type = "";
 }

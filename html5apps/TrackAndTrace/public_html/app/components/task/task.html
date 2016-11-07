@@ -1,0 +1,27 @@
+<div ng-if="taskType === 'delivery'" class="task_delivery">
+    <div ng-if="task.cage">
+        <div class="task_titleheader">Cages to deliver</div>
+        <div class="deliveryamount">
+            {{ task.quantity }}
+        </div>
+    </div>
+    
+    <div ng-if="!task.cage">
+        <div class="task_titleheader">Parcels to deliver<div style="font-size: 12px;"> (Please count) </div></div>
+        <div class="deliveryamount">
+            {{ task.quantity }}
+        </div>
+    </div>
+    
+    <div class="button deliveredbutton" ng-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
+    <div class="button exceptionbutton" ng-click="showExceptions()"><i class="fa fa-exclamation"></i> Exception</div>
+</div>
+
+<div ng-if="taskType === 'pickup_parcels'" class="pickup_parcels">
+    <div class="task_titleheader">How many parcels do you pickup?</div>
+    <div class="deliveryamount">
+        <input type="number" class="textfield"/>
+    </div>
+    
+    <div class="button" ng-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
+</div>

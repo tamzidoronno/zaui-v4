@@ -37,6 +37,8 @@ public class MecaCar extends DataCommon {
     
     public Date newSuggestedDate = null;
     
+    public Date mecaVeihjelpExpiry = null;
+    
     public Boolean nextServiceAcceptedByCarOwner = null;
     
     public MecaCarRequestKilomters requestKilomters = new MecaCarRequestKilomters();
@@ -130,6 +132,7 @@ public class MecaCar extends DataCommon {
         
         if (monthsToNextService < 2) {
             needAttentionToService = true;
+            return;
         }
         
         if (kilometersToNextService != null && kilometersToNextService < 3000) {

@@ -5,6 +5,13 @@ class MecaFleetCars extends \MarketingApplication implements \Application {
     public function getDescription() {
         
     }
+    
+    public static function sortByDate($car1, $car2) {
+        $time1 = strtotime($car1->rowCreatedDate);
+        $time2 = strtotime($car2->rowCreatedDate);
+        
+        return $time1 < $time2;
+    }
 
     public function getName() {
         return "MecaFleetCars";

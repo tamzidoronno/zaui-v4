@@ -1,0 +1,23 @@
+<div class="gsview login">
+    <div class="informationbox">
+        Hello {{ name }}, you have {{ routes.length }} available routes.
+        
+        <br/>
+        <br/>
+        Please select one of the following.
+        
+        <br/>
+    </div>
+    
+    <div class="button" ng-click="loadData()">
+        Load routes
+    </div>
+    
+    <div class="route" ng-repeat="route in datarepository.routes">
+        {{ route.name }}
+        <br/> Destinations x / {{ route.destinations.length }}
+
+        <a ng-href='#routeoverview/{{route.id}}'><div class="button showroutebutton" ng-if="route.startInfo.started"><i class="fa fa-arrow-right"></i></div></a>
+        <div class="button startbutton" ng-if="!route.startInfo.started" ng-click="startRoute(route.id)">Start</div>
+    </div>
+</div>

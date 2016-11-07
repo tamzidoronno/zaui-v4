@@ -262,6 +262,49 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return result;
     }
+
+    private Double addDerivedPrices(PmsBookingRooms room, Double price) {
+        if(room.bookingItemTypeId == null) {
+            return price;
+        }
+        
+        PmsPricing priceObject = pmsManager.getPriceObject();
+        double toAdd = 0.0;
+        if(priceObject.derivedPrices != null && priceObject.derivedPrices.containsKey(room.bookingItemTypeId)) {
+            HashMap<Integer, Double> derivedPriced = priceObject.derivedPrices.get(room.bookingItemTypeId);
+            for(int i = 2;i <= room.numberOfGuests;i++) {
+                if(derivedPriced.containsKey(i)) {
+                    toAdd += derivedPriced.get(i);
+                }
+            }
+        }
+        return price + toAdd;
+    }
+
+    public Double generatePriceFromPriceMatrix(HashMap<String, Double> priceMatrix, boolean avgPrice, PmsBooking booking, String typeId) {
+
+        Double totalPrice = 0.0;
+        int count = 0;
+        for(Double tmpPrice : priceMatrix.values()) {
+            totalPrice += tmpPrice;
+            count++;
+        }
+        
+        Double price = totalPrice;
+        
+        price = calculateDiscountCouponPrice(booking, price);
+        price = getUserPrice(typeId, price, count);
+        
+        if(avgPrice && count != 0) {
+            price /= count;
+        }
+        
+        if(price.isNaN() || price.isInfinite()) {
+            logPrint("Nan price or infinite price... this is not good");
+            price = 0.0;
+        }
+        return price;
+    }
  
     class BookingOrderSummary {
         Integer count = 0;
@@ -425,9 +468,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     public void updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Date startDate, Date endDate, Integer priceType) {
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, startDate, endDate, priceType);
+        
         for(String key : priceMatrix.keySet()) {
             if(!room.priceMatrix.containsKey(key) || !booking.isCompletedBooking()) {
                 Double price = priceMatrix.get(key);
+                price = addDerivedPrices(room, price);
                 price = calculateDiscountCouponPrice(booking, price);
                 price = getUserPrice(room.bookingItemTypeId, price, 1);
                 room.priceMatrix.put(key, price);
@@ -1012,29 +1057,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     public Double calculatePrice(String typeId, Date start, Date end, boolean avgPrice, PmsBooking booking) {
         HashMap<String, Double> priceMatrix = getPriceMatrix(typeId, start, end, booking.priceType);
-        
-        Double totalPrice = 0.0;
-        int count = 0;
-        for(Double tmpPrice : priceMatrix.values()) {
-            totalPrice += tmpPrice;
-            count++;
-        }
-        
-        Double price = totalPrice;
-        
-        price = calculateDiscountCouponPrice(booking, price);
-        price = getUserPrice(typeId, price, count);
-        
-        if(avgPrice && count != 0) {
-            price /= count;
-        }
-        
-        if(price.isNaN() || price.isInfinite()) {
-            logPrint("Nan price or infinite price... this is not good");
-            price = 0.0;
-        }
-        
-        return price;
+        return generatePriceFromPriceMatrix(priceMatrix, avgPrice, booking, typeId);
     }
 
     private Double calculateDiscountCouponPrice(PmsBooking booking, Double price) {

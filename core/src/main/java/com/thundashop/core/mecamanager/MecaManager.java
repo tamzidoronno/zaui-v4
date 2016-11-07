@@ -528,7 +528,9 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     public void sendKilometerRequest(String carId) {
         MecaCar car = getCar(carId);
         if (car != null) {
-            notifyByPush(car.cellPhone, getMailContent("pushRequestKilometers"));
+            String msg = getMailContent("pushRequestKilometers");
+            msg += " (" + car.licensePlate + ")";
+            notifyByPush(car.cellPhone, msg);
             car.requestKilomters.markAsSentPushNotification();
             saveObject(car);
         }

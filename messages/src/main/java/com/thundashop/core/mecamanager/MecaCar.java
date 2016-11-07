@@ -87,6 +87,9 @@ public class MecaCar extends DataCommon {
      * Caluclate the next EU Controll, service date etc.
      */
     private void calculateNextValues() {
+        if (licensePlate.equals("RJ96217")) {
+            System.out.println("found");
+        }
         if (lastServiceKilomters != null) {
             nextServiceKilometers = lastServiceKilomters + kilometersBetweenEachService;
             kilometersToNextService = nextServiceKilometers - kilometers;
@@ -130,6 +133,7 @@ public class MecaCar extends DataCommon {
         
         if (monthsToNextService < 2) {
             needAttentionToService = true;
+            return;
         }
         
         if (kilometersToNextService != null && kilometersToNextService < 3000) {

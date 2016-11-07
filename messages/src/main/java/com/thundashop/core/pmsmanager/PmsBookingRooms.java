@@ -80,6 +80,8 @@ public class PmsBookingRooms implements Serializable {
         bookingId = "";
         bookingItemId = "";
         code = "";
+        invoicedFrom = null;
+        invoicedTo = null;
     }
     
     public static String getOffsetKey(Calendar calStart, Integer priceType) {

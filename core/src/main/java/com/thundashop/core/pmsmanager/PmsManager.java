@@ -413,7 +413,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
         
-        if(filter.searchWord != null) {
+        if(filter != null && filter.searchWord != null) {
             filter.searchWord = filter.searchWord.trim();
         }
         java.util.Calendar cal = java.util.Calendar.getInstance();

@@ -744,7 +744,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 items.addAll(changes);
             }
         }
-
+        
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
                 if(!filter.pmsRoomId.equals(room.pmsBookingRoomId)) {
@@ -1276,6 +1276,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         cartManager.clear();
         cartManager.getCart().addCartItems(itemsToReturn);
+        if(pmsManager.getConfigurationSecure().autoSumarizeCartItems) {
+            cartManager.summarizeItems();
+        }
+        
     }
 
     private CartItem createCartItemForCart(String productId, int count, String roomId) {

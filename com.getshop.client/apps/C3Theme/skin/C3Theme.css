@@ -371,15 +371,23 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
         margin: 0px;
     }
     
+    .gsucell[cellid="bc5dd70b-78e6-4567-835c-f0c476f5e918"] .News .newsboxtemplate_1,
     .gsucell_outer[cellid="d6d64f22-ed6a-45d3-b51d-5b5458ace211"] .News .newsboxtemplate_1 {
         padding-left: 10px;
         padding-right: 10px;
+        padding-bottom: 20px;
         
     }
     .News {
         padding: 0px;
         
     }
+    
+    .gsucell[cellid="6dd15feb-ebb2-4b69-95a5-eb96b73028f4"] {
+        padding-right: 20px;
+        margin-top: 20px;    
+    }
+    
     
     
     .news_dates {

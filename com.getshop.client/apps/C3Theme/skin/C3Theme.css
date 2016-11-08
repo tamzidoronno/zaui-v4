@@ -365,4 +365,24 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
         padding-right: 20px  !important;
         padding-bottom: 20px;
     }
+    
+    .News .newsboxtemplate_1 .news_container {
+        width: 100% !important;
+        margin: 0px;
+    }
+    
+    .gsucell_outer[cellid="d6d64f22-ed6a-45d3-b51d-5b5458ace211"] .News .newsboxtemplate_1 {
+        padding-left: 10px;
+        padding-right: 10px;
+        
+    }
+    .News {
+        padding: 0px;
+        
+    }
+    
+    
+    .news_dates {
+        display: none;
+    }
 }

@@ -282,6 +282,21 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
 }
 @media only all and (max-width: 800px) {
     
+    .gsarea[area="footer"] .gs_page_width {
+        padding-left: 20px;
+        padding-right: 20px;
+        text-align: center;
+    }
+        
+    .gsarea[area="header"] img {
+        width: 200px !important;
+        padding-left: 23px !important;
+    }
+    
+    .gsarea[area="header"] .Menu {
+        top: -80px;
+        right: 30px;
+    }
     .gsarea[area="body"] {
         padding-left: 25px;
         padding-right: 25px;
@@ -305,7 +320,7 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     /* End frontpage grey box */
     
     .gsucell_outer[cellid="9949fd02-4057-4976-8c4e-2117bc09ba6b"] .gsucell,
-    .gsucell_outer[cellid="5e60127a-0b75-46e9-9101-e4696d96da25"] .gsucell,
+    /*.gsucell_outer[cellid="5e60127a-0b75-46e9-9101-e4696d96da25"] .gsucell,*/
     .gsucell_outer[cellid="a3e8a610-4249-4503-8bb4-7c4e491a8c74"] .gsucell,
     .gsucell_outer[cellid="2af236a7-f62c-4bed-88cf-36a26e72ecbd"] .gsucell,
     .gsucell_outer[cellid="3bcc4547-f6e5-41e6-9151-628cf3e59e0a"] .gsucell,
@@ -342,5 +357,12 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     .gscell_505.gsucell,
     .gscell_581.gsucell {
         width: 100% !important;
+    }
+    
+    .gsucell[cellid="8ef52c8e-b548-400d-a299-eeaf548f5bf6"] .ContentManager,
+    .gsucell[cellid="050cb61d-2024-4bae-a19d-fabfb1a8c999"] .ContentManager {
+        padding-left: 20px !important;
+        padding-right: 20px  !important;
+        padding-bottom: 20px;
     }
 }

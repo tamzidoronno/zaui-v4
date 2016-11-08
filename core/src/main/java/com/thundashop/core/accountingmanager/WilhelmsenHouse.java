@@ -148,18 +148,7 @@ public class WilhelmsenHouse implements AccountingInterface {
     }
     
     private String getProductDebitNumber(Product product, Application app) {
-        
-        int taxGroup = product.taxgroup;
-        if (taxGroup == -1) {
-            taxGroup = 0;
-        }
-        
-        String accountId = app.getSetting("product_"+product.id+"_"+taxGroup);
-        if (accountId != null && !accountId.isEmpty()) {
-            return accountId;
-        }
-        
-        return "";
+        return managers.productManager.getProduct(product.id).accountingAccount;
     }
 
     

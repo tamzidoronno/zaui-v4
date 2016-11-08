@@ -37,13 +37,14 @@
                     <span ng-show="cleaningList.type=='checkout'">{{getCheckinTime(guest.end, guest, true) }}</span>
                      {{guest.guest[0].name}} 
                     <i class="fa fa-arrow-right" style='float:right;'></i>
+                    
                     <span style='float:right; padding-right: 20px;' ng-show='guest.hasBeenCleaned'>Ready</span>
                     <span style='float:right; padding-right: 20px;' ng-show='!guest.hasBeenCleaned'>Not ready</span>
+                    <div ng-show="guest.cleaningComment"><i class="fa fa-warning"></i> {{guest.cleaningComment}}</div>
                 </div>
             </a>
         </div>
         <div class='col-md-12' ng-show="!cleaningList.list.length" style="border-bottom: solid 1px #bbb; padding: 10px; padding-left: 30px;"><b>No activity for today</b></div>
-    </a>
 
     </div>
 </div>

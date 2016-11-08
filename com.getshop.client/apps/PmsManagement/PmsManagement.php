@@ -25,6 +25,31 @@ class PmsManagement extends \WebshopApplication implements \Application {
             unset($_SESSION['toggleOldFilterVersion']);
         }
     }
+    
+    public function resendConfirmation() {
+        $email = $_POST['data']['email'];
+        $bookingId = $_POST['data']['bookingid'];
+        $this->getApi()->getPmsManager()->sendConfirmation($this->getSelectedName(), $email, $bookingId);
+        echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
+        echo "<i class='fa fa-info'></i> Confirmation has been sent.";
+        echo "</div>";
+        echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
+        $this->showBookingInformation();
+    }
+    
+    public function setCleaningComment() {
+        $comment = $_POST['data']['comment'];
+        $roomid = $_POST['data']['roomid'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomid) {
+                $room->cleaningComment = $comment;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->showBookingInformation();
+    }
+    
     public function setSendInvoiceAfter() {
         $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
         $booking->createOrderAfterStay = $_POST['data']['checked'];
@@ -200,6 +225,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $bookingId = $_POST['data']['bookingid'];
         $orderid = $_POST['data']['orderid'];
         $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderid, $email, $bookingId);
+
+        echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
+        echo "<i class='fa fa-info'></i> Invoice has been sent.";
+        echo "</div>";
+        echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
+
         $this->showBookingInformation();
     }
     
@@ -352,6 +383,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $email = $_POST['data']['bookerEmail'];
         $prefix = $_POST['data']['bookerPrefix'];
         $phone = $_POST['data']['bookerPhone'];
+
+        echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
+        echo "<i class='fa fa-info'></i> Paymentlink has been sent.";
+        echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
+        echo "</div>";
         
         $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderid, $bookingid, $email, $prefix, $phone);
         $this->showBookingInformation();
@@ -580,10 +616,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . $_POST['data']['endtime']));
         $bookingId = $_POST['data']['bookingid'];
         $type = $_POST['data']['item'];
+        $guestInfoRoom = $_POST['data']['guestinfofromroom'];
         
-        $errors = $this->getApi()->getPmsManager()->addBookingItemType($this->getSelectedName(), $bookingId, $type, $start, $end);
-        if($errors) {
-            $this->errors[] = $errors;
+        for($i = 0; $i < $_POST['data']['itemcount']; $i++) {
+            $errors = $this->getApi()->getPmsManager()->addBookingItemType($this->getSelectedName(), $bookingId, $type, $start, $end, $guestInfoRoom);
+            if($errors) {
+                $this->errors[] = $errors;
+            }
         }
         $this->showBookingInformation();
     }
@@ -1145,10 +1184,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function includeAddRoomOptions($items, $start, $end, $defaultType) {
         $types = $this->getTypes();
         ?>
-            <select style='margin-right: 10px;' gsname='item' class='addroomselectiontype'>
+            <select style='width: 250px;' gsname='item' class='addroomselectiontype'>
                 <?php 
                 foreach($types as $type) {
                     /* @var $item core_bookingengine_data_BookingItem */
+                    if(!$defaultType) {
+                        $defaultType = $type->id;
+                    }
                     $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $type->id, $start, $end);
                     $selected = "";
                     if($type->id == $defaultType) {
@@ -1163,6 +1205,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 ?>
             </select>
         <?php
+        $this->addRoomCount($start, $end, $defaultType);
     }
     
     public function showLog() {
@@ -1790,6 +1833,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->includefile("statistics");
         } else if($filter->filterType == "summary") {
             $this->includefile("summary");
+        } else if($filter->filterType == "unbilled") {
+            $this->includefile("unbilled");
+        } else if($filter->filterType == "invoicecustomers") {
+            $this->includefile("invoicecustomers");
         } else if($filter->filterType == "orderstats") {
             $this->includefile("orderstats");
         } else {
@@ -1824,6 +1871,46 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->end = $this->getSelectedFilter()->endDate;
         return $filter;
         
+    }
+
+    public function addRoomCount($start, $end, $typeId) {
+        $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $typeId, $start, $end);
+
+        if($number <= 0) {
+            return;
+        }
+        echo "<select gsname='itemcount'>";
+        for($i = 1;$i <= $number; $i++) {
+            echo "<option value='$i'>$i</option>";
+        }
+        echo "</select>";
+    }
+
+    public function createOrderPreview($booking, $config) {
+        $endDate = time();
+        foreach($booking->rooms as $room) {
+            if($endDate < strtotime($room->date->end)) {
+                $endDate = strtotime($room->date->end);
+            }
+        }
+        if(isset($_POST['data']['endingAt'])) {
+            $endDate = strtotime($_POST['data']['endingAt']);
+        }
+        $invoiceRoomId = "";
+        if(isset($_POST['data']['roomId'])) {
+            $invoiceRoomId = $_POST['data']['roomId'];
+        }
+
+        $endingAt = date("d.m.Y", $endDate);
+
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        $filter->onlyEnded = false;
+        $filter->prepayment = $config->prepayment;
+        $filter->avoidOrderCreation = true;
+        $filter->pmsRoomId = $invoiceRoomId;
+
+        $filter->endInvoiceAt = $this->convertToJavaDate($endDate);
+        $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), $booking->id, $filter);
     }
 
 }

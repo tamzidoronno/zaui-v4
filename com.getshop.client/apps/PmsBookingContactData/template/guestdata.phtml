@@ -5,6 +5,9 @@
 $codes = $this->getCodes();
 $booking = $this->getCurrentBooking();
 $items = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName()));
+$prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $booking->sessionStartDate, $booking->sessionEndDate);
+$derivedPrices = $prices->derivedPrices;
+
 $j = 1;
 foreach($booking->rooms as $room) {
     $guest = new core_pmsmanager_PmsGuests();
@@ -23,14 +26,29 @@ foreach($booking->rooms as $room) {
     ?>
 <div>
     <label class='col-25'>* <?php echo $this->__w("Number of guests"); ?><br>
+        <?php
+        
+        $derivedToUse = new stdClass();
+        if(isset($derivedPrices->{$room->bookingItemTypeId})) {
+            $derivedToUse = $derivedPrices->{$room->bookingItemTypeId};
+        }
+       ?>
         <select gsname='visitor_numberofguests_<? echo $j;?>' class='alsoupdatesummary'>
         <?php
+        $count = 0;
         for($i = 1; $i <= $items[$room->bookingItemTypeId]->size; $i++) {
             $selected = "";
             if($room->numberOfGuests == $i) {
                 $selected = "SELECTED";
             }
-            echo "<option value='$i' $selected>$i</option>";
+            if(isset($derivedToUse->{$i})) {
+                $count += $derivedToUse->{$i};
+            }
+            $extraText = "";
+            if($count > 0) {
+                $extraText = "(+" . $count . "NOK)";
+            }
+            echo "<option value='$i' $selected>$i $extraText</option>";
         }
         ?>
         </select>

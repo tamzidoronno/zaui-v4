@@ -63,6 +63,7 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
     @Override
     public void checkForOrdersToCapture() {
         String pollKey = getCallBackId();
+        if(pollKey == null) { return; }
         if(frameworkConfig.productionMode) {
             pollKey += "-prod";
         } else {
@@ -137,7 +138,13 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
 
     private String getCallBackId() {
         Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings("a92d56c0-04c7-4b8e-a02d-ed79f020bcca");
+        if(bamboraApp == null) {
+            return null;
+        }
         Setting setting = bamboraApp.settings.get("callback_id");
+        if(setting == null) {
+            return null;
+        }
         return setting.value;
     }
 

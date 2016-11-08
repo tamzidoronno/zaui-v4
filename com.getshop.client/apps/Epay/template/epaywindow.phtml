@@ -1,5 +1,6 @@
 <?php
     $merchid = $this->getConfigurationSetting("merchantid");
+    $secret = $this->getConfigurationSetting("md5secret");
     $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
     $order = $this->getOrder();
     $orderId = $order->incrementOrderId;
@@ -18,22 +19,40 @@
         $key .= "-debug";
     }
     
-    $callBack = 'http://'.$_SERVER['HTTP_HOST']. "?key=".$key;
+    $callBack = 'http://'.$_SERVER['HTTP_HOST']. "/scripts/merchantcallback.php?key=".$key . "&gsordnr=".$orderId;
     $redirect_url = "http://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
     $callBack = str_replace(".3.0.local.", ".", $callBack);
+     
+     $params = array('merchantnumber' => "$merchid",
+         'amount'  => "$amount",
+         "callbackurl" => "$callBack",
+         "accepturl" => $redirect_url."payment_success",
+         "cancelurl" => $redirect_url."payment_failed",
+         "subscription" => "1",
+         "instantcapture" => "1",
+         "currency" => "NOK"
+         );
 ?>
 
 <script charset="UTF-8" src="https://ssl.ditonlinebetalingssystem.dk/integration/ewindow/paymentwindow.js" type="text/javascript"></script>
 <script type="text/javascript">
-     paymentwindow = new PaymentWindow({
-         'merchantnumber': "<?php echo $merchid; ?>",
-         'amount': "<?php echo $amount; ?>",
-         'instantcapture' : 1,
-         'callbackurl' : "<?php echo $callBack; ?>",
-         'accepturl' : "<?php echo $redirect_url; ?>payment_success",
-         'cancelurl' : "<?php echo $redirect_url; ?>payment_failed",
-         'currency': "NOK"
-     });
-     paymentwindow.open();
-</script>
-  
+    function checkPaymentWindow() {
+        console.log('checking');
+        if(typeof PaymentWindow !== 'undefined'){
+            paymentwindow = new PaymentWindow({
+                <?php
+                foreach ($params as $key => $value)
+                {
+                    echo "'" . $key . "': \"" . $value . "\",\n";
+                }
+                ?>
+                'hash': "<?php echo md5(implode("", array_values($params)) . $secret); ?>"
+            });
+            paymentwindow.open();
+        } else {
+            setTimeout(checkPaymentWindow, "200");
+        }            
+    }
+    checkPaymentWindow();
+    
+ </script>

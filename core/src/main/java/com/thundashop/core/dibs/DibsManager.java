@@ -72,7 +72,6 @@ public class DibsManager extends ManagerBase implements IDibsManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        createScheduler("dibscollector", "* * * * *", CheckDibsCollector.class);
     }
     
     

@@ -44,6 +44,9 @@ public interface IPmsManager {
     public List<SimpleInventory> getSimpleInventoryList(String roomName);
     
     @Administrator
+    public void sendConfirmation(String email, String bookingId);
+    
+    @Administrator
     public void reportMissingInventory(List<SimpleInventory> inventories, String itemId, String roomId);
     
     @Administrator
@@ -176,7 +179,7 @@ public interface IPmsManager {
     public String addBookingItem(String bookingId, String item, Date start, Date end);
     
     @Administrator
-    public String addBookingItemType(String bookingId, String item, Date start, Date end);
+    public String addBookingItemType(String bookingId, String item, Date start, Date end, String guestInfoFromRoom);
     
     @Editor
     public String getDefaultMessage(String bookingId);

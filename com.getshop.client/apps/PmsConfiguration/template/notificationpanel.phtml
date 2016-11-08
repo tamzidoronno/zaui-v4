@@ -625,13 +625,13 @@ $channelConfig = $config->channelConfiguration;
             <span class='configentry'>
                 <?
                 $checked = "";
-                if($notificationSettings->autoMarkCreditNotesAsPaidFor) {
+                if($notificationSettings->autoSumarizeCartItems) {
                     $checked = "CHECKED";
                 }
                 ?>
-                <input type='checkbox' gsname='autoMarkCreditNotesAsPaidFor' <? echo $checked; ?>>
+                <input type='checkbox' gsname='autoSumarizeCartItems' <? echo $checked; ?>>
             </span>
-            Automark creditnotes as paid for.
+            Automatically summarize items in cart when create order (credits and debets).
         </div>
         <div class='configrow'>
             <span class='configentry'>

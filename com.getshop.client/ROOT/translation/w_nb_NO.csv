@@ -120,7 +120,6 @@ Continue;-;Fortsett
 Continue shopping;-;Fortsett å handle
 Continue to booking;-;Fortsett til booking
 Continue to cart;-;Gå til handlekurven
-Continue without payment;-;Fortsett uten betaling
 Cookies are being stored;-;Informasjonskapsler!
 Count;-;Antall
 Country;-;Land
@@ -158,7 +157,6 @@ Default contact person for company;-;Default kontakt person
 Delayed;-;Utsatt
 Delete;-;Slett
 Delete area;-;Slett området
-Delete booking;-;Slett booking
 Delete column;-;Slett kolonnen
 Delete image;-;Slett bilde
 Delete opening hours;-;Slett åpningstider
@@ -279,6 +277,7 @@ Link this cell;-;Link denne cellen
 Loading;-;Laster
 Location;-;Sted
 Logged in;-;Innlogget
+Logged on as;-;Logget på som
 Logout;-;Logg ut
 Lost your password?;-;Glemt ditt passord?
 March;-;Mars

@@ -1207,6 +1207,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .filter(filterUsersByDate(filterOptions))
                 .filter(filterUsersBySearchWord(filterOptions))
                 .filter(filterUsersByStatus(filterOptions))
+                .filter(filterUsersByExtras(filterOptions))
                 .collect(Collectors.toList());
         
         Collections.sort(allUsers, compareByName());
@@ -1242,6 +1243,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     private Predicate<? super User> filterUsersBySearchWord(FilterOptions filterOptions) {
         return o -> o.matchByString(filterOptions.searchWord);
+    }
+    
+    private Predicate<? super User> filterUsersByExtras(FilterOptions filterOptions) {
+        return o -> o.matchByPaymentType(filterOptions);
     }
 
     private Predicate<? super User> filterUsersByStatus(FilterOptions filterOptions) {
@@ -1745,4 +1750,5 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         return fullName;
     }
+
 }

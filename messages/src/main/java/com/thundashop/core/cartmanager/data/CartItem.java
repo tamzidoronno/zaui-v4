@@ -44,7 +44,7 @@ public class CartItem implements Serializable {
             return 0.0;
         }
         long diff = endDate.getTime() - startDate.getTime();
-        long mins = diff / 60000;
+        long mins = getSeconds();
         if(mins == 0) {
             return 0.0;
         }

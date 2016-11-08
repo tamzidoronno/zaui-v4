@@ -9,11 +9,14 @@ import com.google.gson.GsonBuilder;
 import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  *
@@ -162,6 +165,7 @@ public class User extends DataCommon implements Comparable<User> {
         
         return companyObject.invoiceEmail;
     }
+
  
     public static class Type {
         public static int GETSHOPADMINISTRATOR = 200;
@@ -331,4 +335,30 @@ public class User extends DataCommon implements Comparable<User> {
         
         return toString().toLowerCase().contains(search.toLowerCase());
     }
+    
+    
+    public boolean matchByPaymentType(FilterOptions filterOptions) {
+        if(filterOptions == null) {
+            return true;
+        }
+        
+        if(filterOptions.extra == null) {
+            return true;
+        }
+
+        String type = filterOptions.extra.get("paymentType");
+        if(type == null) {
+            return true;
+        }
+        
+        if(preferredPaymentType == null || preferredPaymentType.isEmpty()) {
+            return false;
+        }
+        
+        if(preferredPaymentType.contains(type)) {
+            return true;
+        }
+        return false;
+    }
+    
 }

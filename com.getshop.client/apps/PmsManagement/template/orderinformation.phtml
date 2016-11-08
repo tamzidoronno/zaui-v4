@@ -280,17 +280,10 @@ if($booking->orderIds) {
     if(isset($_POST['data']['roomId'])) {
         $invoiceRoomId = $_POST['data']['roomId'];
     }
-    
+
     $endingAt = date("d.m.Y", $endDate);
     
-    $filter = new \core_pmsmanager_NewOrderFilter();
-    $filter->onlyEnded = false;
-    $filter->prepayment = $config->prepayment;
-    $filter->avoidOrderCreation = true;
-    $filter->pmsRoomId = $invoiceRoomId;
-
-    $filter->endInvoiceAt = $this->convertToJavaDate($endDate);
-    $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), $booking->id, $filter);
+    $this->createOrderPreview($booking, $config);
     $cart = $this->getApi()->getCartManager()->getCart();
 
     echo "<br><h2>Next order preview (invoice until $endingAt)</h2>";

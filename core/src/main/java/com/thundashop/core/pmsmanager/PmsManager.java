@@ -412,9 +412,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        
+        if(filter != null && filter.searchWord != null) {
+            filter.searchWord = filter.searchWord.trim();
+        }
         java.util.Calendar cal = java.util.Calendar.getInstance();
         cal.set(java.util.Calendar.YEAR, 2016);
-        System.out.println(cal.get(java.util.Calendar.MONTH));
         
         if (!initFinalized) {
             finalizeList(new ArrayList(bookings.values()));
@@ -464,7 +467,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         } else if (filter.filterType == null || filter.filterType.isEmpty() || filter.filterType.equals("registered")) {
             for (PmsBooking booking : bookings.values()) {
                 if (filter.startDate == null || (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate))) {
-                    result.add(booking);
+                    if(filter.userId == null || filter.userId.isEmpty()) {
+                        result.add(booking);
+                    } else if(filter.userId.equals(booking.userId)) {
+                        result.add(booking);
+                    }
                 }
             }
         } else if (filter.filterType.equals("active") || filter.filterType.equals("inhouse")) {
@@ -863,6 +870,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         prices.pricesExTaxes = newPrices.pricesExTaxes;
         prices.privatePeopleDoNotPayTaxes = newPrices.privatePeopleDoNotPayTaxes;
         prices.channelDiscount = newPrices.channelDiscount;
+        prices.derivedPrices = newPrices.derivedPrices;
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
             for (String date : priceMap.keySet()) {
@@ -2034,7 +2042,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public String addBookingItemType(String bookingId, String type, Date start, Date end) {
+    public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom) {
         PmsBooking booking = getBooking(bookingId);
         PmsBookingRooms room = new PmsBookingRooms();
         BookingItemType typeToAdd = bookingEngine.getBookingItemType(type);
@@ -2045,6 +2053,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.guests.add(new PmsGuests());
         setPriceOnRoom(room, true, booking);
 
+        
+        if(guestInfoFromRoom != null && !guestInfoFromRoom.isEmpty()) {
+            PmsBooking bookingforguest = getBookingFromRoom(guestInfoFromRoom);
+            PmsBookingRooms roomforGuest = bookingforguest.findRoom(guestInfoFromRoom);
+            Gson gson = new Gson();
+            String copyroom = gson.toJson(roomforGuest);
+            PmsBookingRooms copiedRoom = gson.fromJson(copyroom, PmsBookingRooms.class);
+            room.guests = copiedRoom.guests;
+        }
+        
         String res = addBookingToBookingEngine(booking, room);
         if(!res.isEmpty()) {
             return res;
@@ -3110,6 +3128,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
         if(getConfigurationSecure().usePriceMatrixOnOrder) {
             pmsInvoiceManager.updatePriceMatrix(booking, room, room.date.start, room.date.end, booking.priceType);
+            room.price = pmsInvoiceManager.generatePriceFromPriceMatrix(room.priceMatrix, avgPrice, booking, room.bookingItemTypeId);
         }
         room.taxes = pmsInvoiceManager.calculateTaxes(room.bookingItemTypeId);
     }
@@ -4172,6 +4191,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return false;
+    }
+
+    @Override
+    public void sendConfirmation(String email, String bookingId) {
+        emailToSendTo = email;
+        doNotification("booking_completed", bookingId);
     }
 
 }

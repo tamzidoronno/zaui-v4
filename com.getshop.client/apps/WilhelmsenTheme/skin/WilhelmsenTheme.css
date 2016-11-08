@@ -12,6 +12,9 @@ body {
     padding-right: 25px;
 }
 
+.LoggedOnInfoApp { color : #e2d2be; text-align: right; padding-top: 20px; padding-bottom: 22px; min-height: 43px; }
+.LoggedOnInfoApp a { color : #e2d2be;  }
+
 .PmsBookingSummary .itemname { width: 350px; }
 .PmsBooking .pmsfront .fa-calendar,
 .PmsBookingCalendar .calendar .calendar_header,
@@ -80,8 +83,7 @@ body {
 }
 
 .gsarea[area="header"] .Menu .entry {
-    padding-right: 20px;
-    padding-left: 10px;
+    padding-left: 20px;
     font-size: 12px;
     height: 32px;
 }

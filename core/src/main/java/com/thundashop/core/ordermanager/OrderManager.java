@@ -4,6 +4,7 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.bambora.BamboraManager;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -11,6 +12,7 @@ import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.dibs.DibsManager;
+import com.thundashop.core.epay.EpayManager;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -79,6 +81,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private DibsManager dibsManager;
     
     @Autowired
+    private BamboraManager bamboraManager;
+    
+    @Autowired
+    private EpayManager epayManager;
+    
+    @Autowired
     GrafanaManager grafanaManager;
     
     @Override
@@ -145,6 +153,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 orders.put(order.id, order);
             }
         }
+        createScheduler("ordercollector", "* * * * *", CheckOrderCollector.class);
         
     }
     
@@ -384,6 +393,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void checkForOrdersToCapture() throws ErrorException {
         dibsManager.checkForOrdersToCapture();
+        epayManager.checkForOrdersToCapture();
+        bamboraManager.checkForOrdersToCapture();
     }
     
     @Override

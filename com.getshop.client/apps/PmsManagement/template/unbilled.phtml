@@ -1,0 +1,56 @@
+<?php
+
+$filter = $this->getSelectedFilter();
+$filter->filterType = "checkout";
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+
+echo "<table cellspacing='0'>";
+echo "<tr>";
+echo "<th></th>";
+echo "<th>Company</th>";
+echo "<th>Amount</th>";
+echo "</tr>";
+
+$sum = 0;
+foreach($bookings as $booking) {
+    if(!$booking->payedFor) {
+        continue;
+    }
+    if($booking->isDeleted) {
+        continue;
+    }
+    $delete = true;
+    foreach($booking->rooms as $room) {
+        if(!$room->deleted) {
+            $delete = false;
+        }
+    }
+    if($delete) {
+        continue;
+    }
+    
+    $user = $this->getApi()->getUserManager()->getUserById($booking->userId);    
+    $this->createOrderPreview($booking, $config);
+    $total = $this->getApi()->getCartManager()->calculateTotalCost($this->getApi()->getCartManager()->getCart());
+    if($total <= 0) {
+        continue;
+    }
+    $sum += $total;
+    echo "<tr>";
+    echo "<td><i class='fa fa-info moreinformationaboutbooking actions' bookingid='".$booking->id."'></i></td>";
+    echo "<td>" . $user->fullName . "</td>";
+    echo "<td>$total</td>";
+    echo "</tr>";
+}
+
+
+echo "<tr>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td>$sum</td>";
+echo "</tr>";
+
+echo "</table>";
+?>

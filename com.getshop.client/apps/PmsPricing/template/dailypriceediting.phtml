@@ -43,7 +43,46 @@ $prices = $priceObject->dailyPrices;
         echo "</tr>";
     }
     ?>
-</table>    
+</table>
+</div>
+<div>
+    <h1>Additional guest price (remember to manually update remote sites)</h1>
+    <table>
+    <?php
+    $maxCount = 0;
+    foreach($itemTypes as $type) {
+        if($maxCount < $type->size) {
+            $maxCount = $type->size;
+        }
+    }
+    echo "<tR>";
+    echo "<td></td>";
+    for($i = 2; $i <= $maxCount; $i++) {
+        echo "<th>Guest $i</th>";
+    }
+    ?>
+    <?php
+    $derivedPrices = $priceObject->derivedPrices;
+
+    foreach($itemTypes as $type) {
+            echo "<tr>";
+            echo "<td>" . $type->name . "</td>";
+            for($i = 2; $i <= $type->size; $i++) {
+                
+                $toSet = 0.0;
+                if(isset($derivedPrices->{$type->id})) {
+                    $curPrices = $derivedPrices->{$type->id};
+                    if(isset($derivedPrices) && isset($curPrices->{$i})) {
+                        $toSet = $curPrices->{$i};
+                    }
+                }
+
+                echo "<td><input type='txt' class='derivedprices' style='width: 50px;' value='$toSet' bookingtype='".$type->id."' guestcount='$i'></td>";
+            }
+            echo "</tr>";
+        }
+    ?>
+    </table>
 </div>
 
 <div style='text-align: right;'>

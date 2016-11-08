@@ -344,5 +344,44 @@ public class CartManager extends ManagerBase implements ICartManager {
         return null;
     }
 
+    public void summarizeItems() {
+        List<String> iterated = new ArrayList();
+        List<CartItem> removeItem = new ArrayList();
+        for(CartItem item : getCart().getItems()) {
+            iterated.add(item.getCartItemId());
+            for(CartItem item2 : getCart().getItems()) {
+                if(iterated.contains(item2.getCartItemId())) {
+                    continue;
+                }
+                int itemcount2 = item2.getCount();
+                int itemcount = item.getCount();
+                
+                if(itemcount2 > 0 && itemcount < 0) {
+                    continue;
+                }
+                if(itemcount2 < 0 && itemcount > 0) {
+                    continue;
+                }
+                
+                if(item.getProduct().externalReferenceId == null || item2.getProduct().externalReferenceId == null) {
+                    continue;
+                }
+                if(!item2.getProduct().externalReferenceId.equals(item.getProduct().externalReferenceId)) {
+                    continue;
+                }
+                
+                 if(item.getProduct().id.equals(item2.getProduct().id)) {
+                     if(item.getProduct().price == item2.getProduct().price) {
+                         item.setCount(item.getCount()+item2.getCount());
+                         removeItem.add(item2);
+                     }
+                 }
+            }
+        }
+        for(CartItem remove : removeItem) {
+            getCart().removeItem(remove.getCartItemId());
+        }
+    }
+
 
 }

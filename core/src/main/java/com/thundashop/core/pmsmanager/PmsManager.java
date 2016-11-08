@@ -418,7 +418,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         java.util.Calendar cal = java.util.Calendar.getInstance();
         cal.set(java.util.Calendar.YEAR, 2016);
-        System.out.println(cal.get(java.util.Calendar.MONTH));
         
         if (!initFinalized) {
             finalizeList(new ArrayList(bookings.values()));
@@ -468,7 +467,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         } else if (filter.filterType == null || filter.filterType.isEmpty() || filter.filterType.equals("registered")) {
             for (PmsBooking booking : bookings.values()) {
                 if (filter.startDate == null || (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate))) {
-                    result.add(booking);
+                    if(filter.userId == null || filter.userId.isEmpty()) {
+                        result.add(booking);
+                    } else if(filter.userId.equals(booking.userId)) {
+                        result.add(booking);
+                    }
                 }
             }
         } else if (filter.filterType.equals("active") || filter.filterType.equals("inhouse")) {

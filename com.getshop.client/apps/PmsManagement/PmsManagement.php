@@ -1833,6 +1833,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->includefile("statistics");
         } else if($filter->filterType == "summary") {
             $this->includefile("summary");
+        } else if($filter->filterType == "unbilled") {
+            $this->includefile("unbilled");
+        } else if($filter->filterType == "invoicecustomers") {
+            $this->includefile("invoicecustomers");
         } else if($filter->filterType == "orderstats") {
             $this->includefile("orderstats");
         } else {
@@ -1880,6 +1884,33 @@ class PmsManagement extends \WebshopApplication implements \Application {
             echo "<option value='$i'>$i</option>";
         }
         echo "</select>";
+    }
+
+    public function createOrderPreview($booking, $config) {
+        $endDate = time();
+        foreach($booking->rooms as $room) {
+            if($endDate < strtotime($room->date->end)) {
+                $endDate = strtotime($room->date->end);
+            }
+        }
+        if(isset($_POST['data']['endingAt'])) {
+            $endDate = strtotime($_POST['data']['endingAt']);
+        }
+        $invoiceRoomId = "";
+        if(isset($_POST['data']['roomId'])) {
+            $invoiceRoomId = $_POST['data']['roomId'];
+        }
+
+        $endingAt = date("d.m.Y", $endDate);
+
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        $filter->onlyEnded = false;
+        $filter->prepayment = $config->prepayment;
+        $filter->avoidOrderCreation = true;
+        $filter->pmsRoomId = $invoiceRoomId;
+
+        $filter->endInvoiceAt = $this->convertToJavaDate($endDate);
+        $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), $booking->id, $filter);
     }
 
 }

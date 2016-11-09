@@ -18,8 +18,5 @@ class C3Theme extends \ThemeApplication implements \Application {
         return ["logoSameHeight"];
     }
     
-    public function isMobileAndResponsiveDesignDisabled() {
-        return true;
-    }
 }
 ?>

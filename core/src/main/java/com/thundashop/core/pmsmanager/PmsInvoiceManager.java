@@ -466,18 +466,22 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     
 
-    public void updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Date startDate, Date endDate, Integer priceType) {
+    public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Date startDate, Date endDate, Integer priceType) {
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, startDate, endDate, priceType);
-        
+        double total = 0.0;
+        int count = 0;
         for(String key : priceMatrix.keySet()) {
             if(!room.priceMatrix.containsKey(key) || !booking.isCompletedBooking()) {
                 Double price = priceMatrix.get(key);
                 price = addDerivedPrices(room, price);
                 price = calculateDiscountCouponPrice(booking, price);
                 price = getUserPrice(room.bookingItemTypeId, price, 1);
+                total += price;
                 room.priceMatrix.put(key, price);
+                count++;
             }
         }
+        return total / count;
     }
 
     private Date adjustDateForCount(Date date, Integer priceType, boolean start) {

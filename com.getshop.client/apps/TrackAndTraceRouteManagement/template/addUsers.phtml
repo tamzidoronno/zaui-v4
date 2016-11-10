@@ -1,0 +1,29 @@
+<?
+/* @var $this ns_5ebb7b42_35b7_48d3_b047_825dc2b30b5f\TrackAndTraceRouteManagement */
+
+$route = $this->getRoute();
+
+$users = $this->getSearchedForUsers();
+$searchValue = isset($_POST['data']['searchfield']) ? $_POST['data']['searchfield'] : "";
+
+echo "<h1>".$route->name."</h1>";
+?>
+
+<div gstype='form' method='searchForUsers'>
+    <br/>
+    <br/> Search for  users 
+    <br/><input gstype="submitenter" type='textfield' class='gsniceinput1' gsname='searchfield' value="<? echo $searchValue; ?>" placeholder="Name / email / phone etc"/> 
+    <br/>
+    <br/><div gstype="submit" class='shop_button'><i class='fa fa-search'></i> Search</div>
+    <div gsclick="changeToRouteView" class="shop_button">Cancel (Back to route)</div>
+</div>
+
+<br/>
+<div>
+    <?
+    foreach ($users as $user) {
+        echo "<div class='addUserRow'>".'<div class="gs_shop_small_icon"  gsclick="addUser" userid="'.$user->id.'"><i class="fa fa-plus"></i></div> '.$user->fullName." / $user->emailAddress / $user->cellPhone</div>";
+    }
+    ?>
+</div>
+

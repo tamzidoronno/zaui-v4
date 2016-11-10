@@ -18,7 +18,8 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class ProMeisterMessageManager  {
-
+    private String smsFactoryType = "nexmo";
+    
     @Autowired
     private MessageManager messageManager;
     
@@ -30,15 +31,15 @@ public class ProMeisterMessageManager  {
         return messageManager.sendMail(emailAddress, fullName, subject, content, email, from);
     }
 
-    public String sendSms(Event event, String clickatell, String cellPhone, String content, String prefix) {
+    public String sendSms(Event event, String cellPhone, String content, String prefix) {
         if (!event.isInFuture()) {
             return "";
         }
         
-        return messageManager.sendSms(clickatell, cellPhone, content, prefix);
+        return messageManager.sendSms(smsFactoryType, cellPhone, content, prefix);
     }
 
-    public String sendSms(Event event, String smsFactoryType, String phoneNumber, String content, String prefix, String storeName) {
+    public String sendSms(Event event, String phoneNumber, String content, String prefix, String storeName) {
         if (!event.isInFuture()) {
             return "";
         }

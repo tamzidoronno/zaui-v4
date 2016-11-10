@@ -37,4 +37,7 @@ public interface ITrackAndTraceManager {
     
     @Administrator
     public void saveException(TrackAndTraceException exception);
+    
+    @Administrator
+    public List<Route> getAllRoutes();
 }

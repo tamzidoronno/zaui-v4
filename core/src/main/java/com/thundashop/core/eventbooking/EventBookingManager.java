@@ -1272,7 +1272,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String storeName = getStoreName();
         
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            String res = messageManager.sendSms(event, "clickatell", phoneNumber, content, prefix, storeName);
+            String res = messageManager.sendSms(event, phoneNumber, content, prefix, storeName);
             logEventEntry(event, "SMS_SIGNUP_SENT", "Signup sms sent to " + user.fullName, res);
         } else {
             logEventEntry(event, "SMS_SIGNUP_SENT_FAILED", "Failed to send signup sms to use " + user.fullName, "");
@@ -1288,7 +1288,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String storeName = getStoreName();
         
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            String res = messageManager.sendSms(event, "clickatell", phoneNumber, content, prefix, storeName);
+            String res = messageManager.sendSms(event, phoneNumber, content, prefix, storeName);
             logEventEntry(event, "SMS_TRANSFER_SENT", "Signup sms sent to " + user.fullName, res);
         } else {
             logEventEntry(event, "SMS_TRANSFER_SENT_FAILED", "Failed to send signup sms to use " + user.fullName, "");
@@ -1338,7 +1338,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String storeName = getStoreName();
         
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            String res = messageManager.sendSms(event, "clickatell", phoneNumber, content, prefix, storeName);
+            String res = messageManager.sendSms(event, phoneNumber, content, prefix, storeName);
             logEventEntry(event, "SMS_REMOVED_SENT", "Sms removed notification sent to user " + user.fullName + " cellphone, " + phoneNumber + ", prefix: " + prefix, res);
         } else {
             logEventEntry(event, "SMS_REMOVED_SENT_FAILED", "Failed to send removed sms to user " + user.fullName, "");
@@ -1376,7 +1376,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String storeName = getStoreName();
         
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            String res = messageManager.sendSms(event, "clickatell", phoneNumber, content, prefix, storeName);
+            String res = messageManager.sendSms(event, phoneNumber, content, prefix, storeName);
             logEventEntry(event, "SMS_CANCELED_SENT", "Sms canceled notification sent to user " + user.fullName + " cellphone, " + phoneNumber + ", prefix: " + prefix, res);
         } else {
             logEventEntry(event, "SMS_CANCELED_SENT_FAILED", "Failed to send canceled sms to user " + user.fullName + ", phonenumber: " + phoneNumber + ", prefix: " + prefix, "");

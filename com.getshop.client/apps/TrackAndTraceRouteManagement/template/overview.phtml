@@ -1,0 +1,25 @@
+<?
+/* @var $this ns_5ebb7b42_35b7_48d3_b047_825dc2b30b5f\TrackAndTraceRouteManagement */
+
+$routes = $this->getApi()->getTrackAndTraceManager()->getAllRoutes();
+
+if ($routes) {
+   
+    echo "<div class='routelist'>";
+    echo "<h1>All routes:</h1>";
+    foreach ($routes as $route) {
+        echo "<div class='routeview'> <div gsclick='changeToRouteView' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-edit'></i></div> ".$route->name."</div>";
+    }
+    echo "</div>";
+    echo "<br/>";
+    echo "<br/>";
+}
+?>
+
+<div gstype="form" method="createRoute" style="background-color: #EFEFEF; padding: 0px 10px 20px 10px;">
+    <h1>Create new route</h1>
+    Route name: 
+    <br/><input gsname="routename" type="textfield" class="gsniceinput1" placeholder="Route name"/>
+    <br/><br/><div class="shop_button" gstype="submit">Create</div>
+</div>
+

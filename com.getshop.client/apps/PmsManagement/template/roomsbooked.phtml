@@ -124,7 +124,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
         <?php if($config->manualcheckincheckout) { ?>
         <th>Check in/out</th>
         <?php } ?>
-        <th>Guest</th>
+        <th style='width:100px'>Guest</th>
         <?php if(!$addons && $hasPrices) { ?>
         <th>Price <i class='fa fa-edit showmassupdatepricesfield' title='Update prices for all rooms'></i>
             <div class='massupdatepricesfield' gstype="form" method="massUpdatePrices">
@@ -234,8 +234,8 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
             <td>
                 <? 
                 $object->includeLegacyStuffForSemlagerhotell($booking, $room);
-
-                echo $types[$room->bookingItemTypeId]->name; ?>
+                $text = $types[$room->bookingItemTypeId]->name;
+                echo "<div style=' text-overflow: ellipsis; display:block; width: 150px; overflow:hidden; white-space:nowrap;' title='$text'>$text</div>"; ?>
                 <?php if($config->cleaningInterval) { 
                     $startCleaning = $room->date->cleaningDate;
                     if(!$startCleaning) {
@@ -258,7 +258,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                             <span class="viewmode">
                                 <?
                                 if (!$room->bookingItemId) {
-                                    echo "Not assigned yet";
+                                    echo "Not assigned";
                                 } else {
                                     $notifications = "notifications: " . join(",", $room->notificationsSent);
                                     echo "<span title='Change room'>" . $items[$room->bookingItemId]->bookingItemName . "</span>";

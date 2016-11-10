@@ -51,6 +51,8 @@ foreach ($orders as $product) {
     $data['started'] = $product->started == true;
     $data['originalChecksum'] = $product->originalChecksum;
     $data['upload_type'] = $product->type;
+    $data['reference'] = $product->reference;
+    $data['allFiles'] = $product->binaryFiles;
     $files[] = $data;
 }
 

@@ -663,6 +663,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
             }
+            if(room.price.isNaN() || room.price.isInfinite()) {
+                room.price = 0.0;
+            }
         }
 
         return booking;

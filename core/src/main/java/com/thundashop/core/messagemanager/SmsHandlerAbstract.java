@@ -13,9 +13,12 @@ import com.thundashop.core.common.GrafanaFeeder;
 import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.ordermanager.data.Order;
+import java.io.UnsupportedEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -53,9 +56,20 @@ public abstract class SmsHandlerAbstract implements Runnable {
         this.storeId = storeId;
         this.database = database;
         this.from = from;
+        encodeFrom();
         this.productionMode = productionMode;
         this.message = message;
         createSmsMessage();
+    }
+
+    private void encodeFrom() {
+        if (this.from != null) {
+            try {
+                this.from = java.net.URLEncoder.encode(this.from, "UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(SmsHandlerAbstract.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     

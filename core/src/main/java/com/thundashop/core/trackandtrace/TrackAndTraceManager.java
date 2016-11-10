@@ -127,6 +127,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
     
     private void finalize(Route retRoute) {
+        if (retRoute == null)
+            return;
+    
+        retRoute.makeSureUserIdsNotDuplicated();
+        
         retRoute.destinationIds.stream()
             .forEach(destinationId -> retRoute.addDestination(destinations.get(destinationId)));
         
@@ -154,11 +159,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public void saveRoute(Route inRoute) {
-        Route route = getRouteById(inRoute.id);
-        if (route != null && inRoute.startInfo.started && !route.startInfo.started) {
-            route.markAsStarted(inRoute, getSession().currentUser.id);
-            saveObject(route);
-        }
+        saveObject(inRoute);
+        routes.put(inRoute.id, inRoute);
     }
 
     @Override
@@ -176,6 +178,13 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public void saveException(TrackAndTraceException exception) {
         saveObject(exception);
         exceptions.put(exception.id, exception);
+    }
+
+    @Override
+    public List<Route> getAllRoutes() {
+        ArrayList<Route> retList = new ArrayList(routes.values());
+        retList.stream().forEach(route -> finalize(route));
+        return retList;
     }
     
 }

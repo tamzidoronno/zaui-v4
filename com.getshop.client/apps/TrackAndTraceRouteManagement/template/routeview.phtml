@@ -1,0 +1,22 @@
+<?
+/* @var $this ns_5ebb7b42_35b7_48d3_b047_825dc2b30b5f\TrackAndTraceRouteManagement */
+
+$route = $this->getRoute();
+?>
+
+<div>
+    Route name: <input class='gsniceinput1' type='textfield' value='<? echo $route->name; ?>'>
+    
+    <div class="drivermanagement">
+        <h2>Drivers with access to this route</h2>
+        <?
+        $userIds = $route->userIds;
+        foreach ($userIds as $userId) {
+            $user = $this->getApi()->getUserManager()->getUserById($userId);
+            echo "<div>".$user->fullName."</div>";
+        }
+        ?>
+        
+        <div class='shop_button' style="margin-top: 20px" gsclick='showAddDrivers'>Add drivers</div>
+    </div>
+</div>

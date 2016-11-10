@@ -8,7 +8,9 @@ package com.thundashop.core.trackandtrace;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -24,6 +26,8 @@ public class Route extends DataCommon {
     public StartInfo startInfo = new StartInfo();
     
     public List<String> destinationIds = new ArrayList();
+    
+    public List<String> userIds = new ArrayList();
     
     @Transient
     private List<Destination> destinations = new ArrayList();
@@ -46,16 +50,18 @@ public class Route extends DataCommon {
         destinations.add(dest);
     }
 
-    void markAsStarted(Route route, String userId) {
-        startInfo.started = true;
-        startInfo.startedTimeStamp = route.startInfo.startedTimeStamp;
-        startInfo.startedByUserId = userId;
-        startInfo.lon = route.startInfo.lon;
-        startInfo.lat = route.startInfo.lat;   
-    }
 
     public List<Destination> getDestinations() {
         return destinations;
+    }
+
+    void makeSureUserIdsNotDuplicated() {
+        
+        // add elements to al, including duplicates
+        Set<String> hs = new HashSet<>();
+        hs.addAll(userIds);
+        userIds.clear();
+        userIds.addAll(hs);
     }
 
 }

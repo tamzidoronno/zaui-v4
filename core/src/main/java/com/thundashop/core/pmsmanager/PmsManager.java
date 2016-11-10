@@ -663,6 +663,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
             }
+            if(room.price.isNaN() || room.price.isInfinite()) {
+                room.price = 0.0;
+            }
         }
 
         return booking;
@@ -742,8 +745,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.bookingId != null && !room.bookingId.isEmpty()) {
                 bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
             }
-            Date oldStart = room.date.start;
-            Date oldEnd = room.date.end;
+            Date oldStart = new Date();
+            Date oldEnd = new Date();
+            oldStart.setTime(room.date.start.getTime());
+            oldEnd.setTime(room.date.end.getTime());
 
             room.date.start = start;
             room.date.end = end;

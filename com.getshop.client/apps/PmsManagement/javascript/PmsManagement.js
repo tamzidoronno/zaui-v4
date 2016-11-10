@@ -509,12 +509,12 @@ app.PmsManagement = {
     },
     editGuestToggle : function() {
         var row = $(this).closest('.roomattribute');
-        var guests = $('[gsname="numberofguests"]').val();
+        var guests = row.find('[gsname="numberofguests"]').val();
         for(var i = 1; i <= 20; i++) {
             if(i >= guests) {
-                $('.guestrow_'+i).hide();
+                row.find('.guestrow_'+i).hide();
             } else {
-                $('.guestrow_'+i).show();
+                row.find('.guestrow_'+i).show();
             }
         }
     },

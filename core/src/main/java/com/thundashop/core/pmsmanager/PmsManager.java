@@ -3133,6 +3133,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
         if(getConfigurationSecure().usePriceMatrixOnOrder) {
             room.price = pmsInvoiceManager.updatePriceMatrix(booking, room, room.date.start, room.date.end, booking.priceType);
+            if(room.price.isNaN() || room.price.isInfinite()) {
+                room.price = 0.0;
+            }
         }
         room.taxes = pmsInvoiceManager.calculateTaxes(room.bookingItemTypeId);
     }

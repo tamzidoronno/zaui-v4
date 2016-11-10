@@ -3127,8 +3127,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void setPriceOnRoom(PmsBookingRooms room, boolean avgPrice, PmsBooking booking) {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
         if(getConfigurationSecure().usePriceMatrixOnOrder) {
-            pmsInvoiceManager.updatePriceMatrix(booking, room, room.date.start, room.date.end, booking.priceType);
-            room.price = pmsInvoiceManager.generatePriceFromPriceMatrix(room.priceMatrix, avgPrice, booking, room.bookingItemTypeId);
+            room.price = pmsInvoiceManager.updatePriceMatrix(booking, room, room.date.start, room.date.end, booking.priceType);
         }
         room.taxes = pmsInvoiceManager.calculateTaxes(room.bookingItemTypeId);
     }

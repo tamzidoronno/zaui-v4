@@ -785,7 +785,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     private String sendReminderSms(String content, User user, Event event, HashMap<String, String> smsMessageId) {
         content = formatText(content, user, event);
         if (user.cellPhone != null && !user.cellPhone.isEmpty()) {
-            String smsId = messageManager.sendSms(event, "clickatell", user.cellPhone, content, user.prefix);
+            String smsId = messageManager.sendSms(event, user.cellPhone, content, user.prefix);
             if (smsMessageId != null) {
                 smsMessageId.put(user.id, smsId);
             }

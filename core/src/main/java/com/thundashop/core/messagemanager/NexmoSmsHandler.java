@@ -39,6 +39,8 @@ public class NexmoSmsHandler extends SmsHandlerAbstract implements SmsHandler {
         String message = URLEncoder.encode(getMessage(), "UTF-8");
         String urlString =  "https://rest.nexmo.com/sms/json?api_key=cffe6fd9&api_secret=9509ef6b&client-ref="+getStoreId()+"&status-report-req=1&from="+getFrom()+"&to="+getPrefix()+to+"&text="+message;
        
+        System.out.println(urlString);
+        
         URL url = new URL(urlString);
         BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
@@ -48,7 +50,7 @@ public class NexmoSmsHandler extends SmsHandlerAbstract implements SmsHandler {
             content += inputLine;
         in.close();
 
-        if(!content.trim().startsWith("ID:")) {
+        if(content.contains("NO-FIXED")) {
             logMessage("failed", content);
         } else {
             logMessage("delivered", content);

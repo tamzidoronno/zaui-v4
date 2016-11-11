@@ -28,10 +28,20 @@ class OrderExport extends \WebshopApplication implements \Application {
         $configs = $this->getApi()->getAccountingManager()->getAllConfigs();
         foreach($configs as $conf) {
             if($conf->id == $_POST['configid']) {
-                $conf->ftp = $ftpConfig;
-                $conf->delay = $_POST['delay'];
                 $conf->includeUsers = $_POST['includeUsers'];
                 $conf->orderFilterPeriode = $_POST['orderFilterPeriode'];
+                
+                $conf->paymentTypeCustomerIds = array();
+                foreach($_POST as $key => $val) {
+                    if(stristr($key, "customeridforpaymentmethod_")) {
+                        $paymentType = str_replace("customeridforpaymentmethod_", "", $key);
+                        $conf->paymentTypeCustomerIds[$paymentType] = $val;
+                    }
+                }
+                
+                $conf->username = $_POST['username'];
+                $conf->password = $_POST['password'];
+                
                 $this->getApi()->getAccountingManager()->saveConfig($conf);
                 break;
             }

@@ -323,7 +323,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             
             if (!config.confirmationRequired) {
                 verifier.throwExceptionIfBookingItemIdMissing(booking, items);
+            }   
+            
+            if (booking.startDate != null && booking.endDate != null && booking.startDate.after(booking.endDate)) {
+                throw new BookingEngineException("Startdate can not be after enddate");
             }            
+            
         }
     }
 

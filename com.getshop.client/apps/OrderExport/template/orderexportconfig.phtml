@@ -247,6 +247,40 @@ foreach($configs as $config) {
                 </select>
              </div>
         </div>
+      
+      <?php
+        $conftypes = (array)$config->paymentTypes;
+        $printed = array();
+        foreach($conftypes as $type) {
+            foreach ($paymentMethods as $key => $method) {
+                if($method->id == $type->paymentType) {
+                    if(in_array($method->id, $printed)) {
+                        continue;
+                    }
+                    $printed[] = $method->id;
+                    $customerId = "";
+                    if(isset($config->paymentTypeCustomerIds->{$method->id})) {
+                        $customerId = $config->paymentTypeCustomerIds->{$method->id};
+                    }
+                    ?>
+                    <div class="textfield gss_setting">
+                        <span class="title">Optional customer id for <?php echo $method->appName; ?></span>
+                        <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="customeridforpaymentmethod_<?php echo $method->id; ?>" value='<?php echo $customerId; ?>'>
+                    </div>
+                    <?php
+                }
+            }
+        }
+      ?>
+      <div class="textfield gss_setting">
+          <span class="title">Username</span>
+          <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="username" value='<?php echo $config->username; ?>'>
+      </div>
+      <div class="textfield gss_setting">
+          <span class="title">Password</span>
+          <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="password" value='<?php echo $config->password; ?>'>
+      </div>
+      
         <div class='gss_button_area'>
             <div class="gss_button" gss_method="saveAccountingConfig" gss_model="adminconfig_<?php echo $config->id; ?>" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save settings"); ?></div>
         </div>

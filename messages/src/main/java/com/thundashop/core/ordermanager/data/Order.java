@@ -226,6 +226,16 @@ public class Order extends DataCommon implements Comparable<Order> {
         return true;
     }
 
+    public boolean hasPaymentMethod(String paymentMethod) {
+        if(payment != null && payment.paymentType != null && paymentMethod != null) {
+            String methodToTest = paymentMethod.toLowerCase();
+            if(payment.paymentType.contains(methodToTest)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;

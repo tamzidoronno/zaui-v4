@@ -476,10 +476,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 price = addDerivedPrices(room, price);
                 price = calculateDiscountCouponPrice(booking, price);
                 price = getUserPrice(room.bookingItemTypeId, price, 1);
-                total += price;
                 room.priceMatrix.put(key, price);
-                count++;
             }
+        }
+        for(String key : priceMatrix.keySet()) {
+            Double price = priceMatrix.get(key);
+            total += price;
+            count++;
         }
         return total / count;
     }
@@ -754,6 +757,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(room.date == null) { logPrint("room null, should not happen"); continue; }
             if(room.date.start == null) { logPrint("room start date null, should not happen"); continue; }
             if(room.date.end == null) { logPrint("room start date null, should not happen"); continue; }
+            
+            if(addon.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST) {
+                if(room.isSameDay(addon.date, room.date.end)) {
+                    toRemove.add(addon);
+                } else {
+                    if(addon.count > 0) {
+                        addon.count = room.guests.size();
+                    }
+                }
+            }
             
             if(addon.date.before(room.date.start) || addon.date.after(room.date.end) &&
                     (!room.isSameDay(addon.date, room.date.start) && !room.isSameDay(addon.date, room.date.end))) {

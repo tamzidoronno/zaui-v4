@@ -22,7 +22,7 @@ public interface ITrackAndTraceManager {
     public List<Route> getMyRoutes();
     
     @Customer
-    public Route getRouteById(String routeId);
+    public List<Route> getRoutesById(String routeId);
     
     @Customer
     public Destination saveDestination(Destination destination);
@@ -40,4 +40,9 @@ public interface ITrackAndTraceManager {
     
     @Administrator
     public List<Route> getAllRoutes();
+    
+    @Administrator
+    public void addCompanyToRoute(String routeId, String companyId);
+    
+    public void addDeliveryTaskToDestionation(String destionatId, DeliveryTask task);
 }

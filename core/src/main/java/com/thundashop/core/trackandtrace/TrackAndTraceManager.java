@@ -10,10 +10,13 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,6 +35,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     
     public HashMap<String, TrackAndTraceException> exceptions = new HashMap();
 
+    @Autowired
+    private UserManager userManager;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         
@@ -69,7 +75,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     
     @Override
     public List<Route> getMyRoutes() {
-        ArrayList<Route> retList = new ArrayList(routes.values());
+        List<Route> retList = routes.values().stream()
+                .filter(route -> route.userIds.contains(getSession().currentUser.id))
+                .collect(Collectors.toList());
+                
+        
         retList.stream().forEach(route -> finalize(route));
         return retList;
     }
@@ -113,7 +123,16 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public Route getRouteById(String routeId) {
+    public List<Route> getRoutesById(String routeId) {
+        Route foundroute = getRouteById(routeId);
+        
+        ArrayList<Route> retList = new ArrayList();
+        retList.add(foundroute);
+        retList.stream().forEach(route -> finalize(route));
+        return retList;
+    }
+    
+    private Route getRouteById(String routeId) {
         Route retRoute = routes.get(routeId);
         
         finalize(retRoute);
@@ -144,17 +163,17 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         dest.taskIds.stream()
                 .forEach(id -> dest.tasks.add(tasks.get(id)));
+        
+        dest.company = userManager.getCompany(dest.companyId);
     }
 
     @Override
     public Destination saveDestination(Destination inDestination) {
-        Destination destination = getDestination(inDestination.id);
-        if (!destination.startInfo.started && inDestination.startInfo.started) {
-            destination.markHasArrived(inDestination);
-            saveObject(destination);
-        }
+
+        saveObject(inDestination);
+        destinations.put(inDestination.id, inDestination);
         
-        return destination;
+        return inDestination;
     }
 
     @Override
@@ -185,6 +204,37 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         ArrayList<Route> retList = new ArrayList(routes.values());
         retList.stream().forEach(route -> finalize(route));
         return retList;
+    }
+
+    @Override
+    public void addCompanyToRoute(String routeId, String companyId) {
+        Route route = getRouteById(routeId);
+        if (route != null) {
+            if (route.hasCompanyInDestionations(companyId)) {
+                return;
+            }
+            
+            Destination destination = new Destination();
+            destination.companyId = companyId;
+            saveObject(destination);
+            
+            destinations.put(destination.id, destination);
+            route.destinationIds.add(destination.id);
+            saveObject(route);
+        }
+    }
+
+    @Override
+    public void addDeliveryTaskToDestionation(String destionatId, DeliveryTask task) {
+        Destination dest = getDestination(destionatId);
+        
+        if (dest != null) {
+            saveObject(task);
+            tasks.put(task.id, task);
+            dest.taskIds.add(task.id);
+            dest.ensureUniqueTaskIds();
+            saveObject(dest);
+        }
     }
     
 }

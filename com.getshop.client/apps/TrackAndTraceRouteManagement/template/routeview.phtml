@@ -3,11 +3,14 @@
 
 $route = $this->getRoute();
 ?>
+<div class="topmenu">
+    <div class="shop_button" gsclick="backToRoutes"><i class="fa fa-backward"></i> Back to routes</div>
+</div>
 
 <div>
     Route name: <input class='gsniceinput1' type='textfield' value='<? echo $route->name; ?>'>
     
-    <div class="drivermanagement">
+    <div class="routebox drivermanagement">
         <h2>Drivers with access to this route</h2>
         <?
         $userIds = $route->userIds;
@@ -19,4 +22,16 @@ $route = $this->getRoute();
         
         <div class='shop_button' style="margin-top: 20px" gsclick='showAddDrivers'>Add drivers</div>
     </div>
+    
+    <div class="routebox destinations">
+        <h2>Destinations</h2>
+        <?
+        foreach ($route->destinations as $destionation) {
+            echo "<div class='destinationrow'><div class='gs_shop_small_icon' gsclick='showEditDestionation' destionationid='$destionation->id'><i class='fa fa-edit'></i></div> ".$destionation->company->name."</div>";
+        }
+        ?>
+        
+        <div class='shop_button' style="margin-top: 20px" gsclick='showAddDestionation'>Add destionation</div>
+    </div>
 </div>
+

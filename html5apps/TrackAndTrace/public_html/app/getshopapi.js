@@ -3351,6 +3351,22 @@ GetShopApiWebSocket.DibsManager.prototype = {
     },
 
 }
+GetShopApiWebSocket.EpayManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.EpayManager.prototype = {
+    'checkForOrdersToCapture' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'checkForOrdersToCapture',
+            interfaceName: 'core.epay.IEpayManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
 GetShopApiWebSocket.EventBookingManager = function(communication) {
     this.communication = communication;
 }
@@ -7182,13 +7198,14 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'addBookingItemType' : function(multilevelname, bookingId,item,start,end, gs_silent) {
+    'addBookingItemType' : function(multilevelname, bookingId,item,start,end,guestInfoFromRoom, gs_silent) {
         var data = {
             args : {
                 bookingId : JSON.stringify(bookingId),
                 item : JSON.stringify(item),
                 start : JSON.stringify(start),
                 end : JSON.stringify(end),
+                guestInfoFromRoom : JSON.stringify(guestInfoFromRoom),
             },
             method: 'addBookingItemType',
             multiLevelName: multilevelname,
@@ -8187,6 +8204,19 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 roomId : JSON.stringify(roomId),
             },
             method: 'sendCode',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'sendConfirmation' : function(multilevelname, email,bookingId, gs_silent) {
+        var data = {
+            args : {
+                email : JSON.stringify(email),
+                bookingId : JSON.stringify(bookingId),
+            },
+            method: 'sendConfirmation',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
@@ -10693,6 +10723,40 @@ GetShopApiWebSocket.TrackAndTraceManager = function(communication) {
 }
 
 GetShopApiWebSocket.TrackAndTraceManager.prototype = {
+    'addCompanyToRoute' : function(routeId,companyId, gs_silent) {
+        var data = {
+            args : {
+                routeId : JSON.stringify(routeId),
+                companyId : JSON.stringify(companyId),
+            },
+            method: 'addCompanyToRoute',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'addDeliveryTaskToDestionation' : function(destionatId,task, gs_silent) {
+        var data = {
+            args : {
+                destionatId : JSON.stringify(destionatId),
+                task : JSON.stringify(task),
+            },
+            method: 'addDeliveryTaskToDestionation',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getAllRoutes' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getAllRoutes',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getExceptions' : function(gs_silent) {
         var data = {
             args : {
@@ -10713,12 +10777,12 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'getRouteById' : function(routeId, gs_silent) {
+    'getRoutesById' : function(routeId, gs_silent) {
         var data = {
             args : {
                 routeId : JSON.stringify(routeId),
             },
-            method: 'getRouteById',
+            method: 'getRoutesById',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);
@@ -12092,6 +12156,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.ChatManager = new GetShopApiWebSocket.ChatManager(this);
     this.DBBackupManager = new GetShopApiWebSocket.DBBackupManager(this);
     this.DibsManager = new GetShopApiWebSocket.DibsManager(this);
+    this.EpayManager = new GetShopApiWebSocket.EpayManager(this);
     this.EventBookingManager = new GetShopApiWebSocket.EventBookingManager(this);
     this.FileManager = new GetShopApiWebSocket.FileManager(this);
     this.FtpManager = new GetShopApiWebSocket.FtpManager(this);

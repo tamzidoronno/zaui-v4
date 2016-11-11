@@ -29,12 +29,7 @@ import java.util.List;
 import static org.apache.poi.hssf.usermodel.HeaderFooter.file;
 
 @ForAccountingSystem(accountingSystem="poweroffice")
-public class PowerOfficeGo implements AccountingTransferInterface {
-
-    private List<User> users;
-    private List<Order> orders;
-    private AccountingTransferConfig config;
-    private AccountingManagers managers;
+public class PowerOfficeGo extends AccountingTransferOptions implements AccountingTransferInterface {
     private String token;
 
     @Override
@@ -71,8 +66,10 @@ public class PowerOfficeGo implements AccountingTransferInterface {
         HashMap<String, Product> products = new HashMap();
         
         for(Order order : orders) {
-            User user = managers.userManager.getUserById(order.userId);
-            users.put(user.id, user);
+            if(getUniqueCustomerIdForOrder(order) == null) {
+                User user = managers.userManager.getUserById(order.userId);
+                users.put(user.id, user);
+            }
         }
         
         for(Order order : orders) {
@@ -141,7 +138,7 @@ public class PowerOfficeGo implements AccountingTransferInterface {
     private String createAccessToken() {
         try {
             Gson gson = new Gson();
-            String auth = "e5fdab3b-97b5-4041-bddb-5b2a48ccee1c:07a89265-8ad7-425d-bdb1-d87e6c5af134";
+            String auth = "e5fdab3b-97b5-4041-bddb-5b2a48ccee1c:" + config.password;
             String res = managers.webManager.htmlPostBasicAuth("https://go.poweroffice.net/OAuth/Token", "grant_type=client_credentials", false, "UTF-8", auth);
             AccessToken token = gson.fromJson(res, AccessToken.class);
             return token.access_token;
@@ -247,5 +244,5 @@ public class PowerOfficeGo implements AccountingTransferInterface {
         }
         return false;
     }
-    
+
 }

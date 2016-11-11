@@ -280,7 +280,13 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     
     public function addBookingItemType() {
         $room = $_POST['data']['name'];
-        $this->getApi()->getBookingEngine()->createABookingItemType($this->getSelectedName(), $room);
+        $type = $this->getApi()->getBookingEngine()->createABookingItemType($this->getSelectedName(), $room);
+        $product = $this->getApi()->getProductManager()->createProduct();
+        $product->name = $type->name;
+        $this->getApi()->getProductManager()->saveProduct($product);
+        
+        $type->productId = $product->id;
+        $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $type);
     }
 
     public function addBookingItem() {

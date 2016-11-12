@@ -16,4 +16,5 @@ public class Coupon extends DataCommon {
     public int amount;
     public int timesLeft;
     public String channel = "";
+    public String description = "";
 }

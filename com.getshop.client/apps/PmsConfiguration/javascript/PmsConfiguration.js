@@ -11,6 +11,7 @@ app.PmsConfiguration = {
         $(document).on('click', '.PmsConfiguration .inventoryitem .fa-plus-circle', app.PmsConfiguration.loadAllItemsAdded);
         $(document).on('click', '.PmsConfiguration .addInventoryItem', app.PmsConfiguration.addInventory);
         $(document).on('change', '.PmsConfiguration .changeItemForRoom', app.PmsConfiguration.changeItemForRoom);
+        $(document).on('change', '.PmsConfiguration .changechanneloncoupon', app.PmsConfiguration.changechanneloncoupon);
         $(document).on('keyup', '.PmsConfiguration .inventoryonroomcount', app.PmsConfiguration.updateInventoryOnRoomCount);
         $(document).on('click', '.PmsConfiguration #contractfield', function() {
             thundashop.common.activateCKEditor('contractfield', {
@@ -26,6 +27,12 @@ app.PmsConfiguration = {
             thundashop.common.activateCKEditor('fireinstructions', {
                 autogrow : false
             });
+        });
+    },
+    changechanneloncoupon : function() {
+        thundashop.Ajax.simplePost($(this), 'changeChannel', {
+            "id" : $(this).val(),
+            "coupon" : $(this).attr('couponid')
         });
     },
     

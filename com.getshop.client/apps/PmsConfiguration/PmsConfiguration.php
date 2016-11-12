@@ -93,6 +93,58 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         }
     }
     
+    public function changeChannel() {
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['coupon']);
+        $coupon->channel = $_POST['data']['id'];
+        $this->getApi()->getCartManager()->addCoupon($coupon);
+    }
+    
+    public function savecommentoncoupon() {
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['couponid']);
+        $coupon->description = $_POST['data']['description'];
+        $this->getApi()->getCartManager()->addCoupon($coupon);
+        
+    }
+    
+    public function createcoupon() {
+        $coupon = new \core_cartmanager_data_Coupon();
+        $coupon->amount = $_POST['data']['amount'];
+        $coupon->type = $_POST['data']['type'];
+        $coupon->code = $_POST['data']['code'];
+        $coupon->timesLeft = (int)$_POST['data']['times'];
+        
+        
+        $this->addCouponError = "";
+        if ($coupon->code == "" ) {
+            $this->addCouponError = "Code can not be empty";
+        }
+        
+        if (!is_numeric($coupon->timesLeft)) {
+            $this->addCouponError = "Amount must be a number";
+        }
+        
+        if (!$this->int_ok($coupon->amount) || $coupon->amount < 0) {
+            $this->addCouponError = "Times must be a number";
+        }
+        
+        if ($coupon->type == "PERCENTAGE" && ($coupon->amount < 0 || $coupon->amount > 100)) {
+            $this->addCouponError = "Not a valid percentage";
+        }
+        
+        if(!$this->addCouponError) {
+            $this->getApi()->getCartManager()->addCoupon($coupon);
+        }
+    }
+    
+    private function int_ok($val) {
+        return ($val !== true) && ((string)(int) $val) === ((string) $val);
+    }
+    
+    public function removeCoupon() {
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['id']);
+        $this->getApi()->getCartManager()->removeCoupon($coupon->code);
+    }
+    
     public function saveNotifications() {
         $notifications = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         foreach($_POST['data'] as $key => $value) {

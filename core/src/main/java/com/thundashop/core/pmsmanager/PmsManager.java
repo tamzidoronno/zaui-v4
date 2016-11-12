@@ -3406,7 +3406,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if(weekday == -1) {
                         weekday = 7;
                     }
-                    System.out.println(weekday + " : " + date + " : " + type.id + " : " + item.id + " : " + date);
                     Double tmpCount = 0.0;
                     if(result.containsKey(weekday)) {
                         tmpCount = result.get(weekday);

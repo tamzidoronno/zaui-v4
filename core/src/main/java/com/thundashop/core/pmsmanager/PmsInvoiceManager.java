@@ -700,7 +700,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             message += "Other orders connected to booking:<br>";
                             for(String orderId : booking.orderIds) {
                                 Order otherOrder = orderManager.getOrder(orderId);
-                                message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(order) + ")<br>";
+                                message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(otherOrder) + ")<br>";
                             }
                         }catch(Exception e) {
                             e.printStackTrace();

@@ -13,6 +13,84 @@ app.BookingEngineManagement = {
         $(document).on('click','.BookingEngineManagement .configureTypeSorting', app.BookingEngineManagement.configureTypeSorting);
         $(document).on('click','.BookingEngineManagement .savesorting', app.BookingEngineManagement.savesorting);
         $(document).on('click','.BookingEngineManagement .savetypesorting', app.BookingEngineManagement.savetypesorting);
+        $(document).on('click','.BookingEngineManagement .uploadTypeImage', app.BookingEngineManagement.uploadBoxClick);
+        $(document).on('click','.BookingEngineManagement .removeImageFromType', app.BookingEngineManagement.removeImageFromType);
+        $(document).on('click','.BookingEngineManagement .makeimgasdefault', app.BookingEngineManagement.makeimgasdefault);
+    },
+    removeImageFromType : function() {
+        var data = {
+            "typeId" : $(this).attr('typeId'),
+            "fileId" : $(this).attr('fileId')
+        }
+        var event = thundashop.Ajax.createEvent('','removeImageFromType', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.imagearea').html(res);
+        });
+    },
+    makeimgasdefault : function() {
+        var data = {
+            "typeId" : $(this).attr('typeId'),
+            "fileId" : $(this).attr('fileId')
+        }
+        var event = thundashop.Ajax.createEvent('','makeImageDefault', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.imagearea').html(res);
+        });
+    },
+    uploadBoxClick: function () {
+        $('#getshop_select_files_link').remove();
+        $('#your-files').remove();
+        var button = $(this);
+        var curText = button.html();
+        app.BookingEngineManagement.currentTypeId = "";
+        var selectDialogueLink = $('<a href="" id="getshop_select_files_link">Select files</a>');
+        var fileSelector = $('<input type="file" id="your-files" multiple/>');
+
+        selectDialogueLink.click(function () {
+            fileSelector.click();
+        });
+        $('body').append(fileSelector);
+        $('body').append(selectDialogueLink);
+
+        var control = document.getElementById("your-files");
+        var me = this;
+
+        control.addEventListener("change", function () {
+            button.html('<i class="fa fa-spin fa-spinner"></i>');
+            fileSelector.remove();
+            app.BookingEngineManagement.imageSelected(control.files, button.closest('.app'));
+        });
+
+        selectDialogueLink.click();
+        selectDialogueLink.remove();
+    },
+    imageSelected: function (files, application) {
+        var file = files[0];
+        var fileName = file.name;
+
+        var reader = new FileReader();
+
+        reader.onload = function (event) {
+            var dataUri = event.target.result;
+
+            var data = {
+                typeId: application.find('.uploadTypeImage').attr('typeid'),
+                fileBase64: dataUri,
+                fileName: fileName
+            };
+
+            var event = thundashop.Ajax.createEvent('','saveTypeImage', application, data);
+
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                $('.imagearea').html(res);
+            });
+        };
+
+        reader.onerror = function (event) {
+            console.error("File could not be read! Code " + event.target.error.code);
+        };
+
+        reader.readAsDataURL(file);
     },
     configureTypeSorting : function() {
         var data = {}

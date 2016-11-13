@@ -22,6 +22,10 @@ public class Route extends DataCommon {
     public int seq = 0;
     
     public String shortDescription = "";
+    
+    public String instruction = "";
+    
+    public boolean instructionAccepted = false;
 
     public StartInfo startInfo = new StartInfo();
     

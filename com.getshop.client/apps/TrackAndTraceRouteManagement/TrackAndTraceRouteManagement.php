@@ -142,5 +142,11 @@ class TrackAndTraceRouteManagement extends \MarketingApplication implements \App
             }
         }
     }
+    
+    public function saveRoute() {
+        $route = $this->getRoute();
+        $route->instruction = $_POST['data']['instruction'];
+        $this->getApi()->getTrackAndTraceManager()->saveRoute($route);
+    }
 }
 ?>

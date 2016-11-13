@@ -33,6 +33,7 @@ foreach($rooms as $room) {
     if($this->getText("ignorefullybooked") == "true") {
         $availability = 10;
     }
+    $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $room->type->id);
     $imgDisplayed = "";
     if($this->getText("hideimages") != "true") {
         $imgDisplayed = "imgdisplayed";
@@ -41,17 +42,43 @@ foreach($rooms as $room) {
     <div class='productentry <? echo $selected . " " . $imgDisplayed; ?>' typeid='<?php echo $room->type->id; ?>'>
         <?php
         if($this->getText("hideimages") != "true") {
-            $imgs = $this->getImagesFromPage($room->type->pageId);
-            $first = true;
-            foreach($imgs as $img) {
-                if($first) {
-                    $first = false;
-                    continue;
+            if(sizeof((array)$additional->images) > 0) {
+                $index = 1;
+                $defaultIndex = 1;
+                $tmpIndex = 1;
+                foreach($additional->images as $img) {
+                    if($img->isDefault) {
+                        $defaultIndex = $tmpIndex;
+                    }
+                    $tmpIndex++;
                 }
-                echo "<span class='imgcontainer'>";
-                echo "<img class='roomimg' src='displayImage.php?id=" . $img."'>";
+               
+                echo "<span class='gsgalleryroot'>";
+                foreach($additional->images as $img) {
+                    $size = getimagesize("../uploadedfiles/" . $img->fileId);
+                    $display = "style='display:none;'";
+                    if($defaultIndex == $index) {
+                        $display = "";
+                    }
+                    echo "<span class='imgcontainer'>";
+                    echo "<img $display class='roomimg gsgallery' src='/displayImage.php?id=" . $img->fileId."&width=400' img='/displayImage.php?id=" . $img->fileId."' width='".$size[0]."' height='".$size[1]."' index='$index'>";
+                    echo "</span>";
+                    $index++;
+                }
                 echo "</span>";
-                break;
+           } else {
+                $imgs = $this->getImagesFromPage($room->type->pageId);
+                $first = true;
+                foreach($imgs as $img) {
+                    if($first) {
+                        $first = false;
+                        continue;
+                    }
+                    echo "<span class='imgcontainer'>";
+                    echo "<img class='roomimg' src='displayImage.php?id=" . $img."'>";
+                    echo "</span>";
+                    break;
+                }
             }
         }
         

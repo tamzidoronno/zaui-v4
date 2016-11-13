@@ -70,6 +70,17 @@ angular.module('TrackAndTrace')
         }
     });
     
+    $stateProvider.state('base.destinationsignature', {
+        url: '/destinationsignature/:destinationId/:routeId',
+        
+        views: {
+            main: {
+                templateUrl : 'components/destination/departing.html',
+                controller : controllers.DepartingController
+            }
+        }
+    });
+    
     $stateProvider.state('base.task', {
         url: '/destination/:destinationId/:routeId/:taskId',
         

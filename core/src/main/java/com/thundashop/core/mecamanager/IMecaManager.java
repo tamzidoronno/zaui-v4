@@ -105,4 +105,7 @@ public interface IMecaManager {
     
     @Editor
     public void saveMecaFleetSettings(MecaFleetSettings settings);
+    
+    @Editor
+    public String getBase64ExcelReport(String pageId);
 }

@@ -6,7 +6,7 @@ $route = $this->getRoute();
 $users = $this->getSearchedForUsers();
 $searchValue = isset($_POST['data']['searchfield']) ? $_POST['data']['searchfield'] : "";
 
-echo "<h1>".$route->name."</h1>";
+echo "<h1>Route: ".$route->name."</h1>";
 ?>
 
 <div gstype='form' method='searchForUsers'>
@@ -26,4 +26,3 @@ echo "<h1>".$route->name."</h1>";
     }
     ?>
 </div>
-

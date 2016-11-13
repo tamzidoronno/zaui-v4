@@ -712,4 +712,18 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         
         instancePool.setApplicationSettings(settings);
     }
+
+    @Override
+    public String getBase64ExcelReport(String pageId) {
+        return new FleetExcelReport(this, pageId).getBase64Encoded();
+    }
+    
+    public boolean isCarInFleetByPageId(String pageId, String carId) {
+        MecaFleet fleet = getFleetPageId(pageId);
+        if (fleet == null) {
+            return false;
+        }
+        
+        return fleet.cars.contains(carId);
+    }
 }

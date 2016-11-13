@@ -11,5 +11,5 @@ package com.thundashop.core.trackandtrace;
  */
 public class DeliveryTask extends Task {
     public boolean cage = false;
-    public int quantity = 10;
+    public int quantity = 0;
 }

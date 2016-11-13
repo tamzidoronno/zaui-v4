@@ -1,0 +1,49 @@
+<?
+/* @var $this ns_5ebb7b42_35b7_48d3_b047_825dc2b30b5f\TrackAndTraceRouteManagement */
+
+$destionation = $this->getDestionation();
+
+?>
+
+<div gsclick="addDeliveryTask" class="shop_button" gsclick='addDeliveryTask'>Add delivery task</div>
+<div gsclick="changeToRouteView" class="shop_button">Cancel (Back to route)</div>
+
+<?
+
+echo "<h2>Destination: ".$destionation->company->name."</h2>"; 
+if ($destionation->tasks) {
+?>
+    <div class='tasklist' gstype='form' method='updateTasks'>
+
+        <?     
+        echo "<h2>Delivery tasks</h2>";
+        
+        foreach ($destionation->tasks as $task) {
+            if (strstr($task->className, "DeliveryTask")) {
+                echo "<div class='taskrow'>";
+                $selected = $task->cage ? "checked='true'" : "";
+                ?>
+                <input <? echo $selected; ?> type='checkbox' gsname='<? echo $task->id."_cage"; ?>'/> Cage?
+                <br/>Quanity: <input type='text' gsname='<? echo $task->id."_quantity"; ?>' class='gsniceinput1' value='<? echo isset($task->quantity) ? $task->quantity : 0; ?>'/>
+                 
+                <?
+                echo "</div>";
+            }
+        }
+        
+        ?>   
+        <br/> 
+        <div class='shop_button' gstype='submit'>
+            Save
+        </div>
+    </div>
+<?
+}
+?>
+
+<div>
+    <h2>Status</h2>
+    Signature:
+    <br/>
+    <img src='<? echo $destionation->signatureImage; ?>'/>
+</div>

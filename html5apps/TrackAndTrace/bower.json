@@ -13,6 +13,7 @@
         "angular-cookies": "~1.5.3",
         "angular-translate": "~2.1.0",
         "angular-translate-storage-cookie": "~2.1.0",
-        "angular-ui-router": "~0.2.15"
+        "angular-ui-router": "~0.2.15",
+        "signature_pad" : "~1.5.3"
     }
 }

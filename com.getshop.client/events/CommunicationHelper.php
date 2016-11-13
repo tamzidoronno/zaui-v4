@@ -105,7 +105,7 @@ class CommunicationHelper {
         return $obj;
     }
 
-    public function sendMessage($event) {
+    public function sendMessage($event, $debug=false) {
         $event["sessionId"] = $this->sessionId;
         $data = json_encode($event);
         $res = "";
@@ -117,7 +117,10 @@ class CommunicationHelper {
         }
         
         $res = stream_get_line($this->socket, 2147483647, "\n");
-
+        
+        if ($debug)
+            echo $res;
+        
         $object = json_decode($res, false);
         if (json_last_error() != 0) {
             if (trim($res) == "false") {

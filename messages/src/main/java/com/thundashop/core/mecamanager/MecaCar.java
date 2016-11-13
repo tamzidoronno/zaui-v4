@@ -89,6 +89,13 @@ public class MecaCar extends DataCommon {
      * Caluclate the next EU Controll, service date etc.
      */
     private void calculateNextValues() {
+        if (lastService != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(lastService);
+            cal.add(Calendar.MONTH, monthsBetweenServices);
+            nextService = cal.getTime();
+        }
+        
         if (lastServiceKilomters != null) {
             nextServiceKilometers = lastServiceKilomters + kilometersBetweenEachService;
             kilometersToNextService = nextServiceKilometers - kilometers;
@@ -100,13 +107,6 @@ public class MecaCar extends DataCommon {
             cal.setTime(prevControll);
             cal.add(Calendar.MONTH, 24);
             nextControll = cal.getTime();
-        }
-        
-        if (lastService != null) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(lastService);
-            cal.add(Calendar.MONTH, monthsBetweenServices);
-            nextService = cal.getTime();
         }
     }
 

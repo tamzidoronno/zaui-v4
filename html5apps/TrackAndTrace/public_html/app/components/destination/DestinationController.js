@@ -55,4 +55,20 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
         return "unknown";
     }
     
+    $scope.allTaskCompleted = function() {
+        for (var i in $scope.destination.tasks) {
+            var task = $scope.destination.tasks[i];
+            
+            if ($scope.getStatus(task) === "unkown") {
+                return false;
+            }
+        }
+        
+        return true;
+    },
+            
+    $scope.departedTapped = function() {
+        $state.transitionTo('base.destinationsignature', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId });
+    }
+    
 }

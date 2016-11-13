@@ -6,13 +6,11 @@
 package com.thundashop.core.trackandtrace;
 
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
-import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -32,18 +30,17 @@ public class Destination extends DataCommon {
     
     @Transient
     public List<Task> tasks = new ArrayList();
+
+    /**
+     * Signature is saved as PNG base 64 encoded images.
+     */
+    public String signatureImage = "";
     
     public SkipInfo skipInfo = new SkipInfo();
     
     public String note = "";
    
     public Destination() {
-        id = UUID.randomUUID().toString();
-        
-        company.name = "Store 1";
-        company.address = new Address();
-        company.address.address = "Storewille street 1";
-        company.contactPerson = "Jennifer Lopez";
     }
     
     public void markHasArrived(Destination destination) {
@@ -51,5 +48,12 @@ public class Destination extends DataCommon {
         startInfo.lon = destination.startInfo.lon;
         startInfo.started = destination.startInfo.started;
         startInfo.startedTimeStamp = destination.startInfo.startedTimeStamp;
+    }
+
+    void ensureUniqueTaskIds() {
+        Set<String> hs = new HashSet<>();
+        hs.addAll(taskIds);
+        taskIds.clear();
+        taskIds.addAll(hs);
     }
 }

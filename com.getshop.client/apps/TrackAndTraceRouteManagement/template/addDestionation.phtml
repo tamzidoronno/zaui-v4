@@ -1,0 +1,25 @@
+<?
+/* @var $this ns_5ebb7b42_35b7_48d3_b047_825dc2b30b5f\TrackAndTraceRouteManagement */
+
+$route = $this->getRoute();
+$searchWord = isset($_POST['data']['companyname']) ? $_POST['data']['companyname'] : "";
+?>
+
+<h1>Route: <? echo $route->name; ?></h1>
+
+<div gstype="form" method="searchForCompanies">
+    Search: <input class="gsniceinput1" placeholder="company" gsname="companyname" value='<? echo $searchWord; ?>'/>
+    <br/>
+    <br/> <div class="shop_button" gstype="submit">Search</div>
+    <div gsclick="changeToRouteView" class="shop_button">Cancel (Back to route)</div>
+</div>
+
+<?
+if (isset($_POST['data']['companyname'])) {
+    echo "<br/>";
+    $companies = $this->getApi()->getUserManager()->searchForCompanies($_POST['data']['companyname']);
+    foreach ($companies as $company) {
+        echo "<div><div class='gs_shop_small_icon' gsclick='addCompany' companyid='$company->id'><i class='fa fa-plus'></i></div> ".$company->name."</div>";
+    }
+}
+?>

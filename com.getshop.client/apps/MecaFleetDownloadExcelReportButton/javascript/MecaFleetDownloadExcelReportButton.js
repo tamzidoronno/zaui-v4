@@ -5,7 +5,7 @@ app.MecaFleetDownloadExcelReportButton = {
     
     downloadReport: function() {
         var event = thundashop.Ajax.createEvent(null, "downloadReport", this, {});
-        var filename = "fleerreport.xlsx";
+        var filename = "fleetreport.xlsx";
         
         thundashop.Ajax.postWithCallBack(event, function(base64) {
             var url = '/scripts/createExcelFilePlain.php';

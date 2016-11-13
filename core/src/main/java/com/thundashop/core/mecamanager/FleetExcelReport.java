@@ -9,6 +9,7 @@ import com.thundashop.core.common.ExcelBase;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -44,8 +45,8 @@ public class FleetExcelReport extends ExcelBase {
     }
     
     public void createReport() {
-        List<MecaCar> carsNeedServiceNow = mecaManager.getCarsServiceList(true);
-        List<MecaCar> carsNotNeedServiceNow = mecaManager.getCarsServiceList(false);
+        List<MecaCar> carsNeedServiceNow = mecaManager.getCarsServiceList(true).stream().filter(car -> mecaManager.isCarInFleetByPageId(pageId, car.id)).collect(Collectors.toList());
+        List<MecaCar> carsNotNeedServiceNow = mecaManager.getCarsServiceList(false).stream().filter(car -> mecaManager.isCarInFleetByPageId(pageId, car.id)).collect(Collectors.toList());
         
         Collections.sort(carsNeedServiceNow, (MecaCar car1, MecaCar car2) -> {
             if (car1.nextService == null || car2.nextService == null)
@@ -61,10 +62,12 @@ public class FleetExcelReport extends ExcelBase {
             return car1.nextService.compareTo(car2.nextService);
         });
         
-        carsNeedServiceNow.stream().forEach(car -> addDateToRow(car));
-        rownum++;
-        carsNotNeedServiceNow.stream().forEach(car -> addDateToRow(car));
+        carsNeedServiceNow.forEach(car -> addDateToRow(car));
+        if (carsNeedServiceNow.size() > 0) {
+            rownum++;
+        }
         
+        carsNotNeedServiceNow.stream().filter(car -> mecaManager.isCarInFleetByPageId(pageId, car.id)).forEach(car -> addDateToRow(car));
     }
 
     private void addDateToRow(MecaCar icar) {

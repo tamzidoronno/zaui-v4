@@ -1089,30 +1089,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private Double calculateDiscountCouponPrice(PmsBooking booking, Double price, Date start, Date end) {
-        if(booking.discountType != null && booking.discountType.equals("coupon")) {
-            if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
-                Coupon coupon = cartManager.getCoupon(booking.couponCode);
-                if(coupon != null) {
-                    if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
-                        start = booking.rowCreatedDate;
-                        end = booking.rowCreatedDate;
-                    }
-                    if(cartManager.couponIsValid(booking.couponCode, start, end)) {
-                        price = cartManager.calculatePriceForCoupon(booking.couponCode, price);
-                    }
+        if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
+            String couponCode = booking.couponCode;
+            if(booking.discountType.equals("partnership")) {
+                couponCode = "partnership:" + couponCode.substring(0, couponCode.indexOf(":"));
+            }
+            Coupon coupon = cartManager.getCoupon(couponCode);
+            if(coupon != null) {
+                if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
+                    start = booking.rowCreatedDate;
+                    end = booking.rowCreatedDate;
+                }
+                if(cartManager.couponIsValid(couponCode, start, end)) {
+                    price = cartManager.calculatePriceForCoupon(couponCode, price);
                 }
             }
         }
-        if(booking.discountType != null && booking.discountType.equals("partnership")) {
-            if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
-                String[] res = booking.couponCode.split(":");
-                String channel = res[0];
-                Integer discount = pmsManager.getPriceObject().channelDiscount.get(channel);
-                if(discount != null) {
-                    price = price - (price * ((double)discount / 100));
-                }
-            }
-        }
+            
         return price;
     }
 

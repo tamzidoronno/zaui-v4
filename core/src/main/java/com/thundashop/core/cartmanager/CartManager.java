@@ -412,5 +412,26 @@ public class CartManager extends ManagerBase implements ICartManager {
         return false;
     }
 
+    @Override
+    public List<String> getPartnershipCoupons() {
+        List<String> res = new ArrayList();
+        for(Coupon cup : coupons.values()) {
+            if(cup.code.contains("partnership:")) {
+                res.add(cup.code.replace("partnership:", ""));
+            }
+        }
+        return res;
+    }
+
+    @Override
+    public boolean hasCoupons() {
+        for(Coupon cup : coupons.values()) {
+            if(!cup.code.contains("partnership:")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

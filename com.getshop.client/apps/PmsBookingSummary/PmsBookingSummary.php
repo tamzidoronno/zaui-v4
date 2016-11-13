@@ -236,24 +236,25 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
     }
         
     public function includeCouponSystem() {
-        $coupon = $this->getApi()->getStoreApplicationPool()->getApplication("90cd1330-2815-11e3-8224-0800200c9a66");
         $type = $this->getCurrentBooking()->discountType;
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-        $channelconfigs = $config->channelConfiguration;
+        $channelconfigs = array();
         $channels = array();
-        foreach($channelconfigs as $key => $chan) {
-            if($chan->displayOnBookingProcess) {
-                $channels[$key] = $chan->humanReadableText;
-            }
+        $partnerSystem = (array)$this->getApi()->getCartManager()->getPartnershipCoupons();
+        foreach($partnerSystem as $key => $chan) {
+            $channels[$chan] = $chan;
         }
-        if(!$coupon && sizeof($channels) == 0) {
+        
+        $hasCoupons = $this->getApi()->getCartManager()->hasCoupons();
+        
+        if(sizeof($partnerSystem) == null && !$hasCoupons) {
             return;
         }
         
         echo "<h2>".$this->__w("Discount")."</h2>";
         echo "<div class='discountheader'>";
         echo "<span class='discountbutton selected' type='none'>".$this->__w("No discount")."</span>";
-        if($coupon) {
+        if($hasCoupons) {
             echo "<span class='discountbutton' type='coupon'>".$this->__w("Campaign code")."</span>";
         }
         if(sizeof($channels)) {
@@ -261,7 +262,7 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         }
         echo "</div>";
         
-        if($coupon) {
+        if($hasCoupons) {
             echo "<div class='discounttype' type='coupon'>";
             if($this->getCurrentBooking()->couponCode && $type == "coupon") {
                 echo "<i class='fa fa-trash-o'  gstype='clicksubmit' method='removeCouponCode' gsname='id' gsvalue='somevalue'></i> ";

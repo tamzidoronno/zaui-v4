@@ -10,9 +10,14 @@ app.PmsConfiguration = {
         $(document).on('click', '.PmsConfiguration .removeChannel', app.PmsConfiguration.removeChannel);
         $(document).on('click', '.PmsConfiguration .inventoryitem .fa-plus-circle', app.PmsConfiguration.loadAllItemsAdded);
         $(document).on('click', '.PmsConfiguration .addInventoryItem', app.PmsConfiguration.addInventory);
+        $(document).on('click', '.PmsConfiguration .loadcouponmoredates', app.PmsConfiguration.loadMoreDates);
         $(document).on('change', '.PmsConfiguration .changeItemForRoom', app.PmsConfiguration.changeItemForRoom);
         $(document).on('change', '.PmsConfiguration .changechanneloncoupon', app.PmsConfiguration.changechanneloncoupon);
         $(document).on('keyup', '.PmsConfiguration .inventoryonroomcount', app.PmsConfiguration.updateInventoryOnRoomCount);
+        
+        $(document).on('click','.PmsConfiguration .togglerepeatbox', app.PmsConfiguration.closeTheRepeatBox);
+        $(document).on('change','.PmsConfiguration .repeat_type', app.PmsConfiguration.changeRepeatType);
+
         $(document).on('click', '.PmsConfiguration #contractfield', function() {
             thundashop.common.activateCKEditor('contractfield', {
                 autogrow : false
@@ -29,6 +34,44 @@ app.PmsConfiguration = {
             });
         });
     },
+    
+    closeTheRepeatBox : function() {
+        $('.addMoredatesPanel').fadeOut();
+    },
+    
+    loadMoreDates : function() {
+        var panel = $(this).closest('td').find('.addmoredatespanel');
+        var event = thundashop.Ajax.createEvent('','loadCouponRepeatingDataPanel',$(this), {
+            "id" : $(this).attr('data-couponid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            panel.html(res);
+            panel.find('.addMoredatesPanel').fadeIn();
+        });
+    },
+
+    changeRepeatType: function() {
+        var type = $(this).val();
+        $('.repeatrow').hide();
+        if(type !== "3") {
+            $('.repeatrow').show();
+        } 
+        $('.repeateachdaterow').hide();
+        if(type === "1") {
+            $('.repeateachdaterow').show();
+        }
+        
+        $('.repeatoption').hide();
+        $('.repeat_' + type).show();
+    },
+    closeRepeatBox : function() {
+        var box = $('.PmsManagement .addMoredatesPanel');
+        if(box.is(":visible")) {
+            box.slideUp();
+        } else {
+            box.slideDown();
+        }
+    },    
     changechanneloncoupon : function() {
         thundashop.Ajax.simplePost($(this), 'changeChannel', {
             "id" : $(this).val(),

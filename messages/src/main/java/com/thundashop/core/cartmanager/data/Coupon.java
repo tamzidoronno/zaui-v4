@@ -5,6 +5,7 @@
 package com.thundashop.core.cartmanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.pmsmanager.PmsRepeatingData;
 
 /**
  *
@@ -17,4 +18,6 @@ public class Coupon extends DataCommon {
     public int timesLeft;
     public String channel = "";
     public String description = "";
+    public PmsRepeatingData whenAvailable = null;
+    public String pmsWhenAvailable = "";
 }

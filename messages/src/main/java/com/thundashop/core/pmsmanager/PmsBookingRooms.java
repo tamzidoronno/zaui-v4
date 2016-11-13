@@ -6,8 +6,10 @@ import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.Editor;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -109,6 +111,16 @@ public class PmsBookingRooms implements Serializable {
             }
         }
         return days;
+    }
+
+    public static Date convertOffsetToDate(String offset) {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            return formatter.parse(offset);
+        }catch(Exception e) {
+            GetShopLogHandler.logStack(e, null);
+        }
+        return null;
     }
     
     boolean isActiveOnDay(Date time) {

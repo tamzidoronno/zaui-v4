@@ -8,4 +8,4 @@ app.RegistrationForm = {
     }
 };
 
-app.NewsElements.init();
+app.RegistrationForm.init();

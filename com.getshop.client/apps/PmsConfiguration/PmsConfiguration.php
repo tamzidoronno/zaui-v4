@@ -551,6 +551,19 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         }
     }
     
+    public function loadCouponRepeatingDataPanel() {
+        $this->includefile("addmoredates");
+    }
+    
+    
+    public function addRepeatingDates() {
+        $repeat = new \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary();
+        $data = $repeat->createRepeatingDateObject();
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['couponid']);
+        $coupon->pmsWhenAvailable = $_POST['data']['pmsWhenAvailable'];
+        $coupon->whenAvailable = $data;
+        $this->getApi()->getCartManager()->addCoupon($coupon);
+    }
 
     public function printRoomInventoryList() {
         $allItemTypes = $this->getApi()->getPmsManager()->getAllAdditionalInformationOnRooms($this->getSelectedName());
@@ -584,5 +597,59 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         echo "</table>";
     }
 
-}
+    public function getRepeatingSummary($coupon) {
+        if(!$coupon->whenAvailable) {
+            return "";
+        }
+        
+        $text = "";
+        if($coupon->whenAvailable->repeattype == "repeat") {
+            if($coupon->whenAvailable->data->repeatPeride == "3") {
+                $text = $this->__w("Daily");
+            }
+            if($coupon->whenAvailable->data->repeatPeride == "1") {
+                $text = $this->__w("Every {periode} week") . " (";
+                $text = str_replace("{periode}", $coupon->whenAvailable->data->repeatEachTime, $text);
+                if($coupon->whenAvailable->data->repeatMonday) {
+                    $text .= strtolower($this->__w("Mon")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatTuesday) {
+                    $text .= strtolower($this->__w("Tue")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatWednesday) {
+                    $text .= strtolower($this->__w("Wed")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatThursday) {
+                    $text .= strtolower($this->__w("Thu")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatFriday) {
+                    $text .= strtolower($this->__w("Fri")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatSaturday) {
+                    $text .= strtolower($this->__w("Sat")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatSunday) {
+                    $text .= strtolower($this->__w("Sun")) . ", ";
+                }
+                $text = substr($text, 0, -2) . ")";
+            }
+            if($coupon->whenAvailable->data->repeatPeride == "2") {
+                if($coupon->whenAvailable->data->repeatAtDayOfWeek) {
+                    $text = $this->__w("Repeats montly same day in week");
+                } else {
+                    $text = $this->__w("Repeats montly same date in month");
+                }
+            }
+            
+            $text .= " " . $this->__w("until") . " " . date("d.m.Y", strtotime($coupon->whenAvailable->data->endingAt));
+        }
+        if($coupon->pmsWhenAvailable == "REGISTERED") {
+            $text .= " (" . $this->__w("when booked") . ")";
+        } else {
+            $text .= " (" . $this->__w("when staying") . ")";
+        }
+        return $text;
+    }
+
+   }
 ?>

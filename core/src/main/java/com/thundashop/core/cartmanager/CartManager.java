@@ -10,12 +10,17 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pmsmanager.PmsRepeatingData;
+import com.thundashop.core.pmsmanager.TimeRepeater;
+import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -311,6 +316,9 @@ public class CartManager extends ManagerBase implements ICartManager {
                 if(coupon.type == CouponType.FIXED) {
                     newPrice = price - coupon.amount;
                 }
+                if(coupon.type == CouponType.FIXEDPRICE) {
+                    newPrice = coupon.amount;
+                }
                 if(coupon.type == CouponType.PERCENTAGE) {
                     double multiplier = (double)(100-coupon.amount)/(double)100;
                     newPrice = price * multiplier;
@@ -381,6 +389,27 @@ public class CartManager extends ManagerBase implements ICartManager {
         for(CartItem remove : removeItem) {
             getCart().removeItem(remove.getCartItemId());
         }
+    }
+
+    public boolean couponIsValid(String couponCode, Date start, Date end) {
+        if(start == null || end == null) {
+            return true;
+        }
+        Coupon coupon = getCoupon(couponCode);
+        if(coupon.whenAvailable == null) {
+            return true;
+        }
+        
+        PmsRepeatingData when = coupon.whenAvailable;
+        
+        TimeRepeater repeater = new TimeRepeater();
+        LinkedList<TimeRepeaterDateRange> res = repeater.generateRange(when.data);
+        for(TimeRepeaterDateRange range : res) {
+            if((range.start.before(start) || range.start.equals(start)) && (range.end.after(end) || end.equals(range.end))) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

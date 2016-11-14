@@ -59,7 +59,7 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
         for (var i in $scope.destination.tasks) {
             var task = $scope.destination.tasks[i];
             
-            if ($scope.getStatus(task) === "unkown") {
+            if ($scope.getStatus(task) === "unknown") {
                 return false;
             }
         }
@@ -71,4 +71,7 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
         $state.transitionTo('base.destinationsignature', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId });
     }
     
+    $scope.openTask = function(destinationId, routeId, taskId) {
+        $state.transitionTo('base.task', { destinationId: destinationId,  routeId: routeId, taskId: taskId });
+    }
 }

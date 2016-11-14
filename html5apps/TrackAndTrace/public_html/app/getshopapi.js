@@ -2994,6 +2994,16 @@ GetShopApiWebSocket.CartManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getPartnershipCoupons' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getPartnershipCoupons',
+            interfaceName: 'core.cartmanager.ICartManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getShippingCost' : function(gs_silent) {
         var data = {
             args : {
@@ -3019,6 +3029,16 @@ GetShopApiWebSocket.CartManager.prototype = {
             args : {
             },
             method: 'getTaxes',
+            interfaceName: 'core.cartmanager.ICartManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'hasCoupons' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'hasCoupons',
             interfaceName: 'core.cartmanager.ICartManager',
         };
         return this.communication.send(data, gs_silent);
@@ -5170,6 +5190,17 @@ GetShopApiWebSocket.MecaManager.prototype = {
                 fleetId : JSON.stringify(fleetId),
             },
             method: 'deleteFleet',
+            interfaceName: 'core.mecamanager.IMecaManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getBase64ExcelReport' : function(pageId, gs_silent) {
+        var data = {
+            args : {
+                pageId : JSON.stringify(pageId),
+            },
+            method: 'getBase64ExcelReport',
             interfaceName: 'core.mecamanager.IMecaManager',
         };
         return this.communication.send(data, gs_silent);
@@ -10788,6 +10819,29 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'markAsDeliverd' : function(taskId, gs_silent) {
+        var data = {
+            args : {
+                taskId : JSON.stringify(taskId),
+            },
+            method: 'markAsDeliverd',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'markTaskWithExceptionDeliverd' : function(taskId,exceptionId, gs_silent) {
+        var data = {
+            args : {
+                taskId : JSON.stringify(taskId),
+                exceptionId : JSON.stringify(exceptionId),
+            },
+            method: 'markTaskWithExceptionDeliverd',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'saveDestination' : function(destination, gs_silent) {
         var data = {
             args : {
@@ -10816,17 +10870,6 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 route : JSON.stringify(route),
             },
             method: 'saveRoute',
-            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
-        };
-        return this.communication.send(data, gs_silent);
-    },
-
-    'saveTask' : function(task, gs_silent) {
-        var data = {
-            args : {
-                task : JSON.stringify(task),
-            },
-            method: 'saveTask',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);

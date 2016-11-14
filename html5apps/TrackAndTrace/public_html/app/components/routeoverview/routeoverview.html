@@ -1,17 +1,27 @@
-<div class="gsview routeoverview">
+<div class="gsview routeoverview" ng-if="!route.instructionAccepted && route.instruction">
+    Todays instructions
+    <br/>
+    <div style=" white-space: pre-line;">
+        {{ route.instruction }}
+    </div>
+    <br/>
+    <div class="button" ng-mobile-click="acceptTodaysInstruction()"><i class="fa fa-check"></i> Got it</div>
+</div>
+
+<div class="gsview routeoverview" ng-if="route.instructionAccepted || !route.instruction">
     
     <b>{{ route.name }}</b>
     <br/> {{ route.shortDescription }}
     <br/>
    
-    <div class='button hidefinishedtasksbutton' ng-click="toggleFinished()" ng-if="showFinished">Hide finished</div>
-    <div class='button hidefinishedtasksbutton' ng-click="toggleFinished()" ng-if="!showFinished">Show finished</div>
+    <div class='button hidefinishedtasksbutton' ng-mobile-click="toggleFinished()" ng-if="showFinished">Hide finished</div>
+    <div class='button hidefinishedtasksbutton' ng-mobile-click="toggleFinished()" ng-if="!showFinished">Show finished</div>
     
     <div class='destionations'>
         <div style='padding-bottom: 10px;'><b>Destinations (tap one to see more)</b></div>
         
         <div class='destination' ng-repeat="destination in route.destinations" ng-if="showFinished || getFinishedState(destination) !== 'green'">
-            <a ng-href='#/destination/{{destination.id}}/{{route.id}}'>
+            <div ng-mobile-click="showDestination(destination.id, route.id)">
                 <div>
                     {{ destination.company.name }}
                     <br/>{{ destination.company.address.address }}
@@ -30,7 +40,7 @@
                         <div class='statusind green' ng-if="getFinishedState(destination) === 'green'"></div>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
 </div>

@@ -13,8 +13,8 @@
         </div>
     </div>
     
-    <div class="button deliveredbutton" ng-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
-    <div class="button exceptionbutton" ng-click="showExceptions()"><i class="fa fa-exclamation"></i> Exception</div>
+    <div class="button deliveredbutton" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
+    <div class="button exceptionbutton" ng-mobile-click="showExceptions()"><i class="fa fa-exclamation"></i> Exception</div>
 </div>
 
 <div ng-if="taskType === 'pickup_parcels'" class="pickup_parcels">
@@ -23,5 +23,5 @@
         <input type="number" class="textfield"/>
     </div>
     
-    <div class="button" ng-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
+    <div class="button" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
 </div>

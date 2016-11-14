@@ -6,7 +6,7 @@
 
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
-controllers.HomeController = function($scope, $api, $rootScope, datarepository) {
+controllers.HomeController = function($scope, $api, $rootScope, datarepository, $state) {
     $scope.name = "";
     $scope.datarepository = datarepository;
     
@@ -31,13 +31,18 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository) 
         $rootScope.$broadcast("loggedOut", "");
     }
     
+    $scope.openRoute = function(routeId) {
+        $state.transitionTo("base.routeoverview", {routeId: routeId});
+    }
+    
     $scope.startRoute = function(routeId) {
         var confirmed = confirm("Are you sure you want to start this route?");
-        
         $routeToUse = datarepository.getRouteById(routeId);
         
         if (confirmed) {
+            $('.fetchingGpsCoordinates').show();
             navigator.geolocation.getCurrentPosition(function(position) {
+                $('.fetchingGpsCoordinates').fadeOut();
                 $routeToUse.startInfo.started = true;
                 $routeToUse.startInfo.startedTimeStamp = new Date();
                 $routeToUse.startInfo.lon = position.coords.longitude;
@@ -46,7 +51,16 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository) 
                
                 $api.getApi().TrackAndTraceManager.saveRoute($routeToUse);
                 datarepository.save();
-            });
+                $state.transitionTo("base.routeoverview", {routeId: $routeToUse.id});
+            }, function(failare, b, c) {
+                $routeToUse.startInfo.started = true;
+                $routeToUse.startInfo.startedTimeStamp = new Date();
+                $scope.$apply();
+               
+                $api.getApi().TrackAndTraceManager.saveRoute($routeToUse);
+                datarepository.save();
+                $state.transitionTo("base.routeoverview", {routeId: $routeToUse.id});
+            }, {maximumAge:60000, timeout:5000, enableHighAccuracy:false});
         }
     }
     

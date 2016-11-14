@@ -28,7 +28,10 @@ public interface ITrackAndTraceManager {
     public Destination saveDestination(Destination destination);
     
     @Customer
-    public void saveTask(Task task);
+    public void markAsDeliverd(String taskId);
+    
+    @Customer
+    public void markTaskWithExceptionDeliverd(String taskId, String exceptionId);
     
     @Customer
     public void saveRoute(Route route);

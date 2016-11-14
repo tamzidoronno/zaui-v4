@@ -183,12 +183,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void saveTask(Task task) {
-        tasks.put(task.id, task);
-        saveObject(task);
-    }
-
-    @Override
     public List<TrackAndTraceException> getExceptions() {
         return new ArrayList(exceptions.values());
     }
@@ -234,6 +228,27 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             dest.taskIds.add(task.id);
             dest.ensureUniqueTaskIds();
             saveObject(dest);
+        }
+    }
+
+    @Override
+    public void markAsDeliverd(String taskId) {
+        Task task = tasks.get(taskId);
+        
+        if (task != null) {
+            task.completed = true;
+            saveObject(task);
+        }
+    }
+
+    @Override
+    public void markTaskWithExceptionDeliverd(String taskId, String exceptionId) {
+        Task task = tasks.get(taskId);
+        
+        if (task != null) {
+            task.exceptionId = exceptionId;
+            task.completed = false;
+            saveObject(task);
         }
     }
     

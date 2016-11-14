@@ -126,6 +126,10 @@ public interface ICartManager {
     @Administrator
     public List<Coupon> getCoupons();
     
+    public List<String> getPartnershipCoupons();
+    
+    public boolean hasCoupons();
+    
     /**
      * Remove all coupons from the system.
      * @throws ErrorException 

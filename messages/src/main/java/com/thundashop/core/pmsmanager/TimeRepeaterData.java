@@ -5,11 +5,12 @@ import java.util.Date;
 import java.util.UUID;
 
 public class TimeRepeaterData implements Serializable {
-    /* 0, daily, 1. Weekly, 2. Monthly */
+    /* 0, daily, 1. Weekly, 2. Monthly, 3. From start to end */
     public static class RepeatPeriodeTypes {
         public static Integer daily = 0;
         public static Integer weekly = 1;
         public static Integer monthly = 2;
+        public static Integer continously = 3;
     }
     
     Integer repeatPeride = TimeRepeaterData.RepeatPeriodeTypes.daily;

@@ -22,6 +22,9 @@ public class TimeRepeater {
         if(data.repeatPeride == 2) {
             result = generateMonthlyRepeats(data);
         }
+        if(data.repeatPeride == 3) {
+            result = generateContinously(data);
+        }
         
         return result;
     }
@@ -177,5 +180,14 @@ public class TimeRepeater {
     private boolean isSameDay(Date date1, Date date2) {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
         return fmt.format(date1).equals(fmt.format(date2));
+    }
+
+    private LinkedList<TimeRepeaterDateRange> generateContinously(TimeRepeaterData data) {
+        LinkedList<TimeRepeaterDateRange> res = new LinkedList();
+        TimeRepeaterDateRange toAdd = new TimeRepeaterDateRange();
+        toAdd.end = data.endingAt;
+        toAdd.start = data.firstEvent.start;
+        res.add(toAdd);
+        return res;
     }
 }

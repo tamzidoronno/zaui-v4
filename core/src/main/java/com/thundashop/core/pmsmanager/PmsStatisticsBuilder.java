@@ -62,12 +62,28 @@ class PmsStatisticsBuilder {
                         }
 
                         entry.totalPrice += price;
-                        
                         entry.roomsRentedOut++;
+                    }
+                }
+                 for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    if(!filter.typeFilter.isEmpty() && !filter.typeFilter.contains(room.bookingItemTypeId)) {
+                        continue;
+                    }
+                    if(room.isActiveOnDay(cal.getTime()) || room.isEndingToday(cal.getTime())) {
                         for(PmsBookingAddonItem addon : room.addons) {
-                            if(!room.isSameDay(addon.date, cal.getTime())) {
-                                continue;
+                            if(addon.addonType.equals(PmsBookingAddonItem.AddonTypes.BREAKFAST)) {
+                                Calendar cal2 = Calendar.getInstance();
+                                cal2.setTime(addon.date);
+                                cal2.add(Calendar.DAY_OF_YEAR, 1);
+                                if(!room.isSameDay(cal2.getTime(), cal.getTime())) {
+                                    continue;
+                                }
+                            } else {
+                                if(!room.isSameDay(addon.date, cal.getTime())) {
+                                    continue;
+                                }
                             }
+                            System.out.println(room.guests.get(0).name);
                             Integer count = entry.addonsCount.get(addon.addonType);
                             Double addonPrice = entry.addonsPrice.get(addon.addonType);
                             if(count == null) { count = 0; }
@@ -80,7 +96,7 @@ class PmsStatisticsBuilder {
                             entry.addonsPrice.put(addon.addonType, addonPrice);
                         }
                     }
-                }
+                 }
             }
             
             entry.finalize();

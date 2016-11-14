@@ -29,6 +29,26 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function saveTypeImage() {
+        $content = strstr($_POST['data']['fileBase64'], "base64,");
+        $content = str_replace("base64,", "", $content);
+        $content = base64_decode($content);
+        $fileId = \FileUpload::storeFile($content);
+        
+        $imageFile = new \core_pmsmanager_PmsTypeImages();
+        $imageFile->fileId = $fileId;
+        $imageFile->filename = $_POST['data']['fileName'];
+        $imageFile->isDefault = false;
+        
+        $typeId = $_POST['data']['typeId'];
+        $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $typeId);
+        $additional->images[] = $imageFile;
+        $this->getApi()->getPmsManager()->saveAdditionalTypeInformation($this->getSelectedName(), $additional);
+        
+        $this->printImagesForType($typeId);
+    }
+    
+    
     public function checkForRoomsToClose() {
         $this->getApi()->getPmsManager()->checkForRoomsToClose($this->getSelectedName());
     }
@@ -327,6 +347,62 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
             $this->configureOpeningHours();
         }
     }
+
+    public function removeImageFromType() {
+        $typeId = $_POST['data']['typeId'];
+        $additionals = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $typeId);
+        
+        $newImgs = array();
+        foreach($additionals->images as $img) {
+            if($img->fileId != $_POST['data']['fileId']) {
+                $newImgs[] = $img;
+            }
+        }
+        $additionals->images = $newImgs;
+        
+        $this->getApi()->getPmsManager()->saveAdditionalTypeInformation($this->getSelectedName(), $additionals);
+        $this->printImagesForType($typeId);
+    }
+
+    public function makeImageDefault() {
+        $typeId = $_POST['data']['typeId'];
+        $additionals = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $typeId);
+        
+        $newImgs = array();
+        foreach($additionals->images as $img) {
+            $img->isDefault = false;
+            if($img->fileId == $_POST['data']['fileId']) {
+                $img->isDefault = true;
+            }
+            $newImgs[] = $img;
+        }
+        $additionals->images = $newImgs;
+        
+        $this->getApi()->getPmsManager()->saveAdditionalTypeInformation($this->getSelectedName(), $additionals);
+        $this->printImagesForType($typeId);
+    }
     
+    public function printImagesForType($typeId) {
+        $type = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $typeId);
+//        echo "<pre>";
+//        print_r($type);
+//        echo "</pre>";
+        
+        echo "<table>";
+        foreach($type->images as $image) {
+            echo "<tr>";
+            echo "<td><img src='/displayImage.php?id=" . $image->fileId . "&width=100'></td>";
+            echo "<td><i class='fa fa-trash-o removeImageFromType' style='cursor:pointer;' fileId='".$image->fileId."' typeId='$typeId'></i> " . $image->filename;
+            if($image->isDefault) {
+                echo ", this is the default image";
+            } else {
+                echo ", <span class='makeimgasdefault'  fileId='".$image->fileId."' typeId='$typeId' style='cursor: pointer; color: blue;'>make this image as the default</span>";
+            }
+            echo "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    }
+
 }
 ?>

@@ -1,6 +1,8 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PmsAdditionalTypeInformation extends DataCommon {
     public String typeId = "";
@@ -10,6 +12,7 @@ public class PmsAdditionalTypeInformation extends DataCommon {
     public Integer maxNumberOfChildBeds = 0;
     public Integer numberOfChildren = 1;
     public Integer numberOfAdults = 2;
+    public List<PmsTypeImages> images = new ArrayList();
 
     void update(PmsAdditionalTypeInformation info) {
         defaultNumberOfChildBeds = info.defaultNumberOfChildBeds;
@@ -18,5 +21,6 @@ public class PmsAdditionalTypeInformation extends DataCommon {
         defaultNumberOfBeds = info.defaultNumberOfBeds;
         maxNumberOfBeds = info.maxNumberOfBeds;
         maxNumberOfChildBeds = info.maxNumberOfChildBeds;
+        images = info.images;
     }
 }

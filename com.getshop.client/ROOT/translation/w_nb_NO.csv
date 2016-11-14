@@ -33,6 +33,7 @@ All;-;Alle
 All fields are required.;-;Alle felt er påkrevd
 All orders;-;Alle bestilinger
 All products;-;Alle produkter
+All the time;-;Hele tiden
 Already signed up;-;Allerede registrert
 An email has been sent with a code to use in step 2.;-;En epost har blitt sendt til deg som kan benyttes i steg 2.s
 Anchor;-;Anker
@@ -78,6 +79,7 @@ Cell name;-;Cellenavn
 Cell phone;-;Mobil tlf
 Cell settings;-;Instillinger for celle
 Change password;-;Endre passord
+Change to another user;-;Bytt til en annen bruker
 Change to carousel mode;-;Bytt til karusellmodus
 Change to row mode;-;Bytt til rad modus
 Change to tab mode;-;Bytt til tab modus
@@ -199,6 +201,7 @@ Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email/sms.;-;Oppgi koden som er sendt til deg på epost/sms
 Event label (google analythics);-;Event label (google analythics)
 Event name;-;Navn på kurs
+Every {periode} week;-;Hver {periode} uke
 Fade;-;Fade
 Fade in when scrolling;-;Fade når du scroller
 Failed;-;Feilet
@@ -394,6 +397,7 @@ Payment failed;-;Betaling feilet
 Payment fee;-;Betalingsgebyr
 Payment information;-;Betalings informasjon
 Payment successfully completed;-;Betalingen gjennomført
+Periode type;-;Periode type
 Phone;-;Telefon
 Phone number for company;-;Tlf nummer for firmaet
 Pillow;-;Putetrekk
@@ -577,6 +581,7 @@ This is a {} days event.;-;Dette er et {} dagers event.
 This user has not attended any events yet;-;Denne brukeren har ikke deltatt på noen eventer enda
 Thu;-;Tor
 Thursday;-;Torsdag
+Time interval;-;Tidsintervall
 Time periode;-;Tidsperiode
 Timeless black and white design.;-;Tidsløst svart og hvitt design
 Timer (ms);-;Timer (ms)
@@ -671,6 +676,8 @@ view as calendar;-;Vis som kalender
 view as list;-;Vis som liste
 week;-;uke
 weeks;-;uker
+when booked;-;ved booking
+when staying;-;ved oppholdet
 will be added to your invoice.;-;vil bli lagt på sluttsummen.
 your@email.com;-;din@epost.no
 

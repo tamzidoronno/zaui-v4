@@ -10,5 +10,6 @@ package com.thundashop.core.cartmanager.data;
  */
 public enum CouponType {
     FIXED,
-    PERCENTAGE
+    PERCENTAGE,
+    FIXEDPRICE
 }

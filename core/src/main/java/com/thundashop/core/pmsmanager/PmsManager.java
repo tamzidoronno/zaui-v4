@@ -3402,7 +3402,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     cal.setTime(date);
                     int weekday = cal.get(Calendar.DAY_OF_WEEK);
-                    System.out.println(weekday + " : " + date.getTime() + " : " + type.id + " : " + item.id + " : " + date);
+                    weekday--;
+                    if(weekday == -1) {
+                        weekday = 7;
+                    }
                     Double tmpCount = 0.0;
                     if(result.containsKey(weekday)) {
                         tmpCount = result.get(weekday);

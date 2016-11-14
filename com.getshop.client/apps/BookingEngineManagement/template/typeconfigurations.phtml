@@ -1,5 +1,6 @@
 <?
 /* @var $this \ns_3b18f464_5494_4f4a_9a49_662819803c4a\BookingEngineManagement */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 $id = $_POST['data']['typeid'];
 $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $id);
 $product = $this->getApi()->getProductManager()->getAllProducts();
@@ -103,17 +104,25 @@ $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById
 
 
 
-<div gstype="form" method="editFormFieldForType">
-    <input type="hidden" gsname="typeid" value="<? echo $id; ?>">
-    <input type="button" gstype="submitToInfoBox" type="button" value="Open field configuration">
-</div>
+<?php if($config->bookingProfile == "conferense") { ?>
+    <div gstype="form" method="editFormFieldForType">
+        <input type="hidden" gsname="typeid" value="<? echo $id; ?>">
+        <input type="button" gstype="submitToInfoBox" type="button" value="Open field configuration">
+    </div>
+    <hr>
+    <h1>Opening hours configuration</h1>
+    <?php $this->includefile("addmoredates"); ?>
+    <br><br>
+    <div gstype="form" method="editFormFields">
+        <input type="hidden" gsname="itemid" value="<? echo $id; ?>">
+        <input type="button" gstype="submitToInfoBox" type="button" value="Open field configuration">
+    </div>
 
-<hr>
-<h1>Opening hours configuration</h1>
-<?php $this->includefile("addmoredates"); ?>
-<br><br>
-<div gstype="form" method="editFormFields">
-    <input type="hidden" gsname="itemid" value="<? echo $id; ?>">
-    <input type="button" gstype="submitToInfoBox" type="button" value="Open field configuration">
-</div>
+<?php } ?>
 
+<h1>Images</h1>
+<input type='button' class='uploadTypeImage' value='Upload an image' typeid='<?php echo $id; ?>'>
+
+<div class='imagearea'>
+    <?php $this->printImagesForType($id); ?>
+</div>

@@ -8,6 +8,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -292,8 +293,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         Double price = totalPrice;
         
-        price = calculateDiscountCouponPrice(booking, price);
-        price = getUserPrice(typeId, price, count);
+        price = calculateDiscounts(booking, price, typeId, count, null, null, null);
+        
         
         if(avgPrice && count != 0) {
             price /= count;
@@ -305,7 +306,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return price;
     }
- 
+
+    private Double calculateDiscounts(PmsBooking booking, Double price, String bookingEngineTypeId, int count, PmsBookingRooms room, Date start, Date end) {
+        if(room != null) {
+            price = addDerivedPrices(room, price);
+        }
+        price = calculateDiscountCouponPrice(booking, price, start, end);
+        price = getUserPrice(bookingEngineTypeId, price, count);
+        
+        return price;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -473,10 +484,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         for(String key : priceMatrix.keySet()) {
             if(!room.priceMatrix.containsKey(key) || !booking.isCompletedBooking()) {
                 Double price = priceMatrix.get(key);
-                price = addDerivedPrices(room, price);
-                price = calculateDiscountCouponPrice(booking, price);
-                price = getUserPrice(room.bookingItemTypeId, price, 1);
+                Date day = PmsBookingRooms.convertOffsetToDate(key);
+                price = calculateDiscounts(booking, price, room.bookingItemTypeId, 1, room, day, day);
                 room.priceMatrix.put(key, price);
+                priceMatrix.put(key, price);
             }
         }
         for(String key : priceMatrix.keySet()) {
@@ -700,7 +711,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             message += "Other orders connected to booking:<br>";
                             for(String orderId : booking.orderIds) {
                                 Order otherOrder = orderManager.getOrder(orderId);
-                                message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(order) + ")<br>";
+                                message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(otherOrder) + ")<br>";
                             }
                         }catch(Exception e) {
                             e.printStackTrace();
@@ -1077,22 +1088,24 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return generatePriceFromPriceMatrix(priceMatrix, avgPrice, booking, typeId);
     }
 
-    private Double calculateDiscountCouponPrice(PmsBooking booking, Double price) {
-        if(booking.discountType != null && booking.discountType.equals("coupon")) {
-            if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
-                price = cartManager.calculatePriceForCoupon(booking.couponCode, price);
+    private Double calculateDiscountCouponPrice(PmsBooking booking, Double price, Date start, Date end) {
+        if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
+            String couponCode = booking.couponCode;
+            if(booking.discountType.equals("partnership")) {
+                couponCode = "partnership:" + couponCode.substring(0, couponCode.indexOf(":"));
             }
-        }
-        if(booking.discountType != null && booking.discountType.equals("partnership")) {
-            if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
-                String[] res = booking.couponCode.split(":");
-                String channel = res[0];
-                Integer discount = pmsManager.getPriceObject().channelDiscount.get(channel);
-                if(discount != null) {
-                    price = price - (price * ((double)discount / 100));
+            Coupon coupon = cartManager.getCoupon(couponCode);
+            if(coupon != null) {
+                if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
+                    start = booking.rowCreatedDate;
+                    end = booking.rowCreatedDate;
+                }
+                if(cartManager.couponIsValid(couponCode, start, end)) {
+                    price = cartManager.calculatePriceForCoupon(couponCode, price);
                 }
             }
         }
+            
         return price;
     }
 
@@ -1436,9 +1449,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             price /= count;
         } else {
-            price = room.price; 
-            price = calculateDiscountCouponPrice(booking, price);
-            price = getUserPrice(room.pmsBookingRoomId, price, 1);
+            price = room.price;
         }
         
         if(pmsManager.getPriceObject().privatePeopleDoNotPayTaxes) {

@@ -46,4 +46,7 @@ if ($destionation->tasks) {
     Signature:
     <br/>
     <img src='<? echo $destionation->signatureImage; ?>'/>
+    <br/> Lat: <? echo $destionation->startInfo->lat; ?>
+    <br/> Lon: <? echo $destionation->startInfo->lon; ?>
+    <br/> <a href='https://www.google.no/maps/place/ <? echo $destionation->startInfo->lat.','.$destionation->startInfo->lon ?>' target='_blank'>Open in google maps</a>
 </div>

@@ -154,10 +154,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         retRoute.destinationIds.stream()
             .forEach(destinationId -> retRoute.addDestination(destinations.get(destinationId)));
         
-        if (retRoute.instruction == null || retRoute.instruction.isEmpty()) {
-            retRoute.instructionAccepted = true;
-        }
-        
         retRoute.getDestinations().stream().forEach(dest -> finalize(dest));
 
     }

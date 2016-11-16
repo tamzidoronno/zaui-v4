@@ -154,10 +154,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         retRoute.destinationIds.stream()
             .forEach(destinationId -> retRoute.addDestination(destinations.get(destinationId)));
         
-        if (retRoute.instruction == null || retRoute.instruction.isEmpty()) {
-            retRoute.instructionAccepted = true;
-        }
-        
         retRoute.getDestinations().stream().forEach(dest -> finalize(dest));
 
     }
@@ -184,12 +180,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public void saveRoute(Route inRoute) {
         saveObject(inRoute);
         routes.put(inRoute.id, inRoute);
-    }
-
-    @Override
-    public void saveTask(Task task) {
-        tasks.put(task.id, task);
-        saveObject(task);
     }
 
     @Override
@@ -238,6 +228,27 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             dest.taskIds.add(task.id);
             dest.ensureUniqueTaskIds();
             saveObject(dest);
+        }
+    }
+
+    @Override
+    public void markAsDeliverd(String taskId) {
+        Task task = tasks.get(taskId);
+        
+        if (task != null) {
+            task.completed = true;
+            saveObject(task);
+        }
+    }
+
+    @Override
+    public void markTaskWithExceptionDeliverd(String taskId, String exceptionId) {
+        Task task = tasks.get(taskId);
+        
+        if (task != null) {
+            task.exceptionId = exceptionId;
+            task.completed = false;
+            saveObject(task);
         }
     }
     

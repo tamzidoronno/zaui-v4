@@ -138,3 +138,9 @@ a {
     text-decoration: none;
     color: inherit;
 }
+
+[ng-mobile-click],
+[data-ng-mobile-click],
+[x-ng-mobile-click] {
+    cursor: pointer;
+}

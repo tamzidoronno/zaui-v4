@@ -13,7 +13,7 @@
 <div ng-if="destinationState() == 'started'" >
     <b>Tasks</b>
     
-    <a ng-href="#/destination/{{destination.id}}/{{route.id}}/{{task.id}}" ng-repeat="task in destination.tasks">
+    <div ng-mobile-click="openTask(destination.id, route.id, task.id)" ng-repeat="task in destination.tasks">
         <div class='destination_task'>
             {{ getTaskName(task) }}
 
@@ -31,18 +31,18 @@
                 </div>
             </div>
         </div>
-    </a>
+    </div>
     
     <div class='destination_task addTask'>
         <i class='fa fa-plus'></i> New task
     </div>
     
-    <div class='button' ng-if="allTaskCompleted() == true" ng-click="departedTapped()">Departing</div>
+    <div class='button' ng-if="allTaskCompleted() == true" ng-mobile-click="departedTapped()">Departing</div>
 </div>
 
 <div ng-if="destinationState() == 'unkown'">    
     <div>
-        <div class='button' ng-click="markAsArrived()">I have arrived!</div>
+        <div class='button' ng-mobile-click="markAsArrived()">I have arrived!</div>
         <div class='button'>Skip delivery</div>
     </div>
 </div>

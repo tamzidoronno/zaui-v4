@@ -7,7 +7,7 @@
 
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
-controllers.RouteOverviewController = function($scope, datarepository, $rootScope, $stateParams, $state) {
+controllers.RouteOverviewController = function($scope, datarepository, $rootScope, $stateParams, $state, $api) {
     $scope.route = datarepository.getRouteById($stateParams.routeId);
     $scope.showFinished = true;
     
@@ -25,5 +25,19 @@ controllers.RouteOverviewController = function($scope, datarepository, $rootScop
     
     $scope.toggleFinished = function() {
         $scope.showFinished = !$scope.showFinished;   
+    }
+    
+    $scope.acceptTodaysInstruction = function() {
+        $scope.route.instructionAccepted = true;
+        $api.getApi().TrackAndTraceManager.saveRoute($scope.route);
+        datarepository.save();
+    }
+    
+    $scope.goBack = function() {
+        $state.transitionTo("base.home");
+    }
+    
+    $scope.showDestination = function(destinationId, routeId) {
+        $state.transitionTo("base.destination", {destinationId: destinationId, routeId: routeId});
     }
 };

@@ -165,6 +165,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsConfiguration) {
                 configuration = (PmsConfiguration) dataCommon;
             }
+            if( dataCommon instanceof PmsAdditionalTypeInformation) {
+                PmsAdditionalTypeInformation cur = (PmsAdditionalTypeInformation)dataCommon;
+                boolean found = false;
+                for(PmsAdditionalTypeInformation info : additionDataForTypes) {
+                    if(info.typeId.equals(cur.typeId)) {
+                        found = true;
+                        deleteObject(dataCommon);
+                    }
+                }
+                if(!found) {
+                    additionDataForTypes.add(cur);
+                }
+            }
             if (dataCommon instanceof PmsLog) {
                 PmsLog entry = (PmsLog) dataCommon;
                 if(entry.logText.contains("Automarking booking as paid for, since no orders has been added") || entry.logText.equals("Booking saved / updated") || entry.logText.contains("booking has been deleted")) {

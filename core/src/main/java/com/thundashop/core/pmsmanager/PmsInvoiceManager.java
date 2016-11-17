@@ -202,7 +202,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<String> result = new ArrayList();
         for(PmsBooking booking : all) {
             for(PmsBookingRooms room : booking.getActiveRooms()) {
-                if(room.isEnded()) {
+                if(room.isEndedDaysAgo(60)) {
                     continue;
                 }
                 Date invoicedTo = null;

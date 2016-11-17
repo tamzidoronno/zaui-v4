@@ -1251,9 +1251,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
         if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
             daysInPeriode = getNumberOfMonthsBetweenDates(startDate, endDate);
-            if(daysInPeriode > 1000) {
+            if(daysInPeriode > 1000 || pmsManager.getConfigurationSecure().hasNoEndDate) {
                 //Infinate dates, noone wants to pay 100 years in advance.
-                daysInPeriode = pmsManager.getConfigurationSecure().whenInfinteDateFirstOrderTimeUnits;
+                daysInPeriode = 1;
+                if(daysInPeriode > 1000) {
+                    daysInPeriode = pmsManager.getConfigurationSecure().whenInfinteDateFirstOrderTimeUnits;
+                }
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(startDate);
                 cal.add(Calendar.MONTH, daysInPeriode);

@@ -279,7 +279,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             int totalDays = 1;
-            if (room.date.end != null && room.date.start != null) {
+            if (room.date.end != null && room.date.start != null && !getConfigurationSecure().hasNoEndDate) {
                 totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
             }
             

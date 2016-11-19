@@ -39,6 +39,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private boolean avoidChangeInvoicedTo;
     private boolean avoidChangingInvoicedFrom;
+    private List<String> roomIdsInCart = null;
 
     @Override
     public void markOrderAsPaid(String bookingId, String orderId) {
@@ -730,12 +731,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             continue;
                         }
                     }
-                    
-                    room.invoicedFrom = room.date.start;
-                    if(room.date.end.before(filter.endInvoiceAt)) {
-                        room.invoicedTo = room.date.end;
-                    } else {
-                        room.invoicedTo = filter.endInvoiceAt;
+                    if(roomIdsInCart.contains(room.pmsBookingRoomId)) {
+                        room.invoicedFrom = room.date.start;
+                        if(room.date.end.before(filter.endInvoiceAt)) {
+                            room.invoicedTo = room.date.end;
+                        } else {
+                            room.invoicedTo = filter.endInvoiceAt;
+                        }
                     }
                     
                 }
@@ -1321,6 +1323,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private void clearCart() {
+        roomIdsInCart = new ArrayList();
         if(!avoidOrderCreation) {
             itemsToReturn.clear();
         }
@@ -1344,7 +1347,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         item.setProduct(product.clone());
         item.setCount(count);
         item.getProduct().externalReferenceId = roomId;
-        
+        roomIdsInCart.add(roomId);
         if(!runningDiffRoutine) {
             addItemToItemsToReturn(item);
         }

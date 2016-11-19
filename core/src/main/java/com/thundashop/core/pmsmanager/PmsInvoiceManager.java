@@ -525,7 +525,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 end = room.date.end;
             }
             
-            createCartItemsForRoom(start, end, booking, room);
+            createCartItemsForRoom(start, end, booking, room, null);
             avoidChangeInvoicedTo = false;
         }
     }
@@ -544,7 +544,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return;
         }
         
-        List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room);
+        List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room, filter);
         
         if (pmsManager.getConfigurationSecure().substractOneDayOnOrder && !filter.onlyEnded) {
             for(CartItem item : items) {
@@ -1244,7 +1244,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     }
 
-    private List<CartItem> createCartItemsForRoom(Date startDate, Date endDate, PmsBooking booking, PmsBookingRooms room) {
+    private List<CartItem> createCartItemsForRoom(Date startDate, Date endDate, PmsBooking booking, PmsBookingRooms room, NewOrderFilter filter) {
         
         startDate = normalizeDate(startDate, true);
         endDate = normalizeDate(endDate, false);
@@ -1255,14 +1255,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             daysInPeriode = getNumberOfMonthsBetweenDates(startDate, endDate);
             if(daysInPeriode > 1000 || pmsManager.getConfigurationSecure().hasNoEndDate) {
                 //Infinate dates, noone wants to pay 100 years in advance.
-                daysInPeriode = 1;
                 if(daysInPeriode > 1000) {
                     daysInPeriode = pmsManager.getConfigurationSecure().whenInfinteDateFirstOrderTimeUnits;
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(startDate);
+                    cal.add(Calendar.MONTH, daysInPeriode);
+                    endDate = cal.getTime();
+                    if(filter != null) {
+                        filter.endInvoiceAt = endDate;
+                    }
                 }
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(startDate);
-                cal.add(Calendar.MONTH, daysInPeriode);
-                endDate = cal.getTime();
             }
         }
         Double price = getOrderPriceForRoom(room, startDate, endDate, booking.priceType);
@@ -1386,7 +1388,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private void creditRoomForPeriode(Date start, Date end, PmsBooking booking, PmsBookingRooms room) {
-        List<CartItem> items = createCartItemsForRoom(start, end, booking, room);
+        List<CartItem> items = createCartItemsForRoom(start, end, booking, room, null);
         for(CartItem item : items) {
             item.setCount(item.getCount() * -1);
         }
@@ -1509,7 +1511,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             
             List<CartItem> orderRoomItems = getAllOrderItemsForRoomOnBooking(room.pmsBookingRoomId, booking.id);
-            List<CartItem> roomItems = createCartItemsForRoom(room.invoicedFrom, room.invoicedTo, booking, room);
+            List<CartItem> roomItems = createCartItemsForRoom(room.invoicedFrom, room.invoicedTo, booking, room, filter);
             
             List<BookingOrderSummary> ordersummaries = summaries(orderRoomItems);
             List<BookingOrderSummary> roomSummary = summaries(roomItems);

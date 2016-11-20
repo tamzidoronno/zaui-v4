@@ -132,8 +132,8 @@ public class RubiCon implements AccountingTransferInterface {
             if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.toLowerCase().contains("invoice")) {
                 account = "010900";
             } else {
-                account = prependZeros(user.customerId + "", 6);
-            }
+                account = prependZeros(user.customerId + "", 6); 
+           }
             mvaKode = "00";
         }
         //End of configuration

@@ -140,20 +140,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) { 
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
-                
-//                if(booking.deleted != null && (booking.sessionId== null || booking.sessionId.isEmpty()) && booking.orderIds.isEmpty() && !booking.userId.isEmpty()) {
-//                    for(PmsBookingRooms r : booking.rooms) {
-//                        r.bookingId = "";
-//                    }
-//                    System.out.println("Found deleted booking : " + booking.rowCreatedDate + " - " + userManager.getUserById(booking.userId).fullName);
-//                } else if(booking.deleted != null) {
-//                    continue;
-//                }
-//                dumpBooking(booking);
-                if(booking.userId.equals("789dc5fc-a47e-42a4-9d09-d8f3281d8e63")) {
-                    continue;
-                }
-  
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof PmsPricing) {
@@ -735,6 +721,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             String logText = "Changed item type from : " + from + " to " + to;
             logEntry(logText, bookingId, null, roomId);
         } catch (BookingEngineException ex) {
+            logPrintException(ex);
             return ex.getMessage();
         }
         return "";

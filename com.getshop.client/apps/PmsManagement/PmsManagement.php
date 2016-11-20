@@ -1234,7 +1234,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         foreach($entries as $entry) {
             echo "<tr>";
-            echo "<td valign='top'>" . date("d.m.Y H:i", strtotime($entry->dateEntry)) . "</td>";
+            echo "<td valign='top'>" . date("d.m.Y H:i:s", strtotime($entry->dateEntry)) . "</td>";
             echo "<td valign='top'>" . $this->getUsersName($entry->userId) . "</td>";
             echo "<td valign='top'>" . $entry->logText . "</td>";
             $item = "";

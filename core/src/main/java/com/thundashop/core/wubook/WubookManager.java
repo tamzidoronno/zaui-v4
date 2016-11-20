@@ -2,12 +2,14 @@ package com.thundashop.core.wubook;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pmsmanager.CheckPmsProcessing;
 import com.thundashop.core.pmsmanager.NewOrderFilter;
 import com.thundashop.core.pmsmanager.PmsBooking;
@@ -57,6 +59,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Autowired
     FrameworkConfig frameworkConfig;
+    
+    @Autowired
+    MessageManager messageManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -221,6 +226,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     private WubookBooking buildBookingResult(Hashtable table) {
         WubookBooking booking = new WubookBooking();
+        
+        try {
+            Gson gson = new Gson();
+            logPrint(gson.toJson(table));
+        }catch(Exception e) {
+            logPrintException(e);
+        }
 
         String arrival = (String) table.get("date_arrival");
         String departure = (String) table.get("date_departure");
@@ -335,6 +347,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             throw new Exception();
         } else {
             Vector bookings = (Vector) result.get(1);
+            if(bookings.size() > 1) {
+                String msg = "Multiple bookings fetched in fetch new bookings: " + bookings.size() + ", please investigate.<br><bR>";
+                messageManager.sendErrorNotification(msg, null);
+            }
             for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {
                 Hashtable reservation = (Hashtable) bookings.get(bookcount);
                 WubookBooking wubooking = buildBookingResult(reservation);

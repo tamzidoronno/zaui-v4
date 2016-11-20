@@ -41,6 +41,7 @@ class OrderExport extends \WebshopApplication implements \Application {
                 
                 $conf->username = $_POST['username'];
                 $conf->password = $_POST['password'];
+                $conf->subType = $_POST['subtype'];
                 
                 $this->getApi()->getAccountingManager()->saveConfig($conf);
                 break;

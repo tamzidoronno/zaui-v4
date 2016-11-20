@@ -247,15 +247,21 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         result.addAll(otherFiles.values());
         
         for(SavedOrderFile saved : result) {
-            finalizeFile(saved);
+            if(finalizeFile(saved)) {
+                saveObject(saved);
+            }
         }
         
         return result;
     }
     
     @Override
-    public List<String> getFile(String id) {
+    public List<String> getFile(String id) throws Exception {
         SavedOrderFile file = files.get(id);
+        
+        if(file.configId != null && !file.configId.isEmpty() && file.startDate != null && file.endDate != null) {
+            file = downloadOrdeFileNewType(file.configId, file.startDate, file.endDate, file);
+        }
         
         if(file == null) {
             file= otherFiles.get(id);
@@ -714,29 +720,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
 
     @Override
     public SavedOrderFile downloadOrderFileNewType(String configId, Date start, Date end) throws Exception {
-        AccountingTransferConfig configToUse = configs.get(configId);
-        List<Order> orders = getOrdersFromNewFilter(configToUse);
-        if(orders.isEmpty()) {
-            return null;
-        }
-        
-        orders = filterOrders(orders, start, end, configToUse);
-        
-        List<User> users = getUsersFromNewFilter(configToUse, orders);
-        
-        AccountingTransferInterface transfer = getAccoutingInterface(configToUse.transferType);
-        transfer.setOrders(orders);
-        transfer.setUsers(users);
-        
-        SavedOrderFile res = transfer.generateFile();
-        sumOrders(res);
-        res.subtype = configToUse.subType;
-        res.type = configToUse.transferType;
-        saveObject(res);
-        
-        files.put(res.id, res);
-        
-        return res;
+        return downloadOrdeFileNewType(configId, start, end, null);
     }
 
     private List<User> getUsersFromNewFilter(AccountingTransferConfig configToUse, List<Order> selectedOrders) {
@@ -900,9 +884,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         return toReturn;
     }
 
-    private void finalizeFile(SavedOrderFile saved) {
+    private boolean finalizeFile(SavedOrderFile saved) {
         saved.sumAmountExOrderLines = 0.0;
         saved.sumAmountIncOrderLines = 0.0;
+        boolean needSaving = false;
         for(String orderId : saved.orders) {
             Order order = orderManager.getOrder(orderId);
             if(order.cart == null) {
@@ -918,10 +903,76 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
             double total = orderManager.getTotalAmount(order);
             double totalEx = orderManager.getTotalAmount(order);
+            if(!saved.amountOnOrder.containsKey(order.id)) {
+                saved.amountOnOrder.put(order.id, total);
+                needSaving = true;
+            } else if(total != saved.amountOnOrder.get(order.id)) {
+                saved.tamperedOrders.add(order.id);
+                needSaving = true;
+            }
             if(total < 0) { total *= -1; }
             if(totalEx < 0) { totalEx *= -1; }
             saved.sumAmountIncOrderLines += total;
             saved.sumAmountExOrderLines += totalEx;
         }
+        
+        
+        if(saved.configId != null && !saved.configId.isEmpty()) {
+            AccountingTransferConfig configToUse = configs.get(saved.configId);
+            List<Order> orders = getOrdersFromNewFilter(configToUse);
+            saved.numberOfOrdersNow = 0;
+            if(!orders.isEmpty() && configToUse != null) {
+                orders = filterOrders(orders, saved.startDate, saved.endDate, configToUse);
+                saved.numberOfOrdersNow = orders.size();
+            }
+        }
+        
+        
+        return needSaving;
+    }
+
+    private SavedOrderFile downloadOrdeFileNewType(String configId, Date start, Date end, SavedOrderFile fileToUse) throws Exception {
+        AccountingTransferConfig configToUse = configs.get(configId);
+        if(fileToUse == null) {
+            List<SavedOrderFile> firstCheckFiles = getAllFiles();
+            for(SavedOrderFile f : firstCheckFiles) {
+                if(!configToUse.subType.equals(f.subtype)) {
+                    continue;
+                }
+                if(f.endDate != null && f.endDate.after(start)) {
+                    return null;
+                }
+            }
+        }
+        
+        List<Order> orders = getOrdersFromNewFilter(configToUse);
+        if(orders.isEmpty()) {
+            return null;
+        }
+        
+        orders = filterOrders(orders, start, end, configToUse);
+        
+        List<User> users = getUsersFromNewFilter(configToUse, orders);
+        
+        AccountingTransferInterface transfer = getAccoutingInterface(configToUse.transferType);
+        transfer.setOrders(orders);
+        transfer.setUsers(users);
+        
+        SavedOrderFile res = transfer.generateFile();
+        if(fileToUse == null) {
+            res.id = fileToUse.id;
+        }
+
+        sumOrders(res);
+        res.subtype = configToUse.subType;
+        res.type = configToUse.transferType;
+        res.startDate = start;
+        res.endDate = end;
+        res.configId = configId;
+        saveObject(res);
+        
+        files.put(res.id, res);
+        
+        return res;    
     }
 }

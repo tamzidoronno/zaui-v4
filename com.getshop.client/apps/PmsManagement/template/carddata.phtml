@@ -45,7 +45,11 @@ foreach($booking->rooms as $room) {
     }
     echo "</select>";
     echo "</td>";
-    echo "<td><input type='txt' value='".$room->code."' class='code'></td>";
+    $code = "Not active yet";
+    if($room->addedToArx) {
+        $code = $room->code;
+    }
+    echo "<td><input type='txt' value='".$code."' class='code'></td>";
     echo "<td><input type='button' value='Update' class='updatecardonroom'></td>";
     echo "</tr>";
 }

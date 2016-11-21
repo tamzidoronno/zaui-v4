@@ -1954,6 +1954,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         SedoxSharedProduct sharedProduct = getSharedProductById(product.sharedProductId);
         product.populate(sharedProduct);
         setHumanReadableId(product);
+        product.hasBeenBought = hasProductBeenBought(product);
     }
 
     @Override
@@ -2374,5 +2375,16 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             sedoxUser.evcId = evcId;
             saveObject(sedoxUser);
         }
+    }
+
+    private boolean hasProductBeenBought(SedoxProduct product) {
+        SedoxUser sedoxUser = getSedoxUserAccountInternalByIdInternal(product.firstUploadedByUserId);
+        for (SedoxOrder order : sedoxUser.orders) {
+            if (order.productId.equals(product.id)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

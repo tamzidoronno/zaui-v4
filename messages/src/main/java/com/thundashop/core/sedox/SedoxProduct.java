@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -35,6 +36,9 @@ public class SedoxProduct extends SedoxProductCopiedData implements Comparable<S
     public boolean duplicate = false;
     public boolean virtual = false;
     public String humanReadableId = null;
+    
+    @Transient
+    public boolean hasBeenBought = false;
     
     @Override
     public int compareTo(SedoxProduct o) {

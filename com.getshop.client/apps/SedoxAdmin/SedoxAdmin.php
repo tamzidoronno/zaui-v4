@@ -55,7 +55,8 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $text = "";
 
         if (array_key_exists("notifyForCustomer", $file->states)) {
-            $innerstatus = "<div class='finished_marker yellow'><i class='fa fa-comment'></i></div>";
+            $fcolor = $product->hasBeenBought ? "green" : "yellow";
+            $innerstatus = "<div class='finished_marker $fcolor'><i class='fa fa-comment'></i></div>";
             $text = "Notified by";
         } else if (array_key_exists("sendProductByMail", $file->states)) {
             $innerstatus = "<div class='finished_marker'><i class='fa fa-check'></i></div>";

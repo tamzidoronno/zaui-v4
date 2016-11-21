@@ -20,6 +20,7 @@ class SedoxProfileUpdater extends \MarketingApplication implements \Application 
         $user->emailAddress = $_POST['data']['email'];
         $user->cellPhone = $_POST['data']['cellphone'];
         $this->getApi()->getUserManager()->saveUser($user);
+        $this->getApi()->getSedoxProductManager()->setEvcId($user->id, $_POST['data']['evcid']);
     }
 }
 ?>

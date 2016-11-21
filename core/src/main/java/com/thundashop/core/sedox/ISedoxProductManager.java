@@ -246,4 +246,7 @@ public interface ISedoxProductManager  {
     
     @Administrator
     public void setCreditAllowedLimist(String userId, int creditlimit);
+    
+    @Customer
+    public void setEvcId(String userId, String evcId);
 }

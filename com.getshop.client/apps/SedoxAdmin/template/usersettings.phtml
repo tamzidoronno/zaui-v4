@@ -6,9 +6,19 @@ $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById(
 <div class="gss_overrideapp" gss_use_app_id="1475891a-3154-49f9-a2b4-ed10bfdda1fc">
     <input type="hidden" gs_model="sedoxusermodel" gs_model_attr="userid" value="<? echo $user->id; ?>"/>
     
-        <div class="textfield gss_setting" >
+    <div class="textfield gss_setting" >
         <span class="title"><?php echo $this->__f("Customer group"); ?></span>
         <input type="textfield" disabled="true" gs_model='sedoxusermodel' gs_model_attr='usergroup' value="<? echo $user->group; ?>">
+        <div class="description">
+            
+        </div>
+    </div>
+    
+    <input type="hidden" gs_model="sedoxusermodel" gs_model_attr="userid" value="<? echo $user->id; ?>"/>
+    
+    <div class="textfield gss_setting" >
+        <span class="title"><?php echo $this->__f("EVC ID"); ?></span>
+        <input type="textfield" gs_model='sedoxusermodel' gs_model_attr='evcid' value="<? echo $sedoxUser->evcId; ?>">
         <div class="description">
             
         </div>

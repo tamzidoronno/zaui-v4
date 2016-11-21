@@ -2356,4 +2356,17 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
         return 0;
     }
+
+    @Override
+    public void setEvcId(String userId, String evcId) {
+        User user = userManager.getUserById(userId);
+        userManager.checkUserAccess(user);
+        
+        SedoxUser sedoxUser = getSedoxUserAccountInternalByIdInternal(userId);
+        
+        if (sedoxUser != null) {
+            sedoxUser.evcId = evcId;
+            saveObject(sedoxUser);
+        }
+    }
 }

@@ -1,8 +1,9 @@
 <?
 /* @var $this ns_b485ee62_3163_4612_93d4_a36b44e05a8d\SedoxProfileUpdater */
 $user = $this->getApi()->getUserManager()->getLoggedOnUser();
-
+$sedox = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($user->id);
 ?>
+
 <div gstype="form" method="saveUser">
     
     <div class="updaterow">
@@ -18,6 +19,11 @@ $user = $this->getApi()->getUserManager()->getLoggedOnUser();
     <div class="updaterow">
         <div class="label">Cellphone (receive sms on this)</div>
         <div class="field"><input type="text" gsname="cellphone" value="<? echo $user->cellPhone; ?>"></div>
+    </div>
+    
+    <div class="updaterow">
+        <div class="label">Evc ID</div>
+        <div class="field"><input type="text" gsname="evcid" value="<? echo $sedox->evcId; ?>"></div>
     </div>
 
     <div class="sedox_blue_button saveprofile" gstype="submit">Save</div>

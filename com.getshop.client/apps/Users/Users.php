@@ -346,5 +346,21 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $user->profilePicutreId = $imgId;
         $this->getApi()->getUserManager()->saveUser($user);
     }
+
+    public function getExtraUserInfoForHeader($user) {
+        $apps = $this->getApi()->getStoreApplicationPool()->getApplications();
+        
+        foreach ($apps as $appSetting) {
+            $instance = $this->getFactory()->getApplicationPool()->createInstace($appSetting);       
+            
+            if (method_exists($instance, "getUserHeaderInfo")) {
+                $ret .= $instance->getUserHeaderInfo($user);
+            }
+            
+        }
+
+        return $ret;
+    }
+
 }
 ?>

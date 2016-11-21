@@ -227,10 +227,12 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         $this->getApi()->getSedoxProductManager()->toggleAllowWindowsApp($_POST['userid'], $_POST['canUseExternalProgram']);
         $this->getApi()->getSedoxProductManager()->setFixedPrice($_POST['userid'], $_POST['fixedrate']);
         
-        $this->getApi()->getSedoxProductManager()->setCreditAllowedLimist($_POST['userid'], $_POST['creditlimit']);
+        if (is_numeric($_POST['creditlimit'])) {
+            $this->getApi()->getSedoxProductManager()->setCreditAllowedLimist($_POST['userid'], $_POST['creditlimit']);
+        }
         $allowed = $_POST['allowedNegativeCredit'] == "true";
         $this->getApi()->getSedoxProductManager()->toggleAllowNegativeCredit($_POST['userid'], $allowed);
-        
+        $this->getApi()->getSedoxProductManager()->setEvcId($_POST['userid'], $_POST['evcid']);
     }
     
     public function cancelSearch() {
@@ -300,5 +302,13 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
         return $extraRequests;
     }
 
+    /**
+     * 
+     * @param \core_usermanager_data_User $user
+     */
+    public function getUserHeaderInfo($user) {
+        $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($user->id);
+        return " - ".$user->group." - ".$user->id." - ".$sedoxUser->evcId;
+    }
 }
 ?>

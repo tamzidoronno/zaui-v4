@@ -13,7 +13,7 @@ if (!$user->address) {
 
     <div class='gss_settings_header_description'>
         <div class='gss_settings_header_title'>
-            <? echo $user->fullName; ?>
+            <? echo $user->fullName." (".$user->emailAddress . $this->getExtraUserInfoForHeader($user). ")"; ?>
         </div>
         <div class='gss_settings_header_description_inner'>
             <?

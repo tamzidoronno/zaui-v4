@@ -11,11 +11,18 @@ $slaves = $this->getApi()->getSedoxProductManager()->getSlaves($sedoxUser->id);
 
 <div class="information_container">
     <div class="informationtitle">
+        <a href="/impersonate.php?userId=<? echo $user->id; ?>">
+            <div class="gs_shop_small_icon" userid="<? echo $user->id; ?>" title="Impersonate"><i class="fa fa-magic"></i></div>
+        </a>
+        
         <i class="fa fa-user"></i> User Information
     </div>
     <div class="information_data">
+        
         Name:
-        <div class="aligned_data text_data"><? echo $user->fullName; ?> - ID <? echo $user->id; ?></div>
+        <div class="aligned_data text_data">
+            <? echo $user->fullName." - ".$user->emailAddress." - ".$user->group." - ".$user->id." - ".$sedoxUser->evcId; ?> - ID <? echo $user->id; ?>
+        </div>
     </div>
     <div class="information_data">
         Status:
@@ -35,10 +42,15 @@ $slaves = $this->getApi()->getSedoxProductManager()->getSlaves($sedoxUser->id);
         }
         ?>
     </div>
+    <div class="information_data">
+        Credit:
+        <div class="aligned_data text_data"><? echo $sedoxUser->creditAccount->balance; ?></div>
+    </div>
     <div class="information_data comment_data">
         <div class="data_description">Comment:</div>
         <div class="aligned_data"><textarea class="comment_input"><? echo $sedoxUser->comment; ?></textarea></div>
     </div>  
+    
     <div class="informationtitle dealersegment">
         <i class="fa fa-users"></i> Dealer Network
     </div>
@@ -67,7 +79,15 @@ $slaves = $this->getApi()->getSedoxProductManager()->getSlaves($sedoxUser->id);
                 $slaveUser = $this->getApi()->getUserManager()->getUserById($slave->id);
                 ?>
                 <div class="slave_information">
-                    <div class="slave_name float-left" master_id="<?echo $sedoxUser->id; ?>" slave_id="<?echo $slaveUser->id; ?>"><? echo $slaveUser->fullName; ?></div>
+                    <?
+                    $creditBalance = $slaveUser->creditAccount->balance ? $slaveUser->creditAccount->balance : 0;
+                    ?>
+                    <div class="slave_name float-left" master_id="<?echo $sedoxUser->id; ?>" slave_id="<?echo $slaveUser->id; ?>">
+                        <a href="/impersonate.php?userId=<? echo $slave->id; ?>">
+                            <div class="gs_shop_small_icon" userid="<? echo $slave->id; ?>" title="Impersonate"><i class="fa fa-magic"></i></div>
+                        </a>
+                        <? echo $slaveUser->fullName . " ( $creditBalance )"; ?>
+                    </div>
                     <div class="float-right">
                         <div class="slave_options checkbox" slave_id="<?echo $slaveUser->id; ?>" >
                             <input class="income_input" value="<? echo $slave->slaveIncome; ?>"/>

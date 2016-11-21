@@ -245,6 +245,12 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
                 retUsers.add(user);
             }
         }
+        
+        Collections.sort(retUsers, (u1, u2) -> {
+            User gu1 = userManager.getUserById(u1.id);
+            User gu2 = userManager.getUserById(u2.id);
+            return gu1.fullName.compareTo(gu2.fullName);
+        });
 
         return retUsers;
     }

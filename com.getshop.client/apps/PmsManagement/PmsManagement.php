@@ -510,10 +510,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function createPeriodeOrder() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . "15:00"));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . "12:00"));
+        $amount = str_replace(",", ".", $_POST['data']['amount']);
+        $this->getApi()->getPmsInvoiceManager()->createPeriodeInvoice($this->getSelectedName(), $start, $end, $amount, $_POST['data']['bookingid']);
+        $this->showBookingInformation();
+    }
+    
     public function addComment() {
         $id = $_POST['data']['bookingid'];
         $comment = $_POST['data']['comment'];
-        $this->getApi()->getPmsManager()->addComment($this->getSelectedName(), $id, $comment);
+        if($comment) {
+            $this->getApi()->getPmsManager()->addComment($this->getSelectedName(), $id, $comment);
+        }
         $this->showBookingInformation();
     }
     

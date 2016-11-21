@@ -814,7 +814,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<CartItem> items = new ArrayList();
         boolean generateChanges = pmsManager.getConfigurationSecure().autoGenerateChangeOrders;
         if(generateChanges) {
-            if(!booking.ignoreCheckChangesInBooking) {
+            if(!booking.ignoreCheckChangesInBooking && !filter.ignoreCheckChangesInBooking) {
                 List<CartItem> changes = getChangesForBooking(booking.id, filter);
                 items.addAll(changes);
             }
@@ -1588,4 +1588,53 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return items;
     }
 
+    @Override
+    public void createPeriodeInvoice(Date start, Date end, Double amount, String roomId) {
+        int days = getNumberOfDays(start, end) - 1; //Its not number of days, but number of nights.
+        double price = amount / days;
+        PmsBooking booking = pmsManager.getBookingFromRoom(roomId);
+        boolean all = false;
+        if(booking == null) {
+            booking = pmsManager.getBooking(roomId);
+            all = true;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        
+        clearCart();
+        for(PmsBookingRooms room : booking.rooms) {
+            if(!all) {
+                if(room.pmsBookingRoomId.equals(roomId)) {
+                    continue;
+                }
+            }
+            
+            while(true) {
+                String offset = PmsBookingRooms.getOffsetKey(cal, 1);
+                room.priceMatrix.put(offset, price);
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                Date nextDay = cal.getTime();
+                if(end.before(nextDay)) {
+                    break;
+                }
+                
+            }
+            room.invoicedTo = start;
+        }
+        
+        NewOrderFilter filter = new NewOrderFilter();
+        filter.endInvoiceAt = end;
+        if(!all) {
+            filter.pmsRoomId = roomId;
+        }
+        filter.endInvoiceAt = end;
+        filter.avoidOrderCreation = false;
+        filter.createNewOrder = true;
+        filter.ignoreCheckChangesInBooking = true;
+        
+        createOrder(booking.id, filter);
+    }
+    
+    
 }

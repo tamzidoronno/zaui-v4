@@ -17,6 +17,10 @@ app.OrderExport = {
         $('[gss_goto_app="13270e94-258d-408d-b9a1-0ed3bbb1f6c9"]').click();
     },
     deletetransferconfig : function() {
+        var confirmed = confirm("Are you sure you want to delete this configuration?");
+        if(!confirmed) {
+            return;
+        }
         var data = {
             "configid" : $(this).attr('configid')
         }

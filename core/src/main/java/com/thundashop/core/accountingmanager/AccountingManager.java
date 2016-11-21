@@ -26,6 +26,8 @@ import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsOrderStatistics;
+import com.thundashop.core.pmsmanager.PmsOrderStatsFilter;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
@@ -42,6 +44,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -762,6 +765,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     }
 
     private List<Order> getOrdersFromNewFilter(AccountingTransferConfig configToUse) {
+        if(configToUse == null) {
+            return new ArrayList();
+        }
+            
         List<Order> orders = orderManager.getOrders(null, null, null);
         List<Order> result = new ArrayList();
         List<String> ordersAdded = new ArrayList();
@@ -776,6 +783,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             if(amount == 0.0) {
                 continue;
             }
+            
             
             for(AccountingTransferConfigTypes actype : configToUse.paymentTypes) {
                 String paymentMethod = actype.paymentType;
@@ -959,7 +967,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         transfer.setUsers(users);
         
         SavedOrderFile res = transfer.generateFile();
-        if(fileToUse == null) {
+        if(fileToUse != null) {
             res.id = fileToUse.id;
         }
 
@@ -974,5 +982,52 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         files.put(res.id, res);
         
         return res;    
+    }
+
+    @Override
+    public PmsOrderStatistics getStats() {
+        List<Order> ordersToUse = new ArrayList();
+        List<SavedOrderFile> filesToUse = getAllFiles();
+        Date start = new Date();
+        Calendar end = Calendar.getInstance();
+        end.add(Calendar.YEAR, 2);
+        
+        for(SavedOrderFile f : filesToUse) {
+            for(String id : f.orders) {
+                Order order = orderManager.getOrder(id);
+                ordersToUse.add(order); 
+                if(f.startDate != null && start.after(f.startDate)) {
+                    start = f.startDate;
+                }
+            }
+        }
+        
+        PmsOrderStatsFilter filter = new PmsOrderStatsFilter();
+        filter.displayType = "dayslept";
+        filter.start = start;
+        filter.end = end.getTime();
+        filter.priceType = "extaxes";
+        
+        PmsOrderStatistics stats = new PmsOrderStatistics();
+        stats.createStatistics(ordersToUse, filter);
+        return stats;
+    }
+
+    @Override
+    public void deleteFile(String fileId) throws Exception {
+        SavedOrderFile file = getFileById(fileId);
+        files.remove(fileId);
+        otherFiles.remove(fileId);
+        deleteObject(file);
+    }
+
+    @Override
+    public SavedOrderFile getFileById(String id) throws Exception {
+        SavedOrderFile file = files.get(id);
+        if(file == null) {
+            file = otherFiles.get(id);
+        }
+        return file;
+
     }
 }

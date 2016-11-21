@@ -14,7 +14,7 @@ import org.mongodb.morphia.annotations.Transient;
 public class PmsOrderStatistics implements Serializable  {
     LinkedList<PmsOrderStatisticsEntry> entries = new LinkedList();
     
-    PmsOrderStatistics() {
+    public PmsOrderStatistics() {
     }
     
     public void createStatistics(List<Order> ordersToUse, PmsOrderStatsFilter filter) {

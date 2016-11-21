@@ -24,6 +24,55 @@ class OrderExport extends \WebshopApplication implements \Application {
         $this->getApi()->getAccountingManager()->removeTransferConfig($_POST['data']['configid']);
     }
     
+    public function printStatistics() {
+        $configId = "";
+        if(isset($_POST['data']['configId'])) {
+            $configId = $_POST['data']['configId'];
+        }
+        $stats = $this->getApi()->getAccountingManager()->getStats($configId); 
+        $resEx = array();
+        $resInc = array();
+        $totalEx = 0;
+        $totalInc = 0;
+        foreach($stats->entries as $stat) {
+            $time = date("y-M", strtotime($stat->day));
+
+            $mnd =  array();
+            $ex = 0.0;
+            $inc = 0.0;
+            foreach($stat->priceEx as $tmpEx) { $ex += $tmpEx; }
+            foreach($stat->priceInc as $tmpInc) { $inc += $tmpInc; }
+            if(!isset($resEx[$time])) { $resEx[$time] = 0; }
+            if(!isset($resInc[$time])) { $resInc[$time] = 0; }
+            $resEx[$time] += $ex;
+            $resInc[$time] += $inc;
+
+            $totalEx += $ex;
+            $totalInc += $inc;
+        }
+        echo "<table border='1' cellspacing='0' cellpadding='5'>";
+        echo "<tr>";
+        echo "<th>Month</th>";
+        echo "<th>Ex taxes</th>";
+        echo "<th>Inc taxes</th>";
+        echo "</tr>";
+        foreach($resEx as $mnd => $val) {
+            if(!$val && !$resInc[$mnd]) {
+                continue;
+            }
+            echo "<tr>";
+            echo "<td>" . $mnd . "</td><td>" . round($val) . "</td><td>" . round($resInc[$mnd]) . "</td>";
+            echo "</tr>";
+        }
+        echo "<tr>";
+        echo "<td></td>";
+        echo "<td>" . round($totalEx) . "</td>";
+        echo "<td>" . round($totalInc) . "</td>";
+        echo "</tr>";
+        echo "</table>";
+        
+    }
+    
     public function saveAccountingConfig() {
         $configs = $this->getApi()->getAccountingManager()->getAllConfigs();
         foreach($configs as $conf) {

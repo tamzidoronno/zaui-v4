@@ -985,7 +985,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     }
 
     @Override
-    public PmsOrderStatistics getStats() {
+    public PmsOrderStatistics getStats(String configId) {
         List<Order> ordersToUse = new ArrayList();
         List<SavedOrderFile> filesToUse = getAllFiles();
         Date start = new Date();
@@ -993,6 +993,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         end.add(Calendar.YEAR, 2);
         
         for(SavedOrderFile f : filesToUse) {
+            if(configId != null && !configId.isEmpty() && !f.id.equals(configId)) {
+                continue;
+            }
             for(String id : f.orders) {
                 Order order = orderManager.getOrder(id);
                 ordersToUse.add(order); 

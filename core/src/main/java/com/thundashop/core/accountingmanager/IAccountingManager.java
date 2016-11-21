@@ -63,7 +63,7 @@ public interface IAccountingManager {
     public AccountingManagerConfig getAccountingManagerConfig();
     
     @Administrator
-    public PmsOrderStatistics getStats();
+    public PmsOrderStatistics getStats(String configId);
     
     @Administrator
     public void deleteFile(String fileId) throws Exception;

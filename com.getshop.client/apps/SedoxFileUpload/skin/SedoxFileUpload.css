@@ -1,6 +1,5 @@
 .SedoxFileUpload {
-    padding: 100px;
-    padding-top: 50px;
+    padding: 20px;
     color: #626b7a;
 }
 
@@ -8,15 +7,15 @@
     font-size: 24px;
     
     font-weight: normal;
-    padding-bottom: 50px;
+    padding-bottom: 20px;
 }
 
 .SedoxFileUpload .file_selector_area {
     font-size: 16px;
     font-style: italic;
-    padding-bottom: 50px;
+    padding-bottom: 20px;
     border-bottom: solid 1px #EEE;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 }
 
 .SedoxFileUpload .file_selector_area .sedox_blue_button {
@@ -338,6 +337,10 @@
 }
 .SedoxFileUpload .squaredFour input[type=checkbox]:checked + label:after {
   opacity: 1;
+}
+
+.SedoxFileUpload .rowheader {
+    margin-bottom: 3px;
 }
 
 .SedoxFileUpload select {

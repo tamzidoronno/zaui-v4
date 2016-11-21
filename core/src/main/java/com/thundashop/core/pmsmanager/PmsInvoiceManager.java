@@ -39,6 +39,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private boolean avoidChangeInvoicedTo;
     private boolean avoidChangingInvoicedFrom;
+    private List<String> roomIdsInCart = null;
 
     @Override
     public void markOrderAsPaid(String bookingId, String orderId) {
@@ -202,7 +203,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<String> result = new ArrayList();
         for(PmsBooking booking : all) {
             for(PmsBookingRooms room : booking.getActiveRooms()) {
-                if(room.isEnded()) {
+                if(room.isEndedDaysAgo(60)) {
                     continue;
                 }
                 Date invoicedTo = null;
@@ -524,7 +525,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 end = room.date.end;
             }
             
-            createCartItemsForRoom(start, end, booking, room);
+            createCartItemsForRoom(start, end, booking, room, null);
             avoidChangeInvoicedTo = false;
         }
     }
@@ -543,7 +544,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return;
         }
         
-        List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room);
+        List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room, filter);
         
         if (pmsManager.getConfigurationSecure().substractOneDayOnOrder && !filter.onlyEnded) {
             for(CartItem item : items) {
@@ -730,12 +731,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             continue;
                         }
                     }
-                    
-                    room.invoicedFrom = room.date.start;
-                    if(room.date.end.before(filter.endInvoiceAt)) {
-                        room.invoicedTo = room.date.end;
-                    } else {
-                        room.invoicedTo = filter.endInvoiceAt;
+                    if(roomIdsInCart.contains(room.pmsBookingRoomId)) {
+                        room.invoicedFrom = room.date.start;
+                        if(room.date.end.before(filter.endInvoiceAt)) {
+                            room.invoicedTo = room.date.end;
+                        } else {
+                            room.invoicedTo = filter.endInvoiceAt;
+                        }
                     }
                     
                 }
@@ -812,7 +814,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<CartItem> items = new ArrayList();
         boolean generateChanges = pmsManager.getConfigurationSecure().autoGenerateChangeOrders;
         if(generateChanges) {
-            if(!booking.ignoreCheckChangesInBooking) {
+            if(!booking.ignoreCheckChangesInBooking && !filter.ignoreCheckChangesInBooking) {
                 List<CartItem> changes = getChangesForBooking(booking.id, filter);
                 items.addAll(changes);
             }
@@ -1242,7 +1244,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     }
 
-    private List<CartItem> createCartItemsForRoom(Date startDate, Date endDate, PmsBooking booking, PmsBookingRooms room) {
+    private List<CartItem> createCartItemsForRoom(Date startDate, Date endDate, PmsBooking booking, PmsBookingRooms room, NewOrderFilter filter) {
         
         startDate = normalizeDate(startDate, true);
         endDate = normalizeDate(endDate, false);
@@ -1251,13 +1253,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
         if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
             daysInPeriode = getNumberOfMonthsBetweenDates(startDate, endDate);
-            if(daysInPeriode > 1000) {
+            if(daysInPeriode > 1000 || pmsManager.getConfigurationSecure().hasNoEndDate) {
                 //Infinate dates, noone wants to pay 100 years in advance.
-                daysInPeriode = pmsManager.getConfigurationSecure().whenInfinteDateFirstOrderTimeUnits;
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(startDate);
-                cal.add(Calendar.MONTH, daysInPeriode);
-                endDate = cal.getTime();
+                if(daysInPeriode > 1000) {
+                    daysInPeriode = pmsManager.getConfigurationSecure().whenInfinteDateFirstOrderTimeUnits;
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(startDate);
+                    cal.add(Calendar.MONTH, daysInPeriode);
+                    endDate = cal.getTime();
+                    if(filter != null) {
+                        filter.endInvoiceAt = endDate;
+                    }
+                }
             }
         }
         Double price = getOrderPriceForRoom(room, startDate, endDate, booking.priceType);
@@ -1318,6 +1325,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private void clearCart() {
+        roomIdsInCart = new ArrayList();
         if(!avoidOrderCreation) {
             itemsToReturn.clear();
         }
@@ -1341,7 +1349,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         item.setProduct(product.clone());
         item.setCount(count);
         item.getProduct().externalReferenceId = roomId;
-        
+        roomIdsInCart.add(roomId);
         if(!runningDiffRoutine) {
             addItemToItemsToReturn(item);
         }
@@ -1380,7 +1388,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private void creditRoomForPeriode(Date start, Date end, PmsBooking booking, PmsBookingRooms room) {
-        List<CartItem> items = createCartItemsForRoom(start, end, booking, room);
+        List<CartItem> items = createCartItemsForRoom(start, end, booking, room, null);
         for(CartItem item : items) {
             item.setCount(item.getCount() * -1);
         }
@@ -1503,7 +1511,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             
             List<CartItem> orderRoomItems = getAllOrderItemsForRoomOnBooking(room.pmsBookingRoomId, booking.id);
-            List<CartItem> roomItems = createCartItemsForRoom(room.invoicedFrom, room.invoicedTo, booking, room);
+            List<CartItem> roomItems = createCartItemsForRoom(room.invoicedFrom, room.invoicedTo, booking, room, filter);
             
             List<BookingOrderSummary> ordersummaries = summaries(orderRoomItems);
             List<BookingOrderSummary> roomSummary = summaries(roomItems);
@@ -1580,4 +1588,53 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return items;
     }
 
+    @Override
+    public void createPeriodeInvoice(Date start, Date end, Double amount, String roomId) {
+        int days = getNumberOfDays(start, end) - 1; //Its not number of days, but number of nights.
+        double price = amount / days;
+        PmsBooking booking = pmsManager.getBookingFromRoom(roomId);
+        boolean all = false;
+        if(booking == null) {
+            booking = pmsManager.getBooking(roomId);
+            all = true;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        
+        clearCart();
+        for(PmsBookingRooms room : booking.rooms) {
+            if(!all) {
+                if(room.pmsBookingRoomId.equals(roomId)) {
+                    continue;
+                }
+            }
+            
+            while(true) {
+                String offset = PmsBookingRooms.getOffsetKey(cal, 1);
+                room.priceMatrix.put(offset, price);
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                Date nextDay = cal.getTime();
+                if(end.before(nextDay)) {
+                    break;
+                }
+                
+            }
+            room.invoicedTo = start;
+        }
+        
+        NewOrderFilter filter = new NewOrderFilter();
+        filter.endInvoiceAt = end;
+        if(!all) {
+            filter.pmsRoomId = roomId;
+        }
+        filter.endInvoiceAt = end;
+        filter.avoidOrderCreation = false;
+        filter.createNewOrder = true;
+        filter.ignoreCheckChangesInBooking = true;
+        
+        createOrder(booking.id, filter);
+    }
+    
+    
 }

@@ -510,10 +510,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    public function createPeriodeOrder() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . "15:00"));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . "12:00"));
+        $amount = str_replace(",", ".", $_POST['data']['amount']);
+        $this->getApi()->getPmsInvoiceManager()->createPeriodeInvoice($this->getSelectedName(), $start, $end, $amount, $_POST['data']['bookingid']);
+        $this->showBookingInformation();
+    }
+    
     public function addComment() {
         $id = $_POST['data']['bookingid'];
         $comment = $_POST['data']['comment'];
-        $this->getApi()->getPmsManager()->addComment($this->getSelectedName(), $id, $comment);
+        if($comment) {
+            $this->getApi()->getPmsManager()->addComment($this->getSelectedName(), $id, $comment);
+        }
         $this->showBookingInformation();
     }
     
@@ -1234,7 +1244,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         foreach($entries as $entry) {
             echo "<tr>";
-            echo "<td valign='top'>" . date("d.m.Y H:i", strtotime($entry->dateEntry)) . "</td>";
+            echo "<td valign='top'>" . date("d.m.Y H:i:s", strtotime($entry->dateEntry)) . "</td>";
             echo "<td valign='top'>" . $this->getUsersName($entry->userId) . "</td>";
             echo "<td valign='top'>" . $entry->logText . "</td>";
             $item = "";

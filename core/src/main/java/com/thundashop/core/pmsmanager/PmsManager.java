@@ -140,20 +140,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) { 
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
-                
-//                if(booking.deleted != null && (booking.sessionId== null || booking.sessionId.isEmpty()) && booking.orderIds.isEmpty() && !booking.userId.isEmpty()) {
-//                    for(PmsBookingRooms r : booking.rooms) {
-//                        r.bookingId = "";
-//                    }
-//                    System.out.println("Found deleted booking : " + booking.rowCreatedDate + " - " + userManager.getUserById(booking.userId).fullName);
-//                } else if(booking.deleted != null) {
-//                    continue;
-//                }
-//                dumpBooking(booking);
-                if(booking.userId.equals("789dc5fc-a47e-42a4-9d09-d8f3281d8e63")) {
-                    continue;
-                }
-  
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof PmsPricing) {
@@ -164,6 +150,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsConfiguration) {
                 configuration = (PmsConfiguration) dataCommon;
+            }
+            if( dataCommon instanceof PmsAdditionalTypeInformation) {
+                PmsAdditionalTypeInformation cur = (PmsAdditionalTypeInformation)dataCommon;
+                boolean found = false;
+                for(PmsAdditionalTypeInformation info : additionDataForTypes) {
+                    if(info.typeId.equals(cur.typeId)) {
+                        found = true;
+                        deleteObject(dataCommon);
+                    }
+                }
+                if(!found) {
+                    additionDataForTypes.add(cur);
+                }
             }
             if (dataCommon instanceof PmsLog) {
                 PmsLog entry = (PmsLog) dataCommon;
@@ -266,7 +265,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             int totalDays = 1;
-            if (room.date.end != null && room.date.start != null) {
+            if (room.date.end != null && room.date.start != null && !getConfigurationSecure().hasNoEndDate) {
                 totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
             }
             
@@ -722,6 +721,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             String logText = "Changed item type from : " + from + " to " + to;
             logEntry(logText, bookingId, null, roomId);
         } catch (BookingEngineException ex) {
+            logPrintException(ex);
             return ex.getMessage();
         }
         return "";
@@ -2612,7 +2612,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<Booking> bookingsToAdd = new ArrayList();
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             Booking bookingToAdd = createBooking(room);
-            if(getConfigurationSecure().hasNoEndDate) {
+            if(getConfigurationSecure().hasNoEndDate && room.date.end == null) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(room.date.start);
                 cal.add(Calendar.YEAR, 100);

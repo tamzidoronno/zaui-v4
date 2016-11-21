@@ -9,6 +9,7 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,6 +41,9 @@ public interface IPmsInvoiceManager {
     
     @Administrator
     public List<String> validateAllInvoiceToDates();
+    
+    @Administrator
+    public void createPeriodeInvoice(Date start, Date end, Double amount, String roomId);
     
     public boolean isRoomPaidFor(String pmsRoomId);
 }

@@ -18,4 +18,5 @@ public class NewOrderFilter implements Serializable {
     public boolean createNewOrder = false;
     public boolean fromAdministrator = false;
     public String addToOrderId = "";
+    public boolean ignoreCheckChangesInBooking = false;
 }

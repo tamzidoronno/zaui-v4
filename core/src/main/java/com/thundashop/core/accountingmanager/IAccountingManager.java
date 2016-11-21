@@ -2,6 +2,7 @@ package com.thundashop.core.accountingmanager;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.pmsmanager.PmsOrderStatistics;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +25,10 @@ public interface IAccountingManager {
     @Administrator
     public void markAsTransferredToAccounting(String id);
     @Administrator
-    public List<String> getFile(String id);
+    public List<String> getFile(String id) throws Exception;
+    @Administrator
+    public SavedOrderFile getFileById(String id) throws Exception;
+    
     @Administrator
     public List<String> createCombinedOrderFile(boolean newUsersOnly) throws Exception;
     
@@ -57,4 +61,11 @@ public interface IAccountingManager {
     
     @Administrator
     public AccountingManagerConfig getAccountingManagerConfig();
+    
+    @Administrator
+    public PmsOrderStatistics getStats(String configId);
+    
+    @Administrator
+    public void deleteFile(String fileId) throws Exception;
+    
 }

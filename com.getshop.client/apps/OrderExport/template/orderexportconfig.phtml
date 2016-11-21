@@ -1,6 +1,6 @@
 <?php
 namespace ns_13270e94_258d_408d_b9a1_0ed3bbb1f6c9;
-/* @var $this \ns_932810f4_5bd1_4b56_a259_d5bd2e071be1\AccountingTransfer */
+/* @var $this OrderExport */
 $states = \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager::getOrderStatuses();
 $transfertypes = $this->getTransferTypes();
 
@@ -92,18 +92,46 @@ echo "<th align='left'>Inc tax</th>";
 echo "<th align='left'>Ex tax (p)</th>";
 echo "<th align='left'>Inc taxes (p)</th>";
 echo "<th align='left'>Orders</th>";
+echo "<th align='left'>Start</th>";
+echo "<th align='left'>End</th>";
 echo "</tr>";
 
+$totals = array();
+$totals['amountEx'] = 0;
+$totals['amountInc'] = 0;
+$totals['amountExDebet'] = 0;
+$totals['amountIncDebet'] = 0;
+$totals['orders'] = 0;
+    
 foreach($files as $file) {
-    echo "<tr>";
     $date = $file->rowCreatedDate;
     $fileId = $file->id;
     $transferred = "no";
     if($file->transferred) {
         $transferred = "yes";
     }
-    echo "<td>" . date("d.m.Y - H:i", strtotime($date)) . "</td>";
-    echo "<td><a style='color:blue;cursor:pointer;' onclick=\"window.open('/scripts/accounting.php?id=".$fileId."');\">download</a></td>";
+    
+    $totals['amountEx'] += $file->amountEx;
+    $totals['amountInc'] += $file->amountInc;
+    $totals['amountExDebet'] += $file->amountExDebet;
+    $totals['amountIncDebet'] += $file->amountIncDebet;
+    $totals['orders'] += sizeof($file->orders);
+    
+    $tampered =  sizeof($file->tamperedOrders);
+    $moreOrders = (sizeof($file->orders) - $file->numberOfOrdersNow);
+    
+    $warning = "";
+    if($tampered != 0 || $moreOrders != 0) {
+        $warning = "style='color:red; font-weight:bold;'";
+    }
+    
+    echo "<tr $warning>";
+    echo "<td>";
+    if($warning) {
+        echo "<i class='fa fa-warning' title='This file is not valid anymore. Something has changed since last time which makes it invalid. This should not happen and need to be investigated.'></i> ";
+    }
+    echo date("d.m.Y - H:i", strtotime($date)) . "</td>";
+    echo "<td><a style='color:blue;cursor:pointer;' onclick=\"window.open('/scripts/accountingnew.php?id=".$fileId."');\">download</a></td>";
     echo "<td>".$file->type."</td>";
     echo "<td>".$file->subtype."</td>";
     echo "<td>$transferred</td>";
@@ -111,10 +139,27 @@ foreach($files as $file) {
     echo "<td>".round($file->amountInc)."</td>";
     echo "<td>".round($file->amountExDebet)."</td>";
     echo "<td>".round($file->amountIncDebet)."</td>";
-    echo "<td>".sizeof($file->orders)."</td>";
+    echo "<td>".sizeof($file->orders) ." <span title='Tampered files'>($tampered)</span> <span title='Additional orders'>($moreOrders)</span> "."</td>";
+    echo "<td>".  date("d.m.Y H:i", strtotime($file->startDate)) ."</td>";
+    echo "<td>".  date("d.m.Y H:i", strtotime($file->endDate)) ."</td>";
     echo "</tr>";
 }
+
+echo "<tr>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td>".round($totals['amountEx'])."</td>";
+echo "<td>".round($totals['amountInc'])."</td>";
+echo "<td>".round($totals['amountExDebet'])."</td>";
+echo "<td>".round($totals['amountIncDebet'])."</td>";
+echo "<td>".round($totals['orders'])."</td>";
+echo "</tr>";
+
 echo "</table>";
+
 
 echo "<br>";
 echo "<br>";
@@ -136,9 +181,29 @@ foreach($configs as $config) {
         $selected = "selectedintegration";
         $first = false;
     }
-    echo "<span class='integrationselection $selected' type='".$config->id."'><i class='fa fa-trash-o deletetransferconfig' configid='".$config->id."'></i> " .  $availableTypes[$config->transferType] . "</span>";
+    echo "<span class='integrationselection $selected' type='".$config->id."'><i class='fa fa-trash-o deletetransferconfig' configid='".$config->id."'></i> " .  $availableTypes[$config->transferType]  . " (" . $config->subType . ")". "</span>";
 }
+
+echo "<span class='integrationselection incomedistribution' type='incomedistribution'>Income distribution</span>";
 echo "<br><br><div style='clear:both;'></div><hr>";
+?>
+<div class='configfield' type='incomedistribution' style='display:none;'>
+<?php 
+
+echo "<select class='viewstatsforfile'>";
+echo "<option value=''>All orders</option>";
+foreach($files as $file) {
+    echo "<option value='". $file->id."'>" . $file->subtype . " - " . date("d.m.Y" , strtotime($file->startDate)) . " - " .  date("d.m.Y" , strtotime($file->endDate))  . "</option>";
+}
+echo "</select>";
+echo "<br>";
+echo "<br>";
+echo "<div class='orderdistrstats'>";
+$this->printStatistics();
+echo "</div>";
+?>
+</div>    
+<?php
 
 $show = true;
 foreach($configs as $config) {
@@ -165,7 +230,7 @@ foreach($configs as $config) {
     <div class="gss_button_area">
         <div class="gss_button gss_downloadaccountingfile" configid='<?php echo $config->id; ?>'><i class='fa fa-save'></i><?php echo $this->__("Download file"); ?></div>
     </div>
-          <hr>
+    <hr>
 
 
     <script>
@@ -272,6 +337,10 @@ foreach($configs as $config) {
             }
         }
       ?>
+      <div class="textfield gss_setting">
+          <span class="title">Subtype</span>
+          <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="subtype" value='<?php echo $config->subType; ?>'>
+      </div>
       <div class="textfield gss_setting">
           <span class="title">Username</span>
           <input type="textfield" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="username" value='<?php echo $config->username; ?>'>

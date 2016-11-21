@@ -45,15 +45,15 @@ h1,h2,h3 { margin: 0px; text-transform: uppercase; letter-spacing: 2px; font-fam
 .day.dayheader { font-size: 12px; }
 
 @media only all and (max-width: 800px) {
-    .gsarea[area="header"] img { max-width: 50% !important; }
+    .gsarea[area="header"] img { max-width: 80% !important;padding-top: 40px; }
     .gs_page_width { padding-left: 20px; padding-right: 20px; }
-    .mobilenavigatemenu { color:#fff; }
+    .mobilenavigatemenu { color:#000; }
    .Menu a div { width: 100%; box-sizing: border-box; }
-   
+   .gs_language_selection { top: -10px; }
    .mobilenavigatemenu {
         text-align: center !important;
-        padding-bottom: 30px !important;
     }
+    .Menu .menuentries.horizontal { background-color:#fff !important; }
     .Menu a div { text-align: center; }
     .gsinner.gsuicell.gsdepth_1.gscount_1.gscell_126 { padding-top: 5px !important; }
 }

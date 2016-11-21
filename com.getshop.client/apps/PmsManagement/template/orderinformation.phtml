@@ -65,7 +65,23 @@ if($booking->createOrderAfterStay) {
 <div class='orderinformation'>
     <h2>Orders</h2>
 </div>
-<input type='checkbox' class='createorderafterstaycheckbox' <?php echo $createdAfter; ?>> Create order after stay has been completed.
+<div onclick='$(".PmsManagement .moreinvoiceoptions").slideDown();' style='cursor:pointer;'>More options</div>
+<span class="moreinvoiceoptions">
+    <div>
+        <input type='checkbox' class='createorderafterstaycheckbox' <?php echo $createdAfter; ?>> Create order after stay has been completed.
+    </div>
+    <br>
+    <div>
+        <b>Order for a given periode</b><br>
+        <div  gstype="form" method="createPeriodeOrder">
+            <input type='hidden' value='<?php echo $booking->id; ?>' gsname='bookingid'>
+            <input type='txt' style='width:100px;' placeholder='Start date' class='periodeorderstartdate' gsname='start'>
+            <input type='txt' style='width:100px;' placeholder='End date'  class='periodeorderenddate' gsname='end'>
+            <input type='txt' style='width:50px;' placeholder='amount' gsname='amount'>
+            <input type='button' value='Create order' gstype='submitToInfoBox'>
+        </div>
+    </div>
+  </span>
 <div style='clear:both;'></div>
 
 
@@ -326,4 +342,8 @@ if($booking->orderIds) {
 
 <script>
     $("[gsname='endingAt']").datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    
+    $(".periodeorderstartdate").datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $(".periodeorderenddate").datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    
 </script>

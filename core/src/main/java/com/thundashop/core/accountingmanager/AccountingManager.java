@@ -26,6 +26,8 @@ import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsOrderStatistics;
+import com.thundashop.core.pmsmanager.PmsOrderStatsFilter;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
@@ -42,6 +44,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -247,15 +250,21 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         result.addAll(otherFiles.values());
         
         for(SavedOrderFile saved : result) {
-            finalizeFile(saved);
+            if(finalizeFile(saved)) {
+                saveObject(saved);
+            }
         }
         
         return result;
     }
     
     @Override
-    public List<String> getFile(String id) {
+    public List<String> getFile(String id) throws Exception {
         SavedOrderFile file = files.get(id);
+        
+        if(file.configId != null && !file.configId.isEmpty() && file.startDate != null && file.endDate != null) {
+            file = downloadOrdeFileNewType(file.configId, file.startDate, file.endDate, file);
+        }
         
         if(file == null) {
             file= otherFiles.get(id);
@@ -714,29 +723,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
 
     @Override
     public SavedOrderFile downloadOrderFileNewType(String configId, Date start, Date end) throws Exception {
-        AccountingTransferConfig configToUse = configs.get(configId);
-        List<Order> orders = getOrdersFromNewFilter(configToUse);
-        if(orders.isEmpty()) {
-            return null;
-        }
-        
-        orders = filterOrders(orders, start, end, configToUse);
-        
-        List<User> users = getUsersFromNewFilter(configToUse, orders);
-        
-        AccountingTransferInterface transfer = getAccoutingInterface(configToUse.transferType);
-        transfer.setOrders(orders);
-        transfer.setUsers(users);
-        
-        SavedOrderFile res = transfer.generateFile();
-        sumOrders(res);
-        res.subtype = configToUse.subType;
-        res.type = configToUse.transferType;
-        saveObject(res);
-        
-        files.put(res.id, res);
-        
-        return res;
+        return downloadOrdeFileNewType(configId, start, end, null);
     }
 
     private List<User> getUsersFromNewFilter(AccountingTransferConfig configToUse, List<Order> selectedOrders) {
@@ -778,6 +765,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     }
 
     private List<Order> getOrdersFromNewFilter(AccountingTransferConfig configToUse) {
+        if(configToUse == null) {
+            return new ArrayList();
+        }
+            
         List<Order> orders = orderManager.getOrders(null, null, null);
         List<Order> result = new ArrayList();
         List<String> ordersAdded = new ArrayList();
@@ -792,6 +783,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             if(amount == 0.0) {
                 continue;
             }
+            
             
             for(AccountingTransferConfigTypes actype : configToUse.paymentTypes) {
                 String paymentMethod = actype.paymentType;
@@ -900,9 +892,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         return toReturn;
     }
 
-    private void finalizeFile(SavedOrderFile saved) {
+    private boolean finalizeFile(SavedOrderFile saved) {
         saved.sumAmountExOrderLines = 0.0;
         saved.sumAmountIncOrderLines = 0.0;
+        boolean needSaving = false;
         for(String orderId : saved.orders) {
             Order order = orderManager.getOrder(orderId);
             if(order.cart == null) {
@@ -918,10 +911,126 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
             double total = orderManager.getTotalAmount(order);
             double totalEx = orderManager.getTotalAmount(order);
+            if(!saved.amountOnOrder.containsKey(order.id)) {
+                saved.amountOnOrder.put(order.id, total);
+                needSaving = true;
+            } else if(total != saved.amountOnOrder.get(order.id)) {
+                saved.tamperedOrders.add(order.id);
+                needSaving = true;
+            }
             if(total < 0) { total *= -1; }
             if(totalEx < 0) { totalEx *= -1; }
             saved.sumAmountIncOrderLines += total;
             saved.sumAmountExOrderLines += totalEx;
         }
+        
+        
+        if(saved.configId != null && !saved.configId.isEmpty()) {
+            AccountingTransferConfig configToUse = configs.get(saved.configId);
+            List<Order> orders = getOrdersFromNewFilter(configToUse);
+            saved.numberOfOrdersNow = 0;
+            if(!orders.isEmpty() && configToUse != null) {
+                orders = filterOrders(orders, saved.startDate, saved.endDate, configToUse);
+                saved.numberOfOrdersNow = orders.size();
+            }
+        }
+        
+        
+        return needSaving;
+    }
+
+    private SavedOrderFile downloadOrdeFileNewType(String configId, Date start, Date end, SavedOrderFile fileToUse) throws Exception {
+        AccountingTransferConfig configToUse = configs.get(configId);
+        if(fileToUse == null) {
+            List<SavedOrderFile> firstCheckFiles = getAllFiles();
+            for(SavedOrderFile f : firstCheckFiles) {
+                if(!configToUse.subType.equals(f.subtype)) {
+                    continue;
+                }
+                if(f.endDate != null && f.endDate.after(start)) {
+                    return null;
+                }
+            }
+        }
+        
+        List<Order> orders = getOrdersFromNewFilter(configToUse);
+        if(orders.isEmpty()) {
+            return null;
+        }
+        
+        orders = filterOrders(orders, start, end, configToUse);
+        
+        List<User> users = getUsersFromNewFilter(configToUse, orders);
+        
+        AccountingTransferInterface transfer = getAccoutingInterface(configToUse.transferType);
+        transfer.setOrders(orders);
+        transfer.setUsers(users);
+        
+        SavedOrderFile res = transfer.generateFile();
+        if(fileToUse != null) {
+            res.id = fileToUse.id;
+        }
+
+        sumOrders(res);
+        res.subtype = configToUse.subType;
+        res.type = configToUse.transferType;
+        res.startDate = start;
+        res.endDate = end;
+        res.configId = configId;
+        saveObject(res);
+        
+        files.put(res.id, res);
+        
+        return res;    
+    }
+
+    @Override
+    public PmsOrderStatistics getStats(String configId) {
+        List<Order> ordersToUse = new ArrayList();
+        List<SavedOrderFile> filesToUse = getAllFiles();
+        Date start = new Date();
+        Calendar end = Calendar.getInstance();
+        end.add(Calendar.YEAR, 2);
+        
+        for(SavedOrderFile f : filesToUse) {
+            if(configId != null && !configId.isEmpty() && !f.id.equals(configId)) {
+                continue;
+            }
+            for(String id : f.orders) {
+                Order order = orderManager.getOrder(id);
+                ordersToUse.add(order); 
+                if(f.startDate != null && start.after(f.startDate)) {
+                    start = f.startDate;
+                }
+            }
+        }
+        
+        PmsOrderStatsFilter filter = new PmsOrderStatsFilter();
+        filter.displayType = "dayslept";
+        filter.start = start;
+        filter.end = end.getTime();
+        filter.priceType = "extaxes";
+        
+        PmsOrderStatistics stats = new PmsOrderStatistics();
+        stats.createStatistics(ordersToUse, filter);
+        return stats;
+    }
+
+    @Override
+    public void deleteFile(String fileId) throws Exception {
+        SavedOrderFile file = getFileById(fileId);
+        files.remove(fileId);
+        otherFiles.remove(fileId);
+        deleteObject(file);
+    }
+
+    @Override
+    public SavedOrderFile getFileById(String id) throws Exception {
+        SavedOrderFile file = files.get(id);
+        if(file == null) {
+            file = otherFiles.get(id);
+        }
+        return file;
+
     }
 }

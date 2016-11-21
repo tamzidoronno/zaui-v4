@@ -41,7 +41,6 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
         $(document).on('change','.PmsManagement .repeat_type', app.PmsManagement.changeRepeatType);
-        $(document).on('click','.PmsManagement .changeInvoiceTo', app.PmsManagement.changeInvoiceTo);
         $(document).on('click','.PmsManagement .sendpaymentlink', app.PmsManagement.sendpaymentlink);
         $(document).on('click','.PmsManagement .closesendpaymentlink', app.PmsManagement.sendpaymentlink);
         $(document).on('change','.PmsManagement select[gsname="itemid"]', app.PmsManagement.loadTakenRoomList);
@@ -367,24 +366,6 @@ app.PmsManagement = {
                 row.find('.tiparea').html(result);
             }
         });
-    },
-    changeInvoiceTo : function() {
-        if($(this).closest('tr').hasClass('roomdeleted')) {
-            return;
-        }
-        var newDate = prompt("Specify a new date");
-        if(!newDate) {
-            return;
-        }
-        
-        var data = {
-            "newdate" : newDate,
-            "roomid" : $(this).closest('tr').attr('roomid'),
-            "bookingid" : $(this).closest('tr').attr('bookingid')
-        }
-        
-        var event = thundashop.Ajax.createEvent('','changeInvoicedTo',$(this), data);
-        thundashop.common.showInformationBoxNew(event);
     },
     changeCleaingInterval : function() {
         var intBox = $(this).find('.intervalset');

@@ -535,7 +535,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         checkCreditLimit(user, order.creditAmount);
         user.orders.add(order);
         int nextTransactionalId = getNextTransactionId();
-        user.creditAccount.addOrderToCreditHistory(order, getSharedProductById(product.sharedProductId), nextTransactionalId);
+        user.creditAccount.addOrderToCreditHistory(order, getSharedProductById(product.sharedProductId), nextTransactionalId, product, user.id);
         saveObject(user);
         users.put(user.id, user);
 

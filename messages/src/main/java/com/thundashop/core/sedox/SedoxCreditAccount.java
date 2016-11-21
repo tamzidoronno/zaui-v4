@@ -18,10 +18,15 @@ public class SedoxCreditAccount implements Serializable, Cloneable {
     private int balance;
     public Integer creditLimit = null;
 
-    void addOrderToCreditHistory(SedoxOrder order, SedoxSharedProduct sedoxProduct, int transactionSedoxId) {
+    void addOrderToCreditHistory(SedoxOrder order, SedoxSharedProduct sedoxProduct, int transactionSedoxId, SedoxProduct product, String userId) {
         SedoxCreditHistory historyEntry = new SedoxCreditHistory();
         historyEntry.amount = -1 * order.creditAmount;
         historyEntry.description = sedoxProduct.getName();
+        
+        if (product.reference.get(userId) != null) {
+            historyEntry.description += "/ ref: " + product.reference.get(userId);
+        }
+        
         historyEntry.transactionReference = transactionSedoxId;
         balance = (int) (balance + historyEntry.amount);
         historyEntry.newBalance = balance;

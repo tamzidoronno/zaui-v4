@@ -3724,12 +3724,48 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        if(getConfigurationSecure().isGetShopHotelLock()) {
+            long end = System.currentTimeMillis();
+            long start = end - (1000*60*10);
+            HashMap<String, List<AccessLog>> doors = arxManager.getLogForAllDoor(start, end);
+            List<BookingItem> items = bookingEngine.getBookingItems();
+            for(String deviceId : doors.keySet()) {
+                List<AccessLog> log = doors.get(deviceId);
+                for(AccessLog l : log) {
+                    
+                    BookingItem item = null;
+                    for(BookingItem tmpItem : items) {
+                        if(tmpItem.bookingItemAlias != null && tmpItem.bookingItemAlias.equals(deviceId)) {
+                            item = tmpItem;
+                        }
+                    }
+                    
+                    if(item == null) {
+                        continue;
+                    }
+                    
+                    for(PmsBooking booking : bookings.values()) {
+                        for(PmsBookingRooms room : booking.rooms) {
+                            if(!room.isStarted() || room.isEnded() || room.checkedin) {
+                                continue;
+                            }
+                            if(room.bookingItemId == null || !room.bookingItemId.equals(item.id)) {
+                                continue;
+                            }
+
+                            room.checkedin = true;
+                            saveBooking(booking);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void markAsArrived(String card) {
         for(PmsBooking booking : bookings.values()) {
             for(PmsBookingRooms room : booking.rooms) {
-                if(!room.isStarted()) {
+                if(!room.isStarted() || room.isEnded()) {
                     continue;
                 }
                 if(room.code != null && room.code.equals(card) && !room.checkedin) {

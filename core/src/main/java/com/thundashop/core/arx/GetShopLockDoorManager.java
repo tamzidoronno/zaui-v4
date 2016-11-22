@@ -6,6 +6,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -72,12 +73,34 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
 
     @Override
     public List<AccessLog> getLogForDoor(String externalId, long start, long end) throws Exception {
-        return new ArrayList();
+        HashMap<String, List<AccessLog>> logs = getLogForAllDoor(start, end);
+        return logs.get(externalId);
     }
 
     @Override
     public HashMap<String, List<AccessLog>> getLogForAllDoor(long start, long end) throws Exception {
-        return new HashMap();
+        Date startDate = new Date();
+        startDate.setTime(start);
+        
+       Date endDate = new Date();
+       endDate.setTime(end);
+       HashMap<String, List<AccessLog>> toReturn = new HashMap();
+       
+       for(GetShopDevice dev : getShopLockManager.getAllLocks()) {
+           List<AccessLog> result = new ArrayList();
+           for(Date accessEntry : dev.accessLog) {
+               if(accessEntry.after(startDate) && accessEntry.before(endDate)) {
+                   AccessLog entry = new AccessLog();
+                   entry.door = dev.zwaveid + "";
+                   entry.card = "******";
+                   entry.personName = "door opened";
+                   entry.timestamp = accessEntry.getTime();
+                   result.add(entry);
+               }
+           }
+           toReturn.put(dev.id, result);
+        }
+       return toReturn;
     }
 
     @Override

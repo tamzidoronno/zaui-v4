@@ -18,6 +18,8 @@ import java.util.List;
 @GetShopMultiLayerSession
 public interface IGetShopLockManager {
     
+    public void accessEvent(String id, String code, String domain) throws Exception;
+    
     @Administrator
     public String pushCode(String id, String door, String code, Date start, Date end) throws Exception;
     

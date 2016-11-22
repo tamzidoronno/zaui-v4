@@ -14,4 +14,5 @@ import com.thundashop.core.common.DataCommon;
 public class Task extends DataCommon {
     public boolean completed = false;
     public String exceptionId = "";
+    public String comment;
 }

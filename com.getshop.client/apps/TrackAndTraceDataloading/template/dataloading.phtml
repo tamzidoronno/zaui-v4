@@ -1,0 +1,25 @@
+<?
+/* @var $this ns_4b03ba65_0fcf_479d_83b9_1306e1bbedb3\TrackAndTraceDataloading */
+$statuses = $this->getApi()->getTrackAndTraceManager()->getLoadStatuses();
+?>
+
+<form method="post" method="post" enctype="multipart/form-data">
+    <input type = "file" name="data"/>
+    <input type = "submit">
+</form>
+<br/>
+<div>
+    <table style="width: 100%;" class="table">
+        <th style="text-align: left;">Date</th>
+        <th style="text-align: left;">Routes</th>
+        <th style="text-align: left;">Destinations</th>
+        <th style="text-align: left;">Orders</th>
+        <th style="text-align: left;">Loadtime</th>
+        <th style="text-align: left;">Filename</th>
+        <?
+        foreach ($statuses as $status) {
+            echo "<tr><td>$status->rowCreatedDate</td><td>$status->numberOfRoutes</td><td>$status->numberOfDestinations</td><td>$status->numberOfOrders</td><td>$status->millisecondsToLoad</td><td>$status->fileName</td></tr>";
+        }
+        ?>
+    </table>
+</div>

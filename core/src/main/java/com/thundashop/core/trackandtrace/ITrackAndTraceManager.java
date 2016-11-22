@@ -48,4 +48,10 @@ public interface ITrackAndTraceManager {
     public void addCompanyToRoute(String routeId, String companyId);
     
     public void addDeliveryTaskToDestionation(String destionatId, DeliveryTask task);
+    
+    @Administrator
+    public void loadData(String base64, String fileName);
+    
+    @Administrator
+    public List<DataLoadStatus> getLoadStatuses();
 }

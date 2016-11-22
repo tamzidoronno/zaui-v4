@@ -5,12 +5,16 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import com.thundashop.core.common.DataCommon;
+
 /**
  *
  * @author ktonder
  */
-public class PickupTask extends Task {
-    /* parcels, money, valuedparcel */
-    public String type = "";
-    public double quantity;
+public class DataLoadStatus extends DataCommon {
+    public String fileName;
+    public int numberOfRoutes;
+    public int numberOfDestinations;
+    public int numberOfOrders;
+    public long millisecondsToLoad;
 }

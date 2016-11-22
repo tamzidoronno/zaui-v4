@@ -12,6 +12,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -32,6 +33,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public HashMap<String, Destination> destinations = new HashMap();
     
     public HashMap<String, Task> tasks = new HashMap();
+    
+    public HashMap<String, DataLoadStatus> loadStatuses = new HashMap();
     
     public HashMap<String, TrackAndTraceException> exceptions = new HashMap();
 
@@ -64,6 +67,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 if (common instanceof TrackAndTraceException) {
                     TrackAndTraceException exception = (TrackAndTraceException)common;
                     exceptions.put(exception.id, exception);
+                }
+                
+                if (common instanceof DataLoadStatus) {
+                    DataLoadStatus loadStatus = (DataLoadStatus)common;
+                    loadStatuses.put(loadStatus.id, loadStatus);
                 }
             }
         }
@@ -250,6 +258,33 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             task.completed = false;
             saveObject(task);
         }
+    }
+
+    @Override
+    public void loadData(String base64, String fileName) {
+        new AcculogixDataImporter(base64, userManager, this, fileName);
+    }
+
+    void saveTask(DeliveryTask task) {
+        saveObject(task);
+        tasks.put(task.id, task);
+    }
+
+    void saveTaskGeneral(Task task) {
+        saveObject(task);
+        tasks.put(task.id, task);
+    }
+
+    void saveLoadStatus(DataLoadStatus loadStatus) {
+        saveObject(loadStatus);
+        loadStatuses.put(loadStatus.id, loadStatus);
+    }
+
+    @Override
+    public List<DataLoadStatus> getLoadStatuses() {
+        ArrayList<DataLoadStatus> returnlist = new ArrayList(loadStatuses.values());
+        Collections.sort(returnlist, (o1, o2) -> o2.rowCreatedDate.compareTo(o1.rowCreatedDate));
+        return returnlist;
     }
     
 }

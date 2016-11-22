@@ -11,6 +11,7 @@ import com.thundashop.core.common.DataCommon;
  * @author ktonder
  */
 public class Address extends DataCommon {
+
     
     public static class Type {
         public static String SHIPMENT = "shipment";
@@ -31,4 +32,5 @@ public class Address extends DataCommon {
     public String customerNumber;
     public String vatNumber;
     public String reference = "";
+    public String province;
 }

@@ -1,11 +1,10 @@
 package com.thundashop.core.getshop.data;
 
 import com.thundashop.core.common.DataCommon;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
 
 public class GetShopDevice extends DataCommon {
     public boolean needSaving = false;
@@ -19,6 +18,7 @@ public class GetShopDevice extends DataCommon {
     public String type;
     public HashMap<Integer, GetShopLockCode> codes = new HashMap();
     public Date lastTriedUpdate = null;
+    public LinkedList<Date> accessLog = new LinkedList();
     public HashMap<String, Object> instances;
     public Date batteryLastUpdated;
 

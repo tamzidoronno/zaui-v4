@@ -309,7 +309,7 @@ class SedoxAdmin extends \ns_5278fb21_3c0a_4ea1_b282_be1b76896a4b\SedoxCommon im
      */
     public function getUserHeaderInfo($user) {
         $sedoxUser = $this->getApi()->getSedoxProductManager()->getSedoxUserAccountById($user->id);
-        return " - ".$user->group." - ".$user->id." - ".$sedoxUser->evcId;
+        return " - ".$user->group." -  id: ".$user->id." - evc: ".$sedoxUser->evcId;
     }
 }
 ?>

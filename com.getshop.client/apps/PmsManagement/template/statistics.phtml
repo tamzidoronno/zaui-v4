@@ -49,8 +49,12 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
             echo "</td>";
             echo "<td>"; if($entry->spearRooms >= 0) { echo $entry->spearRooms; } echo "</td>";
             echo "<td>"; if($entry->roomsRentedOut >= 0) { echo $entry->roomsRentedOut; } echo "</td>";
-            echo "<td>"; if($entry->avgPrice >= 0) { echo $entry->avgPrice; } echo "</td>";
-            echo "<td>"; if($entry->totalPrice >= 0) { echo $entry->totalPrice; } echo "</td>";
+            echo "<td>"; if($entry->avgPrice >= 0) { echo round($entry->avgPrice); } echo "</td>";
+            if ($entry->date) {
+                echo "<td>"; if($entry->totalPrice >= 0) { echo $entry->totalPrice; } echo "</td>";
+            } else {
+                echo "<td>"; if($entry->totalPrice >= 0) { echo "<b>" . $entry->totalPrice . "</b>"; } echo "</td>";
+            }
             echo "<td>" . $entry->bugdet . "%</td>";
             if($entry->bugdet < $entry->coverage) {
                 echo "<td class='budget_success'><i class='fa fa-check' style='float:right;'></i> " . $entry->coverage . "%</td>";

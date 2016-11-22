@@ -34,14 +34,22 @@ class OrderExport extends \WebshopApplication implements \Application {
         $resInc = array();
         $totalEx = 0;
         $totalInc = 0;
+        $totalExProducts = array();
+        $totalIncProducts = array();
+        $products = $this->getApi()->getProductManager()->getAllProducts();
         foreach($stats->entries as $stat) {
             $time = date("y-M", strtotime($stat->day));
 
             $mnd =  array();
             $ex = 0.0;
             $inc = 0.0;
-            foreach($stat->priceEx as $tmpEx) { $ex += $tmpEx; }
-            foreach($stat->priceInc as $tmpInc) { $inc += $tmpInc; }
+            
+            foreach($stat->priceEx as $prodId => $tmpEx) { @$totalExProducts[$prodId][$time] += $tmpEx; }
+            foreach($stat->priceInc as $prodId => $tmpInc) { @$totalIncProducts[$prodId][$time] += $tmpInc;  }
+            
+            foreach($stat->priceEx as $prodId => $tmpEx) { $ex += $tmpEx; }
+            foreach($stat->priceInc as $prodId => $tmpInc) { $inc += $tmpInc; }
+            
             if(!isset($resEx[$time])) { $resEx[$time] = 0; }
             if(!isset($resInc[$time])) { $resInc[$time] = 0; }
             $resEx[$time] += $ex;
@@ -53,21 +61,37 @@ class OrderExport extends \WebshopApplication implements \Application {
         echo "<table border='1' cellspacing='0' cellpadding='5'>";
         echo "<tr>";
         echo "<th>Month</th>";
-        echo "<th>Ex taxes</th>";
-        echo "<th>Inc taxes</th>";
+        echo "<th>Total</th>";
+        foreach($products as $product) {
+            echo "<th>" . $product->name . "</th>";
+        }
         echo "</tr>";
         foreach($resEx as $mnd => $val) {
             if(!$val && !$resInc[$mnd]) {
                 continue;
             }
             echo "<tr>";
-            echo "<td>" . $mnd . "</td><td>" . round($val) . "</td><td>" . round($resInc[$mnd]) . "</td>";
+            echo "<td>" . $mnd . "</td><td>" . round($val) . "<br><span style='color:#aaa;'>" . round($resInc[$mnd]) . "</span></td>";
+            foreach($products as $product) {
+                $ex = @$totalExProducts[$product->id][$mnd] ? $totalExProducts[$product->id][$mnd] : "0" ;
+                $inc = @$totalIncProducts[$product->id][$mnd] ? $totalIncProducts[$product->id][$mnd] : "0" ;
+                echo "<td>" . round($ex). "<br>";
+                echo "<span style='color:#aaa;'>". round($inc). "</span></td>";
+            }
             echo "</tr>";
         }
         echo "<tr>";
         echo "<td></td>";
-        echo "<td>" . round($totalEx) . "</td>";
-        echo "<td>" . round($totalInc) . "</td>";
+        echo "<td>" . round($totalEx) . "<br>";
+        echo "<span style='color:#aaa;'>" . round($totalInc) . "</span></td>";
+        
+        foreach($products as $product) {
+            $ex = 0;
+            $inc = 0;
+            foreach($totalExProducts[$product->id] as $tmp) { $ex += $tmp; }
+            foreach($totalIncProducts[$product->id] as $tmp) { $inc += $tmp; }
+            echo "<td>".round($ex) . "<br><span style='color:#aaa;'>" . round($inc)."</span></td>";
+        }
         echo "</tr>";
         echo "</table>";
         

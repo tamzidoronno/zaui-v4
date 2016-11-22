@@ -21,7 +21,7 @@ $slaves = $this->getApi()->getSedoxProductManager()->getSlaves($sedoxUser->id);
         
         Name:
         <div class="aligned_data text_data">
-            <? echo $user->fullName." - ".$user->emailAddress." - ".$user->group." - ".$user->id." - ".$sedoxUser->evcId; ?> - ID <? echo $user->id; ?>
+            <? echo $user->fullName." - ".$user->emailAddress." - ".$user->group." - id: ".$user->id." - evc: ".$sedoxUser->evcId; ?>
         </div>
     </div>
     <div class="information_data">
@@ -77,15 +77,13 @@ $slaves = $this->getApi()->getSedoxProductManager()->getSlaves($sedoxUser->id);
         foreach($slaves as $slave) {
             if($slave->id != $sedoxUser->id) {
                 $slaveUser = $this->getApi()->getUserManager()->getUserById($slave->id);
+                
                 ?>
                 <div class="slave_information">
                     <?
-                    $creditBalance = $slaveUser->creditAccount->balance ? $slaveUser->creditAccount->balance : 0;
+                    $creditBalance = isset($slave->creditAccount->balance) ? $slave->creditAccount->balance : 0;
                     ?>
                     <div class="slave_name float-left" master_id="<?echo $sedoxUser->id; ?>" slave_id="<?echo $slaveUser->id; ?>">
-                        <a href="/impersonate.php?userId=<? echo $slave->id; ?>">
-                            <div class="gs_shop_small_icon" userid="<? echo $slave->id; ?>" title="Impersonate"><i class="fa fa-magic"></i></div>
-                        </a>
                         <? echo $slaveUser->fullName . " ( $creditBalance )"; ?>
                     </div>
                     <div class="float-right">

@@ -140,5 +140,7 @@ interface IC3Manager {
     
     @Administrator
     public String getBase64ESAExcelReport(Date start, Date end);
-    
+
+    @Administrator
+    public List<C3Project> getAllProjectsConnectedToWorkPackage(String wpId);
 }

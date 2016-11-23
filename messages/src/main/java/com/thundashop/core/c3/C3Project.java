@@ -8,6 +8,7 @@ package com.thundashop.core.c3;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.mongodb.morphia.annotations.Transient;
  * @author ktonder
  */
 public class C3Project extends DataCommon {
+
     public String name = "";
     public String projectNumber = "";
     public String projectOwner = "";
@@ -106,4 +108,14 @@ public class C3Project extends DataCommon {
         activatedCompanies.values().stream()
                 .forEach(c3prowp -> c3prowp.checkWps(workPackages));
     }
+    
+    static Comparator<? super C3Project> comperatorByProjectNumber() {
+        
+        return (C3Project o1, C3Project o2) -> {
+            Integer a = Integer.parseInt(o1.projectNumber);
+            Integer b = Integer.parseInt(o2.projectNumber);
+            return a.compareTo(b);
+        };
+    }
+
 }

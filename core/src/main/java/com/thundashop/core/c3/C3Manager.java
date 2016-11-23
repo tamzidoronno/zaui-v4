@@ -932,5 +932,17 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         return companyIds.stream().map(companyId -> userManager.getCompany(companyId)).collect(Collectors.toList());
     }
+
+    @Override
+    public List<C3Project> getAllProjectsConnectedToWorkPackage(String wpId) {
+        
+        List<C3Project> retList = projects.values().stream()
+                .filter(project -> project.workPackages.contains(wpId))
+                .sorted( C3Project.comperatorByProjectNumber() )
+                .collect(Collectors.toList());
+        
+        retList.stream().forEach(pro -> finalizeProject(pro));
+        return retList;
+    }
     
 }

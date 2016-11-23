@@ -42,16 +42,6 @@ $companies = $this->getApi()->getUserManager()->getAllCompanies();
         </div>
     </div>
     
-    <div class="textfield gss_setting"  id="">
-        <span class="title"><?php echo $this->__f("Project dates"); ?></span>
-       
-        <input id="startdate" type="textfield" gs_model='projectmodel' gs_model_attr='startdate' value="<? echo $this->convertTime($project->startDate); ?>" placeholder="Start date" style='right: 340px;'>
-        <div style='position: absolute; right: 316px; top: 17px;'> - </div> <input id="enddate" type="textfield" gs_model='projectmodel' gs_model_attr='enddate' value="<? echo $this->convertTime($project->endDate); ?>" placeholder="End date">
-        <div class="description">
-            <?php echo $this->__("Project number."); ?>
-        </div>
-    </div>
-    
     <div class="gss_setting" id="language">
         <div class="text inline title">Prosjektansvarlig</div>
 

@@ -107,7 +107,11 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     @Override
     public List<WorkPackage> getWorkPackages() {
         workPackages.values().stream().forEach(wp -> finalizeWorkPackage(wp));
-        return new ArrayList(workPackages.values()); 
+        
+        return workPackages.values()
+                .stream()
+                .sorted(( o1, o2) -> o1.name.compareTo(o2.name))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -40,8 +40,6 @@ class C3Projects extends \MarketingApplication implements \Application {
         $project->name = $_POST['name'];
         $project->projectNumber = $_POST['projectid'];
         $project->projectOwner = $_POST['projectOwner'];
-        $project->startDate = $this->convertToJavaDate(strtotime($_POST['startdate']));
-        $project->endDate = $this->convertToJavaDate(strtotime($_POST['enddate']));
         $savedProject = $this->getApi()->getC3Manager()->saveProject($project);
         $_POST['value'] = $savedProject->id;
     }

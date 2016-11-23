@@ -57,10 +57,6 @@ $companies = $this->getApi()->getUserManager()->getAllCompanies();
         </div>
     </div>
     
-    <div class="textfield gss_setting" id="shouldSendEmail">
-        <span class="title">Description of workpackage</span>
-        <textarea gs_model="wpmodel" gs_model_attr="description" style="position: initial; width: 945px; height: 300px;"><? echo $package->description; ?></textarea>
-    </div>
     
     <div class='gss_button_area'>
         <div class="gss_button" gss_fragment="wplist" gss_view="gs_wp_workarea" gss_method="deleteWorkPackage" gss_model="wpmodel"><i class='fa fa-remove'></i><?php echo $this->__("Delete"); ?></div>

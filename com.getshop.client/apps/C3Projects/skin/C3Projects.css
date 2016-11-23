@@ -49,6 +49,7 @@
     margin-bottom: 20px;
 }
 
+.gss_c3_removeContract,
 .gss_c3_changeCost {
     color: blue;
     cursor: pointer;

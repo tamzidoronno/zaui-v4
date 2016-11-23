@@ -228,10 +228,21 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     }
 
     @Override
-    public void setProjectCust(String companyId, String projectId, String workPackageId, int year, int price) {
+    public void removeContract(String companyId, String projectId, String workPackageId, String contractId) {
         C3Project project = getProject(projectId);
+        
         if (project != null) {
-            project.setProjectCost(companyId, workPackageId, year, price);
+            project.removeContract(companyId, workPackageId, contractId);
+            saveObject(project);
+        }
+    }
+    
+    @Override
+    public void setProjectCust(String companyId, String projectId, String workPackageId, Date start, Date end, int price, String contractId) {
+        C3Project project = getProject(projectId);
+        
+        if (project != null) {
+            project.setProjectCost(companyId, workPackageId, start, end, price, contractId);
             saveObject(project);
         }
     }
@@ -272,13 +283,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         return project.isCompanyActivated(user.companyObject.id);
     }
 
-    @Override
-    public Double getPercentage(String companyId, String workPackageId, String projectId, int year) {
+    public Double getPercentage(String companyId, String workPackageId, String projectId, Date date) {
         C3Project project = getProject(projectId);
         if (project == null)
             return new Double(0);
         
-        return project.getPercentage(workPackageId, companyId, year);
+        return project.getPercentage(workPackageId, companyId, date);
     }
 
     @Override
@@ -648,7 +658,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 throw new RuntimeException("Generating a report with users that are not connected to a company");
             }
             
-            double percent = getPercentage(user.companyObject.id, forWorkPackageId, projectId, getYear(start));
+            double percent = getPercentage(user.companyObject.id, forWorkPackageId, projectId, start);
             report.recalcuate(percent);
         }
         return report;

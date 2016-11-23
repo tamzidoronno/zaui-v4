@@ -52,11 +52,12 @@ interface IC3Manager {
     public void setProjectAccess(String companyId, String projectId, String workPackageId, boolean value);
     
     @Administrator
-    public void setProjectCust(String companyId, String projectId, String workPackageId, int year, int price);
+    public void setProjectCust(String companyId, String projectId, String workPackageId, Date start, Date end, int price, String contractId);
+    
+    @Administrator
+    public void removeContract(String companyId, String projectId, String workPackageId, String contractId);
 
     public List<UserProjectAccess> getAccessList();
-    
-    public Double getPercentage(String companyId, String workPackageId, String projectId, int year);
     
     @Administrator
     public void saveGroupInfo(String groupId, String type, boolean value);

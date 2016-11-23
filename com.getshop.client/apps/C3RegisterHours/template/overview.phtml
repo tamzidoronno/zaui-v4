@@ -48,8 +48,7 @@ foreach ($accessList as $access) {
         echo "<div>";
             foreach ($access->workPackageIds as $packageId) {
                 $package = $this->getApi()->getC3Manager()->getWorkPackage($packageId);
-                $percentage = $this->getApi()->getC3Manager()->getPercentage($user->companyObject->id, $packageId, $project->id, 2016);
-                echo "<div> &nbsp;&nbsp;&nbsp; ".$package->name."  | Fordeling 2016: ($percentage %)</div>";
+                echo "<div> &nbsp;&nbsp;&nbsp; ".$package->name."</div>";
             }
         echo "</div>";
         

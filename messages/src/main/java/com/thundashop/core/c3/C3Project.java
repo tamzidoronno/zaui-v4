@@ -60,10 +60,16 @@ public class C3Project extends DataCommon {
         activatedCompanies.remove(companyId);
     }
 
-    void setProjectCost(String companyId, String workPackageId, int year, int price) {
+    void setProjectCost(String companyId, String workPackageId, Date start, Date end, int price, String contractId) {
         C3ProjectWorkpackage wp = activatedCompanies.get(companyId);
         if (wp != null)
-            wp.setProjectCost(workPackageId, year, price);
+            wp.setProjectCost(workPackageId, start, end, price, contractId);
+    }
+    
+    void removeContract(String companyId, String workPackageId, String contractId) {
+        C3ProjectWorkpackage wp = activatedCompanies.get(companyId);
+        if (wp != null)
+            wp.removeContract(workPackageId, contractId);
     }
 
     public List<String> getWorkPackagesForUser(User user) {
@@ -76,12 +82,12 @@ public class C3Project extends DataCommon {
         return new ArrayList(activatedCompanies.get(user.companyObject.id).activeWorkPackaged.keySet());
     }
 
-    public double getPercentage(String workPackageId, String companyId, int year) {
+    public double getPercentage(String workPackageId, String companyId, Date date) {
         C3ProjectWorkpackage wp = activatedCompanies.get(companyId);
         if (wp == null)
             return 0;
         
-        return wp.getPercentage(workPackageId, companyId, year);
+        return wp.getPercentage(workPackageId, companyId, date);
     }
 
     public void addHour(String companyId, C3Hour hour) {
@@ -117,5 +123,8 @@ public class C3Project extends DataCommon {
             return a.compareTo(b);
         };
     }
+
+    
+
 
 }

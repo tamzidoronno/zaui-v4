@@ -15,7 +15,6 @@ if (!count($projects)) {
 <?
 
 foreach ($projects as $project) {
-    $startDate = date('Y', strtotime($project->rowCreatedDate));
     $futureDate = date('Y-m-d', strtotime('+3 year'));
 
     ?>
@@ -27,7 +26,7 @@ foreach ($projects as $project) {
             foreach ($project->workPackages as $packageId) {
                 $workPackage = $this->getApi()->getC3Manager()->getWorkPackage($packageId);
                 ?>
-                <div class="textfield gss_setting" id="">
+                <div class="textfield gss_setting" id="" style='background-color: #EEE; padding: 10px; margin-bottom: 10px;'>
                     <span class="title"><?php echo $workPackage->name; ?></span>
                     <div class="gss_onoff" c3projectcompany="true" companyId="<? echo $company->id;?>" wpId="<? echo $workPackage->id; ?>" projectId="<? echo $project->id; ?>" gs_model="storesettings" gs_model_attr="wp_<? echo $packageId."_".$project->id; ?>">
                         <? $faclass = $this->hasProjectWorkPackage($packageId, @$project->activatedCompanies->{$company->id}->activeWorkPackaged) ? "fa-toggle-on" : "fa-toggle-off"; ?>
@@ -41,24 +40,35 @@ foreach ($projects as $project) {
                         <?
                         $settings = @$project->activatedCompanies->{$company->id}->activeWorkPackaged->{$workPackage->id};
                         if ($settings) {
+                            
                         ?>
                             Contract/Project value:
                             <?
                             
-                            for ($i=$startDate; $i<=$futureDate; $i++) {
-                                $cost = isset($settings->projectCost->{$i}) ? $settings->projectCost->{$i} : 0;
-                                echo "<div style='padding-left: 10px;'> <span class='gss_c3_changeCost' year='$i' companyId='$company->id' projectId='$project->id' wpId='$packageId' currentValue='$cost'>(Change)</span> ".$i.": Kr $cost,-</div>";
+                            foreach ($settings->projectContracts as $contract ) {
+                                $startDate = $this->convertTime($contract->startDate);
+                                $endDate = $this->convertTime($contract->endDate);
+                                /* @var $contract core_c3_C3ProjectContract */
+                                
+                                echo "<div style='padding-left: 10px;'> <span class='gss_c3_removeContract' startDate='$startDate' endDate='$endDate' contractId='$contract->id' companyId='$company->id' projectId='$project->id' wpId='$packageId' >(Remove)</span> <span class='gss_c3_changeCost' currentValue='$contract->contractValue' startDate='$startDate' endDate='$endDate' contractId='$contract->id' companyId='$company->id' projectId='$project->id' wpId='$packageId' >(Change)</span> $contract->startDate - $contract->endDate, Kr $contract->contractValue,-</div>";
                             }
+                            ?>
+                            <div class='gss_c3_changeCost gs_shop_small_icon' companyId='<? echo $company->id; ?>' projectId='<? echo $project->id; ?>' wpId='<? echo $packageId; ?>'><i class="fa fa-plus-circle"></i>Add contract</div>
+                            <?
                             
                         }
                         ?>
+                        
                     </div>
+                    
+                    
                 </div>
                 <?
             }
             ?>
             
             <br/>
+            
             <div gss_method="removeAccess" gss_value="<? echo $project->id; ?>" gss_view="c3projects_connected_companies" gss_fragment="connectedProjects" gss_value_2="<? echo $company->id; ?>" class="gs_shop_small_icon"><i class="fa fa-remove"></i>Fjern tilgang</div>
         </div>
     </div>

@@ -418,7 +418,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             if(named == null || named.getName() == null) {
                 logPrint("Null name");
             } else {
-                names.add(named.getName());
+                if(!names.contains("'")) {
+                    names.add(named.getName());
+                }
             }
         }
         

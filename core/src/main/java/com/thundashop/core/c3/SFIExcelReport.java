@@ -46,7 +46,7 @@ public class SFIExcelReport {
         
         for (SFIExcelReportData data : datas) {
             this.data = data;
-            rownum = 0;
+            clearCounters();
 
             createSheet();
             addHeader();
@@ -74,6 +74,13 @@ public class SFIExcelReport {
 
             setColumnSizes();
         }
+    }
+
+    private void clearCounters() {
+        rownum = 0;
+        overTotal = 0;
+        overTotalNfr = 0;
+        overTotalInkind = 0;
     }
     
     public static void main(String[] args) {

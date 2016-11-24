@@ -17,6 +17,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
     private Date lastCleaned = null;
     private List<Date> cleaningDates = new ArrayList();
     public HashMap<String, PmsInventory> inventory = new HashMap();
+    public HashMap<Long, String> cleanedByUser = new HashMap();
     public String itemId = "";
     
     @Transient
@@ -32,10 +33,11 @@ public class PmsAdditionalItemInformation extends DataCommon {
         return isClean(true);
     }
     
-    public void markCleaned() {
+    public void markCleaned(String userId) {
         Date cleaned = new Date();
         lastCleaned = cleaned;
         cleaningDates.add(cleaned);
+        cleanedByUser.put(cleaned.getTime(), userId);
     }
     
     public void markDirty() {

@@ -272,9 +272,24 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "</td>";
         echo "<td>";
         if($room->bookingItemId) {
-            if($additional[$room->bookingItemId]->lastCleaned) {
-                echo date("d.m.Y H:i", strtotime($additional[$room->bookingItemId]->lastCleaned));
+            $lastCleaned = $additional[$room->bookingItemId]->lastCleaned;
+            if($lastCleaned) {
+                echo date("d.m.Y H:i", strtotime($lastCleaned));
             }
+            $time = "";
+            $lastCleanedUser = "";
+            foreach($additional[$room->bookingItemId]->cleanedByUser as $timer => $userId) {
+                if(!$time || $timer>$time) {
+                    $time = $timer;
+                    $lastCleanedUser = $userId;
+                }
+            }
+            
+            if($lastCleanedUser) {
+                echo "<div style='color:#aaa'>by " . $this->getApi()->getUserManager()->getUserById($lastCleanedUser)->fullName . "</div>";
+            }
+//            $userId = $additional[$room->bookingItemId]->cleanedByUser->{$time};
+//            if($userId) { echo $userId; }
         }
         if($isInterval) {
             echo "<div style='color:red; font-weight:bold; cursor:pointer;' class='posponeuntiltomorrow'>Pospone</div>";

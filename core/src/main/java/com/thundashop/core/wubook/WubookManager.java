@@ -226,19 +226,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     private WubookBooking buildBookingResult(Hashtable table) {
         WubookBooking booking = new WubookBooking();
-        
-        try {
-            Gson gson = new Gson();
-            logPrint(gson.toJson(table));
-        }catch(Exception e) {
-            logPrintException(e);
-        }
-
         String arrival = (String) table.get("date_arrival");
         String departure = (String) table.get("date_departure");
         booking.channelId = table.get("id_channel") + "";
         booking.reservationCode = table.get("reservation_code") + "";
         booking.channel_reservation_code = (String) table.get("channel_reservation_code");
+        booking.status = new Integer(table.get("status") + "");
         Vector modifications = (Vector) table.get("modified_reservations");
         if(modifications != null) {
             for(int i = 0; i < modifications.size(); i++) {
@@ -349,17 +342,31 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             throw new Exception();
         } else {
             Vector bookings = (Vector) result.get(1);
-            if(bookings.size() > 1) {
-                String msg = "Multiple bookings fetched in fetch new bookings: " + bookings.size() + ", please investigate.<br><bR>";
-                messageManager.sendErrorNotification(msg, null);
-            }
             for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {
                 Hashtable reservation = (Hashtable) bookings.get(bookcount);
                 WubookBooking wubooking = buildBookingResult(reservation);
+                if(wubooking.status == 5) {
+                    if(wubooking.wasModified > 0) {
+                        //This is a modified reservation. its not a new booking.
+                        continue;
+                    }
+                }
+                try {
+                    Gson gson = new Gson();
+                    logPrint(gson.toJson(reservation));
+                }catch(Exception e) {
+                    logPrintException(e);
+                }
                 toReturn.add(wubooking);
                 addBookingToPms(wubooking);
             }
         }
+        
+        if(toReturn.size() > 1) { 
+            String msg = "Multiple bookings fetched in fetch new bookings: " + toReturn.size() + ", please investigate.<br><bR>";
+            messageManager.sendErrorNotification(msg, null);
+        }
+        
         return toReturn;
     }
 

@@ -23,5 +23,6 @@ public class WubookBooking implements Serializable {
     public Date arrivalDate;
     public List<WubookBookedRoom> rooms = new ArrayList();
     public List<Integer> modifiedReservation = new ArrayList();
+    public Integer status;
     public String countryCode;
 }

@@ -16,6 +16,8 @@ import org.mongodb.morphia.annotations.Transient;
 public class C3Hour extends ProjectCost {
     public String costType = "hour";
     public double hours;
+    public String rateId = "";
+    public int rate = 0;
     
     @Transient
     public double cost;

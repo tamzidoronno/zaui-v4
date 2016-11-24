@@ -66,7 +66,7 @@ $forskningsperiodes = $this->getApi()->getC3Manager()->getForskningsPeriodesForU
             $bottomborder = count($forskningsperiodes) == $i ? "" : "border-bottom: solid 1px #DDD; ";
             echo "<div style='; padding: 5px; $bottomborder position: relative; padding-left: 50px'>";
             echo "<div class='gs_shop_small_icon' gss_view='view_c3management' gss_fragment='usersettings' gss_value='$user->id' gss_value_2='$periode->id' gss_method='deletePeriode' style='position: absolute; left: 5px; top: 5px;'><i class='fa fa-trash'></i></div>";
-            echo "<b>".$project->name."</b><br/> Periode: " . date('d/m-Y', strtotime($periode->start)) . ", til: " . date('d/m-Y', strtotime($periode->end)). "<br/>Stillingsprosent: ".$periode->percents ."%";
+            echo "Periode: " . date('d/m-Y', strtotime($periode->start)) . ", til: " . date('d/m-Y', strtotime($periode->end)). "<br/>Stillingsprosent: ".$periode->percents ."%";
             echo "</div>";
         }
         echo "</div>";

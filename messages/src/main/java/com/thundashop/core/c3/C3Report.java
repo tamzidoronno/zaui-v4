@@ -30,6 +30,7 @@ public class C3Report {
     public int sumPost11;
     public int sumHours;
     public String workpackages = "";
+    double roundSumInKind;
 
     void recalcuate(double percent) {
         
@@ -39,6 +40,7 @@ public class C3Report {
         sumPost11 = (int) (sumPost11 * newPercent);
         sumHours = (int) (sumHours * newPercent);
         roundSum = (int) (roundSum * newPercent);
+        roundSumInKind = (int) (roundSum * newPercent);
         
         for (C3Hour hour : hours) {
             hour.cost = hour.cost * newPercent;

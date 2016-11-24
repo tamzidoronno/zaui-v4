@@ -17,6 +17,7 @@ import java.util.List;
 public class C3ProjectWorkpackage {
     public String companyId = "";
     public List<String> hourListIds = new ArrayList();
+    public List<String> projectPeriodeList = new ArrayList();
     
     /**
      * Key = workpackageid
@@ -46,7 +47,7 @@ public class C3ProjectWorkpackage {
             wp.removeContract(contractId);
     }
 
-    public double getPercentage(String workPackageId, String companyId, Date date) {
+    public double getPercentage(String workPackageId, String companyId, Date date, C3Project project) {
         if (activeWorkPackaged.get(workPackageId) == null)
             return 0;
         
@@ -61,7 +62,7 @@ public class C3ProjectWorkpackage {
             return 0;
         
         if (total == 0 && activeWorkPackaged.size() != 1)
-            throw new RuntimeException("Its not possible to calculate a percentage for this as there is no sum set on one project and multiple workpackages");
+            throw new RuntimeException(getErrorMessage(activeWorkPackaged, companyId, project));
         
         
         double totalForPackage = activeWorkPackaged.get(workPackageId).getCost(date);
@@ -76,10 +77,30 @@ public class C3ProjectWorkpackage {
     void addHours(C3Hour hour) {
         hourListIds.add(hour.id);
     }
+    
+    void addUserProjectPeriode(C3UserProjectPeriode periode) {
+        projectPeriodeList.add(periode.id);
+    }
 
     void checkWps(List<String> workPackages) {
         activeWorkPackaged.keySet().removeIf(key -> !workPackages.contains(key));
     }
 
-    
+    private String getErrorMessage(HashMap<String, CompanyProjectWorkPackageSettings> activeWorkPackaged, String companyId, C3Project project) {
+        String errorMessage = "Its not possible to get the percentage for the project: " + project.name + ", workpackages: ";
+        for (String test : activeWorkPackaged.keySet()) {
+            errorMessage += "\n wpid: " + test;
+        }
+        
+        errorMessage += "companyid: " + companyId;
+        
+        return errorMessage;
+        
+    }
+
+
+    public void removeCost(String costId) {
+        hourListIds.remove(costId);
+        projectPeriodeList.remove(costId);
+    }    
 }

@@ -6,6 +6,7 @@
 package com.thundashop.core.c3;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.GetShopApi;
 import java.util.Date;
 import java.util.List;
@@ -144,4 +145,13 @@ interface IC3Manager {
 
     @Administrator
     public List<C3Project> getAllProjectsConnectedToWorkPackage(String wpId);
+    
+    public C3ForskningsUserPeriode getCurrentForskningsPeriode();
+    
+    public void addUserProjectPeriode(C3UserProjectPeriode projectPeriode);
+    
+    public C3UserProjectPeriode getUserProjectPeriodeById(String id);
+    
+    @Customer
+    public void deleteProjectCost(String projectCostId);
 }

@@ -16,7 +16,6 @@ foreach ($accessList as $access) {
     echo "<div class='projectoverview'>";
         echo "<h1>$project->projectNumber - $project->name</h1>";
         echo "( Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to)).")";
-        echo "<br/>Prosjekt periode: ".date('d.m.Y', strtotime($project->startDate))." - ".date('d.m.Y', strtotime($project->endDate));
         echo "<br/>";
         $hours = $this->getApi()->getC3Manager()->getProjectCostsForCurrentUser($project->id, $projectPeriodeToShow->from, $projectPeriodeToShow->to);
         
@@ -29,6 +28,14 @@ foreach ($accessList as $access) {
                 
                 $from = date('d.m.Y', strtotime($hour->from)); 
                 $to = date('d.m.Y', strtotime($hour->to));
+                
+                if ($hour->costType === "userperiode") {
+                    $editButton = "<span hourid='$hour->id' projectid='$project->id' gs_show_modal='hours' class='gs_shop_small_icon fa fa-edit'></span>";
+                    $totalHours += 0;
+                    $totalCost += 0;
+                    $comment = $hour->nfr ? "(NFR)" : "";
+                    echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'>Stilling: $hour->percent%</span><span class='othercost'>-</span><span class='comment'>$comment</span></div>";
+                }
                 
                 if ($hour->costType === "hour") {
                     $editButton = "<span hourid='$hour->id' projectid='$project->id' gs_show_modal='hours' class='gs_shop_small_icon fa fa-edit'></span>";

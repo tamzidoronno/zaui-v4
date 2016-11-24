@@ -14,8 +14,31 @@ class C3Hour extends \MarketingApplication implements \Application {
         $this->includefile("edithour");
     }
     
-    public function saveHours() {
+    public function savePercent() {
+        if ($this->getModalVariable("hourid")) {
+            $userPeriode = $this->getApi()->getC3Manager()->getUserProjectPeriodeById($this->getModalVariable("hourid"));
+        } else {
+            $userPeriode = new \core_c3_C3UserProjectPeriode();
+        }
         
+        $userPeriode->from = $this->convertToJavaDate(strtotime($_POST['data']['from']));
+        $userPeriode->to = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+        $userPeriode->projectId = $this->getModalVariable("projectid");
+        $userPeriode->percent = $_POST['data']['hours'];
+        $userPeriode->nfr = isset($_POST['data']['nfr']) ? $_POST['data']['nfr'] : false;
+        
+         if (!ctype_digit($userPeriode->percent)) {
+            $obj = $this->getStdErrorObject();
+            $obj->fields->errorMessageTimer = "Kun hele tall er tillatt i dette feltet";
+            $obj->gsfield->percent = 1;
+            $this->doError($obj);
+        }
+        
+        $this->validateProjectCost($userPeriode);
+        $this->getApi()->getC3Manager()->addUserProjectPeriode($userPeriode);
+    }
+    
+    public function saveHours() {
         if ($this->getModalVariable("hourid")) {
             $c3Hour = $this->getApi()->getC3Manager()->getHourById($this->getModalVariable("hourid"));
         } else {
@@ -26,6 +49,7 @@ class C3Hour extends \MarketingApplication implements \Application {
         $c3Hour->to = $this->convertToJavaDate(strtotime($_POST['data']['to']));
         $c3Hour->projectId = $this->getModalVariable("projectid");
         $c3Hour->hours = $_POST['data']['hours'];
+        $c3Hour->rateId = $_POST['data']['rate'];
         $c3Hour->nfr = isset($_POST['data']['nfr']) ? $_POST['data']['nfr'] : false;
         
         $this->validate($c3Hour);
@@ -40,6 +64,10 @@ class C3Hour extends \MarketingApplication implements \Application {
             $this->doError($obj);
         }
         
+        $this->validateProjectCost($hour);
+    }
+    
+    public function validateProjectCost($hour) {
         $result = $this->getApi()->getC3Manager()->canAdd($hour);
         
         if ($result && $result == "OUTSIDE_OF_OPEN_PERIODE") {
@@ -57,6 +85,10 @@ class C3Hour extends \MarketingApplication implements \Application {
             $obj->gsfield->to = 1;
             $this->doError($obj);
         }
+    }
+    
+    public function deleteCost() {
+        $this->getApi()->getC3Manager()->deleteProjectCost($_POST['data']['costid']);
     }
 }
 ?>

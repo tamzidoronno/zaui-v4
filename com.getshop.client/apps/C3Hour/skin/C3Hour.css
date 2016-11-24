@@ -1,0 +1,28 @@
+.C3Hour .tabheader {
+    font-size: 0px;
+    background-color: #EFEFEF;
+    margin-bottom: 20px;
+}
+
+.C3Hour .tabheader .tab {
+    display: inline-block;
+    font-size: 16px;
+    line-height: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-right: solid 1px #DDD;
+    border-left: solid 1px #EEE;
+    cursor: pointer;
+}
+
+.C3Hour .tabheader .tab:first-child {
+    border-left: solid 0px;
+}
+
+.C3Hour .tabheader .tab:last-child {
+    border-right: solid 0px;
+}
+
+.C3Hour .tabheader .tab.active {
+    background-color: #CCC;
+}

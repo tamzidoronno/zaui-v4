@@ -48,8 +48,7 @@ public class CompanyProjectWorkPackageSettings {
             }
         }
         
-        throw new NullPointerException("What do we do here?");
-        
+        return 0;
     }
 
     private C3ProjectContract getContract(String contractId) {

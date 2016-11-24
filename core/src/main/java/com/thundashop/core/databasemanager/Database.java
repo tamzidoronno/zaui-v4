@@ -467,7 +467,7 @@ public class Database extends StoreComponent {
         }
         
         if (database.contains("\'")) {
-            throw new ErrorException(989989898);
+            throw new RuntimeException("Database names are not allowed to contain '");
         }
         
         DataCommon oldObject = getObjectDirect(database, collection, newObject.id);

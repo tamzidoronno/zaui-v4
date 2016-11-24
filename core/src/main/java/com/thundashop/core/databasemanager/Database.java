@@ -466,7 +466,7 @@ public class Database extends StoreComponent {
             userId = getSession().currentUser.id;
         }
         
-        if (database.contains("\'")) {
+        if (database.contains("'")) {
             throw new RuntimeException("Database names are not allowed to contain '");
         }
         

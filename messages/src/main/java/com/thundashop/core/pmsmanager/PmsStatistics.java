@@ -20,15 +20,18 @@ public class PmsStatistics implements Serializable {
         double budget = 0;
         for(StatisticsEntry entry : entries) {
             total.totalPrice += entry.totalPrice;
-            total.avgPrice = -1.0;
             budget = entry.bugdet;
             
-            total.roomsRentedOut = -1;
-            total.spearRooms = -1;
+            total.roomsRentedOut += entry.roomsRentedOut;
+            total.spearRooms += entry.spearRooms;
+            total.avgPrice += entry.avgPrice;
             total.coverage += entry.coverage;
         }
+        
         total.bugdet = budget;
         total.coverage = total.coverage / entries.size();
+        total.avgPrice = total.avgPrice / entries.size();
+        
         entries.add(total);
     }
 

@@ -465,7 +465,11 @@ public class Database extends StoreComponent {
         if (getSession() != null && getSession().currentUser != null) {
             userId = getSession().currentUser.id;
         }
-                
+        
+        if (database.contains("'")) {
+            throw new RuntimeException("Database names are not allowed to contain '");
+        }
+        
         DataCommon oldObject = getObjectDirect(database, collection, newObject.id);
         if (oldObject != null) {
             backupRepository.saveBackup(userId, oldObject, storeId, database, collection);

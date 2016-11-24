@@ -2644,8 +2644,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
             
-            
-            bookingsToAdd.add(bookingToAdd);
+            if(!room.isDeleted()) {
+                bookingsToAdd.add(bookingToAdd);
+            }
         }
         return bookingsToAdd;
     }
@@ -3234,8 +3235,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         for(PmsBooking booking : bookings.values()) {
-            hardDeleteBooking(booking, "deleteallbookings");
+            deleteObject(booking);
         }
+        
+        bookings.clear();
         
         for(Booking booking : bookingEngine.getAllBookings()) {
             bookingEngine.deleteBooking(booking.id);

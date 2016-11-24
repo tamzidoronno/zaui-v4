@@ -2,13 +2,32 @@ app.C3Projects = {
     init: function() {
         PubSub.subscribe('GS_TOGGLE_CHANGED', app.C3Projects.onOffChanged);
         $(document).on('click', '.gss_c3_changeCost', app.C3Projects.changeCost);
+        $(document).on('click', '.gss_c3_removeContract', app.C3Projects.removeContract);
+    },
+    
+    removeContract: function() {
+        var confirmed = confirm("Are you sure you want to remove this contract?");
+        
+        if (confirmed) {
+            getshop.Settings.post({
+                contractId : $(this).attr('contractId'),
+                companyId : $(this).attr("companyId"),
+                projectId : $(this).attr("projectId"),
+                wpId : $(this).attr("wpId"),
+                value2: $(this).attr("companyId"),
+                gss_view : "c3projects_connected_companies",
+                gss_fragment : "connectedProjects"
+            }, "removeContract", {gss_overrideapp : '74d458f4-3203-4488-813d-65741a0213c9'});
+        }
+            
     },
     
     changeCost: function() {
-        var year = $(this).attr('year');
         var currentCost = $(this).attr('currentValue');
-        var data = prompt("Project cost for " + year, currentCost);
-        if (data) {
+        var startDate = prompt("Start date (dd.mm.yyyy)", $(this).attr('startDate'));
+        var endDate = prompt("End date (dd.mm.yyyy)", $(this).attr('endDate'));
+        var data = prompt("Contract value" , currentCost);
+        if (data && startDate && endDate) {
             
             var parsedNumber = ""+parseInt(data, 10);
             if (data !== parsedNumber) {
@@ -17,10 +36,12 @@ app.C3Projects = {
             }
             
             getshop.Settings.post({
+                contractId : $(this).attr('contractId'),
                 companyId : $(this).attr("companyId"),
                 projectId : $(this).attr("projectId"),
                 wpId : $(this).attr("wpId"),
-                year: year,
+                startDate: startDate,
+                endDate: endDate,
                 value2: $(this).attr("companyId"),
                 gss_view : "c3projects_connected_companies",
                 price: data,

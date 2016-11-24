@@ -107,7 +107,10 @@ if ($eventHelder) {
     <?
     foreach ($users as $user) {
         $certificate = $factory->getApi()->getEventBookingManager()->getCertificateForEvent("booking", $eventId, $user->id);
-        $signatureImageId = @$certificate->signatures->{$eventHelderId} ? $certificate->signatures->{$eventHelderId} : "";
+        $signatureImageId = "";
+        if ($certificate && $certificate->signatures  && isset($certificate->signatures->{$eventHelderId})) {
+            $certificate = $certificate->signatures->{$eventHelderId};
+        }
     ?>
         <div class="page">
             <div class="row title1"> <? echo $event->bookingItemType->name; ?></div>    

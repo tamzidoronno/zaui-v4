@@ -40,8 +40,6 @@ class C3Projects extends \MarketingApplication implements \Application {
         $project->name = $_POST['name'];
         $project->projectNumber = $_POST['projectid'];
         $project->projectOwner = $_POST['projectOwner'];
-        $project->startDate = $this->convertToJavaDate(strtotime($_POST['startdate']));
-        $project->endDate = $this->convertToJavaDate(strtotime($_POST['enddate']));
         $savedProject = $this->getApi()->getC3Manager()->saveProject($project);
         $_POST['value'] = $savedProject->id;
     }
@@ -102,7 +100,9 @@ class C3Projects extends \MarketingApplication implements \Application {
     }
 
     public function updateProjectCost() {
-        $this->getApi()->getC3Manager()->setProjectCust($_POST['companyId'], $_POST['projectId'], $_POST['wpId'], $_POST['year'], $_POST['price']);
+        $startDate = $this->convertToJavaDate(strtotime($_POST['startDate']));
+        $endDate = $this->convertToJavaDate(strtotime($_POST['endDate']));
+        $this->getApi()->getC3Manager()->setProjectCust($_POST['companyId'], $_POST['projectId'], $_POST['wpId'], $startDate, $endDate, $_POST['price'], $_POST['contractId']);
     }
 
     public function convertTime($javaDate) {
@@ -110,5 +110,8 @@ class C3Projects extends \MarketingApplication implements \Application {
         return date('d.m.Y', $time);
     }
 
+    public function removeContract() {
+        $this->getApi()->getC3Manager()->removeContract($_POST['companyId'], $_POST['projectId'], $_POST['wpId'], $_POST['contractId']);
+    }
 }
 ?>

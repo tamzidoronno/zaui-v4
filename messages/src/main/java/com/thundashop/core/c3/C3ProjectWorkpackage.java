@@ -6,6 +6,7 @@
 package com.thundashop.core.c3;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,18 +34,24 @@ public class C3ProjectWorkpackage {
         }
     }
 
-    void setProjectCost(String workPackageId, int year, int price) {
+    void setProjectCost(String workPackageId, Date start, Date end, int price, String contractId) {
         CompanyProjectWorkPackageSettings wp = activeWorkPackaged.get(workPackageId);
         if (wp != null)
-            wp.setProjectPrice(year, price);
+            wp.setProjectPrice(start, end, price, contractId);
+    }
+    
+    void removeContract(String workPackageId, String contractId) {
+        CompanyProjectWorkPackageSettings wp = activeWorkPackaged.get(workPackageId);
+        if (wp != null)
+            wp.removeContract(contractId);
     }
 
-    public double getPercentage(String workPackageId, String companyId, int year) {
+    public double getPercentage(String workPackageId, String companyId, Date date) {
         if (activeWorkPackaged.get(workPackageId) == null)
             return 0;
         
         int total = activeWorkPackaged.values().stream()
-                .mapToInt(active -> active.getCost(year))
+                .mapToInt(active -> active.getCost(date))
                 .sum();
         
         if (total == 0 && activeWorkPackaged.size() == 1)
@@ -57,7 +64,7 @@ public class C3ProjectWorkpackage {
             throw new RuntimeException("Its not possible to calculate a percentage for this as there is no sum set on one project and multiple workpackages");
         
         
-        double totalForPackage = activeWorkPackaged.get(workPackageId).getCost(year);
+        double totalForPackage = activeWorkPackaged.get(workPackageId).getCost(date);
         
         if (totalForPackage == 0)
             return 100;
@@ -73,4 +80,6 @@ public class C3ProjectWorkpackage {
     void checkWps(List<String> workPackages) {
         activeWorkPackaged.keySet().removeIf(key -> !workPackages.contains(key));
     }
+
+    
 }

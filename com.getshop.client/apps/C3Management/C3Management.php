@@ -121,7 +121,6 @@ class C3Management extends \MarketingApplication implements \Application {
         $periode = new \core_c3_C3ForskningsUserPeriode();
         $periode->start = $this->convertToJavaDate(strtotime($_POST['from']));
         $periode->end = $this->convertToJavaDate(strtotime($_POST['to']));
-        $periode->projectId = $_POST['projectid'];
         $periode->percents = $_POST['percent'];
         $periode->userId = $_POST['value'];
         $this->getApi()->getC3Manager()->addForskningsUserPeriode($periode);

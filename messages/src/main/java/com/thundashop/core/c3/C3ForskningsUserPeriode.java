@@ -15,7 +15,6 @@ import java.util.Date;
 public class C3ForskningsUserPeriode extends DataCommon {
     public Date start;
     public Date end;
-    public String projectId;
     public int percents;
     public String userId;
 

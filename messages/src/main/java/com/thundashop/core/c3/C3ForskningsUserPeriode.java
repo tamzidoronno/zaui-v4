@@ -17,5 +17,18 @@ public class C3ForskningsUserPeriode extends DataCommon {
     public Date end;
     public int percents;
     public String userId;
+    
+    boolean isDateWithin(Date dateToCheck) {
+        if (start.equals(dateToCheck))
+            return true;
+        
+        if (end.equals(dateToCheck)) 
+            return true;
+        
+        if (start.before(dateToCheck) && end.after(dateToCheck))
+            return true;
+        
+        return false;
+    }
 
 }

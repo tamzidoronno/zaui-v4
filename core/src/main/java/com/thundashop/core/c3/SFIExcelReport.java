@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -40,36 +41,39 @@ public class SFIExcelReport {
     private double overTotalNfr = 0;
     private double overTotalInkind = 0;
 
-    public SFIExcelReport(SFIExcelReportData data) {
-        this.data = data;
+    public SFIExcelReport(List<SFIExcelReportData> datas) {
+        workbook = new XSSFWorkbook();
         
-        createSheet();
-        addHeader();
-        addNameOfPartner();
-        addNavnSfi();
-        addSFIProjectNumber();
-        addWps();
-        addPeriode();
-        
-        addPost1Header();
-        addPost1Content();
-        
-        addPost3Header();
-        addPost3Content();
-        
-        addPost4Header();
-        addPost4Content();
-        
-        addTotalRow();
-        
-        addDateLine();
-        addAnsvarlig();
-        
-        addCommentField();
-        
-        setColumnSizes();
-        
-        
+        for (SFIExcelReportData data : datas) {
+            this.data = data;
+            rownum = 0;
+
+            createSheet();
+            addHeader();
+            addNameOfPartner();
+            addNavnSfi();
+            addSFIProjectNumber();
+            addWps();
+            addPeriode();
+
+            addPost1Header();
+            addPost1Content();
+
+            addPost3Header();
+            addPost3Content();
+
+            addPost4Header();
+            addPost4Content();
+
+            addTotalRow();
+
+            addDateLine();
+            addAnsvarlig();
+
+            addCommentField();
+
+            setColumnSizes();
+        }
     }
     
     public static void main(String[] args) {
@@ -77,8 +81,8 @@ public class SFIExcelReport {
     }
 
     private void createSheet() {
-        workbook = new XSSFWorkbook();
-        sheet = workbook.createSheet("Sample sheet");
+        String sheetName = data.delprosjekter.replaceAll(":", "");
+        sheet = workbook.createSheet(sheetName);
         
     }
 

@@ -24,8 +24,6 @@ public class C3Project extends DataCommon {
     public String projectNumber = "";
     public String projectOwner = "";
     public List<String> workPackages = new ArrayList();
-    public Date startDate = null;
-    public Date endDate = null;
    
     @Transient
     public C3ProjectPeriode currentProjectPeriode;
@@ -87,23 +85,15 @@ public class C3Project extends DataCommon {
         if (wp == null)
             return 0;
         
-        return wp.getPercentage(workPackageId, companyId, date);
+        return wp.getPercentage(workPackageId, companyId, date, this);
     }
 
     public void addHour(String companyId, C3Hour hour) {
         activatedCompanies.get(companyId).addHours(hour);
     }
     
-    public boolean interCepts(Date startDate, Date endDate) {
-        if (startDate == null || endDate == null || this.startDate == null || this.endDate == null) {
-            return false;
-        }
-        
-        long StartDate1 = startDate.getTime();
-        long StartDate2 = this.startDate.getTime()+1;
-        long EndDate1 = endDate.getTime();
-        long EndDate2 = this.endDate.getTime()-1;
-        return (StartDate1 <= EndDate2) && (StartDate2 <= EndDate1);
+    public void addUserProjectPeriode(String companyId, C3UserProjectPeriode periode) {
+        activatedCompanies.get(companyId).addUserProjectPeriode(periode);
     }
 
     public List<String> getCompanyIds() {
@@ -124,7 +114,8 @@ public class C3Project extends DataCommon {
         };
     }
 
-    
-
-
+    public void removeCost(String costId) {
+        activatedCompanies.values().stream().forEach(test -> test.removeCost(costId));
+        
+    }
 }

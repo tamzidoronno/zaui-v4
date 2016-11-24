@@ -768,7 +768,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             saveBooking(booking);
             
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
-            logEntry(logText, bookingId, null, roomId);
+            logEntry(logText, bookingId, room.bookingItemId, roomId);
             doNotification("date_changed", booking, room);
             return room;
         } catch (BookingEngineException ex) {
@@ -1459,7 +1459,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void forceMarkRoomAsCleaned(String itemId) {
         PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
-        additional.markCleaned();
+        String userId = null;
+        if(getSession() != null && getSession().currentUser != null) {
+            userId = getSession().currentUser.id;
+        }
+        additional.markCleaned(userId);
         saveAdditionalInfo(additional);
         List<Booking> allBookings = bookingEngine.getAllBookingsByBookingItem(itemId);
         List<Booking> bookingsToDelete = new ArrayList();

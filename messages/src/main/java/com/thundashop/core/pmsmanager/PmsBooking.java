@@ -388,6 +388,15 @@ public class PmsBooking extends DataCommon {
         }
         return false;
     }    
+    
+    boolean isActiveOnDay(Date day) {
+        for(PmsBookingRooms room : rooms) {
+            if(room.isActiveOnDay(day)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     boolean checkingInBetween(Date startDate, Date endDate) {
         for(PmsBookingRooms room : rooms) {

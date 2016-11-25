@@ -3238,32 +3238,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!code.equals("23424242423423455ggbvvcx")) {
             return;
         }
-        
-        for(PmsBooking booking : bookings.values()) {
-            deleteObject(booking);
-        }
-        
-        bookings.clear();
-        
-        for(Booking booking : bookingEngine.getAllBookings()) {
-            bookingEngine.deleteBooking(booking.id);
-        }
-        bookings.clear();
-        
-        //Delete all orders.
-        List<Order> allOrders = orderManager.getOrders(null, null, null);
-        for(Order order : allOrders) {
-            orderManager.forceDeleteOrder(order);
-        }
-        
-        //Delete all users
-        for(User user : userManager.getAllUsers()) {
-            if(user.emailAddress.toLowerCase().contains("getshop")) {
+        Date now = new Date();
+        List<PmsBooking> allToRemove = new ArrayList();
+       for(PmsBooking booking : bookings.values()) {
+            if(booking.isActiveOnDay(now)) {
                 continue;
             }
-            userManager.deleteUser(user.id);
+            deleteObject(booking);
+            allToRemove.add(booking);
         }
         
+       for(PmsBooking remove : allToRemove) {
+           for(PmsBookingRooms room : remove.getActiveRooms()) {
+                bookingEngine.deleteBooking(room.bookingId);
+           }
+           bookings.remove(remove.id);
+        }
+        
+        orderManager.deleteAllOrders();
+        userManager.deleteAllUsers();
     }
 
     private void checkForMissingEndDate(PmsBooking booking) {

@@ -1751,4 +1751,16 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return fullName;
     }
 
+    public void deleteAllUsers() {
+
+        //Delete all users
+        for(User user : getAllUsers()) {
+            if(user.isAdministrator()) {
+                continue;
+            }
+            deleteUser(user.id);
+        }
+        
+    }
+
 }

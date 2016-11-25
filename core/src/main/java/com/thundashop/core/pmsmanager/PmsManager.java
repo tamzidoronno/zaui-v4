@@ -1418,6 +1418,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     } else {
                         PmsBooking booking = getBookingFromBookingEngineId(tmpres.bookingIds.get(0));
                         User user = userManager.getUserById(booking.userId);
+                        if(user == null) {
+                            System.out.println();
+                        }
                         tmpres.name = user.fullName;
                     }
                 }
@@ -3244,7 +3247,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Date now = new Date();
         List<PmsBooking> allToRemove = new ArrayList();
        for(PmsBooking booking : bookings.values()) {
-            if(booking.isActiveOnDay(now)) {
+            if(booking.isActiveOnDay(now) && booking.userId.equals("fastchecking_user")) {
                 continue;
             }
             deleteObject(booking);

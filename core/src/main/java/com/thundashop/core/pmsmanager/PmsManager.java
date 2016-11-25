@@ -828,7 +828,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 room = splitBookingIfNesesary(booking, room);
             }
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
-            if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted && !room.deleted) {
+            if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
                 bookingEngine.changeBookingItemAndDateOnBooking(room.bookingId, itemId, start, end);
                 resetBookingItem(room, itemId, booking);
             } else {
@@ -3782,7 +3782,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public PmsBooking getBookingFromRoomSecure(String pmsBookingRoomId) {
         for (PmsBooking booking : bookings.values()) {
-            for (PmsBookingRooms room : booking.getActiveRooms()) {
+            for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                 if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
                     return booking;
                 }

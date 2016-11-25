@@ -758,6 +758,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(room.isStarted() && !room.isEnded()) {
                     forceMarkRoomAsCleaned(room.bookingItemId);
                     room.addedToArx = false;
+                    if(getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
+                        room.addedToArx = true;
+                    }
                 }
             }
             

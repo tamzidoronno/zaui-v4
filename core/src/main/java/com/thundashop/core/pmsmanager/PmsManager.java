@@ -618,7 +618,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsBooking finalize(PmsBooking booking) {
         Calendar nowCal = Calendar.getInstance();
         nowCal.add(Calendar.HOUR_OF_DAY, -1);
-        if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
+        if (booking.sessionId != null && !booking.sessionId.isEmpty() && !booking.avoidAutoDelete) {
             if (!booking.rowCreatedDate.after(nowCal.getTime())) {
                 hardDeleteBooking(booking, "finalize");
                 return null;
@@ -825,7 +825,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 room = splitBookingIfNesesary(booking, room);
             }
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
-            if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
+            if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted && !room.deleted) {
                 bookingEngine.changeBookingItemAndDateOnBooking(room.bookingId, itemId, start, end);
                 resetBookingItem(room, itemId, booking);
             } else {
@@ -1349,6 +1349,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     
     private void hardDeleteBooking(PmsBooking booking, String source) {
+        System.out.println("Deleting, source: " + source);
         bookings.remove(booking.id);
         booking.deletedBySource = source;
         if(booking.sessionId == null || booking.sessionId.isEmpty()) {

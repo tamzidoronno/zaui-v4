@@ -51,6 +51,7 @@ public class PmsBooking extends DataCommon {
     public boolean wubookNoShow = false;
     public boolean transferredToRateManager = false;
     public boolean forceGrantAccess = false;
+    public boolean avoidAutoDelete = false;
     
     public String countryCode = "";
     public boolean needCapture;

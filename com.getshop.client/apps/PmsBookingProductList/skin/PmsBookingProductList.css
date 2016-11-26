@@ -18,6 +18,8 @@
 .PmsBookingProductList .selectedtext { position:absolute; right: 10px; }
 .PmsBookingProductList .outofstocktext {position:absolute; right: 10px; top: 10px; }
 .PmsBookingProductList .roomdesc { font-size: 14px; font-weight: normal; margin-top: 10px; }
+.PmsBookingProductList .productentry:hover .configurebookingproduct { display:block; }
+.PmsBookingProductList .configurebookingproduct { display:none; }
 
 @media only all and (max-width: 800px) {
     .PmsBookingProductList .productentry .roomtypeselection { top: 35px; font-size: 13px; line-height: 18px;}

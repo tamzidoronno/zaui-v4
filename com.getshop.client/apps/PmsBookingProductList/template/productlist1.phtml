@@ -124,7 +124,7 @@ foreach($rooms as $room) {
         <? echo $room->type->name; ?>
         <?php 
             if($this->isEditorMode()) {
-                echo "  <span style='position:absolute; top: 35px;left:170px;font-size: 12px;'><a href='?page=".$room->type->pageId."'>Configure</a></span>";
+                echo "  <span style='position:absolute; top: 35px;left:170px;font-size: 12px;' class='configurebookingproduct'><a href='?page=".$room->type->pageId."'>Configure</a></span>";
             }
             if($room->type->description) {
                 echo "<div class='roomdesc'>" . $room->type->description . "</div>";

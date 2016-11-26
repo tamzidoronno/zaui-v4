@@ -18,8 +18,14 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     
     function getDates($year) {
         $dates = array();
+        
+        $leap = date('L', mktime(0, 0, 0, 1, 1, $year));
+        $counter = 365;
+        if($leap) {
+            $counter = 366;
+        }
 
-        for ($i = 1; $i <= 365; $i++) {
+        for ($i = 1; $i <= $counter; $i++) {
             $month = date('m', mktime(0, 0, 0, 1, $i, $year));
             $wk = date('W', mktime(0, 0, 0, 1, $i, $year));
             $wkDay = date('N', mktime(0, 0, 0, 1, $i, $year));

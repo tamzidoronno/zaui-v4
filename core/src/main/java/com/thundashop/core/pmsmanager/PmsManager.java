@@ -618,7 +618,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsBooking finalize(PmsBooking booking) {
         Calendar nowCal = Calendar.getInstance();
         nowCal.add(Calendar.HOUR_OF_DAY, -1);
-        if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
+        if (booking.sessionId != null && !booking.sessionId.isEmpty() && !booking.avoidAutoDelete) {
             if (!booking.rowCreatedDate.after(nowCal.getTime())) {
                 hardDeleteBooking(booking, "finalize");
                 return null;
@@ -758,6 +758,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(room.isStarted() && !room.isEnded()) {
                     forceMarkRoomAsCleaned(room.bookingItemId);
                     room.addedToArx = false;
+                    if(getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
+                        room.addedToArx = true;
+                    }
                 }
             }
             
@@ -768,7 +771,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             saveBooking(booking);
             
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
-            logEntry(logText, bookingId, null, roomId);
+            logEntry(logText, bookingId, room.bookingItemId, roomId);
             doNotification("date_changed", booking, room);
             return room;
         } catch (BookingEngineException ex) {
@@ -1349,6 +1352,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     
     private void hardDeleteBooking(PmsBooking booking, String source) {
+        System.out.println("Deleting, source: " + source);
         bookings.remove(booking.id);
         booking.deletedBySource = source;
         if(booking.sessionId == null || booking.sessionId.isEmpty()) {
@@ -1414,6 +1418,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     } else {
                         PmsBooking booking = getBookingFromBookingEngineId(tmpres.bookingIds.get(0));
                         User user = userManager.getUserById(booking.userId);
+                        if(user == null) {
+                            System.out.println();
+                        }
                         tmpres.name = user.fullName;
                     }
                 }
@@ -1459,7 +1466,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void forceMarkRoomAsCleaned(String itemId) {
         PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
-        additional.markCleaned();
+        String userId = null;
+        if(getSession() != null && getSession().currentUser != null) {
+            userId = getSession().currentUser.id;
+        }
+        additional.markCleaned(userId);
         saveAdditionalInfo(additional);
         List<Booking> allBookings = bookingEngine.getAllBookingsByBookingItem(itemId);
         List<Booking> bookingsToDelete = new ArrayList();
@@ -3233,32 +3244,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!code.equals("23424242423423455ggbvvcx")) {
             return;
         }
-        
-        for(PmsBooking booking : bookings.values()) {
-            deleteObject(booking);
-        }
-        
-        bookings.clear();
-        
-        for(Booking booking : bookingEngine.getAllBookings()) {
-            bookingEngine.deleteBooking(booking.id);
-        }
-        bookings.clear();
-        
-        //Delete all orders.
-        List<Order> allOrders = orderManager.getOrders(null, null, null);
-        for(Order order : allOrders) {
-            orderManager.forceDeleteOrder(order);
-        }
-        
-        //Delete all users
-        for(User user : userManager.getAllUsers()) {
-            if(user.emailAddress.toLowerCase().contains("getshop")) {
+        Date now = new Date();
+        List<PmsBooking> allToRemove = new ArrayList();
+       for(PmsBooking booking : bookings.values()) {
+            if(booking.isActiveOnDay(now) && booking.userId.equals("fastchecking_user")) {
                 continue;
             }
-            userManager.deleteUser(user.id);
+            deleteObject(booking);
+            allToRemove.add(booking);
         }
         
+       for(PmsBooking remove : allToRemove) {
+           for(PmsBookingRooms room : remove.getActiveRooms()) {
+                bookingEngine.deleteBooking(room.bookingId);
+           }
+           bookings.remove(remove.id);
+        }
+        
+        orderManager.deleteAllOrders();
+        userManager.deleteAllUsers();
     }
 
     private void checkForMissingEndDate(PmsBooking booking) {
@@ -3781,7 +3785,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public PmsBooking getBookingFromRoomSecure(String pmsBookingRoomId) {
         for (PmsBooking booking : bookings.values()) {
-            for (PmsBookingRooms room : booking.getActiveRooms()) {
+            for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                 if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
                     return booking;
                 }

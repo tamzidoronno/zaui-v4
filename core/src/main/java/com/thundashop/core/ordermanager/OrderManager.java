@@ -1403,4 +1403,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return orders.containsKey(orderId);
     }
 
+    public void deleteAllOrders() {
+     //Delete all orders.
+        List<Order> allOrders = getOrders(null, null, null);
+        for(Order order : allOrders) {
+            forceDeleteOrder(order);
+        }
+        
+    }
+
 }

@@ -51,6 +51,7 @@ public class PmsBooking extends DataCommon {
     public boolean wubookNoShow = false;
     public boolean transferredToRateManager = false;
     public boolean forceGrantAccess = false;
+    public boolean avoidAutoDelete = false;
     
     public String countryCode = "";
     public boolean needCapture;
@@ -387,6 +388,15 @@ public class PmsBooking extends DataCommon {
         }
         return false;
     }    
+    
+    boolean isActiveOnDay(Date day) {
+        for(PmsBookingRooms room : rooms) {
+            if(room.isActiveOnDay(day)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     boolean checkingInBetween(Date startDate, Date endDate) {
         for(PmsBookingRooms room : rooms) {

@@ -99,7 +99,7 @@ foreach($rooms as $room) {
                     ?>
                     <span style='font-size: 10px;'>Max antall ledige rom: <?php echo $availability; ?></span>
                     <div class='roomtypeselectioncount'>
-                        <i class='fa fa-minus'></i><input type='text' class='productcount' value='<?php echo $bookedCount; ?>' max='<?php echo $availability; ?>' style='width: 25px; padding: 3px; font-size: 20px;text-align: center;margin-left: 5px;'> <i class='fa fa-plus'></i>
+                        <i class='fa fa-minus'></i><input type='text' class='productcount' value='<?php echo $bookedCount; ?>' max='<?php echo $availability; ?>' style='width: 25px; height: 20px; font-size: 20px;text-align: center;margin-left: 5px;'> <i class='fa fa-plus'></i>
                     </div>
                 <?php } ?>
             </span>
@@ -126,7 +126,7 @@ foreach($rooms as $room) {
             if($this->isEditorMode()) {
                 echo "  <span style='position:absolute; top: 35px;left:170px;font-size: 12px;' class='configurebookingproduct'><a href='?page=".$room->type->pageId."'>Configure</a></span>";
             }
-            if($room->type->description) {
+            if($room->type->description && !$this->getFactory()->isMobileIgnoreDisabled()) {
                 echo "<div class='roomdesc'>" . $room->type->description . "</div>";
             }
         ?>
@@ -148,5 +148,10 @@ foreach($rooms as $room) {
     <?php } ?>
     </div>
     <?php
+    if($room->type->description && $this->getFactory()->isMobileIgnoreDisabled()) {
+        echo "<div class='mobileroomdesc'>" . $room->type->description . "</div>";
+    }
+    echo "<div class='productroomspacing'></div>";
+
 }
 ?>

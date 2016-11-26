@@ -49,7 +49,9 @@
     }
     .PmsBookingProductList .continue_button { width: 100%; box-sizing: border-box; }
     .PmsBookingProductList .imgcontainer { top: 34px; }
-    .PmsBookingProductList .productentry { height: 110px; margin-bottom: 30px; }
+    .PmsBookingProductList .productentry { height: 110px; }
+    .PmsBookingProductList .productroomspacing { height: 30px; }
+    .PmsBookingProductList .mobileroomdesc { font-size: 12px; }
     
     .PmsBookingProductList .productentry .price { background-color:#fff;  right: 0px; bottom: 0px;        height: 34px;
                                                  padding-right: 10px;

@@ -907,6 +907,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         filter.fromAdministrator = true;
         
+        if(filter.endInvoiceAt == null) {
+            PmsBooking booking = getBooking(bookingId);
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                if(filter.endInvoiceAt == null || filter.endInvoiceAt.before(room.date.end)) {
+                    filter.endInvoiceAt = room.date.end;
+                }
+            }
+        }
+        
         return pmsInvoiceManager.createOrder(bookingId, filter);
     }
 

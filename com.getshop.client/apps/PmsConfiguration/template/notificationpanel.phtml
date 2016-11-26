@@ -768,6 +768,18 @@ $channelConfig = $config->channelConfiguration;
                 <span class='configentry'>
                     <?
                     $checked = "";
+                    if($notificationSettings->fastOrderCreation) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='fastOrderCreation' <? echo $checked; ?>>
+                </span>
+                Fast order creation in the booking information panel?
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
                     if($notificationSettings->autoGenerateChangeOrders) {
                         $checked = "CHECKED";
                     }

@@ -13,6 +13,15 @@ if(sizeof($this->errors) > 0) {
     echo "</div>";
 }
 
+if(isset($_POST['event']) && $_POST['event'] == "fastordercreation") {
+    echo "<div><i class='fa fa-check'></i> Action is executed<bR>";
+    if($_POST['data']['paymenttype'] != "InvoicePayment" && $_POST['data']['sendpaymentlink'] === "true") {
+        echo "<i class='fa fa-check'></i> Payment link has been sent.<br>";
+    }
+    echo "</div>";
+}
+
+
 $bookingid = $_POST['data']['bookingid'];
 echo "<input type='hidden' id='openedbookingid' value='".$bookingid."'>";
 $pmsManager = $this->getApi()->getPmsManager();
@@ -30,6 +39,7 @@ foreach ($types as $idx => $type) {
 }
 
 $booking = $pmsManager->getBooking($this->getSelectedName(), $bookingid);
+$this->createOrderPreview($booking, $config);
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 if(!$booking->confirmed) {
     ?>
@@ -59,6 +69,9 @@ if($booking->isDeleted) {
 }
 
 $this->includefile("contactdata");
+if($config->fastOrderCreation) {
+    $this->includefile("warningunsettledorders");
+}
 
 echo "<div class='bookinginfo'>";
 echo "<span class='tabs'>";
@@ -123,7 +136,8 @@ if(!$booking->confirmed) { ?>
             <span gstype="submit" class='pmsbutton' gsvalue='unconfirm' style='background-color:red;'>Do not confirm this booking</span>
         </div>
     </div>
-<?php } ?>
+<?php } 
+?>
 <br><br><br>
 <span class='pmsbutton doneediting' style='float:right;'><? echo $this->__w("Done editing"); ?></span> 
 <span class='pmsbutton' onclick='$(".resendconfirmationoption").slideDown();$(window).scrollTop(100000);' style='float:right; background-color:orange; margin-right: 20px;'><? echo $this->__w("Resend confirmation"); ?></span> 

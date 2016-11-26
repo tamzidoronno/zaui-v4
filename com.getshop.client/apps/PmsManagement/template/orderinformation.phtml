@@ -87,11 +87,7 @@ if($booking->createOrderAfterStay) {
 
 <?php
 if($booking->orderIds) {
-    foreach($booking->orderIds as $orderId) {
-        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-        $result[$order->incrementOrderId] = $order;
-    }
-    ksort($result);
+    $result = $this->getOrdersForSelectedBooking();
     
     $totalAmount = 0;
     $totalAmountEx = 0;
@@ -299,7 +295,6 @@ if($booking->orderIds) {
 
     $endingAt = date("d.m.Y", $endDate);
     
-    $this->createOrderPreview($booking, $config);
     $cart = $this->getApi()->getCartManager()->getCart();
 
     echo "<br><h2>Next order preview (invoice until $endingAt)</h2>";

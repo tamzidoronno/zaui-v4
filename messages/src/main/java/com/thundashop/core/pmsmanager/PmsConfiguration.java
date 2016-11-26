@@ -56,6 +56,7 @@ public class PmsConfiguration extends DataCommon {
     public String bookingProfile = "hotel";
 
     /* Invoice creation options */
+    public boolean fastOrderCreation = false;
     public boolean autoSendPaymentReminder;
     public boolean supportRemoveWhenFull = false;
     public boolean supportDiscounts = false;

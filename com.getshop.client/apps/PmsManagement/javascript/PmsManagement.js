@@ -339,6 +339,10 @@ app.PmsManagement = {
         tab.addClass('selected');
         $('.tabarea').hide();
         var area = $(this).attr('area');
+        $('.warnunsettled').show();
+        if(area === "orderinfo") {
+            $('.warnunsettled').hide();
+        }
         $('.tabarea.'+area).show();
         localStorage.setItem('selectedbookinginfotab', area);
     },

@@ -1895,6 +1895,44 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         echo "</select>";
     }
+    
+    public function fastordercreation() {
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        $bookingId = $_POST['data']['bookingid'];
+        $filter->avoidOrderCreation = false;
+        $filter->prepayment = true;
+        $filter->createNewOrder = true;
+        $filter->addToOrderId = $_POST['data']['appendToOrderId'];
+        
+        $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
+        $this->getManager()->processor($this->getSelectedName());
+        
+        if($_POST['data']['paymenttype'] != "InvoicePayment" && $_POST['data']['sendpaymentlink'] === "true") {
+            $email = $_POST['data']['paymentlinkemail'];
+            $phone = $_POST['data']['paymentlinkphone'];
+            $prefix = $_POST['data']['paymentlinkprefix'];
+            $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);
+        }
+        
+        $instanceToUse = null;
+        $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        foreach($instances as $instance) {
+            if($instance->appName == $_POST['data']['paymenttype']) {
+                $instanceToUse = $instance;
+                break;
+            }
+        }
+
+        
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $order->payment->paymentType = $this->createPaymentTypeText($instanceToUse);
+        if($_POST['data']['paymenttype'] == "InvoicePayment") {
+            $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
+        }
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        
+        $this->showBookingInformation();
+    }
 
     public function createOrderPreview($booking, $config) {
         $endDate = time();
@@ -1921,6 +1959,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
         $filter->endInvoiceAt = $this->convertToJavaDate($endDate);
         $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), $booking->id, $filter);
+    }
+
+    public function getOrdersForSelectedBooking() {
+        $booking = $this->getSelectedBooking();
+        if(isset($this->selectedOrders)) {
+            return $this->selectedOrders;
+        }
+        foreach($booking->orderIds as $orderId) {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            $result[$order->incrementOrderId] = $order;
+        }
+        ksort($result);
+        $this->selectedOrders = $result;
+        return $result;
     }
 
 }

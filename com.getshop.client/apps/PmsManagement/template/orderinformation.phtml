@@ -209,7 +209,7 @@ if($booking->orderIds) {
             echo "</select>";
             echo "</div>";
             if($order->status <= 5 && $total > 0) {
-                if(stristr($order->payment->paymentType, "dibs")) {
+                if(stristr($order->payment->paymentType, "dibs") || stristr($order->payment->paymentType, "epay")) {
                     echo "<a href='/?page=cart&payorder=" . $order->id."'>pay</a> - <span style='cursor:pointer; color:blue' class='sendpaymentlink' orderid='".$order->id."' bookingid='".$booking->id."'>Send payment link</span>";
                 }
             }

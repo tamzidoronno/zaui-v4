@@ -80,6 +80,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(!frameworkConfig.productionMode) { return ""; }
         if(!connectToApi()) { return "Faield to connect to api"; }
         Vector<Hashtable> tosend = new Vector();
+        int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
         
         for (WubookRoomData rdata : wubookdata.values()) {
             if(!rdata.addedToWuBook) {
@@ -100,7 +101,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 Date end = startcal.getTime();
                 int count = bookingEngine.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
                 if(count > 0) {
-                    count--;
+                    count -= toRemove;
                 }
                 Hashtable result = new Hashtable();
                 result.put("avail", count);

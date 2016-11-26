@@ -36,7 +36,7 @@ if(sizeof($orders) > 1) {
     echo "<input type='txt' gsname='paymentlinkemail' value='".$user->emailAddress."' style='width:300px;' placeholder='Email adress' gsname='paymentlinkemail'>";
     echo "</div>";
     echo "</div>";
-    echo "<div class='paymenttypeinfoarea' type='InvoicePayment'><br>Invoice information (fetched from user account above under the section USER DATA):<br>";
+    echo "<div class='paymenttypeinfoarea' type='InvoicePayment'><br>Invoice information (fetched from user account above):<br>";
     echo "<span style='font-size:12px;'>" . $user->fullName . "<bR>";
     echo $user->address->address . "<br>";
     echo $user->address->postCode . " " . $user->address->address . "</span><bR>";

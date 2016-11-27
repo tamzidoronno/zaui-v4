@@ -848,7 +848,7 @@ public class PmsManagerProcessor {
         filter.filterType = "checkin";
         filter.startDate = new Date();
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, 2);
+        cal.add(Calendar.DAY_OF_YEAR, days);
         filter.endDate = cal.getTime();
         
         List<PmsBooking> bookingsCheckingIn = manager.getAllBookings(filter);

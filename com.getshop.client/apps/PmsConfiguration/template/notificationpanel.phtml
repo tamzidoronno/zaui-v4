@@ -601,13 +601,7 @@ $channelConfig = $config->channelConfiguration;
         </div>
         <div class='configrow'>
             <span class='configentry'>
-                <?
-                $checked = "";
-                if($notificationSettings->numberOfDaysToSendPaymentLinkAheadOfStay) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='numberOfDaysToSendPaymentLinkAheadOfStay' <? echo $checked; ?>>
+                <input type='number' style='width: 40px;' gsname='numberOfDaysToSendPaymentLinkAheadOfStay' value='<? echo $notificationSettings->numberOfDaysToSendPaymentLinkAheadOfStay; ?>'>
             </span>
             Number of days to autosend payment requirements to.
         </div>

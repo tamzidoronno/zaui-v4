@@ -17,7 +17,7 @@ public class DeliveryTask extends Task {
     public boolean cage = false;
 
     @Override
-    int getOrderCount() {
+    public int getOrderCount() {
         return orders.size();
     }
 }

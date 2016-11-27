@@ -17,7 +17,7 @@ public class PickupTask extends Task {
     public boolean cage;
     
     @Override
-    int getOrderCount() {
+    public int getOrderCount() {
         return orders.size();
     }
 }

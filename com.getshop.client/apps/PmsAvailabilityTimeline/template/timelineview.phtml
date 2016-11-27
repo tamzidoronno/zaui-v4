@@ -199,7 +199,7 @@ if($compact) {
                 if($name)
                     $name = $this->createDeleteBookingIcon($id);
             }
-            if($value->name) {
+            if($value->name == "closed" || stristr($value->name, "closed: ")) {
                 $free = "closedroom";
                 if($name)
                     $name = $this->createDeleteBookingIcon($id);

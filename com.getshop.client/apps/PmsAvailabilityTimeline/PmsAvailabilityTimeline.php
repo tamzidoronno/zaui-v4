@@ -24,7 +24,7 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
             } else {
                 $start = $this->convertToJavaDate(strtotime($startTime . " 14:00"));
                 $end = $this->convertToJavaDate(strtotime($endTime . " 11:00"));
-                $comment = $_POST['data']['closeroomcomment'];
+                $comment = "closed: " . $_POST['data']['closeroomcomment'];
                 foreach($_POST['data'] as $key => $val) {
                     if(strstr($key, "item_") && $val == "true") {
                         $itemId = str_replace("item_", "", $key);

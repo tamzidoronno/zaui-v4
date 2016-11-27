@@ -85,6 +85,7 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     
     public function loadBookingList() {
         $type = $_POST['data']['type'];
+        $selectedType = $type;
         $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $type);
         $day = strtotime(date("d.m.Y 14:00", strtotime($_POST['data']['day'])));
         $start = $this->convertToJavaDate($day);
@@ -111,6 +112,9 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         echo "<th></th>";
         echo "</tr>";
         foreach($rooms as $room) {
+            if($room->bookingTypeId != $selectedType) {
+                continue;
+            }
             $started = "";
             if($room->start/1000 < time()) {
                 $started = "style='color:red; font-weight:bold;'";

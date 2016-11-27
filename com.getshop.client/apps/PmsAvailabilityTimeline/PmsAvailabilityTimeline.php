@@ -15,6 +15,74 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         $this->includefile("settings");
     }
     
+    public function closeRooms() {
+        if($_POST['event'] == "closeRooms") {
+            $startTime = $_POST['data']['start'];
+            $endTime = $_POST['data']['end'];
+            if(!$endTime || !$startTime) {
+                echo "Please select a start and end date";
+            } else {
+                $start = $this->convertToJavaDate(strtotime($startTime));
+                $end = $this->convertToJavaDate(strtotime($endTime));
+                $comment = $_POST['data']['closeroomcomment'];
+                foreach($_POST['data'] as $key => $val) {
+                    if(strstr($key, "item_") && $val == "true") {
+                        $itemId = str_replace("item_", "", $key);
+                        $closed = $this->getApi()->getPmsManager()->closeItem($this->getSelectedName(), $itemId, $start, $end, $comment);
+                        $bookingItem = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $itemId);
+                        if($closed) {
+                            echo "<div><i class='fa fa-check'></i> " . $bookingItem->bookingItemName . " is now closed</div>";
+                        } else {
+                            echo "<div style='color:red;'><i class='fa fa-warning'></i> " . $bookingItem->bookingItemName . " Unable to close room, this room is not available for closing.";
+                            echo "</div>";
+                        }
+                    }
+                }
+            }
+        }
+        echo "<script>";
+        echo "thundashop.framework.reprintPage();";
+        echo "</script>";
+        
+        $this->loadCloseRoomBox();
+    }
+    
+    public function closeOtas() {
+        if(isset($_POST['data']['clicksubmit'])) {
+            $this->getApi()->getWubookManager()->deleteRestriction($this->getSelectedName(), $_POST['data']['id']);
+            $this->loadCloseRoomBox();
+            return;
+        }
+        
+        $startTime = $_POST['data']['start'];
+        $endTime = $_POST['data']['end'];
+        if(!$endTime || !$startTime) {
+            echo "Please select a start and end date";
+        } else {
+            $restriction = new \core_wubook_WubookAvailabilityRestrictions();
+            $restriction->start = $this->convertToJavaDate(strtotime($startTime));
+            $restriction->end = $this->convertToJavaDate(strtotime($endTime));
+            
+            foreach($_POST['data'] as $key => $event) {
+                if(stristr($key, "type_") && $event == "true") {
+                    $typeId = str_replace("type_", "", $key);
+                    $restriction->types[] = $typeId;
+                }
+            }
+            $this->getApi()->getWubookManager()->addRestriction($this->getSelectedName(), $restriction);
+        }
+        
+        echo "<script>";
+        echo "thundashop.framework.reprintPage();";
+        echo "</script>";
+            
+        $this->loadCloseRoomBox();
+    }
+    
+    public function loadCloseRoomBox() {
+        $this->includefile("closeRoomOptions");
+    }
+    
     public function loadBookingList() {
         $type = $_POST['data']['type'];
         $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $type);

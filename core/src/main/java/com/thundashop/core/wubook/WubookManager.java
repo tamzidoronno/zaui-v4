@@ -47,6 +47,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private XmlRpcClient client;
     String token = "";
     private HashMap<String, WubookRoomData> wubookdata = new HashMap();
+    private HashMap<String, WubookAvailabilityRestrictions> restrictions = new HashMap();
     
     @Autowired
     PmsManager pmsManager;
@@ -68,6 +69,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         for (DataCommon dataCommon : data.data) {
             if(dataCommon instanceof WubookRoomData) {
                 wubookdata.put(dataCommon.id, (WubookRoomData) dataCommon);
+            }
+            if(dataCommon instanceof WubookAvailabilityRestrictions) {
+                restrictions.put(dataCommon.id, (WubookAvailabilityRestrictions) dataCommon);
             }
         }
         
@@ -1045,6 +1049,24 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         List<String> result = pmsbook.wubookModifiedResId;
         result.add(pmsbook.wubookreservationid);
         return result;
+    }
+
+    @Override
+    public void addRestriction(WubookAvailabilityRestrictions restriction) {
+        saveObject(restriction);
+        restrictions.put(restriction.id, restriction);
+    }
+
+    @Override
+    public void deleteRestriction(String id) {
+        WubookAvailabilityRestrictions object = restrictions.get(id);
+        restrictions.remove(id);
+        deleteObject(object);
+    }
+
+    @Override
+    public List<WubookAvailabilityRestrictions> getAllRestriction() {
+        return new ArrayList(restrictions.values());
     }
 
 }

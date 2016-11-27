@@ -44,7 +44,7 @@ if($compact) {
         ?>
     </select>
     <input gstype="submit" type="button" value="<? echo $this->__w("Show"); ?>">
-    <input type='button' style='float:right;' onclick="$('.closeRoomOption').show();" value="Close a room">
+    <input type='button' class='closeRoomOptionsButton' value="Close a room" style='float:right;'>
 </div>
 <br>
 <div gstype="form" method="closeRoom" style='display:none;' class='closeRoomOption'>
@@ -199,7 +199,7 @@ if($compact) {
                 if($name)
                     $name = $this->createDeleteBookingIcon($id);
             }
-            if($value->name == "closed") {
+            if($value->name) {
                 $free = "closedroom";
                 if($name)
                     $name = $this->createDeleteBookingIcon($id);

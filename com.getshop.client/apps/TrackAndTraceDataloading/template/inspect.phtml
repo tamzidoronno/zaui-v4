@@ -1,0 +1,45 @@
+<?
+/* @var $this ns_4b03ba65_0fcf_479d_83b9_1306e1bbedb3\TrackAndTraceDataloading */
+?>
+
+<div class='shop_button' gsclick="cancelInspect">
+    Cancel
+</div>
+<?
+$status = $this->getApi()->getTrackAndTraceManager()->getLoadStatus($_SESSION['TrackAndTraceDataloading_inspect_id']);
+
+$counterd = 0;
+$counterp = 0;
+$ordercount = 0;
+$destinations = 0;
+
+foreach ($status->routeIds as $routeId) {
+    $route = $this->getApi()->getTrackAndTraceManager()->getRoutesById($routeId);
+    
+    echo "<h1>Route: ".$route[0]->name."</h1>";
+    
+    foreach ($route[0]->destinations as $dest) {
+        
+        foreach ($dest->tasks as $task) {
+            $ordercount += count($task->orders);
+            if ($task->className === "com.thundashop.core.trackandtrace.DeliveryTask") {
+                $counterd++;
+            }
+            
+            if ($task->className === "com.thundashop.core.trackandtrace.PickupTask") {
+                $counterp++;
+            }
+        }
+    }
+    
+    $destinations += count($route[0]->destinationIds);
+}
+
+echo "<br/>Total Tasks: ".($counterd+$counterp);
+echo "<br/>Pickup Tasks: ".$counterp;
+echo "<br/>Delivery Tasks: ".$counterd;
+echo "<br/>";
+echo "<br/>Orders: ".$ordercount;
+echo "<br/>Destinations: ".$destinations;
+?>
+

@@ -12,6 +12,10 @@ class TrackAndTraceDataloading extends \MarketingApplication implements \Applica
 
     public function render() {
 
+        if (isset($_SESSION['TrackAndTraceDataloading_inspect_id'])) {
+            $this->includefile("inspect");
+            return;
+        }
         if (isset($_FILES['data']['tmp_name'])) {
             $fileContent = file_get_contents($_FILES['data']['tmp_name']);
             $this->getApi()->getTrackAndTraceManager()->loadData($fileContent, $_FILES['data']['name']);
@@ -19,9 +23,16 @@ class TrackAndTraceDataloading extends \MarketingApplication implements \Applica
         $this->includefile("dataloading");
     }
     
+    public function inspect() {
+        $_SESSION['TrackAndTraceDataloading_inspect_id'] = $_POST['data']['statusid'];
+    }
+    
     public function start() {
         
-        
+    }
+    
+    public function cancelInspect() {
+        unset($_SESSION['TrackAndTraceDataloading_inspect_id']);
     }
 }
 ?>

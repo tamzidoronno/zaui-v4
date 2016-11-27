@@ -11,15 +11,21 @@ $statuses = $this->getApi()->getTrackAndTraceManager()->getLoadStatuses();
 <div>
     <table style="width: 100%;" class="table">
         <th style="text-align: left;">Date</th>
-        <th style="text-align: left;">Routes</th>
-        <th style="text-align: left;">Destinations</th>
-        <th style="text-align: left;">Orders</th>
         <th style="text-align: left;">Loadtime</th>
         <th style="text-align: left;">Filename</th>
+        <th style="text-align: left;">Inspect</th>
         <?
+        
         foreach ($statuses as $status) {
-            echo "<tr><td>$status->rowCreatedDate</td><td>$status->numberOfRoutes</td><td>$status->numberOfDestinations</td><td>$status->numberOfOrders</td><td>$status->millisecondsToLoad</td><td>$status->fileName</td></tr>";
+            $inspect = "<div class='gs_shop_small_icon' gsclick='inspect' statusid='$status->id'><i class='fa fa-instagram'></i></div>";
+            echo "<tr>"
+                    . "<td>$status->rowCreatedDate</td>"
+                    . "<td>$status->millisecondsToLoad</td>"
+                    . "<td>$status->fileName</td>"
+                    . "<td>$inspect</td>"
+                . "</tr>";
         }
         ?>
     </table>
 </div>
+

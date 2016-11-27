@@ -8,6 +8,7 @@ $res = $isStopped ? "on" : "off";
 <span type='button' gstype='clicksubmit' method='runCheck' gsname='id' gsvalue='somevalue' class='shop_button'>Run check</span>
 <span type='button' gstype='clicksubmit' method='deleteLocks' gsname='id' gsvalue='somevalue' class='shop_button'>Delete all devices</span>
 <span type='button' gstype='clicksubmit' method='toggleLockUpdate' gsname='id' gsvalue='somevalue' class='shop_button'>Toggle updates on lock (<?php echo $res; ?>)</span>
+<span type='button' gstype='clicksubmit' method='removeUnusedLocks' gsname='id' gsvalue='somevalue' class='shop_button'>Remove all unused locks</span>
 <?php
 if(!$locks || sizeof($locks) == 0) {
     echo "<h1>No locks found</h1>";

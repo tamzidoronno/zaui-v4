@@ -429,7 +429,7 @@ public class PmsManagerProcessor {
         person.accessCategories.add(category);
 
         try {
-            manager.arxManager.updatePerson(person);
+            manager.doorManager.updatePerson(person);
         } catch (Exception e) {
             e.printStackTrace();
             manager.warnArxDown();

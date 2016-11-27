@@ -24,6 +24,10 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
     }
     
+    public function removeUnusedLocks() {
+        $this->getApi()->getGetShopLockManager()->removeAllUnusedLocks($this->getSelectedName());
+    }
+    
     public function updateMasterCode() {
         $codes = $this->getApi()->getGetShopLockManager()->getMasterCodes($this->getSelectedName());
         $codes->codes->{$_POST['data']['offset']} = $_POST['data']['code'];

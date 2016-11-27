@@ -55,6 +55,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     private HashMap<String, GetShopDevice> devices = new HashMap();
     private GetShopLockMasterCodes masterCodes = new GetShopLockMasterCodes();
     private boolean stopUpdatesOnLock = false;
+    private boolean doUpdateLockList = false;
     
         
     @Autowired
@@ -69,6 +70,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     @Override
     public void refreshLock(String lockId) {
         GetShopDevice dev = devices.get(lockId);
+        if(dev.zwaveid == 1) {
+            doUpdateLockList = true;
+            getAllLocks();
+            doUpdateLockList = false;
+        }
         for(GetShopLockCode code : dev.codes.values()) {
             code.resetOnLock();
         }
@@ -131,6 +137,30 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     @Override
     public boolean getUpdatesOnLock() {
         return stopUpdatesOnLock;
+    }
+
+    @Override
+    public void removeAllUnusedLocks() throws Exception {
+        List<GetShopDevice> toremove = new ArrayList();
+        for(GetShopDevice dev : devices.values()) {
+            if(dev.zwaveid == 1) {
+                continue;
+            }
+            boolean inuse = false;
+            for(GetShopLockCode code : dev.codes.values()) {
+                if(code.canUse()) {
+                    inuse = true;
+                }
+            }
+            if(!inuse) {
+                toremove.add(dev);
+            }
+        }
+        
+        for(GetShopDevice dev : toremove) {
+            devices.remove(dev.id);
+            deleteObject(dev);
+        }
     }
 
     class GetshopLockCodeManagemnt extends Thread {
@@ -385,44 +415,47 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     public List<GetShopDevice> getAllLocks() {
         String hostname = getHostname();
         if(hostname == null || hostname.isEmpty()) { return new ArrayList(); }
-        try {
-            String address = "http://" + hostname + ":8083/ZWave.zway/Run/devices";
-            String res = httpLoginRequest(address);
-            
-            HashMap<Integer, ZWaveDevice> result = new HashMap();
-            Type type = new TypeToken<HashMap<Integer, ZWaveDevice>>(){}.getType();
-            Gson gson = new Gson();
-            result = gson.fromJson(res, type);
-            List<GetShopDevice> currentDevices = new ArrayList();
-            for(Integer offset : result.keySet()) {
-                ZWaveDevice device = result.get(offset);
-                GetShopDevice gsdevice = new GetShopDevice();
-                gsdevice.setDevice(device);
-                addDeviceIfNotExists(gsdevice);
-                currentDevices.add(gsdevice);
-            }
-            
-            List<GetShopDevice> toRemove = new ArrayList();
-            for(GetShopDevice dev : devices.values()) {
-                boolean found = false;
-                for(GetShopDevice curlist :currentDevices) {
-                    if(curlist.zwaveid.equals(dev.zwaveid)) {
-                        found = true;
+        if(doUpdateLockList) {
+            try {
+                String address = "http://" + hostname + ":8083/ZWave.zway/Run/devices";
+                String res = httpLoginRequest(address);
+
+                HashMap<Integer, ZWaveDevice> result = new HashMap();
+                Type type = new TypeToken<HashMap<Integer, ZWaveDevice>>(){}.getType();
+                Gson gson = new Gson();
+                result = gson.fromJson(res, type);
+                List<GetShopDevice> currentDevices = new ArrayList();
+                for(Integer offset : result.keySet()) {
+                    ZWaveDevice device = result.get(offset);
+                    GetShopDevice gsdevice = new GetShopDevice();
+                    gsdevice.setDevice(device);
+                    addDeviceIfNotExists(gsdevice);
+                    currentDevices.add(gsdevice);
+                }
+
+                List<GetShopDevice> toRemove = new ArrayList();
+                for(GetShopDevice dev : devices.values()) {
+                    boolean found = false;
+                    for(GetShopDevice curlist :currentDevices) {
+                        if(curlist.zwaveid.equals(dev.zwaveid)) {
+                            found = true;
+                        }
+                    }
+                    if(!found) {
+                        toRemove.add(dev);
                     }
                 }
-                if(!found) {
-                    toRemove.add(dev);
+                for(GetShopDevice torev : toRemove) {
+                    devices.remove(torev.id);
+                    deleteObject(torev);
                 }
+
+            } catch (Exception ex) {
+                Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
             }
-            for(GetShopDevice torev : toRemove) {
-                devices.remove(torev.id);
-            }
-            
-        } catch (Exception ex) {
-            Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
+
+            finalizeLocks();
         }
-        
-        finalizeLocks();
         
         ArrayList<GetShopDevice> res = new ArrayList(devices.values());
         Collections.sort(res, new Comparator<GetShopDevice>(){

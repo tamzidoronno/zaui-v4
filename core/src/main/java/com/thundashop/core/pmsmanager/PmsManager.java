@@ -98,7 +98,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     CartManager cartManager;
 
     @Autowired
-    DoorManager arxManager;
+    DoorManager doorManager;
 
     @Autowired
     StoreManager storeManager;
@@ -3731,7 +3731,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(getConfigurationSecure().isArx()) {
             long end = System.currentTimeMillis();
             long start = end - (1000*60*10);
-            HashMap<String, List<AccessLog>> doors = arxManager.getLogForAllDoor(start,end);
+            HashMap<String, List<AccessLog>> doors = doorManager.getLogForAllDoor(start,end);
             for(List<AccessLog> log : doors.values()) {
                 for(AccessLog l : log) {
                     if(l.card != null && !l.card.isEmpty()) {
@@ -3743,7 +3743,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(getConfigurationSecure().isGetShopHotelLock()) {
             long end = System.currentTimeMillis();
             long start = end - (1000*60*10);
-            HashMap<String, List<AccessLog>> doors = arxManager.getLogForAllDoor(start, end);
+            HashMap<String, List<AccessLog>> doors = doorManager.getLogForAllDoor(start, end);
             List<BookingItem> items = bookingEngine.getBookingItems();
             for(String deviceId : doors.keySet()) {
                 List<AccessLog> log = doors.get(deviceId);

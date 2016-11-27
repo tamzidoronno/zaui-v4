@@ -24,6 +24,9 @@ public interface IGetShopLockManager {
     public String pushCode(String id, String door, String code, Date start, Date end) throws Exception;
     
     @Administrator
+    public void removeAllUnusedLocks() throws Exception;
+    
+    @Administrator
     public String getCodeForLock(String lockId);
     
     @Administrator

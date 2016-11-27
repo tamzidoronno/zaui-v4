@@ -82,6 +82,8 @@ public class PmsConfiguration extends DataCommon {
     public boolean automarkInvoicesAsPaid = false;
     public boolean notifyGetShopAboutCriticalTransactions = false;
     public boolean autoSumarizeCartItems = false;
+    public int numberOfDaysToSendPaymentLinkAheadOfStay = 2;
+
     
 
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily

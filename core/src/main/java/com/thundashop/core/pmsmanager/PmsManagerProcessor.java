@@ -842,6 +842,8 @@ public class PmsManagerProcessor {
             return;
         }
         
+        int days = manager.getConfigurationSecure().numberOfDaysToSendPaymentLinkAheadOfStay;
+        
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.filterType = "checkin";
         filter.startDate = new Date();

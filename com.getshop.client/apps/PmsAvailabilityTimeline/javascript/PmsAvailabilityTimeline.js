@@ -2,10 +2,37 @@ app.PmsAvailabilityTimeline = {
     init : function() {
         $(document).on('click', '.PmsAvailabilityTimeline .valueentry.full', app.PmsAvailabilityTimeline.loadBooking);
         $(document).on('click', '.PmsAvailabilityTimeline .loadBookingList', app.PmsAvailabilityTimeline.loadBookingList);
+        $(document).on('click', '.PmsAvailabilityTimeline .checkallclosingroom', app.PmsAvailabilityTimeline.checkallclosingroom);
+        $(document).on('click', '.PmsAvailabilityTimeline .checkallclosingtypes', app.PmsAvailabilityTimeline.checkallclosingtypes);
         $(document).on('mouseover', '.PmsAvailabilityTimeline .valueentry', app.PmsAvailabilityTimeline.mouseOver);
         $(document).on('mouseout', '.PmsAvailabilityTimeline .valueentry', app.PmsAvailabilityTimeline.mouseOut);
+        $(document).on('click', '.PmsAvailabilityTimeline .closeRoomOptionsButton', app.PmsAvailabilityTimeline.closeRoomOptionsButton);
+    },
+    checkallclosingroom : function() {
+        var checked = $(this).is(':checked');
+        $('.closeforroom').each(function() {
+            if(checked) {
+                $(this).attr('checked','checked');
+            } else {
+                $(this).attr('checked',null);
+            }
+        });
+    },
+    checkallclosingtypes : function() {
+        var checked = $(this).is(':checked');
+        $('.closeforota').each(function() {
+            if(checked) {
+                $(this).attr('checked','checked');
+            } else {
+                $(this).attr('checked',null);
+            }
+        });
     },
     
+    closeRoomOptionsButton : function() {
+        var event = thundashop.Ajax.createEvent('','loadCloseRoomBox', $(this), {});
+        thundashop.common.showInformationBoxNew(event, 'Close a room');
+    },
     mouseOut : function() {
         $('.ui-tooltip').remove();
         if(typeof(pmsAvailabilityTimelineTimeout) !== "undefined") {

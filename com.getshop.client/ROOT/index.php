@@ -464,6 +464,8 @@ if (isset($_SESSION['showadmin']) && $_SESSION['showadmin']) {
     echo "<script>getshop.Settings.showSettings(false);</script>";
 }
 
+$factory->getApi()->getPmsManager()->checkIfGuestHasArrived("default");
+
 ?>    
 <script>
     google.load('visualization', '1.0', {'packages':['corechart','timeline']});

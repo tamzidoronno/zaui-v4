@@ -56,6 +56,7 @@ public class PmsConfiguration extends DataCommon {
     public String bookingProfile = "hotel";
 
     /* Invoice creation options */
+    public boolean fastOrderCreation = false;
     public boolean autoSendPaymentReminder;
     public boolean supportRemoveWhenFull = false;
     public boolean supportDiscounts = false;
@@ -81,6 +82,8 @@ public class PmsConfiguration extends DataCommon {
     public boolean automarkInvoicesAsPaid = false;
     public boolean notifyGetShopAboutCriticalTransactions = false;
     public boolean autoSumarizeCartItems = false;
+    public int numberOfDaysToSendPaymentLinkAheadOfStay = 2;
+
     
 
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily
@@ -127,6 +130,7 @@ public class PmsConfiguration extends DataCommon {
     public String wubookpassword = "";
     public String wubookproviderkey = "";
     public String wubooklcode = "";
+    public int numberOfRoomsToRemoveFromBookingCom = 1;
     public boolean usePricesFromChannelManager = false;
 
     

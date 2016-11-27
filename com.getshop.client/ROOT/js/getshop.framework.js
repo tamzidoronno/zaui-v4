@@ -219,6 +219,7 @@ thundashop.framework = {
         $(document).on('click', '.gsemptyarea .shop_button', this.simpleaddrow);
         $(document).on('click', '[gstype="submitToInfoBox"]', thundashop.framework.postToInformationBox);
         $(document).on('keyup', '[gstype="clicksubmitToInfoBox"]', thundashop.framework.postToInformationBox);
+        $(document).on('click', '[gstype="forceClicksubmitToInfoBox"]', thundashop.framework.postToInformationBox);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
     },
     setHeightOnCell : function() {

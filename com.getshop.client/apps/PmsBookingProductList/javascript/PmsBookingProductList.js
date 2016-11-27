@@ -38,10 +38,24 @@ app.PmsBookingProductList = {
                 "typeid" : typeid,
                 "count" : currentCount
             };
-            console.log(data);
+
             var event = thundashop.Ajax.createEvent('','selectRoomCount',currentInput, data);
-            thundashop.Ajax.post(event);
-        }, 1500);
+            thundashop.Ajax.postWithCallBack(event, function () {
+                var found = false;
+                $('.productcount').each(function() {
+                    var count = parseInt($(this).val());
+                    if(count > 0) {
+                        found = true;
+                    }
+                });
+                if(found) {
+                    $('.continue_button').removeClass('disabled');
+                } else {
+                    $('.continue_button').addClass('disabled');
+                }
+
+            });
+        }, 100);
     },
     
     continueToPage : function() {

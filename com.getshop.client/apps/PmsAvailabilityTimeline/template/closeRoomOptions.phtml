@@ -1,0 +1,89 @@
+<?php
+ /* @var $this ns_176ea989_c7bb_4cef_a4bd_0c8421567e0b\PmsAvailabilityTimeline */
+$startCloseRoom = date("d.m.Y", $this->getStart());
+$endCloseRoom = date("d.m.Y", $this->getEnd());
+$startCloseOta = date("d.m.Y", $this->getStart());
+$endCloseOta = date("d.m.Y", $this->getEnd());
+if(isset($_POST['event']) && $_POST['event'] == "closeRooms") {
+    $startCloseRoom = $_POST['data']['start'];
+    $endCloseRoom = $_POST['data']['end'];
+}
+if(isset($_POST['event']) && $_POST['event'] == "closeOtas") {
+    $startCloseOta = $_POST['data']['start'];
+    $endCloseOta = $_POST['data']['end'];
+}
+
+$allRestrictions = $this->getApi()->getWubookManager()->getAllRestriction($this->getSelectedName());
+?>
+<table width='100%'>
+    <tr>
+        <td valign='top' width='50%' gstype="form" method="closeRooms">
+            <h2>Closing rooms</h2>
+            <h3>1. Time periode</h3>
+            <input type='txt' class='startdate' gsname='start' value='<?php echo $startCloseRoom; ?>'>
+            <input type='txt' class='enddate' gsname='end' value='<?php echo $endCloseRoom; ?>'>
+
+            <h3>2. Select rooms to close</h3>
+            <input type='checkbox' class='checkallclosingroom'> Select all<br>
+            <?php
+            $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+            foreach($items as $item) {
+                $selected = "";
+                if(isset($_POST['data']["item_".$item->id])) {
+                    if($_POST['data']["item_".$item->id] == "true") {
+                        $selected = "CHECKED";
+                    }
+                }
+                echo "<input type='checkbox' class='closeforroom' gsname='item_".$item->id."' $selected> " . $item->bookingItemName . " (" . $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $item->bookingItemTypeId)->name . ")<br>";
+            }
+            ?>
+            <h3>3. Comment for closing</h3>
+            <textarea gsname='closeroomcomment'><?php if(isset($_POST['data']['closeroomcomment'])) { echo $_POST['data']['closeroomcomment']; } ?></textarea><bR><br>
+            <input type='button' value='Close room for booking' gstype="submitToInfoBox" >
+        </td>
+        <td valign='top' width='50%' gstype="form" method="closeOtas">
+            <h2>Closing OTA's (booking.com, etc)</h2>
+            <h3>1. Time periode</h3>
+            <input type='txt' class='startdate' gsname='start' value='<?php echo $startCloseOta; ?>'>
+            <input type='txt' class='enddate' gsname='end' value='<?php echo $endCloseOta; ?>'>
+            <h3>2. Select rooms to close</h3>
+            <input type='checkbox' class='checkallclosingtypes'> Select all<br>
+            <?php
+            $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+            foreach($types as $type) {
+                echo "<input type='checkbox' class='closeforota' gsname='type_".$type->id."'> " . $type->name . "<br>";
+            }
+            ?><bR><br>
+            <input type='button' value='Close selected types for the OTA(s)' gstype="submitToInfoBox" >
+            
+            <?php
+            if($allRestrictions) {
+                echo "<br><br>Closed ota for periode(s):<br>";
+                echo "<table>";
+                foreach($allRestrictions as $res) {
+                    echo "<tr>";
+                    echo "<td valign='top'><i class='fa fa-trash-o' gstype='forceClicksubmitToInfoBox' method='removeRestriction' gsname='id' gsvalue='".$res->id."' style='cursor:pointer;'></i></td>";
+                    echo "<td valign='top'>" . date("d.m.Y", strtotime($res->start)) . "</td>";
+                    echo "<td valign='top'>" . date("d.m.Y", strtotime($res->end)) . "</td>";
+                    echo "<td valign='top'>";
+                    $names = array();
+                    if(is_array($res->types)) {
+                        foreach($res->types as $type) {
+                            $names[] = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $type)->name;
+                        }
+                        echo join(", ", $names);
+                    }
+                    echo "</td>";
+                    echo "</tr>";
+                }
+            }
+            ?>
+        </td>
+    </tr>
+</table>
+
+
+<script>
+    $('.startdate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.enddate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

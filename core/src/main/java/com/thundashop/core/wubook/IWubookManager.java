@@ -60,4 +60,15 @@ public interface IWubookManager {
     @Administrator
     public void saveWubookRoomData(HashMap<String,WubookRoomData> res);
     
+    @Administrator
+    public void addRestriction(WubookAvailabilityRestrictions restriction);
+    
+    @Administrator
+    public List<WubookAvailabilityRestrictions> getAllRestriction();
+    
+    @Administrator
+    public void deleteRestriction(String id);
+    
+    
+    
 }

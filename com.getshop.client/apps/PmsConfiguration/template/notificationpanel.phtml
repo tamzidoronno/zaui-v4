@@ -601,6 +601,12 @@ $channelConfig = $config->channelConfiguration;
         </div>
         <div class='configrow'>
             <span class='configentry'>
+                <input type='number' style='width: 40px;' gsname='numberOfDaysToSendPaymentLinkAheadOfStay' value='<? echo $notificationSettings->numberOfDaysToSendPaymentLinkAheadOfStay; ?>'>
+            </span>
+            Number of days to autosend payment requirements to.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
                 <?
                 $checked = "";
                 if($notificationSettings->autoSendPaymentReminder) {
@@ -768,6 +774,18 @@ $channelConfig = $config->channelConfiguration;
                 <span class='configentry'>
                     <?
                     $checked = "";
+                    if($notificationSettings->fastOrderCreation) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='fastOrderCreation' <? echo $checked; ?>>
+                </span>
+                Fast order creation in the booking information panel?
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
                     if($notificationSettings->autoGenerateChangeOrders) {
                         $checked = "CHECKED";
                     }
@@ -917,6 +935,12 @@ $channelConfig = $config->channelConfiguration;
                     <input type='text' gsname='wubooklcode' value='<? echo $notificationSettings->wubooklcode; ?>'>
                 </span>
                 Wubook lcode
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <input type='text' gsname='numberOfRoomsToRemoveFromBookingCom' value='<? echo $notificationSettings->numberOfRoomsToRemoveFromBookingCom; ?>'>
+                </span>
+                Number of rooms to remove for each type
             </div>
             <div class='configrow'>
             <span class='configentry'>

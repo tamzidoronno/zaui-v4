@@ -39,9 +39,9 @@ public class PmsManagerDoorSurveilance {
         
         Calendar cal = Calendar.getInstance();
         if(cal.get(com.ibm.icu.util.Calendar.HOUR_OF_DAY) > hour) {
-            manager.arxManager.closeAllForTheDay();
+            manager.doorManager.closeAllForTheDay();
         } else if(cal.get(com.ibm.icu.util.Calendar.HOUR_OF_DAY) == hour && cal.get(com.ibm.icu.util.Calendar.MINUTE) >= minute) {
-            manager.arxManager.closeAllForTheDay();
+            manager.doorManager.closeAllForTheDay();
         }
     }
     
@@ -76,7 +76,7 @@ public class PmsManagerDoorSurveilance {
             for(PmsBookingRooms room : booking.getActiveRooms()) {
                 if(room.isEnded() && !room.sentCloseSignal) {
                     room.sentCloseSignal = true;
-                    manager.arxManager.pmsDoorAction(room.code, "close");
+                    manager.doorManager.pmsDoorAction(room.code, "close");
                     manager.logEntry("Ran close on door", booking.id, room.bookingItemId);
                     needSaving = true;
                 }

@@ -47,6 +47,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private XmlRpcClient client;
     String token = "";
     private HashMap<String, WubookRoomData> wubookdata = new HashMap();
+    private HashMap<String, WubookAvailabilityRestrictions> restrictions = new HashMap();
     
     @Autowired
     PmsManager pmsManager;
@@ -69,6 +70,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(dataCommon instanceof WubookRoomData) {
                 wubookdata.put(dataCommon.id, (WubookRoomData) dataCommon);
             }
+            if(dataCommon instanceof WubookAvailabilityRestrictions) {
+                restrictions.put(dataCommon.id, (WubookAvailabilityRestrictions) dataCommon);
+            }
         }
         
         createScheduler("wubookprocessor", "* * * * *", WuBookManagerProcessor.class);
@@ -80,6 +84,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(!frameworkConfig.productionMode) { return ""; }
         if(!connectToApi()) { return "Faield to connect to api"; }
         Vector<Hashtable> tosend = new Vector();
+        int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
         
         for (WubookRoomData rdata : wubookdata.values()) {
             if(!rdata.addedToWuBook) {
@@ -100,7 +105,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 Date end = startcal.getTime();
                 int count = bookingEngine.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
                 if(count > 0) {
-                    count--;
+                    count -= toRemove;
+                }
+                if(isRestricted(rdata.bookingEngineTypeId, start, end)) {
+                    count = 0;
                 }
                 Hashtable result = new Hashtable();
                 result.put("avail", count);
@@ -1044,6 +1052,41 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         List<String> result = pmsbook.wubookModifiedResId;
         result.add(pmsbook.wubookreservationid);
         return result;
+    }
+
+    @Override
+    public void addRestriction(WubookAvailabilityRestrictions restriction) {
+        saveObject(restriction);
+        restrictions.put(restriction.id, restriction);
+    }
+
+    @Override
+    public void deleteRestriction(String id) {
+        WubookAvailabilityRestrictions object = restrictions.get(id);
+        restrictions.remove(id);
+        deleteObject(object);
+    }
+
+    @Override
+    public List<WubookAvailabilityRestrictions> getAllRestriction() {
+        return new ArrayList(restrictions.values());
+    }
+
+    private boolean isRestricted(String bookingEngineTypeId, Date start, Date end) {
+        for(WubookAvailabilityRestrictions restriction : restrictions.values()) {
+            if(end.before(restriction.start)) {
+                continue;
+            }
+            if(start.after(restriction.end)) {
+                continue;
+            }
+            
+            if(restriction.types.contains(bookingEngineTypeId)) {
+                System.out.println("Is restricted in time: " + start + " - " +end);
+                return true;
+            }
+        }
+        return false;
     }
 
 }

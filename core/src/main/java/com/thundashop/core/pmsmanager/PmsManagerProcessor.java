@@ -429,7 +429,7 @@ public class PmsManagerProcessor {
         person.accessCategories.add(category);
 
         try {
-            manager.arxManager.updatePerson(person);
+            manager.doorManager.updatePerson(person);
         } catch (Exception e) {
             e.printStackTrace();
             manager.warnArxDown();
@@ -842,11 +842,13 @@ public class PmsManagerProcessor {
             return;
         }
         
+        int days = manager.getConfigurationSecure().numberOfDaysToSendPaymentLinkAheadOfStay;
+        
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.filterType = "checkin";
         filter.startDate = new Date();
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, 2);
+        cal.add(Calendar.DAY_OF_YEAR, days);
         filter.endDate = cal.getTime();
         
         List<PmsBooking> bookingsCheckingIn = manager.getAllBookings(filter);

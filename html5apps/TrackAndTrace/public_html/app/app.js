@@ -26,13 +26,56 @@ angular.module('TrackAndTrace')
  })
 
 
-angular.module('TrackAndTrace').directive("ngMobileClick", [function () {
-    return function (scope, elem, attrs) {
-        elem.bind("touchstart click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+if (app) {
+    angular.module('TrackAndTrace').directive("ngMobileClick", [function () {
+        return function (scope, elem, attrs) {
+            elem.bind("touchstart", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-            scope.$apply(attrs["ngMobileClick"]);
-        });
-    }
-}])
+                scope.$apply(attrs["ngMobileClick"]);
+            });
+        }
+    }])
+    angular.module('TrackAndTrace').directive("ngMobileClickEnd", [function () {
+        return function (scope, elem, attrs) {
+            elem.bind("touchend", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                scope.$apply(attrs["ngMobileClickEnd"]);
+            });
+        }
+    }])
+} else {
+    angular.module('TrackAndTrace').directive("ngMobileClick", [function () {
+        return function (scope, elem, attrs) {
+            elem.bind("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                scope.$apply(attrs["ngMobileClick"]);
+            });
+        }
+    }])
+    angular.module('TrackAndTrace').directive("ngMobileClickEnd", [function () {
+        return function (scope, elem, attrs) {
+            elem.bind("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                scope.$apply(attrs["ngMobileClickEnd"]);
+            });
+        }
+    }])
+}
+
+stopShowingOfGpsFetching = function() {
+    $('.fetchingGpsCoordinates').hide();
+}
+
+startShowingOfGpsFetching = function() {
+    window.scroll(0,0);
+    $('.fetchingGpsCoordinates').show();
+}

@@ -5,12 +5,19 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author ktonder
  */
 public class PickupTask extends Task {
-    /* parcels, money, valuedparcel */
-    public String type = "";
-    public double quantity;
+    public List<PickupOrder> orders = new ArrayList();
+    public boolean cage;
+    
+    @Override
+    public int getOrderCount() {
+        return orders.size();
+    }
 }

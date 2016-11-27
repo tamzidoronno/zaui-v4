@@ -79,8 +79,8 @@ class TrackAndTraceRouteManagement extends \MarketingApplication implements \App
     
     public function addUser() {
         $route = $this->getRoute();
-        $route->userIds[] = $_POST['data']['userid'];
-        $this->getApi()->getTrackAndTraceManager()->saveRoute($route);
+        $this->getApi()->getTrackAndTraceManager()->addDriverToRoute($_POST['data']['userid'], $route->id);
+        
         $this->changeToRouteView();
     }
     

@@ -54,4 +54,10 @@ public interface ITrackAndTraceManager {
     
     @Administrator
     public List<DataLoadStatus> getLoadStatuses();
+    
+    @Administrator
+    public DataLoadStatus getLoadStatus(String statusId);
+    
+    @Administrator
+    public void addDriverToRoute(String userId, String routeId);
 }

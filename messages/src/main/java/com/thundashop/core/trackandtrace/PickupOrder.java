@@ -12,12 +12,10 @@ import java.util.List;
  *
  * @author ktonder
  */
-public class DeliveryTask extends Task {
-    public List<DeliveryOrder> orders = new ArrayList();
-    public boolean cage = false;
-
-    @Override
-    public int getOrderCount() {
-        return orders.size();
-    }
+public class PickupOrder {
+    public String referenceNumber = "";
+    public String comment = "";
+    public String instruction = "";
+    public List<String> barcodeScanned = new ArrayList();
+    public int countedBundles = 0;
 }

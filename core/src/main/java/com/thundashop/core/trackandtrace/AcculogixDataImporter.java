@@ -8,6 +8,8 @@ package com.thundashop.core.trackandtrace;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +43,7 @@ public class AcculogixDataImporter {
         
         start = System.currentTimeMillis();
         loadData();
+        
         start();
     }
     
@@ -69,12 +72,13 @@ public class AcculogixDataImporter {
         }
     }
 
-    private void start() {
+    private void start()  {
         extractCompanies();
         saveCompanies();
         createRoutes();
         addDestinationsToRoutes();
-        addTasksToDestionations();
+        addDeliveryTasksToDestinations();
+        addPickupTasksToDestinations();
         makeLogEntry();
     }
 
@@ -85,10 +89,20 @@ public class AcculogixDataImporter {
     }
 
     private void createRoutes() {
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        
         for (String[] row : datas) {
             Route route = new Route();
             route.id = row[49];
             route.name = route.id;
+            
+            try {    
+                route.deliveryServiceDate = sdf.parse(row[30].split(" ")[1]);
+            } catch (ParseException ex) {
+                throw new RuntimeException(ex);
+            }
+            
             routes.put(route.id, route);
         }
     }
@@ -125,58 +139,94 @@ public class AcculogixDataImporter {
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
-    private void addTasksToDestionations() {
+    private void addDeliveryTasksToDestinations() {
         for (Destination destination : destinations.values()) {
-            List<Task> tasks = datas.stream()
+            List<String[]> deliveryOrderDatas = datas.stream()
                     .filter(row -> row[50].equals(destination.companyId))
-                    .map(task -> createTask(task))
+                    .filter(row -> row[64].equals("DELIVERY"))
                     .collect(Collectors.toList());
             
-            for (Task task : tasks) {
-                destination.taskIds.add(task.id);
-            }        
+            List<DeliveryOrder> deliveryOrders = deliveryOrderDatas.stream()
+                    .map(task -> createDeliveryOrder(task))
+                    .collect(Collectors.toList());
             
+            if (deliveryOrders.isEmpty()) {
+                continue;
+            }
+            
+            DeliveryTask task = new DeliveryTask();
+            task.taskType = Integer.parseInt(deliveryOrderDatas.get(0)[65]);
+            task.orders = deliveryOrders;
+            task.cage = !deliveryOrderDatas.get(0)[61].isEmpty();
+            task.podBarcode = deliveryOrderDatas.get(0)[34];
+            
+            trackAndTraceManager.saveTaskGeneral(task);
+            tasks.put(task.id, task);
+            destination.taskIds.add(task.id);
             trackAndTraceManager.saveObject(destination);
         }
     }
     
-    private Task createTask(String[] data) {
-        
-        Task retTask = null;
-        
-        if (data[64].equals("DELIVERY")) {
-            DeliveryTask task = new DeliveryTask();
-            task.cage = !data[62].isEmpty();
-            task.quantity = Integer.parseInt(data[58]);
-            retTask = task;
-        }
-        
-        if (data[64].trim().equals("PICKUP RETURNS")) {
-            PickupTask pickupTask = new PickupTask();
-            pickupTask.type = "parcels";
-            retTask = pickupTask;
-        }
-        
-        if (retTask == null) {
-            throw new NullPointerException("Unkown task type: " + data[64]);
-        }
-        
-        retTask.id = data[33];
-        retTask.comment = data[61]; 
-        trackAndTraceManager.saveTaskGeneral(retTask);
-        
-        tasks.put(retTask.id, retTask);
-        return retTask;
+    private DeliveryOrder createDeliveryOrder(String[] data) {
+        DeliveryOrder order = new DeliveryOrder();
+        order.comment = data[59];
+        order.orderOdds = !data[54].isEmpty() ? Integer.parseInt(data[54]) : 0;
+        order.orderFull = !data[55].isEmpty() ? Integer.parseInt(data[55]) : 0;
+        order.orderLargeDisplays = !data[56].isEmpty() ? Integer.parseInt(data[56]) : 0;
+        order.orderDriverDeliveries = !data[57].isEmpty() ? Integer.parseInt(data[57]) : 0;
+        order.quantity = !data[58].isEmpty() ? Integer.parseInt(data[58]) : 0;
+        order.referenceNumber = data[33];
+        return order;
     }
 
     private void makeLogEntry() {
         DataLoadStatus loadStatus = new DataLoadStatus();
+        loadStatus.routeIds = routes.keySet();
         loadStatus.fileName = fileName;
         loadStatus.numberOfRoutes = routes.size();
         loadStatus.numberOfDestinations = companies.size();
-        loadStatus.numberOfOrders = tasks.size();
+        loadStatus.numberOfOrders = tasks.values().stream().mapToInt(task -> task.getOrderCount()).sum();
+        loadStatus.numberOfPickupTasks = (int)tasks.values().stream().filter(task -> task instanceof PickupTask).count();
+        loadStatus.numberOfDeliveryTasks = (int)tasks.values().stream().filter(task -> task instanceof DeliveryTask).count();
+        
         loadStatus.millisecondsToLoad = System.currentTimeMillis() - start;
         trackAndTraceManager.saveLoadStatus(loadStatus);
     }
 
+    private void addPickupTasksToDestinations() {
+        for (Destination destination : destinations.values()) {
+            List<String[]> pickupTasksDatas = datas.stream()
+                    .filter(row -> row[50].equals(destination.companyId))
+                    .filter(row -> row[64].equals("PICKUP RETURNS"))
+                    .collect(Collectors.toList());
+            
+            List<PickupOrder> pickupTasks;
+            pickupTasks = pickupTasksDatas.stream()
+                    .map(task -> createPickupOrder(task))
+                    .collect(Collectors.toList());
+            
+            if (pickupTasks.isEmpty()) {
+                continue;
+            }
+            
+            PickupTask task = new PickupTask();
+            task.taskType = Integer.parseInt(pickupTasksDatas.get(0)[65]);
+            task.orders = pickupTasks;
+            task.cage = !pickupTasksDatas.get(0)[60].isEmpty();
+            task.podBarcode = pickupTasksDatas.get(0)[34];
+            
+            trackAndTraceManager.saveTaskGeneral(task);
+            tasks.put(task.id, task);
+            destination.taskIds.add(task.id);
+            trackAndTraceManager.saveObject(destination);
+        }
+    }
+
+    public PickupOrder createPickupOrder(String[] data) {
+        PickupOrder order = new PickupOrder();
+        order.comment =  data[59];
+        order.instruction = data[22] + " " + data[53];
+        order.referenceNumber = data[33];
+        return order;
+    }
 }

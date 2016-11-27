@@ -40,4 +40,46 @@ controllers.RouteOverviewController = function($scope, datarepository, $rootScop
     $scope.showDestination = function(destinationId, routeId) {
         $state.transitionTo("base.destination", {destinationId: destinationId, routeId: routeId});
     }
+    $scope.isBoth = function(destination) {
+        var foundPick = false;
+        var foundDelivery = false;
+
+        for (var i in destination.tasks) {
+            if (destination.tasks[i].className === "com.thundashop.core.trackandtrace.DeliveryTask") {
+                foundPick = true;
+            }
+            if (destination.tasks[i].className === "com.thundashop.core.trackandtrace.PickupTask") {
+                foundDelivery = true;
+            }
+        }
+
+        return foundPick && foundDelivery;
+    }
+    
+    $scope.isTaskType = function(destination, pickup, delivery) {
+        var isBoth = $scope.isBoth(destination);
+        
+        if (pickup && delivery) {
+            return isBoth;
+        }
+        
+        if (pickup) {
+            for (var i in destination.tasks) {
+                if (destination.tasks[i].className === "com.thundashop.core.trackandtrace.PickupTask") {
+                    return !isBoth;
+                }
+            }
+        }
+        
+        if (delivery) {
+            for (var i in destination.tasks) {
+                if (destination.tasks[i].className === "com.thundashop.core.trackandtrace.DeliveryTask") {
+                    return !isBoth;
+                }
+            }
+        }
+        
+        
+        return false;
+    }
 };

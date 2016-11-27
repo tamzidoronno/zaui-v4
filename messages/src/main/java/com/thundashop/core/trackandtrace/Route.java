@@ -8,6 +8,7 @@ package com.thundashop.core.trackandtrace;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,8 +34,12 @@ public class Route extends DataCommon {
     
     public List<String> userIds = new ArrayList();
     
+    public String deliveryTime = "";
+    
     @Transient
     private List<Destination> destinations = new ArrayList();
+    
+    public Date deliveryServiceDate;
     
 
     public Route() {

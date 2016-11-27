@@ -32,6 +32,8 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
     };
     
     $scope.markAsArrived = function() {
+        startShowingOfGpsFetching();
+        
         navigator.geolocation.getCurrentPosition(function(position) {
             $scope.destination.startInfo.started = true;
             $scope.destination.startInfo.startedTimeStamp = new Date();
@@ -41,7 +43,16 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
 
             $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
             datarepository.save();
-        });
+            stopShowingOfGpsFetching();
+        }, function(failare, b, c) {
+            $scope.destination.startInfo.started = true;
+            $scope.destination.startInfo.startedTimeStamp = new Date();
+            $scope.$apply();
+
+            $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
+            datarepository.save();
+            stopShowingOfGpsFetching();    
+        }, {maximumAge:60000, timeout:5000, enableHighAccuracy:false});
     }
     
     $scope.getStatus = function(task) {

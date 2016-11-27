@@ -6,6 +6,7 @@
 package com.thundashop.core.trackandtrace;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.Set;
 
 /**
  *
@@ -17,4 +18,7 @@ public class DataLoadStatus extends DataCommon {
     public int numberOfDestinations;
     public int numberOfOrders;
     public long millisecondsToLoad;
+    public Set<String> routeIds;
+    public int numberOfPickupTasks;
+    public int numberOfDeliveryTasks;
 }

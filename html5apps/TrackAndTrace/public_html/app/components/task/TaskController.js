@@ -44,6 +44,11 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         }
     }
     
+    $scope.toggleActionButton = function(task) {
+        $('.deliverytaskaction').hide();
+        $('[order="'+task.referenceNumber+'"] .deliverytaskaction').show();
+    }
+    
     $scope.markAsDeliverd = function() {
         $scope.task.completed = true;
         $api.getApi().TrackAndTraceManager.markAsDeliverd($scope.task.id);
@@ -52,6 +57,16 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     }
     
     $scope.setPickupType();
+    
+    $scope.getTotalBundles = function(task) {
+        var count = 0;
+        
+        for (var i in task.orders) {
+            count += task.orders[i].quantity;
+        }
+        
+        return count;
+    }
     
     if ($state.current.name === "base.taskexceptions") {
         $scope.loadExceptions();

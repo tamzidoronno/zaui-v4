@@ -40,7 +40,7 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
         $routeToUse = datarepository.getRouteById(routeId);
         
         if (confirmed) {
-            $('.fetchingGpsCoordinates').show();
+            startShowingOfGpsFetching();
             navigator.geolocation.getCurrentPosition(function(position) {
                 $('.fetchingGpsCoordinates').fadeOut();
                 $routeToUse.startInfo.started = true;

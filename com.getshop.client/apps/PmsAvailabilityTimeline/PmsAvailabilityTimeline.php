@@ -22,8 +22,8 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
             if(!$endTime || !$startTime) {
                 echo "Please select a start and end date";
             } else {
-                $start = $this->convertToJavaDate(strtotime($startTime));
-                $end = $this->convertToJavaDate(strtotime($endTime));
+                $start = $this->convertToJavaDate(strtotime($startTime . " 14:00"));
+                $end = $this->convertToJavaDate(strtotime($endTime . " 11:00"));
                 $comment = $_POST['data']['closeroomcomment'];
                 foreach($_POST['data'] as $key => $val) {
                     if(strstr($key, "item_") && $val == "true") {
@@ -60,8 +60,8 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
             echo "Please select a start and end date";
         } else {
             $restriction = new \core_wubook_WubookAvailabilityRestrictions();
-            $restriction->start = $this->convertToJavaDate(strtotime($startTime));
-            $restriction->end = $this->convertToJavaDate(strtotime($endTime));
+            $restriction->start = $this->convertToJavaDate(strtotime($startTime  . " 14:00"));
+            $restriction->end = $this->convertToJavaDate(strtotime($endTime . "  11:00"));
             
             foreach($_POST['data'] as $key => $event) {
                 if(stristr($key, "type_") && $event == "true") {

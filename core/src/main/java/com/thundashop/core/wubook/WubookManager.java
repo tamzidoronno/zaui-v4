@@ -107,6 +107,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(count > 0) {
                     count -= toRemove;
                 }
+                if(isRestricted(rdata.bookingEngineTypeId, start, end)) {
+                    count = 0;
+                }
                 Hashtable result = new Hashtable();
                 result.put("avail", count);
                 result.put("no_ota", 0);
@@ -1067,6 +1070,23 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Override
     public List<WubookAvailabilityRestrictions> getAllRestriction() {
         return new ArrayList(restrictions.values());
+    }
+
+    private boolean isRestricted(String bookingEngineTypeId, Date start, Date end) {
+        for(WubookAvailabilityRestrictions restriction : restrictions.values()) {
+            if(end.before(restriction.start)) {
+                continue;
+            }
+            if(start.after(restriction.end)) {
+                continue;
+            }
+            
+            if(restriction.types.contains(bookingEngineTypeId)) {
+                System.out.println("Is restricted in time: " + start + " - " +end);
+                return true;
+            }
+        }
+        return false;
     }
 
 }

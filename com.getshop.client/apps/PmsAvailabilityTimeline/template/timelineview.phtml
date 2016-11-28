@@ -149,6 +149,9 @@ if($compact) {
             $isClean = "isClean";
             $text = trim($text). ", room is clean";
         }
+        if($compact) {
+            $text = $items[$itemId]->bookingItemName;
+        }
         
         echo "<span class='valueentry_item'><span class='room_desc' title='$text'><i class='fa fa-paint-brush $isClean'></i> " . $text . "</span></span>";
         echo "<span class='valueentry_placeholder'>&nbsp;</span>";

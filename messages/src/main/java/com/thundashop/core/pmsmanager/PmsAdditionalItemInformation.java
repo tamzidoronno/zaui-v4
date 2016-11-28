@@ -23,6 +23,10 @@ public class PmsAdditionalItemInformation extends DataCommon {
     @Transient
     private boolean isClean = false;
     
+    
+    @Transient
+    private boolean isCleanNotToday = false;
+    
     @Transient
     boolean inUse;
     
@@ -30,6 +34,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
     boolean inUseByCleaning;
 
     Boolean isClean() {
+        isCleanNotToday = isClean(false);
         return isClean(true);
     }
     

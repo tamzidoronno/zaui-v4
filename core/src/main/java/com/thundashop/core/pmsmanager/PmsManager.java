@@ -1547,8 +1547,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private PmsAdditionalItemInformation finalizeAdditionalItem(PmsAdditionalItemInformation additionalInfo) {
         Calendar start = Calendar.getInstance();
+        start.set(Calendar.HOUR_OF_DAY, 17);
+        
         Calendar end = start.getInstance();
-        end.add(Calendar.DAY_OF_YEAR, 1);
+        end.setTime(start.getTime());
+        end.set(Calendar.HOUR_OF_DAY, 18);
 
         additionalInfo.isClean();
         additionalInfo.inUseByCleaning = false;

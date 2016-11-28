@@ -11,6 +11,12 @@ foreach($types as $type) {
     $types[$type->id] = $type;
 }
 $items = $this->indexList($this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName()));
+$types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName()));
+$additional = $this->getApi()->getPmsManager()->getAllAdditionalInformationOnRooms($this->getSelectedName());
+foreach($additional as $add) {
+    $additional[$add->itemId] = $add;
+}
+
 $viewtype = array();
 $viewtype['types'] = "Types";
 $viewtype['items'] = "Rooms";
@@ -47,24 +53,6 @@ if($compact) {
     <input type='button' class='closeRoomOptionsButton' value="Close a room" style='float:right;'>
 </div>
 <br>
-<div gstype="form" method="closeRoom" style='display:none;' class='closeRoomOption'>
-    Choose a room to close down: <br>
-    <select gsname='itemid'>
-        <?php
-        foreach($items as $item) {
-            echo "<option value='".$item->id."'>" . $item->bookingItemName . "</option>";
-        }
-        ?>
-    </select>
-    <input type="text" gsname='start' value='<? echo $start; ?>'>
-    <input type="text" gsname='end' value='<? echo $end; ?>'>
-    <input gstype="submit" type="button" value="<? echo $this->__w("Close room"); ?>">
-    <?php
-    if($this->roomWhereNotClosed) {
-        echo "<div style='color:red; font-size: 20px;'>* Can not close this room since there are booking depending on it, this needs to be cleared out first.</div>";
-    }
-    ?>
-</div>
 <input type='hidden' value='<?php echo $this->getConfigurationSetting("pmsmanagerinstanceid"); ?>' id='bookinginstanceid'>
 <div class='timelineresult'>
     <?php
@@ -110,14 +98,14 @@ if($compact) {
             echo "<tr>";
             echo "<th></th>";
             foreach($lines as $line) {
-                echo "<th>" . date("d.m.y", strtotime($line->start)) . "</th>";
+                echo "<th style='width: 65px;'>" . date("d.m.y", strtotime($line->start)) . "</th>";
             }
             echo "</tr>";
             $printHeading= false;
         }
         /* @var $line core_bookingengine_data_BookingTimeLine */
         echo "<tr>";
-        echo "<td>" . $types[$type]->name .  "</td>";
+        echo "<td><span class='room_desc'>" . $types[$type]->name .  "</span></td>";
         foreach($lines as $day => $line) {
             $full = "available";
             if($lines[0]->totalAvailableSpots == $line->count) {
@@ -155,7 +143,14 @@ if($compact) {
             $printHeader = false;
         }
 
-        echo "<span class='valueentry_item' title='".$items[$itemId]->description."'>" . $items[$itemId]->bookingItemName . " <span class='room_desc'>" . $items[$itemId]->description . "</span></span>";
+        $text = $items[$itemId]->bookingItemName . " ". $types[$items[$itemId]->bookingItemTypeId]->name . " " . $items[$itemId]->description;
+        $isClean = "";
+        if($additional[$itemId]->isCleanNotToday) {
+            $isClean = "isClean";
+            $text = trim($text). ", room is clean";
+        }
+        
+        echo "<span class='valueentry_item'><span class='room_desc' title='$text'><i class='fa fa-paint-brush $isClean'></i> " . $text . "</span></span>";
         echo "<span class='valueentry_placeholder'>&nbsp;</span>";
         $printed = false;
         $free = "available";

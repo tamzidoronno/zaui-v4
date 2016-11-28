@@ -858,7 +858,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             
             logEntry(logText, booking.id, null, roomId);
-            doNotification("room_changed", booking, room);
+            if(room.isStarted() && !room.isEnded()) {
+                doNotification("room_changed", booking, room);
+            }
         } catch (BookingEngineException ex) {
             return ex.getMessage();
         }
@@ -2499,7 +2501,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 add.markDirty();
             }
             saveObject(add);
-            doNotification("room_changed", booking, room);
+            if(room.isStarted() && !room.isEnded()) {
+                doNotification("room_changed", booking, room);
+            }
         }
     }
 

@@ -9,41 +9,43 @@ $result = $this->getOrdersForSelectedBooking();
 
 if(sizeof($orders) > 1) {
     $amount = $orders[sizeof($orders)-1]['price'];
-    echo "<div class='warnunsettled' gstype='form' method='fastordercreation'>";
-    echo "<input type='hidden' gsname='bookingid' value='". $booking->id."'>";
-    echo "<div style='margin-bottom: 10px;'><i class='fa fa-warning' style='color:red;'></i> You have a unsettled amount of $amount, what would you like to do with it?</div>";
-    echo "<select class='paymenttypeunsetled' gsname='paymenttype'>";
-    foreach($instances as $id => $app) {
-        echo "<option value='".$app->appName."' $selected>".$app->appName."</option>";
-    }
-    echo "</select> ";
-
-    echo "<select gsname='appendToOrderId'>";
-    foreach($result as $order) {
-        if(!$order->closed) {
-            echo "<option value='" . $order->id . "'>Add to order " . $order->incrementOrderId . "</option>";
+        if($amount != 0) {
+        echo "<div class='warnunsettled' gstype='form' method='fastordercreation'>";
+        echo "<input type='hidden' gsname='bookingid' value='". $booking->id."'>";
+        echo "<div style='margin-bottom: 10px;'><i class='fa fa-warning' style='color:red;'></i> You have a unsettled amount of $amount, what would you like to do with it?</div>";
+        echo "<select class='paymenttypeunsetled' gsname='paymenttype'>";
+        foreach($instances as $id => $app) {
+            echo "<option value='".$app->appName."' $selected>".$app->appName."</option>";
         }
+        echo "</select> ";
+
+        echo "<select gsname='appendToOrderId'>";
+        foreach($result as $order) {
+            if(!$order->closed) {
+                echo "<option value='" . $order->id . "'>Add to order " . $order->incrementOrderId . "</option>";
+            }
+        }
+        echo "<option value=''>Create a new order</option>";
+        echo "</select> ";
+
+        echo " <input type='button' value='Execute' gstype='submitToInfoBox'><br>";
+        echo "<div class='paymenttypeinfoarea' type='sendpaymentlink' style='font-size: 12px;'><input type='checkbox' checked gsname='sendpaymentlink' > Send payment link";
+        echo "<div>";
+        echo "<br>Sending to: ";
+        echo "+<input type='txt' gsname='paymentlinkprefix' value='".$user->prefix."' placeholder='phone' gsname='paymentlinkphone' style='width:30px;'> ";
+        echo "<input type='txt' gsname='paymentlinkphone' value='".$user->cellPhone."' placeholder='phone' gsname='paymentlinkphone'> ";
+        echo "<input type='txt' gsname='paymentlinkemail' value='".$user->emailAddress."' style='width:300px;' placeholder='Email adress' gsname='paymentlinkemail'>";
+        echo "</div>";
+        echo "</div>";
+        echo "<div class='paymenttypeinfoarea' type='InvoicePayment'><br>Invoice information (fetched from user account above):<br>";
+        echo "<span style='font-size:12px;'>" . $user->fullName . "<bR>";
+        echo $user->address->address . "<br>";
+        echo $user->address->postCode . " " . $user->address->address . "</span><bR>";
+        echo "<br>Note on invoice:<br>";
+        echo "<textarea style='width:100%; height: 100px;' gsname='invoicenoteinfo'>" . $booking->invoiceNote . "</textarea>";
+        echo "</div>";
+        echo "</div>";
     }
-    echo "<option value=''>Create a new order</option>";
-    echo "</select> ";
-    
-    echo " <input type='button' value='Execute' gstype='submitToInfoBox'><br>";
-    echo "<div class='paymenttypeinfoarea' type='sendpaymentlink' style='font-size: 12px;'><input type='checkbox' checked gsname='sendpaymentlink' > Send payment link";
-    echo "<div>";
-    echo "<br>Sending to: ";
-    echo "+<input type='txt' gsname='paymentlinkprefix' value='".$user->prefix."' placeholder='phone' gsname='paymentlinkphone' style='width:30px;'> ";
-    echo "<input type='txt' gsname='paymentlinkphone' value='".$user->cellPhone."' placeholder='phone' gsname='paymentlinkphone'> ";
-    echo "<input type='txt' gsname='paymentlinkemail' value='".$user->emailAddress."' style='width:300px;' placeholder='Email adress' gsname='paymentlinkemail'>";
-    echo "</div>";
-    echo "</div>";
-    echo "<div class='paymenttypeinfoarea' type='InvoicePayment'><br>Invoice information (fetched from user account above):<br>";
-    echo "<span style='font-size:12px;'>" . $user->fullName . "<bR>";
-    echo $user->address->address . "<br>";
-    echo $user->address->postCode . " " . $user->address->address . "</span><bR>";
-    echo "<br>Note on invoice:<br>";
-    echo "<textarea style='width:100%; height: 100px;' gsname='invoicenoteinfo'>" . $booking->invoiceNote . "</textarea>";
-    echo "</div>";
-    echo "</div>";
 }
 ?>
 

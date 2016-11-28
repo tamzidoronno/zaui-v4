@@ -932,6 +932,7 @@ public class PmsManagerProcessor {
                     boolean found = false;
                     String codeToCheck = code.fetchCode();
                     for(PmsBooking booking : bookings) {
+                        if(booking.isDeleted) { continue; }
                         for(PmsBookingRooms room : booking.rooms) {
                             if(room.isEnded() || room.isDeleted()) {
                                 continue;

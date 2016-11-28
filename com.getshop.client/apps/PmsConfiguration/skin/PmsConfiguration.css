@@ -19,6 +19,7 @@
 .PmsConfiguration .pmsbutton.active {
     border-color:darkgreen;
 }
+.PmsConfiguration .addwebtext.added { color: green; }
 
 .PmsConfiguration .cloneroompanel { position:absolute; border: solid 5px; padding: 5px; display:none; background-color: #fff; }
 
@@ -29,7 +30,10 @@
 .PmsConfiguration .inventoryitem:hover { border-bottom:solid 1px #000; }
 
 .PmsConfiguration .inventoryitem { border: solid 1px #bbb; padding: 5px; border-top: solid 0px; }
-
+.PmsConfiguration .addontext {  width: 170px;
+  white-space: nowrap;
+  overflow: hidden; display:block;
+  text-overflow: ellipsis; }
 .PmsConfiguration .productinventoryitem { border: solid 1px #bbb; padding: 2px; margin-right: 5px; border-radius: 3px; font-size: 12px; padding-left: 5px; padding-right: 5px; }
 
 .PmsConfiguration .notificationpanel.email_notifcations {

@@ -163,6 +163,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
     }
 
+    public void saveLock(GetShopDevice lock) {
+        saveObject(lock);
+        devices.put(lock.id, lock);
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;

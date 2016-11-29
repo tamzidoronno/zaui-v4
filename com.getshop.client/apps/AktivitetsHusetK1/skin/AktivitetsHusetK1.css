@@ -20,3 +20,21 @@
 body {
     font-family: 'TheSans', Fallback, sans-serif;
 }
+
+@media only all and (max-width: 800px) {
+    .gsarea[area="header"] .ImageDisplayer { left: 36%; }
+    .gsarea[area="header"] .ContentManager { margin-top: 20px; }
+    .gsarea[area="header"] .Menu { top: 13px; color:#fff; left:0px; }
+    .gsarea[area="header"] { height: 220px; }
+    .gs_page_width { padding-left: 20px; padding-right: 20px; }
+    .mobilenavigatemenu { color:#fff; }
+   .Menu a div { width: 100%; box-sizing: border-box; }
+   .gs_language_selection { top: -10px; }
+   .mobilenavigatemenu {
+        text-align: center !important;
+    }
+    .gscell_29.gsucell { height: 180px; }
+    .Menu .menuentries.horizontal .entries { background-color:#000 !important; }
+    .Menu a div { text-align: center; }
+    .gsinner.gsuicell.gsdepth_1.gscount_1.gscell_126 { padding-top: 5px !important; }
+}

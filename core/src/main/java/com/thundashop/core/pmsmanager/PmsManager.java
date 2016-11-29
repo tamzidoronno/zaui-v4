@@ -1426,11 +1426,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         tmpres.name = bookingEngineBooking.source;
                     } else {
                         PmsBooking booking = getBookingFromBookingEngineId(tmpres.bookingIds.get(0));
-                        User user = userManager.getUserById(booking.userId);
-                        if(user == null) {
-                            System.out.println();
+                        if (booking != null && booking.userId != null) {
+                            User user = userManager.getUserById(booking.userId);
+                            if(user != null) {
+                                tmpres.name = user.fullName;
+                            }
                         }
-                        tmpres.name = user.fullName;
                     }
                 }
                 

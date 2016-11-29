@@ -1975,5 +1975,22 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $result;
     }
 
+    /**
+     * 
+     * @return \core_pmsmanager_PmsAdditionalItemInformation[]
+     */
+    public function getAdditionalInfoList() {
+        if($this->additionalList) {
+            return $this->additionalList;
+        }
+        $additional = $this->getApi()->getPmsManager()->getAllAdditionalInformationOnRooms($this->getSelectedName());
+        foreach($additional as $add) {
+            $additional[$add->itemId] = $add;
+        }
+        $this->additionalList = $additional;
+        return $additional;
+
+    }
+
 }
 ?>

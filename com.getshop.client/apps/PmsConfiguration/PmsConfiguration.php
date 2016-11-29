@@ -52,6 +52,18 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $this->includefile("notificationpanel");
     }
     
+    public function setWebText() {
+        $prodId = $_POST['data']['prodid'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        foreach($config->addonConfiguration as $addon) {
+            /* @var $addon \core_pmsmanager_PmsBookingAddonItem */
+            if($addon->productId == $prodId) {
+                $addon->descriptionWeb = $_POST['data']['text'];
+            }
+        }
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
     public function addNewChannel() {
         $channel = $_POST['data']['name'];
         $this->getApi()->getPmsManager()->createChannel($this->getSelectedName(), $channel);
@@ -233,7 +245,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             }
         }
         
-        $notifications->addonConfiguration = $this->buildAddonConfigs();
+        $notifications->addonConfiguration = $this->buildAddonConfigs($notifications);
         $notifications->cleaningPriceConfig = $this->buildCleaningPriceConfig();
         $notifications->extraCleaningCost = $this->buildExtraCleaningCost();
         
@@ -296,10 +308,22 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $this->includefile("settings");
     }
 
-    public function buildAddonConfigs() {
+    /**
+     * 
+     * @param \core_pmsmanager_PmsConfiguration $config
+     * @return \core_pmsmanager_PmsBookingAddonItem
+     */
+    public function buildAddonConfigs($config) {
+        $types = array();
+        foreach($config->addonConfiguration as $addon) {
+            $types[$addon->addonType] = $addon;
+        }
         $allAddons = array();
         for($i = 1; $i <=  7; $i++) {
             $addon = new \core_pmsmanager_PmsBookingAddonItem();
+            if(isset($types[$i])) {
+                $addon = $types[$i];
+            }
             $addon->addonType = $i;
             $addon->isActive = $_POST['data']['addon_active_'.$i];
             $addon->isSingle = $_POST['data']['addon_single_'.$i];

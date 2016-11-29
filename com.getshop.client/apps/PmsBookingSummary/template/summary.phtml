@@ -252,20 +252,28 @@ function printAddons($room, $config, $object) {
     $addonsText[6] = $object->__w("Include the possibility to cancel your stay for {price} per night");
     $printed = false;
     foreach($addons as $addon) {
-        if(!$addon->isActive) {
+        if(!$addon->isActive && !$addon->isAvailableForBooking) {
             continue;
         }
         $printed = true;
         $type = $addon->addonType;
-        if(!isset($addonsText[$type])) {
+        
+        $text = "";
+        if(isset($addonsText[$type])) { $text = $addonsText[$type]; }
+        
+        if($addon->descriptionWeb) {
+            $text = $addon->descriptionWeb;
+        }
+        if(!$text) {
             continue;
         }
+        
         $addon = $config->addonConfiguration->{$type};
         $product = $object->getProduct($addon->productId);
+        $text =  str_replace("{price}", $product->price, $text);
         echo "<div class='itemrow addonitemrow' roomid='".$room->pmsBookingRoomId."' addontype='$type'>";
         if(!isset($types[$type])) {
-            $text = $addonsText[$type];
-            echo "<div class='addAddonOnRoom'><i class='fa fa-square-o'></i> " .  str_replace("{price}", $product->price, $text) . "</div>";
+            echo "<div class='addAddonOnRoom'><i class='fa fa-square-o'></i> " . $text . "</div>";
         } else {
             $count = $types[$type];
             echo "<div><i class='fa fa-check-square-o removeAddonOnRoom'></i> <span class='bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></span>";
@@ -282,7 +290,7 @@ function printAddons($room, $config, $object) {
             } else {
                 echo $count;
             }
-            echo " x ".$names[$type];
+            echo " x ". $text;
             echo "<span class='price'>" . $product->price * $count. " kr </span>";
             echo "</div>";
         }

@@ -7,6 +7,8 @@ import com.thundashop.core.arx.Person;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.getshop.data.GetShopDevice;
+import com.thundashop.core.getshop.data.GetShopLockCode;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.User;
@@ -51,6 +53,7 @@ public class PmsManagerProcessor {
         try { processAutoDeletion(); }catch(Exception e) { e.printStackTrace(); }
         try { processArx(); }catch(Exception e) { e.printStackTrace(); }
         try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { e.printStackTrace(); }
+        try { checkForDeadCodes(); }catch(Exception e) { e.printStackTrace(); }
     }
     
     public void hourlyProcessor() {
@@ -909,6 +912,44 @@ public class PmsManagerProcessor {
                 ord.captured = true;
                 ord.payment.captured = true;
                 manager.orderManager.saveOrder(ord);
+            }
+        }
+    }
+
+    private void checkForDeadCodes() {
+        if(!manager.getConfigurationSecure().isGetShopHotelLock() || true) {
+            return;
+        }
+        List<PmsBooking> bookings = manager.getAllBookingsFlat();
+        List<GetShopDevice> allLocks = manager.getShopLockManager.getAllLocks();
+        for(GetShopDevice lock : allLocks) {
+            if(!lock.isLock()) {
+                continue;
+            }
+            boolean lockNeedUpdate = false;
+            for(GetShopLockCode code : lock.codes.values()) {
+                if(code.inUse()) {
+                    boolean found = false;
+                    String codeToCheck = code.fetchCode();
+                    for(PmsBooking booking : bookings) {
+                        if(booking.isDeleted) { continue; }
+                        for(PmsBookingRooms room : booking.rooms) {
+                            if(room.isEnded() || room.isDeleted()) {
+                                continue;
+                            }
+                            if(room.code.equals(codeToCheck)) {
+                                found = true;
+                            }
+                        }
+                    }
+                    if(!found) {
+                        code.refreshCode();
+                        lockNeedUpdate = true;
+                    }
+                }
+            }
+            if(lockNeedUpdate) {
+                manager.getShopLockManager.saveLock(lock);
             }
         }
     }

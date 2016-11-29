@@ -1,11 +1,13 @@
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.common.Translation;
+import com.thundashop.core.common.TranslationHandler;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
 
-public class PmsBookingAddonItem  implements Serializable {
+public class PmsBookingAddonItem extends TranslationHandler implements Serializable {
 
 
     public static class AddonTypes {
@@ -30,6 +32,9 @@ public class PmsBookingAddonItem  implements Serializable {
     public boolean isSingle = false;
     public boolean isAvailableForBooking = false;
     public boolean isAvailableForCleaner = false;
+    
+    @Translation
+    public String descriptionWeb = "";
     
     @Transient
     public String name = "";

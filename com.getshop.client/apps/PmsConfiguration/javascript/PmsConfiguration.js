@@ -11,6 +11,7 @@ app.PmsConfiguration = {
         $(document).on('click', '.PmsConfiguration .inventoryitem .fa-plus-circle', app.PmsConfiguration.loadAllItemsAdded);
         $(document).on('click', '.PmsConfiguration .addInventoryItem', app.PmsConfiguration.addInventory);
         $(document).on('click', '.PmsConfiguration .loadcouponmoredates', app.PmsConfiguration.loadMoreDates);
+        $(document).on('click', '.PmsConfiguration .addwebtext', app.PmsConfiguration.addWebText);
         $(document).on('change', '.PmsConfiguration .changeItemForRoom', app.PmsConfiguration.changeItemForRoom);
         $(document).on('change', '.PmsConfiguration .changechanneloncoupon', app.PmsConfiguration.changechanneloncoupon);
         $(document).on('keyup', '.PmsConfiguration .inventoryonroomcount', app.PmsConfiguration.updateInventoryOnRoomCount);
@@ -32,6 +33,19 @@ app.PmsConfiguration = {
             thundashop.common.activateCKEditor('fireinstructions', {
                 autogrow : false
             });
+        });
+    },
+    
+    addWebText : function() {
+        var comment = $(this);
+        var text = prompt("Select text");
+        var data = {
+            "text" : text,
+            "prodid" : $(this).attr('prodid')
+        };
+        var event = thundashop.Ajax.createEvent('','setWebText', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            comment.addClass('added');
         });
     },
     

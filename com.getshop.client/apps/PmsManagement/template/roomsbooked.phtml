@@ -304,7 +304,15 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                         if($room->bookingItemId == $item->id) {
                                             $selected = "SELECTED";
                                         }
-                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . " (" . $types[$item->bookingItemTypeId]->name . ")$taken $desc" . "</option>";
+                                        $clean = "";
+                                        if($config->cleaningInterval > 0) {
+                                            $clean = " (not clean)";
+                                            $additionalInfoList = $object->getAdditionalInfoList();
+                                            if($additionalInfoList[$item->id]->isCleanNotToday) {
+                                                $clean = "(clean)";
+                                            }
+                                        }
+                                        echo "<option value='".$item->id."' $selected>" . $item->bookingItemName . ", " . $types[$item->bookingItemTypeId]->name . "$taken $desc $clean" . "</option>";
                                     }
                                     ?>
                                 </select><br>

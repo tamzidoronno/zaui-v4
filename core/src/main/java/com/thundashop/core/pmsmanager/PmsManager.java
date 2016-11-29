@@ -2469,6 +2469,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void setNewCleaningIntervalOnRoom(String roomId, Integer interval) {
+        if(interval == 0) {
+            return;
+        }
         for (PmsBooking booking : bookings.values()) {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (room.pmsBookingRoomId.equals(roomId)) {

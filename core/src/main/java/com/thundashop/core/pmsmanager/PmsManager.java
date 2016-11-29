@@ -1610,7 +1610,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         sortRooms(rooms);
-
+        
         return rooms;
     }
 
@@ -1629,7 +1629,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return false;
         }
         int interval = configuration.cleaningInterval;
-        if (room.intervalCleaning != null) {
+        if (room.intervalCleaning != null && room.intervalCleaning != 0) {
             interval = room.intervalCleaning;
         }
         if (interval == 0) {
@@ -2473,6 +2473,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (room.pmsBookingRoomId.equals(roomId)) {
                     room.intervalCleaning = interval;
+                    logEntry("New cleaning interval set to " + interval, booking.id, room.bookingItemId);
                     saveBooking(booking);
                 }
             }

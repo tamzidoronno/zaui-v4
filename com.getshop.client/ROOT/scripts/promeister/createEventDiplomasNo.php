@@ -109,7 +109,7 @@ if ($eventHelder) {
         $certificate = $factory->getApi()->getEventBookingManager()->getCertificateForEvent("booking", $eventId, $user->id);
         $signatureImageId = "";
         if ($certificate && $certificate->signatures  && isset($certificate->signatures->{$eventHelderId})) {
-            $certificate = $certificate->signatures->{$eventHelderId};
+            $signatureImageId = $certificate->signatures->{$eventHelderId};
         }
     ?>
         <div class="page">

@@ -16,17 +16,26 @@ body {
     box-shadow: -5px 0px 5px;
 }
 
+[appid="2c4b6189-eb08-4533-b98a-41fc43aa1026"] img {
+    height: 140px !important;
+    z-index: 1;
+    right: 0px;
+    position: absolute;
+    top: 20px;
+}
 .gs_page_width {
     max-width: 1160px;
     margin: 0 auto;
 }
 
-.gscell[cellid="54bdbeb7-80f8-4214-93cc-b0d4ee3d0d6d"] {
+.gsucell[cellid="40c75073-d164-4b01-808b-362d9a9a31b7"] {
     width: 100% !important;
 }
+
 .applicationarea[appid="1c7d1b2f-2052-4390-a721-2d347ec4e264"] {
     position: absolute;
-    right: 0px;
+    left: 0px;
+    top: 10px;
 }
 
 .gsarea[area="header"] img {
@@ -42,7 +51,7 @@ body {
 
 .gsarea[area="header"] .Menu {
     position: absolute;
-    right: 0px;
+    left: 0px;
     top: 90px;
     border-radius: 0px 0px 5px 5px;
     
@@ -91,4 +100,14 @@ body {
     color: #FFF;
     padding-left: 20px;
     padding-right: 20px;
+}
+
+.NewsFeed .newsentrysmall {
+        border: solid 1px #999;
+    color: #FFF;
+    padding: 10px;
+}
+
+.NewsFeed .newsentrysmall .date {
+    color: #FFF;
 }

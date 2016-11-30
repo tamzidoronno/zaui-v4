@@ -917,7 +917,7 @@ public class PmsManagerProcessor {
     }
 
     private void checkForDeadCodes() {
-        if(!manager.getConfigurationSecure().isGetShopHotelLock() || true) {
+        if(!manager.getConfigurationSecure().isGetShopHotelLock()) {
             return;
         }
         List<PmsBooking> bookings = manager.getAllBookingsFlat();

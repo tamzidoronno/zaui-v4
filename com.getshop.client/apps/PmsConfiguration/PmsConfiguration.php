@@ -245,10 +245,8 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             }
         }
         
-        $notifications->addonConfiguration = $this->buildAddonConfigs($notifications);
         $notifications->cleaningPriceConfig = $this->buildCleaningPriceConfig();
         $notifications->extraCleaningCost = $this->buildExtraCleaningCost();
-        
         $notifications->defaultMessage->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['defaultmessage'];
         
         //Save addonsfromproduct
@@ -262,7 +260,6 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                     $found = true;
                 }
             }
-            
             if(!$found) {
                 $notifications->addonConfiguration[] = $conf;
             }
@@ -306,31 +303,6 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     
     public function showSettings() {
         $this->includefile("settings");
-    }
-
-    /**
-     * 
-     * @param \core_pmsmanager_PmsConfiguration $config
-     * @return \core_pmsmanager_PmsBookingAddonItem
-     */
-    public function buildAddonConfigs($config) {
-        $types = array();
-        foreach($config->addonConfiguration as $addon) {
-            $types[$addon->addonType] = $addon;
-        }
-        $allAddons = array();
-        for($i = 1; $i <=  7; $i++) {
-            $addon = new \core_pmsmanager_PmsBookingAddonItem();
-            if(isset($types[$i])) {
-                $addon = $types[$i];
-            }
-            $addon->addonType = $i;
-            $addon->isActive = $_POST['data']['addon_active_'.$i];
-            $addon->isSingle = $_POST['data']['addon_single_'.$i];
-            $addon->productId = $_POST['data']['addon_productid_'.$i];
-            $allAddons[$i] = $addon;
-        }
-        return $allAddons;
     }
 
     public function buildCleaningPriceConfig() {
@@ -675,5 +647,52 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         return $text;
     }
 
-   }
+    /**
+     * @param \core_pmsmanager_PmsConfiguration $config
+     */
+    public function checkForAddonProductsToCreate($config) {
+        $products[1] = "Breakfast";
+        $products[2] = "Parking";
+        $products[3] = "Late checkout";
+        $products[4] = "Early checkin";
+        $products[5] = "Extra bed";
+        $products[6] = "Cancellation";
+        $products[7] = "Extra child bed";
+        
+        $needSaving = false;
+        
+        foreach($products as $addonType => $name) {
+            $found = false;
+            foreach($config->addonConfiguration as $item) {
+                if($item->addonType == $addonType) {
+                    $found = $item;
+                }
+            }
+            if(!$found) {
+                $product = $this->getApi()->getProductManager()->createProduct();
+                $product->name = $name;
+                $product->tag = "addon";
+                $this->getApi()->getProductManager()->saveProduct($product);
+                
+                $conf = new \core_pmsmanager_PmsBookingAddonItem();
+                $conf->addonType = $addonType;
+                $conf->productId = $product->id;
+                $config->addonConfiguration[] = $conf;
+                $needSaving = true;
+            } else if(!$found->productId) {
+                $product = $this->getApi()->getProductManager()->createProduct();
+                $product->name = $name;
+                $product->tag = "addon";
+                $this->getApi()->getProductManager()->saveProduct($product);
+                $found->productId = $product->id;
+                $needSaving = true;
+            }
+        }
+        
+        if($needSaving) {
+            $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+        }
+    }
+
+}
 ?>

@@ -17,5 +17,6 @@ public class PowerOfficeGoSalesOrderLines {
     public String description;
     public String productCode;
     public Integer quantity;
+    public Integer orderNo;
     public Double salesOrderLineUnitPrice;
 }

@@ -1966,11 +1966,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(isset($this->selectedOrders)) {
             return $this->selectedOrders;
         }
+        $result = array();
         foreach($booking->orderIds as $orderId) {
             $order = $this->getApi()->getOrderManager()->getOrder($orderId);
             $result[$order->incrementOrderId] = $order;
         }
-        ksort($result);
+        if(sizeof($result) > 0) {
+            ksort($result);
+        }
         $this->selectedOrders = $result;
         return $result;
     }

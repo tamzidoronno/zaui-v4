@@ -6,7 +6,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PowerOfficeGoOrder {
+public class PowerOfficeGoSalesOrder {
     public Integer customerCode;
     public boolean mergeWithPreviousOrder = false;
     public Integer orderNo;

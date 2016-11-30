@@ -837,6 +837,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     }
 
     private void sumOrders(SavedOrderFile res) {
+        if(res.orders == null) {
+            return;
+        }
         Double amountEx = 0.0;
         Double amountInc = 0.0;
         Double amountExDebet = 0.0;
@@ -941,13 +944,18 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
 
     private SavedOrderFile downloadOrdeFileNewType(String configId, Date start, Date end, SavedOrderFile fileToUse) throws Exception {
         AccountingTransferConfig configToUse = configs.get(configId);
+        
+        if(configToUse == null) {
+            logPrint("Could not find config : " + configId);
+            return null;
+        }
         if(fileToUse == null) {
             List<SavedOrderFile> firstCheckFiles = getAllFiles();
             for(SavedOrderFile f : firstCheckFiles) {
                 if(!configToUse.subType.equals(f.subtype)) {
                     continue;
                 }
-                if(f.endDate != null && f.endDate.after(start)) {
+                if(f.endDate != null && f.endDate.before(start)) {
                     return null;
                 }
             }
@@ -965,22 +973,24 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         AccountingTransferInterface transfer = getAccoutingInterface(configToUse.transferType);
         transfer.setOrders(orders);
         transfer.setUsers(users);
+        transfer.setConfig(configToUse);
         
         SavedOrderFile res = transfer.generateFile();
-        if(fileToUse != null) {
-            res.id = fileToUse.id;
-        }
+        if(res != null) {
+            if(fileToUse != null) {
+                res.id = fileToUse.id;
+            }
 
-        sumOrders(res);
-        res.subtype = configToUse.subType;
-        res.type = configToUse.transferType;
-        res.startDate = start;
-        res.endDate = end;
-        res.configId = configId;
-        saveObject(res);
-        
-        files.put(res.id, res);
-        
+            sumOrders(res);
+            res.subtype = configToUse.subType;
+            res.type = configToUse.transferType;
+            res.startDate = start;
+            res.endDate = end;
+            res.configId = configId;
+            saveObject(res);
+
+            files.put(res.id, res);
+        }
         return res;    
     }
 

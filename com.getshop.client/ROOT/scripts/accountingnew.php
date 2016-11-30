@@ -6,7 +6,6 @@ $factory = IocContainer::getFactorySingelton();
 $start = date("M d, Y h:i:s A", strtotime($_GET['start']));
 $end = date("M d, Y h:i:s A", strtotime($_GET['end']));
 if(isset($_GET['configid'])) {
-    $file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($_GET['configid'], $start, $end);
     $config = $factory->getApi()->getAccountingManager()->getAccountingConfig($_GET['configid']);
 }
 if(isset($_GET['id'])) {
@@ -20,6 +19,8 @@ if(!$file) {
     echo "Unable to download this file, check if the specified time periode is correct. Please note that you can not transfer orders a second time, time periode tried downloading: $start - $end";
     return;
 }
+
+$file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($config->id, $start, $end);
 
 
 $date = date("d.m.Y_H_i", time());

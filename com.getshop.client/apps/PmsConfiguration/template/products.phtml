@@ -25,6 +25,7 @@ echo "<th align='left'>Description</th>";
 echo "<th align='left'>Price</th>";
 echo "<th align='left'>Ex tax</th>";
 echo "<th align='left'>Taxgroup</th>";
+echo "<th align='left' title='Accounting product id'>Apid</th>";
 echo "<th align='left'>Account</th>";
 echo "<th align='left'>Taxcode</th>";
 echo "</tr>";
@@ -76,6 +77,7 @@ foreach($products as $product) {
         echo "<option value='".$group->groupNumber."' $selected>" . $group->taxRate . "%</option>";
     }
     echo "</select>";
+    echo "<td><input type='txt' style='width:20px;' value='".$product->accountingSystemId."' gsname='addonconfig_".$prodid."_accountSystemId'></input></td>";
     echo "<td><input type='txt' style='width:50px;' value='".$product->accountingAccount."' gsname='addonconfig_".$prodid."_account'></input></td>";
     echo "<td><input type='txt' style='width:50px;' value='".$product->sku."' gsname='addonconfig_".$prodid."_taxcode'></input></td>";
     echo "</tr>";

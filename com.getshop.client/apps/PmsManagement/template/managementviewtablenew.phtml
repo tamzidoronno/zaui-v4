@@ -179,6 +179,9 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         $row['room'] .= $room->room;
         $row['room'] .= "<div class='secondary_text'>".$room->roomType."</div>";
         $row['price'] = round($room->price);
+        if($room->totalCost) {
+            $row['price'] = round($room->price) . "<div style='color:#aaa' title='Total cost for this room'>(" . round($room->totalCost) . ")</div>";
+        }
         $row['state'] = $room->progressState;
         $row['stateadditional'] = "";
         if(sizeof($room->orderIds) == 0 && $config->requirePayments) {

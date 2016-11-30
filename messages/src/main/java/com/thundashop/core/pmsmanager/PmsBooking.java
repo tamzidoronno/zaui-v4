@@ -60,6 +60,7 @@ public class PmsBooking extends DataCommon {
     public String channel = "";
     public boolean ignoreCheckChangesInBooking = false;
     public String deletedBySource = "";
+    private double totalPrice;
     
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();
@@ -355,6 +356,20 @@ public class PmsBooking extends DataCommon {
             }
         }
         return false;
+    }
+
+    void calculateTotalCost() {
+        double total = 0.0;
+        if(priceType.equals(PriceType.daily)) {
+            for(PmsBookingRooms room : rooms) {
+                room.calculateTotalCost();
+                if(room.isDeleted()) {
+                    continue;
+                }
+                total += room.totalCost;
+            }
+        }
+        totalPrice = total;
     }
 
 

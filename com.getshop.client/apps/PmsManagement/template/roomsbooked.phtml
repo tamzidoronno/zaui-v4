@@ -27,7 +27,7 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedN
 $dates = $this->getApi()->getPmsManager()->getDefaultDateRange($this->getSelectedName());
 $start = $this->convertToJavaDate(strtotime($dates->start));
 $end = $this->convertToJavaDate(strtotime($dates->end));
-
+$products = $this->indexList($this->getApi()->getProductManager()->getAllProducts());
 $defaultType = $booking->rooms[0]->bookingItemTypeId;
 
 $cleaningInterval = $config->cleaningInterval;
@@ -92,11 +92,11 @@ if(($prices->defaultPriceType == 1 && !empty($arr)) || $prices->defaultPriceType
      $hasPrices = true;
 }
 
-printRooms($toPrint, $types, $items, $booking, false, $hasPrices, $hasArx,$config, $this);
+printRooms($toPrint, $types, $items, $booking, false, $hasPrices, $hasArx,$config, $this, $products);
 
 if(sizeof($addons) > 0) {
     echo '<h2>Addons</h2>';
-    printRooms($addons, $types, $items, $booking, true, $hasPrices, $hasArx,$config, $this);
+    printRooms($addons, $types, $items, $booking, true, $hasPrices, $hasArx,$config, $this, $products);
 }
 
 /**
@@ -111,7 +111,7 @@ if(sizeof($addons) > 0) {
  * @param core_pmsmanager_PmsConfiguration $config
  * @param \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement $object
  */
-function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasArx, $config, $object) {
+function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasArx, $config, $object, $products) {
     $bookingId = $booking->id;
     ?>
 
@@ -185,6 +185,9 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
         if($config->requirePayments) {
             echo "<th>Paid</th>";
         }
+        if(!$addons && $hasPrices) {
+            echo "<th>Total</th>";
+        }
         
         ?>
     </tr>
@@ -236,21 +239,68 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 $object->includeLegacyStuffForSemlagerhotell($booking, $room);
                 $text = $types[$room->bookingItemTypeId]->name;
                 echo "<div style=' text-overflow: ellipsis; display:block; width: 150px; overflow:hidden; white-space:nowrap;' title='$text'>$text</div>"; ?>
-                <?php if($config->cleaningInterval) { 
+                <?php if($config->cleaningInterval) {
                     $startCleaning = $room->date->cleaningDate;
                     if(!$startCleaning) {
                         $startCleaning = $room->date->start;
                     }
                     $startCleaning = date("d.m.Y", strtotime($startCleaning));
                     $comment = "Add a comment to the cleaner";
-                    echo "<div>";
-                    echo "<i class='fa fa-paint-brush setcleaningcomment' title='$comment' roomid='".$room->pmsBookingRoomId."' comment='".$room->cleaningComment."'></i> ";
-                    echo "<span title='Cleaning interval' >CI: <span class='intervalset change_cleaning_interval' roomid='".$room->pmsBookingRoomId."' style='cursor:pointer;'>" . $roomCleaningInterval . "</span> from <span class='change_cleaning_date'  style='cursor:pointer;' roomid='".$room->pmsBookingRoomId."'>$startCleaning</span></span>";
-                    if($room->cleaningComment) {
-                        echo "<div style='font-size: 11px; font-weight:bold'>To cleaner:<br>" . $room->cleaningComment . "</div>";
+                    echo "<i class='fa fa-paint-brush' title='Cleaning options' roomid='".$room->pmsBookingRoomId."' onclick='$(this).closest(\"td\").find(\".cleaningpanel\").toggle()' style='cursor:pointer;'></i> ";
+                    echo "<span class='cleaningpanel' gstype='form' method='updatecleaningoptions'>";
+                    echo "<input type='hidden' gsname='bookingid' value='".$booking->id."'>";
+                    echo "<input type='hidden' gsname='roomid' value='".$room->pmsBookingRoomId."'>";
+                    echo "Cleaning interval: <input type='text' gsname='cleaninginterval' value='". $roomCleaningInterval . "' style='width: 20px; float:right;'><br>";
+                    echo "<div style='clear:both;margin-top:10px;'></div>Interval from date:&nbsp;&nbsp;&nbsp;  <input gsname='cleaningdate' type='text' value='". $startCleaning . "' style='float:right; width:80px;'><br>";
+                    echo "<div style='clear:both;margin-top:10px;'></div>Cleaning comment:<br><textarea style='width:100%;box-sizing:border-box;' gsname='cleaningcomment'>". $room->cleaningComment . "</textarea>";
+                    echo "<div><span class='pmsbutton' style='width:100%; box-sizing:border-box;' gstype='submitToInfoBox'>Save changes</span></div>";
+                    echo "</span>";
+                }
+                $hasAddons= false;
+                foreach($config->addonConfiguration as $addonToPrint) {
+                    if(!$addonToPrint->isActive && !$addonToPrint->isAvailableForBooking && !$addonToPrint->isAvailableForCleaner) {
+                        continue;
                     }
-                    echo "</div>";
-                } ?>
+                    $hasAddons = true;
+                }
+                if($hasAddons) {
+                    ?>
+                    <i class='fa fa-plus-circle' title='Add addons' onclick='$(this).closest("td").find(".addaddonpanel").toggle()' style='cursor:pointer;'></i>
+                    <?php
+
+                    echo "<span class='addaddonpanel' gstype='form' method='addAddonsToRoom'>";
+                    echo "<input type='hidden' gsname='bookingid' value='".$booking->id."'>";
+                    echo "<input type='hidden' gsname='roomid' value='".$room->pmsBookingRoomId."'>";
+                    foreach($config->addonConfiguration as $addonToPrint) {
+                        /* @var $addonToPrint core_pmsmanager_PmsBookingAddonItem */
+                        if(!$addonToPrint->isActive && !$addonToPrint->isAvailableForBooking && !$addonToPrint->isAvailableForCleaner) {
+                            continue;
+                        }
+                        echo "<span class='addaddonsoption' gsvalue='".$addonToPrint->productId."' gsname='addonProduct' gstype='submitToInfoBox'>" . $object->__w("Add") . " "  . strtolower($products[$addonToPrint->productId]->name) . "</span><br>";
+                    }
+                    echo "</span>";
+                }
+                
+                $typesAdded = array();
+                $total = 0;
+                foreach($room->addons as $addon) {
+                    if(!isset($typesAdded[$addon->productId])) {
+                        $typesAdded[$addon->productId]=0;
+                    }
+                    $typesAdded[$addon->productId] += $addon->count;
+                    $total += ($addon->price * $addon->count);
+                }
+                $res = array();
+                foreach($typesAdded as $prodId => $val) {
+                    $title = $val . " x " . $products[$prodId]->name;
+                    $name = strtoupper(substr($products[$prodId]->name,0, 1));
+                    $res[] = "<span title='$title'>($name)</span>";
+                }
+                echo join(",", $res);
+                if($total) {
+                    echo "<span style='float:right; color:#aaa;' title='Total addon cost'>$total</span>";
+                }
+                ?>
             </td>
             <td>
                     <span class='roomattribute'>
@@ -266,7 +316,6 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                 if(!$object->getFactory()->isProductionMode()) {
 //                                    echo " - <span class='resetnotifications' roomid='".$room->pmsBookingRoomId."' bookingid='".$bookingId."'>reset notifications</span>";
                                 }
-
                                 ?>
                             </span>
                             <span class="editmode changebookingitempanel" gstype='form' method='setBookingItem' >
@@ -469,7 +518,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                         <span class='roompostfix'>
                             <span class='viewmode'>
                                 <? 
-                                echo round($room->price); 
+                                echo round($room->price);
                                 ?>
                             </span>
                             <span class='editmode' method='changePrice' gstype='form'>
@@ -528,6 +577,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 echo ($paidFor) ? "yes" : "no"; ?>
             </td>
             <? } ?>
+            <td><?php if($room->totalCost) { echo round($room->totalCost); } ?></td>
         </tr>
     <?php } ?>
 </table>

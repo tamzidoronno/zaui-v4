@@ -14,9 +14,11 @@
 .PmsManagement .ended { color: #aaa; }
 .PmsManagement .changeSorting { cursor:pointer; }
 .PmsManagement .roomactionstip { display:none; }
+.PmsManagement .cleaningpanel,.PmsManagement .addaddonpanel { border: solid 1px; position:absolute; padding: 10px; background-color: #fff;z-index: 10;display:none; }
 .PmsManagement .orderstatsres { margin-top: 15px; }
 .PmsManagement .roomactionstip[type="delete"] { display:block; }
 .PmsManagement .pricecol { cursor:pointer; }
+.PmsManagement .addaddonsoption { color: blue; cursor: pointer; }
 .PmsManagement .warnunsettled { padding: 10px; margin-top: 20px; margin-bottom: 20px; background-color:#CAE8EA; }
 .PmsManagement tr.compressed td { padding: 2px 6px 2px 12px; }
 .PmsManagement .moreinvoiceoptions { border: solid 1px; margin-top: 5px; position:absolute; background-color:#fff; padding: 10px; display:none; }

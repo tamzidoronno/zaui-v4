@@ -24,13 +24,19 @@ public class PmsBookingSimpleFilter {
         LinkedList<PmsRoomSimple> result = new LinkedList();
         List<PmsBooking> bookings = manager.getAllBookings(filter);
         for(PmsBooking booking : bookings) {
-            List<PmsBookingRooms> rooms = booking.getActiveRooms();
-            if(filter.includeDeleted) {
-                rooms = booking.getAllRoomsIncInactive();
-            }
-            for(PmsBookingRooms room : rooms) {
-                if(inFilter(room, filter, booking)) {
+            if(booking.containsOrderId(filter.searchWord)) {
+                for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                     result.add(convertRoom(room, booking));
+                }
+            } else {
+                List<PmsBookingRooms> rooms = booking.getActiveRooms();
+                if(filter.includeDeleted) {
+                    rooms = booking.getAllRoomsIncInactive();
+                }
+                for(PmsBookingRooms room : rooms) {
+                    if(inFilter(room, filter, booking)) {
+                        result.add(convertRoom(room, booking));
+                    }
                 }
             }
         }

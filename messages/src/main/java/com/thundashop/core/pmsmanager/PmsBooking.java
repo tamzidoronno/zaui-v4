@@ -31,6 +31,7 @@ public class PmsBooking extends DataCommon {
     public String bookedByUserId = "";
     public Integer state = 0;
     public List<String> orderIds = new ArrayList();
+    public HashMap<String, Long> incOrderIds = new HashMap();
     public Integer priceType = 1;
     public boolean confirmed = false;
     public Date confirmedDate = null;
@@ -66,6 +67,9 @@ public class PmsBooking extends DataCommon {
             if(room.containsSearchWord(searchWord)) {
                 return true;
             }
+        }
+        if(containsOrderId(searchWord)) {
+            return true;
         }
         
         for(String value : registrationData.resultAdded.values()) {
@@ -341,6 +345,16 @@ public class PmsBooking extends DataCommon {
     boolean isRegisteredToday() {
         PmsBookingRooms room = new PmsBookingRooms();
         return room.isSameDay(rowCreatedDate, new Date());
+    }
+
+    public boolean containsOrderId(String searchWord) {
+        for(Long orderId : incOrderIds.values()) {
+            String ordId = orderId + "";
+            if(ordId.equals(searchWord)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

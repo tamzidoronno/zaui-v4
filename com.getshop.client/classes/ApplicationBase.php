@@ -556,7 +556,9 @@ class ApplicationBase extends FactoryBase {
         $key = $this->getConfigurationSetting($referenceName);
         if ($key == null) {
             $app = $this->getApi()->getStoreApplicationInstancePool()->createNewInstance($applicationId);
-            $this->setConfigurationSetting($referenceName, $app->id);
+            if ($app) {
+                $this->setConfigurationSetting($referenceName, $app->id);
+            }
         }
         
         $instanceId = $this->getConfigurationSetting($referenceName);

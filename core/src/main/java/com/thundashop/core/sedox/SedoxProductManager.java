@@ -2379,6 +2379,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     private boolean hasProductBeenBought(SedoxProduct product) {
         SedoxUser sedoxUser = getSedoxUserAccountInternalByIdInternal(product.firstUploadedByUserId);
+        if (sedoxUser == null)
+            return false;
+        
         for (SedoxOrder order : sedoxUser.orders) {
             if (order.productId.equals(product.id)) {
                 return true;

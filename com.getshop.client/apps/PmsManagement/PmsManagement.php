@@ -37,16 +37,36 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
-    public function setCleaningComment() {
-        $comment = $_POST['data']['comment'];
+    
+    public function updatecleaningoptions() {
         $roomid = $_POST['data']['roomid'];
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $roomid) {
-                $room->cleaningComment = $comment;
+                $room->cleaningComment = $_POST['data']['cleaningcomment'];
+                $room->date->cleaningDate = $this->convertToJavaDate(strtotime($_POST['data']['cleaningdate']));
             }
         }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        
+        $this->getApi()->getPmsManager()->setNewCleaningIntervalOnRoom($this->getSelectedName(), 
+                $_POST['data']['roomid'], 
+                (int)$_POST['data']['cleaninginterval']);
+        
+        $this->showBookingInformation();
+    }
+    
+    public function addAddonsToRoom() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $roomId = $_POST['data']['roomid'];
+        foreach($config->addonConfiguration as $addonItem) {
+            if($addonItem->productId == $_POST['data']['clicksubmit']) {
+                $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $addonItem->addonType, $roomId, true);
+                $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $addonItem->addonType, $roomId, false);
+                break;
+            }
+        }
+        
         $this->showBookingInformation();
     }
     
@@ -490,25 +510,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
-    public function setNewInterval() {
-        $this->getApi()->getPmsManager()->setNewCleaningIntervalOnRoom($this->getSelectedName(), 
-                $_POST['data']['roomid'], 
-                (int)$_POST['data']['interval']);
-    }
-    
-    public function updateCleaningDate() {
-        $roomid = $_POST['data']['roomid'];
-        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomid);
-        foreach($booking->rooms as $room) {
-            if($room->pmsBookingRoomId == $roomid) {
-                $room->date->cleaningDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
-                echo $room->date->cleaningDate;
-            }
-        }
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
-        $this->selectedBooking = null;
-        $this->showBookingInformation();
-    }
     
     public function createPeriodeOrder() {
         $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . "15:00"));
@@ -1966,11 +1967,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(isset($this->selectedOrders)) {
             return $this->selectedOrders;
         }
+        $result = array();
         foreach($booking->orderIds as $orderId) {
             $order = $this->getApi()->getOrderManager()->getOrder($orderId);
             $result[$order->incrementOrderId] = $order;
         }
-        ksort($result);
+        if(sizeof($result) > 0) {
+            ksort($result);
+        }
         $this->selectedOrders = $result;
         return $result;
     }

@@ -63,6 +63,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean credited;
     public boolean deleted = false;
     public Date deletedDate = new Date();
+    public double totalCost = 0.0;
     
     /**
      * Finalized entries
@@ -113,6 +114,22 @@ public class PmsBookingRooms implements Serializable {
         return days;
     }
 
+    Integer getNumberOfNights() {
+        int days = 0;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date.start);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        while(true) {
+            days++;
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(cal.getTime().after(date.end)) {
+                break;
+            }
+        }
+        return days;        
+    }    
+    
     public static Date convertOffsetToDate(String offset) {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
@@ -555,4 +572,15 @@ public class PmsBookingRooms implements Serializable {
         
         return false;
     }
+
+    void calculateTotalCost() {
+        totalCost = 0.0;
+        Integer days = getNumberOfNights();
+        totalCost += days * price;
+        for(PmsBookingAddonItem item : addons) {
+            totalCost += (item.price * item.count);
+        }
+    }
+
+    
 }

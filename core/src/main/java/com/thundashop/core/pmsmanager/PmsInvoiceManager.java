@@ -485,6 +485,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, startDate, endDate, priceType);
         double total = 0.0;
         int count = 0;
+        
         for(String key : priceMatrix.keySet()) {
             if(!room.priceMatrix.containsKey(key) || !booking.isCompletedBooking()) {
                 Double price = priceMatrix.get(key);
@@ -494,6 +495,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 priceMatrix.put(key, price);
             }
         }
+        
+        List<String> toRemoveExisting = new ArrayList();
+        for(String existingKey : room.priceMatrix.keySet()) {
+            if(!priceMatrix.containsKey(existingKey)) {
+                toRemoveExisting.add(existingKey);
+            }
+        }
+        
+        for(String key : toRemoveExisting) {
+            room.priceMatrix.remove(key);
+        }
+        
+        
         for(String key : priceMatrix.keySet()) {
             Double price = priceMatrix.get(key);
             total += price;
@@ -794,6 +808,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         java.util.Calendar startCal = java.util.Calendar.getInstance();
         startCal.setTime(room.date.start);
+        startCal.set(Calendar.HOUR_OF_DAY, 23);
+        startCal.set(Calendar.MINUTE, 59);
         while(true) {
             Date time = startCal.getTime();
             for(Integer key : addTypes.keySet()) {
@@ -809,6 +825,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 break;
             }
         }
+        
         room.sortAddonList();
     }
 
@@ -1150,6 +1167,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Double price = 0.0;
         while (true) {
             String dateToUse = PmsBookingRooms.getOffsetKey(cal, PmsBooking.PriceType.daily);
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            
             cal.add(Calendar.DAY_OF_YEAR,1);
             if (priceRange.get(dateToUse) != null) {
                 price = priceRange.get(dateToUse);

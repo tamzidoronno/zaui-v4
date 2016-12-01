@@ -84,9 +84,21 @@ switch($config->bookingProfile) {
         echo "Rooms booked";
         break;
 }
+if($booking->totalPrice) {
+    echo " (kr " . round($booking->totalPrice) . ")";
+}
 echo "</span>";
 if($config->requirePayments) {
-    echo "<span class='tab' area='orderinfo'>Orders</span>";
+    $totalOrders = 0;
+    $orders = $this->getOrdersForSelectedBooking();
+    foreach($orders as $order) {
+        $totalOrders += $this->getApi()->getOrderManager()->getTotalAmount($order);
+    }
+    echo "<span class='tab' area='orderinfo'>Orders";
+    if($totalOrders) {
+        echo " (kr " . $totalOrders . ")";
+    }
+    echo "</span>";
 }
 echo "<span class='tab' area='messagearea'>Messaging</span>";
 $hasAddons = false;

@@ -61,6 +61,9 @@ $start = date("d.m.Y", time()-86400);
 $end = date("d.m.Y", time()-86400);
 
 $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+
+$configs = (array)$this->getApi()->getAccountingManager()->getAllConfigs();
+$configs = $this->indexList($configs);
 ?>
 
 <div class="gss_settings_header">
@@ -130,8 +133,15 @@ foreach($files as $file) {
     if($warning) {
         echo "<i class='fa fa-warning' title='This file is not valid anymore. Something has changed since last time which makes it invalid. This should not happen and need to be investigated.'></i> ";
     }
+    
+    $configforfile = $configs[$file->configId];
+    $name = "download";
+    if($configforfile->username || $configforfile->password) {
+        $name = "transfer";
+    }
+    
     echo date("d.m.Y - H:i", strtotime($date)) . "</td>";
-    echo "<td><a style='color:blue;cursor:pointer;' onclick=\"window.open('/scripts/accountingnew.php?id=".$fileId."');\">download</a></td>";
+    echo "<td><a style='color:blue;cursor:pointer;' onclick=\"window.open('/scripts/accountingnew.php?id=".$fileId."');\">$name</a></td>";
     echo "<td>".$file->type."</td>";
     echo "<td>".$file->subtype."</td>";
     echo "<td>$transferred</td>";
@@ -171,8 +181,6 @@ foreach($availableTypes as $type => $name) {
 echo "</select>";
 echo "<input type='button' class='gssaddaccounting' value='Add integration'></option>";
 echo "<br><br><div style='clear:both;'></div>";
-
-$configs = (array)$this->getApi()->getAccountingManager()->getAllConfigs();
 
 $first = true;
 foreach($configs as $config) {
@@ -217,6 +225,11 @@ foreach($configs as $config) {
     if(!$ftp) {
         $ftp = new \core_accountingmanager_TransferFtpConfig();
     }
+    
+    $name = "Download";
+    if($configforfile->username || $configforfile->password) {
+        $name = "Transfer";
+    }
     ?>
     <div class='configfield' type='<?php echo $config->id; ?>' style='<?php echo $hidestyle; ?>'>
     <div class="textfield gss_setting">
@@ -228,7 +241,7 @@ foreach($configs as $config) {
         <input type="textfield" class='gss_accdownloadend' configid="<?php echo $config->id; ?>" value='<?php echo $end; ?>'>
     </div>
     <div class="gss_button_area">
-        <div class="gss_button gss_downloadaccountingfile" configid='<?php echo $config->id; ?>'><i class='fa fa-save'></i><?php echo $this->__("Download file"); ?></div>
+        <div class="gss_button gss_downloadaccountingfile" configid='<?php echo $config->id; ?>'><i class='fa fa-save'></i><?php echo $name; ?></div>
     </div>
     <hr>
 

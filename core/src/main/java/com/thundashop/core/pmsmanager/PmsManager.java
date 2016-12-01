@@ -270,6 +270,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             
             pmsInvoiceManager.updateAddonsByDates(room);
+            pmsInvoiceManager.updatePriceMatrix(booking, room, room.date.start, room.date.end, Integer.SIZE);
+
             room.count = totalDays;
             String couponCode = getCouponCode(booking.couponCode);
             setPriceOnRoom(room, true, booking);
@@ -629,11 +631,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.state = 2;
             return booking;
         }
-
+        boolean needSaving = false;
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             if(room.code == null || room.code.isEmpty()) {
                 room.code = generateCode();
-                saveBooking(booking);
             }
             if (room.bookingId != null) {
                 room.booking = bookingEngine.getBooking(room.bookingId);
@@ -665,6 +666,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.price.isNaN() || room.price.isInfinite()) {
                 room.price = 0.0;
             }
+        }
+        
+        for(String orderId : booking.orderIds) {
+            if(!booking.incOrderIds.containsKey(orderId)) { 
+                if(orderManager.orderExists(orderId)) {
+                    Order order = orderManager.getOrder(orderId);
+                    booking.incOrderIds.put(orderId, order.incrementOrderId);
+                    needSaving = true;
+                }
+            }
+        }
+        
+        if(needSaving) {
+            saveBooking(booking);
+        }
+        
+        if(prices.defaultPriceType == PmsBooking.PriceType.daily && configuration.requirePayments) {
+            booking.calculateTotalCost();
         }
 
         return booking;

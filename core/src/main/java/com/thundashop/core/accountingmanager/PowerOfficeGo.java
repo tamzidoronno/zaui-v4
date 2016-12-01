@@ -10,11 +10,13 @@ import com.powerofficego.data.AccessToken;
 import com.powerofficego.data.ApiCustomerResponse;
 import com.powerofficego.data.ApiOrderTransferResponse;
 import com.powerofficego.data.Customer;
-import com.powerofficego.data.PowerOfficeGoOrder;
+import com.powerofficego.data.PowerOfficeGoImportLine;
+import com.powerofficego.data.PowerOfficeGoSalesOrder;
 import com.powerofficego.data.PowerOfficeGoProduct;
 import com.powerofficego.data.PowerOfficeGoSalesOrderLines;
 import com.powerofficego.data.SalesOrderTransfer;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ForAccountingSystem;
 import com.thundashop.core.common.GetShopLogging;
 import com.thundashop.core.ordermanager.data.Order;
@@ -57,11 +59,11 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         this.token = createAccessToken();
         if(token == null || token.isEmpty()) {
             /* @TODO HANDLE PROPER WARNING */
-            System.out.println("Failed to fetch access token");
+            managers.webManager.logPrint("Failed to fetch access token");
             return null;
         }
         
-        System.out.println("Access token: " + token);
+        managers.webManager.logPrint("Access token: " + token);
         HashMap<String, User> users = new HashMap();
         HashMap<String, Product> products = new HashMap();
         
@@ -83,17 +85,22 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         }
         
         for(Product product : products.values()) {
-            if(!createUpdateProduct(product)) {
-                System.out.println("Failed to transfer products");
+            if(product.accountingSystemId == null || product.accountingSystemId.isEmpty()) {
+                managers.webManager.logPrint("Failed to since product id is missing on product : " + product.name);
                 return null;
             }
         }
         
+        for(Order order : orders) {
+            users.put(order.userId, managers.userManager.getUserById(order.userId));
+        }
+        
         for(User user : users.values()) {
-            System.out.println("Need to transfer / update user : " + user.fullName);
             if(!createUpdateUser(user)) {
-                System.out.println("faield to transfer user");
+                managers.webManager.logPrint("failed Transferring user, accounting id " + user.accountingId + ", name" + user.fullName + ", customerid " + user.customerId);
                 return null;
+            } else {
+                managers.webManager.logPrint("Transferred user, accounting id " + user.accountingId + ", name" + user.fullName + ", customerid " + user.customerId);
             }
         }
 
@@ -126,7 +133,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                 return true;
             } else {
                 /* @TODO HANDLE PROPER WARNING */
-                System.out.println("Failed to transfer customer: " + result);
+                managers.webManager.logPrint("Failed to transfer customer: " + result);
             }
         }catch(Exception e) {
             /* @TODO HANDLE PROPER WARNING */
@@ -150,26 +157,20 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
 
     private boolean transferOrders(List<Order> orders) {
         String endpoint = "http://api.poweroffice.net/Import/";
-        List<PowerOfficeGoOrder> ordersToTransfer = new ArrayList();
+        List<PowerOfficeGoSalesOrder> salesOrdersToTransfer = new ArrayList();
+        List<PowerOfficeGoImportLine> importLinesToTransfer = new ArrayList();
         for(Order order : orders) {
-            User user = managers.userManager.getUserById(order.userId);
-            PowerOfficeGoOrder goOrder = new PowerOfficeGoOrder();
-            goOrder.customerCode = new Integer(user.accountingId);
-            goOrder.mergeWithPreviousOrder = false;
-            goOrder.salesOrderLines = new ArrayList();
-            if(order.cart != null) {
-                for(CartItem item : order.cart.getItems()) {
-                    PowerOfficeGoSalesOrderLines line = new PowerOfficeGoSalesOrderLines();
-                    line.description = createLineText(item);
-                    line.productCode = managers.productManager.getProduct(item.getProduct().id).accountingSystemId;
-                    line.quantity = item.getCount();
-                    line.salesOrderLineUnitPrice = item.getProduct().priceExTaxes;
-                }
-            }
-            ordersToTransfer.add(goOrder);
+//            if(order.isInvoice()) {
+                PowerOfficeGoSalesOrder goOrder = createGoSalesOrderLine(order);
+                salesOrdersToTransfer.add(goOrder);
+//            } else {
+//                List<PowerOfficeGoImportLine> line = createGoImportLine(order);
+//                importLinesToTransfer.addAll(line);
+//            }
         }
         SalesOrderTransfer transferObject = new SalesOrderTransfer();
-        transferObject.salesOrders = ordersToTransfer;
+        transferObject.salesOrders = salesOrdersToTransfer;
+        transferObject.importLines = importLinesToTransfer;
         
         Gson gson = new Gson();
         String data = gson.toJson(transferObject);
@@ -191,6 +192,29 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             e.printStackTrace();
         }
         return false;
+    }
+
+    private PowerOfficeGoSalesOrder createGoSalesOrderLine(Order order) throws ErrorException, NumberFormatException {
+        User user = managers.userManager.getUserById(order.userId);
+        if(user.accountingId == null || user.accountingId.isEmpty()) {
+            managers.webManager.logPrint("Accounting id does not exists for user: " + user.fullName + " (" + user.customerId + ")");
+        }
+        PowerOfficeGoSalesOrder goOrder = new PowerOfficeGoSalesOrder();
+        goOrder.customerCode = (new Integer(user.customerId) + 1000);
+        goOrder.mergeWithPreviousOrder = false;
+        goOrder.salesOrderLines = new ArrayList();
+        goOrder.orderNo = (int)order.incrementOrderId;
+        if(order.cart != null) {
+            for(CartItem item : order.cart.getItems()) {
+                PowerOfficeGoSalesOrderLines line = new PowerOfficeGoSalesOrderLines();
+                line.description = createLineText(item);
+                line.productCode = managers.productManager.getProduct(item.getProduct().id).accountingSystemId;
+                line.quantity = item.getCount();
+                line.salesOrderLineUnitPrice = item.getProduct().priceExTaxes;
+                goOrder.salesOrderLines.add(line);
+            }
+        }
+        return goOrder;
     }
     
     
@@ -243,6 +267,28 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             e.printStackTrace();
         }
         return false;
+    }
+
+    private List<PowerOfficeGoImportLine> createGoImportLine(Order order) {
+        List<PowerOfficeGoImportLine> lines = new ArrayList();
+        if(order.cart != null) {
+            for(CartItem item : order.cart.getItems()) {
+                Product prod =  managers.productManager.getProduct(item.getProduct().id);
+                PowerOfficeGoImportLine line = new PowerOfficeGoImportLine();
+                line.accountNumber = new Integer(prod.accountingAccount);
+                line.description = createLineText(item);
+                line.productCode = prod.accountingSystemId;
+                line.quantity = item.getCount();
+                line.invoiceNo = (int)order.incrementOrderId;
+                line.amount = item.getProduct().price;
+                line.quantity = item.getCount();
+                line.postingDate = order.paymentDate;
+                line.documentNumber = 1;
+                line.documentDate = order.rowCreatedDate;
+                lines.add(line);
+            }
+        }
+        return lines;
     }
 
 }

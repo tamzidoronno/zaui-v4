@@ -580,6 +580,14 @@ public class PmsBookingRooms implements Serializable {
         for(PmsBookingAddonItem item : addons) {
             totalCost += (item.price * item.count);
         }
+        
+        double cost = 0.0;
+        for(Double price : priceMatrix.values()) {
+            cost += price;
+        }
+        if(priceMatrix.keySet().size() > 0) {
+            price = cost / priceMatrix.keySet().size();
+        }
     }
 
     

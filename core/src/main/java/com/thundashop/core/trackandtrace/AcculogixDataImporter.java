@@ -129,6 +129,7 @@ public class AcculogixDataImporter {
         destination.seq = Integer.parseInt(args[20]);
         destination.podBarcode = args[34];
         destination.note = args[21];
+        destination.onDemandInstructions = args[23];
         trackAndTraceManager.saveDestination(destination);
         destinations.put(destination.id, destination);
         return destination;
@@ -157,7 +158,6 @@ public class AcculogixDataImporter {
             DeliveryTask task = new DeliveryTask();
             task.taskType = Integer.parseInt(deliveryOrderDatas.get(0)[65]);
             task.orders = deliveryOrders;
-            task.cage = !deliveryOrderDatas.get(0)[61].isEmpty();
             task.podBarcode = deliveryOrderDatas.get(0)[34];
             
             trackAndTraceManager.saveTaskGeneral(task);
@@ -175,7 +175,10 @@ public class AcculogixDataImporter {
         order.orderLargeDisplays = !data[56].isEmpty() ? Integer.parseInt(data[56]) : 0;
         order.orderDriverDeliveries = !data[57].isEmpty() ? Integer.parseInt(data[57]) : 0;
         order.quantity = !data[58].isEmpty() ? Integer.parseInt(data[58]) : 0;
+        order.originalQuantity = order.quantity;
         order.referenceNumber = data[33];
+        order.cage = !data[61].isEmpty();
+        order.orderType = data[31];
         return order;
     }
 

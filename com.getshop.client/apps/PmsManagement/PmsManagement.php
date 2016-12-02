@@ -1517,14 +1517,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
      * @param type $addonType
      */
     public function hasAddon($room, $addonType) {
+        $count = 0;
         if(isset($room->addons)) {
             foreach($room->addons as $addon) {
                 if($addon->addonType == $addonType) {
-                    return true;
+                    $count += $addon->count;
                 }
             }
         }
-        return false;
+        return $count;
     }
     
     public function tryAddToBookingEngine() {

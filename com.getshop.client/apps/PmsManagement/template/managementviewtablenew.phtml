@@ -142,7 +142,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             }
         }
 
-        $row['regdate'] = date("d.m.Y H:i", strtotime($room->regDate));
+        $row['regdate'] = date("d.m.y H:i", strtotime($room->regDate));
         if(!$room->bookingEngineId) {
             $row['regdate'] .= "<i class='fa fa-warning' title='Booking not added to booking engine' style='cursor:pointer;' gstype='clicksubmit' method='tryAddToBookingEngine' gsname='id' gsvalue='".$room->pmsRoomId."'></i>";
         }
@@ -150,7 +150,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         if($diff < 40000) {
             $row['periode'] = date("d.m.Y H:i", $room->start/1000) . " - " . date("H:i", $room->end/1000);
         } else {
-            $row['periode'] =  date("d.m.Y H:i", $room->start/1000) . "<br>" . date("d.m.Y H:i", $room->end/1000);
+            $row['periode'] =  date("d.m.y H:i", $room->start/1000) . "<br>" . date("d.m.y H:i", $room->end/1000);
         }
         $row['visitor'] = "";
         
@@ -158,16 +158,19 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             $row['visitor'] .= "<i class='fa fa-comment' title='$comments'></i> ";
         }
         
-        if($this->hasAddon($room, 1)) {
-            $row['visitor'] .= "<i class='fa fa-cutlery' title='Breakfast included'></i> ";
+        $breakfasts = $this->hasAddon($room, 1);
+        
+        if($breakfasts) {
+            $row['visitor'] .= "<i class='fa fa-cutlery' title='Breakfast included: $breakfasts'></i> ";
         }
         
         foreach($room->guest as $guest) {
             $row['visitor'] .= $guest->name;
             if($guest->email) { $row['visitor'] .= " - " . $guest->email; }
-            if($guest->phone) { $row['visitor'] .= " - +" . $guest->prefix . $guest->phone; }
+            if($guest->phone) { $row['visitor'] .= "<span style='float:right;' class='secondary_text'>+" . $guest->prefix . $guest->phone . "</span>"; }
             $row['visitor'] .= "<br>";
         }
+        $row['visitor'] .= "<div style='clear:both;'></div><span style='float:right;' class='secondary_text'>" .$room->numberOfGuests  . " guests</span>";
         $row['visitor'] .= "<div class='secondary_text'>" . $room->owner . "</div>";
         if(@$filter->groupByBooking && $room->numberOfRoomsInBooking > 1) {
             $row['visitor'] .=  '<div>+ ' . ($room->numberOfRoomsInBooking-1) . " addititional entries.</div>";
@@ -177,7 +180,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             $row['room'] .=  '<i class="fa fa-key" title="Key has been returned" style="color:green;"></i> ';
         }
         $row['room'] .= $room->room;
-        $row['room'] .= "<div class='secondary_text'>".$room->roomType."</div>";
+        $row['room'] .= "<div class='secondary_text roominfosub'>".$room->roomType."</div>";
         $row['price'] = round($room->price);
         if($room->totalCost) {
             $row['price'] = round($room->price) . "<div style='color:#aaa' title='Total cost for this room'>(" . round($room->totalCost) . ")</div>";
@@ -214,10 +217,14 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
                 echo "<td align='center'>" . $row[$header] . "</td>";
              } else if($header == "periode") {
                  echo "<td width='110'>" . $row[$header] . "</td>";
+             } else if($header == "regdate") {
+                 echo "<td width='110'>" . $row[$header] . "</td>";
+             } else if($header == "room") {
+                 echo "<td width='150'>" . $row[$header] . "</td>";
              } else if($header == "price") {
-                 echo "<td class='pricecol' align='center'>" . $row[$header] . "</td>";
+                 echo "<td class='pricecol' width='70' align='center'>" . $row[$header] . "</td>";
              } else if($header == "state") {
-                 echo "<td class='".$row[$header]."' align='center'>";
+                 echo "<td class='".$row[$header]."' align='center' width='110'>";
                  echo $states[$row[$header]] . "<br>";
                  echo $row['stateadditional'];
                  echo "</td>";

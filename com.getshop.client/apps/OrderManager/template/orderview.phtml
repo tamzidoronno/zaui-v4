@@ -37,6 +37,11 @@ $cart = $order->cart;
         $addr .= $user->address->postCode . " " . $user->address->city . "<br>";
         $addr .= $user->emailAddressToInvoice ? $user->emailAddressToInvoice : $user->emailAddress;
         echo $addr;
+        if($order->testOrder) {
+            echo "<br><bR>####################################################<br>";
+            echo "# <b>This is a test order</b><br>";
+            echo "####################################################<br>";
+        }
         ?>
         <br>
         <div class='gss_label'><? echo $this->__f("Invoice information"); ?></div>

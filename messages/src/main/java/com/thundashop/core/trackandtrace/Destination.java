@@ -38,9 +38,13 @@ public class Destination extends DataCommon {
     
     public SkipInfo skipInfo = new SkipInfo();
     
+    public String exceptionId = "";
+    
     public String note = "";
     public Integer seq;
     public String podBarcode = "";
+    
+    public String onDemandInstructions = "" ;
    
     public Destination() {
     }

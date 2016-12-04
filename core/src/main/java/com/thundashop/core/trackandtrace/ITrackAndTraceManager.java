@@ -60,4 +60,13 @@ public interface ITrackAndTraceManager {
     
     @Administrator
     public void addDriverToRoute(String userId, String routeId);
+    
+    @Customer
+    public void changeQuantity(String taskId, String orderReference, int quantity);
+    
+    @Customer
+    public void setDesitionationException(String destinationId, String exceptionId, double lon, double lat);
+    
+    @Customer
+    public void unsetSkippedReason(String destinationId);
 }

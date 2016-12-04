@@ -13,6 +13,7 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -255,6 +256,39 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 route.makeSureUserIdsNotDuplicated();
                 saveObject(route);
             }
+        }
+    }
+
+    @Override
+    public void changeQuantity(String taskId, String orderReference, int quantity) {
+        Task task = tasks.get(taskId);
+        if (task instanceof DeliveryTask) {
+            ((DeliveryTask)task).changeQuantity(orderReference, quantity);
+            saveObject(task);
+        }
+    }
+
+    @Override
+    public void setDesitionationException(String destinationId, String exceptionId, double lon, double lat) {
+        Destination dest = destinations.get(destinationId);
+        if (dest != null) {
+            SkipInfo skipInfo = new SkipInfo();
+            skipInfo.lat = lat;
+            skipInfo.lon = lon;
+            skipInfo.skippedReasonId = exceptionId;
+            skipInfo.startedTimeStamp = new Date();
+            skipInfo.startedByUserId = getSession().currentUser.id;
+            dest.skipInfo = skipInfo;
+            saveObject(dest);
+        }
+    }
+
+    @Override
+    public void unsetSkippedReason(String destinationId) {
+        Destination dest = destinations.get(destinationId);
+        if (dest != null) {
+            dest.skipInfo.skippedReasonId = "";
+            saveObject(dest);
         }
     }
     

@@ -18,4 +18,7 @@ public class DeliveryOrder {
     public int orderLargeDisplays = 0;
     public int orderDriverDeliveries = 0;
     public String exceptionId = "";
+    public boolean cage = false;
+    public String orderType = "";
+    public int originalQuantity = 0;
 }

@@ -1997,5 +1997,16 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     }
 
+    public function translatePtype($tmpType) {
+        $types = array();
+        $types['ExpediaPayment'] = "Expedia";
+        $types['InvoicePayment'] = "Invoice";
+        $types['PayOnDelivery'] = "Cash";
+        if(isset($types[$tmpType])) {
+            return $types[$tmpType];
+        }
+        return $tmpType;
+    }
+
 }
 ?>

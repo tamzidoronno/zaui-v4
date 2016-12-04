@@ -24,7 +24,6 @@ class SalesStatisticsEntry implements Serializable {
         }
         
         start += total;
-        totalPrice = (double)Math.round(totalPrice);
         paymentTypes.put(paymentType, start);
         
     }

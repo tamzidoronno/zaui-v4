@@ -251,6 +251,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         
         //Save addonsfromproduct
         $prods = $this->getApi()->getProductManager()->getAllProducts();
+        $counter = -100000;
         foreach($prods as $prod) {
             $conf = new \core_pmsmanager_PmsBookingAddonItem();
             $found = false;
@@ -261,7 +262,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 }
             }
             if(!$found) {
-                $notifications->addonConfiguration[] = $conf;
+                $notifications->addonConfiguration->{$counter} = $conf;
             }
             
             $conf->productId = $prod->id;
@@ -277,6 +278,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             $prod->name = $_POST['data']['addonconfig_' . $prod->id . "_name"];
             $prod->taxgroup = $_POST['data']['addonconfig_' . $prod->id . "_taxgroup"];
             $this->getApi()->getProductManager()->saveProduct($prod);
+            $counter++;
         }
         
         
@@ -309,6 +311,9 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     public function buildCleaningPriceConfig() {
         $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
         $res = array();
+        if(!$types) {
+            return $res;
+        }
         foreach($types as $type) {
             $stats = new \core_pmsmanager_CleaningStatistics();
             for($i = 1; $i <= 7; $i++) {

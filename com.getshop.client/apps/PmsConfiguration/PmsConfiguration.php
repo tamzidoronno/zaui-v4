@@ -678,7 +678,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 $conf = new \core_pmsmanager_PmsBookingAddonItem();
                 $conf->addonType = $addonType;
                 $conf->productId = $product->id;
-                $config->addonConfiguration[] = $conf;
+                $config->addonConfiguration->{$addonType} = $conf;
                 $needSaving = true;
             } else if(!$found->productId) {
                 $product = $this->getApi()->getProductManager()->createProduct();

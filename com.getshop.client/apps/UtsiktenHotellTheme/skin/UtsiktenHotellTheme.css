@@ -1,0 +1,131 @@
+body {
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    color: #222;
+}
+
+.gsarea[area="header"] {
+    height: 100px;
+    background-color: #000;
+}
+
+.gsarea[area="header"] .Menu .entries .entries {
+    background-color: #000;
+    width: 300px;
+    text-align: left;
+}
+.gsarea[area="header"] .Menu {
+    top: 40px;
+    text-align: right;
+}
+
+.gsarea[area="header"] .Menu .entry a {
+    color: #888;
+    display: inline-block;
+    border-right: solid 1px #333;
+    line-height: 40px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.gsarea[area="header"] .Menu .entry:last-of-type a {
+    border-right: solid 0px;
+}
+
+.gs_page_width {
+    max-width: 1160px;
+    margin: 0 auto;
+}
+
+.gsarea[area="body"] {
+    
+}
+
+[pageid="e30dbf6f-83ec-4c37-9e01-943438cf8fa3"] .gsarea[area="body"] {
+    padding-top: 0px;
+}
+
+.gsarea[area="footer"] {
+    margin-top: 50px;
+    background-color: #EEE;
+    height: 250px;
+    padding-top: 20px;
+    color: #666;
+}
+
+.shop_button {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#7abcff+0,60abf8+44,4096ee+100;Blue+3D+%2314 */
+    background: #7abcff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #7abcff 0%, #60abf8 44%, #4096ee 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #7abcff 0%,#60abf8 44%,#4096ee 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #7abcff 0%,#60abf8 44%,#4096ee 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7abcff', endColorstr='#4096ee',GradientType=0 ); /* IE6-9 */
+
+    color: #FFF;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.gs_language_selection .gs_lang_code_nb_NO {
+    background-image: url('{IMAGEFOLDER}/flag_norwegian.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 35px;
+}
+
+.gs_language_selection .gs_lang_code_en_en {
+    background-image: url('{IMAGEFOLDER}/flag_english.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 30px;
+}
+.gs_language_selection {
+    border: solid 0px;
+    position: absolute;
+    right: 10px;
+}
+
+.PmsBooking .pmsfront1 {
+    background-color: rgba(0,0,0,0.8);
+    color: #FFF;
+    border: solid 3px #000;
+    border-radius: 10px;
+}
+
+.PmsBooking .pmsfront .fa-calendar,
+.PmsBooking .pmsfront .check_available_button {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#258dc8+0,258dc8+100;Blue+Flat+%231 */
+    background: #258dc8; /* Old browsers */
+    background: -moz-linear-gradient(top,  #258dc8 0%, #258dc8 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #258dc8 0%,#258dc8 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #258dc8 0%,#258dc8 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#258dc8', endColorstr='#258dc8',GradientType=0 ); /* IE6-9 */
+
+}
+
+.gsucell[cellid="a09e56cf-1fc4-49ad-98e9-c5582863de3e"] {
+    width: 70% !important;
+}
+
+.gsucell[cellid="26162470-fc1a-4b21-ba37-2aea60744288"] {
+    width: 30% !important;
+    padding-top: 30px;
+}
+
+.frontbox_inner {
+    background-color: #EEE;
+    padding: 20px;
+    margin: 10px;
+}
+
+.frontbox_inner .Button {
+    margin-top: 20px;
+}
+
+.frontbox {
+    text-align: center;
+}

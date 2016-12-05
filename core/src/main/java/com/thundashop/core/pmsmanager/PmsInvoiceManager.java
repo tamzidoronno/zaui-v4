@@ -1274,6 +1274,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         List<CartItem> items = new ArrayList();
         int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
+        if(booking.priceType.equals(PmsBooking.PriceType.daily)) {
+            if(room.isSameDay(startDate, endDate)) {
+                daysInPeriode = 1;
+            }
+        }
         if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
             daysInPeriode = getNumberOfMonthsBetweenDates(startDate, endDate);
             if(daysInPeriode > 1000 || pmsManager.getConfigurationSecure().hasNoEndDate) {

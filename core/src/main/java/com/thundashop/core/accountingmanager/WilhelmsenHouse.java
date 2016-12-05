@@ -86,12 +86,12 @@ public class WilhelmsenHouse implements AccountingInterface {
 
            String result = "A;"; //Fast A som forteller at det er Aktør
            result += user.customerId + ";"; //Kundenummer
-           result += user.fullName + ";"; //Kundenavn
-           result += user.address.address + ";"; //Kunde adresse 1
-           result += user.address.postCode + ";"; //Kunde Postnummer
-           result += user.address.city + ";"; //Kunde Poststed
-           result += user.emailAddress + ";"; //Kunde e-post
-           result += user.cellPhone + ";"; //Kunde mobil tlf.
+           result += removeSemiColon(user.fullName) + ";"; //Kundenavn
+           result += removeSemiColon(user.address.address) + ";"; //Kunde adresse 1
+           result += removeSemiColon(user.address.postCode) + ";"; //Kunde Postnummer
+           result += removeSemiColon(user.address.city) + ";"; //Kunde Poststed
+           result += removeSemiColon(user.emailAddress) + ";"; //Kunde e-post
+           result += removeSemiColon(user.cellPhone) + ";"; //Kunde mobil tlf.
 
            if(user.company.isEmpty()) {
                Date date = null;
@@ -377,6 +377,14 @@ public class WilhelmsenHouse implements AccountingInterface {
     @Override
     public void setManagers(AccountingManagers mgr) {
         this.managers = mgr;
+    }
+
+    private String removeSemiColon(String fullName) {
+        if(fullName == null || fullName.isEmpty()) {
+            return fullName;
+        }
+        
+        return fullName.replaceAll(";", "");
     }
 
     

@@ -1,0 +1,29 @@
+
+body {
+        font-family: "proxima-nova", sans-serif;
+    font-weight: 300;
+    color: #444;
+    background-color: #fafafa;
+}
+.PmsBooking .pmsfront1 { background-color:rgba(0,0,0,0.5); border: solid 0px; color:#fff; }
+
+.gsarea[area="header"] { background-color:#fafafa; border-bottom: solid 1px #bbb; }
+.gsarea[area="footer"] { color:#bbb; }
+.gsarea[area="header"] .gs_page_width { max-width:100%; }
+.gsarea[area="header"] .Menu { text-align: right; }
+.gsarea[area="header"] .Menu a div { padding: 20px; border-left: solid 1px #bbb; letter-spacing: 1px; font-size: 14px; }
+.gsarea[area="header"] .Menu .active div { background-color:#439EBE; color:#FFF; }
+.gsarea[area="header"] .Menu .entries .entries a div { background-color:#fafafa; padding: 5px; border-bottom: solid 1px #bbb; text-align:left; }
+.gsarea[area="header"] .Menu .entries .entries .active div { background-color:#439EBE; color:#FFF; }
+.gs_page_width { max-width: 1400px; margin: auto; }
+
+.PmsBookingCalendar .calendar .calendar_header,
+.PmsBookingCalendar .calendar .day.selected,
+.PmsBookingProductList .continue_button,
+.PmsBookingContactData .complete_button,
+.PmsBooking .pmsfront .check_available_button,
+.PmsBooking .pmsfront .fa-calendar {
+    background-color: #439EBE; 
+    text-transform: uppercase;
+}
+

@@ -1074,6 +1074,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private boolean isRestricted(String bookingEngineTypeId, Date start, Date end) {
         for(WubookAvailabilityRestrictions restriction : restrictions.values()) {
+            if(restriction.types == null || restriction.types.isEmpty()) {
+                continue;
+            }
             if(end.before(restriction.start)) {
                 continue;
             }

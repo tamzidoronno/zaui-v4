@@ -60,8 +60,8 @@ if($notificationSettings->runAutoPayWithCard) {
     $notifications['order_unabletopaywithsavecard_'.$langauge] = "Message sent when the order has expired and payment has not been completed.";
 }
 if($hasArx) {
-    $notifications['room_added_to_arx_'.$langauge] = "Room has been added to arx";
-    $notifications['room_removed_from_arx_'.$langauge] = "Room has been removed from arx";
+    $notifications['room_added_to_arx_'.$langauge] = "When code is active on door";
+    $notifications['room_removed_from_arx_'.$langauge] = "When code is removed from door";
 }
 if($hasEventCalendar) {
     $notifications['booking_eventcalendar_'.$langauge] = "Message to send to event helder in the event calendar";
@@ -194,11 +194,12 @@ $channelConfig = $config->channelConfiguration;
         <select class='smstypeselection'>
         <?php
         foreach($notifications as $index => $name) {
+            $inuse= "";
             if(isset($notificationSettings->smses->{$index})) {
                 $inuse = "(active)";
             }
 
-            echo "<option value='$index'>$name</option>";
+            echo "<option value='$index'>$name $inuse</option>";
         }
         ?>
         </select><br><br>

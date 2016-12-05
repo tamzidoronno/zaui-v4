@@ -8,6 +8,16 @@ $intervaloptions['weekly'] = "Weekly";
 $intervaloptions['monthly'] = "Monthly";
 $intervaloptions['yearly'] = "Yearly";
 $firstWidth = 45;
+
+$paymentTypes = array();
+foreach ($stats->salesEntries as $saleEntry) {
+    foreach($saleEntry->paymentTypes as $type => $val) {
+        $paymentTypes[$type] = 1;
+    }
+}
+
+
+
 if($filter->channel || sizeof($filter->typeFilter) > 0) {
     $firstWidth = 100;
 }
@@ -76,6 +86,14 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
                 <th><?php echo $this->__w("Nights"); ?></th>
                 <th><?php echo $this->__w("Orders"); ?></th>
                 <th><?php echo $this->__w("Avg."); ?><br> order</th>
+                <?php
+                if(sizeof($paymentTypes) > 1) {
+                    foreach($paymentTypes as $type => $val) {
+                        $tmpType = explode("\\", $type);
+                        echo "<th>" . $this->translatePtype($tmpType[1]) . "</th>";
+                    }
+                }
+                ?>
                 <th><?php echo $this->__w("Total"); ?></th>
             </tr>
             <?
@@ -91,7 +109,18 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
                 echo "<td>" . $saleEntry->nights . "</td>";
                 echo "<td>" . $saleEntry->numberOfOrders . "</td>";
                 echo "<td>" . $saleEntry->avgOrderPrice . "</td>";
-                echo "<td>" . $saleEntry->totalPrice . "</td>";
+                
+                if(sizeof($paymentTypes) > 1) {
+                    foreach($paymentTypes as $type => $val) {
+                        $val = 0;
+                        if(isset($saleEntry->paymentTypes->{$type})) {
+                            $val = $saleEntry->paymentTypes->{$type};
+                        }
+                        echo "<td>" . round($val ) . "</td>";
+                    }
+                }
+                
+                echo "<td>" . round($saleEntry->totalPrice) . "</td>";
                 echo "</tr>";
             }
             ?>

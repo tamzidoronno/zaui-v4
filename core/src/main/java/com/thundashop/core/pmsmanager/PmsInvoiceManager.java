@@ -321,6 +321,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return price;
     }
 
+    public void clearOrdersOnBooking(PmsBooking booking) {
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            if(order.closed) {
+                continue;
+            }
+            order.cart.clear();
+            orderManager.saveOrder(order);
+        }
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;

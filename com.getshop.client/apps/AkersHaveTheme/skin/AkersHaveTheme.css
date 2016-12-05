@@ -1,21 +1,40 @@
 
 body {
-        font-family: "proxima-nova", sans-serif;
+    font-family: "proxima-nova", sans-serif;
     font-weight: 300;
-    color: #444;
     background-color: #fafafa;
+    color: #7f7f7f;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+    line-height: 28px;
 }
 .PmsBooking .pmsfront1 { background-color:rgba(0,0,0,0.5); border: solid 0px; color:#fff; }
+h1 {
+    font-size: 50px;
+    margin-top: 0;
+    font-weight: 600;
+}
+h2 {
+        color: #444;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 0.07em;
+    line-height: 28px;
+    font-family: "p22-underground", sans-serif;
+    text-transform: uppercase;
+}
 
-.gsarea[area="header"] { background-color:#fafafa; border-bottom: solid 1px #bbb; }
+.PmsBooking .pmsfront2 .check_available_button { width: 300px;margin-top: 25px; }
+
+.gsarea[area="header"] { background-color:#dadada;  }
 .gsarea[area="footer"] { color:#bbb; }
-.gsarea[area="header"] .gs_page_width { max-width:100%; }
+.gsarea[area="header"] .gs_page_width { max-width:100%; color:#444; }
 .gsarea[area="header"] .Menu { text-align: right; }
-.gsarea[area="header"] .Menu a div { padding: 20px; border-left: solid 1px #bbb; letter-spacing: 1px; font-size: 14px; }
-.gsarea[area="header"] .Menu .active div { background-color:#439EBE; color:#FFF; }
+.gsarea[area="header"] .Menu a div { padding: 20px; border-left: solid 1px #bbb; letter-spacing: 1px; font-size: 14px; color:#444; }
+.gsarea[area="header"] .Menu .active div { background-color:#7f8083; color:#FFF; }
 .gsarea[area="header"] .Menu .entries .entries a div { background-color:#fafafa; padding: 5px; border-bottom: solid 1px #bbb; text-align:left; }
-.gsarea[area="header"] .Menu .entries .entries .active div { background-color:#439EBE; color:#FFF; }
-.gs_page_width { max-width: 1400px; margin: auto; }
+.gsarea[area="header"] .Menu .entries .entries .active div { background-color:#7f8083; color:#FFF; }
+.gs_page_width { max-width: 1200px; margin: auto; }
 
 .PmsBookingCalendar .calendar .calendar_header,
 .PmsBookingCalendar .calendar .day.selected,

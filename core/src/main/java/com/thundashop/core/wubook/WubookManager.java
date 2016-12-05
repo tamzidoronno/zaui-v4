@@ -81,7 +81,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Override
     public String updateAvailability() throws Exception {
-//        if(!frameworkConfig.productionMode) { return ""; }
+        if(!frameworkConfig.productionMode) { return ""; }
         if(!connectToApi()) { return "Faield to connect to api"; }
         Vector<Hashtable> tosend = new Vector();
         int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;

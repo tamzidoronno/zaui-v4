@@ -81,7 +81,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Override
     public String updateAvailability() throws Exception {
-        if(!frameworkConfig.productionMode) { return ""; }
+//        if(!frameworkConfig.productionMode) { return ""; }
         if(!connectToApi()) { return "Faield to connect to api"; }
         Vector<Hashtable> tosend = new Vector();
         int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
@@ -1074,6 +1074,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private boolean isRestricted(String bookingEngineTypeId, Date start, Date end) {
         for(WubookAvailabilityRestrictions restriction : restrictions.values()) {
+            if(restriction.types == null || restriction.types.isEmpty()) {
+                continue;
+            }
             if(end.before(restriction.start)) {
                 continue;
             }

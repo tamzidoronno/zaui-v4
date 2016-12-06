@@ -47,7 +47,7 @@ body {
 .gsarea[area="footer"] {
     margin-top: 50px;
     
-    background-color: #EEE;
+    background-color: #f9f9f9;
     height: 250px;
     padding-top: 50px;
     color: #666;
@@ -90,10 +90,11 @@ body {
 }
 
 .PmsBooking .pmsfront1 {
-    background-color: rgba(0,0,0,0.8);
-    color: #FFF;
-    border: solid 3px #000;
-    border-radius: 10px;
+    background-color: #FFF;
+    color: #333;
+    box-shadow: 0px 5px 10px;
+    height: 244px;
+    box-sizing: border-box;
 }
 
 .PmsBooking .pmsfront .fa-calendar,
@@ -117,9 +118,11 @@ body {
 }
 
 .frontbox_inner {
-    background-color: #EEE;
+    border: solid 4px #EEE;
     padding: 20px;
     margin: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .frontbox_inner .Button {

@@ -776,6 +776,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             i++;
         }
+        pmsInvoiceManager.clearOrdersOnBooking(newbooking);
         newbooking = pmsManager.doCompleteBooking(newbooking);
         
         if(pmsManager.getConfigurationSecure().usePricesFromChannelManager && newbooking != null) {

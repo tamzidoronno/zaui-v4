@@ -19,7 +19,7 @@ import org.mongodb.morphia.annotations.Transient;
  */
 public class Destination extends DataCommon {
     
-    public String companyId = "";
+    public List<String> companyIds = new ArrayList();
     
     @Transient
     public Company company = new Company();

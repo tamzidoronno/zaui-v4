@@ -111,8 +111,8 @@ public class AcculogixDataImporter {
         for (Route route : routes.values()) {
             List<Destination> rows = datas.stream()
                     .filter(row -> row[49].equals(route.id))
+                    .filter(distinctByKey(d -> d[20].trim()))
                     .map(row -> createDestionation(row))
-                    .filter(distinctByKey(d -> d.companyId))
                     .sorted((o1, o2) -> o1.seq.compareTo(o2.seq))
                     .collect(Collectors.toList());
             
@@ -125,7 +125,7 @@ public class AcculogixDataImporter {
     
     private Destination createDestionation(String[] args) {
         Destination destination = new Destination();
-        destination.companyId = args[50];
+        destination.companyIds.addAll(getCompanyIdsForRouteSeq(args[20]));
         destination.seq = Integer.parseInt(args[20]);
         destination.podBarcode = args[34];
         destination.note = args[21];
@@ -136,14 +136,14 @@ public class AcculogixDataImporter {
     }
     
     public <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
-        Map<Object,Boolean> seen = new ConcurrentHashMap<>();
-        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+        Map<Object,Boolean> seen = new ConcurrentHashMap<>(); 
+       return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
     private void addDeliveryTasksToDestinations() {
         for (Destination destination : destinations.values()) {
             List<String[]> deliveryOrderDatas = datas.stream()
-                    .filter(row -> row[50].equals(destination.companyId))
+                    .filter(row -> destination.companyIds.contains(row[50]))
                     .filter(row -> row[64].equals("DELIVERY"))
                     .collect(Collectors.toList());
             
@@ -199,7 +199,7 @@ public class AcculogixDataImporter {
     private void addPickupTasksToDestinations() {
         for (Destination destination : destinations.values()) {
             List<String[]> pickupTasksDatas = datas.stream()
-                    .filter(row -> row[50].equals(destination.companyId))
+                    .filter(row -> destination.companyIds.contains(row[50]))
                     .filter(row -> row[64].equals("PICKUP RETURNS"))
                     .collect(Collectors.toList());
             
@@ -231,5 +231,11 @@ public class AcculogixDataImporter {
         order.instruction = data[22] + " " + data[53];
         order.referenceNumber = data[33];
         return order;
+    }
+
+    private List<String> getCompanyIdsForRouteSeq(String stopSeq) {
+        return datas.stream().filter(d -> d[20].equals(stopSeq))
+                .map(d -> d[50])
+                .collect(Collectors.toList());
     }
 }

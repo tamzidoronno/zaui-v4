@@ -44,8 +44,8 @@ public interface ITrackAndTraceManager {
     @Administrator
     public List<Route> getAllRoutes();
     
-    @Administrator
-    public void addCompanyToRoute(String routeId, String companyId);
+//    @Administrator
+//    public void addCompanyToRoute(String routeId, String companyId);
     
     public void addDeliveryTaskToDestionation(String destionatId, DeliveryTask task);
     

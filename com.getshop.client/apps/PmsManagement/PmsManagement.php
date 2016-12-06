@@ -75,6 +75,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $booking->createOrderAfterStay = $_POST['data']['checked'];
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
     }
+    
+    public function removeCreateOrderAfterStay() {
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
+        $booking->createOrderAfterStay = false;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->showBookingInformation();
+    }
     public function doRoomsBookedAction() {
         $action = $_POST['data']['action'];
         $bookingId = $_POST['data']['bookingid'];
@@ -1899,22 +1906,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function fastordercreation() {
+        
         $filter = new \core_pmsmanager_NewOrderFilter();
         $bookingId = $_POST['data']['bookingid'];
         $filter->avoidOrderCreation = false;
         $filter->prepayment = true;
         $filter->createNewOrder = true;
         $filter->addToOrderId = $_POST['data']['appendToOrderId'];
-        
-        $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
-        $this->getManager()->processor($this->getSelectedName());
-        
-        if($_POST['data']['paymenttype'] != "InvoicePayment" && $_POST['data']['sendpaymentlink'] === "true") {
-            $email = $_POST['data']['paymentlinkemail'];
-            $phone = $_POST['data']['paymentlinkphone'];
-            $prefix = $_POST['data']['paymentlinkprefix'];
-            $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);
-        }
         
         $instanceToUse = null;
         $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
@@ -1924,14 +1922,31 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 break;
             }
         }
+        $this->paymentLinkSent = false;
+        if($filter->addToOrderId == "createafterstay") {
+            $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingId);
+            $booking->paymentType = $instanceToUse->id;
+            $booking->createOrderAfterStay = true;
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        } else {
+            $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
+            $this->getManager()->processor($this->getSelectedName());
 
-        
-        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-        $order->payment->paymentType = $this->createPaymentTypeText($instanceToUse);
-        if($_POST['data']['paymenttype'] == "InvoicePayment") {
-            $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
+            if($_POST['data']['paymenttype'] != "InvoicePayment" && (isset($_POST['data']['sendpaymentlink']) && $_POST['data']['sendpaymentlink'] === "true")) {
+                $email = $_POST['data']['paymentlinkemail'];
+                $phone = $_POST['data']['paymentlinkphone'];
+                $prefix = $_POST['data']['paymentlinkprefix'];
+                $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);
+                $this->paymentLinkSent = true;
+            }
+
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            $order->payment->paymentType = $this->createPaymentTypeText($instanceToUse);
+            if($_POST['data']['paymenttype'] == "InvoicePayment") {
+                $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
+            }
+            $this->getApi()->getOrderManager()->saveOrder($order);
         }
-        $this->getApi()->getOrderManager()->saveOrder($order);
         
         $this->showBookingInformation();
     }

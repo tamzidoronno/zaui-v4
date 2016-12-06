@@ -36,6 +36,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .sendinvoice, .PmsManagement .sendreciept', app.PmsManagement.showsendinvoice);
         $(document).on('click','.PmsManagement .loadExcelExportOptions', app.PmsManagement.loadExcelExportOptions);
         $(document).on('click','.PmsManagement .createorderafterstaycheckbox', app.PmsManagement.createorderafterstaycheckbox);
+        $(document).on('click','.PmsManagement .removecreateafterstayfrombooking', app.PmsManagement.removeorderafterstay);
         $(document).on('click','.PmsManagement .loadorderstatistics', app.PmsManagement.loadorderstatistics);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
@@ -101,6 +102,13 @@ app.PmsManagement = {
         thundashop.Ajax.postWithCallBack(event, function() {
             thundashop.common.Alert("Success", "Card data has been updated.");
         });
+    },
+    removeorderafterstay : function() {
+        var data = {
+            bookingid : $('#openedbookingid').val()
+        }
+        var event = thundashop.Ajax.createEvent('','removeCreateOrderAfterStay', $(this),data);
+        thundashop.common.showInformationBoxNew(event);
     },
     executeroomsbookedaction : function() {
         var action = $('.roomsbookedactionsselection').val();

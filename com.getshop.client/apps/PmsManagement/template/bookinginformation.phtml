@@ -15,7 +15,7 @@ if(sizeof($this->errors) > 0) {
 
 if(isset($_POST['event']) && $_POST['event'] == "fastordercreation") {
     echo "<div><i class='fa fa-check'></i> Action is executed<bR>";
-    if($_POST['data']['paymenttype'] != "InvoicePayment" && $_POST['data']['sendpaymentlink'] === "true") {
+    if(isset($this->paymentLinkSent) && $this->paymentLinkSent) {
         echo "<i class='fa fa-check'></i> Payment link has been sent.<br>";
     }
     echo "</div>";

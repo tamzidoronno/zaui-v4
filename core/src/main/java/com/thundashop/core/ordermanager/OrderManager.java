@@ -1300,6 +1300,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (paymentApplication != null) { 
             Payment payment = new Payment();
             payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+            payment.paymentId = paymentApplication.id;
             return payment;
         }
         
@@ -1316,6 +1317,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (paymentApplication != null) { 
                 Payment payment = new Payment();
                 payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+                payment.paymentId = paymentApplication.id;
                 return payment;
             }
         }

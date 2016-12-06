@@ -7,7 +7,7 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.chatmanager.SubscribedToAirgram;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.GrafanaFeeder;
+import com.thundashop.core.common.GrafanaFeederImpl;
 import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
@@ -141,7 +141,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         toAdd.put("emailsize", (Number)content.length());
         toAdd.put("storeid", (String)storeId);
         
-        GrafanaFeeder feeder = new GrafanaFeeder();
+        GrafanaFeederImpl feeder = new GrafanaFeederImpl();
         grafanaManager.addPoint("webdata", "email", toAdd);
     }    
 

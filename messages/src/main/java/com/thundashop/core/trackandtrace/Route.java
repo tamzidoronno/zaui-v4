@@ -73,9 +73,5 @@ public class Route extends DataCommon {
         userIds.addAll(hs);
     }
 
-    boolean hasCompanyInDestionations(String companyId) {
-        return destinations.stream()
-                .anyMatch(dest -> dest.companyId.equals(companyId));
-    }
 
 }

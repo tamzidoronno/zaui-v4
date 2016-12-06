@@ -32,7 +32,7 @@ import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.GrafanaFeeder;
+import com.thundashop.core.common.GrafanaFeederImpl;
 import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -3560,7 +3560,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toAdd.put("addons", (Number)addons);
         toAdd.put("storeid", (String)storeId);
         
-        GrafanaFeeder feeder = new GrafanaFeeder();
+        GrafanaFeederImpl feeder = new GrafanaFeederImpl();
         grafanaManager.addPoint("pmsmanager", "booking", toAdd);
     }
 

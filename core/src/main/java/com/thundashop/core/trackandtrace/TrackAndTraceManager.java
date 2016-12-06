@@ -124,8 +124,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         dest.taskIds.stream()
                 .forEach(id -> dest.tasks.add(tasks.get(id)));
-        
-        dest.company = userManager.getCompany(dest.companyId);
+     
+        if (dest.companyIds.size() > 0)
+            dest.company = userManager.getCompany(dest.companyIds.get(0));
     }
 
     @Override
@@ -161,23 +162,23 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         return retList;
     }
 
-    @Override
-    public void addCompanyToRoute(String routeId, String companyId) {
-        Route route = getRouteById(routeId);
-        if (route != null) {
-            if (route.hasCompanyInDestionations(companyId)) {
-                return;
-            }
-            
-            Destination destination = new Destination();
-            destination.companyId = companyId;
-            saveObject(destination);
-            
-            destinations.put(destination.id, destination);
-            route.destinationIds.add(destination.id);
-            saveObject(route);
-        }
-    }
+//    @Override
+//    public void addCompanyToRoute(String routeId, String companyId) {
+//        Route route = getRouteById(routeId);
+//        if (route != null) {
+//            if (route.hasCompanyInDestionations(companyId)) {
+//                return;
+//            }
+//            
+//            Destination destination = new Destination();
+//            destination.companyId = companyId;
+//            saveObject(destination);
+//            
+//            destinations.put(destination.id, destination);
+//            route.destinationIds.add(destination.id);
+//            saveObject(route);
+//        }
+//    }
 
     @Override
     public void addDeliveryTaskToDestionation(String destionatId, DeliveryTask task) {

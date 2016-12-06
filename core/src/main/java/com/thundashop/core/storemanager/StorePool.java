@@ -9,7 +9,7 @@ import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.GrafanaFeeder;
+import com.thundashop.core.common.GrafanaFeederImpl;
 import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.databasemanager.Database;

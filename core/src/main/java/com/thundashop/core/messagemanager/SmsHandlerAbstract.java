@@ -9,7 +9,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.GrafanaFeeder;
+import com.thundashop.core.common.GrafanaFeederImpl;
 import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.ordermanager.data.Order;

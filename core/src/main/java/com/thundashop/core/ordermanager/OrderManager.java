@@ -1352,7 +1352,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         toAdd.put("storeid", (String)storeId);
         
-        GrafanaFeeder feeder = new GrafanaFeeder();
+        GrafanaFeederImpl feeder = new GrafanaFeederImpl();
         grafanaManager.addPoint("webdata", "ordercreated", toAdd);
     }
 

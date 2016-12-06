@@ -18,14 +18,19 @@ public class GrafanaManager extends ManagerBase{
     public FrameworkConfig frameworkConfig;
     
     public void addPoint(String dbName, String point, HashMap<String, Object> values) {
-        GrafanaFeeder feeder = new GrafanaFeeder();
-        feeder.dbName = dbName;
-        feeder.point = point;
-        feeder.values = values;
+        GrafanaFeeder feeder = new GrafanaFeederImpl();
+        
+        if (storeId != null && storeId.equals("eafea78d-1eea-403f-abbb-3b23a6e61dae")) {
+            feeder = new DummyGrafanaFeeder();
+        }
+        
+        feeder.setDbName(dbName);
+        feeder.setPoint(point);
+        feeder.setValues(values);
         values.put("storeId", storeId);
 
         if(frameworkConfig.productionMode) {
-            feeder.start();
+            new Thread(feeder).start();
         }
     }
     

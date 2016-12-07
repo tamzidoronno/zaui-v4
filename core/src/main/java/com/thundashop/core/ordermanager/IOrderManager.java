@@ -61,6 +61,8 @@ public interface IOrderManager {
      */
     public List<Order> getOrders(ArrayList<String> orderIds, Integer page, Integer pageSize) throws ErrorException;
     
+    @Administrator
+    public Payment getUserPrefferedPaymentMethod(String userId);
     
     @Editor
     public FilteredData getOrdersFiltered(FilterOptions filterOptions);

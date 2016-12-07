@@ -61,6 +61,8 @@ public class PmsBooking extends DataCommon {
     public boolean ignoreCheckChangesInBooking = false;
     public String deletedBySource = "";
     private double totalPrice;
+    public String paymentType = "";
+    
     
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();

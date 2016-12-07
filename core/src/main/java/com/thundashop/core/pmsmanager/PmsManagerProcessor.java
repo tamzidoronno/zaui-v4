@@ -671,6 +671,9 @@ public class PmsManagerProcessor {
                 if(config.markBookingsWithNoOrderAsUnpaid && config.prepayment && booking.orderIds.isEmpty()) {
                     payedfor = false;
                 }
+                if(booking.createOrderAfterStay) {
+                    payedfor = true;
+                }
             }
             boolean forceSend = (booking.channel != null && !booking.channel.isEmpty()) && booking.isRegisteredToday();
             if(booking.payedFor != payedfor || forceSend) {

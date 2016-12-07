@@ -332,6 +332,56 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
     }
 
+    private Payment getPreferredPaymentTypeFromBooking(PmsBooking booking) {
+        if(getSession() == null) {
+            return null;
+        }
+        if(getSession().currentUser == null) {
+            return null;
+        }
+        
+        if(!getSession().currentUser.isAdministrator()) {
+            return null;
+        }
+        if(booking.paymentType == null || booking.paymentType.isEmpty()) {
+            return null;
+        }
+        
+        Application paymentApplication = applicationPool.getApplication(booking.paymentType);
+        if (paymentApplication != null) {
+            Payment payment = new Payment();
+            payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+            payment.paymentId = paymentApplication.id;
+            return payment;
+        }
+        
+        return null;
+    }
+
+    public Payment getPreferredPaymentMethod(String bookingId, NewOrderFilter filter) {
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        Payment preferred = orderManager.getStorePreferredPayementMethod();
+        Payment preferredChannel = null;
+        if(filter != null && !filter.fromAdministrator) {
+            preferredChannel = getChannelPreferredPaymentMethod(booking);
+        }
+        Payment preferredUser = orderManager.getUserPrefferedPaymentMethod(booking.userId);
+        
+        Payment preferredBooking = getPreferredPaymentTypeFromBooking(booking);
+        
+        if(preferredChannel != null) {
+            preferred = preferredChannel;
+        }
+        
+        if(preferredUser != null) {
+            preferred = preferredUser;
+        }
+        if(preferredBooking != null) {
+            preferred = preferredBooking;
+        }
+        return preferred;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -602,6 +652,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if (paymentApplication != null) { 
                 Payment payment = new Payment();
                 payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+                payment.paymentId = paymentApplication.id;
                 return payment;
             }
         }
@@ -1007,20 +1058,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Order order = orderManager.createOrder(user.address);
         order.userId = booking.userId;
 
-        Payment preferred = orderManager.getStorePreferredPayementMethod();
-        Payment preferredChannel = null;
-        if(!filter.fromAdministrator) {
-            preferredChannel = getChannelPreferredPaymentMethod(booking);
-        }
-        Payment preferredUser = orderManager.getUserPrefferedPaymentMethod(order.userId);
-        
-        if(preferredChannel != null) {
-            preferred = preferredChannel;
-        }
-        
-        if(preferredUser != null) {
-            preferred = preferredUser;
-        }  
+        Payment preferred = getPreferredPaymentMethod(booking.id, filter);
         
         order.payment = preferred;
         order.invoiceNote = booking.invoiceNote;

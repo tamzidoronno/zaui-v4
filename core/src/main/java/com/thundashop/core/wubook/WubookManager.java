@@ -625,6 +625,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return guests;
         }
         
+        if(addons != null) {
+            String channel = (String) addons.get("channel_rate_name");
+            if(channel != null) {
+                if(channel.toLowerCase().contains("breakfast") || channel.toLowerCase().contains("frokost")) {
+                    return guests;
+                }
+            }
+        }
+        
         return 0;
     }
     

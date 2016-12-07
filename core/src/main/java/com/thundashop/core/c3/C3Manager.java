@@ -156,14 +156,22 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         List<C3Project> retList = new ArrayList(projects.values());
         Collections.sort(retList, (o1, o2) -> {
+            Integer projectnumber1 = 0;
+            Integer projectnumber2 = 0;
+            
             try {
-                Integer projectnumber1 = Integer.parseInt(o1.projectNumber);
-                Integer projectnumber2 = Integer.parseInt(o2.projectNumber);
-                
-                return projectnumber1.compareTo(projectnumber2);
+                projectnumber1 = Integer.parseInt(o1.projectNumber);
             } catch (Exception ex) {
-                return 0;
+                return -1;
             }
+            
+            try {
+                projectnumber2 = Integer.parseInt(o2.projectNumber);
+            } catch (Exception ex) {
+                return 1;
+            }
+            
+            return projectnumber1.compareTo(projectnumber2);
         });
         
         return retList;

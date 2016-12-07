@@ -13,6 +13,9 @@ import com.thundashop.core.getshop.GetShopPullService;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserCard;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -41,6 +44,9 @@ public class EpayManager extends ManagerBase implements IEpayManager {
     @Autowired
     OrderManager orderManager;
     
+    @Autowired
+    UserManager userManager;
+    
     @Override
     public void checkForOrdersToCapture() {
         String pollKey = getCallBackId();
@@ -61,12 +67,16 @@ public class EpayManager extends ManagerBase implements IEpayManager {
                     EpayResponse resp = gson.fromJson(msg.getVariables, EpayResponse.class);
                     Order order = orderManager.getOrderByincrementOrderId(resp.gsordnr);
                     order.payment.callBackParameters = polledResult;
+                    
                     boolean valid = true;
                     if(!validCallBack(msg.getVariables)) {
                         order.payment.transactionLog.put(System.currentTimeMillis(), "Invalid callback from epay callback: " + msg.id + " : " + msg.getVariables);
                         messageManager.sendErrorNotification("Invalid callback from epay callback: " + msg.id + " : " + msg.getVariables, null);
                         valid = false;
                     }
+                    
+                    
+                    saveCardOnUser(order);
                     
                     Double amount = new Double(resp.amount) / 100;
                     Double total = orderManager.getTotalAmount(order);
@@ -93,6 +103,25 @@ public class EpayManager extends ManagerBase implements IEpayManager {
         }
     }
     
+    private void saveCardOnUser(Order order) {
+        User user = userManager.getUserById(order.userId);
+        if(user == null) {
+            logPrint("Failed to find user?" + order.userId);
+            return;
+        }
+
+        String subid = order.payment.callBackParameters.get("subscriptionid");
+        if(subid == null || subid.isEmpty()) {
+            return;
+        }
+        
+        UserCard card = new UserCard();
+        card.card = order.payment.callBackParameters.get("5029205");
+        card.savedByVendor = "EPAY";
+        card.mask = order.payment.callBackParameters.get("cardno");
+        user.savedCards.add(card);
+        userManager.saveUser(user);
+    }
     
     private String getCallBackId() {
         Application epayApp = storeApplicationPool.getApplicationWithSecuredSettings("8f5d04ca-11d1-4b9d-9642-85aebf774fee");

@@ -3,6 +3,7 @@
 
 $dibs = $this->getConfigurationSetting("merchantid");
 $md5secret = $this->getConfigurationSetting("md5secret");
+$apipassword = $this->getConfigurationSetting("apipassword");
 ?>
 
 <div class='gss_settings_header'>
@@ -33,6 +34,13 @@ $md5secret = $this->getConfigurationSetting("md5secret");
             <input type="textfield" gs_model='epaymodel' gs_model_attr='md5secret' value="<? echo $md5secret; ?>">
             <div class="description">
                 <?php  echo $this->__f("The secret key to validate callbacks for, created in the epay admin panel."); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="apipassword">
+            <span class="title"><?php echo $this->__f("Api password"); ?></span>
+            <input type="textfield" gs_model='epaymodel' gs_model_attr='apipassword' value="<? echo $apipassword; ?>">
+            <div class="description">
+                <?php  echo $this->__f("A password used when communicating with the api for subscriptions / saved cards"); ?>
             </div>
         </div>
         

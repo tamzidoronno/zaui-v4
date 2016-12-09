@@ -1950,7 +1950,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
             $this->getManager()->processor($this->getSelectedName());
 
-            if($_POST['data']['paymenttype'] != "InvoicePayment" && (isset($_POST['data']['sendpaymentlink']) && $_POST['data']['sendpaymentlink'] === "true")) {
+            if($_POST['data']['paymenttype'] != "InvoicePayment" && 
+                    (isset($_POST['data']['sendpaymentlink']) && $_POST['data']['sendpaymentlink'] === "true") &&
+                    !$savedcard) {
                 $email = $_POST['data']['paymentlinkemail'];
                 $phone = $_POST['data']['paymentlinkphone'];
                 $prefix = $_POST['data']['paymentlinkprefix'];
@@ -1967,8 +1969,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         if($savedcard) {
-            echo "Need to pay with card: " . $savedcard->card;
-            $this->getApi()->getOrderManager()->payWithCard($order->id, $savedcard->id);
+            
+            if($this->getApi()->getOrderManager()->payWithCard($order->id, $savedcard->id)) {
+                echo "<i class='fa fa-check'></i> Successfully paid with saved card subscription id : " . $savedcard->card . " (" . $savedcard->mask . ")";
+            } else {
+                echo "<i class='fa fa-warning'></i> Failed to pay with card  subscription id : " . $savedcard->card . " (" . $savedcard->mask;
+            }
         }
         
         $this->showBookingInformation();

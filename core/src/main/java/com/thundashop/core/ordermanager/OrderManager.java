@@ -1119,6 +1119,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     if(card.savedByVendor.equals("DIBS")) {
                         dibsManager.payWithCard(order, card);
                     }
+                    if(card.savedByVendor.equals("EPAY")) {
+                        epayManager.payWithCard(order, card);
+                    }
                     if(order.status == Order.Status.PAYMENT_COMPLETED) {
                         messageManager.sendInvoiceForOrder(order.id);
                         break;
@@ -1399,7 +1402,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void payWithCard(String orderId, String cardId) throws Exception {
+    public boolean payWithCard(String orderId, String cardId) throws Exception {
         Order order = getOrder(orderId);
         
         User user = userManager.getUserById(order.userId);
@@ -1412,20 +1415,22 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if(cardToUse == null) {
             order.payment.transactionLog.put(System.currentTimeMillis(), "Card with id :  " + cardId + " does not exists, can not continue.");
-            return;
+            return false;
         }
         
         order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to extract with saved card: " + cardToUse.card + " expire: " + cardToUse.expireMonth + "/" + cardToUse.expireYear + " (" + cardToUse.savedByVendor + ")");
         order.payment.triedAutoPay.add(new Date());
         saveOrder(order);
         
-        if(cardToUse.savedByVendor.equals("dibs")) {
-            dibsManager.payWithCard(order, cardToUse);
-        } else if(cardToUse.savedByVendor.equals("epay")) {
-            epayManager.payWithCard(order, cardToUse);
+        boolean res = false;
+        if(cardToUse.savedByVendor.equalsIgnoreCase("dibs")) {
+            res = dibsManager.payWithCard(order, cardToUse);
+        } else if(cardToUse.savedByVendor.equalsIgnoreCase("epay")) {
+            res = epayManager.payWithCard(order, cardToUse);
         } else {
             order.payment.transactionLog.put(System.currentTimeMillis(), "Pay with saved card is not supported by this vendor: " + cardToUse.card + " expire: " + cardToUse.expireMonth + "/" + cardToUse.expireYear + " (" + cardToUse.savedByVendor + ")");
         }
+        return res;
     }
 
 }

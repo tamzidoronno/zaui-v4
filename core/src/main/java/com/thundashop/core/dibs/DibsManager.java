@@ -369,7 +369,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         userManager.saveUser(user);
     }
 
-    public void payWithCard(Order order, UserCard card) throws Exception {
+    public boolean payWithCard(Order order, UserCard card) throws Exception {
         order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to extract with saved card: " + card.card + " expire: " + card.expireMonth + "/" + card.expireYear);
         order.payment.triedAutoPay.add(new Date());
         orderManager.saveOrder(order);
@@ -387,10 +387,12 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         
         String secretMacKey = storeApplicationPool.getApplication("d02f8b7a-7395-455d-b754-888d7d701db8").getSetting("hmac");
         Map<String, String> result = AuthorizeTicket(toTicket, currency, merchantId, order.incrementOrderId+ "", card.card, secretMacKey);
+        boolean res = false;
         if (result.get("status").equals("ACCEPT")) {
             String transactionId = result.get("transactionId");
             order.payment.callBackParameters.put("transaction", transactionId);
             captureOrder(order, toTicket);
+            res = true;
         } else if(order.payment.triedAutoPay.size() >= 31) {
             order.status = Order.Status.PAYMENT_FAILED;
        }
@@ -399,6 +401,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
         String toLog = gson.toJson(result);
         order.payment.transactionLog.put(System.currentTimeMillis(), toLog);
         orderManager.saveObject(order);
+        return res;
     }
     
     

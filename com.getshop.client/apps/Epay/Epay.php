@@ -75,6 +75,7 @@ class Epay extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("md5secret", $_POST['md5secret']);
         $this->setConfigurationSetting("savecard", $_POST['savecard']);
         $this->setConfigurationSetting("testmode", $_POST['testmode']);
+        $this->setConfigurationSetting("apipassword", $_POST['apipassword']);
     }
     
     

@@ -77,7 +77,7 @@ public interface IOrderManager {
     
     
     @Administrator
-    public void payWithCard(String orderId, String cardId) throws Exception;
+    public boolean payWithCard(String orderId, String cardId) throws Exception;
     
     public Order getOrder(String orderId) throws ErrorException;
     

@@ -810,6 +810,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }catch(Exception e) {
             logPrintException(e);
         }
+        
+        if(booking.priceType == PmsBooking.PriceType.daily) {
+            for (PmsBookingRooms room : booking.getActiveRooms()) {
+                int totalDays = 1;
+                if (room.date.end != null && room.date.start != null && !getConfigurationSecure().hasNoEndDate) {
+                    totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
+                }
+
+                pmsInvoiceManager.updateAddonsByDates(room);
+                pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
+            }
+        }
+        
         saveObject(booking);
     }
 

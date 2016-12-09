@@ -1909,6 +1909,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $filter = new \core_pmsmanager_NewOrderFilter();
         $bookingId = $_POST['data']['bookingid'];
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingId);
         $filter->avoidOrderCreation = false;
         $filter->prepayment = true;
         $filter->createNewOrder = true;
@@ -1916,15 +1917,32 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $instanceToUse = null;
         $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        $ptype = $_POST['data']['paymenttype'];
+        
+        if(stristr($ptype, "savedcard_")) {
+            $cardid = str_replace("savedcard_", "", $ptype);
+            $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+            $savedcard = null;
+            foreach($user->savedCards as $card) {
+                if($cardid == $card->id) {
+                    $savedcard = $card;
+                }
+            }
+            if(!$savedcard) {
+                echo "Failed to find saved card.";
+            } else {
+                $ptype = $savedcard->savedByVendor;
+            }
+        }
+        
         foreach($instances as $instance) {
-            if($instance->appName == $_POST['data']['paymenttype']) {
+            if(strtolower($instance->appName) == strtolower($ptype)) {
                 $instanceToUse = $instance;
                 break;
             }
         }
         $this->paymentLinkSent = false;
         if($filter->addToOrderId == "createafterstay") {
-            $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingId);
             $booking->paymentType = $instanceToUse->id;
             $booking->createOrderAfterStay = true;
             $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
@@ -1946,6 +1964,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
             }
             $this->getApi()->getOrderManager()->saveOrder($order);
+        }
+        
+        if($savedcard) {
+            echo "Need to pay with card: " . $savedcard->card;
+            $this->getApi()->getOrderManager()->payWithCard($order->id, $savedcard->id);
         }
         
         $this->showBookingInformation();

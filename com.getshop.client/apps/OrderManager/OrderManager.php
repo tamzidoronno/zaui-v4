@@ -67,7 +67,7 @@ class OrderManager extends GSTableCommon implements \Application {
         $orderId = $_POST['value'];
         $cardId = $_POST['card'];
         
-        $this->getApi()->getOrderManager()->payOrderByCard($cardId, $orderId);
+        $this->getApi()->getOrderManager()->payWithCard($orderId, $cardId);
     }
     
     public function renderDashBoardWidget() {

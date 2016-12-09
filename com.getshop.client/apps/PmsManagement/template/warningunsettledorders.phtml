@@ -45,6 +45,11 @@ if(sizeof($orders) > 1) {
                 if($id == $preferred) { $selected = "SELECTED"; }
                 echo "<option value='".$app->appName."' $selected> ".$app->appName."</option>";
             }
+            
+            foreach($user->savedCards as $card) {
+                echo "<option value='savedcard_".$card->id."'>Saved card (" . $card->savedByVendor  . ") : " . $card->mask . "</option>";
+            }
+            
             echo "</select> ";
 
             echo "<select gsname='appendToOrderId'>";

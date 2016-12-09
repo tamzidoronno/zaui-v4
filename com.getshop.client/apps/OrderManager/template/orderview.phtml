@@ -96,7 +96,11 @@ $cart = $order->cart;
                 echo "<div>";
                 echo "<select id='gssselectedcard'>";
                 foreach($cards as $card) {
-                    echo "<option value='".$card->card . "'>" . $card->mask . " - " . $card->expireMonth . " / " . $card->expireYear . " - " . $card->savedByVendor . "</option>";
+                    if($card->expireYear > 0) {
+                        echo "<option value='".$card->id . "'>" . $card->mask . " - " . $card->expireMonth . " / " . $card->expireYear . " - " . $card->savedByVendor . "</option>";
+                    } else {
+                        echo "<option value='".$card->id . "'>" . $card->mask . "</option>";
+                    }
                 }
                 echo "</select>";
                 echo "<input type='button' class='gsspaywithcard' value='Pay with saved card' orderId='".$order->id."'>";

@@ -177,4 +177,8 @@ public class EpayManager extends ManagerBase implements IEpayManager {
         Setting setting = epayApp.settings.get("md5secret");
         return setting.value;
     }    
+
+    public void payWithCard(Order order, UserCard card) {
+        
+    }
 }

@@ -270,7 +270,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             
             pmsInvoiceManager.updateAddonsByDates(room);
-            pmsInvoiceManager.updatePriceMatrix(booking, room, room.date.start, room.date.end, Integer.SIZE);
+            pmsInvoiceManager.updatePriceMatrix(booking, room, Integer.SIZE);
 
             room.count = totalDays;
             String couponCode = getCouponCode(booking.couponCode);
@@ -3184,7 +3184,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void setPriceOnRoom(PmsBookingRooms room, boolean avgPrice, PmsBooking booking) {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
         if(getConfigurationSecure().usePriceMatrixOnOrder) {
-            room.price = pmsInvoiceManager.updatePriceMatrix(booking, room, room.date.start, room.date.end, booking.priceType);
+            room.price = pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
             if(room.price.isNaN() || room.price.isInfinite()) {
                 room.price = 0.0;
             }

@@ -12,9 +12,20 @@ $to = $otherCostObject ? date('d.m.Y', strtotime($otherCostObject->to)) : "";
 $cost = $otherCostObject ? $otherCostObject->cost : "";
 $type = $otherCostObject ? $otherCostObject->type : "";
 $comment = $otherCostObject ? $otherCostObject->comment : "";
+
+$projectId = $this->getModalVariable("projectid");
+$project = $this->getApi()->getC3Manager()->getProject($projectId);
+$projectPeriodeToShow = $project->currentProjectPeriode;
 ?>
 
 <div>
+    <div class="periodeopen">
+        <i class="fa fa-info-circle"> </i>
+        <?
+        echo "Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to));
+        ?>
+    </div>
+
     <h1>Andre kostnader</h1>
     <div gstype='form' method='saveCost'>
         Periode:

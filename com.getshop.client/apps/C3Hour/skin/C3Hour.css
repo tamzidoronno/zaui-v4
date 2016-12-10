@@ -26,3 +26,10 @@
 .C3Hour .tabheader .tab.active {
     background-color: #CCC;
 }
+
+.C3Hour .periodeopen {
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #EFEFEF;
+    
+}

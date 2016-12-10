@@ -26,6 +26,8 @@ $from = $hourObject ? date('d.m.Y', strtotime($hourObject->from)) : "";
 $to = $hourObject ? date('d.m.Y', strtotime($hourObject->to)) : "";
 $hours = $hourObject && isset($hourObject->hours) ? $hourObject->hours : "";
 $percent = $hourObject && isset($hourObject->percent) ? $hourObject->percent : "";
+$project = $this->getApi()->getC3Manager()->getProject($projectId);
+$projectPeriodeToShow = $project->currentProjectPeriode;
 
 $costId = $hourObject ? $hourObject->id : "";
 ?>
@@ -34,12 +36,23 @@ $costId = $hourObject ? $hourObject->id : "";
 if ($forskningsperiode) {
 ?>
 
+
+
 <div class='tabheader'>
     <div content='timer' class='tab active'>Timer</div>
     <div content='prosent' class='tab'>Prosent</div>
 </div>
 
+
+
 <div gstype='form' method='savePercent' content='prosent' class='tabcontent'>
+    <div class="periodeopen">
+        <i class="fa fa-info-circle"> </i>
+        <?
+        echo "Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to));
+        ?>
+    </div>
+
     <div>
         Det er lagt inn en <? echo $forskningsperiode->percents; ?>% stilling for perioden: <? echo date('m.d.Y', strtotime($forskningsperiode->start)) . "-" . date('m.d.Y', strtotime($forskningsperiode->end)); ?>
     </div>
@@ -70,7 +83,17 @@ if ($forskningsperiode) {
 </div>
 
 <? } ?>
+
+
 <div gstype='form' method='saveHours' content='timer' class='tabcontent'>
+    <div class="periodeopen">
+        <i class="fa fa-info-circle"> </i>
+        <?
+        echo "Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to));
+        ?>
+    </div>
+
+
     Periode:
     <div class='gserrorfield' id='errorMessage'></div>
     <br/><input class='gsniceinput1' type='text' gsname='from' id='from' value='<? echo $from; ?>'/> - <input class='gsniceinput1' type='text' gsname='to' id='to' value='<? echo $to; ?>'/> 

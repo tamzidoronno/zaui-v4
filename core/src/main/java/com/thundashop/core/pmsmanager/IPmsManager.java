@@ -164,6 +164,9 @@ public interface IPmsManager {
     @Editor
     public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms();
     
+    @Editor
+    public List<RoomCleanedInformation> getAllRoomsNeedCleaningToday();
+    
     @Administrator
     public void updateAdditionalInformationOnRooms(PmsAdditionalItemInformation info);
     

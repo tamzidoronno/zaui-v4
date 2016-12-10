@@ -4316,4 +4316,52 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         doNotification("booking_completed", bookingId);
     }
 
+    @Override
+    public List<RoomCleanedInformation> getAllRoomsNeedCleaningToday() {
+        RoomCleanedInformation cleaning = new RoomCleanedInformation();
+        List<RoomCleanedInformation> result = new LinkedList();
+        List<PmsAdditionalItemInformation> allRooms = getAllAdditionalInformationOnRooms();
+        
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = "checkout";
+        filter.startDate = new Date();
+        filter.endDate = new Date();
+        
+        List<PmsRoomSimple> checkoutRooms = getSimpleRooms(filter);
+        List<PmsBookingRooms> intervalCleanings = getRoomsNeedingIntervalCleaning(new Date());
+        
+        for(PmsAdditionalItemInformation room : allRooms) {
+            RoomCleanedInformation info = new RoomCleanedInformation();
+            info.roomId = room.itemId;
+            
+            boolean checkoutToday = false;
+            boolean needInterval = false;
+            
+            for(PmsRoomSimple simple : checkoutRooms) {
+                if(simple.bookingItemId != null && simple.bookingItemId.equals(room.itemId)) {
+                    checkoutToday = true;
+                }
+            }
+            for(PmsBookingRooms tmproom : intervalCleanings) {
+                if(tmproom.bookingItemId.equals(room.itemId)) {
+                    needInterval = true;
+                }
+            }
+            
+            if(room.inUse && !checkoutToday) {
+                info.cleaningState = RoomCleanedInformation.CleaningState.inUse;
+            } else if(room.isClean() || room.isUsedToday()) {
+                info.cleaningState = RoomCleanedInformation.CleaningState.isClean;
+            } else {
+                info.cleaningState = RoomCleanedInformation.CleaningState.needCleaning;
+            }
+            if(needInterval) {
+                info.cleaningState = RoomCleanedInformation.CleaningState.needIntervalCleaning;
+            }
+            result.add(info);
+        }
+        
+        return result;
+    }
+
 }

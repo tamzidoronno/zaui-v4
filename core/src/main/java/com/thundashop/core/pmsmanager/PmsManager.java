@@ -2477,6 +2477,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (room.isStartingToday()) {
                     continue;
                 }
+                
+                if(!room.addedToArx && getConfiguration().hasLockSystem()) {
+                    continue;
+                }
 
                 String ownerMail = storeManager.getMyStore().configuration.emailAdress;
                 String addressMail = storeManager.getMyStore().webAddress;

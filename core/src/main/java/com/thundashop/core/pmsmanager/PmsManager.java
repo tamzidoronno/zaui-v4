@@ -2050,6 +2050,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String[] defaultEndStart = getConfiguration().defaultEnd.split(":");
 
         Calendar calStart = Calendar.getInstance();
+        if (getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.DAILY)) {
+            calStart.add(Calendar.HOUR_OF_DAY, -4);
+        }
         calStart.set(Calendar.HOUR_OF_DAY, new Integer(defaultTimeStart[0]));
         calStart.set(Calendar.MINUTE, new Integer(defaultTimeStart[1]));
         calStart.set(Calendar.SECOND, 0);
@@ -2058,6 +2061,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         range.start = calStart.getTime();
 
         if (getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.DAILY)) {
+            calStart.add(Calendar.HOUR_OF_DAY, -3);
             calStart.add(Calendar.DAY_OF_YEAR, getConfiguration().minStay);
             calStart.set(Calendar.HOUR_OF_DAY, new Integer(defaultEndStart[0]));
             calStart.set(Calendar.MINUTE, new Integer(defaultEndStart[1]));

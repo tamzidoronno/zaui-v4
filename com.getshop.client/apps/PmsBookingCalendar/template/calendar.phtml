@@ -59,10 +59,20 @@ foreach($dates as $date) {
         echo "<span class='dayouter'>";
         if(isset($date[$i])) {
             $dayToPrint = strtotime($date[$i] . "." . $month . "." . $year);
-            if($this->isSelectedDate($dayToPrint)) {
-                echo "<span class='day selected' time='$dayToPrint'>".$date[$i]."</span>";
+            $disabled = "";
+            if($this->isStartDate()) {
+                if($dayToPrint < strtotime(date("d.m.Y 00:00", (time()-14400)))) {
+                    $disabled = "disabled";
+                }
             } else {
-                echo "<span class='day' time='$dayToPrint'>".$date[$i]."</span>";
+                if($dayToPrint < strtotime(date("d.m.Y 23:59", time()))) {
+                    $disabled = "disabled";
+                }
+            }
+            if($this->isSelectedDate($dayToPrint)) {
+                echo "<span class='day selected $disabled' time='$dayToPrint'>".$date[$i]."</span>";
+            } else {
+                echo "<span class='day $disabled' time='$dayToPrint'>".$date[$i]."</span>";
             }
         } else {
             echo "<span class='day empty'>&nbsp;</span>";

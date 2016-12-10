@@ -47,9 +47,9 @@ if ($forskningsperiode) {
 
 <div gstype='form' method='savePercent' content='prosent' class='tabcontent'>
     <div class="periodeopen">
-        <i class="fa fa-info-circle"> </i>
         <?
-        echo "Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to));
+        echo "<b>Prosjekt:</b> ".$project->name;
+        echo "<br/><b>Åpen periode:</b> ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to));
         ?>
     </div>
 
@@ -87,9 +87,9 @@ if ($forskningsperiode) {
 
 <div gstype='form' method='saveHours' content='timer' class='tabcontent'>
     <div class="periodeopen">
-        <i class="fa fa-info-circle"> </i>
         <?
-        echo "Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to));
+        echo "<b>Prosjekt:</b> ".$project->name;
+        echo "<br/><b>Åpen periode:</b> ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to));
         ?>
     </div>
 

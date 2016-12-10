@@ -20,9 +20,9 @@ $projectPeriodeToShow = $project->currentProjectPeriode;
 
 <div>
     <div class="periodeopen">
-        <i class="fa fa-info-circle"> </i>
         <?
-        echo "Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to));
+        echo "<b>Prosjekt:</b> ".$project->name;
+        echo "<br/><b>Åpen periode:</b> ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to));
         ?>
     </div>
 

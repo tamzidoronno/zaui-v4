@@ -1272,11 +1272,19 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             checkUserAccess(user);
         }
         
-        Company companyToUse = companies.values().stream()
-                .filter(o -> o.vatNumber.equals(company.vatNumber) && o.reference.equals(company.reference))
-                .findAny()
-                .orElse(null);
+        Company companyToUse = null;
         
+        if (company!= null && company.id != null && !company.id.isEmpty()) {
+            companyToUse = companies.get(company.id);
+        }
+        
+        if (companyToUse == null) {
+            companyToUse = companies.values().stream()
+                    .filter(o -> o.vatNumber.equals(company.vatNumber) && o.reference.equals(company.reference))
+                    .findAny()
+                    .orElse(null);
+        }
+            
         if (companyToUse == null) {
             saveCompany(company);
             companyToUse = company;

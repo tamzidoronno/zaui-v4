@@ -186,7 +186,6 @@ public class ESAReport {
         if (first) {
             XSSFCell cell = createCell(row, i);
             cell.setCellValue("Total cost");
-            rotateText(cell, (short)90);
             cell.getCellStyle().setWrapText(true);
             setBorder(cell, true, true, true, true);
             setBackgroundColor(cell, Color.CYAN);
@@ -206,7 +205,6 @@ public class ESAReport {
             
             cell = createCell(row, i++);
             cell.setCellValue("Total funding");
-            rotateText(cell, (short)90);
             cell.getCellStyle().setWrapText(true);
             setBorder(cell, true, true, true, true);
             setBackgroundColor(cell, Color.CYAN);

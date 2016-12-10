@@ -155,24 +155,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         projects.values().stream().forEach(project -> finalizeProject(project));
         
         List<C3Project> retList = new ArrayList(projects.values());
-        Collections.sort(retList, (o1, o2) -> {
-            Integer projectnumber1 = 0;
-            Integer projectnumber2 = 0;
-            
-            try {
-                projectnumber1 = Integer.parseInt(o1.projectNumber);
-            } catch (Exception ex) {
-                return -1;
-            }
-            
-            try {
-                projectnumber2 = Integer.parseInt(o2.projectNumber);
-            } catch (Exception ex) {
-                return 1;
-            }
-            
-            return projectnumber1.compareTo(projectnumber2);
-        });
+        Collections.sort(retList, C3Project.comperatorByProjectNumber());
         
         return retList;
     }
@@ -981,20 +964,10 @@ public class C3Manager extends ManagerBase implements IC3Manager {
 
     @Override
     public String getBase64ESAExcelReport(Date start, Date end) {
-        Set<String> allCompaniesIds = new TreeSet();
-        List<Company> allCompanies = new ArrayList();
+        List<Company> allCompanies = userManager.getAllCompanies();
         
         DoubleKeyMap<String, String, Double> totalCosts = new DoubleKeyMap();
         DoubleKeyMap<String, String, Double> inKind = new DoubleKeyMap();
-        
-        for (WorkPackage workPackage : workPackages.values()) {
-            List<Company> companies = getAllCompaniesThatHasRelationToWorkpackage(workPackage);
-            allCompaniesIds.addAll(companies.stream().map(comp -> comp.id).collect(Collectors.toList()));
-        }
-        
-        allCompanies = allCompaniesIds.stream().map(o -> userManager.getCompany(o)).collect(Collectors.toList());
-        
-        HashMap<String, Double> rcnGrantWorkPackage = new HashMap();
         
         for (WorkPackage workPackage : workPackages.values()) {
             for (Company company : allCompanies) {
@@ -1018,18 +991,6 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         ESAReport report = new ESAReport(allCompanies, getWorkPackages(), totalCosts, inKind);
         return report.getBase64Encoded();
-    }
-
-    private List<Company> getAllCompaniesThatHasRelationToWorkpackage(WorkPackage workPackage) {
-        Set<String> companyIds = new TreeSet();
-        
-        for (C3Project project : projects.values()) {
-            if (project.workPackages.contains(workPackage.id)) {
-                companyIds.addAll(project.getCompanyIds());
-            }
-        }
-        
-        return companyIds.stream().map(companyId -> userManager.getCompany(companyId)).collect(Collectors.toList());
     }
 
     @Override

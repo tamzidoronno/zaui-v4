@@ -108,9 +108,26 @@ public class C3Project extends DataCommon {
     static Comparator<? super C3Project> comperatorByProjectNumber() {
         
         return (C3Project o1, C3Project o2) -> {
-            Integer a = Integer.parseInt(o1.projectNumber);
-            Integer b = Integer.parseInt(o2.projectNumber);
-            return a.compareTo(b);
+            
+            {
+                Integer projectnumber1 = 0;
+                Integer projectnumber2 = 0;
+
+                try {
+                    projectnumber1 = Integer.parseInt(o1.projectNumber);
+                } catch (Exception ex) {
+                    return -1;
+                }
+
+                try {
+                    projectnumber2 = Integer.parseInt(o2.projectNumber);
+                } catch (Exception ex) {
+                    return 1;
+                }
+
+                return projectnumber1.compareTo(projectnumber2);
+            }
+
         };
     }
 

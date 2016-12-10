@@ -94,10 +94,12 @@ public abstract class SmsHandlerAbstract implements Runnable {
             countryCode = "+47";
         } else {
             try {
-                int fromutil = phoneUtil.getCountryCodeForRegion(countryCode);
-                if(fromutil > 0) {
-                    if(!("+" + fromutil).equals(phonePrefix)) {
-                        phonePrefix = "+" + fromutil;
+                if(countryCode != null && !countryCode.isEmpty()) {
+                    int fromutil = phoneUtil.getCountryCodeForRegion(countryCode);
+                    if(fromutil > 0) {
+                        if(!("+" + fromutil).equals(phonePrefix)) {
+                            phonePrefix = "+" + fromutil;
+                        }
                     }
                 }
             }catch(Exception g) {

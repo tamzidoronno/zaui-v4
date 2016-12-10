@@ -38,16 +38,20 @@ if(sizeof($orders) > 1) {
         if($amount != 0) {
             echo "<div class='warnunsettled' gstype='form' method='fastordercreation'>";
             echo "<input type='hidden' gsname='bookingid' value='". $booking->id."'>";
-            echo "<i class='fa fa-warning' style='color:red;'></i> You have a unsettled amount of $amount, what would you like to do with it?<br>";
+            echo "<i class='fa fa-warning' style='color:red;'></i> You have an unsettled amount of $amount, what would you like to do with it?<br>";
             echo "<select class='paymenttypeunsetled' gsname='paymenttype'>";
             foreach($instances as $id => $app) {
                 $selected = "";
                 if($id == $preferred) { $selected = "SELECTED"; }
+                if(sizeof($user->savedCards) > 0) {
+                    $selected = "";
+                }
+                
                 echo "<option value='".$app->appName."' $selected> ".$app->appName."</option>";
             }
             
             foreach($user->savedCards as $card) {
-                echo "<option value='savedcard_".$card->id."'>Saved card (" . $card->savedByVendor  . ") : " . $card->mask . "</option>";
+                echo "<option value='savedcard_".$card->id."' SELECTED>Saved card (" . $card->savedByVendor  . ") : " . $card->mask . "</option>";
             }
             
             echo "</select> ";

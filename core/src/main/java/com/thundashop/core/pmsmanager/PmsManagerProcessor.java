@@ -51,7 +51,7 @@ public class PmsManagerProcessor {
         try { processEndings(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
         try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
         try { processAutoDeletion(); }catch(Exception e) { e.printStackTrace(); }
-        try { processArx(); }catch(Exception e) { e.printStackTrace(); }
+        try { processLockSystem(); }catch(Exception e) { e.printStackTrace(); }
         try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { e.printStackTrace(); }
         try { checkForDeadCodes(); }catch(Exception e) { e.printStackTrace(); }
     }
@@ -182,7 +182,7 @@ public class PmsManagerProcessor {
         return true;
     }
 
-    private void processArx() {
+    private void processLockSystem() {
         if (manager.getConfigurationSecure().arxHostname == null || manager.getConfigurationSecure().arxHostname.isEmpty()) { 
             return;
         }
@@ -202,6 +202,9 @@ public class PmsManagerProcessor {
                 if (!manager.isClean(room.bookingItemId) && manager.getConfigurationSecure().cleaningInterval > 0) {
                     continue;
                 }
+                if(room.blocked) {
+                    continue;
+                }
 
                 if (room.guests.isEmpty() || room.guests.get(0).name == null) {
                     room.guests.clear();
@@ -215,22 +218,19 @@ public class PmsManagerProcessor {
                 
                 
                 //If it is possible to let customers check in earlier than specified, do it.
-                if(manager.getStoreId() != null && manager.getStoreId().equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")) {
-                    //This is being tested for renahotell.
-                    int hourNow = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-                    int boardingHour = manager.getConfigurationSecure().hourOfDayToStartBoarding;
-                    if(boardingHour >= 0) {
-                        boolean boardingStarted = (hourNow >= boardingHour);
-                        if(!room.isStarted() && boardingStarted && room.isStartingToday()) {
-                            Calendar startCal = Calendar.getInstance();
-                            startCal.setTime(room.date.start);
-                            if(startCal.get(Calendar.HOUR_OF_DAY) > boardingHour) {
-                                try {
-                                    manager.bookingEngine.changeDatesOnBooking(room.bookingId, new Date(), room.date.end);
-                                    manager.finalize(booking);
-                                }catch(Exception e) {
+                int hourNow = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                int boardingHour = manager.getConfigurationSecure().hourOfDayToStartBoarding;
+                if(boardingHour >= 0) {
+                    boolean boardingStarted = (hourNow >= boardingHour);
+                    if(!room.isStarted() && boardingStarted && room.isStartingToday()) {
+                        Calendar startCal = Calendar.getInstance();
+                        startCal.setTime(room.date.start);
+                        if(startCal.get(Calendar.HOUR_OF_DAY) > boardingHour) {
+                            try {
+                                manager.bookingEngine.changeDatesOnBooking(room.bookingId, new Date(), room.date.end);
+                                manager.finalize(booking);
+                            }catch(Exception e) {
 
-                                }
                             }
                         }
                     }
@@ -257,7 +257,7 @@ public class PmsManagerProcessor {
             
             //Also deleted rooms needs to be removed from arx.
             for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
-                if (((room.isEnded() || !room.isStarted()) && room.addedToArx) || (room.deleted && room.addedToArx)) {
+                if (((room.isEnded() || !room.isStarted()) && room.addedToArx) || (room.deleted && room.addedToArx) || (room.blocked && room.addedToArx)) {
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;

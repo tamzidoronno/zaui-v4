@@ -49,6 +49,13 @@
                 <?php echo $this->__("The username for your smtp server."); ?>
             </div>
         </div>
+        <div class="textfield gss_setting"  id="sendMailFrom">
+            <span class="title"><?php echo $this->__f("Email to send from"); ?></span>
+            <input type="textfield" gs_model='mailsettingsmodel' gs_model_attr='sendMailFrom' placeholder="" value="<? echo $this->getConfigurationSetting("sendMailFrom"); ?>">
+            <div class="description">
+                <?php echo $this->__("Override email to send from"); ?>
+            </div>
+        </div>
         <div class="textfield gss_setting"  id="password">
             <span class="title"><?php echo $this->__f("Password"); ?></span>
             <input type="textfield" gs_model='mailsettingsmodel' gs_model_attr='password' placeholder="" value="<? echo $this->getConfigurationSetting("password"); ?>">

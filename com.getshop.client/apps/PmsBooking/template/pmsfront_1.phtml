@@ -2,8 +2,8 @@
 /* @var $this ns_8dcbf529_72ae_47dd_bd6b_bd2d0c54b30a\PmsBooking */
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 
-$date = date("d.m.Y", time());
-$date2 = date("d.m.Y", time()+(86400*$config->minStay));
+$date = date("d.m.Y", time()-14400);
+$date2 = date("d.m.Y", time()+((86400-14400)*$config->minStay));
 $nextPage = $this->getText("next_page");
 if(!$nextPage) {
     $nextPage = "/?page=booking_" . $this->getSelectedName();

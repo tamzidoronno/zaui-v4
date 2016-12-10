@@ -7,3 +7,4 @@
 .PmsBookingCalendar .calendar .dayouter { box-sizing: border-box; width: 14.28%; display:inline-block; padding: 2px;padding-bottom: 0px; }
 .PmsBookingCalendar .day.dayheader { border: solid 0px; }
 .PmsBookingCalendar .day.empty { border: solid 0px; }
+.PmsBookingCalendar .day.disabled { color: #bbb; cursor:inherit; }

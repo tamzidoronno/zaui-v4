@@ -516,9 +516,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return credited;
     }
 
-    LinkedHashMap<String, Double> buildPriceMatrix(PmsBookingRooms room, PmsBooking booking) {
-        return getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, booking.priceType);
-    }
 
     private LinkedHashMap<String, Double> getPriceMatrix(String typeId, Date start, Date end, Integer priceType) {
         PmsPricing prices = pmsManager.getPriceObject();
@@ -542,8 +539,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     
 
-    public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Date startDate, Date endDate, Integer priceType) {
-        LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, startDate, endDate, priceType);
+    public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {
+        LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, priceType);
         double total = 0.0;
         int count = 0;
         
@@ -1510,7 +1507,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Double price = 0.0;
         if(pmsManager.getConfigurationSecure().usePriceMatrixOnOrder) {
             Calendar calStart = Calendar.getInstance();
-            updatePriceMatrix(booking, room, startDate, endDate, priceType);
+            updatePriceMatrix(booking, room, priceType);
             calStart.setTime(startDate);
             int count = 0;
             while(true) {

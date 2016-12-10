@@ -270,7 +270,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             
             pmsInvoiceManager.updateAddonsByDates(room);
-            pmsInvoiceManager.updatePriceMatrix(booking, room, room.date.start, room.date.end, Integer.SIZE);
+            pmsInvoiceManager.updatePriceMatrix(booking, room, Integer.SIZE);
 
             room.count = totalDays;
             String couponCode = getCouponCode(booking.couponCode);
@@ -810,6 +810,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }catch(Exception e) {
             logPrintException(e);
         }
+        
+        if(booking.priceType == PmsBooking.PriceType.daily) {
+            for (PmsBookingRooms room : booking.getActiveRooms()) {
+                int totalDays = 1;
+                if (room.date.end != null && room.date.start != null && !getConfigurationSecure().hasNoEndDate) {
+                    totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
+                }
+
+                pmsInvoiceManager.updateAddonsByDates(room);
+                pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
+            }
+        }
+        
         saveObject(booking);
     }
 
@@ -2037,6 +2050,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String[] defaultEndStart = getConfiguration().defaultEnd.split(":");
 
         Calendar calStart = Calendar.getInstance();
+        if (getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.DAILY)) {
+            calStart.add(Calendar.HOUR_OF_DAY, -4);
+        }
         calStart.set(Calendar.HOUR_OF_DAY, new Integer(defaultTimeStart[0]));
         calStart.set(Calendar.MINUTE, new Integer(defaultTimeStart[1]));
         calStart.set(Calendar.SECOND, 0);
@@ -2045,6 +2061,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         range.start = calStart.getTime();
 
         if (getConfiguration().bookingTimeInterval.equals(PmsConfiguration.PmsBookingTimeInterval.DAILY)) {
+            calStart.add(Calendar.HOUR_OF_DAY, -3);
             calStart.add(Calendar.DAY_OF_YEAR, getConfiguration().minStay);
             calStart.set(Calendar.HOUR_OF_DAY, new Integer(defaultEndStart[0]));
             calStart.set(Calendar.MINUTE, new Integer(defaultEndStart[1]));
@@ -3184,7 +3201,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void setPriceOnRoom(PmsBookingRooms room, boolean avgPrice, PmsBooking booking) {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
         if(getConfigurationSecure().usePriceMatrixOnOrder) {
-            room.price = pmsInvoiceManager.updatePriceMatrix(booking, room, room.date.start, room.date.end, booking.priceType);
+            room.price = pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
             if(room.price.isNaN() || room.price.isInfinite()) {
                 room.price = 0.0;
             }
@@ -3715,14 +3732,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private boolean verifyPhoneOnBooking(PmsBooking booking) {
+        String countryCode = booking.countryCode;
+        if(countryCode == null || !countryCode.isEmpty()) {
+            countryCode = "NO";
+        }
+        
         if(booking.userId != null) {
             User user = userManager.getUserById(booking.userId);
             if(user == null) {
                 return false;
             }
-            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ user.prefix,user.cellPhone, "NO");
+            String prefix = user.prefix;
+            
+            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ prefix,user.cellPhone, countryCode);
             if(res != null) {
-                String prefix = res.get("prefix");
+                prefix = res.get("prefix");
                 String phone = res.get("phone");
                 if(prefix != null && phone != null) {
                     boolean save = false;
@@ -3738,7 +3762,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         boolean save = false;
         for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             for(PmsGuests guest : room.guests) {
-                HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ guest.prefix,guest.phone, "NO");
+                HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ guest.prefix,guest.phone, countryCode);
                 if(res != null) {
                     String prefix = res.get("prefix");
                     String phone = res.get("phone");

@@ -4,6 +4,7 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.arx.Card;
 import com.thundashop.core.bambora.BamboraManager;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
@@ -1118,6 +1119,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     if(card.savedByVendor.equals("DIBS")) {
                         dibsManager.payWithCard(order, card);
                     }
+                    if(card.savedByVendor.equals("EPAY")) {
+                        epayManager.payWithCard(order, card);
+                    }
                     if(order.status == Order.Status.PAYMENT_COMPLETED) {
                         messageManager.sendInvoiceForOrder(order.id);
                         break;
@@ -1244,23 +1248,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             order.doFinalize();
         }
         
-    }
-
-    @Override
-    public boolean payOrderByCard(String cardId, String orderId) throws Exception {
-        Order order = getOrder(orderId);
-        User user = userManager.getUserById(order.userId);
-        if(user != null) {
-            for(UserCard card : user.savedCards) {
-                if(card.card.equals(cardId)) {
-                    if(card.savedByVendor.equalsIgnoreCase("dibs")) {
-                        dibsManager.payWithCard(order, card);
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     public void forceDeleteOrder(Order order) {
@@ -1412,6 +1399,38 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             forceDeleteOrder(order);
         }
         
+    }
+
+    @Override
+    public boolean payWithCard(String orderId, String cardId) throws Exception {
+        Order order = getOrder(orderId);
+        
+        User user = userManager.getUserById(order.userId);
+        UserCard cardToUse = null;
+        for(UserCard card : user.savedCards) {
+            if(card.id.equals(cardId)) {
+                cardToUse = card;
+            }
+        }
+        
+        if(cardToUse == null) {
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Card with id :  " + cardId + " does not exists, can not continue.");
+            return false;
+        }
+        
+        order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to extract with saved card: " + cardToUse.card + " expire: " + cardToUse.expireMonth + "/" + cardToUse.expireYear + " (" + cardToUse.savedByVendor + ")");
+        order.payment.triedAutoPay.add(new Date());
+        saveOrder(order);
+        
+        boolean res = false;
+        if(cardToUse.savedByVendor.equalsIgnoreCase("dibs")) {
+            res = dibsManager.payWithCard(order, cardToUse);
+        } else if(cardToUse.savedByVendor.equalsIgnoreCase("epay")) {
+            res = epayManager.payWithCard(order, cardToUse);
+        } else {
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Pay with saved card is not supported by this vendor: " + cardToUse.card + " expire: " + cardToUse.expireMonth + "/" + cardToUse.expireYear + " (" + cardToUse.savedByVendor + ")");
+        }
+        return res;
     }
 
 }

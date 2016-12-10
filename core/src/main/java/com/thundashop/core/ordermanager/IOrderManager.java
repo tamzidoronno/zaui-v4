@@ -14,6 +14,7 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
+import com.thundashop.core.usermanager.data.UserCard;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -74,6 +75,10 @@ public interface IOrderManager {
      * @throws ErrorException 
      */
     
+    
+    @Administrator
+    public boolean payWithCard(String orderId, String cardId) throws Exception;
+    
     public Order getOrder(String orderId) throws ErrorException;
     
     /**
@@ -85,9 +90,6 @@ public interface IOrderManager {
     
     @Administrator
     public List<Order> getOrdersFromPeriode(long start, long end, boolean statistics) throws ErrorException;
-    
-    @Administrator
-    public boolean payOrderByCard(String cardId, String orderId) throws Exception;
     
     @Internal
     public Order getOrderSecure(String orderId) throws ErrorException;

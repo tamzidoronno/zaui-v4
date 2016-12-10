@@ -16,6 +16,9 @@ app.PmsBookingCalendar = {
         });
     },
     selectDay : function() {
+        if($(this).hasClass('disabled')) {
+            return;
+        }
          var event = thundashop.Ajax.createEvent('','selectDay',$(this), {
             "time" : $(this).attr('time')
         });

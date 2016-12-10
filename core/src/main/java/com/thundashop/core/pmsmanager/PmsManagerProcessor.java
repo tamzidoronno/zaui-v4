@@ -889,6 +889,7 @@ public class PmsManagerProcessor {
 
                 book.notificationsSent.add(key);
                 manager.sendMissingPayment(orderId, book.id);
+                manager.saveBooking(book);
             }
         }
     }

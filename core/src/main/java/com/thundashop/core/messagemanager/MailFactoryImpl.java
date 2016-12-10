@@ -90,6 +90,13 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 settings.sendMailFrom = confSettings.get("username").value;
             }
             
+            if (confSettings.get("sendMailFrom") != null) {
+                String sendfrom = confSettings.get("sendMailFrom").value;
+                if(sendfrom != null && !sendfrom.isEmpty()) {
+                    settings.sendMailFrom = sendfrom;
+                }
+            }
+            
             if (confSettings.get("enabletls") != null) {
                 String enableTls = confSettings.get("enabletls").value;
                 if (enableTls != null && enableTls.equals("true")) {

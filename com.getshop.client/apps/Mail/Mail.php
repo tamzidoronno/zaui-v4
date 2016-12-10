@@ -35,6 +35,7 @@ class Mail extends \MarketingApplication implements \Application {
         $this->setConfigurationSetting("password", $_POST['password'], true);
         $this->setConfigurationSetting("username", $_POST['username']);
         $this->setConfigurationSetting("enabletls", $_POST['enabletls']);
+        $this->setConfigurationSetting("sendMailFrom", $_POST['sendMailFrom']);
     }
 }
 ?>

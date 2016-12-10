@@ -89,8 +89,20 @@ public abstract class SmsHandlerAbstract implements Runnable {
             phonePrefix = "+" + phonePrefix;
         }
         
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         if(countryCode == null) {
             countryCode = "+47";
+        } else {
+            try {
+                int fromutil = phoneUtil.getCountryCodeForRegion(countryCode);
+                if(fromutil > 0) {
+                    if(!("+" + fromutil).equals(phonePrefix)) {
+                        phonePrefix = "+" + fromutil;
+                    }
+                }
+            }catch(Exception g) {
+                //If it fail, ignore it and continue.
+            }
         }
         
         String phoneNumberToCheck = phonePrefix+phone;
@@ -98,7 +110,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
             phoneNumberToCheck = phoneNumberToCheck.substring(phoneNumberToCheck.indexOf("+", 1));
         }
         
-        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        
         String prefix = "";
         phone = phone.replace("++", "+");
         phone = phone.replace("++", "+");

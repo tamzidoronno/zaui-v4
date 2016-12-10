@@ -94,10 +94,11 @@ public class AcculogixDataImporter {
         
         for (String[] row : datas) {
             Route route = new Route();
-            route.id = row[49];
-            route.name = route.id;
+            route.id = row[49] + row[30];
+            route.name = route.id + row[30];
             
             try {    
+                
                 route.deliveryServiceDate = sdf.parse(row[30].split(" ")[1]);
             } catch (ParseException ex) {
                 throw new RuntimeException(ex);
@@ -129,7 +130,7 @@ public class AcculogixDataImporter {
         destination.seq = Integer.parseInt(args[20]);
         destination.podBarcode = args[34];
         destination.note = args[21];
-        destination.onDemandInstructions = args[23];
+        destination.onDemandInstructions = args[23] + args[53];
         trackAndTraceManager.saveDestination(destination);
         destinations.put(destination.id, destination);
         return destination;
@@ -228,6 +229,7 @@ public class AcculogixDataImporter {
     public PickupOrder createPickupOrder(String[] data) {
         PickupOrder order = new PickupOrder();
         order.comment =  data[59];
+        // This is not the order instruction.
         order.instruction = data[22] + " " + data[53];
         order.referenceNumber = data[33];
         return order;

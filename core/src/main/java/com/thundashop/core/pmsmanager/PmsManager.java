@@ -4384,4 +4384,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
+    @Override
+    public void endRoom(String pmsRoomId, Date date) {
+        List<PmsRoomSimple> rooms = getMyRooms();
+        boolean found = false;
+        for(PmsRoomSimple r : rooms) {
+            if(r.pmsRoomId.equals(pmsRoomId)) {
+                found = true;
+            }
+        }
+        if(found) {
+            PmsBooking booking = getBookingFromRoom(pmsRoomId);
+            for(PmsBookingRooms r : booking.rooms) {
+                if(r.pmsBookingRoomId.equals(pmsRoomId)) {
+                    r.requestedEndDate = date;
+                }
+            }
+            saveBooking(booking);
+        }
+    }
+
 }

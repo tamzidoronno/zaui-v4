@@ -134,6 +134,7 @@ public class PmsBookingSimpleFilter {
         simple.createOrderAfterStay = booking.createOrderAfterStay;
         simple.cleaningComment = room.cleaningComment;
         simple.totalCost = room.totalCost;
+        simple.requestedEndDate = room.requestedEndDate;
         
         if(manager.getConfiguration().hasLockSystem()) {
             simple.code = room.code;

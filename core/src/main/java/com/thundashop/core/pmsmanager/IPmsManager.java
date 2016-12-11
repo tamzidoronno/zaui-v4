@@ -121,6 +121,8 @@ public interface IPmsManager {
     @Administrator
     public void saveBooking(PmsBooking booking);
     
+    public void endRoom(String pmsRoomId, Date date);
+    
     @Administrator
     public PmsPricing setPrices(PmsPricing prices); 
     

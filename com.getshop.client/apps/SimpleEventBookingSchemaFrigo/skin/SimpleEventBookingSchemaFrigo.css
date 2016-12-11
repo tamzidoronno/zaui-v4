@@ -1,0 +1,12 @@
+.SimpleEventBookingSchemaFrigo .row {
+    margin-bottom: 15px;
+}
+
+.SimpleEventBookingSchemaFrigo .row .col1 {
+    color: #888;
+}
+
+.SimpleEventBookingSchemaFrigo .row .col2 input {
+    width: 100%;
+    box-sizing: border-box;
+} 

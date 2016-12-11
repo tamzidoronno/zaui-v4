@@ -1,0 +1,37 @@
+<?
+/* @var $this \ns_0b9a8784_5399_415f_9d79_b1c271f3bed2\SimpleEventList */
+if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+    $events = $this->getApi()->getSimpleEventManager()->getAllEvents();
+} else {
+    $events = $this->getApi()->getSimpleEventManager()->getEventsInFuture();
+}
+
+if (!$events) {
+    echo "<div class='noeventsinfo'>Ingen aktivtiter tilgjengelig, kom tilbake senere</div>";
+    return;
+}
+
+
+foreach ($events as $event) {
+    ?>
+<div class="row">
+    <div class="col">
+        
+        <?        
+        if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+        ?>
+            <div gsclick='deleteEvent' gs_confirm="Sikker på at du ønsker å slette dette?" eventid='<? echo $event->id; ?>' class="gs_shop_small_icon"><i class="fa fa-trash"></i></div>
+        <?
+            }?>
+
+        <? echo date('d/m-Y', strtotime($event->date)); ?>
+    </div>
+    <div class="col"><? echo $event->name; ?></div>
+    <div class="col"><? echo $event->location; ?></div>
+    <div class="col"><a href='/?page=<? echo $event->eventPageId; ?>'><div class="shop_button">Mer informasjon</div></a></div>
+    <div class="col"><div class="shop_button" gs_show_modal='simplebooking'>Påmelding</div></div>
+</div>
+
+    <?
+}
+?>

@@ -1,0 +1,30 @@
+<?php
+/* @var $this ns_ccf7ea4c_5367_49e6_85c2_8b776905503a\SelectPrefferedPaymentType */
+$states = array();
+$states['0'] = "All payment types";
+
+$paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$preferred = $this->getApi()->getOrderManager()->getMyPrefferedPaymentMethod();
+$view = array();
+$view['Avtalegiro'] = "Avtalegiro";
+$view['Dibs'] = "Kredittkort";
+$view['InvoicePayment'] = "Faktura med gebyr";
+$view['Vipps'] = "Vipps";
+$view['PayOnDelivery'] = "Kontantbetaling";
+
+$icons = array();
+$icons['Avtalegiro'] = "fa-bank";
+$icons['Dibs'] = "fa-credit-card-alt";
+$icons['InvoicePayment'] = "fa-money";
+$icons['Vipps'] = "fa-mobile";
+$icons['PayOnDelivery'] = "Kontantbetaling";
+
+foreach ($paymentMethods as $key => $method) {
+    $selected = "";
+    if($method->id == $preferred->paymentId) {  
+        $selected = "selected";
+    }
+    
+    echo "<span class='selectpaymenttypebox $selected' gstype='clicksubmit' gsname='paymenttype' method='selectPaymentMethod' gsvalue='".$method->id."'>" ."<i class='fa " . $icons[$method->appName]. "'></i> ". $view[$method->appName] . "</span>";
+}
+?>

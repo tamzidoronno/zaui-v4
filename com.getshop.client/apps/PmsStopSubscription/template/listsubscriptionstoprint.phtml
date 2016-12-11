@@ -1,0 +1,13 @@
+<?php
+/* @var $this ns_17c0563b_a3b6_4519_b7d1_0880005b11e3\PmsStopSubscription */
+
+$subscriptions = $this->getApi()->getPmsManager()->getMyRooms($this->getSelectedName());
+echo "<table width='100%'>";
+foreach($subscriptions as $sub) {
+    echo "<tr>";
+    echo "<td>" . $sub->room . "</td><td>" . $sub->roomType . ")" . "</td>";
+    echo "<td>Si opp</td>";
+    echo "</tr>";
+}
+echo "</table>";
+?>

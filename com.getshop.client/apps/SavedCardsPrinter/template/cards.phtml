@@ -1,0 +1,10 @@
+<?php
+/* @var $this ns_92f398b2_7be4_4aad_a790_2aa189108e3c\SavedCardsPrinter */
+$user = $this->getApi()->getUserManager()->getLoggedOnUser();
+$cards = $user->savedCards;
+echo "<span class='pmsbutton'>Legg til et kort</span><br>";
+if(sizeof($cards) == 0) {
+    echo "* Du har ingen kort lagret.";
+}
+echo "<br>";
+?>

@@ -78,6 +78,8 @@ public interface IPmsManager {
     @Editor
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId);
     
+    public List<PmsRoomSimple> getMyRooms();
+    
     @Editor
     public PmsBooking getBookingWithOrderId(String orderId);
     

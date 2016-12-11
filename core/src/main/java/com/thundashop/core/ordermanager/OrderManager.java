@@ -1280,7 +1280,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return null;
         
         if (user.preferredPaymentType == null || user.preferredPaymentType.isEmpty()) {
-            return null;
+            return getStorePreferredPayementMethod();
         }
         
         Application paymentApplication = applicationPool.getApplication(user.preferredPaymentType);
@@ -1290,7 +1290,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             payment.paymentId = paymentApplication.id;
             return payment;
         }
-        
         
         return null;
     }
@@ -1431,6 +1430,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             order.payment.transactionLog.put(System.currentTimeMillis(), "Pay with saved card is not supported by this vendor: " + cardToUse.card + " expire: " + cardToUse.expireMonth + "/" + cardToUse.expireYear + " (" + cardToUse.savedByVendor + ")");
         }
         return res;
+    }
+
+    @Override
+    public Payment getMyPrefferedPaymentMethod() {
+        return getUserPrefferedPaymentMethod(getSession().currentUser.id);
     }
 
 }

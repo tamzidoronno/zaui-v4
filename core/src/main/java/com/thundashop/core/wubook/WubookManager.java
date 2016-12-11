@@ -370,11 +370,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         
-        if(toReturn.size() > 1) { 
-            String msg = "Multiple bookings fetched in fetch new bookings: " + toReturn.size() + ", please investigate.<br><bR>";
-            messageManager.sendErrorNotification(msg, null);
-        }
-        
         return toReturn;
     }
 

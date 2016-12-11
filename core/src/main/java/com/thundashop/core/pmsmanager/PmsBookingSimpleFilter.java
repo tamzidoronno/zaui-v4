@@ -180,6 +180,10 @@ public class PmsBookingSimpleFilter {
             simple.progressState = "test";
         }
         
+        if(room.blocked) {
+            simple.progressState = "blocked";
+        }
+        
         simple.checkedIn = room.checkedin;
         simple.checkedOut = room.checkedout;
         

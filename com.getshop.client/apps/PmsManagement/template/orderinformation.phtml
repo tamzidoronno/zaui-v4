@@ -68,10 +68,6 @@ if($booking->createOrderAfterStay) {
 <div onclick='$(".PmsManagement .moreinvoiceoptions").slideDown();' style='cursor:pointer;'>More options</div>
 <span class="moreinvoiceoptions">
     <div>
-        <input type='checkbox' class='createorderafterstaycheckbox' <?php echo $createdAfter; ?>> Create order after stay has been completed.
-    </div>
-    <br>
-    <div>
         <b>Order for a given periode</b><br>
         <div  gstype="form" method="createPeriodeOrder">
             <input type='hidden' value='<?php echo $booking->id; ?>' gsname='bookingid'>

@@ -152,6 +152,32 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         return d;
     }
     
+    $scope.blockAccess = function() {
+        var confirmed = confirm("Are you sure you want to block access for this room?");
+        if(confirmed) {
+            for(var offset in $scope.booking.rooms) {
+                var room = $scope.booking.rooms[offset];
+                if(room.pmsBookingRoomId === roomid) {
+                    room.blocked = true;
+                }
+            }
+            getshopclient.PmsManager.saveBooking(getMultilevelName(), $scope.booking);
+        }
+    }
+    
+    $scope.unblockAccess = function() {
+        var confirmed = confirm("Are you sure you want to unblock access for this room?");
+        if(confirmed) {
+            for(var offset in $scope.booking.rooms) {
+                var room = $scope.booking.rooms[offset];
+                if(room.pmsBookingRoomId === roomid) {
+                    room.blocked = false;
+                }
+            }
+            getshopclient.PmsManager.saveBooking(getMultilevelName(), $scope.booking);
+        }
+    }
+    
     $scope.doPayOrder = function(order) {
         if($scope.payOrderProcess) {
             $scope.payOrderProcess = false;

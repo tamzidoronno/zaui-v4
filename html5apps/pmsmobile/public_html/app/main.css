@@ -31,12 +31,14 @@ body { background-color:#3a99d7; box-sizing: border-box; }
 .roomrow.started,
 .roomrow.active { background-color:green; color:#fff !important; }
 .roomrow.ended { background-color:#ffe39f; color:#000 !important; }
+.roomrow.blocked, .roomrow.blocked a { background-color:#0f0f0f; color:#fff !important; }
 .roomrow.waitingforlock { border: solid 1px; background-color:blue;  }
 .roomrow.notpaid { background-color:red; color:#fff !important;  }
 .roombox { border: solid 1px; border-radius: 3px; margin: 3px; text-align: center; padding: 3px; cursor:pointer; }
 .roombox.notclean { background-color:red; color:#000; }
 .roombox.clean {background-color:green; color:#fff; }
 .roombox.inUse {background-color:purple; color:#fff; }
+.roombox.needInterval { background-color:red !important; color:#fff; }
 .roomrow.notpaid a, 
 .roomrow.started a,
 .roomrow.waitingforlock a

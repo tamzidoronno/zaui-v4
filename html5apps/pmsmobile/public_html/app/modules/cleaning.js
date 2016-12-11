@@ -69,19 +69,22 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
     };
     
     $scope.loadRooms = function() {
-        var additional = getshopclient.PmsManager.getAllAdditionalInformationOnRooms(getMultilevelName());
+        var additional = getshopclient.PmsManager.getAllRoomsNeedCleaningToday(getMultilevelName());
         additional.done(function(addinfo) {
+            console.log(addinfo);
             var loadrooms = getshopclient.BookingEngine.getBookingItems(getMultilevelName());
             loadrooms.done(function(rooms) {
                 for(var roomk in rooms) {
                     var room = rooms[roomk];
                     for(var addk in addinfo) {
                         var addinfoitem = addinfo[addk];
-                        if(addinfoitem.itemId === room.id) {
-                            if(addinfoitem.inUse) {
+                        if(addinfoitem.roomId === room.id) {
+                            if(addinfoitem.cleaningState === 2) {
                                 room.inUseState = "inuse";
-                            } else if(addinfoitem.isClean) {
+                            } else if(addinfoitem.cleaningState === 1) {
                                 room.inUseState = "clean";
+                            } else if(addinfoitem.cleaningState === 4) {
+                                room.inUseState = "needInterval";
                             } else {
                                 room.inUseState = "notclean";
                             }

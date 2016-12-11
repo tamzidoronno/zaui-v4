@@ -1,0 +1,11 @@
+
+<div class="row addEvent" gstype="form" method="addEvent">
+    <div class="col"><input class="gsniceinput1" gsname="date"/></div>
+    <div class="col"><input class="gsniceinput1" gsname="name"/></div>
+    <div class="col"><input class="gsniceinput1" gsname="location"/></div>
+    <div class="col"><div class="shop_button" gstype="submit"><? echo $this->__f("Create"); ?></div></div>
+</div>
+
+<script>
+    $('.gsniceinput1[gsname="date"]').datepicker();
+</script>

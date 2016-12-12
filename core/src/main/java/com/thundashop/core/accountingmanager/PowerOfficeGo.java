@@ -92,9 +92,6 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         }
         
         for(User user : users.values()) {
-            if(true) {
-                return null;
-            }
             if(!createUpdateUser(user)) {
                 managers.webManager.logPrint("failed Transferring user, accounting id " + user.accountingId + ", name" + user.fullName + ", customerid " + user.customerId);
                 return null;

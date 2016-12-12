@@ -14,6 +14,7 @@ if(isset($_GET['id'])) {
     $config = $factory->getApi()->getAccountingManager()->getAccountingConfig($file->configId);
     $start = $file->startDate;
     $end = $file->endDate;
+    $file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($config->id, $start, $end);
 }
 
 

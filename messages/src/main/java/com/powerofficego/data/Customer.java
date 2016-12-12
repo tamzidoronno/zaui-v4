@@ -6,15 +6,11 @@ public class Customer {
     public String code;
     public String name;
     public String vatNumber;
-    public String id;
     public String emailAddress;
     
     public void setUser(User user) {
         name = user.fullName;
-        code = user.customerId + "";
-        if(user.accountingId != null && !user.accountingId.isEmpty()) {
-            id = user.accountingId;
-        }
+        code = user.accountingId + "";
         emailAddress = user.emailAddress;
         if(user.emailAddressToInvoice != null && !user.emailAddressToInvoice.isEmpty()) {
             emailAddress = user.emailAddressToInvoice;

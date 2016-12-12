@@ -1,0 +1,46 @@
+<?php
+ /* @var $this \ns_a6f62935_89bf_4e89_ae9a_647f2b25a432\PmsSubscriptionOverview */
+$start = strtotime(date("01.m.Y", time()));
+$end = strtotime(date("t.m.Y", time()));
+echo date("d.m.Y", $start) . " - " . date("d.m.Y", $end);
+$overview = $this->getApi()->getPmsInvoiceManager()->getSubscriptionOverview($this->getSelectedName(), $this->convertToJavaDate($start), $this->convertToJavaDate($end));  
+
+echo "<table width='100%' id='showtable'>";
+echo "<thead>";
+echo "<tr>";
+echo "<th align='left'>Item</th>";
+echo "<th align='left'>Owner</th>";
+echo "<th align='left'>Price</th>";
+echo "<th align='left'>Order price</th>";
+echo "<th align='left'>Paid</th>";
+echo "<th align='left'>Start</th>";
+echo "<th align='left'>End</th>";
+echo "<th align='left'>Order date</th>";
+echo "<th align='left'>Payment type</th>";
+echo "<th align='left'>Status</th>";
+echo "</tr>";
+echo "</thead>";
+
+echo "<tbody>";
+foreach($overview as $room) {
+    $type = $room->paymentType;
+    $paid = $room->paid ? "Yes" : "No";
+    echo "<tr>";
+    echo "<td>" . $room->roomName . "</td>";
+    echo "<td>" . $room->usersName . "</td>";
+    echo "<td>" . $room->price . "</td>";
+    echo "<td>" . $room->orderValue . "</td>";
+    echo "<td>" . $paid . "</td>";
+    echo "<td>" . date("d.m.Y", $room->start/1000). "</td>";
+    echo "<td>" . date("d.m.Y", $room->end/1000). "</td>";
+    echo "<td>";
+    if($room->orderCreationDate) {
+        echo date("d.m.Y", strtotime($room->orderCreationDate));
+    }
+    echo "</td>";
+    echo "<td>" . substr($type, strpos($room->paymentType, "\\")+1) . "</td>";
+    echo "</tr>";
+}
+echo "</tbody>";
+echo "</table>";
+?>

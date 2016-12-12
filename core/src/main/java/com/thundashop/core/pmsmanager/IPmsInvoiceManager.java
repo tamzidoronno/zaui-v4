@@ -50,4 +50,6 @@ public interface IPmsInvoiceManager {
     public void createPeriodeInvoice(Date start, Date end, Double amount, String roomId);
     
     public boolean isRoomPaidFor(String pmsRoomId);
+    
+    public List<PmsSubscriptionOverview> getSubscriptionOverview(Date start, Date end); 
 }

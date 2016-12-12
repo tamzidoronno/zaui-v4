@@ -269,7 +269,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                 customer.code = config.startCustomerCodeOffset + "";
             }
             if(next < config.startCustomerCodeOffset) {
-                customer.code = next + "";
+                customer.code = config.startCustomerCodeOffset + "";
             }
         }
     }

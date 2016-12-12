@@ -1,0 +1,2 @@
+.PmsStopSubscription .pmsbutton { border: solid 1px; padding: 3px; border-radius: 5px; display:inline-block; padding-left: 20px; padding-right: 20px; background-color:green; cursor:pointer; color: #fff; }
+.PmsStopSubscription .completestopform { display: none; }

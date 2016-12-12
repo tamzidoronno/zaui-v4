@@ -65,6 +65,8 @@ public interface IOrderManager {
     @Administrator
     public Payment getUserPrefferedPaymentMethod(String userId);
     
+    public Payment getMyPrefferedPaymentMethod();
+    
     @Editor
     public FilteredData getOrdersFiltered(FilterOptions filterOptions);
     

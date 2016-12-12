@@ -2477,6 +2477,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (room.isStartingToday()) {
                     continue;
                 }
+                
+                if(!room.addedToArx && getConfiguration().hasLockSystem()) {
+                    continue;
+                }
 
                 String ownerMail = storeManager.getMyStore().configuration.emailAdress;
                 String addressMail = storeManager.getMyStore().webAddress;
@@ -4362,6 +4366,42 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return result;
+    }
+
+    @Override
+    public List<PmsRoomSimple> getMyRooms() {
+        PmsBookingSimpleFilter filter = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
+        String userId = getSession().currentUser.id;
+        List<PmsRoomSimple> result = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.userId.equals(userId)) {
+                for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    PmsRoomSimple res = filter.convertRoom(room, booking);
+                    result.add(res);
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void endRoom(String pmsRoomId, Date date) {
+        List<PmsRoomSimple> rooms = getMyRooms();
+        boolean found = false;
+        for(PmsRoomSimple r : rooms) {
+            if(r.pmsRoomId.equals(pmsRoomId)) {
+                found = true;
+            }
+        }
+        if(found) {
+            PmsBooking booking = getBookingFromRoom(pmsRoomId);
+            for(PmsBookingRooms r : booking.rooms) {
+                if(r.pmsBookingRoomId.equals(pmsRoomId)) {
+                    r.requestedEndDate = date;
+                }
+            }
+            saveBooking(booking);
+        }
     }
 
 }

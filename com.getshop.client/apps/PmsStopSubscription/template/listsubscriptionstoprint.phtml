@@ -1,0 +1,38 @@
+<?php
+/* @var $this ns_17c0563b_a3b6_4519_b7d1_0880005b11e3\PmsStopSubscription */
+
+$subscriptions = $this->getApi()->getPmsManager()->getMyRooms($this->getSelectedName());
+echo "<table width='100%'>";
+foreach($subscriptions as $sub) {
+    echo "<tr>";
+    echo "<td class='roomname'>" . $sub->room . "</td><td>" . $sub->roomType . ")" . "</td>";
+    if($sub->requestedEndDate) {
+        echo "<td>Sagt opp: " . date("d.m.Y", strtotime($sub->requestedEndDate)) . "</td>";
+    } else {
+        echo "<td><span class='pmsbutton stopdatecalbutton' pmsRoomId='".$sub->pmsRoomId."'>Si opp</span></td>";
+    }
+    echo "</tr>";
+}
+echo "</table>";
+
+
+$date = date('Y-m-01', strtotime("+2 month"));
+$futureTime = strtotime($date);
+$days = (int)(($futureTime - time())/86400)+1;
+
+?>
+<br>
+<br>
+<div class='completestopform' gstype='form' method='stopsubscription'>
+    Dato for når du flytter ut<br>
+    <input type='text' gsname='id' class='pmsroomidtostop' style='display:none;'>
+    <input type='text' class='dateforleaving' gsname='enddate' placeholder='Dato for når du flytter ut'>
+    <span class='pmsbutton stopdatecalbutton' gstype='submit'>Si opp <span class='stopsubscriptionbuttontext'></span></span>
+</div>
+
+<script>
+    $('.dateforleaving').datepicker( {
+        dateFormat: "dd.mm.yy",
+        minDate: "<?php echo $days; ?>d", changeMonth: true, changeYear: true, showButtonPanel: true
+    });
+</script>

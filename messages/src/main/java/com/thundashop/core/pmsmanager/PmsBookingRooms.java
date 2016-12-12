@@ -65,6 +65,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean deleted = false;
     public Date deletedDate = new Date();
     public double totalCost = 0.0;
+    public Date requestedEndDate = null;
     
     /**
      * Finalized entries

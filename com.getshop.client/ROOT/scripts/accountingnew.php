@@ -7,6 +7,7 @@ $start = date("M d, Y h:i:s A", strtotime($_GET['start']));
 $end = date("M d, Y h:i:s A", strtotime($_GET['end']));
 if(isset($_GET['configid'])) {
     $config = $factory->getApi()->getAccountingManager()->getAccountingConfig($_GET['configid']);
+    $file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($config->id, $start, $end);
 }
 if(isset($_GET['id'])) {
     $file = $factory->getApi()->getAccountingManager()->getFileById($_GET['id']);
@@ -15,12 +16,12 @@ if(isset($_GET['id'])) {
     $end = $file->endDate;
 }
 
+
 if(!$file) {
     echo "Unable to download this file, check if the specified time periode is correct. Please note that you can not transfer orders a second time, time periode tried downloading: $start - $end";
     return;
 }
 
-$file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($config->id, $start, $end);
 
 
 $date = date("d.m.Y_H_i", time());

@@ -190,7 +190,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         PowerOfficeGoSalesOrder goOrder = new PowerOfficeGoSalesOrder();
         if(uniqueId == null) {
             User user = managers.userManager.getUserById(order.userId);
-            goOrder.customerCode = (new Integer(user.accountingId) + 1000);
+            goOrder.customerCode = new Integer(user.accountingId);
         } else {
             goOrder.customerCode = new Integer(uniqueId);
         }

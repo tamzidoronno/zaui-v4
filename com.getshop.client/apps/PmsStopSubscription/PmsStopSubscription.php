@@ -25,7 +25,7 @@ class PmsStopSubscription extends \WebshopApplication implements \Application {
         if($futureTime > $end) {
             $this->failedStop = "Kan ikke fortsette, minum avslutningsdato er: " . date("d.m.Y", $futureTime+86400);
         } else {
-            $this->getApi()->getPmsManager()->endRoom($this->getSelectedName(), $id, $this->convertToJavaDate($end));
+            $this->getApi()->getPmsManager()->endRoomWithDate($this->getSelectedName(), $id, $this->convertToJavaDate($end));
         }
     }
      

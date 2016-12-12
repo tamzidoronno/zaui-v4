@@ -4385,7 +4385,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void endRoom(String pmsRoomId, Date date) {
+    public void endRoomWithDate(String pmsRoomId, Date date) {
         List<PmsRoomSimple> rooms = getMyRooms();
         boolean found = false;
         for(PmsRoomSimple r : rooms) {

@@ -123,7 +123,7 @@ if ($eventHelder) {
                 <? echo $event->bookingItemType->description; ?>
             </div>
             
-            <div class="row date"><? echo $event->location->name." ".$event->subLocation->name; ?> den <? echo date("d. M Y", strtotime($event->mainStartDate)); ?></div>
+            <div class="row date"><? echo $event->location->name; ?> den <? echo date("d. M Y", strtotime($event->mainStartDate)); ?></div>
             
             <div class="row signature">
                 <?

@@ -39,6 +39,7 @@ public class User extends DataCommon implements Comparable<User> {
     
     @Transient
     public String useGroupId = "";
+    public String externalAccountingId;
  
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);

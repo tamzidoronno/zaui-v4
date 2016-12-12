@@ -92,6 +92,9 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         }
         
         for(User user : users.values()) {
+            if(true) {
+                return null;
+            }
             if(!createUpdateUser(user)) {
                 managers.webManager.logPrint("failed Transferring user, accounting id " + user.accountingId + ", name" + user.fullName + ", customerid " + user.customerId);
                 return null;
@@ -125,6 +128,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             ApiCustomerResponse resp = gson.fromJson(result, ApiCustomerResponse.class);
             if(resp.success) {
                 user.accountingId = customer.code + "";
+                user.externalAccountingId = resp.data.id + "";
                 managers.userManager.saveUser(user);
                 return true;
             } else {

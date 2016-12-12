@@ -7,6 +7,7 @@ public class Customer {
     public String name;
     public String vatNumber;
     public String emailAddress;
+    public String id;
     
     public void setUser(User user) {
         name = user.fullName;
@@ -17,6 +18,9 @@ public class Customer {
         }
         if(user.companyObject != null) {
             vatNumber = user.companyObject.vatNumber;
+        }
+        if(user.externalAccountingId != null && !user.externalAccountingId.isEmpty()) {
+            id = user.externalAccountingId;
         }
     }
 }

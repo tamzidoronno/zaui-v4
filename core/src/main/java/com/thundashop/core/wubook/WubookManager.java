@@ -965,8 +965,19 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(pmsbooking == null) {
                     continue;
                 }
-                if(!pmsbooking.isDeleted) {
-                    pmsManager.deleteBooking(pmsbooking.id);
+                if(!pmsbooking.isDeleted && !pmsbooking.getActiveRooms().isEmpty()) {
+                    boolean needSave = false;
+                    for (PmsBookingRooms room : pmsbooking.getActiveRooms()) {
+                        if (room.bookingId != null && !room.bookingId.isEmpty() && room.undeletedDate == null) {
+                            bookingEngine.deleteBooking(room.bookingId);
+                            room.delete();
+                            pmsManager.logEntry("Autodeleted room by channel manager:  ", pmsbooking.id, room.bookingId);
+                            needSave = true;
+                        }
+                    }
+                    if(needSave) {
+                        pmsManager.saveBooking(pmsbooking);
+                    }
                 }
             }
         }

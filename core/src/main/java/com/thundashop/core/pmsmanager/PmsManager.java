@@ -4355,7 +4355,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             } else {
                 info.cleaningState = RoomCleanedInformation.CleaningState.needCleaning;
             }
-            if(needInterval) {
+            if(needInterval && !room.isClean(true)) {
                 info.cleaningState = RoomCleanedInformation.CleaningState.needIntervalCleaning;
             }
             result.add(info);

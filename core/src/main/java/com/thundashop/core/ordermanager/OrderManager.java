@@ -1273,6 +1273,24 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+      public Payment getUserPrefferedPaymentMethodOnly(String userId) {
+        User user = userManager.getUserById(userId);
+        
+        if (user == null)
+            return null;
+        
+        Application paymentApplication = applicationPool.getApplication(user.preferredPaymentType);
+        if (paymentApplication != null) { 
+            Payment payment = new Payment();
+            payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+            payment.paymentId = paymentApplication.id;
+            return payment;
+        }
+        
+        return null;
+    }
+
+    
     public Payment getUserPrefferedPaymentMethod(String userId) {
         User user = userManager.getUserById(userId);
         

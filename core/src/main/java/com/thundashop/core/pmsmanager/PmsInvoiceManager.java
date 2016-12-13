@@ -365,7 +365,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(filter != null && !filter.fromAdministrator) {
             preferredChannel = getChannelPreferredPaymentMethod(booking);
         }
-        Payment preferredUser = orderManager.getUserPrefferedPaymentMethod(booking.userId);
+        Payment preferredUser = orderManager.getUserPrefferedPaymentMethodOnly(booking.userId);
         
         Payment preferredBooking = getPreferredPaymentTypeFromBooking(booking);
         

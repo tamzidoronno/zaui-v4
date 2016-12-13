@@ -1279,6 +1279,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (user == null)
             return null;
         
+        if (user.preferredPaymentType == null || user.preferredPaymentType.isEmpty()) {
+            return null;
+        }
+        
         Application paymentApplication = applicationPool.getApplication(user.preferredPaymentType);
         if (paymentApplication != null) { 
             Payment payment = new Payment();

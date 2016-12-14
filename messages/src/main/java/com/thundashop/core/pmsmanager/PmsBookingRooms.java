@@ -66,6 +66,7 @@ public class PmsBookingRooms implements Serializable {
     public Date deletedDate = new Date();
     public double totalCost = 0.0;
     public Date requestedEndDate = null;
+    public Date undeletedDate;
     
     /**
      * Finalized entries
@@ -499,6 +500,7 @@ public class PmsBookingRooms implements Serializable {
     void undelete() {
         deleted = false;
         deletedDate = null;
+        undeletedDate = new Date();
     }
 
     public void delete() {

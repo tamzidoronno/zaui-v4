@@ -20,7 +20,7 @@ class AccountingTransferOptions {
     public AccountingManagers managers;
 
     public String getUniqueCustomerIdForOrder(Order order) {
-        for(String paymentMethod : config.paymentTypeCustomerIds.values()) {
+        for(String paymentMethod : config.paymentTypeCustomerIds.keySet()) {
             String customerId = config.paymentTypeCustomerIds.get(paymentMethod);
             if(customerId != null && !customerId.isEmpty()) {
                 if(order.hasPaymentMethod(paymentMethod)) {
@@ -28,7 +28,7 @@ class AccountingTransferOptions {
                 }
             }
         }
-        return "";
+        return null;
     }
     
 }

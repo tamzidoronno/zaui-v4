@@ -1771,4 +1771,19 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
     }
 
+    public Integer getNextAccountingId() {
+        int next = -1;
+        List<User> users = userStoreCollections.get(storeId).getAllUsersNotFinalized();
+        for(User user : users) {
+            if(user.accountingId != null && !user.accountingId.isEmpty()) {
+                int nextCheck = new Integer(user.accountingId);
+                if(nextCheck > next) {
+                    next = nextCheck;
+                }
+            }
+        }
+        next++;
+        return next;
+    }
+
 }

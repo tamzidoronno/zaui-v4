@@ -4,11 +4,11 @@
 }
 
 .gs_page_width { max-width:  1100px; margin: auto; }
-.gsarea[area="header"] .gs_page_width { max-width: 100%; padding-right: 30px; padding-left: 30px; height: 125px; color: #fff;}
+.gsarea[area="header"] .gs_page_width { max-width: 100%; padding-right: 30px; padding-left: 30px; height: 135px; color: #fff;}
 .gsarea[area="header"] .ImageDisplayer { left:0px; width: 100px; height: 100px;z-index: 2; }
 .gsarea[area="header"] .Menu { position:absolute; right: 0px; top: 60px; }
 .gsarea[area="header"] .Menu a div {padding-left: 20px; text-transform: uppercase; color: #fff; font-size: 16px; letter-spacing: 2px; }
-.gsarea[area="header"] { background-color: #f15a29; }
+.gsarea[area="header"] { background-color: #5b8297; }
 .gsarea[area="footer"] { background-color: #f1be37; min-height: 150px; }
 .PmsCalendar .dayentry:hover { background-color: #f1be37 !important; color:#000 !important; }
 .PmsCalendar .tinycalendar { background-color: #8bbd39; }

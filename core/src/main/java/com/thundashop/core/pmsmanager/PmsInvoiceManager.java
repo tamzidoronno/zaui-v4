@@ -365,7 +365,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(filter != null && !filter.fromAdministrator) {
             preferredChannel = getChannelPreferredPaymentMethod(booking);
         }
-        Payment preferredUser = orderManager.getUserPrefferedPaymentMethod(booking.userId);
+        Payment preferredUser = orderManager.getUserPrefferedPaymentMethodOnly(booking.userId);
         
         Payment preferredBooking = getPreferredPaymentTypeFromBooking(booking);
         
@@ -380,6 +380,25 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             preferred = preferredBooking;
         }
         return preferred;
+    }
+
+    private List<Order> getOrdersFromRoom(String pmsRoomId) {
+        List<Order> result = new ArrayList();
+        PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
+        for(String orderId : booking.orderIds) {
+            result.add(orderManager.getOrder(orderId));
+        }
+        return result;
+    }
+
+    private Double getTotalValue(Order latestOrder, String bookingItemId) {
+        Double value = 0.0;
+        for(CartItem item : latestOrder.cart.getItems()) {
+            if(item.getProduct().externalReferenceId.equals(bookingItemId)) {
+                value += item.getCount() * item.getProduct().price;
+            }
+        }
+        return value;
     }
 
     class BookingOrderSummary {
@@ -1710,5 +1729,47 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         createOrder(booking.id, filter);
     }
     
+    @Override
+    public List<PmsSubscriptionOverview> getSubscriptionOverview(Date start, Date end) {
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = "active";
+        filter.startDate = start;
+        filter.endDate = end;
+        
+        List<PmsSubscriptionOverview> result = new ArrayList();
+        
+        List<PmsRoomSimple> rooms = pmsManager.getSimpleRooms(filter);
+        for(PmsRoomSimple simple : rooms) {
+            List<Order> orders = getOrdersFromRoom(simple.pmsRoomId);
+            Order latestOrder = getLatestOrder(orders, start, end);
+            PmsSubscriptionOverview toAdd = new PmsSubscriptionOverview();
+            toAdd.price = simple.price;
+            toAdd.paid = false;
+            toAdd.roomName = simple.room;
+            toAdd.usersName = simple.owner;
+            toAdd.orderValue = 0.0;
+            toAdd.start = simple.start;
+            toAdd.end = simple.end;
+            if(latestOrder != null) {
+                toAdd.orderCreationDate = latestOrder.rowCreatedDate;
+                toAdd.orderValue = getTotalValue(latestOrder, simple.pmsRoomId);
+                toAdd.paid = latestOrder.status == Order.Status.PAYMENT_COMPLETED;
+                toAdd.paymentType = latestOrder.payment.paymentType;
+            }
+            result.add(toAdd);
+        }
+        
+        return result;
+    }
     
+    private Order getLatestOrder(List<Order> orders, Date start, Date end) {
+        List<Order> result = new ArrayList();
+        for(Order ord : orders) {
+            if(ord.rowCreatedDate.after(start) && ord.rowCreatedDate.before(end)) {
+                return ord;
+            }
+        }
+        return null;
+    }
+
 }

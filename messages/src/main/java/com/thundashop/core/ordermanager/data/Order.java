@@ -228,7 +228,7 @@ public class Order extends DataCommon implements Comparable<Order> {
 
     public boolean hasPaymentMethod(String paymentMethod) {
         if(payment != null && payment.paymentType != null && paymentMethod != null) {
-            String methodToTest = paymentMethod.toLowerCase();
+            String methodToTest = paymentMethod.replace("-", "_");
             if(payment.paymentType.contains(methodToTest)) {
                 return true;
             }

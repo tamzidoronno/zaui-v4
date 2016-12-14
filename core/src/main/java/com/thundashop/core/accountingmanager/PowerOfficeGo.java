@@ -59,7 +59,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         this.token = createAccessToken();
         if(token == null || token.isEmpty()) {
             /* @TODO HANDLE PROPER WARNING */
-            managers.webManager.logPrint("Failed to fetch access token");
+            managers.webManager.logPrint("Failed to fetch access token, authentication failed.");
             return null;
         }
         
@@ -91,10 +91,6 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             }
         }
         
-        for(Order order : orders) {
-            users.put(order.userId, managers.userManager.getUserById(order.userId));
-        }
-        
         for(User user : users.values()) {
             if(!createUpdateUser(user)) {
                 managers.webManager.logPrint("failed Transferring user, accounting id " + user.accountingId + ", name" + user.fullName + ", customerid " + user.customerId);
@@ -119,16 +115,17 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         String endpoint = "http://api.poweroffice.net/customer/";
         Customer customer = new Customer();
         customer.setUser(user);
+        setDefaultCustomerId(customer);
 
         Gson gson = new Gson();
         try {
             String htmlType = "POST";
-            customer.code = (new Integer(customer.code) + 1000) + "";
             String data = gson.toJson(customer);
             String result = managers.webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, htmlType);
             ApiCustomerResponse resp = gson.fromJson(result, ApiCustomerResponse.class);
             if(resp.success) {
-                user.accountingId = resp.data.id + "";
+                user.accountingId = customer.code + "";
+                user.externalAccountingId = resp.data.id + "";
                 managers.userManager.saveUser(user);
                 return true;
             } else {
@@ -160,13 +157,8 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         List<PowerOfficeGoSalesOrder> salesOrdersToTransfer = new ArrayList();
         List<PowerOfficeGoImportLine> importLinesToTransfer = new ArrayList();
         for(Order order : orders) {
-//            if(order.isInvoice()) {
-                PowerOfficeGoSalesOrder goOrder = createGoSalesOrderLine(order);
-                salesOrdersToTransfer.add(goOrder);
-//            } else {
-//                List<PowerOfficeGoImportLine> line = createGoImportLine(order);
-//                importLinesToTransfer.addAll(line);
-//            }
+            PowerOfficeGoSalesOrder goOrder = createGoSalesOrderLine(order);
+            salesOrdersToTransfer.add(goOrder);
         }
         SalesOrderTransfer transferObject = new SalesOrderTransfer();
         transferObject.salesOrders = salesOrdersToTransfer;
@@ -195,12 +187,14 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
     }
 
     private PowerOfficeGoSalesOrder createGoSalesOrderLine(Order order) throws ErrorException, NumberFormatException {
-        User user = managers.userManager.getUserById(order.userId);
-        if(user.accountingId == null || user.accountingId.isEmpty()) {
-            managers.webManager.logPrint("Accounting id does not exists for user: " + user.fullName + " (" + user.customerId + ")");
-        }
+        String uniqueId = getUniqueCustomerIdForOrder(order);
         PowerOfficeGoSalesOrder goOrder = new PowerOfficeGoSalesOrder();
-        goOrder.customerCode = (new Integer(user.customerId) + 1000);
+        if(uniqueId == null) {
+            User user = managers.userManager.getUserById(order.userId);
+            goOrder.customerCode = new Integer(user.accountingId);
+        } else {
+            goOrder.customerCode = new Integer(uniqueId);
+        }
         goOrder.mergeWithPreviousOrder = false;
         goOrder.salesOrderLines = new ArrayList();
         goOrder.orderNo = (int)order.incrementOrderId;
@@ -241,34 +235,6 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
     }
     
 
-    private boolean createUpdateProduct(Product product) {
-        String endpoint = "http://api.poweroffice.net/Product/";
-        
-        PowerOfficeGoProduct toUpdate = new PowerOfficeGoProduct();
-        toUpdate.insertProduct(product);
-
-        Gson gson = new Gson();
-        try {
-            String htmlType = "POST";
-
-            String data = gson.toJson(toUpdate);
-            String result = managers.webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, htmlType);
-            ApiCustomerResponse resp = gson.fromJson(result, ApiCustomerResponse.class);
-            if(resp.success) {
-                product.accountingSystemId = resp.data.id + "";
-                managers.productManager.saveProduct(product);
-                return true;
-            } else {
-                /* @TODO HANDLE PROPER WARNING */
-                System.out.println("Failed to transfer customer: " + result);
-            }
-        }catch(Exception e) {
-            /* @TODO HANDLE PROPER WARNING */
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     private List<PowerOfficeGoImportLine> createGoImportLine(Order order) {
         List<PowerOfficeGoImportLine> lines = new ArrayList();
         if(order.cart != null) {
@@ -289,6 +255,23 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             }
         }
         return lines;
+    }
+
+    private void setDefaultCustomerId(Customer customer) {
+        if(customer.code == null || customer.code.isEmpty()) {
+            int next = managers.userManager.getNextAccountingId();
+            if(next > 0) {
+                customer.code = next + "";
+            } else {
+                if(config.startCustomerCodeOffset == null) {
+                    config.startCustomerCodeOffset = 1;
+                }
+                customer.code = config.startCustomerCodeOffset + "";
+            }
+            if(next < config.startCustomerCodeOffset) {
+                customer.code = config.startCustomerCodeOffset + "";
+            }
+        }
     }
 
 }

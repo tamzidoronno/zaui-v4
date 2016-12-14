@@ -19,3 +19,6 @@ h2,h1 { font-weight: 500; }
 .SelectPrefferedPaymentType .selectpaymenttypebox.selected,
 .PmsStopSubscription .pmsbutton,
 .SavedCardsPrinter .pmsbutton { background-color: #f29400; }
+
+.PmsRegisterCreditCard .pmsbutton { background-color:#f29400; color:#fff; border: solid 0px; }
+.PmsRegisterCreditCard .selectitem { background-color:#fff; border-color: rgb(169, 169, 169); }

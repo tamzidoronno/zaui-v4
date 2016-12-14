@@ -52,4 +52,7 @@ public interface IPmsInvoiceManager {
     public boolean isRoomPaidFor(String pmsRoomId);
     
     public List<PmsSubscriptionOverview> getSubscriptionOverview(Date start, Date end); 
+    
+    
+   public String createRegisterCardOrder(String item);
 }

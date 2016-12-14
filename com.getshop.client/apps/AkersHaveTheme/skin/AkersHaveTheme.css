@@ -53,12 +53,20 @@ h2 {
     .mobilenavigatemenu { color:#000; }
    .Menu a div { width: 100%; box-sizing: border-box; }
    .gs_language_selection { top: -10px; }
-   .PmsBooking .inputblock { margin-right: 10px; }
-   .PmsBooking .pmsfront2 .check_available_button { margin-bottom: 20px; width: 100% !important; }
+   .PmsBooking .inputblock { width:100%; }
+   .PmsBooking .pmsfront2 .check_available_button { margin-bottom: 20px; width: 100% !important; box-sizing: border-box; }
    .mobilenavigatemenu {
         text-align: center !important;
     }
     .Menu .menuentries.horizontal { background-color:#fff !important; }
     .Menu a div { text-align: center; }
+    .inputblock .fa-bed { display:none; }
     .gsinner.gsuicell.gsdepth_1.gscount_1.gscell_126 { padding-top: 5px !important; }
+    
+    .PmsBooking .pmsfront .fa-calendar { position:absolute; right: 0px; }
+    .PmsBooking .pmsfront .dates .inputblock,
+    .PmsBooking .pmsfront .dates.start_date,
+    .PmsBooking .pmsfront .dates.end_date,
+    .PmsBooking .pmsfront .dates .dates_inner { width:100%; box-sizing:  border-box; }
+    
 }

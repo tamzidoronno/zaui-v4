@@ -101,11 +101,14 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         }
 
         SavedOrderFile file = new SavedOrderFile();
-        if(transferOrders(orders)) {
+        String transferId = transferOrders(orders);
+        if(!transferId.isEmpty()) {
             file.orders= new ArrayList();
             for(Order ord : orders) {
                 file.orders.add(ord.id);
             }
+            file.transferId = transferId;
+            
         }
         
         return file;
@@ -152,7 +155,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         }
     }
 
-    private boolean transferOrders(List<Order> orders) {
+    private String transferOrders(List<Order> orders) {
         String endpoint = "http://api.poweroffice.net/Import/";
         List<PowerOfficeGoSalesOrder> salesOrdersToTransfer = new ArrayList();
         List<PowerOfficeGoImportLine> importLinesToTransfer = new ArrayList();
@@ -174,16 +177,20 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                     order.transferredToAccountingSystem = true;
                     order.dateTransferredToAccount = new Date();
                     managers.orderManager.saveOrder(order);
-                    return true;
+                    
+                    PowerOfficeGoPoster poster = new PowerOfficeGoPoster(resp.data, token);
+                    poster.start();
+                    
+                    return resp.data;
                 }
             } else {
                 /* @TODO HANDLE PROPER WARNING */
-                System.out.println("Failed to transfer customer: " + result);
+                managers.webManager.logPrint("Failed to transfer customer: " + result);
             }
         }catch(Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return "";
     }
 
     private PowerOfficeGoSalesOrder createGoSalesOrderLine(Order order) throws ErrorException, NumberFormatException {

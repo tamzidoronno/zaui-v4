@@ -10,7 +10,7 @@ body {
 }
 .PmsBooking .pmsfront1 { background-color:rgba(0,0,0,0.5); border: solid 0px; color:#fff; }
 h1 {
-    font-size: 50px;
+    font-size: 30px;
     margin-top: 0;
     font-weight: 600;
 }
@@ -46,3 +46,19 @@ h2 {
     text-transform: uppercase;
 }
 
+
+@media only all and (max-width: 800px) {
+    .gsarea[area="header"] img { max-width: 80% !important;padding-top: 40px; }
+    .gs_page_width { padding-left: 20px; padding-right: 20px; }
+    .mobilenavigatemenu { color:#000; }
+   .Menu a div { width: 100%; box-sizing: border-box; }
+   .gs_language_selection { top: -10px; }
+   .PmsBooking .inputblock { margin-right: 10px; }
+   .PmsBooking .pmsfront2 .check_available_button { margin-bottom: 20px; width: 100% !important; }
+   .mobilenavigatemenu {
+        text-align: center !important;
+    }
+    .Menu .menuentries.horizontal { background-color:#fff !important; }
+    .Menu a div { text-align: center; }
+    .gsinner.gsuicell.gsdepth_1.gscount_1.gscell_126 { padding-top: 5px !important; }
+}

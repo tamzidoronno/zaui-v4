@@ -433,5 +433,27 @@ public class CartManager extends ManagerBase implements ICartManager {
         return false;
     }
 
-
+    /**
+     * Returns a cart by it ids.
+     * 
+     * If the cart with the ID does not exists, it will simply 
+     * create a new one.
+     * 
+     * @param cart
+     * @return 
+     */
+    public Cart getCartById(String cartId) {
+        Cart cart = carts.get(cartId);
+        if (cart == null) {
+            cart = new Cart();
+            cart.id = cartId;
+        }
+        
+        cart.finalizeCart();
+        return cart;
+    }
+    
+    public void storeCart(String cartId) {
+        
+    }
 }

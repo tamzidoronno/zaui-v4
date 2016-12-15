@@ -217,6 +217,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         saveObject(user);
         
         sendWelcomeEmail(user, uncryptedPassword);
+        sendWelcomeSms(user, uncryptedPassword);
         sendEmailIfUserNeedCompanyOwnerApproval(user);
         return user;
     }
@@ -1112,6 +1113,23 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         Store store = storeManager.getMyStore();
         mailfactory.send(store.getDefaultMailAddress(), user.emailAddress, subject, text);
     }
+    
+    private void sendWelcomeSms(User user, String uncryptedPassword) {
+        Application app = applicationPool.getApplication("ba6f5e74-87c7-4825-9606-f2d3c93d292f");
+        if (app == null) {
+            return;
+        }
+        
+        if (!app.getSetting("shouldSendEmail").equals("true")) {
+            return;
+        }
+        
+        String text = app.getSetting("smsconfig");
+        text = formatText(text, user, uncryptedPassword);
+       
+        messageManager.sendSms("nexmo", user.cellPhone, text, user.prefix, getStoreName());
+    }
+
 
     private String formatText(String text, User user, String uncryptedPassword) {
         if (user.fullName != null)

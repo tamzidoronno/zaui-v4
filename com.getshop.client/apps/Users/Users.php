@@ -295,6 +295,8 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $this->setConfigurationSetting("ordersubject", $_POST['ordersubject']);
         $this->setConfigurationSetting("orderemail", $_POST['emailconfig']);
         $this->setConfigurationSetting("shouldSendEmail", $_POST['shouldSendEmail']);
+        $this->setConfigurationSetting("smsconfig", $_POST['smsconfig']);
+        $this->setConfigurationSetting("shouldSmsSignupSms", $_POST['shouldSmsSignupSms']);
     }
 
     static function sortApps($a, $b) {

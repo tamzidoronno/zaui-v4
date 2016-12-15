@@ -279,9 +279,9 @@ public class SFIExcelReport {
         cell_1.setCellValue("Navn");
         cell_2.setCellValue("Timer");
         cell_3.setCellValue("Timesats");
-        cell_4.setCellValue("Totalt");
-        cell_5.setCellValue("NFR-finansiering");
-        cell_6.setCellValue("In-kind");
+        cell_4.setCellValue("NFR-finansiering");
+        cell_5.setCellValue("In-kind");
+        cell_6.setCellValue("Totalt");
         
         setFontSize(cell_1, 10, true);
         setFontSize(cell_2, 10, true);
@@ -326,19 +326,19 @@ public class SFIExcelReport {
                 cell_3.setCellValue(" ");
             }
             
-            cell_4.setCellValue(post11.totalt);
             if (post11.nfr > 0) {
-                cell_5.setCellValue(post11.nfr);
+                cell_4.setCellValue(post11.nfr);
+            } else {
+                cell_4.setCellValue(" ");
+            }
+            
+            if (post11.inkind > 0) {
+                cell_5.setCellValue(post11.inkind);
             } else {
                 cell_5.setCellValue(" ");
             }
             
-            if (post11.inkind > 0) {
-                cell_6.setCellValue(post11.inkind);
-            } else {
-                cell_6.setCellValue(" ");
-            }
-            
+            cell_6.setCellValue(post11.totalt);
 
             setFontSize(cell_1, 10, false);
             setFontSize(cell_2, 10, false);
@@ -379,9 +379,9 @@ public class SFIExcelReport {
         
         cell_1.setCellValue("Sum");
         cell_2.setCellValue(sumtimer);
-        cell_4.setCellValue(sumtotal);
-        cell_5.setCellValue(sumnfr);
-        cell_6.setCellValue(suminkind);
+        cell_4.setCellValue(sumnfr);
+        cell_5.setCellValue(suminkind);
+        cell_6.setCellValue(sumtotal);
         
         setFontSize(cell_1, 10, true);
         setFontSize(cell_2, 10, false);
@@ -444,9 +444,9 @@ public class SFIExcelReport {
             cell_1.setCellValue(post13.navn);
             cell_2.setCellValue(" ");
             cell_3.setCellValue(" ");
-            cell_4.setCellValue(post13.totalt);
-            cell_5.setCellValue(post13.nfr);
-            cell_6.setCellValue(post13.inkind);
+            cell_4.setCellValue(post13.nfr);
+            cell_5.setCellValue(post13.inkind);
+            cell_6.setCellValue(post13.totalt);
 
             setFontSize(cell_1, 10, false);
             setFontSize(cell_2, 10, false);
@@ -538,9 +538,9 @@ public class SFIExcelReport {
             cell_1.setCellValue(post14.navn);
             cell_2.setCellValue(" ");
             cell_3.setCellValue(" ");
-            cell_4.setCellValue(post14.totalt);
-            cell_5.setCellValue(post14.nfr);
-            cell_6.setCellValue(post14.inkind);
+            cell_4.setCellValue(post14.nfr);
+            cell_5.setCellValue(post14.inkind);
+            cell_6.setCellValue(post14.totalt);
 
             setFontSize(cell_1, 10, false);
             setFontSize(cell_2, 10, false);
@@ -579,9 +579,9 @@ public class SFIExcelReport {
         
         cell_1.setCellValue("Sum");
         cell_2.setCellValue(" ");
-        cell_4.setCellValue(sumtotal);
-        cell_5.setCellValue(sumnfr);
-        cell_6.setCellValue(suminkind);
+        cell_4.setCellValue(sumnfr);
+        cell_5.setCellValue(suminkind);
+        cell_6.setCellValue(sumtotal);
         
         setFontSize(cell_1, 10, true);
         setFontSize(cell_2, 10, false);

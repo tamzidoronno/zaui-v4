@@ -9,7 +9,7 @@ foreach ($projects as $project) {
         <div class='gs_shop_small_icon' gss_view='c3projects_connected_companies' gss_value='<? echo $project->id; ?>' gss_value_2='<? echo $_POST['companyid']; ?>' gss_fragment='connectedProjects' gss_method='addCompany'><i class='fa fa-plus'></i></div>
         <?
 
-        echo $project->name;
+        echo $project->projectNumber." - ".$project->name;
     echo "</div>";
 }
 ?>

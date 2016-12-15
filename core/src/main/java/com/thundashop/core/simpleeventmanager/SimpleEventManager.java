@@ -102,4 +102,14 @@ public class SimpleEventManager extends ManagerBase implements ISimpleEventManag
                 .findAny()
                 .orElse(null);
     }
+
+    @Override
+    public void addUserToEvent(String pageId, String userId) {
+        SimpleEvent event = getEventByPageId(pageId);
+        if (event != null) {
+            event.userIds.add(userId);
+            saveObject(event);
+        }
+        
+    }
 }

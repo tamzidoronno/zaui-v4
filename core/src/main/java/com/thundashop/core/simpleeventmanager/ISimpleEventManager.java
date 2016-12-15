@@ -26,4 +26,7 @@ public interface ISimpleEventManager {
     public void deleteEvent(String eventId);
     
     public SimpleEvent getEventByPageId(String pageId);
+    
+    public void addUserToEvent(String pageId, String userId);
+   
 }

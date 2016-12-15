@@ -42,7 +42,7 @@ foreach ($events as $event) {
     <?
     if ($event->requireSignup) {
     ?>
-        <div class="col"><div class="shop_button" gs_show_modal='simplebooking'>Påmelding</div></div>
+        <div class="col"><div class="shop_button" gs_show_modal='simplebooking' pageid="<? echo $event->eventPageId; ?>">Påmelding</div></div>
     <?
     }
     ?>

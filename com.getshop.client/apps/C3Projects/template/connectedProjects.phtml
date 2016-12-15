@@ -19,7 +19,7 @@ foreach ($projects as $project) {
 
     ?>
     <div class='gss_c3_company_project'>
-        <div class='gss_c3_project_title'><? echo $project->name; ?></div>
+        <div class='gss_c3_project_title'><? echo $project->projectNumber . " - ".$project->name; ?></div>
         <div class='gss_c3_workpackages'>
             <b>Workpackages:</b>
             <?

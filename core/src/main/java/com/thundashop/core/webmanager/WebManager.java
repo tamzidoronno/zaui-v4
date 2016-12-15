@@ -95,11 +95,13 @@ public class WebManager extends ManagerBase implements IWebManager {
             connection.setRequestProperty("Accept", "application/json");
         }
         
-        connection.setDoOutput(true);
-        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-        outputStream.writeBytes(new String(data.getBytes(), encoding));
-        outputStream.flush();
-        outputStream.close();
+        if(data != null && !data.isEmpty()) {
+            connection.setDoOutput(true);
+            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+            outputStream.writeBytes(new String(data.getBytes(), encoding));
+            outputStream.flush();
+            outputStream.close();
+        }
         
         try {
             BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -110,7 +112,7 @@ public class WebManager extends ManagerBase implements IWebManager {
             while((responseLine = responseStream.readLine()) != null) {
                 responseBuffer.append(responseLine);
             }
-            return responseBuffer.toString();    
+            return responseBuffer.toString();
         }catch(IOException ex) {
             BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
         
@@ -124,5 +126,6 @@ public class WebManager extends ManagerBase implements IWebManager {
             System.out.println(res);
             
             throw ex;
-        }    }
+        }    
+    }
 }

@@ -328,6 +328,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Address address = user.address;
         Order order = createOrderInternally(address);
         order.userId = user.id;
+        order.payment = getUserPrefferedPaymentMethod(userId);
         saveOrder(order);
         updateStockAndSendConfirmation(order);
         order.doFinalize();

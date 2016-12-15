@@ -434,6 +434,40 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     private boolean runningDiffRoutine = false;
     
+
+    @Override
+    public String createRegisterCardOrder(String item) {
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.startDate = new Date();
+        filter.endDate = new Date();
+        filter.filterType = "active";
+        
+        List<PmsBooking> bookings = pmsManager.getAllBookings(filter);
+        List<PmsBooking> result = new ArrayList();
+        for(PmsBooking booking : bookings) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room.bookingItemId.equals(item)) {
+                    result.add(booking);
+                }
+            }
+        }
+        
+        if(result.size() != 1) {
+            return "-1";
+        }
+        
+        PmsBooking booking = result.get(0);
+        
+        User user = userManager.getUserById(booking.userId);
+        user.preferredPaymentType = orderManager.getStorePreferredPayementMethod().paymentId;
+        userManager.saveUser(user);
+        
+        cartManager.clear();
+        Order order = orderManager.createOrderForUser(booking.userId);
+        return order.id;
+    }
+    
+    
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if(dataCommon instanceof PmsUserDiscount) {

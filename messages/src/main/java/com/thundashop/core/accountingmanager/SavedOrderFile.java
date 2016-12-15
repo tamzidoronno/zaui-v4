@@ -24,6 +24,7 @@ public class SavedOrderFile extends DataCommon {
     public List<String> tamperedOrders = new ArrayList();
     public List<String> orders = new ArrayList();
     public String configId = "";
+    public String transferId;
     
     @Transient
     public Integer numberOfOrdersNow = 0;

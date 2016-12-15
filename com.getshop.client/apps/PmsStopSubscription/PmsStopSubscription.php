@@ -13,6 +13,7 @@ class PmsStopSubscription extends \WebshopApplication implements \Application {
         return "PmsStopSubscription";
     }
     
+    
     public function selectEngine() {
         $this->setConfigurationSetting("selectedkey", $_POST['data']['name']);
     }

@@ -15,6 +15,7 @@ if(isset($_GET['id'])) {
     $start = $file->startDate;
     $end = $file->endDate;
     $file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($config->id, $start, $end);
+    $factory->getApi()->getAccountingManager()->deleteFile($_GET['id']);
 }
 
 

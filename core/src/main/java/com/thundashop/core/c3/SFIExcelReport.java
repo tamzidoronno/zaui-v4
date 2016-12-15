@@ -326,19 +326,19 @@ public class SFIExcelReport {
                 cell_3.setCellValue(" ");
             }
             
-            cell_4.setCellValue(post11.totalt);
             if (post11.nfr > 0) {
-                cell_5.setCellValue(post11.nfr);
+                cell_4.setCellValue(post11.nfr);
+            } else {
+                cell_4.setCellValue(" ");
+            }
+            
+            if (post11.inkind > 0) {
+                cell_5.setCellValue(post11.inkind);
             } else {
                 cell_5.setCellValue(" ");
             }
             
-            if (post11.inkind > 0) {
-                cell_6.setCellValue(post11.inkind);
-            } else {
-                cell_6.setCellValue(" ");
-            }
-            
+            cell_6.setCellValue(post11.totalt);
 
             setFontSize(cell_1, 10, false);
             setFontSize(cell_2, 10, false);

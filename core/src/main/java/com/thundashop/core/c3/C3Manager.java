@@ -250,8 +250,6 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         User user = getSession().currentUser;
         
-        
-        
         List<UserProjectAccess> retList = getAcceListForUser(user.id);
         
         Collections.sort(retList, (o1, o2) -> {
@@ -716,7 +714,6 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     private int daysBetween(Date d1, Date d2){
         Calendar cal = Calendar.getInstance();
         cal.setTime(d2);
-        cal.add(Calendar.DAY_OF_MONTH, 1);
         d2 = cal.getTime();
         return (int)( ((d2.getTime() + 1) - d1.getTime()) / (1000 * 60 * 60 * 24));
     }
@@ -785,22 +782,24 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         List<User> users = userManager.getUsersByCompanyId(companyId);
         SFIExcelReportData reportData = new SFIExcelReportData();
         
-        
         HashMap<String, Double> roundsums = getRoundSums(projectsToUse, users, start, end, true, forWorkPackageId);
         HashMap<String, Double> roundsumsInKnind = getRoundSums(projectsToUse, users, start, end, false, forWorkPackageId);
         HashMap<String, C3ReportHours> hoursInKind = getHours(projectsToUse, users, start, end, false, forWorkPackageId);
         HashMap<String, C3ReportHours> hoursNfr = getHours(projectsToUse, users, start, end, true, forWorkPackageId);
         
-        for (String userId : roundsums.keySet()) {
+        for (User user : users) {
+            String userId = user.id;
+            
             SFIExcelReportDataPost11 post11 = createPost11(userId);
-            post11.inkind = roundsumsInKnind.get(userId);
-            post11.nfr = roundsums.get(userId);
+            post11.inkind = roundsumsInKnind.get(userId) == null ? 0 : roundsumsInKnind.get(userId);
+            post11.nfr = roundsums.get(userId) == null ? 0 : roundsums.get(userId);
             post11.totalt = post11.inkind + post11.nfr;
             post11.timesats = 0;
             if (post11.totalt > 0) {
                 reportData.post11.add(post11);
             }
         }
+        
         for (String userId : hoursNfr.keySet()) {
             SFIExcelReportDataPost11 post11 = createPost11(userId);
             post11.timer = hoursNfr.get(userId).timer;
@@ -810,6 +809,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 reportData.post11.add(post11);
             }
         }
+        
         for (String userId : hoursInKind.keySet()) {
             SFIExcelReportDataPost11 post11 = createPost11(userId);
             post11.timer = hoursInKind.get(userId).timer;
@@ -894,8 +894,13 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             for (User user : users) {
                 C3Report report = getReportForUserProject(user.id, project.id, start, end, forWorkPackageId);
                 
-                if (report.roundSum > 0) {
-                    double roundSumToUse = isNfr ? report.roundSum : report.roundSumInKind;
+                if (report.roundSum > 0 && isNfr) {
+                    double roundSumToUse = report.roundSum;
+                    addRoundSum(roundsums, roundSumToUse, user.id);
+                }
+                
+                if (report.roundSumInKind > 0 && !isNfr) {
+                    double roundSumToUse = report.roundSumInKind;
                     addRoundSum(roundsums, roundSumToUse, user.id);
                 }
             }

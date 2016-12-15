@@ -1222,7 +1222,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     end = booking.rowCreatedDate;
                 }
                 if(cartManager.couponIsValid(couponCode, start, end)) {
-                    price = cartManager.calculatePriceForCoupon(couponCode, price);
+                    price = cartManager.calculatePriceForCouponWithoutSubstract(couponCode, price);
                 }
             }
         }
@@ -1603,9 +1603,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             price *= tax;
         }
         
-        
-        
-        logPrint(price);
         return price;
     }
 

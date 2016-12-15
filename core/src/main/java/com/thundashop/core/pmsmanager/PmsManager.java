@@ -4134,7 +4134,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.isDeleted = false;
         
         List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
-        
+        cartManager.subtractTimesLeft(booking.couponCode);
         createUserForBooking(booking);
         if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
              pmsInvoiceManager.createPrePaymentOrder(booking);

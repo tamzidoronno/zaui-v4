@@ -309,24 +309,8 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     public double calculatePriceForCoupon(String couponCode, double price) {
-        Coupon coupon = getCoupon(couponCode);
-        double newPrice = price;
-        if(coupon != null) {
-            if(coupon.timesLeft > 0) {
-                if(coupon.type == CouponType.FIXED) {
-                    newPrice = price - coupon.amount;
-                }
-                if(coupon.type == CouponType.FIXEDPRICE) {
-                    newPrice = coupon.amount;
-                }
-                if(coupon.type == CouponType.PERCENTAGE) {
-                    double multiplier = (double)(100-coupon.amount)/(double)100;
-                    newPrice = price * multiplier;
-                }
-                coupon.timesLeft--;
-                saveObject(coupon);
-            }
-        }
+        double newPrice = calculatePriceForCouponWithoutSubstract(couponCode, price);
+        subtractTimesLeft(couponCode);
         
         if(newPrice < 0) {
             newPrice = 0;
@@ -455,5 +439,36 @@ public class CartManager extends ManagerBase implements ICartManager {
     
     public void storeCart(String cartId) {
         
+    }
+
+    public void subtractTimesLeft(String couponCode) {
+        if(couponCode == null || couponCode.isEmpty()) {
+            return;
+        }
+        Coupon coupon = getCoupon(couponCode);
+        if(coupon.timesLeft > 0) {
+            coupon.timesLeft--;
+            saveObject(coupon);
+        }
+    }
+
+    public double calculatePriceForCouponWithoutSubstract(String couponCode, double price) {
+        Coupon coupon = getCoupon(couponCode);
+        Double newPrice = price;
+        if(coupon != null) {
+            if(coupon.timesLeft > 0) {
+                if(coupon.type == CouponType.FIXED) {
+                    newPrice = price - coupon.amount;
+                }
+                if(coupon.type == CouponType.FIXEDPRICE) {
+                    newPrice = (double)coupon.amount;
+                }
+                if(coupon.type == CouponType.PERCENTAGE) {
+                    double multiplier = (double)(100-coupon.amount)/(double)100;
+                    newPrice = price * multiplier;
+                }
+            }
+        }
+        return newPrice;
     }
 }

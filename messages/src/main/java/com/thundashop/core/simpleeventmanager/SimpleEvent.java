@@ -17,8 +17,11 @@ public class SimpleEvent extends DataCommon {
 
     public Date date;
     public String name;
-    public String eventPageId;
+    public String eventPageId = "";
+    public String originalPageId;
     public String location;
+    
+    public Boolean requireSignup;
     
     static Comparator<? super SimpleEvent> getDateSorter() {
         return (o1, o2) -> {

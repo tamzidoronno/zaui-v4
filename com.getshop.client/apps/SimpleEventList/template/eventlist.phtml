@@ -1,9 +1,9 @@
 <?
 /* @var $this \ns_0b9a8784_5399_415f_9d79_b1c271f3bed2\SimpleEventList */
 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
-    $events = $this->getApi()->getSimpleEventManager()->getAllEvents();
+    $events = $this->getApi()->getSimpleEventManager()->getAllEvents($this->getPage()->getId());
 } else {
-    $events = $this->getApi()->getSimpleEventManager()->getEventsInFuture();
+    $events = $this->getApi()->getSimpleEventManager()->getEventsInFuture($this->getPage()->getId());
 }
 
 if (!$events) {
@@ -13,12 +13,22 @@ if (!$events) {
 
 
 foreach ($events as $event) {
+    
+    
+    if ($event->requireSignup) {
+        $toggleSignupFunction = '<i gsclick="toggleSignupRequired" eventid="'.$event->id.'" class="fa fa-toggle-on"></i>';
+    } else {
+        $toggleSignupFunction = '<i gsclick="toggleSignupRequired" eventid="'.$event->id.'" class="fa fa-toggle-off"></i>';
+    }
+
     ?>
+
 <div class="row">
     <div class="col">
         
         <?        
         if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            echo $toggleSignupFunction;
         ?>
             <div gsclick='deleteEvent' gs_confirm="Sikker på at du ønsker å slette dette?" eventid='<? echo $event->id; ?>' class="gs_shop_small_icon"><i class="fa fa-trash"></i></div>
         <?
@@ -29,7 +39,13 @@ foreach ($events as $event) {
     <div class="col"><? echo $event->name; ?></div>
     <div class="col"><? echo $event->location; ?></div>
     <div class="col"><a href='/?page=<? echo $event->eventPageId; ?>'><div class="shop_button">Mer informasjon</div></a></div>
-    <div class="col"><div class="shop_button" gs_show_modal='simplebooking'>Påmelding</div></div>
+    <?
+    if ($event->requireSignup) {
+    ?>
+        <div class="col"><div class="shop_button" gs_show_modal='simplebooking'>Påmelding</div></div>
+    <?
+    }
+    ?>
 </div>
 
     <?

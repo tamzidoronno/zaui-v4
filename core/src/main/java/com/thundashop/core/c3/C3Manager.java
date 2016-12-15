@@ -250,7 +250,17 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         User user = getSession().currentUser;
         
-        return getAcceListForUser(user.id);
+        
+        
+        List<UserProjectAccess> retList = getAcceListForUser(user.id);
+        
+        Collections.sort(retList, (o1, o2) -> {
+            C3Project pro1 = getProject(o1.projectId);
+            C3Project pro2 = getProject(o2.projectId);
+            return C3Project.compareByProjectNumber(pro1, pro2);
+        });
+        
+        return retList;
     }
 
     @Override

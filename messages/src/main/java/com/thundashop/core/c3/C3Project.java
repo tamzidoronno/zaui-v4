@@ -20,6 +20,25 @@ import org.mongodb.morphia.annotations.Transient;
  */
 public class C3Project extends DataCommon {
 
+    public static int compareByProjectNumber(C3Project o1, C3Project o2) {
+        Integer projectnumber1 = 0;
+        Integer projectnumber2 = 0;
+
+        try {
+            projectnumber1 = Integer.parseInt(o1.projectNumber);
+        } catch (Exception ex) {
+            return -1;
+        }
+
+        try {
+            projectnumber2 = Integer.parseInt(o2.projectNumber);
+        } catch (Exception ex) {
+            return 1;
+        }
+
+        return projectnumber1.compareTo(projectnumber2);
+    }
+
     public String name = "";
     public String projectNumber = "";
     public String projectOwner = "";
@@ -110,22 +129,7 @@ public class C3Project extends DataCommon {
         return (C3Project o1, C3Project o2) -> {
             
             {
-                Integer projectnumber1 = 0;
-                Integer projectnumber2 = 0;
-
-                try {
-                    projectnumber1 = Integer.parseInt(o1.projectNumber);
-                } catch (Exception ex) {
-                    return -1;
-                }
-
-                try {
-                    projectnumber2 = Integer.parseInt(o2.projectNumber);
-                } catch (Exception ex) {
-                    return 1;
-                }
-
-                return projectnumber1.compareTo(projectnumber2);
+                return compareByProjectNumber(o1, o2);
             }
 
         };

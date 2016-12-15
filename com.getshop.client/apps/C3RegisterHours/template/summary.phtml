@@ -8,6 +8,15 @@ if (!count($accessList)) {
     return;
 }
 
+if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->isCompanyOwner) {
+?>
+    <div class="downloadofreport">
+        Last ned SFI Rapport for nåværende periode
+        <br/><div class="shop_button downloadReport" filename="SFIReport.xlsx">Last ned</div>
+    </div>
+<?
+}
+
 foreach ($accessList as $access) {
     $project = $this->getApi()->getC3Manager()->getProject($access->projectId);
     $projectPeriodeToShow = $project->currentProjectPeriode;

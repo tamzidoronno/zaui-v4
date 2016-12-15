@@ -126,7 +126,7 @@ interface IC3Manager {
     @Administrator
     public C3Report getReportForUserProject(String userId, String projectId, Date start, Date end, String forWorkPackageId);
     
-    @Administrator
+    @Customer
     public String getBase64SFIExcelReport(String companyId, Date start, Date end);
     
     public boolean allowedNfrHour(String userId);

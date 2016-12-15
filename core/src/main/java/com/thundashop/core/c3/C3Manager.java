@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.DoubleKeyMap;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.UserManager;
@@ -748,6 +749,18 @@ public class C3Manager extends ManagerBase implements IC3Manager {
 
     @Override
     public String getBase64SFIExcelReport(String companyId, Date start, Date end) {
+        
+        if (getSession().currentUser.type < 50) {
+            if (getSession().currentUser.companyObject == null )
+                throw new ErrorException(26);
+            
+            if (!getSession().currentUser.isCompanyOwner)
+                throw new ErrorException(26);
+            
+            if (!getSession().currentUser.companyObject.id.equals(companyId)) 
+                throw new ErrorException(26);
+        }
+        
         List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId);
         SFIExcelReport report = new SFIExcelReport(reportData);
         return report.getBase64Encoded();
@@ -757,6 +770,10 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         List<C3Project> projectsToUse = getAllProjectsConnectedToCompany(companyId);
         List<User> users = userManager.getUsersByCompanyId(companyId);
         List<WorkPackage> workPackagesToUse = getWorkPackages(projectsToUse, users, start, end);
+        
+        Collections.sort(workPackagesToUse, (o1, o2) -> {
+            return o1.name.compareTo(o2.name);
+        });
         
         List<SFIExcelReportData> datas = new ArrayList();
         

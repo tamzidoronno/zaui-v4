@@ -564,6 +564,18 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['couponid']);
         $coupon->pmsWhenAvailable = $_POST['data']['pmsWhenAvailable'];
         $coupon->whenAvailable = $data;
+        
+        $coupon->productsToSupport = array();
+        foreach($_POST['data'] as $key => $value) {
+            if($value !== "true") {
+                continue;
+            }
+            if(stristr($key, "productdiscount_")) {
+                $product = str_replace("productdiscount_", "", $key);
+                $coupon->productsToSupport[] = $product;
+            }
+        }
+        
         $this->getApi()->getCartManager()->addCoupon($coupon);
     }
 

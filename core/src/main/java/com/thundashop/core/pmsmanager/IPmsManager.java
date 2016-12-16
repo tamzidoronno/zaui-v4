@@ -277,6 +277,8 @@ public interface IPmsManager {
     public Integer getNumberOfAvailable(String itemType, Date start, Date end);
     public void checkDoorStatusControl() throws Exception;
     public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
+    public List<PmsBookingAddonItem> getAddonsWithDiscount(String pmsBookingRoomId);
+    
     
     public PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception;
     

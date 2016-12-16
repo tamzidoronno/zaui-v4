@@ -375,13 +375,22 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
     }
 
-    public boolean couponIsValid(String couponCode, Date start, Date end) {
+    public boolean couponIsValid(String couponCode, Date start, Date end, String productId) {
         if(start == null || end == null) {
             return true;
         }
         Coupon coupon = getCoupon(couponCode);
+        if(coupon == null) {
+            return false;
+        }
         if(coupon.whenAvailable == null) {
             return true;
+        }
+        
+        if(productId != null && !coupon.productsToSupport.isEmpty()) {
+            if(!coupon.productsToSupport.contains(productId)) {
+                return false;
+            }
         }
         
         PmsRepeatingData when = coupon.whenAvailable;

@@ -3106,43 +3106,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(remove) {
                 continue;
             }
-            
-            if(addonConfig.isSingle) {
-                if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
-                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room, room.date.start);
-                    room.addons.add(toAdd);
-                } else if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
-                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room, room.date.end);
-                    room.addons.add(toAdd);
-                } else {
-                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room, room.date.start);
-                    room.addons.add(toAdd);
-                }
-            } else {
-            
-                Date start = pmsInvoiceManager.normalizeDate(room.date.start, true);
-                Date end = pmsInvoiceManager.normalizeDate(room.date.end, false);
 
-                while(true) {
-                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, room, start);
-                    room.addons.add(toAdd);
-                    start = addTimeUnit(start, booking.priceType);
-                    if(start.after(end)) {
-                        break;
-                    }
+
+            List<PmsBookingAddonItem> result = createAddonForTimePeriode(type, room.date.start, room.date.end, booking.priceType);
+            for(PmsBookingAddonItem toReturn : result) {
+                if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST) {
+                    toReturn.count = room.numberOfGuests;
                 }
             }
+            
+            room.addons.addAll(result);
         }
         saveBooking(booking);
     }
 
-    public PmsBookingAddonItem createAddonToAdd(PmsBookingAddonItem addonConfig, PmsBookingRooms room, Date date) {
-        if(date.after(room.date.end)) {
-            date = room.date.end;
-        }
-        if(date.before(room.date.start)) {
-            date = room.date.start;
-        }
+    public PmsBookingAddonItem createAddonToAdd(PmsBookingAddonItem addonConfig, Date date) {
         
         Product product = productManager.getProduct(addonConfig.productId);
         
@@ -3157,13 +3135,36 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.isActive = addonConfig.isActive;
         if(addonConfig.price > 0) {
             toReturn.price = addonConfig.price;
+            toReturn.priceExTaxes = addonConfig.priceExTaxes;
         }
         
-        if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST) {
-            toReturn.count = room.numberOfGuests;
-        }
         return toReturn;
     }
+    
+    @Override
+    public List<PmsBookingAddonItem> getAddonsWithDiscount(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+
+        List<PmsBookingAddonItem> allAddons = new ArrayList(getConfiguration().addonConfiguration.values());
+        List<PmsBookingAddonItem> result = new ArrayList();
+        for(PmsBookingAddonItem item : allAddons) {
+            List<PmsBookingAddonItem> addons = createAddonForTimePeriodeWithDiscount(item.addonType, room, booking);
+            PmsBookingAddonItem addon = createAddonToAdd(item, room.date.start);
+            Double price = 0.0;
+            Integer count = 0;
+            for(PmsBookingAddonItem tmp : addons) {
+                price += tmp.price;
+                count += tmp.count;
+            }
+            if(count > 0) {
+                addon.price = price / count;
+            }
+            result.add(addon);
+        }
+        return result;
+    }
+
 
     private Date addTimeUnit(Date start, Integer priceType) {
         Calendar cal = Calendar.getInstance();
@@ -4064,24 +4065,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     break;
                 }
             }
-            if(item.isSingle) {
-                PmsBookingAddonItem newAddon = createAddonToAdd(item, room, new Date());
-                newAddon.count = count;
-                room.addons.add(newAddon);
-            } else {
-                Date start = pmsInvoiceManager.normalizeDate(room.date.start, true);
-                Date end = pmsInvoiceManager.normalizeDate(room.date.end, false);
-
-                while(true) {
-                    PmsBookingAddonItem toAdd = createAddonToAdd(item, room, start);
-                    toAdd.count = count;
-                    room.addons.add(toAdd);
-                    start = addTimeUnit(start, booking.priceType);
-                    if(start.after(end)) {
-                        break;
-                    }
-                }
+            
+            List<PmsBookingAddonItem> addons = createAddonForTimePeriode(item.addonType, room.date.start, room.date.end, booking.priceType);
+            for(PmsBookingAddonItem addon : addons) {
+                addon.count = count;
             }
+            room.addons.addAll(addons);
         }
         saveBooking(booking);
     }
@@ -4402,6 +4391,50 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             saveBooking(booking);
         }
+    }
+
+    
+    
+    private List<PmsBookingAddonItem> createAddonForTimePeriodeWithDiscount(Integer type, PmsBookingRooms room, PmsBooking booking) {
+        List<PmsBookingAddonItem> result = createAddonForTimePeriode(type, room.date.start, room.date.end, booking.priceType);
+        
+        for(PmsBookingAddonItem item : result) {
+            if(cartManager.couponIsValid(booking.couponCode, item.date, item.date, item.productId)) {
+                item.price = cartManager.calculatePriceForCouponWithoutSubstract(booking.couponCode, item.price);
+            }
+            
+        }
+        
+        return result;
+    }
+    
+    private List<PmsBookingAddonItem> createAddonForTimePeriode(Integer type, Date start, Date end, Integer priceType) {
+        List<PmsBookingAddonItem> result = new ArrayList();
+        PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
+        if(addonConfig.isSingle) {
+            if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.EARLYCHECKIN) {
+                PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, start);
+                result.add(toAdd);
+            } else if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
+                PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, end);
+                result.add(toAdd);
+            } else {
+                PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, start);
+                result.add(toAdd);
+            }
+        } else {
+            start = pmsInvoiceManager.normalizeDate(start, true);
+            end = pmsInvoiceManager.normalizeDate(end, false);
+            while(true) {
+                PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, start);
+                result.add(toAdd);
+                start = addTimeUnit(start, priceType);
+                if(start.after(end)) {
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
 }

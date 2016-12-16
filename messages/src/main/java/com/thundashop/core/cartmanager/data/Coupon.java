@@ -6,6 +6,8 @@ package com.thundashop.core.cartmanager.data;
 
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pmsmanager.PmsRepeatingData;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -20,4 +22,5 @@ public class Coupon extends DataCommon {
     public String description = "";
     public PmsRepeatingData whenAvailable = null;
     public String pmsWhenAvailable = "";
+    public List<String> productsToSupport = new ArrayList();
 }

@@ -99,6 +99,58 @@ $starting = time();
                 <span class='optionbox'><input type='text' gsname='endingAt' value='<? echo date("d.m.Y", $endDate); ?>' style='width: 35%;text-align: center;'></span>
             </div>
         </div>
+        
+        <?php
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        
+        echo "<b>Limit discount to the following:</b><br>";
+        echo "<table>";
+        $i = 1;
+        $style="";
+        foreach($types as $type) {
+            if($i > 5) {
+                $style = "style='display:none'";
+            }
+            $product = $this->getApi()->getProductManager()->getProduct($type->productId);
+            $checked = "";
+            if(in_array($product->id, $coupon->productsToSupport)) {
+                $checked = "CHECKED";
+            }
+            
+            echo "<tr $style class='productentryrow'>";
+            echo "<td><input type='checkbox' gsname='productdiscount_".$product->id."' $checked></td><td>" . $product->name . "</td>";
+            echo "</tr>";
+             $i++;
+        }
+        
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        foreach($config->addonConfiguration as $addonItem) {
+            /* @var $addonItem core_pmsmanager_PmsBookingAddonItem */
+            if(!$addonItem->isActive && !$addonItem->isAvailableForBooking) {
+                continue;
+            }
+            if($i > 5) {
+                $style = "style='display:none'";
+            }
+            $product = $this->getApi()->getProductManager()->getProduct($addonItem->productId);
+            
+            $checked = "";
+            if(in_array($product->id, $coupon->productsToSupport)) {
+                $checked = "CHECKED";
+            }
+            
+            echo "<tr $style class='productentryrow'>";
+            echo "<td><input type='checkbox' gsname='productdiscount_".$product->id."' $checked></td><td>Addon : " . $product->name . "</td>";
+            echo "</tr>";
+            $i++;
+        }
+        echo "</table>";
+        
+        if($style) {
+            echo "<span onclick='$(this).hide();$(\".productentryrow\").show();'>Show more</span>";
+        }
+        ?>
+        
         <div class='eventrow'>
             <span class='title'></span>
             <span class='optionbox' style='text-align: right;'>

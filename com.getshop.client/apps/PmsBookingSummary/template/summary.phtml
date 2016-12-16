@@ -220,10 +220,7 @@ function printAddons($room, $config, $object) {
     /* @var $config core_pmsmanager_PmsConfiguration */
     /* @var $object \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary */
     $additional = $object->getApi()->getPmsManager()->getAdditionalTypeInformationById($object->getSelectedName(), $room->bookingItemTypeId);
-    $addons = $config->addonConfiguration;
-//    echo "<pre>";
-//    print_r($addons);
-//    echo "</pre>";
+    $addons = $object->getApi()->getPmsManager()->getAddonsWithDiscount($object->getSelectedName(), $room->pmsBookingRoomId);
    
     $types = array();
     $typesCount = array();
@@ -268,18 +265,17 @@ function printAddons($room, $config, $object) {
             continue;
         }
         
-        $addon = $config->addonConfiguration->{$type};
         $product = $object->getProduct($addon->productId);
-        $text =  str_replace("{price}", $product->price, $text);
+        $text =  str_replace("{price}", $addon->price, $text);
         echo "<div class='itemrow addonitemrow' roomid='".$room->pmsBookingRoomId."' addontype='$type'>";
         if(!isset($types[$type])) {
             echo "<div class='addAddonOnRoom'><i class='fa fa-square-o'></i> " . $text . "</div>";
         } else {
             $count = $types[$type];
             echo "<div><i class='fa fa-check-square-o removeAddonOnRoom'></i> <span class='bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></span>";
-            if($type == 5) {
+            if($addon->count > 1) {
                 echo "<select class='changeNumberOfBeds updateCountOnAddon'>";
-                for($i = 1; $i <= $additional->maxNumberOfBeds; $i++) {
+                for($i = 1; $i <= $addon->count; $i++) {
                     $selected = "";
                     if($i == $typesCount[$type]) {
                         $selected = "SELECTED";
@@ -291,7 +287,7 @@ function printAddons($room, $config, $object) {
                 echo $count;
             }
             echo " x ". $text;
-            echo "<span class='price'>" . $product->price * $count. " kr </span>";
+            echo "<span class='price'>" . $addon->price * $count. " kr </span>";
             echo "</div>";
         }
         echo "</div>";

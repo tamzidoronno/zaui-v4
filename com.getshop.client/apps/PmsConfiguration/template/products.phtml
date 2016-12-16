@@ -62,7 +62,7 @@ foreach($products as $product) {
         $added = "added";
         $text = $addonItem->descriptionWeb;
     }
-    echo "<td align='left' class='addontext'><input type='checkbox' gsname='addonconfig_".$prodid."_isAvailableForBooking' $checked></input> <i class='fa fa-comment addwebtext $added' title='The text that should be shown when booking' prodid='".$prodid."'></i> <span title='$text'>$text</span></td>";
+    echo "<td align='left' class='addontext'><input type='checkbox' gsname='addonconfig_".$prodid."_isAvailableForBooking' $checked></input> <i class='fa fa-comment addwebtext $added' title='The text that should be shown when booking' prodid='".$prodid."'></i> <span title='$text' class='textfield'>$text</span></td>";
     $checked = $selectedAddonConfig->isSingle ? "CHECKED" : "";
     echo "<td align='center'><input type='checkbox' gsname='addonconfig_".$prodid."_isSingle' $checked></input></td>";
     echo "<td><input type='txt' gsname='addonconfig_".$prodid."_description' value='".$product->description."'></input></td>";

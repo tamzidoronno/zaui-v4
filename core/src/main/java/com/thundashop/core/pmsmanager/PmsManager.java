@@ -3130,6 +3130,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.priceExTaxes = product.priceExTaxes;
         toReturn.productId = product.id;
         toReturn.date = date;
+        toReturn.descriptionWeb = addonConfig.descriptionWeb;
         toReturn.isAvailableForBooking = addonConfig.isAvailableForBooking;
         toReturn.isAvailableForCleaner = addonConfig.isAvailableForCleaner;
         toReturn.isActive = addonConfig.isActive;

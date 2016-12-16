@@ -38,7 +38,12 @@ app.PmsConfiguration = {
     
     addWebText : function() {
         var comment = $(this);
-        var text = prompt("Select text");
+        var oldText = comment.closest('td').find('.textfield').attr('title');
+        console.log(oldText);
+        var text = prompt("Enter a text to display", oldText);
+        if(!text) {
+            return;
+        }
         var data = {
             "text" : text,
             "prodid" : $(this).attr('prodid')
@@ -46,6 +51,8 @@ app.PmsConfiguration = {
         var event = thundashop.Ajax.createEvent('','setWebText', $(this), data);
         thundashop.Ajax.postWithCallBack(event, function() {
             comment.addClass('added');
+            comment.closest('td').find('.textfield').html(text);
+            comment.closest('td').find('.textfield').attr('title', text);
         });
     },
     

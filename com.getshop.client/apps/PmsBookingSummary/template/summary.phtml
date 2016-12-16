@@ -89,9 +89,8 @@ foreach($booking->rooms as $room) {
         if(!isset($prices[$product->taxGroupObject->taxRate])) {
             $prices[$product->taxGroupObject->taxRate] = 0;
         }
-        $prices[$product->taxGroupObject->taxRate] += ($product->price * $addon->count);
+        $prices[$product->taxGroupObject->taxRate] += ($addon->price * $addon->count);
     }
-    
 }
 
 $bottom = "<h3 class='bottomborder'> " . $this->__w("Total") . "</h3>";
@@ -112,8 +111,6 @@ if($total > 0) {
     $bottom .= "<div class='itemrow ' style='padding-top: 10px;'>";
     $bottom .= "Totalt <span class='price'>" . round($total) . " kr </span>";
     $bottom .= "</div>";
-}
-if($total > 0) {
     echo $bottom;
 }
 ?>
@@ -224,6 +221,7 @@ function printAddons($room, $config, $object) {
    
     $types = array();
     $typesCount = array();
+    
     foreach($room->addons as $addon) {
         if(!isset($types[$addon->addonType])) {
             $types[$addon->addonType] = 0;

@@ -904,8 +904,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 if(room.isSameDay(addon.date, room.date.end)) {
                     toRemove.add(addon);
                 } else {
-                    if(addon.count > 0) {
-                        addon.count = room.guests.size();
+                    if(addon.count > 0 && room.guests.size() > 0) {
+                        addon.count = room.numberOfGuests;
                     }
                 }
             }

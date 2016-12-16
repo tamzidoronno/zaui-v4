@@ -3108,7 +3108,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
 
 
-            List<PmsBookingAddonItem> result = createAddonForTimePeriode(type, room.date.start, room.date.end, booking.priceType);
+            List<PmsBookingAddonItem> result = createAddonForTimePeriodeWithDiscount(type, room, booking);
             for(PmsBookingAddonItem toReturn : result) {
                 if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST) {
                     toReturn.count = room.numberOfGuests;

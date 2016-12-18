@@ -16,7 +16,7 @@ body {
     width: 100%;
     top: 0px;
     background-color: #FFF;
-    z-index: 1;
+    z-index: 2;
 }
 
 .gsarea[area="header"] img {

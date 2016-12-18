@@ -10,11 +10,7 @@ import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.ibm.icu.util.Calendar; 
-import com.thundashop.core.amesto.AmestoManager;
 import com.thundashop.core.amesto.AmestoSync; 
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
@@ -755,40 +751,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(bookingId);
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
-            Date now = new Date();
-            if(!room.isStartingToday() && room.isStarted() && (!room.isEnded() || room.isEndingToday())
-                    && (start.before(now) && end.after(now))) {
-                //This is extending a stay, we need to remove cleaning and mark it as cleaned.
-                forceMarkRoomAsCleaned(room.bookingItemId);
-            }
-            if(room.bookingId != null && !room.bookingId.isEmpty()) {
-                bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
-            }
             Date oldStart = new Date();
             Date oldEnd = new Date();
             oldStart.setTime(room.date.start.getTime());
-            oldEnd.setTime(room.date.end.getTime());
-
-            room.date.start = start;
-            room.date.end = end;
-            room.date.exitCleaningDate = null;
-            room.date.cleaningDate = null;
-            if(room.addedToArx) {
-                if(room.isStarted() && !room.isEnded()) {
-                    forceMarkRoomAsCleaned(room.bookingItemId);
-                    room.addedToArx = false;
-                    if(getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
-                        room.addedToArx = true;
-                    }
-                }
-            }
-            
-            if(configuration.updatePriceWhenChangingDates) {
-                setPriceOnRoom(room, true, booking);
-            }
-            pmsInvoiceManager.updateAddonsByDates(room);
-            saveBooking(booking);
-            
+            oldEnd.setTime(room.date.end.getTime());        
+            changeDatesOnRoom(room, start, end);
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
             logEntry(logText, bookingId, room.bookingItemId, roomId);
             doNotification("date_changed", booking, room);
@@ -1532,6 +1499,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public void markRoomAsCleaned(String itemId) {
+        if(getConfiguration().whenCleaningEndStayForGuestCheckinOut) {
+            endStay(itemId);
+        }
+        
         PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
         Date start = new Date();
         Calendar end = Calendar.getInstance();
@@ -1554,6 +1525,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logText += " not in use";
         }
         logEntry(logText, null, additional.itemId);
+        
     }
 
     void markRoomAsDirty(String bookingItemId) {
@@ -1651,7 +1623,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room.date.cleaningDate == null) {
             room.date.cleaningDate = room.date.start;
         }
-        if (room.isEndingToday(day)) {
+        if (room.isEndingToday(day) && !getConfiguration().autoExtend) {
             return false;
         }
         if (!room.isActiveOnDay(day)) {
@@ -2419,9 +2391,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     boolean needCheckOutCleaning(PmsBookingRooms room, Date toDate) {
+        if(getConfiguration().autoExtend && !room.keyIsReturned) {
+            return false;
+        }
         if (room.date.exitCleaningDate == null) {
             room.date.exitCleaningDate = room.date.end;
-
             if (configuration.cleaningNextDay) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(room.date.exitCleaningDate);
@@ -4436,6 +4410,51 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return result;
+    }
+
+    private void endStay(String itemId) {
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room.bookingItemId != null && room.bookingItemId.equals(itemId)) {
+                    if(room.isEndingToday() && !room.isEnded()) {
+                        changeDatesOnRoom(room, room.date.start, new Date());
+                        logEntry("Cleaning program is ending the stay.", booking.id, itemId, room.pmsBookingRoomId);
+                    }
+                }
+            }
+        }
+    }
+
+    private void changeDatesOnRoom(PmsBookingRooms room, Date start, Date end) {
+        PmsBooking booking = getBookingFromRoom(room.pmsBookingRoomId);
+        Date now = new Date();
+        if(!room.isStartingToday() && room.isStarted() && (!room.isEnded() || room.isEndingToday())
+                && (start.before(now) && end.after(now))) {
+            //This is extending a stay, we need to remove cleaning and mark it as cleaned.
+            forceMarkRoomAsCleaned(room.bookingItemId);
+        }
+        if(room.bookingId != null && !room.bookingId.isEmpty()) {
+            bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
+        }
+        room.date.start = start;
+        room.date.end = end;
+        room.date.exitCleaningDate = null;
+        room.date.cleaningDate = null;
+        if(room.addedToArx) {
+            if(room.isStarted() && !room.isEnded()) {
+                forceMarkRoomAsCleaned(room.bookingItemId);
+                room.addedToArx = false;
+                if(getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
+                    room.addedToArx = true;
+                }
+            }
+        }
+
+        if(configuration.updatePriceWhenChangingDates) {
+            setPriceOnRoom(room, true, booking);
+        }
+        pmsInvoiceManager.updateAddonsByDates(room);
+        saveBooking(booking);
     }
 
 }

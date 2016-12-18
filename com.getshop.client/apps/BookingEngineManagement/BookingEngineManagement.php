@@ -238,10 +238,14 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
             $item->{$key} = $value;
         }
         $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedName(), $item);
-        
+       
         if ($item->bookingItemTypeId != $_POST['data']['bookingitemtype']) {
             $this->getApi()->getBookingEngine()->changeBookingItemType($this->getSelectedName(), $item->id, $_POST['data']['bookingitemtype']);
         }
+        
+        $additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $_POST['data']['itemid']);
+        $additional->textMessageDescription = $_POST['data']['textMessageDescription'];
+        $this->getApi()->getPmsManager()->updateAdditionalInformationOnRooms($this->getSelectedName(), $additional);
     }
     
     public function saveItemType() {

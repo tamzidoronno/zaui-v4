@@ -1170,11 +1170,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         if (room != null) {
             message = formater.formatRoomData(message, room, bookingEngine);
+            try {
+                PmsAdditionalItemInformation addinfo = getAdditionalInfo(room.bookingItemId);
+                message = message.replace("{roomDescription}", addinfo.textMessageDescription);
+            }catch(Exception e) {}
         }
         message = formater.formatContactData(message, userManager.getUserById(booking.userId), null, booking);
         message = formater.formatBookingData(message, booking, bookingEngine);
 
         message = message.replace("{extrafield}", configuration.extraField);
+        
 
         return message;
     }

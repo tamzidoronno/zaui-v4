@@ -2,6 +2,7 @@
 /* @var $this \ns_3b18f464_5494_4f4a_9a49_662819803c4a\BookingEngineManagement */
 $id = $_POST['data']['typeid'];
 $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $id);
+$additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $id);
 ?>
 
 <div gstype="form" method="saveItem">
@@ -34,6 +35,10 @@ $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedNa
         <tr>
             <td width="50%">Description</td>
             <td width="50%"><input type="text" gsname="description" style='width:100%;' value="<? echo $item->description; ?>"></td>
+        </tr>
+        <tr>
+            <td width="50%">Message to include in text message</td>
+            <td width="50%"><textarea type="text" gsname="textMessageDescription" style='width:100%; height:80px;'><? echo $additional->textMessageDescription; ?></textarea></td>
         </tr>
         <tr>
             <td width="50%">Type</td>

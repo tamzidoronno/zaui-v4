@@ -20,6 +20,9 @@ public class PmsAdditionalItemInformation extends DataCommon {
     public HashMap<Long, String> cleanedByUser = new HashMap();
     public String itemId = "";
     
+    //This is a variable that can be set when sending messages.
+    public String textMessageDescription = "";
+    
     @Transient
     private boolean isClean = false;
     

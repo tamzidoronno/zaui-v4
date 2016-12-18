@@ -4,11 +4,16 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.RegistrationRulesField;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 class PmsBookingMessageFormatter { 
+
+    private ProductManager productManager;
     public String formatRoomData(String message, PmsBookingRooms room, BookingEngine bookingEngine) {
         if(message == null) {
             return "";
@@ -140,7 +145,24 @@ class PmsBookingMessageFormatter {
                     bookingData += "<br>";
                 }
             }
-            bookingData += "<br>";
+            
+            try {
+                HashMap<String, Integer> addonsCount = new HashMap(); 
+                for(PmsBookingAddonItem addon : room.addons) {
+                    int count = 0;
+                    if(addonsCount.get(addon.productId) != null) {
+                        count = addonsCount.get(addon.productId);
+                    }
+                    count += addon.count;
+                    addonsCount.put(addon.productId, count);
+                }
+                for(String prodId : addonsCount.keySet()) {
+                    Product product = productManager.getProduct(prodId);
+                    bookingData += addonsCount.get(prodId) + " x " + product.name + "<br>";
+                }
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
         }
         
         String bookinginfo = "<table>";
@@ -192,6 +214,10 @@ class PmsBookingMessageFormatter {
             }
         }
         return "";
+    }
+
+    void setProductManager(ProductManager productManager) {
+        this.productManager = productManager;
     }
 
 }

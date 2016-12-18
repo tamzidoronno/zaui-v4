@@ -92,7 +92,7 @@ public class PmsConfiguration extends DataCommon {
     public String extraField = "";
     public String smsName = "GetShop";
     
-    
+    //Lock system
     public String locktype = "";
     public String arxHostname = "";
     @Administrator
@@ -117,6 +117,7 @@ public class PmsConfiguration extends DataCommon {
     boolean automaticallyCloseRoomIfDirtySameDay = false;
     public boolean autoAddMissingItemsToRoom = false;
     public boolean autoNotifyCareTakerForMissingInventory = false;
+    public boolean whenCleaningEndStayForGuestCheckinOut = false;
 
     
     /* Mail settings */

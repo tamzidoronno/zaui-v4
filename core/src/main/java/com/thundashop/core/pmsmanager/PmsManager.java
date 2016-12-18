@@ -1623,7 +1623,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room.date.cleaningDate == null) {
             room.date.cleaningDate = room.date.start;
         }
-        if (room.isEndingToday(day)) {
+        if (room.isEndingToday(day) && !getConfiguration().autoExtend) {
             return false;
         }
         if (!room.isActiveOnDay(day)) {
@@ -2391,9 +2391,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     boolean needCheckOutCleaning(PmsBookingRooms room, Date toDate) {
+        if(getConfiguration().autoExtend && !room.keyIsReturned) {
+            return false;
+        }
         if (room.date.exitCleaningDate == null) {
             room.date.exitCleaningDate = room.date.end;
-
             if (configuration.cleaningNextDay) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(room.date.exitCleaningDate);

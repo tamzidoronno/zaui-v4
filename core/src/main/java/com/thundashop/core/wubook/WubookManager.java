@@ -616,10 +616,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         
-        if((int)bookingtable.get("id_channel") == 1 && (int)bookingtable.get("booked_rate") == -1) {
-            return guests;
-        }
-        
         if(addons != null) {
             String channel = (String) addons.get("channel_rate_name");
             if(channel != null) {

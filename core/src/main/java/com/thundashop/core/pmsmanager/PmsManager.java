@@ -3719,7 +3719,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private boolean verifyPhoneOnBooking(PmsBooking booking) {
         String countryCode = booking.countryCode;
-        if(countryCode == null || !countryCode.isEmpty()) {
+        if(countryCode == null || countryCode.isEmpty()) {
             countryCode = "NO";
         }
         

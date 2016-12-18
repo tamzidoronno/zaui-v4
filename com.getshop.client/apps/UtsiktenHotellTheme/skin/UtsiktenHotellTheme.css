@@ -13,6 +13,7 @@ body {
     background-color: #FFF;
     width: 300px;
     text-align: left;
+    z-index: 3;
 }
 .gsarea[area="header"] .Menu {
     top: 40px;

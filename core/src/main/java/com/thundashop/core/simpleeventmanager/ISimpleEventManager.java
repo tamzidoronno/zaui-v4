@@ -18,10 +18,15 @@ public interface ISimpleEventManager {
     @Editor
     public void saveEvent(SimpleEvent simpleEvent);
     
-    public List<SimpleEvent> getEventsInFuture();
+    public List<SimpleEvent> getEventsInFuture(String listPageId);
     
-    public List<SimpleEvent> getAllEvents();
+    public List<SimpleEvent> getAllEvents(String listPageId);
     
     @Editor
     public void deleteEvent(String eventId);
+    
+    public SimpleEvent getEventByPageId(String pageId);
+    
+    public void addUserToEvent(String pageId, String userId);
+   
 }

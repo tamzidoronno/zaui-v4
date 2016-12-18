@@ -23,7 +23,25 @@ class SimpleEventList extends \MarketingApplication implements \Application {
         $event->name = $_POST['data']['name'];
         $event->date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
         $event->location = $_POST['data']['location'];
+        $event->originalPageId = $this->getPage()->getId();
+        
         $this->getApi()->getSimpleEventManager()->saveEvent($event);
+    }
+    
+    public function toggleSignupRequired() {
+        $events = $this->getApi()->getSimpleEventManager()->getAllEvents($this->getPage()->getId());
+        foreach ($events as $event) {
+            if ($event->id == $_POST['data']['eventid']) {
+                
+                if ($event->requireSignup)
+                    $event->requireSignup = "false";
+                else 
+                    $event->requireSignup = "true";
+                
+                $this->getApi()->getSimpleEventManager()->saveEvent($event);
+            }
+        }
+        
     }
     
     public function deleteEvent() {

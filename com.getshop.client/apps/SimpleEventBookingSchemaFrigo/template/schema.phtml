@@ -6,31 +6,43 @@
 <div gstype='form' method='signup'>
     <div class='row'>
         <div class='col1'>Ditt navn</div>
-        <div class='col2'> <input class='gsniceinput1'/> </div>
+        <div class='col2'> <input class='gsniceinput1' gsname="name"/> </div>
     </div>
     
     <div class='row'>
         <div class='col1'>Mobilnr</div>
-        <div class='col2'> <input class='gsniceinput1'/> </div>
+        <div class='col2'> <input class='gsniceinput1' gsname="cellphone"/> </div>
     </div>
     
     <div class='row'>
         <div class='col1'>Epost</div>
-        <div class='col2'> <input class='gsniceinput1'/> </div>
+        <div class='col2'> <input class='gsniceinput1'  gsname="email"/> </div>
     </div>
     
     <div class='row'>
         <div class='col1'>Addresse</div>
-        <div class='col2'> <input class='gsniceinput1' placeholder='Gate'/> </div>
-        <div class='col2'> <input class='gsniceinput1' placeholder="Postaddresse"/> </div>
-        <div class='col2'> <input class='gsniceinput1' placeholder="By"/> </div>
+        <div class='col2'> <input class='gsniceinput1' placeholder='Gate'  gsname="street"/> </div>
+        <div class='col2'> <input class='gsniceinput1' placeholder="Postaddresse"  gsname="postcode"/> </div>
+        <div class='col2'> <input class='gsniceinput1' placeholder="By"  gsname="city"/> </div>
     </div>
     
     <div class='row'>
         <div class='col1'>Foresatte</div>
-        <div class='col2'> <input class='gsniceinput1' placeholder='Navn på far/mor'/> </div>
-        <div class='col2'> <input class='gsniceinput1' placeholder="Mobilnr"/> </div>
+        <div class='col2'> <input class='gsniceinput1' placeholder='Navn på far/mor'  gsname="parentname"/> </div>
+        <div class='col2'> <input class='gsniceinput1' placeholder="Mobilnr"  gsname="parentcell"/> </div>
     </div>
+    <br/>
+    * Grunnet behandling av sensitiv informasjon ønsker vi at dere kontaker oss dersom din sønn/datter trenger spesielle behov angående mat eller annet.
+    <br/>
+    <br/>
     
-    <div class='shop_button'>Meld deg på</div>
+    <?
+    if (isset($_POST['event']) && $_POST['event'] == "signup") {
+        echo "Du er nå meldt på..";
+    } else {
+    ?>
+    <div class='shop_button' gstype="submit">Meld deg på</div>
+    <?
+    }
+    ?>
 </div>

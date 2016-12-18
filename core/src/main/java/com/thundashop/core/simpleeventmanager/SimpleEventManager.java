@@ -47,7 +47,7 @@ public class SimpleEventManager extends ManagerBase implements ISimpleEventManag
     }
 
     @Override
-    public List<SimpleEvent> getEventsInFuture() {
+    public List<SimpleEvent> getEventsInFuture(String origninalPageId) {
         
         Date now = new Date();
         
@@ -59,21 +59,22 @@ public class SimpleEventManager extends ManagerBase implements ISimpleEventManag
                 .forEach(e -> finalize(e));
         
         return new ArrayList(retEvents.stream()
+                .filter(e -> e.originalPageId != null && e.originalPageId.equals(origninalPageId))
                 .sorted(SimpleEvent.getDateSorter())
                 .collect(Collectors.toList())
         );
     }
 
     @Override
-    public List<SimpleEvent> getAllEvents() {
+    public List<SimpleEvent> getAllEvents(String origninalPageId) {
         events.values().stream()
+                .filter(e -> e.originalPageId != null && e.originalPageId.equals(origninalPageId))
                 .forEach(e -> finalize(e));
         
-        
-        return new ArrayList(events.values().stream()
+        return events.values().stream()
+                .filter(e -> e.originalPageId != null && e.originalPageId.equals(origninalPageId))
                 .sorted(SimpleEvent.getDateSorter())
-                .collect(Collectors.toList())
-        );
+                .collect(Collectors.toList());
     }
     
     private void finalize(SimpleEvent event) {
@@ -89,5 +90,26 @@ public class SimpleEventManager extends ManagerBase implements ISimpleEventManag
         if (event != null) {
             deleteObject(event);
         }
+    }
+
+    @Override
+    public SimpleEvent getEventByPageId(String pageId) {
+        events.values().stream().forEach(event -> finalize(event));
+        
+        return events.values().stream()
+                .filter(event -> event.eventPageId != null)
+                .filter(event -> event.eventPageId.equals(pageId))
+                .findAny()
+                .orElse(null);
+    }
+
+    @Override
+    public void addUserToEvent(String pageId, String userId) {
+        SimpleEvent event = getEventByPageId(pageId);
+        if (event != null) {
+            event.userIds.add(userId);
+            saveObject(event);
+        }
+        
     }
 }

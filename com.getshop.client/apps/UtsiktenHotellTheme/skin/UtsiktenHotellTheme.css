@@ -5,14 +5,15 @@ body {
 }
 
 .gsarea[area="header"] {
-    height: 110px;
+    height: 120px;
     background-color: #FFF;
 }
 
 .gsarea[area="header"] .Menu .entries .entries {
-    background-color: #000;
+    background-color: #FFF;
     width: 300px;
     text-align: left;
+    z-index: 3;
 }
 .gsarea[area="header"] .Menu {
     top: 40px;

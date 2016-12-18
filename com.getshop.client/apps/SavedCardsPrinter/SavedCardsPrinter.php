@@ -13,5 +13,20 @@ class SavedCardsPrinter extends \WebshopApplication implements \Application {
     public function render() {
         $this->includefile("cards");
     }
+    
+    public function removeCard() {
+        $id = $_POST['data']['id'];
+        
+        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+        $cards = array();
+        foreach($user->savedCards as $card) {
+            if($card->id == $id) {
+                continue;
+            }
+            $cards[] = $card;
+        }
+        $user->savedCards = $cards;
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
 }
 ?>

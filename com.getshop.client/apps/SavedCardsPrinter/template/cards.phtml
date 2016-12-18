@@ -5,6 +5,9 @@ $cards = $user->savedCards;
 echo "<span class='pmsbutton'>Legg til et kort</span><br>";
 if(sizeof($cards) == 0) {
     echo "* Du har ingen kort lagret.";
+} else {
+    foreach($cards as $card) {
+        echo "<i gstype='clicksubmit' style='cursor:pointer;' gsname='id' method='removeCard' gsvalue='".$card->id."' class='fa fa-trash-o'></i> " . $card->mask . "<br>";
+    }
 }
-echo "<br>";
 ?>

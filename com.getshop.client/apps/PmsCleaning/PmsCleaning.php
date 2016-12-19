@@ -387,6 +387,8 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
         $items = $this->indexList($items);
         $rooms = $this->getApi()->getPmsManager()->getAllAdditionalInformationOnRooms($this->getSelectedName());
+        $checkoutCleaningRooms = $this->getApi()->getPmsManager()->getRoomsNeedingCheckoutCleaning($this->getSelectedName(), $this->convertToJavaDate(time()));
+
         echo "<table cellspacing='0' cellpadding='0'>";
         echo "<tr>";
         echo "<th>Room</th>";
@@ -394,6 +396,15 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         echo "</tr>";
         
         foreach($rooms as $room) {
+            $found = false;
+            foreach($checkoutCleaningRooms as $checkout) {
+                if($room->itemId == $checkout->bookingItemId) {
+                    $found = true;
+                }
+            }
+            if($found) {
+                continue;
+            }
             if(!$room->isClean && !$room->inUse) {
                 echo "<tr>";
                 echo "<td>".$items[$room->itemId]->bookingItemName."</td>";

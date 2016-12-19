@@ -1588,7 +1588,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }
-
+//
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (needCheckOutCleaning(room, day)) {
                     finalize(booking);
@@ -2397,7 +2397,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     boolean needCheckOutCleaning(PmsBookingRooms room, Date toDate) {
-        if(getConfiguration().autoExtend && !room.keyIsReturned) {
+        if(getConfigurationSecure().autoExtend && !room.keyIsReturned) {
             return false;
         }
         if (room.date.exitCleaningDate == null) {

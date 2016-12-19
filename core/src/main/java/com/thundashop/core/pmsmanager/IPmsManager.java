@@ -124,7 +124,10 @@ public interface IPmsManager {
     public void endRoomWithDate(String pmsRoomId, Date date);
     
     @Administrator
-    public PmsPricing setPrices(PmsPricing prices); 
+    public PmsPricing setPrices(String code, PmsPricing prices); 
+    
+    @Administrator
+    public PmsPricing getPricesByCode(String code, Date start, Date end);
     
     @Administrator
     public String createOrder(String bookingId, NewOrderFilter filter);
@@ -301,4 +304,13 @@ public interface IPmsManager {
     
     @Administrator
     public boolean closeItem(String id, Date start, Date end, String source);
+    
+    @Administrator
+    public List<String> getpriceCodes();
+    
+    @Administrator
+    public void createNewPricePlan(String code);
+    
+    @Administrator
+    public void deletePricePlan(String code);
 }

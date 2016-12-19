@@ -17,3 +17,4 @@
 .PmsPricing .weeked { border: solid 1px red; }
 .PmsPricing .priceinput { width: 50px; }
 .PmsPricing .pricetableview { width: 100%; overflow: auto; }
+.PmsPricing .selectedpriceplan { color: #000; }

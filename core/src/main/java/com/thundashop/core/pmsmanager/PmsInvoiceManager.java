@@ -37,6 +37,12 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsInvoiceManager {
 
+    class BookingOrderSummary {
+        Integer count = 0;
+        Double price = 0.0;
+        String productId = "";
+    }
+
     private boolean avoidChangeInvoicedTo;
     private boolean avoidChangingInvoicedFrom;
     private List<String> roomIdsInCart = null;
@@ -399,12 +405,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         return value;
-    }
-
-    class BookingOrderSummary {
-        Integer count = 0;
-        Double price = 0.0;
-        String productId = "";
     }
     
     private boolean avoidOrderCreation = false;
@@ -1811,5 +1811,4 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return null;
     }
-
 }

@@ -64,6 +64,10 @@ public class PmsBooking extends DataCommon {
     public String paymentType = "";
     
     
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+    
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();
         for(PmsBookingRooms room : rooms) {

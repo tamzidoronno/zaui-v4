@@ -46,7 +46,9 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.utils.UtilManager;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -123,6 +125,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     PmsInvoiceManager pmsInvoiceManager;
+    
+    @Autowired
+    UtilManager utilManager;
     
     @Autowired
     GrafanaManager grafanaManager;
@@ -1071,6 +1076,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             if (key.startsWith("booking_confirmed")) {
                 attachments.putAll(createICalEntry(booking));
+            }
+            if (key.startsWith("booking_completed")) {
+                attachments.put("termsandcondition.html", createContractAttachment(booking.id));
             }
             if (key.startsWith("sendreciept")) {
                 attachments.put("reciept.pdf", createInvoiceAttachment());
@@ -3562,6 +3570,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String createInvoiceAttachment() {
         String invoice = invoiceManager.getBase64EncodedInvoice(orderIdToSend);
         return invoice;
+    }
+    
+    private String createContractAttachment(String bookingId) {
+        String contract = "";
+        try {
+            contract = getContract(bookingId);
+            contract = invoiceManager.base64Encode(contract);
+            
+        }catch(Exception e) {
+            
+        }
+        return contract;
     }
 
     void setEmailToSendTo(String email) {

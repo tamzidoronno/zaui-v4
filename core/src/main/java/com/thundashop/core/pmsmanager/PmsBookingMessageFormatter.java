@@ -106,32 +106,38 @@ class PmsBookingMessageFormatter {
     }
 
     String formatBookingData(String message, PmsBooking booking, BookingEngine bookingEngine) {
+        String simpleRoomList = "";
         String bookingData = "";
         for(PmsBookingRooms room : booking.getActiveRooms()) {
+            String simpleRoom = "";
             if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
-                bookingData += bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " ";
+                simpleRoom += bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " ";
             }
             long diff = 365*60*60*100;
             if(room.date.end != null && room.date.start != null) {
                 diff = (room.date.end.getTime() - room.date.start.getTime()) / 1000;
             }
             if(diff > (365*60*60)) {
-                bookingData += formatDate(room.date.start);
+                simpleRoom += formatDate(room.date.start);
             } else {
-                bookingData += formatDate(room.date.start) + " - " + formatDate(room.date.end) + " ";
+                simpleRoom += formatDate(room.date.start) + " - " + formatDate(room.date.end) + " ";
             }
             if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                 if(item != null) {
-                    bookingData += "(" + item.bookingItemName + ")";
+                    simpleRoom += "(" + item.bookingItemName + ")";
                 }
             } else if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
                 BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                 if(item != null) {
-                    bookingData += "(" + item.name + ")";
+                    simpleRoom += "(" + item.name + ")";
                 }
 
             }
+            
+            simpleRoomList += simpleRoom +  "<br>";
+            
+            bookingData += simpleRoom;
             for(PmsGuests guest : room.guests) {
                 if(guest.name != null && !guest.name.isEmpty()) {
                     bookingData += "<br>";
@@ -189,10 +195,30 @@ class PmsBookingMessageFormatter {
         }
         bookinginfo += "</table>";
         
+        
+        String total = "";
+        String nightPrice = "";
+        try {
+            booking.calculateTotalCost();
+            long totalCost = Math.round(booking.getTotalPrice());
+            total = totalCost + "";
+            
+            int nights = 0;
+            for(PmsBookingRooms r : booking.getActiveRooms()) {
+                nights += r.getNumberOfNights();
+            }
+            if(nights > 0) {
+                nightPrice = (totalCost / nights) + "";
+            }
+            
+        }catch(Exception e) {}
         message = message.replace("{rooms}", bookingData);
         message = message.replace("{roomlist}", bookingData);
+        message = message.replace("{simpleRoomList}", simpleRoomList);
         message = message.replace("{bookingid}", booking.id);
         message = message.replace("{bookinginformation}", bookinginfo);
+        message = message.replace("{totalcost}", total + "");
+        message = message.replace("{nightprice}", nightPrice + "");
         
         return message;
     }

@@ -322,7 +322,16 @@ public class CartManager extends ManagerBase implements ICartManager {
     
     @Administrator
     public Coupon getCoupon(String couponCode) {
-        return coupons.get(couponCode);
+        if(couponCode == null) {
+            couponCode = "";
+        }
+        for(String key : coupons.keySet()) {
+            if(couponCode.toLowerCase().equals(key.toLowerCase())) {
+                return coupons.get(key);
+            }
+        }
+        
+        return null;
     }
 
     @Administrator

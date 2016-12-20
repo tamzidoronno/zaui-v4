@@ -68,6 +68,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         List<BookingItemType> result = new ArrayList(types.values());
         Comparator<BookingItemType> comparator = new Comparator<BookingItemType>() {
             public int compare(BookingItemType c1, BookingItemType c2) {
+                if(c1.name == null || c2.name == null) {
+                    return 0;
+                } 
                 return c1.name.compareTo(c2.name); // use your logic
             }
         };

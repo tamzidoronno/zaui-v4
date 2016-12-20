@@ -195,7 +195,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     public PmsPricing getPriceObject() {
-        return priceMap.get("default");
+        PmsPricing price = priceMap.get("default");
+        if(price != null) {
+            return price;
+        }
+        return new PmsPricing();
     }
     
     public PmsPricing getPriceObject(String code) {
@@ -691,7 +695,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         PmsPricing prices = getPriceObject();
-        if(prices.defaultPriceType == PmsBooking.PriceType.daily && configuration.requirePayments) {
+        if(prices != null && prices.defaultPriceType == PmsBooking.PriceType.daily && configuration.requirePayments) {
             booking.calculateTotalCost();
         }
 

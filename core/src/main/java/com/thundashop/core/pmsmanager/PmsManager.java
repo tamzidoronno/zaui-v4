@@ -4403,13 +4403,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         } else {
             start = pmsInvoiceManager.normalizeDate(start, true);
-            end = pmsInvoiceManager.normalizeDate(end, false);
-            while(true) {
-                PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, start);
-                result.add(toAdd);
-                start = addTimeUnit(start, priceType);
-                if(start.after(end)) {
-                    break;
+            if(end != null) {
+                end = pmsInvoiceManager.normalizeDate(end, false);
+                while(true) {
+                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, start);
+                    result.add(toAdd);
+                    start = addTimeUnit(start, priceType);
+                    if(start.after(end)) {
+                        break;
+                    }
                 }
             }
         }

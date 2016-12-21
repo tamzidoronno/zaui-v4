@@ -651,7 +651,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                     continue;
                 }
                 orders.add(order);
-        }
+            }
         }
         return orders;
     }
@@ -672,6 +672,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         
         List<User> users = new ArrayList();
         for(Order order : orders) {
+            if(!order.isInvoice()) {
+                continue;
+            }
+            
             User usr = userManager.getUserById(order.userId);
             if(usr != null && !users.contains(usr)) {
                 users.add(usr);

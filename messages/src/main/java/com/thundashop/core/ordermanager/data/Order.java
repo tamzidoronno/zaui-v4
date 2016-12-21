@@ -56,6 +56,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean sentToCustomer = false;
     private boolean cleaned = false;
     public Date dateTransferredToAccount;
+    public boolean avoidAutoSending = false;
     
     public Order jsonClone() {
         Gson gson = new Gson();

@@ -138,7 +138,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        for (DataCommon dataCommon : data.data) { 
+        for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
                 bookings.put(booking.id, booking);

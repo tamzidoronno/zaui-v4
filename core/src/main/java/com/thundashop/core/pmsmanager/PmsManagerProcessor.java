@@ -11,6 +11,7 @@ import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshop.data.GetShopLockCode;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Date;
@@ -875,6 +876,9 @@ public class PmsManagerProcessor {
             
             for(String orderId : book.orderIds) {
                 Order order = manager.orderManager.getOrder(orderId);
+                if(order.avoidAutoSending) {
+                    continue;
+                }
                 if(order.status == Order.Status.PAYMENT_COMPLETED) {
                    continue; 
                 }

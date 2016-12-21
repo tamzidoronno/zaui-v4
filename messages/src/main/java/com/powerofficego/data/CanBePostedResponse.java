@@ -10,5 +10,9 @@ package com.powerofficego.data;
  * @author boggi
  */
 public class CanBePostedResponse {
-    public boolean canBePosted;
+    public class CanBePostedData {
+        public String id;
+        public boolean canBePosted;
+    }
+    public CanBePostedData data;
 }

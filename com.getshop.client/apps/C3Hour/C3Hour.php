@@ -45,6 +45,8 @@ class C3Hour extends \MarketingApplication implements \Application {
             $c3Hour = $this->getApi()->getC3Manager()->getHourById($this->getModalVariable("hourid"));
         } else {
             $c3Hour = new \core_c3_C3Hour();
+            $_SESSION['scope_C3Registration_last_from'] = $_POST['data']['from'];
+            $_SESSION['scope_C3Registration_last_to'] = $_POST['data']['to'];
         }
         
         $c3Hour->from = $this->convertToJavaDate(strtotime($_POST['data']['from']));

@@ -29,6 +29,15 @@ $percent = $hourObject && isset($hourObject->percent) ? $hourObject->percent : "
 $project = $this->getApi()->getC3Manager()->getProject($projectId);
 $projectPeriodeToShow = $project->currentProjectPeriode;
 
+
+if (!$from && isset($_SESSION['scope_C3Registration_last_from'])) {
+    $from = $_SESSION['scope_C3Registration_last_from'];
+}
+
+if (!$to && isset($_SESSION['scope_C3Registration_last_to'])) {
+    $to = $_SESSION['scope_C3Registration_last_to'];
+}
+
 $costId = $hourObject ? $hourObject->id : "";
 ?>
 

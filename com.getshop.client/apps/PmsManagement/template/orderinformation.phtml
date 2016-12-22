@@ -60,6 +60,23 @@ $createdAfter = "";
 if($booking->createOrderAfterStay) {
     $createdAfter = "CHECKED";
 }
+
+echo "<span class='changepaymenttypeform' gstype='form' method='updateOrder'>";
+echo "<input type='hidden' gsname='orderid' class='selectedorderidtochange'>";
+echo "<input type='hidden' gsname='bookingid' value='".$booking->id."'>";
+foreach($instances as $app) {
+    echo "<span class='' gstype='submitToInfoBox' gsvalue='".$this->createPaymentTypeText($app)."'>" . $app->appName . "</span><br>";
+}
+echo "</span>";
+
+echo "<span class='markpaidform' gstype='form' method='markPaid'>";
+echo "<input type='hidden' gsname='orderid' class='selectedorderidtomarkpaid'>";
+echo "<input type='hidden' gsname='bookingid' value='".$booking->id."'>";
+echo "Payment date<br>";
+echo "<input class='paymentdateselection' type='txt' gsname='date' value='".date("d.m.Y", time())."'>";
+echo "<input type='button' value='Mark as paid' gstype='submitToInfoBox'>";
+echo "</span>";
+
 ?>
 
 <div class='orderinformation'>
@@ -93,13 +110,12 @@ if($booking->orderIds) {
     echo "<th>Order</th>";
     echo "<th>Guest</th>";
     echo "<th>Price</th>";
-    echo "<th width='80'>Payment status</th>";
+    echo "<th width='80'>Status</th>";
     echo "<th>Payment type</th>";
-    echo "<th>Closed</th>";
+    echo "<th title='Closed'>Closed</th>";
     if(!$config->prepayment) {
         echo "<th>Credit</th>";
     }
-    echo "<th>Update</th>";
     echo "</tr>";
     foreach($result as $order) {
         $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
@@ -145,20 +161,25 @@ if($booking->orderIds) {
         echo "</td>";
         echo "<td>" . round($totalEx) . "<br><span style='color:#bbb'>" . round($total) . "</span></td>";
         echo "<td>";
-        if(@!$order->closed) {
-            echo "<div>";
-            echo "<selecT class='orderstatus'>";
-            foreach($paymentTypes as $id => $val) {
-                $selected = ($id == $order->status) ? "selected" : "";
-                echo "<option value='$id' $selected>$val</option>";
-            }
-            echo "</selecT>";
-            echo "</div>";
+        $show = true;
+        if(stristr($order->payment->paymentType, "dibs") || stristr($order->payment->paymentType, "\\Epay")) {
+            $show = false;
+        }
+        if($order->status == 7) {
+            echo "<i class='fa fa-check'></i> Paid<br><span style='color:#bbb;' title='Payment date'>".date("d.m.Y", strtotime($order->paymentDate))."</span><br>";
         } else {
-            echo $paymentTypes[$order->status];
+            if($total > 0) {
+                if($show) {
+                    echo "<input type='button' value='Mark paid' class='markpaidbutton'>";
+                } else {
+                    echo "<i class='fa fa-close'></i> Not paid";
+                }
+            } else {
+                echo "Credit note";
+            }
         }
         echo "</td>";
-        echo "<td>";
+        echo "<td valign='top'>";
         
         
         echo "<span class='sendpaymentlinkbox' gstype='form' method='sendPaymentLink'>";
@@ -193,12 +214,15 @@ if($booking->orderIds) {
         
         if(@!$order->closed) {
             echo "<div>";
-            echo "<select class='paymenttype'>";
             foreach($instances as $id => $app) {
-                $selected = ($this->isPaymentType($order->payment->paymentType, $app)) ? "selected" : "";
-                echo "<option value='".$this->createPaymentTypeText($app)."' $selected>".$app->appName."</option>";
+                if($this->isPaymentType($order->payment->paymentType, $app)) {
+                    $name = $app->appName;
+                    if($name == "InvoicePayment") {
+                        $name = "Invoice";
+                    }
+                    echo "<i class='fa fa-edit changepaymenttypebutton' title='Change payment type'></i> " . $name;
+                }
             }
-            echo "</select>";
             echo "</div>";
             if($order->status <= 5 && $total > 0) {
                 if(stristr($order->payment->paymentType, "dibs") || stristr($order->payment->paymentType, "\\epay")) {
@@ -211,7 +235,7 @@ if($booking->orderIds) {
         } else {
             echo $this->translatePaymenttype($order->payment->paymentType, $instances);
             echo "<br><span style='cursor:pointer; color:blue' class='sendreciept' orderid='".$order->id."' bookingid='".$booking->id."'>Send reciept</span>";
-            echo "<br><a href='/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."' target='_fdasf'><span style='cursor:pointer; color:blue' orderid='".$order->id."' bookingid='".$booking->id."'>download</span></a>";
+            echo " - <a href='/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."' target='_fdasf'><span style='cursor:pointer; color:blue' orderid='".$order->id."' bookingid='".$booking->id."'>download</span></a>";
         }
         echo "<span class='sendinvoicebox' gstype='form' method='sendInvoice'>";
         echo "<input type='hidden' value='".$booking->id."' gsname='bookingid'>";
@@ -235,13 +259,6 @@ if($booking->orderIds) {
                 echo "<td></td>";
             }
         }
-        
-        if(@!$order->closed) {
-            echo "<td><input type='button' value='Update' class='updateorderrow'></td>";
-        } else {
-            echo "<td></td>";
-        }
-        
         echo "</tr>";
     }
     
@@ -252,8 +269,9 @@ if($booking->orderIds) {
     echo "<td></td>";
     echo "<td></td>";
     echo "<td></td>";
-    echo "<td></td>";
-    echo "<td></td>";
+    if(!$config->prepayment) {
+        echo "<td></td>";
+    }
     echo "</tr>";
     
     echo "</table>";
@@ -263,78 +281,6 @@ if($booking->orderIds) {
 }
 
 ?>
-<br>
-<h2>Invoice information</h2>
-<div gstype="form" method="updateInvoiceNote" style='text-align:right;'>
-    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-    <textarea gsname='invoicenote' style="width:100%;height: 50px;"><?php echo $booking->invoiceNote; ?></textarea><br>
-    <span class='pmsbutton' gstype="submitToInfoBox">Update invoice note (remeber this info needs to be added before the invoice is created)</span>
-</div>
-
-<div gstype="form" method="createNewOrder">
-    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-
-    <?php
-    $endDate = time();
-    foreach($booking->rooms as $room) {
-        if($endDate < strtotime($room->date->end)) {
-            $endDate = strtotime($room->date->end)+86400;
-        }
-    }
-    if(isset($_POST['data']['endingAt'])) {
-        $endDate = strtotime($_POST['data']['endingAt']);
-    }
-    $invoiceRoomId = "";
-    if(isset($_POST['data']['roomId'])) {
-        $invoiceRoomId = $_POST['data']['roomId'];
-    }
-
-    $endingAt = date("d.m.Y", $endDate);
-    
-    $cart = $this->getApi()->getCartManager()->getCart();
-
-    echo "<br><h2>Next order preview (invoice until $endingAt)</h2>";
-    if($booking->ignoreCheckChangesInBooking) {
-        echo "<b style='color:red; font-size: 20px;'>This booking is old and does not support autopricing since not enough data where connected to it when registering.</b><br><br>";
-    }
-    
-    $this->includeOrderGenerationPreview();
-
-    echo "<br><label><input type='checkbox' gsname='preview'> Update preview only</label><br>";
-    echo "<select gsname='roomId'>";
-    echo "<option value=''>All rooms</option>";
-    foreach($booking->rooms as $room) {
-        $selected = "";
-        if($invoiceRoomId && $invoiceRoomId == $room->pmsBookingRoomId) {
-            $selected = "SELECTED";
-        }
-        $guestInfo = "";
-        if($room->guests[0]->name) {
-            $guestInfo = " guest : " . $room->guests[0]->name;
-        }
-        echo "<option value='".$room->pmsBookingRoomId."' $selected>" . $items[$room->bookingItemId]->bookingItemName . $guestInfo . "</option>";
-    }
-    echo "</select>";
-    if(isset($booking->invoicedTo) && !$booking->invoicedTo) {
-        $booking->invoicedTo = $booking->rooms[0]->date->start;
-    }
-    echo "<label style='display:inline-block;'><input type='text' gsname='endingAt' value='$endingAt' style='font-size: 14px; width: 100px;padding: 1px;' /></label>";
-    echo "<select gsname='appendToOrderId'>";
-    foreach($result as $order) {
-        if(!$order->closed) {
-            echo "<option value='" . $order->id . "'>Add to order " . $order->incrementOrderId . "</option>";
-        }
-    }
-    echo "<option value=''>Create a new order</option>";
-    echo "</select>";
-    echo "<span class='pmsbutton' gstype=\"submitToInfoBox\" style='padding: 1px; padding-left: 20px; padding-right: 20px; border-radius: 0px;'>Update</span>";
-    ?>
-</div>
-
 <script>
-    $("[gsname='endingAt']").datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
-    
-    $(".periodeorderstartdate").datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
-    $(".periodeorderenddate").datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
-    
+    $(".paymentdateselection").datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
 </script>

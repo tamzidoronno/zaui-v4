@@ -14,6 +14,9 @@
 .PmsManagement .ended { color: #aaa; }
 .PmsManagement .changeSorting { cursor:pointer; }
 .PmsManagement .roomactionstip { display:none; }
+.PmsManagement .changepaymenttypeform { position:absolute; background-color:#fff; border: solid 1px; font-size: 12px; padding: 5px; border-radius: 3; z-index: 2; display:none; }
+.PmsManagement .markpaidform { position:absolute; background-color:#fff; border: solid 1px; font-size: 12px; padding: 5px; border-radius: 3; z-index: 2; display:none; }
+.PmsManagement .changepaymenttypeform span:hover { cursor:pointer; color: blue; }
 .PmsManagement .cleaningpanel,.PmsManagement .addaddonpanel { border: solid 1px; position:absolute; padding: 10px; background-color: #fff;z-index: 10;display:none; }
 .PmsManagement .orderstatsres { margin-top: 15px; }
 .PmsManagement .roomactionstip[type="delete"] { display:block; }

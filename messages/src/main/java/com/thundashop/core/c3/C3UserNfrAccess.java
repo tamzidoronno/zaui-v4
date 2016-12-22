@@ -15,4 +15,5 @@ public class C3UserNfrAccess extends DataCommon {
     public String userId = "";
     public boolean hour = false;
     public boolean otherCost = false;
+    public boolean fixedHourCost = false;
 }

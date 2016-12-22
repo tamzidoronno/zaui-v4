@@ -26,6 +26,7 @@ $from = $hourObject ? date('d.m.Y', strtotime($hourObject->from)) : "";
 $to = $hourObject ? date('d.m.Y', strtotime($hourObject->to)) : "";
 $hours = $hourObject && isset($hourObject->hours) ? $hourObject->hours : "";
 $percent = $hourObject && isset($hourObject->percent) ? $hourObject->percent : "";
+$sum = $hourObject && isset($hourObject->fixedSumToUse) ? $hourObject->fixedSumToUse : "";
 $project = $this->getApi()->getC3Manager()->getProject($projectId);
 $projectPeriodeToShow = $project->currentProjectPeriode;
 
@@ -39,17 +40,28 @@ if (!$to && isset($_SESSION['scope_C3Registration_last_to'])) {
 }
 
 $costId = $hourObject ? $hourObject->id : "";
+$fixedHours = $this->getApi()->getC3Manager()->allowedFixedHourCosts(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id);
 ?>
 
 <?
-if ($forskningsperiode) {
+if ($forskningsperiode || $fixedHours) {
 ?>
 
 
 
 <div class='tabheader'>
     <div content='timer' class='tab active'>Timer</div>
-    <div content='prosent' class='tab'>Prosent</div>
+    <?
+    if ($forskningsperiode) {
+    ?>
+        <div content='prosent' class='tab'>Prosent</div>
+    <?
+    }
+    if ($fixedHours) {
+        echo "<div content='fixed' class='tab'>Fastsum</div>";
+    }
+    ?>
+    
 </div>
 
 
@@ -68,7 +80,7 @@ if ($forskningsperiode) {
     
     <br/> Periode
     <div class='gserrorfield' id='errorMessage'></div>
-    <br/><input class='gsniceinput1' type='text' gsname='from' id='from' value='<? echo $from; ?>'/> - <input class='gsniceinput1' type='text' gsname='to' id='to' value='<? echo $to; ?>'/> 
+    <br/><input class='gsniceinput1' type='text' gsname='from' id='from_1' value='<? echo $from; ?>'/> - <input class='gsniceinput1' type='text' gsname='to' id='to_1' value='<? echo $to; ?>'/> 
     <br/>
     <br/> Hvor mange prosent av denne stillingen brukte du på dette prosjektet ?<br/>(100% = hele stillingen gått til dette prosjektet)
     <br/>
@@ -105,7 +117,7 @@ if ($forskningsperiode) {
 
     Periode:
     <div class='gserrorfield' id='errorMessage'></div>
-    <br/><input class='gsniceinput1' type='text' gsname='from' id='from' value='<? echo $from; ?>'/> - <input class='gsniceinput1' type='text' gsname='to' id='to' value='<? echo $to; ?>'/> 
+    <br/><input class='gsniceinput1' type='text' gsname='from' id='from_2' value='<? echo $from; ?>'/> - <input class='gsniceinput1' type='text' gsname='to' id='to_2' value='<? echo $to; ?>'/> 
     <br/>
     <br/>Timer:
     <br/>
@@ -139,17 +151,61 @@ if ($forskningsperiode) {
     <div class='shop_button' gstype='submit'> Lagre </div>
 </div>
 
+<div gstype='form' method='saveFixedHours' content='fixed' class='tabcontent'>
+    <div class="periodeopen">
+        <?
+        echo "<b>Prosjekt:</b> ".$project->name;
+        echo "<br/><b>Åpen periode:</b> ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to));
+        ?>
+    </div>
+
+
+    Periode:
+    <div class='gserrorfield' id='errorMessage'></div>
+    <br/><input class='gsniceinput1' type='text' gsname='from' id='from_3' value='<? echo $from; ?>'/> - <input class='gsniceinput1' type='text' gsname='to' id='to_3' value='<? echo $to; ?>'/> 
+    <br/>
+    <br/>Sum:
+    <br/>
+    <div class='gserrorfield' id='errorMessageTimer'></div>
+    <input class='gsniceinput1 timehours' type='text' gsname='sum' value='<? echo $sum; ?>'/>
+    <br/>
+    <?
+    
+    if ($this->getApi()->getC3Manager()->allowedNfrHourCurrentUser()) {
+        echo "<br/>";
+        echo "<input type='checkbox' gsname='nfr'/> Er dette forskningsrådets midler?";
+        echo "<br/>";
+    }
+    
+    ?>
+    <br/> 
+    <? if ($costId) { ?>
+        <div class='shop_button' gsclick='deleteCost' costId='<? echo $costId; ?>'> Slett oppføring </div>
+    <? } ?>
+    <div class='shop_button' gstype='submit'> Lagre </div>
+</div>
+
 <script>
-    $('#from').datepicker({dateFormat: "dd.mm.yy"});
-    $('#to').datepicker({dateFormat: "dd.mm.yy"});
-    <? if ($percentUsing) { ?>
+    $('#from_1').datepicker({dateFormat: "dd.mm.yy"});
+    $('#to_1').datepicker({dateFormat: "dd.mm.yy"});
+    $('#from_2').datepicker({dateFormat: "dd.mm.yy"});
+    $('#to_2').datepicker({dateFormat: "dd.mm.yy"});
+    $('#from_3').datepicker({dateFormat: "dd.mm.yy"});
+    $('#to_3').datepicker({dateFormat: "dd.mm.yy"});
+    <? if ($hourObject && $hourObject->fixedSum) { ?>
+        $(".tab[content='fixed']").click();
+        $(".tab[content='prosent']").hide();    
+        $(".tab[content='timer']").hide();    
+    <? } else if ($percentUsing) { ?>
         $(".tab[content='prosent']").click();
         $(".tab[content='timer']").hide();
+        $(".tab[content='fixed']").hide();
     <? } else {
         if ($hourObject) {
             ?>
             $(".tab[content='timer']").click();
             $(".tab[content='prosent']").hide();    
+            $(".tab[content='fixed']").hide();
             <?
         } else {
         ?>

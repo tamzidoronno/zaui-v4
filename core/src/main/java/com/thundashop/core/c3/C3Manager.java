@@ -332,7 +332,8 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             throw new IllegalAccessError("Not allowed to put hours without access");
         }
         
-        hour.rate = timeRates.get(hour.rateId).rate;
+        if (timeRates.get(hour.rateId) != null)
+            hour.rate = timeRates.get(hour.rateId).rate;
         hour.registeredByUserId = getSession().currentUser.id;
         
         setRateToUser(getSession().currentUser.id, hour.rateId);
@@ -633,6 +634,9 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         if (timeRate != null) {
             o.cost = o.hours * o.rate;
         }
+        
+        if (o.fixedSum)
+            o.cost = o.fixedSumToUse;
     }
 
     @Override
@@ -964,14 +968,26 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             for (User user : users) {
                 C3Report report = getReportForUserProject(user.id, project.id, start, end, forWorkPackageId);
                 int addHours = report.hours.stream()
-                        .filter(hour -> hour.nfr == isNfr)
+                        .filter(hour -> hour.nfr == isNfr && !hour.fixedSum)
                         .mapToInt(hour -> (int)hour.hours).sum();
                
                 int total = (int) report.hours.stream()
-                        .filter(hour -> hour.nfr == isNfr)
+                        .filter(hour -> hour.nfr == isNfr && !hour.fixedSum)
                         .mapToInt(hour -> (int) hour.hours * hour.rate).sum();
                 
-                addSum(retMap, addHours, total, user.id);
+                int totalFixed = (int) report.hours.stream()
+                        .filter(hour -> hour.nfr == isNfr && hour.fixedSum)
+                        .filter(hour -> hour.projectId.equals(project.id))
+                        .filter(hour -> hour.registeredByUserId.equals(user.id))
+                        .mapToInt(hour -> (int) hour.fixedSumToUse).sum();
+                
+                if (total > 0) {
+                    addSum(retMap, addHours, total, user.id);
+                }
+                
+                if (totalFixed > 0) {
+                    addSum(retMap, addHours, totalFixed, user.id);
+                }
             }
         }
         
@@ -1019,7 +1035,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     public boolean allowedNfrHourCurrentUser() {
         return allowedNfrHour(getSession().currentUser.id);
     }
-
+    
     @Override
     public boolean allowedNfrOtherCostCurrentUser() {
         return allowedNfrOtherCost(getSession().currentUser.id);
@@ -1143,5 +1159,14 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId, false);
         SFIExcelReport report = new SFIExcelReport(reportData);
         return report.getBase64Encoded();
+    }
+
+    @Override
+    public boolean allowedFixedHourCosts(String userId) {
+        if (nfrAccess.get(userId) == null) {
+            return false;
+        }
+        
+        return nfrAccess.get(userId).fixedHourCost;
     }
 }

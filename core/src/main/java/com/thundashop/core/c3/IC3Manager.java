@@ -141,6 +141,8 @@ interface IC3Manager {
     public boolean allowedNfrHourCurrentUser();
     
     public boolean allowedNfrOtherCostCurrentUser();
+
+    public boolean allowedFixedHourCosts(String userId);    
     
     @Administrator
     public void setNfrAccess(C3UserNfrAccess access);

@@ -45,6 +45,7 @@ public class C3Report {
         for (C3Hour hour : hours) {
             hour.cost = hour.cost * newPercent;
             hour.hours = hour.hours * newPercent;
+            hour.fixedSumToUse = (int)(((double)hour.fixedSumToUse) * newPercent);
         }
         
         for (C3OtherCosts otherCost : otherCosts) {

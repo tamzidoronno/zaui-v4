@@ -28,6 +28,14 @@ $forskningsperiodes = $this->getApi()->getC3Manager()->getForskningsPeriodesForU
             <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
         </div>
     </div>
+    
+    <div class="textfield gss_setting">
+        <span class="title"><?php echo $this->__f("Post 1.1 - Tilatt føre timeslønn på fastpris."); ?></span>
+        <div class="gss_onoff" gs_model="c3manmodel" gs_model_attr="fixedHourCost">
+            <? $faclass = $this->getApi()->getC3Manager()->allowedFixedHourCosts($user->id) ? "fa-toggle-on" : "fa-toggle-off"; ?>
+            <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+        </div>
+    </div>
 
     
     <input type="hidden" gs_model="c3manmodel" gs_model_attr="userid" value="<? echo $user->id; ?>"/>

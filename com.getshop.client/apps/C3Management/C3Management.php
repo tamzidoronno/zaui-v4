@@ -70,6 +70,7 @@ class C3Management extends \MarketingApplication implements \Application {
         $access->userId = $_POST['userid'];
         $access->hour = $_POST['nfrhour'];
         $access->otherCost = $_POST['nfrother'];
+        $access->fixedHourCost = $_POST['fixedHourCost'];
         
         $this->getApi()->getC3Manager()->setNfrAccess($access);
         $this->getApi()->getC3Manager()->setRateToUser($_POST['userid'], $_POST['hourrate']);

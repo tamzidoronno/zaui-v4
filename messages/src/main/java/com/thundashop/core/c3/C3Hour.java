@@ -19,6 +19,10 @@ public class C3Hour extends ProjectCost {
     public String rateId = "";
     public int rate = 0;
     
+    public int fixedSumToUse = 0;
+    
+    public boolean fixedSum = false;
+    
     @Transient
     public double cost;
     boolean nfr;

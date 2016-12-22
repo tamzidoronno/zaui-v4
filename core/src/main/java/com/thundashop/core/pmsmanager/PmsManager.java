@@ -980,12 +980,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
-        if(key.equals("booking_completed")) {
-            if(!booking.isRegisteredToday()) {
-                return;
-            }
-        }
-        
         repicientList.clear();
         
         key = key + "_" + booking.language;

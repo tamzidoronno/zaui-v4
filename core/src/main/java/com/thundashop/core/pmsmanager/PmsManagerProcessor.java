@@ -679,7 +679,7 @@ public class PmsManagerProcessor {
             boolean forceSend = (booking.channel != null && !booking.channel.isEmpty()) && booking.isRegisteredToday();
             if(booking.payedFor != payedfor || forceSend) {
                 booking.payedFor = payedfor;
-                if(!booking.hasSentNotification("booking_completed")) {
+                if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
                     if((payedfor == true || forceSend) && booking.orderIds.size() == 1) {
                         manager.doNotification("booking_completed", booking.id);
                         booking.notificationsSent.add("booking_completed");

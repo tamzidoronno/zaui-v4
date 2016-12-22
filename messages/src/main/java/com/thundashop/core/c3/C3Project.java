@@ -99,12 +99,12 @@ public class C3Project extends DataCommon {
         return new ArrayList(activatedCompanies.get(user.companyObject.id).activeWorkPackaged.keySet());
     }
 
-    public double getPercentage(String workPackageId, String companyId, Date date) {
+    public double getPercentage(String workPackageId, String companyId, Date date, Date end) {
         C3ProjectWorkpackage wp = activatedCompanies.get(companyId);
         if (wp == null)
             return 0;
         
-        return wp.getPercentage(workPackageId, companyId, date, this);
+        return wp.getPercentage(workPackageId, companyId, date, end, this);
     }
 
     public void addHour(String companyId, C3Hour hour) {

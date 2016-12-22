@@ -288,12 +288,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         return project.isCompanyActivated(user.companyObject.id);
     }
 
-    public Double getPercentage(String companyId, String workPackageId, String projectId, Date date) {
+    public Double getPercentage(String companyId, String workPackageId, String projectId, Date date, Date end) {
         C3Project project = getProject(projectId);
         if (project == null)
             return new Double(0);
         
-        return project.getPercentage(workPackageId, companyId, date);
+        return project.getPercentage(workPackageId, companyId, date, end);
     }
 
     @Override
@@ -682,7 +682,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 throw new RuntimeException("Generating a report with users that are not connected to a company");
             }
             
-            double percent = getPercentage(user.companyObject.id, forWorkPackageId, projectId, start);
+            double percent = getPercentage(user.companyObject.id, forWorkPackageId, projectId, start, end);
             report.recalcuate(percent);
         }
         return report;

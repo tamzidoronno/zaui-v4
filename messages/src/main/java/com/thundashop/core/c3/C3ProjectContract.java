@@ -18,6 +18,14 @@ public class C3ProjectContract implements Serializable {
     public Date endDate;
     public String id;
     
+    public boolean within(Date start, Date end) { 
+        long StartDate1 = start.getTime();
+        long EndDate1 = end.getTime(); ;
+        long ldate = startDate.getTime();
+        
+        return (StartDate1 <= ldate) && (ldate <= EndDate1);
+    }
+    
     public boolean within(Date date) { 
         if (startDate == null || endDate == null) {
             return false;

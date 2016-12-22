@@ -41,9 +41,9 @@ public class CompanyProjectWorkPackageSettings {
         contract.contractValue = price;
     }
 
-    int getCost(Date date) {
+    int getCost(Date start, Date end) {
         for (C3ProjectContract contract : projectContracts) {
-            if (contract.within(date)) {
+            if (contract.within(start, end)) {
                 return contract.contractValue;
             }
         }

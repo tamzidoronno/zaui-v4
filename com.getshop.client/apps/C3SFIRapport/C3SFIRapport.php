@@ -55,6 +55,15 @@ class C3SFIRapport extends \MarketingApplication implements \Application {
         die();
     }
     
+    public function downloadSfiReportTotal() {
+        
+        $startDate = $this->convertToJavaDate(strtotime($_POST['data']['from']));
+        $endDate = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+        
+        echo $this->getApi()->getC3Manager()->getBase64SFIExcelReportTotal($_POST['data']['companyId'], $startDate, $endDate);
+        die();
+    }
+    
     
 }
 ?>

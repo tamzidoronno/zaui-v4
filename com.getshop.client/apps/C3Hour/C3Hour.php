@@ -36,6 +36,8 @@ class C3Hour extends \MarketingApplication implements \Application {
         
         $this->validateProjectCost($userPeriode);
         $this->getApi()->getC3Manager()->addUserProjectPeriode($userPeriode);
+        
+        $this->closeModal();
     }
     
     public function saveHours() {
@@ -43,6 +45,8 @@ class C3Hour extends \MarketingApplication implements \Application {
             $c3Hour = $this->getApi()->getC3Manager()->getHourById($this->getModalVariable("hourid"));
         } else {
             $c3Hour = new \core_c3_C3Hour();
+            $_SESSION['scope_C3Registration_last_from'] = $_POST['data']['from'];
+            $_SESSION['scope_C3Registration_last_to'] = $_POST['data']['to'];
         }
         
         $c3Hour->from = $this->convertToJavaDate(strtotime($_POST['data']['from']));
@@ -54,10 +58,34 @@ class C3Hour extends \MarketingApplication implements \Application {
         
         $this->validate($c3Hour);
         $this->getApi()->getC3Manager()->addHour($c3Hour);
+        
+        $this->closeModal();
+    }
+    
+    public function saveFixedHours() {
+        if ($this->getModalVariable("hourid")) {
+            $c3Hour = $this->getApi()->getC3Manager()->getHourById($this->getModalVariable("hourid"));
+        } else {
+            $c3Hour = new \core_c3_C3Hour();
+            $_SESSION['scope_C3Registration_last_from'] = $_POST['data']['from'];
+            $_SESSION['scope_C3Registration_last_to'] = $_POST['data']['to'];
+        }
+        
+        $c3Hour->from = $this->convertToJavaDate(strtotime($_POST['data']['from']));
+        $c3Hour->to = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+        $c3Hour->projectId = $this->getModalVariable("projectid");
+        $c3Hour->nfr = isset($_POST['data']['nfr']) ? $_POST['data']['nfr'] : false;
+        $c3Hour->fixedSum = 'true';
+        $c3Hour->fixedSumToUse = $_POST['data']['sum'];
+        
+        $this->validate($c3Hour);
+        $this->getApi()->getC3Manager()->addHour($c3Hour);
+        
+        $this->closeModal();
     }
     
     public function validate($hour) {
-        if (!ctype_digit($hour->hours)) {
+        if (!ctype_digit($hour->hours) && !$hour->fixedSum) {
             $obj = $this->getStdErrorObject();
             $obj->fields->errorMessageTimer = "Kun hele timer er tillatt i dette feltet";
             $obj->gsfield->hours = 1;
@@ -89,6 +117,7 @@ class C3Hour extends \MarketingApplication implements \Application {
     
     public function deleteCost() {
         $this->getApi()->getC3Manager()->deleteProjectCost($_POST['data']['costid']);
+        $this->closeModal();
     }
 }
 ?>

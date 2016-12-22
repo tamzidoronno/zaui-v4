@@ -32,6 +32,8 @@ class C3OtherCosts extends \MarketingApplication implements \Application {
         $this->validate($otherCost);
         $this->getApi()->getC3Manager()->saveOtherCosts($otherCost);
         
+        $this->closeModal();
+        
     }
     
     public function validate($hour) {
@@ -59,6 +61,11 @@ class C3OtherCosts extends \MarketingApplication implements \Application {
             $obj->gsfield->to = 1;
             $this->doError($obj);
         }
+    }
+    
+    public function deleteCost() {
+        $this->getApi()->getC3Manager()->deleteProjectCost($_POST['data']['costid']);
+        $this->closeModal();
     }
 }
 ?>

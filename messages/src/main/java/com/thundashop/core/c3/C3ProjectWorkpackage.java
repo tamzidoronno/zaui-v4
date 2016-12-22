@@ -47,12 +47,12 @@ public class C3ProjectWorkpackage {
             wp.removeContract(contractId);
     }
 
-    public double getPercentage(String workPackageId, String companyId, Date date, C3Project project) {
+    public double getPercentage(String workPackageId, String companyId, Date start, Date end, C3Project project) {
         if (activeWorkPackaged.get(workPackageId) == null)
             return 0;
         
         int total = activeWorkPackaged.values().stream()
-                .mapToInt(active -> active.getCost(date))
+                .mapToInt(active -> active.getCost(start, end))
                 .sum();
         
         if (total == 0 && activeWorkPackaged.size() == 1)
@@ -65,7 +65,7 @@ public class C3ProjectWorkpackage {
             throw new RuntimeException(getErrorMessage(activeWorkPackaged, companyId, project));
         
         
-        double totalForPackage = activeWorkPackaged.get(workPackageId).getCost(date);
+        double totalForPackage = activeWorkPackaged.get(workPackageId).getCost(start, end);
         
         if (totalForPackage == 0)
             return 100;

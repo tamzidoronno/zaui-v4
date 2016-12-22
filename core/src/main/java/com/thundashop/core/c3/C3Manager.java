@@ -288,12 +288,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         return project.isCompanyActivated(user.companyObject.id);
     }
 
-    public Double getPercentage(String companyId, String workPackageId, String projectId, Date date) {
+    public Double getPercentage(String companyId, String workPackageId, String projectId, Date date, Date end) {
         C3Project project = getProject(projectId);
         if (project == null)
             return new Double(0);
         
-        return project.getPercentage(workPackageId, companyId, date);
+        return project.getPercentage(workPackageId, companyId, date, end);
     }
 
     @Override
@@ -332,7 +332,8 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             throw new IllegalAccessError("Not allowed to put hours without access");
         }
         
-        hour.rate = timeRates.get(hour.rateId).rate;
+        if (timeRates.get(hour.rateId) != null)
+            hour.rate = timeRates.get(hour.rateId).rate;
         hour.registeredByUserId = getSession().currentUser.id;
         
         setRateToUser(getSession().currentUser.id, hour.rateId);
@@ -588,6 +589,32 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         return projectCosts;
     }
+    
+    @Override
+    public List<ProjectCost> getProjectCostsForAllUsersInCompany(String projectId, Date from, Date to) {
+        List<ProjectCost> projectCosts = new ArrayList();
+        
+        Company company = getSession().currentUser.companyObject;
+        if (company == null)
+            return new ArrayList();
+        
+        if (!getSession().currentUser.isCompanyOwner) {
+            return new ArrayList();
+        }
+        
+        List<User> users = userManager.getUsersByCompanyId(getSession().currentUser.companyObject.id);
+        for (User user : users) {
+            projectCosts.addAll(getHoursForUser(projectId, from, to, user.id));
+            projectCosts.addAll(getOtherCostsForUser(projectId, from, to, user.id));
+            projectCosts.addAll(getUserPeriodeForUser(projectId, from, to, user.id));
+        }
+        
+        Collections.sort(projectCosts, (o1, o2) -> {
+            return o1.from.compareTo(o2.from);
+        });
+        
+        return projectCosts;
+    }
 
     private List<C3OtherCosts> getOtherCostsForCurrentUser(String projectId, Date from, Date to) {
         return getOtherCostsForUser(projectId, from, to, getSession().currentUser.id);
@@ -607,6 +634,9 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         if (timeRate != null) {
             o.cost = o.hours * o.rate;
         }
+        
+        if (o.fixedSum)
+            o.cost = o.fixedSumToUse;
     }
 
     @Override
@@ -682,7 +712,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 throw new RuntimeException("Generating a report with users that are not connected to a company");
             }
             
-            double percent = getPercentage(user.companyObject.id, forWorkPackageId, projectId, start);
+            double percent = getPercentage(user.companyObject.id, forWorkPackageId, projectId, start, end);
             report.recalcuate(percent);
         }
         return report;
@@ -761,12 +791,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 throw new ErrorException(26);
         }
         
-        List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId);
+        List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId, true);
         SFIExcelReport report = new SFIExcelReport(reportData);
         return report.getBase64Encoded();
     }
     
-    private List<SFIExcelReportData> createReportDatas(Date start, Date end, String companyId) {
+    private List<SFIExcelReportData> createReportDatas(Date start, Date end, String companyId, boolean segregate) {
         List<C3Project> projectsToUse = getAllProjectsConnectedToCompany(companyId);
         List<User> users = userManager.getUsersByCompanyId(companyId);
         List<WorkPackage> workPackagesToUse = getWorkPackages(projectsToUse, users, start, end);
@@ -777,8 +807,13 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         List<SFIExcelReportData> datas = new ArrayList();
         
-        for (WorkPackage wp : workPackagesToUse) {
-            SFIExcelReportData report = createReportData(start, end, companyId, wp.id);
+        if (segregate) {
+            for (WorkPackage wp : workPackagesToUse) {
+                SFIExcelReportData report = createReportData(start, end, companyId, wp.id);
+                datas.add(report);
+            }
+        } else {
+            SFIExcelReportData report = createReportData(start, end, companyId, null);
             datas.add(report);
         }
         
@@ -933,14 +968,26 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             for (User user : users) {
                 C3Report report = getReportForUserProject(user.id, project.id, start, end, forWorkPackageId);
                 int addHours = report.hours.stream()
-                        .filter(hour -> hour.nfr == isNfr)
+                        .filter(hour -> hour.nfr == isNfr && !hour.fixedSum)
                         .mapToInt(hour -> (int)hour.hours).sum();
                
                 int total = (int) report.hours.stream()
-                        .filter(hour -> hour.nfr == isNfr)
+                        .filter(hour -> hour.nfr == isNfr && !hour.fixedSum)
                         .mapToInt(hour -> (int) hour.hours * hour.rate).sum();
                 
-                addSum(retMap, addHours, total, user.id);
+                int totalFixed = (int) report.hours.stream()
+                        .filter(hour -> hour.nfr == isNfr && hour.fixedSum)
+                        .filter(hour -> hour.projectId.equals(project.id))
+                        .filter(hour -> hour.registeredByUserId.equals(user.id))
+                        .mapToInt(hour -> (int) hour.fixedSumToUse).sum();
+                
+                if (total > 0) {
+                    addSum(retMap, addHours, total, user.id);
+                }
+                
+                if (totalFixed > 0) {
+                    addSum(retMap, addHours, totalFixed, user.id);
+                }
             }
         }
         
@@ -988,7 +1035,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     public boolean allowedNfrHourCurrentUser() {
         return allowedNfrHour(getSession().currentUser.id);
     }
-
+    
     @Override
     public boolean allowedNfrOtherCostCurrentUser() {
         return allowedNfrOtherCost(getSession().currentUser.id);
@@ -1105,5 +1152,21 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         userManager.checkUserAccess(user);
         deleteObject(cost);
         toRemoveFrom.remove(cost.id);
+    }
+
+    @Override
+    public String getBase64SFIExcelReportTotal(String companyId, Date start, Date end) {
+        List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId, false);
+        SFIExcelReport report = new SFIExcelReport(reportData);
+        return report.getBase64Encoded();
+    }
+
+    @Override
+    public boolean allowedFixedHourCosts(String userId) {
+        if (nfrAccess.get(userId) == null) {
+            return false;
+        }
+        
+        return nfrAccess.get(userId).fixedHourCost;
     }
 }

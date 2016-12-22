@@ -615,6 +615,14 @@ public class SFIExcelReport {
         
         sheet.addMergedRegion(new CellRangeAddress((rownum-1), (rownum-1), 1, 5));
         addLeftBorderToRegion((rownum-1), (rownum-1), 1, 5);
+        
+        
+        row = sheet.createRow(rownum++);
+        cell1 = row.createCell(0);
+        row.setHeight((short)700);
+        sheet.addMergedRegion(new CellRangeAddress((rownum-1), (rownum-1), 1, 5));
+        addLeftBorderToRegion((rownum-1), (rownum-1), 1, 5);
+        
     }
     
     private void addDateLine() {

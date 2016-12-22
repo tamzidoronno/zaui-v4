@@ -17,6 +17,9 @@ class EventCertificatesAdmin extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Ev
     public function createCertificate() {
         $certificate = new \core_eventbooking_Certificate();
         $certificate->id = $_POST['data']['certificateId'];
+        if (isset($_POST['data']['certificateId'])) {
+            $certificate = $this->getApi()->getEventBookingManager()->getCertificate("booking", $_POST['data']['certificateId']);
+        }
         $certificate->name = $_POST['data']['name'];
         $certificate->validFrom = $this->convertToJavaDate(strtotime($_POST['data']['from']));
         $certificate->validTo = $this->convertToJavaDate(strtotime($_POST['data']['to']));

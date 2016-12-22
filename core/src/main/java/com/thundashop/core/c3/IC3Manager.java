@@ -110,6 +110,8 @@ interface IC3Manager {
     
     public List<ProjectCost> getProjectCostsForCurrentUser(String projectId, Date from, Date to);
     
+    public List<ProjectCost> getProjectCostsForAllUsersInCompany(String projectId, Date from, Date to);
+    
     public C3OtherCosts getOtherCost(String otherCostId);
     
     public List<UserProjectAccess> getAcceListForUser(String userId);
@@ -129,6 +131,9 @@ interface IC3Manager {
     @Customer
     public String getBase64SFIExcelReport(String companyId, Date start, Date end);
     
+    @Customer
+    public String getBase64SFIExcelReportTotal(String companyId, Date start, Date end);
+    
     public boolean allowedNfrHour(String userId);
     
     public boolean allowedNfrOtherCost(String userId);
@@ -136,6 +141,8 @@ interface IC3Manager {
     public boolean allowedNfrHourCurrentUser();
     
     public boolean allowedNfrOtherCostCurrentUser();
+
+    public boolean allowedFixedHourCosts(String userId);    
     
     @Administrator
     public void setNfrAccess(C3UserNfrAccess access);

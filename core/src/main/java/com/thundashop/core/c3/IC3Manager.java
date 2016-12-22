@@ -110,6 +110,8 @@ interface IC3Manager {
     
     public List<ProjectCost> getProjectCostsForCurrentUser(String projectId, Date from, Date to);
     
+    public List<ProjectCost> getProjectCostsForAllUsersInCompany(String projectId, Date from, Date to);
+    
     public C3OtherCosts getOtherCost(String otherCostId);
     
     public List<UserProjectAccess> getAcceListForUser(String userId);

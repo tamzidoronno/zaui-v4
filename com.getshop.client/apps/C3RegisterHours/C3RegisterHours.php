@@ -36,5 +36,22 @@ class C3RegisterHours extends \MarketingApplication implements \Application {
             }
         }
     }
+
+    public function setSummaryView() {
+        $_SESSION['C3RegisterHours_viewmode'] = "true";
+    }
+    
+    public function setNormalView() {
+        unset($_SESSION['C3RegisterHours_viewmode']);
+    }
+    
+    public function getViewMode() {
+        if (isset($_SESSION['C3RegisterHours_viewmode'])) {
+            return true;
+        }
+        
+        return false;
+    }
+
 }
 ?>

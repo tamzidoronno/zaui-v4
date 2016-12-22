@@ -588,6 +588,32 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         return projectCosts;
     }
+    
+    @Override
+    public List<ProjectCost> getProjectCostsForAllUsersInCompany(String projectId, Date from, Date to) {
+        List<ProjectCost> projectCosts = new ArrayList();
+        
+        Company company = getSession().currentUser.companyObject;
+        if (company == null)
+            return new ArrayList();
+        
+        if (!getSession().currentUser.isCompanyOwner) {
+            return new ArrayList();
+        }
+        
+        List<User> users = userManager.getUsersByCompanyId(getSession().currentUser.companyObject.id);
+        for (User user : users) {
+            projectCosts.addAll(getHoursForUser(projectId, from, to, user.id));
+            projectCosts.addAll(getOtherCostsForUser(projectId, from, to, user.id));
+            projectCosts.addAll(getUserPeriodeForUser(projectId, from, to, user.id));
+        }
+        
+        Collections.sort(projectCosts, (o1, o2) -> {
+            return o1.from.compareTo(o2.from);
+        });
+        
+        return projectCosts;
+    }
 
     private List<C3OtherCosts> getOtherCostsForCurrentUser(String projectId, Date from, Date to) {
         return getOtherCostsForUser(projectId, from, to, getSession().currentUser.id);

@@ -2,6 +2,7 @@
 /* @var $this ns_f1f2c4f4_fc7d_4bec_89ec_973ff192ff6d\C3RegisterHours */
 $accessList = $this->getApi()->getC3Manager()->getAccessList();
 
+$allActivated = $this->getViewMode();
 
 if (!count($accessList)) {
     echo "Beklager, du har ikke tilgang til noen prosjekter enda. Kontakt administrator for tilgang til prosjekter";
@@ -13,6 +14,12 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->isCompanyOwn
     <div class="downloadofreport">
         Last ned SFI Rapport for nåværende periode
         <br/><div class="shop_button downloadReport" filename="SFIReport.xlsx">Last ned</div> <div class="shop_button downloadReportTotal" filename="SFIReport.xlsx">Last ned kostnadspesifikasjon</div> 
+        
+        <div class="viewselector">
+            Visningsbilde:
+            <div gsclick="setNormalView" class="shop_button <? echo !$allActivated ? 'active' : ''; ?>">Timeregistrering</div>
+            <div gsclick="setSummaryView" class="shop_button <? echo $allActivated ? 'active' : ''; ?>">Oppsummering</div>
+        </div>
     </div>
 <?
 }
@@ -22,19 +29,26 @@ foreach ($accessList as $access) {
     $projectPeriodeToShow = $project->currentProjectPeriode;
     $periodes = $this->getApi()->getC3Manager()->getPeriodesForProject($project->id);
     
+    
     echo "<div class='projectoverview'>";
         echo "<h1>$project->projectNumber - $project->name</h1>";
         echo "( Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to)).")";
         echo "<br/>";
-        $hours = $this->getApi()->getC3Manager()->getProjectCostsForCurrentUser($project->id, $projectPeriodeToShow->from, $projectPeriodeToShow->to);
+        if ($allActivated) {
+            $hours = $this->getApi()->getC3Manager()->getProjectCostsForAllUsersInCompany($project->id, $projectPeriodeToShow->from, $projectPeriodeToShow->to);
+        } else {
+            $hours = $this->getApi()->getC3Manager()->getProjectCostsForCurrentUser($project->id, $projectPeriodeToShow->from, $projectPeriodeToShow->to);
+        }
         
-        if ($hours) {
+        if ($hours) { 
+            
             $totalHours = 0;
             $totalCost = 0;
-            echo "<div class='hourrow'><span class='editbutton'></span><span class='fromdate'>Fra</span><span class='todate'>Til</span><span class='hour'>Timer</span><span class='othercost'>Kr</span><span class='comment'>Kommentar</span></div>";
+            $headerComment = $allActivated ? "Bruker" : "Kommentar";
+            echo "<div class='hourrow'><span class='editbutton'></span><span class='fromdate'>Fra</span><span class='todate'>Til</span><span class='hour'>Timer</span><span class='othercost'>Kr</span><span class='comment'>$headerComment</span></div>";
             
             foreach ($hours as $hour) {
-                
+                $name = $allActivated ? $this->getApi()->getUserManager()->getUserById($hour->registeredByUserId)->fullName : "";
                 $from = date('d.m.Y', strtotime($hour->from)); 
                 $to = date('d.m.Y', strtotime($hour->to));
                 
@@ -43,6 +57,7 @@ foreach ($accessList as $access) {
                     $totalHours += 0;
                     $totalCost += 0;
                     $comment = $hour->nfr ? "(NFR)" : "";
+                    $comment = $allActivated ? $name : $comment;
                     echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'>Stilling: $hour->percent%</span><span class='othercost'>-</span><span class='comment'>$comment</span></div>";
                 }
                 
@@ -52,6 +67,7 @@ foreach ($accessList as $access) {
                     $cost = $hour->cost;
                     $totalCost += $cost;
                     $comment = $hour->nfr ? "(NFR)" : "";
+                    $comment = $allActivated ? $name : $comment;
                     echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'>$hour->hours</span><span class='othercost'>$cost</span><span class='comment'>$comment</span></div>";
                 }
                 
@@ -77,17 +93,20 @@ foreach ($accessList as $access) {
                     }
                     
                     $totalCost += $cost;
+                    $type = $allActivated ? $name : $comment;
                     echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'></span><span class='othercost'>$cost</span><span class='comment'>$type</span></div>";
                 }
             }
             
             echo "<div class='hourrow summary'><span class='editbutton'></span><span class='fromdate'></span><span class='todate'></span><span class='hour'>$totalHours</span><span class='othercost'>$totalCost</span></div>";
         }
-        echo "<div class='buttons'>";
-            echo "Registrer ny linje: ";
-            echo " <div projectid='$project->id' gs_show_modal='hours' class='shop_button'>1.1 Ny timeregistrering</div>";
-            echo " <div projectid='$project->id' class='shop_button' gs_show_modal='othercosts'>1.4 Andre kostnader</div>";
-        echo "</div>";
+        if (!$allActivated) {
+            echo "<div class='buttons'>";
+                echo "Registrer ny linje: ";
+                echo " <div projectid='$project->id' gs_show_modal='hours' class='shop_button'>1.1 Ny timeregistrering</div>";
+                echo " <div projectid='$project->id' class='shop_button' gs_show_modal='othercosts'>1.4 Andre kostnader</div>";
+            echo "</div>";
+        }
     echo "</div>";
 }
 ?>

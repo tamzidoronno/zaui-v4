@@ -14,6 +14,21 @@ class PmsPricing extends \WebshopApplication implements \Application {
         return $this->getConfigurationSetting("engine_name");
     }
     
+    public function selectPricePlan() {
+        $_SESSION['selectedpriceplan'] = $_POST['data']['selectedpriceplan'];
+    }
+    
+    public function getSelectedPricePlan() {
+        if(isset($_SESSION['selectedpriceplan'])) {
+            return $_SESSION['selectedpriceplan'];
+        }
+        return "default";
+    }
+    
+    public function creatnewpriceplan() {
+        $this->getApi()->getPmsManager()->createNewPricePlan($this->getSelectedName(), $_POST['data']['newplan']);
+    }
+    
     public function render() {
         if(!$this->getSelectedName()) {
             echo "PLease specify a booking engine first";
@@ -41,7 +56,7 @@ class PmsPricing extends \WebshopApplication implements \Application {
         $pricingObject->privatePeopleDoNotPayTaxes = $_POST['data']['privatePeopleDoNotPayTaxes'] == "true";
         $pricingObject->derivedPrices = $_POST['data']['derivedPrices'];
         
-        $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $pricingObject);
+        $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $this->getSelectedPricePlan(), $pricingObject);
     }
 
     public function selectDates() {
@@ -100,11 +115,11 @@ class PmsPricing extends \WebshopApplication implements \Application {
 
         $pricingObject->defaultPriceType = $_POST['data']['pricetype'];
 
-        $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $pricingObject);
+        $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $this->getSelectedPricePlan(), $pricingObject);
     }
     
     public function getPrices() {
-        return $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), 
+        return $this->getApi()->getPmsManager()->getPricesByCode($this->getSelectedName(), $this->getSelectedPricePlan(),
             $this->convertToJavaDate(strtotime($this->getStart())),
             $this->convertToJavaDate(strtotime($this->getEnd())));
     }

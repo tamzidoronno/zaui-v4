@@ -42,6 +42,7 @@ public class WilhelmsenHouse implements AccountingInterface {
 
     @Override
     public List<String> createUserFile(List<User> users) {
+        users.add(userManager.getUserById("a775ffcb-d3c4-469d-a980-a09f10144d2e")); //Dibs user.
         List<String> lines = new ArrayList();
         for(User user : users) {
             /*
@@ -191,12 +192,12 @@ public class WilhelmsenHouse implements AccountingInterface {
                 amount *= -1;
             }
             if(!doCredit) {
-                result += user.customerId+";"; // Debit account
+                result += "18071;"; // Debit account
                 result += ";"; // Credit account
                 debet += amount;
             } else {
                 result += ";"; // Debit account
-                result += user.customerId+";"; // Credit account
+                result += "18071;"; // Credit account
                 credit += amount;
             }
             result += amount+";"; // Total amount
@@ -263,7 +264,11 @@ public class WilhelmsenHouse implements AccountingInterface {
             ordrehode += "1;"; // Fast 1 for salg
             ordrehode += "1;"; // Fast 1 for normalordre
             ordrehode += order.incrementOrderId + ";"; // GetShop ordre id
-            ordrehode += user.customerId + ";"; // Kundenr 
+            if (order.payment != null && order.payment.paymentType.equals("ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\\ExpediaPayment")) {
+                ordrehode += "11072;"; // Expedia customer id.
+            } else {
+                ordrehode += user.customerId + ";"; // Kundenr 
+            }
             ordrehode += new SimpleDateFormat("yyyyMMdd").format(order.createdDate) + ";"; // Ordredato
             if(startedDate != null) {
                 ordrehode += new SimpleDateFormat("yyyyMMdd").format(startedDate)+ ";"; // Leveringsdato
@@ -272,7 +277,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                 ordrehode += "1;"; //Betalingsbetingelse
                 ordrehode += "1;"; //Betalingsmåte
             } else if (order.payment != null && order.payment.paymentType.equals("ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\\ExpediaPayment")) {
-                ordrehode += "14;"; //Betalingsbetingelse
+                ordrehode += "30;"; //Betalingsbetingelse
                 ordrehode += "30;"; //Betalingsmåte
             } else if (order.payment != null && order.payment.paymentType.equals("ns_639164bc_37f2_11e6_ac61_9e71128cae77\\AirBNBCollect")) {
                 ordrehode += "14;"; //Betalingsbetingelse

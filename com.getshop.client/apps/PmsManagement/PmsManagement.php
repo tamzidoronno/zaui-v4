@@ -1948,6 +1948,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         } else {
             $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
+            
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            $order->avoidAutoSending = true;
+            $this->getApi()->getOrderManager()->saveOrder($order);
+            
+            
             $this->getManager()->processor($this->getSelectedName());
 
             if($_POST['data']['paymenttype'] != "InvoicePayment" && 
@@ -1968,8 +1974,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->getApi()->getOrderManager()->saveOrder($order);
         }
         
-        if($savedcard) {
-            
+        if(isset($savedcard) && $savedcard) {
             if($this->getApi()->getOrderManager()->payWithCard($order->id, $savedcard->id)) {
                 echo "<i class='fa fa-check'></i> Successfully paid with saved card subscription id : " . $savedcard->card . " (" . $savedcard->mask . ")";
             } else {

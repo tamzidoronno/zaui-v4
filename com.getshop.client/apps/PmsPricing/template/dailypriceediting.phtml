@@ -45,8 +45,9 @@ $prices = $priceObject->dailyPrices;
     ?>
 </table>
 </div>
-<div>
-    <h1>Additional guest price (remember to manually update remote sites)</h1>
+<span style='cursor:pointer;' onclick='$(".additionalguestprices").toggle()'>Show more options</span>
+<div style='display:none;' class='additionalguestprices'>
+    <h1>Additional guest price</h1>
     <table>
     <?php
     $maxCount = 0;
@@ -86,6 +87,6 @@ $prices = $priceObject->dailyPrices;
 </div>
 
 <div style='text-align: right;'>
-<span class='pmsbutton setnewprices'>Update prices</span>
+<span class='pmsbutton setnewprices'>Save prices</span>
 </div>
 

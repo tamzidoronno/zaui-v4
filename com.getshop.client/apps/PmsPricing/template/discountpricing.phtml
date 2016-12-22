@@ -10,12 +10,14 @@ if(sizeof($channels) == 0) {
     return;
 }
 echo "<h2>Discount for channels (percentage discount)</h2>";
+echo "<table>";
 foreach($channels as $chan => $name) {
     $discount = 0;
     if(isset($priceObject->channelDiscount->{$chan})) {
         $discount = $priceObject->channelDiscount->{$chan};
     }
-    echo "<div>$name <input type='txt' class='discountprice' value='$discount' channel='$chan'></div>";
+    echo "<tr><td>$name</td><td><input type='txt' class='discountprice' value='$discount' channel='$chan'></td></tr>";
 }
+echo "</table>";
 ?>
 <br>

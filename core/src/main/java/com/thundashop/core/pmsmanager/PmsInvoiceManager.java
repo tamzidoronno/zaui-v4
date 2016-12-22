@@ -37,6 +37,12 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsInvoiceManager {
 
+    class BookingOrderSummary {
+        Integer count = 0;
+        Double price = 0.0;
+        String productId = "";
+    }
+
     private boolean avoidChangeInvoicedTo;
     private boolean avoidChangingInvoicedFrom;
     private List<String> roomIdsInCart = null;
@@ -315,7 +321,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room != null) {
             price = addDerivedPrices(room, price);
         }
-        price = calculateDiscountCouponPrice(booking, price, start, end, room);
+        price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId);
         price = getUserPrice(bookingEngineTypeId, price, count);
         
         return price;
@@ -400,12 +406,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return value;
     }
-
-    class BookingOrderSummary {
-        Integer count = 0;
-        Double price = 0.0;
-        String productId = "";
-    }
     
     private boolean avoidOrderCreation = false;
     private List<CartItem> itemsToReturn = new ArrayList();
@@ -460,7 +460,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         User user = userManager.getUserById(booking.userId);
         user.preferredPaymentType = orderManager.getStorePreferredPayementMethod().paymentId;
-        userManager.saveUser(user);
+        userManager.saveUserSecure(user);
         
         cartManager.clear();
         Order order = orderManager.createOrderForUser(booking.userId);
@@ -593,36 +593,38 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
 
     public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {
+        
+        
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, priceType);
         double total = 0.0;
         int count = 0;
+        if(priceType == PmsBooking.PriceType.daily) {
+            for(String key : priceMatrix.keySet()) {
+                if(!room.priceMatrix.containsKey(key) || !booking.isCompletedBooking()) {
+                    Double price = priceMatrix.get(key);
+                    Date day = PmsBookingRooms.convertOffsetToDate(key);
+                    price = calculateDiscounts(booking, price, room.bookingItemTypeId, 1, room, day, day);
+                    room.priceMatrix.put(key, price);
+                    priceMatrix.put(key, price);
+                }
+            }
+
+            List<String> toRemoveExisting = new ArrayList();
+            for(String existingKey : room.priceMatrix.keySet()) {
+                if(!priceMatrix.containsKey(existingKey)) {
+                    toRemoveExisting.add(existingKey);
+                }
+            }
+
+            for(String key : toRemoveExisting) {
+                room.priceMatrix.remove(key);
+            }
         
-        for(String key : priceMatrix.keySet()) {
-            if(!room.priceMatrix.containsKey(key) || !booking.isCompletedBooking()) {
+            for(String key : priceMatrix.keySet()) {
                 Double price = priceMatrix.get(key);
-                Date day = PmsBookingRooms.convertOffsetToDate(key);
-                price = calculateDiscounts(booking, price, room.bookingItemTypeId, 1, room, day, day);
-                room.priceMatrix.put(key, price);
-                priceMatrix.put(key, price);
+                total += price;
+                count++;
             }
-        }
-        
-        List<String> toRemoveExisting = new ArrayList();
-        for(String existingKey : room.priceMatrix.keySet()) {
-            if(!priceMatrix.containsKey(existingKey)) {
-                toRemoveExisting.add(existingKey);
-            }
-        }
-        
-        for(String key : toRemoveExisting) {
-            room.priceMatrix.remove(key);
-        }
-        
-        
-        for(String key : priceMatrix.keySet()) {
-            Double price = priceMatrix.get(key);
-            total += price;
-            count++;
         }
         return total / count;
     }
@@ -1209,7 +1211,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return generatePriceFromPriceMatrix(priceMatrix, avgPrice, booking, typeId);
     }
 
-    private Double calculateDiscountCouponPrice(PmsBooking booking, Double price, Date start, Date end, PmsBookingRooms room) {
+    private Double calculateDiscountCouponPrice(PmsBooking booking, Double price, Date start, Date end, String typeId) {
         if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
             String couponCode = booking.couponCode;
             if(booking.discountType.equals("partnership")) {
@@ -1223,8 +1225,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
                 
                 String productId = null;
-                if(room != null && room.bookingItemTypeId != null) {
-                    BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                if(typeId != null) {
+                    BookingItemType type = bookingEngine.getBookingItemType(typeId);
                     if(type != null) {
                         productId = type.productId;
                     }
@@ -1811,5 +1813,4 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return null;
     }
-
 }

@@ -93,6 +93,20 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     }
     
     
+    public String base64Encode(String contract) {
+         try {
+             
+            byte[] encoded = Base64.encodeBase64(contract.getBytes());
+            contract = new String(encoded);
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+         
+        return contract;
+    }
+    
+    
     public String getInvoiceFile(String orderId) {
         Order order = orderManager.getOrder(orderId);
 
@@ -140,4 +154,5 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         is.close();
         return bytes;
     } 
+
 }

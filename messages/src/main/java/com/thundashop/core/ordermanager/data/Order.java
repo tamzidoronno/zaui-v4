@@ -56,6 +56,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean sentToCustomer = false;
     private boolean cleaned = false;
     public Date dateTransferredToAccount;
+    public boolean avoidAutoSending = false;
     
     public Order jsonClone() {
         Gson gson = new Gson();
@@ -206,6 +207,13 @@ public class Order extends DataCommon implements Comparable<Order> {
         return false;
     }
 
+    public boolean isExpedia() {
+        if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("expedia")) {
+            return true;
+        }
+        return false;
+    }    
+    
     /**
      * Added because there was lots of bogus data added to translation, causing the orders to become huge objects.
      * 

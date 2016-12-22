@@ -24,10 +24,12 @@ public class PowerOfficeGoPoster extends Thread {
                 String result = webMgr.htmlPostBasicAuth(address, "", false, "ISO-8859-1", token, "Bearer", false, "GET");
                 Gson gson = new Gson();
                 CanBePostedResponse resp = gson.fromJson(result, CanBePostedResponse.class);
-                if(resp.canBePosted) {
+                if(resp.data.canBePosted) {
                     PostObject obj = new PostObject();
                     obj.id = transferId;
-                    webMgr.htmlPostBasicAuth("http://api.poweroffice.net/import/post/", gson.toJson(obj), true, "ISO-8859-1", token, "Bearer", false, "GET");
+                    String postedResult = webMgr.htmlPostBasicAuth("http://api.poweroffice.net/import/post/", gson.toJson(obj), true, "ISO-8859-1", token, "Bearer", false, "GET");
+                    System.out.println(postedResult);
+                    return;
                 }
                 System.out.println(i + " : " + result);
                 Thread.sleep(10000); 

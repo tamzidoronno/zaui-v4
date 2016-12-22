@@ -46,7 +46,9 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.utils.UtilManager;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,12 +74,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private HashMap<String, Product> fetchedProducts = new HashMap();
     private HashMap<String, PmsCareTaker> careTaker = new HashMap();
     private HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
-    private PmsPricing prices = new PmsPricing();
+    private HashMap<String, PmsPricing> priceMap = new HashMap();
     private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
     private List<String> warnedAbout = new ArrayList();
     private List<PmsAdditionalTypeInformation> additionDataForTypes = new ArrayList();
-
+    private String specifiedMessage = "";
+    Date lastOrderProcessed;
+    private List<PmsLog> logentries = new ArrayList();
+    private boolean initFinalized = false;
+    private String orderIdToSend;
+    private Date lastCheckForIncosistent;
+    private String emailToSendTo;
+    private String phoneToSend;
+    private String prefixToSend;
+    private List<Order> tmpOrderList;
+    
     @Autowired
     BookingEngine bookingEngine;
 
@@ -115,31 +127,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     PmsInvoiceManager pmsInvoiceManager;
     
     @Autowired
+    UtilManager utilManager;
+    
+    @Autowired
     GrafanaManager grafanaManager;
     
     @Autowired
     GetShop getShop;
     
-    private String specifiedMessage = "";
-    Date lastOrderProcessed;
-    private List<PmsLog> logentries = new ArrayList();
-    private boolean initFinalized = false;
-    private String orderIdToSend;
-    private Date lastCheckForIncosistent;
-    private String emailToSendTo;
-    private String phoneToSend;
-    private String prefixToSend;
-    private List<Order> tmpOrderList;
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        for (DataCommon dataCommon : data.data) { 
+        for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof PmsPricing) {
-                prices = (PmsPricing) dataCommon;
+                PmsPricing price = (PmsPricing) dataCommon;
+                if(price.code.isEmpty()) {
+                    price.code = "default";
+                    saveObject(price);
+                }
+                priceMap.put(price.code, price);
             }
             if (dataCommon instanceof PmsCareTaker) {
                 careTaker.put(dataCommon.id, (PmsCareTaker) dataCommon);
@@ -186,11 +196,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void setSession(Session session) {
-        super.setSession(session); //To change body of generated methods, choose Tools | Templates.
+        super.setSession(session);
     }
     
+    public PmsPricing getPriceObject() {
+        PmsPricing price = priceMap.get("default");
+        if(price != null) {
+            return price;
+        }
+        return new PmsPricing();
+    }
     
-
+    public PmsPricing getPriceObject(String code) {
+        return priceMap.get(code);
+    }
+    
     @Override
     public List<Room> getAllRoomTypes(Date start, Date end) {
         User loggedon = userManager.getLoggedOnUser();
@@ -251,6 +271,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.channel = booking.couponCode.split(":")[0];
         }
 
+        PmsPricing prices = getPriceObject();
         booking.priceType = prices.defaultPriceType;
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             if (room.bookingItemTypeId == null || room.bookingItemTypeId.isEmpty()) {
@@ -678,7 +699,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             saveBooking(booking);
         }
         
-        if(prices.defaultPriceType == PmsBooking.PriceType.daily && configuration.requirePayments) {
+        PmsPricing prices = getPriceObject();
+        if(prices != null && prices.defaultPriceType == PmsBooking.PriceType.daily && configuration.requirePayments) {
             booking.calculateTotalCost();
         }
 
@@ -869,11 +891,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsPricing getPrices(Date start, Date end) {
-        return prices;
+        return priceMap.get("default");
     }
 
     @Override
-    public PmsPricing setPrices(PmsPricing newPrices) {
+    public PmsPricing getPricesByCode(String code, Date start, Date end) {
+        return getPriceObject(code);
+    }
+
+    @Override
+    public PmsPricing setPrices(String code, PmsPricing newPrices) {
+        PmsPricing prices = getPriceObject(code);
         prices.defaultPriceType = newPrices.defaultPriceType;
         prices.progressivePrices = newPrices.progressivePrices;
         prices.pricesExTaxes = newPrices.pricesExTaxes;
@@ -958,7 +986,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
+        if(key.equals("booking_completed")) {
+            if(!booking.isRegisteredToday()) {
+                return;
+            }
+        }
+        
         repicientList.clear();
+        
         key = key + "_" + booking.language;
         String message = notify(key, booking, "sms", room);
         List<String> smsRecp = repicientList;
@@ -1048,6 +1083,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             if (key.startsWith("booking_confirmed")) {
                 attachments.putAll(createICalEntry(booking));
+            }
+            if (key.startsWith("booking_completed")) {
+                attachments.put("termsandcondition.html", createContractAttachment(booking.id));
             }
             if (key.startsWith("sendreciept")) {
                 attachments.put("reciept.pdf", createInvoiceAttachment());
@@ -1162,6 +1200,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             message = message.trim();
         }
         PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+        formater.setProductManager(productManager);
 
         if (this.specifiedMessage != null && message != null) {
             String specifiedmsg = this.specifiedMessage.replace("\n", "<br>\n");
@@ -1170,11 +1209,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         if (room != null) {
             message = formater.formatRoomData(message, room, bookingEngine);
+            try {
+                PmsAdditionalItemInformation addinfo = getAdditionalInfo(room.bookingItemId);
+                message = message.replace("{roomDescription}", addinfo.textMessageDescription);
+            }catch(Exception e) {}
         }
         message = formater.formatContactData(message, userManager.getUserById(booking.userId), null, booking);
         message = formater.formatBookingData(message, booking, bookingEngine);
 
         message = message.replace("{extrafield}", configuration.extraField);
+        
 
         return message;
     }
@@ -1205,6 +1249,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
+        PmsPricing prices = getPriceObject();
         PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings, prices.pricesExTaxes);
         builder.setBudget(getConfigurationSecure().budget);
         int totalRooms = bookingEngine.getBookingItems().size();
@@ -1582,7 +1627,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }
-
+//
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (needCheckOutCleaning(room, day)) {
                     finalize(booking);
@@ -2391,7 +2436,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     boolean needCheckOutCleaning(PmsBookingRooms room, Date toDate) {
-        if(getConfiguration().autoExtend && !room.keyIsReturned) {
+        if(getConfigurationSecure().autoExtend && !room.keyIsReturned) {
             return false;
         }
         if (room.date.exitCleaningDate == null) {
@@ -3045,10 +3090,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
-    PmsPricing getPriceObject() {
-        return prices;
-    }
-
     HashMap<String, PmsBooking> getBookingMap() {
         return bookings;
     }
@@ -3434,7 +3475,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(item.bookingItemTypeId == null || !item.bookingItemTypeId.equals(type.id)) {
                     continue;
                 }
-                System.out.println(item.id);
                 PmsAdditionalItemInformation additional = getAdditionalInfo(item.id);
                 List<Date> cleaningDates = additional.getAllCleaningDates();
                 for(Date date : cleaningDates) {
@@ -3537,6 +3577,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String createInvoiceAttachment() {
         String invoice = invoiceManager.getBase64EncodedInvoice(orderIdToSend);
         return invoice;
+    }
+    
+    private String createContractAttachment(String bookingId) {
+        String contract = "";
+        try {
+            contract = getContract(bookingId);
+            contract = invoiceManager.base64Encode(contract);
+            
+        }catch(Exception e) {
+            
+        }
+        return contract;
     }
 
     void setEmailToSendTo(String email) {
@@ -3713,7 +3765,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private boolean verifyPhoneOnBooking(PmsBooking booking) {
         String countryCode = booking.countryCode;
-        if(countryCode == null || !countryCode.isEmpty()) {
+        if(countryCode == null || countryCode.isEmpty()) {
             countryCode = "NO";
         }
         
@@ -3961,47 +4013,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         saveBooking(booking);
         return room.code;
-    }
-
-    private List<Order> getAllOrders() {
-        tmpOrderList = new ArrayList();
-        String numbers = "108650,108650,108648,108648,108647,108647,108646,108646,108646,108636,108636,108627,108627,108627,108627,108622,108622,108621,108621,108620,108620,108619,108619,108618,108618,108617,108617,108610,108610,108607,108607,108607,108607,108606,108606,108605,108605,108605,108605,108605,108604,108604,108603,108603,108603,108601,108601,108601,108600,108600,108594,108594,108591,108591,108590,108590,108588,108588,108586,108586,108586,108580,108580,108578,108578,108576,108576,108576,108574,108574,108562,108562,108556,108556,108554,108554,108553,108553,108552,108552,108552,108552,108547,108547,108543,108543,108541,108541,108538,108538,108536,108536,108536,108536,108533,108533,108533,108532,108532,108531,108531,108529,108529,108528,108528,108526,108526,108526,108525,108525,108524,108524,108523,108523,108521,108521,108521,108519,108519,108518,108518,108517,108517,108515,108515,108514,108514,108514,108514,108514,108513,108513,108513,108512,108512,108512,108507,108507,108507,108504,108504,108503,108503,108503,108503,108503,108503,108503,108501,108501,108497,108497,108497,108497,108497,108493,108493,108492,108492,108491,108491,108491,108490,108490,108490,108489,108489,108486,108486,108485,108485,108485,108483,108483,108482,108482,108482,108481,108481,108481,108478,108478,108477,108477,108477,108476,108476,108476,108473,108473,108471,108471,108471,108466,108466,108466,108465,108465,108464,108464,108464,108464,108464,108463,108463,108463,108462,108462,108462,108461,108461,108461,108458,108458,108457,108457,108456,108456,108455,108455,108454,108454,108453,108453,108453,108451,108451,108445,108445,108444,108444,108443,108443,108436,108436,108436,108436,108436,108430,108430,108427,108427,108426,108426,108426,108414,108414,108413,108413,108413,108413,108413,108406,108406,108404,108404,108404,108404,108403,108403,108402,108402,108396,108396,108395,108395,108395,108394,108394,108392,108392,108385,108385,108383,108383,108382,108382,108380,108380,108380,108377,108377,108375,108375,108375,108374,108374,108373,108373,108372,108372,108371,108371,108370,108370,108368,108368,108361,108361,108360,108360,108360,108360,108354,108354,108353,108353,108352,108352,108351,108351,108349,108349,108348,108348,108345,108345,108343,108343,108343,108341,108341,108340,108340,108339,108339,108338,108338,108338,108337,108337,108337,108335,108335,108334,108334,108329,108329,108328,108328,108319,108319,108319,108319,108315,108315,108314,108314,108310,108310,108309,108309,108308,108308,108302,108302,108300,108300,108297,108297,108294,108294,108293,108293,108292,108292,108292,108292,108292,108291,108291,108290,108290,108286,108286,108283,108283,108282,108282,108281,108281,108280,108280,108278,108278,108277,108277,108275,108275,108274,108274,108272,108272,108270,108270,108267,108267,108265,108265,108265,108265,108265,108262,108262,108262,108259,108259,108259,108258,108258,108257,108257,108257,108255,108255,108254,108254,108251,108251,108249,108249,108248,108248,108248,108247,108247,108246,108246,108246,108242,108242,108241,108241,108240,108240,108239,108239,108238,108238,108237,108237,108237,108233,108233,108233,108232,108232,108231,108231,108230,108230,108228,108228,108225,108225,108221,108221,108219,108219,108219,108215,108215,108192,108192,108191,108191,108176,108176,108175,108175,108173,108173,108173,108161,108161,108161,108137,108137,108134,108134,108118,108118,108118,108117,108117,108117,108113,108113,108113,108112,108112,108112,108112,108104,108104,108097,108097,108097,108097,108097,108097,108097,108082,108082,108082,108076,108076,108075,108075,108074,108074,108073,108073,108028,108028,108022,108022,108006,108006,107999,107999,107999,107971,107971,107948,107948,107946,107946,107946,107936,107936,107936,107929,107929,107920,107920,107867,107867,107865,107865,107858,107858,107847,107847,107839,107839,107839,107828,107828,107827,107827,107770,107770,107759,107759,107759,107743,107743,107738,107738,107737,107737,107737,107737,107733,107733,107730,107730,107729,107729,107718,107718,107718,107718,107718,107718,107718,107718,107718,107714,107714,107714,107709,107709,107709,107685,107685,107669,107669,107663,107663,107663,107642,107642,107642,107617,107617,107617,107617,107564,107564,107473,107473,107473,107457,107457,107457,107457,107457,107295,107295,107295,107273,107273,107233,107233,107233,107144,107144,107063,107063,107030,107030,107030,106987,106987,106769,106769,106530,106530,106494,106494,106468,106468,106445,106445,106445,106443,106443,106402,106402,106402,106387,106387,106386,106386,106386,106161,106161,106161,106161,106161,106161,106161,106161,106161,106161,106161,106161,106161,106161,106161,106161,106161,106161,106161,106161,106089,106089,105872,105872,105872,105773,105773,105773,105703,105703,105542,105542,105528,105528,105362,105362,105353,105353,105353,105174,105174,105174,105126,105126,105125,105125,105124,105124,104932,104932,104906,104906,104824,104824,104823,104823,104735,104735,104734,104734,104729,104729,104725,104725,104725,104725,104725,104725,104725,104725,104725,104725,104725,104725,104725,104725,104717,104717,104717,104717,104710,104710,104710,104708,104708,104677,104677,104674,104674,104674,104674,104674,104674,104674,104674,104674,104674,104674,104674,104674,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104673,104638,104638,104637,104637,104624,104624,104621,104621,104591,104591,104550,104550,104547,104547,104464,104464,104464,104230,104230,104230,104230,104230,104230,104230,104230,104230,104230,104116,104116,104097,104097,103966,103966,103917,103917,103842,103842,103804,103804,103803,103803,103739,103739,103739,103688,103688,103688,103469,103469,103466,103466,103466,103444,103444,103444,103415,103415,103337,103337,103333,103333,103333,103268,103268,103262,103262,103132,103132,103101,103101,103084,103084,102976,102976,102871,102871,102865,102865,102760,102760,102760,102397,102397,102381,102381,102357,102357,102355,102355,102354,102354,102353,102353,102336,102336,102335,102335,102271,102271,102136,102136,102090,102090,102089,102089,102071,102071,102061,102061,101978,101978,101968,101968,101940,101940,101846,101846,101844,101844,101844,101805,101805,101787,101787,101733,101733,101631,101631,101631,101390,101390,101337,101337,101280,101280,100544,100544,100543,100543,100507,100507,100453,100453,100428,100428,100397,100397,100352,100352,100343,100343,100330,100330,100219,100219,100171,100171,100144,100144,100089,100089,100078,100078,100075,100075,100036,100036,100023,100023,100023,100020,100020,100015,100015,100010,100010";
-
-        List<Integer> list = new ArrayList<Integer>();
-        for (String s : numbers.split(","))
-            list.add(Integer.parseInt(s));
-        for(Integer incId : list) {
-            try {
-                Order order = orderManager.getOrderByincrementOrderId(incId);
-                if(!tmpOrderList.contains(order)) {
-                    tmpOrderList.add(order);
-                }
-            }catch(Exception e) {
-                System.out.println("Failed loading order: " + incId);
-            }
-        }
-        return tmpOrderList;
-    }
-    
-    private void dumpBookingOnOrders() {
-        System.out.println("----------------------------");
-        getAllOrders();
-        for(Order ord : tmpOrderList) {
-            boolean found = false;
-            double total = orderManager.getTotalAmount(ord);
-            for(PmsBooking book : bookings.values()) {
-                if(book.orderIds.contains(ord.id)) {
-                    User user = userManager.getUserById(ord.userId);
-                    for(PmsBookingRooms room : book.rooms) {
-                        System.out.println(book.id + "\t" + ord.incrementOrderId + "\t" + user.fullName + "\t" + book.testReservation + "\t" + ord.rowCreatedDate + "\t" + ord.testOrder + "\t" + total);
-                    }
-                    found = true;
-                }
-            }
-            if(!found) 
-                System.out.println("\t" + ord.incrementOrderId + "\t\t\t" + ord.rowCreatedDate + "\t" + ord.testOrder + "\t" + total);
-        }
-        System.exit(0);
     }
 
     public List<PmsBookingAddonItem> getAddonsForRoom(String roomId) {
@@ -4399,13 +4410,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         } else {
             start = pmsInvoiceManager.normalizeDate(start, true);
-            end = pmsInvoiceManager.normalizeDate(end, false);
-            while(true) {
-                PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, start);
-                result.add(toAdd);
-                start = addTimeUnit(start, priceType);
-                if(start.after(end)) {
-                    break;
+            if(end != null) {
+                end = pmsInvoiceManager.normalizeDate(end, false);
+                while(true) {
+                    PmsBookingAddonItem toAdd = createAddonToAdd(addonConfig, start);
+                    result.add(toAdd);
+                    start = addTimeUnit(start, priceType);
+                    if(start.after(end)) {
+                        break;
+                    }
                 }
             }
         }
@@ -4455,6 +4468,37 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         pmsInvoiceManager.updateAddonsByDates(room);
         saveBooking(booking);
+    }
+
+    HashMap<String, PmsPricing> getAllPrices() {
+        return priceMap;
+    }
+    
+    @Override
+    public List<String> getpriceCodes() {
+        HashMap<String, PmsPricing> allPrices = priceMap;
+        List<String> codes = new ArrayList(allPrices.keySet());
+        return codes;
+    }
+
+    @Override
+    public void createNewPricePlan(String code) {
+        HashMap<String, PmsPricing> current = priceMap;
+        if(current.containsKey(code)) {
+            return;
+        }
+        
+        PmsPricing price = new PmsPricing();
+        price.code = code;
+        priceMap.put(code, price);
+        saveObject(price);
+    }
+
+    @Override
+    public void deletePricePlan(String code) {
+        PmsPricing prices = priceMap.get(code);
+        priceMap.remove(code);
+        deleteObject(prices);
     }
 
 }

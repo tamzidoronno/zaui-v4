@@ -36,6 +36,8 @@ class C3Hour extends \MarketingApplication implements \Application {
         
         $this->validateProjectCost($userPeriode);
         $this->getApi()->getC3Manager()->addUserProjectPeriode($userPeriode);
+        
+        $this->closeModal();
     }
     
     public function saveHours() {
@@ -54,6 +56,8 @@ class C3Hour extends \MarketingApplication implements \Application {
         
         $this->validate($c3Hour);
         $this->getApi()->getC3Manager()->addHour($c3Hour);
+        
+        $this->closeModal();
     }
     
     public function validate($hour) {
@@ -89,6 +93,7 @@ class C3Hour extends \MarketingApplication implements \Application {
     
     public function deleteCost() {
         $this->getApi()->getC3Manager()->deleteProjectCost($_POST['data']['costid']);
+        $this->closeModal();
     }
 }
 ?>

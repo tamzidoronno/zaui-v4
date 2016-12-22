@@ -123,7 +123,10 @@ if ($forskningsperiode) {
     }
     
     ?>
-    <br/> <div class='shop_button' gsclick='deleteCost' costId='<? echo $costId; ?>'> Slett oppføring </div>
+    <br/> 
+    <? if ($costId) { ?>
+        <div class='shop_button' gsclick='deleteCost' costId='<? echo $costId; ?>'> Slett oppføring </div>
+    <? } ?>
     <div class='shop_button' gstype='submit'> Lagre </div>
 </div>
 

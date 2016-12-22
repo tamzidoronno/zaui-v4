@@ -663,5 +663,10 @@ class ApplicationBase extends FactoryBase {
         echo json_encode($obj);
         die();
     }
+    
+    public function closeModal() {
+        $appManager = new ApplicationManager();
+        $appManager->closemodal();
+    }
 }
 ?>

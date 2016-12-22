@@ -129,6 +129,9 @@ interface IC3Manager {
     @Customer
     public String getBase64SFIExcelReport(String companyId, Date start, Date end);
     
+    @Customer
+    public String getBase64SFIExcelReportTotal(String companyId, Date start, Date end);
+    
     public boolean allowedNfrHour(String userId);
     
     public boolean allowedNfrOtherCost(String userId);

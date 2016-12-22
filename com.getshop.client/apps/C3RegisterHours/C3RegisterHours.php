@@ -25,5 +25,16 @@ class C3RegisterHours extends \MarketingApplication implements \Application {
             }
         }
     }
+    
+    public function downloadSfiReportTotal() {
+        $periodes = $this->getApi()->getC3Manager()->getPeriodes();
+        foreach ($periodes as $periode) {
+            if ($periode->isActive) {
+                $companyId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->companyObject->id;
+                echo $this->getApi()->getC3Manager()->getBase64SFIExcelReportTotal($companyId, $periode->from, $periode->to);
+                die();
+            }
+        }
+    }
 }
 ?>

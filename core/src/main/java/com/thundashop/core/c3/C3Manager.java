@@ -761,12 +761,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 throw new ErrorException(26);
         }
         
-        List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId);
+        List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId, true);
         SFIExcelReport report = new SFIExcelReport(reportData);
         return report.getBase64Encoded();
     }
     
-    private List<SFIExcelReportData> createReportDatas(Date start, Date end, String companyId) {
+    private List<SFIExcelReportData> createReportDatas(Date start, Date end, String companyId, boolean segregate) {
         List<C3Project> projectsToUse = getAllProjectsConnectedToCompany(companyId);
         List<User> users = userManager.getUsersByCompanyId(companyId);
         List<WorkPackage> workPackagesToUse = getWorkPackages(projectsToUse, users, start, end);
@@ -777,8 +777,13 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         
         List<SFIExcelReportData> datas = new ArrayList();
         
-        for (WorkPackage wp : workPackagesToUse) {
-            SFIExcelReportData report = createReportData(start, end, companyId, wp.id);
+        if (segregate) {
+            for (WorkPackage wp : workPackagesToUse) {
+                SFIExcelReportData report = createReportData(start, end, companyId, wp.id);
+                datas.add(report);
+            }
+        } else {
+            SFIExcelReportData report = createReportData(start, end, companyId, null);
             datas.add(report);
         }
         
@@ -1105,5 +1110,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         userManager.checkUserAccess(user);
         deleteObject(cost);
         toRemoveFrom.remove(cost.id);
+    }
+
+    @Override
+    public String getBase64SFIExcelReportTotal(String companyId, Date start, Date end) {
+        List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId, false);
+        SFIExcelReport report = new SFIExcelReport(reportData);
+        return report.getBase64Encoded();
     }
 }

@@ -226,6 +226,14 @@ public class PmsBookingSimpleFilter {
             if (filter.startDate == null || (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate))) {
                 return true;
             }
+        } else if (filter.filterType == null || filter.filterType.equals("unpaid")) {
+            if(!pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
+                return true;
+            }
+        } else if (filter.filterType == null || filter.filterType.equals("afterstayorder")) {
+            if(booking.createOrderAfterStay) {
+                return true;
+            }
         } else if (filter.filterType.equals("activecheckin")) {
             if((room.isActiveInPeriode(filter.startDate, filter.endDate) || room.isStartingToday(filter.startDate)) && !room.isEndingToday(filter.startDate)) {
                 return true;

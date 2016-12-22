@@ -62,6 +62,7 @@ public class PmsBooking extends DataCommon {
     public String deletedBySource = "";
     private double totalPrice;
     public String paymentType = "";
+    public Date orderCreatedAfterStay;
     
     
     public Double getTotalPrice() {

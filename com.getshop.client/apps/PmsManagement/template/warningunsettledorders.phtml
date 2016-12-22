@@ -26,6 +26,12 @@ if(sizeof($orders) > 1) {
     
     if($booking->createOrderAfterStay) {
         echo "<div class='warnunsettled' gstype='form' method='fastordercreation'>";
+        if($booking->orderCreatedAfterStay) {
+            $booking->orderCreatedAfterStay = null;
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+            $this->clearCurrentBooking();
+            $booking = $this->getSelectedBooking();
+        }
         echo "<i class='fa fa-trash-o removecreateafterstayfrombooking' style='cursor:pointer;'></i> <i class='fa fa-warning' style='color:red;'></i> An order of $amount, will be created at : $endDate, payment type ";
         foreach($instances as $id => $app) {
             $selected = "";

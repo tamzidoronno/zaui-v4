@@ -492,7 +492,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
             }
-        } else if (filter.filterType.equals("active") || filter.filterType.equals("inhouse")) {
+        } else if (filter.filterType.equals("active") || 
+                filter.filterType.equals("inhouse") || 
+                filter.filterType.equals("unpaid") || 
+                filter.filterType.equals("afterstayorder")) {
             for (PmsBooking booking : bookings.values()) {
                 if (booking.isActiveInPeriode(filter.startDate, filter.endDate)) {
                     result.add(booking);
@@ -537,6 +540,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         finalized = filterByUser(finalized,filter.userId);
         finalized = filterByChannel(finalized,filter.channel);
         finalized = filterByBComRateManager(finalized,filter);
+        finalized = filterByUnpaid(finalized,filter);
 
         return finalized;
     }
@@ -4512,6 +4516,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingRooms room = booking.getRoom(pmsRoomId);
         room.priceMatrix = new LinkedHashMap();
         pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
+    }
+
+    private List<PmsBooking> filterByUnpaid(List<PmsBooking> finalized, PmsBookingFilter filter) {
+        if(filter.filterType == null || !filter.filterType.equals("unpaid")) {
+            return finalized;
+        }
+        
+        List<PmsBooking> unpaidBookings = new ArrayList();
+        
+        for(PmsBooking booking : finalized) {
+            if(!booking.payedFor) {
+                unpaidBookings.add(booking);
+            }
+        }
+        
+        return unpaidBookings;
     }
 
 }

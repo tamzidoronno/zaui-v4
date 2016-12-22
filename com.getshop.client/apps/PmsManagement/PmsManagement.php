@@ -2079,5 +2079,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $tmpType;
     }
 
+    public function clearCurrentBooking() {
+        $this->selectedBooking = null;
+    }
+
 }
 ?>

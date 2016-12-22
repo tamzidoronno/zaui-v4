@@ -802,12 +802,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         if(booking.priceType == PmsBooking.PriceType.daily) {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
-                int totalDays = 1;
-                if (room.date.end != null && room.date.start != null && !getConfigurationSecure().hasNoEndDate) {
-                    totalDays = Days.daysBetween(new LocalDate(room.date.start), new LocalDate(room.date.end)).getDays();
-                }
-
-                pmsInvoiceManager.updateAddonsByDates(room);
                 pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
             }
         }
@@ -4499,6 +4493,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsPricing prices = priceMap.get(code);
         priceMap.remove(code);
         deleteObject(prices);
+    }
+
+    @Override
+    public void updateAddonsBasedOnGuestCount(String pmsRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        HashMap<Integer, String> types = new HashMap();
+        for(PmsBookingAddonItem item : room.addons) {
+            types.put(item.addonType, "1");
+        }
+        
+        for(Integer type : types.keySet()) {
+            if(type == 1 || getConfiguration().addonConfiguration.get(type).dependsOnGuestCount) {
+                addAddonsToBooking(type, pmsRoomId, false);
+            }
+        }
+        
+    }
+
+    @Override
+    public void resetPriceForRoom(String pmsRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        room.priceMatrix = new LinkedHashMap();
+        pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
     }
 
 }

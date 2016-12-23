@@ -25,13 +25,65 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
         $user->address = new \core_usermanager_data_Address();
         $user->address->address = $_POST['data']['street'];
         $user->address->postCode = $_POST['data']['postcode'];
+        $user->address->city = $_POST['data']['city'];
         @$user->metaData->{'parentName'} = $_POST['data']['parentname'];
         @$user->metaData->{'parentcell'} = $_POST['data']['parentcell'];
+        @$user->metaData->{'sex'} = $_POST['data']['sex'];
+        @$user->metaData->{'school'} = $_POST['data']['school'];
+        @$user->metaData->{'schoolclass'} = $_POST['data']['schoolclass'];
+        @$user->metaData->{'usepictures'} = $_POST['data']['usepicutres'] && $_POST['data']['usepicutres'] == "true" ? "Ja" : "Nei";
         
         $craetedUser  =  $this->getApi()->getUserManager()->createUser($user);
         
         $pageIdToUse = $this->getModalVariable("pageid") ? $this->getModalVariable("pageid") : $this->getPage()->getId();
         $this->getApi()->getSimpleEventManager()->addUserToEvent($pageIdToUse , $craetedUser->id);
+    }
+    
+    public function downloadUserList() {
+        $rows = array();
+        $pageIdToUse = $this->getModalVariable("pageid") ? $this->getModalVariable("pageid") : $this->getPage()->getId();
+        $event = $this->getApi()->getSimpleEventManager()->getEventByPageId($pageIdToUse);
+        
+        $header = array();
+        $header[] = "Navn";
+        $header[] = "Mobilnr";
+        $header[] = "Epost";
+        $header[] = "Skole";
+        $header[] = "Klasse";
+        $header[] = "Kjønn";
+        $header[] = "Addresse";
+        $header[] = "Postnr";
+        $header[] = "By";
+        $header[] = "Foresatte navn";
+        $header[] = "Foresatte mobilnr";
+        $header[] = "Tilatt bildebruk";
+        $rows[] = $header;
+        
+        foreach ($event->userIds as $userId) {
+            $user = $this->getApi()->getUserManager()->getUserById($userId);
+            
+            $xuser = array();
+            $xuser[] = $user->fullName;
+            $xuser[] = $user->cellPhone;
+            $xuser[] = $user->emailAddress;
+            
+            $xuser[] = @$user->metaData->{'school'};
+            $xuser[] = @$user->metaData->{'schoolclass'};
+            $xuser[] = @$user->metaData->{'sex'};
+            
+            $xuser[] = $user->address->address;
+            $xuser[] = $user->address->postCode;
+            $xuser[] = $user->address->city;
+            
+            $xuser[] = @$user->metaData->{'parentName'};
+            $xuser[] = @$user->metaData->{'parentcell'};
+            $xuser[] = @$user->metaData->{'usepictures'};
+            
+            $rows[] = $xuser;
+        }
+        
+        echo json_encode($rows);
+        
     }
     
     public function sendMailTilAll() {

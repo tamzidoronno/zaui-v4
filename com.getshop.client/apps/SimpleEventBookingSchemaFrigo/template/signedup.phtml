@@ -4,7 +4,9 @@ $pageIdToUse = $this->getModalVariable("pageid") ? $this->getModalVariable("page
 $event = $this->getApi()->getSimpleEventManager()->getEventByPageId($pageIdToUse);
 
 echo "<hr/>";
+
 echo "<div style='text-align: center; font-weight: bold; margin-top: 40px; margin-bottom: 20px; '> Admin område - påmeldte </div>";
+echo "<div class='shop_button' gs_downloadExcelReport='downloadUserList' gs_fileName='deltakerliste'>Last ned excel liste</div><br/><br/>";
 foreach ($event->userIds as $userId) {
     $user = $this->getApi()->getUserManager()->getUserById($userId);
     if ($user) {
@@ -20,17 +22,3 @@ foreach ($event->userIds as $userId) {
     }
 }
 ?>
-
-        <br/> <br/>
-Send mail til alle:
-<div gstype="form" method="sendMailTilAll">
-    <input class="gsniceinput1" placeholder="subject" gsname="subject" style="width: 100%; box-sizing: border-box;"/>
-    <textarea gsname="message" style="width: 100%; box-sizing: border-box; padding: 10px; height: 200px;"></textarea>
-    
-    <?
-    if (isset($_POST['event']) && $_POST['event'] == "sendMailTilAll") {
-        echo "Meldingen er nå sendt";
-    }
-    ?>
-    <br/><div class="shop_button" gstype="submit">Send mail</div>
-</div>

@@ -15,7 +15,7 @@ class FrigoTheme extends \ThemeApplication implements \Application {
     }
     
     public function addScripts() {
-        echo "<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>";
+        echo '<link href="https://fonts.googleapis.com/css?family=Cabin" rel="stylesheet">';
     }
 
 }

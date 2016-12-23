@@ -1,6 +1,6 @@
 body {
-    font-size: 16px;
-    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    font-family: 'Cabin', sans-serif;
     color: #222;
 }
 
@@ -14,6 +14,7 @@ body {
     height: 110px;
     position: relative;
     box-shadow: -5px 0px 5px;
+    font-size: 16px;
 }
 
 [appid="2c4b6189-eb08-4533-b98a-41fc43aa1026"] img {

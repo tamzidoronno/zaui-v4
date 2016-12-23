@@ -623,12 +623,16 @@ public class PmsManagerProcessor {
                 continue;
             }
 
+            if(booking.orderCreatedAfterStay != null) {
+                continue;
+            }
+            
             if(config.requirePayments && booking.createOrderAfterStay && booking.isEnded()) {
                 NewOrderFilter filter = new NewOrderFilter();
                 filter.createNewOrder = true;
                 filter.endInvoiceAt = booking.getEndDate();
                 manager.pmsInvoiceManager.createOrder(booking.id, filter);
-                booking.createOrderAfterStay = false;
+                booking.orderCreatedAfterStay = new Date();
                 manager.saveBooking(booking);
             }
             boolean needSaving = false;
@@ -679,7 +683,7 @@ public class PmsManagerProcessor {
             boolean forceSend = (booking.channel != null && !booking.channel.isEmpty()) && booking.isRegisteredToday();
             if(booking.payedFor != payedfor || forceSend) {
                 booking.payedFor = payedfor;
-                if(!booking.hasSentNotification("booking_completed")) {
+                if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
                     if((payedfor == true || forceSend) && booking.orderIds.size() == 1) {
                         manager.doNotification("booking_completed", booking.id);
                         booking.notificationsSent.add("booking_completed");

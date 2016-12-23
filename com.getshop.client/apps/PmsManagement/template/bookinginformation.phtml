@@ -99,6 +99,9 @@ if($config->requirePayments) {
         echo " (kr " . $totalOrders . ")";
     }
     echo "</span>";
+    
+    echo "<span class='tab' area='orderpreview'>Preview</span>";
+    
 }
 echo "<span class='tab' area='messagearea'>Messaging</span>";
 $hasAddons = false;
@@ -128,6 +131,9 @@ echo "</div>";
 if($config->requirePayments) {
     echo "<div class='tabarea orderinfo'>";
     $this->includefile("orderinformation");
+    echo "</div>";
+    echo "<div class='tabarea orderpreview'>";
+    $this->includefile("orderpreview");
     echo "</div>";
 }
 

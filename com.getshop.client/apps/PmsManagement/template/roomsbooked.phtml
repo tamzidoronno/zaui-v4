@@ -430,7 +430,13 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                             <input type='text' gsname='end' value='<? echo date("d.m.Y", strtotime($room->date->end)); ?>' style='width:80px;' class='calinput'>
                             <input type='text' gsname='endtime' value='<? echo date("H:i", strtotime($room->date->end)); ?>' style='width:40px;'>
                             <br>
-                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                            
+                            <div style='margin-top: 5px; margin-bottom: 5px;'>
+                                <div style="display: inline-block;margin-right: 20px;"><input type="checkbox" checked gsname="updateprices">Update prices</div>
+                                <div style="display: inline-block; "><input type="checkbox" checked gsname="updateaddons">Update addons</div>
+                            </div>
+                            
+                            <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change dates</span>
                         </span>
                     </span>
                 </span>
@@ -475,7 +481,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                 }
                                 ?>
                             </span>
-                            <span class="editmode" gstype='form' method="setGuests" style="width:400px;">
+                            <span class="editmode" gstype='form' method="setGuests" style="width:350px;">
                                 <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                                 <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                                 <select gsname='numberofguests'>
@@ -489,7 +495,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                 }
                                 ?>
                                 </select><br>
-                                <table>
+                                <table cellspacing='0' cellpadding='0'>
                                     <tr>
                                         <th>Name</th>
                                         <th>Email</th>
@@ -508,7 +514,11 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                 }
                                 ?>
                                 </table>
-                                <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                                <div style='margin-top: 5px; margin-bottom: 5px;'>
+                                    <div style="display: inline-block;margin-right: 20px;"><input type="checkbox" checked gsname="updateprices">Update prices</div>
+                                    <div style="display: inline-block; "><input type="checkbox" checked gsname="updateaddons">Update addons</div>
+                                </div>
+                                <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change guest information</span>
                             </span>
                         </span>
                     </span>

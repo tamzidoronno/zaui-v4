@@ -38,6 +38,8 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .createorderafterstaycheckbox', app.PmsManagement.createorderafterstaycheckbox);
         $(document).on('click','.PmsManagement .removecreateafterstayfrombooking', app.PmsManagement.removeorderafterstay);
         $(document).on('click','.PmsManagement .loadorderstatistics', app.PmsManagement.loadorderstatistics);
+        $(document).on('click','.PmsManagement .changepaymenttypebutton', app.PmsManagement.changepaymenttypebutton);
+        $(document).on('click','.PmsManagement .markpaidbutton', app.PmsManagement.markpaidform);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -64,7 +66,24 @@ app.PmsManagement = {
         $(document).on('keyup','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('change','.PmsManagement .roomsbookedactionsselection', app.PmsManagement.updateRoomActionSelection);
     },
-    
+    changepaymenttypebutton : function() {
+        var data = $(this).closest('tr').attr('orderid');
+        $('.selectedorderidtochange').val(data);
+        
+        var form = $('.changepaymenttypeform');
+        form.css('left', $(this).position().left);
+        form.css('top', $(this).position().top);
+        form.fadeIn();
+    },
+    markpaidform : function() {
+        var data = $(this).closest('tr').attr('orderid');
+        $('.selectedorderidtomarkpaid').val(data);
+        
+        var form = $('.markpaidform');
+        form.css('left', $(this).position().left);
+        form.css('top', $(this).position().top);
+        form.fadeIn();
+    },
     sendconfirmation : function() {
         var data = {
             "bookingid" : $('#openedbookingid').val(),
@@ -347,10 +366,6 @@ app.PmsManagement = {
         tab.addClass('selected');
         $('.tabarea').hide();
         var area = $(this).attr('area');
-        $('.warnunsettled').show();
-        if(area === "orderinfo") {
-            $('.warnunsettled').hide();
-        }
         $('.tabarea.'+area).show();
         localStorage.setItem('selectedbookinginfotab', area);
     },

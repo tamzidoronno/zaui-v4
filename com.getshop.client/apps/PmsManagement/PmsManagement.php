@@ -313,8 +313,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function updateOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
-        $order->status = $_POST['data']['status'];
-        $order->payment->paymentType = $_POST['data']['paymenttype'];
+        $order->payment->paymentType = $_POST['data']['clicksubmit'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->showBookingInformation();
+    }
+    
+    public function markPaid() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->status = 7;
+        $order->paymentDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->showBookingInformation();
     }
@@ -788,7 +795,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(!$error) {
             $this->errors[] = "Could not update start date, due to room not available at the time being.";
         }
-        
+
+        if($_POST['data']['updateprices'] == "true") {
+            $this->getApi()->getPmsManager()->resetPriceForRoom($this->getSelectedName(), $_POST['data']['roomid']);
+        }
+        if($_POST['data']['updateaddons'] == "true") {
+            $this->getApi()->getPmsManager()->updateAddonsBasedOnGuestCount($this->getSelectedName(), $_POST['data']['roomid']);
+        }
+                
         $this->refreshSelectedBooking();
         $this->showBookingInformation();
     }
@@ -1155,6 +1169,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         $this->getManager()->saveBooking($this->getSelectedName(), $booking);
+        
+        if($_POST['data']['updateprices'] == "true") {
+            $this->getApi()->getPmsManager()->resetPriceForRoom($this->getSelectedName(), $_POST['data']['roomid']);
+        }
+        if($_POST['data']['updateaddons'] == "true") {
+            $this->getApi()->getPmsManager()->updateAddonsBasedOnGuestCount($this->getSelectedName(), $_POST['data']['roomid']);
+        }
+        
         $this->selectedBooking = $this->getManager()->getBooking($this->getSelectedName(), $booking->id);
         $this->showBookingInformation();
     }
@@ -2055,6 +2077,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return $types[$tmpType];
         }
         return $tmpType;
+    }
+
+    public function clearCurrentBooking() {
+        $this->selectedBooking = null;
     }
 
 }

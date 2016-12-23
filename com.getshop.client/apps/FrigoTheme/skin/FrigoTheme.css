@@ -1,5 +1,5 @@
 body {
-    font-size: 18px;
+    font-size: 17px;
     font-family: 'Cabin', sans-serif;
     color: #222;
 }
@@ -14,7 +14,7 @@ body {
     height: 110px;
     position: relative;
     box-shadow: -5px 0px 5px;
-    font-size: 16px;
+    font-size: 16px
 }
 
 [appid="2c4b6189-eb08-4533-b98a-41fc43aa1026"] img {
@@ -124,4 +124,65 @@ body {
 
 .NewsFeed .newsentrysmall .date {
     color: #FFF;
+}
+
+@media screen and (max-width: 799px) {
+    .gsarea[area="header"] .Menu { width: 100%; }
+    .gsarea[area="header"] .Menu .entries .entries { 
+        background-color: inherit; 
+        border: solid 0px;
+        padding-left: 15px;
+    }
+    
+    .gsarea[area="footer"] {
+        min-height: 150px;
+        height: auto;
+    }
+    .gsarea[area="footer"] img {
+        width: 100px;
+        display: inline-block;
+        height: 100px;
+    }
+    .gsucell[cellid="9b869d49-6fbf-4315-9822-f1e7a50205e7"] {
+        padding-left: 20px;
+        padding-right: 20px;
+        text-align: center;
+    }
+    .gsucell[cellid="9b869d49-6fbf-4315-9822-f1e7a50205e7"] .gsucell {
+        display: inline-block;
+    }
+    
+    .shop_button {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    .gsarea[area="body"] {
+        margin-top: 40px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    .gsarea[area="header"] .mobilenavigatemenu {
+        
+        width: 40px;
+        font-size: 0px;
+        text-align: center;
+        background-color: #707130;
+        position: fixed;
+        top: 70px;
+    }
+    
+    .gsarea[area="header"] .mobilenavigatemenu i:before {
+        font-size: 30px;
+        color: #FFF;
+    }
+    
+    .simplebooking_inner {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    
+    [appid="2c4b6189-eb08-4533-b98a-41fc43aa1026"] img {
+        margin-top: 20px;
+    }
 }

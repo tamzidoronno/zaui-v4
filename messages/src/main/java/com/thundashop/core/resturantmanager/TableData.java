@@ -5,13 +5,14 @@
  */
 package com.thundashop.core.resturantmanager;
 
-import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author ktonder
  */
-public class ResturantTableSession extends DataCommon {
-    public String createdByUserId = "";
-    public String tableId = "";
+public class TableData {
+    public String currentSessionId = "";
+    public List<ResturantCartItem> cartItems = new ArrayList();
 }

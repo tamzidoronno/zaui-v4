@@ -27,6 +27,7 @@ GetShopApiWebSocket.prototype = {
     unsentMessageLoaded: false,
     messageCountChangedEvent: null,
     firstResendOfUnsentMessages: false,
+    listeners: [],
     
     connect: function() {
         if (!this.shouldConnect)
@@ -61,17 +62,46 @@ GetShopApiWebSocket.prototype = {
           s4() + '-' + s4() + s4() + s4();
     },
 
+    addListener : function(dataObjectName, callback, scope) {
+        var listenObject = {
+            gs_session_scope: scope,
+            dataObjectName : dataObjectName,
+            callback: callback
+        }
+        
+        this.listeners.push(listenObject);
+    },
+
     handleMessage: function(msg) {
         var data = msg.data;
         var jsonObject = JSON.parse(data);
         var corrolatingMessage = this.getMessage(jsonObject.messageId);
         
+        if (typeof(corrolatingMessage) === "undefined") {
+            this.handleIncomingMessage(jsonObject);
+            return;
+        }
+
         corrolatingMessage.resolveWith({ 'messageId': jsonObject.messageId }, [jsonObject.object]);
         if (this.sentMessages.length === 0 && this.transferCompleted) {
             this.transferCompleted();
         }
     },
-            
+
+    handleIncomingMessage: function(msg) {
+        var dataObject = JSON.parse(msg);
+        for (var i in this.listeners) {
+            var listener = this.listeners[i];
+            if (listener.dataObjectName === dataObject.coninicalName) {
+                if (listener.gs_session_scope) {
+                    listener.callback.apply(listener.gs_session_scope, [dataObject.payLoad]);
+                } else {
+                    listener.callback(dataObject.payLoad);
+                }
+            }
+        }
+    },
+
     reconnect: function() {
         var me = this;
         this.shouldConnect = true;

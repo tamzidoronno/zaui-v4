@@ -1,0 +1,27 @@
+<div class="tableoverviewheader">
+    <div class="roomnameheader">{{room.name}} - {{table.name}}</div>
+    <div class="personselector">
+        <span class="selectLeft  changeperson" ng-click="changeSelectedPerson(false)"><i class="fa fa-arrow-left"></i></span>
+        <span ng-click="toggleMenu()" style=" width: calc(100% - 200px); display: inline-block;">{{ getPersonName() }}</span>
+        <span class="selectRight changeperson" ng-click="changeSelectedPerson(true)"><i class="fa fa-arrow-right"></i></span>
+    </div>
+        <div class="tablemenu">
+        <div class="tablemenuentry" ng-click="createNewSession()"> New session </div>
+        <div ng-click='showLoadOldSessions()' class="tablemenuentry"> Load old session </div>
+        <div class="tablemenuentry"> Checkout </div>
+    </div>
+</div>
+
+<div class="tableheaderspacer"></div>
+
+<div class="button" ng-class="canSendToKitched() ? '' : 'disabled'" ng-click="sendToKitchen()">Send order</div>
+
+<div ng-repeat="list in productLists" class="productList">
+    <div class="listnametitle">{{ list.listName }}</div>
+    <div class="productlistinnner">
+        <div ng-repeat="product in getProductsForList(list)" productid="{{product.id}}" class="productcartbutton" ng-right-click="removeProduct(product)" ng-swipe-right="removeProduct(product)" ng-click="addToCart(product)" ng-class="getProductCount(product) > 0 ? 'inuse' : '' ">
+            {{ product.name }}
+            <div>{{ getProductCount(product) }}</div>
+        </div>
+    </div>
+</div>

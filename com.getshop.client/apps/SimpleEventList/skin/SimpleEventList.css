@@ -45,3 +45,12 @@
     border: solid 1px #888;
     margin-bottom: 20px;
 }
+
+@media screen and (max-width: 799px) {
+    .SimpleEventList .row .col { vertical-align: top; }
+    .SimpleEventList .row .col:nth-of-type(1) { width: 30%; box-sizing: border-box; margin: 0px; }
+    .SimpleEventList .row .col:nth-of-type(2) { width: 30%; box-sizing: border-box; margin: 0px; }
+    .SimpleEventList .row .col:nth-of-type(3) { width: 30%; box-sizing: border-box; margin: 0px; }    
+    
+    .SimpleEventList .row .col .shop_button { margin-top: 10px; margin-bottom: 10px; }
+}

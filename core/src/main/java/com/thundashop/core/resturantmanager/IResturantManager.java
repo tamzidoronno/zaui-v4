@@ -25,8 +25,29 @@ interface IResturantManager {
     public ResturantTable getTableById(String tableId);
 
     @Customer
-    public void addCartItems(List<ResturantCartItem> cartItems);
+    public void addCartItems(List<ResturantCartItem> cartItems, String tableId);
     
     @Customer
-    public String createTableSession(String tableId);
+    public TableSession createTableSession(String tableId);
+    
+    @Customer
+    public List<TableSession> getAllSessions();
+    
+    /**
+     * Returns all the sessions which the current table can change to,
+     * this means that the session that is currently active is hidden.
+     * 
+     * @param tableId
+     * @return 
+     */
+    @Customer
+    public List<TableSession> getAllSessionsForTable(String tableId);
+    
+    @Customer 
+    public List<ResturantCartItem> changeToDifferentSession(String sessionId, String tableId);
+    
+    @Customer 
+    public TableData getCurrentTableData(String tableId);
+    
+    
 }

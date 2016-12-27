@@ -290,11 +290,12 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     $typesAdded[$addon->productId] += $addon->count;
                     $total += ($addon->price * $addon->count);
                 }
+                echo "<span class='addonsadded'></span>";
                 $res = array();
                 foreach($typesAdded as $prodId => $val) {
                     $title = $val . " x " . $products[$prodId]->name;
                     $name = strtoupper(substr($products[$prodId]->name,0, 1));
-                    $res[] = "<span title='$title'>($name)</span>";
+                    $res[] = "<span title='$title' class='listaddonsaddedtoroom' style='cursor:pointer;' productId='".$prodId."' pmsRoomId='".$room->pmsBookingRoomId."'>($name)</span>";
                 }
                 echo join(",", $res);
                 if($total) {

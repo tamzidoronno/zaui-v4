@@ -62,10 +62,23 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .executeroomsbookedaction', app.PmsManagement.executeroomsbookedaction);
         $(document).on('keyup','.PmsManagement .matrixpricealldays', app.PmsManagement.updateRoomPriceMatrix);
         $(document).on('click','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
+        $(document).on('click','.PmsManagement .listaddonsaddedtoroom', app.PmsManagement.showAddonList);
+        $(document).on('click','.PmsManagement .removeAddonsFromRoom', app.PmsManagement.removeAddonsFromRoom);
         $(document).on('focus','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('keyup','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('change','.PmsManagement .roomsbookedactionsselection', app.PmsManagement.updateRoomActionSelection);
         $(document).on('click','.PmsManagement .loadStatsForDay', app.PmsManagement.loadStatsForDay);
+    },
+    showAddonList : function() {
+        var event = thundashop.Ajax.createEvent('','loadEventListForRoom',$(this), {
+            productId : $(this).attr('productId'),
+            roomId : $(this).attr('pmsRoomId')
+        });
+        var addon = $(this);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            addon.closest('td').find('.addonsadded').html(res);
+            addon.closest('td').find('.addonsadded').fadeIn();
+        });
     },
     loadStatsForDay : function() {
         var index = $(this).attr('index');
@@ -109,6 +122,16 @@ app.PmsManagement = {
             bookingid : $('#openedbookingid').val()
         }
         var event = thundashop.Ajax.createEvent('','setCleaningComment', $(this),data);
+        thundashop.common.showInformationBoxNew(event);
+    },
+    
+    removeAddonsFromRoom : function() {
+        var panel = $(this).closest('.addonsadded');
+        var data = {
+            roomId : panel.find('[gsname="roomId"]').val(),
+            productId : panel.find('[gsname="productId"]').val()
+        }
+        var event = thundashop.Ajax.createEvent('','removeAddonsFromRoom', $(this),data);
         thundashop.common.showInformationBoxNew(event);
     },
     

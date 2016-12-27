@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class PowerOfficeGoImportLine {
     public Integer accountNumber;
+    public Integer customerCode;
     public Double amount;
     public Integer quantity;
     public String description;

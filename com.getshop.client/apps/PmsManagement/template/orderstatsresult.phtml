@@ -5,6 +5,7 @@ $filter = $this->getOrderStatsFilter();
 $products = $this->getApi()->getProductManager()->getAllProducts();
 $products = $this->indexList($products);
 $result = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedName(), $filter);
+$_SESSION['currentOrderStatsResult'] = serialize($result);
 $productIds = array();
 $priceType = $_POST['data']['priceType'];
 
@@ -30,10 +31,13 @@ echo "<th>Day</th>";
 foreach($productIds as $id => $null) {
     echo "<th width='100'>" . $products[$id]->name . "</th>";
 }
+echo "<th></th>";
 echo "</tr>";
+$index = 0;
 foreach($result->entries as $entry) {
     echo "<tr class='compressed'>";
-    echo "<td>" . date("d.m.Y", strtotime($entry->day)) . "</td>";
+    echo "<td class='loadStatsForDay' index='$index'>" . date("d.m.Y", strtotime($entry->day)) . "</td>";
+    $totalRow = 0;
     foreach($productIds as $id => $price) {
          $prices = $entry->priceInc;
         if($priceType == "extaxes") {
@@ -43,8 +47,11 @@ foreach($result->entries as $entry) {
             echo "<td width='100'>0</td>";
         } else {
             echo "<td width='100'>" . round($prices->{$id}) . "</td>";
+            $totalRow+= round($prices->{$id});
         }
     }
+    echo "<td>" . $totalRow . "</td>";
+    $index++;
     echo "</tr>";
 }
 echo "<tr>";

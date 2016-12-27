@@ -51,6 +51,10 @@ class PmsStatisticsBuilder {
                 if(booking.isDeleted) {
                     continue;
                 }
+                if(booking.isEnded() && !booking.payedFor) {
+                    continue;
+                }
+                
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(!filter.typeFilter.isEmpty() && !filter.typeFilter.contains(room.bookingItemTypeId)) {
                         continue;

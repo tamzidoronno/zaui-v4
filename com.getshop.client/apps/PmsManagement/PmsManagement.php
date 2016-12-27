@@ -26,6 +26,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function loadStatsForDay() {
+        $this->includefile("orderstatsday");
+    }
+    
     public function resendConfirmation() {
         $email = $_POST['data']['email'];
         $bookingId = $_POST['data']['bookingid'];

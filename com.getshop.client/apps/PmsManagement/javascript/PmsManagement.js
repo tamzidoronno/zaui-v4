@@ -65,6 +65,14 @@ app.PmsManagement = {
         $(document).on('focus','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('keyup','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('change','.PmsManagement .roomsbookedactionsselection', app.PmsManagement.updateRoomActionSelection);
+        $(document).on('click','.PmsManagement .loadStatsForDay', app.PmsManagement.loadStatsForDay);
+    },
+    loadStatsForDay : function() {
+        var index = $(this).attr('index');
+        var event = thundashop.Ajax.createEvent('','loadStatsForDay', $(this), {
+            "index" : index
+        });
+        thundashop.common.showInformationBoxNew(event, "Statis for day");
     },
     changepaymenttypebutton : function() {
         var data = $(this).closest('tr').attr('orderid');

@@ -305,7 +305,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             room.breakfasts = checkForBreakfast(roomtable, table, guest);
             booking.rooms.add(room);
             
-            if(pmsManager.getConfigurationSecure().usePricesFromChannelManager && booking.channelId.equals("2")) {
+            if(pmsManager.getConfigurationSecure().usePricesFromChannelManager) {
                 Vector roomdays = (Vector) roomtable.get("roomdays");
                 Iterator roomDaysIterator = roomdays.iterator();
                 SimpleDateFormat intoDate = new SimpleDateFormat("dd-MM-yyyy");

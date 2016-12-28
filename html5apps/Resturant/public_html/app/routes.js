@@ -93,6 +93,36 @@ angular.module('TrackAndTrace')
         }
     });
     
+    $stateProvider.state('base.checkouttable', {
+        url: '/tableoverview_checkout/:tableId',
+        
+        views: {
+            main: {
+                templateUrl : 'components/checkout/table.html',
+                controller : controllers.CheckoutController
+            },
+            footer: {
+                templateUrl : 'components/checkout/footer.html',
+                controller : controllers.CheckoutController
+            }
+        }
+    });
+    
+    $stateProvider.state('base.paymentwindow', {
+        url: '/tableoverview_checkout/:tableId/:paymentMethodId',
+        
+        views: {
+            main: {
+                templateUrl : 'components/payment/payment.html',
+                controller : controllers.PaymentController
+            },
+            footer: {
+                templateUrl : 'components/payment/footer.html',
+                controller : controllers.PaymentController
+            }
+        }
+    });
+    
     $stateProvider.state("base.pagenotfound", {
         url: "*path",
         views: {

@@ -9840,6 +9840,18 @@ GetShopApiWebSocket.ResturantManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'completePayment' : function(paymentMethodId,cartItemIds, gs_silent) {
+        var data = {
+            args : {
+                paymentMethodId : JSON.stringify(paymentMethodId),
+                cartItemIds : JSON.stringify(cartItemIds),
+            },
+            method: 'completePayment',
+            interfaceName: 'core.resturantmanager.IResturantManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'createTableSession' : function(tableId, gs_silent) {
         var data = {
             args : {
@@ -9910,6 +9922,18 @@ GetShopApiWebSocket.ResturantManager.prototype = {
                 tableId : JSON.stringify(tableId),
             },
             method: 'getTableById',
+            interfaceName: 'core.resturantmanager.IResturantManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'payOnRoom' : function(room,cartItemsIds, gs_silent) {
+        var data = {
+            args : {
+                room : JSON.stringify(room),
+                cartItemsIds : JSON.stringify(cartItemsIds),
+            },
+            method: 'payOnRoom',
             interfaceName: 'core.resturantmanager.IResturantManager',
         };
         return this.communication.send(data, gs_silent);

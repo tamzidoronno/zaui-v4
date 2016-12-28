@@ -183,3 +183,14 @@ a {
     text-shadow:0px 0px 0px #2f6627;
     border: solid 1px #888;
 }
+
+input.gsniceinput1 {
+  padding: 10px;
+  border: solid 1px #dcdcdc;
+  transition: box-shadow 0.3s, border 0.3s;
+}
+input.gsniceinput1:focus,
+input.gsniceinput1.focus {
+  border: solid 1px #707070;
+  box-shadow: 0 0 5px 1px #969696;
+}

@@ -77,6 +77,15 @@ controllers.TableController = function($scope, $rootScope, $api, $state, datarep
         }
     }
     
+    $scope.showCheckout = function() {
+        if ($scope.canSendToKitched()) {
+            alert("Can not start a checkout for this table as there is orders that has not been sent to kitchen.");
+            return;
+        }
+        
+        $state.transitionTo("base.checkouttable", { tableId: $scope.table.id });
+    }
+    
     $scope.sendToKitchen = function() {
         var cartItems = datarepository.getAllCartItems($scope.table.id);
         var resturantManager = $api.getApi().ResturantManager;

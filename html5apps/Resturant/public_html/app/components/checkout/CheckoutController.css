@@ -1,0 +1,42 @@
+.checkout_tableoverview {
+    border: solid 1px #FFF;
+}
+
+
+.checkout_tableoverview .checkout_tablenameheader {
+    background-color: #FFF;
+    padding: 5px;
+    text-align: center;
+}
+
+.checkout_tableoverview .person_header_name {
+    background-color: #FEFEFE;
+    
+    margin-top: 10px;
+    margin-bottom: 10px;
+    line-height: 30px;
+}
+
+.checkout_tableoverview .checkout_productoverview {
+    padding: 5px;
+}
+
+.checkout_tableoverview .person_header_name .fa-arrow-down {
+    border-right: solid 1px #888;
+    padding-left: 10px; 
+    padding-right: 10px;
+    line-height: 30px;
+    margin-right: 10px;
+}
+
+.summaryview .paymentbutton {
+    display: inline-block;
+    width: inherit;
+    margin-right: 10px;
+}
+
+.summaryview {
+    border-top: solid 1px #FFF;
+    margin-top: 30px;
+    padding-top: 10px;
+}

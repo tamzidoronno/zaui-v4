@@ -12,7 +12,17 @@ adata = {
     productLists: [],
     cartItems: [],
     deletedItems: [],
+    cartItemsToPay: [],
+    paymentMethods: [],
     
+    setActivatedPaymentMethods: function(methods) {
+        this.paymentMethods = methods;
+        this.save();
+    },
+    
+    getActivatedPaymentMethods: function() {
+        return this.paymentMethods;
+    },
     
     setProducts: function(products) {
         this.products = products;
@@ -26,6 +36,17 @@ adata = {
     
     setProductLists: function(lists) {
         this.productLists = lists;
+    },
+    
+    getPaymentMethodById: function(id) {
+        for (var i in this.paymentMethods) {
+            var pay = this.paymentMethods[i];
+            if (pay.id == id) {
+                return pay;
+            }
+        }
+        
+        return null;
     },
     
     setSelectedRoom: function(roomId) {
@@ -79,11 +100,16 @@ adata = {
         return this.productLists;
     },
     
+    saveItemsToPay: function() {
+        localStorage.setItem("cartItemsToPay", JSON.stringify(this.cartItemsToPay));
+    },
+    
     save: function() {
         localStorage.setItem("selectedRoom", this.selectedRoom);
         localStorage.setItem("rooms", JSON.stringify(this.rooms));
         localStorage.setItem("products", JSON.stringify(this.products));
         localStorage.setItem("productlists", JSON.stringify(this.productLists));
+        localStorage.setItem("paymentMethods", JSON.stringify(this.paymentMethods));
     },
     
     load: function() {
@@ -92,9 +118,14 @@ adata = {
         this.products = JSON.parse(localStorage.getItem("products"));
         this.productLists = JSON.parse(localStorage.getItem("productlists"));
         this.cartItems = JSON.parse(localStorage.getItem("cartItems"));
+        this.paymentMethods = JSON.parse(localStorage.getItem("paymentMethods"));
+        this.cartItemsToPay = JSON.parse(localStorage.getItem("cartItemsToPay"));
         
         if (!this.cartItems) 
             this.cartItems = [];
+        
+        if (!this.cartItemsToPay) 
+            this.cartItemsToPay = [];
     },
     
     getDeletedCartItems: function(tableId) {
@@ -140,6 +171,23 @@ adata = {
         }
         
         return retItems;
+    },
+    
+    forceRemoveCartItem: function(cartItemId) {
+        for (var i in this.cartItems) {
+            var item = this.cartItems[i];
+            if (item.id === cartItemId) {
+                var removedItems = this.cartItems.splice(i, 1);
+                this.saveCartItems();
+                return;
+            }
+        }
+        
+    },
+    
+    clearCheckoutList: function() {
+        this.cartItemsToPay = [];
+        this.saveItemsToPay();
     },
     
     removeCartItem: function(productId, tablePersonNumber, tableId) {

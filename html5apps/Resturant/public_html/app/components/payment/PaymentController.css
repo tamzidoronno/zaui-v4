@@ -1,0 +1,15 @@
+.paymentaction .cash_summary {
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+
+.paymentaction .cash_summary span {
+    display: inline-block;
+    width: 120px;
+}
+
+.paymentaction {
+    border-top: solid 1px #FFF;
+    margin-top: 20px;
+    padding-top: 20px;
+}

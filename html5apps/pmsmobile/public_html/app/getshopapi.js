@@ -1955,6 +1955,17 @@ GetShopApiWebSocket.C3Manager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'allowedFixedHourCosts' : function(userId, gs_silent) {
+        var data = {
+            args : {
+                userId : JSON.stringify(userId),
+            },
+            method: 'allowedFixedHourCosts',
+            interfaceName: 'core.c3.IC3Manager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'allowedNfrHour' : function(userId, gs_silent) {
         var data = {
             args : {
@@ -2164,6 +2175,19 @@ GetShopApiWebSocket.C3Manager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getBase64SFIExcelReportTotal' : function(companyId,start,end, gs_silent) {
+        var data = {
+            args : {
+                companyId : JSON.stringify(companyId),
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getBase64SFIExcelReportTotal',
+            interfaceName: 'core.c3.IC3Manager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getCurrentForskningsPeriode' : function(gs_silent) {
         var data = {
             args : {
@@ -2245,6 +2269,19 @@ GetShopApiWebSocket.C3Manager.prototype = {
                 id : JSON.stringify(id),
             },
             method: 'getProject',
+            interfaceName: 'core.c3.IC3Manager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getProjectCostsForAllUsersInCompany' : function(projectId,from,to, gs_silent) {
+        var data = {
+            args : {
+                projectId : JSON.stringify(projectId),
+                from : JSON.stringify(from),
+                to : JSON.stringify(to),
+            },
+            method: 'getProjectCostsForAllUsersInCompany',
             interfaceName: 'core.c3.IC3Manager',
         };
         return this.communication.send(data, gs_silent);
@@ -5961,6 +5998,16 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getMyPrefferedPaymentMethod' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getMyPrefferedPaymentMethod',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getOrder' : function(orderId, gs_silent) {
         var data = {
             args : {
@@ -7210,6 +7257,18 @@ GetShopApiWebSocket.PmsInvoiceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'createRegisterCardOrder' : function(multilevelname, item, gs_silent) {
+        var data = {
+            args : {
+                item : JSON.stringify(item),
+            },
+            method: 'createRegisterCardOrder',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsInvoiceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'creditOrder' : function(multilevelname, bookingId,orderId, gs_silent) {
         var data = {
             args : {
@@ -7254,6 +7313,19 @@ GetShopApiWebSocket.PmsInvoiceManager.prototype = {
                 filter : JSON.stringify(filter),
             },
             method: 'getPreferredPaymentMethod',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsInvoiceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getSubscriptionOverview' : function(multilevelname, start,end, gs_silent) {
+        var data = {
+            args : {
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getSubscriptionOverview',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsInvoiceManager',
         };
@@ -7561,6 +7633,18 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'createNewPricePlan' : function(multilevelname, code, gs_silent) {
+        var data = {
+            args : {
+                code : JSON.stringify(code),
+            },
+            method: 'createNewPricePlan',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'createOrder' : function(multilevelname, bookingId,filter, gs_silent) {
         var data = {
             args : {
@@ -7610,6 +7694,18 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'deletePricePlan' : function(multilevelname, code, gs_silent) {
+        var data = {
+            args : {
+                code : JSON.stringify(code),
+            },
+            method: 'deletePricePlan',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'doNotification' : function(multilevelname, key,bookingId, gs_silent) {
         var data = {
             args : {
@@ -7629,6 +7725,19 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 roomId : JSON.stringify(roomId),
             },
             method: 'endRoom',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'endRoomWithDate' : function(multilevelname, pmsRoomId,date, gs_silent) {
+        var data = {
+            args : {
+                pmsRoomId : JSON.stringify(pmsRoomId),
+                date : JSON.stringify(date),
+            },
+            method: 'endRoomWithDate',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
@@ -7724,6 +7833,18 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 roomId : JSON.stringify(roomId),
             },
             method: 'getAddonsForRoom',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getAddonsWithDiscount' : function(multilevelname, pmsBookingRoomId, gs_silent) {
+        var data = {
+            args : {
+                pmsBookingRoomId : JSON.stringify(pmsBookingRoomId),
+            },
+            method: 'getAddonsWithDiscount',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
@@ -8002,12 +8123,36 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getItemsForView' : function(multilevelname, viewId,date, gs_silent) {
+        var data = {
+            args : {
+                viewId : JSON.stringify(viewId),
+                date : JSON.stringify(date),
+            },
+            method: 'getItemsForView',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getLogEntries' : function(multilevelname, filter, gs_silent) {
         var data = {
             args : {
                 filter : JSON.stringify(filter),
             },
             method: 'getLogEntries',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getMyRooms' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getMyRooms',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
@@ -8035,6 +8180,20 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 end : JSON.stringify(end),
             },
             method: 'getPrices',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getPricesByCode' : function(multilevelname, code,start,end, gs_silent) {
+        var data = {
+            args : {
+                code : JSON.stringify(code),
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getPricesByCode',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
@@ -8120,6 +8279,17 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 filter : JSON.stringify(filter),
             },
             method: 'getStatistics',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getpriceCodes' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getpriceCodes',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
@@ -8326,6 +8496,18 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 roomId : JSON.stringify(roomId),
             },
             method: 'reportMissingInventory',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'resetPriceForRoom' : function(multilevelname, pmsRoomId, gs_silent) {
+        var data = {
+            args : {
+                pmsRoomId : JSON.stringify(pmsRoomId),
+            },
+            method: 'resetPriceForRoom',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
@@ -8569,9 +8751,10 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'setPrices' : function(multilevelname, prices, gs_silent) {
+    'setPrices' : function(multilevelname, code,prices, gs_silent) {
         var data = {
             args : {
+                code : JSON.stringify(code),
                 prices : JSON.stringify(prices),
             },
             method: 'setPrices',
@@ -8672,6 +8855,18 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'updateAddons',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'updateAddonsBasedOnGuestCount' : function(multilevelname, pmsRoomId, gs_silent) {
+        var data = {
+            args : {
+                pmsRoomId : JSON.stringify(pmsRoomId),
+            },
+            method: 'updateAddonsBasedOnGuestCount',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
@@ -9594,6 +9789,66 @@ GetShopApiWebSocket.ReportingManager.prototype = {
             },
             method: 'getUserLoggedOn',
             interfaceName: 'core.reportingmanager.IReportingManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
+GetShopApiWebSocket.ResturantManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.ResturantManager.prototype = {
+    'addCartItems' : function(cartItems, gs_silent) {
+        var data = {
+            args : {
+                cartItems : JSON.stringify(cartItems),
+            },
+            method: 'addCartItems',
+            interfaceName: 'core.resturantmanager.IResturantManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'createTableSession' : function(tableId, gs_silent) {
+        var data = {
+            args : {
+                tableId : JSON.stringify(tableId),
+            },
+            method: 'createTableSession',
+            interfaceName: 'core.resturantmanager.IResturantManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getRoomById' : function(roomId, gs_silent) {
+        var data = {
+            args : {
+                roomId : JSON.stringify(roomId),
+            },
+            method: 'getRoomById',
+            interfaceName: 'core.resturantmanager.IResturantManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getRooms' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getRooms',
+            interfaceName: 'core.resturantmanager.IResturantManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getTableById' : function(tableId, gs_silent) {
+        var data = {
+            args : {
+                tableId : JSON.stringify(tableId),
+            },
+            method: 'getTableById',
+            interfaceName: 'core.resturantmanager.IResturantManager',
         };
         return this.communication.send(data, gs_silent);
     },
@@ -10580,6 +10835,79 @@ GetShopApiWebSocket.SedoxProductManager.prototype = {
             },
             method: 'updateEvcCreditAccounts',
             interfaceName: 'core.sedox.ISedoxProductManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
+GetShopApiWebSocket.SimpleEventManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.SimpleEventManager.prototype = {
+    'addUserToEvent' : function(pageId,userId, gs_silent) {
+        var data = {
+            args : {
+                pageId : JSON.stringify(pageId),
+                userId : JSON.stringify(userId),
+            },
+            method: 'addUserToEvent',
+            interfaceName: 'core.simpleeventmanager.ISimpleEventManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'deleteEvent' : function(eventId, gs_silent) {
+        var data = {
+            args : {
+                eventId : JSON.stringify(eventId),
+            },
+            method: 'deleteEvent',
+            interfaceName: 'core.simpleeventmanager.ISimpleEventManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getAllEvents' : function(listPageId, gs_silent) {
+        var data = {
+            args : {
+                listPageId : JSON.stringify(listPageId),
+            },
+            method: 'getAllEvents',
+            interfaceName: 'core.simpleeventmanager.ISimpleEventManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getEventByPageId' : function(pageId, gs_silent) {
+        var data = {
+            args : {
+                pageId : JSON.stringify(pageId),
+            },
+            method: 'getEventByPageId',
+            interfaceName: 'core.simpleeventmanager.ISimpleEventManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getEventsInFuture' : function(listPageId, gs_silent) {
+        var data = {
+            args : {
+                listPageId : JSON.stringify(listPageId),
+            },
+            method: 'getEventsInFuture',
+            interfaceName: 'core.simpleeventmanager.ISimpleEventManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'saveEvent' : function(simpleEvent, gs_silent) {
+        var data = {
+            args : {
+                simpleEvent : JSON.stringify(simpleEvent),
+            },
+            method: 'saveEvent',
+            interfaceName: 'core.simpleeventmanager.ISimpleEventManager',
         };
         return this.communication.send(data, gs_silent);
     },
@@ -12507,9 +12835,11 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.PullServerManager = new GetShopApiWebSocket.PullServerManager(this);
     this.QuestBackManager = new GetShopApiWebSocket.QuestBackManager(this);
     this.ReportingManager = new GetShopApiWebSocket.ReportingManager(this);
+    this.ResturantManager = new GetShopApiWebSocket.ResturantManager(this);
     this.SalesManager = new GetShopApiWebSocket.SalesManager(this);
     this.SearchManager = new GetShopApiWebSocket.SearchManager(this);
     this.SedoxProductManager = new GetShopApiWebSocket.SedoxProductManager(this);
+    this.SimpleEventManager = new GetShopApiWebSocket.SimpleEventManager(this);
     this.StoreManager = new GetShopApiWebSocket.StoreManager(this);
     this.TrackAndTraceManager = new GetShopApiWebSocket.TrackAndTraceManager(this);
     this.UserManager = new GetShopApiWebSocket.UserManager(this);

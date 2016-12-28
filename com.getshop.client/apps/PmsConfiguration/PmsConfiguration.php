@@ -9,6 +9,63 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     public function getName() {
         return "PmsConfiguration";
     }
+    
+    public function loadProducts() {
+        $products = $this->getApi()->getProductManager()->getAllProducts();
+        echo "<table cellspacing='0' cellpadding='0'>";
+        foreach($products as $product) {
+            echo "<tr>";
+            echo "<td>" . $product->name . "</td>";
+            echo "<td>";
+            echo "<span style='padding-left: 30px; cursor:pointer;' class='addproducttoview' prodid='".$product->id."'>Add</span>";
+            echo "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    }
+    
+    public function addproducttoview() {
+        $id = $_POST['data']['id'];
+        
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config->mobileViews->{$id}->products[] = $_POST['data']['prodid'];
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+
+        $this->printProductsAdded($id);
+    }
+    
+    public function removeproductfromview() {
+        $id = $_POST['data']['id'];
+        $prodId = $_POST['data']['prodid'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config->mobileViews->{$id}->products[] = $prodId;
+        $res = array();
+        foreach($config->mobileViews->{$id}->products as $tmpProdId) {
+            if($tmpProdId != $prodId && $tmpProdId) {
+                $res[] = $tmpProdId;
+            }
+        }
+        $config->mobileViews->{$id}->products = $res;
+        
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+
+        $this->printProductsAdded($id);
+    }
+    
+    public function createPmsView() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $view = new \core_pmsmanager_PmsMobileView();
+        $view->name = $_POST['data']['name'];
+        $view->id = uniqid();
+        $config->mobileViews->{$view->id} = $view;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
+    public function removePmsView() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        unset($config->mobileViews->{$_POST['data']['id']});
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
 
     public function sendStatistics() {
         $this->getApi()->getPmsManager()->sendStatistics($this->getSelectedName());
@@ -710,6 +767,28 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         if($needSaving) {
             $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
         }
+    }
+
+    public function updateMobileView() {
+        $viewId = $_POST['data']['id'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config->mobileViews->{$viewId}->name = $_POST['data']['name'];
+        $config->mobileViews->{$viewId}->viewType = $_POST['data']['viewtype'];
+        $config->mobileViews->{$viewId}->icon = $_POST['data']['icon'];
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
+    public function printProductsAdded($viewId) {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $views = $config->mobileViews;
+        $view = $views->{$viewId};
+        $prods = array();
+        foreach($view->products as $prodId) {
+            $product = $this->getApi()->getProductManager()->getProduct($prodId);
+            $prods[] = "<i class='fa fa-trash-o removeProductFromMobileView' prodid='$prodId'></i> " . $product->name;
+        }
+        echo join(", ", $prods) . " ";
+
     }
 
 }

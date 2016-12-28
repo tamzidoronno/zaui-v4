@@ -69,6 +69,9 @@ public interface IPmsManager {
     
     @Administrator
     public PmsAdditionalItemInformation getAdditionalInfo(String itemId);
+    
+    @Administrator
+    public List<PmsBookingAddonViewItem> getItemsForView(String viewId, Date date);
         
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     

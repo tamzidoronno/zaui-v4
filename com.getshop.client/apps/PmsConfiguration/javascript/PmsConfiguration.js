@@ -1,4 +1,6 @@
 app.PmsConfiguration = {
+    selectedview : null,
+    
     init: function () {
         $(document).on('change', '.PmsConfiguration .emailtypeselection', app.PmsConfiguration.changeEmailType);
         $(document).on('change', '.PmsConfiguration .smstypeselection', app.PmsConfiguration.changeSmsType);
@@ -10,6 +12,9 @@ app.PmsConfiguration = {
         $(document).on('click', '.PmsConfiguration .removeChannel', app.PmsConfiguration.removeChannel);
         $(document).on('click', '.PmsConfiguration .inventoryitem .fa-plus-circle', app.PmsConfiguration.loadAllItemsAdded);
         $(document).on('click', '.PmsConfiguration .addInventoryItem', app.PmsConfiguration.addInventory);
+        $(document).on('click', '.PmsConfiguration .loadproducts', app.PmsConfiguration.loadproducts);
+        $(document).on('click', '.PmsConfiguration .addproducttoview', app.PmsConfiguration.addproducttoview);
+        $(document).on('click', '.PmsConfiguration .removeProductFromMobileView', app.PmsConfiguration.removeProductFromMobileView);
         $(document).on('click', '.PmsConfiguration .loadcouponmoredates', app.PmsConfiguration.loadMoreDates);
         $(document).on('click', '.PmsConfiguration .addwebtext', app.PmsConfiguration.addWebText);
         $(document).on('change', '.PmsConfiguration .changeItemForRoom', app.PmsConfiguration.changeItemForRoom);
@@ -33,6 +38,42 @@ app.PmsConfiguration = {
             thundashop.common.activateCKEditor('fireinstructions', {
                 autogrow : false
             });
+        });
+    },
+    removeProductFromMobileView : function() {
+        var btn = $(this);
+        var event = thundashop.Ajax.createEvent('','removeproductfromview', $(this), {
+            id : $(this).closest('tr').attr('viewid'),
+            prodid : $(this).attr('prodid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            btn.closest('tr').find('.productsadded').html(res);
+        });
+        $('.productview').fadeOut();
+    },
+    addproducttoview : function() {
+        var btn = $(this);
+        var row = $("tr[viewid='" + app.PmsConfiguration.selectedview + "']");
+        var event = thundashop.Ajax.createEvent('','addproducttoview', $(this), {
+            id : app.PmsConfiguration.selectedview,
+            prodid : $(this).attr('prodid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            row.find('.productsadded').html(res);
+        });
+        $('.productview').fadeOut();
+    },
+    loadproducts : function() {
+        var btn = $(this);
+        app.PmsConfiguration.selectedview = $(this).closest('tr').attr('viewid');
+        var event = thundashop.Ajax.createEvent('','loadProducts', $(this), {});
+        var view = $('.PmsConfiguration .productview');
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            console.log(res);
+            view.html(res);
+            view.css('left', btn.position().left);
+            view.css('top', (btn.position().top+20));
+            view.show();
         });
     },
     

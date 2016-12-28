@@ -4560,8 +4560,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBooking booking : bookings.values()) {
             for(PmsBookingRooms room : booking.getActiveRooms()) {
                 for(PmsBookingAddonItem item : room.addons) {
-                    if(item.date.after(startDate) && item.date.before(endDate)) {
-                        if(!view.products.contains(item.productId)) {
+                    if(!view.products.contains(item.productId)) {
+                        continue;
+                    }
+                    boolean toBeAdded = item.date.after(startDate) && item.date.before(endDate);
+                    if(view.viewType == PmsMobileView.PmsMobileViewType.ALLACTIVE) {
+                        if(room.isActiveOnDay(date)) {
+                            toBeAdded = true;
+                        }
+                    }
+                    if(toBeAdded) {
+                        if(view.paidFor && !pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
                             continue;
                         }
                         PmsBookingAddonViewItem toAdd = new PmsBookingAddonViewItem();

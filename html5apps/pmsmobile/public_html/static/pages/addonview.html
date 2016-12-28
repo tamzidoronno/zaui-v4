@@ -21,9 +21,10 @@
 <div class='row' style="border-bottom: solid 1px #bbb;"></div>
 <div class='row ng-hide breakfastlistrow' ng-show="!loading" ng-repeat="addon in addonslist">
     <div class="col-xs-3 col-md-1 info">{{addon.roomName}}<br>
-    {{addon.count}}x</div>
-    <div class="col-xs-3 col-md-1 info">{{addon.productName}}<br>
-    {{addon.count}}x</div>
+        &nbsp;
+    </div>
+    <div class="col-xs-3 col-md-1 info">
+        {{addon.count}}x<br>{{addon.productName}}</div>
     <div class="col-xs-6  col-md-9">
         {{addon.name}}<br>
         <span style='color:#bbb'>{{addon.owner}}</span>

@@ -21,16 +21,20 @@ if(!$views || sizeof($views) == 0) {
     echo "<table width='100%' cellspacing='1' cellpadding='1'>";
     echo "<tr>";
     echo "<th></th>";
+    echo "<th align='left' width='10'>Paid</th>";
     echo "<th align='left' width='10'>Name</th>";
     echo "<th align='left' width='10'>Type</th>";
     echo "<th align='left' width='10'>Icon</th>";
+    echo "<th align='left' width='10'>Delay</th>";
     echo "<th align='left'>Products</th>";
     echo "<th align='left' width='10'></th>";
     echo "</tr>";
     foreach($views as $view) {
+        $paidFor = $view->paidFor ? "checked" : "";
         echo "<tr viewid='".$view->id."' gstype='form' method='updateMobileView'>";
         echo "<input type='hidden' value='".$view->id."' gsname='viewid'>";
         echo "<td width='10'><i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' gsvalue='". $view->id . "' method='removePmsView' gsname='id'></i></id>";
+        echo "<td align='center'><input type='checkbox' gsname='paidFor' title='Only display items paid for' $paidFor></td>";
         echo "<td><input type='txt' value='" . $view->name . "' gsname='name'></td>";
         echo "<td>";
         echo "<select gsname='viewtype'>";
@@ -42,6 +46,9 @@ if(!$views || sizeof($views) == 0) {
         echo "</td>";
         echo "<td>";
         echo "<input type='txt' value='".$view->icon."' gsname='icon'>";
+        echo "</td>";
+        echo "<td>";
+        echo "<input type='txt' value='".$view->daysDisplacement."' gsname='daysDisplacement' style='width: 40px;' title='Days delayed'>";
         echo "</td>";
         echo "<td>";
         echo "<span class='productsadded'>";

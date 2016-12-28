@@ -16,4 +16,5 @@ public class PmsMobileView implements Serializable {
     public Integer viewType = 1;
     public Integer daysDisplacement = 0;
     public List<String> products = new ArrayList();
+    public boolean paidFor = false;
 }

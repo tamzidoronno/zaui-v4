@@ -315,9 +315,17 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         GSEnvironment environMent = environments.get(environment);
         
         try {
-            GetShopApi api = environMent.getApi(getMyStore().webAddress);    
+            GetShopApi api = environMent.getApi("20366.getshop.com");    
             List<DataCommon> datas = database.getAllDataForStore(storeId);
 
+            for (DataCommon data : datas) {
+                data.colection = data.colection.replaceAll("d4d1317a-640f-4fb2-94f1-a41efd3b6b71", "fcefb0eb-aba1-41d7-ac6f-2b166886d1eb");
+            }
+            
+            for (DataCommon data : datas) {
+                System.out.println(data.colection);
+            }
+            
             Runnable task = () -> {
                 try {
                     User user = api.getUserManager().logOn(username, password);

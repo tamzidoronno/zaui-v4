@@ -9,4 +9,6 @@ public class PmsOrderStatisticsEntry implements Serializable {
     HashMap<String, Double> priceInc = new HashMap();
     HashMap<String, Double> priceEx = new HashMap();
     HashMap<String, Double> priceIncOnOrder = new HashMap();
+    HashMap<Long, Double> orderInc;
+    HashMap<Long, Double> orderEx;
 }

@@ -156,6 +156,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     public function submitForm() {
         $this->savePostedForm();
         $this->validatePostedForm();
+        $loaded = false;
         if(!sizeof($this->validation) > 0) {
             $this->getCurrentBooking();
             $this->currentBooking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
@@ -166,7 +167,12 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 if($config->payAfterBookingCompleted) {
                     if(!isset($curBooking->orderIds[0])) {
                         if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
-                        echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
+                            $nextPage = $this->getConfigurationSetting("nextPageId");
+                            if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $nextPage) {
+                                echo 'thundashop.common.goToPageLink("/?page='.$nextPage. '");';
+                            } else {
+                                echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
+                            }
                         } else {
                             echo 'thundashop.common.goToPage("payment_failed");';
                         }
@@ -177,16 +183,26 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                     if($curBooking->confirmed) {
                         echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName().'_confirmed");';
                     } else {
-                        echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
+                        $nextPage = $this->getConfigurationSetting("nextPageId");
+                        if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $nextPage) {
+                            echo 'thundashop.common.goToPageLink("/?page='.$nextPage. '");';
+                        } else {
+                            echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
+                        }
                     }
                 }
                 echo "</script>";
+                $loaded = true;
             } else {
                 $this->validation[] = "Someone booked your room before you where able to complete the booking process, please try again with a different room.";
                 $this->unknownError = "Someone booked your room before you where able to complete the booking process, please try again with a different room.";
             }
         }
-        $this->includefile("roomcontactdata");
+        if($loaded) {
+           echo "<div style='font-size:30px;text-align:center;'><i class='fa fa-spin fa-spinner'></i></div>"; 
+        } else {
+            $this->includefile("roomcontactdata");
+        }
     }
 
     public function printTitle($title, $required, $type) {

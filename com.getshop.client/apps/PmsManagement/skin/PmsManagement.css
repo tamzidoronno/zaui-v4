@@ -11,6 +11,7 @@
 .PmsManagement .guestrow input { width: 20%; float:left; }
 .PmsManagement .columnfilter {position:absolute; border: solid 2px; padding: 5px; z-index: 2; background-color: #fff; max-width: 500px; display:none; margin-top: 5px;}
 .PmsManagement .toggleColumnFilter { cursor:pointer; }
+.PmsManagement .addonsadded { position:absolute; z-index: 2; background-color:#fff; border-radius: 3px; border: solid 1px; display:none; }
 .PmsManagement .ended { color: #aaa; }
 .PmsManagement .changeSorting { cursor:pointer; }
 .PmsManagement .roomactionstip { display:none; }

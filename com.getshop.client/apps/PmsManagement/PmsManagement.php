@@ -26,6 +26,72 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function loadStatsForDay() {
+        $this->includefile("orderstatsday");
+    }
+    
+    public function removeAddonsFromRoom() {
+        $id = $_POST['data']['productId'];
+        $roomId = $_POST['data']['roomId'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomId);
+        $this->getApi()->getPmsManager()->addProductToRoom($this->getSelectedName(), $id, $roomId, 0);
+        $_POST['data']['bookingid'] = $booking->id;
+        $this->showBookingInformation();
+    }
+    
+    public function saveAddonsCountAndPrice() {
+        $id = $_POST['data']['productId'];
+        $roomId = $_POST['data']['roomId'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomId);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomId) {
+                foreach($room->addons as $addon) {
+                    if(isset($_POST['data'][$addon->addonId."_count"])) {
+                        $addon->count = $_POST['data'][$addon->addonId."_count"];
+                        $addon->price = $_POST['data'][$addon->addonId."_price"];
+                    }
+                }
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        
+        $_POST['data']['bookingid'] = $booking->id;
+        $this->showBookingInformation();
+    }
+    
+    public function loadEventListForRoom() {
+        $id = $_POST['data']['productId'];
+        $roomId = $_POST['data']['roomId'];
+        echo "<span gstype='form' method='saveAddonsCountAndPrice'>";
+        echo "<input type='hidden' value='$id' gsname='productId'>";
+        echo "<input type='hidden' value='$roomId' gsname='roomId'>";
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomId);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $roomId) {
+                echo "<table cellspacing='0' cellpadding='0'>";
+                echo "<tr>";
+                echo "<td colspan='3'><i class='fa fa-trash-o removeAddonsFromRoom' title='Remove all' style='cursor:pointer;'></i> " . $this->getApi()->getProductManager()->getProduct($id)->name . "</td>";
+                echo "</tr>";
+                foreach($room->addons as $addon) {
+                    if($addon->productId == $id) {
+                        echo "<tr>";
+                        echo "<td> ".date("d.m.Y", strtotime($addon->date))."</td>";
+                        echo "<td><input type='text' value='" . $addon->count . "' style='width:30px' gsname='".$addon->addonId."_count'></td>";
+                        echo "<td><input type='text' value='" . $addon->price . "' style='width:50px' gsname='".$addon->addonId."_price'></td>";
+                        echo "</tr>";
+                    }
+                }
+                echo "<tr>";
+                echo "<td align='center' onclick='$(this).closest(\".addonsadded\").fadeOut()' style='cursor:pointer;'>Close</td>";
+                echo "<td></td>";
+                echo "<td align='center' gstype='submitToInfoBox' style='cursor:pointer;'>Save</td>";
+                echo "</tr>";
+                echo "</table>";
+            }
+        }
+        echo "</span>";
+    }
+    
     public function resendConfirmation() {
         $email = $_POST['data']['email'];
         $bookingId = $_POST['data']['bookingid'];

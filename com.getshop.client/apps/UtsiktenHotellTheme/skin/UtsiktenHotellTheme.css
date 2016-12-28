@@ -5,7 +5,7 @@ body {
 }
 
 .gsarea[area="header"] {
-    height: 120px;
+    height: 123px;
     background-color: #FFF;
 }
 
@@ -15,12 +15,13 @@ body {
     text-align: left;
     z-index: 3;
 }
+.gsfloatingheader { display:none !important; }
 .gsarea[area="header"] .Menu {
     top: 40px;
     text-align: right;
 }
 
-.gsarea[area="header"] .Menu .entry a {
+.gsarea[area="header"] .Menu .entry a div {
     color: #333;
     display: inline-block;
     line-height: 40px;

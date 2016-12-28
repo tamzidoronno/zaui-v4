@@ -6,16 +6,29 @@
 package com.thundashop.core.resturantmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.getshop.scope.GetShopSessionScope;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
+import static com.thundashop.core.pagemanager.data.Page.PageType.Product;
+import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsRoomSimple;
 import com.thundashop.core.socket.WebSocketServerImpl;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +57,19 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     private UserManager userManager;
     
     @Autowired
+    private OrderManager orderManager;
+    
+    @Autowired
     public WebSocketServerImpl webSocketServer;
+    
+    @Autowired
+    public GetShopSessionScope sessionScope;
+    
+    @Autowired
+    public StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    public ProductManager productManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -182,7 +207,10 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
 
     private void finalizeTableSessions() {
         for (TableSession session : sessions.values()) {
-            session.createByUser = userManager.getUserById(session.createdByUserId);
+            if (session.createByUser == null) {
+                session.createByUser = userManager.getUserById(session.createdByUserId);
+                saveObject(session);
+            }
         }
     }
 
@@ -214,5 +242,84 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         data.cartItems = getCurrentTableSession(tableId).getCartItems();
         return data;
     }
+
+    @Override
+    public void completePayment(String paymentMethodId, List<String> cartItemIds) {
+        cartManager.clear();
+        List<CartItem> groupedCartItems = getGroupedCartItems(cartItemIds);
+        groupedCartItems.stream().forEach(id -> addToCart(id));
+        Order order = orderManager.createOrder(new Address());
+        orderManager.changeOrderStatus(order.id, Order.Status.PAYMENT_COMPLETED);
+        orderManager.changeOrderType(order.id, paymentMethodId);
+    }   
     
+    public List<ResturantCartItem> fetchAllCartItems(List<String> ids) {
+        List<ResturantCartItem> retCartItems = new ArrayList();
+        List<TableSession> usedSessions = new ArrayList();
+        
+        for (String cartId : ids) {
+            for (TableSession tableSession : sessions.values()) {
+                if (tableSession.hasItem(cartId)) {
+                    ResturantCartItem item = tableSession.fetchAndRemove(cartId);
+                    retCartItems.add(item);
+                    usedSessions.add(tableSession);
+                }
+            }
+        }
+        
+        for (TableSession sess : usedSessions) {
+            if (sess.getCartItems().isEmpty()) {
+                sess.ended = new Date();
+                
+                String currentTableSessionId = (String) sessionFactory.getObject("resturant_system_session", "resturantmanager_session_id_"+sess.tableId);
+                if (currentTableSessionId != null && currentTableSessionId.equals(sess.id)) {
+                    sessionFactory.addToSession("resturant_system_session", "resturantmanager_session_id_"+sess.tableId, null);
+                }
+                
+                deleteObject(sess);
+            }
+        }
+        
+        return retCartItems;
+    }
+    
+    public void addToCart(CartItem cartItem) {
+        cartManager.addProductItem(cartItem.getProduct().id, cartItem.getCount());
+    }
+
+    @Override
+    public void payOnRoom(PmsRoomSimple room, List<String> cartItemsIds) {
+        Application paymentApp = storeApplicationPool.getApplication("f86e7042-f511-4b9b-bf0d-5545525f42de");
+        if (paymentApp == null)
+            throw new NullPointerException("Can not pay to room as PayOnRoom is not activated");
+        
+        String bookingengine = paymentApp.getSetting("bookingengine");
+        if (bookingengine == null || bookingengine.isEmpty())
+            throw new NullPointerException("Can not pay to room as PayOnRoom has no bookingengine configures, configure this under settings");
+        
+        PmsManager pmsManager = sessionScope.getNamedSessionBean(bookingengine, PmsManager.class);
+        List<CartItem> groupedCartItems = getGroupedCartItems(cartItemsIds);
+        for (CartItem cartItem : groupedCartItems) {
+            pmsManager.addProductToRoom(cartItem.getProduct().id, room.pmsRoomId, cartItem.getCount());
+        }
+    }
+
+    private List<CartItem> getGroupedCartItems(List<String> cartItemIds) {
+        List<ResturantCartItem> allItems = fetchAllCartItems(cartItemIds);
+        HashMap<String, CartItem> allCartItems = new HashMap();
+        
+        for (ResturantCartItem item : allItems) {
+            CartItem retItem = allCartItems.get(item.productId);
+            if (retItem == null) {
+                retItem = new CartItem();
+                Product product = productManager.getProduct(item.productId);
+                retItem.setProduct(product);
+                allCartItems.put(product.id, retItem);
+            }
+            
+            retItem.setCount(retItem.getCount() + 1);
+        }
+        
+        return new ArrayList(allCartItems.values());
+    }
 }

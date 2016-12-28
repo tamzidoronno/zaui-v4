@@ -116,7 +116,7 @@ public class GetShopSessionScope implements Scope {
         return objectMap.get(name + "_" + storeId);
     }
     
- public List<GetShopSessionBeanNamed> getSessionNamedObjects() {
+    public List<GetShopSessionBeanNamed> getSessionNamedObjects() {
         long threadId = Thread.currentThread().getId();
         String storeId = threadStoreIds.get(threadId);
         return new ArrayList(

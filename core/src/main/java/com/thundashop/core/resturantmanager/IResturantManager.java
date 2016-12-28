@@ -6,7 +6,9 @@
 package com.thundashop.core.resturantmanager;
 
 import com.thundashop.core.common.Customer;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.pmsmanager.PmsRoomSimple;
 import java.util.List;
 
 /**
@@ -49,5 +51,9 @@ interface IResturantManager {
     @Customer 
     public TableData getCurrentTableData(String tableId);
     
+    @Customer
+    public void completePayment(String paymentMethodId, List<String> cartItemIds);
     
+    @Editor
+    public void payOnRoom(PmsRoomSimple room, List<String> cartItemsIds);
 }

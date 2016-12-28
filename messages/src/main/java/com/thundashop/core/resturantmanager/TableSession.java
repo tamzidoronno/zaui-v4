@@ -67,5 +67,26 @@ public class TableSession extends DataCommon {
     public List<ResturantCartItem> getCartItems() {
         return cartItems;
     }
+
+    public boolean hasItem(String itemId) {
+        for (ResturantCartItem item : cartItems) {
+            if (item.id.equals(itemId)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public ResturantCartItem fetchAndRemove(String itemId) {
+        for (ResturantCartItem item : cartItems) {
+            if (item.id.equals(itemId)) {
+                cartItems.remove(item);
+                return item;
+            }
+        }
+        
+        return null;
+    }
     
 }

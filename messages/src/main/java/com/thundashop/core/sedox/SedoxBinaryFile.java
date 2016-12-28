@@ -53,7 +53,9 @@ public class SedoxBinaryFile implements Serializable {
                 && !fileType.toLowerCase().equals("cmd original") 
                 && !fileType.toLowerCase().equals("original") 
                 ) {
-            return Double.parseDouble(sedoxUser.fixedPrice);
+            if (type.equals("car")) {
+                return Double.parseDouble(sedoxUser.fixedPrice);
+            }
         }
         
         if (fileType.toLowerCase().equals("original")) {

@@ -19,4 +19,5 @@ public class PmsSubscriptionOverview {
     Date orderCreationDate;
     Double orderValue;
     String paymentType;
+    Integer cardsSaved = 0;
 }

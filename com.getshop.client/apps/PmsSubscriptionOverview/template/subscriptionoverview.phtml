@@ -17,14 +17,17 @@ echo "<th align='left'>Start</th>";
 echo "<th align='left'>End</th>";
 echo "<th align='left'>Order date</th>";
 echo "<th align='left'>Payment type</th>";
+echo "<th align='left'>Cards</th>";
 echo "<th align='left'>Status</th>";
 echo "</tr>";
 echo "</thead>";
 
 echo "<tbody>";
+$totalCardsSaved = 0;
 foreach($overview as $room) {
     $type = $room->paymentType;
     $paid = $room->paid ? "Yes" : "No";
+    $totalCardsSaved += $room->cardsSaved;
     echo "<tr>";
     echo "<td>" . $room->roomName . "</td>";
     echo "<td>" . $room->usersName . "</td>";
@@ -39,8 +42,11 @@ foreach($overview as $room) {
     }
     echo "</td>";
     echo "<td>" . substr($type, strpos($room->paymentType, "\\")+1) . "</td>";
+    echo "<td>" . $room->cardsSaved . "</td>";
     echo "</tr>";
 }
 echo "</tbody>";
 echo "</table>";
+echo "<br>";
+echo "Total cards saved: $totalCardsSaved";
 ?>

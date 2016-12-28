@@ -4599,4 +4599,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return items;
     }
 
+    PmsBooking getBookingUnfinalized(String bookingId) {
+        return bookings.get(bookingId);
+    }
+
 }

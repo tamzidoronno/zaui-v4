@@ -274,12 +274,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return result;
     }
 
-    private Double addDerivedPrices(PmsBookingRooms room, Double price) {
+    private Double addDerivedPrices(PmsBooking booking, PmsBookingRooms room, Double price) {
         if(room.bookingItemTypeId == null) {
             return price;
         }
         
-        PmsPricing priceObject = pmsManager.getPriceObject();
+        PmsPricing priceObject = pmsManager.getPriceObjectFromBooking(booking);
         double toAdd = 0.0;
         if(priceObject.derivedPrices != null && priceObject.derivedPrices.containsKey(room.bookingItemTypeId)) {
             HashMap<Integer, Double> derivedPriced = priceObject.derivedPrices.get(room.bookingItemTypeId);
@@ -319,7 +319,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private Double calculateDiscounts(PmsBooking booking, Double price, String bookingEngineTypeId, int count, PmsBookingRooms room, Date start, Date end) {
         if(room != null) {
-            price = addDerivedPrices(room, price);
+            price = addDerivedPrices(booking, room, price);
         }
         price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId);
         price = getUserPrice(bookingEngineTypeId, price, count);
@@ -570,20 +570,20 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
 
-    private LinkedHashMap<String, Double> getPriceMatrix(String typeId, Date start, Date end, Integer priceType) {
-        PmsPricing prices = pmsManager.getPriceObject();
+    private LinkedHashMap<String, Double> getPriceMatrix(String typeId, Date start, Date end, Integer priceType, PmsBooking booking) {
+        PmsPricing prices = pmsManager.getPriceObjectFromBooking(booking);
         LinkedHashMap<String, Double> price = new LinkedHashMap();
         if (prices.defaultPriceType == 1) {
-            price = calculateDailyPricing(typeId, start, end);
+            price = calculateDailyPricing(typeId, start, end, prices);
         }
         if (prices.defaultPriceType == 2) {
-            price = calculateMonthlyPricing(typeId, start, end);
+            price = calculateMonthlyPricing(typeId, start, end, prices);
         }
         if (prices.defaultPriceType == 7) {
-            price = calculateProgressivePrice(typeId, start, end, 0, priceType);
+            price = calculateProgressivePrice(typeId, start, end, 0, priceType, prices);
         }
         if (prices.defaultPriceType == 8) {
-            price = calculateIntervalPrice(typeId, start, end);
+            price = calculateIntervalPrice(typeId, start, end, prices);
         }
         
         
@@ -593,9 +593,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
 
     public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {
-        
-        
-        LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, priceType);
+        String priceCode = "default";
+
+        LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, priceType, booking);
         double total = 0.0;
         int count = 0;
         if(priceType == PmsBooking.PriceType.daily) {
@@ -1143,8 +1143,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return order;
     }
 
-    private LinkedHashMap<String, Double> calculateProgressivePrice(String typeId, Date start, Date end, int offset, Integer priceType) {
-        ArrayList<ProgressivePriceAttribute> priceRange = pmsManager.getPriceObject().progressivePrices.get(typeId);
+    private LinkedHashMap<String, Double> calculateProgressivePrice(String typeId, Date start, Date end, int offset, Integer priceType, PmsPricing prices) {
+        ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
         LinkedHashMap<String, Double> result = new LinkedHashMap();
         if (priceRange == null) {
             logPrint("No progressive price found for type");
@@ -1207,7 +1207,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     public Double calculatePrice(String typeId, Date start, Date end, boolean avgPrice, PmsBooking booking) {
-        HashMap<String, Double> priceMatrix = getPriceMatrix(typeId, start, end, booking.priceType);
+        HashMap<String, Double> priceMatrix = getPriceMatrix(typeId, start, end, booking.priceType, booking);
         return generatePriceFromPriceMatrix(priceMatrix, avgPrice, booking, typeId);
     }
 
@@ -1258,8 +1258,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     
-    private LinkedHashMap<String, Double> calculateDailyPricing(String typeId, Date start, Date end) {
-        HashMap<String, Double> priceRange = pmsManager.getPriceObject().dailyPrices.get(typeId);
+    private LinkedHashMap<String, Double> calculateDailyPricing(String typeId, Date start, Date end, PmsPricing prices) {
+        HashMap<String, Double> priceRange = prices.dailyPrices.get(typeId);
 
         
         LinkedHashMap<String, Double> result = new LinkedHashMap();
@@ -1297,8 +1297,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     
-    private LinkedHashMap<String, Double> calculateMonthlyPricing(String typeId, Date start, Date end) {
-        HashMap<String, Double> priceRange = pmsManager.getPriceObject().dailyPrices.get(typeId);
+    private LinkedHashMap<String, Double> calculateMonthlyPricing(String typeId, Date start, Date end, PmsPricing prices) {
+        HashMap<String, Double> priceRange = prices.dailyPrices.get(typeId);
         LinkedHashMap<String, Double> result = new LinkedHashMap();
         
         Calendar cal = Calendar.getInstance();
@@ -1324,10 +1324,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return result;
     }
 
-    private LinkedHashMap<String, Double> calculateIntervalPrice(String typeId, Date start, Date end) {
+    private LinkedHashMap<String, Double> calculateIntervalPrice(String typeId, Date start, Date end, PmsPricing prices) {
         int totalDays = Days.daysBetween(new LocalDate(start), new LocalDate(end)).getDays();
         LinkedHashMap<String, Double> res = new LinkedHashMap();
-        ArrayList<ProgressivePriceAttribute> priceRange = pmsManager.getPriceObject().progressivePrices.get(typeId);
+        ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
         if (priceRange == null) {
             logPrint("No progressive price found for type");
             return res;
@@ -1598,7 +1598,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             price = room.price;
         }
         
-        if(pmsManager.getPriceObject().privatePeopleDoNotPayTaxes) {
+        if(pmsManager.getPriceObjectFromBooking(booking).privatePeopleDoNotPayTaxes) {
             User user = userManager.getUserById(booking.userId);
             if(user.company.isEmpty()) {
                 includeTaxes = false;
@@ -1608,7 +1608,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
 
-        if (pmsManager.getPriceObject().pricesExTaxes && includeTaxes) {
+        if (pmsManager.getPriceObjectFromBooking(booking).pricesExTaxes && includeTaxes) {
             double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
             //Order price needs to be inc taxes.. 
             price *= tax;

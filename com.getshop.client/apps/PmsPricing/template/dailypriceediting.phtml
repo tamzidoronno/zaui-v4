@@ -1,4 +1,5 @@
 <?php
+/* @var $this ns_1be25b17_c17e_4308_be55_ae2988fecc7c\PmsPricing */
 $itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 $priceObject = $this->getPrices();
 $prices = $priceObject->dailyPrices;
@@ -89,4 +90,9 @@ $prices = $priceObject->dailyPrices;
 <div style='text-align: right;'>
 <span class='pmsbutton setnewprices'>Save prices</span>
 </div>
+<div style="border-bottom: solid 1px; margin-bottom: 20px; padding-bottom: 20px;"></div>
+<h1>Discount codes</h1>
 
+<?php
+$this->includefile("discounts");
+?>

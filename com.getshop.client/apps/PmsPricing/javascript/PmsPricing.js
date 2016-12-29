@@ -7,7 +7,49 @@ app.PmsPricing = {
         $(document).on('click', '.PmsPricing .selectcol', app.PmsPricing.selectCol);
         $(document).on('click', '.PmsPricing .selectrow', app.PmsPricing.selectRow);
         $(document).on('keyup', '.PmsPricing .priceinputsetter', app.PmsPricing.priceinput);
+        $(document).on('click', '.PmsPricing .loadcouponmoredates', app.PmsPricing.loadMoreDates);
+        $(document).on('click','.PmsPricing .togglerepeatbox', app.PmsConfiguration.closeTheRepeatBox);
+        $(document).on('change','.PmsPricing .repeat_type', app.PmsConfiguration.changeRepeatType);
     },
+
+    closeTheRepeatBox : function() {
+        $('.addMoredatesPanel').fadeOut();
+    },
+
+    changeRepeatType: function() {
+        var type = $(this).val();
+        $('.repeatrow').hide();
+        if(type !== "3") {
+            $('.repeatrow').show();
+        } 
+        $('.repeateachdaterow').hide();
+        if(type === "1") {
+            $('.repeateachdaterow').show();
+        }
+        
+        $('.repeatoption').hide();
+        $('.repeat_' + type).show();
+    },
+    closeRepeatBox : function() {
+        var box = $('.PmsManagement .addMoredatesPanel');
+        if(box.is(":visible")) {
+            box.slideUp();
+        } else {
+            box.slideDown();
+        }
+    },        
+    
+    loadMoreDates : function() {
+        var panel = $(this).closest('td').find('.addmoredatespanel');
+        var event = thundashop.Ajax.createEvent('','loadCouponRepeatingDataPanel',$(this), {
+            "id" : $(this).attr('data-couponid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            panel.html(res);
+            panel.find('.addMoredatesPanel').fadeIn();
+        });
+    },
+    
     loadpriceinput : function() {
         $('.priceinputsetter').each(function() {
             $(this).val(localStorage.getItem("priceinput_" + $(this).attr('itemid')));

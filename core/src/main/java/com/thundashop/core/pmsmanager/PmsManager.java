@@ -4343,6 +4343,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBooking booking : bookings.values()) {
             if(booking.userId.equals(userId)) {
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    if(room.isDeleted() || booking.isDeleted) {
+                        continue;
+                    }
                     PmsRoomSimple res = filter.convertRoom(room, booking);
                     result.add(res);
                 }

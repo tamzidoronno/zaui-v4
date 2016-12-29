@@ -18,6 +18,13 @@
 </div>
 
 <!-- Pay On Delivery -->
+<div class='paymentaction' ng-if='paymentMethodId == "e6cf029b-0b96-4cf8-9a88-8db2755c0062"'>
+    Trykk på denne knappen når betalingen er gjennomført og godkjent på terminalen.
+    <br/>
+    <br/>
+    <div class='button' ng-click="completePayment()">Betalingen er gjennomført.</div>
+</div>
+
 <div class='paymentaction' ng-if='paymentMethodId == "565ea7bd-c56b-41fe-b421-18f873c63a8f"'>
     
     <bc-keypad 

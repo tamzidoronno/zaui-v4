@@ -6,6 +6,10 @@
 package com.thundashop.core.resturantmanager;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -18,4 +22,13 @@ public class ResturantCartItem extends DataCommon {
     public boolean sentToKitchen;
     public String tableSessionId = "";
     public double discountedPrice = 0;
+    public boolean useDiscountedPrice = false;
+    public Map<String,String> options = new HashMap();
+
+    public String getVariationId() {
+        if (options.isEmpty())
+            return "";
+        
+        return ""+options.hashCode();
+    }
 }

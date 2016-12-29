@@ -5,9 +5,11 @@
  */
 package com.thundashop.core.resturantmanager;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.PmsRoomSimple;
 import java.util.List;
 
@@ -35,6 +37,14 @@ interface IResturantManager {
     @Customer
     public List<TableSession> getAllSessions();
     
+    @Administrator
+    public void createTable(String roomId, String tableId);
+    
+    @Administrator
+    public void deleteTable(String tableId);
+    
+    @Administrator
+    public void createRoom(String roomName);
     /**
      * Returns all the sessions which the current table can change to,
      * this means that the session that is currently active is hidden.
@@ -51,8 +61,11 @@ interface IResturantManager {
     @Customer 
     public TableData getCurrentTableData(String tableId);
     
-    @Customer
-    public void completePayment(String paymentMethodId, List<ResturantCartItem> cartItemIds);
+    @Editor
+    public Order completePayment(String paymentMethodId, List<ResturantCartItem> cartItemIds);
+    
+    @Editor
+    public boolean isOrderPriceCorrect(String paymentMethodId, List<ResturantCartItem> cartItems, double price);
     
     @Editor
     public void payOnRoom(PmsRoomSimple room, List<ResturantCartItem> cartItemsIds);

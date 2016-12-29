@@ -72,14 +72,15 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        ResturantDemoData demoData = new ResturantDemoData();
-        
-        rooms = demoData.getRooms();
-        tables = demoData.getTables();
-        
-        for (DataCommon idata : data.data) {
-            if (idata instanceof TableSession) {
-                sessions.put(idata.id, (TableSession)idata);
+        for (DataCommon dataCommon : data.data) {
+            if (dataCommon instanceof ResturantRoom) {
+                ResturantRoom room = (ResturantRoom)dataCommon;
+                rooms.put(room.id, room);
+            }
+            
+            if (dataCommon instanceof ResturantTable) {
+                ResturantTable table = (ResturantTable)dataCommon;
+                tables.put(table.id, table);
             }
         }
     }
@@ -243,18 +244,49 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     }
 
     @Override
-    public void completePayment(String paymentMethodId, List<ResturantCartItem> cartItems) {
-        cartManager.clear();
-        List<CartItem> groupedCartItems = getGroupedCartItems(cartItems);
+    public boolean isOrderPriceCorrect(String paymentMethodId, List<ResturantCartItem> cartItems, double price) {
+        Order order = createOrderInternally(paymentMethodId, cartItems, true);
+        Double totalForOrder = order.cart.getTotal(false);
+        
+        if (price == totalForOrder) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    private void addCartItems(List<ResturantCartItem> cartItems, boolean dummy) {
+        List<CartItem> groupedCartItems = getGroupedCartItems(cartItems, dummy);
         groupedCartItems.stream().forEach(id -> addToCart(id));
-        Order order = orderManager.createOrder(new Address());
-        orderManager.changeOrderStatus(order.id, Order.Status.PAYMENT_COMPLETED);
-        orderManager.changeOrderType(order.id, paymentMethodId);
+    }
+    
+    @Override
+    public Order completePayment(String paymentMethodId, List<ResturantCartItem> cartItems) {
+        Order order = createOrderInternally(paymentMethodId, cartItems, false);
+        orderManager.saveOrder(order);
+        return orderManager.getOrder(order.id);
+    }   
+
+    private Order createOrderInternally(String paymentMethodId, List<ResturantCartItem> cartItems, boolean dummy) throws ErrorException {
+        cartManager.clear();
+        addCartItems(cartItems, dummy); 
+        
+        Order order = null;
+        
+        if (dummy) {
+            order = orderManager.createOrderDummy(new Address());
+        } else {
+            order = orderManager.createOrder(new Address());
+            orderManager.changeOrderStatus(order.id, Order.Status.PAYMENT_COMPLETED);
+            orderManager.changeOrderType(order.id, paymentMethodId);
+        }
+        
         
         updateDiscountedPrices(order, cartItems);
-    }   
+        return order;
+    }
     
-    public List<ResturantCartItem> fetchAllCartItems(List<ResturantCartItem> ids) {
+    public List<ResturantCartItem> fetchAllCartItems(List<ResturantCartItem> ids, boolean dummy) {
         List<ResturantCartItem> retCartItems = new ArrayList();
         List<TableSession> usedSessions = new ArrayList();
         
@@ -262,7 +294,12 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
             boolean found = false;
             for (TableSession tableSession : sessions.values()) {
                 if (tableSession.hasItem(cartId.id)) {
-                    ResturantCartItem item = tableSession.fetchAndRemove(cartId.id);
+                    
+                    ResturantCartItem item = tableSession.fetch(cartId.id);
+                    if (!dummy) {
+                        item = tableSession.fetchAndRemove(cartId.id);
+                    }
+                     
                     retCartItems.add(item);
                     usedSessions.add(tableSession);
                     found = true;
@@ -291,7 +328,11 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     }
     
     public void addToCart(CartItem cartItem) {
-        cartManager.addProductItem(cartItem.getProduct().id, cartItem.getCount());
+        if (cartItem.getVariations().isEmpty()) {
+            cartManager.addProductItem(cartItem.getProduct().id, cartItem.getCount());
+        } else {
+            cartManager.addProduct(cartItem.getProduct().id, cartItem.getCount(), cartItem.getVariations());
+        }
     }
 
     @Override
@@ -305,23 +346,26 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
             throw new NullPointerException("Can not pay to room as PayOnRoom has no bookingengine configures, configure this under settings");
         
         PmsManager pmsManager = sessionScope.getNamedSessionBean(bookingengine, PmsManager.class);
-        List<CartItem> groupedCartItems = getGroupedCartItems(cartItemsIds);
+        List<CartItem> groupedCartItems = getGroupedCartItems(cartItemsIds, false);
         for (CartItem cartItem : groupedCartItems) {
+            // TODO - Manipulate prices!
             pmsManager.addProductToRoom(cartItem.getProduct().id, room.pmsRoomId, cartItem.getCount());
         }
     }
 
-    private List<CartItem> getGroupedCartItems(List<ResturantCartItem> cartItems) {
-        List<ResturantCartItem> allItems = fetchAllCartItems(cartItems);
+    private List<CartItem> getGroupedCartItems(List<ResturantCartItem> cartItems, boolean dummy) {
+        List<ResturantCartItem> allItems = fetchAllCartItems(cartItems, dummy);
         HashMap<String, CartItem> allCartItems = new HashMap();
         
         for (ResturantCartItem item : allItems) {
-            CartItem retItem = allCartItems.get(item.productId);
+            CartItem retItem = allCartItems.get(item.productId+"_"+item.getVariationId());
+            
             if (retItem == null) {
                 retItem = new CartItem();
                 Product product = productManager.getProduct(item.productId);
                 retItem.setProduct(product);
-                allCartItems.put(product.id, retItem);
+                retItem.setVariations(item.options);
+                allCartItems.put(product.id+"_"+item.getVariationId(), retItem);
             }
             
             retItem.setCount(retItem.getCount() + 1);
@@ -332,15 +376,48 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
 
     private void updateDiscountedPrices(Order order, List<ResturantCartItem> cartItems) {
         for (ResturantCartItem cartItem : cartItems) {
-            for (CartItem icartItem : order.cart.getItems()) {
-                if (icartItem.getProduct().equals(cartItem.productId)) {
-                    if (cartItem.discountedPrice > 0) {
-                        order.updatePrice(icartItem.getCartItemId(), cartItem.discountedPrice);
-                    }
-                }
+            
+            if (!cartItem.useDiscountedPrice) {
+                continue;
+            }
+            
+            List<CartItem> productCartItems = order.cart.getItemsByProductId(cartItem.productId);
+            
+            for (CartItem item : productCartItems) {
+                order.updatePrice(item.getCartItemId(), cartItem.discountedPrice);
             }
         }
-        
-        orderManager.saveOrder(order);
+    }
+
+    @Override
+    public void createTable(String roomId, String tableName) {
+        ResturantRoom room = rooms.get(roomId);
+        if (room != null) {
+            ResturantTable table = new ResturantTable();
+            table.name = tableName;
+            saveObject(table);
+            tables.put(table.id, table);
+            room.tableIds.add(table.id);
+            saveObject(room);
+        }
+    }
+
+    @Override
+    public void deleteTable(String tableId) {
+        ResturantTable table = tables.get(tableId);
+        if (table != null) {
+            for (ResturantRoom room : rooms.values()) {
+                room.tableIds.remove(tableId);
+                saveObject(room);
+            }
+        }
+    }
+
+    @Override
+    public void createRoom(String roomName) {
+        ResturantRoom room = new ResturantRoom();
+        room.name = roomName;
+        saveObject(room);
+        rooms.put(room.id, room);
     }
 }

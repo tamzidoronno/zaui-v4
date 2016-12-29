@@ -69,8 +69,11 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
             var item = datarepository.cartItemsToPay[i];
             var overridePrice = datarepository.getOveriddenPrice(item.productId);
             
-            if (overridePrice) {
+            if (overridePrice && overridePrice.price) {
                 item.discountedPrice = overridePrice.price;
+                item.useDiscountedPrice = true;
+            } else {
+                item.useDiscountedPrice = false;
             }
             
             ids.push(item);
@@ -82,8 +85,10 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
         for (var i in ids) {
             datarepository.forceRemoveCartItem(ids[i].id);
         }
-        
-        datarepository.clearCheckoutList();
+
+        if ($scope.standalone) {
+            datarepository.clearCheckoutList();
+        }
         
         if (datarepository.isStandAlone()) {
             $state.transitionTo('base.checkouttable', { tableId: $stateParams.tableId })
@@ -97,12 +102,44 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
         }
     }
     
+    $scope.getTotalForOrder = function(order) {
+        var total = 0;
+        for (var i in order.cart.items) {
+            var item = order.cart.items[i];
+            var productPrice = item.product.price;
+            var totalForProduct = productPrice * item.count;
+            total += totalForProduct;
+        }
+        
+        return total;
+    }
+    
+    $scope.showErrorMessage = function() {
+        alert("The order created is not the same amount as what you have stored on your device, check if the products are updated. This should not happen and will cause problems.");
+    }
+    
     $scope.completePayment = function() {
         var ids = $scope.getIds();
         
-        $api.getApi().ResturantManager.completePayment($scope.paymentMethodId, ids).done(function() {
-            $scope.markCompleted(ids);
+        $api.getApi().ResturantManager.isOrderPriceCorrect($scope.paymentMethodId, ids, datarepository.getTotal()).done(function(res) {
+            if (!res) {
+                $scope.showErrorMessage();
+                return;
+            }
+            
+            $api.getApi().ResturantManager.completePayment($scope.paymentMethodId, ids).done(function(order) {
+                var totalFromOrder = $scope.getTotalForOrder(order);
+
+                if (totalFromOrder != datarepository.getTotal()) {
+                    $scope.showErrorMessage();
+                    return;
+                }
+
+                $scope.markCompleted(ids);
+            });
         });
+        
+        
     }
     
     $scope.loadRoomList = function() {
@@ -114,6 +151,11 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
             startDate: new Date(),
             endDate: new Date()
         };
+        
+        if (!method.settings.bookingengine) {
+            alert("Pay On Room paymentmethod is not setup correctly, check that you have specified the booking engine name under settings");
+            return;
+        }
         
         pmsManager.getSimpleRooms(method.settings.bookingengine.value, filter).done(function(res) {
             $scope.rooms = res;

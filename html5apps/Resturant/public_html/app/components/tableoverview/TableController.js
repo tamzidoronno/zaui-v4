@@ -1,6 +1,6 @@
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
-controllers.TableController = function($scope, $rootScope, $api, $state, datarepository, $stateParams) {
+controllers.TableController = function($scope, $rootScope, $api, $state, datarepository, $stateParams, ngDialog) {
     $scope.table = datarepository.getTableById($stateParams.tableId);
     $scope.products = datarepository.getProducts();
     $scope.room = datarepository.getSelectedRoom();
@@ -44,7 +44,31 @@ controllers.TableController = function($scope, $rootScope, $api, $state, datarep
         }
     }
     
+    
     $scope.addToCart = function(product) {
+        if (product.variations) {
+            var variations = product.variations.nodes[0].children
+            var selectedPerson = $scope.selectedPerson;
+            var table = $scope.table;
+            
+            ngDialog.open({
+                template: 'components/tableoverview/variations.html',
+                controller: ['$scope', 'datarepository', 'ngDialog', function($scope, datarepository, ngDialog) {
+                        $scope.currentOpenProduct = product;
+                        $scope.variations = variations;
+                        $scope.selectedPerson = selectedPerson;
+                        $scope.table = table;
+                        
+                        $scope.selectVariation = function(variation, option) {
+                            datarepository.addToCart($scope.currentOpenProduct.id, $scope.selectedPerson, $scope.table.id, variation, option);
+                            ngDialog.close();
+                        }
+                }]
+            });
+            
+            return;
+        }
+        
         datarepository.addToCart(product.id, $scope.selectedPerson, $scope.table.id);
         $scope.currentSwiping = null;
     }
@@ -83,6 +107,7 @@ controllers.TableController = function($scope, $rootScope, $api, $state, datarep
             return;
         }
         
+        datarepository.clearCheckoutList();
         $state.transitionTo("base.checkouttable", { tableId: $scope.table.id });
     }
     
@@ -95,6 +120,7 @@ controllers.TableController = function($scope, $rootScope, $api, $state, datarep
             var cartItem = cartItems[i];
             cartItem.sentToKitchen = true;
         }
+        
         
         datarepository.clearDeletedItems($scope.table.id);
         datarepository.saveCartItems();

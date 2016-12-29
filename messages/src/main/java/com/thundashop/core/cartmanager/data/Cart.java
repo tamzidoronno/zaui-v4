@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -241,5 +242,11 @@ public class Cart extends DataCommon {
 
     public void addCartItems(List<CartItem> items) {
         this.items.addAll(items);
+    }
+
+    public List<CartItem> getItemsByProductId(String productId) {
+        return items.stream()
+                .filter(item -> item.getProduct().id.equals(productId))
+                .collect(Collectors.toList());
     }
 }

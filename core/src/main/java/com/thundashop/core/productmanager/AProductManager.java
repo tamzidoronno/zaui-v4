@@ -87,6 +87,10 @@ public abstract class AProductManager extends ManagerBase {
         
         product.doFinalize();
         
+        product.variations = listManager.getJsTree("variationslist_product_"+product.id);
+        if (product.variations != null && product.variations.nodes.isEmpty()) {
+            product.variations = null;
+        }
 //        updateTranslation(product);
         return product;
     }

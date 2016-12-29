@@ -319,9 +319,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+    public Order createOrderDummy(Address address) throws ErrorException {
+        Order order = createOrderInternally(address, true);
+        setPreferredPayment(order);
+        return order;
+    }
+    
     @Override
     public Order createOrder(Address address) throws ErrorException {
-        Order order = createOrderInternally(address);
+        Order order = createOrderInternally(address, false);
         setPreferredPayment(order);
         saveOrder(order);
         updateStockAndSendConfirmation(order);
@@ -337,7 +343,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
             
         Address address = user.address;
-        Order order = createOrderInternally(address);
+        Order order = createOrderInternally(address, false);
         order.userId = user.id;
         order.payment = getUserPrefferedPaymentMethod(userId);
         saveOrder(order);
@@ -351,7 +357,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         User user = userManager.getUserByReference(referenceKey);
         user.address.phone = user.cellPhone;
         user.address.fullName = user.fullName;
-        Order order = createOrderInternally(user.address);
+        Order order = createOrderInternally(user.address, false);
         order.userId = user.id;
         saveOrder(order);
         updateStockAndSendConfirmation(order);
@@ -535,7 +541,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return order.cart.getCartTaxes();
     }
     
-    private Order createOrderInternally(Address address) throws ErrorException {
+    private Order createOrderInternally(Address address, boolean dummy) throws ErrorException {
         Cart cart = cartManager.getCart();
         cart.address = address;
         
@@ -551,8 +557,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         finalizeCart(order.cart);
         
-        incrementingOrderId++;
-        order.incrementOrderId = incrementingOrderId;
+        if (!dummy) {
+            incrementingOrderId++;
+            order.incrementOrderId = incrementingOrderId;
+        } else {
+            order.incrementOrderId = -1;
+        }
+        
         order.doFinalize();
         feedGrafana(order);
         return order;

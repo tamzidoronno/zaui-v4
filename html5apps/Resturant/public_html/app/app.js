@@ -1,5 +1,5 @@
 angular.module('TrackAndTrace', [
-    'ui.router', 'bc.AngularKeypad', 'ngTouch'
+    'ui.router', 'bc.AngularKeypad', 'ngTouch', 'ngDialog'
 ]);
 
 

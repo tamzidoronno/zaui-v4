@@ -12,6 +12,10 @@ controllers.SettingsController = function($scope, $rootScope, $api, datareposito
     
     $scope.standalone = datarepository.isStandAlone();
     
+    $scope.savePaymentMethods = function() {
+        datarepository.save();
+    }
+    
     $scope.reloadData = function() {
         var resturantManager = $api.getApi().ResturantManager;
         var productManager = $api.getApi().ProductManager;
@@ -20,7 +24,7 @@ controllers.SettingsController = function($scope, $rootScope, $api, datareposito
         productManager.getAllProducts().done(function(res) { datarepository.setProducts(res); });
         productManager.getProductLists().done(function(res) { datarepository.setProductLists(res); });
         resturantManager.getRooms().done(function(res) { datarepository.setRooms(res); } )
-        storeApplicationPool.getActivatedPaymentApplications().done(function(res) { datarepository.setActivatedPaymentMethods(res); } )
+        storeApplicationPool.getActivatedPaymentApplications().done(function(res) { datarepository.setActivatedPaymentMethods(res); $scope.$apply(); } )
     }
     
     $scope.goBack = function() {

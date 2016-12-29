@@ -6,6 +6,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.Translation;
+import com.thundashop.core.listmanager.data.JsTreeList;
 import com.thundashop.core.pagemanager.data.Page;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,6 +119,9 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     public Map<String, String> variationCombinations;
 
+    @Transient
+    public JsTreeList variations = null;
+    
     public void setMainImage(String fileId) {
         mainImage = fileId;
     }

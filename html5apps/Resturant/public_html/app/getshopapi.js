@@ -5972,6 +5972,16 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'createRegisterCardOrder' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'createRegisterCardOrder',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'creditOrder' : function(orderId, gs_silent) {
         var data = {
             args : {
@@ -8153,6 +8163,19 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getItemsForView' : function(multilevelname, viewId,date, gs_silent) {
+        var data = {
+            args : {
+                viewId : JSON.stringify(viewId),
+                date : JSON.stringify(date),
+            },
+            method: 'getItemsForView',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getLogEntries' : function(multilevelname, filter, gs_silent) {
         var data = {
             args : {
@@ -9922,6 +9945,19 @@ GetShopApiWebSocket.ResturantManager.prototype = {
                 tableId : JSON.stringify(tableId),
             },
             method: 'getTableById',
+            interfaceName: 'core.resturantmanager.IResturantManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'isOrderPriceCorrect' : function(paymentMethodId,cartItems,price, gs_silent) {
+        var data = {
+            args : {
+                paymentMethodId : JSON.stringify(paymentMethodId),
+                cartItems : JSON.stringify(cartItems),
+                price : JSON.stringify(price),
+            },
+            method: 'isOrderPriceCorrect',
             interfaceName: 'core.resturantmanager.IResturantManager',
         };
         return this.communication.send(data, gs_silent);

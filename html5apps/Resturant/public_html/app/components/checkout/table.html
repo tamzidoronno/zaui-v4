@@ -1,5 +1,5 @@
 <div class='checkout_toparea'>
-    <div ng-if="!standalone" class="small_button addmoretables"><i class='fa fa-plus'></i>Add table</div>
+    <div ng-click='showAddTable()' ng-if="!standalone" class="small_button addmoretables"><i class='fa fa-plus'></i>Add table</div>
     <div ng-click='showMoreProducts()' class='small_button showmoreproducts'><i class='fa fa-shopping-bag'></i>More products</div>
 </div>
 
@@ -13,6 +13,15 @@
             </div>
         </div>
     </div>    
+</div>
+
+<div class="checkout_addTable">
+    <div class='close_checkout_list' ng-click='closeAddTable()'><i class='fa fa-close'></i></div>
+    <div ng-repeat='room in rooms'>
+        <div ng-repeat='table in room.tables'>
+            <div class='button' ng-click='addTable(table)'>{{ room.name }} - {{ table.name }}</div>
+        </div>
+    </div>
 </div>
 
 
@@ -42,7 +51,7 @@
     <div class="payment_summary">
         <div ng-if="getSelectedProducts().length === 0">Ingen produkter lagt til.</div>
         <div ng-repeat='product in getSelectedProducts()' class="summary_product_row">
-            <div class="productname" ng-click="removeProduct(product)">{{ getSelectedCount(product) }} x {{ product.name }}</div><div class="price" ng-click="changePrice(product)"><div ng-class="product.discountedPrice ? 'discountedprice' : ''">{{ product.price }} ,-</div><div ng-if="product.discountedPrice">{{ product.discountedPrice }},-</div></div>
+            <div class="productname" ng-click="removeProduct(product)">{{ getSelectedCount(product) }} x {{ product.name }}</div><div class="price" ng-click="changePrice(product)"><div ng-class="product.tempDiscountedPrice ? 'discountedprice' : ''">{{ product.price }} ,-</div><div ng-if="product.tempDiscountedPrice">{{ product.tempDiscountedPrice }},-</div></div>
         </div>
 
         

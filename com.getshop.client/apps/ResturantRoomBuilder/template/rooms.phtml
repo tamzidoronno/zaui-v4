@@ -1,0 +1,29 @@
+<?
+/* @var $this \ns_659cac48_9502_4b79_b11b_e3fa1535f85a\ResturantRoomBuilder */
+$rooms = $this->getApi()->getResturantManager()->getRooms();
+
+foreach ($rooms as $room) {
+    echo "<h2><i class='fa fa-trash'></i> ".$room->name."</h2>";
+    foreach ($room->tables as $table) {
+        echo "<div><i gsclick='deleteTable' tableid='$table->id' class='fa fa-trash'></i> ".$table->name."</div>";
+    }
+    ?>
+    
+    <br/>
+    <div gstype='form' method='createTable' >
+        <input type='hidden' gsname='roomid' value='<? echo $room->id; ?>'/>
+        Add table to room: <? echo $room->name; ?><br/> <input class='gsniceinput1' type='textfield' gsname='roomname'/> 
+        <br/><br/><div class='shop_button' gstype='submit'>Create</div>
+    </div>
+    <?
+}
+?>
+
+    
+<div gstype='form' method='createRoom' style='background-color: #EFEFEF; padding: 40px; margin-top: 50px;'>
+    <h2> Create new room </h2>
+    Room name:
+    <br/><input type='textfield' class='gsniceinput1' gsname='roomname'/>
+    <br/>
+    <br/><div class='shop_button' gstype='submit'>Create</div>
+</div>

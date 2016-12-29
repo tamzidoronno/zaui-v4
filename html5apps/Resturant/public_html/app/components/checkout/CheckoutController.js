@@ -2,12 +2,36 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.CheckoutController = function($scope, $rootScope, $api, $state, datarepository, $stateParams) {
     $scope.total = 0;
-    $scope.tables = [];
-    $scope.tables[0] = datarepository.getTableById($stateParams.tableId);
+    $scope.tables = datarepository.getCurrentlyCheckingOutTables($stateParams.tableId);
     $scope.paymentMethods = datarepository.getActivatedPaymentMethods();
     $scope.productLists = datarepository.getProductLists();
     $scope.standalone = datarepository.isStandAlone();
+    $scope.rooms = datarepository.rooms;
     
+    console.log($scope.tables);
+    $scope.closeAddTable = function() {
+        $('.checkout_addTable').hide();
+    }
+    
+    $scope.showAddTable = function() {
+        $('.checkout_addTable').show();
+    }
+    
+    $scope.addTable = function(table) {
+        for (var i in $scope.tables) {
+            if ($scope.tables[i].id == table.id) {
+                return;
+            }
+        }
+        
+        console.log("Adding", table);
+        
+        datarepository.addCurrentlyCheckingOutTables(table);
+        $scope.tables = datarepository.getCurrentlyCheckingOutTables($stateParams.tableId);
+        $scope.closeAddTable();
+        
+    }
+            
     $scope.changePrice = function(product) {
         var value = prompt("Price", product.price);
         
@@ -211,10 +235,6 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
         return paymentApp.appName;
     }
     
-    $scope.clearSavedCheckoutList = function() {
-        datarepository.clearCheckoutList();
-    }
-    
     $scope.removeProduct = function(product) {
         for (var i in datarepository.cartItemsToPay) {
             var item = datarepository.cartItemsToPay[i];
@@ -228,6 +248,4 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
             }
         }
     }
-    
-    $scope.clearSavedCheckoutList();
 }

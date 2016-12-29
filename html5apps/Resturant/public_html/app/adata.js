@@ -15,14 +15,49 @@ adata = {
     cartItemsToPay: [],
     paymentMethods: [],
     temporaryProductPrices: [],
+    currentlyTablesToCheckout: [],
     
     setActivatedPaymentMethods: function(methods) {
+        for (var i in this.paymentMethods) {
+            var oldMethod = this.paymentMethods[i];
+            for (var j in methods) {
+                if (methods[j].id === oldMethod.id) {
+                    methods[j].isActiveForDevice = oldMethod.isActiveForDevice;
+                }
+            }
+        }
+        
         this.paymentMethods = methods;
         this.save();
     },
     
+    addCurrentlyCheckingOutTables: function(table) {
+        this.currentlyTablesToCheckout.push(table);
+        this.saveItemsToPay();
+    },
+    
+    getCurrentlyCheckingOutTables: function(tableId) {
+        var retValues = [];
+        
+        retValues.push(this.getTableById(tableId));
+        
+        for (var i in this.currentlyTablesToCheckout) {
+            retValues.push(this.currentlyTablesToCheckout[i]);
+        }
+        
+        
+        return retValues;
+    },
+    
     getActivatedPaymentMethods: function() {
-        return this.paymentMethods;
+        var ret = [];
+        
+        $(this.paymentMethods).each(function() {
+            if (this.isActiveForDevice)
+                ret.push(this);
+        });
+        
+        return ret;
     },
     
     setProducts: function(products) {
@@ -70,8 +105,11 @@ adata = {
 
     finalizeProduct: function(product) {
         var overriddenPrice = this.getOveriddenPrice(product.id);
-        if (overriddenPrice) {
-            product.discountedPrice = overriddenPrice.price;
+        
+        if (overriddenPrice && overriddenPrice.price !== "") {
+            product.tempDiscountedPrice = overriddenPrice.price;
+        } else {
+            product.tempDiscountedPrice = null;
         }
     },
     
@@ -113,6 +151,7 @@ adata = {
     saveItemsToPay: function() {
         localStorage.setItem("cartItemsToPay", JSON.stringify(this.cartItemsToPay));
         localStorage.setItem("temporaryProductPrices", JSON.stringify(this.temporaryProductPrices));
+        localStorage.setItem("currentlyTablesToCheckout", JSON.stringify(this.currentlyTablesToCheckout));
     },
     
     save: function() {
@@ -132,6 +171,7 @@ adata = {
         this.paymentMethods = JSON.parse(localStorage.getItem("paymentMethods"));
         this.cartItemsToPay = JSON.parse(localStorage.getItem("cartItemsToPay"));
         this.temporaryProductPrices = JSON.parse(localStorage.getItem("temporaryProductPrices"));
+        this.currentlyTablesToCheckout = JSON.parse(localStorage.getItem("currentlyTablesToCheckout"));
         
         if (!this.cartItems) 
             this.cartItems = [];
@@ -141,6 +181,9 @@ adata = {
         
         if (!this.temporaryProductPrices) 
             this.temporaryProductPrices = [];
+        
+        if (!this.currentlyTablesToCheckout) 
+            this.currentlyTablesToCheckout = [];
     },
     
     getDeletedCartItems: function(tableId) {
@@ -203,6 +246,7 @@ adata = {
     clearCheckoutList: function() {
         this.cartItemsToPay = [];
         this.temporaryProductPrices = [];
+        this.currentlyTablesToCheckout = [];
         this.saveItemsToPay();
     },
     
@@ -266,8 +310,8 @@ adata = {
         for (var i in this.cartItemsToPay) {
             var item = this.cartItemsToPay[i];
             var product = this.getProductById(item.productId);
-            if (product.discountedPrice) {
-                j += parseInt(product.discountedPrice);
+            if (product.tempDiscountedPrice) {
+                j += parseInt(product.tempDiscountedPrice);
             } else {
                 j += product.price;
             }
@@ -276,14 +320,19 @@ adata = {
         return j;
     },
     
-    addToCart : function(productId, tablePersonNumber, tableId) {
+    addToCart : function(productId, tablePersonNumber, tableId, variation, option) {
         var cartItem = {
             productId: productId,
             tablePersonNumber: tablePersonNumber,
             tableId: tableId,
             id: this.guid(), 
-            sentToKitchen: false
+            sentToKitchen: false,
+            options: {}
         };
+        
+        if (variation) {
+            cartItem.options[variation.id] = option.id;
+        }
         
         this.cartItems.push(cartItem);
         this.saveCartItems();

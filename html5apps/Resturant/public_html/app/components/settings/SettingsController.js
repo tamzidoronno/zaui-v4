@@ -10,6 +10,8 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 controllers.SettingsController = function($scope, $rootScope, $api, datarepository, $state) {
     $scope.datarepository = datarepository;
     
+    $scope.standalone = datarepository.isStandAlone();
+    
     $scope.reloadData = function() {
         var resturantManager = $api.getApi().ResturantManager;
         var productManager = $api.getApi().ProductManager;
@@ -23,5 +25,9 @@ controllers.SettingsController = function($scope, $rootScope, $api, datareposito
     
     $scope.goBack = function() {
         $state.transitionTo("base.home", {});
+    }
+    
+    $scope.toggleStandalone = function() {
+        datarepository.toggleStandAlone();
     }
 };

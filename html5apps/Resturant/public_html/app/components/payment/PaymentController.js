@@ -16,15 +16,7 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
     }
     
     $scope.getTotal = function() {
-        var j = 0;
-        
-        for (var i in datarepository.cartItemsToPay) {
-            var item = datarepository.cartItemsToPay[i];
-            var product = datarepository.getProductById(item.productId);
-            j += product.price;
-        }
-        
-        return j;
+        return datarepository.getTotal();
     }
     
     $scope.getSelectedCount = function(product) {
@@ -75,16 +67,28 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
         var ids = [];
         for (var i in datarepository.cartItemsToPay) {
             var item = datarepository.cartItemsToPay[i];
-            ids.push(item.id);
+            var overridePrice = datarepository.getOveriddenPrice(item.productId);
+            
+            if (overridePrice) {
+                item.discountedPrice = overridePrice.price;
+            }
+            
+            ids.push(item);
         }
         return ids;
     }
     
     $scope.markCompleted = function(ids) {
         for (var i in ids) {
-            datarepository.forceRemoveCartItem(ids[i]);
+            datarepository.forceRemoveCartItem(ids[i].id);
         }
+        
         datarepository.clearCheckoutList();
+        
+        if (datarepository.isStandAlone()) {
+            $state.transitionTo('base.checkouttable', { tableId: $stateParams.tableId })
+            return;
+        }
         
         if (!datarepository.getAllCartItems($stateParams.tableId).length) {
             $state.transitionTo('base.tableoverview', { tableId: $stateParams.tableId })

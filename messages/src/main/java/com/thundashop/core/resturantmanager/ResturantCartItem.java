@@ -17,4 +17,5 @@ public class ResturantCartItem extends DataCommon {
     public String tableId = "";
     public boolean sentToKitchen;
     public String tableSessionId = "";
+    public double discountedPrice = 0;
 }

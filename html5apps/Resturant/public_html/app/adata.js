@@ -14,6 +14,7 @@ adata = {
     deletedItems: [],
     cartItemsToPay: [],
     paymentMethods: [],
+    temporaryProductPrices: [],
     
     setActivatedPaymentMethods: function(methods) {
         this.paymentMethods = methods;
@@ -67,10 +68,19 @@ adata = {
         return null;
     },
 
+    finalizeProduct: function(product) {
+        var overriddenPrice = this.getOveriddenPrice(product.id);
+        if (overriddenPrice) {
+            product.discountedPrice = overriddenPrice.price;
+        }
+    },
+    
     getProductById: function(productId) {
         for (var i in this.products) {
             if (this.products[i].id == productId) {
-                return this.products[i];
+                var retProduct = this.products[i];
+                this.finalizeProduct(retProduct);
+                return retProduct;
             }
         }
         
@@ -102,6 +112,7 @@ adata = {
     
     saveItemsToPay: function() {
         localStorage.setItem("cartItemsToPay", JSON.stringify(this.cartItemsToPay));
+        localStorage.setItem("temporaryProductPrices", JSON.stringify(this.temporaryProductPrices));
     },
     
     save: function() {
@@ -120,12 +131,16 @@ adata = {
         this.cartItems = JSON.parse(localStorage.getItem("cartItems"));
         this.paymentMethods = JSON.parse(localStorage.getItem("paymentMethods"));
         this.cartItemsToPay = JSON.parse(localStorage.getItem("cartItemsToPay"));
+        this.temporaryProductPrices = JSON.parse(localStorage.getItem("temporaryProductPrices"));
         
         if (!this.cartItems) 
             this.cartItems = [];
         
         if (!this.cartItemsToPay) 
             this.cartItemsToPay = [];
+        
+        if (!this.temporaryProductPrices) 
+            this.temporaryProductPrices = [];
     },
     
     getDeletedCartItems: function(tableId) {
@@ -187,6 +202,7 @@ adata = {
     
     clearCheckoutList: function() {
         this.cartItemsToPay = [];
+        this.temporaryProductPrices = [];
         this.saveItemsToPay();
     },
     
@@ -206,6 +222,60 @@ adata = {
         }
     },
     
+    isStandAlone: function() {
+        return localStorage.getItem("standalone") === "true";
+    },
+    
+    toggleStandAlone: function() {
+        if (this.isStandAlone()) {
+            localStorage.setItem("standalone", "false");
+        } else {
+            localStorage.setItem("standalone", "true");
+        }
+    },
+    
+    getOveriddenPrice: function(productId) {
+        for (var i in this.temporaryProductPrices) {
+            var old = this.temporaryProductPrices[i];
+            if (old.productId === productId) {
+                return old;
+            }
+        }
+        
+        return null;
+    },
+    
+    setNewTemporaryProductPrice: function(productId, price) {
+        var overridenPrice = this.getOveriddenPrice(productId);
+        if (overridenPrice) {
+            overridenPrice.price = price;
+        } else {
+            overridenPrice = {
+                productId : productId,
+                price: price
+            }
+            this.temporaryProductPrices.push(overridenPrice);
+        }
+        
+        localStorage.setItem("temporaryProductPrices", JSON.stringify(this.temporaryProductPrices));
+    },
+    
+    getTotal: function() {
+        var j = 0;
+        
+        for (var i in this.cartItemsToPay) {
+            var item = this.cartItemsToPay[i];
+            var product = this.getProductById(item.productId);
+            if (product.discountedPrice) {
+                j += parseInt(product.discountedPrice);
+            } else {
+                j += product.price;
+            }
+        }
+        
+        return j;
+    },
+    
     addToCart : function(productId, tablePersonNumber, tableId) {
         var cartItem = {
             productId: productId,
@@ -217,6 +287,7 @@ adata = {
         
         this.cartItems.push(cartItem);
         this.saveCartItems();
+        return cartItem;
     },
     
     saveCartItems: function() {

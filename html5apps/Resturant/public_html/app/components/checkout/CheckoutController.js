@@ -5,6 +5,17 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
     $scope.tables = [];
     $scope.tables[0] = datarepository.getTableById($stateParams.tableId);
     $scope.paymentMethods = datarepository.getActivatedPaymentMethods();
+    $scope.productLists = datarepository.getProductLists();
+    $scope.standalone = datarepository.isStandAlone();
+    
+    $scope.changePrice = function(product) {
+        var value = prompt("Price", product.price);
+        
+        if (value === null)
+            return;
+        
+        datarepository.setNewTemporaryProductPrice(product.id, value);
+    }
     
     $scope.transferAllItemForTableAndPerson = function(table, personnumber) {
         var items = $scope.getCartItems(table, personnumber);
@@ -13,6 +24,27 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
         }
         
         datarepository.saveItemsToPay();
+    }
+    
+    $scope.addToCart = function(product) {
+        var item = datarepository.addToCart(product.id, 0, $scope.tables[0].id);
+        datarepository.cartItemsToPay.push(item);
+        datarepository.save();
+        
+        $('.productcartbutton[productid="'+product.id+'"]').css({ 'background-color': "green" });
+        setTimeout(function() {
+            $('.productcartbutton[productid="'+product.id+'"]').css({ 'background-color': "#6c9bc6" });
+        }, 100)
+    }
+   
+    $scope.getProductsForList = function(productList) {
+        var retList = [];
+        for (var i in productList.productIds) {
+            var product = datarepository.getProductById(productList.productIds[i]);
+            if (product)
+                retList.push(product);
+        }
+        return retList;
     }
     
     $scope.addSingleProduct = function(product, table, personnumber) {
@@ -25,6 +57,14 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
                 return;
             }
         }
+    }
+    
+    $scope.closeCheckoutList = function() {
+        $('.checkout_productList').hide();
+    }
+    
+    $scope.showMoreProducts = function() {
+        $('.checkout_productList').show();
     }
     
     $scope.goBack = function() {
@@ -161,15 +201,7 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
     }
     
     $scope.getTotal = function() {
-        var j = 0;
-        
-        for (var i in datarepository.cartItemsToPay) {
-            var item = datarepository.cartItemsToPay[i];
-            var product = datarepository.getProductById(item.productId);
-            j += product.price;
-        }
-        
-        return j;
+        return datarepository.getTotal();
     }
     
     $scope.getPaymentName = function(paymentApp) {
@@ -187,6 +219,9 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
         for (var i in datarepository.cartItemsToPay) {
             var item = datarepository.cartItemsToPay[i];
             if (item.productId === product.id) {
+                if (!item.sentToKitchen) {
+                    datarepository.forceRemoveCartItem(item.id);
+                }
                 datarepository.cartItemsToPay.splice(i, 1);
                 datarepository.saveItemsToPay();
                 return;

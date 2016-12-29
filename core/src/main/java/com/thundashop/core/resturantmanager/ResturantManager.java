@@ -19,7 +19,6 @@ import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import static com.thundashop.core.pagemanager.data.Page.PageType.Product;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsRoomSimple;
 import com.thundashop.core.socket.WebSocketServerImpl;
@@ -244,26 +243,34 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     }
 
     @Override
-    public void completePayment(String paymentMethodId, List<String> cartItemIds) {
+    public void completePayment(String paymentMethodId, List<ResturantCartItem> cartItems) {
         cartManager.clear();
-        List<CartItem> groupedCartItems = getGroupedCartItems(cartItemIds);
+        List<CartItem> groupedCartItems = getGroupedCartItems(cartItems);
         groupedCartItems.stream().forEach(id -> addToCart(id));
         Order order = orderManager.createOrder(new Address());
         orderManager.changeOrderStatus(order.id, Order.Status.PAYMENT_COMPLETED);
         orderManager.changeOrderType(order.id, paymentMethodId);
+        
+        updateDiscountedPrices(order, cartItems);
     }   
     
-    public List<ResturantCartItem> fetchAllCartItems(List<String> ids) {
+    public List<ResturantCartItem> fetchAllCartItems(List<ResturantCartItem> ids) {
         List<ResturantCartItem> retCartItems = new ArrayList();
         List<TableSession> usedSessions = new ArrayList();
         
-        for (String cartId : ids) {
+        for (ResturantCartItem cartId : ids) {
+            boolean found = false;
             for (TableSession tableSession : sessions.values()) {
-                if (tableSession.hasItem(cartId)) {
-                    ResturantCartItem item = tableSession.fetchAndRemove(cartId);
+                if (tableSession.hasItem(cartId.id)) {
+                    ResturantCartItem item = tableSession.fetchAndRemove(cartId.id);
                     retCartItems.add(item);
                     usedSessions.add(tableSession);
+                    found = true;
                 }
+            }
+            
+            if (!found) {
+                retCartItems.add(cartId);
             }
         }
         
@@ -288,7 +295,7 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     }
 
     @Override
-    public void payOnRoom(PmsRoomSimple room, List<String> cartItemsIds) {
+    public void payOnRoom(PmsRoomSimple room, List<ResturantCartItem> cartItemsIds) {
         Application paymentApp = storeApplicationPool.getApplication("f86e7042-f511-4b9b-bf0d-5545525f42de");
         if (paymentApp == null)
             throw new NullPointerException("Can not pay to room as PayOnRoom is not activated");
@@ -304,8 +311,8 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         }
     }
 
-    private List<CartItem> getGroupedCartItems(List<String> cartItemIds) {
-        List<ResturantCartItem> allItems = fetchAllCartItems(cartItemIds);
+    private List<CartItem> getGroupedCartItems(List<ResturantCartItem> cartItems) {
+        List<ResturantCartItem> allItems = fetchAllCartItems(cartItems);
         HashMap<String, CartItem> allCartItems = new HashMap();
         
         for (ResturantCartItem item : allItems) {
@@ -321,5 +328,19 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         }
         
         return new ArrayList(allCartItems.values());
+    }
+
+    private void updateDiscountedPrices(Order order, List<ResturantCartItem> cartItems) {
+        for (ResturantCartItem cartItem : cartItems) {
+            for (CartItem icartItem : order.cart.getItems()) {
+                if (icartItem.getProduct().equals(cartItem.productId)) {
+                    if (cartItem.discountedPrice > 0) {
+                        order.updatePrice(icartItem.getCartItemId(), cartItem.discountedPrice);
+                    }
+                }
+            }
+        }
+        
+        orderManager.saveOrder(order);
     }
 }

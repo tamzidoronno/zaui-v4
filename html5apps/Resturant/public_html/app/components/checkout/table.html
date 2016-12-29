@@ -1,40 +1,55 @@
-
-<div>
-    Tøm listen!
-    <br/>
-    <div ng-repeat="table in getTables()" class="checkout_tableoverview">
-        <div class="checkout_tablenameheader">{{ table.name }}</div>
-        
-        <div class="checkout_productoverview">
-            
-            <div ng-repeat="personnumber in getPersons(table)" class='checkout_productoverview_inner'>
-                <div ng-click='transferAllItemForTableAndPerson(table, personnumber)' ng-if='personnumber == 0' class='person_header_name'><i class='fa fa-arrow-down'></i>General</div>
-                <div ng-click='transferAllItemForTableAndPerson(table, personnumber)' ng-if='personnumber > 0' class='person_header_name'><i class='fa fa-arrow-down'></i>Person {{ personnumber}}</div>
-                
-                <div>
-                    <div ng-repeat="product in getProducts(table, personnumber)" class="productcartbutton"  ng-class="getProductCount(product, table, personnumber) > 0 ? 'inuse' : ''" ng-click="addSingleProduct(product, table, personnumber)">
-                        {{ product.name }}
-                        <div>{{ getProductCount(product, table, personnumber) }}</div>
-                    </div>
-                </div>
-                
-            </div>
-            
-        </div>
-        
-    </div>
-    
-    <div class="button">Add table</div>
+<div class='checkout_toparea'>
+    <div ng-if="!standalone" class="small_button addmoretables"><i class='fa fa-plus'></i>Add table</div>
+    <div ng-click='showMoreProducts()' class='small_button showmoreproducts'><i class='fa fa-shopping-bag'></i>More products</div>
 </div>
 
+<div class="checkout_productList">
+    <div class='close_checkout_list' ng-click='closeCheckoutList()'><i class='fa fa-close'></i></div>
+    <div ng-repeat="list in productLists" >
+        <div class="listnametitle">{{ list.listName }}</div>
+        <div class="productlistinnner">
+            <div ng-repeat="product in getProductsForList(list)" productid="{{product.id}}" class="productcartbutton highlighted" ng-right-click="removeProduct(product)" ng-swipe-right="removeProduct(product)" ng-click="addToCart(product)">
+                {{ product.name }}
+            </div>
+        </div>
+    </div>    
+</div>
+
+
 <div class='summaryview'> 
-    <div ng-repeat='product in getSelectedProducts()' ng-click="removeProduct(product)">
-        {{ getSelectedCount(product) }} x {{ product.name }}
+    
+    <div ng-if="!standalone" class="tableoverviewwindow_checkout">
+        <div ng-repeat="table in getTables()" class="checkout_tableoverview">
+            <div class="checkout_tablenameheader">{{ table.name }}</div>
+
+            <div class="checkout_productoverview">
+
+                <div ng-repeat="personnumber in getPersons(table)" class='checkout_productoverview_inner'>
+                    <div ng-click='transferAllItemForTableAndPerson(table, personnumber)' ng-if='personnumber == 0' class='person_header_name'><i class='fa fa-arrow-down'></i>General</div>
+                    <div ng-click='transferAllItemForTableAndPerson(table, personnumber)' ng-if='personnumber > 0' class='person_header_name'><i class='fa fa-arrow-down'></i>Person {{ personnumber}}</div>
+
+                    <div>
+                        <div ng-repeat="product in getProducts(table, personnumber)" class="productcartbutton"  ng-class="getProductCount(product, table, personnumber) > 0 ? 'inuse' : ''" ng-click="addSingleProduct(product, table, personnumber)">
+                            {{ product.name }}
+                            <div>{{ getProductCount(product, table, personnumber) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="payment_summary">
+        <div ng-if="getSelectedProducts().length === 0">Ingen produkter lagt til.</div>
+        <div ng-repeat='product in getSelectedProducts()' class="summary_product_row">
+            <div class="productname" ng-click="removeProduct(product)">{{ getSelectedCount(product) }} x {{ product.name }}</div><div class="price" ng-click="changePrice(product)"><div ng-class="product.discountedPrice ? 'discountedprice' : ''">{{ product.price }} ,-</div><div ng-if="product.discountedPrice">{{ product.discountedPrice }},-</div></div>
+        </div>
+
+        
+        <div class="total"> Totalt: Kr {{ getTotal() }},-</div>
     </div>
     
-    Totalt: Kr {{ getTotal() }},-
-    
-    <div ng-if='getTotal() > 0'>
+    <div ng-if='getTotal() !== 0'>
         <div class='button paymentbutton' ng-repeat='paymentMethod in paymentMethods' ng-click='goToPaymentWindow(paymentMethod)'>
             {{ getPaymentName(paymentMethod) }}
         </div>

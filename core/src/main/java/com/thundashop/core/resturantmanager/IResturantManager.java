@@ -52,8 +52,8 @@ interface IResturantManager {
     public TableData getCurrentTableData(String tableId);
     
     @Customer
-    public void completePayment(String paymentMethodId, List<String> cartItemIds);
+    public void completePayment(String paymentMethodId, List<ResturantCartItem> cartItemIds);
     
     @Editor
-    public void payOnRoom(PmsRoomSimple room, List<String> cartItemsIds);
+    public void payOnRoom(PmsRoomSimple room, List<ResturantCartItem> cartItemsIds);
 }

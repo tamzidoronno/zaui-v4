@@ -98,6 +98,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveObject(order);
     }
     
+
+    @Override
+    public String createRegisterCardOrder() {        
+        User user = userManager.getUserById(getSession().currentUser.id);
+        user.preferredPaymentType = getStorePreferredPayementMethod().paymentId;
+        userManager.saveUserSecure(user);
+        
+        cartManager.clear();
+        Order order = createOrderForUser(getSession().currentUser.id);
+        return order.id;
+    }    
     
     @Override
     public Order creditOrder(String orderId) {

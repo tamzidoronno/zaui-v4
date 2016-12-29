@@ -1,0 +1,44 @@
+<div class='additionalinfo row'>
+    <a ui-sref="mainpage"><i class='fa fa-arrow-left' style='color:#fff; float:left;'></i></a>
+    Addon view {{view.name}}</div>
+<div class='row'>
+    <div class="input-group">
+      <input type="date" class="form-control" ng-model="selectedDay">
+      <span class="input-group-addon" id="basic-addon2"  ng-click="loadAddonsList()">Update</span>
+    </div>
+</div>
+
+<div class='row ng-hide loading' ng-show="loading"><i class="fa fa-spinner fa-spin"></i></div>
+
+<div class='row ng-hide' ng-show="notfound">
+        <div class="col-xs-12">
+            <br>
+            Sorry, no entries where found for this date.
+            <br>
+            <br>
+        </div>
+</div>
+<div class='row' style="border-bottom: solid 1px #bbb;"></div>
+<div class='row ng-hide breakfastlistrow' ng-show="!loading" ng-repeat="addon in addonslist">
+    <div class="col-xs-3 col-md-1 info">{{addon.roomName}}<br>
+        &nbsp;
+    </div>
+    <div class="col-xs-3 col-md-1 info">
+        {{addon.count}}x<br>{{addon.productName}}</div>
+    <div class="col-xs-6  col-md-9">
+        {{addon.name}}<br>
+        <span style='color:#bbb'>{{addon.owner}}</span>
+    </div>
+</div>
+<div class='row ng-hide' ng-show="!loading">
+    <div class="col-xs-10">
+        <b>Total number of addons : {{addonsCount}}</b>
+    </div>
+</div>
+
+
+<div class='additionalinfobottom row'>
+    <div style='text-align:center; font-size: 20px; padding: 10px; color:#fff;'>
+        <a ui-sref="mainpage"><i class='fa fa-home' style='color:#fff;'></i></a>
+    </div>
+</div>

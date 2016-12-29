@@ -19,6 +19,11 @@ angular.module('app', ['ui.router'])
         templateUrl: "pages/guestinfo.html",
         controller: getshop.guestInfoController
     })
+    .state('addonview', {
+        url: '/addonview/:viewid',
+        templateUrl: "pages/addonview.html",
+        controller: getshop.addonviewController
+    })
     .state('cleaningCheckout', {
         url: '/cleaning/checkout/:roomName',
         templateUrl: "pages/cleaningcheckout.html",

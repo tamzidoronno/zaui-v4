@@ -46,6 +46,7 @@ August;-;August
 Availability;-;Tilgjengelighet
 Available positions;-;Ledige plasser
 Available spots;-;Ledige plasser
+Available when;-;Tilgjengelig når
 Avg.;-;Gj.snitt
 Avg.<br>price;-;Gjsnitt<br>pris
 Back to page;-;Tilbake til siden
@@ -211,6 +212,7 @@ Field is required;-;Feltet er påkrevd
 First event;-;Første event
 Fixed price;-;Fast pris
 Flip contect to add content underneat this cell;-;Flipp cellen for å legge til innhold under denne cellen
+Forgot password?;-;Glemt passord?
 Fr;-;Fr
 Fri;-;Fre
 Friday;-;Fredag
@@ -397,7 +399,6 @@ Payment failed;-;Betaling feilet
 Payment fee;-;Betalingsgebyr
 Payment information;-;Betalings informasjon
 Payment successfully completed;-;Betalingen gjennomført
-Periode type;-;Periode type
 Phone;-;Telefon
 Phone number for company;-;Tlf nummer for firmaet
 Pillow;-;Putetrekk
@@ -437,7 +438,6 @@ Products;-;Produkter
 Public key is found in braintree account.;-;Den offentlig nøkkelen er noe du finner på kontoen din hos braintree.
 Read more;-;Les mer
 Read the terms and conditions;-;Les bruksvilkårene
-Recover password;-;Gjennopprett passord
 Reference key;-;Referanse nummer
 Register;-;Registrer
 Register email;-;Registrer epost

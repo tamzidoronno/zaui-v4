@@ -16,6 +16,7 @@ getshop.mainpageController = function($scope, $state) {
         $scope.hasBreakfast = false;
         var config = getshopclient.PmsManager.getConfiguration(getMultilevelName());
         config.done(function(res) {
+            $scope.views = res.mobileViews;
             if(res.arxHostname) {
                 $scope.hasDoorControl = true;
             }

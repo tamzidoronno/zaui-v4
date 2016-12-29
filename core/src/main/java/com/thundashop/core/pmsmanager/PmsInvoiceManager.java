@@ -1785,6 +1785,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             List<Order> orders = getOrdersFromRoom(simple.pmsRoomId);
             Order latestOrder = getLatestOrder(orders, start, end);
             PmsSubscriptionOverview toAdd = new PmsSubscriptionOverview();
+            
             toAdd.price = simple.price;
             toAdd.paid = false;
             toAdd.roomName = simple.room;
@@ -1792,6 +1793,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             toAdd.orderValue = 0.0;
             toAdd.start = simple.start;
             toAdd.end = simple.end;
+            toAdd.userId = pmsManager.getBookingUnfinalized(simple.bookingId).userId;
+            
+            User user = userManager.getUserById(toAdd.userId);
+            toAdd.cardsSaved = user.savedCards.size();
+            
             if(latestOrder != null) {
                 toAdd.orderCreationDate = latestOrder.rowCreatedDate;
                 toAdd.orderValue = getTotalValue(latestOrder, simple.pmsRoomId);

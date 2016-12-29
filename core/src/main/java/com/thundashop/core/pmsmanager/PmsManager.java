@@ -4343,6 +4343,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBooking booking : bookings.values()) {
             if(booking.userId.equals(userId)) {
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    if(room.isDeleted() || booking.isDeleted) {
+                        continue;
+                    }
                     PmsRoomSimple res = filter.convertRoom(room, booking);
                     result.add(res);
                 }
@@ -4532,6 +4535,75 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return unpaidBookings;
+    }
+
+    @Override
+    public List<PmsBookingAddonViewItem> getItemsForView(String viewId, Date date) {
+        Calendar startCal = Calendar.getInstance();
+        Calendar endCal = Calendar.getInstance();
+        
+        PmsMobileView view = getConfiguration().mobileViews.get(viewId);
+        
+        startCal.setTime(date);
+        endCal.setTime(date);
+        
+        startCal.set(Calendar.HOUR_OF_DAY, 0);
+        startCal.set(Calendar.MINUTE, 0);
+        startCal.set(Calendar.SECOND, 0);
+        
+        endCal.set(Calendar.HOUR_OF_DAY, 23);
+        endCal.set(Calendar.MINUTE, 59);
+        endCal.set(Calendar.SECOND, 59);
+        
+        Date startDate = startCal.getTime();
+        Date endDate = endCal.getTime();
+        
+        List<PmsBookingAddonViewItem> items = new ArrayList();
+        
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                for(PmsBookingAddonItem item : room.addons) {
+                    if(!view.products.contains(item.productId)) {
+                        continue;
+                    }
+                    boolean toBeAdded = item.date.after(startDate) && item.date.before(endDate);
+                    if(view.viewType == PmsMobileView.PmsMobileViewType.ALLACTIVE) {
+                        if(room.isActiveOnDay(date)) {
+                            toBeAdded = true;
+                        }
+                    }
+                    if(toBeAdded) {
+                        if(view.paidFor && !pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
+                            continue;
+                        }
+                        PmsBookingAddonViewItem toAdd = new PmsBookingAddonViewItem();
+                        toAdd.count = item.count;
+                        toAdd.productName = productManager.getProduct(item.productId).name;
+                        if(!room.guests.isEmpty()) {
+                            toAdd.name = room.guests.get(0).name;
+                        }
+                        BookingItem bookingItem = bookingEngine.getBookingItem(room.bookingItemId);
+                        if(bookingItem != null) {
+                            toAdd.roomName = bookingItem.bookingItemName;
+                        }
+                        toAdd.owner = userManager.getUserById(booking.userId).fullName;
+                        items.add(toAdd);
+                    }
+                }
+            }
+        }
+        
+        Collections.sort(items, new Comparator<PmsBookingAddonViewItem>(){
+            public int compare(PmsBookingAddonViewItem s1, PmsBookingAddonViewItem s2) {
+                return s1.owner.compareTo(s2.owner);
+            }
+        });
+        
+        return items;
+    }
+
+    PmsBooking getBookingUnfinalized(String bookingId) {
+        return bookings.get(bookingId);
     }
 
 }

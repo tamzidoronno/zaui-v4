@@ -15,6 +15,11 @@
     <a ui-sref="doors"><div class='col-md-4' ng-show="hasDoorControl"><span class='box'><i class='fa fa-sign-in'></i><span class='text'>Doors</span></span></div></a>
     <a ui-sref="cleaning"><div class='col-md-4' ng-show="hasCleaning"><span class='box'><i class='fa fa-paint-brush'></i><span class='text'>Cleaning</span></span></div></a>
     <a ui-sref="caretaker"><div class='col-md-4' ng-show="hasCaretaker"><span class='box'><i class='fa fa-medkit'></i><span class='text'>Caretaker</span></span></div></a>
+    
+    <span ng-repeat="view in views" class='orderrow row no-gutter col-md-4'>
+        <a ui-sref="addonview({ viewid: '{{view.id}}' })"><span class='box'><i class='fa fa-{{view.icon}}'></i><span class='text'>{{view.name}}</span></span></a>
+    </span>
+    
 </div>
 <div class='row'>
     <br>

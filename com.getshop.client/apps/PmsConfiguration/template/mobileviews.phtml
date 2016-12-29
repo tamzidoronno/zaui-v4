@@ -1,0 +1,65 @@
+<?php
+ /* @var $this ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+$viewtypes = array();
+$viewtypes[1] = "Daily";
+$viewtypes[2] = "All active";
+?>
+<br>
+<h1>PMS views</h1>
+<span gstype='form' method='createPmsView'>
+    <input type='txt' placeholder='Name' gsname='name'><span class='pmsbutton' gstype='submit'>Create view</span>
+</span>
+<br>
+<h1>Existing views</h1>
+<?php
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$views = (array)$config->mobileViews;
+echo "<span class='productview'></span>";
+if(!$views || sizeof($views) == 0) {
+    echo "No views created yet.";
+} else {
+    echo "<table width='100%' cellspacing='1' cellpadding='1'>";
+    echo "<tr>";
+    echo "<th></th>";
+    echo "<th align='left' width='10'>Paid</th>";
+    echo "<th align='left' width='10'>Name</th>";
+    echo "<th align='left' width='10'>Type</th>";
+    echo "<th align='left' width='10'>Icon</th>";
+    echo "<th align='left' width='10'>Delay</th>";
+    echo "<th align='left'>Products</th>";
+    echo "<th align='left' width='10'></th>";
+    echo "</tr>";
+    foreach($views as $view) {
+        $paidFor = $view->paidFor ? "checked" : "";
+        echo "<tr viewid='".$view->id."' gstype='form' method='updateMobileView'>";
+        echo "<input type='hidden' value='".$view->id."' gsname='viewid'>";
+        echo "<td width='10'><i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' gsvalue='". $view->id . "' method='removePmsView' gsname='id'></i></id>";
+        echo "<td align='center'><input type='checkbox' gsname='paidFor' title='Only display items paid for' $paidFor></td>";
+        echo "<td><input type='txt' value='" . $view->name . "' gsname='name'></td>";
+        echo "<td>";
+        echo "<select gsname='viewtype'>";
+        foreach($viewtypes as $id => $val) {
+            $selected = ($id == $view->viewType) ? "SELECTED" : "";
+            echo "<option value='$id' $selected>$val</option>";
+        }
+        echo "</select>";
+        echo "</td>";
+        echo "<td>";
+        echo "<input type='txt' value='".$view->icon."' gsname='icon'>";
+        echo "</td>";
+        echo "<td>";
+        echo "<input type='txt' value='".$view->daysDisplacement."' gsname='daysDisplacement' style='width: 40px;' title='Days delayed'>";
+        echo "</td>";
+        echo "<td>";
+        echo "<span class='productsadded'>";
+        $this->printProductsAdded($view->id);
+        echo "</span>";
+        echo "<i class='fa fa-plus-circle loadproducts' style='cursor:pointer;'></i>";
+        echo "</td>";
+        echo "<td><input type='button' value='Save' gstype='submit'></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+
+?>

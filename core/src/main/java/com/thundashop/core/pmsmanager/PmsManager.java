@@ -4610,7 +4610,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(coupon != null) {
             code = coupon.priceCode;
         }
-        return getPriceObject(code);
+        PmsPricing priceplan = getPriceObject(code);
+        if(priceplan == null) {
+            priceplan = new PmsPricing();
+        }
+        return priceplan;
+    }
+
+    @Override
+    public void addCartItemToRoom(CartItem item, String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+       
+        Product product = item.getProduct();
+        
+        PmsBookingAddonItem addon = new PmsBookingAddonItem();
+        addon.productId = product.id;
+        addon.count = item.getCount();
+        addon.price = product.price;
+        addon.priceExTaxes = product.priceExTaxes;
+        addon.variations = product.variationCombinations;
+        addon.date = item.getStartingDate();
+        if(addon.date == null) {
+            addon.date = new Date();
+        }
+        addon.description = product.description;
+        
+        room.addons.add(addon);
     }
 
 }

@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
@@ -91,6 +92,9 @@ public interface IPmsManager {
     
     @Administrator
     public String setBookingItemAndDate(String roomId, String itemId, boolean split, Date start, Date end);
+    
+    @Administrator
+    public void addCartItemToRoom(CartItem item, String pmsBookingRoomId);
     
     @Administrator
     public String setNewRoomType(String roomId, String bookingId, String newType);

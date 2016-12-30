@@ -4,11 +4,12 @@ import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
 
 public class PmsBookingAddonItem extends TranslationHandler implements Serializable {
-
 
     public static class AddonTypes {
         public static Integer BREAKFAST = 1;
@@ -33,6 +34,9 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public boolean isAvailableForBooking = false;
     public boolean isAvailableForCleaner = false;
     public boolean dependsOnGuestCount = false;
+    Map<String, String> variations = new HashMap();
+    String description;
+
     
     @Translation
     public String descriptionWeb = "";

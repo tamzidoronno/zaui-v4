@@ -253,8 +253,31 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
                         $scope.$apply();
                     });
                 });
+                
             }
         }
+        $scope.noAddons = false;
+        if($scope.room.addons.length === 0) {
+            $scope.noAddons = true;
+        } else {
+            var products = getshopclient.ProductManager.getAllProducts();
+            products.done(function(res) {
+                $scope.products = res;
+                for(var key in $scope.room.addons) {
+                    var item = $scope.room.addons[key];
+                    for(var prodKey in res) {
+                        var product = res[prodKey];
+                        if(product.id == item.productId) {
+                            item.productName = product.name;
+                        }
+                    }
+                }
+                $scope.$apply();
+            })
+
+        }
+        console.log($scope.room.addons);
+        
         $scope.booking = res;
         $scope.$apply();
         var loadingUser = getshopclient.UserManager.getUserById(res.userId);

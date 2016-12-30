@@ -245,6 +245,20 @@
 </div>
 
 <div class='row'><br></div>
+<div class='additionalinfobottom row'></div>
+
+<div class='additionalinfo row'>Addons</div>
+<div ng-repeat="addon in room.addons" class='guestrow row no-gutter'>
+    <div class='col-xs-12'>
+        {{addon.count}}x
+        {{addon.productName}} - 
+        (price: {{addon.price}})
+    </div>
+</div>
+<div class="row" ng-show="noAddons">
+    <div class="col-md-12">No addons added</div>
+</div>
+
 <div class='additionalinfobottom row'>
     <div style='text-align:center; font-size: 20px; padding: 10px; color:#fff;'>
         <a ui-sref="mainpage"><i class='fa fa-home' style='color:#fff;'></i></a>

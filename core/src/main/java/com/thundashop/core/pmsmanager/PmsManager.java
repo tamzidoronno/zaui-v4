@@ -2830,7 +2830,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Coupon getCouponCode(String couponCode) {
         if(couponCode.contains(":")) {
             String[] couponCodes = couponCode.split(":");
-            couponCode = couponCodes[1];
+            if(couponCodes.length > 1) {
+                couponCode = couponCodes[1];
+            }
         }
         
         return cartManager.getCoupon(couponCode); 

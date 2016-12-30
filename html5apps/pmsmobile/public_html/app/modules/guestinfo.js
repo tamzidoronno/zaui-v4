@@ -3,6 +3,7 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
     var bookingid = $stateParams.bookingid;
     var roomid = $stateParams.roomid;
     $scope.doPayOrder = false;
+    $scope.displaySendPaymentLink = false;
     
     $scope.saveUser = function() {
         var saving = getshopclient.UserManager.saveUser($scope.user);
@@ -10,6 +11,26 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             alert('saved');
         });
     }
+    
+    $scope.showSendPaymentLink = function(order) {
+        $scope.displaySendPaymentLink = true;
+        $scope.selectedOrder = order;
+    }
+    
+    $scope.sendPaymentLink = function(order) {
+        var orderId = $scope.selectedOrder.id;
+        var bookingId = $scope.booking.id;
+        var email = $scope.selectedEmail;
+        var prefix = $scope.selectedPrefix;
+        var phone = $scope.selectedPhone;
+        
+        var sending = getshopclient.PmsManager.sendPaymentLink(getMultilevelName(), orderId, bookingId, email, prefix, phone);
+        sending.done(function() {
+            alert('Payment link has been sent');
+            $scope.displaySendPaymentLink = false;
+            $scope.$apply();
+        });
+    },
     
     $scope.changeRoom = function(newroom) {
         var bookingid = $scope.booking.id;
@@ -239,6 +260,11 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         var loadingUser = getshopclient.UserManager.getUserById(res.userId);
         loadingUser.done(function(user) {
             $scope.user = user;
+            
+            $scope.selectedEmail = user.emailAddress;
+            $scope.selectedPrefix = user.prefix;
+            $scope.selectedPhone = user.cellPhone;
+            
             $scope.$apply();
         });
         

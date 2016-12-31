@@ -627,6 +627,10 @@ public class PmsManagerProcessor {
                 continue;
             }
             
+            if(booking.isDeleted || booking.getActiveRooms().isEmpty()) {
+                continue;
+            }
+            
             if(config.requirePayments && booking.createOrderAfterStay && booking.isEnded()) {
                 NewOrderFilter filter = new NewOrderFilter();
                 filter.createNewOrder = true;

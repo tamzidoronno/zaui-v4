@@ -23,4 +23,5 @@ public class Coupon extends DataCommon {
     public PmsRepeatingData whenAvailable = null;
     public String pmsWhenAvailable = "";
     public List<String> productsToSupport = new ArrayList();
+    public String priceCode = "default";
 }

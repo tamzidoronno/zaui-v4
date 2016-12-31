@@ -44,14 +44,7 @@ class PmsPricing extends \WebshopApplication implements \Application {
             $pricingObject->dailyPrices = $prices;
         }
 
-        foreach($_POST['data']['channeldiscount'] as $chan => $discount) {
-                if(!$pricingObject->channelDiscount) {
-                    $pricingObject->channelDiscount = new \stdClass();
-                }
-                $pricingObject->channelDiscount->{$chan} = $discount;
-        }
-        
-        $pricingObject->defaultPriceType = $_POST['data']['pricetype'];
+//        $pricingObject->defaultPriceType = $_POST['data']['pricetype'];
         $pricingObject->pricesExTaxes = $_POST['data']['prices_ex_taxes'] == "true";
         $pricingObject->privatePeopleDoNotPayTaxes = $_POST['data']['privatePeopleDoNotPayTaxes'] == "true";
         $pricingObject->derivedPrices = $_POST['data']['derivedPrices'];
@@ -77,6 +70,135 @@ class PmsPricing extends \WebshopApplication implements \Application {
         }
     }
 
+    
+    public function createcoupon() {
+        $coupon = new \core_cartmanager_data_Coupon();
+        $coupon->amount = $_POST['data']['amount'];
+        $coupon->type = $_POST['data']['type'];
+        $coupon->code = $_POST['data']['code'];
+        $coupon->timesLeft = (int)$_POST['data']['times'];
+        $coupon->priceCode = $this->getSelectedPricePlan();
+        
+        
+        $this->addCouponError = "";
+        if ($coupon->code == "" ) {
+            $this->addCouponError = "Code can not be empty";
+        }
+        
+        if (!is_numeric($coupon->timesLeft)) {
+            $this->addCouponError = "Amount must be a number";
+        }
+        
+        if (!$this->int_ok($coupon->amount) || $coupon->amount < 0) {
+            $this->addCouponError = "Times must be a number";
+        }
+        
+        if ($coupon->type == "PERCENTAGE" && ($coupon->amount < 0 || $coupon->amount > 100)) {
+            $this->addCouponError = "Not a valid percentage";
+        }
+        
+        if(!$this->addCouponError) {
+            $this->getApi()->getCartManager()->addCoupon($coupon);
+        }
+    }
+    
+    private function int_ok($val) {
+        return ($val !== true) && ((string)(int) $val) === ((string) $val);
+    }
+    
+    public function getRepeatingSummary($coupon) {
+        if(!$coupon->whenAvailable) {
+            return "";
+        }
+        
+        $text = "";
+        if($coupon->whenAvailable->repeattype == "repeat") {
+            if($coupon->whenAvailable->data->repeatPeride == "3") {
+                $text = $this->__w("Daily");
+            }
+            if($coupon->whenAvailable->data->repeatPeride == "1") {
+                $text = $this->__w("Every {periode} week") . " (";
+                $text = str_replace("{periode}", $coupon->whenAvailable->data->repeatEachTime, $text);
+                if($coupon->whenAvailable->data->repeatMonday) {
+                    $text .= strtolower($this->__w("Mon")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatTuesday) {
+                    $text .= strtolower($this->__w("Tue")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatWednesday) {
+                    $text .= strtolower($this->__w("Wed")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatThursday) {
+                    $text .= strtolower($this->__w("Thu")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatFriday) {
+                    $text .= strtolower($this->__w("Fri")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatSaturday) {
+                    $text .= strtolower($this->__w("Sat")) . ", ";
+                }
+                if($coupon->whenAvailable->data->repeatSunday) {
+                    $text .= strtolower($this->__w("Sun")) . ", ";
+                }
+                $text = substr($text, 0, -2) . ")";
+            }
+            if($coupon->whenAvailable->data->repeatPeride == "2") {
+                if($coupon->whenAvailable->data->repeatAtDayOfWeek) {
+                    $text = $this->__w("Repeats montly same day in week");
+                } else {
+                    $text = $this->__w("Repeats montly same date in month");
+                }
+            }
+            
+            $text .= " " . $this->__w("until") . " " . date("d.m.Y", strtotime($coupon->whenAvailable->data->endingAt));
+        }
+        if($coupon->pmsWhenAvailable == "REGISTERED") {
+            $text .= " (" . $this->__w("when booked") . ")";
+        } else {
+            $text .= " (" . $this->__w("when staying") . ")";
+        }
+        return $text;
+    }
+    
+    
+    public function loadCouponRepeatingDataPanel() {
+        $this->includefile("addmoredates");
+    }
+    
+    public function addRepeatingDates() {
+        $repeat = new \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary();
+        $data = $repeat->createRepeatingDateObject();
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['couponid']);
+        $coupon->pmsWhenAvailable = $_POST['data']['pmsWhenAvailable'];
+        $coupon->whenAvailable = $data;
+        
+        $coupon->productsToSupport = array();
+        foreach($_POST['data'] as $key => $value) {
+            if($value !== "true") {
+                continue;
+            }
+            if(stristr($key, "productdiscount_")) {
+                $product = str_replace("productdiscount_", "", $key);
+                $coupon->productsToSupport[] = $product;
+            }
+        }
+        
+        $this->getApi()->getCartManager()->addCoupon($coupon);
+    }
+
+    public function removeCoupon() {
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['id']);
+        $this->getApi()->getCartManager()->removeCoupon($coupon->code);
+    }
+    
+    public function savecommentoncoupon() {
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['couponid']);
+        $coupon->description = $_POST['data']['description'];
+        $this->getApi()->getCartManager()->addCoupon($coupon);
+        
+    }
+    
+    
     public function getStart() {
         if(isset($_SESSION['pmspricing'][$this->getSelectedName()]['start'])) {
             return $_SESSION['pmspricing'][$this->getSelectedName()]['start'];

@@ -3,6 +3,7 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
     var bookingid = $stateParams.bookingid;
     var roomid = $stateParams.roomid;
     $scope.doPayOrder = false;
+    $scope.displaySendPaymentLink = false;
     
     $scope.saveUser = function() {
         var saving = getshopclient.UserManager.saveUser($scope.user);
@@ -10,6 +11,26 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             alert('saved');
         });
     }
+    
+    $scope.showSendPaymentLink = function(order) {
+        $scope.displaySendPaymentLink = true;
+        $scope.selectedOrder = order;
+    }
+    
+    $scope.sendPaymentLink = function(order) {
+        var orderId = $scope.selectedOrder.id;
+        var bookingId = $scope.booking.id;
+        var email = $scope.selectedEmail;
+        var prefix = $scope.selectedPrefix;
+        var phone = $scope.selectedPhone;
+        
+        var sending = getshopclient.PmsManager.sendPaymentLink(getMultilevelName(), orderId, bookingId, email, prefix, phone);
+        sending.done(function() {
+            alert('Payment link has been sent');
+            $scope.displaySendPaymentLink = false;
+            $scope.$apply();
+        });
+    },
     
     $scope.changeRoom = function(newroom) {
         var bookingid = $scope.booking.id;
@@ -232,13 +253,41 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
                         $scope.$apply();
                     });
                 });
+                
             }
         }
+        $scope.noAddons = false;
+        if($scope.room.addons.length === 0) {
+            $scope.noAddons = true;
+        } else {
+            var products = getshopclient.ProductManager.getAllProducts();
+            products.done(function(res) {
+                $scope.products = res;
+                for(var key in $scope.room.addons) {
+                    var item = $scope.room.addons[key];
+                    for(var prodKey in res) {
+                        var product = res[prodKey];
+                        if(product.id == item.productId) {
+                            item.productName = product.name;
+                        }
+                    }
+                }
+                $scope.$apply();
+            })
+
+        }
+        console.log($scope.room.addons);
+        
         $scope.booking = res;
         $scope.$apply();
         var loadingUser = getshopclient.UserManager.getUserById(res.userId);
         loadingUser.done(function(user) {
             $scope.user = user;
+            
+            $scope.selectedEmail = user.emailAddress;
+            $scope.selectedPrefix = user.prefix;
+            $scope.selectedPhone = user.cellPhone;
+            
             $scope.$apply();
         });
         

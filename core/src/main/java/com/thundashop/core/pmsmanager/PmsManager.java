@@ -199,7 +199,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         super.setSession(session);
     }
     
-    public PmsPricing getPriceObject() {
+    private PmsPricing getDefaultPriceObject() {
         PmsPricing price = priceMap.get("default");
         if(price != null) {
             return price;
@@ -208,7 +208,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     public PmsPricing getPriceObject(String code) {
-        return priceMap.get(code);
+        PmsPricing object = priceMap.get(code);
+        if(object == null) {
+            object = priceMap.get("default");
+        }
+        return object;
     }
     
     @Override
@@ -242,7 +246,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.start = start;
             room.date.end = end;
             
-            String couponcode = getCouponCode("");
             PmsBooking booking = new PmsBooking();
             booking.priceType = PmsBooking.PriceType.daily;
             setPriceOnRoom(room, true, booking);
@@ -271,7 +274,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.channel = booking.couponCode.split(":")[0];
         }
 
-        PmsPricing prices = getPriceObject();
+        PmsPricing prices = getPriceObjectFromBooking(booking);
         booking.priceType = prices.defaultPriceType;
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             if (room.bookingItemTypeId == null || room.bookingItemTypeId.isEmpty()) {
@@ -290,7 +293,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             pmsInvoiceManager.updatePriceMatrix(booking, room, Integer.SIZE);
 
             room.count = totalDays;
-            String couponCode = getCouponCode(booking.couponCode);
             setPriceOnRoom(room, true, booking);
             room.updateBreakfastCount();
             
@@ -703,7 +705,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             saveBooking(booking);
         }
         
-        PmsPricing prices = getPriceObject();
+        PmsPricing prices = getPriceObjectFromBooking(booking);
         if(prices != null && prices.defaultPriceType == PmsBooking.PriceType.daily && configuration.requirePayments) {
             booking.calculateTotalCost();
         }
@@ -1241,7 +1243,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
-        PmsPricing prices = getPriceObject();
+        PmsPricing prices = getDefaultPriceObject();
         PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings, prices.pricesExTaxes);
         builder.setBudget(getConfigurationSecure().budget);
         int totalRooms = bookingEngine.getBookingItems().size();
@@ -2825,17 +2827,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return errors;
     }
 
-    private String getCouponCode(String couponCode) {
-        Session loggedonuser = getSession();
-        if(loggedonuser != null && loggedonuser.currentUser != null && loggedonuser.currentUser.couponId != null) {
-            if(!loggedonuser.currentUser.couponId.isEmpty()) {
-                Coupon coupon = cartManager.getCouponById(loggedonuser.currentUser.couponId);
-                if(coupon != null) {
-                    return coupon.code;
-                }
+    private Coupon getCouponCode(String couponCode) {
+        if(couponCode.contains(":")) {
+            String[] couponCodes = couponCode.split(":");
+            if(couponCodes.length > 1) {
+                couponCode = couponCodes[1];
             }
         }
-        return couponCode; 
+        
+        return cartManager.getCoupon(couponCode); 
     }
 
     @Override
@@ -4604,6 +4604,41 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     PmsBooking getBookingUnfinalized(String bookingId) {
         return bookings.get(bookingId);
+    }
+
+    public PmsPricing getPriceObjectFromBooking(PmsBooking booking) {
+        String code = "default";
+        Coupon coupon = getCouponCode(booking.couponCode);
+        if(coupon != null) {
+            code = coupon.priceCode;
+        }
+        PmsPricing priceplan = getPriceObject(code);
+        if(priceplan == null) {
+            priceplan = new PmsPricing();
+        }
+        return priceplan;
+    }
+
+    @Override
+    public void addCartItemToRoom(CartItem item, String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+       
+        Product product = item.getProduct();
+        
+        PmsBookingAddonItem addon = new PmsBookingAddonItem();
+        addon.productId = product.id;
+        addon.count = item.getCount();
+        addon.price = product.price;
+        addon.priceExTaxes = product.priceExTaxes;
+        addon.variations = product.variationCombinations;
+        addon.date = item.getStartingDate();
+        if(addon.date == null) {
+            addon.date = new Date();
+        }
+        addon.description = product.description;
+        
+        room.addons.add(addon);
     }
 
 }

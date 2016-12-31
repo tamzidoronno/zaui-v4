@@ -13,7 +13,31 @@
     </div>
     <div class='col-xs-4' style='text-align:right;'>
         <span class='btn btn-success' div ng-show='order.status === 7' ng-click="doSendReciept(order)">Send reciept</span>
+        <span class='btn btn-success' ng-show='order.status !== 7' ng-click="showSendPaymentLink(order)">Send payment link</span>
         <span class='btn btn-success' ng-show='order.status !== 7' ng-click="doPayOrder(order)">Make payment</span>
+    </div>
+</div>
+
+<div class='row' ng-show="displaySendPaymentLink">
+    <div class='col-md-5'>
+        <label style="width:100%;">Email
+            <input type='text' class='form-control' ng-model="selectedEmail">
+        </label>
+    </div>
+    <div class='col-md-1'>
+        <label>Prefix
+            <input type='text' class='form-control' ng-model="selectedPrefix">
+        </label>
+    </div>
+    <div class='col-md-3'>
+        <label>Phone
+            <input type='text' class='form-control' ng-model="selectedPhone">
+        </label>
+    </div>
+    <div class='col-md-3'>
+        <label>&nbsp;
+            <span class="btn btn-success form-control" ng-click="sendPaymentLink()">Send payment link</span>
+        </label>
     </div>
 </div>
 
@@ -221,6 +245,20 @@
 </div>
 
 <div class='row'><br></div>
+<div class='additionalinfobottom row'></div>
+
+<div class='additionalinfo row'>Addons</div>
+<div ng-repeat="addon in room.addons" class='guestrow row no-gutter'>
+    <div class='col-xs-12'>
+        {{addon.count}}x
+        {{addon.productName}} - 
+        (price: {{addon.price}})
+    </div>
+</div>
+<div class="row" ng-show="noAddons">
+    <div class="col-md-12">No addons added</div>
+</div>
+
 <div class='additionalinfobottom row'>
     <div style='text-align:center; font-size: 20px; padding: 10px; color:#fff;'>
         <a ui-sref="mainpage"><i class='fa fa-home' style='color:#fff;'></i></a>

@@ -3,6 +3,7 @@
 /* @var $this ns_96b4d05e_68d9_4c89_9654_6edbe7548318\PmsRegisterCreditCard */
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 echo "<select class='selectitem' gsname='item'>";
+echo "<option value=''>Velg din bod</option>";
 foreach($items as $item) {
     echo "<option value='".$item->id."'>" . $item->bookingItemName . "</option>";
 }

@@ -34,6 +34,8 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public boolean isAvailableForBooking = false;
     public boolean isAvailableForCleaner = false;
     public boolean dependsOnGuestCount = false;
+    public boolean isIncludedInRoomPrice = false;
+
     Map<String, String> variations = new HashMap();
     String description;
 

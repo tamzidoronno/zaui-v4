@@ -232,12 +232,16 @@ class PmsPricing extends \WebshopApplication implements \Application {
         }
         
         
-        $pricingObject = new \core_pmsmanager_PmsPricing();
+        $pricingObject = $this->getPrices();
         $pricingObject->progressivePrices = $result;
 
-        $pricingObject->defaultPriceType = $_POST['data']['pricetype'];
-
         $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $this->getSelectedPricePlan(), $pricingObject);
+    }
+    
+    public function changepricetype() {
+        $prices = $this->getPrices();
+        $prices->defaultPriceType = $_POST['data']['pricetype'];
+        $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $this->getSelectedPricePlan(), $prices);
     }
     
     public function getPrices() {

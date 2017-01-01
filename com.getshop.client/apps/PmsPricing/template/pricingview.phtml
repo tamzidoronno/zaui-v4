@@ -18,7 +18,6 @@ $pricetypes[8] = "Interval pricing";
 
 $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($this->getSelectedName());
 ?>
-
 <div style="border-bottom: solid 1px; margin-bottom: 20px; padding-bottom: 20px;">
     <?php
     foreach($priceCodes as $code) {
@@ -34,6 +33,19 @@ $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($this->getSelected
         <input type='text' gsname='newplan'><input type='button' value='Create new plan' gstype='submit'>
     </div>
 </div>
+
+<div method='changepricetype' gstype='form'>
+    <?php
+    echo "<select gsname='pricetype'>";
+    foreach($pricetypes as $id => $type) {
+        $selected = ($prices->defaultPriceType == $id) ? "SELECTED" : "";
+        echo "<option value='$id' $selected>" . $type . "</option>";
+    }
+    echo "</select> ";
+    echo "<input type='button' value='Change price type' gstype='submit'></input>";
+    ?>
+</div>
+
 <table width='100%'>
     <tr>
         <td valign='top'>

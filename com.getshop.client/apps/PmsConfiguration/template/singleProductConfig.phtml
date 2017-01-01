@@ -1,0 +1,52 @@
+<?php
+/* @var $this \ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$this->checkForAddonProductsToCreate($config);
+
+$addonConfig = $config->addonConfiguration;
+
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$addonItems = array();
+foreach($config->addonConfiguration as $item) {
+    $addonItems[$item->productId] = $item;
+}
+foreach($addonConfig as $conf) {
+    if($_POST['data']['id'] == $conf->productId) {
+        $selectedAddonConfig = $conf;
+        break;
+    }
+}
+
+if(!$selectedAddonConfig) {
+    $selectedAddonConfig = new core_pmsmanager_PmsBookingAddonItem();
+}
+$includedIn = (array)$selectedAddonConfig->includedInBookingItemTypes;
+?>
+<div gstype="form" method="saveProductConfig">
+    <input type='hidden' gsname='productId' gsvalue='<?php echo $_POST['data']['id']; ?>'>
+    <table width="80%" class="contactConfigTable">
+        <tr>
+            <td width="50%"><? echo $this->__w("Count"); ?></td>
+            <td width="50%"><input type="text" gsname="count" style='width:100%;' value="<? echo $selectedAddonConfig->count; ?>"></td>
+        </tr>
+        <tr>
+            <td width="50%">Is included in room price</td>
+            <?php $CHECKED = ($selectedAddonConfig->isIncludedInRoomPrice) ? "CHECKED" : ""; ?>
+            <td width="50%"><input type="checkbox" gsname="isIncludedInRoomPrice" style='width:100%;' <?php echo $CHECKED; ?>></td>
+        </tr>
+        <tr>
+            <td width="50%">Web description</td>
+            <td width="50%"><input type="text" gsname="descriptionWeb" style='width:100%;' value="<? echo $selectedAddonConfig->descriptionWeb; ?>"></td>
+        </tr>
+    </table>
+    <br><br>
+    Is included for types<br>
+    <?php
+    foreach($types as $type) {
+        $checked = in_array($type->id, $includedIn) ? "CHECKED" : "";
+        echo "<input type='checkbox' gsname='includefortype_".$type->id."' $checked>" . $type->name . "<br>";
+    }
+    ?>
+    
+    <input gstype="submit" type="button" value='Save'>
+</div>

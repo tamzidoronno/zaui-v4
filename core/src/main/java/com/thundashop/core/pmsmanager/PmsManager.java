@@ -4674,7 +4674,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         for(PmsBookingAddonItem item : room.addons) {
-            if(item.isIncludedInRoomPrice) {
+            if(getAddonOriginalItem(item).isIncludedInRoomPrice) {
                 Double roomPrice = room.price;
                 roomPrice -= item.price;
                 room.price = roomPrice;
@@ -4700,6 +4700,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private Double getRoomPriceFromPackage(PmsBookingAddonItem item) {
         return 10.0;
+    }
+
+    private PmsBookingAddonItem getAddonOriginalItem(PmsBookingAddonItem item) {
+        for(PmsBookingAddonItem item2 : getConfiguration().addonConfiguration.values()) {
+            if(item2.addonType == item.addonType) {
+                return item2;
+            }
+        }
+        return null;
     }
 
 }

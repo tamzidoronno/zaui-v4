@@ -162,6 +162,17 @@ $groups = $this->getApi()->getUserManager()->getAllGroups();
                 </div>
             </div>
             
+            <div class="textfield gss_setting">
+                <span class="title"><?php echo $this->__f("Is food?"); ?></span>
+                <div class="gss_onoff" gs_model="productmodel" gs_model_attr="isfood">
+                    <? $faclass = $product->isFood ? "fa-toggle-on" : "fa-toggle-off"; ?>
+                    <? echo $this->__f("Off"); ?><i class="fa <? echo $faclass; ?>"></i><? echo $this->__f("On"); ?>
+                </div>
+                <div class="description">
+                    <?php echo $this->__("Activate this if this if food, used for communication with the kitchen."); ?>
+                </div>
+            </div>
+            
             <div class="gss_setting" id="taxgroup">
                 <div class="text inline title"><?php echo $this->__f("Please select a tax group"); ?></div>
 

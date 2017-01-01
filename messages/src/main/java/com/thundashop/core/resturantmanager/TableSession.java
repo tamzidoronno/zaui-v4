@@ -28,20 +28,24 @@ public class TableSession extends DataCommon {
     @Transient
     public User createByUser = null;
 
+    public boolean first = true;
+    private List<ResturantCartItem> itemsAdded = new ArrayList();
+    private List<ResturantCartItem> itemsRemoved = new ArrayList();
+    
     public void changeCartItems(List<ResturantCartItem> cartItems) {
         ArrayList<ResturantCartItem> copied = new ArrayList(cartItems);
         for (ResturantCartItem item : copied) {
             if (!doesCartItemExist(item, this.cartItems)) {
-                System.out.println("Item added");
                 this.cartItems.add(item);
+                this.itemsAdded.add(item);
             }
         }
         
         copied = new ArrayList(this.cartItems);
         for (ResturantCartItem item : copied) {
             if (!doesCartItemExist(item, cartItems)) {
-                System.out.println("Item removed");
                 this.cartItems.remove(item);
+                itemsRemoved.add(item);
             }
         }
         
@@ -99,4 +103,16 @@ public class TableSession extends DataCommon {
         return null;
     }
     
+    public void clearStatus() {
+        itemsAdded.clear();
+        itemsRemoved.clear();
+    }
+
+    public List<ResturantCartItem> getItemsAdded() {
+        return itemsAdded;
+    }
+
+    public List<ResturantCartItem> getItemsRemoved() {
+        return itemsRemoved;
+    }
 }

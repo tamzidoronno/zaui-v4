@@ -87,6 +87,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     public boolean isGroupedProduct = false;
     
+    public boolean isFood = false;
+    
     /**
      * Should always be in gram.
      */

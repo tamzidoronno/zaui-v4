@@ -15,4 +15,5 @@ import java.util.List;
 public class TableData {
     public String currentSessionId = "";
     public List<ResturantCartItem> cartItems = new ArrayList();
+    public String tableId = "";
 }

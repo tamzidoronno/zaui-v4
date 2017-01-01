@@ -85,9 +85,7 @@ if($config->arxHostname) {
     $hasArx = true;
 }
 $hasPrices = false;
-
 $arr = (array)$prices->dailyPrices;
-
 if(($prices->defaultPriceType == 1 && !empty($arr)) || $prices->defaultPriceType != 1) {
      $hasPrices = true;
 }

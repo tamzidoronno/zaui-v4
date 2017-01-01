@@ -14,6 +14,23 @@ class PmsPricing extends \WebshopApplication implements \Application {
         return $this->getConfigurationSetting("engine_name");
     }
     
+    public function saveAddonPriceOnPricePlan() {
+        $res = array();
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "product_")) {
+                if(!$val) {
+                    continue;
+                }
+                $productId = str_replace("product_", "", $key);
+                $val = str_replace(",",".", $val);
+                $res[$productId] = $val;
+            }
+        }
+        $pricePlan = $this->getPrices();
+        $pricePlan->productPrices = $res;
+        $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $this->getSelectedPricePlan(), $pricePlan);
+    }
+    
     public function selectPricePlan() {
         $_SESSION['selectedpriceplan'] = $_POST['data']['selectedpriceplan'];
     }

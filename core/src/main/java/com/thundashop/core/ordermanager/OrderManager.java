@@ -1482,4 +1482,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return getUserPrefferedPaymentMethod(getSession().currentUser.id);
     }
 
+    @Override
+    public void forceDeleteOrder(String orderId, String password) {
+        if(!password.equals("fdsafnbbo45453gbsdsdgfHTRYTnvnvvqerqw98ngvdjsgndfl8345()")) {
+            return;
+        }
+        Order object = orders.get(orderId);
+        forceDeleteOrder(object);
+    }
+
 }

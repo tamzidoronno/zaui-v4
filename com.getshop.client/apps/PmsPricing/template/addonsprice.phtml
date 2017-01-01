@@ -1,0 +1,47 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/* @var $this ns_1be25b17_c17e_4308_be55_ae2988fecc7c\PmsPricing */
+$products = $this->getApi()->getProductManager()->getAllProducts();
+$rooms = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$roomProducts = array();
+$prices = $this->getPrices();
+foreach($rooms as $room) {
+    $roomProducts[] = $room->productId;
+}
+
+$newprods = array();
+foreach($products as $prod) {
+    $newprods[$prod->name] = $prod;
+}
+$products = $newprods;
+ksort($products);
+
+
+echo "<table width='100%' gstype='form' method='saveAddonPriceOnPricePlan'>";
+foreach($products as $product) {
+    if(in_array($product->id, $roomProducts)) {
+        continue;
+    }
+    if(!$product->name) {
+        continue;
+    }
+    $val = "";
+    if(isset($prices->productPrices->{$product->id})) {
+        $val = $prices->productPrices->{$product->id};
+    }
+    echo "<tr>";
+    echo "<td>".$product->name."</td>";
+    echo "<td align='right'><input type='text' gsname='product_".$product->id."' value='$val'></input></td>";
+    echo "</tr>";
+}
+echo "<tr>";
+echo "<td></td>";
+echo "<td align='right'><span class='pmsbutton' gstype='submit' style='width: 200px; text-align:center;'>Update</span></td>";
+echo "</tr>";
+echo "</table>";
+?>

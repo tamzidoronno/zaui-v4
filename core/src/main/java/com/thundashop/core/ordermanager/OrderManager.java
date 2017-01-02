@@ -1499,7 +1499,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .stream()
                 .filter(order -> order.paymentDate != null && order.paymentDateWithin(from, to))
                 .filter(order -> userId.equals("") || order.markedAsPaidByUserId.equals(userId))
-                .filter(order -> paymentId.equals("") || order.payment.paymentType.equals(userId))
+                .filter(order -> paymentId.equals("") || order.payment.paymentType.equals(paymentId))
                 .collect(Collectors.toList());
         
 

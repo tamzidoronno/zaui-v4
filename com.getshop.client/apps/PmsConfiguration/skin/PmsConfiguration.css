@@ -32,7 +32,7 @@
 .PmsConfiguration .inventoryitem:hover { border-bottom:solid 1px #000; }
 
 .PmsConfiguration .inventoryitem { border: solid 1px #bbb; padding: 5px; border-top: solid 0px; }
-.PmsConfiguration .addontext {  width: 170px;
+.PmsConfiguration .addontext {  width: 80px;
   white-space: nowrap;
   overflow: hidden; display:block;
   text-overflow: ellipsis; }

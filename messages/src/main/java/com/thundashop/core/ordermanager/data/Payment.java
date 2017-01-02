@@ -24,4 +24,12 @@ public class Payment implements Serializable {
     public boolean captured = false;
     public HashMap<String, String> callBackParameters = new HashMap();
     public String paymentId = "";
-}
+
+    public String readablePaymentType() {
+        if(paymentType.contains("\\")) {
+            return paymentType.substring(paymentType.indexOf("\\")+1);
+        }
+        return "";
+    }
+    }
+

@@ -19,6 +19,33 @@ class AccountingTransferOptions {
     public AccountingTransferConfig config;
     public AccountingManagers managers;
 
+    
+    public Integer getAccountingId(String userId) {
+        Integer idToUse = 0;
+        if(config.startCustomerCodeOffset != null && config.startCustomerCodeOffset > 0) {
+            idToUse = config.startCustomerCodeOffset;
+        }
+
+        User user = managers.userManager.getUserById(userId);
+
+        Integer accountingId = user.customerId;
+        if(user.accountingId != null && !user.accountingId.trim().isEmpty() && !user.accountingId.equals("0")) {
+            accountingId = new Integer(user.accountingId);
+        }
+        if(accountingId > idToUse) {
+            return accountingId;
+        } else {
+            int next = managers.userManager.getNextAccountingId();
+            if(next < idToUse) {
+                next = idToUse;
+            }
+            user.accountingId = next + "";
+            managers.userManager.saveUser(user);
+            return next;
+        }
+    }
+    
+    
     public String getUniqueCustomerIdForOrder(Order order) {
         for(String paymentMethod : config.paymentTypeCustomerIds.keySet()) {
             String customerId = config.paymentTypeCustomerIds.get(paymentMethod);

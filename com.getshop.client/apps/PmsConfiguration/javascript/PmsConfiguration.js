@@ -17,6 +17,7 @@ app.PmsConfiguration = {
         $(document).on('click', '.PmsConfiguration .removeProductFromMobileView', app.PmsConfiguration.removeProductFromMobileView);
         $(document).on('click', '.PmsConfiguration .loadcouponmoredates', app.PmsConfiguration.loadMoreDates);
         $(document).on('click', '.PmsConfiguration .addwebtext', app.PmsConfiguration.addWebText);
+        $(document).on('click', '.PmsConfiguration .loadproductConfig', app.PmsConfiguration.loadproductConfig);
         $(document).on('change', '.PmsConfiguration .changeItemForRoom', app.PmsConfiguration.changeItemForRoom);
         $(document).on('change', '.PmsConfiguration .changechanneloncoupon', app.PmsConfiguration.changechanneloncoupon);
         $(document).on('keyup', '.PmsConfiguration .inventoryonroomcount', app.PmsConfiguration.updateInventoryOnRoomCount);
@@ -39,6 +40,12 @@ app.PmsConfiguration = {
                 autogrow : false
             });
         });
+    },
+    loadproductConfig : function() {
+        var event = thundashop.Ajax.createEvent('','loadproductConfig', $(this), {
+            "id" : $(this).attr('gsvalue')
+        });
+        thundashop.common.showInformationBoxNew(event);
     },
     removeProductFromMobileView : function() {
         var btn = $(this);

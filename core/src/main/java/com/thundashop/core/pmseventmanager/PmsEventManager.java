@@ -199,7 +199,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
                 return o1.date.compareTo(o2.date);
             }
        });
-
+        
         
         return result;
     }

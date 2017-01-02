@@ -11,6 +11,9 @@ public class Customer {
     
     public void setUser(User user) {
         name = user.fullName;
+        if(name == null || name.isEmpty()) {
+            name = "Unkonwn name";
+        }
         code = user.accountingId + "";
         emailAddress = user.emailAddress;
         if(user.emailAddressToInvoice != null && !user.emailAddressToInvoice.isEmpty()) {

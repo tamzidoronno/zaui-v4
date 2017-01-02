@@ -45,15 +45,15 @@ foreach($products as $product) {
     }
     
     $prodid = $product->id;
-    $priceExTax = round($conf->price/(1 + ($product->taxGroupObject->taxRate/100)));
+    $priceExTax = round($product->price/(1 + ($product->taxGroupObject->taxRate/100)));
     $addonItem = new core_pmsmanager_PmsBookingAddonItem();
     if(isset($addonItems[$prodid])) {
         $addonItem = $addonItems[$prodid];
     }
     
     echo "<tr>";
-    echo "<td>" . $addonItem->count . "</td>";
-    echo "<td><span style='display:inline-block; width: 30px;'>".$addonItem->addonType."</span><input type='text' value='".$product->name."' gsname='addonconfig_".$prodid."_name' style='width: 80px;'></input> ".$product->tag."</td>";
+    echo "<td><i class='fa fa-edit loadproductConfig' method='loadConfigInfoBoxForProduct' gsname='id' gsvalue='".$product->id."'></i> " . $addonItem->count . "</td>";
+    echo "<td><input type='text' value='".$product->name."' gsname='addonconfig_".$prodid."_name' style='width: 80px;'></input> ".$product->tag."</td>";
     $checked = $selectedAddonConfig->isAvailableForCleaner ? "CHECKED" : "";
     echo "<td align='center'><input type='checkbox' gsname='addonconfig_".$prodid."_isAvailableForCleaner' $checked></input></td>";
     $checked = $selectedAddonConfig->isAvailableForBooking ? "CHECKED" : "";
@@ -67,7 +67,7 @@ foreach($products as $product) {
     $checked = $selectedAddonConfig->isSingle ? "CHECKED" : "";
     echo "<td align='center'><input type='checkbox' gsname='addonconfig_".$prodid."_isSingle' $checked></input></td>";
     echo "<td><input type='txt' gsname='addonconfig_".$prodid."_description' value='".$product->description."'></input></td>";
-    echo "<td><input type='txt' style='width:50px;' value='".$conf->price."' gsname='addonconfig_".$prodid."_price'></input></td>";
+    echo "<td><input type='txt' style='width:50px;' value='".$product->price."' gsname='addonconfig_".$prodid."_price'></input></td>";
     echo "<td>$priceExTax</td>";
     echo "<td>";
     echo "<select gsname='addonconfig_".$prodid."_taxgroup'>";

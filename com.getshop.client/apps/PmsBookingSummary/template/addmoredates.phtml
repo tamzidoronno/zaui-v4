@@ -35,7 +35,7 @@ if($repeat) {
             <span class='optionbox'>
                 <select gsname='typeid'>
                 <?php
-                $types =$this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+                $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
                 $types = $this->indexList($types);
                 foreach($types as $idx => $type) {
                     if(!$type->visibleForBooking && !$this->isEditorMode()) {

@@ -104,10 +104,26 @@ $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($this->getSelected
     } else {
         $this->includefile("dailypriceediting");
     }
-    
-    
     ?>
 </div>
+
+<div style="border-bottom: solid 1px; margin-bottom: 20px; padding-bottom: 20px;"></div>
+<h1>Discount codes</h1>
+
+<?php
+$this->includefile("discounts");
+
+if($this->getSelectedPricePlan() != "default") {
+    ?>
+
+    <div style="border-bottom: solid 1px; margin-bottom: 20px; padding-bottom: 20px;"></div>
+    <h1>Override prices (leave empty to use default prices)</h1>
+
+    <?php
+    $this->includefile("addonsprice");
+}
+?>
+
 <script>
     $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
     $('input[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });

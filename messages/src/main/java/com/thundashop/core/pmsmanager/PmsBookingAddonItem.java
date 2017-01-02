@@ -3,8 +3,10 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
@@ -34,6 +36,9 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public boolean isAvailableForBooking = false;
     public boolean isAvailableForCleaner = false;
     public boolean dependsOnGuestCount = false;
+    public boolean isIncludedInRoomPrice = false;
+    List<String> includedInBookingItemTypes = new ArrayList();
+    
     Map<String, String> variations = new HashMap();
     String description;
 

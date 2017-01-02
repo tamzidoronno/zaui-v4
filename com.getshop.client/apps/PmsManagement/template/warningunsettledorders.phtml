@@ -92,7 +92,7 @@ if(sizeof($orders) > 1) {
             echo "<div class='paymenttypeinfoarea' type='InvoicePayment'><br>Invoice information (fetched from user account above):<br>";
             echo "<span style='font-size:12px;'>" . $user->fullName . "<bR>";
             echo $user->address->address . "<br>";
-            echo $user->address->postCode . " " . $user->address->address . "</span><bR>";
+            echo $user->address->postCode . " " . $user->address->city . "</span><bR>";
             echo "<br>Note on invoice:<br>";
             echo "<textarea style='width:100%; height: 100px;' gsname='invoicenoteinfo'>" . $booking->invoiceNote . "</textarea>";
             echo "</div>";

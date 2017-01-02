@@ -205,6 +205,39 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         }
     }
     
+    public function saveProductConfig() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $addons = $config->addonConfiguration;
+        foreach($addons as $addonKey => $val) {
+            $addon = $addons->{$addonKey};
+            if($addon->productId == $_POST['data']['productId']) {
+                $config->addonConfiguration->{$addonKey}->isIncludedInRoomPrice = $_POST['data']['isIncludedInRoomPrice'] == "true";
+                $config->addonConfiguration->{$addonKey}->count = $_POST['data']['count'];
+                $config->addonConfiguration->{$addonKey}->descriptionWeb = $_POST['data']['descriptionWeb'];
+                
+                $includedRes = array();
+                foreach($_POST['data'] as $key => $val) {
+                    if(stristr($key, "includefortype_")) {
+                        if($val != "true") {
+                            continue;
+                        }
+                        $id = str_replace("includefortype_", "", $key);
+                        $includedRes[] = $id;
+                    }
+                }
+                $config->addonConfiguration->{$addonKey}->includedInBookingItemTypes = $includedRes;
+                
+            }
+        }
+        
+        
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
+    function loadproductConfig() {
+        $this->includefile("singleProductConfig");
+    }
+    
     private function int_ok($val) {
         return ($val !== true) && ((string)(int) $val) === ((string) $val);
     }
@@ -334,6 +367,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             $prod->accountingAccount = $_POST['data']['addonconfig_' . $prod->id . "_account"];
             $prod->name = $_POST['data']['addonconfig_' . $prod->id . "_name"];
             $prod->taxgroup = $_POST['data']['addonconfig_' . $prod->id . "_taxgroup"];
+            $prod->price = $_POST['data']['addonconfig_' . $prod->id . "_price"];
             $this->getApi()->getProductManager()->saveProduct($prod);
             $counter++;
         }

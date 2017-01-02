@@ -908,6 +908,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         prices.privatePeopleDoNotPayTaxes = newPrices.privatePeopleDoNotPayTaxes;
         prices.channelDiscount = newPrices.channelDiscount;
         prices.derivedPrices = newPrices.derivedPrices;
+        prices.productPrices = newPrices.productPrices;
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
             for (String date : priceMap.keySet()) {
@@ -2729,7 +2730,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
             
-            if(!room.isDeleted()) {
+            if(!room.isDeleted() && room.canBeAdded) {
                 bookingsToAdd.add(bookingToAdd);
             }
         }
@@ -3123,12 +3124,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             List<PmsBookingAddonItem> result = createAddonForTimePeriodeWithDiscount(type, room, booking);
             for(PmsBookingAddonItem toReturn : result) {
-                if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST) {
+                if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST || addonConfig.dependsOnGuestCount) {
                     toReturn.count = room.numberOfGuests;
                 }
             }
             
             room.addons.addAll(result);
+            setAddonPricesOnRoom(room, booking);
+            updateRoomPriceFromAddons(room, booking);
         }
         saveBooking(booking);
     }
@@ -3159,16 +3162,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<PmsBookingAddonItem> getAddonsWithDiscount(String pmsBookingRoomId) {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        PmsPricing prices = getPriceObjectFromBooking(booking);
 
         List<PmsBookingAddonItem> allAddons = new ArrayList(getConfiguration().addonConfiguration.values());
         List<PmsBookingAddonItem> result = new ArrayList();
         for(PmsBookingAddonItem item : allAddons) {
             List<PmsBookingAddonItem> addons = createAddonForTimePeriodeWithDiscount(item.addonType, room, booking);
             PmsBookingAddonItem addon = createAddonToAdd(item, room.date.start);
+            addon.count = item.count;
+
             Double price = 0.0;
             Integer count = 0;
             for(PmsBookingAddonItem tmp : addons) {
-                price += tmp.price;
+                double tmpPrice = tmp.price;
+                if(prices.productPrices.containsKey(item.productId)) {
+                    tmpPrice = prices.productPrices.get(item.productId);
+                }
+                price += tmpPrice;
                 count += tmp.count;
             }
             if(count > 0) {
@@ -3226,6 +3236,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         room.taxes = pmsInvoiceManager.calculateTaxes(room.bookingItemTypeId);
+        setAddonPricesOnRoom(room, booking);
+        updateRoomPriceFromAddons(room, booking);
     }
 
     private void createUserForBooking(PmsBooking booking) {
@@ -4648,6 +4660,57 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         addon.description = product.description;
         
         room.addons.add(addon);
+    }
+
+    private void updateRoomPriceFromAddons(PmsBookingRooms room, PmsBooking booking) {
+        setAddonPricesOnRoom(room, booking);
+        
+        for(PmsBookingAddonItem item : room.addons) {
+            if(isPackage(item)) {
+                Double roomPrice = getRoomPriceFromPackage(item);
+                room.price = roomPrice;
+                for(String key : room.priceMatrix.keySet()) {
+                    room.priceMatrix.put(key, roomPrice);
+                }
+            }
+        }
+        
+        for(PmsBookingAddonItem item : room.addons) {
+            if(getAddonOriginalItem(item).isIncludedInRoomPrice) {
+                Double roomPrice = room.price;
+                roomPrice -= item.price;
+                room.price = roomPrice;
+                for(String key : room.priceMatrix.keySet()) {
+                    room.priceMatrix.put(key, roomPrice);
+                }
+            }
+        }
+    }
+    
+    private void setAddonPricesOnRoom(PmsBookingRooms room, PmsBooking booking) {
+        PmsPricing priceplan = getPriceObjectFromBooking(booking);
+        for(PmsBookingAddonItem item : room.addons) {
+            if(priceplan.productPrices.containsKey(item.productId)) {
+                item.price = priceplan.productPrices.get(item.productId);
+            }
+        }
+    }
+
+    private boolean isPackage(PmsBookingAddonItem item) {
+        return false;
+    }
+
+    private Double getRoomPriceFromPackage(PmsBookingAddonItem item) {
+        return 10.0;
+    }
+
+    private PmsBookingAddonItem getAddonOriginalItem(PmsBookingAddonItem item) {
+        for(PmsBookingAddonItem item2 : getConfiguration().addonConfiguration.values()) {
+            if(item2.addonType == item.addonType) {
+                return item2;
+            }
+        }
+        return null;
     }
 
 }

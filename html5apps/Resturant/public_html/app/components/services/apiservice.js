@@ -16,10 +16,11 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             var me = this;
             
             this.api.setConnectedEvent(function() {
+                $rootScope.$digest();
+                me.logon(false);
                 $rootScope.$broadcast("connectionEstablished", "");
                 $rootScope.$digest();
                 
-                me.logon(false);
             });
             
             var me = this;

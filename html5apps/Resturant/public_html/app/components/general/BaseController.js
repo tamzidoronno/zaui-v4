@@ -16,5 +16,24 @@ controllers.BaseController = function($scope, $rootScope, $api, datarepository) 
         }) 
     }
     
+    $scope.connectionEstablished = function() {
+        for (var i in datarepository.rooms) {
+            var room = datarepository.rooms[i];
+            for (var j in room.tables) {
+                var table = room.tables[j];
+                table.refreshing = true;
+                $api.getApi().ResturantManager.getCurrentTableData(table.id).done(function(res) {
+                    datarepository.setCartItems(res.cartItems, res.tableId);
+                    $scope.$apply();
+                });
+                
+                $scope.$apply();
+            }
+        }
+    }
+    
     $rootScope.$on('refreshTable', $scope.refreshTable);
+    $rootScope.$on('connectionEstablished', $scope.connectionEstablished);
+    
+    $api.reconnect();
 };

@@ -24,12 +24,9 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
             }
         }
         
-        console.log("Adding", table);
-        
         datarepository.addCurrentlyCheckingOutTables(table);
         $scope.tables = datarepository.getCurrentlyCheckingOutTables($stateParams.tableId);
         $scope.closeAddTable();
-        
     }
             
     $scope.changePrice = function(product) {
@@ -68,6 +65,13 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
             if (product)
                 retList.push(product);
         }
+        
+        retList.sort(function(a, b){
+            if(a.name < b.name) return -1;
+            if(a.name > b.name) return 1;
+            return 0;
+        });
+        
         return retList;
     }
     
@@ -204,6 +208,12 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
                 retProducts.push(product);
             }
         }
+        
+        retProducts.sort(function(a, b){
+            if(a.name < b.name) return -1;
+            if(a.name > b.name) return 1;
+            return 0;
+        });
         
         return retProducts;
     }

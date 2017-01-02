@@ -2,7 +2,10 @@
     The menu is stored on the device due to performance reasons.
     <br/>
     <br/>
-    <div class='button' ng-click="reloadData()">Download menu</div>
+    <div class='button' ng-click="reloadData()">
+        <i class='fa fa-spinner fa-spin' ng-if='starteda || startedb ||startedc '></i>
+        Download menu
+    </div>
     
     <div style="font-size: 20px; margin-top: 30px;">
         <input type='checkbox' ng-model="standalone" ng-click="toggleStandalone()"/> Is standalone ?
@@ -11,5 +14,10 @@
     Active payment methods:
     <div ng-repeat='method in datarepository.paymentMethods '>
         <input type='checkbox' ng-model='method.isActiveForDevice' ng-click='savePaymentMethods()'/>{{ method.appName }}
+    </div>
+    
+    <h2>Active product lists for this device</h2>
+    <div ng-repeat='list in datarepository.productLists '>
+        <input type='checkbox' ng-model='list.isActiveForDevice' ng-click='saveActiveLists()'/>{{ list.listName }}
     </div>
 </div>

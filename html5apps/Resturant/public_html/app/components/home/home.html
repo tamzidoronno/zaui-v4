@@ -14,7 +14,7 @@
             <div class='inforow'> <span class='inusetableindicator'></span><span>Table in use</span> </div>
         </div>
         
-        <div ng-repeat="table in room.tables"  ng-click="goToTable(table.id)" ng-class='inUse(table) ? "resturanttable red" : "resturanttable green"'>
+        <div ng-repeat="table in room.tables" class="resturanttable"  ng-click="goToTable(table.id)" ng-class='{ "red" : inUse(table), "green" : !inUse(table), "refreshing" : table.refreshing }'>
             <div class='tablename'>{{ table.name }}</div>
         </div>
     </div>

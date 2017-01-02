@@ -12,7 +12,15 @@ controllers.SettingsController = function($scope, $rootScope, $api, datareposito
     
     $scope.standalone = datarepository.isStandAlone();
     
+    $scope.starteda = false;
+    $scope.startedc = false;
+    $scope.startedb = false;
+    
     $scope.savePaymentMethods = function() {
+        datarepository.save();
+    }
+    
+    $scope.saveActiveLists = function() {
         datarepository.save();
     }
     
@@ -21,9 +29,13 @@ controllers.SettingsController = function($scope, $rootScope, $api, datareposito
         var productManager = $api.getApi().ProductManager;
         var storeApplicationPool = $api.getApi().StoreApplicationPool;
         
-        productManager.getAllProducts().done(function(res) { datarepository.setProducts(res); });
-        productManager.getProductLists().done(function(res) { datarepository.setProductLists(res); });
-        resturantManager.getRooms().done(function(res) { datarepository.setRooms(res); } )
+        $scope.starteda = true; 
+        $scope.startedb = true; 
+        $scope.startedc = true; 
+        
+        productManager.getAllProducts().done(function(res) {  $scope.starteda = false; datarepository.setProducts(res); $scope.$apply(); });
+        productManager.getProductLists().done(function(res) { $scope.startedb = false; datarepository.setProductLists(res); $scope.$apply(); });
+        resturantManager.getRooms().done(function(res) { $scope.startedc = false; datarepository.setRooms(res); $scope.$apply(); } )
         storeApplicationPool.getActivatedPaymentApplications().done(function(res) { datarepository.setActivatedPaymentMethods(res); $scope.$apply(); } )
     }
     

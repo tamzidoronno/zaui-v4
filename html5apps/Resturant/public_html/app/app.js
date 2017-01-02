@@ -2,12 +2,6 @@ angular.module('TrackAndTrace', [
     'ui.router', 'bc.AngularKeypad', 'ngTouch', 'ngDialog'
 ]);
 
-
-// Make sure to reconnect on startup
-angular.module('TrackAndTrace').run(['$api', function ($api) {
-    $api.reconnect();
-}]);
-
 angular.module('TrackAndTrace')
  .run( function($rootScope, $location) {
     $rootScope.$on("$locationChangeSuccess",function(event, next, current){

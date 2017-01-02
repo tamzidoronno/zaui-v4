@@ -71,6 +71,16 @@ adata = {
     },
     
     setProductLists: function(lists) {
+        
+        for (var i in this.productLists) {
+            var oldProductList = this.productLists[i];
+            for (var j in lists) {
+                if (lists[j].id === oldProductList.id) {
+                    lists[j].isActiveForDevice = oldProductList.isActiveForDevice;
+                }
+            }
+        }
+        
         this.productLists = lists;
     },
     
@@ -212,6 +222,11 @@ adata = {
     
     setCartItems: function(items, tableId) {
         this.clearCartItemsForTable(tableId);
+        var table = this.getTableById(tableId);
+        
+        if (table)
+            table.refreshing = false;
+        
         for (var i in items) {
             items[i].sentToKitchen = true;
             this.cartItems.push(items[i]);

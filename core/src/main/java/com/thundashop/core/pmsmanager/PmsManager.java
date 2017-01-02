@@ -2730,7 +2730,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
             
-            if(!room.isDeleted()) {
+            if(!room.isDeleted() && room.canBeAdded) {
                 bookingsToAdd.add(bookingToAdd);
             }
         }

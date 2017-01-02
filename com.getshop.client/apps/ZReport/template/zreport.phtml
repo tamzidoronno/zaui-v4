@@ -40,11 +40,18 @@ $orders = $this->getOrders();
     $('#to').datetimepicker();
 </script>
   
+<?
+if (!$orders) {
+    return;
+}
+?>
 
 <div>
     <br/>
     <table width='100%;'>
     <?
+    
+    
     $sum = 0;
     foreach ($orders as $order) {
 

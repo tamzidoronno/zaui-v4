@@ -14,7 +14,6 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.usermanager.data.Address;
-import com.thundashop.core.usermanager.data.UserCard;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -263,4 +262,5 @@ public interface IOrderManager {
 
     public void setExternalRefOnCartItem(String cartItem, String externalId);
     
+    public List<Order> getOrdersPaid(String paymentId, String userId, Date from, Date to);
 }

@@ -383,4 +383,15 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         return match;
     }
+    
+    public boolean paymentDateWithin(Date from, Date to) {
+        if (paymentDate == null)
+            return false;
+        
+        long inDate = paymentDate.getTime();
+        long fromL = from.getTime();
+        long toL = to.getTime();
+        
+        return (fromL <= inDate &&  inDate <= toL);
+    }
 } 

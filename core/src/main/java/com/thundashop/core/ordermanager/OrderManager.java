@@ -36,6 +36,7 @@ import com.thundashop.core.usermanager.data.UserCard;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1490,6 +1491,22 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         Order object = orders.get(orderId);
         forceDeleteOrder(object);
+    }
+
+    @Override
+    public List<Order> getOrdersPaid(String paymentId, String userId, Date from, Date to) {
+        List<Order> retOrderStream = orders.values()
+                .stream()
+                .filter(order -> order.paymentDate != null && order.paymentDateWithin(from, to))
+                .filter(order -> userId.equals("") || order.markedAsPaidByUserId.equals(userId))
+                .filter(order -> paymentId.equals("") || order.payment.paymentType.equals(userId))
+                .collect(Collectors.toList());
+        
+
+        retOrderStream.stream()
+                .forEach(order -> finalizeOrder(order));
+        
+        return retOrderStream;
     }
 
 }

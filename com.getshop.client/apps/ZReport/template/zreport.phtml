@@ -1,0 +1,67 @@
+<?
+/* @var $this ns_b6143df9_a5cd_424c_9f17_8e24616b2c3f\ZReport */
+$payments = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$orders = array();
+
+if (isset($_POST['data']['from'])) {
+    $javaFrom = $this->convertToJavaDate(strtotime($_POST['data']['from']));
+    $javaTo = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+    $orders = $this->getApi()->getOrderManager()->getOrdersPaid($_POST['data']['paymentid'], $_POST['data']['userid'], $javaFrom, $javaTo);
+}
+
+?>
+
+<div gstype="form" method="showReport">
+    <div class="col1">Dato/tid: </div><input type="textfield" class="gsniceinput1" gsname="from" id="from" value="<? echo @$_POST['data']['from']; ?>"/> - <input type="textfield" class="gsniceinput1" id="to" gsname="to" value="<? echo @$_POST['data']['to']; ?>"/>
+    <br/>
+    <br/><div class="col1">User: </div><select gsname="userid" class="gsniceselect1">
+        <option value="">All</option>
+        <?
+        $admins = $this->getApi()->getUserManager()->getUsersByType(100);
+        foreach ($admins as $admin) {
+            $selected = $_POST['data']['userid'] == $admin->id ? "selected='true'" : "";
+            echo "<option $selected value='$admin->id'>$admin->fullName</option>";
+        }
+        ?>
+    </select>
+
+    <br/><div class="col1">Payment type:</div><select gsname="paymentid" class="gsniceselect1">
+        <option value="">All</option>
+        <?
+        foreach ($payments as $payment) {
+            $selected = $_POST['data']['paymentid'] == $payment->id ? "selected='true'" : "";
+            echo "<option $selected value='$payment->id'>$payment->appName</option>";
+        }
+        ?>
+    </select>
+
+    <br/>
+    <br/><div class="shop_button" gstype="submit">Show</div>
+
+</div>
+
+<script>
+    $('#from').datetimepicker();
+    $('#to').datetimepicker();
+</script>
+  
+
+<div>
+    <br/>
+    <table width='100%;'>
+    <?
+    $sum = 0;
+    foreach ($orders as $order) {
+
+        foreach ($order->payment->transactionLog as $time => $text) {
+            $readableTime = date("Y-m-d H:i:s", substr($time, 0, 10));
+            $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+            $sum += $total;
+            echo "<tr><td width='150'>".$readableTime . "</td><td style='text-align: left;'>" . $text."</td><td width='100'>$total</td></tr>";
+        }
+    }
+    
+    echo "<tr><td width='150'></td><td style='text-align: left;'>Total</td><td width='100'>$sum</td></tr>";
+    ?>
+    </table>
+</div>

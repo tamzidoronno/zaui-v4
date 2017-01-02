@@ -371,6 +371,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return -2;
         }
         if(canAdd) {
+            addDefaultAddons(booking);
+
             bookingEngine.addBookings(bookingsToAdd);
             booking.attachBookingItems(bookingsToAdd);
             booking.sessionId = null;
@@ -3096,7 +3098,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void addAddonsToBooking(Integer type, String roomId, boolean remove) {
         boolean foundRoom = true;
-        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBooking booking = getBookingFromRoomSecure(roomId);
         if(booking == null) {
             foundRoom = false;
             booking = getBooking(roomId);
@@ -4711,6 +4713,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+
+    private void addDefaultAddons(PmsBooking booking) {
+        HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            for(PmsBookingAddonItem item : addons.values()) {
+                if(room.bookingItemTypeId != null) {
+                    if(item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
+                        addAddonsToBooking(item.addonType, room.pmsBookingRoomId, false);
+                    }
+                }
+            }
+        }
     }
 
 }

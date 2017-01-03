@@ -157,6 +157,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     saveObject(order);
                 }
                 
+                if (order.incrementOrderId == 100034) {
+                    order.status = Order.Status.WAITING_FOR_PAYMENT;
+                    saveObject(order);
+                }
+                
                 if (order.cart == null) {
                     continue;
                 }

@@ -318,6 +318,7 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
                         item = tableSession.fetchAndRemove(cartId.id);
                     }
                      
+                    item.discountedPrice = cartId.discountedPrice;
                     retCartItems.add(item);
                     usedSessions.add(tableSession);
                     found = true;

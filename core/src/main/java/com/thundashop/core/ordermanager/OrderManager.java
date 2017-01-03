@@ -198,6 +198,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     public void markAsPaidInternal(Order order, Date date) {
         order.paymentDate = date;
+        order.status = Order.Status.PAYMENT_COMPLETED;
+        
         String name = "";
         if(getSession() != null && getSession().currentUser != null) {
             name = getSession().currentUser.fullName;

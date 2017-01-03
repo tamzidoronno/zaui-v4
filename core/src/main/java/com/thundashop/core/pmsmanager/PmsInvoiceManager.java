@@ -1432,7 +1432,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         start.setTime(startDate);
         List<CartItem> result = new ArrayList();
         for(String productId : products.keySet()) {
-            List<PmsBookingAddonItem> items = room.getAllAddons(productId, startDate, endDate);
+            Date endDateToUse = endDate;
+            if(isSameDay(endDate, room.date.end)) {
+                endDateToUse = room.date.end;
+            }
+            List<PmsBookingAddonItem> items = room.getAllAddons(productId, startDate, endDateToUse);
             if(items.size() > 0) {
                 Date startDateToAdd = startDate;
                 Date endDateToAdd = endDate;

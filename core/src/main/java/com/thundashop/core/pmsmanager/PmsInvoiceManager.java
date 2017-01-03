@@ -661,7 +661,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private void checkIfNeedAdditionalEndInvoicing(PmsBookingRooms room, NewOrderFilter filter) {
-        avoidChangingInvoicedFrom = true;
+         avoidChangingInvoicedFrom = true;
         PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
 
         Date startDate = room.getInvoiceStartDate();
@@ -675,7 +675,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room, filter);
-        
+
         if (pmsManager.getConfigurationSecure().substractOneDayOnOrder && !filter.onlyEnded) {
             for(CartItem item : items) {
                 Calendar cal = Calendar.getInstance();
@@ -1022,7 +1022,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             item.startDate = endDate;
             item.endDate = tmpDate;
         }
-
+        
         
         item.getProduct().price = price;
         
@@ -1378,7 +1378,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private List<CartItem> createCartItemsForRoom(Date startDate, Date endDate, PmsBooking booking, PmsBookingRooms room, NewOrderFilter filter) {
-        
         startDate = normalizeDate(startDate, true);
         endDate = normalizeDate(endDate, false);
         
@@ -1483,7 +1482,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private CartItem createCartItemForCart(String productId, int count, String roomId) {
         CartItem item = new CartItem();
-        Product product = productManager.getProduct(productId);
+        long start = System.currentTimeMillis();
+        Product product = productManager.getProductUnfinalized(productId);
         item.setProduct(product.clone());
         item.setCount(count);
         item.getProduct().externalReferenceId = roomId;
@@ -1491,6 +1491,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(!runningDiffRoutine) {
             addItemToItemsToReturn(item);
         }
+        System.out.println("4. : " + (System.currentTimeMillis() - start));
         return item;
     }
 

@@ -1811,7 +1811,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (result.get("choosetyperadio") == null || result.get("choosetyperadio").equals("registration_private")) {
             return null;
         }
-
+        String vat = result.get("company_vatNumber");
+        if(vat != null) {
+            vat = vat.trim();
+            List<Company> companies = userManager.getCompaniesByVatNumber(vat);
+            if(!companies.isEmpty()) {
+                return companies.get(0);
+            }
+        }
+        
         Company company = new Company();
         company.vatNumber = result.get("company_vatNumber");
         company.name = result.get("company_name");
@@ -3256,16 +3264,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.userId = newuser.id;
             Company curcompany = createCompany(booking);
             if (curcompany != null) {
-                curcompany = userManager.saveCompany(curcompany);
-                newuser.company.add(curcompany.id);
-                newuser.fullName = curcompany.name;
-                newuser.emailAddress = curcompany.email;
-                newuser.cellPhone = curcompany.phone;
-                newuser.prefix = curcompany.prefix;
-                newuser.address = curcompany.address;
-                newuser.isCompanyOwner = true;
+                List<User> existingUsers = userManager.getUsersByCompanyId(curcompany.id);
+                if(!existingUsers.isEmpty()) {
+                    newuser = existingUsers.get(0);
+                } else {
+                    curcompany = userManager.saveCompany(curcompany);
+                    newuser.company.add(curcompany.id);
+                    newuser.fullName = curcompany.name;
+                    newuser.emailAddress = curcompany.email;
+                    newuser.cellPhone = curcompany.phone;
+                    newuser.prefix = curcompany.prefix;
+                    newuser.address = curcompany.address;
+                    newuser.isCompanyOwner = true;
 
-                userManager.saveUserSecure(newuser);
+                    userManager.saveUserSecure(newuser);
+                }
             }
         } else {
             booking.registrationData.resultAdded = new LinkedHashMap();
@@ -4728,29 +4741,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
-    }
-
-    private String checkIfCompanyExists(PmsBooking booking) {
-        LinkedHashMap<String, String> result = booking.registrationData.resultAdded;
-        if (result.get("choosetyperadio") == null || result.get("choosetyperadio").equals("registration_private")) {
-            return null;
-        }
-        String vatNumber = result.get("company_vatNumber");
-        
-        List<Company> companies = userManager.getCompaniesByVatNumber(vatNumber);
-        if(!companies.isEmpty()) {
-            Company company = companies.get(0);
-            List<User> users = userManager.getUsersByCompanyId(company.id);
-            for(User user : users) {
-                if(user.isCompanyOwner) {
-                    return user.id;
-                }
-            }
-            if(!users.isEmpty()) {
-                return users.get(0).id;
-            }
-        }
-        return "";
     }
 
 }

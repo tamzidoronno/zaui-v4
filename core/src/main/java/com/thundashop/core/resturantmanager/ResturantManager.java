@@ -365,9 +365,9 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         
         PmsManager pmsManager = sessionScope.getNamedSessionBean(bookingengine, PmsManager.class);
         List<CartItem> groupedCartItems = getGroupedCartItems(cartItemsIds, false);
+        
         for (CartItem cartItem : groupedCartItems) {
-            // TODO - Manipulate prices!
-            pmsManager.addProductToRoom(cartItem.getProduct().id, room.pmsRoomId, cartItem.getCount());
+            pmsManager.addCartItemToRoom(cartItem, room.pmsRoomId);
         }
     }
 
@@ -380,7 +380,10 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
             
             if (retItem == null) {
                 retItem = new CartItem();
-                Product product = productManager.getProduct(item.productId);
+                Product product = productManager.getProduct(item.productId).clone();
+                if (item.discountedPrice > 0)
+                    product.price = item.discountedPrice;
+                
                 retItem.setProduct(product);
                 retItem.setVariations(item.options);
                 allCartItems.put(product.id+"_"+item.getVariationId(), retItem);

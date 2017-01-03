@@ -183,18 +183,29 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             incrementingOrderId = order.incrementOrderId;
         }
         if(order.status == Order.Status.PAYMENT_COMPLETED && order.paymentDate == null) {
-            order.paymentDate = new Date();
-            String name = "";
-            if(getSession() != null && getSession().currentUser != null) {
-                name = getSession().currentUser.fullName;
-                order.markedAsPaidByUserId = getSession().currentUser.id;
-            }
-            if(order.payment != null && order.payment.transactionLog != null) {
-                order.payment.transactionLog.put(System.currentTimeMillis(), "Order marked paid for by : " + name);
-            }
+            markAsPaidInternal(order, new Date());
         }
         saveObject(order);
         orders.put(order.id, order);
+    }
+
+    @Override
+    public void markAsPaid(String orderId, Date date) {
+        Order order = orders.get(orderId);
+        markAsPaidInternal(order, date);
+        saveOrder(order);
+    }
+    
+    public void markAsPaidInternal(Order order, Date date) {
+        order.paymentDate = date;
+        String name = "";
+        if(getSession() != null && getSession().currentUser != null) {
+            name = getSession().currentUser.fullName;
+            order.markedAsPaidByUserId = getSession().currentUser.id;
+        }
+        if(order.payment != null && order.payment.transactionLog != null) {
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Order marked paid for by : " + name);
+        }
     }
     
     private HashMap<String, Setting> getSettings(String phpApplicationName) throws ErrorException {

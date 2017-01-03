@@ -148,6 +148,10 @@ public interface IOrderManager {
      */
     public void saveOrder(Order order) throws ErrorException;
     
+    
+    @Editor
+    public void markAsPaid(String orderId, Date date);
+    
     /**
      * @param id
      * @return

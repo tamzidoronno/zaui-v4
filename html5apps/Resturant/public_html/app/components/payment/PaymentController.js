@@ -86,9 +86,7 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
             datarepository.forceRemoveCartItem(ids[i].id);
         }
 
-        if ($scope.standalone) {
-            datarepository.clearCheckoutList();
-        }
+        datarepository.clearCheckoutList();
         
         if (datarepository.isStandAlone()) {
             $state.transitionTo('base.checkouttable', { tableId: $stateParams.tableId })

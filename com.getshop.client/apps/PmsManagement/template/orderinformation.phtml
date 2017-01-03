@@ -73,7 +73,7 @@ echo "<span class='markpaidform' gstype='form' method='markPaid'>";
 echo "<input type='hidden' gsname='orderid' class='selectedorderidtomarkpaid'>";
 echo "<input type='hidden' gsname='bookingid' value='".$booking->id."'>";
 echo "Payment date<br>";
-echo "<input class='paymentdateselection' type='txt' gsname='date' value='".date("d.m.Y h:i:s", time())."'>";
+echo "<input class='paymentdateselection' type='txt' gsname='date' value='".date("d.m.Y H:i", time())."'>";
 echo "<input type='button' value='Mark as paid' gstype='submitToInfoBox'>";
 echo "</span>";
 

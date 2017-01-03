@@ -68,6 +68,16 @@ $cart = $order->cart;
         <? } ?>
         </div>
         
+        <?
+        if (isset($order->paymentDate)) {
+        ?>
+        
+        
+        <div class='gss_label'><? echo $this->__f("Payment date"); ?></div>
+        <div class='gss_label_content'><i date="<? echo date("Y-m-d H:i", strtotime($order->paymentDate)); ?>" class="fa fa-edit gsschangePaymentDate"></i><? echo $order->paymentDate; ?></div>
+        <?
+        }
+        ?>
         <div class='gss_label'><? echo $this->__f("Incremental order id"); ?></div>
         <div class='gss_label_content'><? echo $order->incrementOrderId; ?></div>
         <div class='gss_label'><? echo $this->__f("Transferred to accounting"); ?></div>

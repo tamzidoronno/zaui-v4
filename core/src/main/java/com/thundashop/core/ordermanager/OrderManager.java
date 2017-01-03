@@ -157,6 +157,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     saveObject(order);
                 }
                 
+                if (order.incrementOrderId == 100034) {
+                    order.status = Order.Status.WAITING_FOR_PAYMENT;
+                    saveObject(order);
+                }
+                
                 if (order.cart == null) {
                     continue;
                 }
@@ -198,6 +203,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     public void markAsPaidInternal(Order order, Date date) {
         order.paymentDate = date;
+        order.status = Order.Status.PAYMENT_COMPLETED;
+        
         String name = "";
         if(getSession() != null && getSession().currentUser != null) {
             name = getSession().currentUser.fullName;

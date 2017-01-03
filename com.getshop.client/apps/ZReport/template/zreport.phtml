@@ -54,13 +54,15 @@ if (!$orders) {
     
     $sum = 0;
     foreach ($orders as $order) {
-
         foreach ($order->payment->transactionLog as $time => $text) {
-            $readableTime = date("Y-m-d H:i:s", substr($time, 0, 10));
-            $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
-            $sum += $total; 
-            echo "<tr><td width='100'>".$readableTime . "</td><td width='50'>$order->incrementOrderId</td><td style='text-align: left;'>" . $text."</td><td width='100'>$total</td></tr>";
         }
+        
+        $readableTime = date("Y-m-d H:i", strtotime($order->paymentDate));
+        $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+        $sum += $total; 
+        
+        echo "<tr><td width='100'>".$readableTime . "</td><td width='50'>$order->incrementOrderId</td><td style='text-align: left;'></td><td width='100'>$total</td></tr>";
+      
     }
     
     echo "<tr><td width='150'></td><td></td><td style='text-align: left;'>Total</td><td width='100'>$sum</td></tr>";

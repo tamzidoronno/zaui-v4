@@ -365,7 +365,6 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         
         PmsManager pmsManager = sessionScope.getNamedSessionBean(bookingengine, PmsManager.class);
         List<CartItem> groupedCartItems = getGroupedCartItems(cartItemsIds, false);
-        
         for (CartItem cartItem : groupedCartItems) {
             pmsManager.addCartItemToRoom(cartItem, room.pmsRoomId);
         }

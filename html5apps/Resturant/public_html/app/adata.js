@@ -71,16 +71,6 @@ adata = {
     },
     
     setProductLists: function(lists) {
-        
-        for (var i in this.productLists) {
-            var oldProductList = this.productLists[i];
-            for (var j in lists) {
-                if (lists[j].id === oldProductList.id) {
-                    lists[j].isActiveForDevice = oldProductList.isActiveForDevice;
-                }
-            }
-        }
-        
         this.productLists = lists;
     },
     

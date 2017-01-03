@@ -16,8 +16,4 @@
         <input type='checkbox' ng-model='method.isActiveForDevice' ng-click='savePaymentMethods()'/>{{ method.appName }}
     </div>
     
-    <h2>Active product lists for this device</h2>
-    <div ng-repeat='list in datarepository.productLists '>
-        <input type='checkbox' ng-model='list.isActiveForDevice' ng-click='saveActiveLists()'/>{{ list.listName }}
-    </div>
 </div>

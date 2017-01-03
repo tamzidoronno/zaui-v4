@@ -4653,6 +4653,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         addon.productId = product.id;
         addon.count = item.getCount();
         addon.price = product.price;
+        addon.isSingle = true;
         addon.priceExTaxes = product.priceExTaxes;
         addon.variations = product.variationCombinations;
         addon.date = item.getStartingDate();

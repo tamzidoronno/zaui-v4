@@ -1425,7 +1425,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private List<CartItem> createCartItemsFromAddon(PmsBookingRooms room, Date startDate, Date endDate) {
         HashMap<String, Integer> products = new HashMap();
         for(PmsBookingAddonItem addon : room.addons) {
-            products.put(addon.productId, 0);
+            if(productManager.getProductUnfinalized(addon.productId) != null) {
+                products.put(addon.productId, 0);
+            }
         }
         
         Calendar start = Calendar.getInstance();
@@ -1486,7 +1488,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private CartItem createCartItemForCart(String productId, int count, String roomId) {
         CartItem item = new CartItem();
-        long start = System.currentTimeMillis();
         Product product = productManager.getProductUnfinalized(productId);
         item.setProduct(product.clone());
         item.setCount(count);
@@ -1495,7 +1496,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(!runningDiffRoutine) {
             addItemToItemsToReturn(item);
         }
-        System.out.println("4. : " + (System.currentTimeMillis() - start));
         return item;
     }
 

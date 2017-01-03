@@ -32,7 +32,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public String addonSubType = "";
     public Integer count = 1;
     public boolean isActive = false;
-    public boolean isSingle = false;
+    public boolean isSingle = true;
     public boolean isAvailableForBooking = false;
     public boolean isAvailableForCleaner = false;
     public boolean dependsOnGuestCount = false;

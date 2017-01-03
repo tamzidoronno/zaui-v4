@@ -1430,6 +1430,20 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .findFirst()
                 .orElse(null);
     }
+    
+    public List<Company> getCompaniesByVatNumber(String vat) {
+        if(vat == null) {
+            return new ArrayList();
+        }
+        List<Company> result = new ArrayList();
+        for(Company com : companies.values()) {
+            if(com.vatNumber != null && com.vatNumber.equalsIgnoreCase(vat)) {
+                result.add(com);
+            }
+        }
+        
+        return result;
+    }
 
     @Override
     public void assignReferenceToCompany(String companyId, String companyReference) {

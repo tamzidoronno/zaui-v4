@@ -377,13 +377,62 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->showBookingInformation();
     }
     
+    
+    public function exportUserDataToExcel() {
+        $result = array();
+        
+        $filter = $this->getSelectedFilter();
+        
+        $rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
+        
+        $users = array();
+        foreach($rooms as $room) {
+            if(in_array($room->userId, $users)) {
+                continue;
+            }
+            $users[] = $room->userId;
+        }
+        
+        $heading = array();
+        $heading[] = "Name";
+        $heading[] = "Address";
+        $heading[] = "Postcode";
+        $heading[] = "city";
+        $heading[] = "Birth date";
+        $heading[] = "Org number";
+        $heading[] = "Email";
+        $heading[] = "Phone";
+        $heading[] = "Vat number";
+        
+        foreach($users as $id) {
+            $line = array();
+            $user = $this->getApi()->getUserManager()->getUserById($id);
+            $line[] = $user->fullName;
+            $line[] = $user->address->address;
+            $line[] = $user->address->postCode;
+            $line[] = $user->address->city;
+            $line[] = $user->birthDay;
+            $line[] = $user->emailAddress;
+            $line[] = $user->cellPhone;
+            $arr = (array)$user->companyObject;
+            if(!empty($user->company)) {
+                $line[] = $user->companyObject->vatNumber;
+            } else {
+                $line[] = "";
+            }
+            $result[] = $line;
+        }
+        
+        echo json_encode($result);
+    }
+    
     public function updateOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $order->payment->paymentType = $_POST['data']['clicksubmit'];
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->showBookingInformation();
     }
-    
+
     public function markPaid() {
         $dateDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
         $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $dateDate);
@@ -1225,10 +1274,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         $booking = $this->getSelectedBooking();
+        $selectedRoom = null;
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
                 $room->guests = $guests;
                 $room->numberOfGuests = $_POST['data']['numberofguests'];
+                $selectedRoom = $room;
             }
         }
         
@@ -1242,7 +1293,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         $this->selectedBooking = $this->getManager()->getBooking($this->getSelectedName(), $booking->id);
-        $this->showBookingInformation();
+        if($_POST['data']['updateprices'] == "true" || $_POST['data']['updateaddons'] == "true") {
+            $this->showBookingInformation();
+        } else {
+            $this->printGuests($selectedRoom);
+        }
     }
 
     public function createPaymentTypeText($app) {
@@ -1777,7 +1832,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "</table>";
     }
 
-    public function getCreatedOrders() {
+    public function loadEditBookingItem() {
+        $this->includefile("editbookingitem");
+    }
+    
+    public function getCreatedOrders($includeBookingData) {
         $items = array();
         
         
@@ -1788,26 +1847,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $total = 0;
         $totalCount = 0;
         foreach($cart->items as $item) {
-            $booking = $this->findBookingFromRoom($item->product->externalReferenceId);
-            $user = $this->findUser($booking->userId);
-
-            $room = "";
-            foreach($booking->rooms as $r) {
-                if($r->pmsBookingRoomId == $item->product->externalReferenceId) {
-                    $room = $r;
-                }
-            }
             $priceEx = round($item->product->priceExTaxes);
             $price = round($item->product->price, 1);
             $totalEx += ($priceEx * $item->count);
             $total += ($price * $item->count);
             $totalCount += $item->count;
             $res = array();
-            $res['id'] = $booking->id;
-            $res['start'] = date("d.m.Y H:i", strtotime($room->date->start));
-            $res['end'] = date("d.m.Y H:i", strtotime($room->date->end));
-            $res['fullname'] = $user->fullName;
-            $res['invoicedto'] = date("d.m.Y H:i", strtotime($room->invoicedTo));
             $res['additionalmetadata'] = $item->product->additionalMetaData;
             $res['itemstart'] = date("d.m.Y H:i", strtotime($item->startDate));
             $res['itemend'] = date("d.m.Y H:i", strtotime($item->endDate));
@@ -1815,8 +1860,33 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $res['metadata'] = $item->product->metaData;
             $res['price'] = $price;
             $res['priceex'] = $priceEx;
-            $res['roomprice'] = $room->price;
             $res['count'] = $item->count;
+            
+            if($includeBookingData) {
+                $booking = $this->findBookingFromRoom($item->product->externalReferenceId);
+                $user = $this->findUser($booking->userId);
+
+                $room = "";
+                foreach($booking->rooms as $r) {
+                    if($r->pmsBookingRoomId == $item->product->externalReferenceId) {
+                        $room = $r;
+                    }
+                }
+                
+                $res['id'] = $booking->id;
+                $res['fullname'] = $user->fullName;
+                $res['start'] = date("d.m.Y H:i", strtotime($room->date->start));
+                $res['end'] = date("d.m.Y H:i", strtotime($room->date->end));
+                $res['invoicedto'] = date("d.m.Y H:i", strtotime($room->invoicedTo));
+            } else {
+                $res['id'] = "";
+                $res['fullname'] = "";
+                $res['start'] = "";
+                $res['end'] = "";
+                $res['invoicedto'] = "";
+            }
+
+            
             $items[] = $res;
         }
         
@@ -1841,7 +1911,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function getOrderInvoiceArray() {
-        $arr = $this->getCreatedOrders();
+        $arr = $this->getCreatedOrders(true);
         array_unshift($arr, array_keys($arr[0]));
        echo json_encode($arr);
     }
@@ -2145,6 +2215,18 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function clearCurrentBooking() {
         $this->selectedBooking = null;
+    }
+
+    public function printGuests($room) {
+        if(sizeof((array)$room->guests) == 0) {
+            echo "No guest registered";
+        }
+        foreach ($room->guests as $guest) {
+            if(isset($guest)) {
+                echo (isset($guest->name) && $guest->name) ? $guest->name : "No name";
+            }
+            echo "<br>";
+        }
     }
 
 }

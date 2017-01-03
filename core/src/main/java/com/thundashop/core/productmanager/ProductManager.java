@@ -362,4 +362,8 @@ public class ProductManager extends AProductManager implements IProductManager {
         saveProductList(list);
         
     }
+
+    public Product getProductUnfinalized(String productId) {
+        return products.get(productId);
+    }
 }

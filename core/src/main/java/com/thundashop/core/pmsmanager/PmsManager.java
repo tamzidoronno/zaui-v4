@@ -3263,6 +3263,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 newuser.cellPhone = curcompany.phone;
                 newuser.prefix = curcompany.prefix;
                 newuser.address = curcompany.address;
+                newuser.isCompanyOwner = true;
 
                 userManager.saveUserSecure(newuser);
             }
@@ -4727,6 +4728,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    private String checkIfCompanyExists(PmsBooking booking) {
+        LinkedHashMap<String, String> result = booking.registrationData.resultAdded;
+        if (result.get("choosetyperadio") == null || result.get("choosetyperadio").equals("registration_private")) {
+            return null;
+        }
+        String vatNumber = result.get("company_vatNumber");
+        
+        List<Company> companies = userManager.getCompaniesByVatNumber(vatNumber);
+        if(!companies.isEmpty()) {
+            Company company = companies.get(0);
+            List<User> users = userManager.getUsersByCompanyId(company.id);
+            for(User user : users) {
+                if(user.isCompanyOwner) {
+                    return user.id;
+                }
+            }
+            if(!users.isEmpty()) {
+                return users.get(0).id;
+            }
+        }
+        return "";
     }
 
 }

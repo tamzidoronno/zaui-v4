@@ -1603,16 +1603,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             price = room.price;
         }
         
-        if(pmsManager.getPriceObjectFromBooking(booking).privatePeopleDoNotPayTaxes) {
-            User user = userManager.getUserById(booking.userId);
-            if(user.company.isEmpty()) {
-                includeTaxes = false;
-            } else {
-                Company company = userManager.getCompany(user.company.get(0));
-                includeTaxes = company.vatRegisterd;
-            }
-        }
-
         if (pmsManager.getPriceObjectFromBooking(booking).pricesExTaxes && includeTaxes) {
             double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
             //Order price needs to be inc taxes.. 

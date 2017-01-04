@@ -37,6 +37,16 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsInvoiceManager {
 
+    private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
+        double res = 0.0;
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.date.after(startDate) && item.date.before(endDate)) {
+                res += item.price;
+            }
+        }
+        return res;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -1598,6 +1608,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     break;
                 }
             }
+            
+            Double addonsIncluded = getAddonsPriceIncludedInRoom(room, startDate, endDate);
+            price = price - addonsIncluded;
             price /= count;
         } else {
             price = room.price;

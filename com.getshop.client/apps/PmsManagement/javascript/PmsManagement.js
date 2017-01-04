@@ -69,6 +69,17 @@ app.PmsManagement = {
         $(document).on('keyup','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('change','.PmsManagement .roomsbookedactionsselection', app.PmsManagement.updateRoomActionSelection);
         $(document).on('click','.PmsManagement .loadStatsForDay', app.PmsManagement.loadStatsForDay);
+        $(document).on('click','.PmsManagement .selectalladdons', app.PmsManagement.selectalladdons);
+    },
+    selectalladdons: function() {
+        var checked = $(this).is(':checked');
+        $(this).closest('.addonsadded').find('.addontoremove').each(function() {
+            if(checked) {
+                $(this).attr('checked','checked');
+            } else {
+                $(this).attr('checked',null);
+            }
+        });
     },
     showAddonList : function() {
         var event = thundashop.Ajax.createEvent('','loadEventListForRoom',$(this), {
@@ -143,9 +154,18 @@ app.PmsManagement = {
     
     removeAddonsFromRoom : function() {
         var panel = $(this).closest('.addonsadded');
+        var idstoremove = [];
+        panel.find('.addontoremove').each(function() {
+            if($(this).is(':checked')) {
+                idstoremove.push($(this).attr('addonid'));
+            }
+        });
+        
         var data = {
             roomId : panel.find('[gsname="roomId"]').val(),
-            productId : panel.find('[gsname="productId"]').val()
+            productId : panel.find('[gsname="productId"]').val(),
+            idstoremove : idstoremove,
+            bookingid : $('#openedbookingid').val()
         }
         var event = thundashop.Ajax.createEvent('','removeAddonsFromRoom', $(this),data);
         thundashop.common.showInformationBoxNew(event);

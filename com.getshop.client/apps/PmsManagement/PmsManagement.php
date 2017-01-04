@@ -32,11 +32,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function removeAddonsFromRoom() {
-        $id = $_POST['data']['productId'];
         $roomId = $_POST['data']['roomId'];
-        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $roomId);
-        $this->getApi()->getPmsManager()->addProductToRoom($this->getSelectedName(), $id, $roomId, 0);
-        $_POST['data']['bookingid'] = $booking->id;
+        foreach($_POST['data']['idstoremove'] as $id) {
+            $this->getApi()->getPmsManager()->removeAddonFromRoomById($this->getSelectedName(), $id, $roomId);
+        }
+        
         $this->showBookingInformation();
     }
     
@@ -71,11 +71,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
             if($room->pmsBookingRoomId == $roomId) {
                 echo "<table cellspacing='0' cellpadding='0'>";
                 echo "<tr>";
-                echo "<td colspan='3'><i class='fa fa-trash-o removeAddonsFromRoom' title='Remove all' style='cursor:pointer;'></i> " . $this->getApi()->getProductManager()->getProduct($id)->name . "</td>";
+                echo "<td><input type='checkbox' class='selectalladdons'></td>";
+                echo "<td colspan='3'>" . $this->getApi()->getProductManager()->getProduct($id)->name . "</td>";
                 echo "</tr>";
                 foreach($room->addons as $addon) {
                     if($addon->productId == $id) {
                         echo "<tr>";
+                        echo "<td><input type='checkbox' class='addontoremove' addonid='".$addon->addonId."'></td>";
                         echo "<td> ".date("d.m.Y", strtotime($addon->date))."</td>";
                         echo "<td><input type='text' value='" . $addon->count . "' style='width:30px' gsname='".$addon->addonId."_count'></td>";
                         echo "<td><input type='text' value='" . $addon->price . "' style='width:50px' gsname='".$addon->addonId."_price'></td>";
@@ -83,8 +85,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     }
                 }
                 echo "<tr>";
-                echo "<td align='center' onclick='$(this).closest(\".addonsadded\").fadeOut()' style='cursor:pointer;'>Close</td>";
+                echo "<td align='center'><i class='fa fa-trash-o removeAddonsFromRoom' title='Remove selected addons' style='cursor:pointer;'></i> </td>";
                 echo "<td></td>";
+                echo "<td align='center' onclick='$(this).closest(\".addonsadded\").fadeOut()' style='cursor:pointer;'>Close</td>";
                 echo "<td align='center' gstype='submitToInfoBox' style='cursor:pointer;'>Save</td>";
                 echo "</tr>";
                 echo "</table>";

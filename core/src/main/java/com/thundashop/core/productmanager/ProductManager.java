@@ -236,14 +236,6 @@ public class ProductManager extends AProductManager implements IProductManager {
         }
 
 
-        Collections.sort(retval, new Comparator<Product>() {
-            public int compare(Product o1, Product o2) {
-                if(o1.name != null && o2.name != null) {
-                    return o1.name.compareTo(o2.name);
-                }
-                return 0;
-            }
-        });
         return retval;
     }
 

@@ -250,8 +250,12 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         result.addAll(otherFiles.values());
         
         for(SavedOrderFile saved : result) {
-            if(finalizeFile(saved)) {
-                saveObject(saved);
+            try {
+                if(finalizeFile(saved)) {
+                    saveObject(saved);
+                }
+            }catch(Exception e) {
+                e.printStackTrace();
             }
         }
         
@@ -904,7 +908,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         saved.sumAmountIncOrderLines = 0.0;
         boolean needSaving = false;
         for(String orderId : saved.orders) {
-            Order order = orderManager.getOrder(orderId);
+            Order order = orderManager.getOrderSecure(orderId);
             if(order.cart == null) {
                 continue;
             } 

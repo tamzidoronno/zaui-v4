@@ -32,7 +32,8 @@ h2 {
 .gsarea[area="header"] .Menu { text-align: right; }
 .gsarea[area="header"] .Menu a div { padding: 20px; border-left: solid 1px #bbb; letter-spacing: 1px; font-size: 14px; color:#444; }
 .gsarea[area="header"] .Menu .active div { background-color:#7f8083; color:#FFF; }
-.gsarea[area="header"] .Menu .entries .entries a div { background-color:#fafafa; padding: 5px; border-bottom: solid 1px #bbb; text-align:left; }
+.gsarea[area="header"] .Menu .active .entries { color:#000; }
+.gsarea[area="header"] .Menu .entries .entries a div { background-color:#fafafa; padding: 5px; border-bottom: solid 1px #bbb; text-align:left; color:#444; }
 .gsarea[area="header"] .Menu .entries .entries .active div { background-color:#7f8083; color:#FFF; }
 .gs_page_width { max-width: 1200px; margin: auto; }
 

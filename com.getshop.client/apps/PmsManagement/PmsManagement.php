@@ -1167,7 +1167,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))+86400);
         $filter->sorting = "regdate";
         $filter->includeDeleted = true;
-        print_r($filter);
         return $filter;
     }
 

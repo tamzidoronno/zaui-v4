@@ -13,6 +13,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public $roomTable = "";
     public $fastAddedCode = null;
     private $fetchedBookings = array();
+    public $showBookersData = false;
     
     public function getUserSettingsOrder() {
         return 1;

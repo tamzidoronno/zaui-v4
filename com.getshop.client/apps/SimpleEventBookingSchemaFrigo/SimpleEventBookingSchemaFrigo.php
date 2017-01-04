@@ -2,6 +2,8 @@
 namespace ns_bea0c467_dd4d_4066_891c_172adc42bb9f;
 
 class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Application {
+    public $hasInvalidFields = false;
+    
     public function getDescription() {
         
     }
@@ -17,9 +19,20 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
         }
     }
     
+    public function isValidField($field) {
+        if (isset($_POST['event']) && $_POST['event'] == "signup") {
+            if(!$_POST['data'][$field] || $_POST['data'][$field] == "false") {
+                $this->hasInvalidFields = true;
+                return false;
+            }
+        }
+        return true;
+    }
+    
     public function signup() {
         $user = new \core_usermanager_data_User();
         $user->fullName = $_POST['data']['name'];
+        $user->birthDay = $_POST['data']['birthDay'];
         $user->cellPhone = $_POST['data']['cellphone'];
         $user->emailAddress = $_POST['data']['email'];
         $user->address = new \core_usermanager_data_Address();
@@ -32,6 +45,7 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
         @$user->metaData->{'school'} = $_POST['data']['school'];
         @$user->metaData->{'schoolclass'} = $_POST['data']['schoolclass'];
         @$user->metaData->{'usepictures'} = $_POST['data']['usepicutres'] && $_POST['data']['usepicutres'] == "true" ? "Ja" : "Nei";
+        @$user->metaData->{'overAge'} = $_POST['data']['overAge'] && $_POST['data']['overAge'] == "true" ? "Ja" : "Nei";
         
         $craetedUser  =  $this->getApi()->getUserManager()->createUser($user);
         
@@ -46,6 +60,7 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
         
         $header = array();
         $header[] = "Navn";
+        $header[] = "Fødselsdato";
         $header[] = "Mobilnr";
         $header[] = "Epost";
         $header[] = "Skole";
@@ -57,6 +72,7 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
         $header[] = "Foresatte navn";
         $header[] = "Foresatte mobilnr";
         $header[] = "Tilatt bildebruk";
+        $header[] = "Over 18år";
         $rows[] = $header;
         
         foreach ($event->userIds as $userId) {
@@ -64,6 +80,7 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
             
             $xuser = array();
             $xuser[] = $user->fullName;
+            $xuser[] = $user->birthDay;
             $xuser[] = $user->cellPhone;
             $xuser[] = $user->emailAddress;
             
@@ -78,6 +95,7 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
             $xuser[] = @$user->metaData->{'parentName'};
             $xuser[] = @$user->metaData->{'parentcell'};
             $xuser[] = @$user->metaData->{'usepictures'};
+            $xuser[] = @$user->metaData->{'overAge'};
             
             $rows[] = $xuser;
         }

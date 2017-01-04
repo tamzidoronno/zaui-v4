@@ -5,66 +5,86 @@
 
 <div gstype='form' method='signup'>
     <div class='row'>
-        <div class='col1'>Ditt navn</div>
-        <div class='col2'> <input class='gsniceinput1' gsname="name"/> </div>
+        <div class='col1 <?php if(!$this->isValidField("name")) { echo "invalidfield"; } ?>'>* Ditt navn</div>
+        <div class='col2'> <input class='gsniceinput1' gsname="name" value="<?if(isset ($_POST['data']['name'])){ echo $_POST['data']['name'];}?>"/> </div>
     </div>
     
     <div class='row'>
-        <div class='col1'>Mobilnr</div>
-        <div class='col2'> <input class='gsniceinput1' gsname="cellphone"/> </div>
+        <div class='col1 <?php if(!$this->isValidField("birthDay")) { echo "invalidfield"; } ?>'>* Fødselsdato</div>
+        <div class='col2'> <input class='gsniceinput1' gsname="birthDay"value="<?if(isset ($_POST['data']['birthDay'])){ echo $_POST['data']['birthDay'];}?>"/> </div>
     </div>
     
     <div class='row'>
-        <div class='col1'>Epost</div>
-        <div class='col2'> <input class='gsniceinput1'  gsname="email"/> </div>
+        <div class='col1 <?php if(!$this->isValidField("cellphone")) { echo "invalidfield"; } ?>'>* Mobilnr</div>
+        <div class='col2'> <input class='gsniceinput1' gsname="cellphone" value="<?if(isset ($_POST['data']['cellphone'])){ echo $_POST['data']['cellphone'];}?>"/> </div>
     </div>
     
     <div class='row'>
-        <div class='col1'>Skole</div>
-        <div class='col2'> <input class='gsniceinput1'  gsname="school"/> </div>
+        <div class='col1 <?php if(!$this->isValidField("email")) { echo "invalidfield"; } ?>'>* Epost</div>
+        <div class='col2'> <input class='gsniceinput1'  gsname="email" value="<?if(isset ($_POST['data']['email'])){ echo $_POST['data']['email'];}?>"/> </div>
     </div>
     
     <div class='row'>
-        <div class='col1'>Klasse</div>
-        <div class='col2'> <input class='gsniceinput1'  gsname="schoolclass"/> </div>
+        <div class='col1 <?php if(!$this->isValidField("school")) { echo "invalidfield"; } ?>'>* Skole</div>
+        <div class='col2'> <input class='gsniceinput1'  gsname="school" value="<?if(isset ($_POST['data']['school'])){ echo $_POST['data']['school'];}?>"/> </div>
     </div>
     
     <div class='row'>
-        <div class='col1'>Kjønn</div>
+        <div class='col1 <?php if(!$this->isValidField("schoolclass")) { echo "invalidfield"; } ?>'>* Klasse</div>
+        <div class='col2'> <input class='gsniceinput1'  gsname="schoolclass" value="<?if(isset ($_POST['data']['schoolclass'])){ echo $_POST['data']['schoolclass'];}?>"/> </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col1 <?php if(!$this->isValidField("sex")) { echo "invalidfield"; } ?>'>* Kjønn</div>
         <select class="gsniceselect1" gsname="sex">
-            <option value="dame">Dame</option>
-            <option value="dame">Mann</option>
+            <option value="">Velg kjønn</option>
+            <option value="dame" <?php if (isset ($_POST['data']['sex']) && $_POST['data']['sex'] == "dame") echo 'selected="selected" '; ?>>Dame</option>
+            <option value="mann" <?php if (isset ($_POST['data']['sex']) && $_POST['data']['sex'] == "mann") echo 'selected="selected" '; ?>>Mann</option>
         </select>
     </div>
     
     <div class='row'>
-        <div class='col1'>Addresse</div>
-        <div class='col2'> <input class='gsniceinput1' placeholder='Gate'  gsname="street"/> </div>
-        <div class='col2'> <input class='gsniceinput1' placeholder="Postaddresse"  gsname="postcode"/> </div>
-        <div class='col2'> <input class='gsniceinput1' placeholder="By"  gsname="city"/> </div>
+        <div class='col1 <?php if(!$this->isValidField("street") ||!$this->isValidField("postcode")||!$this->isValidField("city") ) { echo "invalidfield"; } ?>'>* Addresse</div>
+        <div class='col2'> <input class='gsniceinput1' placeholder='Gate'  gsname="street" value="<?if(isset ($_POST['data']['street'])){ echo $_POST['data']['street'];}?>"/> </div>
+        <div class='col2'> <input class='gsniceinput1' placeholder="Postaddresse"  gsname="postcode" value="<?if(isset ($_POST['data']['postcode'])){ echo $_POST['data']['postcode'];}?>"/> </div>
+        <div class='col2'> <input class='gsniceinput1' placeholder="By"  gsname="city" value="<?if(isset ($_POST['data']['city'])){ echo $_POST['data']['city'];}?>"/> </div>
     </div>
     
     <div class='row'>
-        <div class='col1'>Foresatte</div>
-        <div class='col2'> <input class='gsniceinput1' placeholder='Navn på far/mor'  gsname="parentname"/> </div>
-        <div class='col2'> <input class='gsniceinput1' placeholder="Mobilnr"  gsname="parentcell"/> </div>
+        <div class='col1 <?php if(!$this->isValidField("parentname") ||!$this->isValidField("parentcell") ) { echo "invalidfield"; } ?>'>* Foresatte</div>
+        <div class='col2'> <input class='gsniceinput1' placeholder='Navn på far/mor'  gsname="parentname" value="<?if(isset ($_POST['data']['parentname'])){ echo $_POST['data']['parentname'];}?>"/> </div>
+        <div class='col2'> <input class='gsniceinput1' placeholder="Mobilnr"  gsname="parentcell" value="<?if(isset ($_POST['data']['parentcell'])){ echo $_POST['data']['parentcell'];}?>"/> </div>
     </div>
     <br/>
     * Grunnet behandling av sensitiv informasjon ønsker vi at dere kontaker oss dersom din sønn/datter trenger spesielle behov angående mat eller annet.
     <br/>
     <br/>
-    
-    <input type="checkbox" gsname="usepicutres"/> Jeg bekrefter at Frigo kan publisere bilder av min datter/sønn på nett og brosjyrer.
-    <br/>
-    <br/>
+    <div class='row'> 
+        <div class='col1 <?php if(!$this->isValidField("usepicutres")) { echo "invalidfield"; } ?>'><input type="checkbox" gsname="usepicutres" <?php if (isset ($_POST['data']['usepicutres']) && $_POST['data']['usepicutres'] == "true") echo 'checked="checked" '; ?>/>* Jeg bekrefter at Frigo kan publisere bilder av min datter/sønn på nett og brosjyrer.</div>
+    </div>
+    <div class='row'>
+        <div class='col1 <?php if(!$this->isValidField("overAge")) { echo "invalidfield"; } ?>'><input type="checkbox" gsname="overAge" <?php if (isset ($_POST['data']['overAge']) && $_POST['data']['overAge'] == "true") echo 'checked="checked" '; ?>/>* Jeg bekrefter at jeg er over 18 år og melder meg på Frigotur.</div>
+    </div>
     
     <?
-    if (isset($_POST['event']) && $_POST['event'] == "signup") {
-        echo "Du er nå meldt på..";
-    } else {
-    ?>
+    if (isset($_POST['event']) && $_POST['event'] == "signup" && !$this->hasInvalidFields) {
+            
+            echo "Du er nå meldt på...";
+            ?>
+            <script>
+                thundashop.common.closeModal();
+                thundashop.common.goToPage("registration_completed");
+            </script>
+            <?
+    }   
+    else {
+        ?>
     <div class='shop_button' gstype="submit">Meld deg på</div>
     <?
+        if($this->hasInvalidFields){
+            echo "<br><br><div class='invalidfield'> * Du må fylle alle felter som er merket med stjerne</div>";
+        }
+    
     }
     ?>
 </div>

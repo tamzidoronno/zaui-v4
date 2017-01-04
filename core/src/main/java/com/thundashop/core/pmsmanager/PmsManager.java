@@ -4693,7 +4693,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         for(PmsBookingAddonItem item : room.addons) {
-            if(getAddonOriginalItem(item).isIncludedInRoomPrice) {
+            if(getAddonOriginalItem(item) != null && getAddonOriginalItem(item).isIncludedInRoomPrice) {
                 Double roomPrice = room.price;
                 roomPrice -= item.price;
                 room.price = roomPrice;

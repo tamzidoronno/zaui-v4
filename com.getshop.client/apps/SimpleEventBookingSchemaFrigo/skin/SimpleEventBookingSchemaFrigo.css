@@ -10,3 +10,5 @@
     width: 100%;
     box-sizing: border-box;
 } 
+
+.SimpleEventBookingSchemaFrigo .invalidfield { color: red !important; font-weight: bold; }

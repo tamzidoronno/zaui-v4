@@ -1811,7 +1811,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (result.get("choosetyperadio") == null || result.get("choosetyperadio").equals("registration_private")) {
             return null;
         }
-
+        String vat = result.get("company_vatNumber");
+        if(vat != null) {
+            vat = vat.trim();
+            List<Company> companies = userManager.getCompaniesByVatNumber(vat);
+            if(!companies.isEmpty()) {
+                return companies.get(0);
+            }
+        }
+        
         Company company = new Company();
         company.vatNumber = result.get("company_vatNumber");
         company.name = result.get("company_name");
@@ -3152,6 +3160,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.isAvailableForBooking = addonConfig.isAvailableForBooking;
         toReturn.isAvailableForCleaner = addonConfig.isAvailableForCleaner;
         toReturn.isActive = addonConfig.isActive;
+        toReturn.isIncludedInRoomPrice = addonConfig.isIncludedInRoomPrice;
         if(addonConfig.price > 0) {
             toReturn.price = addonConfig.price;
             toReturn.priceExTaxes = addonConfig.priceExTaxes;
@@ -3256,15 +3265,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.userId = newuser.id;
             Company curcompany = createCompany(booking);
             if (curcompany != null) {
-                curcompany = userManager.saveCompany(curcompany);
-                newuser.company.add(curcompany.id);
-                newuser.fullName = curcompany.name;
-                newuser.emailAddress = curcompany.email;
-                newuser.cellPhone = curcompany.phone;
-                newuser.prefix = curcompany.prefix;
-                newuser.address = curcompany.address;
+                List<User> existingUsers = userManager.getUsersByCompanyId(curcompany.id);
+                if(!existingUsers.isEmpty()) {
+                    newuser = existingUsers.get(0);
+                } else {
+                    curcompany = userManager.saveCompany(curcompany);
+                    newuser.company.add(curcompany.id);
+                    newuser.fullName = curcompany.name;
+                    newuser.emailAddress = curcompany.email;
+                    newuser.cellPhone = curcompany.phone;
+                    newuser.prefix = curcompany.prefix;
+                    newuser.address = curcompany.address;
+                    newuser.isCompanyOwner = true;
 
-                userManager.saveUserSecure(newuser);
+                    userManager.saveUserSecure(newuser);
+                }
             }
         } else {
             booking.registrationData.resultAdded = new LinkedHashMap();
@@ -4197,14 +4212,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void removeAddonFromRoomById(String addonId, String roomId) {
         PmsBooking booking = getBookingFromRoom(roomId);
         PmsBookingRooms room = booking.findRoom(roomId);
+        PmsBookingAddonItem toRemove = null;
         for(PmsBookingAddonItem item : room.addons) {
-            PmsBookingAddonItem toRemove = null;
             if(item.addonId.equals(addonId)) {
                 toRemove = item;
             }
-            if(toRemove != null) {
-                room.addons.remove(toRemove);
-            }
+        }
+        if(toRemove != null) {
+            room.addons.remove(toRemove);
         }
         saveBooking(booking);
     }
@@ -4677,17 +4692,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
-        
-        for(PmsBookingAddonItem item : room.addons) {
-            if(getAddonOriginalItem(item).isIncludedInRoomPrice) {
-                Double roomPrice = room.price;
-                roomPrice -= item.price;
-                room.price = roomPrice;
-                for(String key : room.priceMatrix.keySet()) {
-                    room.priceMatrix.put(key, roomPrice);
-                }
-            }
-        }
     }
     
     private void setAddonPricesOnRoom(PmsBookingRooms room, PmsBooking booking) {
@@ -4727,6 +4731,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    @Override
+    public void removeAddonFromRoom(String id, String pmsBookingRooms) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRooms);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRooms);
+        PmsBookingAddonItem toremove = null;
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.addonId.equals(id)) {
+                toremove = item;
+            }
+        }
+        room.addons.remove(toremove);
+        saveBooking(booking);
     }
 
 }

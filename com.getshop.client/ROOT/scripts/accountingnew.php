@@ -3,9 +3,9 @@ chdir("../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
-$start = date("M d, Y h:i:s A", strtotime($_GET['start']));
-$end = date("M d, Y h:i:s A", strtotime($_GET['end']));
 if(isset($_GET['configid'])) {
+    $start = date("M d, Y h:i:s A", strtotime($_GET['start']));
+    $end = date("M d, Y h:i:s A", strtotime($_GET['end']));
     $config = $factory->getApi()->getAccountingManager()->getAccountingConfig($_GET['configid']);
     $file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($config->id, $start, $end);
 }

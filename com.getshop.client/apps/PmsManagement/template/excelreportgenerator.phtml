@@ -3,6 +3,7 @@
 $options = array();
 $options['exportBookingDataToExcel'] = "All data";
 $options['exportBookingExpediaDataToExcel'] = "Expedia data";
+$options['exportUserDataToExcel'] = "User data";
 
 foreach($options as $idx => $option) {
     echo $option . ' - <a gs_downloadexcelreport="'.$idx.'" title="Download to excel" style="cursor:pointer" aria-hidden="true" gs_filename="bookingdataexport" onclick="$(\'.excelexportoptions\').hide();">(download)</a><br>';

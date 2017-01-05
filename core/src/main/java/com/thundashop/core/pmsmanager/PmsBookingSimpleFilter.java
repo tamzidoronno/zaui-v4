@@ -135,6 +135,7 @@ public class PmsBookingSimpleFilter {
         simple.cleaningComment = room.cleaningComment;
         simple.totalCost = room.totalCost;
         simple.requestedEndDate = room.requestedEndDate;
+        simple.userId = booking.userId;
         
         if(manager.getConfiguration().hasLockSystem()) {
             simple.code = room.code;

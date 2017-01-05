@@ -1,15 +1,21 @@
 <?php
 /* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
-$orders = (array)$this->getCreatedOrders();
+$showBookingData = false;
+if(isset($this->showBookersData)) {
+    $showBookingData = $this->showBookersData;
+}
+$orders = (array)$this->getCreatedOrders($showBookingData);
 $i = 1;
 if(sizeof($orders) <= 1) {
     echo "Nothing to preview.<br><br>";
 } else {
     echo "<table cellspacing='0' cellpadding='0' width='100%'>";
     echo "<tr>";
-    echo "<th>";
-    echo '<i gs_downloadexcelreport="getOrderInvoiceArray" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="Orderpreviewexport"></i>';
-    echo "Booking</th>";
+    if($showBookingData) {
+        echo "<th>";
+        echo '<i gs_downloadexcelreport="getOrderInvoiceArray" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="Orderpreviewexport"></i>';
+        echo "Booking</th>";
+    }
     echo "<th>Room</th>";
     echo "<th>Start date</th>";
     echo "<th>End date</th>";
@@ -23,14 +29,16 @@ if(sizeof($orders) <= 1) {
     foreach($orders as $res) {
         if($i != sizeof($orders)) {
             echo "<tr>";
-            echo "<td class='moreinformationaboutbooking' bookingid='".$res['id']."' style='cursor:pointeR;'>" . $res['fullname'] . "<br>";
-            echo "<div style='color:#bbb;'>";
-            echo "<b>" . $res['start'] . "</b> - <b>" . $res['end'] . "</b>";
-            if($res['invoicedto']) {
-                echo "<br> invoiced until: " . $res['invoicedto'];
+            if($showBookingData) {
+                echo "<td class='moreinformationaboutbooking' bookingid='".$res['id']."' style='cursor:pointeR;'>" . $res['fullname'] . "<br>";
+                echo "<div style='color:#bbb;'>";
+                echo "<b>" . $res['start'] . "</b> - <b>" . $res['end'] . "</b>";
+                if($res['invoicedto']) {
+                    echo "<br> invoiced until: " . $res['invoicedto'];
+                }
+                echo "</div>";
+                echo "</td>";
             }
-            echo "</div>";
-            echo "</td>";
             echo "<td>" . $res['additionalmetadata'] . "</td>";
             echo "<td>" . $res['itemstart'] . "</td>";
             echo "<td>" . $res['itemend']  . "</td>";
@@ -43,7 +51,9 @@ if(sizeof($orders) <= 1) {
             echo "</tr>";
         } else {
             echo "<tr>";
-            echo "<td></td>";
+            if($showBookingData) {
+                echo "<td></td>";
+            }
             echo "<td></td>";
             echo "<td></td>";
             echo "<td></td>";

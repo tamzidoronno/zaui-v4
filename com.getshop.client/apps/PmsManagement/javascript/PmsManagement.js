@@ -40,6 +40,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .loadorderstatistics', app.PmsManagement.loadorderstatistics);
         $(document).on('click','.PmsManagement .changepaymenttypebutton', app.PmsManagement.changepaymenttypebutton);
         $(document).on('click','.PmsManagement .markpaidbutton', app.PmsManagement.markpaidform);
+        $(document).on('click','.PmsManagement .changeGuestInformation', app.PmsManagement.changeGuestInformation);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -68,6 +69,17 @@ app.PmsManagement = {
         $(document).on('keyup','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('change','.PmsManagement .roomsbookedactionsselection', app.PmsManagement.updateRoomActionSelection);
         $(document).on('click','.PmsManagement .loadStatsForDay', app.PmsManagement.loadStatsForDay);
+        $(document).on('click','.PmsManagement .selectalladdons', app.PmsManagement.selectalladdons);
+    },
+    selectalladdons: function() {
+        var checked = $(this).is(':checked');
+        $(this).closest('.addonsadded').find('.addontoremove').each(function() {
+            if(checked) {
+                $(this).attr('checked','checked');
+            } else {
+                $(this).attr('checked',null);
+            }
+        });
     },
     showAddonList : function() {
         var event = thundashop.Ajax.createEvent('','loadEventListForRoom',$(this), {
@@ -80,6 +92,21 @@ app.PmsManagement = {
             addon.closest('td').find('.addonsadded').fadeIn();
         });
     },
+    changeGuestInformation : function() {
+        var form = $(this).closest('[gstype="form"]');
+        var data = thundashop.framework.createGsArgs(form);
+        var method = form.attr('method');
+        var event = thundashop.Ajax.createEvent('',method, $(this), data);
+        if(data.updateprices || data.updateaddons) {
+            thundashop.common.showInformationBoxNew(event);
+        } else {
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                form.closest('td').find('.viewmode').html(res);
+                form.fadeOut();
+            });
+        }
+    },
+    
     loadStatsForDay : function() {
         var index = $(this).attr('index');
         var event = thundashop.Ajax.createEvent('','loadStatsForDay', $(this), {
@@ -127,9 +154,18 @@ app.PmsManagement = {
     
     removeAddonsFromRoom : function() {
         var panel = $(this).closest('.addonsadded');
+        var idstoremove = [];
+        panel.find('.addontoremove').each(function() {
+            if($(this).is(':checked')) {
+                idstoremove.push($(this).attr('addonid'));
+            }
+        });
+        
         var data = {
             roomId : panel.find('[gsname="roomId"]').val(),
-            productId : panel.find('[gsname="productId"]').val()
+            productId : panel.find('[gsname="productId"]').val(),
+            idstoremove : idstoremove,
+            bookingid : $('#openedbookingid').val()
         }
         var event = thundashop.Ajax.createEvent('','removeAddonsFromRoom', $(this),data);
         thundashop.common.showInformationBoxNew(event);
@@ -558,17 +594,36 @@ app.PmsManagement = {
         }
     },
     toggleEditMode : function() {
-        var row = $(this).closest('.roomattribute');
-        var view = row.find('.viewmode');
-        var edit = row.find('.editmode');
-        edit.find('.fa-close').remove();
-        var close = $("<i class='fa fa-close' style='float:right;cursor:pointer;'></i>");
-        close.click(function() {
-            edit.fadeOut();
-            return;
-        });
-        edit.prepend(close);
-        edit.fadeIn();
+        
+        if($(this).hasClass('loadRoomItem')) {
+            var td = $(this).closest('td');
+            var event = thundashop.Ajax.createEvent('','loadEditBookingItem',$(this),{
+                "bookingId" : $(this).closest('tr').attr('bookingid'),
+                "pmsRoomId" : $(this).closest('tr').attr('roomid')
+            });
+            thundashop.Ajax.postWithCallBack(event, function(res){
+                td.find('.changebookingitempanel').html(res);
+                var close = $("<i class='fa fa-close' style='float:right;cursor:pointer;'></i>");
+                close.click(function() {
+                    td.find('.changebookingitempanel').fadeOut();
+                    return;
+                });
+                td.find('.changebookingitempanel').prepend(close);
+                td.find('.changebookingitempanel').fadeIn();
+            });
+        } else {
+            var row = $(this).closest('.roomattribute');
+            var edit = row.find('.editmode');
+            edit.find('.fa-close').remove();
+            var close = $("<i class='fa fa-close' style='float:right;cursor:pointer;'></i>");
+            close.click(function() {
+                edit.fadeOut();
+                return;
+            });
+            edit.prepend(close);
+            edit.fadeIn();
+        }
+        
     },
     showMoreInformation : function() {
         var data = {

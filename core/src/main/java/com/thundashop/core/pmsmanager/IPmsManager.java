@@ -73,6 +73,9 @@ public interface IPmsManager {
     
     @Administrator
     public List<PmsBookingAddonViewItem> getItemsForView(String viewId, Date date);
+    
+    @Administrator
+    public void removeAddonFromRoom(String id, String pmsBookingRooms);
         
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     

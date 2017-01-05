@@ -41,6 +41,7 @@ public class PmsRoomSimple implements Serializable {
     boolean createOrderAfterStay;
     boolean hasBeenCleaned = false;
     public double totalCost;
+    public String userId;
     
     boolean earlycheckin = false;
     boolean latecheckout = false;

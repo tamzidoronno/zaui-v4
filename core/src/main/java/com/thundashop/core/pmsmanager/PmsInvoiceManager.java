@@ -37,6 +37,16 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsInvoiceManager {
 
+    private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
+        double res = 0.0;
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.date.after(startDate) && item.date.before(endDate)) {
+                res += item.price;
+            }
+        }
+        return res;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -661,7 +671,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private void checkIfNeedAdditionalEndInvoicing(PmsBookingRooms room, NewOrderFilter filter) {
-        avoidChangingInvoicedFrom = true;
+         avoidChangingInvoicedFrom = true;
         PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
 
         Date startDate = room.getInvoiceStartDate();
@@ -675,7 +685,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room, filter);
-        
+
         if (pmsManager.getConfigurationSecure().substractOneDayOnOrder && !filter.onlyEnded) {
             for(CartItem item : items) {
                 Calendar cal = Calendar.getInstance();
@@ -1022,7 +1032,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             item.startDate = endDate;
             item.endDate = tmpDate;
         }
-
+        
         
         item.getProduct().price = price;
         
@@ -1378,7 +1388,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private List<CartItem> createCartItemsForRoom(Date startDate, Date endDate, PmsBooking booking, PmsBookingRooms room, NewOrderFilter filter) {
-        
         startDate = normalizeDate(startDate, true);
         endDate = normalizeDate(endDate, false);
         
@@ -1426,14 +1435,20 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private List<CartItem> createCartItemsFromAddon(PmsBookingRooms room, Date startDate, Date endDate) {
         HashMap<String, Integer> products = new HashMap();
         for(PmsBookingAddonItem addon : room.addons) {
-            products.put(addon.productId, 0);
+            if(productManager.getProductUnfinalized(addon.productId) != null) {
+                products.put(addon.productId, 0);
+            }
         }
         
         Calendar start = Calendar.getInstance();
         start.setTime(startDate);
         List<CartItem> result = new ArrayList();
         for(String productId : products.keySet()) {
-            List<PmsBookingAddonItem> items = room.getAllAddons(productId, startDate, endDate);
+            Date endDateToUse = endDate;
+            if(isSameDay(endDate, room.date.end)) {
+                endDateToUse = room.date.end;
+            }
+            List<PmsBookingAddonItem> items = room.getAllAddons(productId, startDate, endDateToUse);
             if(items.size() > 0) {
                 Date startDateToAdd = startDate;
                 Date endDateToAdd = endDate;
@@ -1483,7 +1498,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private CartItem createCartItemForCart(String productId, int count, String roomId) {
         CartItem item = new CartItem();
-        Product product = productManager.getProduct(productId);
+        Product product = productManager.getProductUnfinalized(productId);
         item.setProduct(product.clone());
         item.setCount(count);
         item.getProduct().externalReferenceId = roomId;
@@ -1593,21 +1608,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     break;
                 }
             }
+            
+            Double addonsIncluded = getAddonsPriceIncludedInRoom(room, startDate, endDate);
+            price = price - addonsIncluded;
             price /= count;
         } else {
             price = room.price;
         }
         
-        if(pmsManager.getPriceObjectFromBooking(booking).privatePeopleDoNotPayTaxes) {
-            User user = userManager.getUserById(booking.userId);
-            if(user.company.isEmpty()) {
-                includeTaxes = false;
-            } else {
-                Company company = userManager.getCompany(user.company.get(0));
-                includeTaxes = company.vatRegisterd;
-            }
-        }
-
         if (pmsManager.getPriceObjectFromBooking(booking).pricesExTaxes && includeTaxes) {
             double tax = 1 + (calculateTaxes(room.bookingItemTypeId) / 100);
             //Order price needs to be inc taxes.. 

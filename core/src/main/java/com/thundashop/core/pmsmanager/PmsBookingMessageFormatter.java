@@ -165,7 +165,7 @@ class PmsBookingMessageFormatter {
                 for(String prodId : addonsCount.keySet()) {
                     Product product = productManager.getProduct(prodId);
                     bookingData += addonsCount.get(prodId) + " x " + product.name + "<br>";
-                }
+                    }
             }catch(Exception e) {
                 e.printStackTrace();
             }

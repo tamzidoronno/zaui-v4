@@ -12,14 +12,16 @@ if (!count($accessList)) {
 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->isCompanyOwner) {
 ?>
     <div class="downloadofreport">
-        Last ned SFI Rapport for nåværende periode
-        <br/><div class="shop_button downloadReport" filename="SFIReport.xlsx">Last ned</div> <div class="shop_button downloadReportTotal" filename="SFIReport.xlsx">Last ned kostnadspesifikasjon</div> 
-        
         <div class="viewselector">
             Visningsbilde:
             <div gsclick="setNormalView" class="shop_button <? echo !$allActivated ? 'active' : ''; ?>">Timeregistrering</div>
             <div gsclick="setSummaryView" class="shop_button <? echo $allActivated ? 'active' : ''; ?>">Oppsummering</div>
         </div>
+        
+        <br/>Last ned SFI Rapport for aktiv periode
+        <div class="shop_button downloadReport" filename="SFIReport.xlsx">Last ned</div> <div class="shop_button downloadReportTotal" filename="SFIReport.xlsx">Last ned kostnadspesifikasjon</div> 
+        
+        
     </div>
 <?
 }

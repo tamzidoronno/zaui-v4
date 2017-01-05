@@ -89,7 +89,7 @@ $company = $this->getApi()->getUserManager()->getCompany($_POST['value']);
     </div>
     <div class="textfield gss_setting"  id="contactPerson">
         <span class="title"><?php echo $this->__f("Description"); ?></span>
-        <textarea type="textfield" gs_model='companymodel' gs_model_attr='fritext'><? echo $company->fritext; ?></textarea>
+        <textarea type="textfield" gs_model='companymodel' gs_model_attr='description'><? echo $company->description; ?></textarea>
         <div class="description">
             <?php echo $this->__w(""); ?>
         </div>

@@ -90,26 +90,8 @@ foreach ($accessList as $access) {
                 if ($hour->costType === "other") {
                     $editButton = "<span otherid='$hour->id' projectid='$project->id' gs_show_modal='othercosts' class='gs_shop_small_icon fa fa-edit'></span>";
                     $cost = $hour->cost;
-                    $type = $hour->type;
+                    $type = $hour->comment;
                     
-                    if ($type == "meeting")
-                        $type = "(Møte)";
-                    
-                    if ($type == "travel")
-                        $type = "(Reise)";
-                    
-                    if ($type == "other")
-                        $type = "(Annet)";
-                    
-                    if ($hour->nfr) {
-                        $type .= " (NFR)";
-                    }
-                    if ($hour->comment) {
-                        $type .= " - ".$hour->comment;
-                    }
-                    
-                    $totalCost += $cost;
-                    $type = $allActivated ? $name : $comment;
                     if ($allActivated)
                         $editButton = "";
                     echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'></span><span class='othercost'>$cost</span><span class='comment'>$type</span></div>";

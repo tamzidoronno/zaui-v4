@@ -99,7 +99,11 @@ if ($forskningsperiode || $fixedHours) {
     
     ?>
     
-    <br/> <div class='shop_button' gsclick='deleteCost' costId='<? echo $costId; ?>'> Slett oppføring </div>
+    <br/>
+    <br/>
+    <? if ($costId) { ?>
+        <div class='shop_button' gsclick='deleteCost' costId='<? echo $costId; ?>'> Slett oppføring </div>
+    <? } ?>
     <div class='shop_button' gstype='submit'> Lagre </div>
 </div>
 
@@ -151,6 +155,9 @@ if ($forskningsperiode || $fixedHours) {
     <div class='shop_button' gstype='submit'> Lagre </div>
 </div>
 
+<?
+if ($fixedHours) {
+?>
 <div gstype='form' method='saveFixedHours' content='fixed' class='tabcontent'>
     <div class="periodeopen">
         <?
@@ -184,6 +191,9 @@ if ($forskningsperiode || $fixedHours) {
     <? } ?>
     <div class='shop_button' gstype='submit'> Lagre </div>
 </div>
+<?
+}
+?>
 
 <script>
     $('#from_1').datepicker({dateFormat: "dd.mm.yy"});

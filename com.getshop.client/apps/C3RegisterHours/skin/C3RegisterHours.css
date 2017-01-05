@@ -44,10 +44,14 @@
 }
 
 .C3RegisterHours .viewselector {
-    border-top: solid 1px #FFF;
-    margin-top: 10px;
+    border-bottom: solid 1px #FFF;
+    padding-bottom: 10px;
 }
 
 .C3RegisterHours .viewselector .shop_button.active {
     background-color: green;
+}
+
+.C3RegisterHours h1 {
+    font-size: 20px;
 }

@@ -82,7 +82,8 @@ class Page {
             $this->includeLayoutHistory();
         }
         
-        echo "<div class='gsbody_inner $editormodeclass $canChangeLayout $userClass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn' userTimeout='$timeout'>";
+        $openModalClass = isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOpen" : ""; 
+        echo "<div class='gsbody_inner $editormodeclass $canChangeLayout $userClass $openModalClass' gsStoreId='".$this->factory->getStore()->id."' pageId='" . $this->getId() . "' gspagetype='$gs_page_type' userLoggedIn='$loggedIn' userTimeout='$timeout'>";
         
         $this->printCompanySelectList();
         

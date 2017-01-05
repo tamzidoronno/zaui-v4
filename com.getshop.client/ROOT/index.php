@@ -329,7 +329,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         }
         
         ?>
-        <div id="gsbody" class="<? echo  isset($_SESSION['gs_currently_showing_modal']) ? "gs_modalIsOpen" : ""; echo " " . $disableMobileview; ?> ">
+        <div id="gsbody" class="<? echo " " . $disableMobileview; ?> ">
             <?php echo $html; ?>
         </div>
         

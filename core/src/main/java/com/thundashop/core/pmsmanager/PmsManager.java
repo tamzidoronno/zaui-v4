@@ -3160,6 +3160,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.isAvailableForBooking = addonConfig.isAvailableForBooking;
         toReturn.isAvailableForCleaner = addonConfig.isAvailableForCleaner;
         toReturn.isActive = addonConfig.isActive;
+        toReturn.isIncludedInRoomPrice = addonConfig.isIncludedInRoomPrice;
         if(addonConfig.price > 0) {
             toReturn.price = addonConfig.price;
             toReturn.priceExTaxes = addonConfig.priceExTaxes;
@@ -4211,14 +4212,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void removeAddonFromRoomById(String addonId, String roomId) {
         PmsBooking booking = getBookingFromRoom(roomId);
         PmsBookingRooms room = booking.findRoom(roomId);
+        PmsBookingAddonItem toRemove = null;
         for(PmsBookingAddonItem item : room.addons) {
-            PmsBookingAddonItem toRemove = null;
             if(item.addonId.equals(addonId)) {
                 toRemove = item;
             }
-            if(toRemove != null) {
-                room.addons.remove(toRemove);
-            }
+        }
+        if(toRemove != null) {
+            room.addons.remove(toRemove);
         }
         saveBooking(booking);
     }
@@ -4691,17 +4692,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
-        
-        for(PmsBookingAddonItem item : room.addons) {
-            if(getAddonOriginalItem(item) != null && getAddonOriginalItem(item).isIncludedInRoomPrice) {
-                Double roomPrice = room.price;
-                roomPrice -= item.price;
-                room.price = roomPrice;
-                for(String key : room.priceMatrix.keySet()) {
-                    room.priceMatrix.put(key, roomPrice);
-                }
-            }
-        }
     }
     
     private void setAddonPricesOnRoom(PmsBookingRooms room, PmsBooking booking) {
@@ -4741,6 +4731,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    @Override
+    public void removeAddonFromRoom(String id, String pmsBookingRooms) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRooms);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRooms);
+        PmsBookingAddonItem toremove = null;
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.addonId.equals(id)) {
+                toremove = item;
+            }
+        }
+        room.addons.remove(toremove);
+        saveBooking(booking);
     }
 
 }

@@ -119,6 +119,8 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         line.put(15, order.incrementOrderId + "");
         line.put(16, ""); //KID
         line.put(17, format.format(order.rowCreatedDate)); //Forfallsdato
+        line.put(18, "");
+        line.put(19, "");
         line.put(20, "GetShop order: " + order.incrementOrderId); //Forfallsdato
         line.put(21, order.payment.readablePaymentType()); //Forfallsdato
         
@@ -138,9 +140,15 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
             subLine.put(8, df.format(item.getProduct().price * item.getCount() * -1)+"");
             subLine.put(9, customerId+"");
             subLine.put(10, "");
+            subLine.put(11, "");
+            subLine.put(12, "");
+            subLine.put(13, "");
+            subLine.put(14, "");
             subLine.put(15, order.incrementOrderId + "");
             subLine.put(16, ""); //KID
             subLine.put(17, format.format(order.rowCreatedDate)); //Forfallsdato
+            subLine.put(18, "");
+            subLine.put(19, "");
             subLine.put(20, createLineText(item)); //Forfallsdato
             subLine.put(21, order.payment.readablePaymentType()); //Forfallsdato
             

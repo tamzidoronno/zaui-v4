@@ -582,6 +582,9 @@ public class PmsBookingRooms implements Serializable {
         Integer days = getNumberOfNights();
         totalCost += days * price;
         for(PmsBookingAddonItem item : addons) {
+            if(item.isIncludedInRoomPrice) {
+                continue;
+            }
             totalCost += (item.price * item.count);
         }
         

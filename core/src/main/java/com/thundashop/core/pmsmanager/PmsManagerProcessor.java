@@ -685,6 +685,9 @@ public class PmsManagerProcessor {
                 }
             }
             boolean forceSend = (booking.channel != null && !booking.channel.isEmpty()) && booking.isRegisteredToday();
+            if(!manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
+                forceSend = true;
+            }
             if(booking.payedFor != payedfor || forceSend) {
                 booking.payedFor = payedfor;
                 if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
@@ -878,8 +881,14 @@ public class PmsManagerProcessor {
                 continue;
             }
             
-            if(book.isRegisteredToday() && (book.channel == null || book.channel.isEmpty())) {
+            if(book.isRegisteredToday() && (book.channel == null || book.channel.isEmpty()) && manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
                 continue;
+            }
+            
+            if(book.isRegisteredToday() && (book.channel == null || book.channel.isEmpty()) && !manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
+                if(!book.isOld(30)) {
+                    continue;
+                }
             }
             
             for(String orderId : book.orderIds) {

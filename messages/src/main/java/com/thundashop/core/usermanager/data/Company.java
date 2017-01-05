@@ -24,6 +24,7 @@ public class Company extends DataCommon {
     public String groupId = "";
     
     public String reference = "";
+    public String fritext = "";
     
     /* This are legacy attributes, replaced with address field*/
     public String streetAddress = "";

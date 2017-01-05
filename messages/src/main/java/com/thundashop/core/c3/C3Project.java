@@ -139,4 +139,11 @@ public class C3Project extends DataCommon {
         activatedCompanies.values().stream().forEach(test -> test.removeCost(costId));
         
     }
+
+    public boolean isWorkPackageActivated(String companyId, String wpId) {
+        if (!isCompanyActivated(companyId))
+            return false;
+        
+        return activatedCompanies.get(companyId).activeWorkPackaged.containsKey(wpId);
+    }
 }

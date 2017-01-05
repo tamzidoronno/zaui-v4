@@ -51,3 +51,7 @@
 .C3RegisterHours .viewselector .shop_button.active {
     background-color: green;
 }
+
+.C3RegisterHours h1 {
+    font-size: 20px;
+}

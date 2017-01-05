@@ -25,7 +25,6 @@ class C3OtherCosts extends \MarketingApplication implements \Application {
         $otherCost->to = $this->convertToJavaDate(strtotime($_POST['data']['to']));
         $otherCost->projectId = $this->getModalVariable("projectid");
         $otherCost->cost = $_POST['data']['cost'];
-        $otherCost->type = $_POST['data']['type'];
         $otherCost->comment = $_POST['data']['comment'];
         $otherCost->nfr = isset($_POST['data']['nfr']) ? $_POST['data']['nfr'] : false;
         
@@ -37,6 +36,13 @@ class C3OtherCosts extends \MarketingApplication implements \Application {
     }
     
     public function validate($hour) {
+        if (!$_POST['data']['comment']) {
+            $obj = $this->getStdErrorObject();
+            $obj->fields->errorMessageComment = "Feltet kan ikke være blank";
+            $obj->gsfield->comment = 1;
+            $this->doError($obj);
+        }
+        
         if (!ctype_digit($hour->cost)) {
             $obj = $this->getStdErrorObject();
             $obj->fields->errorMessageTimer = "Kun hele kroner tilatt i dette feltet";

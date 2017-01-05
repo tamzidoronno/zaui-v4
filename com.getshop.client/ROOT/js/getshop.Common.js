@@ -203,7 +203,7 @@ thundashop.common.showModal = function(modalName, data) {
     var event = thundashop.Ajax.createEvent(null, "showModal", null, data);
     event['synchron'] = true;
     thundashop.Ajax.post(event, function(res) {
-        $('#gsbody').addClass('gs_modalIsOpen');
+        $('#gsbody .gsbody_inner').addClass('gs_modalIsOpen');
         $('#dynamicmodal').html(res);
         $(window).scrollTop(0);
     });

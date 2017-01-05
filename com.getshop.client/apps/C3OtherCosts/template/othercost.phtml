@@ -32,21 +32,13 @@ $projectPeriodeToShow = $project->currentProjectPeriode;
         <br/><input class='gsniceinput1' type='text' gsname='from' id='from' value='<? echo $from; ?>'/> - <input class='gsniceinput1' type='text' gsname='to' id='to' value='<? echo $to; ?>'/> 
         <br/>
         <br/>Type:
-        <br/>
-        <select class='gsniceselect1' gsname='type'  style="width: 100%; box-sizing: border-box;">
-            <option value='travel' <? echo $type == "travel" ? "selected='true'" : ""; ?>>Reise</option>
-            <option value='meeting' <? echo $type == "meeting" ? "selected='true'" : ""; ?>>Møter</option>
-            <option value='other' <? echo $type == "other" ? "selected='true'" : ""; ?>>Andre driftskostnader</option>
-        </select>
+        <div class='gserrorfield' id='errorMessageComment'></div>
+        <br/><input type='text' gsname='comment' class='gsniceinput1' style="width: 100%; box-sizing: border-box;" value='<? echo $comment; ?>' placeholder='Eksempel: Reise, Innkjøp etc'/>
         <br/>
         <br/> Kostnad (Kr):
         <div class='gserrorfield' id='errorMessageTimer'></div>
         <br/><input type='text' gsname='cost' class='gsniceinput1'  style="width: 100%; box-sizing: border-box;" value="<? echo $cost; ?>"/>
         
-        <br/>
-        <br/> Kommentar:
-        <br/><input type='text' gsname='comment' class='gsniceinput1' style="width: 100%; box-sizing: border-box;" value='<? echo $comment; ?>'/>
-        <br/>
         
         <?
         if ($this->getApi()->getC3Manager()->allowedNfrOtherCostCurrentUser()) {

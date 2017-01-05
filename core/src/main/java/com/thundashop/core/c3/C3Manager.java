@@ -177,6 +177,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     public List<C3Project> search(String searchText) {
         List<C3Project> retProjects = projects.values().stream()
                 .filter(project -> project.name.toLowerCase().contains(searchText))
+                .sorted(C3Project.comperatorByProjectNumber())
                 .collect(Collectors.toList());
         
         retProjects.stream().forEach(project -> finalizeProject(project));
@@ -799,7 +800,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     private List<SFIExcelReportData> createReportDatas(Date start, Date end, String companyId, boolean segregate) {
         List<C3Project> projectsToUse = getAllProjectsConnectedToCompany(companyId);
         List<User> users = userManager.getUsersByCompanyId(companyId);
-        List<WorkPackage> workPackagesToUse = getWorkPackages(projectsToUse, users, start, end);
+        List<WorkPackage> workPackagesToUse = getWorkPackages(projectsToUse, users, start, end, companyId);
         
         Collections.sort(workPackagesToUse, (o1, o2) -> {
             return o1.name.compareTo(o2.name);
@@ -994,12 +995,14 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         return retMap;
     }
 
-    private List<WorkPackage> getWorkPackages(List<C3Project> projectsToUse, List<User> users, Date start, Date end) {
+    private List<WorkPackage> getWorkPackages(List<C3Project> projectsToUse, List<User> users, Date start, Date end, String companyId) {
         TreeSet<String> wpIds = new TreeSet();
         
         for (C3Project project : projectsToUse) {
             for (String wpId : project.workPackages) {
-                wpIds.add(wpId);
+                if (project.isWorkPackageActivated(companyId, wpId)) {
+                    wpIds.add(wpId);
+                }
             }
         }
         

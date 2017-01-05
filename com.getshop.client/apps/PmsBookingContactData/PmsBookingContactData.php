@@ -154,6 +154,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
     }
     
     public function submitForm() {
+        unset($_SESSION['pmfilter'][$this->getSelectedName()]);
         $this->savePostedForm();
         $this->validatePostedForm();
         $loaded = false;
@@ -181,7 +182,12 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                     }
                 } else {
                     if($curBooking->confirmed) {
-                        echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName().'_confirmed");';
+                            $nextPage = $this->getConfigurationSetting("nextPageId");
+                            if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $nextPage) {
+                                echo 'thundashop.common.goToPageLink("/?page='.$nextPage. '");';
+                            } else {
+                                echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName().'_confirmed");';
+                            }
                     } else {
                         $nextPage = $this->getConfigurationSetting("nextPageId");
                         if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $nextPage) {

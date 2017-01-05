@@ -150,7 +150,6 @@ if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
     } else {
         if($this->isEditorMode() && $pmsconfig->requirePayments && !$pmsconfig->autoCreateInvoices) {
             echo "<span style='margin-top: 5px;'  class='complete_button' gsvalue='nopay'>".$this->__w("Continue")."</span>";
-            echo "<b>* Use continue without orders if you are missing invoice information and need to add it later on, or if you need to change the prices before sending payment link / invoice.</b>";
         } else {
             echo "<span class='complete_button'>$completeText</span>";
         }

@@ -14,5 +14,9 @@ public class PowerOfficeGoImportLine {
     public Integer invoiceNo;
     public Integer documentNumber;
     public Date documentDate;
+    public Double currencyAmount;
+    public Date dueDate;
+    public String currencyCode;
+    public String vatCode;
     
 }

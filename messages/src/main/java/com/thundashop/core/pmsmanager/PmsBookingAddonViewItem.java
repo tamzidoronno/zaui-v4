@@ -9,4 +9,6 @@ public class PmsBookingAddonViewItem {
     public Date date;
     public String roomName;
     public String owner;
+    public Integer delivered = 0;
+    public String addonId = "";
 }

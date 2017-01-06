@@ -1,7 +1,16 @@
-.gs_page_width { max-width: 1300px; margin: auto; background-color:#fff; font-size: 18px; }
+@font-face {
+    font-family: 'Antonio-Regular';
+    src:url('/fonts/Antonio-Regular.ttf.woff') format('woff'),
+        url('/fonts/Antonio-Regular.ttf.svg#Antonio-Regular') format('svg'),
+        url('/fonts/Antonio-Regular.ttf.eot'),
+        url('/fonts/Antonio-Regular.ttf.eot?#iefix') format('embedded-opentype'); 
+    font-weight: normal;
+    font-style: normal;
+}
+.gs_page_width { max-width: 1300px; margin: auto; background-color:#fff; font-size: 18px; font-family: 'Open Sans' }
 body { background-color:#525659; margin-top: 10px; margin-bottom: 10px; font-family: 'Open Sans';}
 .Menu .entry a { font-size: 20px; width:100px; display:inline-block; margin-top: 20px;color: #666666;padding-right: 20px; }
-.Menu { text-align: right; position: absolute; top:110px; right: 100px;font-family: 'Anton', sans-serif; }
+.Menu { text-align: right; position: absolute; top:93px; right: 100px; font-family: 'Antonio-Regular'; }
 .chooseprivateperson_label { display:none; }
 .gsarea[area="header"] .gs_page_width,
 .gsarea[area="footer"] .gs_page_width { height: 250px; }
@@ -40,8 +49,8 @@ body { background-color:#525659; margin-top: 10px; margin-bottom: 10px; font-fam
 .gs_lang_code_en_en { background-image: url('https://hybelhotell.getshop.com/displayImage.php?id=a1626d35-83cc-49c7-9c35-60a0f9784b05'); background-size: 35px 35px; }
 
 
-H1,H2 { font-family: 'Anton', sans-serif; color: #3f2d51; letter-spacing: 1px; }
-.shop_button { background: none; background-color:#7b6a58; color:#fff;font-family: 'Anton', sans-serif; border: solid 0px;  }
+H1,H2 { font-size: 22px; font-family: 'Antonio-Regular'; color: #3f2d51; letter-spacing: 0px; }
+.shop_button { background: none; background-color:#7b6a58; color:#fff;font-family: 'Open Sans', sans-serif; border: solid 0px;  }
 
 @media only all and (max-width: 1100px) {
     .gsarea[area="body"] .gs_page_width {
@@ -53,10 +62,10 @@ H1,H2 { font-family: 'Anton', sans-serif; color: #3f2d51; letter-spacing: 1px; }
 @media only all and (max-width: 800px) {
     .gsarea[area="body"] .gs_page_width {
         box-shadow: none;
-         padding-left: 10px; padding-right: 10px; 
+         padding-left: 10px; padding-right: 10px;
     }
     .Menu {
-        top: 75px;
+        top: 55px;
         right: 30px;
     }
     

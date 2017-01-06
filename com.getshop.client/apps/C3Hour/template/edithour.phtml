@@ -127,7 +127,7 @@ if ($forskningsperiode || $fixedHours) {
     <br/>
     <div class='gserrorfield' id='errorMessageTimer'></div>
     <input class='gsniceinput1 timehours' type='text' gsname='hours' value='<? echo $hours; ?>'/> x 
-    <select class='gsniceselect1 hourrate' gsname='rate'>
+    <select class='gsniceselect1 hourrate' gsname='rate' disabled="true">
         <?
         $rates = $this->getApi()->getC3Manager()->getTimeRates();
         $hourRate = $this->getApi()->getC3Manager()->getTimeRate(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id);

@@ -15,7 +15,7 @@ controllers.DestinationExceptionController = function($scope, datarepository, $s
     $scope.goBackToDestionation = function() {
         $state.transitionTo("base.destination", {destinationId: $stateParams.destinationId, routeId: $stateParams.routeId});
     }
-
+  
     $scope.setDesitinationException = function(ex) {
         startShowingOfGpsFetching();
         

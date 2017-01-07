@@ -57,7 +57,22 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         debugger;
     }
     
+    $scope.isAllDriverCopiedOrdersCounted = function() {
+        for (var i in $scope.task.orders) {
+            var order = $scope.task.orders[i];
+            if (order.orderDriverDeliveries && !order.driverDeliveryCopiesCounted) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
     $scope.markAsDeliverd = function() {
+        if (!$scope.isAllDriverCopiedOrdersCounted()) {
+            alert("You need to count all the orders with driver copies");
+            return;
+        }
         $scope.task.completed = true;
         $api.getApi().TrackAndTraceManager.markAsDeliverd($scope.task.id);
         datarepository.save();
@@ -110,7 +125,21 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     }
     
     $scope.openCorrection = function(order) {
-        $state.transitionTo('base.ordercorrection', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId, taskId: $scope.task.id, orderId: order.referenceNumber });
+        $state.transitionTo('base.ordercorrection', { 
+            destinationId: $stateParams.destinationId,  
+            routeId: $stateParams.routeId, 
+            taskId: $scope.task.id, orderId: order.referenceNumber,
+            type: 'normal'
+        });
+    }
+    
+    $scope.openDriverCopies = function(order) {
+        $state.transitionTo('base.ordercorrection', { 
+            destinationId: $stateParams.destinationId,  
+            routeId: $stateParams.routeId, 
+            taskId: $scope.task.id, orderId: order.referenceNumber,
+            type: 'driverCopies'
+        });
     }
     
     if ($state.current.name === "base.taskexceptions") {

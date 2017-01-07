@@ -9,11 +9,11 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.RouteOverviewController = function($scope, datarepository, $rootScope, $stateParams, $state, $api) {
     $scope.route = datarepository.getRouteById($stateParams.routeId);
-    $scope.showFinished = true;
+    $scope.showFinished = datarepository.showFinished;
     
     $scope.getFinishedState = function(destination) {
         if (destination.skipInfo.skippedReasonId) {
-            return "green";
+            return "yellow";
         }
         
         if (!destination.signatureImage && !destination.startInfo.started) {
@@ -29,6 +29,7 @@ controllers.RouteOverviewController = function($scope, datarepository, $rootScop
     
     $scope.toggleFinished = function() {
         $scope.showFinished = !$scope.showFinished;   
+        datarepository.showFinished = $scope.showFinished;   
     }
     
     $scope.acceptTodaysInstruction = function() {

@@ -21,14 +21,39 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
         }
     }
     
+    $scope.getOldQuantity = function(order) {
+        if ($stateParams.type === "normal") {
+            return order.quantity;
+        }
+        
+        if ($stateParams.type === "driverCopies") {
+            return order.driverDeliveryCopiesCounted;
+        }
+        
+        return 0;
+    }
+    
     $scope.makeCorrection = function(a, b) {
         var newQuantity = parseInt(b, 10);
-        $scope.order.quantity = newQuantity;
-        datarepository.save();
-        $scope.api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, $scope.order.referenceNumber, b);
+        if ($stateParams.type === "normal") {
+            $scope.order.quantity = newQuantity;
+            datarepository.save();
+            $scope.api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, $scope.order.referenceNumber, b);
+        }
+        
+        if ($stateParams.type === "driverCopies") {
+            var order = $scope.order;
+            var totalBundles = order.driverDeliveryCopiesCounted + order.orderOdds + order.orderFull + order.orderLargeDisplays;
+            
+            $scope.order.driverDeliveryCopiesCounted = newQuantity;
+            $scope.order.quantity = totalBundles;
+            
+            datarepository.save();
+            $scope.api.getApi().TrackAndTraceManager.changeCountedDriverCopies($scope.task.id, $scope.order.referenceNumber, b);
+            $scope.api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, $scope.order.referenceNumber, $scope.order.quantity);
+        }
+        
         $state.transitionTo('base.task', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId, taskId: $stateParams.taskId });
-        
-        
     }
     
     $scope.goBack = function(a, b) {

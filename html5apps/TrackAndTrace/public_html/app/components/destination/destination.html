@@ -8,6 +8,11 @@
     <br/> {{ destination.note }}
 </div>
 
+<div ng-if="destination.skipInfo.skippedReasonId" class="destinationwarning">
+    <i class="fa fa-exclamation"></i> {{ getCurrentException() }}
+</div>
+    
+
 <div ng-if="destination.onDemandInstructions" class='instruction'>
     <b>Todays instruction</b>
     <br/> {{ destination.onDemandInstructions }}

@@ -123,7 +123,7 @@ angular.module('TrackAndTrace')
     });
     
     $stateProvider.state('base.ordercorrection', {
-        url: '/destination/exceptions/:destinationId/:routeId/:taskId/:orderId',
+        url: '/destination/exceptions/:destinationId/:routeId/:taskId/:orderId/:type',
         
         views: {
             main: {

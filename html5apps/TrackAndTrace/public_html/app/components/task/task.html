@@ -20,11 +20,20 @@
                 <div class="col">{{order.orderOdds}}</div>
                 <div class="col">{{order.orderFull}}</div>
                 <div class="col">{{order.orderLargeDisplays}}</div>
-                <div class="col">{{order.orderDriverDeliveries}}</div>
+                <div class="col">
+                    {{order.orderDriverDeliveries}}
+                    <br/><span ng-if='order.driverDeliveryCopiesCounted'> ( {{ order.driverDeliveryCopiesCounted }} )</span>
+                </div>
                 <div class="col">{{order.quantity}}</div>
                 <div class="">{{ order.orderType }} {{order.comment}}</div>
                 <div class="deliverytaskaction">
-                    <div class="button orange exceptionButton" ng-mobile-click="openCorrection(order)">Make correction </div>
+                    <div ng-if="order.orderDriverDeliveries">
+                        <div style='width: 48%; display: inline-block;'class="button orange exceptionButton" ng-mobile-click="openDriverCopies(order)">Count drivercopies</div>
+                        <div style='width: 48%; display: inline-block;'class="button orange exceptionButton" ng-mobile-click="openCorrection(order)">Make correction </div>
+                    </div>
+                    <div ng-if="!order.orderDriverDeliveries">
+                        <div class="button orange exceptionButton" ng-mobile-click="openCorrection(order)">Make correction </div>
+                    </div>
                 </div>
             </div>
         </div>

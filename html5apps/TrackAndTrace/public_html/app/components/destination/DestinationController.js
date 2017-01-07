@@ -23,6 +23,15 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
         return "unkown";
     };
     
+      $scope.getCurrentException = function() {
+        var exceptions = datarepository.getDestionationsExceptions();
+        for (var i in exceptions) {
+            if (exceptions[i].id === $scope.destination.skipInfo.skippedReasonId) {
+                return exceptions[i].name;
+            }
+        }
+    }
+    
     $scope.getTaskName = function(task) {
         if (task.className == "com.thundashop.core.trackandtrace.PickupTask")
             return "Pickup - " + task.type;

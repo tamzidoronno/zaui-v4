@@ -65,6 +65,9 @@ public interface ITrackAndTraceManager {
     public void changeQuantity(String taskId, String orderReference, int quantity);
     
     @Customer
+    public void changeCountedDriverCopies(String taskId, String orderReference, int quantity);
+    
+    @Customer
     public void setDesitionationException(String destinationId, String exceptionId, double lon, double lat);
     
     @Customer

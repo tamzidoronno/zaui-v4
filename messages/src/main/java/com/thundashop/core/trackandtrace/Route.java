@@ -41,6 +41,8 @@ public class Route extends DataCommon {
     
     public Date deliveryServiceDate;
     
+    public String originalId;
+    
 
     public Route() {
         shortDescription = "A route description";

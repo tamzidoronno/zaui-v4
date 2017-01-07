@@ -8,7 +8,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     $scope.exceptions = [];
     
     $scope.doTheBack = function() {
-        window.history.back();
+        $state.transitionTo('base.destination', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId });
     }
     
     $scope.exceptionSelected = function(exceptionid) {
@@ -45,11 +45,34 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     }
     
     $scope.toggleActionButton = function(task) {
-        $('.deliverytaskaction').hide();
-        $('[order="'+task.referenceNumber+'"] .deliverytaskaction').show();
+        if ($('[order="'+task.referenceNumber+'"] .deliverytaskaction').is(':visible')) {
+            $('[order="'+task.referenceNumber+'"] .deliverytaskaction').hide();
+        } else {
+            $('.deliverytaskaction').hide();
+            $('[order="'+task.referenceNumber+'"] .deliverytaskaction').show();
+        }
+    }
+    
+    $scope.cancelCorrection = function(a, b) {
+        debugger;
+    }
+    
+    $scope.isAllDriverCopiedOrdersCounted = function() {
+        for (var i in $scope.task.orders) {
+            var order = $scope.task.orders[i];
+            if (order.orderDriverDeliveries && !order.driverDeliveryCopiesCounted) {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     $scope.markAsDeliverd = function() {
+        if (!$scope.isAllDriverCopiedOrdersCounted()) {
+            alert("You need to count all the orders with driver copies");
+            return;
+        }
         $scope.task.completed = true;
         $api.getApi().TrackAndTraceManager.markAsDeliverd($scope.task.id);
         datarepository.save();
@@ -68,8 +91,58 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         return count;
     }
     
+    
+    $scope.getCages = function() {
+        var orders = [];
+        for (var i in $scope.task.orders) {
+            var order = $scope.task.orders[i];
+            if (order.cage) {
+                orders.push(order);
+            }
+        }
+        
+        return orders;
+    }
+    
+    $scope.getBundleCount = function(orders) {
+        var q = 0;
+        for (var i in orders) {
+            var order = orders[i];
+            q += order.quantity;
+        }
+        return q;
+    }
+    
+    $scope.getLooseOrders = function() {
+        var orders = [];
+        for (var i in $scope.task.orders) {
+            var order = $scope.task.orders[i];
+            if (!order.cage) {
+                orders.push(order);
+            }
+        }
+        return orders;
+    }
+    
+    $scope.openCorrection = function(order) {
+        $state.transitionTo('base.ordercorrection', { 
+            destinationId: $stateParams.destinationId,  
+            routeId: $stateParams.routeId, 
+            taskId: $scope.task.id, orderId: order.referenceNumber,
+            type: 'normal'
+        });
+    }
+    
+    $scope.openDriverCopies = function(order) {
+        $state.transitionTo('base.ordercorrection', { 
+            destinationId: $stateParams.destinationId,  
+            routeId: $stateParams.routeId, 
+            taskId: $scope.task.id, orderId: order.referenceNumber,
+            type: 'driverCopies'
+        });
+    }
+    
     if ($state.current.name === "base.taskexceptions") {
         $scope.loadExceptions();
     }
 }
-

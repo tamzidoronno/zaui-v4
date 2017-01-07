@@ -1,5 +1,5 @@
 angular.module('TrackAndTrace', [
-    'ui.router'   
+    'ui.router', 'bc.AngularKeypad'
 ]);
 
 
@@ -10,6 +10,7 @@ angular.module('TrackAndTrace').run(['$api', function ($api) {
 
 angular.module('TrackAndTrace').factory('datarepository', function($api) {
     return adata;
+    
 });
 
 angular.module('TrackAndTrace')

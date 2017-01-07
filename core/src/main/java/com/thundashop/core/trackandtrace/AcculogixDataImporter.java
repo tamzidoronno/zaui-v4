@@ -94,8 +94,10 @@ public class AcculogixDataImporter {
         
         for (String[] row : datas) {
             Route route = new Route();
-            route.id = row[49] + row[30];
-            route.name = route.id + row[30];
+            route.id = row[49] + " " + row[30];
+            route.name = route.id;
+            route.originalId = row[49];
+            route.userIds.add(row[63]);
             
             try {    
                 
@@ -111,7 +113,7 @@ public class AcculogixDataImporter {
     private void addDestinationsToRoutes() {
         for (Route route : routes.values()) {
             List<Destination> rows = datas.stream()
-                    .filter(row -> row[49].equals(route.id))
+                    .filter(row -> row[49].equals(route.originalId))
                     .filter(distinctByKey(d -> d[20].trim()))
                     .map(row -> createDestionation(row))
                     .sorted((o1, o2) -> o1.seq.compareTo(o2.seq))
@@ -180,6 +182,9 @@ public class AcculogixDataImporter {
         order.referenceNumber = data[33];
         order.cage = !data[61].isEmpty();
         order.orderType = data[31];
+        if (order.orderDriverDeliveries > 0) 
+            System.out.println("Driver deliveries");
+        
         return order;
     }
 

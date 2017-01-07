@@ -5,6 +5,8 @@
  */
 
 
+if(typeof(controllers) === "undefined") { var controllers = {}; }
+
 controllers.BaseController = function($scope, $rootScope, datarepository, $api) {
     if($api.getApi()) {
         $scope.counter = $api.getApi().getUnsentMessageCount();

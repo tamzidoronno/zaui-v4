@@ -21,4 +21,5 @@ public class DeliveryOrder {
     public boolean cage = false;
     public String orderType = "";
     public int originalQuantity = 0;
+    public int driverDeliveryCopiesCounted = 0;
 }

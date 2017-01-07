@@ -84,3 +84,33 @@
 .summary .deliverytaskaction {
     display: none;
 }
+
+.correction_field1 {
+    width: 150px;
+    display: inline-block;
+    vertical-align: top;
+    height: 50px;
+    line-height: 50px;
+}
+
+.correctionfield {
+    background-color: #FFF;
+    width: 100px;
+    padding: 10px;
+    text-align: center;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+}
+
+.cor_row {
+    vertical-align: central;
+    margin-bottom: 5px;
+}
+
+.podBarcode {
+    text-align: center;
+    padding: 10px;
+    border:solid 1px #9595bf;
+    margin-bottom: 10px;
+}

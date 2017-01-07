@@ -23,7 +23,7 @@
         <div class='destination' ng-repeat="destination in route.destinations" ng-if="showFinished || getFinishedState(destination) !== 'green'">
             
             <div>
-                {{ destination.company.name }}
+                {{destination.seq}} - {{ destination.company.name }}
                 <br/>{{ destination.company.address.address }}
 
                 <!--<div class='tasks'> Tasks: {{ destination.tasks.length }}</div>-->
@@ -36,8 +36,14 @@
 
                 <div class='status' ng-mobile-click="showDestination(destination.id, route.id)" >
                     <div class='statusind red' ng-if="getFinishedState(destination) === 'red'"><i class="fa fa-arrow-right"></i></div>
-                    <div class='statusind yellow' ng-if="getFinishedState(destination) === 'yellow'"><i class="fa fa-arrow-right"></i></div>
-                    <div class='statusind green' ng-if="getFinishedState(destination) === 'green'"><i class="fa fa-arrow-right"></i></div>
+                    <div class='statusind yellow' ng-if="getFinishedState(destination) === 'yellow'">
+                        <i ng-if='!destination.skipInfo.skippedReasonId' class="fa fa-arrow-right"></i>
+                        <i ng-if='destination.skipInfo.skippedReasonId' class="fa fa-exclamation-circle"></i>
+                    
+                    </div>
+                    <div class='statusind green' ng-if="getFinishedState(destination) === 'green'">
+                        <i class="fa fa-arrow-right"></i>
+                    </div>
                 </div>
             </div>
             

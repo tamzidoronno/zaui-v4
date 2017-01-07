@@ -96,7 +96,7 @@ angular.module('TrackAndTrace')
         }
     });
     
-     $stateProvider.state('base.taskexceptions', {
+    $stateProvider.state('base.taskexceptions', {
         url: '/destination/exceptions/:destinationId/:routeId/:taskId',
         
         views: {
@@ -107,6 +107,28 @@ angular.module('TrackAndTrace')
             footer: {
                 templateUrl : 'components/task/footer.html',
                 controller : controllers.TaskController
+            }
+        }
+    });
+    
+    $stateProvider.state('base.destinationexception', {
+        url: '/destinationexception/exceptions/:destinationId/:routeId/:taskId',
+        
+        views: {
+            main: {
+                templateUrl : 'components/destination/exceptions.html',
+                controller : controllers.DestinationExceptionController
+            }
+        }
+    });
+    
+    $stateProvider.state('base.ordercorrection', {
+        url: '/destination/exceptions/:destinationId/:routeId/:taskId/:orderId/:type',
+        
+        views: {
+            main: {
+                templateUrl : 'components/task/correction.html',
+                controller : controllers.TaskCorrectionController
             }
         }
     });

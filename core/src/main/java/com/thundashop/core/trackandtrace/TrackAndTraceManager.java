@@ -216,6 +216,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public void loadData(String base64, String fileName) {
+        if (fileName.contains("drivers")) {
+            new AcculogixDriverImporter(userManager, base64);
+            return;
+        }
+        
         new AcculogixDataImporter(base64, userManager, this, fileName);
     }
 
@@ -290,6 +295,15 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         if (dest != null) {
             dest.skipInfo.skippedReasonId = "";
             saveObject(dest);
+        }
+    }
+
+    @Override
+    public void changeCountedDriverCopies(String taskId, String orderReference, int quantity) {
+        Task task = tasks.get(taskId);
+        if (task instanceof DeliveryTask) {
+            ((DeliveryTask)task).changeQuantity(orderReference, quantity);
+            saveObject(task);
         }
     }
     

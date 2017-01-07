@@ -43,9 +43,9 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
         
         if ($stateParams.type === "driverCopies") {
             var order = $scope.order;
-            var totalBundles = order.driverDeliveryCopiesCounted + order.orderOdds + order.orderFull + order.orderLargeDisplays;
-            
             $scope.order.driverDeliveryCopiesCounted = newQuantity;
+            
+            var totalBundles = order.driverDeliveryCopiesCounted + order.orderOdds + order.orderFull + order.orderLargeDisplays;
             $scope.order.quantity = totalBundles;
             
             datarepository.save();

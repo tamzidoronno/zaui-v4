@@ -77,6 +77,18 @@ public interface IPmsManager {
     @Administrator
     public void removeAddonFromRoom(String id, String pmsBookingRooms);
         
+    @Administrator
+    public void markAddonDelivered(String id);
+    
+    @Administrator
+    public List<PmsAddonDeliveryLogEntry> getDeliveryLog(List<String> productIds, Date start, Date end);
+    
+    @Administrator
+    public List<PmsAddonDeliveryLogEntry> getDeliveryLogByView(String viewId, Date start, Date end);
+    
+    @Administrator
+    public void deleteDeliveryLogEntry(String id);
+    
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
     @Editor

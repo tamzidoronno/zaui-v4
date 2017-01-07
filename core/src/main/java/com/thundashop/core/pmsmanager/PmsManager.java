@@ -66,12 +66,17 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ *
+ * @author boggi
+ */
 @Component
 @GetShopSession
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private HashMap<String, PmsBooking> bookings = new HashMap();
     private HashMap<String, Product> fetchedProducts = new HashMap();
+    private HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap();
     private HashMap<String, PmsCareTaker> careTaker = new HashMap();
     private HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
     private HashMap<String, PmsPricing> priceMap = new HashMap();
@@ -156,6 +161,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsConfiguration) {
                 configuration = (PmsConfiguration) dataCommon;
+            }
+            if (dataCommon instanceof PmsAddonDeliveryLogEntry) {
+                deliveredAddons.put(dataCommon.id, (PmsAddonDeliveryLogEntry) dataCommon);
             }
             if( dataCommon instanceof PmsAdditionalTypeInformation) {
                 PmsAdditionalTypeInformation cur = (PmsAdditionalTypeInformation)dataCommon;
@@ -2904,8 +2912,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.filterType = PmsBookingFilter.PmsBookingFilterTypes.active;
         Calendar start = Calendar.getInstance();
         Calendar end = Calendar.getInstance();
-        start.set(Calendar.HOUR, 1);
-        end.set(Calendar.HOUR, 23);
+        start.set(Calendar.HOUR_OF_DAY, 1);
+        end.set(Calendar.HOUR_OF_DAY, 23);
         filter.startDate = start.getTime();
         filter.endDate = end.getTime();
         
@@ -4585,6 +4593,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         startCal.setTime(date);
         endCal.setTime(date);
         
+        startCal.add(Calendar.DAY_OF_YEAR, view.daysDisplacement);
+        endCal.add(Calendar.DAY_OF_YEAR, view.daysDisplacement);
+        
         startCal.set(Calendar.HOUR_OF_DAY, 0);
         startCal.set(Calendar.MINUTE, 0);
         startCal.set(Calendar.SECOND, 0);
@@ -4616,10 +4627,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                         PmsBookingAddonViewItem toAdd = new PmsBookingAddonViewItem();
                         toAdd.count = item.count;
+                        toAdd.addonId = item.addonId;
                         toAdd.productName = productManager.getProduct(item.productId).name;
                         if(!room.guests.isEmpty()) {
                             toAdd.name = room.guests.get(0).name;
                         }
+                        
+                        toAdd.delivered = 0;
+                        for(PmsAddonDeliveryLogEntry entry : deliveredAddons.values()) {
+                            if(entry.addonId.equals(item.addonId)) {
+                                toAdd.delivered++;
+                            }
+                        }
+                        
                         BookingItem bookingItem = bookingEngine.getBookingItem(room.bookingItemId);
                         if(bookingItem != null) {
                             toAdd.roomName = bookingItem.bookingItemName;
@@ -4746,6 +4766,65 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         room.addons.remove(toremove);
         saveBooking(booking);
+    }
+
+    @Override
+    public void markAddonDelivered(String id) {
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.rooms) {
+                for(PmsBookingAddonItem item : room.addons) {
+                    if(item.addonId.equals(id)) {
+                        PmsAddonDeliveryLogEntry entry = new PmsAddonDeliveryLogEntry();
+                        entry.addonId = item.addonId;
+                        entry.pmsBookingRoomId = room.pmsBookingRoomId;
+                        entry.price = item.price;
+                        entry.priceEx = item.priceExTaxes;
+                        entry.productId = item.productId;
+                        entry.productName = productManager.getProduct(item.productId).name;
+                        entry.owner = userManager.getUserById(booking.userId).fullName;
+                        BookingItem bitem = bookingEngine.getBookingItem(room.bookingItemId);
+                        entry.roomName = "";
+                        if(bitem != null) {
+                            entry.roomName = bitem.bookingItemName;
+                        }
+                        saveObject(entry);
+                        deliveredAddons.put(entry.id, entry);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void deleteDeliveryLogEntry(String id) {
+        PmsAddonDeliveryLogEntry object = deliveredAddons.get(id);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(object.rowCreatedDate);
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        if(cal.getTime().after(new Date())) {
+            return;
+        }
+        deleteObject(object);
+        deliveredAddons.remove(id);
+    }
+
+    @Override
+    public List<PmsAddonDeliveryLogEntry> getDeliveryLog(List<String> productIds, Date start, Date end) {
+        List<PmsAddonDeliveryLogEntry> res = new ArrayList();
+        for(PmsAddonDeliveryLogEntry entry : deliveredAddons.values()) {
+            if(productIds.contains(entry.productId)) {
+                if(entry.rowCreatedDate.after(start) && entry.rowCreatedDate.before(end)) {
+                    res.add(entry);
+                }
+            }
+        }
+        return res;
+    }
+
+    @Override
+    public List<PmsAddonDeliveryLogEntry> getDeliveryLogByView(String viewId, Date start, Date end) {
+        PmsMobileView view = getConfiguration().mobileViews.get(viewId);
+        return getDeliveryLog(view.products, start, end);
     }
 
 }

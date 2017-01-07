@@ -324,7 +324,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderid, $email, $bookingId);
 
         echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
-        echo "<i class='fa fa-info'></i> Invoice has been sent.";
+        echo "<i class='fa fa-info'></i> Invoice / reciept has been sent.";
         echo "</div>";
         echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
 
@@ -1164,7 +1164,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->state = 0;
         $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))-(86400*$config->defaultNumberOfDaysBack));
-        $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))+86400);
+        $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))+86300);
         $filter->sorting = "regdate";
         $filter->includeDeleted = true;
         return $filter;

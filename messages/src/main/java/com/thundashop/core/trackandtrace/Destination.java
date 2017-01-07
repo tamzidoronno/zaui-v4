@@ -36,6 +36,8 @@ public class Destination extends DataCommon {
      */
     public String signatureImage = "";
     
+    public String typedNameForSignature = "";
+    
     public SkipInfo skipInfo = new SkipInfo();
     
     public String exceptionId = "";

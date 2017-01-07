@@ -11,6 +11,7 @@ controllers.DepartingController = function($scope, datarepository, $stateParams,
     $scope.route = datarepository.getRouteById($stateParams.routeId);
     $scope.destination = datarepository.getDestinationById($stateParams.destinationId);
     $scope.api = $api;
+    $scope.typedName = "";
     
     $scope.initSignaturePad = function() {
         
@@ -30,8 +31,13 @@ controllers.DepartingController = function($scope, datarepository, $stateParams,
     }
     
     $scope.saveSignature = function() {
+        if (!$scope.typedName) {
+            alert("The type named can not be blank");
+            return;
+        }
         var data = $scope.signaturePad.toDataURL("image/png");
         $scope.destination.signatureImage = data;
+        $scope.destination.typedNameForSignature = $scope.typedName;
         $scope.api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
         $scope.api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
         $scope.destination.skipInfo.skippedReasonId = "";

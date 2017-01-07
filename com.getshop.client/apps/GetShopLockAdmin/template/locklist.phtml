@@ -1,65 +1,74 @@
 <?php
 /* @var $this ns_99d42f8c_e446_40fe_a038_af9f316dfb3a\GetShopLockAdmin */
-$locks = $this->getApi()->getGetShopLockManager()->getAllLocks($this->getSelectedName());
-$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
+
 $isStopped = $this->getApi()->getGetShopLockManager()->getUpdatesOnLock($this->getSelectedName());
-$res = $isStopped ? "on" : "off";
+$res = $isStopped ? "is currently not updating" : "is currently updating";
+$configs = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$lockServers = $configs->lockServerConfigs;
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
 ?>
-<span type='button' gstype='clicksubmit' method='runCheck' gsname='id' gsvalue='somevalue' class='shop_button'>Run check</span>
-<span type='button' gstype='clicksubmit' method='deleteLocks' gsname='id' gsvalue='somevalue' class='shop_button'>Delete all devices</span>
-<span type='button' gstype='clicksubmit' method='toggleLockUpdate' gsname='id' gsvalue='somevalue' class='shop_button'>Toggle updates on lock (<?php echo $res; ?>)</span>
-<span type='button' gstype='clicksubmit' method='removeUnusedLocks' gsname='id' gsvalue='somevalue' class='shop_button'>Remove all unused locks</span>
+<span type='button' gstype='clicksubmit' method='runCheck' gsname='id' gsvalue='somevalue' class='shop_button' style="float: right;">Run check</span>
+<span type='button' gstype='clicksubmit' method='toggleLockUpdate' gsname='id' gsvalue='somevalue' class='shop_button' style="float: right;">Toggle updates on lock (<?php echo $res; ?>)</span>
 <?php
-if(!$locks || sizeof($locks) == 0) {
-    echo "<h1>No locks found</h1>";
-} else {
-    echo "<table width='100%'>";
-    echo "<tr>";
-    echo "<th align='left'>Id</th>";
-    echo "<th align='left'>Type</th>";
-    echo "<th>Code status</th>";
-    echo "<th>Connect</th>";
-    echo "</tr>";
-    
-    foreach($locks as $lock) {
-        $battery = $this->getBattery($lock);
+foreach($lockServers as $name => $server) {
+    echo "<h1>" . $name;
+    $locks = $this->getApi()->getGetShopLockManager()->getAllLocks($this->getSelectedName(), $name);
+    ?>
+    <span type='button' gstype='clicksubmit' method='deleteLocks' gsname='serverSource' gsvalue='<?php echo $name; ?>' class='shop_button' style="float: right;">Delete all devices</span>
+    <span type='button' gstype='clicksubmit' method='removeUnusedLocks' gsname='serverSource' gsvalue='<?php echo $name; ?>' class='shop_button' style="float: right;">Remove all unused locks</span>
+    <?php
+    echo "</h1>";
+    if(!$locks || sizeof($locks) == 0) {
+        echo "<div style='font-size: 12px; color:red; font-weight:bold'>No locks found</div>";
+    } else {
+        echo "<table width='100%'>";
         echo "<tr>";
-        echo "<td>" . $lock->zwaveid;
-        if($lock->isFailed) {
-            echo " <i class='fa fa-ban' title='Lock is offline.'></i>";
-        }
-        
-        echo "</td>";
-        echo "<td>" . $lock->name . " (" . $lock->type . ")";
-        if($battery >= 0) {
-            $warn = "";
-            if($battery < 20) {
-                $warn = "style='color:red; font-weight:bold;'";
-            }
-            echo ", <span $warn>battery : $battery%</span>, last updated : " . date("d.m H:i", strtotime($lock->batteryLastUpdated));
-        }
-        echo "</td>";
-        echo "<td align='center'>";
-        $this->printCodeList($lock);
-        echo "</td>";
-        echo "<td align='center'>";
-        echo "<select class='connectlock' lockid='".$lock->id."'>";
-        echo "<option value=''></option>";
-        foreach($items as $item) {
-            $selected = "";
-            if($item->bookingItemAlias == $lock->id) {
-                $selected = "SELECTED";
-            } 
-            echo "<option value='". $item->id ."' $selected>" . $item->bookingItemName . "</option>";
-        }
-        echo "</select>";
-        echo " <i style='cursor:pointer;' class='fa fa-refresh' title='Resend codes to lock' gstype='clicksubmit' method='resetLock' gsname='id' gsvalue='".$lock->id."'></i>";
-        echo "</td>";
+        echo "<th align='left'>Id</th>";
+        echo "<th align='left'>Type</th>";
+        echo "<th>Code status</th>";
+        echo "<th>Connect</th>";
         echo "</tr>";
+
+        foreach($locks as $lock) {
+            $battery = $this->getBattery($lock);
+            echo "<tr>";
+            echo "<td>" . $lock->zwaveid;
+            if($lock->isFailed) {
+                echo " <i class='fa fa-ban' title='Lock is offline.'></i>";
+            }
+
+            echo "</td>";
+            echo "<td>" . $lock->name . " (" . $lock->type . ")";
+            if($battery >= 0) {
+                $warn = "";
+                if($battery < 20) {
+                    $warn = "style='color:red; font-weight:bold;'";
+                }
+                echo ", <span $warn>battery : $battery%</span>, last updated : " . date("d.m H:i", strtotime($lock->batteryLastUpdated));
+            }
+            echo "</td>";
+            echo "<td align='center'>";
+            $this->printCodeList($lock);
+            echo "</td>";
+            echo "<td align='center'>";
+            echo "<select class='connectlock' lockid='".$lock->id."'>";
+            echo "<option value=''></option>";
+            foreach($items as $item) {
+                $selected = "";
+                if($item->bookingItemAlias == $lock->id) {
+                    $selected = "SELECTED";
+                } 
+                echo "<option value='". $item->id ."' $selected>" . $item->bookingItemName . "</option>";
+            }
+            echo "</select>";
+            echo " <i style='cursor:pointer;' class='fa fa-refresh' title='Resend codes to lock' gstype='clicksubmit' method='resetLock' gsname='id' gsvalue='".$lock->id."'></i>";
+            echo "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
     }
-    echo "</table>";
+    echo "<br>";
 }
-echo "<br>";
 echo "<h1>Master codes</h1>";
 $masterCodes = $this->getApi()->getGetShopLockManager()->getMasterCodes($this->getSelectedName());
 foreach($masterCodes->codes as $offset => $code) {
@@ -72,4 +81,8 @@ foreach($masterCodes->codes as $offset => $code) {
     <?php
 }
 echo "<br>";
+
+
 ?>
+
+    

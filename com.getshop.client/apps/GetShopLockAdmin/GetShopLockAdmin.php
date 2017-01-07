@@ -7,7 +7,7 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
     }
 
     public function deleteLocks() {
-        $this->getApi()->getGetShopLockManager()->deleteAllDevices($this->getSelectedName(), "fdsafbvvre4234235t");
+        $this->getApi()->getGetShopLockManager()->deleteAllDevices($this->getSelectedName(), "fdsafbvvre4234235t", $_POST['data']['serverSource']);
     }
     
     public function getName() {
@@ -25,7 +25,7 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
     }
     
     public function removeUnusedLocks() {
-        $this->getApi()->getGetShopLockManager()->removeAllUnusedLocks($this->getSelectedName());
+        $this->getApi()->getGetShopLockManager()->removeAllUnusedLocks($this->getSelectedName(), $_POST['data']['serverSource']);
     }
     
     public function updateMasterCode() {
@@ -51,6 +51,33 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $this->getApi()->getGetShopLockManager()->refreshLock($this->getSelectedName(), $_POST['data']['id']);
     }
     
+    public function createlockserverconfig() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config->lockServerConfigs->{$_POST['data']['servername']} = new \stdClass();
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
+    public function saveConfig() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $lockconfig = $config->lockServerConfigs->{$_POST['data']['servername']};
+        
+        $lockconfig->locktype = $_POST['data']['locktype'];
+        $lockconfig->arxHostname = $_POST['data']['arxHostname'];
+        $lockconfig->arxUsername = $_POST['data']['arxUsername'];
+        $lockconfig->arxPassword = $_POST['data']['arxPassword'];
+        $lockconfig->arxCardFormat = $_POST['data']['arxCardFormat'];
+        $lockconfig->arxCardFormatsAvailable = $_POST['data']['arxCardFormatsAvailable'];
+        $lockconfig->codeSize = $_POST['data']['codeSize'];
+        
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
+    public function removeConfig() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        unset($config->lockServerConfigs->{$_POST['data']['servername']});
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
     public function render() {
          if (!$this->getSelectedName()) {
             echo "You need to specify a booking engine first<br>";
@@ -60,7 +87,10 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
             }
             return;
         }
-        
+        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        if($user->showHiddenFields) {
+            $this->includefile("lockserveradmin");
+        }
         $this->includefile("locklist");
     }
     

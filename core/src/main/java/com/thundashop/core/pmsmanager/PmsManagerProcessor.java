@@ -123,7 +123,7 @@ public class PmsManagerProcessor {
     private boolean pushToLock(PmsBookingRooms room, boolean deleted) {
         PmsConfiguration config = manager.getConfigurationSecure();
         
-        if (config.locktype.isEmpty() || config.locktype.equals("arx")) {
+        if (config.getDefaultLockServer().locktype.isEmpty() || config.getDefaultLockServer().locktype.equals("arx")) {
             if(!deleted) {
                 //Make sure everything is 100% updated.
                 pushToArx(room, true);
@@ -184,7 +184,7 @@ public class PmsManagerProcessor {
     }
 
     private void processLockSystem() {
-        if (manager.getConfigurationSecure().arxHostname == null || manager.getConfigurationSecure().arxHostname.isEmpty()) { 
+        if (manager.getConfigurationSecure().getDefaultLockServer().arxHostname == null || manager.getConfigurationSecure().getDefaultLockServer().arxHostname.isEmpty()) { 
             return;
         }
         try {
@@ -399,7 +399,7 @@ public class PmsManagerProcessor {
             person.firstName = "Unknown";
         }
 
-        if (manager.getConfigurationSecure().arxCardFormat == null || manager.getConfigurationSecure().arxCardFormat.isEmpty()) {
+        if (manager.getConfigurationSecure().getDefaultLockServer().arxCardFormat == null || manager.getConfigurationSecure().getDefaultLockServer().arxCardFormat.isEmpty()) {
             manager.logPrint("Card format not set yet");
             return false;
         }
@@ -408,7 +408,7 @@ public class PmsManagerProcessor {
         if(room.cardformat != null && !room.cardformat.isEmpty()) {
             card.format = room.cardformat;
         } else {
-            room.cardformat = manager.getConfigurationSecure().arxCardFormat;
+            room.cardformat = manager.getConfigurationSecure().getDefaultLockServer().arxCardFormat;
         }
         card.cardid = room.code;
 
@@ -780,8 +780,8 @@ public class PmsManagerProcessor {
     }
 
     private boolean notifyRoomAddedToArx(String format) {
-        if(manager.getConfigurationSecure().arxCardFormatsAvailable != null && !manager.getConfigurationSecure().arxCardFormatsAvailable.isEmpty()) {
-            String[] splitted = manager.getConfigurationSecure().arxCardFormatsAvailable.split(";");
+        if(manager.getConfigurationSecure().getDefaultLockServer().arxCardFormatsAvailable != null && !manager.getConfigurationSecure().getDefaultLockServer().arxCardFormatsAvailable.isEmpty()) {
+            String[] splitted = manager.getConfigurationSecure().getDefaultLockServer().arxCardFormatsAvailable.split(";");
             if(splitted == null || splitted.length == 1) {
                 return true;
             }
@@ -946,7 +946,7 @@ public class PmsManagerProcessor {
             return;
         }
         List<PmsBooking> bookings = manager.getAllBookingsFlat();
-        List<GetShopDevice> allLocks = manager.getShopLockManager.getAllLocks();
+        List<GetShopDevice> allLocks = manager.getShopLockManager.getAllLocks(null);
         for(GetShopDevice lock : allLocks) {
             if(!lock.isLock()) {
                 continue;

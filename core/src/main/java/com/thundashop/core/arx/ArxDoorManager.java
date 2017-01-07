@@ -70,9 +70,9 @@ public class ArxDoorManager implements IDoorManager {
     }
     
     public String httpLoginRequest(String address, String content) throws Exception {
-        String username = pmsManager.getConfigurationSecure().arxUsername;
-        String arxHost = pmsManager.getConfigurationSecure().arxHostname;
-        String password = pmsManager.getConfigurationSecure().arxPassword;
+        String username = pmsManager.getConfigurationSecure().getDefaultLockServer().arxUsername;
+        String arxHost = pmsManager.getConfigurationSecure().getDefaultLockServer().arxHostname;
+        String password = pmsManager.getConfigurationSecure().getDefaultLockServer().arxPassword;
         
         if(!address.startsWith("http")) {
             address = "https://" + arxHost + address;

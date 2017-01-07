@@ -1,0 +1,62 @@
+<?php
+/* @var $this ns_99d42f8c_e446_40fe_a038_af9f316dfb3a\GetShopLockAdmin */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$lockservers = $config->lockServerConfigs;
+
+$locktype = array();
+$locktype['arx'] = "Arx";
+$locktype['getshop'] = "GetShop";
+$locktype['getshophotellock'] = "GetShop hotel lock";
+
+?>
+<table width="100%">
+    <tr>
+        <th></th>
+        <th align='left'>Name</th>
+        <th align='left'>Server type</th>
+        <th align='left'>Hostname</th>
+        <th align='left'>Username</th>
+        <th align='left'>Password</th>
+        <th align='left'>Card format</th>
+        <th align='left'>Available card format</th>
+        <th align='left'>Code size</th>
+        <th></th>
+    </tr>
+    <?php
+    foreach($lockservers as $name => $server) {
+        ?>
+            <tr gstype='form' method='saveConfig'>
+                <td>
+                    <?php
+                    if($name != "default") {
+                        echo "<i class='fa fa-trash-o' gstype='clicksubmit' method='removeConfig' gsname='servername' gsvalue='$name'></i>";
+                    }
+                    ?>
+                </td>
+                <td><input type='hidden' gsname='servername' value='<?php echo $name; ?>'><?php echo $name; ?></td>
+                <td>
+                <?php
+                echo "<select gsname='locktype'>";
+                foreach($locktype as $ltype => $lname) {
+                    $selected = ($ltype == $server->locktype) ? "SELECTED" : "";
+                    echo "<option value='$ltype' $selected>" . $lname . "</option>";
+                }
+                echo "</select>";
+                ?>
+                </td>
+                <td><input type='text' gsname='arxHostname' style='width:100px;' value='<?php echo $server->arxHostname; ?>'> </td>
+                <td><input type='text' gsname='arxUsername' style='width:100px;' value='<?php echo $server->arxUsername; ?>'> </td>
+                <td><input type='text' gsname='arxPassword' style='width:100px;' value='<?php echo $server->arxPassword; ?>'> </td>
+                <td><input type='text' gsname='arxCardFormat' style='width:50px;' value='<?php echo $server->arxCardFormat; ?>'> </td>
+                <td><input type='text' gsname='arxCardFormatsAvailable' style='width:100px;' value='<?php echo $server->arxCardFormatsAvailable; ?>'> </td>
+                <td><input type='text' gsname='codeSize' style='width:50px;' value='<?php echo $server->codeSize; ?>'> </td>
+                <td><input type="button" value="Save" gstype='submit'></td>
+            </tr>
+    <?php
+    }
+    ?>
+</table><br>
+<span gstype='form' method='createlockserverconfig'>
+    <input type='text' placeholder='Server name' gsname='servername'><input type='button' value='Set up another lock server' gstype='submit'>
+</span>
+<br><br><br>

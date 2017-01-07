@@ -1,40 +1,69 @@
+
+<div class='podBarcode'> {{ task.podBarcode }} </div>
+
 <div ng-if="taskType === 'delivery'" class="task_delivery">
-    <div ng-if="task.cage">
-        <div class="task_titleheader">Deliver cages... </div>
-    </div>
-    
-    <div ng-if="!task.cage">
-        <div class="task_titleheader">Parcels to deliver<div style="font-size: 12px;"> (Please count) </div></div>
-    </div>
-    
-    <div class="summary">
-        <div class="summaryrow">
-            <div class="col">Order Number</div>
-            <div class="col">Odds Bundles</div>
-            <div class="col">Full Bundles</div>
-            <div class="col">Large Displays</div>
-            <div class="col">Driver Copies</div>
-            <div class="col">Total</div>
-        </div>
-        <div ng-repeat="order in task.orders" ng-mobile-click-end="toggleActionButton(order)" class="summaryrow" order="{{order.referenceNumber}}">
-            <div class="col">{{order.referenceNumber}}</div>
-            <div class="col">{{order.orderOdds}}</div>
-            <div class="col">{{order.orderFull}}</div>
-            <div class="col">{{order.orderLargeDisplays}}</div>
-            <div class="col">{{order.orderDriverDeliveries}}</div>
-            <div class="col">{{order.quantity}}</div>
-            <div class="">{{order.comment}}</div>
-            <div class="deliverytaskaction">
-                <div class="button orange exceptionButton"><i class="fa fa-exclamation"></i> Add exception</div>
+    <div ng-if="getCages().length > 0">
+        <div class="task_titleheader">Cages to deliver</div>
+        
+        <div class="summary">
+            <div class="summaryrow">
+                <div class="col">Order Number</div>
+                <div class="col">Odds Bundles</div>
+                <div class="col">Full Bundles</div>
+                <div class="col">Large Displays</div>
+                <div class="col">Driver Copies</div>
+                <div class="col">Total</div>
+            </div>
+
+            <div ng-repeat="order in getCages()" ng-mobile-click-end="toggleActionButton(order)" class="summaryrow" order="{{order.referenceNumber}}">
+                <div class="col">{{order.referenceNumber}}</div>
+                <div class="col">{{order.orderOdds}}</div>
+                <div class="col">{{order.orderFull}}</div>
+                <div class="col">{{order.orderLargeDisplays}}</div>
+                <div class="col">{{order.orderDriverDeliveries}}</div>
+                <div class="col">{{order.quantity}}</div>
+                <div class="">{{ order.orderType }} {{order.comment}}</div>
+                <div class="deliverytaskaction">
+                    <div class="button orange exceptionButton" ng-mobile-click="openCorrection(order)">Make correction </div>
+                </div>
             </div>
         </div>
-        
-        <div class="summaryrow">
-            <center>Overall bundles: {{ getTotalBundles(task); }}</center>
-        </div>
-        
-        
     </div>
+    
+    <div ng-if="getLooseOrders().length > 0">
+        <div class="task_titleheader">Parcels to deliver. Please count.. </div></div>
+
+        <div class="summary">
+            <div class="summaryrow">
+                <div class="col">Order Number</div>
+                <div class="col">Odds Bundles</div>
+                <div class="col">Full Bundles</div>
+                <div class="col">Large Displays</div>
+                <div class="col">Driver Copies</div>
+                <div class="col">Total</div>
+            </div>
+
+            <div ng-repeat="order in getLooseOrders()" ng-mobile-click-end="toggleActionButton(order)" class="summaryrow" order="{{order.referenceNumber}}">
+                <div class="col">{{order.referenceNumber}}</div>
+                <div class="col">{{order.orderOdds}}</div>
+                <div class="col">{{order.orderFull}}</div>
+                <div class="col">{{order.orderLargeDisplays}}</div>
+                <div class="col">{{order.orderDriverDeliveries}}</div>
+                <div class="col">{{order.quantity}}</div>
+                <div class="">{{ order.orderType }} {{order.comment}}</div>
+                <div class="deliverytaskaction">
+                    <div class="button orange exceptionButton" ng-mobile-click="openCorrection(order)">Make correction</div>
+                </div>
+            </div>
+        </div>    
+    </div>
+    
+    <div class="summaryrow">
+        <center>Overall bundles: {{ getTotalBundles(task); }}</center>
+        <center>Loose bundles: {{ getBundleCount(getLooseOrders()); }}</center>
+        <center>Caged bundles: {{ getBundleCount(getCages()); }}</center>
+    </div>
+    
     <div class="button deliveredbutton" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
 </div>
 
@@ -46,3 +75,4 @@
     
     <div class="button" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
 </div>
+

@@ -33,6 +33,8 @@ controllers.DepartingController = function($scope, datarepository, $stateParams,
         var data = $scope.signaturePad.toDataURL("image/png");
         $scope.destination.signatureImage = data;
         $scope.api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
+        $scope.api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
+        $scope.destination.skipInfo.skippedReasonId = "";
         datarepository.save();
         
         $state.transitionTo("base.routeoverview", { routeId : $stateParams.routeId } )

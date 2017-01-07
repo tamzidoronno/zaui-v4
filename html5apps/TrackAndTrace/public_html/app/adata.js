@@ -62,6 +62,18 @@ adata = {
         return $taskToUse;
     },
     
+    getDestionationsExceptions: function() {
+        var retArr = [];
+        for (var i in this.exceptions) {
+            var exception = this.exceptions[i];
+            if (exception.type === "destionation") {
+                retArr.push(exception);
+            }
+        }
+        
+        return retArr;
+    },
+    
     save: function() {
         localStorage.setItem("aDataRoutes", JSON.stringify(this.routes));
         localStorage.setItem("aDataExceptions", JSON.stringify(this.exceptions));

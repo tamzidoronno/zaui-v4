@@ -60,3 +60,25 @@ and open the template in the editor.
     background: linear-gradient(to bottom,  #ffa84c 0%,#ff7b0d 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa84c', endColorstr='#ff7b0d',GradientType=0 ); /* IE6-9 */
 }
+
+.instruction {
+    border: solid 1px red;
+    margin-top: 10px;
+    padding: 10px;
+    text-align: center;
+    background-color: rgba(255,0,0,0.1);
+}
+
+.exceptionselection {
+    position: relative;
+    padding-right: 100px;
+    min-height: 60px;
+    border-top: solid 1px #FFF;
+    margin-top: 5px;
+}
+
+.exceptionselection .button {
+    width: 100px;
+    position: absolute;
+    right: 0px;
+}

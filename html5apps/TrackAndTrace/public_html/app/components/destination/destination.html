@@ -8,6 +8,11 @@
     <br/> {{ destination.note }}
 </div>
 
+<div ng-if="destination.onDemandInstructions" class='instruction'>
+    <b>Todays instruction</b>
+    <br/> {{ destination.onDemandInstructions }}
+</div>
+
 <br/>   
 
 <div ng-if="destinationState() == 'started'" >
@@ -38,12 +43,13 @@
     </div>
     
     <div class='button' ng-if="allTaskCompleted() == true" ng-mobile-click="departedTapped()">Departing</div>
+    <div class='button exceptionbutton' ng-if="!allTaskCompleted() == true" ng-mobile-click="showDestinationExceptions()">Exception</div>
 </div>
 
 <div ng-if="destinationState() == 'unkown'">    
     <div>
         <div class='button' ng-mobile-click="markAsArrived()">I have arrived!</div>
-        <div class='button'>Skip delivery</div>
+        <div class='button' ng-mobile-click="showDestinationExceptions()">Skip delivery</div>
     </div>
 </div>
 

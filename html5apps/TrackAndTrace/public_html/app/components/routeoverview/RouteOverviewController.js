@@ -12,6 +12,10 @@ controllers.RouteOverviewController = function($scope, datarepository, $rootScop
     $scope.showFinished = true;
     
     $scope.getFinishedState = function(destination) {
+        if (destination.skipInfo.skippedReasonId) {
+            return "green";
+        }
+        
         if (!destination.signatureImage && !destination.startInfo.started) {
             return "red";
         }

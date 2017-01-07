@@ -42,6 +42,9 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
             $scope.$apply();
 
             $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
+            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
+            $scope.destination.skipInfo.skippedReasonId = "";
+            
             datarepository.save();
             stopShowingOfGpsFetching();
         }, function(failare, b, c) {
@@ -50,9 +53,13 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
             $scope.$apply();
 
             $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
+            
+            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
+            $scope.destination.skipInfo.skippedReasonId = "";
+            
             datarepository.save();
             stopShowingOfGpsFetching();    
-        }, {maximumAge:60000, timeout:5000, enableHighAccuracy:false});
+        }, {maximumAge:60000, timeout:10000, enableHighAccuracy:true});
     }
     
     $scope.getStatus = function(task) {
@@ -84,5 +91,9 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
     
     $scope.openTask = function(destinationId, routeId, taskId) {
         $state.transitionTo('base.task', { destinationId: destinationId,  routeId: routeId, taskId: taskId });
+    }
+    
+    $scope.showDestinationExceptions = function() {
+        $state.transitionTo('base.destinationexception', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId });
     }
 }

@@ -117,7 +117,8 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
                 <?php
                 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
                     $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
-                    echo "<center>Welcome back ".$user->fullName.", please wait while we are logging you on.</center>";
+                    echo "<center>Welcome back ".$user->fullName."<br>"
+                            . "Please wait while we are logging you on.</center>";
                 } else {
                     ?>
                     <div class="form">

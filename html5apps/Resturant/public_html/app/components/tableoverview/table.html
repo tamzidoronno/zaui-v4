@@ -19,7 +19,7 @@
 <div ng-repeat="list in productLists" class="productList">
     <div class="listnametitle">{{ list.listName }}</div>
     <div class="productlistinnner">
-        <div ng-repeat="product in getProductsForList(list)" productid="{{product.id}}" class="productcartbutton" ng-right-click="removeProduct(product)" ng-swipe-right="removeProduct(product)" ng-click="addToCart(product)" ng-class="getProductCount(product) > 0 ? 'inuse' : '' ">
+        <div ng-repeat="product in getProductsForList(list)" productid="{{product.id}}" class="productcartbutton" ng-right-click="removeProduct(product)" ng-swipe-right="removeProduct(product)" ng-click="addToCart(product)" ng-class="{ 'inuse' : getProductCount(product), 'not_for_table' : getProductCountForTable(product) }">
             {{ product.name }}
             <div>{{ getProductCount(product) }}</div>
         </div>

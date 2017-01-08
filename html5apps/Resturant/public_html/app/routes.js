@@ -123,6 +123,17 @@ angular.module('TrackAndTrace')
         }
     });
     
+    $stateProvider.state('base.printInvoice', {
+        url: '/tableoverview_checkout_printinvoice/:tableId/:orderId',
+        
+        views: {
+            main: {
+                templateUrl : 'components/payment/printInvoice.html',
+                controller : controllers.PaymentController
+            }
+        }
+    });
+    
     $stateProvider.state("base.pagenotfound", {
         url: "*path",
         views: {

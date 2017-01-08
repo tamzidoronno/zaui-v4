@@ -5,6 +5,7 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
     $scope.numbers = 10;
     $scope.numpadnumber = "";
     $scope.paymentMethodId = $stateParams.paymentMethodId;
+    $scope.printers = datarepository.getPrinters();
     
     $scope.contains = function(a, obj) {
         for (var i = 0; i < a.length; i++) {
@@ -81,14 +82,8 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
         return ids;
     }
     
-    $scope.markCompleted = function(ids) {
-        for (var i in ids) {
-            datarepository.forceRemoveCartItem(ids[i].id);
-        }
-
-        datarepository.clearCheckoutList();
-        
-        if (datarepository.isStandAlone()) {
+    $scope.receiptFinished = function() {
+        if ($stateParams.tableId === "direct") {
             $state.transitionTo('base.checkouttable', { tableId: $stateParams.tableId })
             return;
         }
@@ -98,6 +93,36 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
         } else {
             $state.transitionTo('base.checkouttable', { tableId: $stateParams.tableId })
         }
+    }
+    
+    $scope.printInvoice = function(printer) {
+        var orderId = $stateParams.orderId;
+        var printerId = printer.id;
+        $api.getApi().OrderManager.printInvoice(orderId, printerId);
+    }
+    
+    $scope.markCompleted = function(ids, order, room) {
+        for (var i in ids) {
+            datarepository.forceRemoveCartItem(ids[i].id);
+        }
+
+        datarepository.clearCheckoutList();
+        
+        if (order !== null) {
+            $state.transitionTo('base.printInvoice', { tableId: $stateParams.tableId, orderId: order.id });
+            return;
+        }
+        
+        if (room) {
+            var msg = "Items put on room: " + room.room;
+            if (room.guest && room.guest[0]) {
+                msg += ", Guest: " + room.guest[0].name;
+            }
+            
+            alert(msg);
+        }
+        
+        $scope.receiptFinished();
     }
     
     $scope.getTotalForOrder = function(order) {
@@ -133,7 +158,7 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
                     return;
                 }
 
-                $scope.markCompleted(ids);
+                $scope.markCompleted(ids, order);
             });
         });
         
@@ -157,6 +182,12 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
         
         pmsManager.getSimpleRooms(method.settings.bookingengine.value, filter).done(function(res) {
             $scope.rooms = res;
+            
+            $scope.rooms.sort(function(a, b){
+                if(a.room < b.room) return -1;
+                if(a.room > b.room) return 1;
+                return 0;
+            });
             $scope.$apply();
         });
     }
@@ -164,7 +195,7 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
     $scope.payOnRoom = function(room) {
         var ids = $scope.getIds();
         $api.getApi().ResturantManager.payOnRoom(room, ids).done(function() {
-            $scope.markCompleted(ids);
+            $scope.markCompleted(ids, null, room);
         });
     }
     

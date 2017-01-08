@@ -15,6 +15,23 @@ controllers.TableController = function($scope, $rootScope, $api, $state, datarep
         $state.transitionTo('base.home');
     }
     
+    $scope.getProductCountForTable = function(product) {
+        var cartItems = datarepository.getAllCartItems($scope.table.id);
+        var count = 0;
+        for (var i in cartItems) {
+            var cartItem = cartItems[i];
+            if (cartItem.productId == product.id && $scope.selectedPerson == cartItem.tablePersonNumber) {
+                count++;
+            }
+        }
+        
+        if (!count) {
+            return true;
+        }
+        
+        return false;
+    }
+    
     $scope.getProductsForList = function(productList) {
         var retList = [];
         for (var i in productList.productIds) {

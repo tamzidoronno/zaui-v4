@@ -5,7 +5,7 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
     $scope.tables = datarepository.getCurrentlyCheckingOutTables($stateParams.tableId);
     $scope.paymentMethods = datarepository.getActivatedPaymentMethods();
     $scope.productLists = datarepository.getProductLists();
-    $scope.standalone = datarepository.isStandAlone();
+    $scope.standalone = $stateParams.tableId === "direct";
     $scope.rooms = datarepository.rooms;
     
     console.log($scope.tables);
@@ -48,7 +48,8 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
     }
     
     $scope.addToCart = function(product) {
-        var item = datarepository.addToCart(product.id, 0, $scope.tables[0].id);
+        var tableId = $scope.tables[0] ? $scope.tables[0].id : "direct";
+        var item = datarepository.addToCart(product.id, 0, tableId);
         datarepository.cartItemsToPay.push(item);
         datarepository.save();
         
@@ -96,6 +97,10 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
     }
     
     $scope.goBack = function() {
+        if (!$scope.tables[0]) {
+            $state.transitionTo('base.home', {});    
+            return;
+        }
         $state.transitionTo('base.tableoverview', {tableId: $scope.tables[0].id});
     }
     
@@ -118,6 +123,9 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
     }
     
     $scope.getAllCartItems = function(tableId) {
+        if (tableId === "direct")
+            return [];
+        
         return datarepository.getAllCartItems(tableId);
     }
     
@@ -162,6 +170,9 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
     }
  
     $scope.getPersons = function(table) {
+        if (!table)
+            return [];
+        
         var items = $scope.getAllCartItems(table.id);
         var retItems = [];
         
@@ -231,7 +242,8 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
     }
     
     $scope.goToPaymentWindow = function(paymentMethod) {
-        $state.transitionTo('base.paymentwindow', {tableId: $scope.tables[0].id, paymentMethodId: paymentMethod.id})
+        var tableId = $scope.tables[0] ? $scope.tables[0].id : "direct";
+        $state.transitionTo('base.paymentwindow', {tableId: tableId, paymentMethodId: paymentMethod.id})
     }
     
     $scope.getTotal = function() {

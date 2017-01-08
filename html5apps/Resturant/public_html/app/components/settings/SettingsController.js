@@ -28,6 +28,7 @@ controllers.SettingsController = function($scope, $rootScope, $api, datareposito
         var resturantManager = $api.getApi().ResturantManager;
         var productManager = $api.getApi().ProductManager;
         var storeApplicationPool = $api.getApi().StoreApplicationPool;
+        var storePrintManager = $api.getApi().StorePrintManager;
         
         $scope.starteda = true; 
         $scope.startedb = true; 
@@ -37,6 +38,7 @@ controllers.SettingsController = function($scope, $rootScope, $api, datareposito
         productManager.getProductLists().done(function(res) { $scope.startedb = false; datarepository.setProductLists(res); $scope.$apply(); });
         resturantManager.getRooms().done(function(res) { $scope.startedc = false; datarepository.setRooms(res); $scope.$apply(); } )
         storeApplicationPool.getActivatedPaymentApplications().done(function(res) { datarepository.setActivatedPaymentMethods(res); $scope.$apply(); } )
+        storePrintManager.getPrinters().done(function(res) { datarepository.setPrinters(res); $scope.$apply(); } )
     }
     
     $scope.goBack = function() {

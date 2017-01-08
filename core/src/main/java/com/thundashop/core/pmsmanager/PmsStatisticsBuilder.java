@@ -8,6 +8,7 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +52,10 @@ class PmsStatisticsBuilder {
                 if(booking.isDeleted) {
                     continue;
                 }
+                if(!booking.payedFor && cal.getTime().before(new Date()) && cal.get(Calendar.YEAR) >= 2017) {
+                    continue;
+                }
+                
                 if(booking.isEnded() && !booking.payedFor) {
                     continue;
                 }

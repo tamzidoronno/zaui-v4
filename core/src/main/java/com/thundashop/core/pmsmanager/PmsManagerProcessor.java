@@ -381,8 +381,8 @@ public class PmsManagerProcessor {
 
     private Date beginningOfMonth(int monthsToAdd) {
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().getActualMinimum(Calendar.DAY_OF_MONTH));
-        cal.add(Calendar.MONTH, monthsToAdd);
+        cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().getActualMinimum(Calendar.DAY_OF_MONTH)); 
+       cal.add(Calendar.MONTH, monthsToAdd);
 
         return cal.getTime();
     }

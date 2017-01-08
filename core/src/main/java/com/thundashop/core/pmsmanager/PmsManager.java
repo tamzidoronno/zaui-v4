@@ -143,6 +143,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
+        Calendar toCheck = Calendar.getInstance();
+        
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
@@ -161,7 +163,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsConfiguration) {
                 checkConvertLockConfigs((PmsConfiguration) dataCommon);
-                configuration = (PmsConfiguration) dataCommon;
+                PmsConfiguration toAdd = (PmsConfiguration) dataCommon;
+                toCheck.setTime(toAdd.rowCreatedDate);
+                if(toCheck.get(Calendar.YEAR) == 2017 && toCheck.get(Calendar.DAY_OF_YEAR) == 8) {
+                    System.out.println("delete this configuration, failure to add today: " + toAdd.rowCreatedDate + "(" + getName() + ")");
+                    deleteObject(dataCommon);
+                } else {
+                    if(configuration.rowCreatedDate == null || (configuration.rowCreatedDate.before(dataCommon.rowCreatedDate) || configuration.rowCreatedDate.equals(dataCommon.rowCreatedDate))) {
+                        if(configuration.rowCreatedDate != null) { deleteObject(configuration); }
+                        configuration = toAdd;
+                    } else {
+                        if(configuration.rowCreatedDate != null) { deleteObject(dataCommon); }
+                        System.out.println(getName() + " : " +dataCommon.rowCreatedDate);
+                    }
+                }
             }
             if (dataCommon instanceof PmsAddonDeliveryLogEntry) {
                 deliveredAddons.put(dataCommon.id, (PmsAddonDeliveryLogEntry) dataCommon);
@@ -4824,7 +4839,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsLockServer res = pmsConfiguration.lockServerConfigs.get("default");
         if(res == null) {
             pmsConfiguration.convertLockConfigToDefault();
-            saveObject(configuration);
+            saveObject(pmsConfiguration);
         }
     }
 

@@ -6,6 +6,7 @@
 package com.thundashop.core.ordermanager;
 
 import com.getshop.scope.GetShopSchedulerBase;
+import java.util.Random;
 
 /**
  *
@@ -20,6 +21,12 @@ public class CheckOrderCollector extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
+        Random r = new Random();
+        int Low = 0;
+        int High = 30000;
+        int Result = r.nextInt(High-Low) + Low;
+        Thread.sleep(Result);
+        
         getApi().getOrderManager().checkForOrdersToCapture();
     }
 }

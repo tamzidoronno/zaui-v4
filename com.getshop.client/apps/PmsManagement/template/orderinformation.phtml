@@ -86,6 +86,12 @@ echo "</span>";
 <span class="moreinvoiceoptions">
     <div>
         <b>Order for a given periode</b><br>
+        <div  gstype="form" method="saveOrderSettingsOnBooking">
+            <input type='hidden' value='<?php echo $booking->id; ?>' gsname='bookingid'>
+            <input type='text' style='width:30px;' value='<?php echo $booking->dueDays; ?>' gsname='duedays'> number of days for due<br>
+            <input type='button' style='float:right;' value='Save settings' gstype='submitToInfoBox'><br><br>
+        </div>
+        <b>Order for a given periode</b><br>
         <div  gstype="form" method="createPeriodeOrder">
             <input type='hidden' value='<?php echo $booking->id; ?>' gsname='bookingid'>
             <input type='txt' style='width:100px;' placeholder='Start date' class='periodeorderstartdate' gsname='start'>
@@ -145,9 +151,14 @@ if($booking->orderIds) {
         $addr .= $user->emailAddressToInvoice ? $user->emailAddressToInvoice : $user->emailAddress;
         
         echo "<tr orderid='".$order->id."'>";
-        echo "<td> <a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a> - ".date("d.m.Y", strtotime($order->rowCreatedDate));
-        echo "<br><span style='color:#bbb; width: 127px;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='$addr'>".$user->fullName . "(" . $user->customerId . ")</span></td>";
-        echo "<td>";
+        echo "<td width='200'> <a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a> - ".date("d.m.Y", strtotime($order->rowCreatedDate));
+        echo "<br>";
+        echo "<span style='color:#bbb; width: 160px;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='$addr'>";
+        if(!isset($order->closed) || !$order->closed) {
+            echo "<i class='fa fa-edit edituseronorderviewbutton' orderid='".$order->id."'></i> <span class='edituseronorderview edituserview'></span> ";
+        }
+        echo $user->fullName . "(" . $user->customerId . ")</span></td>";
+        echo "<td width='120'>";
         $names = "";
         $name = "";
         foreach($guests as $guest) {
@@ -157,7 +168,7 @@ if($booking->orderIds) {
             $names .= $guest->name . "<br>";
         }
         
-        echo "<span style='width: 50px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;display:inline-block;' title='$names'>$name</span>";
+        echo "<span style='width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;display:inline-block;' title='$names'>$name</span>";
         echo "</td>";
         echo "<td>" . round($totalEx) . "<br><span style='color:#bbb'>" . round($total) . "</span></td>";
         echo "<td>";

@@ -19,6 +19,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return 1;
     }
     
+    public function saveOrderSettingsOnBooking() {
+        $booking = $this->getSelectedBooking();
+        $booking->dueDays = $_POST['data']['duedays'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
+    }
+    
     public function toggleFilterVersion() {
         if(!isset($_SESSION['toggleOldFilterVersion'])) {
             $_SESSION['toggleOldFilterVersion'] = true;
@@ -216,6 +224,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("edituserview");
     }
     
+    
+    public function editUserOnOrder() {
+        $this->includefile("edituserview");
+    }
     
     /**
      * @param \core_usermanager_data_User $user
@@ -684,21 +696,28 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function changeBookingOnEvent() {
         $booking = $this->getSelectedBooking();
+        $userId = "";
         if($_POST['data']['userid'] == "newuser") {
             $user = new \core_usermanager_data_User();
             $user->fullName = "New user";
             $newUser = $this->getApi()->getUserManager()->createUser($user);
-            $booking->userId = $newUser->id;
+            $userId = $newUser->id;
         } else {
-            $booking->userId = $_POST['data']['userid'];
+            $userId = $_POST['data']['userid'];
         }
-
+        $type = $_POST['data']['type'];
+        if($type == "order") {
+            $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+            $order->userId = $userId;
+            $this->getApi()->getOrderManager()->saveOrder($order);
+        } else {
+            $booking->userId = $userId;
+        }
+        
         $this->renderEditUserView();
     }
     
     public function saveUser() {
-        $selected = $this->getSelectedBooking();
-        $selected->userId = $_POST['data']['userid'];
         $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
         $user->fullName = $_POST['data']['fullName'];
         $user->prefix = $_POST['data']['prefix'];
@@ -713,7 +732,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->city = $_POST['data']['address.city'];
         $user->birthDay = $_POST['data']['birthDay'];
         $this->getApi()->getUserManager()->saveUser($user);
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $selected);
+        
         $this->selectedBooking = null;
         $this->showBookingInformation();
     }

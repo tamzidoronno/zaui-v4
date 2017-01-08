@@ -21,6 +21,7 @@ public class GetShopDevice extends DataCommon {
     public LinkedList<Date> accessLog = new LinkedList();
     public HashMap<String, Object> instances;
     public Date batteryLastUpdated;
+    public String serverSource = "";
 
     public void setDevice(ZWaveDevice device) {
         zwaveid = device.id;

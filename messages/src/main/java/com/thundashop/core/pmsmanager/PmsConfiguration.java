@@ -54,6 +54,7 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<String, List<String>> emailsToNotify = new HashMap();
     public HashMap<String, Double> extraCleaningCost = new HashMap();
     public HashMap<String, PmsMobileView> mobileViews = new HashMap();
+    public HashMap<String, List<String>> mobileViewRestrictions = new HashMap();
     public String bookingProfile = "hotel";
 
     /* Invoice creation options */
@@ -94,17 +95,34 @@ public class PmsConfiguration extends DataCommon {
     public String smsName = "GetShop";
     
     //Lock system
-    public String locktype = "";
-    public String arxHostname = "";
+    public HashMap<String, PmsLockServer> lockServerConfigs = new HashMap();
+    
+    public PmsLockServer getDefaultLockServer() {
+        PmsLockServer defaultsv = lockServerConfigs.get("default");
+        if(defaultsv == null) {
+            defaultsv = new PmsLockServer();
+        }
+        return defaultsv;
+    }
+    public PmsLockServer getLockServer(String serverSource) {
+        if(serverSource == null || serverSource.trim().isEmpty()) {
+            serverSource = "default";
+        }
+        return lockServerConfigs.get(serverSource);
+    }
+
+    
+    private String locktype = "";
+    private String arxHostname = "";
     @Administrator
-    public String arxUsername = "";
+    private String arxUsername = "";
     @Administrator
-    public String arxPassword = "";
-    public String arxCardFormat = "";
-    public String arxCardFormatsAvailable = "";
-    public Integer codeSize = 4;
-    public boolean keepDoorOpenWhenCodeIsPressed = false;
-    public String closeAllDoorsAfterTime = "22:00";
+    private String arxPassword = "";
+    private String arxCardFormat = "";
+    private String arxCardFormatsAvailable = "";
+    private Integer codeSize = 4;
+    private boolean keepDoorOpenWhenCodeIsPressed = false;
+    private String closeAllDoorsAfterTime = "22:00";
 
     
     //Cleaning options
@@ -207,8 +225,21 @@ public class PmsConfiguration extends DataCommon {
     public boolean hasLockSystem() {
         return (arxHostname != null && !arxHostname.isEmpty());
     }
-
     
+    void convertLockConfigToDefault() {
+        PmsLockServer server = new PmsLockServer();
+        server.locktype = locktype;
+        server.arxHostname = arxHostname;
+        server.arxUsername = arxUsername;
+        server.arxPassword = arxPassword;
+        server.arxCardFormat = arxCardFormat;
+        server.arxCardFormatsAvailable = arxCardFormatsAvailable;
+        server.codeSize = codeSize;
+        server.keepDoorOpenWhenCodeIsPressed = keepDoorOpenWhenCodeIsPressed;
+        server.closeAllDoorsAfterTime = closeAllDoorsAfterTime;
+        lockServerConfigs.put("default", server);
+    }
+   
     boolean isArx() {
         if(!hasLockSystem()) {
             return true;

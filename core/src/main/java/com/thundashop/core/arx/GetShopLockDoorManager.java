@@ -27,7 +27,7 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
     @Override
     public List<Door> getAllDoors() throws Exception {
         List<Door> doors = new ArrayList();
-        List<GetShopDevice> locks = getShopLockManager.getAllLocks();
+        List<GetShopDevice> locks = getShopLockManager.getAllLocks(null);
         List<BookingItem> items = bookingEngine.getBookingItems();
         for(GetShopDevice lock : locks) {
             if(lock.isLock()) {
@@ -86,7 +86,7 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
        endDate.setTime(end);
        HashMap<String, List<AccessLog>> toReturn = new HashMap();
        
-       for(GetShopDevice dev : getShopLockManager.getAllLocks()) {
+       for(GetShopDevice dev : getShopLockManager.getAllLocks(null)) {
            List<AccessLog> result = new ArrayList();
            for(Date accessEntry : dev.accessLog) {
                if(accessEntry.after(startDate) && accessEntry.before(endDate)) {

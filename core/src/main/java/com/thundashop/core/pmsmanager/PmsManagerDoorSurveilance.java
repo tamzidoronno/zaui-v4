@@ -28,11 +28,11 @@ public class PmsManagerDoorSurveilance {
     
     private void closeForTheDay() throws Exception {
         
-        if (!manager.getConfigurationSecure().keepDoorOpenWhenCodeIsPressed) {
+        if (!manager.getConfigurationSecure().getDefaultLockServer().keepDoorOpenWhenCodeIsPressed) {
             return;
         }
         
-        String closeAtEnd = manager.getConfigurationSecure().closeAllDoorsAfterTime;
+        String closeAtEnd = manager.getConfigurationSecure().getDefaultLockServer().closeAllDoorsAfterTime;
         String[] time = closeAtEnd.split(":");
         int hour = new Integer(time[0]);
         int minute = new Integer(time[1]);
@@ -67,7 +67,7 @@ public class PmsManagerDoorSurveilance {
     }
 
     private void checkForSendCloseSignal() throws Exception {
-        if(!manager.getConfiguration().keepDoorOpenWhenCodeIsPressed) {
+        if(!manager.getConfiguration().getDefaultLockServer().keepDoorOpenWhenCodeIsPressed) {
             return;
         }
         

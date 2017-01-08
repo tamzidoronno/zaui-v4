@@ -908,15 +908,19 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public void checkForNoShowsAndMark() throws Exception {
+        Calendar cal = Calendar.getInstance();
+        
         if(!frameworkConfig.productionMode) { return; }
         PmsBookingFilter filter = new PmsBookingFilter();
         if(storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
+            if(cal.get(Calendar.HOUR_OF_DAY) < 5) {
+                return;
+            }
             filter.filterType = "checkin";
         } else {
             filter.filterType = "checkout";
         }
         
-        Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, -1);
         
         filter.startDate = cal.getTime();

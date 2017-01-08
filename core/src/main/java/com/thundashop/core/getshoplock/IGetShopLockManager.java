@@ -24,16 +24,16 @@ public interface IGetShopLockManager {
     public String pushCode(String id, String door, String code, Date start, Date end) throws Exception;
     
     @Administrator
-    public void removeAllUnusedLocks() throws Exception;
+    public void removeAllUnusedLocks(String source) throws Exception;
     
     @Administrator
     public String getCodeForLock(String lockId);
     
     @Administrator
-    public List<GetShopDevice> getAllLocks();
+    public List<GetShopDevice> getAllLocks(String serverSource);
     
     @Administrator
-    public void deleteAllDevices(String password);
+    public void deleteAllDevices(String password, String source);
     
     @Administrator
     public void openLock(String lockId);

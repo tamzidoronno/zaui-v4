@@ -1,7 +1,18 @@
 <?php
 /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $booking = $this->getSelectedBooking();
-$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$userId = $booking->userId;
+$type = "booking";
+$orderId = "";
+if(isset($_POST['data']['orderid'])) {
+    $orderId = $_POST['data']['orderid'];
+    if($orderId) {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $userId = $order->userId;
+        $type = "order";
+    }
+}
+$user = $this->getApi()->getUserManager()->getUserById($userId);
 $allUsers = $this->getApi()->getUserManager()->getAllUsers();
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 
@@ -14,6 +25,8 @@ if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferred
 }
 ?>
 <div class="edituserbox" gstype='form' method='saveUser'>
+    <input type='hidden' value='<? echo $type; ?>' class='changeusertype'>
+    <input type='hidden' value='<? echo $orderId; ?>' gsname='orderid'>
     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
     <input type='hidden' value='<? echo $user->id; ?>' gsname='userid'>
     <table cellspacing='0' cellpadding='0'>
@@ -21,8 +34,7 @@ if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferred
         <tr>
             <td>Change user</td>
             <td>
-                <select class='changeuseronbooking' bookingid='<?php echo $booking->id; ?>'>
-                    <option value="newuser">Create a new user</option>
+                <select class='changeuseronbooking' bookingid='<?php echo $booking->id; ?>' orderid='<?php echo $orderId; ?>'>
                 <?php
                 foreach($allUsers as $user2) {
                     $selected = "";
@@ -36,10 +48,11 @@ if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferred
                     echo "<option value='" . $user2->id . "' " . $selected.'>'.$user2->fullName . $email . "</option>";
                 }
                 ?>
-                </select>
+                </select><br>
+                <span style='cursor:pointer; color:blue;' class='createanewuserfromeditbox' bookingid='<?php echo $booking->id; ?>' orderid='<?php echo $orderId; ?>'>create a new user</span>
             </td>
         </tr>
-        <tr><td>Fullname</td><td><input type="txt" gsname="fullName" value="<?php echo $user->fullName; ?>" <?php echo $disabled; ?>></td><tr>
+        <tr><td><i class='fa fa-question' title='This is the name of the booker, if a company this is the company name. If its a private person its the name of the person.'></i> Name</td><td><input type="txt" gsname="fullName" value="<?php echo $user->fullName; ?>" <?php echo $disabled; ?>></td><tr>
         <tr><td>Prefix</td><td><input type="txt" gsname="prefix" value="<?php echo $user->prefix; ?>" <?php echo $disabled; ?>></td><tr>
         <tr><td>Phone</td><td><input type="txt" gsname="cellPhone" value="<?php echo $user->cellPhone; ?>" <?php echo $disabled; ?>></td><tr>
         <tr><td>Email</td><td><input type="txt" gsname="emailAddress" value="<?php echo $user->emailAddress; ?>" <?php echo $disabled; ?>></td><tr>

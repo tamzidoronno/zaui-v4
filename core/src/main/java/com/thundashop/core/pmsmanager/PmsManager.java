@@ -143,6 +143,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
+        Calendar toCheck = Calendar.getInstance();
+        
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
@@ -160,7 +162,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 careTaker.put(dataCommon.id, (PmsCareTaker) dataCommon);
             }
             if (dataCommon instanceof PmsConfiguration) {
-                configuration = (PmsConfiguration) dataCommon;
+                checkConvertLockConfigs((PmsConfiguration) dataCommon);
+                PmsConfiguration toAdd = (PmsConfiguration) dataCommon;
+                toCheck.setTime(toAdd.rowCreatedDate);
+                if(toCheck.get(Calendar.YEAR) == 2017 && toCheck.get(Calendar.DAY_OF_YEAR) == 8) {
+                    System.out.println("delete this configuration, failure to add today: " + toAdd.rowCreatedDate + "(" + getName() + ")");
+                    deleteObject(dataCommon);
+                } else {
+                    if(configuration.rowCreatedDate == null || (configuration.rowCreatedDate.before(dataCommon.rowCreatedDate) || configuration.rowCreatedDate.equals(dataCommon.rowCreatedDate))) {
+                        if(configuration.rowCreatedDate != null) { deleteObject(configuration); }
+                        configuration = toAdd;
+                    } else {
+                        if(configuration.rowCreatedDate != null) { deleteObject(dataCommon); }
+                        System.out.println(getName() + " : " +dataCommon.rowCreatedDate);
+                    }
+                }
             }
             if (dataCommon instanceof PmsAddonDeliveryLogEntry) {
                 deliveredAddons.put(dataCommon.id, (PmsAddonDeliveryLogEntry) dataCommon);
@@ -614,7 +630,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (int i = 0; i < 100000; i++) {
             int start = 1;
             int end = 10;
-            for (int j = 0; j < configuration.codeSize - 1; j++) {
+            for (int j = 0; j < configuration.getDefaultLockServer().codeSize - 1; j++) {
                 start *= 10;
                 end *= 10;
             }
@@ -971,19 +987,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         PmsConfiguration toReturn = gson.fromJson(copy, PmsConfiguration.class);
-        toReturn.arxUsername = "";
-        toReturn.arxPassword = "";
-        toReturn.arxHostname = "";
-        
-        toReturn.wubookusername = "";
-        toReturn.wubookpassword = "";
-        toReturn.wubookproviderkey = "";
-
         return toReturn;
     }
 
     @Override
     public void saveConfiguration(PmsConfiguration notifications) {
+        if(configuration.rowCreatedDate != null && (notifications.id == null || !notifications.id.equals(configuration.id))) {
+            logPrint("Tried to save an invalid configuration object");
+            return;
+        }
         this.configuration = notifications;
         notifications.finalize();
         saveObject(notifications);
@@ -4825,6 +4837,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public List<PmsAddonDeliveryLogEntry> getDeliveryLogByView(String viewId, Date start, Date end) {
         PmsMobileView view = getConfiguration().mobileViews.get(viewId);
         return getDeliveryLog(view.products, start, end);
+    }
+
+    private void checkConvertLockConfigs(PmsConfiguration pmsConfiguration) {
+        PmsLockServer res = pmsConfiguration.lockServerConfigs.get("default");
+        if(res == null) {
+            pmsConfiguration.convertLockConfigToDefault();
+            saveObject(pmsConfiguration);
+        }
     }
 
 }

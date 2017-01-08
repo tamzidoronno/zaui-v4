@@ -62,4 +62,53 @@ if(!$views || sizeof($views) == 0) {
     echo "</table>";
 }
 
+$users = $this->getApi()->getUserManager()->getAllUsers();
+
+$vareas = array();
+$vareas['otherinstruction'] = "Instructions";
+$vareas['findguest'] = "Guests";
+$vareas['fire'] = "Fire";
+$vareas['sms'] = "Sms";
+$vareas['log'] = "Log";
+$vareas['doors'] = "Doors";
+$vareas['cleaning'] = "Cleaning";
+$vareas['caretaker'] = "Caretaker";
+
+foreach($views as $area) {
+    $vareas[$area->name] = $area->name;
+}
+echo "<br><br>";
+
+echo "<h1>User restriction on mobile view</h1>";
+echo "<div gstype='form' method='updateMobileViewRestriction'>";
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th>User</th>";
+foreach($vareas as $area) {
+    echo "<th>" . $area . "</th>";
+}
+echo "</tr>";
+
+
+foreach($users as $user) {
+    if($user->type != 100) {
+        continue;
+    }
+    echo "<tr>";
+    echo "<td>" . $user->fullName . " (" . $user->emailAddress . ")". "</td>";
+    foreach($vareas as $id => $area) {
+        $checked = "";
+        if(isset($config->mobileViewRestrictions->{$user->id}) && in_array($id, $config->mobileViewRestrictions->{$user->id})) {
+            $checked = "CHECKED";
+        }
+
+        echo "<td align='center'><input type='checkbox' gsname='".$user->id."_".$id."' $checked></td>";
+    }
+    echo "</tr>";
+}
+echo "</table>";
+echo "<div style='text-align:right;'>";
+echo "<input type='button' value='Save restrictions' gstype='submit'>";
+echo "</div>";
+echo "</div>";
 ?>

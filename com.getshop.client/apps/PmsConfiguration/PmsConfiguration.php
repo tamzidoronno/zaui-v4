@@ -10,6 +10,28 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         return "PmsConfiguration";
     }
     
+    public function updateMobileViewRestriction() {
+        $toSave = array();
+        foreach($_POST['data'] as $key => $val) {
+            if($val === "true") {
+//                echo "found";
+                $res = explode("_", $key);
+                $userId = $res[0];
+                $area = $res[1];
+                echo $userId;
+                if(!isset($toSave[$userId])) {
+                    $toSave[$userId] = array();
+                }
+                $toSave[$userId][] = $area;
+            }
+        }
+//        print_r($toSave);
+        
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config->mobileViewRestrictions = $toSave;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
     public function loadProducts() {
         $products = $this->getApi()->getProductManager()->getAllProducts();
         echo "<table cellspacing='0' cellpadding='0'>";

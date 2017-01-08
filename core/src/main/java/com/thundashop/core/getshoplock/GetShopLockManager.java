@@ -22,6 +22,7 @@ import com.thundashop.core.getshop.data.GetShopLockMasterCodes;
 import com.thundashop.core.getshop.data.ZWaveDevice;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsLockServer;
 import com.thundashop.core.pmsmanager.PmsManager;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -72,7 +73,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         GetShopDevice dev = devices.get(lockId);
         if(dev.zwaveid == 1) {
             doUpdateLockList = true;
-            getAllLocks();
+            getAllLocks(dev.serverSource);
             doUpdateLockList = false;
         }
         for(GetShopLockCode code : dev.codes.values()) {
@@ -98,14 +99,28 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
 
     @Override
-    public void deleteAllDevices(String password) {
+    public void deleteAllDevices(String password, String source) {
         if(!password.equals("fdsafbvvre4234235t")) {
             return;
         }
+        List<String> toRemove = new ArrayList();
         for(GetShopDevice dev : devices.values()) {
-            deleteObject(dev);
+            boolean remove = false;
+            if(source.equals("default")) {
+                if(dev.serverSource.equals("") || dev.serverSource.equals("default")) {
+                    remove = true;
+                }
+            } else if(dev.serverSource.equals(source)) {
+                remove = true;
+            }
+            if(remove) {
+                toRemove.add(dev.id);
+                deleteObject(dev);
+            }
         }
-        devices.clear();
+        for(String id : toRemove) {
+            devices.remove(id);
+        }
     }
 
     @Override
@@ -140,7 +155,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
 
     @Override
-    public void removeAllUnusedLocks() throws Exception {
+    public void removeAllUnusedLocks(String serverSource) throws Exception {
         List<GetShopDevice> toremove = new ArrayList();
         for(GetShopDevice dev : devices.values()) {
             if(dev.zwaveid == 1) {
@@ -158,8 +173,18 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
         
         for(GetShopDevice dev : toremove) {
-            devices.remove(dev.id);
-            deleteObject(dev);
+            boolean toRemove = false;
+            if(serverSource.equals("default")) {
+                if(dev.serverSource.isEmpty() || dev.serverSource.equals("default")) {
+                    toRemove = true;
+                }
+            } else if(serverSource.equals(dev.serverSource)) {
+                toRemove = true;
+            }
+            if(toRemove) {
+                devices.remove(dev.id);
+                deleteObject(dev);
+            }
         }
     }
 
@@ -361,41 +386,30 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         createScheduler("pmsprocessor_lock", "30 23,04 * * *", UpdateLockList.class);
     }
     
-    public String getUsername() {
-        return pmsManager.getConfigurationSecure().arxUsername;
+    public String getUsername(String serverSource) {
+        return pmsManager.getConfigurationSecure().getLockServer(serverSource).arxUsername;
     }
     
-    public String getHostname() {
-        return pmsManager.getConfigurationSecure().arxHostname;
+    public String getHostname(String serverSource) {
+        return pmsManager.getConfigurationSecure().getLockServer(serverSource).arxHostname;
     }
     
-    public String getPassword() {
-        return pmsManager.getConfigurationSecure().arxPassword;
+    public String getPassword(String serverSource) {
+        return pmsManager.getConfigurationSecure().getLockServer(serverSource).arxPassword;
     }
     
-    private String httpLoginRequest(String address) throws Exception {
-        String username = getUsername();
-        String password = getPassword();
+    private String httpLoginRequest(String address, String serverSource) throws Exception {
+        String username = getUsername(serverSource);
+        String password = getPassword(serverSource);
         return GetshopLockCom.httpLoginRequest(address, username, password);
     }
 
     public String pushCode(String id, String door, String code, Date start, Date end) throws Exception {
-        SimpleDateFormat s1 = new SimpleDateFormat("dd.MM.YYYY HH:mm");
-        String startString = start.getTime()/1000 + "";
-        String endString = end.getTime()/1000 + "";
-        
-        id = URLEncoder.encode(id, "UTF-8");
-        
-        String address = "http://"+getHostname()+":8080/storecode/"+door+"/"+id+"/"+startString+"/"+endString+"/" + code;
-        logPrint("Executing: " + address);
-        return this.httpLoginRequest(address);
+        return "";
     }
 
     public String removeCode(String pmsBookingRoomId) throws Exception {
-        String id = URLEncoder.encode(pmsBookingRoomId, "UTF-8");
-        String address = "http://"+getHostname()+":8080/deletekey/"+id;
-        logPrint("Executing: " + address);
-        return this.httpLoginRequest(address);
+        return "";
     }
 
     @Override
@@ -417,13 +431,13 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
 
     @Override
-    public List<GetShopDevice> getAllLocks() {
-        String hostname = getHostname();
+    public List<GetShopDevice> getAllLocks(String serverSource) {
+        String hostname = getHostname(serverSource);
         if(hostname == null || hostname.isEmpty()) { return new ArrayList(); }
         if(doUpdateLockList) {
             try {
                 String address = "http://" + hostname + ":8083/ZWave.zway/Run/devices";
-                String res = httpLoginRequest(address);
+                String res = httpLoginRequest(address, serverSource);
 
                 HashMap<Integer, ZWaveDevice> result = new HashMap();
                 Type type = new TypeToken<HashMap<Integer, ZWaveDevice>>(){}.getType();
@@ -434,6 +448,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     ZWaveDevice device = result.get(offset);
                     GetShopDevice gsdevice = new GetShopDevice();
                     gsdevice.setDevice(device);
+                    gsdevice.serverSource = serverSource;
                     addDeviceIfNotExists(gsdevice);
                     currentDevices.add(gsdevice);
                 }
@@ -464,29 +479,43 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         ArrayList<GetShopDevice> res = new ArrayList(devices.values());
         Collections.sort(res, new Comparator<GetShopDevice>(){
-             public int compare(GetShopDevice o1, GetShopDevice o2){
-             if(o1.name == null || o2.name == null) {
-             return 0;
-         }
-         return o1.name.compareTo(o2.name);
-     }
-});
+            public int compare(GetShopDevice o1, GetShopDevice o2){
+                if(o1.name == null || o2.name == null) {
+                    return 0;
+                }
+                return o1.name.compareTo(o2.name);
+            }
+        });
+        
+        if(serverSource != null && !serverSource.isEmpty()) {
+            List<GetShopDevice> toRemove = new ArrayList();
+            for(GetShopDevice dev : res) {
+                if(serverSource.equals("default")) {
+                    if(!dev.serverSource.isEmpty() && dev.serverSource.equals("default")) {
+                        toRemove.add(dev);
+                    }
+                } else if(!serverSource.equals(dev.serverSource)) {
+                    toRemove.add(dev);
+                }
+            }
+            res.removeAll(toRemove);
+        }
         
         return res;
     }
 
     @Override
     public void openLock(String lockId) {
-        String hostname = getHostname();
-        if(hostname == null || hostname.isEmpty()) { return; }
         GetShopDevice dev = devices.get(lockId);
+        String hostname = getHostname(dev.serverSource);
+        if(hostname == null || hostname.isEmpty()) { return; }
         String postfix = "ZWave.zway/Run/devices["+dev.zwaveid+"].instances[0].commandClasses[98].Set(1)";
         try {
             postfix = URLEncoder.encode(postfix, "UTF-8");
         }catch(Exception e) {}
-        String address = "http://"+getHostname()+":8083/" + postfix;
+        String address = "http://"+getHostname(dev.serverSource)+":8083/" + postfix;
         try {
-            httpLoginRequest(address);
+            httpLoginRequest(address, dev.serverSource);
         } catch (Exception ex) {
             Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
@@ -551,9 +580,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             if(dev.isLock() && !dev.beingUpdated && dev.needUpdate()) {
                 dev.beingUpdated = true;
                 dev.lastTriedUpdate = new Date();
-                String user = getUsername();
-                String pass = getPassword();
-                String host = getHostname();
+                String user = getUsername(dev.serverSource);
+                String pass = getPassword(dev.serverSource);
+                String host = getHostname(dev.serverSource);
                 
                 GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(dev, user, pass, host, items, stopUpdatesOnLock);
                 mgr.start();

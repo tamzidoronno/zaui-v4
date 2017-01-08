@@ -330,7 +330,11 @@ public class InvoiceGenerator {
         
         Calendar c = Calendar.getInstance();
         c.setTime(this.order.createdDate);
-        c.add(Calendar.DATE, details.dueDays);
+        if(order.dueDays != null) {
+            c.add(Calendar.DATE, order.dueDays);
+        } else {
+            c.add(Calendar.DATE, details.dueDays);
+        }
         
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         return sdf.format(c.getTime());

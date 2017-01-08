@@ -113,6 +113,13 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
     <div class="inner <? echo $notloggedInClass; ?>">
         <div  style="max-width: 400px; width:100%; display:inline-block; background-color:#FFF; box-shadow: 0px 0px 2px #000; border-radius: 5px; padding: 20px; text-align:left;">
             <form id='getshoploginform' method="POST" action="/login.php<? echo $doubleauth ? "?doubleauth=true" : ""; ?>" name="loginform" class="loginform">
+                
+                <?php
+                if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
+                    $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+                    echo "<center>Welcome back ".$user->fullName.", please wait while we are logging you on.</center>";
+                } else {
+                    ?>
                     <div class="form">
                         <div class="username">Username / Email<br><input id='gsloginusername' class="tstextfield" name="username" type="textfield" value='<? echo $username; ?>' style="height:40px;width:100%;"></input></div>
                         <bR>
@@ -131,6 +138,11 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
                         
                         <input class="loginbutton" type="submit" value="login" style="height:40px; margin-top: 20px;width:100%;"/>                
                     </div>
+
+                <?php
+                }
+                
+                ?>
             </form>
         </div>
     </div>

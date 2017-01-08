@@ -297,6 +297,7 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
             order = orderManager.createOrder(new Address());
             orderManager.changeOrderStatus(order.id, Order.Status.PAYMENT_COMPLETED);
             orderManager.changeOrderType(order.id, paymentMethodId);
+            orderManager.changeOrderCreatedByManagerName(order.id, ResturantManager.class.getSimpleName());
         }
         
         
@@ -367,7 +368,7 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         PmsManager pmsManager = sessionScope.getNamedSessionBean(bookingengine, PmsManager.class);
         List<CartItem> groupedCartItems = getGroupedCartItems(cartItemsIds, false);
         for (CartItem cartItem : groupedCartItems) {
-            pmsManager.addCartItemToRoom(cartItem, room.pmsRoomId);
+            pmsManager.addCartItemToRoom(cartItem, room.pmsRoomId, ResturantManager.class.getSimpleName());
         }
     }
 

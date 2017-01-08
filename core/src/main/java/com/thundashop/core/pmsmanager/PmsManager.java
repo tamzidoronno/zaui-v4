@@ -4690,7 +4690,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void addCartItemToRoom(CartItem item, String pmsBookingRoomId) {
+    public void addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy) {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
        
@@ -4704,6 +4704,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         addon.priceExTaxes = product.priceExTaxes;
         addon.variations = product.variationCombinations;
         addon.date = item.getStartingDate();
+        addon.addedBy = addedBy;
         if(addon.date == null) {
             addon.date = new Date();
         }

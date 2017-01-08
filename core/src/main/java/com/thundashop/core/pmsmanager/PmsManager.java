@@ -992,6 +992,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveConfiguration(PmsConfiguration notifications) {
+        if(configuration.rowCreatedDate != null && (notifications.id == null || !notifications.id.equals(configuration.id))) {
+            logPrint("Tried to save an invalid configuration object");
+            return;
+        }
         this.configuration = notifications;
         notifications.finalize();
         saveObject(notifications);

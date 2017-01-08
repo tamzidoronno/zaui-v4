@@ -8,8 +8,11 @@ package com.thundashop.core.resturantmanager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.usermanager.data.User;
 import java.awt.Color;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -21,57 +24,30 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  * @author ktonder
  */
 public class PdfKitchenNote {
-    private int cornerSize = 7;
-    private PDPageContentStream contentStream;
-    private PDPageContentStream attachment;
-    
     private final ProductManager productManager;
     private final TableSession session;
+    private String generatedText = "=================";
 
     public PdfKitchenNote(TableSession session, ProductManager productManager) {
         this.session = session;
-        this.productManager = productManager;
+        this.productManager = productManager;      
     }
     
-    public String createFile(String tableName) throws IOException, COSVisitorException {
-        PDDocument document = new PDDocument();
-        PDPage page = new PDPage(PDPage.PAGE_SIZE_A4);
-
-        document.addPage(page);
-
-        contentStream = new PDPageContentStream(document, page);
-        contentStream.setNonStrokingColor(new Color(0, 0, 0));
-        
+    public String createFile(String tableName, User user) throws IOException, COSVisitorException {
+        writeHeader(tableName, user);
         writeContent(tableName);
         
-        contentStream.close();
-        
-        String fileName = "/tmp/"+session.id+".pdf";
-        document.save(fileName);
-        document.close();
-
-        return fileName;
+        return generatedText;
     }
     
 
     private void writeText( String text, int x, int y, boolean bold, int fontSize, boolean alignRight) throws IOException {
-        
-        PDPageContentStream stream = contentStream;
-    
-        PDType1Font font = bold ? PDType1Font.HELVETICA_BOLD : PDType1Font.HELVETICA;
-        stream.beginText();
-        stream.setFont(font, fontSize);
-        if (alignRight) {
-            x = x - (int) (font.getStringWidth(text) / 1000 * 9);
-        }
-        stream.moveTextPositionByAmount(x, y);
-        stream.drawString(text);
-        stream.endText();
+        generatedText += text+"\\n";
     }
     
     private void writeText( String text, int x, int y, boolean bold, int fontSize) throws IOException {
         if (text == null) {
-            text = "";
+            generatedText += "\\n";
         }
         
         writeText(text, x, y, bold, fontSize, false);
@@ -93,7 +69,7 @@ public class PdfKitchenNote {
             start -= 10;
             int pos = start - (i*lineHeight) - (i*padding);
             String personText = j == 0 ? "Generel" : "Person " + j;
-            writeText(personText, 20, pos, false, lineHeight);
+            writeText("\\n"+personText, 20, pos, false, lineHeight);
             
             i++;
             
@@ -112,9 +88,9 @@ public class PdfKitchenNote {
                     for (String key : cartItem.options.keySet()) {
                         TreeNode variation = product.variations.getNode(key);
                         productName += " ( " + variation.text + ": " + variation.getNode(cartItem.options.get(key)).text + " )";
-                    }
-                    
+                    }   
                 }
+                
                 writeText(productName, 20, pos, false, lineHeight);
                 i++;
             }
@@ -139,4 +115,16 @@ public class PdfKitchenNote {
         
         return false;
     }    
+
+    private void writeHeader(String tableName, User user) throws IOException {
+        SimpleDateFormat smf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        String date = smf.format(new Date());
+        
+        writeText("\\nBor: " + tableName, 0, 0, true, 0);
+        writeText("Dato: " + date, 0, 0, true, 0);
+        if (user != null) {
+            writeText("Servitør: " + user.fullName, 0,0,true,0);
+        }
+        
+    }
 }

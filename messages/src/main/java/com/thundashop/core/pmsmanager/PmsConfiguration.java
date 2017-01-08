@@ -54,6 +54,7 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<String, List<String>> emailsToNotify = new HashMap();
     public HashMap<String, Double> extraCleaningCost = new HashMap();
     public HashMap<String, PmsMobileView> mobileViews = new HashMap();
+    public HashMap<String, List<String>> mobileViewRestrictions = new HashMap();
     public String bookingProfile = "hotel";
 
     /* Invoice creation options */

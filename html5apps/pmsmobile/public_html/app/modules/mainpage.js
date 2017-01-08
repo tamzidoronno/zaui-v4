@@ -9,6 +9,17 @@ getshop.mainpageController = function($scope, $state) {
     $scope.hasCaretaker = true;
     
     
+    $scope.showAll = function() {
+        $scope.findguest = true;
+        $scope.otherinstruction = true;
+        $scope.fire = true;
+        $scope.sms = true;
+        $scope.log = true;
+        $scope.doors = true;
+        $scope.cleaning = true;
+        $scope.caretaker = true;
+    },
+    
     $scope.LoadConfig = function() {
         $scope.hasOtherInstructions = false;
         $scope.hasFireInstructions = false;
@@ -33,13 +44,27 @@ getshop.mainpageController = function($scope, $state) {
                     $scope.hasBreakfast = true;
                 }
             }
+            var loadUser = getshopclient.UserManager.getLoggedOnUser();
+            loadUser.done(function(user) {
+                var list = res.mobileViewRestrictions[user.id];
+                if(!list || list.length === 0) {
+                    $scope.showAll();
+                    for(var k in res.mobileViews) {
+                        $scope[res.mobileViews[k].name] = true;
+                    }
+                } else {
+                    for(var k in list) {
+                        $scope[list[k]] = true;
+                    }
+                }
+                $scope.$apply()
+            });
             
             $scope.$apply();
         });
     };
     
     loadNames.done(function(data) {
-        console.log(data);
         var names = [];
         var current = getMultilevelName();
         for(var key in data) {

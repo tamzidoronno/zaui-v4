@@ -80,3 +80,27 @@
     text-align: center;
     padding: 3px;
 }
+
+.direct_checkout_button_outer {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.direct_checkout_button {
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    
+    color: #000;
+    cursor: pointer;
+    
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f1e767+0,feb645+100;Yellow+3D */
+    background: #f1e767; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f1e767 0%, #feb645 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #f1e767 0%,#feb645 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #f1e767 0%,#feb645 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1e767', endColorstr='#feb645',GradientType=0 ); /* IE6-9 */
+
+}

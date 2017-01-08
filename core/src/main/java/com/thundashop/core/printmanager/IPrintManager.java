@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.printmanager;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopNotSynchronized;
 import java.util.List;
@@ -28,5 +29,4 @@ public interface IPrintManager {
      */
     @GetShopNotSynchronized
     public List<PrintJob> getPrintJobs(String printerId);
-    
 }

@@ -1,5 +1,12 @@
 <div class="gsview login">
     
+    <div class='direct_checkout_button_outer'>
+        <div ng-click='goDirectlyToCheckout()' class='direct_checkout_button'>
+            Direct checkout
+        </div>    
+    </div>
+    
+    
     <div ng-if="!room" >
         <h1>No room has been selected.</h1>
         Please select a room first, click on the "Change room" button on the bottom menu.

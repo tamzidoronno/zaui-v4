@@ -21,4 +21,13 @@ public class PrintJob implements Serializable {
     public String content;
     
     public Date createdDate = new Date();
+
+    public void convertAdaFruit() {
+        content = content.replaceAll("ø", "\\\\x9B");
+        content = content.replaceAll("Ø", "\\\\x9D");
+        content = content.replaceAll("æ", "\\\\x91");
+        content = content.replaceAll("Æ", "\\\\x92");
+        content = content.replaceAll("Å", "\\\\x8F");
+        content = content.replaceAll("å", "\\\\x86");
+    }
 }

@@ -31,6 +31,15 @@ adata = {
         this.save();
     },
     
+    getPrinters: function() {
+        return this.printers;
+    },
+    
+    setPrinters: function(printers) {
+        this.printers = printers;
+        this.save();
+    },
+    
     addCurrentlyCheckingOutTables: function(table) {
         this.currentlyTablesToCheckout.push(table);
         this.saveItemsToPay();
@@ -160,6 +169,7 @@ adata = {
         localStorage.setItem("products", JSON.stringify(this.products));
         localStorage.setItem("productlists", JSON.stringify(this.productLists));
         localStorage.setItem("paymentMethods", JSON.stringify(this.paymentMethods));
+        localStorage.setItem("printers", JSON.stringify(this.printers));
     },
     
     load: function() {
@@ -172,6 +182,7 @@ adata = {
         this.cartItemsToPay = JSON.parse(localStorage.getItem("cartItemsToPay"));
         this.temporaryProductPrices = JSON.parse(localStorage.getItem("temporaryProductPrices"));
         this.currentlyTablesToCheckout = JSON.parse(localStorage.getItem("currentlyTablesToCheckout"));
+        this.printers = JSON.parse(localStorage.getItem("printers"));
         
         if (!this.cartItems) 
             this.cartItems = [];
@@ -184,6 +195,9 @@ adata = {
         
         if (!this.currentlyTablesToCheckout) 
             this.currentlyTablesToCheckout = [];
+        
+        if (!this.printers) 
+            this.printers = [];
     },
     
     getDeletedCartItems: function(tableId) {

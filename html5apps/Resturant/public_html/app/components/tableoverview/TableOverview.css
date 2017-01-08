@@ -29,6 +29,7 @@ and open the template in the editor.
     color: #FFF;
     
 }
+
 .listbutton {
     position: fixed;
     top: 60px;
@@ -93,6 +94,11 @@ and open the template in the editor.
 .productcartbutton.inuse {
     background-color: green;
 }
+
+.inuse.not_for_table {
+    background-color: #9e9e9e;
+}
+
 
 .productList {
     margin-top: 20px;

@@ -1,0 +1,24 @@
+<?
+/* @var $this ns_6b14626c_cb58_4ffe_a584_06e26c3eea59\PrinterConfig */
+$printers = $this->getApi()->getStorePrintManager()->getPrinters();
+if (!$printers) {
+    $printers = array();
+}
+
+?>
+
+<div gstype='form' method='cratePrinter'>
+    Type:
+    <select gsname='type' class='gsniceselect1'>
+        <option value='receipt'>Receipt</option>
+        <option value='kitchen'>Kitchen</option>
+    </select>
+    <br/>
+    Name: <input type='textfield' class='gsniceinput1' gsname='name' placeholder='Name of printer'/>
+    <br/><br/><div class='shop_button' gstype='submit' > Create </div>
+</div>
+<?
+foreach ($printers as $printer) {
+    echo "<div style='line-height: 30px; border-top: solid 1px #DDD; margin-top: 10px;'><i class='fa fa-trash' gsclick='deletePrinter' printerid='$printer->id'></i> ".$printer->name." ($printer->type)</div>";
+}
+?>

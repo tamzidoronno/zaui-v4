@@ -24,7 +24,13 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.printmanager.ReceiptGenerator;
+import com.thundashop.core.printmanager.PrintJob;
+import com.thundashop.core.printmanager.PrintManager;
+import com.thundashop.core.printmanager.Printer;
+import com.thundashop.core.printmanager.StorePrintManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;
@@ -89,7 +95,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private EpayManager epayManager;
     
     @Autowired
-    GrafanaManager grafanaManager;
+    private GrafanaManager grafanaManager;
+    
+    @Autowired
+    private StorePrintManager storePrintManager;
+    
+    @Autowired
+    private PrintManager printManager;
     
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
@@ -1511,6 +1523,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         forceDeleteOrder(object);
     }
 
+    private AccountingDetails getAccountingDetails() throws ErrorException {
+        Application settings = storeApplicationPool.getApplication("70ace3f0-3981-11e3-aa6e-0800200c9a66");
+        AccountingDetails details = new AccountingDetails();
+        details.accountNumber = settings.getSetting("accountNumber");
+        details.address = settings.getSetting("address");
+        details.city = settings.getSetting("city");
+        details.companyName = settings.getSetting("companyName");
+        details.contactEmail = settings.getSetting("contactEmail");
+        details.dueDays = Integer.parseInt(settings.getSetting("duedays"));
+        details.vatNumber = settings.getSetting("vatNumber");
+        details.webAddress = settings.getSetting("webAddress");
+
+        return details;
+    }
+    
     @Override
     public List<Order> getOrdersPaid(String paymentId, String userId, Date from, Date to) {
         List<Order> retOrderStream = orders.values()
@@ -1525,6 +1552,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .forEach(order -> finalizeOrder(order));
         
         return retOrderStream;
+    }
+
+    @Override
+    public void printInvoice(String orderId, String printerId) {
+        Printer printer = storePrintManager.getPrinter(printerId);
+        Order order = getOrder(orderId);
+        
+        if (printer == null)
+            throw new RuntimeException("Printer not found");
+        
+        if (printer.type.equals("receipt")) {
+            PrintJob printJob = new PrintJob();
+            printJob.printerId = printerId;
+            printJob.content = new ReceiptGenerator(order, getSession().currentUser, getAccountingDetails()).getContent();
+            printJob.convertAdaFruit();
+            printManager.addPrintJob(printJob);
+        }
     }
 
 }

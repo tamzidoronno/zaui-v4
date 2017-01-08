@@ -43,7 +43,9 @@ controllers.HomeController = function($scope, $api, $rootScope, $state, datarepo
         return false;
     }
     
-    
+    $scope.goDirectlyToCheckout = function() {
+        $state.transitionTo('base.checkouttable', { tableId : 'direct' });
+    }
     
     $scope.init($api);
 };

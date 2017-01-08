@@ -6,7 +6,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         
         this.setConnectionDetails = function(identifier) {
 //            this.api = new GetShopApiWebSocket('resturantsystem.getshop.com', '31332', identifier, false);
-            this.api = new GetShopApiWebSocket('resturantsystem.3.0.local.getshop.com', '31330', identifier, false);
+            this.api = new GetShopApiWebSocket('192.168.10.190', '31330', identifier, false);
 //            this.api = new GetShopApiWebSocket('resturantsystem.3.0.mpal.getshop.com', '31330', identifier, false);
             
             this.api.setMessageCountChangedEvent(function() {

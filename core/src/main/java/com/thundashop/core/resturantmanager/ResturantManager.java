@@ -5,7 +5,6 @@
  */
 package com.thundashop.core.resturantmanager;
 
-import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -20,17 +19,17 @@ import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsRoomSimple;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.printmanager.PrintManager;
+import com.thundashop.core.printmanager.Printer;
+import com.thundashop.core.printmanager.StorePrintManager;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,8 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +78,9 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     
     @Autowired
     public PrintManager printManager;
+    
+    @Autowired
+    public StorePrintManager storePrintManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -449,25 +449,18 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         
         PdfKitchenNote note = new PdfKitchenNote(session, productManager);
         ResturantTable table = tables.get(session.tableId);
-        String tableName = table.name;
-        String tmpPdfName = note.createFile(tableName);
-        
-        File file = new File(tmpPdfName);
-        byte[] bytes;
-        try {
-            bytes = InvoiceManager.loadFile(file);
-            byte[] encoded = Base64.encodeBase64(bytes);
-            String encodedString = new String(encoded);
-            
-            PrintJob job = new PrintJob();
-            job.printerId = "utsikten_hotell_printer_1";
-            job.content = encodedString;
-            printManager.addPrintJob(job);
-            
-            file.delete();
-        } catch (IOException ex) {
-            throw new ErrorException(1033);
+
+        List<Printer> printers = storePrintManager.getPrinters();
+        for (Printer printer : printers) {
+            if (printer.type.equals("kitchen")) {
+                PrintJob job = new PrintJob();
+                job.printerId = printer.id;
+                job.content = note.createFile(table.name, getSession().currentUser);
+                job.convertAdaFruit();
+                printManager.addPrintJob(job);        
+            }
         }
+        
     }
 
     private boolean anyFoodProducts(TableSession session) {

@@ -23,7 +23,7 @@ public class CheckOrderCollector extends GetShopSchedulerBase {
     public void execute() throws Exception {
         Random r = new Random();
         int Low = 0;
-        int High = 30000;
+        int High = 45000;
         int Result = r.nextInt(High-Low) + Low;
         Thread.sleep(Result);
         

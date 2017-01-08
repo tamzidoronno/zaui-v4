@@ -19,6 +19,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return 1;
     }
     
+    public function saveOrderSettingsOnBooking() {
+        $booking = $this->getSelectedBooking();
+        $booking->dueDays = $_POST['data']['duedays'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
+    }
+    
     public function toggleFilterVersion() {
         if(!isset($_SESSION['toggleOldFilterVersion'])) {
             $_SESSION['toggleOldFilterVersion'] = true;

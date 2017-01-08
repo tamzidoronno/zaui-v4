@@ -842,6 +842,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     if (order == null) {
                         return "Could not create order.";
                     }
+                    order.dueDays = booking.dueDays;
                     autoSendInvoice(order, booking.id);
                     booking.orderIds.add(order.id);
                     Double total = orderManager.getTotalAmount(order);

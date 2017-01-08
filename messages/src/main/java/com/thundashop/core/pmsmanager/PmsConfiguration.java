@@ -98,7 +98,11 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<String, PmsLockServer> lockServerConfigs = new HashMap();
     
     public PmsLockServer getDefaultLockServer() {
-        return lockServerConfigs.get("default");
+        PmsLockServer defaultsv = lockServerConfigs.get("default");
+        if(defaultsv == null) {
+            defaultsv = new PmsLockServer();
+        }
+        return defaultsv;
     }
     public PmsLockServer getLockServer(String serverSource) {
         if(serverSource == null || serverSource.trim().isEmpty()) {

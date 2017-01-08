@@ -53,7 +53,7 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     private Map<String, ResturantTable> tables = new HashMap();
     private Map<String, TableSession> sessions = new HashMap();
 
-    public SessionFactory sessionFactory = new SessionFactory();
+    public SessionFactory sessionFactory;
     
     @Autowired
     private CartManager cartManager;
@@ -94,6 +94,22 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
                 ResturantTable table = (ResturantTable)dataCommon;
                 tables.put(table.id, table);
             }
+            
+            if (dataCommon instanceof SessionFactory) {
+                if (sessionFactory != null) {
+                    deleteObject(dataCommon);
+                } else {
+                    sessionFactory = (SessionFactory)dataCommon;
+                }
+            }
+            
+            if (dataCommon instanceof TableSession) {
+                sessions.put(dataCommon.id, (TableSession)dataCommon);
+            }
+        }
+        
+        if (sessionFactory == null) {
+            sessionFactory = new SessionFactory();
         }
     }
 
@@ -302,6 +318,8 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         
         
         updateDiscountedPrices(order, cartItems);
+        
+        saveSessionFactory();
         return order;
     }
     

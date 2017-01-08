@@ -189,6 +189,16 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         retApp = finalizeApplication(retApp);
         return retApp; 
     }
+    
+    public Application getApplicationIgnoreActive(String id) {
+        Application retApp = getAvailableApplicationsInternally().stream()
+                .filter(app -> app.id.equals(id))
+                .findFirst()
+                .orElse(null);
+
+        retApp = finalizeApplication(retApp);
+        return retApp; 
+    }
 
     private Application getDefaultThemeApplication() {
         if (getAvailableThemeApplications().size() == 0) {

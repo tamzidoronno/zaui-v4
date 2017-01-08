@@ -145,9 +145,14 @@ if($booking->orderIds) {
         $addr .= $user->emailAddressToInvoice ? $user->emailAddressToInvoice : $user->emailAddress;
         
         echo "<tr orderid='".$order->id."'>";
-        echo "<td> <a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a> - ".date("d.m.Y", strtotime($order->rowCreatedDate));
-        echo "<br><span style='color:#bbb; width: 127px;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='$addr'>".$user->fullName . "(" . $user->customerId . ")</span></td>";
-        echo "<td>";
+        echo "<td width='200'> <a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a> - ".date("d.m.Y", strtotime($order->rowCreatedDate));
+        echo "<br>";
+        echo "<span style='color:#bbb; width: 160px;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='$addr'>";
+        if(!isset($order->closed) || !$order->closed) {
+            echo "<i class='fa fa-edit edituseronorderviewbutton' orderid='".$order->id."'></i> <span class='edituseronorderview edituserview'></span> ";
+        }
+        echo $user->fullName . "(" . $user->customerId . ")</span></td>";
+        echo "<td width='120'>";
         $names = "";
         $name = "";
         foreach($guests as $guest) {
@@ -157,7 +162,7 @@ if($booking->orderIds) {
             $names .= $guest->name . "<br>";
         }
         
-        echo "<span style='width: 50px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;display:inline-block;' title='$names'>$name</span>";
+        echo "<span style='width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;display:inline-block;' title='$names'>$name</span>";
         echo "</td>";
         echo "<td>" . round($totalEx) . "<br><span style='color:#bbb'>" . round($total) . "</span></td>";
         echo "<td>";

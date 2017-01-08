@@ -14,6 +14,8 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .resetnotifications', app.PmsManagement.resetnotifications);
         $(document).on('click', '.PmsManagement .editfield', app.PmsManagement.editfieldrow);
         $(document).on('click', '.PmsManagement .loadedituser', app.PmsManagement.loadedituser);
+        $(document).on('click', '.PmsManagement .edituseronorderviewbutton', app.PmsManagement.loadedituseronorder);
+        $(document).on('click', '.PmsManagement .createanewuserfromeditbox', app.PmsManagement.createNewUserOnBooking);
         $(document).on('click', '.PmsManagement .savenewfielddata', app.PmsManagement.savenewfielddata);
         $(document).on('keyup','.PmsManagement .newroomstartdate', app.PmsManagement.updateRoomList);
         $(document).on('keyup','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
@@ -255,6 +257,18 @@ app.PmsManagement = {
             $('#edituserview').html(res);
             $(".PmsManagement .edituserbox").fadeIn(function() {$(".edituserbox select").chosen(); });
         })
+    },
+    loadedituseronorder : function() {
+        var btn = $(this);
+        var event = thundashop.Ajax.createEvent('','editUserOnOrder', $(this), {
+            bookingid : $('#openedbookingid').val(),
+            orderid : $(this).attr('orderid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            var view = btn.closest('td').find('.edituseronorderview');
+            view.html(res);
+            view.find('.edituserbox').fadeIn(function() {$(".edituserbox select").chosen(); });
+        });
     },
     showNotPaidInfo : function() {
         var event = thundashop.Ajax.createEvent('','loadOrderInfoOnBooking', $(this), {
@@ -506,16 +520,33 @@ app.PmsManagement = {
     },
     
     changeuseronbooking : function() {
+        var view = $(this).closest('.edituserview');
+        var btn = $(this);
+        var userId = $(this).val();
+        app.PmsManagement.doChangeUser(btn, view, userId);
+    },
+    
+    doChangeUser : function(btn, view, userId) {
         var data = {
-            "userid" : $(this).val(),
-            "bookingid" : $(this).attr('bookingid')
+            "userid" : userId,
+            "bookingid" : btn.attr('bookingid'),
+            "orderid" : btn.attr('orderid'),
+            "type" : view.find('.changeusertype').val()
         };
-        var event = thundashop.Ajax.createEvent('','changeBookingOnEvent', $(this), data);
+
+        var event = thundashop.Ajax.createEvent('','changeBookingOnEvent', btn, data);
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            $('#edituserview').html(res);
-            $(".PmsManagement .edituserbox").show();
-        })
-        
+            view.html(res);
+            view.find('.edituserbox').show();
+            $(".edituserbox select").chosen();
+        });        
+    },
+    
+    createNewUserOnBooking : function() {
+        var view = $(this).closest('.edituserview');
+        var btn = $(this);
+        var userId = "newuser";
+        app.PmsManagement.doChangeUser(btn, view, userId);
     },
     changecompanyonuser : function() {
         var data = {

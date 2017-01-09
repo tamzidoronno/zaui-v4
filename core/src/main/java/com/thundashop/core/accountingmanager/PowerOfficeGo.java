@@ -24,6 +24,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -119,9 +120,13 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
     private boolean createUpdateUser(User user) {
         String endpoint = "http://api.poweroffice.net/customer/";
         Customer customer = new Customer();
+        if((user.accountingId != null || user.accountingId.isEmpty()) && user.externalAccountingId == null || user.externalAccountingId.isEmpty()) {
+            //Something is wrong here. There should be an externa account id connected to it.
+            user.externalAccountingId = findExternalAccountId(user.accountingId);
+            
+        }
         customer.setUser(user);
         customer.code = getAccountingId(user.id) + "";
-
         Gson gson = new Gson();
         try {
             String htmlType = "POST";
@@ -303,6 +308,19 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             }
         }
         return lines;
+    }
+
+    private String findExternalAccountId(String code) {
+        try {
+            String param = URLEncoder.encode("(Code eq '"+code+"')", "ISO-8859-1");
+            String addr = "http://api.poweroffice.net/customer?$filter="+param;
+            String result = managers.webManager.htmlPostBasicAuth(addr, null, false, "ISO-8859-1", token, "Bearer", false, "GET");
+            System.out.println(result);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+        
     }
 
 

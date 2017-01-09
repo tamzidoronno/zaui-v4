@@ -831,6 +831,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 Constructor<?> ctor = myClass.getConstructor();
                 AccountingTransferInterface object = (AccountingTransferInterface) ctor.newInstance();
                 AccountingManagers mgrs = new AccountingManagers();
+                mgrs.productMode = frameworkConfig.productionMode;
                 mgrs.userManager = userManager;
                 mgrs.invoiceManager = invoiceManager;
                 mgrs.orderManager = orderManager;

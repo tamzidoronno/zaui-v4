@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author ktonder
  */
-public class Company extends DataCommon {
+public class Company extends DataCommon implements Comparable<Company> {
     public Address invoiceAddress;
     public Address address;
     public String vatNumber = "";
@@ -37,4 +37,14 @@ public class Company extends DataCommon {
     public List<Company> subCompanies = new ArrayList();
     
     public String companyLeaderUserId = "";
+
+    @Override
+    public int compareTo(Company o) {
+        if(o != null && o.name != null && name != null) {
+            return o.name.compareTo(name);
+        }
+        return 0;
+    }
+    
+    
 }

@@ -1,7 +1,7 @@
 <?php
 namespace ns_a6d68820_a8e3_4eac_b2b6_b05043c28d78;
 
-class Company extends \SystemApplication implements \Application {
+class Company extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon implements \Application {
     /**
      * @var \core_usermanager_data_User
      */
@@ -70,7 +70,10 @@ class Company extends \SystemApplication implements \Application {
     public function render() {
         
     }
-    
+    public function loadData() {
+        $this->filteredData = $this->getApi()->getUserManager()->getAllCompanyFiltered($this->createFilter());
+    }
+
     public function deleteCompany() {
         $companyId = $_POST['companyid'];
         $this->getApi()->getUserManager()->deleteCompany($companyId);

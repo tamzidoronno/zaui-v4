@@ -1818,4 +1818,41 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return next;
     }
 
+    @Override
+    public FilteredData getAllCompanyFiltered(FilterOptions filter) {
+        List<Company> copmanies = getAllCompanies();
+        List<Company> result = new ArrayList();
+        for(Company comp : companies.values()) {
+            if(filter.searchWord != null && !filter.searchWord.isEmpty()) {
+                if(comp.name.toLowerCase().contains(filter.searchWord.toLowerCase())) {
+                    result.add(comp);    
+                }
+                else if(comp.vatNumber.toLowerCase().contains(filter.searchWord.toLowerCase())) {
+                    result.add(comp);
+                    }
+                else if(comp.address != null && comp.address.address !=null && comp.address.address.toLowerCase().contains(filter.searchWord.toLowerCase())) {
+                    result.add(comp);
+                    }
+                else if(comp.invoiceAddress != null && comp.invoiceAddress.address != null && comp.invoiceAddress.address.toLowerCase().contains(filter.searchWord.toLowerCase())){
+                    result.add(comp);
+                }
+                else if(comp.address != null && comp.address.city !=null && comp.address.city.toLowerCase().contains(filter.searchWord.toLowerCase())){
+                    result.add(comp);
+                }
+                else if(comp.address != null && comp.address.postCode !=null && comp.address.postCode.toLowerCase().contains(filter.searchWord.toLowerCase())){
+                    result.add(comp);
+                }
+                else if(comp.invoiceEmail.toLowerCase().contains(filter.searchWord.toLowerCase())){
+                    result.add(comp);
+                }
+            } else {
+                result.add(comp);
+            }
+        }
+        
+        
+        FilteredData returndata = pageIt(result, filter);
+        return returndata;
+    }
+
 }

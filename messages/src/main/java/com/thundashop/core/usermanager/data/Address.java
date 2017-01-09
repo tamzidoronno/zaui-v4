@@ -12,7 +12,7 @@ import com.thundashop.core.common.DataCommon;
  */
 public class Address extends DataCommon {
 
-    
+
     public static class Type {
         public static String SHIPMENT = "shipment";
         public static String INVOICE = "invoice";

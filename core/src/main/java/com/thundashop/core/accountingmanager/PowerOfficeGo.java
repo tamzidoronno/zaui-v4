@@ -187,8 +187,8 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                     order.dateTransferredToAccount = new Date();
                     managers.orderManager.saveOrder(order);
                     
-                    PowerOfficeGoPoster poster = new PowerOfficeGoPoster(resp.data, token);
-                    poster.start();
+//                    PowerOfficeGoPoster poster = new PowerOfficeGoPoster(resp.data, token);
+//                    poster.start();
                     
                     return resp.data;
                 }
@@ -287,8 +287,12 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                 line.description = createLineText(item);
                 line.productCode = prod.accountingSystemId;
                 line.invoiceNo = (int)order.incrementOrderId;
-                line.amount = (item.getProduct().price * item.getCount()) * -1;
-                line.quantity = item.getCount();
+                int count = item.getCount();
+                line.amount = (item.getProduct().price * count) * -1;
+                if(count < 0) {
+                    count *= -1;
+                }
+                line.quantity = count;
                 line.postingDate = order.paymentDate;
                 line.documentDate = order.rowCreatedDate;
                 line.documentNumber = (int)order.incrementOrderId;

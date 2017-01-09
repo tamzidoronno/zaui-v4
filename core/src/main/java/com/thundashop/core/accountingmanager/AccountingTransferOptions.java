@@ -32,7 +32,7 @@ class AccountingTransferOptions {
         if(user.accountingId != null && !user.accountingId.trim().isEmpty() && !user.accountingId.equals("0")) {
             accountingId = new Integer(user.accountingId);
         }
-        if(accountingId > idToUse) {
+        if(accountingId >= idToUse) {
             return accountingId;
         } else {
             int next = managers.userManager.getNextAccountingId();

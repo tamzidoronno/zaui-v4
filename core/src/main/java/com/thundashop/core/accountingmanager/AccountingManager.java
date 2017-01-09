@@ -906,6 +906,8 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     private boolean finalizeFile(SavedOrderFile saved) {
         saved.sumAmountExOrderLines = 0.0;
         saved.sumAmountIncOrderLines = 0.0;
+        saved.onlyPositiveLinesEx = 0.0;
+        saved.onlyPositiveLinesInc = 0.0;
         boolean needSaving = false;
         for(String orderId : saved.orders) {
             Order order = orderManager.getOrderSecure(orderId);
@@ -916,6 +918,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 int count = item.getCount();
                 if(count < 0) {
                     count *= -1;
+                } else {
+                    saved.onlyPositiveLinesEx += item.getProduct().priceExTaxes * item.getCount();
+                    saved.onlyPositiveLinesInc += item.getProduct().price * item.getCount();
                 }
                 saved.sumAmountExOrderLines += (item.getProduct().priceExTaxes*count);
                 saved.sumAmountIncOrderLines += (item.getProduct().price*count);

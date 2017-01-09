@@ -95,6 +95,8 @@ echo "<th align='left'>Ex tax</th>";
 echo "<th align='left'>Inc tax</th>";
 echo "<th align='left'>Ex tax (p)</th>";
 echo "<th align='left'>Inc taxes (p)</th>";
+echo "<th align='left'>Orderlines (positive)</th>";
+echo "<th align='left'>Orderlines ex (positive)</th>";
 echo "<th align='left'>Orders</th>";
 echo "<th align='left'>Start</th>";
 echo "<th align='left'>End</th>";
@@ -148,8 +150,12 @@ foreach($files as $file) {
     echo "<td>$transferred</td>";
     echo "<td>".round($file->amountEx)."</td>";
     echo "<td>".round($file->amountInc)."</td>";
-    echo "<td>".round($file->amountExDebet)."</td>";
-    echo "<td>".round($file->amountIncDebet)."</td>";
+    echo "<td>".round($file->amountExDebet). "<br>(" . round($file->onlyPositiveLinesEx) . ")</td>";
+    echo "<td>".round($file->amountIncDebet) . "<bR>(" . round($file->onlyPositiveLinesInc) . ")"."</td>";
+    echo "<td>".round($file->sumAmountIncOrderLines)."</td>";
+    echo "<td>".round($file->sumAmountExOrderLines)."</td>";
+
+    
     echo "<td>".sizeof($file->orders) ." <span title='Tampered files'>($tampered)</span> <span title='Additional orders'>($moreOrders)</span> "."</td>";
     echo "<td>".  date("d.m.Y H:i", strtotime($file->startDate)) ."</td>";
     echo "<td>".  date("d.m.Y H:i", strtotime($file->endDate)) ."</td>";
@@ -234,11 +240,11 @@ foreach($configs as $config) {
     ?>
     <div class='configfield' type='<?php echo $config->id; ?>' style='<?php echo $hidestyle; ?>'>
     <div class="textfield gss_setting">
-        <span class="title">Start date</span>
+        <span class="title">Start date (starting from)</span>
         <input type="textfield" class='gss_accdownloadstart' configid="<?php echo $config->id; ?>" value='<?php echo $start; ?>'>
     </div>
     <div class="textfield gss_setting">
-        <span class="title">End date</span>
+        <span class="title">End date (ending at, this day is not included in the file)</span>
         <input type="textfield" class='gss_accdownloadend' configid="<?php echo $config->id; ?>" value='<?php echo $end; ?>'>
     </div>
     <div class="gss_button_area">

@@ -97,11 +97,6 @@ if ($eventToUse) {
         <? echo $eventToUse ? $this->__f("Save") : $this->__f("Create"); ?>
     </div>
     
-    <?
-    if ($eventToUse && !$eventToUse->markedAsReady) {
-        echo "<div class='shop_button' gsclick='markAsReady' eventid='$eventToUse->id' gs_confirm='Are you sure you want to mark this as ready ?'>".$this->__w("Mark as ready")."</div>";
-    }
-    ?>
     
     <?
     if ($eventToUse && !$eventToUse->isCanceled) {

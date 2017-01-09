@@ -33,6 +33,9 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
     public function setParticiationStatus() {
         $this->getApi()->getEventBookingManager()->setParticipationStatus($this->getBookingEngineName(), $_POST['data']['eventId'], $_POST['data']['userId'], $_POST['data']['status']);
     }
+    public function markAsReady() {
+        $this->getApi()->getEventBookingManager()->markAsReady($this->getBookingEngineName(), $_POST['data']['eventid']);
+    }
 
     /**
      * 

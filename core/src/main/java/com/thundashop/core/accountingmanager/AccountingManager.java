@@ -17,6 +17,7 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ForAccountingSystem;
 import com.thundashop.core.common.ForStore;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ftpmanager.FtpManager;
@@ -88,6 +89,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     
     @Autowired
     WebManager webManager;
+    
+    @Autowired
+    FrameworkConfig frameworkConfig;
     
     private List<AccountingInterface> interfaces = new ArrayList();
     private AccountingManagerConfig config = new AccountingManagerConfig();
@@ -231,6 +235,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 object.setStoreApplication(applicationPool);
                 
                 AccountingManagers mgr = new AccountingManagers();
+                mgr.productMode = frameworkConfig.productionMode;
                 mgr.ftpManager = ftpManager;
                 mgr.invoiceManager = invoiceManager;
                 mgr.orderManager = orderManager;

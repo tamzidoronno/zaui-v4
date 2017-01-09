@@ -35,6 +35,10 @@ class AccountingTransferOptions {
         if(accountingId >= idToUse) {
             return accountingId;
         } else {
+            if(!managers.productMode) {
+                //DO NOT CREATE NEW IDS IN NON PRODUCTION MODE
+                return -100000;
+            }
             int next = managers.userManager.getNextAccountingId();
             if(next < idToUse) {
                 next = idToUse;

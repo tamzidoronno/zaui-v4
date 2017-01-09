@@ -14,4 +14,5 @@ public class AccountingManagers {
     public InvoiceManager invoiceManager; 
     public ProductManager productManager;
     public WebManager webManager;
+    public boolean productMode = false;
 }

@@ -6,6 +6,7 @@
 package com.thundashop.core.accountingmanager;
 
 import com.google.gson.Gson;
+import com.ibm.icu.util.Calendar;
 import com.powerofficego.data.AccessToken;
 import com.powerofficego.data.ApiCustomerResponse;
 import com.powerofficego.data.ApiOrderTransferResponse;
@@ -21,6 +22,7 @@ import com.thundashop.core.common.ForAccountingSystem;
 import com.thundashop.core.common.GetShopLogging;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -118,7 +120,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         String endpoint = "http://api.poweroffice.net/customer/";
         Customer customer = new Customer();
         customer.setUser(user);
-        setDefaultCustomerId(customer);
+        customer.code = getAccountingId(user.id) + "";
 
         Gson gson = new Gson();
         try {
@@ -133,7 +135,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                 return true;
             } else {
                 /* @TODO HANDLE PROPER WARNING */
-                managers.webManager.logPrint("Failed to transfer customer: " + result);
+                managers.webManager.logPrint("Failed to transfer customer: " + result + "(" + user.customerId + " - " + user.fullName);
             }
         }catch(Exception e) {
             /* @TODO HANDLE PROPER WARNING */
@@ -160,8 +162,15 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         List<PowerOfficeGoSalesOrder> salesOrdersToTransfer = new ArrayList();
         List<PowerOfficeGoImportLine> importLinesToTransfer = new ArrayList();
         for(Order order : orders) {
-            PowerOfficeGoSalesOrder goOrder = createGoSalesOrderLine(order);
-            salesOrdersToTransfer.add(goOrder);
+            if(order.isInvoice()) {
+                PowerOfficeGoSalesOrder goOrder = createGoSalesOrderLine(order);
+                salesOrdersToTransfer.add(goOrder);
+            } else {
+                if(order.cart.getItems().size() > 0) {
+                    List<PowerOfficeGoImportLine> lines = createGoImportLine(order);
+                    importLinesToTransfer.addAll(lines);
+                }
+            }
         }
         SalesOrderTransfer transferObject = new SalesOrderTransfer();
         transferObject.salesOrders = salesOrdersToTransfer;
@@ -243,7 +252,33 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
     
 
     private List<PowerOfficeGoImportLine> createGoImportLine(Order order) {
+        int bilags = 1;
         List<PowerOfficeGoImportLine> lines = new ArrayList();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(order.rowCreatedDate);
+        cal.add(Calendar.DAY_OF_YEAR, 14);
+        
+        PowerOfficeGoImportLine totalline = new PowerOfficeGoImportLine();
+        totalline.description = "GetShop order: " + order.incrementOrderId;
+        totalline.invoiceNo = (int)order.incrementOrderId;
+        totalline.amount = managers.orderManager.getTotalAmount(order);
+        totalline.currencyAmount = managers.orderManager.getTotalAmount(order);
+        totalline.postingDate = order.paymentDate;
+        totalline.documentDate = order.rowCreatedDate;
+        totalline.documentNumber = (int)order.incrementOrderId;
+        totalline.dueDate = cal.getTime();
+        totalline.currencyCode = "NOK";
+        
+        String uniqueId = getUniqueCustomerIdForOrder(order);
+        if(uniqueId != null) {
+            totalline.customerCode = new Integer(uniqueId);
+        } else {
+            User user = managers.userManager.getUserById(order.userId);
+            totalline.customerCode = new Integer(user.accountingId);
+        }
+        lines.add(totalline);
+
+        bilags++;        
         if(order.cart != null) {
             for(CartItem item : order.cart.getItems()) {
                 Product prod =  managers.productManager.getProduct(item.getProduct().id);
@@ -251,34 +286,20 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                 line.accountNumber = new Integer(prod.accountingAccount);
                 line.description = createLineText(item);
                 line.productCode = prod.accountingSystemId;
-                line.quantity = item.getCount();
                 line.invoiceNo = (int)order.incrementOrderId;
-                line.amount = item.getProduct().price;
+                line.amount = (item.getProduct().price * item.getCount()) * -1;
                 line.quantity = item.getCount();
                 line.postingDate = order.paymentDate;
-                line.documentNumber = 1;
                 line.documentDate = order.rowCreatedDate;
+                line.documentNumber = (int)order.incrementOrderId;
+                line.currencyCode = "NOK";
+                line.vatCode = prod.sku;
                 lines.add(line);
+                bilags++;
             }
         }
         return lines;
     }
 
-    private void setDefaultCustomerId(Customer customer) {
-        if(customer.code == null || customer.code.isEmpty()) {
-            int next = managers.userManager.getNextAccountingId();
-            if(next > 0) {
-                customer.code = next + "";
-            } else {
-                if(config.startCustomerCodeOffset == null) {
-                    config.startCustomerCodeOffset = 1;
-                }
-                customer.code = config.startCustomerCodeOffset + "";
-            }
-            if(next < config.startCustomerCodeOffset) {
-                customer.code = config.startCustomerCodeOffset + "";
-            }
-        }
-    }
 
 }

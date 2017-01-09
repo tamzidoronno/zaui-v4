@@ -35,10 +35,6 @@ class AccountingTransferOptions {
         if(accountingId >= idToUse) {
             return accountingId;
         } else {
-            if(!managers.userManager.frameworkConfig.productionMode) {
-                //DO NOT GENERATE NEW IDS WHEN IN DEV MODE. THIS WILL SCREW UP REMOTE DB IF ADDED.
-                return -100000;
-            }
             int next = managers.userManager.getNextAccountingId();
             if(next < idToUse) {
                 next = idToUse;

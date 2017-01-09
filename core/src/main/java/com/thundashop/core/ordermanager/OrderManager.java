@@ -1571,4 +1571,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+    public void changeOrderCreatedByManagerName(String id, String managerName) {
+        Order order = this.getOrder(id);
+        if (order != null) {
+            order.createByManager = managerName;
+            saveObject(order);
+        }
+    }
+
 }

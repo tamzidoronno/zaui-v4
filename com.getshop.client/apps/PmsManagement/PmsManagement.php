@@ -712,6 +712,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->getApi()->getOrderManager()->saveOrder($order);
         } else {
             $booking->userId = $userId;
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+            $this->selectedBooking = null;
         }
         
         $this->renderEditUserView();

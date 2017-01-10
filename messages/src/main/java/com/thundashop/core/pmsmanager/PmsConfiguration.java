@@ -72,6 +72,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean grantAccessEvenWhenNotPaid = false;
     public boolean runAutoPayWithCard = false;
     public int numberOfDaysToTryToPayWithCardAfterStayOrderHasBeenCreated = 1;
+    public int warnWhenOrderNotPaidInDays = 3;
     public Integer createOrderAtDayInMonth = 0;
     public boolean prepayment = false;
     public boolean payAfterBookingCompleted = false;

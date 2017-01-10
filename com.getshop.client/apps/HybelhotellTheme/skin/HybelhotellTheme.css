@@ -10,7 +10,7 @@
 .gs_page_width { max-width: 1300px; margin: auto; background-color:#fff; font-size: 18px; font-family: 'Open Sans' }
 body { background-color:#525659; margin-top: 10px; margin-bottom: 10px; font-family: 'Open Sans';}
 .Menu .entry a { font-size: 20px; width:100px; display:inline-block; margin-top: 20px;color: #666666;padding-right: 20px; }
-.Menu { text-align: right; position: absolute; top:93px; right: 100px; font-family: 'Antonio-Regular'; }
+.Menu { text-align: center; position: absolute; top:93px; right: 10px; font-family: 'Antonio-Regular'; }
 .chooseprivateperson_label { display:none; }
 .gsarea[area="header"] .gs_page_width,
 .gsarea[area="footer"] .gs_page_width { height: 250px; }

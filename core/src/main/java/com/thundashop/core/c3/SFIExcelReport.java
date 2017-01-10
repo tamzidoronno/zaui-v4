@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -40,40 +43,51 @@ public class SFIExcelReport {
     private double overTotal = 0;
     private double overTotalNfr = 0;
     private double overTotalInkind = 0;
-
-    public SFIExcelReport(List<SFIExcelReportData> datas) {
+    private final List<SFIExcelReportData> datas;
+    private final HashMap<String, WorkPackage> wps;
+    private final Date end;
+    
+    private SFIExcelReportData wp11 ;
+    private final boolean segreate;
+    
+    public SFIExcelReport(List<SFIExcelReportData> datas, HashMap<String, WorkPackage> wps, boolean segreate, Date end, SFIExcelReportData wp11) {
         workbook = new XSSFWorkbook();
+        this.wp11 = wp11;
+        this.datas = datas;
+        this.wps = wps;
+        this.end = end;
+        this.segreate = segreate;
         
         for (SFIExcelReportData data : datas) {
-            this.data = data;
-            clearCounters();
-
-            createSheet();
-            addHeader();
-            addNameOfPartner();
-            addNavnSfi();
-            addSFIProjectNumber();
-            addWps();
-            addPeriode();
-
-            addPost1Header();
-            addPost1Content();
-
-            addPost3Header();
-            addPost3Content();
-
-            addPost4Header();
-            addPost4Content();
-
-            addTotalRow();
-
-            addDateLine();
-            addAnsvarlig();
-
-            addCommentField();
-
-            setColumnSizes();
+            doSfiReport(data);
         }
+        
+        if (segreate && shouldAddWp11()) {
+            doSfiReport(wp11);
+        }
+    }
+
+    private void doSfiReport(SFIExcelReportData data1) {
+        this.data = data1;
+        clearCounters();
+        createSheet();
+        addHeader();
+        addNameOfPartner();
+        addNavnSfi();
+        addSFIProjectNumber();
+        addWps();
+        addPeriode();
+        addPost1Header();
+        addPost1Content(data1.wpId);
+        addPost3Header();
+        addPost3Content(data1.wpId);
+        addPost4Header();
+        addPost4Content(data1.wpId);
+        addTotalRow();
+        addDateLine();
+        addAnsvarlig();
+        addCommentField();
+        setColumnSizes();
     }
 
     private void clearCounters() {
@@ -298,7 +312,7 @@ public class SFIExcelReport {
         setBorder(cell_6);
     }
 
-    private void addPost1Content() {
+    private void addPost1Content(String wpId) {
         double sumtimer = 0;
         double sumtotal = 0;
         double sumnfr = 0;
@@ -359,6 +373,19 @@ public class SFIExcelReport {
             suminkind += post11.inkind;
         }
         
+        if (segreate && shouldTransferToOtherWp11(wpId)) {
+            double post11RemovalTotal = sumtotal * 0.01;
+            double post11RemovalTotalNfr = sumnfr * 0.01;
+            double post11RemovalTotalInkind = suminkind * 0.01;
+
+            
+            sumtotal -= post11RemovalTotal;
+            sumnfr -= post11RemovalTotalNfr;
+            suminkind -= post11RemovalTotalInkind;
+            
+            addRemovalLine(post11RemovalTotalNfr, post11RemovalTotalInkind, post11RemovalTotal, wp11.post11, wpId, 0);
+        }
+        
         // Empty row
         XSSFRow erowh = sheet.createRow(rownum++);
         XSSFCell ecell_1 = erowh.createCell(0); ecell_1.setCellValue(" "); setFontSize(ecell_1, 10, false); setBorderLeftAndRight(ecell_1);
@@ -367,6 +394,7 @@ public class SFIExcelReport {
         XSSFCell ecell_4 = erowh.createCell(3); ecell_4.setCellValue(" "); setFontSize(ecell_4, 10, false); setBorderLeftAndRight(ecell_4);
         XSSFCell ecell_5 = erowh.createCell(4); ecell_5.setCellValue(" "); setFontSize(ecell_5, 10, false); setBorderLeftAndRight(ecell_5);
         XSSFCell ecell_6 = erowh.createCell(5); ecell_6.setCellValue(" "); setFontSize(ecell_6, 10, false); setBorderLeftAndRight(ecell_6);
+        
         
         
         XSSFRow rowh = sheet.createRow(rownum++);
@@ -400,6 +428,7 @@ public class SFIExcelReport {
         overTotal += sumtotal;
         overTotalInkind += suminkind;
         overTotalNfr += sumnfr;
+        
     }
 
     private void addPost3Header() {
@@ -427,7 +456,7 @@ public class SFIExcelReport {
 //        setBorderLeft(cell7);
     }
 
-    private void addPost3Content() {
+    private void addPost3Content(String wpId) {
         double sumtotal = 0;
         double sumnfr = 0;
         double suminkind = 0;
@@ -463,6 +492,18 @@ public class SFIExcelReport {
             sumtotal += post13.totalt;
             sumnfr += post13.nfr;
             suminkind += post13.inkind;
+        }
+        
+        if (segreate && shouldTransferToOtherWp11(wpId)) {
+            double post11RemovalTotal = sumtotal * 0.01;
+            double post11RemovalTotalNfr = sumnfr * 0.01;
+            double post11RemovalTotalInkind = suminkind * 0.01;
+                    
+            sumtotal -= post11RemovalTotal;
+            sumnfr -= post11RemovalTotalNfr;
+            suminkind -= post11RemovalTotalInkind;
+            
+            addRemovalLine(post11RemovalTotalNfr, post11RemovalTotalInkind, post11RemovalTotal, wp11.post13 , wpId, 1);
         }
         
         // Empty row
@@ -521,7 +562,7 @@ public class SFIExcelReport {
         addLeftBorderToRegion((rownum-1), (rownum-1), 0, 5);
     }
 
-    private void addPost4Content() {
+    private void addPost4Content(String wpId) {
         double sumtotal = 0;
         double sumnfr = 0;
         double suminkind = 0;
@@ -557,6 +598,18 @@ public class SFIExcelReport {
             sumtotal += post14.totalt;
             sumnfr += post14.nfr;
             suminkind += post14.inkind;
+        }
+        
+        if (segreate && shouldTransferToOtherWp11(wpId)) {
+            double post11RemovalTotal = sumtotal * 0.01;
+            double post11RemovalTotalNfr = sumnfr * 0.01;
+            double post11RemovalTotalInkind = suminkind * 0.01;
+                    
+            sumtotal -= post11RemovalTotal;
+            sumnfr -= post11RemovalTotalNfr;
+            suminkind -= post11RemovalTotalInkind;
+            
+            addRemovalLine(post11RemovalTotalNfr, post11RemovalTotalInkind, post11RemovalTotal, wp11.post14, wpId, 2);
         }
         
         // Empty row
@@ -688,9 +741,9 @@ public class SFIExcelReport {
         cell_1.setCellValue("Sum totalt");
         cell_2.setCellValue(" ");
         cell_3.setCellValue(" ");
-        cell_4.setCellValue(overTotal);
-        cell_5.setCellValue(overTotalNfr);
-        cell_6.setCellValue(overTotalInkind);
+        cell_4.setCellValue(overTotalNfr);
+        cell_5.setCellValue(overTotalInkind);
+        cell_6.setCellValue(overTotal);
 
         setFontSize(cell_1, 10, true);
         setFontSize(cell_2, 10, false);
@@ -705,5 +758,73 @@ public class SFIExcelReport {
 
         
         
+    }
+
+    private boolean shouldTransferToOtherWp11(String wpId) {
+        if (wps.get(wpId) == null)
+            return false;
+        
+        return wps.get(wpId).shouldRemoveOnePercent(end);
+    }
+
+    private void addRemovalLine(double nfr, double inkind, double total, List postList, String wpId, int type) { 
+        if (nfr == 0 && inkind == 0)
+            return;
+        
+        WorkPackage packageToUse = wps.get(wpId);
+        
+        XSSFRow rowh = sheet.createRow(rownum++);
+        XSSFCell cell_1 = rowh.createCell(0);
+        XSSFCell cell_2 = rowh.createCell(1);
+        XSSFCell cell_3 = rowh.createCell(2);
+        XSSFCell cell_4 = rowh.createCell(3);
+        XSSFCell cell_5 = rowh.createCell(4);
+        XSSFCell cell_6 = rowh.createCell(5);
+        
+        
+        cell_1.setCellValue("Overføring til WP11");
+        cell_4.setCellValue(nfr * -1);
+        cell_5.setCellValue(inkind * -1);
+        cell_6.setCellValue(total * -1);
+        
+        setFontSize(cell_1, 10, false);
+        setFontSize(cell_2, 10, false);
+        setFontSize(cell_3, 10, false);
+        setFontSize(cell_4, 10, false);
+        setFontSize(cell_5, 10, false);
+        setFontSize(cell_6, 10, false);
+            
+        setBorder(cell_1);
+        setBorder(cell_2);
+        setBorder(cell_3);
+        setBorder(cell_4);
+        setBorder(cell_5);
+        setBorder(cell_6);
+        
+        SFIExcelReportDataPost nfrPost = null;
+                
+        if (type == 0)
+            nfrPost = new SFIExcelReportDataPost11();
+        
+        if (type == 1)
+            nfrPost = new SFIExcelReportDataPost13();
+        
+        if (type == 2)
+            nfrPost = new SFIExcelReportDataPost14();
+        
+        nfrPost.navn = "Overføring fra " + packageToUse.name + "(1%)";
+        nfrPost.nfr = nfr;
+        nfrPost.inkind = inkind;
+        nfrPost.totalt = nfr + inkind;
+        postList.add(nfrPost);
+    }
+
+    private boolean shouldAddWp11() {
+        for (SFIExcelReportData data : datas) {
+            if (wps.get(data.wpId).shouldRemoveOnePercent(end))
+                return true;
+        }
+        
+        return false;
     }
 }

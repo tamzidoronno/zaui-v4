@@ -21,6 +21,7 @@ public class SFIExcelReportData {
     public List<SFIExcelReportDataPost14> post14 = new ArrayList();
     public String date = "12/5-2016";
     public String ansvarlig = "";
+    public String wpId;
     
     public SFIExcelReportData() {
     }

@@ -28,7 +28,8 @@ foreach($overview as $room) {
     $type = $room->paymentType;
     $paid = $room->paid ? "Yes" : "No";
     $totalCardsSaved += $room->cardsSaved;
-    echo "<tr>";
+    $ptype = substr($type, strpos($room->paymentType, "\\")+1);
+    echo "<tr class='$paid"."_".$ptype."'>";
     echo "<td>" . $room->roomName . "</td>";
     echo "<td>" . $room->usersName . "</td>";
     echo "<td>" . $room->price . "</td>";
@@ -41,7 +42,7 @@ foreach($overview as $room) {
         echo date("d.m.Y", strtotime($room->orderCreationDate));
     }
     echo "</td>";
-    echo "<td>" . substr($type, strpos($room->paymentType, "\\")+1) . "</td>";
+    echo "<td>" . $ptype . "</td>";
     echo "<td>" . $room->cardsSaved . "</td>";
     echo "</tr>";
 }

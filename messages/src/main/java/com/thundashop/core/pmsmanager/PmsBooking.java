@@ -64,6 +64,7 @@ public class PmsBooking extends DataCommon {
     private double totalPrice;
     public String paymentType = "";
     public Date orderCreatedAfterStay;
+    boolean isConference = false;
     
     
     public Double getTotalPrice() {

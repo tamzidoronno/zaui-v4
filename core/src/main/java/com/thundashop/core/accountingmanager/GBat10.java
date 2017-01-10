@@ -67,7 +67,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
     
     private String makeLine(HashMap<Integer, String> line) {
         String result = "";
-        for(Integer i = 1; i <= line.size(); i++) {
+        for(Integer i = 0; i <= line.size(); i++) {
             String toAdd = line.get(i);
             if(toAdd == null) {
                 toAdd = "";
@@ -96,6 +96,10 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         int firstMonth = cal.get(Calendar.MONTH)+1;
         int year = cal.get(Calendar.YEAR);
         Integer customerId = getAccountingId(order.userId);
+        String unique = getUniqueCustomerIdForOrder(order);
+        if(unique != null) {
+            customerId = new Integer(unique);
+        }
         Double total = managers.orderManager.getTotalAmount(order);
         DecimalFormat df = new DecimalFormat("#.##");    
         User user = managers.userManager.getUserById(order.userId);
@@ -104,13 +108,13 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         line.put(0, "GBAT10");
         line.put(1, order.incrementOrderId+ "");
         line.put(2, format.format(order.rowCreatedDate));
-        line.put(3, "");
+        line.put(3, "1");
         line.put(4, firstMonth + "");
         line.put(5, year + "");
-        line.put(6, "");
+        line.put(6, "1510");
         line.put(7, "1");
         line.put(8, df.format(total)+"");
-        line.put(9, customerId+"");
+        line.put(9, "");
         line.put(10, "");
         line.put(11, user.fullName);
         line.put(12, user.address.address);
@@ -132,11 +136,11 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
             subLine.put(0, "GBAT10");
             subLine.put(1, order.incrementOrderId+ "");
             subLine.put(2, format.format(order.rowCreatedDate));
-            subLine.put(3, "");
+            subLine.put(3, "1");
             subLine.put(4, firstMonth + "");
             subLine.put(5, year + "");
-            subLine.put(6, "");
-            subLine.put(7, "1");
+            subLine.put(6, managers.productManager.getProduct(item.getProduct().id).accountingAccount);
+            subLine.put(7, managers.productManager.getProduct(item.getProduct().id).sku);
             subLine.put(8, df.format(item.getProduct().price * item.getCount() * -1)+"");
             subLine.put(9, customerId+"");
             subLine.put(10, "");

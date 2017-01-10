@@ -708,7 +708,7 @@ public class PmsManagerProcessor {
         if(!manager.getConfigurationSecure().runAutoPayWithCard) {
             return;
         }
-        manager.orderManager.checkForOrdersToAutoPay();
+        manager.orderManager.checkForOrdersToAutoPay(manager.getConfigurationSecure().numberOfDaysToTryToPayWithCardAfterStayOrderHasBeenCreated);
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, 3);

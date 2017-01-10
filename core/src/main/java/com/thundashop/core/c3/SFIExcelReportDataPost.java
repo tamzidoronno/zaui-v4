@@ -9,6 +9,9 @@ package com.thundashop.core.c3;
  *
  * @author ktonder
  */
-public class SFIExcelReportDataPost13 extends SFIExcelReportDataPost{
-    
+public class SFIExcelReportDataPost {
+    public double inkind;
+    public double totalt;
+    public double nfr;
+    public String navn;
 }

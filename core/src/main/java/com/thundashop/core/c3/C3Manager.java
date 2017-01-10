@@ -294,7 +294,9 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         if (project == null)
             return new Double(0);
         
-        return project.getPercentage(workPackageId, companyId, date, end);
+        double percent = project.getPercentage(workPackageId, companyId, date, end);
+        
+        return percent;
     }
 
     @Override
@@ -793,7 +795,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         }
         
         List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId, true);
-        SFIExcelReport report = new SFIExcelReport(reportData);
+        SFIExcelReport report = new SFIExcelReport(reportData, workPackages, true, end, createEmptyWp11(companyId, start, end));
         return report.getBase64Encoded();
     }
     
@@ -834,6 +836,8 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         List<C3Project> projectsToUse = getAllProjectsConnectedToCompany(companyId);
         List<User> users = userManager.getUsersByCompanyId(companyId);
         SFIExcelReportData reportData = new SFIExcelReportData();
+        
+        reportData.wpId = forWorkPackageId;
         
         HashMap<String, Double> roundsums = getRoundSums(projectsToUse, users, start, end, true, forWorkPackageId);
         HashMap<String, Double> roundsumsInKnind = getRoundSums(projectsToUse, users, start, end, false, forWorkPackageId);
@@ -1160,7 +1164,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     @Override
     public String getBase64SFIExcelReportTotal(String companyId, Date start, Date end) {
         List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId, false);
-        SFIExcelReport report = new SFIExcelReport(reportData);
+        SFIExcelReport report = new SFIExcelReport(reportData, workPackages, false, end, createEmptyWp11(companyId, start, end));
         return report.getBase64Encoded();
     }
 
@@ -1171,5 +1175,17 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         }
         
         return nfrAccess.get(userId).fixedHourCost;
+    }
+
+    private SFIExcelReportData createEmptyWp11(String companyId, Date start, Date end) {
+        String forWorkPackageId = "de20c1c3-faee-4237-8457-dc9efed16364";
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM-yyyy");
+        
+        SFIExcelReportData reportData = new SFIExcelReportData();
+        reportData.delprosjekter = forWorkPackageId == null ? "all" : workPackages.get(forWorkPackageId).name;
+        reportData.nameOfPartner = userManager.getCompany(companyId).name;
+        reportData.ansvarlig = userManager.getCompany(companyId).contactPerson;
+        reportData.periode = sdf.format(start) + " - " + sdf.format(end);
+        return reportData;
     }
 }

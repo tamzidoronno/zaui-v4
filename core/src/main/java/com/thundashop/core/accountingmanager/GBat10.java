@@ -114,7 +114,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         line.put(6, "1510");
         line.put(7, "1");
         line.put(8, df.format(total)+"");
-        line.put(9, "");
+        line.put(9, customerId+"");
         line.put(10, "");
         line.put(11, user.fullName);
         line.put(12, user.address.address);
@@ -142,7 +142,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
             subLine.put(6, managers.productManager.getProduct(item.getProduct().id).accountingAccount);
             subLine.put(7, managers.productManager.getProduct(item.getProduct().id).sku);
             subLine.put(8, df.format(item.getProduct().price * item.getCount() * -1)+"");
-            subLine.put(9, customerId+"");
+            subLine.put(9, "");
             subLine.put(10, "");
             subLine.put(11, "");
             subLine.put(12, "");

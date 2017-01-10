@@ -22,6 +22,7 @@ public class PmsBookingEventEntry extends DataCommon {
     public List<PmsBookingDateRange> dateRanges = new ArrayList();
     public List<String> roomNames = new ArrayList();
     public HashMap<String, PmsBookingEventEntry> overrideEntries = new HashMap();
+    public String bookingId = "";
 
     void saveDay(PmsBookingEventEntry entry, String day) {
         if(day == null || day.isEmpty()) {

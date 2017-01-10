@@ -57,16 +57,18 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     }
 
     private AccountingDetails getAccountingDetails() throws ErrorException {
-        Application settings = storeApplicationPool.getApplication("70ace3f0-3981-11e3-aa6e-0800200c9a66");
+        Application settings = storeApplicationPool.getApplicationIgnoreActive("70ace3f0-3981-11e3-aa6e-0800200c9a66");
         AccountingDetails details = new AccountingDetails();
-        details.accountNumber = settings.getSetting("accountNumber");
-        details.address = settings.getSetting("address");
-        details.city = settings.getSetting("city");
-        details.companyName = settings.getSetting("companyName");
-        details.contactEmail = settings.getSetting("contactEmail");
-        details.dueDays = Integer.parseInt(settings.getSetting("duedays"));
-        details.vatNumber = settings.getSetting("vatNumber");
-        details.webAddress = settings.getSetting("webAddress");
+        if(settings != null) {
+            details.accountNumber = settings.getSetting("accountNumber");
+            details.address = settings.getSetting("address");
+            details.city = settings.getSetting("city");
+            details.companyName = settings.getSetting("companyName");
+            details.contactEmail = settings.getSetting("contactEmail");
+            details.dueDays = Integer.parseInt(settings.getSetting("duedays"));
+            details.vatNumber = settings.getSetting("vatNumber");
+            details.webAddress = settings.getSetting("webAddress");
+        }
 
         return details;
     }

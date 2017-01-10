@@ -79,6 +79,14 @@ $paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPa
     </div>
 </div>
 
+<div class="textfield gss_setting"  id="externalAccountingId">
+    <span class="title"><?php echo $this->__f("External Accounting ID"); ?></span>
+    <input type="textfield" gs_model='usermodel' gs_model_attr='externalAccountingId' value="<? echo $user->externalAccountingId; ?>">
+    <div class="description">
+        <?php echo $this->__("In some cases the accounting system operates with an external accounting id as well (a secondary id)."); ?>
+    </div>
+</div>
+
 <div class="textfield gss_setting"  id="admin">
     <span class="title"><?php echo $this->__f("Administrator"); ?></span>
     <div class="gss_onoff" gs_model="usermodel" gs_model_attr="isadmin">

@@ -3285,7 +3285,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.userId = newuser.id;
             Company curcompany = createCompany(booking);
             if (curcompany != null) {
-                List<User> existingUsers = userManager.getUsersByCompanyId(curcompany.id);
+                List<User> existingUsers = userManager.getUsersThatHasCompany(curcompany.id);
                 if(!existingUsers.isEmpty()) {
                     newuser = existingUsers.get(0);
                 } else {
@@ -4150,21 +4150,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             bookingEngine.setConfirmationRequired(true);
         }
         
-        checkForMissingEndDate(booking);
-        
-        Integer result = 0;
-        booking.isDeleted = false;
-        
-        List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
-        Coupon coupon = getCouponCode(booking);
-        if(coupon != null) {
-            cartManager.subtractTimesLeft(coupon.code);
-        }
-        createUserForBooking(booking);
-        if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
-             pmsInvoiceManager.createPrePaymentOrder(booking);
-        }
         try {
+            checkForMissingEndDate(booking);
+
+            Integer result = 0;
+            booking.isDeleted = false;
+
+            List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
+            Coupon coupon = getCouponCode(booking);
+            if(coupon != null) {
+                cartManager.subtractTimesLeft(coupon.code);
+            }
+            createUserForBooking(booking);
+            if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
+                 pmsInvoiceManager.createPrePaymentOrder(booking);
+            }
+            
             result = completeBooking(bookingsToAdd, booking);
 
             if (result == 0) {
@@ -4180,7 +4181,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return booking;
             }
         } catch (Exception e) {
-            messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id, e);
+            messageManager.sendErrorNotification("This should never happen and need to be investigated : Unknown booking exception occured for booking id: " + booking.id, e);
             e.printStackTrace();
         }
         return null; 

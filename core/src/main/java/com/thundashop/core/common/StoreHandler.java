@@ -75,8 +75,11 @@ public class StoreHandler {
             Object result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
             clearSessionObject();
             
-
-            result = cloneResult(result, user);
+            try {
+                result = cloneResult(result, user);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
             return result;
         } catch (ErrorException ex) {
             if (ex.code == 26) {

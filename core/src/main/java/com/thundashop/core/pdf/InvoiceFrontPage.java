@@ -247,6 +247,7 @@ public class InvoiceFrontPage {
                 writeText("00", 310, 45, false, 12);
             }
             writeText(totalString, 230, 308, false, 12);
+            writeText(order.kid, 30, 45, false, 12);
         }
         
         if (order.status != Order.Status.PAYMENT_COMPLETED) {

@@ -201,7 +201,7 @@ public class PmsBookingRooms implements Serializable {
     public void clearAddonType(int type) {
         List<PmsBookingAddonItem> toRemove = new ArrayList();
         for(PmsBookingAddonItem item2 : addons) {
-            if(item2.addonType == type) {
+            if(item2!= null && item2.addonType != null && item2.addonType == type) {
                 toRemove.add(item2);
             }
         }
@@ -445,6 +445,7 @@ public class PmsBookingRooms implements Serializable {
             if(item.addonId.equals(addedItem.addonId)) {
                 addedItem.price = item.price;
                 addedItem.count = item.count;
+                addedItem.isIncludedInRoomPrice = item.isIncludedInRoomPrice;
             }
         }
     }

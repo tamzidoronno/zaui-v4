@@ -57,7 +57,11 @@ foreach($booking->rooms as $room) {
     if($room->bookingItemId) {
         $roomName .= " (" . $bookingItems[$room->bookingItemId]->bookingItemName . ") " . $room->guests[0]->name;
     }
-    echo "<h2>" . $roomName . " - " . date("d.m.Y H:i" , strtotime($room->date->start)) . " - " . date("d.m.Y H:i" , strtotime($room->date->end)) . "</h2>";
+    $guestName = "";
+    if(isset($room->guests[0])) {
+        $guestName = $room->guests[0]->name;
+    }
+    echo "<h2>$guestName " . $roomName . " - " . date("d.m.Y H:i" , strtotime($room->date->start)) . " - " . date("d.m.Y H:i" , strtotime($room->date->end)) . "</h2>";
     echo "<table cellspacing='0' cellpadding='0' width='100%' class='addonstable'>";
     echo "<tr>";
     echo "<th>Type</th>";
@@ -65,6 +69,7 @@ foreach($booking->rooms as $room) {
     echo "<th>Count</th>";
     echo "<th>Price</th>";
     echo "<th>Date</th>";
+    echo "<th title='In room price'>Irm</th>";
     echo "</tr>";
     if(sizeof($room->addons) == 0) {
         echo "No addons added to this room.";
@@ -78,11 +83,19 @@ foreach($booking->rooms as $room) {
                 $name = $items[$addon->addonType];
             }
             echo "<tr addonid='".$addon->addonId."' roomid='".$room->pmsBookingRoomId."' class='addonrow'>";
-            echo "<td>" . $name . "</td>";
+            echo "<td>";
+            echo $name . "</td>";
             echo "<td>" . $roomName . "</td>";
             echo "<td width='10'><input type='text' value='" . $addon->count . "' style='width:70px;' class='addoncount'></td>";
             echo "<td width='10'><input type='text' value='" .  $addon->price . "' style='width:70px;' class='addonprice'></td>";
             echo "<td>" . date("d.m.Y, H:i", strtotime($addon->date)) . "</td>";
+            echo "<td align='center' width='10'>";
+            if($addon->isIncludedInRoomPrice) {
+                echo "<i class='fa fa-check addonincludedinroomprice' title='This addon is included in the room price'></i>";
+            } else {
+                echo "<i class='fa fa-close addonincludedinroomprice' title='This addon is not included in the room price'></i>";
+            }
+            echo "</td>";
             echo "</tr>";
         }
     }

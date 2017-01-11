@@ -242,6 +242,7 @@ if($booking->orderIds) {
             }
             if(stristr($order->payment->paymentType, "invoice")) {
                 echo "<span style='cursor:pointer; color:blue' class='sendinvoice' orderid='".$order->id."' bookingid='".$booking->id."'>Send invoice</span>";
+                echo " - <a href='/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."' target='_fdasf'><span style='cursor:pointer; color:blue' orderid='".$order->id."' bookingid='".$booking->id."'>download</span></a>";
             }
         } else {
             echo $this->translatePaymenttype($order->payment->paymentType, $instances);

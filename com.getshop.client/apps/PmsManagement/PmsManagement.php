@@ -1673,6 +1673,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $add->addonId = $id;
             $add->count = $addon['count'];
             $add->price = $addon['price'];
+            $add->isIncludedInRoomPrice = false;
+            if($addon['includedInRoomPrice'] == "true") {
+                $add->isIncludedInRoomPrice = true;
+            }
             $toAdd[] = $add;
         }
         $this->getApi()->getPmsManager()->updateAddons($this->getSelectedName(), $toAdd, $bookingid);
@@ -2095,6 +2099,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->prepayment = true;
         $filter->createNewOrder = true;
         $filter->addToOrderId = $_POST['data']['appendToOrderId'];
+        
+        if($_POST['data']['appendToOrderId'] && $this->getFactory()->getStore()->id == "178330ad-4b1d-4b08-a63d-cca9672ac329") {
+            $this->getApi()->getPmsInvoiceManager()->clearOrder($this->getSelectedName(), $bookingId, $_POST['data']['appendToOrderId']);
+        }
         
         $instanceToUse = null;
         $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();

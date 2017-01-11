@@ -47,7 +47,7 @@ $forskningsperiodes = $this->getApi()->getC3Manager()->getForskningsPeriodesForU
                 echo "<option value=''>None</option>";
                 foreach ($this->getApi()->getC3Manager()->getTimeRates() as $rate) {
                     $selected = $this->isSelected($rate, $user) ? "selected='true'" : "";
-                    echo "<option value='" . $rate->id . "' $selected>" . $rate->name . "</option>";
+                    echo "<option value='" . $rate->id . "' $selected>" . $rate->name ."($rate->rate)". "</option>";
                 }
                 ?>
             </select>

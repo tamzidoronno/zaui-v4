@@ -267,6 +267,9 @@ public class InvoiceGenerator {
         
         if (order.status != Order.Status.PAYMENT_COMPLETED) {
             writeText(details.accountNumber, 400, 45, false, 12);
+            if (order.kid != null && !order.kid.isEmpty()) {
+                writeText(order.kid, 30, 45, false, 12);
+            }
         }
         
         

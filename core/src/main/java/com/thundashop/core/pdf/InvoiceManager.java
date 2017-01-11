@@ -68,6 +68,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             details.dueDays = Integer.parseInt(settings.getSetting("duedays"));
             details.vatNumber = settings.getSetting("vatNumber");
             details.webAddress = settings.getSetting("webAddress");
+            details.type = settings.getSetting("type");
         }
 
         return details;

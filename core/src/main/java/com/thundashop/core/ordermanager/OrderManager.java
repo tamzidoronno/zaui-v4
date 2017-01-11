@@ -1545,6 +1545,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         details.dueDays = Integer.parseInt(settings.getSetting("duedays"));
         details.vatNumber = settings.getSetting("vatNumber");
         details.webAddress = settings.getSetting("webAddress");
+        details.type = settings.getSetting("type");
 
         return details;
     }

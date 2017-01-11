@@ -35,6 +35,7 @@ public class CartItem implements Serializable {
     public Date newStartDate;
     public Date newEndDate;
     public Date periodeStart = null;
+    public String groupedById = "";
 
     public CartItem() {
     }

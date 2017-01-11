@@ -50,6 +50,7 @@ class InvoicePayment extends \PaymentApplication implements \Application{
         $this->setConfigurationSetting("contactEmail", $_POST['contactEmail']);
         $this->setConfigurationSetting("webAddress", $_POST['webAddress']);
         $this->setConfigurationSetting("duedays", $_POST['duedays']);
+        $this->setConfigurationSetting("type", $_POST['type']);
     }
 }
 ?>

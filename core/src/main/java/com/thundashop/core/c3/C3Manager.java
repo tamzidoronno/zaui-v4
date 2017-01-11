@@ -176,7 +176,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     @Override
     public List<C3Project> search(String searchText) {
         List<C3Project> retProjects = projects.values().stream()
-                .filter(project -> project.name.toLowerCase().contains(searchText))
+                .filter(project -> project.name.toLowerCase().contains(searchText) || project.projectNumber.equals(searchText))
                 .sorted(C3Project.comperatorByProjectNumber())
                 .collect(Collectors.toList());
         

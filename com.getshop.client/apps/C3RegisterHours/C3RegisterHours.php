@@ -58,7 +58,7 @@ class C3RegisterHours extends \MarketingApplication implements \Application {
     }
 
     public function sortAndGroup($hours) {
-//        return $hours;
+
         if ($hours)
             uasort($hours, array('\ns_f1f2c4f4_fc7d_4bec_89ec_973ff192ff6d\C3RegisterHours', 'sortHours'));
         

@@ -1095,13 +1095,20 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     public C3ForskningsUserPeriode getCurrentForskningsPeriode() {
         C3ProjectPeriode activePeriode = getActivePeriode();
         List<C3ForskningsUserPeriode> forsperiodes = getForskningsPeriodesForUser(getSession().currentUser.id);
+        
+        List<C3ForskningsUserPeriode> retObjects = new ArrayList();
+        
         for (C3ForskningsUserPeriode fors : forsperiodes) {
-            if (fors.isDateWithin(activePeriode.from)) {
-                return fors;
+            if (fors.isStartDateWithin(activePeriode.from, activePeriode.to)) {
+                retObjects.add(fors);
             }
         }
         
-        return null;
+        if (retObjects.size() > 1) {
+            throw new RuntimeException("The system does not support that a user has multiple periodes within an active periode.");
+        }
+        
+        return retObjects.get(0);
     }
     
     public C3ForskningsUserPeriode getCurrentForskningsPeriodeForDate(String userId, Date date) {

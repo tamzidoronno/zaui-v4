@@ -1093,9 +1093,10 @@ public class C3Manager extends ManagerBase implements IC3Manager {
 
     @Override
     public C3ForskningsUserPeriode getCurrentForskningsPeriode() {
+        C3ProjectPeriode activePeriode = getActivePeriode();
         List<C3ForskningsUserPeriode> forsperiodes = getForskningsPeriodesForUser(getSession().currentUser.id);
         for (C3ForskningsUserPeriode fors : forsperiodes) {
-            if (fors.isDateWithin(new Date())) {
+            if (fors.isDateWithin(activePeriode.from)) {
                 return fors;
             }
         }

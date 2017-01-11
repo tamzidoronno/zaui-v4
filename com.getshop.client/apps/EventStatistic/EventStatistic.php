@@ -19,6 +19,40 @@ class EventStatistic extends \MarketingApplication implements \Application {
         
     }
     
+    public function downloadStatisticFull() {
+        $_POST = $_SESSION['searchcriterias'];
+        $stats = $this->getStats();
+        $rows = array();
+        
+        foreach ($stats as $stat) {
+
+            $yrdata= strtotime("$stat->year-$stat->month-1");
+            $monthName = date('M-Y', $yrdata);
+            $row = array();
+            $row[] = $monthName;
+            $rows[] = $row;
+            foreach ($stat->users as $eventId => $users) {
+                $event = $this->getApi()->getEventBookingManager()->getEvent("booking", $eventId);
+                $date = \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatMainStartDates($event);
+                $row2 = array();
+                $row2[] = html_entity_decode($event->bookingItemType->name." ( $date ) ");
+                $rows[] = $row2;
+                foreach ($users as $userId) {
+                    $user = $this->getApi()->getUserManager()->getUserById($userId);
+                    $companyName = $user->companyObject ? $user->companyObject->name : "";
+                    $row3 = array();
+                    $row3[] = $user->fullName;
+                    $row3[] = $companyName;
+                    $rows[] = $row3;
+                }
+            }
+            $rows[] = array();
+        }
+        
+        echo json_encode($rows);
+        die();
+    }
+    
     public function downloadStatistic() {
         $_POST = $_SESSION['searchcriterias'];
         $stats = $this->getStats();

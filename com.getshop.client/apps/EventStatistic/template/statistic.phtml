@@ -13,6 +13,7 @@ $this->includefile("form");
     $stats = $this->getStats();
     if ($stats) {
         echo '<div class="shop_button" gs_downloadexcelreport="downloadStatistic" gs_filename="statistic">Download excel</div>';
+        echo '<div class="shop_button" gs_downloadexcelreport="downloadStatisticFull" gs_filename="statistic">Download excel (full)</div>';
         
         $data = ""; 
         foreach ($stats as $stat) {

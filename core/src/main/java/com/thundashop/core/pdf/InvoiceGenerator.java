@@ -26,16 +26,18 @@ public class InvoiceGenerator {
 
     public String createInvoice() throws IOException, COSVisitorException {
         PDDocument document = new PDDocument();
+        
+        boolean showAttachments = order.cart.getItems().size() > 19;
 
         InvoiceFrontPage frontPage = new InvoiceFrontPage(this.order, details, true, document);
         frontPage.createInvoice();
 
-        if (details.isTypeOne()) {
+        if (details.isTypeOne() && showAttachments) {
             InvoiceAttachmentTypeOne attachment = new InvoiceAttachmentTypeOne(order.cart.getItems(), details, document);
             attachment.createInvoice();
         }
 
-        if (details.isTypeTwo()) {
+        if (details.isTypeTwo() && showAttachments) {
             new InvoiceAttachmentTypeTwoPages(document, order, details);
         }
 

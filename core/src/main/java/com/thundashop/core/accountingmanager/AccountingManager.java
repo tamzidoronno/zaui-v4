@@ -1028,11 +1028,16 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             for(String id : f.orders) {
                 Order order = orderManager.getOrder(id);
                 ordersToUse.add(order); 
+                Date orderStartDate = order.getStartDateByItems();
                 if(f.startDate != null && start.after(f.startDate)) {
                     start = f.startDate;
                 }
+                if(orderStartDate != null && orderStartDate.before(start)) {
+                    start = orderStartDate;
+                }
             }
         }
+        
         
         PmsOrderStatsFilter filter = new PmsOrderStatsFilter();
         filter.displayType = "dayslept";

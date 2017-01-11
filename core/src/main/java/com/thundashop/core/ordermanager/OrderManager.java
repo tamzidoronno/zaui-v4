@@ -1,6 +1,7 @@
 package com.thundashop.core.ordermanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
@@ -103,6 +104,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private PrintManager printManager;
     
+    @Autowired
+    private GetShopApplicationPool getShopApplicationPool; 
+   
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
         Order order = getOrder(orderId);
@@ -113,9 +117,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
 
     @Override
-    public String createRegisterCardOrder() {        
+    public String createRegisterCardOrder(String paymentTypeId) {
         User user = userManager.getUserById(getSession().currentUser.id);
-        user.preferredPaymentType = getStorePreferredPayementMethod().paymentId;
+        user.preferredPaymentType = paymentTypeId;
         userManager.saveUserSecure(user);
         
         cartManager.clear();
@@ -1158,9 +1162,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void checkForOrdersToAutoPay() throws ErrorException {
+    public void checkForOrdersToAutoPay(int daysToTryAfterOrderHasStarted) throws ErrorException {
         for(Order order : orders.values()) {
-            if(!orderNeedAutoPay(order)) {
+            if(!orderNeedAutoPay(order, daysToTryAfterOrderHasStarted)) {
                 continue;
             }
             logPrint("autopay for order: " + order.incrementOrderId);
@@ -1169,6 +1173,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if(card.isExpired()) {
                     continue;
                 }
+                
+                        
+                if(!frameworkConfig.productionMode) {
+                    System.out.println("Tried autopay with card: " + card.savedByVendor + " - " + card.mask);
+                    return;
+                }
+
                 
                 try {
                     if(card.savedByVendor.equals("DIBS")) {
@@ -1196,7 +1207,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         logPrint("Need to notify about failed payment");
     }
 
-    private boolean orderNeedAutoPay(Order order) {
+    private boolean orderNeedAutoPay(Order order, int daysToTryAfterOrderHasStarted) {
         if(order.cart.getTotal(true) <= 0) {
             return false;
         }
@@ -1213,7 +1224,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         //Order has started, its too late.
         Calendar yesterday = Calendar.getInstance();
-        yesterday.add(Calendar.DAY_OF_YEAR, -1);
+        yesterday.add(Calendar.DAY_OF_YEAR, (daysToTryAfterOrderHasStarted * -1));
         for(CartItem item : order.cart.getItems()) {
             if(item.startDate != null && new Date().after(item.startDate)) {
                 if(yesterday.getTime().after(order.rowCreatedDate)) {

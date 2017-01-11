@@ -25,7 +25,8 @@ class SavedCardsPrinter extends \WebshopApplication implements \Application {
     }
     
     public function addCard() {
-        $orderId = $this->getApi()->getOrderManager()->createRegisterCardOrder();
+        //Dibs is default. we can fix this later if anyone else needs it. just change the payment type.
+        $orderId = $this->getApi()->getOrderManager()->createRegisterCardOrder("d02f8b7a-7395-455d-b754-888d7d701db8");
         $this->redirectToPayment = $orderId;
         
     }

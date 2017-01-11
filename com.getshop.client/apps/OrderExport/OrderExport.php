@@ -88,8 +88,10 @@ class OrderExport extends \WebshopApplication implements \Application {
         foreach($products as $product) {
             $ex = 0;
             $inc = 0;
-            foreach($totalExProducts[$product->id] as $tmp) { $ex += $tmp; }
-            foreach($totalIncProducts[$product->id] as $tmp) { $inc += $tmp; }
+            if(isset($totalExProducts[$product->id])) {
+                foreach($totalExProducts[$product->id] as $tmp) { $ex += $tmp; }
+                foreach($totalIncProducts[$product->id] as $tmp) { $inc += $tmp; }
+            }
             echo "<td>".round($ex) . "<br><span style='color:#aaa;'>" . round($inc)."</span></td>";
         }
         echo "</tr>";

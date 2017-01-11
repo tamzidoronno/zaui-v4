@@ -16,6 +16,12 @@ public class StatisticsEntry {
     public HashMap<Integer, Double> addonsPrice = new HashMap();
     public HashMap<Integer, Double> addonsPriceEx = new HashMap();
     
+    public HashMap<String, Integer> uniqueGuests = new HashMap();
+    public HashMap<String, Integer> guests = new HashMap();
+    public HashMap<String, Integer> guestsCompany = new HashMap();
+    public HashMap<String, Integer> guestsConference = new HashMap();
+    public HashMap<String, Integer> guestsRegular = new HashMap();
+    
     public void finalize() {
         avgPrice = totalPrice / roomsRentedOut;
         totalPrice = (double)Math.round(totalPrice);

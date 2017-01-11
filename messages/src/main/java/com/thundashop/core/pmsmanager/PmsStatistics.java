@@ -10,6 +10,7 @@ import java.util.LinkedList;
 public class PmsStatistics implements Serializable {
     public LinkedList<StatisticsEntry> entries = new LinkedList();
     public LinkedList<SalesStatisticsEntry> salesEntries = new LinkedList(); 
+    public SleepoverStatistics sleepoverstats = new SleepoverStatistics();
     
     void addEntry(StatisticsEntry entry) {
         entries.add(entry);
@@ -26,11 +27,16 @@ public class PmsStatistics implements Serializable {
             total.spearRooms += entry.spearRooms;
             total.avgPrice += entry.avgPrice;
             total.coverage += entry.coverage;
+            sleepoverstats.nighsSlept += entry.roomsRentedOut;
+            
+            sumarizeGuests(entry);
+            
         }
         
         total.bugdet = budget;
         total.coverage = total.coverage / entries.size();
         total.avgPrice = total.avgPrice / entries.size();
+        
         
         entries.add(total);
     }
@@ -43,6 +49,9 @@ public class PmsStatistics implements Serializable {
             result.nights += entry.nights;
             result.numberOfOrders += entry.numberOfOrders;
             result.avgOrderPrice += entry.avgOrderPrice;
+            
+            sleepoverstats.nightsSold += entry.nights;
+            
             if(entry.avgOrderPrice > 0) {
                 avgCount++;
             }
@@ -144,6 +153,48 @@ public class PmsStatistics implements Serializable {
         
         String key = year + "-" + month + "-" + day;
         return key;
+    }
+
+    private void sumarizeGuests(StatisticsEntry entry) {
+        for(String k : entry.guests.keySet()) {
+            int count = entry.guests.get(k);
+            if(sleepoverstats.guests.containsKey(k)) {
+                count += sleepoverstats.guests.get(k);
+            }
+            sleepoverstats.guests.put(k, count);
+        }
+        
+        for(String k : entry.guestsCompany.keySet()) {
+            int count = entry.guestsCompany.get(k);
+            if(sleepoverstats.guestsCompany.containsKey(k)) {
+                count += sleepoverstats.guestsCompany.get(k);
+            }
+            sleepoverstats.guestsCompany.put(k, count);
+        }
+        
+        for(String k : entry.guestsConference.keySet()) {
+            int count = entry.guestsConference.get(k);
+            if(sleepoverstats.guestsConference.containsKey(k)) {
+                count += sleepoverstats.guestsConference.get(k);
+            }
+            sleepoverstats.guestsConference.put(k, count);
+        }
+        
+        for(String k : entry.guestsRegular.keySet()) {
+            int count = entry.guestsRegular.get(k);
+            if(sleepoverstats.guestsRegular.containsKey(k)) {
+                count += sleepoverstats.guestsRegular.get(k);
+            }
+            sleepoverstats.guestsRegular.put(k, count);
+        }
+        
+        for(String k : entry.uniqueGuests.keySet()) {
+            int count = entry.uniqueGuests.get(k);
+            if(sleepoverstats.uniqueGuests.containsKey(k)) {
+                count += sleepoverstats.uniqueGuests.get(k);
+            }
+            sleepoverstats.uniqueGuests.put(k, count);
+        }
     }
 
 }

@@ -202,7 +202,7 @@ if ($fixedHours) {
     $('#to_2').datepicker({dateFormat: "dd.mm.yy"});
     $('#from_3').datepicker({dateFormat: "dd.mm.yy"});
     $('#to_3').datepicker({dateFormat: "dd.mm.yy"});
-    <? if ($hourObject && $hourObject->fixedSum) { ?>
+    <? if ($hourObject && isset($hourObject->fixedSum) && $hourObject->fixedSum) { ?>
         $(".tab[content='fixed']").click();
         $(".tab[content='prosent']").hide();    
         $(".tab[content='timer']").hide();    

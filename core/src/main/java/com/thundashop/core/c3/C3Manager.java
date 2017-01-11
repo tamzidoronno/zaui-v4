@@ -725,7 +725,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         int year = getYear(start);
         C3RoundSum roundSumForYear = getRoundSum(year);
         C3Project project = getProject(projectId);
-        C3ForskningsUserPeriode forskningsPeriode = getCurrentForskningsPeriodeForDate(userId, start);
+        C3ForskningsUserPeriode forskningsPeriode = getCurrentForskningsPeriodeForDate(userId, start, end);
         
         List<C3UserProjectPeriode> periodesToUse = getUserPeriodeForUser(projectId, start, end, userId);
         int totalForPeriode = 0;
@@ -1114,13 +1114,14 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         return retObjects.get(0);
     }
     
-    public C3ForskningsUserPeriode getCurrentForskningsPeriodeForDate(String userId, Date date) {
+    private C3ForskningsUserPeriode getCurrentForskningsPeriodeForDate(String userId, Date start, Date end) {
         List<C3ForskningsUserPeriode> forsperiodes = getForskningsPeriodesForUser(userId);
         for (C3ForskningsUserPeriode fors : forsperiodes) {
-            if (fors.isDateWithin(date)) {
+            if (fors.isStartDateWithin(start, end)) {
                 return fors;
             }
         }
+        
         
         return null;
     }

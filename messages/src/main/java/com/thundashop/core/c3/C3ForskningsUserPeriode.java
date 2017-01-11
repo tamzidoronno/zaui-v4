@@ -30,5 +30,18 @@ public class C3ForskningsUserPeriode extends DataCommon {
         
         return false;
     }
+    
+    boolean isStartDateWithin(Date from, Date to) {
+        if (from.equals(start))
+            return true;
+        
+        if (to.equals(start)) 
+            return true;
+        
+        if (from.before(start) && to.after(start))
+            return true;
+        
+        return false;
+    }
 
 }

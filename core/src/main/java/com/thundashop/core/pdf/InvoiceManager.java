@@ -90,6 +90,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
                 details.kidSize = new Integer(kidSize);
             }
             details.kidType = settings.getSetting("defaultKidMethod");
+            details.type = settings.getSetting("type");
         }
 
         return details;

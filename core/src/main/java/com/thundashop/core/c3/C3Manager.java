@@ -176,7 +176,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     @Override
     public List<C3Project> search(String searchText) {
         List<C3Project> retProjects = projects.values().stream()
-                .filter(project -> project.name.toLowerCase().contains(searchText))
+                .filter(project -> project.name.toLowerCase().contains(searchText) || project.projectNumber.equals(searchText))
                 .sorted(C3Project.comperatorByProjectNumber())
                 .collect(Collectors.toList());
         
@@ -725,7 +725,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         int year = getYear(start);
         C3RoundSum roundSumForYear = getRoundSum(year);
         C3Project project = getProject(projectId);
-        C3ForskningsUserPeriode forskningsPeriode = getCurrentForskningsPeriodeForDate(userId, start);
+        C3ForskningsUserPeriode forskningsPeriode = getCurrentForskningsPeriodeForDate(userId, start, end);
         
         List<C3UserProjectPeriode> periodesToUse = getUserPeriodeForUser(projectId, start, end, userId);
         int totalForPeriode = 0;
@@ -1093,23 +1093,35 @@ public class C3Manager extends ManagerBase implements IC3Manager {
 
     @Override
     public C3ForskningsUserPeriode getCurrentForskningsPeriode() {
+        C3ProjectPeriode activePeriode = getActivePeriode();
         List<C3ForskningsUserPeriode> forsperiodes = getForskningsPeriodesForUser(getSession().currentUser.id);
+        
+        List<C3ForskningsUserPeriode> retObjects = new ArrayList();
+        
         for (C3ForskningsUserPeriode fors : forsperiodes) {
-            if (fors.isDateWithin(new Date())) {
+            if (fors.isStartDateWithin(activePeriode.from, activePeriode.to)) {
+                retObjects.add(fors);
+            }
+        }
+        
+        if (retObjects.size() > 1) {
+            throw new RuntimeException("The system does not support that a user has multiple periodes within an active periode.");
+        }
+        
+        if (retObjects.isEmpty())
+            return null;
+        
+        return retObjects.get(0);
+    }
+    
+    private C3ForskningsUserPeriode getCurrentForskningsPeriodeForDate(String userId, Date start, Date end) {
+        List<C3ForskningsUserPeriode> forsperiodes = getForskningsPeriodesForUser(userId);
+        for (C3ForskningsUserPeriode fors : forsperiodes) {
+            if (fors.isStartDateWithin(start, end)) {
                 return fors;
             }
         }
         
-        return null;
-    }
-    
-    public C3ForskningsUserPeriode getCurrentForskningsPeriodeForDate(String userId, Date date) {
-        List<C3ForskningsUserPeriode> forsperiodes = getForskningsPeriodesForUser(userId);
-        for (C3ForskningsUserPeriode fors : forsperiodes) {
-            if (fors.isDateWithin(date)) {
-                return fors;
-            }
-        }
         
         return null;
     }

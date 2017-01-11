@@ -115,6 +115,26 @@ $kidMethods['customeridandorderid'] = "Orderid + customerid";
         </div>
     </div>
         
+    <div class="gss_setting">
+        <div class="text inline title"><?php echo $this->__f("Please select your language"); ?></div>
+
+        <?
+        $states = array();
+        $states['type1'] = "type1";
+        $states['type2'] = "type2";
+        ?>
+        
+        <div class="gss_dropdown">
+            <select class="config" gs_model='invoicepaymentmodel' gs_model_attr='type'>
+                <? foreach ($states as $key => $lang) { 
+                    $selected = $this->getConfigurationSetting("type") == $key ? "selected='true'" : "";
+                    ?>
+                    <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>
+                <? } ?>
+            </select>
+        </div>    
+    </div>    
+    
     <div class='gss_button_area'>
         <div class="gss_button" gss_method="saveSettings" gss_model="invoicepaymentmodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
     </div>

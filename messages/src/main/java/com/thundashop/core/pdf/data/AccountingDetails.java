@@ -20,4 +20,19 @@ public class AccountingDetails {
     public int dueDays = 14;
     public String kidType = "";
     public Integer kidSize = 0;
+    public String type = "type1";
+
+    public boolean isTypeOne() {
+        if (type == null || type.isEmpty() || type.equals("type1"))
+            return true;
+        
+        return false;
+    }
+
+    public boolean isTypeTwo() {
+        if (type != null && !type.isEmpty() && type.equals("type2"))
+            return true;
+        
+        return false;
+    }
 }

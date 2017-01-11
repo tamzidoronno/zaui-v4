@@ -11,6 +11,6 @@ package com.thundashop.core.c3;
  */
 public class C3UserProjectPeriode extends ProjectCost {
     public String costType = "userperiode";
-    public int percent;
+    public double percent;
     public boolean nfr;
 }

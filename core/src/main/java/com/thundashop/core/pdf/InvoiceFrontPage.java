@@ -1,54 +1,94 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package com.thundashop.core.pdf;
 
+import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.usermanager.data.Address;
+import java.awt.Color;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.joda.time.DateTime;
 
 /**
  *
  * @author ktonder
  */
-public class InvoiceGenerator {
-
+public class InvoiceFrontPage {
+    
     private final Order order;
+    private int cornerSize = 7;
+    private PDPageContentStream contentStream;
     private final AccountingDetails details;
-
-    public InvoiceGenerator(Order order, AccountingDetails details) {
+    private final boolean useAttachment;
+    private final PDDocument document;
+    
+    public InvoiceFrontPage(Order order, AccountingDetails details, boolean useAttachment, PDDocument document) {
         this.order = order;
         this.details = details;
+        this.useAttachment = useAttachment;
+        this.document = document;
     }
-
-    public String createInvoice() throws IOException, COSVisitorException {
-        PDDocument document = new PDDocument();
-
-        InvoiceFrontPage frontPage = new InvoiceFrontPage(this.order, details, true, document);
-        frontPage.createInvoice();
-
-        if (details.isTypeOne()) {
-            InvoiceAttachmentTypeOne attachment = new InvoiceAttachmentTypeOne(order.cart.getItems(), details, document);
-            attachment.createInvoice();
+    
+    private void addInvoiceNote() throws IOException {
+        writeText("Note", 45,413, true, 8);
+        String[] lines = order.invoiceNote.split("\n");
+        int i = 0;
+        for(String line : lines) {
+            if(line.isEmpty()) {
+                continue;
+            }
+            writeText(line,  45,400-(i*10), false, 8);
+            i++;
         }
+    }
+    
+    public void createInvoice() throws IOException, COSVisitorException {
+        PDPage page = new PDPage(PDPage.PAGE_SIZE_A4);
+        
+        document.addPage(page);
 
-        if (details.isTypeTwo()) {
-            new InvoiceAttachmentTypeTwoPages(document, order, details);
+        contentStream = new PDPageContentStream(document, page);
+        
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            addFooterLines();
+            generateYellowLines(page);
         }
+        addTexts();
+        addOrderText();
+        addSummary();
+        
+        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            int startx = 33;
+            contentStream.drawLine(20, startx, 20, 77);
+            contentStream.drawLine(220, startx, 220, 77);
 
-        String fileName = "/tmp/" + order.id + ".pdf";
-        document.save(fileName);
-        document.close();
+            contentStream.setStrokingColor(new Color(255, 246, 133));
+            contentStream.drawLine(300, startx, 300, 77);
+        }
+        
+        drawLines();
+        writeText("OPPSUMMERING", 443, 420, true, 8);
+        if(order.cart.getItems().size() <= 19) {
+            addDescriptions();
+        } else {
+            writeText("Se vedlegg for detaljert informasjon", 40, 600, true, 16);
+        }
+        
+        contentStream.close();
 
-        return fileName;
     }
     
     private void generateYellowLines(PDPage page) throws IOException {
@@ -145,12 +185,8 @@ public class InvoiceGenerator {
     }
     
     private void writeText( String text, int x, int y, boolean bold, int fontSize, boolean alignRight) throws IOException {
-        
         PDPageContentStream stream = contentStream;
-        if(writeToPage == 2) {
-            stream = attachment;
-        }
-        
+
         PDType1Font font = bold ? PDType1Font.HELVETICA_BOLD : PDType1Font.HELVETICA;
         stream.beginText();
         stream.setFont(font, fontSize);
@@ -215,9 +251,6 @@ public class InvoiceGenerator {
         
         if (order.status != Order.Status.PAYMENT_COMPLETED) {
             writeText(details.accountNumber, 400, 45, false, 12);
-            if (order.kid != null && !order.kid.isEmpty()) {
-                writeText(order.kid, 30, 45, false, 12);
-            }
         }
         
         
@@ -330,17 +363,7 @@ public class InvoiceGenerator {
         if (addShippingLine(start, i, lineHeight, padding)) {
             i = 1;
         }
-        if(order.cart.getItems().size() > 19) {
-            writeToPage = 2; 
-            start = 750;
-            attachment.setNonStrokingColor(new Color(0, 0, 0));
-            attachment.drawLine(40, 760, 560, 760);
-            writeText("BESKRIVELSE", 45, 765, true, 8);
-            writeText("PRIS", 335, 765, true, 8);
-            writeText("ANTALL", 385, 765, true, 8);
-            writeText("MVA", 475, 765, true, 8);
-            writeText("BELØP", 525, 765, true, 8);
-        } else {
+        if(!useAttachment) {
             contentStream.setNonStrokingColor(new Color(0, 0, 0));
             contentStream.drawLine(40, 640, 560, 640);
             writeText("BESKRIVELSE", 45, 645, true, 8);
@@ -385,7 +408,6 @@ public class InvoiceGenerator {
                 i++;
             }
         }
-        writeToPage = 1;
     }
 
     private double getNetto() {

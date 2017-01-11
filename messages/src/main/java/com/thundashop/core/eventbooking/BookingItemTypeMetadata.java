@@ -23,6 +23,12 @@ public class BookingItemTypeMetadata extends DataCommon {
     
     /**
      * Key = groupId
+     * Value = true / false / (null = true);
+     */
+    public HashMap<String, Boolean> mandatoryForGroup = new HashMap();
+    
+    /**
+     * Key = groupId
      * Value = price
      */
     public HashMap<String, Double> groupPrices = new HashMap();

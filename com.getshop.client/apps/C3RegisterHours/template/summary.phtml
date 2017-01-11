@@ -40,7 +40,8 @@ foreach ($accessList as $access) {
         echo "( Åpen periode: ".date('d.m.Y', strtotime($projectPeriodeToShow->from))." - ".date('d.m.Y', strtotime($projectPeriodeToShow->to)).")";
         echo "<br/>";
         if ($allActivated) {
-            $hours = $this->getApi()->getC3Manager()->getProjectCostsForAllUsersInCompany($project->id, $projectPeriodeToShow->from, $projectPeriodeToShow->to);
+            $inHours = $this->getApi()->getC3Manager()->getProjectCostsForAllUsersInCompany($project->id, $projectPeriodeToShow->from, $projectPeriodeToShow->to);
+            $hours = $this->sortAndGroup($inHours);
         } else {
             $hours = $this->getApi()->getC3Manager()->getProjectCostsForCurrentUser($project->id, $projectPeriodeToShow->from, $projectPeriodeToShow->to);
         }

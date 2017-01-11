@@ -1108,6 +1108,9 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             throw new RuntimeException("The system does not support that a user has multiple periodes within an active periode.");
         }
         
+        if (retObjects.isEmpty())
+            return null;
+        
         return retObjects.get(0);
     }
     

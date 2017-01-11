@@ -1,4 +1,7 @@
 Options +FollowSymLinks -MultiViews
+
+Redirect /golfpark http://utsiktengolf.no/golfpark
+
 # Turn mod_rewrite on
 RewriteEngine On
 RewriteBase /

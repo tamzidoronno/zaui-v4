@@ -42,6 +42,7 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1412,9 +1413,34 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void finalizeOrder(Order order) {
+        updateAddressIfNotClosed(order);
+        
         List<Order> ordersToFinalise = new ArrayList();
         ordersToFinalise.add(order);
         finalize(ordersToFinalise);
+    }
+
+    private void updateAddressIfNotClosed(Order order) {
+        if (!order.closed && order.userId != null && !order.userId.isEmpty() && order.cart != null && order.cart.address != null) {
+            try {
+                User user = userManager.getUserById(order.userId);
+                if (user == null || user.address == null)
+                    return;
+                
+                if (order.cart.address.isSame(user, user.address)) {
+                    return;
+                }
+                
+                order.cart.address = (Address)user.address.clone();
+                if (order.cart.address.fullName == null || order.cart.address.fullName.isEmpty()) {
+                    order.cart.address.fullName = user.fullName;
+                }
+                
+                saveObject(order);
+            } catch (CloneNotSupportedException ex) {
+                java.util.logging.Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     private void feedGrafana(Order order) {

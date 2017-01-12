@@ -6,8 +6,8 @@
 <div class="checkout_productList">
     <div class='close_checkout_list' ng-click='closeCheckoutList()'><i class='fa fa-close'></i></div>
     <div ng-repeat="list in productLists" >
-        <div class="listnametitle">{{ list.listName }}</div>
-        <div class="productlistinnner">
+        <div class="listnametitle" ng-click="toggleHiddenState(list.id)" > <i class="fa fa-thumb-tack" ng-click="toggleSticky(list.id)" ng-class="{'sticky' : isListSticky(list.id) }"></i> {{ list.listName }}</div>
+        <div class="productlistinnner hidden" listid="{{list.id}}" ng-class="{'sticky' : isListSticky(list.id) }">
             <div ng-repeat="product in getProductsForList(list)" productid="{{product.id}}" class="productcartbutton highlighted" ng-right-click="removeProduct(product)" ng-swipe-right="removeProduct(product)" ng-click="addToCart(product)">
                 {{ product.name }}
             </div>

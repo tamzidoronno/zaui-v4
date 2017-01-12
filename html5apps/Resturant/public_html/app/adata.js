@@ -16,6 +16,7 @@ adata = {
     paymentMethods: [],
     temporaryProductPrices: [],
     currentlyTablesToCheckout: [],
+    stickyLists: [],
     
     setActivatedPaymentMethods: function(methods) {
         for (var i in this.paymentMethods) {
@@ -28,6 +29,38 @@ adata = {
         }
         
         this.paymentMethods = methods;
+        this.save();
+    },
+    
+    isListSticky: function (listId) {
+        for (var i in this.stickyLists) {
+            var inId = this.stickyLists[i];
+            if (listId === inId) { 
+                return true;
+            }
+        }
+        
+        return false;
+    },
+    
+    toggleStickList: function(listId) {
+        var newList = [];
+        var found = false;
+        
+        for (var i in this.stickyLists) {
+            var inId = this.stickyLists[i];
+            if (listId === inId) {
+                found = true;
+            } else {
+                newList.push(inId);
+            }
+        }
+        
+        if (!found) {
+            newList.push(listId);
+        }
+        
+        this.stickyLists = newList;
         this.save();
     },
     
@@ -164,6 +197,7 @@ adata = {
     },
     
     save: function() {
+        this.sortProductList();
         localStorage.setItem("selectedRoom", this.selectedRoom);
         localStorage.setItem("rooms", JSON.stringify(this.rooms));
         localStorage.setItem("products", JSON.stringify(this.products));
@@ -198,6 +232,19 @@ adata = {
         
         if (!this.printers) 
             this.printers = [];
+        
+        this.sortProductList();
+    },
+    
+    sortProductList: function() {
+        this.productLists.sort(function(a, b) {
+            var nameA=a.listName.toLowerCase(), nameB=b.listName.toLowerCase();
+            if (nameA < nameB) //sort string ascending
+              return -1;
+            if (nameA > nameB)
+              return 1;
+            return 0; //default return value (no sorting)
+        });        
     },
     
     getDeletedCartItems: function(tableId) {

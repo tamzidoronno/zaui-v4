@@ -8,9 +8,24 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
     $scope.standalone = $stateParams.tableId === "direct";
     $scope.rooms = datarepository.rooms;
     
-    console.log($scope.tables);
     $scope.closeAddTable = function() {
         $('.checkout_addTable').hide();
+    }
+    
+    $scope.toggleSticky = function(listId) {
+        datarepository.toggleStickList(listId);    
+    }
+    
+    $scope.isListSticky = function(listId) {
+        return datarepository.isListSticky(listId);
+    }
+    
+    $scope.toggleHiddenState = function(listId) {
+        var isVisible = $('.productlistinnner[listid="'+listId+'"]').is(':visible');
+        $('.productlistinnner').addClass('hidden');
+        if (!isVisible) {
+            $('.productlistinnner[listid="'+listId+'"]').removeClass('hidden');
+        }   
     }
     
     $scope.showAddTable = function() {

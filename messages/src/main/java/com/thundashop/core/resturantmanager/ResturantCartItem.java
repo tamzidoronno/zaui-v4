@@ -23,6 +23,7 @@ public class ResturantCartItem extends DataCommon {
     public String tableSessionId = "";
     public double discountedPrice = 0;
     public boolean useDiscountedPrice = false;
+    public String addonId = "";
     public Map<String,String> options = new HashMap();
 
     public String getVariationId() {

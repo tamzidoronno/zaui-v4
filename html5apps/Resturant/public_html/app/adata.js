@@ -13,6 +13,7 @@ adata = {
     cartItems: [],
     deletedItems: [],
     cartItemsToPay: [],
+    addonsToPay: [],
     paymentMethods: [],
     temporaryProductPrices: [],
     currentlyTablesToCheckout: [],
@@ -41,6 +42,28 @@ adata = {
         }
         
         return false;
+    },
+    
+    getAddonCountAdded: function(addon) {
+        var j = 0;
+        for (var i in this.cartItemsToPay) {
+            var item = this.cartItemsToPay[i];
+            if (item.addonId === addon.addonId) {
+                j++;
+            }
+        }
+        
+        return j;
+    },
+    
+    getAddonToCheckoutById: function(addonId) {
+        for (var i in this.addonsToPay) {
+            if (this.addonsToPay[i].addonId === addonId) {
+                return this.addonsToPay[i];
+            }
+        }
+        
+        return 0;
     },
     
     toggleStickList: function(listId) {
@@ -386,13 +409,14 @@ adata = {
         return j;
     },
     
-    addToCart : function(productId, tablePersonNumber, tableId, variation, option) {
+    addToCart : function(productId, tablePersonNumber, tableId, variation, option, addonId) {
         var cartItem = {
             productId: productId,
             tablePersonNumber: tablePersonNumber,
             tableId: tableId,
             id: this.guid(), 
             sentToKitchen: false,
+            addonId: addonId,
             options: {}
         };
         

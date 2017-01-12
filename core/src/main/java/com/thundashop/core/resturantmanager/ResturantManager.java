@@ -316,11 +316,22 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
             orderManager.changeOrderCreatedByManagerName(order.id, ResturantManager.class.getSimpleName());
         }
         
-        
         updateDiscountedPrices(order, cartItems);
         
         saveSessionFactory();
+        
+        if (!dummy) {
+            cartItems.stream()
+                    .filter(item -> !item.addonId.isEmpty())
+                    .forEach(item -> removeAddon(item));
+        }
+        
         return order;
+    }
+    
+    private void removeAddon(ResturantCartItem item) {
+        PmsManager pmsManager = getPmsManager();
+        pmsManager.removeAddon(item.addonId);
     }
     
     public List<ResturantCartItem> fetchAllCartItems(List<ResturantCartItem> ids, boolean dummy) {
@@ -375,19 +386,22 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
 
     @Override
     public void payOnRoom(PmsRoomSimple room, List<ResturantCartItem> cartItemsIds) {
-        Application paymentApp = storeApplicationPool.getApplication("f86e7042-f511-4b9b-bf0d-5545525f42de");
-        if (paymentApp == null)
-            throw new NullPointerException("Can not pay to room as PayOnRoom is not activated");
-        
-        String bookingengine = paymentApp.getSetting("bookingengine");
-        if (bookingengine == null || bookingengine.isEmpty())
-            throw new NullPointerException("Can not pay to room as PayOnRoom has no bookingengine configures, configure this under settings");
-        
-        PmsManager pmsManager = sessionScope.getNamedSessionBean(bookingengine, PmsManager.class);
+        PmsManager pmsManager = getPmsManager();
         List<CartItem> groupedCartItems = getGroupedCartItems(cartItemsIds, false);
         for (CartItem cartItem : groupedCartItems) {
             pmsManager.addCartItemToRoom(cartItem, room.pmsRoomId, ResturantManager.class.getSimpleName());
         }
+    }
+
+    private PmsManager getPmsManager() throws NullPointerException {
+        Application paymentApp = storeApplicationPool.getApplication("f86e7042-f511-4b9b-bf0d-5545525f42de");
+        if (paymentApp == null)
+            throw new NullPointerException("Can not pay to room as PayOnRoom is not activated");
+        String bookingengine = paymentApp.getSetting("bookingengine");
+        if (bookingengine == null || bookingengine.isEmpty())
+            throw new NullPointerException("Can not pay to room as PayOnRoom has no bookingengine configures, configure this under settings");
+        PmsManager pmsManager = sessionScope.getNamedSessionBean(bookingengine, PmsManager.class);
+        return pmsManager;
     }
 
     private List<CartItem> getGroupedCartItems(List<ResturantCartItem> cartItems, boolean dummy) {

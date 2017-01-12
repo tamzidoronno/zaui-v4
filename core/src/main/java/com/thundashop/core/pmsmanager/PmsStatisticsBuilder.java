@@ -91,7 +91,7 @@ class PmsStatisticsBuilder {
                     }
                     if(room.isActiveOnDay(cal.getTime()) || room.isEndingToday(cal.getTime())) {
                         for(PmsBookingAddonItem addon : room.addons) {
-                            if(addon.addonType.equals(PmsBookingAddonItem.AddonTypes.BREAKFAST)) {
+                            if(addon != null && addon.addonType != null && addon.addonType.equals(PmsBookingAddonItem.AddonTypes.BREAKFAST)) {
                                 Calendar cal2 = Calendar.getInstance();
                                 cal2.setTime(addon.date);
                                 cal2.add(Calendar.DAY_OF_YEAR, 1);

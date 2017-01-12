@@ -63,9 +63,14 @@ $cart = $order->cart;
                     $creditedPrice = $this->getApi()->getOrderManager()->getTotalAmount($creditedOrder);
                     echo '<input type="button" gss_view="gss_orderview" gss_fragment="orderview" gss_method="showOrder" gss_value="'.$creditId.'" value="Open credited order ('.$creditedPrice.')" style="float:right;">';
                 }
-            }  ?>
-            <input type="button" value="Credit order" class="creditinvoice" style="float:right;" orderid="<? echo $order->id; ?>" style='margin-right:10px;'>
-        <? } ?>
+            }  
+            
+            if($this->getApi()->getStoreManager()->getStoreId() != "123865ea-3232-4b3b-9136-7df23cf896c6") {
+                ?>
+                <input type="button" value="Credit order" class="creditinvoice" style="float:right;" orderid="<? echo $order->id; ?>" style='margin-right:10px;'>
+        <? } 
+         }
+            ?>
         </div>
         
         <?

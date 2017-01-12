@@ -2,6 +2,14 @@
 /* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
 
 $dibs = $this->getConfigurationSetting("merchantid");
+
+$kidMethods = array();
+$kidMethods[''] = "None";
+$kidMethods['orderid'] = "Order id only";
+$kidMethods['customerid'] = "Customer id only";
+$kidMethods['customeridandorderid'] = "Orderid + customerid";
+
+
 ?>
 
 <div class='gss_settings_header'>
@@ -82,6 +90,31 @@ $dibs = $this->getConfigurationSetting("merchantid");
         </div>
     </div>
 
+    <div class="gss_setting" id="defaultKidMethod">
+        <div class="text inline title"><?php echo $this->__f("Please select the default payment method"); ?></div>
+
+        <div class="gss_dropdown">
+            <select class="config" gs_model='invoicepaymentmodel' gs_model_attr='defaultKidMethod'>
+                <? foreach ($kidMethods as $key => $name) { 
+                    $selected = $this->getConfigurationSetting("defaultKidMethod") == $key ? "SELECTED" : "";
+                    ?>
+                    <option value="<? echo $key; ?>" <?php echo $selected; ?>><? echo $name; ?></option>
+                <? } ?>
+            </select>
+        </div>
+        <div class="description">
+            <?php echo $this->__("This will be the default kid solution."); ?>
+        </div>        
+    </div>
+
+    <div class="textfield gss_setting"  id="kidSize">
+        <span class="title"><?php echo $this->__f("Kid size"); ?></span>
+        <input type='textfield' gs_model='invoicepaymentmodel' gs_model_attr='kidSize' value="<? echo $this->getConfigurationSetting("kidSize"); ?>" style='width: 50px;'>
+        <div class="description">
+            <?php echo $this->__("If cartCustomerId is set, use this payment application id as default"); ?>
+        </div>
+    </div>
+        
     <div class="gss_setting">
         <div class="text inline title"><?php echo $this->__f("Please select your language"); ?></div>
 

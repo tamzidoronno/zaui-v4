@@ -921,7 +921,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         }
     }
     
-    private void addSum(HashMap<String, C3ReportHours> map, int hours, int total, String userId) {
+    private void addSum(HashMap<String, C3ReportHours> map, double hours, int total, String userId) {
         C3ReportHours report = map.get(userId);
         
         if (report == null) {
@@ -972,13 +972,13 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         for (C3Project project : projectsToUse) {
             for (User user : users) {
                 C3Report report = getReportForUserProject(user.id, project.id, start, end, forWorkPackageId);
-                int addHours = report.hours.stream()
+                double addHours = report.hours.stream()
                         .filter(hour -> hour.nfr == isNfr && !hour.fixedSum)
-                        .mapToInt(hour -> (int)hour.hours).sum();
+                        .mapToDouble(hour -> hour.hours).sum();
                
                 int total = (int) report.hours.stream()
                         .filter(hour -> hour.nfr == isNfr && !hour.fixedSum)
-                        .mapToInt(hour -> (int) hour.hours * hour.rate).sum();
+                        .mapToDouble(hour -> hour.hours * hour.rate).sum();
                 
                 int totalFixed = (int) report.hours.stream()
                         .filter(hour -> hour.nfr == isNfr && hour.fixedSum)

@@ -10,6 +10,6 @@ package com.thundashop.core.c3;
  * @author ktonder
  */
 public class C3ReportHours {
-    public int timer;
-    public int totalt;
+    public double timer;
+    public double totalt;
 }

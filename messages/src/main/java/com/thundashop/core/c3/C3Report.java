@@ -28,7 +28,7 @@ public class C3Report {
     public List<C3OtherCosts> otherCosts = new ArrayList();
     
     public int sumPost11;
-    public int sumHours;
+    public double sumHours;
     public String workpackages = "";
     double roundSumInKind;
 

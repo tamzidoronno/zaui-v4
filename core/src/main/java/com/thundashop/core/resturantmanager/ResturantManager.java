@@ -494,10 +494,17 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
             }
         }
         
+        session.clearStatus();
+        saveObject(session);
     }
 
     private boolean anyFoodProducts(TableSession session) {
-        return session.getCartItems().stream()
+        return session.getItemsAdded().stream()
+                .map(item -> productManager.getProduct(item.productId))
+                .filter(product -> product.isFood)
+                .count() > 0
+                
+                || session.getItemsRemoved().stream()
                 .map(item -> productManager.getProduct(item.productId))
                 .filter(product -> product.isFood)
                 .count() > 0;

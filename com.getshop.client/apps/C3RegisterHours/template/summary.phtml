@@ -96,6 +96,7 @@ foreach ($accessList as $access) {
                     $editButton = "<span otherid='$hour->id' projectid='$project->id' gs_show_modal='othercosts' class='gs_shop_small_icon fa fa-edit'></span>";
                     $cost = $hour->cost;
                     $type = $hour->comment;
+                    $totalCost += $cost;
                     
                     if ($allActivated)
                         $editButton = "";

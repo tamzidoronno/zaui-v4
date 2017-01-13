@@ -3620,6 +3620,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             room.calculateAvgPrice();
         }
+        saveBooking(booking);
     }
 
     private String createInvoiceAttachment() {

@@ -839,7 +839,7 @@ public class SFIExcelReport {
 
     private boolean isWp11Included() {
         for (SFIExcelReportData data : datas) {
-            if (data.wpId.equals("de20c1c3-faee-4237-8457-dc9efed16364")) {
+            if (data.wpId != null && data.wpId.equals("de20c1c3-faee-4237-8457-dc9efed16364")) {
                 return true;
             }
         }

@@ -51,7 +51,7 @@ foreach ($accessList as $access) {
             $totalHours = 0;
             $totalCost = 0;
             $headerComment = $allActivated ? "Bruker" : "Kommentar";
-            echo "<div class='hourrow'><span class='editbutton'></span><span class='fromdate'>Fra</span><span class='todate'>Til</span><span class='hour'>Timer</span><span class='othercost'>Kr</span><span class='comment'>$headerComment</span></div>";
+            echo "<div class='hourrow'><span class='editbutton'></span><span class='fromdate'>Fra</span><span class='todate'>Til</span><span class='hour'>Timer/Prosent</span><span class='othercost'>Kr</span><span class='comment'>$headerComment</span></div>";
             
             foreach ($hours as $hour) {
                 $name = $allActivated ? $this->getApi()->getUserManager()->getUserById($hour->registeredByUserId)->fullName : "";
@@ -59,14 +59,18 @@ foreach ($accessList as $access) {
                 $to = date('d.m.Y', strtotime($hour->to));
                 
                 if ($hour->costType === "userperiode") {
+                    $newCost = $this->getApi()->getC3Manager()->calculateSum($hour->id);
+                    
                     $editButton = "<span hourid='$hour->id' projectid='$project->id' gs_show_modal='hours' class='gs_shop_small_icon fa fa-edit'></span>";
                     $totalHours += 0;
-                    $totalCost += 0;
+                    $totalCost += $newCost;
                     $comment = $hour->nfr ? "(NFR)" : "";
                     $comment = $allActivated ? $name : $comment;
+                    
                     if ($allActivated)
                         $editButton = "";
-                    echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'>Stilling: $hour->percent%</span><span class='othercost'>-</span><span class='comment'>$comment</span></div>";
+                    
+                    echo "<div class='hourrow'><span class='editbutton'>$editButton</span><span class='fromdate'>$from</span><span class='todate'>$to</span><span class='hour'>$hour->percent%</span><span class='othercost'>$newCost</span><span class='comment'>$comment</span></div>";
                 }
                 
                 if ($hour->costType === "hour") {

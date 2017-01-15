@@ -1008,7 +1008,11 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         SavedOrderFile res = transfer.generateFile();
         if(res != null) {
             if(fileToUse != null) {
+                if(otherFiles.containsKey(fileToUse.id)) {
+                    otherFiles.remove(fileToUse.id);
+                }
                 res.id = fileToUse.id;
+                res.rowCreatedDate = fileToUse.rowCreatedDate;
             }
 
             sumOrders(res);

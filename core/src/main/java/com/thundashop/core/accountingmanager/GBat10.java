@@ -90,6 +90,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         if(order.getStartDateByItems() != null) {
             cal.setTime(order.getStartDateByItems());
         }
+        managers.invoiceManager.generateKidOnOrder(order);
         
         List<HashMap<Integer, String>> lines = new ArrayList();
         
@@ -107,6 +108,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         if(kid == null) {
             kid = "";
         }
+        System.out.println(kid);
         HashMap<Integer, String> line = new HashMap();
         line.put(0, "GBAT10");
         line.put(1, order.incrementOrderId+ "");

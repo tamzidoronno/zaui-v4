@@ -48,21 +48,8 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     public void createInvoice(String orderId) throws ErrorException {
         Order order = orderManager.getOrder(orderId);
 
-        AccountingDetails details = getAccountingDetails();
-
-        if(details.kidType != null && details.kidType.isEmpty()) {
-            if(details.kidType.equals("orderid")) {
-                order.generateKidLuhn(order.incrementOrderId + "", details.kidSize);
-            } else if(details.kidType.equals("customerid")) {
-                User user = userManager.getUserById(order.userId);
-                order.generateKidLuhn(user.customerId + "", details.kidSize);
-            } else if(details.kidType.equals("customeridandorderid")) {
-                User user = userManager.getUserById(order.userId);
-                order.generateKidLuhn(user.customerId + "" + order.incrementOrderId, details.kidSize);
-            }
-        }
-        
-        InvoiceGenerator generator = new InvoiceGenerator(order, details);
+        generateKidOnOrder(order);
+        InvoiceGenerator generator = new InvoiceGenerator(order, getAccountingDetails());
         try {
             String file = generator.createInvoice();
             Map<String, String> files = new HashMap();
@@ -101,20 +88,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         Order order = orderManager.getOrder(orderId);
 
         AccountingDetails details = getAccountingDetails();
-
-        if(details.kidType != null && !details.kidType.isEmpty()) {
-            if(details.kidType.equals("orderid")) {
-                order.generateKidLuhn(order.incrementOrderId + "", details.kidSize);
-            } else if(details.kidType.equals("customerid")) {
-                User user = userManager.getUserById(order.userId);
-                order.generateKidLuhn(user.customerId + "", details.kidSize);
-            } else if(details.kidType.equals("customeridandorderid")) {
-                User user = userManager.getUserById(order.userId);
-                order.generateKidLuhn(user.customerId + "" + order.incrementOrderId, details.kidSize);
-            }
-        }
-
-        
+        generateKidOnOrder(order);
         InvoiceGenerator generator = new InvoiceGenerator(order, details);
         
         try {
@@ -192,5 +166,22 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         is.close();
         return bytes;
     } 
+
+    public void generateKidOnOrder(Order order) {
+        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+            AccountingDetails details = getAccountingDetails();
+            if(details.kidType != null && !details.kidType.isEmpty()) {
+                if(details.kidType.equals("orderid")) {
+                    order.generateKidLuhn(order.incrementOrderId + "", details.kidSize);
+                } else if(details.kidType.equals("customerid")) {
+                    User user = userManager.getUserById(order.userId);
+                    order.generateKidLuhn(user.customerId + "", details.kidSize);
+                } else if(details.kidType.equals("customeridandorderid")) {
+                    User user = userManager.getUserById(order.userId);
+                    order.generateKidLuhn(user.customerId + "" + order.incrementOrderId, details.kidSize);
+                }
+            }
+        }
+    }
 
 }

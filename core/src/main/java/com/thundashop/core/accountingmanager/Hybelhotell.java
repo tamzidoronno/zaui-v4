@@ -169,7 +169,7 @@ public class Hybelhotell implements AccountingInterface {
 //        }
         
         if(!item.getProduct().additionalMetaData.isEmpty()) {
-            lineText += item.getProduct().additionalMetaData + " ";
+            lineText += "rom " + item.getProduct().additionalMetaData + " ";
         }
         
         lineText += item.getProduct().metaData + " (" + startDate + " - " + endDate + ")";

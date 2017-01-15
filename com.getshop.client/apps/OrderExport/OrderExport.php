@@ -5,7 +5,7 @@ class OrderExport extends \WebshopApplication implements \Application {
     public function getDescription() {
         return "Replaces the old accountingtransfer application. This is more flexible";
     }
-
+ 
     public function getTransferTypes() {
         $transfertypes = array();
         $transfertypes['creditor'] = "Creditor";
@@ -17,6 +17,10 @@ class OrderExport extends \WebshopApplication implements \Application {
         return "OrderExport";
     }
 
+    public function loadDataForConfig() {
+        $this->includefile("orderconfigfileoverview");
+    }
+    
     public function renderConfig() {
         $this->includefile("orderexportconfig");
     }

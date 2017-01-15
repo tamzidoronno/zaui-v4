@@ -7,6 +7,16 @@ app.OrderExport = {
         $(document).on('click', '.deletetransferconfig', app.OrderExport.deletetransferconfig);
         $(document).on('click', '.gss_downloadaccountingfile', app.OrderExport.downloadFile);
         $(document).on('click', '.viewstatsforfile', app.OrderExport.viewstatsforfile);
+        $(document).on('click', '.openorderexportconfig', app.OrderExport.viewConfig);
+    },
+    
+    viewConfig : function() {
+        var event = thundashop.Ajax.createEvent('','loadDataForConfig', $(this), {
+            "id" : $(this).attr('configid')
+        });
+        event.core.appid = "ns_13270e94_258d_408d_b9a1_0ed3bbb1f6c9\\OrderExport";
+        
+        thundashop.common.showInformationBoxNew(event, "Information");
     },
     
     viewstatsforfile : function() {

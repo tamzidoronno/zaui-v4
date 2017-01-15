@@ -850,6 +850,9 @@ public class PmsManagerProcessor {
             if(booking.isOld(100)) {
                 continue;
             }
+            if(booking.transferredToLock()) {
+                continue;
+            }
             System.out.println("Running autodelete: Autodeleted because it has expired" + " " + booking.rowCreatedDate);
             manager.logEntry("Autodeleted because it has expired.", booking.id, null);
             manager.deleteBooking(booking.id);

@@ -1,0 +1,91 @@
+<?php
+$id = $_POST['data']['id'];
+$config = $this->getApi()->getAccountingManager()->getFileById($id, null, null);
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th>Orderid</th>";
+echo "<th>Amount</th>";
+echo "<th>Amount now</th>";
+echo "<th>Diff</th>";
+echo "<th>Order date</th>";
+echo "<th>Payment date</th>";
+echo "</tr>";
+
+$res = array();
+foreach($config->amountOnOrder as $orderId => $amount) {
+    $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+    $order->tmpAmount = $amount;
+    $res[$order->incrementOrderId] = $order;
+}
+ksort($res);
+
+foreach($res as $orderId => $order) {
+    $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+    $amount = $order->tmpAmount;
+    $diff = $total - $amount;
+    echo "<tr>";
+    echo "<td>" . $order->incrementOrderId . "</td>";
+    echo "<td>" . $amount . "</td>";
+    echo "<td>" . $total . "</td>";
+    echo "<td>" . $diff . "</td>";
+    echo "<td>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)). "</td>";
+    echo "<td>" . date("d.m.Y H:i", strtotime($order->paymentDate)) . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+
+$diff = $config->numberOfOrdersNow - sizeof($config->orders);
+if($diff != 0) {
+    echo "<br><br>";
+    echo "<b>New orders</b>";
+    echo "<table width='100%'>";
+    echo "<tr>";
+    echo "<th>Orderid</th>";
+    echo "<th>Amount</th>";
+echo "<th>Order date</th>";
+echo "<th>Payment date</th>";
+    echo "</tr>";
+    
+    $res = array();
+    foreach($config->ordersNow as $orderId) {
+        if(!in_array($orderId, $config->orders)) {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            $res[$order->incrementOrderId] = $order;
+        }
+    }
+    ksort($res);
+    
+    foreach($res as $order) {
+        $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+        echo "<tr>";
+        echo "<td>" . $order->incrementOrderId . "</td>";
+        echo "<td>" . $total . "</td>";
+        echo "<td>" . date("d.m.Y H:i", strtotime($order->rowCreatedDate)). "</td>";
+        if(isset($order->paymentDate)) {
+            echo "<td>" . date("d.m.Y H:i", strtotime($order->paymentDate)) . "</td>";
+        } else {
+            echo "<td></td>";
+        }
+        echo "</tr>";
+    }
+    echo "</table>";
+    echo "<b>Lost orders</b>";
+    echo "<table>";
+    echo "<tr>";
+    echo "<th>Orderid</th>";
+    echo "<th>Amount</th>";
+    echo "</tr>";
+    foreach($config->orders as $orderId) {
+        if(!in_array($orderId, $config->ordersNow)) {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+            echo "<tr>";
+            echo "<td>" . $order->incrementOrderId . "</td>";
+            echo "<td>" . $total . "</td>";
+            echo "</tr>";
+        }
+    }
+    echo "</table>";
+}
+
+?>

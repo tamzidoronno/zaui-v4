@@ -178,6 +178,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             }
         }
         SalesOrderTransfer transferObject = new SalesOrderTransfer();
+        transferObject.description = "getshop file of type : " + config.subType;
         transferObject.salesOrders = salesOrdersToTransfer;
         transferObject.importLines = importLinesToTransfer;
         

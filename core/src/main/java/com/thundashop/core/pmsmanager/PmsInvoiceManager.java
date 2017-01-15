@@ -985,10 +985,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<CartItem> items = new ArrayList();
         boolean generateChanges = pmsManager.getConfigurationSecure().autoGenerateChangeOrders;
         if(generateChanges) {
-            if(!booking.ignoreCheckChangesInBooking && !filter.ignoreCheckChangesInBooking) {
-                List<CartItem> changes = getChangesForBooking(booking.id, filter);
-                items.addAll(changes);
-            }
+            List<CartItem> changes = getChangesForBooking(booking.id, filter);
+            items.addAll(changes);
         }
         
         for (PmsBookingRooms room : booking.getActiveRooms()) {

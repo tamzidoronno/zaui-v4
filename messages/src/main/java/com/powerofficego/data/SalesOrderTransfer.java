@@ -8,6 +8,6 @@ public class SalesOrderTransfer {
     public List<PowerOfficeGoImportLine> importLines;
     public Integer type = 1;
     public Date date = new Date();
-    public String description = "Testing";
+    public String description = "";
     
 }

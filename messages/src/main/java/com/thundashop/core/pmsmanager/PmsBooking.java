@@ -381,6 +381,15 @@ public class PmsBooking extends DataCommon {
         totalPrice = total;
     }
 
+    boolean transferredToLock() {
+        for(PmsBookingRooms room : rooms) {
+            if(room.addedToArx) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

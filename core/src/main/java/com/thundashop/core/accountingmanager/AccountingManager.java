@@ -269,7 +269,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     
     @Override
     public List<String> getFile(String id) throws Exception {
-        SavedOrderFile file = files.get(id);
+        SavedOrderFile file = getFileById(id);
         
         if(file.configId != null && !file.configId.isEmpty() && file.startDate != null && file.endDate != null) {
             file = downloadOrdeFileNewType(file.configId, file.startDate, file.endDate, file);
@@ -898,6 +898,12 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             if(filterDateByType.equals("started")) { dateToUse = order.getStartDateByItems(); }
             if(filterDateByType.equals("ended")) { dateToUse = order.getEndDateByItems(); }
             if(filterDateByType.equals("paymentdate")) { dateToUse = order.paymentDate; }
+            
+            double amount = orderManager.getTotalAmount(order);
+            if(amount < 0) {
+                dateToUse = order.rowCreatedDate;
+            }
+            
             if(dateToUse == null) {
                 continue;
             }
@@ -917,22 +923,26 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         boolean needSaving = false;
         for(String orderId : saved.orders) {
             Order order = orderManager.getOrderSecure(orderId);
+            double total = orderManager.getTotalAmount(order);
+            double totalEx = orderManager.getTotalAmount(order);
             if(order.cart == null) {
                 continue;
             } 
             for(CartItem item : order.cart.getItems()) {
                 int count = item.getCount();
-                if(count < 0) {
-                    count *= -1;
-                } else {
-                    saved.onlyPositiveLinesEx += item.getProduct().priceExTaxes * item.getCount();
-                    saved.onlyPositiveLinesInc += item.getProduct().price * item.getCount();
+                int countToUse = count;
+                if(countToUse > 0 && total > 0) {
+                    saved.onlyPositiveLinesEx += item.getProduct().priceExTaxes * countToUse;
+                    saved.onlyPositiveLinesInc += item.getProduct().price * countToUse;
                 }
+                if(countToUse < 0 && total < 0) {
+                    saved.onlyPositiveLinesEx += item.getProduct().priceExTaxes * (countToUse*-1);
+                    saved.onlyPositiveLinesInc += item.getProduct().price * (countToUse*-1);
+                }
+                
                 saved.sumAmountExOrderLines += (item.getProduct().priceExTaxes*count);
                 saved.sumAmountIncOrderLines += (item.getProduct().price*count);
             }
-            double total = orderManager.getTotalAmount(order);
-            double totalEx = orderManager.getTotalAmount(order);
             if(!saved.amountOnOrder.containsKey(order.id)) {
                 saved.amountOnOrder.put(order.id, total);
                 needSaving = true;
@@ -951,9 +961,13 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             AccountingTransferConfig configToUse = configs.get(saved.configId);
             List<Order> orders = getOrdersFromNewFilter(configToUse);
             saved.numberOfOrdersNow = 0;
+            saved.ordersNow = new ArrayList();
             if(!orders.isEmpty() && configToUse != null) {
                 orders = filterOrders(orders, saved.startDate, saved.endDate, configToUse);
                 saved.numberOfOrdersNow = orders.size();
+                for(Order tmp : orders) {
+                    saved.ordersNow.add(tmp.id);
+                }
             }
         }
         
@@ -973,9 +987,6 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             for(SavedOrderFile f : firstCheckFiles) {
                 if(!configToUse.subType.equals(f.subtype)) {
                     continue;
-                }
-                if(f.endDate != null && f.endDate.before(start)) {
-                    return null;
                 }
             }
         }
@@ -1064,7 +1075,8 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         if(file == null) {
             file = otherFiles.get(id);
         }
+        finalizeFile(file);
         return file;
-
     }
+
 }

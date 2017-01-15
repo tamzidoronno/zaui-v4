@@ -90,7 +90,7 @@ echo "<th align='left'>Created date</th>";
 echo "<th align='left'>Download</th>";
 echo "<th align='left'>Type</th>";
 echo "<th align='left'>Subtype</th>";
-echo "<th align='left'>Transferred</th>";
+echo "<th align='left'>View</th>";
 echo "<th align='left'>Ex tax</th>";
 echo "<th align='left'>Inc tax</th>";
 echo "<th align='left'>Ex tax (p)</th>";
@@ -147,7 +147,7 @@ foreach($files as $file) {
     echo "<td><a style='color:blue;cursor:pointer;' onclick=\"window.open('/scripts/accountingnew.php?id=".$fileId."');\">$name</a></td>";
     echo "<td>".$file->type."</td>";
     echo "<td>".$file->subtype."</td>";
-    echo "<td>$transferred</td>";
+    echo "<td class='openorderexportconfig' configid='$fileId'>Open</td>";
     echo "<td>".round($file->amountEx)."</td>";
     echo "<td>".round($file->amountInc)."</td>";
     echo "<td>".round($file->amountExDebet). "<br>(" . round($file->onlyPositiveLinesEx) . ")</td>";

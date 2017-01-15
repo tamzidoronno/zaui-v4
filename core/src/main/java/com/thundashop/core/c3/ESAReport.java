@@ -40,14 +40,17 @@ public class ESAReport {
     private int rownumber = 0;
     private Date endDate;
     private final List<Company> companies;
-    private final List<WorkPackage> workPackages;
+    private List<WorkPackage> workPackages;
 
     public ESAReport(List<Company> companies, List<WorkPackage> workPackages, DoubleKeyMap<String, String, Double> totalCosts, DoubleKeyMap<String, String, Double> inKind, Date endDate) {
         this.companies = companies;
         this.workPackages = workPackages;
+        this.workPackages = this.workPackages.stream().sorted(WorkPackage.getComperator()).collect(Collectors.toList());
         this.endDate = endDate;
        
         transferCostsToWp11(totalCosts);
+        transferCostsToWp11(inKind);
+        
         totalCosts = devideAllNumbersOn1000(totalCosts);
         inKind = devideAllNumbersOn1000(inKind);
         

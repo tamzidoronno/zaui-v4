@@ -58,20 +58,43 @@ public class WorkPackage extends DataCommon {
     }
     
     static Comparator<? super WorkPackage> getComperator() {
+        
+        
         return (WorkPackage o1, WorkPackage o2) -> {
+            Integer a = null;
+            Integer b = null;
+        
             try {
                 String firstOne = o1.name.split(" ")[0];
-                String firstTwo = o2.name.split(" ")[0];
-                
                 firstOne = firstOne.replaceAll("\\D+","");
-                firstTwo = firstTwo.replaceAll("\\D+","");
+                a = Integer.parseInt(firstOne);
                 
-                Integer a = Integer.parseInt(firstOne);
-                Integer b = Integer.parseInt(firstTwo);
-                return a.compareTo(b);
             } catch (Exception ex) {
-                return 0;
+                
             }
+            
+            try {
+                String firstTwo = o2.name.split(" ")[0];
+                firstTwo = firstTwo.replaceAll("\\D+","");
+                b = Integer.parseInt(firstTwo);
+                
+            } catch (Exception ex) {
+                
+            }
+            
+            if (a == null && b == null) {
+                return -1;
+            }
+            
+            if (a == null ) {
+                return 1;
+            }
+            
+            if (b == null ) {
+                return -1;
+            }
+            
+            return a.compareTo(b);
         };
     }
 }

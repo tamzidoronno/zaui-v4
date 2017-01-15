@@ -41,7 +41,9 @@ public class ESAReport {
     private Date endDate;
     private final List<Company> companies;
     private List<WorkPackage> workPackages;
-
+    
+    private final String ousVertsId = "70b90eb2-80de-4a86-9820-cfb06bb5442c";
+    
     public ESAReport(List<Company> companies, List<WorkPackage> workPackages, DoubleKeyMap<String, String, Double> totalCosts, DoubleKeyMap<String, String, Double> inKind, Date endDate) {
         this.companies = companies;
         this.workPackages = workPackages;
@@ -51,6 +53,8 @@ public class ESAReport {
         transferCostsToWp11(totalCosts);
         transferCostsToWp11(inKind);
         
+        mergeOus(totalCosts, inKind);
+
         totalCosts = devideAllNumbersOn1000(totalCosts);
         inKind = devideAllNumbersOn1000(inKind);
         
@@ -482,6 +486,39 @@ public class ESAReport {
         }
         
         return null;
+    }
+
+    private void mergeOus(DoubleKeyMap<String, String, Double> totalCosts, DoubleKeyMap<String, String, Double> inKind) {
+        String ousBrukerPartnerId = "eb2e16f0-0083-47eb-94bd-297984410350";
+        String ousForskningsPartnerId = "4e6e95bc-d362-4362-944c-482176c7c2b4";
+
+        for (String wpId : inKind.keySet()) {
+            mergeCompany(wpId, ousBrukerPartnerId, totalCosts);
+            mergeCompany(wpId, ousForskningsPartnerId, totalCosts);
+        }
+        
+        for (String wpId : totalCosts.keySet()) {
+            mergeCompany(wpId, ousBrukerPartnerId, inKind);
+            mergeCompany(wpId, ousForskningsPartnerId, inKind);
+        }
+        
+        this.companies.removeIf(comp -> comp.id.equals(ousBrukerPartnerId));
+        this.companies.removeIf(comp -> comp.id.equals(ousForskningsPartnerId));
+    }
+
+    private void mergeCompany(String wpId, String companyId, DoubleKeyMap<String, String, Double> totalCosts) {
+        Double value = totalCosts.get(wpId, companyId);
+        Double oldValue = totalCosts.get(wpId, ousVertsId);
+        if (oldValue == null)
+            oldValue = 0D;
+        
+        if (value == null) 
+            value = 0D;
+        
+        double newValue = value + oldValue;
+        
+        totalCosts.put(wpId, ousVertsId, newValue);
+        totalCosts.remove(wpId, companyId);
     }
     
 }

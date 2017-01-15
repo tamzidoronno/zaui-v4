@@ -436,7 +436,7 @@ public class ESAReport {
         
         for (String wpId : totalCosts.keySet()) {
             for (String companyId : totalCosts.innerKeySet(wpId)) {
-                double newValue = (int)(totalCosts.get(wpId, companyId) / 1000);
+                double newValue = Math.round(totalCosts.get(wpId, companyId) / (double)1000);
                 newKeySet.put(wpId, companyId, newValue);
             }
         }

@@ -473,4 +473,8 @@ public class PmsBooking extends DataCommon {
             }
         }
     }
+    
+    public boolean hasAddonOfType(String type) {
+        return rooms.stream().anyMatch(room -> room.hasAddonOfType(type));
+    }
 }

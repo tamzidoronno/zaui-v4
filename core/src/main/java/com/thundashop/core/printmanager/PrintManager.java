@@ -10,7 +10,9 @@ import com.thundashop.core.common.ManagerBase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.thundashop.core.common.FrameworkConfig;
 
 /**
  *
@@ -29,6 +31,9 @@ public class PrintManager extends ManagerBase implements IPrintManager {
     */
     public List<PrintJob> printJobs = new ArrayList();
     
+    @Autowired
+    private FrameworkConfig frameworkConfig;
+    
     @Override
     public synchronized List<PrintJob> getPrintJobs(String printerId) {
         List<PrintJob> toReturn = printJobs.stream()
@@ -41,6 +46,11 @@ public class PrintManager extends ManagerBase implements IPrintManager {
     }
     
     public synchronized void addPrintJob(PrintJob printJob) {
+        if (!frameworkConfig.productionMode) {
+            System.out.println(printJob.content.replace("\\n", "\n"));
+            return;
+        }
+        
         printJobs.add(printJob);
     }
     

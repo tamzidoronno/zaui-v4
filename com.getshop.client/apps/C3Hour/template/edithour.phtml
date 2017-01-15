@@ -75,7 +75,7 @@ if ($forskningsperiode || $fixedHours) {
     </div>
 
     <div>
-        Det er lagt inn en <? echo $forskningsperiode->percents; ?>% stilling for perioden: <? echo date('m.d.Y', strtotime($forskningsperiode->start)) . "-" . date('m.d.Y', strtotime($forskningsperiode->end)); ?>
+        Det er lagt inn en <? echo $forskningsperiode->percents; ?>% stilling for perioden: <? echo date('d.m.Y', strtotime($forskningsperiode->start)) . "-" . date('d.m.Y', strtotime($forskningsperiode->end)); ?>
     </div>
     
     <br/> Periode

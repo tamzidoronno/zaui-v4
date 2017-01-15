@@ -44,4 +44,30 @@ public class C3ForskningsUserPeriode extends DataCommon {
         return false;
     }
 
+    boolean isEndDateWithin(Date from, Date to) {
+        if (from.equals(end))
+            return true;
+        
+        if (to.equals(end)) 
+            return true;
+        
+        if (from.before(end) && to.after(end))
+            return true;
+        
+        return false;
+    }
+
+
+    boolean intercepts(Date startDate, Date endDate) {
+        if (startDate == null || endDate == null || this.start == null || this.end == null) {
+            return false;
+        }
+        
+        long StartDate1 = startDate.getTime();
+        long StartDate2 = this.start.getTime()+1;
+        long EndDate1 = endDate.getTime();
+        long EndDate2 = this.end.getTime()-1;
+        return (StartDate1 <= EndDate2) && (StartDate2 <= EndDate1);
+    }
+
 }

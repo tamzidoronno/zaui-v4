@@ -341,4 +341,7 @@ public interface IPmsManager {
     
     @Administrator
     public void deletePricePlan(String code);
+    
+    @Administrator
+    public List<PmsRoomSimple> getAllRoomsThatHasAddonsOfType(String type);
 }

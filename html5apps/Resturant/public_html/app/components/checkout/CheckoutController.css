@@ -2,6 +2,12 @@
     border: solid 1px #FFF;
 }
 
+.roomselectormenutop {
+    border: solid 1px #FFF;
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+}
 
 .checkout_tableoverview .checkout_tablenameheader {
     background-color: #FFF;
@@ -153,4 +159,8 @@
      .bc-keypad {
          max-width: 300px;
      }
+}
+
+.today {
+    color: green;
 }

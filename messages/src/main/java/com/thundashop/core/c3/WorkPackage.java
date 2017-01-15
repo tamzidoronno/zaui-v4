@@ -7,6 +7,7 @@ package com.thundashop.core.c3;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -54,5 +55,23 @@ public class WorkPackage extends DataCommon {
         
         return false;
         
+    }
+    
+    static Comparator<? super WorkPackage> getComperator() {
+        return (WorkPackage o1, WorkPackage o2) -> {
+            try {
+                String firstOne = o1.name.split(" ")[0];
+                String firstTwo = o2.name.split(" ")[0];
+                
+                firstOne = firstOne.replaceAll("\\D+","");
+                firstTwo = firstTwo.replaceAll("\\D+","");
+                
+                Integer a = Integer.parseInt(firstOne);
+                Integer b = Integer.parseInt(firstTwo);
+                return a.compareTo(b);
+            } catch (Exception ex) {
+                return 0;
+            }
+        };
     }
 }

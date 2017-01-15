@@ -79,6 +79,8 @@ public class InvoiceFrontPage {
             contentStream.drawLine(300, startx, 300, 77);
         }
         
+        addInvoiceNote();
+        
         drawLines();
         writeText("OPPSUMMERING", 443, 420, true, 8);
         if(order.cart.getItems().size() <= 19) {
@@ -360,7 +362,7 @@ public class InvoiceFrontPage {
         int i = 0;
         int start = 628;
         int padding = 3;
-        addInvoiceNote();
+        
         if (addShippingLine(start, i, lineHeight, padding)) {
             i = 1;
         }

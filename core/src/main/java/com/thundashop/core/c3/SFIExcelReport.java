@@ -54,6 +54,11 @@ public class SFIExcelReport {
         workbook = new XSSFWorkbook();
         this.wp11 = wp11;
         this.datas = datas;
+        
+        if (isWp11Included()) {
+            this.wp11 = getWp11Data();
+        }
+        
         this.wps = wps;
         this.end = end;
         this.segreate = segreate;
@@ -379,11 +384,11 @@ public class SFIExcelReport {
             double post11RemovalTotalInkind = suminkind * 0.01;
 
             
-            sumtotal -= post11RemovalTotal;
-            sumnfr -= post11RemovalTotalNfr;
-            suminkind -= post11RemovalTotalInkind;
+            sumtotal -= (int)post11RemovalTotal;
+            sumnfr -= (int)post11RemovalTotalNfr;
+            suminkind -= (int)post11RemovalTotalInkind;
             
-            addRemovalLine(post11RemovalTotalNfr, post11RemovalTotalInkind, post11RemovalTotal, wp11.post11, wpId, 0);
+            addRemovalLine((int)post11RemovalTotalNfr, (int)post11RemovalTotalInkind, (int)post11RemovalTotal, wp11.post11, wpId, 0);
         }
         
         // Empty row
@@ -499,11 +504,11 @@ public class SFIExcelReport {
             double post11RemovalTotalNfr = sumnfr * 0.01;
             double post11RemovalTotalInkind = suminkind * 0.01;
                     
-            sumtotal -= post11RemovalTotal;
-            sumnfr -= post11RemovalTotalNfr;
-            suminkind -= post11RemovalTotalInkind;
+            sumtotal -= (int)post11RemovalTotal;
+            sumnfr -= (int)post11RemovalTotalNfr;
+            suminkind -= (int)post11RemovalTotalInkind;
             
-            addRemovalLine(post11RemovalTotalNfr, post11RemovalTotalInkind, post11RemovalTotal, wp11.post13 , wpId, 1);
+            addRemovalLine((int)post11RemovalTotalNfr, (int)post11RemovalTotalInkind, (int)post11RemovalTotal, wp11.post13 , wpId, 1);
         }
         
         // Empty row
@@ -605,11 +610,11 @@ public class SFIExcelReport {
             double post11RemovalTotalNfr = sumnfr * 0.01;
             double post11RemovalTotalInkind = suminkind * 0.01;
                     
-            sumtotal -= post11RemovalTotal;
-            sumnfr -= post11RemovalTotalNfr;
-            suminkind -= post11RemovalTotalInkind;
+            sumtotal -= (int)post11RemovalTotal;
+            sumnfr -= (int)post11RemovalTotalNfr;
+            suminkind -= (int)post11RemovalTotalInkind;
             
-            addRemovalLine(post11RemovalTotalNfr, post11RemovalTotalInkind, post11RemovalTotal, wp11.post14, wpId, 2);
+            addRemovalLine((int)post11RemovalTotalNfr, (int)post11RemovalTotalInkind, (int)post11RemovalTotal, wp11.post14, wpId, 2);
         }
         
         // Empty row
@@ -767,7 +772,7 @@ public class SFIExcelReport {
         return wps.get(wpId).shouldRemoveOnePercent(end);
     }
 
-    private void addRemovalLine(double nfr, double inkind, double total, List postList, String wpId, int type) { 
+    private void addRemovalLine(int nfr, int inkind, int total, List postList, String wpId, int type) { 
         if (nfr == 0 && inkind == 0)
             return;
         
@@ -820,11 +825,34 @@ public class SFIExcelReport {
     }
 
     private boolean shouldAddWp11() {
+        if (isWp11Included()) {
+            return false;
+        }
+        
         for (SFIExcelReportData data : datas) {
             if (wps.get(data.wpId).shouldRemoveOnePercent(end))
                 return true;
         }
         
         return false;
+    }
+
+    private boolean isWp11Included() {
+        for (SFIExcelReportData data : datas) {
+            if (data.wpId != null && data.wpId.equals("de20c1c3-faee-4237-8457-dc9efed16364")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private SFIExcelReportData getWp11Data() {
+        for (SFIExcelReportData data : datas) {
+            if (data.wpId.equals("de20c1c3-faee-4237-8457-dc9efed16364")) {
+                return data;
+            }
+        }
+        
+        return null;
     }
 }

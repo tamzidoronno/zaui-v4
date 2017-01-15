@@ -59,4 +59,10 @@ public class DoubleKeyMap<K1, K2, V> {
         
         return false;
     }
+
+    public void remove(String k1, String k2) {
+        if (map1.get(k1) != null) {
+            map1.get(k1).remove(k2);
+        }
+    }
 }

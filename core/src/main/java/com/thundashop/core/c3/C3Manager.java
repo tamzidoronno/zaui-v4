@@ -916,6 +916,10 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 report.otherCosts.stream().filter(cost -> !cost.nfr).forEach(cost -> addOtherCost(cost, reportData));
             }
         }
+        
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
+        reportData.date = sdf2.format(new Date());
+        
         return reportData;
     }
 

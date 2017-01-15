@@ -1096,7 +1096,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         }
         
         
-        ESAReport report = new ESAReport(allCompanies, getWorkPackages(), totalCosts, inKind);
+        ESAReport report = new ESAReport(allCompanies, getWorkPackages(), totalCosts, inKind, end);
         return report.getBase64Encoded();
     }
 

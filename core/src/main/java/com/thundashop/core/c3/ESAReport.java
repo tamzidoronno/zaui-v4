@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -37,13 +38,16 @@ public class ESAReport {
     private XSSFWorkbook workbook;
     private XSSFSheet sheet;
     private int rownumber = 0;
+    private Date endDate;
     private final List<Company> companies;
     private final List<WorkPackage> workPackages;
 
-    public ESAReport(List<Company> companies, List<WorkPackage> workPackages, DoubleKeyMap<String, String, Double> totalCosts, DoubleKeyMap<String, String, Double> inKind) {
+    public ESAReport(List<Company> companies, List<WorkPackage> workPackages, DoubleKeyMap<String, String, Double> totalCosts, DoubleKeyMap<String, String, Double> inKind, Date endDate) {
         this.companies = companies;
         this.workPackages = workPackages;
+        this.endDate = endDate;
        
+        transferCostsToWp11(totalCosts);
         totalCosts = devideAllNumbersOn1000(totalCosts);
         inKind = devideAllNumbersOn1000(inKind);
         
@@ -100,9 +104,9 @@ public class ESAReport {
             j++;
         }
         
-        ESAReport report = new ESAReport(allUserManagerData, workPackages, totalCosts, inKind);
-        report.writeFile();
-        System.exit(0);
+//        ESAReport report = new ESAReport(allUserManagerData, workPackages, totalCosts, inKind);
+//        report.writeFile();
+//        System.exit(0);
     } 
 
     private void writeFile() {
@@ -442,6 +446,39 @@ public class ESAReport {
         }
         
         return newKeySet;
+    }
+
+    private void transferCostsToWp11(DoubleKeyMap<String, String, Double> totalCosts) {
+        for (String wpId : totalCosts.keySet()) {
+            WorkPackage moveCost = getWorkPackage(wpId);
+            if (moveCost.shouldRemoveOnePercent(endDate)) {
+                for (String companyId : totalCosts.innerKeySet(wpId)) {
+                    double oldValue = totalCosts.get(wpId, companyId);
+                    double onePercent = oldValue / (double)100;
+                    double newValue = oldValue - onePercent;
+                    totalCosts.put(wpId, companyId, newValue);
+                    
+                    
+                    if (totalCosts.keyExists("de20c1c3-faee-4237-8457-dc9efed16364", companyId)) {
+                        double toAdd = totalCosts.get("de20c1c3-faee-4237-8457-dc9efed16364", companyId);
+                        toAdd = toAdd + onePercent;
+                        totalCosts.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, toAdd);
+                    } else {
+                        totalCosts.put("de20c1c3-faee-4237-8457-dc9efed16364", companyId, onePercent);
+                    }
+                }    
+            }
+        }
+        
+    }
+
+    private WorkPackage getWorkPackage(String wpId) {
+        for (WorkPackage wp : this.workPackages) {
+            if (wp.id.equals(wpId))
+                return wp;
+        }
+        
+        return null;
     }
     
 }

@@ -649,7 +649,13 @@ public class PmsManagerProcessor {
                     if(order == null) {
                         continue;
                     }
-                    if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+                    if(order.payment != null && order.payment.paymentType != null && 
+                            order.payment.paymentType.toLowerCase().contains("invoice")) {
+                        manager.pmsInvoiceManager.autoSendInvoice(order, booking.id);
+                        continue;
+                    }
+                    if(order.payment != null && order.payment.paymentType != null && 
+                            order.payment.paymentType.toLowerCase().contains("samlefaktura")) {
                         manager.pmsInvoiceManager.autoSendInvoice(order, booking.id);
                         continue;
                     }

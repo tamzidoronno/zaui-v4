@@ -45,6 +45,7 @@ public class InvoiceGeneratorCartItem {
         metaDataText = "";
         productMetaData = "";        
         sequence = firstItem.sequence;
+        price = firstItem.getTotal();
     }
 
     private void setValues() {

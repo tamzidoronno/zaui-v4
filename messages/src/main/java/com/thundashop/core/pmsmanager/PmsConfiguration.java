@@ -155,6 +155,7 @@ public class PmsConfiguration extends DataCommon {
     public String wubooklcode = "";
     public int numberOfRoomsToRemoveFromBookingCom = 1;
     public boolean usePricesFromChannelManager = false;
+    public boolean useGetShopPricesOnExpedia = false;
 
     
     public HashMap<String, PmsChannelConfig> channelConfiguration = new HashMap();

@@ -779,7 +779,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         pmsInvoiceManager.clearOrdersOnBooking(newbooking);
         newbooking = pmsManager.doCompleteBooking(newbooking);
         
-        if(pmsManager.getConfigurationSecure().usePricesFromChannelManager && newbooking != null) {
+        boolean doNormalPricing = true;
+        if(newbooking.channel != null && newbooking.channel.equals("wubook_1")) {
+           if(pmsManager.getConfigurationSecure().useGetShopPricesOnExpedia) {
+               doNormalPricing = false;
+           }
+        }
+        
+        if(pmsManager.getConfigurationSecure().usePricesFromChannelManager && newbooking != null && doNormalPricing) {
             Date end = new Date();
             for(String pmsId : pricestoset.keySet()) {
                 PmsBookingRooms pmsroom = newbooking.findRoom(pmsId);

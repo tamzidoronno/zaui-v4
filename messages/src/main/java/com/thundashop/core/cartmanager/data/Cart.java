@@ -101,7 +101,7 @@ public class Cart extends DataCommon {
 
     private Double getProductTotal(boolean excludeFreeShipping) {
         Double total = 0D;
-        for (CartItem cartItem : items) {
+        for (CartItem cartItem : getItems()) {
             if(excludeFreeShipping && cartItem.getProduct().freeShipping) {
                 continue;
             }
@@ -140,7 +140,13 @@ public class Cart extends DataCommon {
     }
     
     public List<CartItem> getItems() {
-        return items;
+        List<CartItem> itemsToReturn = new ArrayList();
+        for(CartItem it : items) {
+            if(it != null) {
+                itemsToReturn.add(it);
+            }
+        }
+        return itemsToReturn;
     }
 
     @Override

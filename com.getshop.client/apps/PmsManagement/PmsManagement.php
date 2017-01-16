@@ -1878,6 +1878,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $total = 0;
         $totalCount = 0;
         foreach($cart->items as $item) {
+            if(!$item) {
+                continue;
+            }
             $priceEx = round($item->product->priceExTaxes);
             $price = round($item->product->price, 1);
             $totalEx += ($priceEx * $item->count);
@@ -2102,9 +2105,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->createNewOrder = true;
         $filter->addToOrderId = $_POST['data']['appendToOrderId'];
         
-        if($_POST['data']['appendToOrderId'] && $this->getFactory()->getStore()->id == "178330ad-4b1d-4b08-a63d-cca9672ac329") {
+//        if($_POST['data']['appendToOrderId'] && $this->getFactory()->getStore()->id == "178330ad-4b1d-4b08-a63d-cca9672ac329") {
             $this->getApi()->getPmsInvoiceManager()->clearOrder($this->getSelectedName(), $bookingId, $_POST['data']['appendToOrderId']);
-        }
+//        }
         
         $instanceToUse = null;
         $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();

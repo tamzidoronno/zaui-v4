@@ -757,6 +757,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     @Override
     public void clearOrder(String bookingId, String orderId) {
         Order currentOrder = orderManager.getOrder(orderId);
+        if(currentOrder.closed) {
+            return;
+        }
         PmsBooking booking = pmsManager.getBooking(bookingId);
         
         for(CartItem item : currentOrder.cart.getItems()) {
@@ -891,6 +894,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             }
                         }
                     }
+                    Double amount = orderManager.getTotalAmount(order);
+                    if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty() && amount < 0) {
+                        Order baseOrder = orderManager.getOrder(filter.addToOrderId);
+                        baseOrder.creditOrderId.add(order.id);
+                        order.payment = baseOrder.payment;
+                        orderManager.saveOrder(order);
+                    }
                 }
                 
                 for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
@@ -901,7 +911,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                     if(roomIdsInCart.contains(room.pmsBookingRoomId)) {
                         room.invoicedFrom = room.date.start;
-                        if(room.date.end.before(filter.endInvoiceAt)) {
+                        if(filter.endInvoiceAt != null && room.date.end.before(filter.endInvoiceAt)) {
                             room.invoicedTo = room.date.end;
                         } else {
                             room.invoicedTo = filter.endInvoiceAt;
@@ -1525,7 +1535,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private void updateCart() {
         for(CartItem item : itemsToReturn) {
-            item.doFinalize();
+            if(item != null) {
+                item.doFinalize();
+            }
         }
         cartManager.clear();
         cartManager.getCart().addCartItems(itemsToReturn);
@@ -1743,8 +1755,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 List<CartItem> credited = creditAllLinesOnBookingForRoom(booking.id, room.pmsBookingRoomId);
                 returnresult.addAll(credited);
                 if(!avoidOrderCreation) {
-                    room.addons.clear();
+                    List<PmsBookingAddonItem> toRemove = new ArrayList();
+                    for(PmsBookingAddonItem tmp : room.addons) {
+                        PmsBookingAddonItem base = pmsManager.getBaseAddon(tmp.productId);
+                        if(base != null && base.noRefundable) {
+                            continue;
+                        }
+                        toRemove.add(tmp);
+                    }
+                    room.addons.removeAll(toRemove);
                     room.credited = true;
+                }
+                for(PmsBookingAddonItem item : room.addons) {
+                    PmsBookingAddonItem base = pmsManager.getBaseAddon(item.productId);
+                    if(base != null && base.noRefundable) {
+                        CartItem addonToAdd = createCartItem(item.productId, item.name, room, room.date.start, room.date.end, item.price, item.count, "");
+                        returnresult.add(addonToAdd);
+                    }
                 }
             }
         }

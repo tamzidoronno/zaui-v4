@@ -1346,6 +1346,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     bookingEngine.addBookings(toAdd);
                     remove.undelete();
                     booking.isDeleted = false;
+                    remove.credited = false;
                     remove.setBooking(tmpbook);
                     logEntry(roomName + " readded to booking ", bookingId, null);
                 }catch(BookingEngineException ex) {
@@ -4888,5 +4889,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 saveBooking(booking);
             }
         }
+    }
+
+    public PmsBookingAddonItem getBaseAddon(String productId) {
+        for(PmsBookingAddonItem item : getConfigurationSecure().addonConfiguration.values()) {
+            if(item != null && item.productId != null && item.productId.equals(productId)) {
+                return item;
+            }
+        }
+        return null;
     }
 }

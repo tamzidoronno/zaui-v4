@@ -33,6 +33,14 @@ public class WorkPackage extends DataCommon {
         if (id.equals("de20c1c3-faee-4237-8457-dc9efed16364"))
             return false;
         
+        // SFI ADM
+        if (id.equals("0b3a1ac4-4689-462d-ad06-469e2ffe72dd"))
+            return false;
+//        
+        // SFI UTSTYR
+        if (id.equals("6bbba99e-7206-4ce2-800b-a1010fd02b1b"))
+            return false;
+        
         if (isBefore2017(end)) {
             // WP 3
             if (id.equals("2d9c56ee-c95b-4638-bcb1-93a4f340c931"))

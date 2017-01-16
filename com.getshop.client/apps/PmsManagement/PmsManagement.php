@@ -163,16 +163,16 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function doRoomsBookedAction() {
         $action = $_POST['data']['action'];
         $bookingId = $_POST['data']['bookingid'];
+        $booking = $this->getSelectedBooking();
         if($action == "delete") {
             foreach($_POST['data']['rooms'] as $roomid) {
                 $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedName(), $bookingId, $roomid);
             }
         } else if($action == "split") {
             $this->getApi()->getPmsManager()->splitBooking($this->getSelectedName(), $_POST['data']['rooms']);
-        } else if($action == "singlepayments") {
+        } else if($action == "singlepayments" || $action == "singlepaymentsnosend") {
             $this->getApi()->getPmsInvoiceManager()->removeOrderLinesOnOrdersForBooking($this->getSelectedName(), $bookingId, $_POST['data']['rooms']);
             foreach($_POST['data']['rooms'] as $roomid) {
-                $booking = $this->getSelectedBooking();
                 $selectedroom = null;
                 foreach($booking->rooms as $room) {
                     if($room->pmsBookingRoomId == $roomid) {
@@ -195,13 +195,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $filter->createNewOrder = true;
 
                 $newOrderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
-                $email = $room->guests[0]->email;
-                $prefix = $room->guests[0]->prefix;
-                $phone = $room->guests[0]->phone;
-                $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $newOrderId, $bookingId, $email, $prefix, $phone);
-                $this->selectedBooking = null;
+                if($action != "singlepaymentsnosend") {
+                    $email = $room->guests[0]->email;
+                    $prefix = $room->guests[0]->prefix;
+                    $phone = $room->guests[0]->phone;
+                    $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $newOrderId, $bookingId, $email, $prefix, $phone);
+                }
             }
         }
+        $this->selectedBooking = null;
 
         $this->showBookingInformation();
     }

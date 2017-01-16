@@ -103,7 +103,10 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         Double total = managers.orderManager.getTotalAmount(order);
         DecimalFormat df = new DecimalFormat("#.##");    
         User user = managers.userManager.getUserById(order.userId);
-
+        String kid = order.kid;
+        if(kid == null) {
+            kid = "";
+        }
         HashMap<Integer, String> line = new HashMap();
         line.put(0, "GBAT10");
         line.put(1, order.incrementOrderId+ "");
@@ -121,7 +124,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         line.put(13, user.address.postCode);
         line.put(14, user.address.city);
         line.put(15, order.incrementOrderId + "");
-        line.put(16, ""); //KID
+        line.put(16, kid); //KID
         line.put(17, format.format(order.rowCreatedDate)); //Forfallsdato
         line.put(18, "");
         line.put(19, "");
@@ -149,7 +152,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
             subLine.put(13, "");
             subLine.put(14, "");
             subLine.put(15, order.incrementOrderId + "");
-            subLine.put(16, ""); //KID
+            subLine.put(16, kid); //KID
             subLine.put(17, format.format(order.rowCreatedDate)); //Forfallsdato
             subLine.put(18, "");
             subLine.put(19, "");

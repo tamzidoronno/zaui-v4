@@ -317,6 +317,11 @@ public class SFIExcelReport {
         setBorder(cell_6);
     }
 
+    private double round (double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
+    }
+    
     private void addPost1Content(String wpId) {
         double sumtimer = 0;
         double sumtotal = 0;
@@ -334,7 +339,7 @@ public class SFIExcelReport {
 
             cell_1.setCellValue(post11.navn);
             if (post11.timer > 0) {
-                cell_2.setCellValue(post11.timer);
+                cell_2.setCellValue(round(post11.timer, 1));
             } else {
                 cell_2.setCellValue(" ");
             }
@@ -372,7 +377,7 @@ public class SFIExcelReport {
             setBorderLeftAndRight(cell_5);
             setBorderLeftAndRight(cell_6);
             
-            sumtimer += post11.timer;
+            sumtimer += round(post11.timer,1);
             sumtotal += post11.totalt;
             sumnfr += post11.nfr;
             suminkind += post11.inkind;

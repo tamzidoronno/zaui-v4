@@ -10,13 +10,13 @@ if ($tree) {
 function printItem($item) {
     $liclass = $item->li_attr->class;
     $nodeId = $item->li_attr->nodeid;
-    echo "<ul><li class='$liclass' nodeid='$nodeId'>".$item->text;
+    echo "<ul><li class='$liclass' nodeid='$nodeId' id='$nodeId'>".$item->text;
         if (count($item->children)) {
             echo "<ul>";
             foreach ($item->children as $child) {
                 $liclass = $child->li_attr->class;
                 $nodeId = $child->li_attr->nodeid;
-                echo "<li nodeid='$nodeId' class='$liclass'>".$child->text."</li>";
+                echo "<li nodeid='$nodeId' class='$liclass' id='$nodeId'>".$child->text."</li>";
             }
             echo "</ul>";
         }
@@ -27,7 +27,7 @@ function printItem($item) {
 
 <div id='<? echo $id; ?>'>
     <ul>
-        <li>Questions
+        <li id="rootnode">Questions
             <? 
             if ($tree) {
                 foreach ($tree[0]->children as $child) {

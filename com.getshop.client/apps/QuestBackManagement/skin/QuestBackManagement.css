@@ -200,4 +200,92 @@ and open the template in the editor.
     padding: 20px;
     border-radius: 10px;
 }
+.QuestBackManagement .usermanagement{
+    float: right;
+    margin-top: 5px;
+}
 
+
+
+.QuestBackManagement .dropdown {
+    border: solid 1px #dcdcdc;
+    position: absolute;
+    margin-bottom: 20px;
+    font-size: 16px;
+
+}
+
+.QuestBackManagement a {
+  color: #dcdcdc;
+}
+
+.QuestBackManagement .dropdown dd,
+.dropdown dt {
+  margin: 0px;
+  padding: 0px;
+}
+
+.QuestBackManagement .dropdown ul {
+  margin: -1px 0 0 0;
+  margin-left: -1px;
+}
+
+.QuestBackManagement .dropdown dd {
+  position: relative;
+}
+
+.QuestBackManagement .dropdown a,
+.dropdown a:visited {
+  color: #dcdcdc;
+  text-decoration: none;
+  outline: none;
+}
+
+.QuestBackManagement .dropdown dt a {
+  background-color: #fff;
+  display: block;
+  margin-top:0px;
+  padding: 5px;
+  min-height: 25px;
+  line-height: 24px;
+  overflow: hidden;
+  border: 0;
+  width: 370px;
+}
+
+.QuestBackManagement .dropdown dt a span,
+.multiSel span {
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 3px 2px 0;
+}
+
+.QuestBackManagement .dropdown dd ul {
+  background-color: #fff;
+  color: #000;
+  display: none;
+  left: 0px;
+  padding: 2px 15px 2px 5px;
+  position: absolute;
+  top: 0px;
+  width: 360px;
+  list-style: none;
+  height: 200px;
+  overflow: auto;
+  border-left: solid 1px #dcdcdc;
+  border-bottom: solid 1px #dcdcdc;
+  border-right: solid 1px #dcdcdc;
+}
+
+.QuestBackManagement .dropdown span.value {
+  display: none;
+}
+
+.QuestBackManagement .dropdown dd ul li a {
+  padding: 5px;
+  display: block;
+}
+
+.QuestBackManagement .dropdown dd ul li a:hover {
+  background-color: #fff;
+}

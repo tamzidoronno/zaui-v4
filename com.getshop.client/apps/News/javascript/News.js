@@ -5,6 +5,17 @@ app.News = {
         $(document).on('click', '.News .delete', this.deleteEvent );
         $(document).on('click', '.News .publish', this.publishEvent );
         $(document).on('click', '.News .showimageeditor', app.News.showEditImage);
+        
+        PubSub.subscribe('NAVIGATION_COMPLETED', function() {
+            for(name in CKEDITOR.instances)
+            {
+                if(name == "newscontentaddentry") {
+                    CKEDITOR.instances[name].destroy();
+                }
+            }
+            thundashop.common.activateCKEditor('newscontentaddentry', { "notdestroyonblur" : false });
+        });
+
     },
     showEditImage: function(application) {
         var app = $(application).hasClass('app') ? application : this;
@@ -40,7 +51,8 @@ app.News = {
         });
         
     },
-    deleteEvent: function() {
+    deleteEvent: function(event) {
+        event.stopPropagation();
         var id = $(this).closest('.news_container').attr('id');
         var data = {
             id : id
@@ -51,7 +63,7 @@ app.News = {
             
     addEvent: function() {
         var subject = $('.News .outeraddnewscontainer #subject').val();
-        var text = $('.News .outeraddnewscontainer textarea').val()
+        var text = $('.News .outeraddnewscontainer div').html();
         var data = {
             subject : subject,
             text: text,

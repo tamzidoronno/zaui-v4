@@ -71,6 +71,7 @@ class PmsStatisticsBuilder {
                         continue;
                     }
                     if(room.isActiveOnDay(cal.getTime())) {
+                        entry.roomsIncluded.add(room.pmsBookingRoomId);
                         Double price = room.getDailyPrice(booking.priceType, cal);
                         if(!pricesExTax) {
                             price /= 1 + (room.taxes/100);

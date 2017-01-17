@@ -408,7 +408,8 @@ app.PmsManagement = {
     loadStatisticsOverview : function() {
         var data = {
             "type" : $(this).attr('type'),
-            "day" : $(this).attr('day')
+            "day" : $(this).attr('day'),
+            "included" : $(this).attr('included')
         }
         
         var event = thundashop.Ajax.createEvent('','loadDayStatistics',$(this),data);

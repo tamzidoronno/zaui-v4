@@ -497,7 +497,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         
-        throw new ErrorException(61);
+        throw null;
     }
     
     private Order getByTransactionId(String transactionId) {

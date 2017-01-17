@@ -1,7 +1,9 @@
 package com.thundashop.core.pmsmanager;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class StatisticsEntry {
     public Date date;
@@ -21,6 +23,7 @@ public class StatisticsEntry {
     public HashMap<String, Integer> guestsCompany = new HashMap();
     public HashMap<String, Integer> guestsConference = new HashMap();
     public HashMap<String, Integer> guestsRegular = new HashMap();
+    public List<String> roomsIncluded = new ArrayList();
     
     public void finalize() {
         avgPrice = totalPrice / roomsRentedOut;

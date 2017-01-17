@@ -917,13 +917,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             room.invoicedTo = filter.endInvoiceAt;
                         }
                     }
-                    
                 }
                 lastOrderId = order.id;
                 pmsManager.saveBooking(booking);
             }
         }
         
+        if(lastOrderId.isEmpty() && itemsToReturn.isEmpty() && filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+            lastOrderId = filter.addToOrderId;
+        }
+        
+        if(lastOrderId.isEmpty() && !avoidOrderCreation) {
+            logPrint("Returning an empty order id, this is wrong.");
+        }
         updateCart();
         return lastOrderId;
     }

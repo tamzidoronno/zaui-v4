@@ -472,7 +472,23 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->endDate = $this->convertToJavaDate(strtotime($day));
 
             $bookings = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
-            $this->printSimpleRoomTable($bookings, $day);
+            
+            $included = json_decode($_POST['data']['included']);
+            $toPrint = array();
+            $toExclude = array();
+            foreach ($bookings as $booking) {
+                if(!in_array($booking->pmsRoomId, $included)) {
+                    $toExclude[] = $booking;
+                    continue;
+                }
+                $toPrint[] = $booking;
+            }
+
+            echo "<b>Rooms included in the statistics</b><br>";
+            $this->printSimpleRoomTable($toPrint, $day);
+            echo "<br><br><b>Other rooms not included in the statistics</b><br>";
+            echo "* Test bookings and not paid which is before today is not included in the statistics";
+            $this->printSimpleRoomTable($toExclude, $day);
         } else {
             $filterOptions = new \core_common_FilterOptions();
             $filterOptions->startDate = $this->convertToJavaDate(strtotime($day));
@@ -1783,14 +1799,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
             if(date("d.m.Y", $booking->end/1000) == date("d.m.Y", strtotime($day))) {
                 continue;
             }
-            $price = round($booking->price);
+            $price = $booking->price / 1.1;
             $totalprice += $price;
             echo "<tr class='moreinformationaboutbooking' style='cursor:pointer;' bookingid='".$booking->bookingId."'>";
             echo "<td>" . $booking->room . "</td>";
             echo "<td>" . $booking->owner . "</td>";
             echo "<td>" . date("d.m.Y", $booking->start/1000) . "</td>";
             echo "<td>" . date("d.m.Y", $booking->end/1000) . "</td>";
-            echo "<td>" . $price . "</td>";
+            echo "<td>" . round($price) . "</td>";
             echo "<td>" . $booking->progressState . "</td>";
             if($booking->testReservation) {
                 echo "<td>yes</td>";
@@ -1804,7 +1820,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "<td></td>";
         echo "<td></td>";
         echo "<td></td>";
-        echo "<td>$totalprice</td>";
+        echo "<td>".round($totalprice)."</td>";
         echo "<td></td>";
         echo "<td></td>";
         echo "</tr>";

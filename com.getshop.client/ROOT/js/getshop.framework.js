@@ -1936,7 +1936,7 @@ thundashop.framework = {
                 value = $(this).is(':checked');
             }
             if ($(this).attr('gstype') == "ckeditor") {
-                value = ckeditors[$(this).attr('id')];
+                value = CKEDITOR.instances[$(this).attr('id')].getData();
             }
             if ($(this).is(':radio')) {
                 if ($(this).is(':checked')) {

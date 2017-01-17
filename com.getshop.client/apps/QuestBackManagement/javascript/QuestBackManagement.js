@@ -315,9 +315,7 @@ app.QuestBackManagement = {
         .bind("delete_node.jstree", function(e, data) { app.QuestBackManagement.saveTree(this); })
         .bind("move_node.jstree", function(e, data) { app.QuestBackManagement.saveTree(this); })
         .bind("dblclick.jstree", app.QuestBackManagement.navigateToQuestion )
-        .bind('ready.jstree', function() {
-            $(this).jstree("open_all"); 
-        });
+        .bind('ready.jstree', function() {$(this).jstree("open_node", $("#rootnode")); })
     }
 };
 

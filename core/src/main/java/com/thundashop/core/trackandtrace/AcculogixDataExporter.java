@@ -42,12 +42,24 @@ public class AcculogixDataExporter {
         return exports;
     }
 
-    private AcculogixExport createExport(Destination dest, Task task) {
+    private AcculogixExport createExport(Route route, Destination dest, Task task) {
         AcculogixExport exp = new AcculogixExport();
         exp.ArrivalDateTime = dest.startInfo.started ? formatDate(dest.startInfo.startedTimeStamp) : "";
         exp.PODBarcodeID = task.podBarcode;
         exp.RDDriver$ID = route.startInfo.startedByUserId;
         exp.ReceiverName = dest.typedNameForSignature;
+        
+        if (route.startInfo.started) {
+            exp.TaskStatus = "AF";
+        }
+        
+        if (task.completed) {
+            exp.TaskStatus = "D1";
+        }
+        
+        if (dest.skipInfo.skippedReasonId != null && !dest.skipInfo.skippedReasonId.isEmpty()) {
+            exp.TaskStatus = exceptions.get(dest.skipInfo.skippedReasonId).name;
+        }
         
         if (dest.skipInfo.startedTimeStamp != null) {
             exp.StatusDateTimeCompleted = formatDate(dest.skipInfo.startedTimeStamp);
@@ -75,7 +87,7 @@ public class AcculogixDataExporter {
         List<AcculogixExport> toAdd = new ArrayList();
         
         for (PickupOrder order : task.orders) {
-            AcculogixExport exp = createExport(dest, task);
+            AcculogixExport exp = createExport(route, dest, task);
             exp.BarcodeValidated = task.barcodeValidated ? "Yes" : "No";
             setOrderInfo(exp, order);
 
@@ -94,7 +106,7 @@ public class AcculogixDataExporter {
         List<AcculogixExport> toAdd = new ArrayList();
         
         for (DeliveryOrder order : task.orders) {
-            AcculogixExport exp = createExport(dest, task);
+            AcculogixExport exp = createExport(route, dest, task);
             setOrderInfo(exp, order);
             
             if (order.originalQuantity > order.quantity) {

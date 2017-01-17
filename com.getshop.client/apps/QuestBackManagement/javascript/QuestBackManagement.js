@@ -4,17 +4,70 @@
  * and open the template in the editor.
  */
 
-
+    
+    
 app.QuestBackManagement = {
     init: function() {
-        $(document).on('click', '.QuestBackManagement .showTemplatePage', app.QuestBackManagement.showTemplatePage)
-        $(document).on('click', '.QuestBackManagement .menuelement', app.QuestBackManagement.changeMenu)
-        $(document).on('click', '.QuestBackManagement .delete_test_button', app.QuestBackManagement.deleteTest)
-        $(document).on('click', '.QuestBackManagement .modify_questionbase_button', app.QuestBackManagement.modifyTest)
-        $(document).on('click', '.QuestBackManagement .saveTestSettings', app.QuestBackManagement.saveTestSettings)
+        $(document).on('click', '.QuestBackManagement .showTemplatePage', app.QuestBackManagement.showTemplatePage);
+        $(document).on('click', '.QuestBackManagement .menuelement', app.QuestBackManagement.changeMenu);
+        $(document).on('click', '.QuestBackManagement .delete_test_button', app.QuestBackManagement.deleteTest);
+        $(document).on('click', '.QuestBackManagement .modify_questionbase_button', app.QuestBackManagement.modifyTest);
+        $(document).on('click', '.QuestBackManagement .saveTestSettings', app.QuestBackManagement.saveTestSettings);
         $(document).on('click', '.QuestBackManagement .assignTestsToUser', app.QuestBackManagement.assignTestsToUser);
-        $(document).on('click', '.QuestBackManagement .createTest', app.QuestBackManagement.createTest)
-        $(document).on('change', '.QuestBackManagement #testToSeeResultFor', app.QuestBackManagement.testToSeeResultFor)
+        $(document).on('click', '.QuestBackManagement .createTest', app.QuestBackManagement.createTest);
+        $(document).on('change', '.QuestBackManagement #testToSeeResultFor', app.QuestBackManagement.testToSeeResultFor);
+        $(document).on('keyup', '.QuestBackManagement #usermanagementInput', app.QuestBackManagement.filterUsers);
+        $(document).on('click', '.QuestBackManagement .dropdown dt a', app.QuestBackManagement.slideToggle);
+        $(document).on('click', '.QuestBackManagement .dropdown dd ul li a', app.QuestBackManagement.somethinghide);
+        $(document).on('click', '.QuestBackManagement .multiSelect input[type="checkbox"]', app.QuestBackManagement.something);
+        
+        $(document).bind('click', function(e) {
+          var $clicked = $(e.target);
+          if (!$clicked.parents().hasClass("dropdown")) $(".dropdown dd ul").hide();
+        });
+    
+    },
+    slideToggle : function() {
+        $(".QuestBackManagement .dropdown dd ul").slideToggle('fast');
+    },
+    somethinghide : function(){
+        $(".QuestBackManagement .dropdown dd ul").hide();
+    },
+    something : function() {
+        //var exisitngtitle = $('.multiSel').text();
+        var title = $(this).closest('.mutliSelect').find('input[type="checkbox"]').val(),
+        title = $(this).val() + ",";
+
+        if ($(this).is(':checked')){
+            var html = '<span title="' + title +'">' + title + " " + '</span>';
+            $('.multiSel').append(html);
+            $(".hida").hide();
+        } else {
+            $('span[title="' + title + '"]').remove();
+            var ret = $(".hida");
+            $('.dropdown dt a').append(ret);
+        }
+    },
+    getSelectedValue: function(id){
+        return $("#" + id).find("dt a span.value").html();
+    },
+    
+    
+    filterUsers: function()  {
+        var value = $(this).val().toUpperCase();
+        var table = $('#usermanagementTable');
+        
+        table.find('tr').each(function() {
+            var row = $(this);
+            var text = $(this).text();
+            if(text.toUpperCase().indexOf(value) > -1) {
+                row.show();
+            } else {
+                if(!row.find('.user_to_send').is(':checked')) {
+                    row.hide();
+                }
+            }
+        });
     },
     
     testToSeeResultFor: function() {
@@ -30,8 +83,14 @@ app.QuestBackManagement = {
     },
     
     assignTestsToUser: function() {
+        var ids = [];
+        $('.usertest').each(function() {
+            if($(this).is(':checked')) {
+                ids.push($(this).attr('testid'));
+            }
+        });
         var data = {
-            testId : $('#testToSend').val(),
+            testIds : ids
         }
         
         data.usersIds = $('.QuestBackManagement .user_to_send:checked').map(function () {
@@ -164,10 +223,9 @@ app.QuestBackManagement = {
     createTree: function(idOfTree) {
         $('#'+idOfTree).jstree({
         "core" : {
-            "check_callback" : true
+            "check_callback" : true            
         },
-        
-        "contextmenu": {         
+        "contextmenu": {  
             "items": function($node) {
                 var tree = $('#'+idOfTree).jstree(true);
                 return {
@@ -234,10 +292,11 @@ app.QuestBackManagement = {
                 };
             }
         },
-        
+        "state" : {"key" : "CheckState"},
         "plugins" : [
                 "contextmenu", 
                 "dnd",
+                "state",
                 "wholerow"
             ]
         }).bind("create_node.jstree", function(e, data) {
@@ -256,9 +315,7 @@ app.QuestBackManagement = {
         .bind("delete_node.jstree", function(e, data) { app.QuestBackManagement.saveTree(this); })
         .bind("move_node.jstree", function(e, data) { app.QuestBackManagement.saveTree(this); })
         .bind("dblclick.jstree", app.QuestBackManagement.navigateToQuestion )
-        .bind('ready.jstree', function() {
-            $(this).jstree("open_all"); 
-        });
+        .bind('ready.jstree', function() {$(this).jstree("open_node", $("#rootnode")); })
     }
 };
 

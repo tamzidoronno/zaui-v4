@@ -16,8 +16,7 @@
     padding: 20px;
 }
 .EditEventType .groupinformation {
-    border: solid 1px #DDD;
-    
+    border: solid 1px #DDD; 
     padding-top: 0px;
     margin-bottom: 20px;
 }
@@ -37,15 +36,37 @@
     padding: 20px;
 }
 .EditEventType .extrainformationarea {
-    width: 100%;
     box-sizing: border-box;
-    height: 100px;
+    width: 100%;
+    padding:10px;
 }
 
 .EditEventType .eventdescription {
-    width: 100%;
+    width: 94.5%;
     display: inline-block;
     border:solid 1px #888;
-    height: 200px;
+    height: 50px;
     padding: 20px;
+}
+.EditEventType .eventname{
+    margin-left: 0px;
+}
+.EditEventType .tableEvent{
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-collapse: collapse;
+}
+.EditEventType th{
+    padding-right: 20px;
+    border-bottom: solid 1px #c1c1c1;
+}
+.EditEventType td{
+    border-bottom: solid 1px #f1f1f1;
+}
+.EditEventType .priceInput{
+    width: 50px;
+    padding: 10px;
+    padding-left: 7px;
 }

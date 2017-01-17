@@ -52,6 +52,7 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     private Map<String, ResturantRoom> rooms = new HashMap();
     private Map<String, ResturantTable> tables = new HashMap();
     private Map<String, TableSession> sessions = new HashMap();
+    private Map<String, PaymentTransaction> payments = new HashMap();
 
     public SessionFactory sessionFactory;
     
@@ -296,8 +297,15 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     
     @Override
     public Order completePayment(String paymentMethodId, List<ResturantCartItem> cartItems) {
+        PaymentTransaction transaction = createPaymentTransction(cartItems);
         Order order = createOrderInternally(paymentMethodId, cartItems, false);
         orderManager.saveOrder(order);
+        
+        if (order != null) {
+            transaction.orderId = order.id;
+            saveObject(transaction);
+        }
+        
         return orderManager.getOrder(order.id);
     }   
 
@@ -508,5 +516,16 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
                 .map(item -> productManager.getProduct(item.productId))
                 .filter(product -> product.isFood)
                 .count() > 0;
+    }
+
+    private PaymentTransaction createPaymentTransction(List<ResturantCartItem> cartItems) {
+        PaymentTransaction pt = new PaymentTransaction();
+        if (getSession().currentUser != null) {
+            pt.userId = getSession().currentUser.id;
+        }
+        
+        pt.cartItems = cartItems;
+        saveObject(pt);
+        return pt;
     }
 }

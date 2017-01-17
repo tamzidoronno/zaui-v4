@@ -13,10 +13,13 @@ $imgApp = $this->getImageDisplayer();
                 <div class="outeraddnewscontainer">
                     <? echo $this->__f("Subject"); ?><br> <input id="subject" name="subject" type="text" class='gsautosave' value='<? echo $this->getAutoSaved("subject"); ?>'/>
                     <br><br> <? echo $this->__f("Extended description"); ?> 
+                    <br><br><br><br>
+                    <div  name='content' class='gsautosave' id='newscontentaddentry' 
+                        style="width: 100%; min-height: 100px; padding: 10px;box-sizing: border-box;background-color:#fff;border:solid 1px #bbb;" 
+                        placeholder="<? echo $this->__f("Click on me to edit"); ?>">
+                        <? echo $this->getAutoSaved("content"); ?>
+                    </div>
                     <br>
-                    <textarea  name='content' class='gsautosave' 
-                               style="width: 100%; height: 100px; padding: 10px;box-sizing: border-box;" 
-                               placeholder="<? echo $this->__f("Click on me to edit"); ?>"><? echo $this->getAutoSaved("content"); ?></textarea>
                     <div class="gs_button addevent">
                         <? echo $this->__f("Add"); ?>
                     </div>

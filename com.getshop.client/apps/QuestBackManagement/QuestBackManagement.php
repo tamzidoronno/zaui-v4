@@ -150,8 +150,10 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
     }
     
     public function assignTestToUsers() {
-        foreach ($_POST['data']['usersIds'] as $userId) {
-            $this->getApi()->getQuestBackManager()->assignUserToTest($_POST['data']['testId'], $userId);
+        foreach($_POST['data']['testIds'] as $testId) {
+            foreach ($_POST['data']['usersIds'] as $userId) {
+                $this->getApi()->getQuestBackManager()->assignUserToTest($testId, $userId);
+            }
         }
     }
 

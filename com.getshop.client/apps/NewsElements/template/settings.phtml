@@ -83,9 +83,14 @@ if(stristr($pageid,"news_template_")) {
            </td>
        </tr>
    </table>
-   <br>
-   <textarea gsname="content" style="width:100%; font-size: 16px; padding: 10px; height: 150px; box-sizing: border-box;"><?php echo $entry->content; ?></textarea>
-
-   <input type="button" gstype="submit" value="Save">
+    <br><br><br><br>
+    <div gsname='content' id='newscontenteditentry' gstype='ckeditor'
+            style="width: 100%; min-height: 100px; padding: 10px;box-sizing: border-box;background-color:#fff;border:solid 1px #bbb;">
+            <?php echo $entry->content; ?>
+    </div>
+        <input type="button" gstype="submit" value="Save">
 </div>
 <?php } ?>
+<script>
+    thundashop.common.activateCKEditor('newscontenteditentry', { "notdestroyonblur" : false });
+</script>

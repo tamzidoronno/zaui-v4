@@ -122,6 +122,14 @@ public interface IUserManager {
      */
     @Editor
     public FilteredData getAllUsersFiltered(FilterOptions filter);
+
+    /**
+     * Fetch all the companies registered to this webshop.
+     * @return
+     * @throws ErrorException 
+     */
+    @Editor
+    public FilteredData getAllCompanyFiltered(FilterOptions filter);
     
     /**
      * Update a given user.<br>

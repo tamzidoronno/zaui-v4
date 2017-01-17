@@ -147,6 +147,7 @@ public class AcculogixDataImporter {
         for (Destination destination : destinations.values()) {
             List<String[]> deliveryOrderDatas = datas.stream()
                     .filter(row -> destination.companyIds.contains(row[50]))
+                    .filter(row -> destination.seq.equals(Integer.parseInt(row[20])))
                     .filter(row -> row[64].equals("DELIVERY"))
                     .collect(Collectors.toList());
             
@@ -206,6 +207,7 @@ public class AcculogixDataImporter {
         for (Destination destination : destinations.values()) {
             List<String[]> pickupTasksDatas = datas.stream()
                     .filter(row -> destination.companyIds.contains(row[50]))
+                    .filter(row -> destination.seq.equals(Integer.parseInt(row[20])))
                     .filter(row -> row[64].equals("PICKUP RETURNS"))
                     .collect(Collectors.toList());
             

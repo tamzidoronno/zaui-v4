@@ -1,41 +1,33 @@
-<div class='gss_settings_content'>
-    
-<?php
-/* @var $this ns_a6d68820_a8e3_4eac_b2b6_b05043c28d78\Company */
-$companies = $this->getApi()->getUserManager()->getAllCompanies();
-
-if(!$companies) {
-    echo $this->__w("No companies registered yet!");
-    $companies = array();
-}
-foreach($companies as $company) {
-    $id = $company->id;
-    echo "<div class='companyentry' gss_fragment='company' gss_view='gs_company_workarea' gss_value='$id'>";
-    echo "<table width='100%'>";
-    echo "<tr>";
-    echo "<td width='25%'>";
-    echo "<i class='fa fa-building-o' style='font-size:30px; float:left; margin-right: 10px; '></i>";
-    echo "<b>" . $company->name . "</b><br>vat number: " . $company->vatNumber;
-    echo "</td>";
-    echo "<td valign='top' width='25%'>";
-    echo $company->address->address . "<br>";
-    echo $company->address->postCode . " " . $company->address->city . "<br>";
-    echo "</td>";
-    echo "<td valign='top' width='25%'>";
-    if($company->invoiceAddress && $company->invoiceAddress->address) {
-        echo $company->invoiceAddress->address . "<br>";
-        echo $company->invoiceAddress->postCode . " " . $company->invoiceAddress->city . "<br>";
-    } else {
-        echo "No invoice address set";
-    }
-    echo "</td>";
-    echo "<td valign='top' width='25%'>";
-    echo $company->email . " " . $company->invoiceEmail. "<br>";
-    echo $company->phone . " " . $company->contactPerson . "<br>";
-    echo "</td>";
-    echo "</tr>";
-    echo "</table>";
-    echo "</div>";
-}
+<?
+    $searchtext = $this->getSearchText();
 ?>
+
+<div class='gss_settings_header'>
+    <i class='fa fa-info'></i>
+    
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Companylist"); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?
+                echo $this->__f("Below you see a list of all companies registered in this system. To see more information about a companies you can simply click on it.").".";
+            ?>	
+        </div>
+    </div>	
 </div>
+
+<div class="gss_settings_header">
+    <i class="fa fa-search"></i>
+
+    <div class="gss_settings_header_description" >
+        <div class="gss_settings_header_title"><? echo $this->__f("Search (leave blank to see all)"); ?></div>
+        <div class="gss_settings_header_description_inner" style="position: relative; width: 868px;">
+            <input id='gss_order_filter_search_text' gs_model='orders' gs_model_attr='order_filter' type="textfield" style="left: 0px; top: 0px;" placeholder="<? echo $this->__f("Filter company"); ?>" value='<? echo $searchtext; ?>'/>
+            <div id='gss_order_filter_search_button' gss_method='filterOrders' gss_view='gss_outer_searchresult' gss_fragment='searchresultcompany' gss_model='orders' style='position: absolute; right: 0px;height: 11px;line-height: 11px;top: 2px;' class='gss_button'><? echo $this->__f("Search"); ?></div>
+        </div>
+    </div>	
+</div>
+<div class='gss_outer_searchresult gss_settings_content'>
+    <? $this->includefile("searchresultcompany"); ?>
+</div>  

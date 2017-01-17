@@ -5,25 +5,47 @@ $allUsers = $this->getApi()->getUserManager()->getAllUsers();
 <div>
     <h2><? echo $this->__f("Send tests"); ?></h2>
     What test do you want to send out?: &nbsp;&nbsp;
-    <select id="testToSend">
-    <?
-    $tests = $this->getApi()->getQuestBackManager()->getAllTests();
-    foreach ($tests as $test) {
-        echo "<option value='$test->id'>$test->name</option>";
-    }
-    ?>
-    </select>
+    <dl class="dropdown">
+        <dt>
+            <a href="#">
+                <span class="hida"><? echo $this->__w("Choose test");?></span>
+                <p class="multiSel"></p>      
+            </a>
+        </dt>
+        <dd>
+           <div class="multiSelect">
+               <ul>
+                    <?
+                        $tests = $this->getApi()->getQuestBackManager()->getAllTests();
+                        foreach ($tests as $test) {
+                            echo "<li> <input type='checkbox' class='usertest' value='$test->name' testid='$test->id'>$test->name</li>";
+                        }
+                    ?>
+               </ul>
+            </div> 
+        </dd>
+    </dl>
     
+    <div class="usermanagement"> 
+        <label><? echo $this->__w("Search");?></label>
+        <input id="usermanagementInput" class="gsniceinput1" type="txt" placeholder="<? echo $this->__w("Search");?>">    
+    </div>
     <br/>
     <br/>
-    <table width='100%'>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <table id="usermanagementTable" width='100%'>
         <th></th>
         <th><? echo $this->__f("Name"); ?></th>
         <th><? echo $this->__f("Email"); ?></th>
         <th><? echo $this->__f("CellPhone"); ?></th>
         <?
         foreach ($allUsers as $user) {
-            echo "<tr><td width='25'><input type='checkbox' class='user_to_send' value='$user->id'></td><td>$user->fullName</td><td>$user->emailAddress</td><td>$user->cellPhone</td></tr>";
+            if($user->fullName ||$user->emailAddress || $user->cellPhone){
+                echo "<tr><td width='25'><input type='checkbox' class='user_to_send' value='$user->id'></td><td>$user->fullName</td><td>$user->emailAddress</td><td>$user->cellPhone</td></tr>";
+            }
         }
         ?>
         

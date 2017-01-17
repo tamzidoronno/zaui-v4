@@ -1877,6 +1877,39 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "<td></td>";
         echo "</tr>";
         echo "</table>";
+        
+        $start = $_POST['data']['day'] . "00:00";
+        $end = $_POST['data']['day'] . "23:59";
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->filterType = "registered";
+        $filter->startDate = $this->convertToJavaDate(strtotime($start));
+        $filter->endDate = $this->convertToJavaDate(strtotime($end));        
+        
+        $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+        echo "<br>Bookings registered<br><br>";
+        echo "<table cellspacing='0' cellpadding='0'>";
+        echo "<tr>";
+        echo "<th>Created date</th>";
+        echo "<th>Owner</th>";
+        echo "<th>Value</th>";
+        echo "</tr>";
+        
+        $total = 0;
+        foreach($bookings as $booking) {
+            $total += $booking->totalPrice;
+            $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+            echo "<tr>";
+            echo "<td>" . date("d.m.Y H:i", strtotime($booking->rowCreatedDate)) . "</td>";
+            echo "<td>" . $user->fullName . "</td>";
+            echo "<td>" . $booking->totalPrice . "</td>";
+            echo "</tr>";
+        }
+        echo "<tr>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td>$total</td>";
+        echo "</tr>";
+        echo "</table>";
     }
 
     public function loadEditBookingItem() {

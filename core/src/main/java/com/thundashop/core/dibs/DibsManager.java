@@ -283,7 +283,7 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             messageManager.sendMail("post@getshop.com", "post@getshop.com", "Declined to capture order (" + order.incrementOrderId + ")", respresult, "post@getshop.com", "post@getshop.com");
             order.status = Order.Status.COLLECTION_FAILED;
         } else {
-            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed to capture order (" + order.incrementOrderId + ")", respresult, "post@getshop.com", "post@getshop.com");
+            messageManager.sendErrorNotification("Failed to capture order (" + order.incrementOrderId + ")" + respresult, null);
             order.status = Order.Status.COLLECTION_FAILED;
         }
         order.payment.transactionLog.put(System.currentTimeMillis(), respresult);

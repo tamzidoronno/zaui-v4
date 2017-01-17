@@ -9,11 +9,13 @@ app.News = {
         PubSub.subscribe('NAVIGATION_COMPLETED', function() {
             for(name in CKEDITOR.instances)
             {
-                if(name == "newscontentaddentry") {
+                if(name == "newscontentaddentry" || name == "newscontenteditentry") {
                     CKEDITOR.instances[name].destroy();
                 }
             }
-            thundashop.common.activateCKEditor('newscontentaddentry', { "notdestroyonblur" : false });
+            if($('#newscontentaddentry').length > 0) {
+                thundashop.common.activateCKEditor('newscontentaddentry', { "notdestroyonblur" : false });
+            }
         });
 
     },

@@ -49,7 +49,7 @@ public class PmsStatistics implements Serializable {
             result.nights += entry.nights;
             result.numberOfOrders += entry.numberOfOrders;
             result.avgOrderPrice += entry.avgOrderPrice;
-            
+            result.bookingValue += entry.bookingValue;
             sleepoverstats.nightsSold += entry.nights;
             
             if(entry.avgOrderPrice > 0) {

@@ -21,14 +21,16 @@ import java.util.List;
  */
 class PmsStatisticsBuilder {
     private final List<PmsBooking> bookings;
+    private final List<PmsBooking> allBookings;
     private final boolean pricesExTax;
     private HashMap<Integer, PmsBudget> budget;
     private final UserManager userManager;
 
-    PmsStatisticsBuilder(List<PmsBooking> allBookings, boolean pricesExTax, UserManager userManager) {
-        this.bookings = allBookings;
+    PmsStatisticsBuilder(List<PmsBooking> bookingsInFilter, boolean pricesExTax, UserManager userManager, List<PmsBooking> allBookings) {
+        this.bookings = bookingsInFilter;
         this.userManager = userManager;
         this.pricesExTax = pricesExTax;
+        this.allBookings = allBookings;
     }
 
     PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms) {
@@ -162,6 +164,9 @@ class PmsStatisticsBuilder {
                     entry.addPayment(order.payment.paymentType, total);
                 }
             }
+            
+            entry.bookingValue = addBookingValues(cal);
+            
             entry.finalize();
             
             cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -234,6 +239,17 @@ class PmsStatisticsBuilder {
             }
             regularGuests += room.numberOfGuests;
             entry.uniqueGuests.put(countryCode, regularGuests);
+    }
+
+    private Double addBookingValues(Calendar cal) {
+        Double res = 0.0;
+        for(PmsBooking booking : allBookings) {
+            if(booking.createdOnDay(cal.getTime())) {
+                booking.calculateTotalCost();
+                res += booking.getTotalPrice();
+            }
+        }
+        return res;
     }
     
 }

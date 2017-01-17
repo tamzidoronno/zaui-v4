@@ -306,5 +306,12 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             saveObject(task);
         }
     }
+
+    @Override
+    public List<AcculogixExport> getExport(String routeId) {
+        Route route = getRouteById(routeId);
+        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions);
+        return exporter.getExport();
+    }
     
 }

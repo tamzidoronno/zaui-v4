@@ -72,4 +72,7 @@ public interface ITrackAndTraceManager {
     
     @Customer
     public void unsetSkippedReason(String destinationId);
+    
+    @Customer
+    public List<AcculogixExport> getExport(String routeId);
 }

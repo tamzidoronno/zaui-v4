@@ -9,9 +9,7 @@ package com.thundashop.core.trackandtrace;
  *
  * @author ktonder
  */
-public class DeliveryOrder {
-    public String referenceNumber = "";
-    public String comment = "";
+public class DeliveryOrder extends TntOrder {
     public int quantity = 0;
     public int orderOdds = 0;
     public int orderFull = 0;

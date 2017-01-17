@@ -2,9 +2,9 @@
  /* @var $this \ns_a6f62935_89bf_4e89_ae9a_647f2b25a432\PmsSubscriptionOverview */
 $start = strtotime(date("01.m.Y", time()));
 $end = strtotime(date("t.m.Y", time()));
-echo date("d.m.Y", $start) . " - " . date("d.m.Y", $end);
+echo date("d.m.Y", $start) . " - " . date("d.m.Y", $end) . "<br><br>";
 $overview = $this->getApi()->getPmsInvoiceManager()->getSubscriptionOverview($this->getSelectedName(), $this->convertToJavaDate($start), $this->convertToJavaDate($end));  
-
+echo "<input type='checkbox' id='onlyunpaid'> Show only unpaid card orders<br>";
 echo "<table width='100%' id='showtable'>";
 echo "<thead>";
 echo "<tr>";
@@ -28,7 +28,8 @@ foreach($overview as $room) {
     $type = $room->paymentType;
     $paid = $room->paid ? "Yes" : "No";
     $totalCardsSaved += $room->cardsSaved;
-    echo "<tr>";
+    $ptype = substr($type, strpos($room->paymentType, "\\")+1);
+    echo "<tr class='$paid"."_".$ptype." overviewrow'>";
     echo "<td>" . $room->roomName . "</td>";
     echo "<td>" . $room->usersName . "</td>";
     echo "<td>" . $room->price . "</td>";
@@ -41,7 +42,7 @@ foreach($overview as $room) {
         echo date("d.m.Y", strtotime($room->orderCreationDate));
     }
     echo "</td>";
-    echo "<td>" . substr($type, strpos($room->paymentType, "\\")+1) . "</td>";
+    echo "<td>" . $ptype . "</td>";
     echo "<td>" . $room->cardsSaved . "</td>";
     echo "</tr>";
 }

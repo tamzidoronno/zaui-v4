@@ -13,9 +13,11 @@ adata = {
     cartItems: [],
     deletedItems: [],
     cartItemsToPay: [],
+    addonsToPay: [],
     paymentMethods: [],
     temporaryProductPrices: [],
     currentlyTablesToCheckout: [],
+    stickyLists: [],
     
     setActivatedPaymentMethods: function(methods) {
         for (var i in this.paymentMethods) {
@@ -28,6 +30,60 @@ adata = {
         }
         
         this.paymentMethods = methods;
+        this.save();
+    },
+    
+    isListSticky: function (listId) {
+        for (var i in this.stickyLists) {
+            var inId = this.stickyLists[i];
+            if (listId === inId) { 
+                return true;
+            }
+        }
+        
+        return false;
+    },
+    
+    getAddonCountAdded: function(addon) {
+        var j = 0;
+        for (var i in this.cartItemsToPay) {
+            var item = this.cartItemsToPay[i];
+            if (item.addonId === addon.addonId) {
+                j++;
+            }
+        }
+        
+        return j;
+    },
+    
+    getAddonToCheckoutById: function(addonId) {
+        for (var i in this.addonsToPay) {
+            if (this.addonsToPay[i].addonId === addonId) {
+                return this.addonsToPay[i];
+            }
+        }
+        
+        return 0;
+    },
+    
+    toggleStickList: function(listId) {
+        var newList = [];
+        var found = false;
+        
+        for (var i in this.stickyLists) {
+            var inId = this.stickyLists[i];
+            if (listId === inId) {
+                found = true;
+            } else {
+                newList.push(inId);
+            }
+        }
+        
+        if (!found) {
+            newList.push(listId);
+        }
+        
+        this.stickyLists = newList;
         this.save();
     },
     
@@ -164,6 +220,7 @@ adata = {
     },
     
     save: function() {
+        this.sortProductList();
         localStorage.setItem("selectedRoom", this.selectedRoom);
         localStorage.setItem("rooms", JSON.stringify(this.rooms));
         localStorage.setItem("products", JSON.stringify(this.products));
@@ -198,6 +255,19 @@ adata = {
         
         if (!this.printers) 
             this.printers = [];
+        
+        this.sortProductList();
+    },
+    
+    sortProductList: function() {
+        this.productLists.sort(function(a, b) {
+            var nameA=a.listName.toLowerCase(), nameB=b.listName.toLowerCase();
+            if (nameA < nameB) //sort string ascending
+              return -1;
+            if (nameA > nameB)
+              return 1;
+            return 0; //default return value (no sorting)
+        });        
     },
     
     getDeletedCartItems: function(tableId) {
@@ -339,13 +409,14 @@ adata = {
         return j;
     },
     
-    addToCart : function(productId, tablePersonNumber, tableId, variation, option) {
+    addToCart : function(productId, tablePersonNumber, tableId, variation, option, addonId) {
         var cartItem = {
             productId: productId,
             tablePersonNumber: tablePersonNumber,
             tableId: tableId,
             id: this.guid(), 
             sentToKitchen: false,
+            addonId: addonId,
             options: {}
         };
         

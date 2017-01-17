@@ -13,6 +13,7 @@ public class PmsEventListEntry {
     public String shortdesc;
     public String category;
     public String eventId;
+    public String bookingId;
     public String arrangedBy;
     public String description = "";
     public List<PmsBookingEventLink> lenker = new ArrayList();
@@ -30,5 +31,6 @@ public class PmsEventListEntry {
         description = entry.description;
         lenker = entry.lenker;
         imageid = entry.imageId;
+        bookingId = entry.bookingId;
     }
 }

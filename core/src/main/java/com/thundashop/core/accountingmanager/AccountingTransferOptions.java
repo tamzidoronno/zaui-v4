@@ -32,9 +32,13 @@ class AccountingTransferOptions {
         if(user.accountingId != null && !user.accountingId.trim().isEmpty() && !user.accountingId.equals("0")) {
             accountingId = new Integer(user.accountingId);
         }
-        if(accountingId > idToUse) {
+        if(accountingId >= idToUse) {
             return accountingId;
         } else {
+            if(!managers.productMode) {
+                //DO NOT CREATE NEW IDS IN NON PRODUCTION MODE
+                return -100000;
+            }
             int next = managers.userManager.getNextAccountingId();
             if(next < idToUse) {
                 next = idToUse;

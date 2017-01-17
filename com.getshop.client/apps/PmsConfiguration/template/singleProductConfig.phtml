@@ -35,6 +35,11 @@ $includedIn = (array)$selectedAddonConfig->includedInBookingItemTypes;
             <td width="50%"><input type="checkbox" gsname="isIncludedInRoomPrice" style='width:100%;' <?php echo $CHECKED; ?>></td>
         </tr>
         <tr>
+            <td width="50%">Non refundable addon (used as cancelations etc)</td>
+            <?php $CHECKED = ($selectedAddonConfig->noRefundable) ? "CHECKED" : ""; ?>
+            <td width="50%"><input type="checkbox" gsname="noRefundable" style='width:100%;' <?php echo $CHECKED; ?>></td>
+        </tr>
+        <tr>
             <td width="50%">Web description</td>
             <td width="50%"><input type="text" gsname="descriptionWeb" style='width:100%;' value="<? echo $selectedAddonConfig->descriptionWeb; ?>"></td>
         </tr>

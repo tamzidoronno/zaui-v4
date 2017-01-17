@@ -9,9 +9,6 @@ package com.thundashop.core.c3;
  *
  * @author ktonder
  */
-public class SFIExcelReportDataPost13 {
-    public String navn = "";
-    public double totalt;
-    public double nfr;
-    public double inkind;
+public class SFIExcelReportDataPost13 extends SFIExcelReportDataPost{
+    
 }

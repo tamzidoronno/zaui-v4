@@ -8,6 +8,7 @@ import java.util.List;
 
 public class PmsConfiguration extends DataCommon {
 
+
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;
         public static Integer DAILY = 2;
@@ -70,6 +71,8 @@ public class PmsConfiguration extends DataCommon {
     public boolean autoGenerateChangeOrders = false;
     public boolean grantAccessEvenWhenNotPaid = false;
     public boolean runAutoPayWithCard = false;
+    public int numberOfDaysToTryToPayWithCardAfterStayOrderHasBeenCreated = 1;
+    public int warnWhenOrderNotPaidInDays = 3;
     public Integer createOrderAtDayInMonth = 0;
     public boolean prepayment = false;
     public boolean payAfterBookingCompleted = false;
@@ -152,6 +155,7 @@ public class PmsConfiguration extends DataCommon {
     public String wubooklcode = "";
     public int numberOfRoomsToRemoveFromBookingCom = 1;
     public boolean usePricesFromChannelManager = false;
+    public boolean useGetShopPricesOnExpedia = false;
 
     
     public HashMap<String, PmsChannelConfig> channelConfiguration = new HashMap();

@@ -649,7 +649,13 @@ public class PmsManagerProcessor {
                     if(order == null) {
                         continue;
                     }
-                    if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+                    if(order.payment != null && order.payment.paymentType != null && 
+                            order.payment.paymentType.toLowerCase().contains("invoice")) {
+                        manager.pmsInvoiceManager.autoSendInvoice(order, booking.id);
+                        continue;
+                    }
+                    if(order.payment != null && order.payment.paymentType != null && 
+                            order.payment.paymentType.toLowerCase().contains("samlefaktura")) {
                         manager.pmsInvoiceManager.autoSendInvoice(order, booking.id);
                         continue;
                     }
@@ -708,10 +714,11 @@ public class PmsManagerProcessor {
         if(!manager.getConfigurationSecure().runAutoPayWithCard) {
             return;
         }
-        manager.orderManager.checkForOrdersToAutoPay();
+        int daysToWarn = manager.getConfigurationSecure().warnWhenOrderNotPaidInDays;
+        manager.orderManager.checkForOrdersToAutoPay(manager.getConfigurationSecure().numberOfDaysToTryToPayWithCardAfterStayOrderHasBeenCreated);
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, 3);
+        cal.add(Calendar.DAY_OF_YEAR, daysToWarn);
         Date threeDaysAhead = cal.getTime();
         for(PmsBooking booking : bookings) {
             if(booking.isEnded()) {
@@ -847,6 +854,9 @@ public class PmsManagerProcessor {
                 continue;
             }
             if(booking.isOld(100)) {
+                continue;
+            }
+            if(booking.transferredToLock()) {
                 continue;
             }
             System.out.println("Running autodelete: Autodeleted because it has expired" + " " + booking.rowCreatedDate);

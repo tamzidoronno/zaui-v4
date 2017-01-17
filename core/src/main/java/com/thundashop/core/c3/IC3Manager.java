@@ -161,4 +161,6 @@ interface IC3Manager {
     
     @Customer
     public void deleteProjectCost(String projectCostId);
+    
+    public int calculateSum(String periodeId);
 }

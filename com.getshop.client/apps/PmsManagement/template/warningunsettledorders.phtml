@@ -56,16 +56,22 @@ if(sizeof($orders) > 1) {
                 echo "<option value='".$app->appName."' $selected> ".$app->appName."</option>";
             }
             
-            foreach($user->savedCards as $card) {
-                echo "<option value='savedcard_".$card->id."' SELECTED>Saved card (" . $card->savedByVendor  . ") : " . $card->mask . "</option>";
+            if($amount > 0) {
+                foreach($user->savedCards as $card) {
+                    echo "<option value='savedcard_".$card->id."' SELECTED>Saved card (" . $card->savedByVendor  . ") : " . $card->mask . "</option>";
+                }
             }
             
             echo "</select> ";
 
             echo "<select gsname='appendToOrderId'>";
             foreach($result as $order) {
-                if(!$order->closed) {
-                    echo "<option value='" . $order->id . "'>Add to order " . $order->incrementOrderId . "</option>";
+                if(!$order->closed || $amount < 0) {
+                    $text = "Add to order " . $order->incrementOrderId;
+                    if($amount < 0) {
+                        $text = "Create credit based on " . $order->incrementOrderId;
+                    }
+                    echo "<option value='" . $order->id . "'>$text</option>";
                 }
             }
             $createOrderText = "Create a new order";

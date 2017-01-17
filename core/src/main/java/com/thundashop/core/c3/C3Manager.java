@@ -176,7 +176,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     @Override
     public List<C3Project> search(String searchText) {
         List<C3Project> retProjects = projects.values().stream()
-                .filter(project -> project.name.toLowerCase().contains(searchText))
+                .filter(project -> project.name.toLowerCase().contains(searchText) || project.projectNumber.equals(searchText))
                 .sorted(C3Project.comperatorByProjectNumber())
                 .collect(Collectors.toList());
         
@@ -294,7 +294,9 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         if (project == null)
             return new Double(0);
         
-        return project.getPercentage(workPackageId, companyId, date, end);
+        double percent = project.getPercentage(workPackageId, companyId, date, end);
+        
+        return percent;
     }
 
     @Override
@@ -723,24 +725,45 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         int year = getYear(start);
         C3RoundSum roundSumForYear = getRoundSum(year);
         C3Project project = getProject(projectId);
-        C3ForskningsUserPeriode forskningsPeriode = getCurrentForskningsPeriodeForDate(userId, start);
         
         List<C3UserProjectPeriode> periodesToUse = getUserPeriodeForUser(projectId, start, end, userId);
-        int totalForPeriode = 0;
+        double totalForPeriode = 0;
         
         for (C3UserProjectPeriode periode : periodesToUse) {
             if (periode.nfr != nfr)
                 continue;
-            
+        
+            C3ForskningsUserPeriode forskningsPeriode = getCurrentForskningsPeriodeForDate(userId, start, end);
             Date toCalclateFrom = getHighestDate(start, periode.from);
             Date toCalculateTo = getLowestDate(end, periode.to);
-            int days = daysBetween(toCalclateFrom, toCalculateTo);
+            double days = daysBetween(toCalclateFrom, toCalculateTo);
             double priceEachDay = (double)roundSumForYear.sum / (double)365;
             double fullPrice = (priceEachDay * days);
             totalForPeriode += fullPrice * ((double)forskningsPeriode.percents/(double)100) * ((double)periode.percent/(double)100);
         }
         
+        if (totalForPeriode > 0)
+            System.out.println(totalForPeriode);
+        
         return totalForPeriode;
+    }
+    
+    @Override
+    public int calculateSum(String periodeId) {
+        C3UserProjectPeriode periode = userProjectPeriodes.get(periodeId);
+        C3ForskningsUserPeriode forskningsPeriode = getUserPeriodesOverlappingWith(periode.registeredByUserId, periode.from, periode.to);
+        
+        int year = getYear(periode.from);
+        C3RoundSum roundSumForYear = getRoundSum(year);
+        double days = daysBetween(periode.from, periode.to);
+        double priceEachDay = (double)roundSumForYear.sum / (double)365;
+        double factor = periode.percent / 100;
+        double fullPrice = (priceEachDay * days) *  factor;
+        
+        if (forskningsPeriode != null)
+            fullPrice = fullPrice * ((double)forskningsPeriode.percents/(double)100);
+        
+        return (int)fullPrice;
     }
     
     private int daysBetween(Date d1, Date d2){
@@ -793,7 +816,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         }
         
         List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId, true);
-        SFIExcelReport report = new SFIExcelReport(reportData);
+        SFIExcelReport report = new SFIExcelReport(reportData, workPackages, true, end, createEmptyWp11(companyId, start, end));
         return report.getBase64Encoded();
     }
     
@@ -834,6 +857,8 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         List<C3Project> projectsToUse = getAllProjectsConnectedToCompany(companyId);
         List<User> users = userManager.getUsersByCompanyId(companyId);
         SFIExcelReportData reportData = new SFIExcelReportData();
+        
+        reportData.wpId = forWorkPackageId;
         
         HashMap<String, Double> roundsums = getRoundSums(projectsToUse, users, start, end, true, forWorkPackageId);
         HashMap<String, Double> roundsumsInKnind = getRoundSums(projectsToUse, users, start, end, false, forWorkPackageId);
@@ -891,6 +916,10 @@ public class C3Manager extends ManagerBase implements IC3Manager {
                 report.otherCosts.stream().filter(cost -> !cost.nfr).forEach(cost -> addOtherCost(cost, reportData));
             }
         }
+        
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
+        reportData.date = sdf2.format(new Date());
+        
         return reportData;
     }
 
@@ -917,7 +946,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         }
     }
     
-    private void addSum(HashMap<String, C3ReportHours> map, int hours, int total, String userId) {
+    private void addSum(HashMap<String, C3ReportHours> map, double hours, int total, String userId) {
         C3ReportHours report = map.get(userId);
         
         if (report == null) {
@@ -968,13 +997,13 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         for (C3Project project : projectsToUse) {
             for (User user : users) {
                 C3Report report = getReportForUserProject(user.id, project.id, start, end, forWorkPackageId);
-                int addHours = report.hours.stream()
+                double addHours = report.hours.stream()
                         .filter(hour -> hour.nfr == isNfr && !hour.fixedSum)
-                        .mapToInt(hour -> (int)hour.hours).sum();
+                        .mapToDouble(hour -> hour.hours).sum();
                
                 int total = (int) report.hours.stream()
                         .filter(hour -> hour.nfr == isNfr && !hour.fixedSum)
-                        .mapToInt(hour -> (int) hour.hours * hour.rate).sum();
+                        .mapToDouble(hour -> hour.hours * hour.rate).sum();
                 
                 int totalFixed = (int) report.hours.stream()
                         .filter(hour -> hour.nfr == isNfr && hour.fixedSum)
@@ -1071,7 +1100,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         }
         
         
-        ESAReport report = new ESAReport(allCompanies, getWorkPackages(), totalCosts, inKind);
+        ESAReport report = new ESAReport(allCompanies, getWorkPackages(), totalCosts, inKind, end);
         return report.getBase64Encoded();
     }
 
@@ -1089,24 +1118,47 @@ public class C3Manager extends ManagerBase implements IC3Manager {
 
     @Override
     public C3ForskningsUserPeriode getCurrentForskningsPeriode() {
+        C3ProjectPeriode activePeriode = getActivePeriode();
         List<C3ForskningsUserPeriode> forsperiodes = getForskningsPeriodesForUser(getSession().currentUser.id);
+        
+        List<C3ForskningsUserPeriode> retObjects = new ArrayList();
+        
         for (C3ForskningsUserPeriode fors : forsperiodes) {
-            if (fors.isDateWithin(new Date())) {
+            if (fors.isStartDateWithin(activePeriode.from, activePeriode.to)) {
+                retObjects.add(fors);
+            }
+        }
+        
+        if (retObjects.size() > 1) {
+            throw new RuntimeException("The system does not support that a user has multiple periodes within an active periode.");
+        }
+        
+        if (retObjects.isEmpty())
+            return null;
+        
+        return retObjects.get(0);
+    }
+    
+    private C3ForskningsUserPeriode getCurrentForskningsPeriodeForDate(String userId, Date start, Date end) {
+        List<C3ForskningsUserPeriode> forsperiodes = getForskningsPeriodesForUser(userId);
+        for (C3ForskningsUserPeriode fors : forsperiodes) {
+            if (fors.isStartDateWithin(start, end)) {
                 return fors;
             }
         }
+        
         
         return null;
     }
     
-    public C3ForskningsUserPeriode getCurrentForskningsPeriodeForDate(String userId, Date date) {
+    private C3ForskningsUserPeriode getUserPeriodesOverlappingWith(String userId, Date start, Date end) {
         List<C3ForskningsUserPeriode> forsperiodes = getForskningsPeriodesForUser(userId);
         for (C3ForskningsUserPeriode fors : forsperiodes) {
-            if (fors.isDateWithin(date)) {
+            if (fors.intercepts(start, end)) {
                 return fors;
             }
         }
-        
+       
         return null;
     }
 
@@ -1160,7 +1212,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
     @Override
     public String getBase64SFIExcelReportTotal(String companyId, Date start, Date end) {
         List<SFIExcelReportData> reportData = createReportDatas(start, end, companyId, false);
-        SFIExcelReport report = new SFIExcelReport(reportData);
+        SFIExcelReport report = new SFIExcelReport(reportData, workPackages, false, end, createEmptyWp11(companyId, start, end));
         return report.getBase64Encoded();
     }
 
@@ -1171,5 +1223,17 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         }
         
         return nfrAccess.get(userId).fixedHourCost;
+    }
+
+    private SFIExcelReportData createEmptyWp11(String companyId, Date start, Date end) {
+        String forWorkPackageId = "de20c1c3-faee-4237-8457-dc9efed16364";
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM-yyyy");
+        
+        SFIExcelReportData reportData = new SFIExcelReportData();
+        reportData.delprosjekter = forWorkPackageId == null ? "all" : workPackages.get(forWorkPackageId).name;
+        reportData.nameOfPartner = userManager.getCompany(companyId).name;
+        reportData.ansvarlig = userManager.getCompany(companyId).contactPerson;
+        reportData.periode = sdf.format(start) + " - " + sdf.format(end);
+        return reportData;
     }
 }

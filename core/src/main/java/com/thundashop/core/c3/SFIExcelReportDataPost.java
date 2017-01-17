@@ -9,8 +9,9 @@ package com.thundashop.core.c3;
  *
  * @author ktonder
  */
-public class C3UserProjectPeriode extends ProjectCost {
-    public String costType = "userperiode";
-    public double percent;
-    public boolean nfr;
+public class SFIExcelReportDataPost {
+    public double inkind;
+    public double totalt;
+    public double nfr;
+    public String navn;
 }

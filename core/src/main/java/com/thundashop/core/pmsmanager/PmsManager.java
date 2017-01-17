@@ -60,6 +60,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -1267,7 +1268,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
         PmsPricing prices = getDefaultPriceObject();
-        PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings, prices.pricesExTaxes);
+        PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings, prices.pricesExTaxes, userManager);
         builder.setBudget(getConfigurationSecure().budget);
         int totalRooms = bookingEngine.getBookingItems().size();
         if(!filter.typeFilter.isEmpty()) {
@@ -1345,6 +1346,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     bookingEngine.addBookings(toAdd);
                     remove.undelete();
                     booking.isDeleted = false;
+                    remove.credited = false;
                     remove.setBooking(tmpbook);
                     logEntry(roomName + " readded to booking ", bookingId, null);
                 }catch(BookingEngineException ex) {
@@ -3285,7 +3287,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.userId = newuser.id;
             Company curcompany = createCompany(booking);
             if (curcompany != null) {
-                List<User> existingUsers = userManager.getUsersByCompanyId(curcompany.id);
+                List<User> existingUsers = userManager.getUsersThatHasCompany(curcompany.id);
                 if(!existingUsers.isEmpty()) {
                     newuser = existingUsers.get(0);
                 } else {
@@ -3619,6 +3621,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             room.calculateAvgPrice();
         }
+        saveBooking(booking);
     }
 
     private String createInvoiceAttachment() {
@@ -4150,21 +4153,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             bookingEngine.setConfirmationRequired(true);
         }
         
-        checkForMissingEndDate(booking);
-        
-        Integer result = 0;
-        booking.isDeleted = false;
-        
-        List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
-        Coupon coupon = getCouponCode(booking);
-        if(coupon != null) {
-            cartManager.subtractTimesLeft(coupon.code);
-        }
-        createUserForBooking(booking);
-        if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
-             pmsInvoiceManager.createPrePaymentOrder(booking);
-        }
         try {
+            checkForMissingEndDate(booking);
+
+            Integer result = 0;
+            booking.isDeleted = false;
+
+            List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
+            Coupon coupon = getCouponCode(booking);
+            if(coupon != null) {
+                cartManager.subtractTimesLeft(coupon.code);
+            }
+            createUserForBooking(booking);
+            if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
+                 pmsInvoiceManager.createPrePaymentOrder(booking);
+            }
+            
             result = completeBooking(bookingsToAdd, booking);
 
             if (result == 0) {
@@ -4180,7 +4184,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return booking;
             }
         } catch (Exception e) {
-            messageManager.sendErrorNotification("Unknown booking exception occured for booking id: " + booking.id, e);
+            messageManager.sendErrorNotification("This should never happen and need to be investigated : Unknown booking exception occured for booking id: " + booking.id, e);
             e.printStackTrace();
         }
         return null; 
@@ -4848,4 +4852,51 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
+    @Override
+    public List<PmsRoomSimple> getAllRoomsThatHasAddonsOfType(String type) {
+        PmsBookingSimpleFilter filter = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
+        
+        List<PmsBooking> bookingsWithResturantAddons = bookings.values().stream()
+                .filter(booking -> !booking.payedFor && !booking.isDeleted)
+                .filter(booking -> booking.hasAddonOfType(type))
+                .collect(Collectors.toList());
+        
+        bookingsWithResturantAddons.stream().forEach(booking -> finalize(booking));
+        
+        List<PmsRoomSimple> simpleRooms = new ArrayList();
+        for (PmsBooking booking : bookingsWithResturantAddons) {
+            for (PmsBookingRooms room : booking.getActiveRooms()) {
+                if (room.hasAddonOfType(type)) {
+                    simpleRooms.add(filter.convertRoom(room, booking));
+                }
+            }
+        }
+    
+        return simpleRooms;
+    }
+
+    public void removeAddon(String addonId) {
+        for (PmsBooking booking : bookings.values()) {
+            boolean removed = false;
+            for (PmsBookingRooms room : booking.rooms) {
+                boolean addonRemoved = room.decreaseAddonAndRemoveIfEmpty(addonId);
+                if (addonRemoved) {
+                    removed = true;
+                }
+            }
+            
+            if (removed) {
+                saveBooking(booking);
+            }
+        }
+    }
+
+    public PmsBookingAddonItem getBaseAddon(String productId) {
+        for(PmsBookingAddonItem item : getConfigurationSecure().addonConfiguration.values()) {
+            if(item != null && item.productId != null && item.productId.equals(productId)) {
+                return item;
+            }
+        }
+        return null;
+    }
 }

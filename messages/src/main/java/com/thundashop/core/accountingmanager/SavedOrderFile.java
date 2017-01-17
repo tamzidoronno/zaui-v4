@@ -20,11 +20,15 @@ public class SavedOrderFile extends DataCommon {
     public Double amountIncDebet = 0.0;
     public Double sumAmountExOrderLines = 0.0;
     public Double sumAmountIncOrderLines = 0.0;
+    public double onlyPositiveLinesEx = 0.0;
+    public double onlyPositiveLinesInc = 0.0;
+    
     public HashMap<String, Double> amountOnOrder = new HashMap();
     public List<String> tamperedOrders = new ArrayList();
     public List<String> orders = new ArrayList();
     public String configId = "";
     public String transferId;
+    public ArrayList ordersNow = new ArrayList();
     
     @Transient
     public Integer numberOfOrdersNow = 0;

@@ -163,16 +163,16 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function doRoomsBookedAction() {
         $action = $_POST['data']['action'];
         $bookingId = $_POST['data']['bookingid'];
+        $booking = $this->getSelectedBooking();
         if($action == "delete") {
             foreach($_POST['data']['rooms'] as $roomid) {
                 $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedName(), $bookingId, $roomid);
             }
         } else if($action == "split") {
             $this->getApi()->getPmsManager()->splitBooking($this->getSelectedName(), $_POST['data']['rooms']);
-        } else if($action == "singlepayments") {
+        } else if($action == "singlepayments" || $action == "singlepaymentsnosend") {
             $this->getApi()->getPmsInvoiceManager()->removeOrderLinesOnOrdersForBooking($this->getSelectedName(), $bookingId, $_POST['data']['rooms']);
             foreach($_POST['data']['rooms'] as $roomid) {
-                $booking = $this->getSelectedBooking();
                 $selectedroom = null;
                 foreach($booking->rooms as $room) {
                     if($room->pmsBookingRoomId == $roomid) {
@@ -195,13 +195,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $filter->createNewOrder = true;
 
                 $newOrderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
-                $email = $room->guests[0]->email;
-                $prefix = $room->guests[0]->prefix;
-                $phone = $room->guests[0]->phone;
-                $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $newOrderId, $bookingId, $email, $prefix, $phone);
-                $this->selectedBooking = null;
+                if($action != "singlepaymentsnosend") {
+                    $email = $room->guests[0]->email;
+                    $prefix = $room->guests[0]->prefix;
+                    $phone = $room->guests[0]->phone;
+                    $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $newOrderId, $bookingId, $email, $prefix, $phone);
+                }
             }
         }
+        $this->selectedBooking = null;
 
         $this->showBookingInformation();
     }
@@ -470,7 +472,23 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->endDate = $this->convertToJavaDate(strtotime($day));
 
             $bookings = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $filter);
-            $this->printSimpleRoomTable($bookings, $day);
+            
+            $included = json_decode($_POST['data']['included']);
+            $toPrint = array();
+            $toExclude = array();
+            foreach ($bookings as $booking) {
+                if(!in_array($booking->pmsRoomId, $included)) {
+                    $toExclude[] = $booking;
+                    continue;
+                }
+                $toPrint[] = $booking;
+            }
+
+            echo "<b>Rooms included in the statistics</b><br>";
+            $this->printSimpleRoomTable($toPrint, $day);
+            echo "<br><br><b>Other rooms not included in the statistics</b><br>";
+            echo "* Test bookings and not paid which is before today is not included in the statistics";
+            $this->printSimpleRoomTable($toExclude, $day);
         } else {
             $filterOptions = new \core_common_FilterOptions();
             $filterOptions->startDate = $this->convertToJavaDate(strtotime($day));
@@ -712,6 +730,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->getApi()->getOrderManager()->saveOrder($order);
         } else {
             $booking->userId = $userId;
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+            $this->selectedBooking = null;
         }
         
         $this->renderEditUserView();
@@ -1671,6 +1691,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $add->addonId = $id;
             $add->count = $addon['count'];
             $add->price = $addon['price'];
+            $add->isIncludedInRoomPrice = false;
+            if($addon['includedInRoomPrice'] == "true") {
+                $add->isIncludedInRoomPrice = true;
+            }
             $toAdd[] = $add;
         }
         $this->getApi()->getPmsManager()->updateAddons($this->getSelectedName(), $toAdd, $bookingid);
@@ -1775,14 +1799,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
             if(date("d.m.Y", $booking->end/1000) == date("d.m.Y", strtotime($day))) {
                 continue;
             }
-            $price = round($booking->price);
+            $price = $booking->price / 1.1;
             $totalprice += $price;
             echo "<tr class='moreinformationaboutbooking' style='cursor:pointer;' bookingid='".$booking->bookingId."'>";
             echo "<td>" . $booking->room . "</td>";
             echo "<td>" . $booking->owner . "</td>";
             echo "<td>" . date("d.m.Y", $booking->start/1000) . "</td>";
             echo "<td>" . date("d.m.Y", $booking->end/1000) . "</td>";
-            echo "<td>" . $price . "</td>";
+            echo "<td>" . round($price) . "</td>";
             echo "<td>" . $booking->progressState . "</td>";
             if($booking->testReservation) {
                 echo "<td>yes</td>";
@@ -1796,7 +1820,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "<td></td>";
         echo "<td></td>";
         echo "<td></td>";
-        echo "<td>$totalprice</td>";
+        echo "<td>".round($totalprice)."</td>";
         echo "<td></td>";
         echo "<td></td>";
         echo "</tr>";
@@ -1870,6 +1894,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $total = 0;
         $totalCount = 0;
         foreach($cart->items as $item) {
+            if(!$item) {
+                continue;
+            }
             $priceEx = round($item->product->priceExTaxes);
             $price = round($item->product->price, 1);
             $totalEx += ($priceEx * $item->count);
@@ -2093,6 +2120,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->prepayment = true;
         $filter->createNewOrder = true;
         $filter->addToOrderId = $_POST['data']['appendToOrderId'];
+        
+        if($_POST['data']['appendToOrderId'] && $this->getFactory()->getStore()->id == "178330ad-4b1d-4b08-a63d-cca9672ac329") {
+            $this->getApi()->getPmsInvoiceManager()->clearOrder($this->getSelectedName(), $bookingId, $_POST['data']['appendToOrderId']);
+        }
         
         $instanceToUse = null;
         $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();

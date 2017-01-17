@@ -43,7 +43,7 @@ public interface IOrderManager {
      */
     public Order createOrderForUser(String userId);
     
-    public String createRegisterCardOrder();
+    public String createRegisterCardOrder(String paymentType);
     
     @Administrator
     public void forceDeleteOrder(String orderId, String password);
@@ -112,7 +112,7 @@ public interface IOrderManager {
     public void checkForOrdersToCapture() throws ErrorException;
     
     @Administrator
-    public void checkForOrdersToAutoPay() throws ErrorException;
+    public void checkForOrdersToAutoPay(int daysToTryAfterOrderHasStarted) throws ErrorException;
     
     /**
      * Fetch all orders for a user.

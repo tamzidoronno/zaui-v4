@@ -64,6 +64,7 @@ public class PmsBooking extends DataCommon {
     private double totalPrice;
     public String paymentType = "";
     public Date orderCreatedAfterStay;
+    boolean isConference = false;
     
     
     public Double getTotalPrice() {
@@ -380,6 +381,15 @@ public class PmsBooking extends DataCommon {
         totalPrice = total;
     }
 
+    boolean transferredToLock() {
+        for(PmsBookingRooms room : rooms) {
+            if(room.addedToArx) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;
@@ -462,5 +472,9 @@ public class PmsBooking extends DataCommon {
                 }
             }
         }
+    }
+    
+    public boolean hasAddonOfType(String type) {
+        return rooms.stream().anyMatch(room -> room.hasAddonOfType(type));
     }
 }

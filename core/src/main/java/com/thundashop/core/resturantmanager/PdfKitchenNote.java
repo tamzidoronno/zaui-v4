@@ -56,33 +56,15 @@ public class PdfKitchenNote {
     private void writeContent(String tableName) throws IOException {
         writeText(tableName, 20, 820, false, 14);
         
-        int i = 0;
-        int lineHeight = 8;
-        int padding = 3;
-        int start = 800;
-        
-        for (int j=0; j<=getMaxPersonSize(); j++) {
-            if (!hasAnyForPerson(j)) {
-                continue;
-            }
-            
-            start -= 10;
-            int pos = start - (i*lineHeight) - (i*padding);
-            String personText = j == 0 ? "Generel" : "Person " + j;
-            writeText("\\n"+personText, 20, pos, false, lineHeight);
-            
-            i++;
-            
-            for (ResturantCartItem cartItem : session.getCartItems()) {
-                if (cartItem.tablePersonNumber != j)
-                    continue;
-                
-                pos = start - (i*lineHeight) - (i*padding);
+        if (!session.getItemsAdded().isEmpty()) {
+            writeText("Items added:", 0, 0, false, 0);
+            for (ResturantCartItem cartItem : session.getItemsAdded()) {
+
                 Product product = productManager.getProduct(cartItem.productId);
                 if (!product.isFood) {
                     continue;
                 }
-                
+
                 String productName = product.name; 
                 if (cartItem.options.size() > 0) {
                     for (String key : cartItem.options.keySet()) {
@@ -90,31 +72,32 @@ public class PdfKitchenNote {
                         productName += " ( " + variation.text + ": " + variation.getNode(cartItem.options.get(key)).text + " )";
                     }   
                 }
-                
-                writeText(productName, 20, pos, false, lineHeight);
-                i++;
+
+                writeText(productName, 20, 20, false, 20);
+            }
+        }
+
+        if (!session.getItemsRemoved().isEmpty()) {
+            writeText("*** Items removed:", 0, 0, false, 0);
+            for (ResturantCartItem cartItem : session.getItemsRemoved()) {
+
+                Product product = productManager.getProduct(cartItem.productId);
+                if (!product.isFood) {
+                    continue;
+                }
+
+                String productName = product.name; 
+                if (cartItem.options.size() > 0) {
+                    for (String key : cartItem.options.keySet()) {
+                        TreeNode variation = product.variations.getNode(key);
+                        productName += " ( " + variation.text + ": " + variation.getNode(cartItem.options.get(key)).text + " )";
+                    }   
+                }
+
+                writeText(productName, 20, 20, false, 20);
             }
         }
     }
-
-    private int getMaxPersonSize() {
-        int i = 0;
-        for (ResturantCartItem cartItem : session.getCartItems()) {
-            if (cartItem.tablePersonNumber > i)
-                i = cartItem.tablePersonNumber;
-        }
-        
-        return i;
-    }
-
-    private boolean hasAnyForPerson(int j) {
-        for (ResturantCartItem cartItem : session.getCartItems()) {
-            if (cartItem.tablePersonNumber == j && productManager.getProduct(cartItem.productId).isFood)
-                return true;
-        }
-        
-        return false;
-    }    
 
     private void writeHeader(String tableName, User user) throws IOException {
         SimpleDateFormat smf = new SimpleDateFormat("dd.MM.yyyy HH:mm");

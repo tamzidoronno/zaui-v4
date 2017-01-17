@@ -201,7 +201,7 @@ public class PmsBookingRooms implements Serializable {
     public void clearAddonType(int type) {
         List<PmsBookingAddonItem> toRemove = new ArrayList();
         for(PmsBookingAddonItem item2 : addons) {
-            if(item2.addonType == type) {
+            if(item2!= null && item2.addonType != null && item2.addonType == type) {
                 toRemove.add(item2);
             }
         }
@@ -445,6 +445,7 @@ public class PmsBookingRooms implements Serializable {
             if(item.addonId.equals(addedItem.addonId)) {
                 addedItem.price = item.price;
                 addedItem.count = item.count;
+                addedItem.isIncludedInRoomPrice = item.isIncludedInRoomPrice;
             }
         }
     }
@@ -597,5 +598,27 @@ public class PmsBookingRooms implements Serializable {
         }
     }
 
-    
+    public boolean hasAddonOfType(String type) {
+        return addons.stream().anyMatch(addon -> addon.addedBy != null 
+                && addon.addedBy.equals(type) 
+                && addon.count > 0 
+                && addon.price > 0
+        );
+    }
+
+    public boolean decreaseAddonAndRemoveIfEmpty(String addonId) {
+        for (PmsBookingAddonItem addon : addons) {
+            if (addon.addonId.equals(addonId)) {
+                if (addon.count > 1) {
+                    addon.count -= 1;
+                    return true;
+                } else {
+                    addons.remove(addon);
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
 }

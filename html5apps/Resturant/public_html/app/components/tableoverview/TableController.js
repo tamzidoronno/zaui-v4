@@ -11,6 +11,22 @@ controllers.TableController = function($scope, $rootScope, $api, $state, datarep
         return 0;
     }
     
+    $scope.toggleSticky = function(listId) {
+        datarepository.toggleStickList(listId);    
+    }
+    
+    $scope.isListSticky = function(listId) {
+        return datarepository.isListSticky(listId);
+    }
+    
+    $scope.toggleHiddenState = function(listId) {
+        var isVisible = $('.productList .productlistinnner[listid="'+listId+'"]').is(':visible');
+        $('.productList .productlistinnner').addClass('hidden');
+        if (!isVisible) {
+            $('.productList .productlistinnner[listid="'+listId+'"]').removeClass('hidden');
+        }   
+    }
+    
     $scope.goBack = function() {
         $state.transitionTo('base.home');
     }

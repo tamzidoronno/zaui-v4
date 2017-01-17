@@ -43,6 +43,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .changepaymenttypebutton', app.PmsManagement.changepaymenttypebutton);
         $(document).on('click','.PmsManagement .markpaidbutton', app.PmsManagement.markpaidform);
         $(document).on('click','.PmsManagement .changeGuestInformation', app.PmsManagement.changeGuestInformation);
+        $(document).on('click','.PmsManagement .addonincludedinroomprice', app.PmsManagement.toggleAddonIncluded);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -82,6 +83,16 @@ app.PmsManagement = {
                 $(this).attr('checked',null);
             }
         });
+    },
+    toggleAddonIncluded : function() {
+            $(this).attr('title','');
+        if($(this).hasClass('fa-check')) {
+            $(this).removeClass('fa-check');
+            $(this).addClass('fa-close');
+        } else {
+            $(this).addClass('fa-check');
+            $(this).removeClass('fa-close');
+        }
     },
     showAddonList : function() {
         var event = thundashop.Ajax.createEvent('','loadEventListForRoom',$(this), {
@@ -397,7 +408,8 @@ app.PmsManagement = {
     loadStatisticsOverview : function() {
         var data = {
             "type" : $(this).attr('type'),
-            "day" : $(this).attr('day')
+            "day" : $(this).attr('day'),
+            "included" : $(this).attr('included')
         }
         
         var event = thundashop.Ajax.createEvent('','loadDayStatistics',$(this),data);
@@ -424,6 +436,10 @@ app.PmsManagement = {
             }
             toSave[addonid].count = $(this).find('.addoncount').val();
             toSave[addonid].price = $(this).find('.addonprice').val();
+            toSave[addonid].includedInRoomPrice = false;
+            if($(this).find('.addonincludedinroomprice').hasClass('fa-check')) {
+                toSave[addonid].includedInRoomPrice = true;
+            }
         });
         var event = thundashop.Ajax.createEvent('','updateAddons',$(this), {
             "addons" : toSave,

@@ -9,11 +9,8 @@ package com.thundashop.core.c3;
  *
  * @author ktonder
  */
-public class SFIExcelReportDataPost11 {
-    public String navn = "";
+public class SFIExcelReportDataPost11 extends SFIExcelReportDataPost {
     public double timer;
     public double timesats;
-    public double totalt;
-    public double nfr;
-    public double inkind;
+    
 }

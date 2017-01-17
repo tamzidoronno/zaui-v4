@@ -236,6 +236,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 $config->addonConfiguration->{$addonKey}->isIncludedInRoomPrice = $_POST['data']['isIncludedInRoomPrice'] == "true";
                 $config->addonConfiguration->{$addonKey}->count = $_POST['data']['count'];
                 $config->addonConfiguration->{$addonKey}->descriptionWeb = $_POST['data']['descriptionWeb'];
+                $config->addonConfiguration->{$addonKey}->noRefundable = $_POST['data']['noRefundable'] == "true";
                 
                 $includedRes = array();
                 foreach($_POST['data'] as $key => $val) {

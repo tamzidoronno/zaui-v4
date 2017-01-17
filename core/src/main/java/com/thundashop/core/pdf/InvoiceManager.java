@@ -14,6 +14,8 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,6 +37,9 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
 
     @Autowired
     private OrderManager orderManager;
+
+    @Autowired
+    private UserManager userManager;
     
     @Autowired
     private StoreApplicationPool storeApplicationPool;
@@ -43,9 +48,8 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     public void createInvoice(String orderId) throws ErrorException {
         Order order = orderManager.getOrder(orderId);
 
-        AccountingDetails details = getAccountingDetails();
-
-        InvoiceGenerator generator = new InvoiceGenerator(order, details);
+        generateKidOnOrder(order);
+        InvoiceGenerator generator = new InvoiceGenerator(order, getAccountingDetails());
         try {
             String file = generator.createInvoice();
             Map<String, String> files = new HashMap();
@@ -57,16 +61,24 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     }
 
     private AccountingDetails getAccountingDetails() throws ErrorException {
-        Application settings = storeApplicationPool.getApplication("70ace3f0-3981-11e3-aa6e-0800200c9a66");
+        Application settings = storeApplicationPool.getApplicationIgnoreActive("70ace3f0-3981-11e3-aa6e-0800200c9a66");
         AccountingDetails details = new AccountingDetails();
-        details.accountNumber = settings.getSetting("accountNumber");
-        details.address = settings.getSetting("address");
-        details.city = settings.getSetting("city");
-        details.companyName = settings.getSetting("companyName");
-        details.contactEmail = settings.getSetting("contactEmail");
-        details.dueDays = Integer.parseInt(settings.getSetting("duedays"));
-        details.vatNumber = settings.getSetting("vatNumber");
-        details.webAddress = settings.getSetting("webAddress");
+        if(settings != null) {
+            details.accountNumber = settings.getSetting("accountNumber");
+            details.address = settings.getSetting("address");
+            details.city = settings.getSetting("city");
+            details.companyName = settings.getSetting("companyName");
+            details.contactEmail = settings.getSetting("contactEmail");
+            details.dueDays = Integer.parseInt(settings.getSetting("duedays"));
+            details.vatNumber = settings.getSetting("vatNumber");
+            details.webAddress = settings.getSetting("webAddress");
+            String kidSize = settings.getSetting("kidSize");
+            if(kidSize != null && !kidSize.isEmpty()) {
+                details.kidSize = new Integer(kidSize);
+            }
+            details.kidType = settings.getSetting("defaultKidMethod");
+            details.type = settings.getSetting("type");
+        }
 
         return details;
     }
@@ -76,7 +88,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         Order order = orderManager.getOrder(orderId);
 
         AccountingDetails details = getAccountingDetails();
-
+        generateKidOnOrder(order);
         InvoiceGenerator generator = new InvoiceGenerator(order, details);
         
         try {
@@ -154,5 +166,22 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         is.close();
         return bytes;
     } 
+
+    public void generateKidOnOrder(Order order) {
+        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+            AccountingDetails details = getAccountingDetails();
+            if(details.kidType != null && !details.kidType.isEmpty()) {
+                if(details.kidType.equals("orderid")) {
+                    order.generateKidLuhn(order.incrementOrderId + "", details.kidSize);
+                } else if(details.kidType.equals("customerid")) {
+                    User user = userManager.getUserById(order.userId);
+                    order.generateKidLuhn(user.customerId + "", details.kidSize);
+                } else if(details.kidType.equals("customeridandorderid")) {
+                    User user = userManager.getUserById(order.userId);
+                    order.generateKidLuhn(user.customerId + "" + order.incrementOrderId, details.kidSize);
+                }
+            }
+        }
+    }
 
 }

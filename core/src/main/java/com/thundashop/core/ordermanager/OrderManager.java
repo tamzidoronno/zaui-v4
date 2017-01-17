@@ -1,6 +1,7 @@
 package com.thundashop.core.ordermanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
@@ -41,6 +42,7 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +105,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private PrintManager printManager;
     
+    @Autowired
+    private GetShopApplicationPool getShopApplicationPool; 
+   
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
         Order order = getOrder(orderId);
@@ -113,9 +118,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
 
     @Override
-    public String createRegisterCardOrder() {        
+    public String createRegisterCardOrder(String paymentTypeId) {
         User user = userManager.getUserById(getSession().currentUser.id);
-        user.preferredPaymentType = getStorePreferredPayementMethod().paymentId;
+        user.preferredPaymentType = paymentTypeId;
         userManager.saveUserSecure(user);
         
         cartManager.clear();
@@ -492,7 +497,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         
-        throw new ErrorException(61);
+        throw null;
     }
     
     private Order getByTransactionId(String transactionId) {
@@ -1158,9 +1163,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void checkForOrdersToAutoPay() throws ErrorException {
+    public void checkForOrdersToAutoPay(int daysToTryAfterOrderHasStarted) throws ErrorException {
         for(Order order : orders.values()) {
-            if(!orderNeedAutoPay(order)) {
+            if(!orderNeedAutoPay(order, daysToTryAfterOrderHasStarted)) {
                 continue;
             }
             logPrint("autopay for order: " + order.incrementOrderId);
@@ -1169,6 +1174,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if(card.isExpired()) {
                     continue;
                 }
+                
+                        
+                if(!frameworkConfig.productionMode) {
+                    System.out.println("Tried autopay with card: " + card.savedByVendor + " - " + card.mask);
+                    return;
+                }
+
                 
                 try {
                     if(card.savedByVendor.equals("DIBS")) {
@@ -1196,7 +1208,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         logPrint("Need to notify about failed payment");
     }
 
-    private boolean orderNeedAutoPay(Order order) {
+    private boolean orderNeedAutoPay(Order order, int daysToTryAfterOrderHasStarted) {
         if(order.cart.getTotal(true) <= 0) {
             return false;
         }
@@ -1213,7 +1225,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         //Order has started, its too late.
         Calendar yesterday = Calendar.getInstance();
-        yesterday.add(Calendar.DAY_OF_YEAR, -1);
+        yesterday.add(Calendar.DAY_OF_YEAR, (daysToTryAfterOrderHasStarted * -1));
         for(CartItem item : order.cart.getItems()) {
             if(item.startDate != null && new Date().after(item.startDate)) {
                 if(yesterday.getTime().after(order.rowCreatedDate)) {
@@ -1401,9 +1413,34 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void finalizeOrder(Order order) {
+        updateAddressIfNotClosed(order);
+        
         List<Order> ordersToFinalise = new ArrayList();
         ordersToFinalise.add(order);
         finalize(ordersToFinalise);
+    }
+
+    private void updateAddressIfNotClosed(Order order) {
+        if (!order.closed && order.userId != null && !order.userId.isEmpty() && order.cart != null && order.cart.address != null) {
+            try {
+                User user = userManager.getUserById(order.userId);
+                if (user == null || user.address == null)
+                    return;
+                
+                if (order.cart.address.isSame(user, user.address)) {
+                    return;
+                }
+                
+                order.cart.address = (Address)user.address.clone();
+                if (order.cart.address.fullName == null || order.cart.address.fullName.isEmpty()) {
+                    order.cart.address.fullName = user.fullName;
+                }
+                
+                saveObject(order);
+            } catch (CloneNotSupportedException ex) {
+                java.util.logging.Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     private void feedGrafana(Order order) {
@@ -1534,6 +1571,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         details.dueDays = Integer.parseInt(settings.getSetting("duedays"));
         details.vatNumber = settings.getSetting("vatNumber");
         details.webAddress = settings.getSetting("webAddress");
+        details.type = settings.getSetting("type");
 
         return details;
     }

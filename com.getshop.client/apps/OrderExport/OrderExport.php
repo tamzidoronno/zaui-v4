@@ -5,7 +5,7 @@ class OrderExport extends \WebshopApplication implements \Application {
     public function getDescription() {
         return "Replaces the old accountingtransfer application. This is more flexible";
     }
-
+ 
     public function getTransferTypes() {
         $transfertypes = array();
         $transfertypes['creditor'] = "Creditor";
@@ -17,6 +17,10 @@ class OrderExport extends \WebshopApplication implements \Application {
         return "OrderExport";
     }
 
+    public function loadDataForConfig() {
+        $this->includefile("orderconfigfileoverview");
+    }
+    
     public function renderConfig() {
         $this->includefile("orderexportconfig");
     }
@@ -88,8 +92,10 @@ class OrderExport extends \WebshopApplication implements \Application {
         foreach($products as $product) {
             $ex = 0;
             $inc = 0;
-            foreach($totalExProducts[$product->id] as $tmp) { $ex += $tmp; }
-            foreach($totalIncProducts[$product->id] as $tmp) { $inc += $tmp; }
+            if(isset($totalExProducts[$product->id])) {
+                foreach($totalExProducts[$product->id] as $tmp) { $ex += $tmp; }
+                foreach($totalIncProducts[$product->id] as $tmp) { $inc += $tmp; }
+            }
             echo "<td>".round($ex) . "<br><span style='color:#aaa;'>" . round($inc)."</span></td>";
         }
         echo "</tr>";

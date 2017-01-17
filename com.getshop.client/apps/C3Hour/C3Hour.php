@@ -27,9 +27,9 @@ class C3Hour extends \MarketingApplication implements \Application {
         $userPeriode->percent = $_POST['data']['hours'];
         $userPeriode->nfr = isset($_POST['data']['nfr']) ? $_POST['data']['nfr'] : false;
         
-         if (!ctype_digit($userPeriode->percent)) {
+         if (!is_numeric($userPeriode->percent)) {
             $obj = $this->getStdErrorObject();
-            $obj->fields->errorMessageTimer = "Kun hele tall er tillatt i dette feltet";
+            $obj->fields->errorMessageTimer = "Kun tall, eksempel: 10 eller med desimaler 10.4 (bruk punktum, ikke comma)";
             $obj->gsfield->percent = 1;
             $this->doError($obj);
         }

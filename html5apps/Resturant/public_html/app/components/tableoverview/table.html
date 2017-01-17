@@ -17,8 +17,8 @@
 <div class="button" ng-class="canSendToKitched() ? '' : 'disabled'" ng-click="sendToKitchen()">Send order</div>
 
 <div ng-repeat="list in productLists" class="productList">
-    <div class="listnametitle">{{ list.listName }}</div>
-    <div class="productlistinnner">
+    <div class="listnametitle" ng-click="toggleHiddenState(list.id)" > <i class="fa fa-thumb-tack" ng-click="toggleSticky(list.id)" ng-class="{'sticky' : isListSticky(list.id) }"></i> {{ list.listName }}</div>
+    <div class="productlistinnner hidden" listid="{{list.id}}" ng-class="{'sticky' : isListSticky(list.id) }">
         <div ng-repeat="product in getProductsForList(list)" productid="{{product.id}}" class="productcartbutton" ng-right-click="removeProduct(product)" ng-swipe-right="removeProduct(product)" ng-click="addToCart(product)" ng-class="{ 'inuse' : getProductCount(product), 'not_for_table' : getProductCountForTable(product) }">
             {{ product.name }}
             <div>{{ getProductCount(product) }}</div>

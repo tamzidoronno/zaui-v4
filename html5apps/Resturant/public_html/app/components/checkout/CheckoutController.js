@@ -7,10 +7,86 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
     $scope.productLists = datarepository.getProductLists();
     $scope.standalone = $stateParams.tableId === "direct";
     $scope.rooms = datarepository.rooms;
+    $scope.view = 'products';
+    $scope.roomsWithProducts = [];
+    $scope.noRoomsFound = false;
     
-    console.log($scope.tables);
     $scope.closeAddTable = function() {
         $('.checkout_addTable').hide();
+    }
+    
+    $scope.loadList = function() {
+        $scope.c = false;
+        $scope.roomsWithProducts = [];
+        
+        $api.getApi().PmsManager.getAllRoomsThatHasAddonsOfType("default", "ResturantManager").done(function(res) {
+            $scope.roomsWithProducts = res;
+            $scope.roomsWithProducts.sort(function(a,b) {
+                if(a.room < b.room) return -1;
+                if(a.room > b.room) return 1;
+                return 0;
+            })
+            
+            $scope.noRoomsFound = $scope.roomsWithProducts.length < 1;
+            $scope.$apply();
+        })
+    }
+    
+    $scope.addAddonToCheckout = function(addon) {
+        if ($scope.getProductCountAddon(addon) < 1)
+            return;
+        
+        var tableId = $scope.tables[0] ? $scope.tables[0].id : "direct";
+        var item = datarepository.addToCart(addon.productId, 0, tableId, null, null, addon.addonId);
+        
+        if (datarepository.getProductById(addon.productId) == null || addon.price !== datarepository.getProductById(addon.productId).price) {
+            datarepository.setNewTemporaryProductPrice(addon.productId, addon.price);
+        }
+        
+        datarepository.cartItemsToPay.push(item);
+        datarepository.save();
+    }
+    
+    $scope.getProductCountAddon = function(addon) {
+        return addon.count - datarepository.getAddonCountAdded(addon);
+    }
+    
+    $scope.getProductName = function(productId) {
+        if (datarepository.getProductById(productId)) {
+            return datarepository.getProductById(productId).name;
+        }
+        
+        return "";
+    }
+    
+    $scope.isToday = function(inep) {
+        var inputDate = new Date(inep);
+        var todaysDate = new Date();
+        return inputDate.setHours(0,0,0,0) == todaysDate.setHours(0,0,0,0);
+    }
+    
+    $scope.getStayPeriod = function(room) {
+        var d = new Date(room.start);
+        var b = new Date(room.end);
+        
+        var datestring = d.getDate()  + "." + (d.getMonth()+1) + "." + d.getFullYear() + " - " +  b.getDate()  + "." + (b.getMonth()+1) + "." + b.getFullYear();
+        return datestring;
+    }
+    
+    $scope.toggleSticky = function(listId) {
+        datarepository.toggleStickList(listId);    
+    }
+    
+    $scope.isListSticky = function(listId) {
+        return datarepository.isListSticky(listId);
+    }
+    
+    $scope.toggleHiddenState = function(listId) {
+        var isVisible = $('.productlistinnner[listid="'+listId+'"]').is(':visible');
+        $('.productlistinnner').addClass('hidden');
+        if (!isVisible) {
+            $('.productlistinnner[listid="'+listId+'"]').removeClass('hidden');
+        }   
     }
     
     $scope.showAddTable = function() {
@@ -212,6 +288,7 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
     
     $scope.getSelectedProducts = function() {
         var retProducts = [];
+        
         for (var i in datarepository.cartItemsToPay) {
             var cartItem = datarepository.cartItemsToPay[i];
             var product = datarepository.getProductById(cartItem.productId);
@@ -255,6 +332,18 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
             return "Kontant";
         
         return paymentApp.appName;
+    }
+    
+    $scope.isPayOnRoomMethodAndAddonsAdded = function(paymentMethod) {
+        if (paymentMethod.appName !== "PayOnRoom")
+            return false;
+        
+        for (var i in datarepository.cartItemsToPay) {
+            if (datarepository.cartItemsToPay[i].addonId)
+                return true;
+        }
+        
+        return false;
     }
     
     $scope.removeProduct = function(product) {

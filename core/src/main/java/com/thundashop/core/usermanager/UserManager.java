@@ -1371,7 +1371,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return getUsersThatHasCompany(companyId);
     }
 
-    private List<User> getUsersThatHasCompany(String companyId) {
+    public List<User> getUsersThatHasCompany(String companyId) {
         return getUserStoreCollection(storeId).getUsersThatHasCompany(companyId);
     }
 

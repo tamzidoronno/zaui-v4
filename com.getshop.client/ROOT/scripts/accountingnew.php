@@ -10,12 +10,10 @@ if(isset($_GET['configid'])) {
     $file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($config->id, $start, $end);
 }
 if(isset($_GET['id'])) {
-    $file = $factory->getApi()->getAccountingManager()->getFileById($_GET['id']);
+    $file = $factory->getApi()->getAccountingManager()->getFile($_GET['id']);
     $config = $factory->getApi()->getAccountingManager()->getAccountingConfig($file->configId);
     $start = $file->startDate;
     $end = $file->endDate;
-    $file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($config->id, $start, $end);
-    $factory->getApi()->getAccountingManager()->deleteFile($_GET['id']);
 }
 
 

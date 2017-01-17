@@ -6,6 +6,8 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,9 +23,11 @@ class PmsStatisticsBuilder {
     private final List<PmsBooking> bookings;
     private final boolean pricesExTax;
     private HashMap<Integer, PmsBudget> budget;
+    private final UserManager userManager;
 
-    PmsStatisticsBuilder(List<PmsBooking> allBookings, boolean pricesExTax) {
+    PmsStatisticsBuilder(List<PmsBooking> allBookings, boolean pricesExTax, UserManager userManager) {
         this.bookings = allBookings;
+        this.userManager = userManager;
         this.pricesExTax = pricesExTax;
     }
 
@@ -31,6 +35,7 @@ class PmsStatisticsBuilder {
         PmsStatistics statics = new PmsStatistics();
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
+        List<String> roomsAddedForGuests = new ArrayList();
         while(true) {
             StatisticsEntry entry = buildStatsEntry(cal);
             entry.date = cal.getTime();
@@ -42,6 +47,7 @@ class PmsStatisticsBuilder {
                 entry.bugdet = budget.get(month).coverage_percentage.doubleValue();
             }
             statics.addEntry(entry);
+            
             for(PmsBooking booking : bookings) {
                 if(!booking.confirmed) {
                     continue;
@@ -65,6 +71,7 @@ class PmsStatisticsBuilder {
                         continue;
                     }
                     if(room.isActiveOnDay(cal.getTime())) {
+                        entry.roomsIncluded.add(room.pmsBookingRoomId);
                         Double price = room.getDailyPrice(booking.priceType, cal);
                         if(!pricesExTax) {
                             price /= 1 + (room.taxes/100);
@@ -72,6 +79,11 @@ class PmsStatisticsBuilder {
 
                         entry.totalPrice += price;
                         entry.roomsRentedOut++;
+                        addGuests(entry, room, booking);
+                        if(!roomsAddedForGuests.contains(room.pmsBookingRoomId)) {
+                            addUniqueGuests(entry, room, booking);
+                            roomsAddedForGuests.add(room.pmsBookingRoomId);
+                        }
                     }
                 }
                  for(PmsBookingRooms room : booking.getActiveRooms()) {
@@ -80,7 +92,7 @@ class PmsStatisticsBuilder {
                     }
                     if(room.isActiveOnDay(cal.getTime()) || room.isEndingToday(cal.getTime())) {
                         for(PmsBookingAddonItem addon : room.addons) {
-                            if(addon.addonType.equals(PmsBookingAddonItem.AddonTypes.BREAKFAST)) {
+                            if(addon != null && addon.addonType != null && addon.addonType.equals(PmsBookingAddonItem.AddonTypes.BREAKFAST)) {
                                 Calendar cal2 = Calendar.getInstance();
                                 cal2.setTime(addon.date);
                                 cal2.add(Calendar.DAY_OF_YEAR, 1);
@@ -92,7 +104,6 @@ class PmsStatisticsBuilder {
                                     continue;
                                 }
                             }
-                            System.out.println(room.guests.get(0).name);
                             Integer count = entry.addonsCount.get(addon.addonType);
                             Double addonPrice = entry.addonsPrice.get(addon.addonType);
                             if(count == null) { count = 0; }
@@ -170,6 +181,59 @@ class PmsStatisticsBuilder {
 
     void setBudget(HashMap<Integer, PmsBudget> budget) {
         this.budget = budget;
+    }
+
+    private void addGuests(StatisticsEntry entry, PmsBookingRooms room, PmsBooking booking) {
+        String countryCode = booking.countryCode;
+        if(countryCode == null || countryCode.isEmpty()) {
+            countryCode = "NO";
+        }
+
+        User user = userManager.getUserById(booking.userId);
+        
+        int totalGuests = 0;
+        if(entry.guests.containsKey(countryCode)) {
+            totalGuests = entry.guests.get(countryCode);
+        }
+        totalGuests += room.numberOfGuests;
+        entry.guests.put(countryCode, totalGuests);
+        
+        if(booking.isConference) {
+            int confGuests = 0;
+            if(entry.guestsConference.containsKey(countryCode)) {
+                confGuests = entry.guestsConference.get(countryCode);
+            }
+            confGuests += room.numberOfGuests;
+            entry.guestsConference.put(countryCode, confGuests);
+        } else if(!user.company.isEmpty()) {
+            int confCompany = 0;
+            if(entry.guestsCompany.containsKey(countryCode)) {
+                confCompany = entry.guestsCompany.get(countryCode);
+            }
+            confCompany += room.numberOfGuests;
+            entry.guestsCompany.put(countryCode, confCompany);
+        } else {
+            int regularGuests = 0;
+            if(entry.guestsRegular.containsKey(countryCode)) {
+                regularGuests = entry.guestsRegular.get(countryCode);
+            }
+            regularGuests += room.numberOfGuests;
+            entry.guestsRegular.put(countryCode, regularGuests);
+        }
+    }
+
+    private void addUniqueGuests(StatisticsEntry entry, PmsBookingRooms room, PmsBooking booking) {
+            String countryCode = booking.countryCode;
+            if(countryCode == null || countryCode.isEmpty()) {
+                countryCode = "NO";
+            }
+            
+            int regularGuests = 0;
+            if(entry.uniqueGuests.containsKey(countryCode)) {
+                regularGuests = entry.uniqueGuests.get(countryCode);
+            }
+            regularGuests += room.numberOfGuests;
+            entry.uniqueGuests.put(countryCode, regularGuests);
     }
     
 }

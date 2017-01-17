@@ -9,10 +9,14 @@ getshop.addonviewController = function ($scope, $state, $stateParams) {
     $scope.loadAddonsList = function() {
         var loading = getshopclient.PmsManager.getItemsForView(getMultilevelName(), $scope.viewid, $scope.selectedDay);
         loading.done(function(res) {
+            $scope.addonsCount = 0;
             $scope.addonslist = res;
             $scope.notfound = false;
             if(res.length === 0) {
                 $scope.notfound = true;
+            }
+            for(var k in res) {
+                $scope.addonsCount += res[k].count;
             }
             $scope.loadDeliveryLog();
             $scope.$apply();

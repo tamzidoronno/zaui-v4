@@ -85,12 +85,11 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     
     public function isAddedToList($bookingId) {
         $list = $this->getEventList();
-        
         foreach($list as $l) {
-            if(!isset($l->id)) {
+            if(!isset($l->bookingId)) {
                 continue;
             }
-            if($l->id == $bookingId) {
+            if($l->bookingId == $bookingId) {
                 return true;
             }
         }

@@ -75,7 +75,7 @@ if ($forskningsperiode || $fixedHours) {
     </div>
 
     <div>
-        Det er lagt inn en <? echo $forskningsperiode->percents; ?>% stilling for perioden: <? echo date('m.d.Y', strtotime($forskningsperiode->start)) . "-" . date('m.d.Y', strtotime($forskningsperiode->end)); ?>
+        Det er lagt inn en <? echo $forskningsperiode->percents; ?>% stilling for perioden: <? echo date('d.m.Y', strtotime($forskningsperiode->start)) . "-" . date('d.m.Y', strtotime($forskningsperiode->end)); ?>
     </div>
     
     <br/> Periode
@@ -202,7 +202,7 @@ if ($fixedHours) {
     $('#to_2').datepicker({dateFormat: "dd.mm.yy"});
     $('#from_3').datepicker({dateFormat: "dd.mm.yy"});
     $('#to_3').datepicker({dateFormat: "dd.mm.yy"});
-    <? if ($hourObject && $hourObject->fixedSum) { ?>
+    <? if ($hourObject && isset($hourObject->fixedSum) && $hourObject->fixedSum) { ?>
         $(".tab[content='fixed']").click();
         $(".tab[content='prosent']").hide();    
         $(".tab[content='timer']").hide();    

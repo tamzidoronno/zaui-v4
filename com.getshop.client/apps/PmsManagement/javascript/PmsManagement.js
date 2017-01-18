@@ -73,7 +73,28 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .roomsbookedactionsselection', app.PmsManagement.updateRoomActionSelection);
         $(document).on('click','.PmsManagement .loadStatsForDay', app.PmsManagement.loadStatsForDay);
         $(document).on('click','.PmsManagement .selectalladdons', app.PmsManagement.selectalladdons);
+        $(document).on('click','.PmsManagement .addPaymentMethod', app.PmsManagement.addPaymentMethod);
+        $(document).on('click','.PmsManagement .removePaymentMethod', app.PmsManagement.removePaymentMethod);
     },
+    addPaymentMethod : function() {
+        var data = thundashop.framework.createGsArgs($('.statsorderfilter'));
+        var event = thundashop.Ajax.createEvent('','addPaymentTypeToFilter',$(this), data);
+        $('.orderstatsres').html("<center style='font-size: 50px;'><i class='fa fa-spin fa-spinner'></i></center>");
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.orderstatsres').html(res);
+        });
+    },
+    removePaymentMethod : function() {
+        var data = {
+            toRemove : $(this).attr('toremove')
+        };
+        var event = thundashop.Ajax.createEvent('','removePaymentMethod',$(this), data);
+        $('.orderstatsres').html("<center style='font-size: 50px;'><i class='fa fa-spin fa-spinner'></i></center>");
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.orderstatsres').html(res);
+        });
+    },
+    
     selectalladdons: function() {
         var checked = $(this).is(':checked');
         $(this).closest('.addonsadded').find('.addontoremove').each(function() {

@@ -2110,21 +2110,54 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     }
 
+    public function addPaymentTypeToFilter() {
+        $filter = $this->getOrderStatsFilter();
+        $method = array();
+        $method['paymentMethod'] = $_POST['data']['paymentmethod'];
+        $method['paymentStatus'] = $_POST['data']['paymentstatus'];
+        $filter->methods[] = $method;
+        $_SESSION['pmsorderstatsfilter'] = serialize($filter);
+        $this->includefile("orderstatsresult");
+    }
+
+    public function removePaymentMethod() {
+        $filter = $this->getOrderStatsFilter();
+        $newMethods = array();
+        foreach($filter->methods as $method) {
+            if($method['paymentMethod']."-".$method['paymentStatus'] != $_POST['data']['toRemove']) {
+                $newMethods[] = $method;
+            }
+        }
+        $filter->methods = $newMethods;
+        $_SESSION['pmsorderstatsfilter'] = serialize($filter);
+        $this->includefile("orderstatsresult");
+    }
+    
     /**
      * 
      * @return \core_pmsmanager_PmsOrderStatsFilter
      */
     public function getOrderStatsFilter() {
         $filter = new \core_pmsmanager_PmsOrderStatsFilter();
+        if(isset($_SESSION['pmsorderstatsfilter'])) {
+            $filter = unserialize($_SESSION['pmsorderstatsfilter']);
+        }
         if(isset($_POST['data']['paymentmethod'])) {
-            $filter->paymentMethod = $_POST['data']['paymentmethod'];
-            $filter->paymentStatus = $_POST['data']['paymentstatus'];
+            $method = array();
+            $method['paymentMethod'] = $_POST['data']['paymentmethod'];
+            $method['paymentStatus'] = $_POST['data']['paymentstatus'];
+            
+            if(!$filter->methods) {
+               $filter->methods = array();
+            }
+            if($_POST['data']['paymentmethod']) {
+//                $filter->methods[] = $method;
+            }
             $filter->displayType = $_POST['data']['viewtype'];
             $filter->priceType = $_POST['data']['priceType'];
             $_SESSION['pmsorderstatsfilter'] = serialize($filter);
-        } elseif(isset($_SESSION['pmsorderstatsfilter'])) {
-            $filter = unserialize($_SESSION['pmsorderstatsfilter']);
         }
+        
         $filter->start = $this->getSelectedFilter()->startDate;
         $filter->end = $this->getSelectedFilter()->endDate;
         return $filter;
@@ -2314,6 +2347,119 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
             echo "<br>";
         }
+    }
+    
+    public function downloadOrderStatsMatrixToExcel() {
+        echo json_encode($this->buildResultMatrix(false));
+    }
+
+    public function buildResultMatrix($includeDownload) {
+        
+        $filter = $this->getOrderStatsFilter();
+        $result = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedName(), $filter);
+        $_SESSION['currentOrderStatsResult'] = serialize($result);
+
+        
+        $products = $this->getApi()->getProductManager()->getAllProductsLight();
+        $products = $this->indexList($products);
+
+        $resultMatrix = array();
+        $priceType = $filter->priceType;
+        $total = 0;
+        $productIds = array();
+        foreach($result->entries as $entry) {
+            $prices = $entry->priceInc;
+            if($priceType == "extaxes") {
+                $prices = $entry->priceEx;
+            }
+
+            foreach($prices as $id => $val) {
+                if(!isset($productIds[$id])) {
+                    $productIds[$id] = 0;
+                }
+                $productIds[$id] += $val;
+                $total += $val;
+            }
+        }
+
+        $row = array();
+        if($includeDownload) {
+            $row[] = "<i class='fa fa-file-excel-o' style='cursor:pointer;' gs_downloadexcelreport='downloadOrderStatsMatrixToExcel' title='Download to excel' gs_filename='bookingdataexport' ></i> Day";
+        } else {
+            $row[] = "Day";
+        }
+        foreach($productIds as $id => $null) {
+            if(isset($products[$id])) {
+                $row[] = $products[$id]->name;
+            } else {
+                $row[] = "Deleted product";
+            }
+        }
+        $row[] = "Total";
+        $headerRow = $row;
+
+        $index = 0;
+        foreach($result->entries as $entry) {
+            $row = array();
+            $row[] = date("d.m.Y", strtotime($entry->day));
+            $totalRow = 0;
+
+            foreach($productIds as $id => $price) {
+                $prices = $entry->priceInc;
+                if($priceType == "extaxes") {
+                    $prices = $entry->priceEx;
+                }
+                if(!isset($prices->{$id})) {
+                    $row[] = "0";
+                } else {
+                    $row[] = round($prices->{$id});
+                    $totalRow+= round($prices->{$id});
+                }
+            }
+            $row[] = $totalRow;
+            $resultMatrix[$index] = $row;
+            $index++;
+        }
+        
+        $row = array();
+        $row[] = round($total);
+        foreach($productIds as $id => $price) {
+            if(isset($price)) {
+                $row[] = round($price);
+            } else {
+                $row[] = 0;
+            }
+        }
+        asort($headerRow);
+        
+        $correctHeader = array();
+        $correctHeader[0] = $headerRow[0];
+        $totalIdx = "";
+        foreach($headerRow as $idx => $val) {
+            if($idx == 0) {
+                continue;
+            }
+            if($val == "Total") {
+                $totalIdx = $idx;
+                continue;
+            }
+            $correctHeader[$idx] = $val;
+        }
+
+        $correctHeader[$totalIdx] = "Total";
+        $headerRow = $correctHeader;
+        
+        $sortedMatrix = array();
+        $sortedMatrix['header'] = $correctHeader;
+        foreach($resultMatrix as $rowidx => $row) {
+            $newRow = array();
+            foreach($headerRow as $idx => $name) {
+                $newRow[] = $row[$idx];
+            }
+            $sortedMatrix[$rowidx] = $newRow;
+        }
+        
+        return $sortedMatrix;
     }
 
 }

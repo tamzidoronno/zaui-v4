@@ -9,9 +9,26 @@ class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3
     }
 
     public function getName() {
-        return "ProMeisterCandidateSearch";
+        return "Course";
     }
 
+    
+    public function renderUserSettings($user) {
+        $names = $this->getApi()->getStoreManager()->getMultiLevelNames();
+
+        foreach($names as $name) {
+            $events = $this->getApi()->getEventBookingManager()->getEventsForUser($name, $user->id);
+            if($events) {
+                $oldEvents = $this->getOldEvents($events);
+                $newEvents = $this->getNewEvents($events);
+                echo "<div class='GSPromeisterCandidateSearch'>";
+                $this->printEventRows($oldEvents, false);
+                $this->printEventRows($newEvents, true);
+                echo "</div>";
+            }
+        }
+    }
+    
     public function render() {
         $this->currentlyLoading = "favor";
         $this->includefile("searchresult");

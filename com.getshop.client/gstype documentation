@@ -48,7 +48,12 @@ attribute gstypes;
         Scroll to top on click:
             <div  gsclick="method" gs_scrollToTop="true"/>
 
-        
+    
+    gschange (posts all attributes),
+        Works for fields that has the change event. 
+        example:
+            <input type="textfield" gschange="methodName" customattr="customvvalue" etc="etc"/>
+            Note: Value is posted as gsvalue
 
     gs_show_modal:
         example: <div gs_show_modal="modalname">Open Modal</div>

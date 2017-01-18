@@ -146,7 +146,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public List<TrackAndTraceException> getExceptions() {
-        return new ArrayList(exceptions.values());
+        return new ArrayList(exceptions.values().stream().sorted(TrackAndTraceException.getSortBySequence()).collect(Collectors.toList()));
     }
 
     @Override
@@ -312,6 +312,15 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         Route route = getRouteById(routeId);
         AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions);
         return exporter.getExport();
+    }
+
+    @Override
+    public void setSequence(String exceptionId, int sequence) {
+        TrackAndTraceException exp = exceptions.get(exceptionId);
+        if (exp != null) {
+            exp.sequence = sequence;
+            saveObject(exp);
+        }
     }
     
 }

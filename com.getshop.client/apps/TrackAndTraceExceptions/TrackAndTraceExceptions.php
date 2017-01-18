@@ -18,6 +18,10 @@ class TrackAndTraceExceptions extends \MarketingApplication implements \Applicat
         }   
     }
     
+    public function updateSequence() {
+        $this->getApi()->getTrackAndTraceManager()->setSequence($_POST['data']['expid'], $_POST['data']['gsvalue']);
+    }
+    
     public function createException() {
         $ex = new \core_trackandtrace_TrackAndTraceException();
         

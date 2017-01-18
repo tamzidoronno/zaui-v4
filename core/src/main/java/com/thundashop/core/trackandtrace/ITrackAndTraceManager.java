@@ -75,4 +75,7 @@ public interface ITrackAndTraceManager {
     
     @Customer
     public List<AcculogixExport> getExport(String routeId);
+    
+    @Administrator
+    public void setSequence(String exceptionId, int sequence);
 }

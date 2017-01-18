@@ -19,6 +19,7 @@ foreach ($types as $type) {
             
             echo "<div class='exceptionline'>";
                 echo "&nbsp;&nbsp;&nbsp;<div class='gs_shop_small_icon' gs_show_modal='createexception' type='$type' exid='$ex->id'><i class='fa fa-edit'></i></div>";
+                echo "&nbsp;&nbsp;&nbsp; <input gschange='updateSequence' gssilent='true' expid='$ex->id' type='textfield' class='gsniceinput1' value='$ex->sequence'/>";
                 echo "&nbsp;&nbsp;&nbsp;".$ex->name;
             echo "</div>";
         }

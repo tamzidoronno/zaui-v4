@@ -181,7 +181,18 @@ public class AcculogixDataImporter {
         order.quantity = !data[58].isEmpty() ? Integer.parseInt(data[58]) : 0;
         order.originalQuantity = order.quantity;
         order.referenceNumber = data[33];
-        order.cage = !data[61].isEmpty();
+        
+        if (!data[61].isEmpty()) {
+            if (data[62].equalsIgnoreCase("CAGE LG"))
+                order.containerType = ContainerType.CAGE_LG;
+            
+            if (data[62].equalsIgnoreCase("CAGE SM"))
+                order.containerType = ContainerType.CAGE_SM;
+            
+            if (data[62].equalsIgnoreCase("PALLET"))
+                order.containerType = ContainerType.PALLET;
+        }
+        
         order.orderType = data[31];
         if (order.orderDriverDeliveries > 0) 
             System.out.println("Driver deliveries");

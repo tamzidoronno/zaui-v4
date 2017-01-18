@@ -39,6 +39,6 @@ controllers.DestinationExceptionController = function($scope, datarepository, $s
             datarepository.save();
             stopShowingOfGpsFetching();    
             $state.transitionTo("base.routeoverview", {routeId: $stateParams.routeId});
-        }, {maximumAge:60000, timeout:5000, enableHighAccuracy:false});
+        }, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
     }
 }

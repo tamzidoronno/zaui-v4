@@ -5,15 +5,10 @@
  */
 package com.thundashop.core.trackandtrace;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author ktonder
  */
-public class PickupOrder extends TntOrder {
-    public String instruction = "";
-    public List<String> barcodeScanned = new ArrayList();
-    public int countedBundles = 0;
+public enum ContainerType {
+    CAGE_LG, CAGE_SM, PALLET
 }

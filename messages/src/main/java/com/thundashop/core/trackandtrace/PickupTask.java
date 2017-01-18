@@ -15,6 +15,7 @@ import java.util.List;
 public class PickupTask extends Task {
     public List<PickupOrder> orders = new ArrayList();
     public boolean cage;
+    boolean barcodeValidated = false;
     
     @Override
     public int getOrderCount() {

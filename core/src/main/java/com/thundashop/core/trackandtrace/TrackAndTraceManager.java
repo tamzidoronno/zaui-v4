@@ -146,7 +146,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public List<TrackAndTraceException> getExceptions() {
-        return new ArrayList(exceptions.values());
+        return new ArrayList(exceptions.values().stream().sorted(TrackAndTraceException.getSortBySequence()).collect(Collectors.toList()));
     }
 
     @Override
@@ -303,6 +303,31 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         Task task = tasks.get(taskId);
         if (task instanceof DeliveryTask) {
             ((DeliveryTask)task).changeQuantity(orderReference, quantity);
+            saveObject(task);
+        }
+    }
+
+    @Override
+    public List<AcculogixExport> getExport(String routeId) {
+        Route route = getRouteById(routeId);
+        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions);
+        return exporter.getExport();
+    }
+
+    @Override
+    public void setSequence(String exceptionId, int sequence) {
+        TrackAndTraceException exp = exceptions.get(exceptionId);
+        if (exp != null) {
+            exp.sequence = sequence;
+            saveObject(exp);
+        }
+    }
+
+    @Override
+    public void setCagesOrPalletCount(String taskId, String orderReference, int quantity) {
+        Task task = tasks.get(taskId);
+        if (task instanceof DeliveryTask) {
+            ((DeliveryTask)task).changeCagesOrPalletCount(orderReference, quantity);
             saveObject(task);
         }
     }

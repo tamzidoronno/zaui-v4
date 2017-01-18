@@ -35,4 +35,12 @@ public class DeliveryTask extends Task {
             }
         }
     }
+
+    public void changeCagesOrPalletCount(String orderReference, int quantity) {
+        for (DeliveryOrder order : orders) {
+            if (order.referenceNumber.equals(orderReference)) {
+                order.palletsOrCagesDelivered = quantity;
+            }
+        }
+    }
 }

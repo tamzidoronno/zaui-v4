@@ -66,13 +66,35 @@
     font-size: 10px;
     min-height: 25px;
 }
+
+.alreadyasdf {
+    display: block !important;
+}
+
+.summaryrow .button .fa-check {
+    display: none;
+    
+}
+
+.summaryrow .button.order_task_completed .fa-check { color: green; display: inline-block; }
+
+.summaryrow .button.order_task_completed {
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#a4b357+0,75890c+100;Olive+3D+%233 */
+    background: #a4b357; /* Old browsers */
+    background: -moz-linear-gradient(top,  #a4b357 0%, #75890c 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #a4b357 0%,#75890c 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #a4b357 0%,#75890c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a4b357', endColorstr='#75890c',GradientType=0 ); /* IE6-9 */
+
+}
+
 .summary .summaryrow .col {
     display: inline-block;
     box-sizing: border-box;
     vertical-align: top;
 }
 
-.summary .summaryrow .col:nth-of-type(1) {width: 80px;}
+.summary .summaryrow .col:nth-of-type(1) {width: 90px;}
 .summary .summaryrow .col:nth-of-type(2) {width: 40px;}
 .summary .summaryrow .col:nth-of-type(3) {width: 40px;}
 .summary .summaryrow .col:nth-of-type(4) {width: 40px;}

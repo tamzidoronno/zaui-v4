@@ -30,6 +30,10 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
             return order.driverDeliveryCopiesCounted;
         }
         
+        if ($stateParams.type === "cagecount") {
+            return order.palletsOrCagesDelivered;
+        }
+        
         return 0;
     }
     
@@ -39,6 +43,12 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
             $scope.order.quantity = newQuantity;
             datarepository.save();
             $scope.api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, $scope.order.referenceNumber, b);
+        }
+        
+        if ($stateParams.type === "cagecount") {
+            $scope.order.palletsOrCagesDelivered = newQuantity;
+            datarepository.save();
+            $scope.api.getApi().TrackAndTraceManager.setCagesOrPalletCount($scope.task.id, $scope.order.referenceNumber, b);
         }
         
         if ($stateParams.type === "driverCopies") {

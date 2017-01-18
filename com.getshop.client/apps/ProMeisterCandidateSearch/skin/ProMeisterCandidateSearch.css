@@ -8,6 +8,15 @@
     margin-left: 10px;
 }
 
+.GSPromeisterCandidateSearch .event_row{
+    width: 99%;
+    border-bottom: solid 1px #EEE;
+    padding: 5px;
+}
+.GSPromeisterCandidateSearch .event_list_title{
+    font-size: 16px;
+    padding-bottom: 5px;
+}
 .ProMeisterCandidateSearch .userrow {
     padding: 10px;
 }

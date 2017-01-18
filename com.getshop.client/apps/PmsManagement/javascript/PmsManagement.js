@@ -73,7 +73,75 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .roomsbookedactionsselection', app.PmsManagement.updateRoomActionSelection);
         $(document).on('click','.PmsManagement .loadStatsForDay', app.PmsManagement.loadStatsForDay);
         $(document).on('click','.PmsManagement .selectalladdons', app.PmsManagement.selectalladdons);
+        $(document).on('click','.PmsManagement .conference_addactionpoint', app.PmsManagement.addActionPoint);
+        $(document).on('click','.PmsManagement .save_conference_data', app.PmsManagement.save_conference_data);
+        $(document).on('click','.PmsManagement .remove_conference_row', app.PmsManagement.removeConferenceRow);
     },
+    
+    removeConferenceRow: function() {
+        $(this).closest('.action_point_row').remove();
+    },
+    
+    save_conference_data: function() {
+        var container = $(this).closest('.conference_data_form');
+        
+        var data = {
+            bookingid : container.find('[gsname="bookingid"]').val(),
+            note : container.find('[gsname="note"]').val(),
+            rows : []
+        }
+        
+        container.find('.action_point_row.with_data').each(function() {
+            var row = {
+                id: $(this).attr('rowid'),
+                place : $(this).find('.col1 input').val(),
+                from : $(this).find('.col2 input').val(),
+                to : $(this).find('.col3 input').val(),
+                actionName : $(this).find('.col4 input').val(),
+                attendeesCount : $(this).find('.col5 input').val(),
+            }
+            
+            data.rows.push(row);
+        });
+        
+        var event = thundashop.Ajax.createEvent(null, "saveConferenceData", this, data);
+        
+        var me = $(this);
+        $(this).prepend('<i class="fa fa-spin fa-spinner"></i>');
+        thundashop.Ajax.post(event, function() {
+            me.find('i').removeClass("fa-spin");
+            me.find('i').removeClass("fa-spinner");
+            me.find('i').addClass("fa-check");
+            setTimeout(function() {
+                me.find('i').remove();
+            }, 1000);
+        });
+    },
+    
+    guid: function() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+        }
+        ;
+
+        
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    },
+    
+    addActionPoint: function() {
+        var newId = app.PmsManagement.guid();
+        var dayform = $('.conference_addactionpoint').closest('.dayform');
+        var templateRow = dayform.find('.row_template');
+        var toInsert = templateRow.clone();
+        toInsert.removeClass('row_template');
+        toInsert.addClass('with_data');
+        toInsert.attr('rowid', newId);
+        var rowsArea = dayform.find('.rows');
+        rowsArea.append(toInsert);
+    },
+    
     selectalladdons: function() {
         var checked = $(this).is(':checked');
         $(this).closest('.addonsadded').find('.addontoremove').each(function() {

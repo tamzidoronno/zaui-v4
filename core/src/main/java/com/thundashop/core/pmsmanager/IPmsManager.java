@@ -344,4 +344,10 @@ public interface IPmsManager {
     
     @Administrator
     public List<PmsRoomSimple> getAllRoomsThatHasAddonsOfType(String type);
+    
+    @Administrator
+    public ConferenceData getConferenceData(String bookingId);
+    
+    @Administrator
+    public void saveConferenceData(ConferenceData data);
 }

@@ -39,6 +39,26 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("orderstatsday");
     }
     
+    public function saveConferenceData() {
+        $conferenceData = new \core_pmsmanager_ConferenceData();
+        $conferenceData->id = $_POST['data']['bookingid'];
+        $conferenceData->note = $_POST['data']['note'];
+        
+        foreach ($_POST['data']['rows'] as $row) {
+            $conferenceDataRow = new \core_pmsmanager_ConferenceDataRow();
+            
+            $conferenceDataRow->place = $row['place'];
+            $conferenceDataRow->from = $row['from'];
+            $conferenceDataRow->to = $row['to'];
+            $conferenceDataRow->actionName = $row['actionName'];
+            $conferenceDataRow->attendeesCount = $row['attendeesCount'];
+            $conferenceDataRow->rowId = $row['id'];
+            $conferenceData->conferences[] = $conferenceDataRow;
+        }
+        
+        $this->getApi()->getPmsManager()->saveConferenceData($this->getSelectedName(), $conferenceData);
+    }
+    
     public function removeAddonsFromRoom() {
         $roomId = $_POST['data']['roomId'];
         foreach($_POST['data']['idstoremove'] as $id) {

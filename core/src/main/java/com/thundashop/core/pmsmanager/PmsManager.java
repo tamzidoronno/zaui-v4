@@ -81,6 +81,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private HashMap<String, PmsCareTaker> careTaker = new HashMap();
     private HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
     private HashMap<String, PmsPricing> priceMap = new HashMap();
+    private HashMap<String, ConferenceData> conferenceDatas = new HashMap();
     private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
     private List<String> warnedAbout = new ArrayList();
@@ -150,6 +151,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
                 bookings.put(booking.id, booking);
+            }
+            if (dataCommon instanceof ConferenceData) {
+                ConferenceData conferenceRoomData = (ConferenceData) dataCommon;
+                conferenceDatas.put(conferenceRoomData.id, conferenceRoomData);
             }
             if (dataCommon instanceof PmsPricing) {
                 PmsPricing price = (PmsPricing) dataCommon;
@@ -4898,5 +4903,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public ConferenceData getConferenceData(String bookingId) {
+        ConferenceData data = conferenceDatas.get(bookingId);
+        
+        if (data == null) {
+            data = new ConferenceData();
+            data.id = bookingId;
+            saveObject(data);
+            conferenceDatas.put(data.id, data);
+        }
+        
+        finalize(data);
+        return data;
+    }
+
+    private void finalize(ConferenceData data) {
+        PmsBooking booking = getBooking(data.id);
+        if (booking != null) {
+            data.attendeesCount = booking.getTotalGuestCount();
+        }
+    }
+
+    @Override
+    public void saveConferenceData(ConferenceData data) {
+        saveObject(data);
+        conferenceDatas.put(data.id, data);
     }
 }

@@ -8,6 +8,7 @@ import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Calendar;
 import java.util.Date;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -90,6 +91,16 @@ public class DataCommon extends TranslationHandler implements Serializable, Clon
         }
 
         return false;
+    }
+    
+    public boolean createdOnDay(Date day) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(rowCreatedDate);
+        String first = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.DAY_OF_YEAR);
+        
+        cal.setTime(day);
+        String second = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.DAY_OF_YEAR);
+        return second.equals(first);
     }
 
     public DataCommon clone() throws CloneNotSupportedException {

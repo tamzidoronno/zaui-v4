@@ -12,6 +12,8 @@ class SalesStatisticsEntry implements Serializable {
     public Integer avgPrice = 0;
     public Integer numberOfOrders = 0;
     public Integer avgOrderPrice = 0;
+    public Double bookingValue = 0.0;
+    public Double bookings = 0.0;
     
     public void finalize() {
         avgOrderPrice = (int)(totalPrice / numberOfOrders);

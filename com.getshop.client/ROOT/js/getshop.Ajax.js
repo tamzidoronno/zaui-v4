@@ -33,9 +33,9 @@ thundashop.handleAjaxError = function(error, textstatus, status, content) {
 };
 
 thundashop.Ajax = {
-    
     init: function() {
         $(document).on('click','*[gsclick]', thundashop.Ajax.postgeneral);
+        $(document).on('change','*[gschange]', thundashop.Ajax.postgeneral);
         $(document).on('click','*[gs_downloadExcelReport]', thundashop.Ajax.createExcelFile);
         $(document).on('click','*[gs_show_modal]', thundashop.Ajax.showModal);
         $(document).on('click','*[gs_close_modal]', thundashop.Ajax.closeModal);
@@ -103,7 +103,13 @@ thundashop.Ajax = {
     
     postgeneral: function() {
         var method = $(this).attr('gsclick');
+        
         var data = {};
+        
+        if ($(this).attr('gschange')) {
+            method = $(this).attr('gschange');
+            data.gsvalue = $(this).val();
+        }
         
         if ($(this).attr("gs_confirm")) {
             var conf = confirm($(this).attr("gs_confirm"));

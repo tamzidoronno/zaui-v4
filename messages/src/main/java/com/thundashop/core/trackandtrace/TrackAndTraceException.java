@@ -6,15 +6,26 @@
 package com.thundashop.core.trackandtrace;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.Comparator;
 
 /**
  *
  * @author ktonder
  */
 public class TrackAndTraceException extends DataCommon {
+
     public String name = "";
     /**
      * Type = common, pickup_{mode}, delivery
      */
     public String type = "";
+    
+    public Integer sequence = Integer.MAX_VALUE;
+    
+    static Comparator<? super TrackAndTraceException> getSortBySequence() {
+        return (o1, o2) -> {
+            return o1.sequence.compareTo(o2.sequence);
+        };
+    }
+  
 }

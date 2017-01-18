@@ -88,7 +88,7 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
                     <i gs_downloadexcelreport="exportSaleStats" title="Download to excel" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="salestats"></i>
                     <?php echo $this->__w("Date"); ?></th>
                 <th><?php echo $this->__w("Nights"); ?></th>
-                <th><?php echo $this->__w("Orders"); ?></th>
+                <th><?php echo $this->__w("Sales count"); ?></th>
                 <th><?php echo $this->__w("Avg."); ?><br> order</th>
                 <?php
                 if(sizeof($paymentTypes) > 1) {
@@ -98,6 +98,7 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
                     }
                 }
                 ?>
+                <th><?php echo $this->__w("Booking value"); ?></th>
                 <th><?php echo $this->__w("Total"); ?></th>
             </tr>
             <?
@@ -123,7 +124,7 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
                         echo "<td>" . round($val ) . "</td>";
                     }
                 }
-                
+                echo "<td>" . round($saleEntry->bookingValue) . "</td>";
                 echo "<td>" . round($saleEntry->totalPrice) . "</td>";
                 echo "</tr>";
             }

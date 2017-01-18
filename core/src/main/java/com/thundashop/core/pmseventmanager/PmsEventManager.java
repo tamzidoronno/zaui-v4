@@ -2,6 +2,7 @@ package com.thundashop.core.pmseventmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
@@ -113,6 +114,10 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
             entry = entry.getDay(day);
             entry.id = entryId;
         }
+        
+        entry.roomNames = new ArrayList();
+        entry.overrideEntries = new HashMap();
+
         return entry;
     }
 

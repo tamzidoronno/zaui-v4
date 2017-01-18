@@ -2421,6 +2421,23 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $index++;
         }
         
+        $sumBottom=array();
+        foreach($resultMatrix as $row) {
+            foreach($row as $idx => $field) {
+                if(!isset($sumBottom[$idx])) {
+                    $sumBottom[$idx] = 0;
+                }
+                $sumBottom[$idx] += $field;
+            }
+        }
+        $tmpSum= array();
+        foreach($sumBottom as $val) {
+            $tmpSum[] = $val;
+        }
+        $tmpSum[0] = "";
+        $resultMatrix[$index] = $tmpSum;
+
+        
         $row = array();
         $row[] = round($total);
         foreach($productIds as $id => $price) {
@@ -2458,6 +2475,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
             $sortedMatrix[$rowidx] = $newRow;
         }
+        
         
         return $sortedMatrix;
     }

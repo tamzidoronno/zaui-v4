@@ -178,37 +178,56 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public PmsOrderStatistics generateStatistics(PmsOrderStatsFilter filter) {
+        if(filter == null) {
+            return new PmsOrderStatistics();
+        }
         List<Order> orders = orderManager.getOrders(null, null, null);
         List<Order> ordersToUse = new ArrayList();
         for(Order order : orders) {
             if(order.testOrder) {
                 continue;
             }
-            if(filter.paymentMethod != null && !filter.paymentMethod.isEmpty()) {
-                if(order.payment == null) {
-                    continue;
-                }
-                String method = filter.paymentMethod.replace("-", "_");
-                if(!order.payment.paymentType.contains(method)) {
-                    continue;
-                }
-            }
             
-            if(filter.paymentStatus != null) {
-                if(filter.paymentStatus == -10) {
-                    if(!order.transferredToAccountingSystem) {
-                        continue;
+            if(filter.methods.isEmpty()) {
+                ordersToUse.add(order);
+            }
+            for(PmsOrderStatsFilter.PaymentMethods pmethod : filter.methods) {
+                boolean avoid = false;
+                String filterMethod = pmethod.paymentMethod;
+                Integer filterStatus = pmethod.paymentStatus;
+                if(filterMethod != null && !filterMethod.isEmpty()) {
+                    if(order.payment == null) {
+                        avoid = true;
+                    }
+                    String method = filterMethod.replace("-", "_");
+                    if(!order.payment.paymentType.contains(method)) {
+                        avoid = true;
                     }
                 }
 
-                if(filter.paymentStatus > 0) {
-                    if(order.status != filter.paymentStatus) {
-                        continue;
+                if(filterStatus != null) {
+                    if(filterStatus == -10) {
+                        if(!order.transferredToAccountingSystem) {
+                            avoid = true;
+                        }
                     }
+                    if(filterStatus == -9) {
+                        if(orderManager.getTotalAmount(order) > 0) {
+                            avoid = true;
+                        }
+                    }
+
+                    if(filterStatus > 0) {
+                        if(order.status != filterStatus) {
+                            avoid = true;
+                        }
+                    }
+                }
+                if(!avoid) {
+                    ordersToUse.add(order);
                 }
             }
             
-            ordersToUse.add(order);
         }
         PmsOrderStatistics stats = new PmsOrderStatistics();
         stats.createStatistics(ordersToUse, filter);

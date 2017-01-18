@@ -8,7 +8,6 @@ if(isset($_GET['time']) && $_GET['time']) {
     $day = date("Y-m-d", $time);
 }
 
-
 $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_GET['eventid'], $day);
 
 $imgDisplayer = $this->getImageDisplayer($event->id);

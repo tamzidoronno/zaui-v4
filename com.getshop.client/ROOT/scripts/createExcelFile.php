@@ -29,7 +29,11 @@ foreach ($data as $row) {
     $xls->home();
     foreach ($row as $cell) {
         $column = mb_convert_encoding($cell, "ISO-8859-1", "UTF-8");
-        $xls->label($column);
+        if(is_numeric($column)) {
+            $xls->number($column);
+        } else {
+            $xls->label($column);
+        }
         $xls->right();
     }
     $xls->down();

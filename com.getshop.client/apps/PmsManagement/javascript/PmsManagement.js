@@ -76,6 +76,8 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .conference_addactionpoint', app.PmsManagement.addActionPoint);
         $(document).on('click','.PmsManagement .save_conference_data', app.PmsManagement.save_conference_data);
         $(document).on('click','.PmsManagement .remove_conference_row', app.PmsManagement.removeConferenceRow);
+        $(document).on('click','.PmsManagement .addPaymentMethod', app.PmsManagement.addPaymentMethod);
+        $(document).on('click','.PmsManagement .removePaymentMethod', app.PmsManagement.removePaymentMethod);
     },
     
     removeConferenceRow: function() {
@@ -140,6 +142,25 @@ app.PmsManagement = {
         toInsert.attr('rowid', newId);
         var rowsArea = dayform.find('.rows');
         rowsArea.append(toInsert);
+    },
+    
+    addPaymentMethod : function() {
+        var data = thundashop.framework.createGsArgs($('.statsorderfilter'));
+        var event = thundashop.Ajax.createEvent('','addPaymentTypeToFilter',$(this), data);
+        $('.orderstatsres').html("<center style='font-size: 50px;'><i class='fa fa-spin fa-spinner'></i></center>");
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.orderstatsres').html(res);
+        });
+    },
+    removePaymentMethod : function() {
+        var data = {
+            toRemove : $(this).attr('toremove')
+        };
+        var event = thundashop.Ajax.createEvent('','removePaymentMethod',$(this), data);
+        $('.orderstatsres').html("<center style='font-size: 50px;'><i class='fa fa-spin fa-spinner'></i></center>");
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.orderstatsres').html(res);
+        });
     },
     
     selectalladdons: function() {

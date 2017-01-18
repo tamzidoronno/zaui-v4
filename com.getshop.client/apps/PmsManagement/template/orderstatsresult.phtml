@@ -1,69 +1,54 @@
 <?php
 /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $filter = $this->getOrderStatsFilter();
-
-$products = $this->getApi()->getProductManager()->getAllProductsLight();
-$products = $this->indexList($products);
-$result = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedName(), $filter);
-$_SESSION['currentOrderStatsResult'] = serialize($result);
-$productIds = array();
 $priceType = $_POST['data']['priceType'];
 
-$total = 0;
-foreach($result->entries as $entry) {
-    $prices = $entry->priceInc;
-    if($priceType == "extaxes") {
-        $prices = $entry->priceEx;
+$states = \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager::getOrderStatuses();
+$states["0"] = "All states";
+$states[-9] = "Credit notes";
+$states[-10] = "Everything transferred to accounting";
+
+$paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$pmethodToPrint = array();
+$pmethodToPrint[""] = "All payment methods";
+foreach ($paymentMethods as $key => $method) {
+    $pmethodToPrint[$method->id] = $method->appName;
+}
+if(isset($filter->methods)) {
+    echo "<table cellspacing='0' cellpadding='0'>";
+    echo "<tr>";
+    echo "<th></th>";
+    echo "<th></th>";
+    echo "<th></th>";
+    echo "</tr>"; 
+    foreach($filter->methods as $method) {
+        echo "<tr>";
+        echo "<td><i class='fa fa-trash-o removePaymentMethod' style='cursor:pointer;' toremove='".$method['paymentMethod']."-".$method['paymentStatus']."'></i></td><td>" . $pmethodToPrint[$method['paymentMethod']] . " </td><td> " . $states[$method['paymentStatus']] . "</td>";
+        echo "</tr>";
     }
-    
-    foreach($prices as $id => $val) {
-        if(!isset($productIds[$id])) {
-            $productIds[$id] = 0;
-        }
-        $productIds[$id] += $val;
-        $total += $val;
-    }
+    echo "</table>";
 }
 
+$resultMatrix = $this->buildResultMatrix(true);
+
 echo "<table cellspacing='0' cellpadding='0'>";
-echo "<tr>";
-echo "<th>Day</th>";
-foreach($productIds as $id => $null) {
-    echo "<th width='100'>" . $products[$id]->name . "</th>";
-}
-echo "<th></th>";
-echo "</tr>";
-$index = 0;
-foreach($result->entries as $entry) {
-    echo "<tr class='compressed'>";
-    echo "<td class='loadStatsForDay' index='$index'>" . date("d.m.Y", strtotime($entry->day)) . "</td>";
-    $totalRow = 0;
-    foreach($productIds as $id => $price) {
-         $prices = $entry->priceInc;
-        if($priceType == "extaxes") {
-            $prices = $entry->priceEx;
-        }
-        if(!isset($prices->{$id})) {
-            echo "<td width='100'>0</td>";
+
+foreach($resultMatrix as $index => $row) {
+    $extra = "";
+    if($index != "header" || $index == "0") {
+        $extra = "class='loadStatsForDay' style='cursor:pointer;' index='$index'";
+    }
+    echo "<tr $extra>";
+    foreach($row as $cell) {
+        if($index == "header" && $index != "0") {
+            echo "<th>$cell</th>";
         } else {
-            echo "<td width='100'>" . round($prices->{$id}) . "</td>";
-            $totalRow+= round($prices->{$id});
+            echo "<td>$cell</td>";
         }
     }
-    echo "<td>" . $totalRow . "</td>";
-    $index++;
     echo "</tr>";
 }
-echo "<tr>";
-echo "<td>".round($total)."</td>";
-foreach($productIds as $id => $price) {
-    if(isset($price)) {
-        echo "<td width='100'>" . round($price) . "</td>";
-    } else {
-        echo "<td width='100'>0</td>";
-    }
-}
-echo "</tr>";
+
 echo "</table>";
 ?>    
 </pre>

@@ -120,6 +120,7 @@ function loadPaymentTypeAreas() {
     }
     $('.paymenttypeinfoarea').hide();
     $('.paymenttypeinfoarea[type="'+val+'"]').show();
+    $('[gsname="sendpaymentlink"]').attr('checked', $('[gsname="sendpaymentlink"]').is(':visible'));
 }
 loadPaymentTypeAreas();
 $('.paymenttypeunsetled').on('change',loadPaymentTypeAreas);

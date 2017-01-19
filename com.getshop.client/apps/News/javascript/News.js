@@ -7,14 +7,16 @@ app.News = {
         $(document).on('click', '.News .showimageeditor', app.News.showEditImage);
         
         PubSub.subscribe('NAVIGATION_COMPLETED', function() {
-            for(name in CKEDITOR.instances)
-            {
-                if(name == "newscontentaddentry" || name == "newscontenteditentry") {
-                    CKEDITOR.instances[name].destroy();
+            if (typeof(CKEDITOR) !== "undefined") {
+                for(name in CKEDITOR.instances)
+                {
+                    if(name == "newscontentaddentry" || name == "newscontenteditentry") {
+                        CKEDITOR.instances[name].destroy();
+                    }
                 }
-            }
-            if($('#newscontentaddentry').length > 0) {
-                thundashop.common.activateCKEditor('newscontentaddentry', { "notdestroyonblur" : false });
+                if($('#newscontentaddentry').length > 0) {
+                    thundashop.common.activateCKEditor('newscontentaddentry', { "notdestroyonblur" : false });
+                }
             }
         });
 

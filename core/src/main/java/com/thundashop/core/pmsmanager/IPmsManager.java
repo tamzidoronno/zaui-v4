@@ -350,4 +350,7 @@ public interface IPmsManager {
     
     @Administrator
     public void saveConferenceData(ConferenceData data);
+    
+    @Administrator
+    public List<ConferenceData> getFutureConferenceData();
 }

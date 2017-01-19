@@ -4913,7 +4913,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             data = new ConferenceData();
             data.id = bookingId;
 //            saveObject(data);
-//            conferenceDatas.pu>t(data.id, data);
+//            conferenceDatas.put(data.id, data);
         }
         
         finalize(data);
@@ -4924,7 +4924,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(data.id);
         if (booking != null) {
             data.attendeesCount = booking.getTotalGuestCount();
-//            data.date = booking.getStartDate();
+            data.date = booking.getStartDate();
         }
     }
 

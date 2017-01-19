@@ -4930,7 +4930,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveConferenceData(ConferenceData data) {
-        saveObject(data);
+//        saveObject(data);
         conferenceDatas.put(data.id, data);
     }
 

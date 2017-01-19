@@ -4912,8 +4912,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (data == null) {
             data = new ConferenceData();
             data.id = bookingId;
-            saveObject(data);
-            conferenceDatas.put(data.id, data);
+//            saveObject(data);
+//            conferenceDatas.pu>t(data.id, data);
         }
         
         finalize(data);
@@ -4924,6 +4924,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(data.id);
         if (booking != null) {
             data.attendeesCount = booking.getTotalGuestCount();
+//            data.date = booking.getStartDate();
         }
     }
 
@@ -4931,5 +4932,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void saveConferenceData(ConferenceData data) {
         saveObject(data);
         conferenceDatas.put(data.id, data);
+    }
+
+    @Override
+    public List<ConferenceData> getFutureConferenceData() {
+        List<ConferenceData> retList = conferenceDatas.values().stream()
+                .filter(conference -> conference.conferences != null && !conference.conferences.isEmpty())
+                .filter(conf -> isInFuture(conf))
+                .collect(Collectors.toList());
+        
+        retList.stream().forEach(conf -> finalize(conf));
+        
+        return retList;
+    }
+    
+    private boolean isInFuture(ConferenceData data) {
+        PmsBooking booking = getBooking(data.id);
+        
+        return booking != null && (!booking.isEnded() || booking.isActiveOnDay(new Date()));
     }
 }

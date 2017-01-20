@@ -28,4 +28,6 @@ public class ConferenceData extends DataCommon {
     public Date date;
     
     List<ConferenceDataRow> conferences = new ArrayList();
+    
+    public String bookingId;
 }

@@ -41,7 +41,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function saveConferenceData() {
         $conferenceData = new \core_pmsmanager_ConferenceData();
-        $conferenceData->id = $_POST['data']['bookingid'];
+        $conferenceData->bookingId = $_POST['data']['bookingid'];
         $conferenceData->note = $_POST['data']['note'];
         
         foreach ($_POST['data']['rows'] as $row) {

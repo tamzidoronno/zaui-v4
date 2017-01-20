@@ -3699,6 +3699,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Calendar cal = Calendar.getInstance();
             cal.setTime(room.date.start);
             cal.set(Calendar.HOUR_OF_DAY, hour);
+            if(getConfigurationSecure().isArx()) {
+                room.addedToArx = false;
+            }
             room.date.start = cal.getTime();
             if(room.bookingId != null) {
                 updateBooking(room);
@@ -3715,6 +3718,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             cal.setTime(room.date.end);
             cal.set(Calendar.HOUR_OF_DAY, hour);
             room.date.end = cal.getTime();
+            if(getConfigurationSecure().isArx()) {
+                room.addedToArx = false;
+            }
             if(room.bookingId != null) {
                 updateBooking(room);
             }

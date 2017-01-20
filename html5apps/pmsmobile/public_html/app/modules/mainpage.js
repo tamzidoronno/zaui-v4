@@ -7,6 +7,7 @@ getshop.mainpageController = function($scope, $state) {
     $scope.hasDoorControl = false;
     $scope.hasCleaning = true;
     $scope.hasCaretaker = true;
+    $scope.hasConference = false;
     
     
     $scope.showAll = function() {
@@ -25,6 +26,7 @@ getshop.mainpageController = function($scope, $state) {
         $scope.hasFireInstructions = false;
         $scope.hasDoorControl = false;
         $scope.hasBreakfast = false;
+        $scope.hasConference = false;
         var config = getshopclient.PmsManager.getConfiguration(getMultilevelName());
         config.done(function(res) {
             $scope.views = res.mobileViews;
@@ -37,7 +39,9 @@ getshop.mainpageController = function($scope, $state) {
             if(res.fireinstructions) {
                 $scope.hasFireInstructions = true;
             }
-
+            
+            $scope.hasConference = res.functionsEnabled;
+            
             for(var key in res.addonConfiguration) {
                 var addon = res.addonConfiguration[key];
                 if(addon.addonType === 1) {

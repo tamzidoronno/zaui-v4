@@ -69,7 +69,7 @@
                 </div>
                 <div class="col">{{order.quantity}}</div>
                 <div class="">{{ order.orderType }} {{order.comment}}</div>
-                <div class="deliverytaskaction">
+                <div class="deliverytaskaction" ng-class="{'alreadyasdf' :  shouldBeVisible(order)}">
                     <div ng-if="order.orderDriverDeliveries">
                         <div style='width: 48%; display: inline-block;'class="button orange exceptionButton" ng-class="{'order_task_completed' : order.hasOwnProperty('driverDeliveryCopiesCounted')}" ng-mobile-click="openDriverCopies(order)"><i class="fa fa-check"></i> Count drivercopies</div>
                         <div style='width: 48%; display: inline-block;'class="button orange exceptionButton order_task_completed" ng-mobile-click="openCorrection(order)">Make correction </div>

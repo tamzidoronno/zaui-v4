@@ -47,6 +47,8 @@ public class Destination extends DataCommon {
     public String podBarcode = "";
     
     public String onDemandInstructions = "" ;
+    
+    public String stopWindow;
    
     public Destination() {
     }

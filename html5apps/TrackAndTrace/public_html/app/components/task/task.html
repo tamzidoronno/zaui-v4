@@ -90,6 +90,9 @@
     <br/>
     <div ng-if='!isContainerCounted()' class="button" ng-mobile-click="openCountPalletsOrCages()">Count containers.</div>
     <div ng-if='allOrdersFinished() && isContainerCounted()' class="button deliveredbutton" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
+    <div ng-if='!allOrdersFinished() && isContainerCounted()'>
+        Please complete all the tasks above.
+    </div>
 </div>
 
 <div ng-if="taskType === 'pickup_parcels'" class="pickup_parcels">
@@ -97,7 +100,7 @@
     <div class="deliveryamount">
         <input type="number" class="textfield"/>
     </div>
-    
+     
     <div ng-if='allOrdersFinished()' class="button" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
 </div>
 

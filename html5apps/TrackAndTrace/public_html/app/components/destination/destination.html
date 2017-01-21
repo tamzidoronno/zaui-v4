@@ -2,11 +2,17 @@
 <br/> {{ destination.company.address.address }}
 <br/> {{ destination.company.address.postCode }} {{ destination.company.address.city }} 
 
+<div ng-if="destination.stopWindow">
+    <br/>
+    <b><i class='fa fa-clock-o'></i> Stop window: </b> {{ destination.stopWindow }}
+</div>
+
 <div ng-if="destination.note">
     <br/>
     <b>Note</b>
     <br/> {{ destination.note }}
 </div>
+
 
 <div ng-if="destination.skipInfo.skippedReasonId" class="destinationwarning">
     <i class="fa fa-exclamation"></i> {{ getCurrentException() }}

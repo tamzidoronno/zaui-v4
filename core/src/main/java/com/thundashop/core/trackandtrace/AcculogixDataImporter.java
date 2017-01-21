@@ -132,6 +132,7 @@ public class AcculogixDataImporter {
         destination.seq = Integer.parseInt(args[20]);
         destination.podBarcode = args[34];
         destination.note = args[21];
+        destination.stopWindow = args[24];
         destination.onDemandInstructions = args[23] + args[53];
         trackAndTraceManager.saveDestination(destination);
         destinations.put(destination.id, destination);

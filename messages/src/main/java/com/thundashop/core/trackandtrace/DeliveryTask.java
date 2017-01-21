@@ -15,6 +15,8 @@ import java.util.List;
 public class DeliveryTask extends Task {
     public List<DeliveryOrder> orders = new ArrayList();
 
+    public int containerCounted;
+    
     @Override
     public int getOrderCount() {
         return orders.size();
@@ -36,11 +38,4 @@ public class DeliveryTask extends Task {
         }
     }
 
-    public void changeCagesOrPalletCount(String orderReference, int quantity) {
-        for (DeliveryOrder order : orders) {
-            if (order.referenceNumber.equals(orderReference)) {
-                order.palletsOrCagesDelivered = quantity;
-            }
-        }
-    }
 }

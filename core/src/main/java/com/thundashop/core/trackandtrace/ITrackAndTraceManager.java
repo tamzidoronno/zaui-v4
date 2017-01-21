@@ -80,5 +80,5 @@ public interface ITrackAndTraceManager {
     public void setSequence(String exceptionId, int sequence);
     
     @Customer
-    public void setCagesOrPalletCount(String taskId, String orderReference, int quantity);
+    public void setCagesOrPalletCount(String taskId, int quantity);
 }

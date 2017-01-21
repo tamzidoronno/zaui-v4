@@ -48,6 +48,7 @@ public class AcculogixDataExporter {
         exp.PODBarcodeID = task.podBarcode;
         exp.RDDriver$ID = route.startInfo.startedByUserId;
         exp.ReceiverName = dest.typedNameForSignature;
+        exp.routeId = route.originalId;
         
         if (route.startInfo.started) {
             exp.TaskStatus = "AF";
@@ -76,7 +77,7 @@ public class AcculogixDataExporter {
         if (dest.startInfo.completed) {
             exp.StatusDateTimeCompleted = formatDate(dest.startInfo.completedTimeStamp);
             exp.Latitude = dest.startInfo.completedLat;
-            exp.Longitude =dest.startInfo.completedLon;
+            exp.Longitude = dest.startInfo.completedLon;
         }
 
         exp.SignatureObtained = dest.signatureImage != null && !dest.signatureImage.isEmpty() ? "Yes" : "No";

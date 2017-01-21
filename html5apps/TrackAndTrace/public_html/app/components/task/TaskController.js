@@ -45,7 +45,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     }
     
     $scope.shouldBeVisible = function(order) {
-        return datarepository.currentVissibleReferenceNumber === order.referenceNumber;
+        return datarepository.currentVissibleReferenceNumber == order.referenceNumber;
     }
     
     $scope.toggleActionButton = function(task) {
@@ -57,10 +57,6 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
             $('.deliverytaskaction').hide();
             $('[order="'+task.referenceNumber+'"] .deliverytaskaction').show();
         }
-    }
-    
-    $scope.cancelCorrection = function(a, b) {
-        debugger;
     }
     
     $scope.isAllDriverCopiedOrdersCounted = function() {
@@ -131,7 +127,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         return orders;
     }
     
-    $scope.getCagesAndPallet = function() {
+    $scope.getContainerBundles = function() {
         var pallets = $scope.getPallets();
         var cages = $scope.getCages();
         var combined = pallets.concat(cages);
@@ -171,42 +167,18 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         var orders = $scope.getCages();
         return $scope.countIt(orders);
     }
-    
-    $scope.countIt = function(orders) {
-        var count = 0;
-        
-        for (var i in orders) {
-            var order = orders[i];
-            if (order.palletsOrCagesDelivered) {
-                count += order.palletsOrCagesDelivered;
-            }
-        }
-        
-        return count;
-    }
-    
+
     $scope.orderFinished = function(order) {
         
-        if ($scope.isLooseOrder(order)) {
-
-            if (order.orderDriverDeliveries && !order.hasOwnProperty("driverDeliveryCopiesCounted")) {
-                return false;
-            }
-            
-            return true;
+        if (order.orderDriverDeliveries && !order.hasOwnProperty("driverDeliveryCopiesCounted")) {
+            return false;
         }
         
-        if ($scope.isCageOrder(order) || $scope.isPalletOrder(order)) {
-
-            if (order.orderDriverDeliveries && !order.hasOwnProperty("driverDeliveryCopiesCounted")) {
-                return false;
-            }
-            
-            if (!order.hasOwnProperty("palletsOrCagesDelivered"))
-                return false;
-            
-            return true;
-        }
+        return true;
+    }
+    
+    $scope.isContainerCounted = function() {
+        return $scope.task.hasOwnProperty('containerCounted');
     }
     
     $scope.allOrdersFinished = function() {
@@ -232,7 +204,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         $state.transitionTo('base.ordercorrection', { 
             destinationId: $stateParams.destinationId,  
             routeId: $stateParams.routeId, 
-            taskId: $scope.task.id, orderId: order.referenceNumber,
+            taskId: $scope.task.id, orderId: null,
             type: 'cagecount'
         });
     }

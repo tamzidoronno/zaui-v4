@@ -324,10 +324,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void setCagesOrPalletCount(String taskId, String orderReference, int quantity) {
+    public void setCagesOrPalletCount(String taskId, int quantity) {
         Task task = tasks.get(taskId);
         if (task instanceof DeliveryTask) {
-            ((DeliveryTask)task).changeCagesOrPalletCount(orderReference, quantity);
+            ((DeliveryTask)task).containerCounted = quantity;
             saveObject(task);
         }
     }

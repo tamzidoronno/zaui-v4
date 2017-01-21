@@ -58,6 +58,8 @@ public class AcculogixExport {
     public String ORComments = "";
     
     public String ORPieceCorrect;
+    
+    public String routeId = "";
 
 
 }

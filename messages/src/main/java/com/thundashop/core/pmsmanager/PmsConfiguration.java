@@ -9,6 +9,7 @@ import java.util.List;
 public class PmsConfiguration extends DataCommon {
 
 
+
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;
         public static Integer DAILY = 2;
@@ -157,6 +158,7 @@ public class PmsConfiguration extends DataCommon {
     public int numberOfRoomsToRemoveFromBookingCom = 1;
     public boolean usePricesFromChannelManager = false;
     public boolean useGetShopPricesOnExpedia = false;
+    public boolean ignoreNoShow = false;
 
     
     public HashMap<String, PmsChannelConfig> channelConfiguration = new HashMap();

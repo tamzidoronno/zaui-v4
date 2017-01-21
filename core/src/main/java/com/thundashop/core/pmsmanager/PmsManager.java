@@ -402,7 +402,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         if(canAdd) {
             addDefaultAddons(booking);
-
             bookingEngine.addBookings(bookingsToAdd);
             booking.attachBookingItems(bookingsToAdd);
             booking.sessionId = null;
@@ -4177,7 +4176,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             createUserForBooking(booking);
             if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
-                 pmsInvoiceManager.createPrePaymentOrder(booking);
+                booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
+                pmsInvoiceManager.createPrePaymentOrder(booking);
             }
             
             result = completeBooking(bookingsToAdd, booking);

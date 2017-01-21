@@ -1038,6 +1038,28 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsInvoiceManager()->validateAllInvoiceToDates($this->getSelectedName());
     }
     
+    public function setQuickFilter() {
+        $this->emptyfilter();
+        $filter = $this->getSelectedFilter();
+        $filter->filterType = $_POST['data']['type'];
+        $filter->startDate = $this->convertToJavaDate(time());
+        $filter->endDate = $this->convertToJavaDate(time());
+        
+        if($filter->filterType == "stats" || $filter->filterType == "orderstats") {
+            $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime($filter->startDate))));
+            $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime($filter->endDate))));
+        }
+        if($filter->filterType == "orderstats") {
+            $this->setDefaultIncomeFilter();
+        }
+        
+        $this->setCurrentFilter($filter);
+    }
+    
+    public function loadCoverage() {
+        echo "TEST";
+    }
+    
     public function exportBookingStats() {
         $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->getSelectedFilter());
         $arr = (array)$stats->entries;
@@ -2499,6 +2521,37 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         
         return $sortedMatrix;
+    }
+
+    public function setDefaultIncomeFilter() {
+        $filter = new \core_pmsmanager_PmsOrderStatsFilter();
+        
+        $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        foreach ($paymentMethods as $key => $method) {
+            $id = $method->id;
+            if($id == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
+                //Ignore invoices
+                $method = array();
+                $method['paymentMethod'] = $id;
+                $method['paymentStatus'] = 0;
+                $filter->methods[] = $method;
+                continue;
+            }
+            $method = array();
+            $method['paymentMethod'] = $id;
+            $method['paymentStatus'] = 7;
+            $filter->methods[] = $method;
+            
+            $method = array();
+            $method['paymentMethod'] = $id;
+            $method['paymentStatus'] = -9;
+            $filter->methods[] = $method;
+        }
+        $filter->priceType = "extaxes";
+        $filter->displayType = "dayslept";
+        $filter->start = $this->getSelectedFilter()->startDate;
+        $filter->end = $this->getSelectedFilter()->endDate;
+        $_SESSION['pmsorderstatsfilter'] = serialize($filter);
     }
 
 }

@@ -919,6 +919,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Calendar cal = Calendar.getInstance();
         
         if(!frameworkConfig.productionMode) { return; }
+        if(pmsManager.getConfigurationSecure().ignoreNoShow) { return; }
         PmsBookingFilter filter = new PmsBookingFilter();
         if(storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
             if(cal.get(Calendar.HOUR_OF_DAY) < 5) {

@@ -394,7 +394,7 @@ app.PmsManagement = {
         }
         
         var data = {
-            orderid : $(this).closest('tr').attr('orderid'),
+            orderid : $(this).closest('tr[orderid]').attr('orderid'),
             bookingid : $('#openedbookingid').val()
         };
         

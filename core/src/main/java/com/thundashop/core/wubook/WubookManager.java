@@ -150,9 +150,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     
     private boolean connectToApi() throws Exception {
+        
         if(!isWubookActive()) { return false; }
         client = new XmlRpcClient("https://wubook.net/xrws/");
-        
+
         Vector<String> params = new Vector<String>();
         params.addElement(pmsManager.getConfigurationSecure().wubookusername);
         params.addElement(pmsManager.getConfigurationSecure().wubookpassword);

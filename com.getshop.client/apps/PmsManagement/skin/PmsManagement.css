@@ -27,6 +27,7 @@
 .PmsManagement tr.compressed td { padding: 2px 6px 2px 12px; }
 .PmsManagement .moreinvoiceoptions { border: solid 1px; margin-top: 5px; position:absolute; background-color:#fff; padding: 10px; display:none; }
 .PmsManagement .roominfosub {  width: 140px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:inline-block; }
+.PmsManagement .otherOrderOptions { position:absolute;  background-color:#fff;  width: 300px; left: -300px; }
 .PmsManagement .Confirmed,
 .PmsManagement .active,
 .PmsManagement .confirmed { color:green; }

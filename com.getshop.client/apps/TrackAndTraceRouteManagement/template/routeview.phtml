@@ -10,10 +10,7 @@ $route = $this->getRoute();
 <div>
     <div class="routebox" gstype='form' method='saveRoute'>
         Route name: <input class='gsniceinput1' gsname='routename' type='textfield' value='<? echo $route->name; ?>'>
-
-        <h2>Route instruction</h2>
-        <textarea placeholder="Todays instruction" gsname='instruction' style='width: 100%; box-sizing: border-box; height: 100px; border: solid 1px #DDD; padding: 10px;'><? echo $route->instruction; ?></textarea>
-        
+        <br/>
         <div class='shop_button' style="margin-top: 20px" gstype='submit'>Save</div>
     </div>
     

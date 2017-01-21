@@ -113,6 +113,9 @@ if($hasAddons) {
 if($hasArx) {
     echo "<span class='tab' area='cards'>Card / code</span>";
 }
+if($config->functionsEnabled) {
+    echo "<span class='tab' area='functions'>Conference</span>";
+}
 echo "</span>";
 echo "<div style='clear:both;'></div>";
 echo "<div class='tabarea roomsbooked'>";
@@ -140,6 +143,11 @@ if($hasArx) {
     echo "</div>";
 }
 
+if ($config->functionsEnabled) {
+    echo "<div class='tabarea functions'>";
+    $this->includefile("functions");
+    echo "</div>";
+}
 if(!$booking->confirmed) { ?>
     <div class='needconfirmation' style="margin:0px;margin-top: 20px;">
         <h2>Confirm this booking</h2>

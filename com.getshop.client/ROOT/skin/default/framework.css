@@ -2103,6 +2103,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', end
     top: -1px;
     bottom: -1px;
 }
+.gscellbox.gsactivebox {
+    opacity: 1 !important;
+}
+
 .gscellbox .gscellboxheader i { cursor:pointer; }
 .gscellbox .gscellboxheader i:hover,.gscaraouselmenu i:hover { font-weight: bold; }
 .gscellbox .gscellboxheader {

@@ -1,0 +1,26 @@
+<div class='additionalinfo row'>
+    <a ui-sref="mainpage"><i class='fa fa-arrow-left' style='color:#fff; float:left;'></i></a>
+    Conferences
+</div>
+<div class='row'>
+    <div ng-repeat="conf in conferences" class="conferencerow">
+        <div class="conf_title"> {{ conf.date }}</div>
+        <div class="conf_note" ng-if="conf.note">
+            <b>Note:</B><br/>
+            {{ conf.note }}
+        </div>
+        <div ng-repeat="act in conf.conferences" class="conf_action">
+            <div class="conf_col col1">{{ act.place }}</div>
+            <div class="conf_col col2">{{ act.from }}</div>
+            <div class="conf_col col3">- {{ act.to }}</div>
+            <div class="conf_col col4">( {{ act.attendeesCount }} )</div>
+            <div class="conf_col col5">{{ act.actionName }}</div>
+            
+        </div>
+    </div>
+</div>
+<div class='additionalinfobottom row'>
+    <div style='text-align:center; font-size: 20px; padding: 10px; color:#fff;'>
+        <a ui-sref="mainpage"><i class='fa fa-home' style='color:#fff;'></i></a>
+    </div>
+</div>

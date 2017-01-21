@@ -81,6 +81,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private HashMap<String, PmsCareTaker> careTaker = new HashMap();
     private HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
     private HashMap<String, PmsPricing> priceMap = new HashMap();
+    private HashMap<String, ConferenceData> conferenceDatas = new HashMap();
     private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
     private List<String> warnedAbout = new ArrayList();
@@ -150,6 +151,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
                 bookings.put(booking.id, booking);
+            }
+            if (dataCommon instanceof ConferenceData) {
+                ConferenceData conferenceRoomData = (ConferenceData) dataCommon;
+                conferenceDatas.put(conferenceRoomData.id, conferenceRoomData);
             }
             if (dataCommon instanceof PmsPricing) {
                 PmsPricing price = (PmsPricing) dataCommon;
@@ -4904,5 +4909,53 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public ConferenceData getConferenceData(String bookingId) {
+        ConferenceData data = conferenceDatas.values()
+                .stream()
+                .filter(conf -> conf.bookingId.equals(bookingId))
+                .findFirst()
+                .orElse(new ConferenceData());
+        
+        data.bookingId = bookingId;
+                
+        finalize(data);
+        return data;
+    }
+
+    private void finalize(ConferenceData data) {
+        PmsBooking booking = getBooking(data.bookingId);
+        if (booking != null) {
+            data.attendeesCount = booking.getTotalGuestCount();
+            data.date = booking.getStartDate();
+        }
+    }
+
+    @Override
+    public void saveConferenceData(ConferenceData data) {
+        ConferenceData old = getConferenceData(data.bookingId);
+        data.id = old.id;
+        saveObject(data);
+        conferenceDatas.put(data.id, data);
+    }
+
+    @Override
+    public List<ConferenceData> getFutureConferenceData() {
+        List<ConferenceData> retList = conferenceDatas.values().stream()
+                .filter(conference -> conference.conferences != null && !conference.conferences.isEmpty())
+                .filter(conf -> isInFuture(conf))
+                .collect(Collectors.toList());
+        
+        retList.stream().forEach(conf -> finalize(conf));
+        
+        return retList;
+    }
+    
+    private boolean isInFuture(ConferenceData data) {
+        PmsBooking booking = getBooking(data.bookingId);
+        
+        return booking != null && (!booking.isEnded() || booking.isActiveOnDay(new Date()));
     }
 }

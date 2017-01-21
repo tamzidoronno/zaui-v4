@@ -1,0 +1,56 @@
+<?
+$bookingId = $_POST['data']['bookingid'];
+/* @var $this ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+$data = $this->getApi()->getPmsManager()->getConferenceData($this->getSelectedName(), $bookingId);
+?>
+<br/>
+<div class='conference_data_form' gstype="form" method="saveFunction" >
+    <h2> <? echo $this->__w("Number of attendees in group"); ?>: <? echo $data->attendeesCount; ?></h2>
+    <input type="hidden" gsname="bookingid" value="<? echo $bookingId; ?>"/>
+    Note:
+    <br/>
+    <textarea gsname="note" placeholer="A few notes :D" style="width: 100%; box-sizing: border-box; border: solid 1px #DDD; height: 100px;"><? echo $data->note; ?></textarea>
+    <br/>
+    <br/>
+    <!-- Do we need more then one day for this, well if we do make more dayforms. :D ? -->
+    <div class="dayform">
+        <div class="rows">
+            <div class="action_point_row row_template">
+                <div class="col col1"><input type="textfield" gsname="place" class="gsniceinput1"/></div>
+                <div class="col col2"><input type="textfield" gsname="from" class="gsniceinput1"/></div>
+                <div class="col col3"><input type="textfield" gsname="to" class="gsniceinput1"/></div>
+                <div class="col col4"><input type="textfield" gsname="actionName" class="gsniceinput1"/></div>
+                <div class="col col5"><input type="textfield" gsname="attendeesCount" class="gsniceinput1"/></div>
+                <div class="col col6"><i class="fa fa-trash remove_conference_row"></i></div>
+            </div>
+            
+            <div class="action_point_row">
+                <div class="col col1">&nbsp;Where</div>
+                <div class="col col2">&nbsp;From</div>
+                <div class="col col3">&nbsp;To</div>
+                <div class="col col4">&nbsp;Name</div>
+                <div class="col col5">&nbsp;Size</div>
+            </div>
+            
+            <?
+            foreach ($data->conferences as $row) {
+                ?>
+                <div class="action_point_row with_data" rowid="<? echo $row->rowId; ?>">
+                    <div class="col col1"><input type="textfield" gsname="place" class="gsniceinput1" value="<? echo $row->place; ?>"/></div>
+                    <div class="col col2"><input type="textfield" gsname="from" class="gsniceinput1" value="<? echo $row->from; ?>"/></div>
+                    <div class="col col3"><input type="textfield" gsname="to" class="gsniceinput1" value="<? echo $row->to; ?>"/></div>
+                    <div class="col col4"><input type="textfield" gsname="actionName" class="gsniceinput1" value="<? echo $row->actionName; ?>"/></div>
+                    <div class="col col5"><input type="textfield" gsname="attendeesCount" class="gsniceinput1" value="<? echo $row->attendeesCount; ?>"/></div>
+                    <div class="col col6"><i class="fa fa-trash remove_conference_row"></i></div>
+                </div>
+                <?
+            }
+            ?>
+        </div>
+
+        <br/><br/>Add more actionpoints?<br/>
+        <div class="pmsbutton conference_addactionpoint"><? echo $this->__w("Add actionpoint"); ?></div>    
+        <div class="pmsbutton save_conference_data">Save</div>    
+    </div>
+    
+</div>

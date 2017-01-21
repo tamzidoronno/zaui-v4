@@ -75,5 +75,9 @@ public class Route extends DataCommon {
         userIds.addAll(hs);
     }
 
+    void setPodBarcodeStringToTasks() {
+        destinations.stream().forEach(dest -> dest.setPodBarcodeStringToTasks());
+    }
+
 
 }

@@ -117,6 +117,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         retRoute.getDestinations().stream().forEach(dest -> finalize(dest));
 
+        retRoute.setPodBarcodeStringToTasks();
     }
 
     private void finalize(Destination dest) {

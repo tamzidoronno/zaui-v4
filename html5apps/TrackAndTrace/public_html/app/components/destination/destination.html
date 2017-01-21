@@ -7,21 +7,24 @@
     <b><i class='fa fa-clock-o'></i> Stop window: </b> {{ destination.stopWindow }}
 </div>
 
-<div ng-if="destination.note">
-    <br/>
-    <b>Note</b>
-    <br/> {{ destination.note }}
-</div>
-
-
 <div ng-if="destination.skipInfo.skippedReasonId" class="destinationwarning">
     <i class="fa fa-exclamation"></i> {{ getCurrentException() }}
 </div>
     
 
-<div ng-if="destination.onDemandInstructions" class='instruction'>
-    <b>Todays instruction</b>
-    <br/> {{ destination.onDemandInstructions }}
+<div ng-if="destination.onDemandInstructions || destination.pickupInstruction || destination.deliveryInstruction" class='instruction'>
+    <div ng-if='destination.onDemandInstructions' class='subinstruction'>
+        <b>Todays instruction</b>
+        <br/> {{ destination.onDemandInstructions }}    
+    </div>
+    <div ng-if='destination.deliveryInstruction' class='subinstruction'>
+        <b>Delivery instruction</b>
+        <br/> {{ destination.deliveryInstruction }}    
+    </div>
+    <div ng-if='destination.pickupInstruction' class='subinstruction'>
+        <b>Pickup instruction</b>
+        <br/> {{ destination.pickupInstruction }}    
+    </div>
 </div>
 
 <br/>   

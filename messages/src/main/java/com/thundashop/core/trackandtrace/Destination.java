@@ -42,10 +42,11 @@ public class Destination extends DataCommon {
     
     public String exceptionId = "";
     
-    public String note = "";
     public Integer seq;
     public String podBarcode = "";
     
+    public String deliveryInstruction = "";
+    public String pickupInstruction = "";
     public String onDemandInstructions = "" ;
     
     public String stopWindow;
@@ -65,5 +66,9 @@ public class Destination extends DataCommon {
         hs.addAll(taskIds);
         taskIds.clear();
         taskIds.addAll(hs);
+    }
+    
+    void setPodBarcodeStringToTasks() {
+        tasks.stream().forEach(task -> task.setPodBarcodeStringToTasks());
     }
 }

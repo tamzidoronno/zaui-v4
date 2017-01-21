@@ -1,4 +1,9 @@
 
+<div ng-if='task.instruction' class='instruction'>
+    <b>Instruction</b>
+    <br/>{{ task.instruction }}
+</div>
+
 <div class='podBarcode'> {{ task.podBarcode }} </div>
 
 <div ng-if="taskType === 'delivery'" class="task_delivery">

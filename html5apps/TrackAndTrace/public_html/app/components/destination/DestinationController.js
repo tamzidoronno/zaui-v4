@@ -11,6 +11,8 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
     $scope.route = datarepository.getRouteById($stateParams.routeId);
     $scope.destination = datarepository.getDestinationById($stateParams.destinationId);
     
+    console.log($scope.destination);
+    
     $scope.doTheBack = function() {
         $state.transitionTo('base.routeoverview', { routeId : $stateParams.routeId });
     };

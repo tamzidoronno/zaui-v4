@@ -1,9 +1,14 @@
 
+<div ng-if='task.instruction' class='instruction'>
+    <b>Instruction</b>
+    <br/>{{ task.instruction }}
+</div>
+
 <div class='podBarcode'> {{ task.podBarcode }} </div>
 
 <div ng-if="taskType === 'delivery'" class="task_delivery">
-    <div ng-if="getCagesAndPallet().length > 0">
-        <div class="task_titleheader">Cages to deliver</div>
+    <div ng-if="getContainerBundles().length > 0">
+        <div class="task_titleheader">Containers to deliver</div>
         
         <div class="summary">
             <div class="summaryrow">
@@ -15,7 +20,7 @@
                 <div class="col">Total</div>
             </div>
 
-            <div ng-repeat="order in getCagesAndPallet()" ng-mobile-click-end="toggleActionButton(order)" class="summaryrow" order="{{order.referenceNumber}}">
+            <div ng-repeat="order in getContainerBundles()" ng-mobile-click-end="toggleActionButton(order)" class="summaryrow" order="{{order.referenceNumber}}">
                 <div class="col"><span class="fa" ng-class="{'fa-check': orderFinished(order), 'fa-close' : !orderFinished(order)}"></span>{{order.referenceNumber}}</div>
                 <div class="col">{{order.orderOdds}}</div>
                 <div class="col">{{order.orderFull}}</div>
@@ -26,27 +31,19 @@
                 </div>
                 <div class="col">
                     {{order.quantity}}
-                    <br/><span ng-if='order.palletsOrCagesDelivered'>( {{ order.palletsOrCagesDelivered }} )</span>
                 </div>
                 <div class="">{{ order.orderType }} {{order.comment}}</div>
                 <div class="deliverytaskaction" ng-class="{'alreadyasdf' :  shouldBeVisible(order)}">
                     <div ng-if="order.orderDriverDeliveries">
-                        <div style='width: 33%; display: inline-block;' class="button orange exceptionButton" ng-class="{ 'order_task_completed' : order.hasOwnProperty('driverDeliveryCopiesCounted') }" ng-mobile-click="openDriverCopies(order)">
+                        <div style='width: 48%; display: inline-block;' class="button orange exceptionButton" ng-class="{ 'order_task_completed' : order.hasOwnProperty('driverDeliveryCopiesCounted') }" ng-mobile-click="openDriverCopies(order)">
                             <i class="fa fa-check"></i> Count drivercopies
                         </div>
-                        <div style='width: 33%; display: inline-block;' class="button orange exceptionButton order_task_completed" ng-mobile-click="openCorrection(order)">
+                        <div style='width: 48%; display: inline-block;' class="button orange exceptionButton order_task_completed" ng-mobile-click="openCorrection(order)">
                             Make correction
-                        </div>
-                        
-                        <div class="button orange exceptionButton"  style='width: 32%; display: inline-block;' ng-class="{ 'order_task_completed' : order.hasOwnProperty('palletsOrCagesDelivered') }" ng-mobile-click="openCountPalletsOrCages(order)">
-                            <i class="fa fa-check"></i> Count pallet or cages
                         </div>
                     </div>
                     <div ng-if="!order.orderDriverDeliveries">
-                        <div class="button orange exceptionButton"  style='width: 48%; display: inline-block;' ng-mobile-click="openCorrection(order)">Make correction </div>
-                        <div class="button orange exceptionButton"  style='width: 48%; display: inline-block;' ng-mobile-click="openCountPalletsOrCages(order)" ng-class="{ 'order_task_completed' : order.hasOwnProperty('palletsOrCagesDelivered') }" >
-                            <i class="fa fa-check"></i>Count pallet or cages
-                        </div>
+                        <div class="button orange exceptionButton order_task_completed" style='width: 100%; display: inline-block;' ng-mobile-click="openCorrection(order)">Make correction </div>
                     </div>
                 </div>
             </div>
@@ -77,13 +74,13 @@
                 </div>
                 <div class="col">{{order.quantity}}</div>
                 <div class="">{{ order.orderType }} {{order.comment}}</div>
-                <div class="deliverytaskaction">
+                <div class="deliverytaskaction" ng-class="{'alreadyasdf' :  shouldBeVisible(order)}">
                     <div ng-if="order.orderDriverDeliveries">
-                        <div style='width: 48%; display: inline-block;'class="button orange exceptionButton" ng-mobile-click="openDriverCopies(order)">Count drivercopies</div>
-                        <div style='width: 48%; display: inline-block;'class="button orange exceptionButton" ng-mobile-click="openCorrection(order)">Make correction </div>
+                        <div style='width: 48%; display: inline-block;'class="button orange exceptionButton" ng-class="{'order_task_completed' : order.hasOwnProperty('driverDeliveryCopiesCounted')}" ng-mobile-click="openDriverCopies(order)"><i class="fa fa-check"></i> Count drivercopies</div>
+                        <div style='width: 48%; display: inline-block;'class="button orange exceptionButton order_task_completed" ng-mobile-click="openCorrection(order)">Make correction </div>
                     </div>
                     <div ng-if="!order.orderDriverDeliveries">
-                        <div class="button orange exceptionButton" ng-mobile-click="openCorrection(order)">Make correction </div>
+                        <div class="button orange exceptionButton order_task_completed" ng-mobile-click="openCorrection(order)">Make correction </div>
                     </div>
                 </div>
             </div>
@@ -93,11 +90,14 @@
     <div class="summaryrow">
         <center>Overall bundles: {{ getTotalBundles(task); }}</center>
         <center>Loose bundles: {{ getBundleCount(getLooseOrders()); }}</center>
-        <center ng-if='getBundleCount(getCages())'><span ng-if='getCageCount()'>{{ getCageCount() }} x </span>Caged bundles: {{ getBundleCount(getCages()); }}</center>
-        <center ng-if='getBundleCount(getPallets())'><span ng-if='getPalletCount()'>{{ getPalletCount() }} x </span>Pallet bundles: {{ getBundleCount(getPallets()); }}</center>
+        <center ng-if='getBundleCount(getCages())'><span ng-if='getContainerCount()'>{{ getContainerCount() }} x </span>Container bundles: {{ getBundleCount(getContainerBundles()); }}</center>
     </div>
-    
-    <div ng-if='allOrdersFinished()' class="button deliveredbutton" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
+    <br/>
+    <div ng-if='!isContainerCounted()' class="button" ng-mobile-click="openCountPalletsOrCages()">Count containers.</div>
+    <div ng-if='allOrdersFinished() && isContainerCounted()' class="button deliveredbutton" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
+    <div ng-if='!allOrdersFinished() && isContainerCounted()'>
+        Please complete all the tasks above.
+    </div>
 </div>
 
 <div ng-if="taskType === 'pickup_parcels'" class="pickup_parcels">
@@ -105,7 +105,7 @@
     <div class="deliveryamount">
         <input type="number" class="textfield"/>
     </div>
-    
+     
     <div ng-if='allOrdersFinished()' class="button" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
 </div>
 

@@ -2,10 +2,9 @@
 <br/> {{ destination.company.address.address }}
 <br/> {{ destination.company.address.postCode }} {{ destination.company.address.city }} 
 
-<div ng-if="destination.note">
+<div ng-if="destination.stopWindow">
     <br/>
-    <b>Note</b>
-    <br/> {{ destination.note }}
+    <b><i class='fa fa-clock-o'></i> Stop window: </b> {{ destination.stopWindow }}
 </div>
 
 <div ng-if="destination.skipInfo.skippedReasonId" class="destinationwarning">
@@ -13,9 +12,19 @@
 </div>
     
 
-<div ng-if="destination.onDemandInstructions" class='instruction'>
-    <b>Todays instruction</b>
-    <br/> {{ destination.onDemandInstructions }}
+<div ng-if="destination.onDemandInstructions || destination.pickupInstruction || destination.deliveryInstruction" class='instruction'>
+    <div ng-if='destination.onDemandInstructions' class='subinstruction'>
+        <b>Todays instruction</b>
+        <br/> {{ destination.onDemandInstructions }}    
+    </div>
+    <div ng-if='destination.deliveryInstruction' class='subinstruction'>
+        <b>Delivery instruction</b>
+        <br/> {{ destination.deliveryInstruction }}    
+    </div>
+    <div ng-if='destination.pickupInstruction' class='subinstruction'>
+        <b>Pickup instruction</b>
+        <br/> {{ destination.pickupInstruction }}    
+    </div>
 </div>
 
 <br/>   
@@ -56,9 +65,4 @@
         <div class='button' ng-mobile-click="markAsArrived()">I have arrived!</div>
         <div class='button' ng-mobile-click="showDestinationExceptions()">Skip delivery</div>
     </div>
-</div>
-
-<div class="fetchingGpsCoordinates">
-    <i class="fa fa-spinner fa-spin"></i>
-    Fetching GPS coordinates, please wait..
 </div>

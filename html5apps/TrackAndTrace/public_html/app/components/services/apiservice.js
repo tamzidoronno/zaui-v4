@@ -8,6 +8,10 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
 //            this.api = new GetShopApiWebSocket('trackandtrace.getshop.com', '31332', identifier, true);
             this.api = new GetShopApiWebSocket('trackandtrace.3.0.local.getshop.com', '31330', identifier, true);
 //            this.api = new GetShopApiWebSocket('trackandtrace.3.0.mpal.getshop.com', '31330', identifier, true);
+
+            this.api.setTransferCompletedFirstTimeAfterUnsentMessageSent(function() {
+                $rootScope.$broadcast("refreshData", "");
+            });
             
             this.api.setMessageCountChangedEvent(function() {
                 $rootScope.$broadcast("messageCountChanged", "");
@@ -21,6 +25,16 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                 
                 me.logon(false);
             });
+            
+            this.api.addListener("com.thundashop.core.trackandtrace.Route", this.refreshRoute, me);
+        },
+                
+        this.refreshRoute = function(route) {
+            if (this.api.sessionId === route.sentFromSessionId)
+                return;
+  
+            $rootScope.$broadcast("refreshRouteEven1", route);
+            $rootScope.$apply();
         },
                 
         this.logon = function(fromLogin) {

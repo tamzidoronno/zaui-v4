@@ -5,12 +5,14 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import com.thundashop.core.common.DataCommon;
+
 /**
  *
  * @author ktonder
  */
-public class TntOrder {
-    public String referenceNumber = "";
-    public String comment = "";    
-    public String podBarcode = "";
+public class PooledDestionation extends DataCommon {
+    public String destionationId;
+    public String pooledByUserId = "";
+    public String originalRouteId = "";
 }

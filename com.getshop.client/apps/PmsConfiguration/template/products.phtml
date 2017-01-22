@@ -52,7 +52,7 @@ foreach($products as $product) {
     }
     
     echo "<tr>";
-    echo "<td><i class='fa fa-edit loadproductConfig' method='loadConfigInfoBoxForProduct' gsname='id' gsvalue='".$product->id."'></i> " . $addonItem->count . "</td>";
+    echo "<td><i class='fa fa-edit loadproductConfig' gsvalue='".$product->id."'></i> " . $addonItem->count . "</td>";
     echo "<td><input type='text' value='".$product->name."' gsname='addonconfig_".$prodid."_name' style='width: 80px;'></input> ".$product->tag."</td>";
     $checked = $selectedAddonConfig->isAvailableForCleaner ? "CHECKED" : "";
     echo "<td align='center'><input type='checkbox' gsname='addonconfig_".$prodid."_isAvailableForCleaner' $checked></input></td>";

@@ -131,8 +131,11 @@ public class AcculogixDataImporter {
         destination.companyIds.addAll(getCompanyIdsForRouteSeq(args[20]));
         destination.seq = Integer.parseInt(args[20]);
         destination.podBarcode = args[34];
-        destination.note = args[21];
-        destination.onDemandInstructions = args[23] + args[53];
+        destination.stopWindow = args[24];
+        destination.onDemandInstructions = args[23];
+        destination.pickupInstruction = args[22] + args[53];
+        destination.deliveryInstruction = args[21];
+
         trackAndTraceManager.saveDestination(destination);
         destinations.put(destination.id, destination);
         return destination;
@@ -181,6 +184,7 @@ public class AcculogixDataImporter {
         order.quantity = !data[58].isEmpty() ? Integer.parseInt(data[58]) : 0;
         order.originalQuantity = order.quantity;
         order.referenceNumber = data[33];
+        order.podBarcode = data[34];
         
         if (!data[61].isEmpty()) {
             if (data[62].equalsIgnoreCase("CAGE LG"))
@@ -250,6 +254,7 @@ public class AcculogixDataImporter {
         // This is not the order instruction.
         order.instruction = data[22] + " " + data[53];
         order.referenceNumber = data[33];
+        order.podBarcode = data[34];
         return order;
     }
 

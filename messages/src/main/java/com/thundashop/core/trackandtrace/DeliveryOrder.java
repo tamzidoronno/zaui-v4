@@ -25,8 +25,5 @@ public class DeliveryOrder extends TntOrder {
      */
     public Integer driverDeliveryCopiesCounted;
     
-    /**
-     * This is counted by the driver.
-     */
-    public Integer palletsOrCagesDelivered;
+    
 }

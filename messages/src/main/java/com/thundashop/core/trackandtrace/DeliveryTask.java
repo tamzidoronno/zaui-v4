@@ -7,6 +7,7 @@ package com.thundashop.core.trackandtrace;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -15,6 +16,8 @@ import java.util.List;
 public class DeliveryTask extends Task {
     public List<DeliveryOrder> orders = new ArrayList();
 
+    public int containerCounted;
+    
     @Override
     public int getOrderCount() {
         return orders.size();
@@ -36,11 +39,9 @@ public class DeliveryTask extends Task {
         }
     }
 
-    public void changeCagesOrPalletCount(String orderReference, int quantity) {
-        for (DeliveryOrder order : orders) {
-            if (order.referenceNumber.equals(orderReference)) {
-                order.palletsOrCagesDelivered = quantity;
-            }
-        }
+    @Override
+    void setPodBarcodeStringToTasks() {
+        podBarcode = orders.stream().map(order -> order.podBarcode).distinct().collect(Collectors.joining(","));
     }
+
 }

@@ -47,10 +47,19 @@ class TrackAndTraceRouteManagement extends \MarketingApplication implements \App
         }
     }
     
+    public function addDestinationToRoute() {
+        $route = $this->getRoute();
+        $this->getApi()->getTrackAndTraceManager()->moveDestinationFromPoolToRoute($_POST['data']['destid'], $route->id);
+    }
+    
     public function showAddDrivers() {
         $_SESSION['track_trace_route_view'] = "addUsers";
     }
 
+    public function moveToPool() {
+        $route = $this->getRoute();
+        $this->getApi()->getTrackAndTraceManager()->moveDesitinationToPool($route->id, $_POST['data']['destionationid']);
+    }
     
     /**
      * 

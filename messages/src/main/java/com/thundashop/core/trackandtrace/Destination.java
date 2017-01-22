@@ -31,10 +31,13 @@ public class Destination extends DataCommon {
     @Transient
     public List<Task> tasks = new ArrayList();
 
+    @Transient
     /**
      * Signature is saved as PNG base 64 encoded images.
      */
     public String signatureImage = "";
+    
+    public List<TrackAndTraceSignature> signatures = new ArrayList();
     
     public String typedNameForSignature = "";
     
@@ -42,11 +45,14 @@ public class Destination extends DataCommon {
     
     public String exceptionId = "";
     
-    public String note = "";
     public Integer seq;
     public String podBarcode = "";
     
+    public String deliveryInstruction = "";
+    public String pickupInstruction = "";
     public String onDemandInstructions = "" ;
+    
+    public String stopWindow;
    
     public Destination() {
     }
@@ -63,5 +69,9 @@ public class Destination extends DataCommon {
         hs.addAll(taskIds);
         taskIds.clear();
         taskIds.addAll(hs);
+    }
+    
+    void setPodBarcodeStringToTasks() {
+        tasks.stream().forEach(task -> task.setPodBarcodeStringToTasks());
     }
 }

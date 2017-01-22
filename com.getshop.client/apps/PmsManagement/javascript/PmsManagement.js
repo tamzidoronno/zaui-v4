@@ -546,14 +546,30 @@ app.PmsManagement = {
         var event = thundashop.Ajax.createEvent('','addAddon', $(this), data);
         thundashop.common.showInformationBoxNew(event);
     },
-    selectTab : function() {
+    selectTab : function(event) {
+        console.log(event);
+        if(event.cancelable) {
+            thundashop.framework.lastScrollTopInfoBox = $('.informationbox-outer').scrollTop();
+        }
         var tab = $(this);
+        var id = $('#openedbookingid').val();
         $('.tab.selected').removeClass('selected');
         tab.addClass('selected');
         $('.tabarea').hide();
         var area = $(this).attr('area');
         $('.tabarea.'+area).show();
         localStorage.setItem('selectedbookinginfotab', area);
+        var event = thundashop.Ajax.createEvent('','loadBookingDataArea', $(this), {
+            "bookingid" : id,
+            "area" : area
+        });
+        
+        $('.tabarea.'+area).html('<div style="text-align:center; padding-top: 40px; padding-bottom: 40px;font-size: 50px;"><i class="fa fa-spin fa-spinner"></i></div>');
+        
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.tabarea.'+area).html(result);
+            $('.informationbox-outer').scrollTop(thundashop.framework.lastScrollTopInfoBox);
+        });
     },
     sendpaymentlink : function() {
         $(this).closest('td').find('.sendpaymentlinkbox').toggle();

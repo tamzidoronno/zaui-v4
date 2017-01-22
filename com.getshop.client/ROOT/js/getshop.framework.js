@@ -15,6 +15,7 @@ thundashop.framework = {
     historyboxshown : false,
     cssEditorCount: 0,
     firstCellIdToMove : null,
+    lastScrollTopInfoBox : null,
     
     scrollToPosition : function(scrollTop) {
         
@@ -316,7 +317,9 @@ thundashop.framework = {
                 return;
             }
         }
+        
         var corScroll = $('.informationbox-outer').scrollTop();
+        thundashop.framework.lastScrollTopInfoBox = corScroll;
         var form = $(this).closest('[gstype="form"]');
         var data = thundashop.framework.createGsArgs(form);
         

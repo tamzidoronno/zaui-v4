@@ -5,6 +5,9 @@ $start = $this->getStart();
 $end = $this->getEnd();
 $priceObject = $this->getPrices();
 $prices = $priceObject->dailyPrices;
+echo "<pre>";
+//print_r($priceObject);
+echo "</pre>";
 
 $pricetypes = array();
 $pricetypes[1] = "Daily";
@@ -38,7 +41,7 @@ $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($this->getSelected
     <?php
     echo "<select gsname='pricetype'>";
     foreach($pricetypes as $id => $type) {
-        $selected = ($prices->defaultPriceType == $id) ? "SELECTED" : "";
+        $selected = ($priceObject->defaultPriceType == $id) ? "SELECTED" : "";
         echo "<option value='$id' $selected>" . $type . "</option>";
     }
     echo "</select> ";

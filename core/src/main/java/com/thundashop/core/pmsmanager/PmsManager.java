@@ -402,7 +402,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         if(canAdd) {
             addDefaultAddons(booking);
-
             bookingEngine.addBookings(bookingsToAdd);
             booking.attachBookingItems(bookingsToAdd);
             booking.sessionId = null;
@@ -3704,6 +3703,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Calendar cal = Calendar.getInstance();
             cal.setTime(room.date.start);
             cal.set(Calendar.HOUR_OF_DAY, hour);
+            if(getConfigurationSecure().isArx()) {
+                room.addedToArx = false;
+            }
             room.date.start = cal.getTime();
             if(room.bookingId != null) {
                 updateBooking(room);
@@ -3720,6 +3722,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             cal.setTime(room.date.end);
             cal.set(Calendar.HOUR_OF_DAY, hour);
             room.date.end = cal.getTime();
+            if(getConfigurationSecure().isArx()) {
+                room.addedToArx = false;
+            }
             if(room.bookingId != null) {
                 updateBooking(room);
             }
@@ -4171,7 +4176,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             createUserForBooking(booking);
             if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
-                 pmsInvoiceManager.createPrePaymentOrder(booking);
+                booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
+                pmsInvoiceManager.createPrePaymentOrder(booking);
             }
             
             result = completeBooking(bookingsToAdd, booking);

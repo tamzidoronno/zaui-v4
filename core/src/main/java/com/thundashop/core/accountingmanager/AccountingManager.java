@@ -793,10 +793,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 continue;
             }
             Double amount = orderManager.getTotalAmount(order);
-            if(amount == 0.0) {
+            long totalAmount = Math.round(amount);
+            if(totalAmount == 0.0) {
                 continue;
             }
-            
             
             for(AccountingTransferConfigTypes actype : configToUse.paymentTypes) {
                 String paymentMethod = actype.paymentType;

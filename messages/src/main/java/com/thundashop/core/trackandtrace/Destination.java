@@ -31,10 +31,13 @@ public class Destination extends DataCommon {
     @Transient
     public List<Task> tasks = new ArrayList();
 
+    @Transient
     /**
      * Signature is saved as PNG base 64 encoded images.
      */
     public String signatureImage = "";
+    
+    public List<TrackAndTraceSignature> signatures = new ArrayList();
     
     public String typedNameForSignature = "";
     

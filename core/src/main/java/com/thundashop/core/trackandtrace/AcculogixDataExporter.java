@@ -16,12 +16,14 @@ import java.util.Map;
  * @author ktonder
  */
 public class AcculogixDataExporter {
+    private final String address;
     private final Route route;
     private final Map<String, TrackAndTraceException> exceptions;
 
-    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions) {
+    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress) {
         this.route = route;
         this.exceptions = exceptions;
+        this.address = storeAddress;
     }
     
     public List<AcculogixExport> getExport() {
@@ -80,8 +82,15 @@ public class AcculogixDataExporter {
             exp.Longitude = dest.startInfo.completedLon;
         }
 
-        exp.SignatureObtained = dest.signatureImage != null && !dest.signatureImage.isEmpty() ? "Yes" : "No";
+        exp.SignatureObtained = dest.signatures != null && !dest.signatures.isEmpty() ? "Yes" : "No";
+        exp.signatures = dest.signatures;
+        
+        exp.signatures.forEach(sign -> setSignatureAddress(sign));
         return exp;
+    }
+    
+    private void setSignatureAddress(TrackAndTraceSignature sign) {
+        sign.address = "http://"+this.address+"/displayImage.php?id="+sign.imageId;
     }
     
     private List<AcculogixExport> createExports(Route route, Destination dest, PickupTask task) {
@@ -124,7 +133,7 @@ public class AcculogixDataExporter {
             
             exp.ORPieceCount = order.quantity;
             
-            if (order.driverDeliveryCopiesCounted> 0) {
+            if (order.driverDeliveryCopiesCounted != null && order.driverDeliveryCopiesCounted> 0) {
                 exp.ORPieceCount = order.quantity;
             }
             

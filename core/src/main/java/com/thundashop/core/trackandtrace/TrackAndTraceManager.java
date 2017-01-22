@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import com.thundashop.core.utils.ImageManager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
@@ -40,6 +41,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Autowired
     private UserManager userManager;
+    
+    @Autowired
+    private ImageManager imageManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -132,11 +136,34 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public Destination saveDestination(Destination inDestination) {
-
+        storeAndSaveSignatureImage(inDestination);
         saveObject(inDestination);
         destinations.put(inDestination.id, inDestination);
         
         return inDestination;
+    }
+
+    private void storeAndSaveSignatureImage(Destination inDestination) {
+        Destination memDest = destinations.get(inDestination.id);
+        if (memDest != null)
+            inDestination.signatures = memDest.signatures;
+        
+        if (inDestination.signatureImage != null && !inDestination.signatureImage.isEmpty()) {
+            String imageId = imageManager.saveImage(inDestination.signatureImage);
+            
+            
+            if (imageId != null && !imageId.isEmpty()) {
+                TrackAndTraceSignature signature = new TrackAndTraceSignature();
+                signature.imageId = imageId;
+                signature.operatorUserId = getSession().currentUser.id;
+                signature.sigutureAddedDate = new Date();
+                signature.typedName = inDestination.typedNameForSignature.toUpperCase();
+                inDestination.signatures.add(signature);
+            }
+            
+            inDestination.typedNameForSignature = "";
+            inDestination.signatureImage = "";
+        }
     }
 
     @Override
@@ -311,7 +338,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     @Override
     public List<AcculogixExport> getExport(String routeId) {
         Route route = getRouteById(routeId);
-        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions);
+        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress());
         return exporter.getExport();
     }
 

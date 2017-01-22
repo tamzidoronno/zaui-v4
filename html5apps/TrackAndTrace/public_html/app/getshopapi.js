@@ -27,6 +27,8 @@ GetShopApiWebSocket.prototype = {
     unsentMessageLoaded: false,
     messageCountChangedEvent: null,
     firstResendOfUnsentMessages: false,
+    firstUnsentMessages: false,
+    transferCompletedFirstTimeAfterUnsentMessageSent: false,
     listeners: [],
     
     connect: function() {
@@ -50,6 +52,21 @@ GetShopApiWebSocket.prototype = {
         };
         
         this.createManagers();
+        this.loadUnsentMessages();
+    },
+    
+    setTransferCompletedFirstTimeAfterUnsentMessageSent: function(func) {
+        this.transferCompletedFirstTimeAfterUnsentMessageSent = func;
+    },
+    
+    loadUnsentMessages: function() {
+        try {
+            this.messagesToSendJson = JSON.parse(localStorage.getItem("gs_api_messagetopush"));
+        } catch (Ex) {
+            this.messagesToSendJson = [];
+        }
+
+        this.unsentMessageLoaded = true;
     },
     
     guid: function() {
@@ -85,6 +102,11 @@ GetShopApiWebSocket.prototype = {
         corrolatingMessage.resolveWith({ 'messageId': jsonObject.messageId }, [jsonObject.object]);
         if (this.sentMessages.length === 0 && this.transferCompleted) {
             this.transferCompleted();
+        }
+        
+        if (this.sentMessages.length === 0 && this.transferCompletedFirstTimeAfterUnsentMessageSent && this.firstUnsentMessages) {
+            this.transferCompletedFirstTimeAfterUnsentMessageSent();
+            this.firstUnsentMessages = false;
         }
     },
 
@@ -137,21 +159,24 @@ GetShopApiWebSocket.prototype = {
             return;
         }
         
-        try {
-            this.messagesToSendJson = JSON.parse(localStorage.getItem("gs_api_messagetopush"));
-        } catch (Ex) {
-            this.messagesToSendJson = [];
-        }
-
-        this.unsentMessageLoaded = true;
         this.firstResendOfUnsentMessages = true;
         
+        var anySent = false;
         for (var i in this.messagesToSendJson) {
             var msg = this.messagesToSendJson[i];
             this.send(msg);
+            anySent = true;
         }
         
         this.firstResendOfUnsentMessages = false;
+        this.firstUnsentMessages = true;
+        
+        if (!anySent) {
+            if (this.sentMessages.length === 0 && this.transferCompletedFirstTimeAfterUnsentMessageSent) {
+                this.firstUnsentMessages = false;
+                this.transferCompletedFirstTimeAfterUnsentMessageSent();
+            }
+        }
     },
     
     setSessionId: function() {
@@ -173,6 +198,7 @@ GetShopApiWebSocket.prototype = {
         
         this.fireDisconnectedEvent();
         this.connectionEstablished = false;
+        this.firstUnsentMessages = false;
         this.reconnect();
     },
 
@@ -11734,6 +11760,17 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getDestinationById' : function(destinationId, gs_silent) {
+        var data = {
+            args : {
+                destinationId : JSON.stringify(destinationId),
+            },
+            method: 'getDestinationById',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getExceptions' : function(gs_silent) {
         var data = {
             args : {
@@ -11849,6 +11886,18 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 destinationId : JSON.stringify(destinationId),
             },
             method: 'moveDesitinationToPool',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'moveDestinationFromPoolToRoute' : function(destId,routeId, gs_silent) {
+        var data = {
+            args : {
+                destId : JSON.stringify(destId),
+                routeId : JSON.stringify(routeId),
+            },
+            method: 'moveDestinationFromPoolToRoute',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);

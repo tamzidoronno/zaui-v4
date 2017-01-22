@@ -12,6 +12,17 @@ controllers.BaseController = function($scope, $rootScope, datarepository, $api) 
         $scope.counter = $api.getApi().getUnsentMessageCount();
     }
     
+    $rootScope.$on('refreshRouteEven1', function(msg, data) {
+        if(datarepository.updateRoute(data, $api)) {
+            $rootScope.$broadcast('refreshRoute', data);
+        }
+    });
+    
+    $rootScope.$on('refreshData', function() {
+        $('.loadingData').show();
+        datarepository.loadAllData($api, $scope);
+    });
+    
     $rootScope.$on('messageCountChanged', function() {
         $scope.counter = $api.getApi().messagesToSendJson.length;
         if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {

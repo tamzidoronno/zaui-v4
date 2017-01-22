@@ -15,43 +15,60 @@ adata = {
         
         me.routes = [];
         me.exceptions = [];
-        
+        me.routeLoadCompleted = false;
+        me.exceptionLoadCompleted = false;
+            
         $api.getApi().TrackAndTraceManager.getMyRoutes().done(function (res) {
             me.routes = res;
             me.loaded = true;
             me.save();
+            
+            me.routeLoadCompleted = true;
             $scope.$apply();
+            if (me.routeLoadCompleted && me.exceptionLoadCompleted) {
+                $('.loadingData').hide();
+            }
         });
         
         $api.getApi().TrackAndTraceManager.getExceptions().done(function (res) {
             me.exceptions = res;
             me.save();
+            me.exceptionLoadCompleted = true;
             $scope.$apply();
+            if (me.routeLoadCompleted && me.exceptionLoadCompleted) {
+                $('.loadingData').hide();
+            }
         });
     },
     
-    updateRoute: function(route) {
+    updateRoute: function(route, $api) {
         if (!route)
             return;
         
         var toAdd = [];
-        var added = false;
+        var found = false;
         
         for (var i in this.routes) {
             var iRoute = this.routes[i];
             if (iRoute.id === route.id) {
-                added = true;
+                found = true;
                 toAdd.push(route);
             } else {
                 toAdd.push(iRoute);
             }
         }
         
-        if (!added)
+        debugger;
+        
+        if (!found && $api && route.userIds.indexOf($api.getLoggedOnUser().id)) {
             toAdd.push(route);
+        }
+        
         
         this.routes = toAdd;
         this.save();
+        
+        return found;
     },
     
     getRouteById: function (routeId) {

@@ -33,5 +33,11 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
         
         $state.transitionTo("base.home");
     }
+    
+    $rootScope.$on('refreshRoute', function(msg, route) {
+        if ($scope.datarepository.selectedRouteForPoolController && $scope.datarepository.selectedRouteForPoolController.id == route.id) {
+            $scope.datarepository.selectedRouteForPoolController = route;
+        }
+    });
 };
 

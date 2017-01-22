@@ -10,6 +10,7 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
@@ -46,6 +47,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     
     @Autowired
     private ImageManager imageManager;
+    
+    @Autowired
+    public WebSocketServerImpl webSocketServer;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -304,6 +308,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 route.userIds.add(userId);
                 route.makeSureUserIdsNotDuplicated();
                 saveObject(route);
+                
+                notifyRoute(route);
             }
         }
     }
@@ -396,6 +402,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         finalize(route);
         
+        notifyRoute(route);
         return route;
     }
 
@@ -425,8 +432,16 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 Destination dest = getDestination(pooledDest.destionationId);
                 route.destinationIds.add(dest.id);
                 saveObject(route);
+                notifyRoute(route);
             }
         }
+        
+        
+    }
+
+    private void notifyRoute(Route route) {
+        finalize(route);
+        webSocketServer.sendMessage(route);
     }
     
 }

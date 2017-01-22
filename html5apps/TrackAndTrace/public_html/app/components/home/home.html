@@ -9,8 +9,14 @@
         <br/>
     </div>
     
-    <div class="button" ng-mobile-click="loadData()">
-        Load routes
+    <div class="buttonarea" style="font-size: 0px; margin-bottom: 10px;">
+        <div class="button" ng-mobile-click="openPool()" style="width: 50%; display: inline-block; box-sizing: border-box; font-size: 15px;">
+            <i class="fa fa-tags"></i> Pool
+        </div>
+
+        <div class="button" ng-mobile-click="loadData()" style="width: calc(50% - 5px); display: inline-block; box-sizing: border-box; font-size: 15px; margin-left: 5px;">
+            <i class='fa fa-refresh'></i> Fetch my routes
+        </div>
     </div>
     
     <div class="route" ng-repeat="route in datarepository.routes">

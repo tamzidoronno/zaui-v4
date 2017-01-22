@@ -33,6 +33,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     
     public HashMap<String, Destination> destinations = new HashMap();
     
+    public HashMap<String, PooledDestionation> pooledDestinations = new HashMap();
+    
     public HashMap<String, Task> tasks = new HashMap();
     
     public HashMap<String, DataLoadStatus> loadStatuses = new HashMap();
@@ -63,6 +65,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 Task task = (Task)common;
                 tasks.put(task.id, task);
             }
+            
+            if (common instanceof PooledDestionation) {
+                PooledDestionation pooled = (PooledDestionation)common;
+                pooledDestinations.put(pooled.id, pooled);
+            }
 
             if (common instanceof TrackAndTraceException) {
                 TrackAndTraceException exception = (TrackAndTraceException)common;
@@ -74,6 +81,12 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 loadStatuses.put(loadStatus.id, loadStatus);
             }
         }
+        
+        new ArrayList(pooledDestinations.values()).stream().forEach(pool -> ensureRemoval((PooledDestionation)pool));
+    }
+    
+    private void ensureRemoval(PooledDestionation dest) {
+        moveDesitinationToPool(dest.originalRouteId, dest.destionationId);
     }
     
     @Override
@@ -115,6 +128,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             return;
     
         retRoute.makeSureUserIdsNotDuplicated();
+        
+        retRoute.clearDestinations();
         
         retRoute.destinationIds.stream()
             .forEach(destinationId -> retRoute.addDestination(destinations.get(destinationId)));
@@ -357,6 +372,60 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         if (task instanceof DeliveryTask) {
             ((DeliveryTask)task).containerCounted = quantity;
             saveObject(task);
+        }
+    }
+
+    @Override
+    public Route moveDesitinationToPool(String routeId, String destinationId) {
+        Route route = getRouteById(routeId);
+        if (route != null) {
+            boolean removed = route.removeDestination(destinationId);
+            if (removed) {
+                PooledDestionation dest = new PooledDestionation();
+                dest.destionationId = destinationId;
+                
+                if (getSession() != null && getSession().currentUser != null)
+                    dest.pooledByUserId = getSession().currentUser.id;
+                
+                dest.originalRouteId = routeId;
+                saveObject(dest);
+                pooledDestinations.put(dest.id, dest);
+                saveObject(route);
+            }
+        }
+        
+        finalize(route);
+        
+        return route;
+    }
+
+    @Override
+    public List<PooledDestionation> getPooledDestiontions() {
+        return new ArrayList(pooledDestinations.values());
+    }
+
+    @Override
+    public Destination getDestinationById(String destinationId) {
+        Destination dest = destinations.get(destinationId);
+        
+        if (dest != null) {
+            finalize(dest);
+        }
+        
+        return dest;
+    }
+
+    @Override
+    public void moveDestinationFromPoolToRoute(String destId, String routeId) {
+        PooledDestionation pooledDest = pooledDestinations.remove(destId);
+        if (pooledDest != null) {
+            deleteObject(pooledDest);
+            Route route = getRouteById(routeId);
+            if (route != null) {
+                Destination dest = getDestination(pooledDest.destionationId);
+                route.destinationIds.add(dest.id);
+                saveObject(route);
+            }
         }
     }
     

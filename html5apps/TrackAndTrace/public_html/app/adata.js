@@ -13,6 +13,9 @@ adata = {
     loadAllData: function ($api, $scope) {
         var me = this;
         
+        me.routes = [];
+        me.exceptions = [];
+        
         $api.getApi().TrackAndTraceManager.getMyRoutes().done(function (res) {
             me.routes = res;
             me.loaded = true;
@@ -25,6 +28,30 @@ adata = {
             me.save();
             $scope.$apply();
         });
+    },
+    
+    updateRoute: function(route) {
+        if (!route)
+            return;
+        
+        var toAdd = [];
+        var added = false;
+        
+        for (var i in this.routes) {
+            var iRoute = this.routes[i];
+            if (iRoute.id === route.id) {
+                added = true;
+                toAdd.push(route);
+            } else {
+                toAdd.push(iRoute);
+            }
+        }
+        
+        if (!added)
+            toAdd.push(route);
+        
+        this.routes = toAdd;
+        this.save();
     },
     
     getRouteById: function (routeId) {

@@ -23,6 +23,11 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
         datarepository.loadAllData($api, $scope);
     }
     
+    $scope.openPool = function() {
+        $scope.loadData();
+        $state.transitionTo("base.pool", {});
+    }
+    
     $scope.logOut = function() {
         localStorage.setItem("username", "");
         localStorage.setItem("password", "");

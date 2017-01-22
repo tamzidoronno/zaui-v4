@@ -55,6 +55,21 @@ angular.module('TrackAndTrace')
         }
     });
     
+    $stateProvider.state('base.pool', {
+        url: '/pool',
+        
+        views: {
+            main: {
+                templateUrl : 'components/pool/pool.html',
+                controller : controllers.PoolController
+            },
+            footer: {
+                templateUrl : 'components/pool/footer.html',
+                controller : controllers.PoolController
+            }
+        }
+    });
+    
     $stateProvider.state('base.destination', {
         url: '/destination/:destinationId/:routeId',
         

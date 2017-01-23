@@ -42,7 +42,6 @@ public class Route extends DataCommon {
     public Date deliveryServiceDate;
     
     public String originalId;
-    
 
     public Route() {
         shortDescription = "A route description";
@@ -53,6 +52,10 @@ public class Route extends DataCommon {
     }
     
     public void addDestination(Destination dest) {
+        if (dest == null) {
+            return;
+        }
+        
         if (!destinationIds.contains(dest.id)) {
             throw new ErrorException(1000016);
         }
@@ -66,13 +69,25 @@ public class Route extends DataCommon {
         return destinations;
     }
 
-    void makeSureUserIdsNotDuplicated() {
+    public void makeSureUserIdsNotDuplicated() {
         
         // add elements to al, including duplicates
         Set<String> hs = new HashSet<>();
         hs.addAll(userIds);
         userIds.clear();
         userIds.addAll(hs);
+    }
+
+    public void setPodBarcodeStringToTasks() {
+        destinations.stream().forEach(dest -> dest.setPodBarcodeStringToTasks());
+    }
+
+    public boolean removeDestination(String destinationId) {
+        return destinationIds.removeIf(key -> key.equals(destinationId));
+    }
+
+    public void clearDestinations() {
+        destinations.clear();;
     }
 
 

@@ -72,7 +72,15 @@ if($config->requirePayments) {
    
     <input type="txt" gsname='searchWord' placeholder="Search" gstype="submitenter" class="pmsinput searchword" value="<? echo @$filter->searchWord; ?>">
     <span gstype="submit" class="pmsbutton addGroupOptions">Search</span>
-    <br><br>
+    <div style="text-align:left; font-size: 12px; margin-top: 3px;">
+        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="checkin" gsname="type">Checking in</span> - 
+        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="checkout" gsname="type">Checking out</span> - 
+        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="active" gsname="type">Active today</span> - 
+        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="stats" gsname="type">Coverage</span> - 
+        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="orderstats" gsname="type">Income report</span>
+        
+    </div>
+   <br>
 <?php
 echo "<div style='text-align:left;' class='roomfilter'>";
 $types = $this->getTypes();
@@ -105,7 +113,6 @@ echo "<input type='checkbox' gstype='clicksubmitforce' method='includeDeleted' g
 echo "</div>";
 echo "<br>";
 echo "</div>";
-
 $this->includeManagementViewResult();
  ?>
 

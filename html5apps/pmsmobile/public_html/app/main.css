@@ -84,3 +84,34 @@ a, a:hover { color:#000; }
 @media only all and (min-width: 1000px) {
     .innerview { max-width: 1000px; margin: auto; }
 }
+
+
+.conferencerow {
+    background-color: #FFF;
+    margin: 10px;
+}
+
+.conferencerow .conf_title {
+    background-color: #2f749f;
+    color: #FFF;
+    padding: 10px;
+    text-align: center;
+}
+
+.conferencerow .conf_action {
+    padding: 10px;
+    border-top: solid 1px #DDD;
+}
+
+.conferencerow .conf_col {
+    display: inline-block;
+}
+.conferencerow .conf_col.col1 {
+    width: 100px;
+}
+.conferencerow .conf_col.col5 {
+    display:block;
+}
+.conferencerow .conf_note {
+    padding: 10px;
+}

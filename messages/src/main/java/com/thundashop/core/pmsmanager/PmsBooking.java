@@ -460,7 +460,7 @@ public class PmsBooking extends DataCommon {
             }
         }
         return false;
-    }
+    }   
     
     public void printInvoicedTo() {
         for(PmsBookingRooms room : rooms) {
@@ -476,5 +476,9 @@ public class PmsBooking extends DataCommon {
     
     public boolean hasAddonOfType(String type) {
         return rooms.stream().anyMatch(room -> room.hasAddonOfType(type));
+    }
+    
+    public int getTotalGuestCount() {
+        return getActiveRooms().stream().mapToInt(room -> room.guests.size()).sum();
     }
 }

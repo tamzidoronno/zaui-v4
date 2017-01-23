@@ -5,6 +5,8 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import java.util.List;
+
 /**
  *
  * @author ktonder
@@ -58,6 +60,10 @@ public class AcculogixExport {
     public String ORComments = "";
     
     public String ORPieceCorrect;
+    
+    public String routeId = "";
+    
+    public List<TrackAndTraceSignature> signatures;
 
 
 }

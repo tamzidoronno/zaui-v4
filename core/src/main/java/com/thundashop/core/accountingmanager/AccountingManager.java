@@ -793,10 +793,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 continue;
             }
             Double amount = orderManager.getTotalAmount(order);
-            if(amount == 0.0) {
+            long totalAmount = Math.round(amount);
+            if(totalAmount == 0.0) {
                 continue;
             }
-            
             
             for(AccountingTransferConfigTypes actype : configToUse.paymentTypes) {
                 String paymentMethod = actype.paymentType;
@@ -923,14 +923,14 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         boolean needSaving = false;
         for(String orderId : saved.orders) {
             Order order = orderManager.getOrderSecure(orderId);
-            double total = orderManager.getTotalAmount(order);
-            double totalEx = orderManager.getTotalAmount(order);
             if(order.cart == null) {
                 continue;
             } 
+            double total = orderManager.getTotalAmount(order);
+            double totalEx = orderManager.getTotalAmountExTaxes(order);
             for(CartItem item : order.cart.getItems()) {
                 int count = item.getCount();
-                int countToUse = count;
+                int countToUse = new Integer(count);
                 if(countToUse > 0 && total > 0) {
                     saved.onlyPositiveLinesEx += item.getProduct().priceExTaxes * countToUse;
                     saved.onlyPositiveLinesInc += item.getProduct().price * countToUse;
@@ -939,7 +939,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                     saved.onlyPositiveLinesEx += item.getProduct().priceExTaxes * (countToUse*-1);
                     saved.onlyPositiveLinesInc += item.getProduct().price * (countToUse*-1);
                 }
-                
+                if(count< 0) {
+                    count *= -1;
+                }
                 saved.sumAmountExOrderLines += (item.getProduct().priceExTaxes*count);
                 saved.sumAmountIncOrderLines += (item.getProduct().price*count);
             }
@@ -950,6 +952,8 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 saved.tamperedOrders.add(order.id);
                 needSaving = true;
             }
+            total = orderManager.getTotalAmount(order);
+            totalEx = orderManager.getTotalAmountExTaxes(order);
             if(total < 0) { total *= -1; }
             if(totalEx < 0) { totalEx *= -1; }
             saved.sumAmountIncOrderLines += total;

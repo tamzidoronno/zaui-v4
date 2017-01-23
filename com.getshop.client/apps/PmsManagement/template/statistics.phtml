@@ -33,7 +33,8 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
     </select>
 </div>
 <br>
-<div style='float:left; width: <?php echo $firstWidth; ?>%'>
+<div >
+    <b>Sleepover statistics</b><br>
     <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
         <tr>
             <th>
@@ -80,8 +81,10 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
         ?>
     </table>
 </div>
+<br><br>
+<b>Sale statistics</b><br>
 <?php if(!$filter->channel && sizeof($filter->typeFilter) == 0) { ?>
-    <div style='float:right; width: 45%'>
+    <div>
         <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
             <tr>
                 <th>

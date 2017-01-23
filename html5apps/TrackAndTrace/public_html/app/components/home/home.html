@@ -9,8 +9,10 @@
         <br/>
     </div>
     
-    <div class="button" ng-mobile-click="loadData()">
-        Load routes
+    <div class="buttonarea" style="font-size: 0px; margin-bottom: 10px;">
+        <div class="button" ng-mobile-click="openPool()" style="width: 100%; display: inline-block; box-sizing: border-box; font-size: 15px;">
+            <i class="fa fa-tags"></i> Pool
+        </div>
     </div>
     
     <div class="route" ng-repeat="route in datarepository.routes">
@@ -20,8 +22,8 @@
         <div ng-mobile-click="openRoute(route.id)" ><div class="button showroutebutton" ng-if="route.startInfo.started"><i class="fa fa-arrow-right"></i></div></div>
         <div class="button startbutton" ng-if="!route.startInfo.started" ng-mobile-click="startRoute(route.id)">Start</div>
     </div>
-</div>
-<div class="fetchingGpsCoordinates">
-    <i class="fa fa-spinner fa-spin"></i>
-    Fetching GPS coordinates, please wait..
+    
+    <div style='border-top: dashed 1px #FFF; text-align: center; color: #FFF; padding-top: 10px; margin-top: 10px;'>
+        Version: 1.0.6
+    </div>
 </div>

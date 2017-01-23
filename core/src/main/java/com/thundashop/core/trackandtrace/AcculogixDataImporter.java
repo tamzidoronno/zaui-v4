@@ -131,8 +131,11 @@ public class AcculogixDataImporter {
         destination.companyIds.addAll(getCompanyIdsForRouteSeq(args[20]));
         destination.seq = Integer.parseInt(args[20]);
         destination.podBarcode = args[34];
-        destination.note = args[21];
-        destination.onDemandInstructions = args[23] + args[53];
+        destination.stopWindow = args[24];
+        destination.onDemandInstructions = args[23];
+        destination.pickupInstruction = args[22] + args[53];
+        destination.deliveryInstruction = args[21];
+
         trackAndTraceManager.saveDestination(destination);
         destinations.put(destination.id, destination);
         return destination;
@@ -181,7 +184,19 @@ public class AcculogixDataImporter {
         order.quantity = !data[58].isEmpty() ? Integer.parseInt(data[58]) : 0;
         order.originalQuantity = order.quantity;
         order.referenceNumber = data[33];
-        order.cage = !data[61].isEmpty();
+        order.podBarcode = data[34];
+        
+        if (!data[61].isEmpty()) {
+            if (data[62].equalsIgnoreCase("CAGE LG"))
+                order.containerType = ContainerType.CAGE_LG;
+            
+            if (data[62].equalsIgnoreCase("CAGE SM"))
+                order.containerType = ContainerType.CAGE_SM;
+            
+            if (data[62].equalsIgnoreCase("PALLET"))
+                order.containerType = ContainerType.PALLET;
+        }
+        
         order.orderType = data[31];
         if (order.orderDriverDeliveries > 0) 
             System.out.println("Driver deliveries");
@@ -239,6 +254,7 @@ public class AcculogixDataImporter {
         // This is not the order instruction.
         order.instruction = data[22] + " " + data[53];
         order.referenceNumber = data[33];
+        order.podBarcode = data[34];
         return order;
     }
 

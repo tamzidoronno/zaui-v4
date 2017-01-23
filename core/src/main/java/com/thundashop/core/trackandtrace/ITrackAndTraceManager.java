@@ -78,4 +78,26 @@ public interface ITrackAndTraceManager {
     
     @Administrator
     public void setSequence(String exceptionId, int sequence);
+    
+    @Administrator
+    public Destination getDestinationById(String destinationId);
+    
+    @Customer
+    public void setCagesOrPalletCount(String taskId, int quantity);
+    
+    /**
+     * Returns a list of all the pooled destinations.
+     * 
+     * @param routeId
+     * @param destinationId
+     * @return 
+     */
+    @Customer
+    public Route moveDesitinationToPool(String routeId, String destinationId);
+    
+    @Administrator
+    public void moveDestinationFromPoolToRoute(String destId, String routeId);
+    
+    @Customer
+    public List<PooledDestionation> getPooledDestiontions();
 }

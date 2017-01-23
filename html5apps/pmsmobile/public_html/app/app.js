@@ -78,6 +78,11 @@ angular.module('app', ['ui.router'])
       url: "/otherinstruction",
       templateUrl: "pages/otherinstruction.html",
       controller: getshop.otherInstructionController
+    })
+    .state('conference', {
+      url: "/conference",
+      templateUrl: "pages/conference.html",
+      controller: getshop.conferenceController
     });
 })
 .value('$routerRootComponent', 'app')

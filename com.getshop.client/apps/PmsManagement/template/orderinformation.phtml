@@ -119,9 +119,7 @@ if($booking->orderIds) {
     echo "<th width='80'>Status</th>";
     echo "<th>Payment type</th>";
     echo "<th title='Closed'>Closed</th>";
-    if(!$config->prepayment) {
-        echo "<th>Credit</th>";
-    }
+    echo "<th></th>";
     echo "</tr>";
     foreach($result as $order) {
         $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
@@ -271,13 +269,28 @@ if($booking->orderIds) {
             echo "<i class='fa fa-close'>";
         }
         echo "</td>";
-        if(!$config->prepayment) {
-            if(@$order->closed && !@$order->isCreditNote) {
-                echo "<td class='doCreditOrder'>Credit order</td>";
+        echo "<td style='position:relative;'>";
+        echo "<i class='fa fa-edit' onclick='$(this).closest(\"td\").find(\".otherOrderOptions\").toggle()'></i>";
+        echo "<span class='otherOrderOptions' style='display:none; position:absolute;'>";
+        echo "<table cellspacing='0' cellpadding='0'>";
+        echo "<tr><th>Option</th><th>Action</th></tr>";
+        echo "<tr>";
+        echo "<td>";
+        echo "Credit order, sometimes its nessesary to credit an order. This is when the order is incorrect and you need to create a new one.";
+        echo "</td>";
+        echo "<td>";
+            if(@$order->closed && !@$order->isCreditNote && sizeof(@$order->creditOrderId) == 0) {
+                echo "<span class='doCreditOrder'>Credit order</span>";
             } else {
-                echo "<td></td>";
+                echo "This order can not be credited.";
             }
-        }
+        echo "</td>";
+        echo "</tr>";
+        echo "</table>";
+        
+        echo "</span>";
+        
+        echo "</td>";
         echo "</tr>";
     }
     

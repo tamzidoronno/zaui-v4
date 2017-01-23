@@ -90,6 +90,11 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         $this->booking->sessionStartDate = $this->convertToJavaDate(strtotime(date("d.m.Y ", strtotime($this->booking->sessionStartDate)) . $config->defaultStart));
         $this->booking->sessionEndDate = $this->convertToJavaDate(strtotime(date("d.m.Y ", strtotime($this->booking->sessionEndDate)) . $config->defaultEnd));
         
+        if($config->hasNoEndDate) {
+            $this->booking->sessionEndDate = null;
+        }
+        
+        
         if(sizeof($this->booking->rooms) > 0) {
             foreach($this->booking->rooms as $room) {
                 $room->date->start = $this->booking->sessionStartDate;

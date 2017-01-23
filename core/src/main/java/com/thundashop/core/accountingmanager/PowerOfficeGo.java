@@ -13,16 +13,13 @@ import com.powerofficego.data.ApiOrderTransferResponse;
 import com.powerofficego.data.Customer;
 import com.powerofficego.data.PowerOfficeGoImportLine;
 import com.powerofficego.data.PowerOfficeGoSalesOrder;
-import com.powerofficego.data.PowerOfficeGoProduct;
 import com.powerofficego.data.PowerOfficeGoSalesOrderLines;
 import com.powerofficego.data.SalesOrderTransfer;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ForAccountingSystem;
-import com.thundashop.core.common.GetShopLogging;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
-import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -31,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import static org.apache.poi.hssf.usermodel.HeaderFooter.file;
 
 @ForAccountingSystem(accountingSystem="poweroffice")
 public class PowerOfficeGo extends AccountingTransferOptions implements AccountingTransferInterface {
@@ -263,13 +259,18 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         Calendar cal = Calendar.getInstance();
         cal.setTime(order.rowCreatedDate);
         cal.add(Calendar.DAY_OF_YEAR, 14);
+        Date endDate = order.getEndDateByItems();
+        if(endDate == null) {
+            endDate = order.rowCreatedDate;
+        }
+        
         
         PowerOfficeGoImportLine totalline = new PowerOfficeGoImportLine();
         totalline.description = "GetShop order: " + order.incrementOrderId;
         totalline.invoiceNo = (int)order.incrementOrderId;
         totalline.amount = managers.orderManager.getTotalAmount(order);
         totalline.currencyAmount = managers.orderManager.getTotalAmount(order);
-        totalline.postingDate = order.paymentDate;
+        totalline.postingDate = endDate;
         totalline.documentDate = order.rowCreatedDate;
         totalline.documentNumber = (int)order.incrementOrderId;
         totalline.dueDate = cal.getTime();
@@ -299,7 +300,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                     count *= -1;
                 }
                 line.quantity = count;
-                line.postingDate = order.paymentDate;
+                line.postingDate = endDate;
                 line.documentDate = order.rowCreatedDate;
                 line.documentNumber = (int)order.incrementOrderId;
                 line.currencyCode = "NOK";

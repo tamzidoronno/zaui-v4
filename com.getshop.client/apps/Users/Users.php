@@ -10,6 +10,51 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         
     }
     
+    public function saveFileUploaded() {
+        $content = strstr($_POST['fileBase64'], "base64,");
+        $content = str_replace("base64,", "", $content);
+        $content = base64_decode($content);
+        $imgId = \FileUpload::storeFile($content);
+        
+        $entry = new \core_usermanager_data_UploadedFiles();
+        $entry->fileName = $_POST['fileName'];
+        $entry->fileId = $imgId;
+        $entry->createdDate = $this->convertToJavaDate(time());
+        
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['value']);
+        $user->files[] = $entry;
+        $this->getApi()->getUserManager()->saveUser($user);
+        
+    }
+    public function deleteFileUploaded() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userId']);
+ 
+        $newArray = array();
+        foreach($user->files as $file) {
+            if($file->fileId != $_POST['data']['fileId']) {
+                $newArray[] = $file;
+            }
+        }
+        $user->files = $newArray;
+        
+        $this->getApi()->getUserManager()->saveUser($user);
+        
+        
+    }
+    
+    public function saveDescription(){
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userId']);
+ 
+        $newArray = array();
+        foreach($user->files as $file) {
+            if($file->fileId == $_POST['data']['fileId']) {
+                $file->description = $_POST['data']['description'];
+            }
+        }
+        
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
     public function getName() {
         return $this->__f("Users");
     }

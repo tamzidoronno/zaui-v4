@@ -22,6 +22,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function saveOrderSettingsOnBooking() {
         $booking = $this->getSelectedBooking();
         $booking->dueDays = $_POST['data']['duedays'];
+        $booking->periodesToCreateOrderOn = $_POST['data']['periodesToCreateOrderOn'];
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         $this->selectedBooking = null;
         $this->showBookingInformation();

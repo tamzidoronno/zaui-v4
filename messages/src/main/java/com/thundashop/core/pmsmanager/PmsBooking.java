@@ -44,6 +44,7 @@ public class PmsBooking extends DataCommon {
     public PmsRepeatingData lastRepeatingData = null;
     public String invoiceNote = "";
     public Integer dueDays;
+    public Integer periodesToCreateOrderOn;
     public String discountType = "";
     public String couponCode = "";
     public String wubookchannelid = "";

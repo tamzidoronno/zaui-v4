@@ -82,13 +82,14 @@ echo "</span>";
 <div class='orderinformation'>
     <h2>Orders</h2>
 </div>
-<div onclick='$(".PmsManagement .moreinvoiceoptions").slideDown();' style='cursor:pointer;'>More options</div>
+<div onclick='$(".PmsManagement .moreinvoiceoptions").toggle();' style='cursor:pointer;'>More options</div>
 <span class="moreinvoiceoptions">
     <div>
         <b>Order for a given periode</b><br>
         <div  gstype="form" method="saveOrderSettingsOnBooking">
             <input type='hidden' value='<?php echo $booking->id; ?>' gsname='bookingid'>
             <input type='text' style='width:30px;' value='<?php echo $booking->dueDays; ?>' gsname='duedays'> number of days for due<br>
+            <input type='text' style='width:30px;' value='<?php echo $booking->periodesToCreateOrderOn; ?>' gsname='periodesToCreateOrderOn'> number of periodes to create order on<br>
             <input type='button' style='float:right;' value='Save settings' gstype='submitToInfoBox'><br><br>
         </div>
         <b>Order for a given periode</b><br>

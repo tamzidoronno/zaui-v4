@@ -28,6 +28,7 @@ public class User extends DataCommon implements Comparable<User> {
 
     public List<UserPrivilege> privileges = new ArrayList();
     public List<UserCard> savedCards = new ArrayList();
+    public List<UploadedFiles> files = new ArrayList();
     public String lastRegisteredToken;
     public boolean triedToFetch = false;
     public boolean suspended = false;

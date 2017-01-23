@@ -1,0 +1,27 @@
+.gss_UserFileUpload{
+    margin-top: 20px;
+}
+
+.gss_UserFileUpload .userfileuploadline{
+    border-bottom: solid 1px #EEE;
+    padding: 10px;
+}
+.gss_UserFileUpload .userfiledeletebutton{
+    float:right;
+    padding: 6px;
+    margin-top:-7px;
+    background-image: linear-gradient(to bottom, #BBB 1px, #BBB 19px, #AAA 20px, #AAA 100% );
+    border: solid 1px #BBB;
+}
+.gss_UserFileUpload .userfiledeletebutton:hover{
+    background-image:linear-gradient(to bottom, #AAA 1px, #AAA 19px, #999 20px, #999 100% );
+}
+.gss_UserFileUpload .userfileuploadline span{
+    float: right;
+    padding-right: 15px;
+}
+.gss_UserFileUpload .userfileuploadline .gss_user_save_description{
+    float:right;
+    margin-top: -18px !important;
+    position: relative !important;
+}

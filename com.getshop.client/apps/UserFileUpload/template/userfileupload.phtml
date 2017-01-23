@@ -1,0 +1,34 @@
+<?
+    /* @var $this ns_ed0c5af9_32a9_426a_9908_c7ac67e7b2f4\UserFileUpload */
+?>
+<div class="gss_UserFileUpload">
+    <div class="userfileuploadarea">
+        <?
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['value']);
+
+        foreach ($user->files as $file){
+            /* core_usermanager_data_UploadedFiles */
+            $fileId = $file->fileId;
+            echo "<div class='userfileuploadline' value='$fileId'><a href='#'>";
+            echo $file->fileName;
+            echo ": &nbsp";
+            echo $file->createdDate;
+            echo "</a>&nbsp";
+            echo "<div class='userfiledeletebutton gss_button fa fa-trash' fileId='$fileId' userId='".$_POST['value']."'></div>";
+            echo "<input class='gss_user_save_description'type='textfield' fileId='$fileId' userId='".$_POST['value']."'value='$file->description'>&nbsp";
+            echo "<span class='titleDescription'>";
+                echo $this->__w("Description");
+            echo "&nbsp</span>";
+            echo "</div>";
+        }
+        ?>
+    </div>
+    <div class="gss_button_area">
+        <div>
+            
+        </div>
+        <div class="gss_user_save_file  gss_button">
+            <i class="fa fa-save"><? echo $this->__w("&nbsp;&nbsp;Upload file"); ?></i> 
+        </div>
+    </div>
+</div>

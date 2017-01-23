@@ -22,6 +22,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function saveOrderSettingsOnBooking() {
         $booking = $this->getSelectedBooking();
         $booking->dueDays = $_POST['data']['duedays'];
+        $booking->periodesToCreateOrderOn = $_POST['data']['periodesToCreateOrderOn'];
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         $this->selectedBooking = null;
         $this->showBookingInformation();
@@ -637,6 +638,25 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordergenerationpreview");
     }
     
+   public function loadBookingDataArea() {
+       $area = $_POST['data']['area'];
+       $_SESSION['lastloadedarea'] = $area;
+       switch($area) {
+           case "roomsbooked":
+           case "addons":
+           case "messagearea":
+           case "orderinformation":
+           case "orderpreview":
+           case "carddata":
+           case "functions":
+               $this->includefile($area);
+               break;
+           default:
+               echo "File not found";
+               break;
+       }
+   } 
+   
     public function showBookingInformation() {
         $this->includefile("bookinginformation");
     }
@@ -978,7 +998,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if($_POST['data']['updateaddons'] == "true") {
             $this->getApi()->getPmsManager()->updateAddonsBasedOnGuestCount($this->getSelectedName(), $_POST['data']['roomid']);
         }
-                
+        $this->setLastSelectedRoom($_POST['data']['roomid']);       
         $this->refreshSelectedBooking();
         $this->showBookingInformation();
     }
@@ -1271,6 +1291,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if($error) {
             $this->errors[] = $error;
         }
+        $this->setLastSelectedRoom($_POST['data']['roomid']);
         $this->selectedBooking = $this->getManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
         $this->showBookingInformation();
     }
@@ -1282,6 +1303,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $r->checkedin = true;
             }
         }
+        $this->setLastSelectedRoom($_POST['data']['roomid']);
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         $this->selectedBooking = null;
         $this->showBookingInformation();
@@ -1322,8 +1344,18 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     $room->priceMatrix = $newmatrix;
                     $room->price = $avg / sizeof($pricematrix);
                 }
+            } else {
+                if($_POST['data']['pricematrix'] != "no") {
+                    $newArray = array();
+                    foreach($room->priceMatrix as $key => $val) {
+                        $newArray[$key] = $val;
+                    }
+                    $room->priceMatrix = $newArray;
+                }
             }
         }
+        
+        $this->setLastSelectedRoom($_POST['data']['roomid']);       
         
         $this->getManager()->saveBooking($this->getSelectedName(), $booking);
         $this->selectedBooking = $this->getManager()->getBooking($this->getSelectedName(), $booking->id);
@@ -1367,6 +1399,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $selectedRoom = $room;
             }
         }
+        $this->setLastSelectedRoom($_POST['data']['roomid']);
         
         $this->getManager()->saveBooking($this->getSelectedName(), $booking);
         
@@ -2110,6 +2143,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         return "";
     }
+    
+    
+    public function setLastSelectedRoom($roomId) {
+        $_SESSION['lastselectedroom'] = $roomId;
+    }
+
 
     public function getTotalAddons($saleStats) {
         $addonsResult = array();
@@ -2552,6 +2591,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->start = $this->getSelectedFilter()->startDate;
         $filter->end = $this->getSelectedFilter()->endDate;
         $_SESSION['pmsorderstatsfilter'] = serialize($filter);
+    }
+
+    public function mightInclude($area) {
+        if(isset($_SESSION['lastloadedarea']) && $_SESSION['lastloadedarea'] == $area) {
+            $this->includefile($area);
+        }
     }
 
 }

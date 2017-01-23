@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.gson.Gson;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
@@ -624,8 +625,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
 
     public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {
-        String priceCode = "default";
-
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, priceType, booking);
         double total = 0.0;
         int count = 0;
@@ -1020,8 +1019,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<CartItem> items = new ArrayList();
         boolean generateChanges = pmsManager.getConfigurationSecure().autoGenerateChangeOrders;
         if(generateChanges) {
-            List<CartItem> changes = getChangesForBooking(booking.id, filter);
-            items.addAll(changes);
+            if(!booking.ignoreCheckChangesInBooking && !filter.ignoreCheckChangesInBooking) {
+                List<CartItem> changes = getChangesForBooking(booking.id, filter);
+                items.addAll(changes);
+            }
         }
         
         for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -1465,6 +1466,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 //Infinate dates, noone wants to pay 100 years in advance.
                 if(daysInPeriode > 1000) {
                     daysInPeriode = pmsManager.getConfigurationSecure().whenInfinteDateFirstOrderTimeUnits;
+                    if(booking.periodesToCreateOrderOn != null) {
+                        daysInPeriode = booking.periodesToCreateOrderOn;
+                    }
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(startDate);
                     cal.add(Calendar.MONTH, daysInPeriode);
@@ -1569,7 +1573,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(pmsManager.getConfigurationSecure().autoSumarizeCartItems) {
             cartManager.summarizeItems();
         }
-        
+        checkIfOrderNeedsToBeSplitted();
     }
 
     private CartItem createCartItemForCart(String productId, int count, String roomId) {
@@ -1918,4 +1922,84 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return null;
     }
+    
+    
+    private void checkIfOrderNeedsToBeSplitted() {
+        if(!pmsManager.getConfigurationSecure().splitOrderIntoMonths) {
+            return;
+        }
+        List<CartItem> items = cartManager.getCart().getItems();
+        Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        Gson gson = new Gson();
+        
+        
+        List<CartItem> newItems = new ArrayList();
+        List<CartItem> toRemove = new ArrayList();
+        for(CartItem item : items) {
+            if(item.startDate == null || item.endDate == null) {
+                continue;
+            }
+            toRemove.add(item);
+            cal.setTime(item.startDate);
+            int curMonth = cal.get(Calendar.MONTH);
+            Date startOnMonth = item.startDate;
+            int daysInMonth = 0;
+            CartItem toAdd = null;
+            
+            while(true) {
+                daysInMonth++;
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                if(cal.get(Calendar.MONTH) != curMonth) {
+                    Date endInMonth = cal.getTime();
+                    String copy = gson.toJson(item);
+                    toAdd = gson.fromJson(copy, CartItem.class);
+                    
+                    cal2.setTime(startOnMonth);
+                    int totalDays = cal2.getActualMaximum(Calendar.DAY_OF_MONTH);
+                    double diff = ( (double)daysInMonth / (double)totalDays);
+                    if(daysInMonth != totalDays) {
+                        toAdd.getProduct().price = toAdd.getProduct().price * diff;
+                        toAdd.getProduct().priceExTaxes = toAdd.getProduct().priceExTaxes * diff;
+                    }
+                    
+                    toAdd.startDate = startOnMonth;
+                    toAdd.endDate = endInMonth;
+                    toAdd.setCount(1);
+                    
+                    newItems.add(toAdd);
+                    
+                    startOnMonth = cal.getTime();
+                    daysInMonth = 0;
+                    curMonth++;
+                }
+                if(cal.getTime().after(item.endDate)) {
+                    if(!pmsManager.getConfigurationSecure().orderEndsFirstInMonth) {
+                        cal2.setTime(startOnMonth);
+                        
+                        String copy = gson.toJson(item);
+                        CartItem lastAdd = gson.fromJson(copy, CartItem.class);
+                        lastAdd.startDate = toAdd.endDate;
+                        lastAdd.endDate = item.endDate;
+                        lastAdd.setCount(1);
+                        newItems.add(lastAdd);
+                        
+                        int totalDays = cal2.getActualMaximum(Calendar.DAY_OF_MONTH);
+                        double diff = ( (double)daysInMonth / (double)totalDays);
+                        
+                        lastAdd.getProduct().price = lastAdd.getProduct().price * diff;
+                        lastAdd.getProduct().priceExTaxes = lastAdd.getProduct().priceExTaxes * diff;
+                        lastAdd.endDate = item.endDate;
+                    }
+                    break;
+                }
+            }
+        }
+        for(CartItem remove : toRemove) {
+            cartManager.getCart().removeItem(remove.getCartItemId());
+        }
+        cartManager.getCart().addCartItems(newItems);
+    }
+
+
 }

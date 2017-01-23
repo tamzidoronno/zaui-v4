@@ -69,6 +69,8 @@ public class PmsConfiguration extends DataCommon {
     public boolean autoMarkCreditNotesAsPaidFor = false;
     public boolean autoCreateInvoices = false;
     public boolean usePriceMatrixOnOrder = false;
+    public boolean splitOrderIntoMonths = false;
+    public boolean orderEndsFirstInMonth = false;
     public Integer whenInfinteDateFirstOrderTimeUnits = 1;
     public boolean autoGenerateChangeOrders = false;
     public boolean grantAccessEvenWhenNotPaid = false;

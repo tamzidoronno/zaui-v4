@@ -63,7 +63,7 @@ public class Hybelhotell implements AccountingInterface {
             
             String lineText = createLineText(item);
             
-            toAdd.put(3, order.incrementOrderId + "");
+            toAdd.put(3, "");
             toAdd.put(4, order.incrementOrderId + "");
             toAdd.put(5, linenumber + "");
             toAdd.put(6, format1.format(order.rowCreatedDate));
@@ -75,7 +75,7 @@ public class Hybelhotell implements AccountingInterface {
             toAdd.put(23, item.getCount() + "");
             toAdd.put(25, item.getProduct().priceExTaxes+ "");
             toAdd.put(28, managers.productManager.getProduct(item.getProduct().id).sku);
-            toAdd.put(32, order.invoiceNote);
+            toAdd.put(33, order.invoiceNote);
             
             String resultLine = "";
             for(int i = 0; i < 60; i++) {
@@ -88,7 +88,7 @@ public class Hybelhotell implements AccountingInterface {
                 }
                 resultLine += entry + ";";
             }
-            resultLine += "EOL\r\n";
+            resultLine += "X\r\n";
             allLines.add(resultLine);
             linenumber++;
         }

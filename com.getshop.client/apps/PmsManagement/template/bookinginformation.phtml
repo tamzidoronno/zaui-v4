@@ -25,7 +25,6 @@ $pmsManager = $this->getApi()->getPmsManager();
 $config = $pmsManager->getConfiguration($this->getSelectedName());
 
 $lang = $this->getFactory()->getCurrentLanguage();
-$default =  $pmsManager->getDefaultMessage($this->getSelectedName(), $bookingid);
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 $hasArx = false;
 if($config->arxHostname) {
@@ -91,7 +90,7 @@ if($config->requirePayments) {
     foreach($orders as $order) {
         $totalOrders += $this->getApi()->getOrderManager()->getTotalAmount($order);
     }
-    echo "<span class='tab' area='orderinfo'>Orders";
+    echo "<span class='tab' area='orderinformation'>Orders";
     if($totalOrders) {
         echo " (kr " . $totalOrders . ")";
     }
@@ -111,7 +110,7 @@ if($hasAddons) {
     echo "<span class='tab' area='addons'>Addons</span>";
 }
 if($hasArx) {
-    echo "<span class='tab' area='cards'>Card / code</span>";
+    echo "<span class='tab' area='carddata'>Card / code</span>";
 }
 if($config->functionsEnabled) {
     echo "<span class='tab' area='functions'>Conference</span>";
@@ -119,36 +118,39 @@ if($config->functionsEnabled) {
 echo "</span>";
 echo "<div style='clear:both;'></div>";
 echo "<div class='tabarea roomsbooked'>";
+    $this->mightInclude("roomsbooked");
     echo "<div style='clear:both;'></div>";
-    $this->includefile("roomsbooked");
 echo "</div>";
 echo "<div class='tabarea addons'>";
-    $this->includefile("addons");
+    $this->mightInclude("addons");
 echo "</div>";
 echo "<div class='tabarea messagearea'>";
-    $this->includefile("messagearea");
+    $this->mightInclude("messagearea");
 echo "</div>";
 if($config->requirePayments) {
-    echo "<div class='tabarea orderinfo'>";
-    $this->includefile("orderinformation");
+    echo "<div class='tabarea orderinformation'>";
+    $this->mightInclude("orderinformation");
     echo "</div>";
     echo "<div class='tabarea orderpreview'>";
-    $this->includefile("orderpreview");
+    $this->mightInclude("orderpreview");
     echo "</div>";
 }
 
 if($hasArx) {
-    echo "<div class='tabarea cards'>";
-    $this->includefile("carddata");
+    echo "<div class='tabarea carddata'>";
+    $this->mightInclude("carddata");
     echo "</div>";
 }
 
 if ($config->functionsEnabled) {
     echo "<div class='tabarea functions'>";
-    $this->includefile("functions");
+    $this->mightInclude("functions");
     echo "</div>";
 }
-if(!$booking->confirmed) { ?>
+
+if(!$booking->confirmed) { 
+    $default =  $pmsManager->getDefaultMessage($this->getSelectedName(), $bookingid);
+    ?>
     <div class='needconfirmation' style="margin:0px;margin-top: 20px;">
         <h2>Confirm this booking</h2>
         <div gstype="form" method="confirmBooking">
@@ -182,4 +184,6 @@ if(!$booking->confirmed) { ?>
     if(area) {
         $('.tab[area="'+area+'"]').click();
     }
+    
+    
 </script>

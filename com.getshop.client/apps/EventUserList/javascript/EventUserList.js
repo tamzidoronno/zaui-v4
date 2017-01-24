@@ -9,6 +9,11 @@ app.EventUserList = {
         
         $(document).on('mouseenter', '.EventUserList .companyInfoSpan', app.EventUserList.showExtraCompanyInfo);
         $(document).on('mouseleave', '.EventUserList .companyInfoSpan', app.EventUserList.hideExtraCompanyInfo);
+        $(document).on('mouseleave', '.EventUserList .removeComment', app.EventUserList.removeComment);
+    },
+    
+    removeComment: function() {
+        $(this).closest('.comment_row').hide();
     },
     
     showExtraCompanyInfo: function() {
@@ -20,7 +25,6 @@ app.EventUserList = {
     },
     
     downloadReport: function() {
-        alert("OKE");
     },
     
     showspecialinfo: function() {

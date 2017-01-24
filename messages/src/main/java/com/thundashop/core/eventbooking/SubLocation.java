@@ -20,7 +20,9 @@ public class SubLocation implements Serializable {
     public String name = "";
     public String description = "";
     public String extraDescription = "";
+    public String privateDescription = "";
     public String contactPerson = "";
+    public String contactEmail = "";
     public String cellPhone = "";
     public String lat = "";
     public String lon = "";

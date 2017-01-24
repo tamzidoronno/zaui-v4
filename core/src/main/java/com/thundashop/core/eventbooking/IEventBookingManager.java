@@ -107,6 +107,9 @@ public interface IEventBookingManager {
     public void sendReminder(Reminder reminder);
     
     @Editor
+    public void sendDiplomas(Reminder reminder, String userid, String base64);
+    
+    @Editor
     public List<Reminder>  getReminders(String eventId);
     
     @Editor
@@ -222,4 +225,5 @@ public interface IEventBookingManager {
         
     @Administrator
     public void deleteUserComment(String userId, String eventId, String commentId);
+    
 }

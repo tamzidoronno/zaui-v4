@@ -15,6 +15,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
@@ -79,6 +80,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     @Autowired
     public Database database;
 
+    @Autowired
+    public GetShop getshop;
+    
     @Override
     public void dataFromDatabase(DataRetreived datas) {
         for (DataCommon data : datas.data) {
@@ -763,6 +767,30 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         if (!dontSendToCompany && user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty() && !user.companyObject.invoiceEmail.equals(user.emailAddress)) {
             String messageId = messageManager.sendMail(event, user.companyObject.invoiceEmail, user.fullName, subject, content, email, "");
+            if (userIdInvoiceMessageId != null) {
+                userIdInvoiceMessageId.put(user.id, messageId);
+            }
+        }
+    }
+
+    private void sendReminderWithEmailAttachement(String conent, String subject, User user, Event event, HashMap<String, String> userIdMessageId, HashMap<String, String> userIdInvoiceMessageId, boolean dontSendToCompany, String base64) {
+        String email = storePool.getStore(storeId).configuration.emailAdress;
+        String content = formatText(conent, user, event);
+        subject = formatText(subject, user, event);
+        
+        String name = "Diplom.pdf";
+        HashMap<String, String> map = new HashMap();
+        map.put(name, base64);
+        
+        if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
+            String messageId = messageManager.sendMailWithAttachment(event, user.emailAddress, user.fullName, subject, content, email, "", map);
+            if (userIdInvoiceMessageId != null) {
+                userIdMessageId.put(user.id, messageId);
+            }
+        }
+        
+        if (!dontSendToCompany && user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty() && !user.companyObject.invoiceEmail.equals(user.emailAddress)) {
+            String messageId = messageManager.sendMailWithAttachment(event, user.companyObject.invoiceEmail, user.fullName, subject, content, email, "", map);
             if (userIdInvoiceMessageId != null) {
                 userIdInvoiceMessageId.put(user.id, messageId);
             }
@@ -2061,5 +2089,16 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         saveObject(event);
         log("Comment removed", event, null);
     }
+
+    @Override
+    public void sendDiplomas(Reminder reminder, String userId, String base64) {
+        User user = userManager.getUserById(userId);
+        Event event = getEvent(reminder.eventId);
+        sendReminderWithEmailAttachement(reminder.content, reminder.subject, user, event, reminder.userIdMessageId, reminder.userIdInvoiceMessageId, false, base64);
+        
+        saveObject(reminder);
+        reminders.put(reminder.id, reminder);
+        log("REMINDER_SENT", event, reminder.type);
+   }
     
 }

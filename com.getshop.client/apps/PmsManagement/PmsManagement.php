@@ -2601,6 +2601,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function mightInclude($area) {
         if(isset($_SESSION['lastloadedarea']) && $_SESSION['lastloadedarea'] == $area) {
             $this->includefile($area);
+        } else if($area == "roomsbooked") {
+            $this->includefile($area);
         }
     }
 

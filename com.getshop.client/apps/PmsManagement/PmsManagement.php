@@ -2472,6 +2472,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
 
+        
+        
         $row = array();
         if($includeDownload) {
             $row[] = "<i class='fa fa-file-excel-o' style='cursor:pointer;' gs_downloadexcelreport='downloadOrderStatsMatrixToExcel' title='Download to excel' gs_filename='bookingdataexport' ></i> Day";
@@ -2566,6 +2568,21 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $sortedMatrix[$rowidx] = $newRow;
         }
         
+        $accounts = array();
+        foreach($productIds as $id => $val) {
+           $product = $this->getApi()->getProductManager()->getProduct($id);
+           if(!isset($accounts[$product->accountingAccount])) {
+               $accounts[$product->accountingAccount] = 0;
+           }
+           $accounts[$product->accountingAccount] += $val;
+        }
+        foreach($accounts as $account => $val) {
+            $row = array();
+            $row[] = $account;
+            $row[] = round($val);
+            
+            $sortedMatrix[] = $row;
+        }
         
         return $sortedMatrix;
     }

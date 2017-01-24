@@ -450,10 +450,8 @@ app.PmsManagement = {
             "paymenttype" : row.find('.paymenttype').val()
         };
         
-        var corScroll = $('.informationbox-outer').scrollTop();
         var event = thundashop.Ajax.createEvent('','updateOrder', $(this), data);
-        thundashop.common.showInformationBoxNew(event);
-        $('.informationbox-outer').scrollTop(corScroll);
+        thundashop.common.showInformationBoxNew(event, '', true);
     },
     doCreditOrder : function() {
         var confirmed = confirm("Are you sure you want to credit this order?");
@@ -546,14 +544,27 @@ app.PmsManagement = {
         var event = thundashop.Ajax.createEvent('','addAddon', $(this), data);
         thundashop.common.showInformationBoxNew(event);
     },
-    selectTab : function() {
+    selectTab : function(event) {
         var tab = $(this);
+        var id = $('#openedbookingid').val();
         $('.tab.selected').removeClass('selected');
         tab.addClass('selected');
         $('.tabarea').hide();
         var area = $(this).attr('area');
         $('.tabarea.'+area).show();
         localStorage.setItem('selectedbookinginfotab', area);
+        if(event.cancelable) {
+            var event = thundashop.Ajax.createEvent('','loadBookingDataArea', $(this), {
+                "bookingid" : id,
+                "area" : area
+            });
+
+            $('.tabarea.'+area).html('<div style="text-align:center; padding-top: 40px; padding-bottom: 40px;font-size: 50px;"><i class="fa fa-spin fa-spinner"></i></div>');
+
+            thundashop.Ajax.postWithCallBack(event, function(result) {
+                $('.tabarea.'+area).html(result);
+            });
+        }
     },
     sendpaymentlink : function() {
         $(this).closest('td').find('.sendpaymentlinkbox').toggle();
@@ -658,10 +669,8 @@ app.PmsManagement = {
             "companyid" : $(this).val(),
             "bookingid" : $(this).attr('bookingid')
         };
-        var corScroll = $('.informationbox-outer').scrollTop();
         var event = thundashop.Ajax.createEvent('','changeCompanyOnUser', $(this), data);
-        thundashop.common.showInformationBoxNew(event);
-        $('.informationbox-outer').scrollTop(corScroll);
+        thundashop.common.showInformationBoxNew(event, '', true);
     },
     closeadduser : function() {
         $('.PmsManagement .edituserbox').fadeOut();
@@ -745,7 +754,7 @@ app.PmsManagement = {
                     return;
                 });
                 td.find('.changebookingitempanel').prepend(close);
-                td.find('.changebookingitempanel').fadeIn();
+                td.find('.changebookingitempanel').show();
             });
         } else {
             var row = $(this).closest('.roomattribute');
@@ -757,7 +766,7 @@ app.PmsManagement = {
                 return;
             });
             edit.prepend(close);
-            edit.fadeIn();
+            edit.show();
         }
         
     },

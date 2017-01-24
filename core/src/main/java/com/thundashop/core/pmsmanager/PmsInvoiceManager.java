@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.gson.Gson;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
@@ -15,6 +16,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
+import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
@@ -182,8 +184,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return new PmsOrderStatistics();
         }
         List<Order> orders = orderManager.getOrders(null, null, null);
+        if(filter.includeVirtual) {
+            pmsManager.createAllVirtualOrders();
+            orders = orderManager.getAllOrderIncludedVirtual();
+        }
         List<Order> ordersToUse = new ArrayList();
         for(Order order : orders) {
+            if(order.cart.getItems().isEmpty()) {
+                continue;
+            }
+            if(order.isVirtual) {
+                System.out.println("TEST");
+            }
             if(order.testOrder) {
                 continue;
             }
@@ -624,8 +636,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
 
     public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {
-        String priceCode = "default";
-
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, priceType, booking);
         double total = 0.0;
         int count = 0;
@@ -884,7 +894,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     orderManager.saveOrder(order);
                 } else {
                     updateCart();
-                    order = createOrderFromCart(booking, filter);
+                    order = createOrderFromCart(booking, filter, false);
                     if (order == null) {
                         return "Could not create order.";
                     }
@@ -1020,8 +1030,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<CartItem> items = new ArrayList();
         boolean generateChanges = pmsManager.getConfigurationSecure().autoGenerateChangeOrders;
         if(generateChanges) {
-            List<CartItem> changes = getChangesForBooking(booking.id, filter);
-            items.addAll(changes);
+            if(!booking.ignoreCheckChangesInBooking && !filter.ignoreCheckChangesInBooking) {
+                List<CartItem> changes = getChangesForBooking(booking.id, filter);
+                items.addAll(changes);
+            }
         }
         
         for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -1083,6 +1095,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
     
         CartItem item = createCartItemForCart(productId, count, room.pmsBookingRoomId);
+        if(item == null) {
+            return null;
+        }
         item.startDate = startDate;
         item.endDate = endDate;
         item.periodeStart = room.date.start;
@@ -1162,7 +1177,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return true;
     }
 
-    private Order createOrderFromCart(PmsBooking booking, NewOrderFilter filter) {
+    private Order createOrderFromCart(PmsBooking booking, NewOrderFilter filter, boolean virtual) {
        
         User user = userManager.getUserById(booking.userId);
         if (user == null) {
@@ -1178,7 +1193,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         user.address.fullName = user.fullName;
 
-        Order order = orderManager.createOrder(user.address);
+        VirtualOrder virtualOrder = null;
+        Order order = null;
+        
+        orderManager.deleteVirtualOrders(booking.id);
+        
+        if (virtual) {
+            virtualOrder = orderManager.createVirtualOrder(user.address, booking.id);
+            order = virtualOrder.order;
+        } else {
+            order = orderManager.createOrder(user.address);
+        }
+        
         order.userId = booking.userId;
 
         Payment preferred = getPreferredPaymentMethod(booking.id, filter);
@@ -1210,7 +1236,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
 
-        orderManager.saveOrder(order);
+        if (virtual) {
+            orderManager.saveVirtalOrder(virtualOrder);
+        } else {
+            orderManager.saveOrder(order);
+        }
         return order;
     }
 
@@ -1465,6 +1495,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 //Infinate dates, noone wants to pay 100 years in advance.
                 if(daysInPeriode > 1000) {
                     daysInPeriode = pmsManager.getConfigurationSecure().whenInfinteDateFirstOrderTimeUnits;
+                    if(booking.periodesToCreateOrderOn != null) {
+                        daysInPeriode = booking.periodesToCreateOrderOn;
+                    }
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(startDate);
                     cal.add(Calendar.MONTH, daysInPeriode);
@@ -1543,7 +1576,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         if(iteration == 0) {
                             groupId = room.pmsBookingRoomId;
                         }
-                        result.add(createCartItem(productId, null, room, startDateToAdd, endDateToAdd, price / count, count, groupId));
+                        CartItem item = createCartItem(productId, null, room, startDateToAdd, endDateToAdd, price / count, count, groupId);
+                        if(item != null) {
+                            result.add(item);
+                        }
                     }
                 }
             }
@@ -1569,15 +1605,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(pmsManager.getConfigurationSecure().autoSumarizeCartItems) {
             cartManager.summarizeItems();
         }
-        
+        checkIfOrderNeedsToBeSplitted();
     }
 
     private CartItem createCartItemForCart(String productId, int count, String roomId) {
         CartItem item = new CartItem();
         Product product = productManager.getProductUnfinalized(productId);
+        if(product == null) {
+            logPrint("Product: " + productId + " does not exists anymore");
+            return null;
+        }
         item.setProduct(product.clone());
-        item.setCount(count);
         item.getProduct().externalReferenceId = roomId;
+        item.setCount(count);
         roomIdsInCart.add(roomId);
         if(!runningDiffRoutine) {
             addItemToItemsToReturn(item);
@@ -1795,7 +1835,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     PmsBookingAddonItem base = pmsManager.getBaseAddon(item.productId);
                     if(base != null && base.noRefundable) {
                         CartItem addonToAdd = createCartItem(item.productId, item.name, room, room.date.start, room.date.end, item.price, item.count, "");
-                        returnresult.add(addonToAdd);
+                        if(addonToAdd != null) {
+                            returnresult.add(addonToAdd);
+                        }
                     }
                 }
             }
@@ -1918,4 +1960,109 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return null;
     }
+    
+    private void checkIfOrderNeedsToBeSplitted() {
+        if(!pmsManager.getConfigurationSecure().splitOrderIntoMonths) {
+            return;
+        }
+        List<CartItem> items = cartManager.getCart().getItems();
+        Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        Gson gson = new Gson();
+        
+        
+        List<CartItem> newItems = new ArrayList();
+        List<CartItem> toRemove = new ArrayList();
+        for(CartItem item : items) {
+            if(item.startDate == null || item.endDate == null) {
+                continue;
+            }
+            toRemove.add(item);
+            cal.setTime(item.startDate);
+            int curMonth = cal.get(Calendar.MONTH);
+            Date startOnMonth = item.startDate;
+            int daysInMonth = 0;
+            CartItem toAdd = null;
+            
+            while(true) {
+                daysInMonth++;
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                if(cal.get(Calendar.MONTH) != curMonth) {
+                    Date endInMonth = cal.getTime();
+                    String copy = gson.toJson(item);
+                    toAdd = gson.fromJson(copy, CartItem.class);
+                    
+                    cal2.setTime(startOnMonth);
+                    int totalDays = cal2.getActualMaximum(Calendar.DAY_OF_MONTH);
+                    double diff = ( (double)daysInMonth / (double)totalDays);
+                    if(daysInMonth != totalDays) {
+                        toAdd.getProduct().price = toAdd.getProduct().price * diff;
+                        toAdd.getProduct().priceExTaxes = toAdd.getProduct().priceExTaxes * diff;
+                    }
+                    
+                    toAdd.startDate = startOnMonth;
+                    toAdd.endDate = endInMonth;
+                    toAdd.setCount(1);
+                    
+                    newItems.add(toAdd);
+                    
+                    startOnMonth = cal.getTime();
+                    daysInMonth = 0;
+                    curMonth++;
+                }
+                if(cal.getTime().after(item.endDate)) {
+                    if(!pmsManager.getConfigurationSecure().orderEndsFirstInMonth) {
+                        cal2.setTime(startOnMonth);
+                        
+                        String copy = gson.toJson(item);
+                        CartItem lastAdd = gson.fromJson(copy, CartItem.class);
+                        lastAdd.startDate = toAdd.endDate;
+                        lastAdd.endDate = item.endDate;
+                        lastAdd.setCount(1);
+                        newItems.add(lastAdd);
+                        
+                        int totalDays = cal2.getActualMaximum(Calendar.DAY_OF_MONTH);
+                        double diff = ( (double)daysInMonth / (double)totalDays);
+                        
+                        lastAdd.getProduct().price = lastAdd.getProduct().price * diff;
+                        lastAdd.getProduct().priceExTaxes = lastAdd.getProduct().priceExTaxes * diff;
+                        lastAdd.endDate = item.endDate;
+                    }
+                    break;
+                }
+            }
+        }
+        for(CartItem remove : toRemove) {
+            cartManager.getCart().removeItem(remove.getCartItemId());
+        }
+        cartManager.getCart().addCartItems(newItems);
+    }
+
+    public void createVirtualOrder(String bookingId) {
+        System.out.println("Creating virtual order");
+        PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        double total = booking.getTotalPrice();
+        double totalOrder = getTotalOrderPrice(booking);
+        if (total != totalOrder) {
+            System.out.println("Creating virtual orders");
+            itemsToReturn.clear();
+            NewOrderFilter filter = new NewOrderFilter();
+            filter.avoidOrderCreation = true;
+            filter.endInvoiceAt = booking.getEndDate();
+
+            createOrder(bookingId, filter);
+            updateCart();
+            createOrderFromCart(booking, null, true);    
+        }
+        
+    }
+
+    private double getTotalOrderPrice(PmsBooking booking) {
+        Double total = 0.0;
+        for(String orderId : booking.orderIds) {
+            total += orderManager.getTotalAmount(orderManager.getOrderSecure(orderId));
+        }
+        return total;
+    }
+
 }

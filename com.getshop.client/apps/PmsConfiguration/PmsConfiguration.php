@@ -272,6 +272,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     
     public function saveNotifications() {
         $notifications = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        echo $notifications->id;
         foreach($_POST['data'] as $key => $value) {
             if($this->endsWith($key, "_email")) {
                 $key = substr($key, 0, strlen($key)-6);
@@ -321,6 +322,9 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 continue;
             }
             if(property_exists($notifications, $key)) {
+                if($key == "id") {
+                    echo "yes";
+                }
                 $notifications->{$key} = $value;
             }
         }

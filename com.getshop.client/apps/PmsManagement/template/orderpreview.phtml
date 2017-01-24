@@ -7,9 +7,13 @@ $booking = $this->getSelectedBooking();
 
     <?php
     $endDate = time();
+    $startDate = null;
     foreach($booking->rooms as $room) {
         if($endDate < strtotime($room->date->end)) {
             $endDate = strtotime($room->date->end)+86400;
+        }
+        if($startDate < strtotime($room->date->start)) {
+            $startDate = strtotime($room->date->start)+86400;
         }
     }
     if(isset($_POST['data']['endingAt'])) {

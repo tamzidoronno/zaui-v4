@@ -24,6 +24,9 @@ public interface IPmsManager {
     public void markRoomAsCleaned(String itemId);
     
     @Administrator
+    public void createAllVirtualOrders();
+    
+    @Administrator
     public void tryAddToEngine(String pmsBookingRoomId);
     
     @Administrator

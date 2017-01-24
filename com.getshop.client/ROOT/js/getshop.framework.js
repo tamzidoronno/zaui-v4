@@ -15,6 +15,7 @@ thundashop.framework = {
     historyboxshown : false,
     cssEditorCount: 0,
     firstCellIdToMove : null,
+    lastScrollTopInfoBox : null,
     
     scrollToPosition : function(scrollTop) {
         
@@ -316,7 +317,8 @@ thundashop.framework = {
                 return;
             }
         }
-        var corScroll = $('.informationbox-outer').scrollTop();
+        $('#loaderbox').show();
+
         var form = $(this).closest('[gstype="form"]');
         var data = thundashop.framework.createGsArgs(form);
         
@@ -327,8 +329,7 @@ thundashop.framework = {
         var method = form.attr('method');
         var event = thundashop.Ajax.createEvent('',method,$(this),data);
         var title = $('#informationboxtitle').text();
-        thundashop.common.showInformationBoxNew(event, title);
-        $('.informationbox-outer').scrollTop(corScroll);
+        thundashop.common.showInformationBoxNew(event, title, true);
     },
     
     resetMobileLayout : function() {

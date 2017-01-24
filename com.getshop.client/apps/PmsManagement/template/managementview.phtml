@@ -102,14 +102,19 @@ foreach($types as $id => $type) {
 }
 $checked = "";
 $incDeleted = "";
+$incVirtual = "";
 if($this->isGroupedByBooking()) {
     $checked = "CHECKED";
 }
 if($this->isIncludeDeleted()) {
     $incDeleted = "CHECKED";
 }
+if($this->isVirtual()) {
+    $incVirtual = "CHECKED";
+}
 echo "<input type='checkbox' gstype='clicksubmitforce' method='groupByBooking' gsname='id' gsvalue='' $checked> Group by booking ";
 echo "<input type='checkbox' gstype='clicksubmitforce' method='includeDeleted' gsname='incdelete' $incDeleted class='clicksubmitcheckbox'> Include deleted";
+echo "<input type='checkbox' gsname='include_virtual_filter' method='includeDeleted' gsname='incvirtual' $incVirtual class='clicksubmitcheckbox'> Include virtual orders";
 echo "</div>";
 echo "<br>";
 echo "</div>";

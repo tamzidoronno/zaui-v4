@@ -189,6 +189,9 @@ public class InvoiceFrontPage {
     private void writeText( String text, int x, int y, boolean bold, int fontSize, boolean alignRight) throws IOException {
         PDPageContentStream stream = contentStream;
 
+        text = text.replace("ž", "z");
+        text = text.replace("č", "c");
+        
         PDType1Font font = bold ? PDType1Font.HELVETICA_BOLD : PDType1Font.HELVETICA;
         stream.beginText();
         stream.setFont(font, fontSize);

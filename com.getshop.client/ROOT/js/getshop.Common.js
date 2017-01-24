@@ -603,16 +603,24 @@ thundashop.common.showInformationBox = function(event, title, avoidScroll) {
     if(!alreadyvisible) {
         infoBox.html('<div style="font-size:35px; text-align:center; color:#3f3f3f;padding-top: 40px; "><i class="fa fa-spinner fa-spin"></i></div>');
     }
+    var current = $('.informationbox-outer').scrollTop();
+    
     if(event !== undefined) {
-        var result = thundashop.Ajax.postSynchron(event);
-        setTimeout(function() {
-            infoBox.html(result);
-            thundashop.common.setMaskHeight();
-        }, timer);
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            setTimeout(function() {
+                infoBox.html(result);
+                thundashop.common.setMaskHeight();
+                if (!avoidScroll) {
+                    $('.informationbox-outer').scrollTop(0);
+                }
+                $('.informationbox-outer').scrollTop(current);
+            }, timer);
+        });
     }
     if (!avoidScroll) {
         $('.informationbox-outer').scrollTop(0);
     }
+
     infoBox.closest('#informationbox-holder').removeClass('gsnewinfobox');
 
     return infoBox;

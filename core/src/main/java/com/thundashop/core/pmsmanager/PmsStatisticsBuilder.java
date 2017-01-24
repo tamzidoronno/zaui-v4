@@ -59,20 +59,12 @@ class PmsStatisticsBuilder {
                 if(booking.isDeleted) {
                     continue;
                 }
-                if(isPaidFor(booking, cal)) {
-                    if (filter.includeVirtual && orderManager.isThereVirtualOrders(booking.id)) {
-                        // 
-                    } else {
-                        continue;
-                    }
+                if(isPaidFor(booking, cal) && !filter.includeVirtual) {
+                    continue;
                 }
                 
-                if(booking.isEnded() && !booking.payedFor) {
-                    if (filter.includeVirtual && orderManager.isThereVirtualOrders(booking.id)) {
-                        //
-                    } else {
-                        continue;
-                    }
+                if(booking.isEnded() && (!booking.payedFor && ! filter.includeVirtual)) {
+                    continue;
                 }
                 
                 for(PmsBookingRooms room : booking.getActiveRooms()) {

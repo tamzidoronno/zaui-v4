@@ -76,7 +76,7 @@ public abstract class UpdateScriptBase implements ApplicationContextAware {
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         UpdateScript script = (UpdateScript)context.getBean(this.getClass());
         script.run();
-        System.exit(1);
+        System.exit(0);
     }
     
     /**

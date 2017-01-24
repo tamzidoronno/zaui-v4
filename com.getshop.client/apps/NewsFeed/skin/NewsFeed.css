@@ -1,36 +1,23 @@
 .NewsFeed {
     font-size: 0px;
-    
 }
-.NewsFeed a:hover{
     
-}
 .NewsFeed .newsentrysmall {
-    margin-left:30px;
-    margin-bottom: 100px;
-    width: 230px;
-    float:left;
-   
-    background-color: #000;
+    border: solid 1px #DDD;
+    padding: 5px;
+    margin-bottom: 10px;
+    position: relative;
+    min-height: 50px;
 }
 
 .NewsFeed .newsentrysmall .subject {
     font-size: 16px;
     padding-left: 15px;
-    
 }
 .NewsFeed .newsentrysmall .thumbnail {
-    width: 250px;
-    height: 150px;
-    position: relative;
+    width: 100px;
     display: inline-block;
     vertical-align: top;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    right: 10px;
-    bottom: 10px;
-    
 }
 
 .NewsFeed .newsentrysmall .rightcontent {
@@ -58,4 +45,31 @@
     position: absolute;
     bottom: 5px;
     right: 5px;
+}
+
+.NewsFeed .frigonewsentrysmall{
+    margin-left:30px;
+    margin-bottom: 100px;
+    width: 350px;
+    float:left;
+    background-color:rgba(255, 255, 255, 0.6);
+}
+.NewsFeed .frigonewsentrysmall .subject{
+    font-size: 16px;
+    padding-left: 15px;
+    color: #000;
+    padding: 5px;
+}
+.NewsFeed .frigonewsentrysmall .thumbnail{
+    width: 350px;
+    height: 200px;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.NewsFeed .frigonewsentrysmall .thumbnail img {
+    width: 100%;
 }

@@ -15,4 +15,6 @@ public class PmsOrderStatsFilter implements Serializable {
     List<PaymentMethods> methods = new ArrayList();
     public String displayType;
     public String priceType;
+    public boolean includeVirtual = false;
+    public Integer shiftHours = 0;
 }

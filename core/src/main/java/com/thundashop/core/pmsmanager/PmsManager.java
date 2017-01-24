@@ -227,7 +227,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void createAllVirtualOrders() {
         for (PmsBooking booking : bookings.values()) {
-            if (!booking.payedFor && booking.isEnded() && !orderManager.isThereVirtualOrders(booking.id)) {
+            if (booking.isEnded()) {
+                orderManager.deleteVirtualOrders(booking.id);
                 pmsInvoiceManager.createVirtualOrder(booking.id);
             }
         }

@@ -74,12 +74,7 @@ public class PmsOrderStatistics implements Serializable  {
                 }
             } else if(filter.displayType.equals("dayslept")) {
                 for(CartItem item : order.cart.getItems()) {
-                    double secondsInDay = item.getSecondsForDay(cal);
-                    if(order.incrementOrderId == 103977 && secondsInDay > 0 || secondsInDay < -1) {
-                        System.out.println("Secondprice: " + item.getPriceIncForMinutes());
-                        System.out.println("Seconds: " + secondsInDay + " - " + cal.getTime() + " : " + (secondsInDay * item.getPriceIncForMinutes()));
-                        System.out.println("-----------------");
-                    }
+                    double secondsInDay = item.getSecondsForDay(cal, filter.shiftHours != 0);
                     if(secondsInDay == 0.0) {
                         continue;
                     }
@@ -102,7 +97,14 @@ public class PmsOrderStatistics implements Serializable  {
                     }
                     
                     if(secondsInDay == -1) {
-                        if(item.startsOnDate(cal.getTime(), order.rowCreatedDate)) {
+                        Date createUse = new Date(order.rowCreatedDate.getTime());
+                        if(filter.shiftHours != 0) {
+                            Calendar tmpCal = Calendar.getInstance();
+                            tmpCal.setTime(createUse);
+                            tmpCal.add(Calendar.HOUR_OF_DAY, filter.shiftHours);
+                            createUse = tmpCal.getTime();
+                        }
+                        if(item.startsOnDate(cal.getTime(), createUse)) {
                             totalCalc += (item.getProduct().price * item.getCount());
                             inc += (item.getProduct().price * item.getCount());
                             ex += (item.getProduct().priceExTaxes * item.getCount());

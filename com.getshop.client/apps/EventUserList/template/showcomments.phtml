@@ -18,7 +18,7 @@ $event = $this->getApi()->getEventBookingManager()->getEvent("booking", $_POST['
             }
 
             foreach ($comments as $i => $comment) {
-                echo "<div>";
+                echo "<div class='comment_row'><i class='fa fa-trash removeComment' gsclick='removeComment' userid='$userId' eventid='$event->id' commentId='$comment->commentId'></i> ";
                 echo $comment->commentCreatedDate."<br/>";
                 echo nl2br($comment->comment);
                 $addedBy = $this->getApi()->getUserManager()->getUserById($comment->addedByUserId);

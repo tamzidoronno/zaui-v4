@@ -1,0 +1,17 @@
+<?
+/* @var $this \ns_eaaf0123_f479_4b0f_839f_1948c9b927ef\NewsFeed */
+
+$news = $this->getApi()->getNewsManager()->getAllNews(null);
+$news = array_slice($news, 0, 3, true);
+foreach ($news as $new) {
+    
+        echo "<a href='/?page=$new->pageId'>";
+            echo "<div class='frigonewsentrysmall'>";
+                echo "<div class='thumbnail'><img src='/displayImage.php?id=$new->image'/></div>";
+                echo "<div class='subject'><b>$new->subject</b></div>";
+            echo "</div>";
+        echo "</a>";
+    
+}
+?>
+

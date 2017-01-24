@@ -220,4 +220,6 @@ public interface IEventBookingManager {
     @Administrator
     public List<EventStatistic> getStatisticGroupedByLocations(Date startDate, Date stopDate, List<String> groupIds, List<String> eventTypeIds);
         
+    @Administrator
+    public void deleteUserComment(String userId, String eventId, String commentId);
 }

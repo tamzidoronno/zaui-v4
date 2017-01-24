@@ -36,6 +36,10 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
     public function markAsReady() {
         $this->getApi()->getEventBookingManager()->markAsReady($this->getBookingEngineName(), $_POST['data']['eventid']);
     }
+    
+    public function removeComment() {
+        $this->getApi()->getEventBookingManager()->deleteUserComment($this->getBookingEngineName(), $_POST['data']['userid'], $_POST['data']['eventid'], $_POST['data']['commentid']);
+    }
 
     /**
      * 

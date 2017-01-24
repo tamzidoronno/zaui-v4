@@ -2048,4 +2048,18 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         saveObject(event);
         finalize(event);
     }
+
+    @Override
+    public void deleteUserComment(String userId, String eventId, String commentId) {
+        Event event = getEvent(eventId);
+        if (event == null) {
+            throw new ErrorException(1035);
+        }
+        
+        List<UserComment> comments = event.comments.get(userId);
+        comments.removeIf(comment -> comment.commentId.equals(commentId));
+        saveObject(event);
+        log("Comment removed", event, null);
+    }
+    
 }

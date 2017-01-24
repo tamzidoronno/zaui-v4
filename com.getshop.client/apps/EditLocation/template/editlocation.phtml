@@ -27,13 +27,20 @@ $groups = $this->getApi()->getUserManager()->getAllGroups();
         ?>
             <div class="sublocation" sublocationid="<? echo $loc->id; ?>">
                 <br/><label>Name</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>name" value="<? echo $loc->name;?>"></input>
-                <br/><br/><label>Description</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>description" value="<? echo $loc->description;?>"></input>
+                <br/><br/><label>Address</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>description" value="<? echo $loc->description;?>"></input>
                 <br/><br/><label>Contact person</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>contactperson" value="<? echo $loc->contactPerson;?>"></input>
+                <br/><br/><label>Contact email</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>contactemail" value="<? echo $loc->contactEmail;?>"></input>
                 <br/><br/><label>Cellphone</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>cellphone" value="<? echo $loc->cellPhone;?>"></input>
-                <br/><br/><label>Lat</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lat" value="<? echo $loc->lat;?>"></input>
-                <br/><br/><label>Lon</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lon" value="<? echo $loc->lon;?>"></input>    
+                <br/><br/>
+                <div class="gps_position">
+                    <label>Lat</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lat" value="<? echo $loc->lat;?>"></input>
+                    <br/><br/><label>Lon</label><input type="txt" class="gsniceinput1" gsname="<? echo $loc->id."_"; ?>lon" value="<? echo $loc->lon;?>"></input>        
+                </div>
+                
                 <br/><br/>
                 <textarea class='extradescription' placeholder='Extra description' gsname="<? echo $loc->id."_"; ?>extradescription"><? echo $loc->extraDescription; ?></textarea>
+                <br/><br/><label>Private description</label>
+                <textarea class='extradescription' placeholder='' gsname="<? echo $loc->id."_"; ?>privatedescription"><? echo $loc->privateDescription; ?></textarea>
             
             <?
                 foreach ($groups as $group) {

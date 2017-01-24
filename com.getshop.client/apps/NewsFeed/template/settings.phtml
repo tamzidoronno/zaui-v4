@@ -1,0 +1,27 @@
+
+
+<div gstype="form" method="saveAppInstanceSettings" style="color:#000">
+    <table width="80%" class="contactConfigTable">
+    <tr>
+        <td width="50%">Template</td>
+        <td width="50%">
+            <select gsname="setting_template">
+                <?php 
+                for($i = 1; $i < 3; $i++) {
+                    $checked = "";
+                    if($i == $this->getConfigurationSetting("template")) {
+                        $checked = "SELECTED";
+                    }
+                    if($i == 1) {
+                        echo "<option value='' $checked>Template $i</option>";
+                    } else {
+                        echo "<option value='$i' $checked>Template $i</option>";
+                    }
+                }
+                ?>
+            </select>
+        </td>
+    </tr>
+    </table>
+    <input gstype="submit" type="button" value='Save' class='logoutclick'>
+</div>

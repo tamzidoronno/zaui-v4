@@ -1,9 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
-import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.cartmanager.data.CartItem;
-import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.UserManager;
@@ -25,12 +22,14 @@ class PmsStatisticsBuilder {
     private final boolean pricesExTax;
     private HashMap<Integer, PmsBudget> budget;
     private final UserManager userManager;
+    private final OrderManager orderManager;
 
-    PmsStatisticsBuilder(List<PmsBooking> bookingsInFilter, boolean pricesExTax, UserManager userManager, List<PmsBooking> allBookings) {
+    PmsStatisticsBuilder(List<PmsBooking> bookingsInFilter, boolean pricesExTax, UserManager userManager, List<PmsBooking> allBookings, OrderManager orderManager) {
         this.bookings = bookingsInFilter;
         this.userManager = userManager;
         this.pricesExTax = pricesExTax;
         this.allBookings = allBookings;
+        this.orderManager = orderManager;
     }
 
     PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms) {
@@ -60,12 +59,20 @@ class PmsStatisticsBuilder {
                 if(booking.isDeleted) {
                     continue;
                 }
-                if(!booking.payedFor && cal.getTime().before(new Date()) && cal.get(Calendar.YEAR) >= 2017) {
-                    continue;
+                if(isPaidFor(booking, cal)) {
+                    if (filter.includeVirtual && orderManager.isThereVirtualOrders(booking.id)) {
+                        // 
+                    } else {
+                        continue;
+                    }
                 }
                 
                 if(booking.isEnded() && !booking.payedFor) {
-                    continue;
+                    if (filter.includeVirtual && orderManager.isThereVirtualOrders(booking.id)) {
+                        //
+                    } else {
+                        continue;
+                    }
                 }
                 
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
@@ -114,8 +121,10 @@ class PmsStatisticsBuilder {
                             addonPrice += (addon.price*addon.count);
 //                            addonPriceEx += addon.priceExTaxes;
 
-                            entry.addonsCount.put(addon.addonType, count);
-                            entry.addonsPrice.put(addon.addonType, addonPrice);
+                            if (addon.addonType != null) {
+                                entry.addonsCount.put(addon.addonType, count);
+                                entry.addonsPrice.put(addon.addonType, addonPrice);
+                            }
                         }
                     }
                  }
@@ -130,17 +139,30 @@ class PmsStatisticsBuilder {
         
         return statics;
     }
+
+    private static boolean isPaidFor(PmsBooking booking, Calendar cal) {
+        return !booking.payedFor && cal.getTime().before(new Date()) && cal.get(Calendar.YEAR) >= 2017;
+    }
     
     public LinkedList<SalesStatisticsEntry> buildOrderStatistics(PmsBookingFilter filter, OrderManager orderManager) {
         LinkedList<SalesStatisticsEntry> result = new LinkedList();
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
+                    
+        List<Order> ordersToUse = orderManager.getOrders(null, null, null);
+
+        if (filter.includeVirtual) {
+            ordersToUse = orderManager.getAllOrderIncludedVirtual();
+        }
+        
         while(true) {
             SalesStatisticsEntry entry = new SalesStatisticsEntry();
             entry.date = cal.getTime();
             result.add(entry);
+            
 
-            for(Order order : orderManager.getOrders(null, null, null)) {
+
+            for(Order order : ordersToUse) {
                 if(cal.getTime() == null || order == null) {
                     continue;
                 }

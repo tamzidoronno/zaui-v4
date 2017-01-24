@@ -30,5 +30,6 @@ public class PmsBookingFilter implements Serializable {
     public String interval;
     public String timeInterval;
     public boolean includeCleaningInformation = false;
+    public boolean includeVirtual = false;
     public List<String> typeFilter = new ArrayList();
 }

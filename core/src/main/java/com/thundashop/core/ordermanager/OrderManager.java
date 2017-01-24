@@ -5,7 +5,6 @@ import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
-import com.thundashop.core.arx.Card;
 import com.thundashop.core.bambora.BamboraManager;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
@@ -24,9 +23,9 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
+import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
-import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.printmanager.ReceiptGenerator;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.printmanager.PrintManager;
@@ -44,7 +43,6 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -56,6 +54,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private long incrementingOrderId = 100000;
     
     public HashMap<String, Order> orders = new HashMap();
+    
+    public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
     
     @Autowired
     public MailFactory mailFactory;
@@ -168,6 +168,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataFromDatabase : data.data) {
+            if (dataFromDatabase instanceof VirtualOrder) {
+                virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
+            }
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
                 if (order.cleanMe()) {
@@ -189,7 +192,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         createScheduler("ordercollector", "* * * * *", CheckOrderCollector.class);
-        
     }
     
 
@@ -371,7 +373,52 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.doFinalize();
         return order;
     }
-
+    
+    public VirtualOrder createVirtualOrder(Address address, String virtualOrderReference) {
+        VirtualOrder virtualOrder = new VirtualOrder();
+        virtualOrder.order = createOrderDummy(address);
+        virtualOrder.order.id = "";
+        virtualOrder.order.rowCreatedDate = new Date();
+        virtualOrder.order.isVirtual = true;
+        virtualOrder.reference = virtualOrderReference;
+        saveObject(virtualOrder);
+        
+        virtualOrders.put(virtualOrder.id, virtualOrder);
+        
+        return virtualOrder;
+    }
+    
+    public void deleteVirtualOrders(String virtualOrderReference) {
+        List<VirtualOrder> virtOrders = virtualOrders.values()
+                .stream()
+                .filter(virt -> virt.reference.equals(virtualOrderReference))
+                .collect(Collectors.toList());
+        
+        for (VirtualOrder virt : virtOrders) {
+            virtOrders.remove(virt.id);
+            deleteObject(virt);
+        }
+    }
+    
+    public boolean isThereVirtualOrders(String virtualOrderReference) {
+        return virtualOrders.values()
+                .stream()
+                .anyMatch(virt -> virt.reference.equals(virtualOrderReference));
+    }
+    
+    public List<Order> getAllOrderIncludedVirtual() {
+        List<Order> retOrders = getOrders(null, null, null);
+        List<Order> retVirtualOrders = this.virtualOrders.values().stream().map(virt -> virt.order).collect(Collectors.toList());
+        
+        List<Order> all = new ArrayList();
+        all.addAll(retOrders);
+        all.addAll(retVirtualOrders);
+        
+        finalize(all);
+        
+        return all;
+    }
+    
     @Override
     public Order createOrderForUser(String userId) {
         User user = userManager.getUserById(userId);
@@ -602,7 +649,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         order.doFinalize();
-        feedGrafana(order);
+        if (!dummy) {
+            feedGrafana(order);
+        }
+        
         return order;
     }
     
@@ -1615,6 +1665,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             order.createByManager = managerName;
             saveObject(order);
         }
+    }
+
+    public void saveVirtalOrder(VirtualOrder virtualOrder) {
+        saveObject(virtualOrder);
+        virtualOrders.put(virtualOrder.id, virtualOrder);
     }
 
 }

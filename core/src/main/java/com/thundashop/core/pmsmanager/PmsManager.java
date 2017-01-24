@@ -225,6 +225,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
+    public void createAllVirtualOrders() {
+        for (PmsBooking booking : bookings.values()) {
+            if (!booking.payedFor && booking.isEnded() && !orderManager.isThereVirtualOrders(booking.id)) {
+                pmsInvoiceManager.createVirtualOrder(booking.id);
+            }
+        }
+    }
+    
+    @Override
     public void setSession(Session session) {
         super.setSession(session);
     }
@@ -843,6 +852,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
+        pmsInvoiceManager.createVirtualOrder(booking.id);
         saveObject(booking);
     }
 
@@ -1272,7 +1282,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
         PmsPricing prices = getDefaultPriceObject();
-        PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings, prices.pricesExTaxes, userManager,new ArrayList(bookings.values()));
+        PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings, prices.pricesExTaxes, userManager,new ArrayList(bookings.values()), orderManager);
         builder.setBudget(getConfigurationSecure().budget);
         int totalRooms = bookingEngine.getBookingItems().size();
         if(!filter.typeFilter.isEmpty()) {
@@ -3353,6 +3363,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         if(!allItemsToMove.isEmpty()) {
             cartManager.getCart().addCartItems(allItemsToMove);
+            orderManager.deleteVirtualOrders(booking.id);
             Order order = orderManager.createOrder(user.address);
             if(firstOrder != null) {
                 order.payment = firstOrder.payment;

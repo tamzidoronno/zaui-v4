@@ -16,6 +16,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
+import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
@@ -883,7 +884,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     orderManager.saveOrder(order);
                 } else {
                     updateCart();
-                    order = createOrderFromCart(booking, filter);
+                    order = createOrderFromCart(booking, filter, false);
                     if (order == null) {
                         return "Could not create order.";
                     }
@@ -1163,7 +1164,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return true;
     }
 
-    private Order createOrderFromCart(PmsBooking booking, NewOrderFilter filter) {
+    private Order createOrderFromCart(PmsBooking booking, NewOrderFilter filter, boolean virtual) {
        
         User user = userManager.getUserById(booking.userId);
         if (user == null) {
@@ -1179,7 +1180,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         user.address.fullName = user.fullName;
 
-        Order order = orderManager.createOrder(user.address);
+        VirtualOrder virtualOrder = null;
+        Order order = null;
+        
+        orderManager.deleteVirtualOrders(booking.id);
+        
+        if (virtual) {
+            virtualOrder = orderManager.createVirtualOrder(user.address, booking.id);
+            order = virtualOrder.order;
+        } else {
+            order = orderManager.createOrder(user.address);
+        }
+        
         order.userId = booking.userId;
 
         Payment preferred = getPreferredPaymentMethod(booking.id, filter);
@@ -1211,7 +1223,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
 
-        orderManager.saveOrder(order);
+        if (virtual) {
+            orderManager.saveVirtalOrder(virtualOrder);
+        } else {
+            orderManager.saveOrder(order);
+        }
         return order;
     }
 
@@ -1923,7 +1939,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return null;
     }
     
-    
     private void checkIfOrderNeedsToBeSplitted() {
         if(!pmsManager.getConfigurationSecure().splitOrderIntoMonths) {
             return;
@@ -2001,5 +2016,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         cartManager.getCart().addCartItems(newItems);
     }
 
+    public void createVirtualOrder(String bookingId) {
+        System.out.println("Creating virtual order");
+        PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        if (!booking.payedFor) {
+            System.out.println("Creating virtual orders");
+            updateCart();
+            createOrderFromCart(booking, null, true);    
+        }
+        
+    }
 
 }

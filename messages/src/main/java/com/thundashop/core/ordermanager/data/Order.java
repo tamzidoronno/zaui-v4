@@ -61,6 +61,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Integer dueDays;
     public String createByManager = "";
     public String kid = "";
+    public boolean isVirtual = false;
     
     public Order jsonClone() {
         Gson gson = new Gson();

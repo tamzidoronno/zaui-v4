@@ -1203,6 +1203,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->endDate = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " 23:59"));
         $filter->filterType = $_POST['data']['filterType'];
         $filter->state = 0;
+        $filter->includeVirtual = $_POST['data']['include_virtual_filter'] == "true";
         $filter->searchWord = $_POST['data']['searchWord'];
         if(isset($_POST['data']['channel'])) {
             $filter->channel = $_POST['data']['channel'];
@@ -2597,6 +2598,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(isset($_SESSION['lastloadedarea']) && $_SESSION['lastloadedarea'] == $area) {
             $this->includefile($area);
         }
+    }
+
+    public function isVirtual() {
+        return $this->getSelectedFilter()->includeVirtual;
     }
 
 }

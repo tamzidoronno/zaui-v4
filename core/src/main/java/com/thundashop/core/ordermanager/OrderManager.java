@@ -379,6 +379,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         virtualOrder.order = createOrderDummy(address);
         virtualOrder.order.id = "";
         virtualOrder.order.rowCreatedDate = new Date();
+        virtualOrder.order.status = Order.Status.PAYMENT_COMPLETED;
         virtualOrder.order.isVirtual = true;
         virtualOrder.reference = virtualOrderReference;
         saveObject(virtualOrder);

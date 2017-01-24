@@ -184,8 +184,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return new PmsOrderStatistics();
         }
         List<Order> orders = orderManager.getOrders(null, null, null);
+        if(filter.includeVirtual) {
+            pmsManager.createAllVirtualOrders();
+            orders = orderManager.getAllOrderIncludedVirtual();
+        }
         List<Order> ordersToUse = new ArrayList();
         for(Order order : orders) {
+            if(order.cart.getItems().isEmpty()) {
+                continue;
+            }
+            if(order.isVirtual) {
+                System.out.println("TEST");
+            }
             if(order.testOrder) {
                 continue;
             }
@@ -1085,6 +1095,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
     
         CartItem item = createCartItemForCart(productId, count, room.pmsBookingRoomId);
+        if(item == null) {
+            return null;
+        }
         item.startDate = startDate;
         item.endDate = endDate;
         item.periodeStart = room.date.start;
@@ -1563,7 +1576,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         if(iteration == 0) {
                             groupId = room.pmsBookingRoomId;
                         }
-                        result.add(createCartItem(productId, null, room, startDateToAdd, endDateToAdd, price / count, count, groupId));
+                        CartItem item = createCartItem(productId, null, room, startDateToAdd, endDateToAdd, price / count, count, groupId);
+                        if(item != null) {
+                            result.add(item);
+                        }
                     }
                 }
             }
@@ -1595,9 +1611,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private CartItem createCartItemForCart(String productId, int count, String roomId) {
         CartItem item = new CartItem();
         Product product = productManager.getProductUnfinalized(productId);
+        if(product == null) {
+            logPrint("Product: " + productId + " does not exists anymore");
+            return null;
+        }
         item.setProduct(product.clone());
-        item.setCount(count);
         item.getProduct().externalReferenceId = roomId;
+        item.setCount(count);
         roomIdsInCart.add(roomId);
         if(!runningDiffRoutine) {
             addItemToItemsToReturn(item);
@@ -1815,7 +1835,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     PmsBookingAddonItem base = pmsManager.getBaseAddon(item.productId);
                     if(base != null && base.noRefundable) {
                         CartItem addonToAdd = createCartItem(item.productId, item.name, room, room.date.start, room.date.end, item.price, item.count, "");
-                        returnresult.add(addonToAdd);
+                        if(addonToAdd != null) {
+                            returnresult.add(addonToAdd);
+                        }
                     }
                 }
             }
@@ -2019,12 +2041,28 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public void createVirtualOrder(String bookingId) {
         System.out.println("Creating virtual order");
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
-        if (!booking.payedFor) {
+        double total = booking.getTotalPrice();
+        double totalOrder = getTotalOrderPrice(booking);
+        if (total != totalOrder) {
             System.out.println("Creating virtual orders");
+            itemsToReturn.clear();
+            NewOrderFilter filter = new NewOrderFilter();
+            filter.avoidOrderCreation = true;
+            filter.endInvoiceAt = booking.getEndDate();
+
+            createOrder(bookingId, filter);
             updateCart();
             createOrderFromCart(booking, null, true);    
         }
         
+    }
+
+    private double getTotalOrderPrice(PmsBooking booking) {
+        Double total = 0.0;
+        for(String orderId : booking.orderIds) {
+            total += orderManager.getTotalAmount(orderManager.getOrderSecure(orderId));
+        }
+        return total;
     }
 
 }

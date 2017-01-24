@@ -9,9 +9,19 @@ class NewsFeed extends \MarketingApplication implements \Application {
     public function getName() {
         return "NewsFeed";
     }
+    
+    public function getTemplateNumber() {
+        $number = $this->getConfigurationSetting("template");
+        if(!$number) {
+            $number = "";
+        }
+        return $number;
+    }
+
 
     public function render() {
-        $this->includefile("news");
+        $number = $this->getTemplateNumber();
+        $this->includefile("news" . $number);
     }
 }
 ?>

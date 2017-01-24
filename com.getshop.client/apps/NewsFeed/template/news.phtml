@@ -5,17 +5,17 @@ $news = $this->getApi()->getNewsManager()->getAllNews(null);
 $news = array_slice($news, 0, 5, true);
 
 foreach ($news as $new) {
-
-    echo "<a href='/?page=$new->pageId'>";
-        echo "<div class='newsentrysmall'>";
-            echo "<div class='thumbnail'><img src='/displayImage.php?id=$new->image'/></div>";
+    
+        echo "<a href='/?page=$new->pageId'>";
+            echo "<div class='newsentrysmall'>";
+                echo "<div class='thumbnail'><img src='/displayImage.php?id=$new->image'/></div>";
             echo "<div class='rightcontent'>";
                 echo "<div class='subject'>$new->subject</div>";
                 echo "<div class='date'>".date('d/m-Y', strtotime($new->date))."</div>";
                 echo "<div class='readmore'>".$this->__w("Read more")."</div>";
             echo "</div>";
         echo "</div>";
-    echo "</a>";
+        echo "</a>";
 }
 ?>
 

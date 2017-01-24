@@ -2237,6 +2237,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
             $filter->displayType = $_POST['data']['viewtype'];
             $filter->priceType = $_POST['data']['priceType'];
+            $filter->includeVirtual = $_POST['data']['includevirtual'] == "true";
+            $filter->shiftHours = $_POST['data']['shift'];
+            
+            
             $_SESSION['pmsorderstatsfilter'] = serialize($filter);
         }
         

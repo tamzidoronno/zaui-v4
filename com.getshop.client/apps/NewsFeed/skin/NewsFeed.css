@@ -1,7 +1,7 @@
 .NewsFeed {
     font-size: 0px;
 }
-
+    
 .NewsFeed .newsentrysmall {
     border: solid 1px #DDD;
     padding: 5px;
@@ -45,4 +45,31 @@
     position: absolute;
     bottom: 5px;
     right: 5px;
+}
+
+.NewsFeed .frigonewsentrysmall{
+    margin-left:30px;
+    margin-bottom: 100px;
+    width: 350px;
+    float:left;
+    background-color:rgba(255, 255, 255, 0.6);
+}
+.NewsFeed .frigonewsentrysmall .subject{
+    font-size: 16px;
+    padding-left: 15px;
+    color: #000;
+    padding: 5px;
+}
+.NewsFeed .frigonewsentrysmall .thumbnail{
+    width: 350px;
+    height: 200px;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.NewsFeed .frigonewsentrysmall .thumbnail img {
+    width: 100%;
 }

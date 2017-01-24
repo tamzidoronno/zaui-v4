@@ -852,8 +852,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
             }
         }
-        
-        pmsInvoiceManager.createVirtualOrder(booking.id);
+        if(getConfiguration().createVirtualOrders) {
+            pmsInvoiceManager.createVirtualOrder(booking.id);
+        }
         saveObject(booking);
     }
 

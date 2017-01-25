@@ -396,7 +396,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .collect(Collectors.toList());
         
         for (VirtualOrder virt : virtOrders) {
-            virtOrders.remove(virt.id);
+            virtualOrders.remove(virt.id);
             deleteObject(virt);
         }
     }
@@ -1235,7 +1235,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 
                 try {
                     if(card.savedByVendor.equals("DIBS")) {
-                        dibsManager.payWithCard(order, card);
+                        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("dibs")) {
+                            dibsManager.payWithCard(order, card);
+                        }
                     }
                     if(card.savedByVendor.equals("EPAY")) {
                         epayManager.payWithCard(order, card);

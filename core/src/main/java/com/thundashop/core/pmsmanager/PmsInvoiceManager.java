@@ -234,6 +234,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
                 if(!avoid) {
                     ordersToUse.add(order);
+                } else {
+                    System.out.println("Ignored");
                 }
             }
             
@@ -2039,7 +2041,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public void createVirtualOrder(String bookingId) {
-        System.out.println("Creating virtual order");
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
         double total = booking.getTotalPrice();
         double totalOrder = getTotalOrderPrice(booking);

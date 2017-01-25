@@ -1,0 +1,109 @@
+<?php
+/* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$booking = $this->getSelectedBooking();
+$this->createOrderPreview($booking, $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName()));
+$cart = $this->getApi()->getCartManager()->getCart();
+
+$toprint = array();
+foreach($cart->items as $item) {
+    $toprint[] = $item->product->externalReferenceId;
+}
+
+echo "<br>";
+echo "<span class='roomselectionbtn selectall'>All rooms</span>";
+foreach($booking->rooms as $room) {
+    if(!in_array($room->pmsBookingRoomId, $toprint)) {
+//        continue;
+    }
+    echo "<span class='roomselectionbtn' roomid='".$room->pmsBookingRoomId."'>";
+    if($room->bookingItemId) {
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId);
+        echo $item->bookingItemName . " - ";
+    }
+    if(isset($room->guests[0]) && $room->guests[0]->name) {
+        echo $room->guests[0]->name;
+    } else {
+        echo "Unnamed room";
+    }
+    echo "</span>";
+}
+echo "<br>";
+
+
+$this->includeFile("newordercreationpanelinpreview");
+
+
+$lastSelectedRoom = null;
+foreach($cart->items as $item) {
+    $selectedRoom = null;
+    foreach($booking->rooms as $room) {
+        if($room->pmsBookingRoomId == $item->product->externalReferenceId) {
+            $selectedRoom = $room;
+            break;
+        }
+    }
+    if($lastSelectedRoom != $selectedRoom) {
+        echo "<div selectionroomrow='".$selectedRoom->pmsBookingRoomId."'>";
+        echo "<br>";
+        if($selectedRoom->bookingItemId) {
+            $bookingItem = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $selectedRoom->bookingItemId);
+            echo $bookingItem->bookingItemName . " - ";
+        }
+        if(isset($selectedRoom->guests[0])) {
+            echo $selectedRoom->guests[0]->name . "<br>";
+        }
+        $lastSelectedRoom = $selectedRoom;
+        echo "</div>";
+    }
+    
+    echo "<div selectionroomrow='".$lastSelectedRoom->pmsBookingRoomId."' class='cartitemselectionrow'>";
+    echo "<input type='checkbox' class='itemselection'>";
+    echo "<input type='txt' gsname='start' value='". date("d.m.Y H:i", strtotime($item->startDate)) . "' style='width:120px;'> ";
+    echo "<input type='txt' gsname='end' value='". date("d.m.Y H:i", strtotime($item->endDate)) . "' style='width:120px;'> ";
+    echo "<input type='txt' gsname='count' style='width: 25px;text-align:center;' value='". $item->count . "' style='width:120px;' class='cartcount'> ";
+    echo "<input type='txt' gsname='name' value='". $item->product->name . "' style='width:550px;'> ";
+    echo "<input type='txt' gsname='price' style='width: 60px;' class='cartprice' value='". $item->product->price . "' style='width:120px;'>";
+    echo "</div>";
+}
+?>
+
+<style>
+    .roomselectionbtn { border: solid 1px #bbb; font-size: 11px; margin: 3px; padding: 3px; display:inline-block; border-radius: 3px; cursor:pointer; }
+    .roomselectionbtn.selectedButton { background-color: green; color:#fff; }
+</style>
+
+<script>
+    $('.roomselectionbtn').on('click', function() {
+        if($(this).hasClass('selectedButton')) {
+            $(this).removeClass('selectedButton');
+        } else {
+            $(this).addClass('selectedButton');
+        }
+        
+        if($(this).hasClass('selectall')) {
+            var curbtn = $(this);
+            $('.roomselectionbtn').each(function() {
+                if(curbtn.hasClass('selectedButton')) {
+                    $(this).addClass('selectedButton');
+                } else {
+                    $(this).removeClass('selectedButton');
+                }
+            });
+        }
+        
+        $('.roomselectionbtn').each(function() {
+            var roomId = $(this).attr('roomid');
+            if($(this).hasClass('selectedButton')) {
+                $("[selectionroomrow='" + roomId + "']").find('.itemselection').attr('checked','checked');
+                $("[selectionroomrow='" + roomId + "']").show();
+            } else {
+                $("[selectionroomrow='" + roomId + "']").find('.itemselection').attr('checked',null);
+                $("[selectionroomrow='" + roomId + "']").hide();
+            }
+        })
+        app.PmsManagement.calculcateCartCost();
+        $('.cartprice').on('keyup', app.PmsManagement.calculcateCartCost);
+        $('.cartcount').on('keyup', app.PmsManagement.calculcateCartCost);
+        $('.itemselection').on('click', app.PmsManagement.calculcateCartCost);
+    });
+</script>

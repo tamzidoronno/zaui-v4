@@ -1,0 +1,179 @@
+<?php
+/* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$instances = $this->indexList($instances);
+$booking = $this->getSelectedBooking();
+$user = $this->getApi()->getUserManager()->getUserById($this->getSelectedBooking()->userId);
+$bookingUser = $user;
+$this->createOrderPreview($booking, $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName()));
+$users = $this->getApi()->getUserManager()->getAllUsers();
+
+$toChangeObject = new stdClass();
+$toChangeObject->name = $user->fullName;
+$toChangeObject->email = $user->emailAddress;
+$toChangeObject->prefix = $user->prefix;
+$toChangeObject->phone = $user->cellPhone;
+$toChangeObject->address = $user->address->address;
+$toChangeObject->postcode = $user->address->postCode;
+$toChangeObject->city = $user->address->city;
+$toChangeObject->countryname = $user->address->countryname;
+$toChangeObject->userid = $user->id;
+
+?>
+<div class='createorderpanelinfo'>
+    <input type='hidden' value='<?php echo $bookingUser->id; ?>' gsname='userid'>
+    <div style="height: 20px;"></div>
+    <span style="border-left: solid 1px #bbb; border-top: solid 1px #bbb; width: 70%; display:inline-block;float:left; box-sizing: border-box;">
+        <div style='border-bottom: solid 1px #bbb;'>
+            <span class='orderUserSelection selectedbooker' booker='<?php echo json_encode($toChangeObject); ?>'>The booker</span>
+            <span class='orderUserSelection' show='guestarea'>Guest</span>
+            <span class='orderUserSelection' show='existing'>Existing</span>
+            <span class='orderUserSelection' show='newcompany'>New company</span>
+            <span class='orderUserSelection' show='newprivate'>New private person</span>
+        </div>
+        <div class='guestarea showarea'>
+            <select style='width: 100%; border: solid 1px; padding: 5px;' id='selectguest'>
+                <option value=''>Select guest</option>
+                <?php
+                 foreach($booking->rooms as $room) {
+                     foreach($room->guests as $guest) {
+                         $toChangeObject = new stdClass();
+                         $toChangeObject->name = $guest->name;
+                         $toChangeObject->email = $guest->email;
+                         $toChangeObject->prefix = $guest->prefix;
+                         $toChangeObject->phone = $guest->phone;
+                         
+                         echo "<option value='".  json_encode($toChangeObject)."'>" . $guest->name . " - " . $guest->email . " - " . $guest->phone . "</option>";
+                     }
+                 }
+                ?>
+            </select>
+        </div>
+        <div class='existing showarea'>
+            <select style='width: 100%; border: solid 1px; padding: 5px;' id='selectuser'>
+                <option value=''>Select guest</option>
+                <?php
+                 foreach($users as $user) {
+                    $toChangeObject = new stdClass();
+                    $toChangeObject->name = $user->fullName;
+                    $toChangeObject->email = $user->emailAddress;
+                    $toChangeObject->prefix = $user->prefix;
+                    $toChangeObject->phone = $user->cellPhone;
+                    $toChangeObject->address = $user->address->address;
+                    $toChangeObject->postcode = $user->address->postCode;
+                    $toChangeObject->city = $user->address->city;
+                    $toChangeObject->countryname = $user->address->countryname;
+                    $toChangeObject->userid = $user->id;
+                     
+                    echo "<option value='".  json_encode($toChangeObject)."'>" . $user->fullName . " - " . $user->email . " - " . $user->cellPhone . "</option>";
+                 }
+                ?>
+            </select>
+        </div>
+        
+        
+        <div style='padding: 10px; border-right: solid 1px #bbb; width: 45%;height: 145px;float:left; display:inline-block;'>
+            <label style='font-size:12px;'>Name<br><input type='text' gsname='name' style='width:290px;' value='<?php echo $bookingUser->fullName; ?>'></label>
+            <label style='font-size:12px;'>Phone<br><input type='text' style='width:70px;' gsname='prefix'   value='<?php echo $bookingUser->prefix; ?>'><input gsname='phone'  type='text' style='width:216px;'  value='<?php echo $bookingUser->cellPhone; ?>'></label>
+            <label style='font-size:12px;'>Email<input type='text' gsname='email' style='width:290px;' value='<?php echo $bookingUser->emailAddress; ?>'></label>
+        </div>
+        <div style='padding: 10px;width: 45%;heigth: 200px;float:left; display:inline-block;'>
+            <label style='font-size:12px;'>Address<input gsname='address'  type='text' style='width:290px;' value='<?php echo $bookingUser->address->address; ?>'></label>
+            <label style='font-size:12px;'>Postcode + city<br><input gsname='postcode' type='text' style='width:70px;' value='<?php echo $bookingUser->address->postCode; ?>'><input gsname='city' type='text' style='width:216px;' value='<?php echo $bookingUser->address->city; ?>'></label>
+            <label style='font-size:12px;'>Country<input gsname='country' type='text' style='width:290px'  value='<?php echo $bookingUser->address->countryname ? $bookingUser->address->countryname : "Norway"; ?>'></label>
+        </div>
+
+    </span>
+    <span style="border: solid 1px #bbb; width: 30%; display:inline-block;float:left; box-sizing: border-box; padding: 10px; height: 200px;">
+        <?php
+        echo "Payment type:<br>";
+        echo "<select class='paymenttypeunsetled' gsname='paymenttype'>";
+       foreach($instances as $id => $app) {
+           $selected = "";
+           if($id == $preferred) { $selected = "SELECTED"; }
+           if(sizeof($user->savedCards) > 0) {
+               $selected = "";
+           }
+
+           echo "<option value='".$app->appName."' $selected> ".$app->appName."</option>";
+       }
+
+       if($amount > 0) {
+           foreach($user->savedCards as $card) {
+               echo "<option value='savedcard_".$card->id."' SELECTED>Saved card (" . $card->savedByVendor  . ") : " . $card->mask . "</option>";
+           }
+       }
+
+       echo "</select> ";
+       ?>
+    </span>
+    <span style="border: solid 1px #bbb; width: 100%; display:inline-block;float:left; box-sizing: border-box; padding: 10px; text-align: right">
+        <span  style='float:left;'>Total : <span class='totalprice'>0</span></span>
+        <input type="button" id='runcreateorder' value="Create order (not functional yet)">
+    </span>
+    <div style="height: 20px;clear:both;"></div>
+</div>
+
+<style>
+    .orderUserSelection { border-right: solid 1px #bbb; display:inline-block; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; cursor:pointer; }
+    .selectedbooker { background-color:green; color:#fff; }
+    .createorderpanelinfo input { padding: 3px !important; box-sizing: border-box;}
+</style>
+<script>
+    
+    function populateAreas(res) {
+        $('.createorderpanelinfo [gsname="name"]').val(res.name);
+         $('.createorderpanelinfo [gsname="prefix"]').val(res.prefix);
+         $('.createorderpanelinfo [gsname="phone"]').val(res.phone);
+         $('.createorderpanelinfo [gsname="email"]').val(res.email);
+         $('.createorderpanelinfo [gsname="address"]').val(res.address);
+         $('.createorderpanelinfo [gsname="postcode"]').val(res.postcode);
+         $('.createorderpanelinfo [gsname="city"]').val(res.city);
+         $('.createorderpanelinfo [gsname="country"]').val(res.country);
+         $('.createorderpanelinfo [gsname="userid"]').val(res.userid);
+    }
+    
+    $('.orderUserSelection').on('click', function() {
+        $('.orderUserSelection').removeClass('selectedbooker');
+        $(this).addClass('selectedbooker');
+        $('.showarea').hide();
+        $('.showarea.' + $(this).attr('show')).show();
+        $('#selectguest, #selectuser').val('');
+        if($(this).attr('booker')) {
+            var res = JSON.parse($(this).attr('booker'));
+            populateAreas(res);
+        } else {
+            populateAreas({});
+        }
+    });
+
+    $('#selectguest').chosen();
+    $('#selectuser').chosen();
+     $('.showarea').hide();
+     
+     $('#selectguest, #selectuser').on('change', function() {
+         var res = $(this).val();
+         res = JSON.parse(res);
+         $('.showarea').hide();
+         populateAreas(res);
+     });
+     
+     $('#runcreateorder').on('click', function() {
+         var user = thundashop.framework.createGsArgs($('.createorderpanelinfo'));
+         var items = [];
+         $('.cartitemselectionrow').each(function() {
+             if($(this).find('.itemselection').is(':checked')) {
+                 var row = thundashop.framework.createGsArgs($(this));
+                row["itemid"] = $(this).attr('selectionroomrow');
+                items.push(row);
+             }
+         });
+         
+         var data = {
+             "user" : user,
+             "items" : items,
+         }
+         console.log('This is where we need to contionue');
+         console.log(data);
+     });
+</script>

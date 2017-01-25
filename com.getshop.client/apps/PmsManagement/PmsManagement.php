@@ -2023,7 +2023,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $res['price'] = $price;
             $res['priceex'] = $priceEx;
             $res['count'] = $item->count;
-            
+            $res['groupedById'] = $item->groupedById;
             if($includeBookingData) {
                 $booking = $this->findBookingFromRoom($item->product->externalReferenceId);
                 $user = $this->findUser($booking->userId);
@@ -2571,6 +2571,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $accounts = array();
         foreach($productIds as $id => $val) {
            $product = $this->getApi()->getProductManager()->getProduct($id);
+           if(!$product) {
+               continue;
+           }
            if(!isset($accounts[$product->accountingAccount])) {
                $accounts[$product->accountingAccount] = 0;
            }
@@ -2628,6 +2631,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function isVirtual() {
         return $this->getSelectedFilter()->includeVirtual;
+    }
+
+    public function includeOrderCreationPanel() {
+        $this->includefile("ordercreationpanel");
     }
 
 }

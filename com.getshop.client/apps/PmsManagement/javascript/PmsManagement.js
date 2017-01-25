@@ -80,6 +80,18 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .removePaymentMethod', app.PmsManagement.removePaymentMethod);
     },
     
+    calculcateCartCost : function() {
+        var total = 0;
+        $('.PmsManagement .cartitemselectionrow').each(function() {
+            if($(this).find('.itemselection').is(':CHECKED')) {
+                var price = $(this).find('.cartprice').val();
+                var count = $(this).find('.cartcount').val();
+                total += (price * count);
+            }
+        });
+        $('.PmsManagement .totalprice').html(total);
+    },
+    
     removeConferenceRow: function() {
         $(this).closest('.action_point_row').remove();
     },

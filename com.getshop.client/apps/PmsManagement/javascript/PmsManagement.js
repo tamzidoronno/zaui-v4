@@ -74,10 +74,16 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .loadStatsForDay', app.PmsManagement.loadStatsForDay);
         $(document).on('click','.PmsManagement .selectalladdons', app.PmsManagement.selectalladdons);
         $(document).on('click','.PmsManagement .conference_addactionpoint', app.PmsManagement.addActionPoint);
+        $(document).on('click','.PmsManagement .conference_addday', app.PmsManagement.addConferenceDay);
         $(document).on('click','.PmsManagement .save_conference_data', app.PmsManagement.save_conference_data);
         $(document).on('click','.PmsManagement .remove_conference_row', app.PmsManagement.removeConferenceRow);
+        $(document).on('click','.PmsManagement .delete_day_row', app.PmsManagement.deleteConferenceDay);
         $(document).on('click','.PmsManagement .addPaymentMethod', app.PmsManagement.addPaymentMethod);
         $(document).on('click','.PmsManagement .removePaymentMethod', app.PmsManagement.removePaymentMethod);
+    },
+    
+    deleteConferenceDay: function() {
+        $(this).closest('.dayform').remove();
     },
     
     removeConferenceRow: function() {
@@ -87,24 +93,36 @@ app.PmsManagement = {
     save_conference_data: function() {
         var container = $(this).closest('.conference_data_form');
         
-        var data = {
-            bookingid : container.find('[gsname="bookingid"]').val(),
-            note : container.find('[gsname="note"]').val(),
-            rows : []
-        }
+        var data = {};
+        data.days = [];
+        data.bookingid = container.find('[gsname="bookingid"]').val();
+        data.note = container.find('[gsname="note"]').val();
         
-        container.find('.action_point_row.with_data').each(function() {
-            var row = {
-                id: $(this).attr('rowid'),
-                place : $(this).find('.col1 input').val(),
-                from : $(this).find('.col2 input').val(),
-                to : $(this).find('.col3 input').val(),
-                actionName : $(this).find('.col4 input').val(),
-                attendeesCount : $(this).find('.col5 input').val(),
+        container.find('.dayform.with_data').each(function() {
+            var day = {
+                dayid : $(container).attr('dayid'),
+                day : $(this).find('input[gsname="day"]').val(),
+                rows : []
             }
             
-            data.rows.push(row);
+            $(this).find('.action_point_row.with_data').each(function() {
+                var row = {
+                    id: $(this).attr('rowid'),
+                    place : $(this).find('.col1 input').val(),
+                    from : $(this).find('.col2 input').val(),
+                    to : $(this).find('.col3 input').val(),
+                    actionName : $(this).find('.col4 input').val(),
+                    attendeesCount : $(this).find('.col5 input').val(),
+                }
+
+                day.rows.push(row);
+            });
+            
+            data.days.push(day);
         });
+        
+        console.log(data);
+        
         
         var event = thundashop.Ajax.createEvent(null, "saveConferenceData", this, data);
         
@@ -134,7 +152,7 @@ app.PmsManagement = {
     
     addActionPoint: function() {
         var newId = app.PmsManagement.guid();
-        var dayform = $('.conference_addactionpoint').closest('.dayform');
+        var dayform = $(this).closest('.dayform');
         var templateRow = dayform.find('.row_template');
         var toInsert = templateRow.clone();
         toInsert.removeClass('row_template');
@@ -142,6 +160,17 @@ app.PmsManagement = {
         toInsert.attr('rowid', newId);
         var rowsArea = dayform.find('.rows');
         rowsArea.append(toInsert);
+    },
+    
+    addConferenceDay: function() {
+        var newId = app.PmsManagement.guid();
+        var dayform = $(this).closest('.conference_data_form').find('.dayform.daytemplate');
+        var toInsert = dayform.clone();
+        toInsert.removeClass('daytemplate');
+        toInsert.addClass('with_data');
+        toInsert.attr('dayid', newId);
+        $(this).closest('.conference_data_form').find('.days_data').append(toInsert);
+        toInsert.find('.conference_addactionpoint').click();
     },
     
     addPaymentMethod : function() {

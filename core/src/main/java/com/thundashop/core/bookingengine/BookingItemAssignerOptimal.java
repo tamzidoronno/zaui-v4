@@ -90,31 +90,31 @@ public class BookingItemAssignerOptimal {
     private List<OptimalBookingTimeLine> makeOptimalTimeLines() {
         List<Booking> bookingsToAssign = new ArrayList(bookings);
         
-        Collections.sort(bookingsToAssign, (Booking o1, Booking o) -> {
+        Collections.sort(bookingsToAssign, (Booking o1, Booking o2) -> {
             
-            if (o1.isUnassigned() && !o.isUnassigned()) {
+            if (o1.isUnassigned() && !o2.isUnassigned()) {
                 return 1;
             }
 
-            if (!o1.isUnassigned() && o.isUnassigned()) {
+            if (!o1.isUnassigned() && o2.isUnassigned()) {
                 return -1;
             }
 
-            return o1.startDate.compareTo(o.startDate);
+            if (o1.startDate.equals(o2.startDate)) {
+                return o2.endDate.compareTo(o1.endDate);
+            }
+
+            return o1.startDate.compareTo(o2.startDate);
         });
-   
+        
         List<OptimalBookingTimeLine> bookingLines = new ArrayList();
         while(bookingsToAssign.size() > 0) {
             OptimalBookingTimeLine bookingLine = new OptimalBookingTimeLine();
-            Booking currentBooking = bookingsToAssign.get(0);
+            Booking currentBooking = bookingsToAssign.remove(0);
             bookingLine.bookings.add(currentBooking);
             String currentBookingItemId = currentBooking.bookingItemId;
             
             for (Booking booking : bookingsToAssign) {
-                if (booking.equals(currentBooking)) {
-                    continue;
-                }
-                
                 if (currentBooking.endDate.getTime() <= booking.startDate.getTime()) {
                     if (!canBeOnTheSameLine(booking, currentBookingItemId)) {
                         continue;

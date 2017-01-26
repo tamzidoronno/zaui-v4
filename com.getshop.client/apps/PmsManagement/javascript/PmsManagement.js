@@ -81,6 +81,22 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .addPaymentMethod', app.PmsManagement.addPaymentMethod);
         $(document).on('click','.PmsManagement .removePaymentMethod', app.PmsManagement.removePaymentMethod);
     },
+    calculcateCartCost : function(e) {
+        var target = $(e.target);
+        var row = target.closest('.cartitemselectionrow');
+        if(!target.hasClass('itemselection')) {
+            row.find('.itemselection').attr('checked','checked');
+        }
+        var total = 0;
+        $('.PmsManagement .cartitemselectionrow').each(function() {
+            if($(this).find('.itemselection').is(':CHECKED')) {
+                var price = $(this).find('.cartprice').val();
+                var count = $(this).find('.cartcount').val();
+                total += (price * count);
+            }
+        });
+        $('.PmsManagement .totalprice').html(total);
+    },
     
     deleteConferenceDay: function() {
         $(this).closest('.dayform').remove();
@@ -238,10 +254,12 @@ app.PmsManagement = {
         }
     },
     
-    loadStatsForDay : function() {
+    loadStatsForDay : function(e) {
+        var target = $(e.target);
         var index = $(this).attr('index');
         var event = thundashop.Ajax.createEvent('','loadStatsForDay', $(this), {
-            "index" : index
+            "index" : index,
+            "rowindex" : target.attr('rowindex')
         });
         thundashop.common.showInformationBoxNew(event, "Statis for day");
     },

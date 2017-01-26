@@ -862,6 +862,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         
         for(String order : res.orders) {
             Order ord = orderManager.getOrder(order);
+            if(!ord.closed) {
+                ord.closed = true;
+                orderManager.saveOrder(ord);
+            }
             Double sumEx = orderManager.getTotalAmountExTaxes(ord);
             Double sumInc = orderManager.getTotalAmount(ord);
             amountEx += sumEx;
@@ -921,6 +925,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         saved.onlyPositiveLinesEx = 0.0;
         saved.onlyPositiveLinesInc = 0.0;
         boolean needSaving = false;
+        saved.tamperedOrders.clear();
         for(String orderId : saved.orders) {
             Order order = orderManager.getOrderSecure(orderId);
             if(order.cart == null) {
@@ -1018,7 +1023,6 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 res.id = fileToUse.id;
                 res.rowCreatedDate = fileToUse.rowCreatedDate;
             }
-
             sumOrders(res);
             res.subtype = configToUse.subType;
             res.type = configToUse.transferType;
@@ -1064,7 +1068,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         filter.end = end.getTime();
         filter.priceType = "extaxes";
         
-        PmsOrderStatistics stats = new PmsOrderStatistics();
+        PmsOrderStatistics stats = new PmsOrderStatistics(null);
         stats.createStatistics(ordersToUse, filter);
         return stats;
     }

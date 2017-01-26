@@ -1,43 +1,92 @@
 <?php
 /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 $index = $_POST['data']['index'];
-echo $index;
+$rowIndex = $_POST['data']['rowindex'];
 $result = unserialize($_SESSION['currentOrderStatsResult']);
 $entries = $result->entries[$index];
-echo "<table cellspacing='0' cellpadding='0'>";
-echo "<tr>";
-echo "<th>Orderid</th>";
-echo "<th>Name</th>";
-echo "<th>Booking</th>";
-echo "<th>Ex tax</th>";
-echo "<th>Inc tax</th>";
-$totalEx = 0.0;
-$totalInc = 0.0;
-foreach($entries->orderEx as $orderIncId => $value) {
-    $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderId($orderIncId);
-    $user = $this->getApi()->getUserManager()->getUserById($order->userId);
-    $totalEx += $value;
-    $totalInc += $entries->orderInc->{$orderIncId};
+$productHeaderRow = unserialize($_SESSION['currentOrderStatsResultHeader']);
+
+$productId = "";
+if($rowIndex > 0) {
+    $i = 1;
+    foreach($productHeaderRow as $id => $val) {
+        if($i == $rowIndex) {
+            $productId = $id;
+            break;
+        }
+        $i++;
+    }
+
+    $product = $this->getApi()->getProductManager()->getProduct($productId);
+    echo $product->name . " - " . $entries->day;
     
-    $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedName(), $order->id);
-    $hasBooking = "";
-    if($booking) {
-        $hasBooking = "yes";
+    
+        
+    echo "<table cellspacing='0' cellpadding='0'>";
+    echo "<tr>";
+    echo "<th>Orderid</th>";
+    echo "<th>Name</th>";
+    echo "<th>Ex tax</th>";
+    echo "<th>Inc tax</th>";
+    echo "</tr>";
+    $totalEx = 0.0;
+    $totalInc = 0.0;
+    foreach($entries->priceExOrders->{$productId} as $orderId => $value) {
+        $totalEx += $value;
+        $totalInc += $entries->priceIncOrders->{$productId}->{$orderId};
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+        echo "<tr>";
+        echo "<td>" . $order->incrementOrderId . "</td>";
+        echo "<td>" . $user->fullName . "</td>";
+        echo "<td>".round($value)."</td>";
+        echo "<td>".round($entries->priceIncOrders->{$productId}->{$orderId})."</td>";
+        echo "</tr>";
     }
     echo "<tr>";
-    echo "<td>" . $orderIncId . "</td>";
-    echo "<td>" . $user->fullName . "</td>";
-    echo "<td>" . $hasBooking . "</td>";
-    echo "<td>".round($value)."</td>";
-    echo "<td>".round($entries->orderInc->{$orderIncId})."</td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td>".round($totalEx)."</td>";
+    echo "<td>".round($totalInc)."</td>";
     echo "</tr>";
+    echo "</table>";
+    
+} else {
+    echo "<table cellspacing='0' cellpadding='0'>";
+    echo "<tr>";
+    echo "<th>Orderid</th>";
+    echo "<th>Name</th>";
+    echo "<th>Booking</th>";
+    echo "<th>Ex tax</th>";
+    echo "<th>Inc tax</th>";
+    $totalEx = 0.0;
+    $totalInc = 0.0;
+    foreach($entries->orderEx as $orderIncId => $value) {
+        $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderId($orderIncId);
+        $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+        $totalEx += $value;
+        $totalInc += $entries->orderInc->{$orderIncId};
+
+        $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedName(), $order->id);
+        $hasBooking = "";
+        if($booking) {
+            $hasBooking = "yes";
+        }
+        echo "<tr>";
+        echo "<td>" . $orderIncId . "</td>";
+        echo "<td>" . $user->fullName . "</td>";
+        echo "<td>" . $hasBooking . "</td>";
+        echo "<td>".round($value)."</td>";
+        echo "<td>".round($entries->orderInc->{$orderIncId})."</td>";
+        echo "</tr>";
+    }
+    echo "<tr>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td>".round($totalEx)."</td>";
+    echo "<td>".round($totalInc)."</td>";
+    echo "</tr>";
+    echo "</table>";
 }
-echo "<tr>";
-echo "<td></td>";
-echo "<td></td>";
-echo "<td></td>";
-echo "<td>".round($totalEx)."</td>";
-echo "<td>".round($totalInc)."</td>";
-echo "</tr>";
-echo "</table>";
 ?>

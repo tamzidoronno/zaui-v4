@@ -3120,7 +3120,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
-    private void dumpBooking(PmsBooking booking) {
+    public void dumpBooking(PmsBooking booking) {
         if(checkDate(booking)) {
             if((!booking.payedFor && booking.deleted != null) && (booking.sessionId == null || booking.sessionId.isEmpty())) {
                 booking.dump();

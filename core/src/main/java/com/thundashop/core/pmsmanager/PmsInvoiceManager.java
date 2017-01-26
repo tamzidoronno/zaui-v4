@@ -8,6 +8,7 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.DataCommon;
@@ -50,6 +51,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return res;
     }
+
+    private void clearCartExcept(List<String> itemsToCreate) {
+        List<CartItem> added = new ArrayList();
+        for(String id : itemsToCreate) {
+            CartItem item = cartManager.getCart().getCartItem(id);
+            added.add(item);
+        }
+        cartManager.clear();
+        cartManager.getCart().addCartItems(added);
+    }
+
+    
 
     class BookingOrderSummary {
         Integer count = 0;
@@ -181,7 +194,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     @Override
     public PmsOrderStatistics generateStatistics(PmsOrderStatsFilter filter) {
         if(filter == null) {
-            return new PmsOrderStatistics();
+            return new PmsOrderStatistics(null);
         }
         List<Order> orders = orderManager.getOrders(null, null, null);
         if(filter.includeVirtual) {
@@ -232,13 +245,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         }
                     }
                 }
-                if(!avoid) {
+                if(order.isVirtual && filter.includeVirtual) {
+                    avoid = false;
+                }
+                
+                if(!avoid && !ordersToUse.contains(order)) {
                     ordersToUse.add(order);
                 }
             }
             
         }
-        PmsOrderStatistics stats = new PmsOrderStatistics();
+        
+        List<String> roomProducts = new ArrayList();
+        for(BookingItemType type : bookingEngine.getBookingItemTypes()) {
+            roomProducts.add(type.productId);
+        }
+        
+        PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts);
         stats.createStatistics(ordersToUse, filter);
         return stats;
     }
@@ -852,7 +875,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         avoidChangeInvoicedTo = false;
         avoidChangingInvoicedFrom = false;
         runningDiffRoutine = false;
-        itemsToReturn.clear();
+        if(filter.itemsToCreate.isEmpty()) {
+            itemsToReturn.clear();
+        }
         this.avoidOrderCreation = filter.avoidOrderCreation;
         
         List<PmsBooking> allbookings = new ArrayList();
@@ -873,9 +898,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         String lastOrderId = "";
         for(PmsBooking booking : allbookings) {
-            clearCart();
-            addBookingToCart(booking, filter);
-            if(!itemsToReturn.isEmpty()) {
+            if(filter.itemsToCreate.isEmpty()) {
+                clearCart();
+                addBookingToCart(booking, filter);
+            } else {
+                clearCartExcept(filter.itemsToCreate);
+            }
+            if(!itemsToReturn.isEmpty() || !filter.itemsToCreate.isEmpty()) {
                 if(avoidOrderCreation) {
                     continue;
                 }
@@ -893,12 +922,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     order.cart.addCartItems(itemsToReturn);
                     orderManager.saveOrder(order);
                 } else {
-                    updateCart();
+                    if(itemsToReturn.isEmpty()) {
+                        updateCart();
+                    }
                     order = createOrderFromCart(booking, filter, false);
                     if (order == null) {
                         return "Could not create order.";
                     }
                     order.dueDays = booking.dueDays;
+                    if(filter.userId != null && filter.userId.isEmpty()) {
+                        order.userId = filter.userId;
+                        orderManager.saveOrder(order);
+                    }
                     autoSendInvoice(order, booking.id);
                     booking.orderIds.add(order.id);
                     Double total = orderManager.getTotalAmount(order);
@@ -1184,7 +1219,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             logPrint("User does not exists: " + booking.userId + " for booking : " + booking.id);
             Exception ex = new Exception();
             logPrintException(ex);
-            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed.", ex);
+            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed (userid: " + booking.userId + ").", ex);
             return null;
         }
 
@@ -1590,17 +1625,37 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private void clearCart() {
         roomIdsInCart = new ArrayList();
         if(!avoidOrderCreation) {
-            itemsToReturn.clear();
+            List<CartItem> toRemove = new ArrayList();
+            for(CartItem item : itemsToReturn) {
+                if(item != null && item.addedBy != null && item.addedBy.equals("pmsquickproduct")) {
+                    continue;
+                }
+                toRemove.add(item);
+            }
+            itemsToReturn.removeAll(toRemove);
         }
     }
 
+    private void clearRealCart() {
+            List<CartItem> toRemove = new ArrayList();
+            for(CartItem item : cartManager.getCart().getItems()) {
+                if(item.addedBy != null && item.addedBy.equals("pmsquickproduct")) {
+                    continue;
+                }
+                toRemove.add(item);
+            }
+            for(CartItem remove : toRemove) {
+                cartManager.getCart().removeItem(remove.getCartItemId());
+            }
+    }
+    
     private void updateCart() {
         for(CartItem item : itemsToReturn) {
             if(item != null) {
                 item.doFinalize();
             }
         }
-        cartManager.clear();
+        clearRealCart();
         cartManager.getCart().addCartItems(itemsToReturn);
         if(pmsManager.getConfigurationSecure().autoSumarizeCartItems) {
             cartManager.summarizeItems();
@@ -2039,20 +2094,26 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public void createVirtualOrder(String bookingId) {
-        System.out.println("Creating virtual order");
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
         double total = booking.getTotalPrice();
         double totalOrder = getTotalOrderPrice(booking);
+        double diff = totalOrder - total;
         if (total != totalOrder) {
-            System.out.println("Creating virtual orders");
             itemsToReturn.clear();
             NewOrderFilter filter = new NewOrderFilter();
             filter.avoidOrderCreation = true;
             filter.endInvoiceAt = booking.getEndDate();
-
+            
             createOrder(bookingId, filter);
             updateCart();
-            createOrderFromCart(booking, null, true);    
+            Order order = createOrderFromCart(booking, null, true);
+            
+            double newDiff = diff + orderManager.getTotalAmount(order);
+            newDiff = Math.round(newDiff);
+            if(newDiff != 0.0) {
+                System.out.println("Failed when creating virtual order : " + bookingId + " - " + newDiff);
+                pmsManager.dumpBooking(booking);
+            }
         }
         
     }

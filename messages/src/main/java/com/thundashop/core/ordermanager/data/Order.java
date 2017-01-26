@@ -425,7 +425,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date getEndDateByItems() {
         Date end = null;
         for(CartItem item : cart.getItems()) {
-            if(end == null || end.after(item.getEndingDate())) {
+            if(end == null || (item.getEndingDate() != null && end.after(item.getEndingDate()))) {
                 end = item.getEndingDate();
             }
         }

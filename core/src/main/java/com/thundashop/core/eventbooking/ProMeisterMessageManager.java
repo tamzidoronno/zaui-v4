@@ -8,6 +8,7 @@ package com.thundashop.core.eventbooking;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.messagemanager.IMessageManager;
 import com.thundashop.core.messagemanager.MessageManager;
+import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +30,14 @@ public class ProMeisterMessageManager  {
         }
         
         return messageManager.sendMail(emailAddress, fullName, subject, content, email, from);
+    }
+    
+    public String sendMailWithAttachment(Event event, String emailAddress, String fullName, String subject, String content, String email, String from, HashMap<String, String> map) {
+        if (!event.isInFuture()) {
+            return "";
+        }
+        
+        return messageManager.sendMailWithAttachments(emailAddress, fullName, subject, content, email, from, map);
     }
 
     public String sendSms(Event event, String cellPhone, String content, String prefix) {

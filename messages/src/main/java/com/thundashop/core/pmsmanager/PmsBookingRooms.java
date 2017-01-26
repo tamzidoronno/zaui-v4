@@ -314,7 +314,7 @@ public class PmsBookingRooms implements Serializable {
     }
 
     Date getInvoiceEndDate(NewOrderFilter filter, PmsBooking booking) {
-        Date toEnd = filter.endInvoiceAt;
+        Date toEnd = new Date(filter.endInvoiceAt.getTime());
         if(filter.increaseUnits > 0) {
             toEnd = addTimeUnits(filter.increaseUnits, booking, getInvoiceStartDate());
         }

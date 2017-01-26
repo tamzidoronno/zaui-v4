@@ -44,17 +44,26 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $conferenceData = new \core_pmsmanager_ConferenceData();
         $conferenceData->bookingId = $_POST['data']['bookingid'];
         $conferenceData->note = $_POST['data']['note'];
+        $conferenceData->days = array();
         
-        foreach ($_POST['data']['rows'] as $row) {
-            $conferenceDataRow = new \core_pmsmanager_ConferenceDataRow();
+        foreach ($_POST['data']['days'] as $postday) {
+            $day = new \core_pmsmanager_ConferenceDataDay();
+            $day->conferences = array();
+            $day->day = $postday['day'];
             
-            $conferenceDataRow->place = $row['place'];
-            $conferenceDataRow->from = $row['from'];
-            $conferenceDataRow->to = $row['to'];
-            $conferenceDataRow->actionName = $row['actionName'];
-            $conferenceDataRow->attendeesCount = $row['attendeesCount'];
-            $conferenceDataRow->rowId = $row['id'];
-            $conferenceData->conferences[] = $conferenceDataRow;
+            foreach ($postday['rows'] as $row) {
+                $conferenceDataRow = new \core_pmsmanager_ConferenceDataRow();
+
+                $conferenceDataRow->place = $row['place'];
+                $conferenceDataRow->from = $row['from'];
+                $conferenceDataRow->to = $row['to'];
+                $conferenceDataRow->actionName = $row['actionName'];
+                $conferenceDataRow->attendeesCount = $row['attendeesCount'];
+                $conferenceDataRow->rowId = $row['id'];
+                $day->conferences[] = $conferenceDataRow;
+            }
+            
+            $conferenceData->days[] = $day;
         }
         
         $this->getApi()->getPmsManager()->saveConferenceData($this->getSelectedName(), $conferenceData);
@@ -623,6 +632,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter = new \core_pmsmanager_NewOrderFilter();
         $filter->onlyEnded = false;
         $filter->prepayment = $config->prepayment;
+        if($config->increaseUnits > 0) {
+            $filter->increaseUnits = $config->increaseUnits;
+        }
         if($_POST['data']['preview'] == "true") {
             $filter->avoidOrderCreation = true;
         }
@@ -2600,6 +2612,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function mightInclude($area) {
         if(isset($_SESSION['lastloadedarea']) && $_SESSION['lastloadedarea'] == $area) {
+            $this->includefile($area);
+        } else if($area == "roomsbooked") {
             $this->includefile($area);
         }
     }

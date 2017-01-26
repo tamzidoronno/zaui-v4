@@ -5,7 +5,7 @@ $event = $this->getEvent();
 $reminder = $this->getApi()->getEventBookingManager()->getReminder($this->getBookingEngineName(), $_POST['data']['reminderId']);
 $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
 
-if ($reminder->type == "mail") {
+if ($reminder->type == "mail" || $reminder->type == "diplom") {
     $mailId = @$reminder->userIdMessageId->{$user->id};
     $invoiceMailId = @$reminder->userIdInvoiceMessageId->{$user->id};
 

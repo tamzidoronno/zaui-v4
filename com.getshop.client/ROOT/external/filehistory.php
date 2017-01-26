@@ -14,6 +14,20 @@ function getTuningfile($product, $orgFileName = false) {
     return 0;
 }
 
+function getTuningfile2($product, $orgFileName = false) {
+    foreach ($product->binaryFiles as $binFile) {
+        if ($orgFileName && $binFile->fileType == "Original") {
+            return $binFile;
+        }
+
+        if ($binFile->fileType != "Original") {
+            return $binFile;
+        }
+    }
+
+    return 0;
+}
+
 chdir("../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
@@ -33,6 +47,8 @@ $orders = array_splice($orders, 0, 10);
 $files = array();
 
 foreach ($orders as $product) {
+    $tuningfile = getTuningfile2($product);
+    
     /* @var $product SedoxProduct */
     $data = array();
 
@@ -53,6 +69,10 @@ foreach ($orders as $product) {
     $data['upload_type'] = $product->type;
     $data['reference'] = $product->reference;
     $data['allFiles'] = $product->binaryFiles;
+    foreach ($data['allFiles'] as $file) {
+        $file->{'filename'} = $file->id." - ".$product->printableName." ".$file->fileType.".bin";
+    }
+
     $files[] = $data;
 }
 

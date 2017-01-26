@@ -116,6 +116,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', end
     padding: 50px;
 }
 
+[gsStoreId='17f52f76-2775-4165-87b4-279a860ee92c'] .EditLocation .gps_position,
+[gsStoreId='17f52f76-2775-4165-87b4-279a860ee92c'] .EventUserList [gs_show_modal="send_tests"] {
+    display: none;
+}
 
 .left_side_bar .Menu .entry {
     line-height: 50px;

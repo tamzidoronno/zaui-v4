@@ -277,15 +277,15 @@ public class BookingEngineItemAssignerOptimal {
         ArrayList<Booking> bookings = new ArrayList();
         bookings.add(getBooking("2015-01-05 08:00", "2015-01-05 09:00", null));
         bookings.add(getBooking("2015-01-05 09:00", "2015-01-05 10:00", null));
-        bookings.add(getBooking("2015-01-05 08:00", "2015-01-05 10:00", null));
+        bookings.add(getBooking("2015-01-05 08:00", "2015-01-05 10:01", null));
         bookings.add(getBooking("2015-01-05 08:00", "2015-01-05 10:00", null));
         
         runTest(bookings);
         
-        Assert.assertEquals(item1.id, bookings.get(0).bookingItemId); 
-        Assert.assertEquals(item1.id, bookings.get(1).bookingItemId); 
-        Assert.assertEquals(item2.id, bookings.get(2).bookingItemId); 
-        Assert.assertEquals(item3.id, bookings.get(3).bookingItemId); 
+        Assert.assertEquals(item3.id, bookings.get(0).bookingItemId); 
+        Assert.assertEquals(item3.id, bookings.get(1).bookingItemId); 
+        Assert.assertEquals(item1.id, bookings.get(2).bookingItemId); 
+        Assert.assertEquals(item2.id, bookings.get(3).bookingItemId); 
     }
     
     /**

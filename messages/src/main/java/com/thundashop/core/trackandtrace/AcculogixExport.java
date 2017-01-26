@@ -63,6 +63,8 @@ public class AcculogixExport {
     
     public String routeId = "";
     
+    public int RTRouteStopSeq;
+    
     public List<TrackAndTraceSignature> signatures;
 
 

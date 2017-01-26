@@ -852,8 +852,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
             }
         }
-        
-        pmsInvoiceManager.createVirtualOrder(booking.id);
+        if(getConfiguration().createVirtualOrders) {
+            pmsInvoiceManager.createVirtualOrder(booking.id);
+        }
         saveObject(booking);
     }
 
@@ -4927,7 +4928,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public ConferenceData getConferenceData(String bookingId) {
         ConferenceData data = conferenceDatas.values()
                 .stream()
-                .filter(conf -> conf.bookingId.equals(bookingId))
+                .filter(conf -> conf.bookingId != null && conf.bookingId.equals(bookingId))
                 .findFirst()
                 .orElse(new ConferenceData());
         
@@ -4956,7 +4957,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<ConferenceData> getFutureConferenceData() {
         List<ConferenceData> retList = conferenceDatas.values().stream()
-                .filter(conference -> conference.conferences != null && !conference.conferences.isEmpty())
+                .filter(conference -> conference.days != null && !conference.days.isEmpty())
                 .filter(conf -> isInFuture(conf))
                 .collect(Collectors.toList());
         

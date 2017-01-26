@@ -193,9 +193,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(order.cart.getItems().isEmpty()) {
                 continue;
             }
-            if(order.isVirtual) {
-                System.out.println("TEST");
-            }
             if(order.testOrder) {
                 continue;
             }
@@ -710,8 +707,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || room.invoicedTo.after(endDate))) {
             return;
         }
+        if(endDate.after(filter.endInvoiceAt) && filter.increaseUnits > 0) {
+            return;
+        }
         if(room.invoicedTo == null && startDate.after(endDate)) {
-            //Never invoiced, and a credit not is needed?
+            //Never invoiced, and a credit note is needed?
             return;
         }
         

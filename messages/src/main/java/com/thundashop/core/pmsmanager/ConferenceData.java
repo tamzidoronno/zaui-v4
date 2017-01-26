@@ -27,7 +27,7 @@ public class ConferenceData extends DataCommon {
     @Transient
     public Date date;
     
-    List<ConferenceDataRow> conferences = new ArrayList();
+    List<ConferenceDataDay> days = new ArrayList();
     
     public String bookingId;
 }

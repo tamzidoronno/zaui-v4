@@ -112,4 +112,9 @@ public class SimpleEventManager extends ManagerBase implements ISimpleEventManag
         }
         
     }
+
+    @Override
+    public SimpleEvent getEventById(String eventId) {
+        return events.get(eventId);
+    }
 }

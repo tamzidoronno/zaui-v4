@@ -11,15 +11,33 @@ class SimpleEventList extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        $this->includefile("header");
-        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
-            $this->includefile("addevent");
+        if(isset($_POST['data']['showedit']) && $_POST['data']['showedit'] == "true") {
+            $this->includefile("doedit");
+        } else {
+            if(isset($_POST['event']) && $_POST['event'] == "saveEvent") {
+                $this->closeModal();
+            } 
+            
+            $this->includefile("header");
+            if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+                $this->includefile("addevent");
+            }
+            $this->includefile("eventlist");
         }
-        $this->includefile("eventlist");
     }
     
     public function addEvent() {
         $event = new \core_simpleeventmanager_SimpleEvent();
+        $event->name = $_POST['data']['name'];
+        $event->date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        $event->location = $_POST['data']['location'];
+        $event->originalPageId = $this->getPage()->getId();
+        
+        $this->getApi()->getSimpleEventManager()->saveEvent($event);
+    }
+    
+    public function saveEvent() {
+        $event = $this->getApi()->getSimpleEventManager()->getEventById($_POST['data']['eventid']);
         $event->name = $_POST['data']['name'];
         $event->date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
         $event->location = $_POST['data']['location'];

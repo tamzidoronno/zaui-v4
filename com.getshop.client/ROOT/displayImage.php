@@ -30,6 +30,10 @@ if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])){
 $imageLoader = new ImageLoader();
 $imageLoader->load($_GET['id']);
 
+if (!$imageLoader->found()) {
+//    $factory->getApi()->ge
+}
+
 if (isset($_GET['rotation'])) {
     $imageLoader->rotate($_GET['rotation']);
 }
@@ -49,7 +53,14 @@ if(isset($_GET['width']) && isset($_GET['height'])) {
     $imageLoader->resizeToWidth($_GET['width']);
 }
 
-$imageLoader->output();
+if (!$imageLoader->found()) {
+    $img = $factory->getApi()->getImageManager()->getBase64EncodedImageLocally($_GET['id']);
+    $img = str_replace("data:image/png;base64,", "", $img);
+    echo base64_decode($img);
+} else {
+    $imageLoader->output();
+}
+
 
 $PageContent = ob_get_contents();
 ob_end_clean();

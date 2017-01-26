@@ -17,14 +17,21 @@ class ImageLoader {
     var $zoom;
     var $image_type;
     var $displayRaw = true;
+    var $found = true;
 
     function load($id) {
         $filename = "../uploadedfiles/" . $id;
         if (!file_exists($filename)) {
             $filename = "../demoimages/$id";
         }
+        
+        if (!file_exists($filename)) {
+            $this->found = false;
+            return;
+        }
+        
         $image_info = getimagesize($filename);
-//        print_r($image_info);s
+        
         $this->raw = file_get_contents($filename);
         $this->image_type = $image_info[2];
         
@@ -35,6 +42,10 @@ class ImageLoader {
         } elseif ($this->image_type == IMAGETYPE_PNG) {
             $this->image = imagecreatefrompng($filename);
         }
+    }
+    
+    function found() {
+        return $this->found;
     }
 
     function cropImage($x, $y, $x2, $y2) {

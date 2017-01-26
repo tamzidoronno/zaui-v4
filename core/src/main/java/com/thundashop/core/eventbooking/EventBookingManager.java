@@ -1107,6 +1107,19 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     @Override
+    public void unCancelEvent(String eventId) {
+        Event event = getEvent(eventId);
+        
+        if (event == null) {
+            throw new ErrorException(1035);
+        }
+        
+        log("EVENT_UNCANCELED", event, null);
+        event.isCanceled = false;
+        saveObject(event);
+    }
+    
+    @Override
     public void cancelEvent(String eventId) {
         Event event = getEvent(eventId);
         

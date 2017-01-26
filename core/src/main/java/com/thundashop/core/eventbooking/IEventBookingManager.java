@@ -225,5 +225,7 @@ public interface IEventBookingManager {
         
     @Administrator
     public void deleteUserComment(String userId, String eventId, String commentId);
-    
+
+    @Administrator
+    public void unCancelEvent(String eventId);
 }

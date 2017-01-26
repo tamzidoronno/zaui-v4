@@ -103,6 +103,10 @@ if ($eventToUse) {
         echo "<div class='shop_button' gsclick='cancelEvent' eventid='$eventToUse->id' gs_confirm='Are you sure you want to cancel this as ready ?'>".$this->__w("Cancel event")."</div>";
     }
     
+    if ($eventToUse && $eventToUse->isCanceled) {
+        echo "<div class='shop_button' gsclick='unCancelEvent' eventid='$eventToUse->id' gs_confirm='Are you sure you want to uncancel the event?'>".$this->__w("Uncancel event")."</div>";
+    }
+    
     if ($eventToUse) {
         $lockText = $eventToUse->isLocked ? $this->__f("Unlock event") : $this->__f("Lock event");
         echo " <div class='shop_button' gsclick='toggleLocked' eventid='$eventToUse->id' >".$lockText."</div>";

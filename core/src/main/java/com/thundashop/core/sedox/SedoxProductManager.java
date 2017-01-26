@@ -2000,33 +2000,35 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private void addEvcCredit(SedoxUser user, SedoxMagentoIntegration.Order order) throws ErrorException {
-        boolean exists = evcApi.isPersonalAccount(order.evccustomerid);
+        String evcId = user.evcId != null && !user.evcId.isEmpty() ? user.evcId : order.evccustomerid;
+        
+        boolean exists = evcApi.isPersonalAccount(evcId);
         if (!exists) {
-            boolean success = evcApi.addPersonalAccount(order.evccustomerid);
+            boolean success = evcApi.addPersonalAccount(evcId);
             
             if (!success) {
-                notifyEvcError("Was not able to automatically update evc credit, orderid: " + order.orderId + " Credit: " + order.credit + ", failed because EVC does not accept that you add account: " + order.evccustomerid, order);
+                notifyEvcError("Was not able to automatically update evc credit, orderid: " + order.orderId + " Credit: " + order.credit + ", failed because EVC does not accept that you add account: " + evcId, order);
                 return;
             }
         }
         
-        int credit = evcApi.getPersonalAccountBalance(order.evccustomerid);
+        int credit = evcApi.getPersonalAccountBalance(evcId);
         credit += order.credit;
         
-        boolean success = evcApi.setPersonalAccountBalance(order.evccustomerid, credit);
+        boolean success = evcApi.setPersonalAccountBalance(evcId, credit);
         
         if (!success) {
-            notifyEvcError("Evc did not accept setting the new credit, orderid: " + order.orderId + " Credit: " + credit + " evcid: " + order.evccustomerid, order);
+            notifyEvcError("Evc did not accept setting the new credit, orderid: " + order.orderId + " Credit: " + credit + " evcid: " + evcId, order);
             return;
         }
         
         SedoxEvcCreditOrder creditOrder = new SedoxEvcCreditOrder();
         creditOrder.magentoOrderId = order.orderId;
-        creditOrder.evcCustomerId = order.evccustomerid;
+        creditOrder.evcCustomerId = evcId;
         creditOrder.amount = order.credit;
         
         user.addEvcCreditOrder(creditOrder);
-        user.evcCurrentBalance = evcApi.getPersonalAccountBalance(order.evccustomerid);
+        user.evcCurrentBalance = evcApi.getPersonalAccountBalance(evcId);
         saveObject(user);
     }
 

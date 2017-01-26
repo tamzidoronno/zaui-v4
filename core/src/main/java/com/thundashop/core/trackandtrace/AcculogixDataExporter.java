@@ -51,6 +51,9 @@ public class AcculogixDataExporter {
         exp.RDDriver$ID = route.startInfo.startedByUserId;
         exp.ReceiverName = dest.typedNameForSignature;
         exp.routeId = route.originalId;
+        exp.RTRouteStopSeq = dest.seq;
+        
+        exp.TaskStatus = "DL";
         
         if (route.startInfo.started) {
             exp.TaskStatus = "AF";

@@ -30,7 +30,8 @@ foreach ($events as $event) {
         if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
             echo $toggleSignupFunction;
         ?>
-            <div gsclick='deleteEvent' gs_confirm="Sikker på at du ønsker å slette dette?" eventid='<? echo $event->id; ?>' class="gs_shop_small_icon"><i class="fa fa-trash"></i></div>
+            <span gs_show_modal="modalname" gsclick="editEvent" eventid='<? echo $event->id; ?>' showedit='true' class="gs_shop_small_icon"><i class="fa fa-edit"></i></span>
+            <span gsclick='deleteEvent' gs_confirm="Sikker på at du ønsker å slette dette?" eventid='<? echo $event->id; ?>' class="gs_shop_small_icon"><i class="fa fa-trash"></i></span>
         <?
             }?>
 

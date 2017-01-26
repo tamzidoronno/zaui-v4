@@ -925,6 +925,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         saved.onlyPositiveLinesEx = 0.0;
         saved.onlyPositiveLinesInc = 0.0;
         boolean needSaving = false;
+        saved.tamperedOrders.clear();
         for(String orderId : saved.orders) {
             Order order = orderManager.getOrderSecure(orderId);
             if(order.cart == null) {

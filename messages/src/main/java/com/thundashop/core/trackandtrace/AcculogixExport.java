@@ -65,7 +65,7 @@ public class AcculogixExport {
     
     public int RTRouteStopSeq;
     
-    public List<TrackAndTraceSignature> signatures;
-
+    public String signatureBase64 = "";
+    public String signatureUuid = "";
 
 }

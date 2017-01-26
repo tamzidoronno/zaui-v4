@@ -168,7 +168,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             inDestination.signatures = memDest.signatures;
         
         if (inDestination.signatureImage != null && !inDestination.signatureImage.isEmpty()) {
-            String imageId = imageManager.saveImage(inDestination.signatureImage);
+            String imageId = imageManager.saveImageLocally(inDestination.signatureImage);
             
             
             if (imageId != null && !imageId.isEmpty()) {
@@ -359,7 +359,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     @Override
     public List<AcculogixExport> getExport(String routeId) {
         Route route = getRouteById(routeId);
-        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress());
+        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress(), imageManager);
         return exporter.getExport();
     }
 

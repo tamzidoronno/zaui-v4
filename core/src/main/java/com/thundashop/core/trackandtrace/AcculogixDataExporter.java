@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import com.thundashop.core.utils.ImageManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,24 +20,32 @@ public class AcculogixDataExporter {
     private final String address;
     private final Route route;
     private final Map<String, TrackAndTraceException> exceptions;
+    private final ImageManager imageManager;
 
-    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress) {
+    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress, ImageManager imageManager) {
         this.route = route;
         this.exceptions = exceptions;
         this.address = storeAddress;
+        this.imageManager = imageManager;
     }
     
     public List<AcculogixExport> getExport() {
         List<AcculogixExport> exports = new ArrayList();
         
         for (Destination dest : route.getDestinations()) {
+            String base64Sigature = null;
+            
+            if (dest.getLatestSignatureImage() != null) {
+                base64Sigature = imageManager.getBase64EncodedImageLocally(dest.getLatestSignatureImage().imageId);
+            }
+            
             for (Task task : dest.tasks) {
                 if (task instanceof PickupTask) {
-                    exports.addAll(createExports(route,dest,(PickupTask)task));
+                    exports.addAll(createExports(route,dest,(PickupTask)task, base64Sigature));
                 }
                 
                 if (task instanceof DeliveryTask) {
-                    exports.addAll(createExports(route,dest,(DeliveryTask)task));
+                    exports.addAll(createExports(route,dest,(DeliveryTask)task, base64Sigature));
                 }
             }
         }
@@ -44,7 +53,7 @@ public class AcculogixDataExporter {
         return exports;
     }
 
-    private AcculogixExport createExport(Route route, Destination dest, Task task) {
+    private AcculogixExport createExport(Route route, Destination dest, Task task, String base64Signature) {
         AcculogixExport exp = new AcculogixExport();
         exp.ArrivalDateTime = dest.startInfo.started ? formatDate(dest.startInfo.startedTimeStamp) : "";
         exp.PODBarcodeID = task.podBarcode;
@@ -85,22 +94,23 @@ public class AcculogixDataExporter {
             exp.Longitude = dest.startInfo.completedLon;
         }
 
-        exp.SignatureObtained = dest.signatures != null && !dest.signatures.isEmpty() ? "Yes" : "No";
-        exp.signatures = dest.signatures;
+        boolean anySignatures = dest.signatures != null && !dest.signatures.isEmpty();
+        exp.SignatureObtained = anySignatures ? "Yes" : "No";
         
-        exp.signatures.forEach(sign -> setSignatureAddress(sign));
+        if (anySignatures) {
+            exp.signatureBase64 = base64Signature;
+            exp.signatureUuid = dest.getLatestSignatureImage().imageId;
+        }
+        
+        
         return exp;
     }
     
-    private void setSignatureAddress(TrackAndTraceSignature sign) {
-        sign.address = "http://"+this.address+"/displayImage.php?id="+sign.imageId;
-    }
-    
-    private List<AcculogixExport> createExports(Route route, Destination dest, PickupTask task) {
+    private List<AcculogixExport> createExports(Route route, Destination dest, PickupTask task, String base64Signature) {
         List<AcculogixExport> toAdd = new ArrayList();
         
         for (PickupOrder order : task.orders) {
-            AcculogixExport exp = createExport(route, dest, task);
+            AcculogixExport exp = createExport(route, dest, task, base64Signature);
             exp.BarcodeValidated = task.barcodeValidated ? "Yes" : "No";
             setOrderInfo(exp, order);
 
@@ -115,11 +125,11 @@ public class AcculogixDataExporter {
         return toAdd;
     }
 
-    private List<AcculogixExport> createExports(Route route, Destination dest, DeliveryTask task) {
+    private List<AcculogixExport> createExports(Route route, Destination dest, DeliveryTask task, String base64Sigature) {
         List<AcculogixExport> toAdd = new ArrayList();
         
         for (DeliveryOrder order : task.orders) {
-            AcculogixExport exp = createExport(route, dest, task);
+            AcculogixExport exp = createExport(route, dest, task, base64Sigature);
             setOrderInfo(exp, order);
             
             if (order.originalQuantity > order.quantity) {

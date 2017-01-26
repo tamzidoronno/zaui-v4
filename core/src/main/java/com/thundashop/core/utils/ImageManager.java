@@ -1,15 +1,23 @@
 package com.thundashop.core.utils;
 
-
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.ManagerBase;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -24,27 +32,71 @@ import org.springframework.stereotype.Component;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author ktonder
  */
 @Component
 @GetShopSession
-public class ImageManager extends ManagerBase {
-    public String saveImage(String base64encodedImage) {
+public class ImageManager extends ManagerBase implements IImageManager  {
+
+    public String saveImageLocally(String base64encodedImage) {
+        base64encodedImage = base64encodedImage.replace("data:image/png;base64,", "");
+        String uuid = UUID.randomUUID().toString();
+        
+        File theDir = new File("images");
+        
+        if (!theDir.exists()) {
+            theDir.mkdir();
+        }
+        
+        Path path = Paths.get("images/"+uuid+".png");
+        try {
+            Files.write(path, Base64.getDecoder().decode(base64encodedImage));
+        } catch (IOException ex) {
+            Logger.getLogger(ImageManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return uuid;
+    }
+    
+    public String saveImageToPhpServer(String base64encodedImage) {
         try {
             return post(base64encodedImage);
+        } catch (IOException ex) {
+            Logger.getLogger(ImageManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
+    public String getBase64EncodedImageLocally(String imageId) {
+        if (imageId == null || imageId.isEmpty()) {
+            return null;
+        }
+        
+        String file = "images/" + imageId + ".png";
+        if (!new File(file).exists()) {
+            return null;
+        }
+        
+        Path path = Paths.get(file);
+        try {
+            byte[] data = Files.readAllBytes(path);
+            String toReturn = Base64.getEncoder().encodeToString(data);
+            if (toReturn != null && !toReturn.isEmpty()) {
+                toReturn = "data:image/png;base64," + toReturn;
+            }
+            return toReturn;
         } catch (IOException ex) {
             Logger.getLogger(ImageManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return null;
     }
-    
+
     private String post(String data) throws IOException {
         String result = null;
-        String url = "http://"+getStoreDefaultAddress()+"/scripts/makeImageHappen.php";
+        String url = "http://" + getStoreDefaultAddress() + "/scripts/makeImageHappen.php";
         HttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);
 
@@ -66,7 +118,7 @@ public class ImageManager extends ManagerBase {
                 instream.close();
             }
         }
-        
+
         return result;
     }
 }

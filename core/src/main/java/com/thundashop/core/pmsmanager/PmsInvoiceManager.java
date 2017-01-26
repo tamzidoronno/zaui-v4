@@ -181,7 +181,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     @Override
     public PmsOrderStatistics generateStatistics(PmsOrderStatsFilter filter) {
         if(filter == null) {
-            return new PmsOrderStatistics();
+            return new PmsOrderStatistics(null);
         }
         List<Order> orders = orderManager.getOrders(null, null, null);
         if(filter.includeVirtual) {
@@ -232,15 +232,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         }
                     }
                 }
-                if(!avoid) {
+                if(order.isVirtual && filter.includeVirtual) {
+                    avoid = false;
+                }
+                
+                if(!avoid && !ordersToUse.contains(order)) {
                     ordersToUse.add(order);
-                } else {
-                    System.out.println("Ignored");
                 }
             }
             
         }
-        PmsOrderStatistics stats = new PmsOrderStatistics();
+        
+        List<String> roomProducts = new ArrayList();
+        for(BookingItemType type : bookingEngine.getBookingItemTypes()) {
+            roomProducts.add(type.productId);
+        }
+        
+        PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts);
         stats.createStatistics(ordersToUse, filter);
         return stats;
     }
@@ -1186,7 +1194,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             logPrint("User does not exists: " + booking.userId + " for booking : " + booking.id);
             Exception ex = new Exception();
             logPrintException(ex);
-            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed.", ex);
+            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed (userid: " + booking.userId + ").", ex);
             return null;
         }
 
@@ -2044,16 +2052,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
         double total = booking.getTotalPrice();
         double totalOrder = getTotalOrderPrice(booking);
+        double diff = totalOrder - total;
         if (total != totalOrder) {
-            System.out.println("Creating virtual orders");
             itemsToReturn.clear();
             NewOrderFilter filter = new NewOrderFilter();
             filter.avoidOrderCreation = true;
             filter.endInvoiceAt = booking.getEndDate();
-
+            
             createOrder(bookingId, filter);
             updateCart();
-            createOrderFromCart(booking, null, true);    
+            Order order = createOrderFromCart(booking, null, true);
+            
+            double newDiff = diff + orderManager.getTotalAmount(order);
+            newDiff = Math.round(newDiff);
+            if(newDiff != 0.0) {
+                System.out.println("Failed when creating virtual order : " + bookingId + " - " + newDiff);
+                pmsManager.dumpBooking(booking);
+            }
         }
         
     }

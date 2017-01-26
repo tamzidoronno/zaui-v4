@@ -2480,11 +2480,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         } else {
             $row[] = "Day";
         }
+        $headerRowWithProductId = array();
         foreach($productIds as $id => $null) {
             if(isset($products[$id])) {
                 $row[] = $products[$id]->name;
+                $headerRowWithProductId[$id] = $products[$id]->name;
             } else {
                 $row[] = "Deleted product";
+                $headerRowWithProductId[$id] = "Deleted product";
             }
         }
         $row[] = "Total";
@@ -2540,6 +2543,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         asort($headerRow);
+        asort($headerRowWithProductId);
+        
+        $_SESSION['currentOrderStatsResultHeader'] = serialize($headerRowWithProductId);
         
         $correctHeader = array();
         $correctHeader[0] = $headerRow[0];

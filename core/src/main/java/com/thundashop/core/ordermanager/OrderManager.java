@@ -377,7 +377,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public VirtualOrder createVirtualOrder(Address address, String virtualOrderReference) {
         VirtualOrder virtualOrder = new VirtualOrder();
         virtualOrder.order = createOrderDummy(address);
-        virtualOrder.order.id = "";
+        virtualOrder.order.id = UUID.randomUUID().toString();
         virtualOrder.order.rowCreatedDate = new Date();
         virtualOrder.order.status = Order.Status.PAYMENT_COMPLETED;
         virtualOrder.order.isVirtual = true;
@@ -528,7 +528,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public Order getOrder(String orderId) throws ErrorException {
         User user = getSession().currentUser;
-        for (Order order : orders.values()) {
+        for (Order order : getAllOrderIncludedVirtualNonFinalized()) {
             if (!order.id.equals(orderId)) {
                 continue;
             }
@@ -544,6 +544,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 return order;
             }
         }
+        
         
         throw null;
     }
@@ -573,7 +574,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Order getOrderByincrementOrderId(Integer id) throws ErrorException {
-        for (Order order : orders.values()) {
+        for (Order order : getAllOrderIncludedVirtualNonFinalized()) {
             if (order.incrementOrderId == id) {
                 order.doFinalize();
                 return order;
@@ -1673,6 +1674,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void saveVirtalOrder(VirtualOrder virtualOrder) {
         saveObject(virtualOrder);
         virtualOrders.put(virtualOrder.id, virtualOrder);
+    }
+
+    private List<Order> getAllOrderIncludedVirtualNonFinalized() {
+        List<Order> retval = new ArrayList();
+        retval.addAll(new ArrayList(orders.values()));
+        for(VirtualOrder vord : virtualOrders.values()) {
+            retval.add(vord.order);
+        }
+        return retval;
     }
 
 }

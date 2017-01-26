@@ -40,12 +40,14 @@ foreach($resultMatrix as $index => $row) {
         $extra = "class='loadStatsForDay' style='cursor:pointer;' index='$index'";
     }
     echo "<tr $extra>";
+    $rowIndex = 0;
     foreach($row as $cell) {
         if($index == "header" && $index != "0") {
-            echo "<th>$cell</th>";
+            echo "<th rowindex='$rowIndex'>$cell</th>";
         } else {
-            echo "<td>$cell</td>";
+            echo "<td rowindex='$rowIndex'>$cell</td>";
         }
+        $rowIndex++;
     }
     echo "</tr>";
 }

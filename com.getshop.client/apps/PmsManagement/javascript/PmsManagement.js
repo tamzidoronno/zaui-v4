@@ -221,10 +221,12 @@ app.PmsManagement = {
         }
     },
     
-    loadStatsForDay : function() {
+    loadStatsForDay : function(e) {
+        var target = $(e.target);
         var index = $(this).attr('index');
         var event = thundashop.Ajax.createEvent('','loadStatsForDay', $(this), {
-            "index" : index
+            "index" : index,
+            "rowindex" : target.attr('rowindex')
         });
         thundashop.common.showInformationBoxNew(event, "Statis for day");
     },

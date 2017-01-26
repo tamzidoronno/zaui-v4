@@ -2,7 +2,9 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,8 +15,10 @@ import org.mongodb.morphia.annotations.Transient;
 
 public class PmsOrderStatistics implements Serializable  {
     LinkedList<PmsOrderStatisticsEntry> entries = new LinkedList();
+    private List<String> roomProducts = new ArrayList();
     
-    public PmsOrderStatistics() {
+    public PmsOrderStatistics(List<String> roomProducts) {
+        this.roomProducts = roomProducts;
     }
     
     public void createStatistics(List<Order> ordersToUse, PmsOrderStatsFilter filter) {
@@ -37,6 +41,7 @@ public class PmsOrderStatistics implements Serializable  {
         HashMap<Long, Double> orderEx = new HashMap();
         HashMap<Long, Double> orderInc = new HashMap();
 
+        PmsOrderStatisticsEntry entry = new PmsOrderStatisticsEntry();
         for(Order order : ordersToUse) {
             if(filter.displayType == null || filter.displayType.equals("dayregistered")) {
                 if(!order.createdOnDay(cal.getTime())) {
@@ -58,6 +63,8 @@ public class PmsOrderStatistics implements Serializable  {
                     }
                     
                     calculate(item, orderEx, order, orderInc, inc, ex, priceInc, priceEx);
+                    addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().priceExTaxes * item.getCount()), entry.priceExOrders);
+                    addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().price * item.getCount()), entry.priceIncOrders);
                 }
             } else if(filter.displayType.equals("firstdayslept")) {
                 for(CartItem item : order.cart.getItems()) {
@@ -71,6 +78,8 @@ public class PmsOrderStatistics implements Serializable  {
                     if(ex == null) { ex = 0.0; }
                     
                     calculate(item, orderEx, order, orderInc, inc, ex, priceInc, priceEx);
+                    addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().priceExTaxes * item.getCount()), entry.priceExOrders);
+                    addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().price * item.getCount()), entry.priceIncOrders);
                 }
             } else if(filter.displayType.equals("dayslept")) {
                 for(CartItem item : order.cart.getItems()) {
@@ -80,6 +89,10 @@ public class PmsOrderStatistics implements Serializable  {
                     }
                     Double inc = priceInc.get(item.getProduct().id);
                     Double ex = priceEx.get(item.getProduct().id);
+                    
+                    if(roomProducts != null && !roomProducts.contains(item.getProduct().id)) {
+                        secondsInDay = -1;
+                    }
                     
                     Double totalCalc = priceIncOrder.get(order.id);
                     if(totalCalc == null) { totalCalc = 0.0; }
@@ -110,6 +123,8 @@ public class PmsOrderStatistics implements Serializable  {
                             ex += (item.getProduct().priceExTaxes * item.getCount());
                             orderPriceInc += (item.getProduct().price * item.getCount());
                             orderPriceEx += (item.getProduct().priceExTaxes * item.getCount());
+                            addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().priceExTaxes * item.getCount()), entry.priceExOrders);
+                            addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().price * item.getCount()), entry.priceIncOrders);
                         }
                     } else {
                         totalCalc += item.getPriceIncForMinutes() * secondsInDay;
@@ -117,6 +132,8 @@ public class PmsOrderStatistics implements Serializable  {
                         ex += item.getPriceExForMinutes() * secondsInDay;
                         orderPriceInc += item.getPriceIncForMinutes() * secondsInDay;
                         orderPriceEx += item.getPriceExForMinutes() * secondsInDay;
+                        addProductOrderPrice(item.getProduct().id, order.id, item.getPriceExForMinutes() * secondsInDay, entry.priceExOrders);
+                        addProductOrderPrice(item.getProduct().id, order.id, item.getPriceIncForMinutes() * secondsInDay, entry.priceIncOrders);
                     }
                     
                     priceInc.put(item.getProduct().id, inc);
@@ -143,11 +160,12 @@ public class PmsOrderStatistics implements Serializable  {
                     }
                     
                     calculate(item, orderEx, order, orderInc, inc, ex, priceInc, priceEx);
+                    addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().priceExTaxes * item.getCount()), entry.priceExOrders);
+                    addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().price * item.getCount()), entry.priceIncOrders);
                 }
             }
         }
         
-        PmsOrderStatisticsEntry entry = new PmsOrderStatisticsEntry();
         entry.day = cal.getTime();
         entry.priceEx = priceEx;
         entry.priceInc = priceInc;
@@ -186,6 +204,21 @@ public class PmsOrderStatistics implements Serializable  {
             }
         }
         return total;
+    }
+
+    private void addProductOrderPrice(String productId, String orderId, double price, HashMap<String, HashMap<String, Double>> toAdd) {
+        if(!toAdd.containsKey(productId)) {
+            toAdd.put(productId, new HashMap());
+        }
+        
+        Double current = 0.0;
+        if(toAdd.get(productId).containsKey(orderId)) {
+            current = toAdd.get(productId).get(orderId);
+        }
+        
+        current += price;
+        
+        toAdd.get(productId).put(orderId, current);
     }
     
 }

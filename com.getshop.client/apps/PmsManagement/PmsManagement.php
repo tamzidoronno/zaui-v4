@@ -281,6 +281,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("orderstatsresult");
     }
     
+    public function addProductToCart() {
+        $this->getApi()->getCartManager()->addProductWithSource($_POST['data']['productid'], 1, "pmsquickproduct");
+        $this->showBookingInformation();
+    }
+    
     public function loadOrderInfoOnBooking() {
          $states = array();
         $states['0'] = "All";
@@ -926,6 +931,122 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+    }
+    
+    public function createNewOrderAdvanced() {
+        
+        $items = $_POST['data']['items'];
+        $users = $_POST['data']['user'];
+
+        $cart = $this->getApi()->getCartManager()->getCart();
+        $itemsToAdd = array();
+        $end = null;
+        foreach($cart->items as $cartItem) {
+            $found = false;
+            foreach($items as $item) {
+                if($cartItem->cartItemId == $item['itemid']) {
+                    if($item['start']) {
+                        $cartItem->startDate = $this->convertToJavaDate(strtotime($item['start']));
+                    }
+                    if($item['end']) {
+                        $cartItem->endDate = $this->convertToJavaDate(strtotime($item['end']));
+                    }
+                    $cartItem->count = $item['count'];
+                    $cartItem->product->name = $item['name'];
+                    $cartItem->product->price = $item['price'];
+                    $this->getApi()->getCartManager()->updateCartItem($cartItem);
+                    $itemsToAdd[] = $cartItem->cartItemId;
+                    
+                    if($end == null || $end < strtotime($item['end'])) {
+                        $end = strtotime($item['end']);
+                    }
+                    
+                }
+            }
+        }
+        
+        if(isset($users['userid']) && $users['userid']) {
+            $user = $this->getApi()->getUserManager()->getUserById($users['userid']);
+        } else {
+            $user = new \core_usermanager_data_User();
+            $user = $this->getApi()->getUserManager()->createUser($user);
+        }
+        
+        $user->fullName = $users['name'];
+        $user->emailAddress = $users['email'];
+        $user->prefix = $users['prefix'];
+        $user->cellPhone = $users['phone'];
+        
+        $user->address->address = $users['address'];
+        $user->address->postCode = $users['postcode'];
+        $user->address->city = $users['city'];
+        $user->address->countryname = $users['country'];
+        
+        $this->getApi()->getUserManager()->saveUser($user);
+        
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        $filter->itemsToCreate = $itemsToAdd;
+        $filter->userId = $user->id;
+        $filter->endInvoiceAt = $this->convertToJavaDate($end);
+        $filter->createNewOrder = true;
+        
+        $orderId = $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedName(), $_POST['data']['bookingid'], $filter);
+        
+        $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        $instances = $this->indexList($instances);
+        foreach($instances as $instance) {
+            if(strtolower($instance->appName) == strtolower($users['paymenttype'])) {
+                $instanceToUse = $instance;
+                break;
+            }
+        }
+        
+        $text = $this->createPaymentTypeText($instanceToUse);
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $order->payment->paymentType = $text;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        
+        echo "Order has been created, what would you like to do <br>";
+        echo "<div gstype='form' method='doAction'>";
+        echo "<input type='hidden' gsname='bookingid' value='".$_POST['data']['bookingid']."'>";
+        echo "<input type='hidden' gsname='orderid' value='".$order->id."'><br>";
+        echo "Email : <input type='text' style='width: 220px;' gsname='email' placeholder='Email' value='".$users['email']."'><br>";
+        echo "Phone : <input type='text' style='width: 70px;' gsname='prefix' placeholder='prefix' value='".$users['prefix']."'>";
+        echo "<input type='text' style='width: 150px;' gsname='phone' placeholder='phone' value='".$users['phone']."'><br><br>";
+        if($users['paymenttype'] == "InvoicePayment") {
+            echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='sendInvoice'>Send invoice</span>";
+        }
+        if($users['paymenttype'] == "Epay" || $users['paymenttype'] == "Dibs") {
+            echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='sendPaymentLink'>Send payment link</span>";
+        } else {
+            echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='markPaid'>Mark order as paid</span>";
+            echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='markPaidSendReciept'>Mark order as paid and send reciept</span>";
+        }
+        echo "<br><span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='refresh'>Continue</span>";
+        echo "</div>";
+    }
+    
+    public function doAction() {
+        $orderId = $_POST['data']['orderid'];
+        $bookingId = $_POST['data']['bookingid'];
+        $email = $_POST['data']['email'];
+        $phone = $_POST['data']['phone'];
+        $prefix = $_POST['data']['prefix'];
+        if($_POST['data']['clicksubmit'] == "sendInvoice") {
+            $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderId, $email, $bookingId);
+        }
+        if($_POST['data']['clicksubmit'] == "sendPaymentLink") {
+            $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);            
+        }
+        if($_POST['data']['clicksubmit'] == "markPaid" || $_POST['data']['clicksubmit'] == "markPaidSendReciept") {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            $order->status = 7;
+            $this->getApi()->getOrderManager()->saveOrder($order);
+        }
+        if($_POST['data']['clicksubmit'] == "markPaidSendReciept") {
+            $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderId, $email, $bookingId);
+        }
+        $this->showBookingInformation();
     }
     
     public function createNewOrder() {

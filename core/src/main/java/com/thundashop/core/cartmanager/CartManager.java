@@ -94,14 +94,30 @@ public class CartManager extends ManagerBase implements ICartManager {
         if (product != null) {
             Cart cart = getCart(getSession().id);
             for(int i = 0; i < count; i++) {
-                cart.addProduct(product, variations);
+                CartItem item = cart.addProduct(product, variations);
+                item.addedBy = "cartmanager";
             }
             return cart;
         } else {
             throw new ErrorException(1011);
         }
     }
+    
+    @Override
+    public Cart addProductWithSource(String productId, int count, String source) throws ErrorException {
+        Product product = getProduct(productId, null);
 
+        if (product != null) {
+            Cart cart = getCart(getSession().id);
+            for(int i = 0; i < count; i++) {
+                CartItem item = cart.addProduct(product, null);
+                item.addedBy = source;
+            }
+            return cart;
+        } else {
+            throw new ErrorException(1011);
+        }
+    }
     @Override
     public Cart updateProductCount(String cartItemId, int count) throws ErrorException {
         Cart cart = getCart(getSession().id);
@@ -489,4 +505,18 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
         return newPrice;
     }
+
+    @Override
+    public void updateCartItem(CartItem item) {
+        Cart cart = getCart();
+        cart.updateCartItem(item);
+    }
+
+    @Override
+    public void removeCartItem(String cartItemId) throws ErrorException {
+        Cart cart = getCart();
+        cart.removeItem(cartItemId);
+    }
+
+    
 }

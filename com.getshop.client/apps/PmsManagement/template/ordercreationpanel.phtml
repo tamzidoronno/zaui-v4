@@ -13,7 +13,7 @@ echo "<br>";
 echo "<span class='roomselectionbtn selectall'>All rooms</span>";
 foreach($booking->rooms as $room) {
     if(!in_array($room->pmsBookingRoomId, $toprint)) {
-//        continue;
+        continue;
     }
     echo "<span class='roomselectionbtn' roomid='".$room->pmsBookingRoomId."'>";
     if($room->bookingItemId) {
@@ -32,7 +32,7 @@ echo "<br>";
 
 $this->includeFile("newordercreationpanelinpreview");
 
-
+echo "<br>";
 $lastSelectedRoom = null;
 foreach($cart->items as $item) {
     $selectedRoom = null;
@@ -55,11 +55,28 @@ foreach($cart->items as $item) {
         $lastSelectedRoom = $selectedRoom;
         echo "</div>";
     }
+    $lastSelectedId = "";
+    if(isset($lastSelectedRoom->pmsBookingRoomId)) {
+        $lastSelectedId = $lastSelectedRoom->pmsBookingRoomId;
+    }
     
-    echo "<div selectionroomrow='".$lastSelectedRoom->pmsBookingRoomId."' class='cartitemselectionrow'>";
+    echo "<div selectionroomrow='".$lastSelectedId."' class='cartitemselectionrow'>";
     echo "<input type='checkbox' class='itemselection'>";
-    echo "<input type='txt' gsname='start' value='". date("d.m.Y H:i", strtotime($item->startDate)) . "' style='width:120px;'> ";
-    echo "<input type='txt' gsname='end' value='". date("d.m.Y H:i", strtotime($item->endDate)) . "' style='width:120px;'> ";
+    echo "<input type='hidden' gsname='itemid' value='".$item->cartItemId."'>";
+    if(isset($lastSelectedId)) {
+        echo "<input type='hidden' gsname='pmsRoomId' value='". $lastSelectedId . "' style='width:120px;'> ";
+    }
+    
+    $start = "";
+    if(isset($item->startDate)) {
+        $start =  date("d.m.Y H:i", strtotime($item->startDate));
+    }
+    $end = "";
+    if(isset($item->startDate)) {
+        $end =  date("d.m.Y H:i", strtotime($item->endDate));
+    }
+    echo "<input type='txt' gsname='start' value='".$start . "' style='width:120px;'> ";
+    echo "<input type='txt' gsname='end' value='$end' style='width:120px;'> ";
     echo "<input type='txt' gsname='count' style='width: 25px;text-align:center;' value='". $item->count . "' style='width:120px;' class='cartcount'> ";
     echo "<input type='txt' gsname='name' value='". $item->product->name . "' style='width:550px;'> ";
     echo "<input type='txt' gsname='price' style='width: 60px;' class='cartprice' value='". $item->product->price . "' style='width:120px;'>";
@@ -102,8 +119,8 @@ foreach($cart->items as $item) {
             }
         })
         app.PmsManagement.calculcateCartCost();
-        $('.cartprice').on('keyup', app.PmsManagement.calculcateCartCost);
-        $('.cartcount').on('keyup', app.PmsManagement.calculcateCartCost);
-        $('.itemselection').on('click', app.PmsManagement.calculcateCartCost);
     });
+    $('.cartprice').on('keyup', app.PmsManagement.calculcateCartCost);
+    $('.cartcount').on('keyup', app.PmsManagement.calculcateCartCost);
+    $('.itemselection').on('click', app.PmsManagement.calculcateCartCost);
 </script>

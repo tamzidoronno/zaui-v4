@@ -862,6 +862,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         
         for(String order : res.orders) {
             Order ord = orderManager.getOrder(order);
+            if(!ord.closed) {
+                ord.closed = true;
+                orderManager.saveOrder(ord);
+            }
             Double sumEx = orderManager.getTotalAmountExTaxes(ord);
             Double sumInc = orderManager.getTotalAmount(ord);
             amountEx += sumEx;
@@ -1018,7 +1022,6 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 res.id = fileToUse.id;
                 res.rowCreatedDate = fileToUse.rowCreatedDate;
             }
-
             sumOrders(res);
             res.subtype = configToUse.subType;
             res.type = configToUse.transferType;

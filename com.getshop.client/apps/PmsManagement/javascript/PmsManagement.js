@@ -79,8 +79,12 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .addPaymentMethod', app.PmsManagement.addPaymentMethod);
         $(document).on('click','.PmsManagement .removePaymentMethod', app.PmsManagement.removePaymentMethod);
     },
-    
-    calculcateCartCost : function() {
+    calculcateCartCost : function(e) {
+        var target = $(e.target);
+        var row = target.closest('.cartitemselectionrow');
+        if(!target.hasClass('itemselection')) {
+            row.find('.itemselection').attr('checked','checked');
+        }
         var total = 0;
         $('.PmsManagement .cartitemselectionrow').each(function() {
             if($(this).find('.itemselection').is(':CHECKED')) {

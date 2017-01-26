@@ -922,7 +922,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     order.cart.addCartItems(itemsToReturn);
                     orderManager.saveOrder(order);
                 } else {
-                    if(itemsToReturn.isEmpty()) {
+                    if(filter.itemsToCreate.isEmpty()) {
                         updateCart();
                     }
                     order = createOrderFromCart(booking, filter, false);
@@ -930,7 +930,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         return "Could not create order.";
                     }
                     order.dueDays = booking.dueDays;
-                    if(filter.userId != null && filter.userId.isEmpty()) {
+                    if(filter.userId != null && !filter.userId.isEmpty()) {
                         order.userId = filter.userId;
                         orderManager.saveOrder(order);
                     }

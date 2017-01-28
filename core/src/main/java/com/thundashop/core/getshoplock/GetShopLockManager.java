@@ -496,7 +496,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             List<GetShopDevice> toRemove = new ArrayList();
             for(GetShopDevice dev : res) {
                 if(serverSource.equals("default")) {
-                    if(!dev.serverSource.isEmpty() && dev.serverSource.equals("default")) {
+                    if(!dev.serverSource.isEmpty() && !dev.serverSource.equals("default")) {
                         toRemove.add(dev);
                     }
                 } else if(!serverSource.equals(dev.serverSource)) {

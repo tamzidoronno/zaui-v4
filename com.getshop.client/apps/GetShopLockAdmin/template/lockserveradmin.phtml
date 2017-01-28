@@ -27,6 +27,9 @@ $locktype['getshophotellock'] = "GetShop hotel lock";
         ?>
             <tr gstype='form' method='saveConfig'>
                 <td>
+                    <i class="fa fa-refresh" gstype='clicksubmit' method='refreshAllLocks' gsname='source' gsvalue='<?php echo $name; ?>'></i>
+                </td>
+                <td>
                     <?php
                     if($name != "default") {
                         echo "<i class='fa fa-trash-o' gstype='clicksubmit' method='removeConfig' gsname='servername' gsvalue='$name'></i>";

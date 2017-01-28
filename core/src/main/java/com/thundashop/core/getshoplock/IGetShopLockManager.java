@@ -57,6 +57,9 @@ public interface IGetShopLockManager {
     public void refreshLock(String lockId);
     
     @Administrator
+    public void refreshAllLocks(String source);
+    
+    @Administrator
     public GetShopLockMasterCodes getMasterCodes();
     
     @Administrator

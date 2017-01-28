@@ -44,7 +44,7 @@ public class AcculogixDriverImporter {
             user.password = data[4].toLowerCase();
             
             userManager.saveUser(user);
-            
+            userManager.updatePassword(user.id, data[4].toLowerCase(), data[4].toLowerCase());
             
             String groupId = data[6];
             if (!groupId.isEmpty()) {

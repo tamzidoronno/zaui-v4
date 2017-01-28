@@ -57,7 +57,7 @@ public class AcculogixDataExporter {
 
     private AcculogixExport createExport(Route route, Destination dest, Task task, String base64Signature) {
         if (!route.dirty && !dest.dirty && !task.dirty) {
-            return null;
+//            return null;
         }
         
         startId++;
@@ -77,7 +77,7 @@ public class AcculogixDataExporter {
             exp.TaskStatus = "AF";
         }
         
-        if (task.completed) {
+        if (dest.startInfo.completed) {
             exp.TaskStatus = "D1";
         }
         
@@ -87,20 +87,21 @@ public class AcculogixDataExporter {
         
         if (route.startInfo.started) {
             exp.StatusDateTimeCompleted = formatDate(route.startInfo.startedTimeStamp);
-            exp.Latitude = route.startInfo.completedLat;
-            exp.Longitude = route.startInfo.completedLon;
+            exp.Latitude = route.startInfo.lat;
+            exp.Longitude = route.startInfo.lon;
         }
         
         if (dest.skipInfo.startedTimeStamp != null) {
             exp.StatusDateTimeCompleted = formatDate(dest.skipInfo.startedTimeStamp);
+            
             exp.Latitude = dest.skipInfo.lat;
             exp.Longitude = dest.skipInfo.lon;
         }
         
         if (dest.startInfo.started) {
             exp.StatusDateTimeCompleted = formatDate(dest.startInfo.startedTimeStamp);
-            exp.Latitude = dest.startInfo.completedLat;
-            exp.Longitude =dest.startInfo.completedLon;
+            exp.Latitude = dest.startInfo.lat;
+            exp.Longitude =dest.startInfo.lon;
         }
         
         if (dest.startInfo.completed) {
@@ -151,13 +152,20 @@ public class AcculogixDataExporter {
             if (exp == null)
                 continue;
             
+            boolean hasDriverCopies = order.driverDeliveryCopiesCounted != null && order.driverDeliveryCopiesCounted > 0;
+            
+            exp.ORPieceCount = order.originalQuantity;
             setOrderInfo(exp, order);
             
-            if (order.originalQuantity > order.quantity) {
+            if (task.completed) {
+                exp.TaskType = "DELIVERED";
+            }
+            
+            if (order.originalQuantity > order.quantity && !hasDriverCopies) {
                 exp.TaskType = "SHORT # PACKAGES";
             }
             
-            if (order.originalQuantity < order.quantity) {
+            if (order.originalQuantity < order.quantity && !hasDriverCopies) {
                 exp.TaskType = "OVER # PACKAGES";
             }
             
@@ -165,13 +173,7 @@ public class AcculogixDataExporter {
                 exp.TaskType = exceptions.get(order.exceptionId).name;
             }
             
-            exp.ORPieceCount = order.quantity;
-            
-            if (order.driverDeliveryCopiesCounted != null && order.driverDeliveryCopiesCounted> 0) {
-                exp.ORPieceCount = order.quantity;
-            }
-            
-            exp.TotalPieces = order.originalQuantity;
+            exp.TotalPieces = order.quantity;
             
             toAdd.add(exp);
         }
@@ -181,7 +183,7 @@ public class AcculogixDataExporter {
     
     private String formatDate(Date date) {
         // YYYYMMDDHHMMSS
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         return sdf.format(date);
     }
 
@@ -196,6 +198,3 @@ public class AcculogixDataExporter {
          */
     }
 }
-
-
-//20170107085958

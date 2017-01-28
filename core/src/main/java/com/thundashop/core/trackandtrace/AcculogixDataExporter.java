@@ -57,7 +57,7 @@ public class AcculogixDataExporter {
 
     private AcculogixExport createExport(Route route, Destination dest, Task task, String base64Signature) {
         if (!route.dirty && !dest.dirty && !task.dirty) {
-//            return null;
+            return null;
         }
         
         startId++;

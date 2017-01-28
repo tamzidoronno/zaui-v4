@@ -390,13 +390,27 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             exported.routeId = routeId;
             exported.exportSequence = getExports(routeId).size() + 1;
             exported.exportedData = new ArrayList(exportedData);
-//            saveObject(exported);    
-//            exports.put(exported.id, exported);
+            saveObject(exported);    
+            exports.put(exported.id, exported);
         }
         
-        addLastExports(routeId, exportedData, exportedData.isEmpty() ? 1 : 0);
+        addLastExports(routeId, exportedData, exportedData.isEmpty() ? 4 : 3, !exportedData.isEmpty());
         
         markRouteAsClean(routeId);
+        
+        exportedData = exportedData.stream().sorted((o1, o2) -> {
+            if (o1.TNTUID == o2.TNTUID) {
+                return 0;
+            }
+            if (o1.TNTUID < o2.TNTUID) {
+                return 1;
+            }
+            if (o1.TNTUID > o2.TNTUID) {
+                return -1;
+            }
+            
+            return 0;
+        }).collect(Collectors.toList());
         return exportedData;
     }
     
@@ -526,7 +540,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
     }
 
-    private void addLastExports(String routeId, List<AcculogixExport> exportedData, int max) {
+    private void addLastExports(String routeId, List<AcculogixExport> exportedData, int max, boolean skipFirst) {
+        
         List<ExportedData> sortedRoutes = getExports(routeId).stream().sorted((o1, o2) -> {
             if (o1.exportSequence == o2.exportSequence) {
                 return 0;
@@ -544,6 +559,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         int i = 0;
         
         for (ExportedData iExp : sortedRoutes) {
+            if (skipFirst) {
+                skipFirst = false;
+                continue;
+            }
+            
             i++;
             if (i > max) {
                 break;

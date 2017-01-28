@@ -53,6 +53,9 @@ public class Destination extends DataCommon {
     public String onDemandInstructions = "" ;
     
     public String stopWindow;
+    
+    public boolean dirty = false;
+    
    
     public Destination() {
     }

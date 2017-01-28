@@ -46,6 +46,11 @@ controllers.DepartingController = function($scope, datarepository, $stateParams,
         
         $scope.destination.signatureImage = data;
         $scope.destination.typedNameForSignature = $scope.typedName;
+        
+        $scope.destination.signatures.push( {
+            typedName: $scope.typedName
+        });
+        
         $scope.api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
         $scope.api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
         $scope.destination.skipInfo.skippedReasonId = "";

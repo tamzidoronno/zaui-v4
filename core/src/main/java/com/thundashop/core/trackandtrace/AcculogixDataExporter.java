@@ -21,9 +21,11 @@ public class AcculogixDataExporter {
     private final Route route;
     private final Map<String, TrackAndTraceException> exceptions;
     private final ImageManager imageManager;
-
-    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress, ImageManager imageManager) {
+    private int startId = 0;
+    
+    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress, ImageManager imageManager, int startId) {
         this.route = route;
+        this.startId = startId;
         this.exceptions = exceptions;
         this.address = storeAddress;
         this.imageManager = imageManager;
@@ -54,6 +56,12 @@ public class AcculogixDataExporter {
     }
 
     private AcculogixExport createExport(Route route, Destination dest, Task task, String base64Signature) {
+        if (!route.dirty && !dest.dirty && !task.dirty) {
+            return null;
+        }
+        
+        startId++;
+        
         AcculogixExport exp = new AcculogixExport();
         exp.ArrivalDateTime = dest.startInfo.started ? formatDate(dest.startInfo.startedTimeStamp) : "";
         exp.PODBarcodeID = task.podBarcode;
@@ -61,6 +69,7 @@ public class AcculogixDataExporter {
         exp.ReceiverName = dest.typedNameForSignature;
         exp.routeId = route.originalId;
         exp.RTRouteStopSeq = dest.seq;
+        exp.TNTUID = startId;
         
         exp.TaskStatus = "DL";
         
@@ -74,6 +83,12 @@ public class AcculogixDataExporter {
         
         if (dest.skipInfo.skippedReasonId != null && !dest.skipInfo.skippedReasonId.isEmpty()) {
             exp.TaskStatus = exceptions.get(dest.skipInfo.skippedReasonId).name;
+        }
+        
+        if (route.startInfo.started) {
+            exp.StatusDateTimeCompleted = formatDate(route.startInfo.startedTimeStamp);
+            exp.Latitude = route.startInfo.completedLat;
+            exp.Longitude = route.startInfo.completedLon;
         }
         
         if (dest.skipInfo.startedTimeStamp != null) {
@@ -111,6 +126,9 @@ public class AcculogixDataExporter {
         
         for (PickupOrder order : task.orders) {
             AcculogixExport exp = createExport(route, dest, task, base64Signature);
+            if (exp == null)
+                continue;
+            
             exp.BarcodeValidated = task.barcodeValidated ? "Yes" : "No";
             setOrderInfo(exp, order);
 
@@ -130,6 +148,9 @@ public class AcculogixDataExporter {
         
         for (DeliveryOrder order : task.orders) {
             AcculogixExport exp = createExport(route, dest, task, base64Sigature);
+            if (exp == null)
+                continue;
+            
             setOrderInfo(exp, order);
             
             if (order.originalQuantity > order.quantity) {

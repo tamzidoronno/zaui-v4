@@ -17,6 +17,8 @@ public class Task extends DataCommon {
     public String comment;
     public int taskType;
     
+    public boolean dirty = false;
+    
     @Transient
     public String podBarcode = "";
     

@@ -13,4 +13,5 @@ public class TntOrder {
     public String referenceNumber = "";
     public String comment = "";    
     public String podBarcode = "";
+    
 }

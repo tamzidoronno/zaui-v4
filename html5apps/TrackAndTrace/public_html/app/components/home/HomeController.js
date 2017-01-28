@@ -65,7 +65,7 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
                 $api.getApi().TrackAndTraceManager.saveRoute($routeToUse);
                 datarepository.save();
                 $state.transitionTo("base.routeoverview", {routeId: $routeToUse.id});
-            }, {maximumAge:60000, timeout:5000, enableHighAccuracy:true});
+            }, {maximumAge:60000, timeout:5000, enableHighAccuracy:false});
         }
     }
     

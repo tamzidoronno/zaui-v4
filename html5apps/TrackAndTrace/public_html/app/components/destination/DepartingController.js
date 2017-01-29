@@ -44,6 +44,17 @@ controllers.DepartingController = function($scope, datarepository, $stateParams,
             return;
         }
         
+        
+        
+        startShowingOfGpsFetching();
+        navigator.geolocation.getCurrentPosition(function(position) {
+            $scope.saveDeparting(data, position.coords.longitude, position.coords.latitude);
+        }, function(failare, b, c) {
+            $scope.saveDeparting(data, 0, 0);
+        }, {maximumAge:60000, timeout:10000, enableHighAccuracy:true});
+    }
+    
+    $scope.saveDeparting = function(data, longitude, latitude) {
         $scope.destination.signatureImage = data;
         $scope.destination.typedNameForSignature = $scope.typedName;
         
@@ -51,11 +62,17 @@ controllers.DepartingController = function($scope, datarepository, $stateParams,
             typedName: $scope.typedName
         });
         
+        $scope.destination.startInfo.completed = true;
+        $scope.destination.startInfo.completedTimeStamp = new Date();
+        $scope.destination.startInfo.completedLon = longitude;
+        $scope.destination.startInfo.completedLat = latitude;  
+            
         $scope.api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
         $scope.api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
         $scope.destination.skipInfo.skippedReasonId = "";
         datarepository.save();
         
         $state.transitionTo("base.routeoverview", { routeId : $stateParams.routeId } )
+        stopShowingOfGpsFetching();
     }
 }

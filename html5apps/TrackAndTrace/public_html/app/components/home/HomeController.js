@@ -40,6 +40,19 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
         $state.transitionTo("base.routeoverview", {routeId: routeId});
     }
     
+    $scope.getUncompletedTasksNumber = function(route) {
+        var count = 0;
+        
+        for (var i in route.destinations) {
+            var dest = route.destinations[i];
+            if (dest.signatures.length > 0) {
+                count++;
+            }
+        }
+        
+        return count;
+    }
+    
     $scope.startRoute = function(routeId) {
         var confirmed = confirm("Are you sure you want to start this route?");
         $routeToUse = datarepository.getRouteById(routeId);

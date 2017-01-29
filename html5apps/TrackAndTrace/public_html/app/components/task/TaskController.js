@@ -25,9 +25,10 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     
     $scope.setPickupType = function() {
         $scope.task = datarepository.getTaskById($stateParams.taskId);
+        console.log($scope.task);
         
         if ($scope.task.className == "com.thundashop.core.trackandtrace.PickupTask") {
-            $scope.taskType = "pickup_"+$scope.task.type;
+            $scope.taskType = "pickup";
         }
         
         if ($scope.task.className == "com.thundashop.core.trackandtrace.DeliveryTask") {
@@ -169,6 +170,9 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     }
 
     $scope.orderFinished = function(order) {
+        if ($scope.taskType === "pickup" && order.countedBundles < 0) {
+            return false;
+        }
         
         if (order.orderDriverDeliveries && !order.hasOwnProperty("driverDeliveryCopiesCounted")) {
             return false;
@@ -223,6 +227,15 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         });
     }
     
+    $scope.openCountedReturn = function(order) {
+        $state.transitionTo('base.ordercorrection', { 
+            destinationId: $stateParams.destinationId,  
+            routeId: $stateParams.routeId, 
+            taskId: $scope.task.id, orderId: order.referenceNumber,
+            type: 'returncountingnormal'
+        });
+    }
+    
     $scope.openCountPalletsOrCages = function(order) {
         $state.transitionTo('base.ordercorrection', { 
             destinationId: $stateParams.destinationId,  
@@ -241,8 +254,47 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         });
     }
     
+    $scope.barcodeReceived = function(barcode) {
+        var labelNumber = barcode.substr(barcode.length - 3);
+        var orderReference = barcode.substr(barcode.length - 13, 10);
+        
+        var orderFound = false;
+        for (var i in $scope.task.orders) {
+            var order = $scope.task.orders[i];
+            if (order.referenceNumber.trim() == orderReference) {
+                orderFound = order;
+            }
+        }
+        
+        if (orderFound) {
+            $scope.openCountedReturn(orderFound);
+            return;
+        }
+        
+        alert("Please check the return label");
+    }
+    
+    $scope.stopScanner = function() {
+        if (typeof(cordova) === "undefined") {
+            alert("No cordova");
+            return;
+        }
+        
+        cordova.exec(function() {}, function() {}, "HoneyWellBarcodeReaderE75", "stop", ["test"])
+    }
+    
+    $scope.startScanner = function() {
+        if (typeof(cordova) === "undefined") {
+            alert("No cordova");
+            return;
+        }
+        
+        $scope.stopScanner();
+        cordova.exec(function(a) { $scope.barcodeReceived(a); }, function(fail) {}, "HoneyWellBarcodeReaderE75", "echo", ["test"])
+    }
+    
     if ($state.current.name === "base.taskexceptions") {
         $scope.loadExceptions();
     }
-    
+
 }

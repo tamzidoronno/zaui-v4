@@ -344,9 +344,6 @@ public class BookingItemAssignerOptimal {
         for (OptimalBookingTimeLine bookings : bookingLines) {
             GetShopLogHandler.logPrintStatic("Line " + i, null);
             for (Booking booking : bookings.bookings) {
-                if(lastCreated == null || lastCreated.before(booking.rowCreatedDate)) {
-                    lastCreated = booking.rowCreatedDate;
-                }
                 GetShopLogHandler.logPrintStatic("Booking id: " + booking.id + ",created : " + booking.rowCreatedDate + " - Times: " + booking.getHumanReadableDates() + " type: " + booking.bookingItemTypeId + " Item id: " + booking.bookingItemId, null);
             }
             i++;

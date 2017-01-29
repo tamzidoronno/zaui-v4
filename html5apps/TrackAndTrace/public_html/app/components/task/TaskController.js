@@ -177,8 +177,31 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         return true;
     }
     
+    $scope.getContainerCount = function() {
+        if (!$scope.isContainerCounted()) {
+            return 0;
+        }
+        
+        return $scope.task.containerCounted;
+    }
+    
     $scope.isContainerCounted = function() {
-        return $scope.task.hasOwnProperty('containerCounted');
+        var anyCont = false;
+        for (var i in $scope.task.orders) {
+            var order = $scope.task.orders[i];
+            if ($scope.isPalletOrder(order) || $scope.isCageOrder(order)) {
+                anyCont = true;
+            }
+        }
+        
+        if (!anyCont) {
+            return true;
+        }
+        
+        if ($scope.task.hasOwnProperty('containerCounted') && $scope.task.containerCounted > 0) 
+            return true;
+        
+        return false;
     }
     
     $scope.allOrdersFinished = function() {

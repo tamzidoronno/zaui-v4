@@ -55,21 +55,21 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     
     $scope.startRoute = function(routeId) {
         var confirmed = confirm("Are you sure you want to start this route?");
-        $routeToUse = datarepository.getRouteById(routeId);
         
         if (confirmed) {
-            startShowingOfGpsFetching();
+            var $routeToUse = datarepository.getRouteById(routeId);        
+            $routeToUse.startInfo.started = true;
+            $routeToUse.startInfo.startedTimeStamp = new Date();
+
+            $state.transitionTo("base.routeoverview", {routeId: $routeToUse.id});
+            
             navigator.geolocation.getCurrentPosition(function(position) {
-                $('.fetchingGpsCoordinates').fadeOut();
-                $routeToUse.startInfo.started = true;
-                $routeToUse.startInfo.startedTimeStamp = new Date();
                 $routeToUse.startInfo.lon = position.coords.longitude;
                 $routeToUse.startInfo.lat = position.coords.latitude;  
                 $scope.$apply();
                
                 $api.getApi().TrackAndTraceManager.saveRoute($routeToUse);
                 datarepository.save();
-                $state.transitionTo("base.routeoverview", {routeId: $routeToUse.id});
             }, function(failare, b, c) {
                 $routeToUse.startInfo.started = true;
                 $routeToUse.startInfo.startedTimeStamp = new Date();
@@ -77,8 +77,7 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
                
                 $api.getApi().TrackAndTraceManager.saveRoute($routeToUse);
                 datarepository.save();
-                $state.transitionTo("base.routeoverview", {routeId: $routeToUse.id});
-            }, {maximumAge:60000, timeout:5000, enableHighAccuracy:false});
+            }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
         }
     }
     

@@ -25,7 +25,7 @@ public class DeliveryTask extends Task {
 
     public void changeQuantity(String orderReference, int quantity) {
         for (DeliveryOrder order : orders) {
-            if (order.referenceNumber.equals(orderReference)) {
+            if (order.referenceNumber.trim().equals(orderReference.trim())) {
                 order.quantity = quantity;
             }
         }
@@ -33,7 +33,7 @@ public class DeliveryTask extends Task {
     
     public void changeDriverQuantity(String orderReference, int quantity) {
         for (DeliveryOrder order : orders) {
-            if (order.referenceNumber.equals(orderReference)) {
+            if (order.referenceNumber.trim().equals(orderReference.trim())) {
                 order.driverDeliveryCopiesCounted = quantity;
             }
         }

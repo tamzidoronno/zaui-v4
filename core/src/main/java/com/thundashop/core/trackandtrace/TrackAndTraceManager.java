@@ -41,6 +41,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public HashMap<String, DataLoadStatus> loadStatuses = new HashMap();
     
     public HashMap<String, TrackAndTraceException> exceptions = new HashMap();
+    
+    public HashMap<String, ExportedData> exports = new HashMap();
 
     @Autowired
     private UserManager userManager;
@@ -74,6 +76,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 PooledDestionation pooled = (PooledDestionation)common;
                 pooledDestinations.put(pooled.id, pooled);
             }
+            
+            if (common instanceof ExportedData) {
+                ExportedData export = (ExportedData)common;
+                exports.put(export.id, export);
+            }
 
             if (common instanceof TrackAndTraceException) {
                 TrackAndTraceException exception = (TrackAndTraceException)common;
@@ -98,9 +105,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         List<Route> retList = routes.values().stream()
                 .filter(route -> route.userIds.contains(getSession().currentUser.id))
                 .collect(Collectors.toList());
-                
         
         retList.stream().forEach(route -> finalize(route));
+        
         return retList;
     }
 
@@ -144,7 +151,12 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     private void finalize(Destination dest) {
-        dest.tasks.clear();
+        if (dest == null)
+            return;
+        
+        if (dest.tasks != null) {
+            dest.tasks.clear();
+        }
         
         dest.taskIds.stream()
                 .forEach(id -> dest.tasks.add(tasks.get(id)));
@@ -156,7 +168,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     @Override
     public Destination saveDestination(Destination inDestination) {
         storeAndSaveSignatureImage(inDestination);
-        saveObject(inDestination);
+        saveObjectInternal(inDestination);
         destinations.put(inDestination.id, inDestination);
         
         return inDestination;
@@ -187,7 +199,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public void saveRoute(Route inRoute) {
-        saveObject(inRoute);
+        if (inRoute.startInfo.started && inRoute.startInfo.startedByUserId.isEmpty()) {
+            inRoute.startInfo.startedByUserId = getSession().currentUser.id;
+        }
+        
+        saveObjectInternal(inRoute);
         routes.put(inRoute.id, inRoute);
     }
 
@@ -198,7 +214,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public void saveException(TrackAndTraceException exception) {
-        saveObject(exception);
+        saveObjectInternal(exception);
         exceptions.put(exception.id, exception);
     }
 
@@ -219,11 +235,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 //            
 //            Destination destination = new Destination();
 //            destination.companyId = companyId;
-//            saveObject(destination);
+//            saveObjectInternal(destination);
 //            
 //            destinations.put(destination.id, destination);
 //            route.destinationIds.add(destination.id);
-//            saveObject(route);
+//            saveObjectInternal(route);
 //        }
 //    }
 
@@ -232,11 +248,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         Destination dest = getDestination(destionatId);
         
         if (dest != null) {
-            saveObject(task);
+            saveObjectInternal(task);
             tasks.put(task.id, task);
             dest.taskIds.add(task.id);
             dest.ensureUniqueTaskIds();
-            saveObject(dest);
+            saveObjectInternal(dest);
         }
     }
 
@@ -246,7 +262,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         if (task != null) {
             task.completed = true;
-            saveObject(task);
+            saveObjectInternal(task);
         }
     }
 
@@ -257,7 +273,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         if (task != null) {
 //            task.exceptionId = exceptionId;
             task.completed = false;
-            saveObject(task);
+            saveObjectInternal(task);
         }
     }
 
@@ -268,21 +284,24 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             return;
         }
         
-        new AcculogixDataImporter(base64, userManager, this, fileName);
+        AcculogixDataImporter ret = new AcculogixDataImporter(base64, userManager, this, fileName);
+        ret.getRoutes().stream().forEach(route -> notifyRoute(getRouteById(route.id)));
+        
+        
     }
 
     void saveTask(DeliveryTask task) {
-        saveObject(task);
+        saveObjectInternal(task);
         tasks.put(task.id, task);
     }
 
     void saveTaskGeneral(Task task) {
-        saveObject(task);
+        saveObjectInternal(task);
         tasks.put(task.id, task);
     }
 
     void saveLoadStatus(DataLoadStatus loadStatus) {
-        saveObject(loadStatus);
+        saveObjectInternal(loadStatus);
         loadStatuses.put(loadStatus.id, loadStatus);
     }
 
@@ -307,7 +326,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 userManager.checkUserAccess(user);
                 route.userIds.add(userId);
                 route.makeSureUserIdsNotDuplicated();
-                saveObject(route);
+                saveObjectInternal(route);
                 
                 notifyRoute(route);
             }
@@ -319,7 +338,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         Task task = tasks.get(taskId);
         if (task instanceof DeliveryTask) {
             ((DeliveryTask)task).changeQuantity(orderReference, quantity);
-            saveObject(task);
+            saveObjectInternal(task);
         }
     }
 
@@ -334,7 +353,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             skipInfo.startedTimeStamp = new Date();
             skipInfo.startedByUserId = getSession().currentUser.id;
             dest.skipInfo = skipInfo;
-            saveObject(dest);
+            saveObjectInternal(dest);
         }
     }
 
@@ -343,7 +362,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         Destination dest = destinations.get(destinationId);
         if (dest != null) {
             dest.skipInfo.skippedReasonId = "";
-            saveObject(dest);
+            saveObjectInternal(dest);
         }
     }
 
@@ -351,16 +370,64 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public void changeCountedDriverCopies(String taskId, String orderReference, int quantity) {
         Task task = tasks.get(taskId);
         if (task instanceof DeliveryTask) {
-            ((DeliveryTask)task).changeQuantity(orderReference, quantity);
-            saveObject(task);
+            ((DeliveryTask)task).changeDriverQuantity(orderReference, quantity);
+            saveObjectInternal(task);
         }
     }
 
     @Override
     public List<AcculogixExport> getExport(String routeId) {
         Route route = getRouteById(routeId);
-        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress(), imageManager);
-        return exporter.getExport();
+        
+        if (route == null)
+            return new ArrayList();
+        
+        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress(), imageManager, getStartNumber(routeId));
+        List<AcculogixExport> exportedData = exporter.getExport();
+        
+        if (!exportedData.isEmpty()) {
+            ExportedData exported = new ExportedData();
+            exported.routeId = routeId;
+            exported.exportSequence = getExports(routeId).size() + 1;
+            exported.exportedData = new ArrayList(exportedData);
+            saveObject(exported);    
+            exports.put(exported.id, exported);
+        }
+        
+        addLastExports(routeId, exportedData, exportedData.isEmpty() ? 4 : 3, !exportedData.isEmpty());
+        
+        markRouteAsClean(routeId);
+        
+        exportedData = exportedData.stream().sorted((o1, o2) -> {
+            if (o1.TNTUID == o2.TNTUID) {
+                return 0;
+            }
+            if (o1.TNTUID < o2.TNTUID) {
+                return 1;
+            }
+            if (o1.TNTUID > o2.TNTUID) {
+                return -1;
+            }
+            
+            return 0;
+        }).collect(Collectors.toList());
+        return exportedData;
+    }
+    
+    private int getStartNumber(String routeId) {
+        List<ExportedData> retVal = getExports(routeId);
+        
+        return retVal
+                .stream()
+                .mapToInt(exp -> exp.exportedData.size())
+                .sum();
+                
+    }
+    
+    public List<ExportedData> getExports(String routeId) {
+        return exports.values().stream()
+                .filter(exp -> exp.routeId != null && exp.routeId.equals(routeId))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -368,7 +435,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         TrackAndTraceException exp = exceptions.get(exceptionId);
         if (exp != null) {
             exp.sequence = sequence;
-            saveObject(exp);
+            saveObjectInternal(exp);
         }
     }
 
@@ -377,7 +444,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         Task task = tasks.get(taskId);
         if (task instanceof DeliveryTask) {
             ((DeliveryTask)task).containerCounted = quantity;
-            saveObject(task);
+            saveObjectInternal(task);
         }
     }
 
@@ -394,9 +461,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                     dest.pooledByUserId = getSession().currentUser.id;
                 
                 dest.originalRouteId = routeId;
-                saveObject(dest);
+                saveObjectInternal(dest);
                 pooledDestinations.put(dest.id, dest);
-                saveObject(route);
+                saveObjectInternal(route);
             }
         }
         
@@ -431,7 +498,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             if (route != null) {
                 Destination dest = getDestination(pooledDest.destionationId);
                 route.destinationIds.add(dest.id);
-                saveObject(route);
+                saveObjectInternal(route);
                 notifyRoute(route);
             }
         }
@@ -442,6 +509,86 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     private void notifyRoute(Route route) {
         finalize(route);
         webSocketServer.sendMessage(route);
+    }
+    
+    private void saveObjectInternal(DataCommon data) {
+        if (data instanceof Route)
+            ((Route)data).dirty = true;
+        
+        if (data instanceof Destination)
+            ((Destination)data).dirty = true;
+        
+        if (data instanceof Task)
+            ((Task)data).dirty = true;
+        
+        saveObject(data);
+    }
+
+    private void markRouteAsClean(String routeId) {
+        Route route = getRouteById(routeId);
+        if (route != null) {
+            route.dirty = false;
+            for (Destination dest : route.getDestinations()) {
+                dest.dirty = false;
+                for (Task task : dest.tasks) {
+                    task.dirty = false;
+                    saveObject(task);
+                }
+                saveObject(dest);
+            }
+            saveObject(route);
+        }
+    }
+
+    private void addLastExports(String routeId, List<AcculogixExport> exportedData, int max, boolean skipFirst) {
+        
+        List<ExportedData> sortedRoutes = getExports(routeId).stream().sorted((o1, o2) -> {
+            if (o1.exportSequence == o2.exportSequence) {
+                return 0;
+            }
+            if (o1.exportSequence < o2.exportSequence) {
+                return 1;
+            }
+            if (o1.exportSequence > o2.exportSequence) {
+                return -1;
+            }
+            
+            return 0;
+        }).collect(Collectors.toList());
+        
+        int i = 0;
+        
+        for (ExportedData iExp : sortedRoutes) {
+            if (skipFirst) {
+                skipFirst = false;
+                continue;
+            }
+            
+            i++;
+            if (i > max) {
+                break;
+            }
+            
+            System.out.println("Adding: " + iExp.exportSequence);
+            exportedData.addAll(iExp.exportedData);
+        }
+    }
+
+    @Override
+    public void deleteRoute(String routeId) {
+        Route route = getRouteById(routeId);
+        if (route != null) {
+            deleteObject(route);
+            routes.remove(route.id);
+        }
+        
+        for (ExportedData exportData : exports.values()) {
+            if (exportData.routeId != null && exportData.routeId.equals(routeId)) {
+                deleteObject(exportData);
+            }
+        }
+        
+        exports.values().removeIf(o -> o.routeId != null && o.routeId.equals(routeId));
     }
     
 }

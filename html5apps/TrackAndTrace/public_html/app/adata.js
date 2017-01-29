@@ -45,7 +45,7 @@ adata = {
         if (!route)
             return;
         
-        var toAdd = [];
+        var toAdd = []; 
         var found = false;
         
         for (var i in this.routes) {
@@ -57,8 +57,6 @@ adata = {
                 toAdd.push(iRoute);
             }
         }
-        
-        debugger;
         
         if (!found && $api && route.userIds.indexOf($api.getLoggedOnUser().id)) {
             toAdd.push(route);

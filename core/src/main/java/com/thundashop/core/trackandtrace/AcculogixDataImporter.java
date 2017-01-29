@@ -263,4 +263,8 @@ public class AcculogixDataImporter {
                 .map(d -> d[50])
                 .collect(Collectors.toList());
     }
+
+    public List<Route> getRoutes() {
+        return new ArrayList(routes.values());
+    }
 }

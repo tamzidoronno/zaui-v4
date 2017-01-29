@@ -11,7 +11,9 @@ controllers.RouteOverviewController = function($scope, datarepository, $rootScop
     $scope.route = datarepository.getRouteById($stateParams.routeId);
     $scope.showFinished = datarepository.showFinished;
     
+    
     $scope.getFinishedState = function(destination) {
+        
         if (destination.skipInfo.skippedReasonId) {
             return "yellow";
         }
@@ -19,10 +21,10 @@ controllers.RouteOverviewController = function($scope, datarepository, $rootScop
         if (!destination.signatureImage && !destination.startInfo.started) {
             return "red";
         }
-        if (!destination.signatureImage && destination.startInfo.started) {
+        if (destination.signatures.length == 0  && destination.startInfo.started) {
             return "yellow";
         }
-        if (destination.signatureImage && destination.startInfo.started) {
+        if (destination.signatures.length > 0 && destination.startInfo.started) {
             return "green";
         }
     }

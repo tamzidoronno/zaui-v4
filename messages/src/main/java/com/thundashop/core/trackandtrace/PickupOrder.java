@@ -15,5 +15,7 @@ import java.util.List;
 public class PickupOrder extends TntOrder {
     public String instruction = "";
     public List<String> barcodeScanned = new ArrayList();
-    public int countedBundles = 0;
+    public int countedBundles = -1;
+    public boolean mustScanBarcode;
+    public String returnLabelNumber = "";
 }

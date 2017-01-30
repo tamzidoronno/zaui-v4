@@ -2449,7 +2449,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
             
             $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-            $order->avoidAutoSending = true;
+            if(!isset($_POST['data']['appendToOrderId']) || !$_POST['data']['appendToOrderId']) {
+                $order->avoidAutoSending = true;
+            }
             $this->getApi()->getOrderManager()->saveOrder($order);
             
             

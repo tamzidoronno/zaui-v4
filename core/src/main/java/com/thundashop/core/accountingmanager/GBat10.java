@@ -87,9 +87,6 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         Calendar cal = Calendar.getInstance();
         cal.setTime(order.rowCreatedDate);
         
-        if(order.getStartDateByItems() != null) {
-            cal.setTime(order.getStartDateByItems());
-        }
         managers.invoiceManager.generateKidOnOrder(order);
         
         List<HashMap<Integer, String>> lines = new ArrayList();

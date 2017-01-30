@@ -226,18 +226,18 @@ public class AcculogixDataImporter {
                     .filter(row -> row[64].equals("PICKUP RETURNS"))
                     .collect(Collectors.toList());
             
-            List<PickupOrder> pickupTasks;
-            pickupTasks = pickupTasksDatas.stream()
+            List<PickupOrder> pickupOrders;
+            pickupOrders = pickupTasksDatas.stream()
                     .map(task -> createPickupOrder(task))
                     .collect(Collectors.toList());
             
-            if (pickupTasks.isEmpty()) {
+            if (pickupOrders.isEmpty()) {
                 continue;
             }
             
             PickupTask task = new PickupTask();
             task.taskType = Integer.parseInt(pickupTasksDatas.get(0)[65]);
-            task.orders = pickupTasks;
+            task.orders = pickupOrders;
             task.cage = !pickupTasksDatas.get(0)[60].isEmpty();
             task.podBarcode = pickupTasksDatas.get(0)[34];
             
@@ -251,10 +251,10 @@ public class AcculogixDataImporter {
     public PickupOrder createPickupOrder(String[] data) {
         PickupOrder order = new PickupOrder();
         order.comment =  data[59];
-        // This is not the order instruction.
         order.instruction = data[22] + " " + data[53];
         order.referenceNumber = data[33];
         order.podBarcode = data[34];
+        order.mustScanBarcode = data[67].toLowerCase().equals("scan");
         return order;
     }
 

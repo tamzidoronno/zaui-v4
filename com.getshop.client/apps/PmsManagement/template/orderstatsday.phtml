@@ -36,7 +36,7 @@ if($rowIndex > 0) {
         $totalInc += $entries->priceIncOrders->{$productId}->{$orderId};
         $order = $this->getApi()->getOrderManager()->getOrder($orderId);
         $user = $this->getApi()->getUserManager()->getUserById($order->userId);
-        echo "<tr>";
+        echo "<tr class='loadorderstatsentryfororder' productid='$productId' orderid='".$order->id."'>";
         echo "<td>" . $order->incrementOrderId . "</td>";
         echo "<td>" . $user->fullName . "</td>";
         echo "<td>".round($value)."</td>";
@@ -90,3 +90,5 @@ if($rowIndex > 0) {
     echo "</table>";
 }
 ?>
+
+<div id="singledayresult"></div>

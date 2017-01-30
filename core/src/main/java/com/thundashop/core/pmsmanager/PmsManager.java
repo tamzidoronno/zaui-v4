@@ -473,7 +473,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
-        
+        boolean unsettled = false;
+        if(filter != null && filter.filterType != null && filter.filterType.equals("unsettled")) {
+            unsettled = true;
+            filter.filterType = "checkout";
+        }
         if(filter != null && filter.searchWord != null) {
             filter.searchWord = filter.searchWord.trim();
         }
@@ -584,7 +588,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         finalized = filterByChannel(finalized,filter.channel);
         finalized = filterByBComRateManager(finalized,filter);
         finalized = filterByUnpaid(finalized,filter);
-
+        if(unsettled) {
+            finalized = filterByUnsettledAmounts(finalized);
+        }
+        
+        //Dump bookings
+        if(getConfiguration().usePriceMatrixOnOrder) {
+            for(PmsBooking booking : finalized) {
+                for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    if(room.priceMatrix == null || room.priceMatrix.keySet().isEmpty()) {
+                        pmsInvoiceManager.correctFaultyPriceMatrix(room, booking);
+                        logEntry("The pricematrix has been erased, it was rebuilt using the average price.", booking.id, room.pmsBookingRoomId);
+                        saveBooking(booking);
+                    }
+                }
+            }
+        }
+        
         return finalized;
     }
 
@@ -4965,5 +4985,28 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(data.bookingId);
         
         return booking != null && (!booking.isEnded() || booking.isActiveOnDay(new Date()));
+    }
+
+    private List<PmsBooking> filterByUnsettledAmounts(List<PmsBooking> finalized) {
+        List<PmsBooking> result = new ArrayList();
+        for(PmsBooking test : finalized) {
+            if(!test.payedFor) {
+                continue;
+            }
+            test.calculateTotalCost();
+            double total = test.getTotalPrice();
+            double orderTotal = 0.0;
+            for(String orderId : test.orderIds) {
+                Order order = orderManager.getOrderSecure(orderId);
+                orderTotal += orderManager.getTotalAmount(order);
+            }
+            double diff = total - orderTotal;
+            if(diff < -3 || diff > 3) {
+                test.totalUnsettledAmount = diff;
+                result.add(test);
+            }
+        }
+        
+        return result;
     }
 }

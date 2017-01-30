@@ -80,6 +80,17 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .delete_day_row', app.PmsManagement.deleteConferenceDay);
         $(document).on('click','.PmsManagement .addPaymentMethod', app.PmsManagement.addPaymentMethod);
         $(document).on('click','.PmsManagement .removePaymentMethod', app.PmsManagement.removePaymentMethod);
+        $(document).on('click','.PmsManagement .loadorderstatsentryfororder', app.PmsManagement.loadorderstatsentryfororder);
+    },
+    loadorderstatsentryfororder : function() {
+        var event = thundashop.Ajax.createEvent('','loadOrderStatsForEntryCell',$(this),{
+            "orderid" : $(this).attr('orderid'),
+            "productid" : $(this).attr('productid')
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('#singledayresult').html(res);
+        })
     },
     calculcateCartCost : function(e) {
         var target = $(e.target);

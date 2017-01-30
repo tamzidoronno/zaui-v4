@@ -40,6 +40,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("orderstatsday");
     }
     
+    public function loadOrderStatsForEntryCell() {
+        $this->includefile("orderstatsresultentrycell");
+    }
+    
     public function saveConferenceData() {
         $conferenceData = new \core_pmsmanager_ConferenceData();
         $conferenceData->bookingId = $_POST['data']['bookingid'];

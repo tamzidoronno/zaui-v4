@@ -482,6 +482,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function updateOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $order->payment->paymentType = $_POST['data']['clicksubmit'];
+        if(stristr($_POST['data']['clicksubmit'], "invoice")) {
+            $order->rowCreatedDate = $this->convertToJavaDate(time());
+        }
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->showBookingInformation();
     }

@@ -1095,7 +1095,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (message == null || message.isEmpty()) {
             return "";
         }
-        
+        if((message == null || message.isEmpty()) && key.toLowerCase().contains("room_resendcode")) {
+            message = "Code {code} room {roomName}.";
+        }
+
         if(key.startsWith("booking_sendpaymentlink") || 
                 key.startsWith("booking_unabletochargecard") || 
                 key.startsWith("booking_paymentmissing") || 

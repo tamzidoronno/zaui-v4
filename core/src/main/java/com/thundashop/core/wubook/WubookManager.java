@@ -921,14 +921,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(!frameworkConfig.productionMode) { return; }
         if(pmsManager.getConfigurationSecure().ignoreNoShow) { return; }
         PmsBookingFilter filter = new PmsBookingFilter();
-        if(storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
-            if(cal.get(Calendar.HOUR_OF_DAY) < 5) {
-                return;
-            }
-            filter.filterType = "checkin";
-        } else {
-            filter.filterType = "checkout";
+        
+        if(cal.get(Calendar.HOUR_OF_DAY) < 5) {
+            return;
         }
+        filter.filterType = "checkin";
         
         cal.add(Calendar.DAY_OF_YEAR, -1);
         
@@ -951,15 +948,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             if(book.channel != null && book.channel.contains("wubook")) {
                 Long idToMark = new Long(book.wubookreservationid);
-                if(storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
-                    List<String> ids = book.wubookModifiedResId;
-                    if(storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
-                        for(String id : ids) {
-                            long tmpid = new Long(id);
-                            if(tmpid > idToMark) {
-                                idToMark = tmpid;
-                            }
-                        }
+                List<String> ids = book.wubookModifiedResId;
+                for(String id : ids) {
+                    long tmpid = new Long(id);
+                    if(tmpid > idToMark) {
+                        idToMark = tmpid;
                     }
                 }
                 markNoShow(idToMark + "");

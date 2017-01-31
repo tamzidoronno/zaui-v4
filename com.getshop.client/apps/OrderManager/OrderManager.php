@@ -64,6 +64,22 @@ class OrderManager extends GSTableCommon implements \Application {
             $this->getApi()->getOrderManager()->saveOrder($order);
         }
     }
+
+    public function lockOrder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['value']);
+        
+        if ($order->closed) {
+            echo "H";
+            $order->closed = false;
+            $order->forcedOpen = true;
+        } else {
+            echo "D";
+            $order->closed = true;
+            $order->forcedOpen = false;   
+        }
+        
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }    
     
     public function renderConfig() {
         $this->includefile("orderoverview");

@@ -18,9 +18,17 @@ app.OrderManager = {
         $(document).on('click', '.gsschangePaymentDate', app.OrderManager.changePaymentDate);
         $(document).on('click', '.gsspayorder', app.OrderManager.payorder);
         $(document).on('click', '.gsspaywithcard', app.OrderManager.payWithCard);
+        $(document).on('click', '.gss_button.showHiddenAdminOptionButton', app.OrderManager.showHiddenAdminOptions);
         $(document).on('click', '.gss_changePaymentType', function() {
             $('.gss_orderview_available_payments').slideDown();
         });   
+    },
+    
+    showHiddenAdminOptions: function() {
+        var res = prompt("Password please :)");
+        if (res === "getshop123") {
+            $('.hiddenAdminOption').show();
+        }
     },
     
     changePaymentDate: function() {

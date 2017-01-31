@@ -284,6 +284,7 @@ echo "<div class='gss_button' style='float:right;' onclick='$(\".gshiddenlogpara
     <div class="gss_button" gss_value="<? echo $order->id; ?>" gss_method="updateOrder" gss_model="ordermodel" gss_fragment="orderview" gss_view="gss_orderview">
         <? echo $this->__f("Save"); ?>
     </div>
+    
 </div>
 <div class='gshiddenlogparams' style='display:none;'>
     <hr>
@@ -314,4 +315,12 @@ echo "<div class='gss_button' style='float:right;' onclick='$(\".gshiddenlogpara
     echo "</table>";
 
     ?>
+    
+    <div class="gss_button showHiddenAdminOptionButton"> Show Hidden Admin Options </div>
+    <div class="hiddenAdminOption" style="display: none;">
+        <br/>
+        <div class="gss_button" gss_value="<? echo $order->id; ?>" gss_method="lockOrder" gss_model="ordermodel" gss_fragment="orderview" gss_view="gss_orderview">
+            <? echo $this->__f("Manually lock/unlock order"); ?>
+        </div>    
+    </div>
 </div>

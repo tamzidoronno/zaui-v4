@@ -62,6 +62,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String createByManager = "";
     public String kid = "";
     public boolean isVirtual = false;
+    public boolean forcedOpen = false;
     
     public Order jsonClone() {
         Gson gson = new Gson();
@@ -228,13 +229,17 @@ public class Order extends DataCommon implements Comparable<Order> {
         for(CartItem item : cart.getItems()) {
             item.doFinalize();
         }
-        if(!closed) {
+        if(!closed && !forcedOpen) {
             if(status == Order.Status.PAYMENT_COMPLETED) {
                 closed = true;
             }
             if(transferredToAccountingSystem) {
                 closed = true;
             }
+        }
+        
+        if (forcedOpen) {
+            closed = false;
         }
     }
 

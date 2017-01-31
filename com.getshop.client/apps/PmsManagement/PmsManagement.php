@@ -40,6 +40,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("orderstatsday");
     }
     
+    public function loadOrderStatsForEntryCell() {
+        $this->includefile("orderstatsresultentrycell");
+    }
+    
     public function saveConferenceData() {
         $conferenceData = new \core_pmsmanager_ConferenceData();
         $conferenceData->bookingId = $_POST['data']['bookingid'];
@@ -482,6 +486,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function updateOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $order->payment->paymentType = $_POST['data']['clicksubmit'];
+        if(stristr($_POST['data']['clicksubmit'], "invoice")) {
+            $order->rowCreatedDate = $this->convertToJavaDate(time());
+        }
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->showBookingInformation();
     }
@@ -2446,7 +2453,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
             
             $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-            $order->avoidAutoSending = true;
+            if(!isset($_POST['data']['appendToOrderId']) || !$_POST['data']['appendToOrderId']) {
+                $order->avoidAutoSending = true;
+            }
             $this->getApi()->getOrderManager()->saveOrder($order);
             
             

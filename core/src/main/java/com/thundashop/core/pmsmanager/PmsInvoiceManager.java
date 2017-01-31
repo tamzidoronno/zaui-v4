@@ -654,7 +654,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     
-
+    public void correctFaultyPriceMatrix(PmsBookingRooms room, PmsBooking booking) {
+        LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, booking.priceType, booking);
+        if(booking.priceType == PmsBooking.PriceType.daily) {
+            for(String key : priceMatrix.keySet()) {
+                room.priceMatrix.put(key, room.price);
+            }
+        }
+        String guestName = "";
+        if(room.guests != null && !room.guests.isEmpty()) {
+            guestName = room.guests.get(0).name;
+        }
+        guestName += room.date.start + " - " + room.date.end;
+        User user = userManager.getUserById(booking.userId);
+        guestName += " (" + user.fullName + ")";
+        messageManager.sendErrorNotification("The price matrix is invalid for this order, the pricematrix has been reconstructed, but why it happends has to be investigated: " + guestName, null);
+    }
+    
     public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, priceType, booking);
         double total = 0.0;
@@ -861,6 +877,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public void sendRecieptOrInvoice(String orderId, String email, String bookingId) {
         Order order = orderManager.getOrder(orderId);
         order.sentToCustomer = true;
+        order.closed = true;
         orderManager.saveObject(order);
         pmsManager.setOrderIdToSend(orderId);
         pmsManager.setEmailToSendTo(email);

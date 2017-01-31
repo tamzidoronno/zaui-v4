@@ -1,0 +1,84 @@
+<?php
+/* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$orderId = $_POST['data']['orderid'];
+$order = $this->getApi()->getOrderManager()->getOrder($orderId);
+$productId = $_POST['data']['productid'];
+
+echo "<br><br>Order information:<br>";
+echo "<table cellspacing='0' cellpadding='0'>";
+echo "<tr>";
+echo "<th>Count</th>";
+echo "<th>Product</th>";
+echo "<th>Price ex</th>";
+echo "<th>Price inc</th>";
+echo "<th>Total ex</th>";
+echo "<th>Total inc</th>";
+echo "<th>Start date</th>";
+echo "<th>End date</th>";
+echo "</tr>";
+
+$totalEx = 0;
+$totalInc = 0;
+foreach($order->cart->items as $item) {
+    if($item->product->id == $productId) {
+        echo "<tr style='font-weight:bold;'>";
+    } else {
+        continue;
+    }
+    echo "<td>".$item->count."</td>";
+    echo "<td>".$item->product->name."</td>";
+    echo "<td>".round($item->product->priceExTaxes)."</td>";
+    echo "<td>".round($item->product->price)."</td>";
+    echo "<td>".round($item->product->priceExTaxes * $item->count)."</td>";
+    echo "<td>".round($item->product->price * $item->count)."</td>";
+    echo "<td>".$item->startDate."</td>";
+    echo "<td>".$item->endDate."</td>";
+    echo "</tr>";
+    $totalEx += $item->product->priceExTaxes;
+    $totalInc += $item->product->price;
+    $totalSumEx += $item->product->priceExTaxes * $item->count;
+    $totalSumInc += $item->product->price * $item->count;
+}
+echo "<tr>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td>".round($totalEx)."</td>";
+echo "<td>".round($totalInc)."</td>";
+echo "<td>".round($totalSumEx)."</td>";
+echo "<td>".round($totalSumInc)."</td>";
+echo "</tr>";
+
+echo "</table>";
+echo "<br><br>";
+$result = unserialize($_SESSION['currentOrderStatsResult']);
+echo "<table cellspacing='0' cellpadding='0'>";
+echo "<tr>";
+echo "<th>Day</th>";
+echo "<th>Amount</th>";
+echo "</tr>";
+$total = 0;
+foreach($result->entries as $entry) {
+    $row = "<tr>";
+    $row .= "<td>" . date("d.m.Y", strtotime($entry->day)) . "</td>";
+    if(!isset($entry->priceExOrders->{$productId})) {
+        continue;
+    }
+    $found = false;
+    foreach($entry->priceExOrders->{$productId} as $entryOrderId => $value) {
+        if($entryOrderId != $orderId) {
+            continue;
+        }
+        $total += $value;
+        $found = true;
+        $row .= "<td>" . round($value) . "</td>";
+    }
+    $row .= "</tr>";
+    if($found) {
+        echo $row;
+    }
+}
+
+echo "<tr><th></th>";
+echo "<th>".round($total)."</th></tr>";
+echo "</table>";
+?>

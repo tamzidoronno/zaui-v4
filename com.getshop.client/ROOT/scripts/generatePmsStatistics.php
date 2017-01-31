@@ -141,7 +141,7 @@ table tr:nth-child(even) td {
 table tr:nth-child(odd) td {
     background-color: #efefef;
 }
-.pageheight { height: 1700px; padding-left:50px; padding-right: 50px; padding-top: 10px; }
+.pageheight, .pdfPageSizer { height: 1700px; padding-left:50px; padding-right: 50px; padding-top: 10px; }
 table td.budget_success { background-color:green !important; color:#fff; }
 table td.budget_fail { background-color:red !important; color:#fff; }
 td:nth-child(1) {

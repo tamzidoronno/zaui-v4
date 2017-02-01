@@ -389,6 +389,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return virtualOrder;
     }
     
+    public void deleteAllVirtualOrders() {
+        for(VirtualOrder vorder : virtualOrders.values()) {
+            deleteVirtualOrders(vorder.reference);
+        }
+    }
+    
     public void deleteVirtualOrders(String virtualOrderReference) {
         List<VirtualOrder> virtOrders = virtualOrders.values()
                 .stream()

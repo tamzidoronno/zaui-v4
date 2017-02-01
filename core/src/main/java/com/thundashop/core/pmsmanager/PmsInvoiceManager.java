@@ -755,9 +755,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         Date startDate = room.getInvoiceStartDate();
         Date endDate = room.getInvoiceEndDate(filter, booking);
-        if(pmsManager.getConfigurationSecure().ignoreRoomToEndDate && endDate.before(filter.endInvoiceAt)) {
-            endDate = filter.endInvoiceAt;
-        }
         
         if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || room.invoicedTo.after(endDate))) {
             return;
@@ -768,6 +765,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.invoicedTo == null && startDate.after(endDate)) {
             //Never invoiced, and a credit note is needed?
             return;
+        }
+        
+        if(pmsManager.getConfigurationSecure().ignoreRoomToEndDate && endDate.before(filter.endInvoiceAt)) {
+            endDate = filter.endInvoiceAt;
         }
         
         List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room, filter);

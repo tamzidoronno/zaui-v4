@@ -2081,7 +2081,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     
                     startOnMonth = cal.getTime();
                     daysInMonth = 0;
-                    curMonth++;
+                    curMonth = cal.get(Calendar.MONTH);
                 }
                 if(cal.getTime().after(item.endDate)) {
                     if(!pmsManager.getConfigurationSecure().orderEndsFirstInMonth) {

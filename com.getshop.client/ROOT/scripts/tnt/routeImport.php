@@ -11,15 +11,16 @@ if (!$user) {
     return;
 }
 
-if (!isset($_FILES['content'])) {
+if (!isset($_FILES['file'])) {
     ?>
     <form action="routeImport.php?username=<? echo $_GET['username']; ?>&password=<? echo $_GET['password']; ?>" method="post" enctype="multipart/form-data">
         Select image to upload:
-        <input type="file" name="content" id="fileToUpload">
+        <input type="file" name="file" id="fileToUpload">
         <input type="submit" value="Upload Image" name="submit">
     </form>
     <?
 } else {
-    $content = file_get_contents($_FILES['content']['tmp_name']);
-    $factory->getApi()->getTrackAndTraceManager()->loadData($content, $_FILES['content']['name']);
+    $file = file_get_contents($_FILES['file']['tmp_name']);
+    $factory->getApi()->getTrackAndTraceManager()->loadData($file, $_FILES['file']['name']);
 }
+?>

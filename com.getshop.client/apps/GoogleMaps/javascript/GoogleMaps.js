@@ -171,23 +171,27 @@ thundashop.app.GoogleMaps.prototype = {
         var X = C.lng();
         var Y = C.lat();
 
-        var AmaxX = this.boundsToChoose.getNorthEast().lng();
-        var AmaxY = this.boundsToChoose.getNorthEast().lat();
-        var AminX = this.boundsToChoose.getSouthWest().lng();
-        var AminY = this.boundsToChoose.getSouthWest().lat();
+        if (this.this.boundsToChoose) {
+            var AmaxX = this.boundsToChoose.getNorthEast().lng();
+            var AmaxY = this.boundsToChoose.getNorthEast().lat();
+            var AminX = this.boundsToChoose.getSouthWest().lng();
+            var AminY = this.boundsToChoose.getSouthWest().lat();
+        
+            if (X < AminX) {
+                X = AminX;
+            }
+            if (X > AmaxX) {
+                X = AmaxX;
+            }
+            if (Y < AminY) {
+                Y = AminY;
+            }
+            if (Y > AmaxY) {
+                Y = AmaxY;
+            }
+        }
 
-        if (X < AminX) {
-            X = AminX;
-        }
-        if (X > AmaxX) {
-            X = AmaxX;
-        }
-        if (Y < AminY) {
-            Y = AminY;
-        }
-        if (Y > AmaxY) {
-            Y = AmaxY;
-        }
+        
         this.map.setCenter(new google.maps.LatLng(Y, X));
 
 

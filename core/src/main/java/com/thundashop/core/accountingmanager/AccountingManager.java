@@ -1033,6 +1033,18 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
 
             files.put(res.id, res);
         }
+        
+        for(String orderId : res.orders) {
+            Order order = orderManager.getOrder(orderId);
+            try {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Closed order from accounting system");
+            }catch(Exception e) {
+                
+            }
+            order.closed = true;
+            orderManager.saveOrder(order);
+        }
+        
         return res;    
     }
 

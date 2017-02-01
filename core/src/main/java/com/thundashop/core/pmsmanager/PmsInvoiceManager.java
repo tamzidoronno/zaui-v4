@@ -1243,7 +1243,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if (!booking.confirmed) {
             return false;
         }
-        if (!booking.payedFor) {
+        if (!booking.payedFor && !pmsManager.getConfigurationSecure().ignoreRoomToEndDate) {
             return false;
         }
         return true;
@@ -2018,6 +2018,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             List<Order> orders = getOrdersFromRoom(simple.pmsRoomId);
             Order latestOrder = getLatestOrder(orders, start, end);
             PmsSubscriptionOverview toAdd = new PmsSubscriptionOverview();
+            PmsBooking booking = pmsManager.getBooking(simple.bookingId);
+            PmsBookingRooms room = booking.getRoom(simple.pmsRoomId);
             
             toAdd.price = simple.price;
             toAdd.paid = false;
@@ -2026,7 +2028,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             toAdd.orderValue = 0.0;
             toAdd.start = simple.start;
             toAdd.end = simple.end;
+            toAdd.confirmed = booking.confirmed;
             toAdd.userId = pmsManager.getBookingUnfinalized(simple.bookingId).userId;
+            toAdd.invoicedTo = room.invoicedTo;
             
             User user = userManager.getUserById(toAdd.userId);
             toAdd.cardsSaved = user.savedCards.size();
@@ -2034,6 +2038,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(latestOrder != null) {
                 toAdd.orderCreationDate = latestOrder.rowCreatedDate;
                 toAdd.orderValue = getTotalValue(latestOrder, simple.pmsRoomId);
+                toAdd.latestInvoiceEndDate = latestOrder.getEndDateByItems();
+                toAdd.latestInvoiceStartDate = latestOrder.getStartDateByItems();
                 toAdd.paid = latestOrder.status == Order.Status.PAYMENT_COMPLETED;
                 toAdd.paymentType = latestOrder.payment.paymentType;
             }
@@ -2044,13 +2050,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     private Order getLatestOrder(List<Order> orders, Date start, Date end) {
-        List<Order> result = new ArrayList();
+        Order latest = null;
         for(Order ord : orders) {
-            if(ord.rowCreatedDate.after(start) && ord.rowCreatedDate.before(end)) {
-                return ord;
+            Date orderEnd = ord.getEndDateByItems();
+            System.out.println(orderEnd);
+            if(orderEnd != null) {
+                if(latest == null || orderEnd.after(latest.getEndDateByItems())) {
+                    latest = ord;
+                }
             }
         }
-        return null;
+        return latest;
     }
     
     private void checkIfOrderNeedsToBeSplitted() {

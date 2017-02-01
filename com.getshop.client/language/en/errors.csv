@@ -139,6 +139,8 @@
 "1035","Can not add user to event, the event does not exists";
 "1036","Cant delete location, its in use in some events";
 "1037","User can not be created, already exists one with same cellphone";
+"1038","The time periode is already closed, cannot reclose it";
+"1039","Can not save order, its within a closed periode";
 
 "1000001","The name attribute is invalid",
 "1000002","The entry you are trying to fecth does not exists.",

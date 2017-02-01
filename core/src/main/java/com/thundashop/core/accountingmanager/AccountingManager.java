@@ -1068,7 +1068,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         filter.end = end.getTime();
         filter.priceType = "extaxes";
         
-        PmsOrderStatistics stats = new PmsOrderStatistics(null);
+        PmsOrderStatistics stats = new PmsOrderStatistics(null, userManager.getAllUsersMap());
         stats.createStatistics(ordersToUse, filter);
         return stats;
     }

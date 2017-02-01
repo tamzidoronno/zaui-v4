@@ -194,7 +194,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     @Override
     public PmsOrderStatistics generateStatistics(PmsOrderStatsFilter filter) {
         if(filter == null) {
-            return new PmsOrderStatistics(null);
+            return new PmsOrderStatistics(null, userManager.getAllUsersMap());
         }
         List<Order> orders = orderManager.getOrders(null, null, null);
         if(filter.includeVirtual) {
@@ -261,7 +261,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             roomProducts.add(type.productId);
         }
         
-        PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts);
+        PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts, userManager.getAllUsersMap());
         stats.createStatistics(ordersToUse, filter);
         return stats;
     }
@@ -1001,6 +1001,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
                 lastOrderId = order.id;
                 pmsManager.saveBooking(booking);
+                cartManager.clear();
             }
         }
         

@@ -1855,4 +1855,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return returndata;
     }
 
+    public HashMap<String, User> getAllUsersMap() {
+        HashMap<String, User> users =new HashMap();
+        for(User user : getAllUsers()) {
+            users.put(user.id, user);
+        }
+        return users;
+    }
+
 }

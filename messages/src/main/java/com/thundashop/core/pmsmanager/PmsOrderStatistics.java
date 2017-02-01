@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.usermanager.data.User;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,9 +17,11 @@ import org.mongodb.morphia.annotations.Transient;
 public class PmsOrderStatistics implements Serializable  {
     LinkedList<PmsOrderStatisticsEntry> entries = new LinkedList();
     private List<String> roomProducts = new ArrayList();
+    private final HashMap<String, User> users;
     
-    public PmsOrderStatistics(List<String> roomProducts) {
+    public PmsOrderStatistics(List<String> roomProducts, HashMap<String, User> users) {
         this.roomProducts = roomProducts;
+        this.users = users;
     }
     
     public void createStatistics(List<Order> ordersToUse, PmsOrderStatsFilter filter) {
@@ -118,6 +121,7 @@ public class PmsOrderStatistics implements Serializable  {
                             createUse = tmpCal.getTime();
                         }
                         if(item.startsOnDate(cal.getTime(), createUse)) {
+//                            System.out.println(order.incrementOrderId+";addon;"+item.getProduct().name + ";" + item.getProduct().priceExTaxes * item.getCount() + ";" + cal.getTime() + ";" + users.get(order.userId).fullName);
                             totalCalc += (item.getProduct().price * item.getCount());
                             inc += (item.getProduct().price * item.getCount());
                             ex += (item.getProduct().priceExTaxes * item.getCount());

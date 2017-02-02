@@ -841,6 +841,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     @Override
     public void clearOrder(String bookingId, String orderId) {
+        if(orderId.equals("createafterstay")) {
+            return;
+        }
         Order currentOrder = orderManager.getOrder(orderId);
         if(currentOrder.closed) {
             return;

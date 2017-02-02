@@ -15,10 +15,33 @@ class EmailCollector extends \MarketingApplication implements \Application {
         return "EmailCollector";
     }
 
+    public function downloadList() {
+        $excel = array();
+        $list = $this->getApi()->getMessageManager()->getCollectedEmails();
+        
+        $res = array();
+        
+        foreach($list as $email) {
+            if(!stristr($email, "@")) {
+                continue;
+            }
+            $res[$email] = "a";
+        }
+        
+        foreach($res as $r => $t) {
+            $emailRow = array();
+            $emailRow[] = $r;
+            $excel[] = $emailRow;
+        }
+        
+        echo json_encode($excel);
+    }
+    
     public function render() {
         $this->includefile("collectorform");
         if($this->isEditorMode()) {
-            $this->printEmailList();
+            echo "<div class='shop_button' style='width: 138px; line-height: 25px; height: 25px;' gs_downloadexcelreport='downloadList' gs_filename='emails'>Download list</div>";
+//            $this->printEmailList();
         }
     }
 

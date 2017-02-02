@@ -36,7 +36,8 @@ public class CartItem implements Serializable {
     public Date newEndDate;
     public Date periodeStart = null;
     public String groupedById = "";
-
+    public String addedBy = "";
+    
     public CartItem() {
     }
     
@@ -263,5 +264,9 @@ public class CartItem implements Serializable {
         long minutes = Duration.between(start, end).getSeconds();
 
         return minutes;
+    }
+
+    public void refreshCartItemId() {
+        cartItemId = UUID.randomUUID().toString();
     }
 }

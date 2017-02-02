@@ -171,23 +171,27 @@ thundashop.app.GoogleMaps.prototype = {
         var X = C.lng();
         var Y = C.lat();
 
-        var AmaxX = this.boundsToChoose.getNorthEast().lng();
-        var AmaxY = this.boundsToChoose.getNorthEast().lat();
-        var AminX = this.boundsToChoose.getSouthWest().lng();
-        var AminY = this.boundsToChoose.getSouthWest().lat();
+        if (this.this.boundsToChoose) {
+            var AmaxX = this.boundsToChoose.getNorthEast().lng();
+            var AmaxY = this.boundsToChoose.getNorthEast().lat();
+            var AminX = this.boundsToChoose.getSouthWest().lng();
+            var AminY = this.boundsToChoose.getSouthWest().lat();
+        
+            if (X < AminX) {
+                X = AminX;
+            }
+            if (X > AmaxX) {
+                X = AmaxX;
+            }
+            if (Y < AminY) {
+                Y = AminY;
+            }
+            if (Y > AmaxY) {
+                Y = AmaxY;
+            }
+        }
 
-        if (X < AminX) {
-            X = AminX;
-        }
-        if (X > AmaxX) {
-            X = AmaxX;
-        }
-        if (Y < AminY) {
-            Y = AminY;
-        }
-        if (Y > AmaxY) {
-            Y = AmaxY;
-        }
+        
         this.map.setCenter(new google.maps.LatLng(Y, X));
 
 
@@ -274,5 +278,11 @@ thundashop.app.GoogleMapsCommon.initInfoBoxEvents();
 googleMapsInitialized = function() {
     thundashop.app.GoogleMapsCommon.inizialized = true;
 }
-$.getScript("https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=googleMapsInitialized", function(){
-});
+if (typeof(ns_17c48891_6f7a_47a0_849d_b50de9af218f_GoogleMaps_extravariables) !== "undefined" &&  typeof(ns_17c48891_6f7a_47a0_849d_b50de9af218f_GoogleMaps_extravariables.key) !== "undefined") {
+    var key = ns_17c48891_6f7a_47a0_849d_b50de9af218f_GoogleMaps_extravariables.key;
+    var url = "https://maps.googleapis.com/maps/api/js?key="+key+"&v=3.exp&sensor=false&callback=googleMapsInitialized";
+    $.getScript(url, function(){});
+} else {
+    $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCS7XnBQXFqolWxs97eNmWpbVnMShfkj3s&v=3.exp&sensor=false&callback=googleMapsInitialized", function(){});
+}
+

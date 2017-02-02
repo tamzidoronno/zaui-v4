@@ -2,3 +2,14 @@
     display: inline-block;
     width: 200px;
 }
+
+.ZReport .summary_bottom {
+    margin-top: 20px;
+    background-color: #EEE;
+    padding: 20px;
+}
+
+.ZReport .summary_bottom tr td {
+    border-bottom: solid 1px #FFF !important;
+    padding: 3px;
+}

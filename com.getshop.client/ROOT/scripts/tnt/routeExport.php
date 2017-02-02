@@ -1,5 +1,5 @@
 <?
-chdir("../");
+chdir("../../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 

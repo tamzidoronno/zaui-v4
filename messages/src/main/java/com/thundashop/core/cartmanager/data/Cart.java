@@ -59,7 +59,7 @@ public class Cart extends DataCommon {
         return null;
     }
     
-    public void addProduct(Product product, Map<String, String> variations) {
+    public CartItem addProduct(Product product, Map<String, String> variations) {
         CartItem cartItem = getCartItem(product.id, variations);
         
         if (cartItem == null) {
@@ -71,6 +71,7 @@ public class Cart extends DataCommon {
         }
         
         cartItem.increseCounter();
+        return cartItem;
     }
     
     public void removeItem(String cartItemId) {
@@ -242,8 +243,8 @@ public class Cart extends DataCommon {
         CartItem cartItem = getCartItem(cartItemId);
         if (cartItem != null) {
             cartItem.getProduct().price = price;
-            cartItem.getProduct().doFinalize();
-        }
+            cartItem.getProduct().doFinalize(); 
+       }
     }
 
     public void addCartItems(List<CartItem> items) {
@@ -254,5 +255,18 @@ public class Cart extends DataCommon {
         return items.stream()
                 .filter(item -> item.getProduct().id.equals(productId))
                 .collect(Collectors.toList());
+    }
+
+    public void updateCartItem(CartItem item) {
+        CartItem toremove = null;
+        for(CartItem tmp : items) {
+            if(tmp.getCartItemId().equals(item.getCartItemId())) {
+                toremove = tmp;
+            }
+        }
+        if(toremove != null) {
+            items.remove(toremove);
+            items.add(item);
+        }
     }
 }

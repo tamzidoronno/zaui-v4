@@ -53,6 +53,9 @@ public class Destination extends DataCommon {
     public String onDemandInstructions = "" ;
     
     public String stopWindow;
+    
+    public boolean dirty = false;
+    
    
     public Destination() {
     }
@@ -73,5 +76,24 @@ public class Destination extends DataCommon {
     
     void setPodBarcodeStringToTasks() {
         tasks.stream().forEach(task -> task.setPodBarcodeStringToTasks());
+    }
+
+    public TrackAndTraceSignature getLatestSignatureImage() {
+        TrackAndTraceSignature signature = null;
+        
+        for (TrackAndTraceSignature sing : signatures) {
+            if (signature == null) {
+                signature = sing;
+            } else {
+                if (sing.sigutureAddedDate.after(signature.sigutureAddedDate)) {
+                    signature = sing;
+                }
+            }
+        }
+        
+        if (signature == null)
+            return null;
+        
+        return signature;
     }
 }

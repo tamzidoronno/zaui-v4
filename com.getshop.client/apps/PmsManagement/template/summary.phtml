@@ -58,247 +58,250 @@ foreach($stats as $cleaningstat) {
 
 ?>
 <br><br>
-<h1><?php echo $this->__w("Summary"); ?></h1>
-<table width='100%' cellspacing='0' cellpadding='0'>
-    <tr>
-        <td width='50%' valign='top'>
-            <table cellspacing='0' cellpadding='0' width='100%'>
-                <tr>
-                    <th></th>
-                    <th>Count</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                </tr>
-            <?php
-            $total = 0;
-                foreach($config->extraCleaningCost as $key => $val) {
-                    echo "<tr>";
-                    echo "<td>" . $cleanAccs[$key] . "</td>";
-                    echo "<td>" . $itemsCount . "</td>";
-                    echo "<td>" . $val . "</td>";
-                    echo "<td>" . $val * $itemsCount . "</td>";
-                    $total += $val * $itemsCount;
-                    echo "</tr>";
-                }
-                echo "<tr>";
-                echo "<td></td>";
-                echo "<td></td>";
-                echo "<td></td>";
-                echo "<td>$total</td>";
-                echo "</tr>";
-            ?>
-            </table>
-        </td>
-        <td width='50%' valign='top'>
-            <table cellspacing='0' cellpadding='0' width='100%'>
-                <tr>
-                    <th></th>
-                    <th>Value</th>
-                </tr>
-
-                <tr>
-                    <td>Budget</td>
-                    <td><?php echo $budget; ?></td>
-                </tr>
-                <tr>
-                    <td>Slept for in total</td>
-                    <td><?php echo $slept; ?></td>
-                </tr>
+<div class="pdfPageSizer">
+    <h1><?php echo $this->__w("Summary"); ?></h1>
+    <table width='100%' cellspacing='0' cellpadding='0'>
+        <tr>
+            <td width='50%' valign='top'>
+                <table cellspacing='0' cellpadding='0' width='100%'>
+                    <tr>
+                        <th></th>
+                        <th>Count</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
                 <?php
-                foreach($totals as $name => $val) {
-                    ?>
+                $total = 0;
+                    foreach($config->extraCleaningCost as $key => $val) {
+                        echo "<tr>";
+                        echo "<td>" . $cleanAccs[$key] . "</td>";
+                        echo "<td>" . $itemsCount . "</td>";
+                        echo "<td>" . $val . "</td>";
+                        echo "<td>" . $val * $itemsCount . "</td>";
+                        $total += $val * $itemsCount;
+                        echo "</tr>";
+                    }
+                    echo "<tr>";
+                    echo "<td></td>";
+                    echo "<td></td>";
+                    echo "<td></td>";
+                    echo "<td>$total</td>";
+                    echo "</tr>";
+                ?>
+                </table>
+            </td>
+            <td width='50%' valign='top'>
+                <table cellspacing='0' cellpadding='0' width='100%'>
                     <tr>
-                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $name; ?></td>
-                        <td><?php echo $val; ?></td>
+                        <th></th>
+                        <th>Value</th>
+                    </tr>
+
+                    <tr>
+                        <td>Budget</td>
+                        <td><?php echo $budget; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Slept for in total</td>
+                        <td><?php echo $slept; ?></td>
                     </tr>
                     <?php
-                }
-                ?>
-                <tr>
-                    <td>Cleaning cost</td>
-                    <td><?php echo $totalCleaningCost; ?></td>
-                </tr>
-
-                <?php 
-                foreach($addons as $id => $val) {
+                    foreach($totals as $name => $val) {
+                        ?>
+                        <tr>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $name; ?></td>
+                            <td><?php echo $val; ?></td>
+                        </tr>
+                        <?php
+                    }
                     ?>
                     <tr>
-                        <td><?php echo $items[$id]; ?> count</td>
-                        <td><?php echo $val['count']; ?></td>
+                        <td>Cleaning cost</td>
+                        <td><?php echo $totalCleaningCost; ?></td>
                     </tr>
-                    <tr>
-                        <td><?php echo $items[$id]; ?> total sales</td>
-                        <td><?php echo $val['price']; ?></td>
-                    </tr>
-                    <?php
-                }
-                ?>
-            </table>
-        </td>
-    </tr>
-</table>
 
-<br><br>
-<h1><?php echo $this->__w("Sleepover statistics"); ?></h1>
+                    <?php 
+                    foreach($addons as $id => $val) {
+                        ?>
+                        <tr>
+                            <td><?php echo $items[$id]; ?> count</td>
+                            <td><?php echo $val['count']; ?></td>
+                        </tr>
+                        <tr>
+                            <td><?php echo $items[$id]; ?> total sales</td>
+                            <td><?php echo $val['price']; ?></td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
+                </table>
+            </td>
+        </tr>
+    </table>
 
-<table cellspacing='0'>
-    <tr>
-        <th>
-            Type
-        </th>
-        <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-            echo "<th>" . $country . "</th>";
-        }?>
-    </tr>
-    <tr>
-        <td>Number of guests</td>
-        <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-            echo "<td>" . $count . "</td>";
-        }
-        ?>
-    </tr>
-    <tr>
-        <td>Number of guests per night</td>
-        <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-            echo "<td>" . $saleStats->sleepoverstats->guests->{$country} . "</td>";
-        }
-        ?>
-    </tr>
-    <tr>
-        <td>Number of company guests per night</td>
-        <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-            $count = isset($saleStats->sleepoverstats->guestsCompany->{$country}) ? $saleStats->sleepoverstats->guestsCompany->{$country} : "0";
-            echo "<td>" . $count . "</td>";
-        }
-        ?>
-    </tr>
-    <tr>
-        <td>Number of regular guests per night</td>
-        <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-            $count = isset($saleStats->sleepoverstats->guestsRegular->{$country}) ? $saleStats->sleepoverstats->guestsRegular->{$country} : "0";
-            echo "<td>" . $count . "</td>";
-        }
-        ?>
-    </tr>
-    <tr>
-        <td>Number of conference guests per night</td>
-        <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-            $count = isset($saleStats->sleepoverstats->guestsConference->{$country}) ? $saleStats->sleepoverstats->guestsConference->{$country} : "0";
-            echo "<td>" . $count . "</td>";
-        }
-        ?>
-    </tr>
-</table>
-<br>
-Total nights sold of rooms : <?php echo $saleStats->sleepoverstats->nightsSold; ?><br>
-Total nights rented rooms : <?php echo $saleStats->sleepoverstats->nighsSlept; ?>
-<br><br>
+    <br><br>
+    <h1><?php echo $this->__w("Sleepover statistics"); ?></h1>
 
-
-<h1><?php echo $this->__w("Cleaning count"); ?></h1>
-<table cellspacing='0' cellpadding='0' width='100%'>
-    <tr>
-        <th>Type</th>
-        <th><?php echo $this->__w("Mo"); ?></th>
-        <th><?php echo $this->__w("Tu"); ?></th>
-        <th><?php echo $this->__w("We"); ?></th>
-        <th><?php echo $this->__w("Th"); ?></th>
-        <th><?php echo $this->__w("Fr"); ?></th>
-        <th><?php echo $this->__w("Sa"); ?></th>
-        <th><?php echo $this->__w("Su"); ?></th>
-        <th><?php echo $this->__w("Total"); ?></th>
-    </tr>
-    <?php
-    $total = array();
-    $total["total"] = 0;
-    foreach($stats as $cleaningstat) {
-        echo "<tr>";
-    echo "<td>" . $types[$cleaningstat->typeId]->name . "</td>";
-        
-        $totalfortype = 0;
-        for($i = 1; $i <= 7; $i++) {
-            $count = 0;
-            if(isset($cleaningstat->cleanings->{$i})) {
-                $count = $cleaningstat->cleanings->{$i};
+    <table cellspacing='0'>
+        <tr>
+            <th>
+                Type
+            </th>
+            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                echo "<th>" . $country . "</th>";
+            }?>
+        </tr>
+        <tr>
+            <td>Number of guests</td>
+            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                echo "<td>" . $count . "</td>";
             }
-            echo "<td>" . $count . "</td>";
-            if(!isset($total[$i])) {
-                $total[$i]=0;
+            ?>
+        </tr>
+        <tr>
+            <td>Number of guests per night</td>
+            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                echo "<td>" . $saleStats->sleepoverstats->guests->{$country} . "</td>";
             }
-            $total[$i] += $count;
-            $totalfortype += $count;
-        }
-        $total["total"] += $totalfortype;
-        echo "<td>" . $totalfortype . "</td>";
-        echo "</tr>";
-    }
-    echo "<tr>";
-    echo "<td></td>";
-    for($i = 1; $i <= 7; $i++) {
-        echo "<td>" . $total[$i] . "</td>";
-    }
-    echo "<td>" . $total["total"] . "</td>";
-    echo "</tr>";
-    ?>
-</table>
-<br><br>
-<h1><?php echo $this->__w("Cleaning cost"); ?></h1>
-<table cellspacing='0' cellpadding='0' width='100%'>
-    <tr>
-        <th>Type</th>
-        <th><?php echo $this->__w("Mo"); ?></th>
-        <th><?php echo $this->__w("Tu"); ?></th>
-        <th><?php echo $this->__w("We"); ?></th>
-        <th><?php echo $this->__w("Th"); ?></th>
-        <th><?php echo $this->__w("Fr"); ?></th>
-        <th><?php echo $this->__w("Sa"); ?></th>
-        <th><?php echo $this->__w("Su"); ?></th>
-        <th><?php echo $this->__w("Total"); ?></th>
-    </tr>
-    <?php
-    $total = array();
-    $total['total'] = 0;
-    $total['items'] = 0;
-    $itemsCount = 0;
-    foreach($stats as $cleaningstat) {
-        echo "<tr>";
+            ?>
+        </tr>
+        <tr>
+            <td>Number of company guests per night</td>
+            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                $count = isset($saleStats->sleepoverstats->guestsCompany->{$country}) ? $saleStats->sleepoverstats->guestsCompany->{$country} : "0";
+                echo "<td>" . $count . "</td>";
+            }
+            ?>
+        </tr>
+        <tr>
+            <td>Number of regular guests per night</td>
+            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                $count = isset($saleStats->sleepoverstats->guestsRegular->{$country}) ? $saleStats->sleepoverstats->guestsRegular->{$country} : "0";
+                echo "<td>" . $count . "</td>";
+            }
+            ?>
+        </tr>
+        <tr>
+            <td>Number of conference guests per night</td>
+            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                $count = isset($saleStats->sleepoverstats->guestsConference->{$country}) ? $saleStats->sleepoverstats->guestsConference->{$country} : "0";
+                echo "<td>" . $count . "</td>";
+            }
+            ?>
+        </tr>
+    </table>
+</div>
+<div class="pdfPageSizer">
+    <br>
+    Total nights sold of rooms : <?php echo $saleStats->sleepoverstats->nightsSold; ?><br>
+    Total nights rented rooms : <?php echo $saleStats->sleepoverstats->nighsSlept; ?>
+    <br><br>
+
+
+    <h1><?php echo $this->__w("Cleaning count"); ?></h1>
+    <table cellspacing='0' cellpadding='0' width='100%'>
+        <tr>
+            <th>Type</th>
+            <th><?php echo $this->__w("Mo"); ?></th>
+            <th><?php echo $this->__w("Tu"); ?></th>
+            <th><?php echo $this->__w("We"); ?></th>
+            <th><?php echo $this->__w("Th"); ?></th>
+            <th><?php echo $this->__w("Fr"); ?></th>
+            <th><?php echo $this->__w("Sa"); ?></th>
+            <th><?php echo $this->__w("Su"); ?></th>
+            <th><?php echo $this->__w("Total"); ?></th>
+        </tr>
+        <?php
+        $total = array();
+        $total["total"] = 0;
+        foreach($stats as $cleaningstat) {
+            echo "<tr>";
         echo "<td>" . $types[$cleaningstat->typeId]->name . "</td>";
-        $totalfortype = 0;
-        for($i = 1; $i <= 7; $i++) {
-            $count = 0;
-            $price = 0;
-            
-            if(isset($cleaningstat->cleanings->{$i})) {
-                $count = $cleaningstat->cleanings->{$i};
-            }
-            $tmpItemCount = 1;
-            if(isset($config->cleaningPriceConfig->{$cleaningstat->typeId}->cleanings->{$i})) {
-                $tmpItemCount = $config->cleaningPriceConfig->{$cleaningstat->typeId}->itemCount;
-                $price = $config->cleaningPriceConfig->{$cleaningstat->typeId}->cleanings->{$i} * $count;
-            }
-            
-            $itemsCount += ($count * $tmpItemCount);
-            echo "<td>" . $price . "</td>";
-            if(!isset($total[$i])) {
-                $total[$i]=0;
-            }
-            $totalfortype += $price;
-            $total[$i] += $price;
-        }
-        $total['total'] += $totalfortype;
-        echo "<td>" . $totalfortype . "</td>";
-        
-        echo "</tr>";
-        
-    }
-    echo "<tr>";
-    echo "<td></td>";
-    for($i = 1; $i <= 7; $i++) {
-        echo "<td>" . $total[$i] . "</td>";
-    }
-    echo "</td>";
-    echo "<td>" . $total["total"] . "</td>";
-    $totalCleaningCost = $total['total'];
-    ?>
-</table>
 
+            $totalfortype = 0;
+            for($i = 1; $i <= 7; $i++) {
+                $count = 0;
+                if(isset($cleaningstat->cleanings->{$i})) {
+                    $count = $cleaningstat->cleanings->{$i};
+                }
+                echo "<td>" . $count . "</td>";
+                if(!isset($total[$i])) {
+                    $total[$i]=0;
+                }
+                $total[$i] += $count;
+                $totalfortype += $count;
+            }
+            $total["total"] += $totalfortype;
+            echo "<td>" . $totalfortype . "</td>";
+            echo "</tr>";
+        }
+        echo "<tr>";
+        echo "<td></td>";
+        for($i = 1; $i <= 7; $i++) {
+            echo "<td>" . $total[$i] . "</td>";
+        }
+        echo "<td>" . $total["total"] . "</td>";
+        echo "</tr>";
+        ?>
+    </table>
+    <br><br>
+    <h1><?php echo $this->__w("Cleaning cost"); ?></h1>
+    <table cellspacing='0' cellpadding='0' width='100%'>
+        <tr>
+            <th>Type</th>
+            <th><?php echo $this->__w("Mo"); ?></th>
+            <th><?php echo $this->__w("Tu"); ?></th>
+            <th><?php echo $this->__w("We"); ?></th>
+            <th><?php echo $this->__w("Th"); ?></th>
+            <th><?php echo $this->__w("Fr"); ?></th>
+            <th><?php echo $this->__w("Sa"); ?></th>
+            <th><?php echo $this->__w("Su"); ?></th>
+            <th><?php echo $this->__w("Total"); ?></th>
+        </tr>
+        <?php
+        $total = array();
+        $total['total'] = 0;
+        $total['items'] = 0;
+        $itemsCount = 0;
+        foreach($stats as $cleaningstat) {
+            echo "<tr>";
+            echo "<td>" . $types[$cleaningstat->typeId]->name . "</td>";
+            $totalfortype = 0;
+            for($i = 1; $i <= 7; $i++) {
+                $count = 0;
+                $price = 0;
+
+                if(isset($cleaningstat->cleanings->{$i})) {
+                    $count = $cleaningstat->cleanings->{$i};
+                }
+                $tmpItemCount = 1;
+                if(isset($config->cleaningPriceConfig->{$cleaningstat->typeId}->cleanings->{$i})) {
+                    $tmpItemCount = $config->cleaningPriceConfig->{$cleaningstat->typeId}->itemCount;
+                    $price = $config->cleaningPriceConfig->{$cleaningstat->typeId}->cleanings->{$i} * $count;
+                }
+
+                $itemsCount += ($count * $tmpItemCount);
+                echo "<td>" . $price . "</td>";
+                if(!isset($total[$i])) {
+                    $total[$i]=0;
+                }
+                $totalfortype += $price;
+                $total[$i] += $price;
+            }
+            $total['total'] += $totalfortype;
+            echo "<td>" . $totalfortype . "</td>";
+
+            echo "</tr>";
+
+        }
+        echo "<tr>";
+        echo "<td></td>";
+        for($i = 1; $i <= 7; $i++) {
+            echo "<td>" . $total[$i] . "</td>";
+        }
+        echo "</td>";
+        echo "<td>" . $total["total"] . "</td>";
+        $totalCleaningCost = $total['total'];
+        ?>
+    </table>
+</div>

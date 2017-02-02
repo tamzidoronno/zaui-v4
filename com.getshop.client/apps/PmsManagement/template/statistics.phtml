@@ -33,8 +33,7 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
     </select>
 </div>
 <br>
-<div >
-    <b>Sleepover statistics</b><br>
+<div class="pdfPageSizer" >
     <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
         <tr>
             <th>
@@ -80,59 +79,61 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
         }
         ?>
     </table>
+    <br><br>
 </div>
-<br><br>
-<b>Sale statistics</b><br>
-<?php if(!$filter->channel && sizeof($filter->typeFilter) == 0) { ?>
-    <div>
-        <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
-            <tr>
-                <th>
-                    <i gs_downloadexcelreport="exportSaleStats" title="Download to excel" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="salestats"></i>
-                    <?php echo $this->__w("Date"); ?></th>
-                <th><?php echo $this->__w("Nights"); ?></th>
-                <th><?php echo $this->__w("Sales count"); ?></th>
-                <th><?php echo $this->__w("Avg."); ?><br> order</th>
-                <?php
-                if(sizeof($paymentTypes) > 1) {
-                    foreach($paymentTypes as $type => $val) {
-                        $tmpType = explode("\\", $type);
-                        echo "<th>" . $this->translatePtype($tmpType[1]) . "</th>";
+<div class="pdfPageSizer">
+    <b>Sale statistics</b><br>
+    <?php if(!$filter->channel && sizeof($filter->typeFilter) == 0) { ?>
+        <div>
+            <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
+                <tr>
+                    <th>
+                        <i gs_downloadexcelreport="exportSaleStats" title="Download to excel" style="cursor:pointer" class="fa fa-file-excel-o" aria-hidden="true" gs_filename="salestats"></i>
+                        <?php echo $this->__w("Date"); ?></th>
+                    <th><?php echo $this->__w("Nights"); ?></th>
+                    <th><?php echo $this->__w("Sales count"); ?></th>
+                    <th><?php echo $this->__w("Avg."); ?><br> order</th>
+                    <?php
+                    if(sizeof($paymentTypes) > 1) {
+                        foreach($paymentTypes as $type => $val) {
+                            $tmpType = explode("\\", $type);
+                            echo "<th>" . $this->translatePtype($tmpType[1]) . "</th>";
+                        }
                     }
+                    ?>
+                    <th><?php echo $this->__w("Booking value"); ?></th>
+                    <th><?php echo $this->__w("Total"); ?></th>
+                </tr>
+                <?
+                foreach ($stats->salesEntries as $saleEntry) {
+                    $day = "";
+                    if ($saleEntry->date) {
+                        $day = $this->getDayText($saleEntry->date, $filter->timeInterval);
+                    }
+                    echo "<tr class='statisticsrow' type='sale' day='$day'>";
+                    echo "<td>";
+                    echo $day;
+                    echo "</td>";
+                    echo "<td>" . $saleEntry->nights . "</td>";
+                    echo "<td>" . $saleEntry->numberOfOrders . "</td>";
+                    echo "<td>" . $saleEntry->avgOrderPrice . "</td>";
+
+                    if(sizeof($paymentTypes) > 1) {
+                        foreach($paymentTypes as $type => $val) {
+                            $val = 0;
+                            if(isset($saleEntry->paymentTypes->{$type})) {
+                                $val = $saleEntry->paymentTypes->{$type};
+                            }
+                            echo "<td>" . round($val ) . "</td>";
+                        }
+                    }
+                    echo "<td>" . round($saleEntry->bookingValue) . "</td>";
+                    echo "<td>" . round($saleEntry->totalPrice) . "</td>";
+                    echo "</tr>";
                 }
                 ?>
-                <th><?php echo $this->__w("Booking value"); ?></th>
-                <th><?php echo $this->__w("Total"); ?></th>
-            </tr>
-            <?
-            foreach ($stats->salesEntries as $saleEntry) {
-                $day = "";
-                if ($saleEntry->date) {
-                    $day = $this->getDayText($saleEntry->date, $filter->timeInterval);
-                }
-                echo "<tr class='statisticsrow' type='sale' day='$day'>";
-                echo "<td>";
-                echo $day;
-                echo "</td>";
-                echo "<td>" . $saleEntry->nights . "</td>";
-                echo "<td>" . $saleEntry->numberOfOrders . "</td>";
-                echo "<td>" . $saleEntry->avgOrderPrice . "</td>";
-                
-                if(sizeof($paymentTypes) > 1) {
-                    foreach($paymentTypes as $type => $val) {
-                        $val = 0;
-                        if(isset($saleEntry->paymentTypes->{$type})) {
-                            $val = $saleEntry->paymentTypes->{$type};
-                        }
-                        echo "<td>" . round($val ) . "</td>";
-                    }
-                }
-                echo "<td>" . round($saleEntry->bookingValue) . "</td>";
-                echo "<td>" . round($saleEntry->totalPrice) . "</td>";
-                echo "</tr>";
-            }
-            ?>
-        </table>
-    </div>
-<? } ?>
+            </table>
+        </div>
+    <? } ?>
+</div>
 <div style='clear:both;'></div>

@@ -69,12 +69,17 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     FrameworkConfig frameworkConfig;
     
     @Override
+    public void refreshAllLocks(String source) {
+            doUpdateLockList = true;
+            getAllLocks(source);
+            doUpdateLockList = false;
+    }
+    
+    @Override
     public void refreshLock(String lockId) {
         GetShopDevice dev = devices.get(lockId);
         if(dev.zwaveid == 1) {
-            doUpdateLockList = true;
-            getAllLocks(dev.serverSource);
-            doUpdateLockList = false;
+            refreshAllLocks(dev.serverSource);
         }
         for(GetShopLockCode code : dev.codes.values()) {
             code.resetOnLock();
@@ -491,7 +496,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             List<GetShopDevice> toRemove = new ArrayList();
             for(GetShopDevice dev : res) {
                 if(serverSource.equals("default")) {
-                    if(!dev.serverSource.isEmpty() && dev.serverSource.equals("default")) {
+                    if(!dev.serverSource.isEmpty() && !dev.serverSource.equals("default")) {
                         toRemove.add(dev);
                     }
                 } else if(!serverSource.equals(dev.serverSource)) {

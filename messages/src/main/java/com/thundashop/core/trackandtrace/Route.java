@@ -43,6 +43,8 @@ public class Route extends DataCommon {
     
     public String originalId;
 
+    public boolean dirty = false;
+    
     public Route() {
         shortDescription = "A route description";
     }

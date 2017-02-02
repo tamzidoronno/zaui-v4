@@ -35,7 +35,6 @@ foreach ($types as $idx => $type) {
 }
 
 $booking = $pmsManager->getBooking($this->getSelectedName(), $bookingid);
-$this->createOrderPreview($booking, $config);
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 if(!$booking->confirmed) {
     ?>

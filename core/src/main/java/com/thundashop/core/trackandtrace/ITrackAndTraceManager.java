@@ -39,6 +39,9 @@ public interface ITrackAndTraceManager {
     public List<TrackAndTraceException> getExceptions();
     
     @Administrator
+    public void deleteRoute(String routeId);
+    
+    @Administrator
     public void saveException(TrackAndTraceException exception);
     
     @Administrator

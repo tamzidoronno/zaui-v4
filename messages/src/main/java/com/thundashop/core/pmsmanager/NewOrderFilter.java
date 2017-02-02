@@ -2,7 +2,9 @@
 package com.thundashop.core.pmsmanager;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class NewOrderFilter implements Serializable {
     public Date endInvoiceAt = null;
@@ -19,4 +21,6 @@ public class NewOrderFilter implements Serializable {
     public boolean fromAdministrator = false;
     public String addToOrderId = "";
     public boolean ignoreCheckChangesInBooking = false;
+    public List<String> itemsToCreate = new ArrayList();
+    public String userId = new String();
 }

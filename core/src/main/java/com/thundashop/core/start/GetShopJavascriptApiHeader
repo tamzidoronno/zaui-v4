@@ -246,6 +246,9 @@ GetShopApiWebSocket.prototype = {
         var messageJson = JSON.stringify(message);
         
         if (this.unsentMessageLoaded && !this.firstResendOfUnsentMessages) {
+            if (!this.messagesToSendJson) {
+                this.messagesToSendJson = [];
+            }
             this.messagesToSendJson.push(message);
             localStorage.setItem("gs_api_messagetopush", JSON.stringify(this.messagesToSendJson));
             this.fireMessageCountChanged();

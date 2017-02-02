@@ -40,6 +40,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("orderstatsday");
     }
     
+    public function loadOrderStatsForEntryCell() {
+        $this->includefile("orderstatsresultentrycell");
+    }
+    
     public function saveConferenceData() {
         $conferenceData = new \core_pmsmanager_ConferenceData();
         $conferenceData->bookingId = $_POST['data']['bookingid'];
@@ -290,6 +294,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("orderstatsresult");
     }
     
+    public function addProductToCart() {
+        $this->getApi()->getCartManager()->addProductWithSource($_POST['data']['productid'], 1, "pmsquickproduct");
+        $this->showBookingInformation();
+    }
+    
     public function loadOrderInfoOnBooking() {
          $states = array();
         $states['0'] = "All";
@@ -477,6 +486,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function updateOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $order->payment->paymentType = $_POST['data']['clicksubmit'];
+        if(stristr($_POST['data']['clicksubmit'], "invoice")) {
+            $order->rowCreatedDate = $this->convertToJavaDate(time());
+        }
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->showBookingInformation();
     }
@@ -632,6 +644,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter = new \core_pmsmanager_NewOrderFilter();
         $filter->onlyEnded = false;
         $filter->prepayment = $config->prepayment;
+        $filter->createNewOrder = true;
         if($config->increaseUnits > 0) {
             $filter->increaseUnits = $config->increaseUnits;
         }
@@ -935,6 +948,122 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+    }
+    
+    public function createNewOrderAdvanced() {
+        
+        $items = $_POST['data']['items'];
+        $users = $_POST['data']['user'];
+
+        $cart = $this->getApi()->getCartManager()->getCart();
+        $itemsToAdd = array();
+        $end = null;
+        foreach($cart->items as $cartItem) {
+            $found = false;
+            foreach($items as $item) {
+                if($cartItem->cartItemId == $item['itemid']) {
+                    if($item['start']) {
+                        $cartItem->startDate = $this->convertToJavaDate(strtotime($item['start']));
+                    }
+                    if($item['end']) {
+                        $cartItem->endDate = $this->convertToJavaDate(strtotime($item['end']));
+                    }
+                    $cartItem->count = $item['count'];
+                    $cartItem->product->name = $item['name'];
+                    $cartItem->product->price = $item['price'];
+                    $this->getApi()->getCartManager()->updateCartItem($cartItem);
+                    $itemsToAdd[] = $cartItem->cartItemId;
+                    
+                    if($end == null || $end < strtotime($item['end'])) {
+                        $end = strtotime($item['end']);
+                    }
+                    
+                }
+            }
+        }
+        
+        if(isset($users['userid']) && $users['userid']) {
+            $user = $this->getApi()->getUserManager()->getUserById($users['userid']);
+        } else {
+            $user = new \core_usermanager_data_User();
+            $user = $this->getApi()->getUserManager()->createUser($user);
+        }
+        
+        $user->fullName = $users['name'];
+        $user->emailAddress = $users['email'];
+        $user->prefix = $users['prefix'];
+        $user->cellPhone = $users['phone'];
+        
+        $user->address->address = $users['address'];
+        $user->address->postCode = $users['postcode'];
+        $user->address->city = $users['city'];
+        $user->address->countryname = $users['country'];
+        
+        $this->getApi()->getUserManager()->saveUser($user);
+        
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        $filter->itemsToCreate = $itemsToAdd;
+        $filter->userId = $user->id;
+        $filter->endInvoiceAt = $this->convertToJavaDate($end);
+        $filter->createNewOrder = true;
+        
+        $orderId = $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedName(), $_POST['data']['bookingid'], $filter);
+        
+        $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        $instances = $this->indexList($instances);
+        foreach($instances as $instance) {
+            if(strtolower($instance->appName) == strtolower($users['paymenttype'])) {
+                $instanceToUse = $instance;
+                break;
+            }
+        }
+        
+        $text = $this->createPaymentTypeText($instanceToUse);
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $order->payment->paymentType = $text;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        
+        echo "Order has been created, what would you like to do <br>";
+        echo "<div gstype='form' method='doAction'>";
+        echo "<input type='hidden' gsname='bookingid' value='".$_POST['data']['bookingid']."'>";
+        echo "<input type='hidden' gsname='orderid' value='".$order->id."'><br>";
+        echo "Email : <input type='text' style='width: 220px;' gsname='email' placeholder='Email' value='".$users['email']."'><br>";
+        echo "Phone : <input type='text' style='width: 70px;' gsname='prefix' placeholder='prefix' value='".$users['prefix']."'>";
+        echo "<input type='text' style='width: 150px;' gsname='phone' placeholder='phone' value='".$users['phone']."'><br><br>";
+        if($users['paymenttype'] == "InvoicePayment") {
+            echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='sendInvoice'>Send invoice</span>";
+        }
+        if($users['paymenttype'] == "Epay" || $users['paymenttype'] == "Dibs") {
+            echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='sendPaymentLink'>Send payment link</span>";
+        } else {
+            echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='markPaid'>Mark order as paid</span>";
+            echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='markPaidSendReciept'>Mark order as paid and send reciept</span>";
+        }
+        echo "<br><span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='refresh'>Continue</span>";
+        echo "</div>";
+    }
+    
+    public function doAction() {
+        $orderId = $_POST['data']['orderid'];
+        $bookingId = $_POST['data']['bookingid'];
+        $email = $_POST['data']['email'];
+        $phone = $_POST['data']['phone'];
+        $prefix = $_POST['data']['prefix'];
+        if($_POST['data']['clicksubmit'] == "sendInvoice") {
+            $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderId, $email, $bookingId);
+        }
+        if($_POST['data']['clicksubmit'] == "sendPaymentLink") {
+            $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);            
+        }
+        if($_POST['data']['clicksubmit'] == "markPaid" || $_POST['data']['clicksubmit'] == "markPaidSendReciept") {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            $order->status = 7;
+            $this->getApi()->getOrderManager()->saveOrder($order);
+        }
+        if($_POST['data']['clicksubmit'] == "markPaidSendReciept") {
+            $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderId, $email, $bookingId);
+        }
+        $this->showBookingInformation();
     }
     
     public function createNewOrder() {
@@ -2032,7 +2161,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $res['price'] = $price;
             $res['priceex'] = $priceEx;
             $res['count'] = $item->count;
-            
+            $res['groupedById'] = $item->groupedById;
             if($includeBookingData) {
                 $booking = $this->findBookingFromRoom($item->product->externalReferenceId);
                 $user = $this->findUser($booking->userId);
@@ -2325,7 +2454,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
             
             $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-            $order->avoidAutoSending = true;
+            if(!isset($_POST['data']['appendToOrderId']) || !$_POST['data']['appendToOrderId']) {
+                $order->avoidAutoSending = true;
+            }
             $this->getApi()->getOrderManager()->saveOrder($order);
             
             
@@ -2481,17 +2612,22 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
 
+        
+        
         $row = array();
         if($includeDownload) {
             $row[] = "<i class='fa fa-file-excel-o' style='cursor:pointer;' gs_downloadexcelreport='downloadOrderStatsMatrixToExcel' title='Download to excel' gs_filename='bookingdataexport' ></i> Day";
         } else {
             $row[] = "Day";
         }
+        $headerRowWithProductId = array();
         foreach($productIds as $id => $null) {
             if(isset($products[$id])) {
                 $row[] = $products[$id]->name;
+                $headerRowWithProductId[$id] = $products[$id]->name;
             } else {
                 $row[] = "Deleted product";
+                $headerRowWithProductId[$id] = "Deleted product";
             }
         }
         $row[] = "Total";
@@ -2547,6 +2683,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         asort($headerRow);
+        asort($headerRowWithProductId);
+        
+        $_SESSION['currentOrderStatsResultHeader'] = serialize($headerRowWithProductId);
         
         $correctHeader = array();
         $correctHeader[0] = $headerRow[0];
@@ -2575,6 +2714,24 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $sortedMatrix[$rowidx] = $newRow;
         }
         
+        $accounts = array();
+        foreach($productIds as $id => $val) {
+           $product = $this->getApi()->getProductManager()->getProduct($id);
+           if(!$product) {
+               continue;
+           }
+           if(!isset($accounts[$product->accountingAccount])) {
+               $accounts[$product->accountingAccount] = 0;
+           }
+           $accounts[$product->accountingAccount] += $val;
+        }
+        foreach($accounts as $account => $val) {
+            $row = array();
+            $row[] = $account;
+            $row[] = round($val);
+            
+            $sortedMatrix[] = $row;
+        }
         
         return $sortedMatrix;
     }
@@ -2620,6 +2777,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function isVirtual() {
         return $this->getSelectedFilter()->includeVirtual;
+    }
+
+    public function includeOrderCreationPanel() {
+        $this->includefile("ordercreationpanel");
     }
 
 }

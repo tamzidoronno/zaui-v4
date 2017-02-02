@@ -34,6 +34,10 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $this->getApi()->getGetShopLockManager()->saveMastercodes($this->getSelectedName(), $codes);
     }
     
+    public function refreshAllLocks() {
+        $this->getApi()->getGetShopLockManager()->refreshAllLocks($this->getSelectedName(), $_POST['data']['source']);
+    }
+    
     public function getSelectedName() {
         return $this->getConfigurationSetting("engine_name");
     }

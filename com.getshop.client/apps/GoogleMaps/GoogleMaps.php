@@ -51,6 +51,14 @@ class GoogleMaps extends \WebshopApplication implements \Application {
         $this->includefile("map");
     }
     
+    public function renderConfig() {
+        $this->includefile("settings");
+    }
+    
+    public function saveSettings() {
+        $this->setConfigurationSetting("key", $_POST['key']);
+    }
+    
     public function saveConfiguration() {
         if(!$this->isEditorMode()) {
             return;
@@ -85,6 +93,15 @@ class GoogleMaps extends \WebshopApplication implements \Application {
         }
         
         return $res;
+    }
+    
+    public function getJavaScriptVariables() {
+        if (!$this->getConfigurationSetting("key"))
+            return false;
+        
+        $settings = new \stdClass();
+        $settings->key = $this->getConfigurationSetting("key");
+        return $settings;
     }
 }
 ?>

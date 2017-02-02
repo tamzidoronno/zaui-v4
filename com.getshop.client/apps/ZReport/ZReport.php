@@ -18,12 +18,25 @@ class ZReport extends \ReportingApplication implements \Application {
         $_SESSION['ZREPORT_ALL_DATA'] = json_encode($_POST);
     }
 
+    public function closePeriode() {
+        $closedPeriode = new \core_ordermanager_data_ClosedOrderPeriode();
+        $closedPeriode->startDate = $_SESSION['ZREPORT_JAVA_FROM'];
+        $closedPeriode->endDate = $_SESSION['ZREPORT_JAVA_TO'];
+        $closedPeriode->paymentTypeId = $_SESSION['ZREPORT_JAVA_PAYMENTID'];
+        $this->getApi()->getOrderManager()->addClosedPeriode($closedPeriode);
+        
+    }
+    
     public function getOrders() {
         $orders = array();
 
         if (isset($_POST['data']['from'])) {
             $javaFrom = $this->convertToJavaDate(strtotime($_POST['data']['from']));
             $javaTo = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+            
+            $_SESSION['ZREPORT_JAVA_FROM'] = $javaFrom;
+            $_SESSION['ZREPORT_JAVA_TO'] = $javaTo;
+            $_SESSION['ZREPORT_JAVA_PAYMENTID'] = $_POST['data']['paymentid'];
             $orders = $this->getApi()->getOrderManager()->getOrdersPaid($_POST['data']['paymentid'], $_POST['data']['userid'], $javaFrom, $javaTo);
         }
         
@@ -70,6 +83,29 @@ class ZReport extends \ReportingApplication implements \Application {
         
         echo json_encode($rows);
         die();
+    }
+   
+    /**
+     * 
+     * @param type $orders
+     * @return \core_cartmanager_data_CartItem[]
+     */
+    public function groupByProduct($orders) {
+        $cartItems = new \stdClass();
+        foreach ($orders as $order) {
+            
+            if (!isset($order->cart->items))
+                continue;
+            
+            foreach ($order->cart->items as $cartItem) {
+                if (!isset($cartItems->{$cartItem->product->id})) {
+                    $cartItems->{$cartItem->product->id} = array();
+                }
+                $cartItems->{$cartItem->product->id}[] = $cartItem;
+            }
+        }
+        
+        return $cartItems;
     }
 }
 ?>

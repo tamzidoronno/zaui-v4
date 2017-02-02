@@ -27,6 +27,8 @@ public interface ICartManager {
      */
     public Cart addProduct(String productId, int count, Map<String,String> variations) throws ErrorException;
     
+    public Cart addProductWithSource(String productId, int count, String source) throws ErrorException;
+    
     public CartItem addProductItem(String productId, int count) throws ErrorException;
     
     /**
@@ -52,6 +54,8 @@ public interface ICartManager {
      * @throws ErrorException 
      */
     public Cart removeProduct(String cartItemId) throws ErrorException;
+    
+    public void removeCartItem(String cartItemId) throws ErrorException;
     
     /**
      * Fetch the current cart.
@@ -159,4 +163,6 @@ public interface ICartManager {
     public void setReference(String reference) throws ErrorException;
     
     public void addMetaDataToProduct(String cartItemId, String metaData);
+    
+    public void updateCartItem(CartItem item);
 }

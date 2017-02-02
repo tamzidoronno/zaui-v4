@@ -12,6 +12,7 @@ $locktype['getshophotellock'] = "GetShop hotel lock";
 <table width="100%">
     <tr>
         <th></th>
+        <th></th>
         <th align='left'>Name</th>
         <th align='left'>Server type</th>
         <th align='left'>Hostname</th>
@@ -26,6 +27,9 @@ $locktype['getshophotellock'] = "GetShop hotel lock";
     foreach($lockservers as $name => $server) {
         ?>
             <tr gstype='form' method='saveConfig'>
+                <td>
+                    <i class="fa fa-refresh" gstype='clicksubmit' method='refreshAllLocks' gsname='source' gsvalue='<?php echo $name; ?>'></i>
+                </td>
                 <td>
                     <?php
                     if($name != "default") {

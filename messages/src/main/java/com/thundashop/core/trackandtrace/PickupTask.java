@@ -27,4 +27,12 @@ public class PickupTask extends Task {
     void setPodBarcodeStringToTasks() {
         podBarcode = orders.stream().map(order -> order.podBarcode).distinct().collect(Collectors.joining(","));
     }
+
+    public void changeCountedCopies(String orderReference, int quantity) {
+        for (PickupOrder order : orders) {
+            if (order.referenceNumber.trim().equals(orderReference.trim())) {
+                order.countedBundles = quantity;
+            }
+        }
+    }
 }

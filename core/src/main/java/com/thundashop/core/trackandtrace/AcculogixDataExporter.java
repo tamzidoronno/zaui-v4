@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import com.thundashop.core.utils.ImageManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,24 +20,34 @@ public class AcculogixDataExporter {
     private final String address;
     private final Route route;
     private final Map<String, TrackAndTraceException> exceptions;
-
-    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress) {
+    private final ImageManager imageManager;
+    private int startId = 0;
+    
+    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress, ImageManager imageManager, int startId) {
         this.route = route;
+        this.startId = startId;
         this.exceptions = exceptions;
         this.address = storeAddress;
+        this.imageManager = imageManager;
     }
     
     public List<AcculogixExport> getExport() {
         List<AcculogixExport> exports = new ArrayList();
         
         for (Destination dest : route.getDestinations()) {
+            String base64Sigature = null;
+            
+            if (dest.getLatestSignatureImage() != null) {
+                base64Sigature = imageManager.getBase64EncodedImageLocally(dest.getLatestSignatureImage().imageId);
+            }
+            
             for (Task task : dest.tasks) {
                 if (task instanceof PickupTask) {
-                    exports.addAll(createExports(route,dest,(PickupTask)task));
+                    exports.addAll(createExports(route,dest,(PickupTask)task, base64Sigature));
                 }
                 
                 if (task instanceof DeliveryTask) {
-                    exports.addAll(createExports(route,dest,(DeliveryTask)task));
+                    exports.addAll(createExports(route,dest,(DeliveryTask)task, base64Sigature));
                 }
             }
         }
@@ -44,7 +55,13 @@ public class AcculogixDataExporter {
         return exports;
     }
 
-    private AcculogixExport createExport(Route route, Destination dest, Task task) {
+    private AcculogixExport createExport(Route route, Destination dest, Task task, String base64Signature) {
+        if (!route.dirty && !dest.dirty && !task.dirty) {
+            return null;
+        }
+        
+        startId++;
+        
         AcculogixExport exp = new AcculogixExport();
         exp.ArrivalDateTime = dest.startInfo.started ? formatDate(dest.startInfo.startedTimeStamp) : "";
         exp.PODBarcodeID = task.podBarcode;
@@ -52,6 +69,7 @@ public class AcculogixDataExporter {
         exp.ReceiverName = dest.typedNameForSignature;
         exp.routeId = route.originalId;
         exp.RTRouteStopSeq = dest.seq;
+        exp.TNTUID = startId;
         
         exp.TaskStatus = "DL";
         
@@ -59,7 +77,7 @@ public class AcculogixDataExporter {
             exp.TaskStatus = "AF";
         }
         
-        if (task.completed) {
+        if (dest.startInfo.completed) {
             exp.TaskStatus = "D1";
         }
         
@@ -67,16 +85,23 @@ public class AcculogixDataExporter {
             exp.TaskStatus = exceptions.get(dest.skipInfo.skippedReasonId).name;
         }
         
+        if (route.startInfo.started) {
+            exp.StatusDateTimeCompleted = formatDate(route.startInfo.startedTimeStamp);
+            exp.Latitude = route.startInfo.lat;
+            exp.Longitude = route.startInfo.lon;
+        }
+        
         if (dest.skipInfo.startedTimeStamp != null) {
             exp.StatusDateTimeCompleted = formatDate(dest.skipInfo.startedTimeStamp);
+            
             exp.Latitude = dest.skipInfo.lat;
             exp.Longitude = dest.skipInfo.lon;
         }
         
         if (dest.startInfo.started) {
             exp.StatusDateTimeCompleted = formatDate(dest.startInfo.startedTimeStamp);
-            exp.Latitude = dest.startInfo.completedLat;
-            exp.Longitude =dest.startInfo.completedLon;
+            exp.Latitude = dest.startInfo.lat;
+            exp.Longitude =dest.startInfo.lon;
         }
         
         if (dest.startInfo.completed) {
@@ -85,22 +110,26 @@ public class AcculogixDataExporter {
             exp.Longitude = dest.startInfo.completedLon;
         }
 
-        exp.SignatureObtained = dest.signatures != null && !dest.signatures.isEmpty() ? "Yes" : "No";
-        exp.signatures = dest.signatures;
+        boolean anySignatures = dest.signatures != null && !dest.signatures.isEmpty();
+        exp.SignatureObtained = anySignatures ? "Yes" : "No";
         
-        exp.signatures.forEach(sign -> setSignatureAddress(sign));
+        if (anySignatures) {
+            exp.signatureBase64 = base64Signature;
+            exp.signatureUuid = dest.getLatestSignatureImage().imageId;
+        }
+        
+        
         return exp;
     }
     
-    private void setSignatureAddress(TrackAndTraceSignature sign) {
-        sign.address = "http://"+this.address+"/displayImage.php?id="+sign.imageId;
-    }
-    
-    private List<AcculogixExport> createExports(Route route, Destination dest, PickupTask task) {
+    private List<AcculogixExport> createExports(Route route, Destination dest, PickupTask task, String base64Signature) {
         List<AcculogixExport> toAdd = new ArrayList();
         
         for (PickupOrder order : task.orders) {
-            AcculogixExport exp = createExport(route, dest, task);
+            AcculogixExport exp = createExport(route, dest, task, base64Signature);
+            if (exp == null)
+                continue;
+            
             exp.BarcodeValidated = task.barcodeValidated ? "Yes" : "No";
             setOrderInfo(exp, order);
 
@@ -115,18 +144,28 @@ public class AcculogixDataExporter {
         return toAdd;
     }
 
-    private List<AcculogixExport> createExports(Route route, Destination dest, DeliveryTask task) {
+    private List<AcculogixExport> createExports(Route route, Destination dest, DeliveryTask task, String base64Sigature) {
         List<AcculogixExport> toAdd = new ArrayList();
         
         for (DeliveryOrder order : task.orders) {
-            AcculogixExport exp = createExport(route, dest, task);
+            AcculogixExport exp = createExport(route, dest, task, base64Sigature);
+            if (exp == null)
+                continue;
+            
+            boolean hasDriverCopies = order.driverDeliveryCopiesCounted != null && order.driverDeliveryCopiesCounted > 0;
+            
+            exp.ORPieceCount = order.originalQuantity;
             setOrderInfo(exp, order);
             
-            if (order.originalQuantity > order.quantity) {
+            if (task.completed) {
+                exp.TaskType = "DELIVERED";
+            }
+            
+            if (order.originalQuantity > order.quantity && !hasDriverCopies) {
                 exp.TaskType = "SHORT # PACKAGES";
             }
             
-            if (order.originalQuantity < order.quantity) {
+            if (order.originalQuantity < order.quantity && !hasDriverCopies) {
                 exp.TaskType = "OVER # PACKAGES";
             }
             
@@ -134,13 +173,7 @@ public class AcculogixDataExporter {
                 exp.TaskType = exceptions.get(order.exceptionId).name;
             }
             
-            exp.ORPieceCount = order.quantity;
-            
-            if (order.driverDeliveryCopiesCounted != null && order.driverDeliveryCopiesCounted> 0) {
-                exp.ORPieceCount = order.quantity;
-            }
-            
-            exp.TotalPieces = order.originalQuantity;
+            exp.TotalPieces = order.quantity;
             
             toAdd.add(exp);
         }
@@ -150,7 +183,7 @@ public class AcculogixDataExporter {
     
     private String formatDate(Date date) {
         // YYYYMMDDHHMMSS
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         return sdf.format(date);
     }
 
@@ -165,6 +198,3 @@ public class AcculogixDataExporter {
          */
     }
 }
-
-
-//20170107085958

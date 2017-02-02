@@ -36,41 +36,38 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
     
     $scope.getTaskName = function(task) {
         if (task.className == "com.thundashop.core.trackandtrace.PickupTask")
-            return "Pickup - " + task.type;
+            return "Pickup";
         
         if (task.className == "com.thundashop.core.trackandtrace.DeliveryTask")
             return "Delivery";
     };
     
     $scope.markAsArrived = function() {
-        startShowingOfGpsFetching();
+        $scope.destination.startInfo.started = true;
+        $scope.destination.startInfo.startedTimeStamp = new Date();
+        $scope.destination.skipInfo.skippedReasonId = "";
         
-        navigator.geolocation.getCurrentPosition(function(position) {
-            $scope.destination.startInfo.started = true;
-            $scope.destination.startInfo.startedTimeStamp = new Date();
-            $scope.destination.startInfo.lon = position.coords.longitude;
-            $scope.destination.startInfo.lat = position.coords.latitude;  
-            $scope.$apply();
-
+        setTimeout(function() {
             $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
             $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
-            $scope.destination.skipInfo.skippedReasonId = "";
-            
-            datarepository.save();
-            stopShowingOfGpsFetching();
-        }, function(failare, b, c) {
-            $scope.destination.startInfo.started = true;
-            $scope.destination.startInfo.startedTimeStamp = new Date();
-            $scope.$apply();
-
-            $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
-            
-            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
-            $scope.destination.skipInfo.skippedReasonId = "";
-            
-            datarepository.save();
-            stopShowingOfGpsFetching();    
-        }, {maximumAge:60000, timeout:10000, enableHighAccuracy:true});
+        }, 20000);
+        
+//        navigator.geolocation.getCurrentPosition(function(position) {
+//            
+//            $scope.destination.startInfo.lon = position.coords.longitude;
+//            $scope.destination.startInfo.lat = position.coords.latitude;  
+//            $scope.$apply();
+//
+//            $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
+//            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
+//            
+//            datarepository.save();
+//        }, function(failare, b, c) {
+//            $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
+//            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
+//            
+//            datarepository.save();
+//        }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
     }
     
     $scope.getStatus = function(task) {

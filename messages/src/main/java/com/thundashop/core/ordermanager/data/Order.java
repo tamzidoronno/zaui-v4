@@ -62,6 +62,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String createByManager = "";
     public String kid = "";
     public boolean isVirtual = false;
+    public boolean forcedOpen = false;
     
     public Order jsonClone() {
         Gson gson = new Gson();
@@ -228,13 +229,17 @@ public class Order extends DataCommon implements Comparable<Order> {
         for(CartItem item : cart.getItems()) {
             item.doFinalize();
         }
-        if(!closed) {
+        if(!closed && !forcedOpen) {
             if(status == Order.Status.PAYMENT_COMPLETED) {
                 closed = true;
             }
             if(transferredToAccountingSystem) {
                 closed = true;
             }
+        }
+        
+        if (forcedOpen) {
+            closed = false;
         }
     }
 
@@ -309,6 +314,18 @@ public class Order extends DataCommon implements Comparable<Order> {
             }
         }
         return false;
+    }
+
+    public boolean isPaymentDate(Date paymentDate) {
+        if (paymentDate == null && this.paymentDate == null) {
+            return false;
+        }
+        
+        if (this.paymentDate == null) {
+            return false;
+        }
+        
+        return this.paymentDate.equals(paymentDate);
     }
 
     public static class Status  {
@@ -425,7 +442,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date getEndDateByItems() {
         Date end = null;
         for(CartItem item : cart.getItems()) {
-            if(end == null || (item.getEndingDate() != null && end.after(item.getEndingDate()))) {
+            if(end == null || (item.getEndingDate() != null && end.before(item.getEndingDate()))) {
                 end = item.getEndingDate();
             }
         }

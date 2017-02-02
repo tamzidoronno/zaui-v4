@@ -69,5 +69,45 @@ if (!$orders) {
     ?>
     </table>
     
-    <div class="shop_button" gs_downloadexcelreport="downloadExcelReport" gs_filename="report.xls"> Download</div>
+    <?
+    if (isset($_POST['data']['paymentid']) && $_POST['data']['paymentid'] && !$_POST['data']['userid'] && "a" == "b") { ?>
+        <div class="shop_button" gsclick="closePeriode">Close periode</div>
+    <?
+    }
+    ?>
+</div>
+
+<div class="summary_bottom">
+    <h2>Summary based on products.</h2>
+    <?
+    $groupedItems = $this->groupByProduct($orders);
+    echo "<table cellspacing='0' cellpadding='0' width='100%'>";
+    echo "<tr><td>Product</td><td>Ex taxes</td><td>Inc taxes</td></tr>";
+    $totex = 0;
+    $totinc = 0;
+    foreach ($groupedItems as $productId => $items) {    
+        $exPrice = 0;
+        $price = 0;
+        $product = null;
+
+        foreach ($items as $item) {
+            /* @var $item core_cartmanager_data_CartItem */
+            $count = $item->count;
+            if (!isset($item->product->priceExTaxes) || !$item->product->price) {
+                continue;
+            }
+            $product = $item->product;
+            $exPrice += $item->product->priceExTaxes*$count;
+            $price += $item->product->price*$count;
+        }
+        if (!$product)
+            continue;
+        
+        $totex += $exPrice;
+        $totinc += $price;
+        echo "<tr><td>$product->name</td><td>".round($exPrice,2)."</td><td>".round($price,2)."</td></tr>";
+    }
+    echo "<tr><td>Total</td><td>".round($totex,2)."</td><td>".round($totinc,2)."</td></tr>";
+    echo "</table>";
+    ?>
 </div>

@@ -28,50 +28,13 @@ $booking = $this->getSelectedBooking();
     
     $cart = $this->getApi()->getCartManager()->getCart();
 
-    echo "<br><h2>Next order preview (invoice until $endingAt)</h2>";
     if($booking->ignoreCheckChangesInBooking) {
         echo "<b style='color:red; font-size: 20px;'>This booking is old and does not support autopricing since not enough data where connected to it when registering.</b><br><br>";
     }
     
-    $this->includeOrderGenerationPreview();
+    $this->includeOrderCreationPanel();
 
-    echo "<br><label><input type='checkbox' gsname='preview'> Update preview only</label><br>";
-    echo "<select gsname='roomId'>";
-    echo "<option value=''>All rooms</option>";
-    foreach($booking->rooms as $room) {
-        $selected = "";
-        if($invoiceRoomId && $invoiceRoomId == $room->pmsBookingRoomId) {
-            $selected = "SELECTED";
-        }
-        $guestInfo = "";
-        if($room->guests[0]->name) {
-            $guestInfo = " guest : " . $room->guests[0]->name;
-        }
-        echo "<option value='".$room->pmsBookingRoomId."' $selected>" . $items[$room->bookingItemId]->bookingItemName . $guestInfo . "</option>";
-    }
-    echo "</select>";
-    if(isset($booking->invoicedTo) && !$booking->invoicedTo) {
-        $booking->invoicedTo = $booking->rooms[0]->date->start;
-    }
-    echo "<label style='display:inline-block;'><input type='text' gsname='endingAt' value='$endingAt' style='font-size: 14px; width: 100px;padding: 1px;' /></label>";
-    echo "<select gsname='appendToOrderId'>";
-    foreach($result as $order) {
-        if(!$order->closed) {
-            echo "<option value='" . $order->id . "'>Add to order " . $order->incrementOrderId . "</option>";
-        }
-    }
-    echo "<option value=''>Create a new order</option>";
-    echo "</select>";
-    echo "<span class='pmsbutton' gstype=\"submitToInfoBox\" style='padding: 1px; padding-left: 20px; padding-right: 20px; border-radius: 0px;'>Update</span>";
-    ?>
-</div>
-<h2>Invoice information</h2>
-<div gstype="form" method="updateInvoiceNote" style='text-align:right;'>
-    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-    <textarea gsname='invoicenote' style="width:100%;height: 50px;"><?php echo $booking->invoiceNote; ?></textarea><br>
-    <span class='pmsbutton' gstype="submitToInfoBox">Update invoice note (remeber this info needs to be added before the invoice is created)</span>
-</div>
-
+?>
 <script>
     $("[gsname='endingAt']").datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
     

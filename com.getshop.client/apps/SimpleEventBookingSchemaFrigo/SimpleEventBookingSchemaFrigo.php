@@ -17,11 +17,14 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
         if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
             $this->includefile("signedup");
         }
+        if(isset($_POST['event']) && $_POST['event'] == "signup" && !$this->hasInvalidFields) {
+            $this->dosignup();
+        }
     }
     
     public function isValidField($field) {
         if (isset($_POST['event']) && $_POST['event'] == "signup") {
-            if(!$_POST['data'][$field] || $_POST['data'][$field] == "false") {
+            if(!$_POST['data'][$field] || $_POST['data'][$field] == "false" || $_POST['data'][$field] == "") {
                 $this->hasInvalidFields = true;
                 return false;
             }
@@ -29,28 +32,31 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
         return true;
     }
     
-    public function signup() {
+    public function dosignup() {
         $user = new \core_usermanager_data_User();
-        $user->fullName = $_POST['data']['name'];
-        $user->birthDay = $_POST['data']['birthDay'];
-        $user->cellPhone = $_POST['data']['cellphone'];
-        $user->emailAddress = $_POST['data']['email'];
-        $user->address = new \core_usermanager_data_Address();
-        $user->address->address = $_POST['data']['street'];
-        $user->address->postCode = $_POST['data']['postcode'];
-        $user->address->city = $_POST['data']['city'];
-        @$user->metaData->{'parentName'} = $_POST['data']['parentname'];
-        @$user->metaData->{'parentcell'} = $_POST['data']['parentcell'];
-        @$user->metaData->{'sex'} = $_POST['data']['sex'];
-        @$user->metaData->{'school'} = $_POST['data']['school'];
-        @$user->metaData->{'schoolclass'} = $_POST['data']['schoolclass'];
-        @$user->metaData->{'usepictures'} = $_POST['data']['usepicutres'] && $_POST['data']['usepicutres'] == "true" ? "Ja" : "Nei";
-        @$user->metaData->{'overAge'} = $_POST['data']['overAge'] && $_POST['data']['overAge'] == "true" ? "Ja" : "Nei";
-        
-        $craetedUser  =  $this->getApi()->getUserManager()->createUser($user);
-        
-        $pageIdToUse = $this->getModalVariable("pageid") ? $this->getModalVariable("pageid") : $this->getPage()->getId();
-        $this->getApi()->getSimpleEventManager()->addUserToEvent($pageIdToUse , $craetedUser->id);
+            $user->fullName = $_POST['data']['name'];
+            $user->birthDay = $_POST['data']['birthDay'];
+            $user->cellPhone = $_POST['data']['cellphone'];
+            $user->emailAddress = $_POST['data']['email'];
+            $user->address = new \core_usermanager_data_Address();
+            $user->address->address = $_POST['data']['street'];
+            $user->address->postCode = $_POST['data']['postcode'];
+            $user->address->city = $_POST['data']['city'];
+            @$user->metaData->{'parentName'} = $_POST['data']['parentname'];
+            @$user->metaData->{'parentcell'} = $_POST['data']['parentcell'];
+            @$user->metaData->{'sex'} = $_POST['data']['sex'];
+            @$user->metaData->{'school'} = $_POST['data']['school'];
+            @$user->metaData->{'schoolclass'} = $_POST['data']['schoolclass'];
+            @$user->metaData->{'usepictures'} = $_POST['data']['usepicutres'];
+            @$user->metaData->{'overAge'} = $_POST['data']['overAge'] && $_POST['data']['overAge'] == "true" ? "Ja" : "Nei";
+
+            $craetedUser  =  $this->getApi()->getUserManager()->createUser($user);
+            $pageIdToUse = $this->getModalVariable("pageid") ? $this->getModalVariable("pageid") : $this->getPage()->getId();
+            $this->getApi()->getSimpleEventManager()->addUserToEvent($pageIdToUse , $craetedUser->id);
+    }
+    
+    public function signup() {
+            
     }
     
     public function downloadUserList() {

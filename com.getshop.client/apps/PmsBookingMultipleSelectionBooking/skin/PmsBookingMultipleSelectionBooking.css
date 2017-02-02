@@ -1,0 +1,94 @@
+.PmsBookingMultipleSelectionBooking{
+    width: 280px;
+    height: 300px;
+    top: 50px;
+    left: 75%;
+    position: absolute;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, .7);
+    text-align: center;
+    color: #000;
+    z-index: 2;
+}
+
+.PmsBookingMultipleSelectionBooking .title{
+    font-size: 20px;
+    width: 90%;
+    border-bottom: 1px #BBB solid;
+    margin: 16px 0 20px 15px;
+    color: #555;
+    cursor: default;
+}
+.PmsBookingMultipleSelectionBooking .boxarea{
+    width:100%;
+    margin: 15px;
+
+}
+.PmsBookingMultipleSelectionBooking .boxarea ul.tab{
+    list-style-type: none;
+    margin:0;
+    padding:0;
+    overflow: hidden;
+    border: none;
+    
+}
+.PmsBookingMultipleSelectionBooking .boxarea ul.tab li{
+    float:left;
+}
+.PmsBookingMultipleSelectionBooking .boxarea ul.tab li a{
+    display: inline-block;
+    width: 70px;
+    color: #555;
+    text-align: center;
+    padding: 5px;
+    margin-right: 5px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 12px;
+    background-color: rgba(255,255,255,.4)
+}
+
+.PmsBookingMultipleSelectionBooking .boxarea ul.tab li .activeTab{
+    color: #FFF;
+    background-color: rgba(85,85,85,0.3) !important;
+}
+.PmsBookingMultipleSelectionBooking .tabcontent{
+    display: none;
+    margin-top: 20px;
+    border: none;
+    -webkit-animation: fadeEffect 1s;
+    animation: fadeEffect 1s;
+}
+.PmsBookingMultipleSelectionBooking .dateinput{
+    width:105px;
+    padding:9px;
+    
+    color: #555;
+    border: none;
+    background-color: rgba(255,255,255,0.4);
+    
+    font-size: 12px;
+    text-align: center;
+    cursor: context-menu;
+}
+.PmsBookingMultipleSelectionBooking .bottomarea .searchbooking{
+    width:87%;
+    height: 30px;
+    margin-top:80px;
+    
+    left: 18px;
+    position: absolute;
+    color: white;
+    background-color: rgba(205, 22, 37,.8);
+    border: 0px;
+    cursor: pointer;
+}
+@-webkit-keyframes fadeEffect {
+    from{opacity: 0;}
+    to  {opacity: 1;}
+}
+
+@keyframes fadeEffect {
+    from{opacity: 0;}
+    to  {opacity: 1;}
+}

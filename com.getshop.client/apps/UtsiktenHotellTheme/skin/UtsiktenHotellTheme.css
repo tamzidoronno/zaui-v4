@@ -109,6 +109,8 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#258dc8', endColorstr='#258dc8',GradientType=0 ); /* IE6-9 */
 
 }
+.PmsBookingCalendar .calendar .calendar_header { position: relative; text-align: center; border: solid 1px #bbb; font-size: 16px; padding: 5px; background-color:#000; color:#fff; }
+.PmsBookingCalendar .calendar .day.selected { background-color:#000; color:#fff; }
 
 .gsucell[cellid="a09e56cf-1fc4-49ad-98e9-c5582863de3e"] {
     width: 70% !important;

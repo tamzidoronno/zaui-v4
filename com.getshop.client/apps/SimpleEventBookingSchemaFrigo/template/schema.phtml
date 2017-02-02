@@ -60,7 +60,11 @@
     <br/>
     <br/>
     <div class='row'> 
-        <div class='col1 <?php if(!$this->isValidField("usepicutres")) { echo "invalidfield"; } ?>'><input type="checkbox" gsname="usepicutres" <?php if (isset ($_POST['data']['usepicutres']) && $_POST['data']['usepicutres'] == "true") echo 'checked="checked" '; ?>/>* Jeg bekrefter at Frigo kan publisere bilder av min datter/sønn på nett og brosjyrer.</div>
+        <div class='col1'>
+            <input type="radio" name="usepicutres" gsname="usepicutres" value="Ja" <?php if (isset ($_POST['data']['usepicutres']) && $_POST['data']['usepicutres'] == "true") echo 'checked="checked" '; ?>/>Ja &nbsp;
+            <input type="radio" name="usepicutres" gsname="usepicutres" value="Nei" checked="checked"/>Nei &nbsp;  Frigo kan publisere bilder av min datter/sønn på nett og brosjyrer?
+        
+        </div>
     </div>
     <div class='row'>
         <div class='col1 <?php if(!$this->isValidField("overAge")) { echo "invalidfield"; } ?>'><input type="checkbox" gsname="overAge" <?php if (isset ($_POST['data']['overAge']) && $_POST['data']['overAge'] == "true") echo 'checked="checked" '; ?>/>* Jeg bekrefter at jeg er over 18 år og melder meg på Frigotur.</div>
@@ -79,7 +83,7 @@
     }   
     else {
         ?>
-    <div class='shop_button' gstype="submit">Meld deg på</div>
+    <div class='shop_button ' gstype="submit">Meld deg på</div>
     <?
         if($this->hasInvalidFields){
             echo "<br><br><div class='invalidfield'> * Du må fylle alle felter som er merket med stjerne</div>";

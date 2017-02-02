@@ -18,7 +18,8 @@ foreach ($event->userIds as $userId) {
         <div> Epost: <? echo $user->emailAddress; ?> </div>
         <div> Address: <? echo $user->address->address. " " . $user->address->postCode. " " .$user->address->city; ?> </div>
         <div> Foresatte: <? echo $user->metaData->{'parentName'}. " / " . $user->metaData->{'parentcell'}?> </div>
-        <div> Bekreftet over 18: <? echo $user->metaData->{'overAge'} ?>
+        <div> Bruke bilder: <? echo $user->metaData->{'usepictures'} ?></div>
+        <div> Bekreftet over 18: <? echo $user->metaData->{'overAge'} ?></div>
         <?
         echo "</div>";
     }

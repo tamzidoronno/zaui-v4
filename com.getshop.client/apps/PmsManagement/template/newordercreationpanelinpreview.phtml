@@ -110,15 +110,18 @@ $products = $this->getApi()->getProductManager()->getAllProductsLight();
         <span  style='float:left;'>Total : <span class='totalprice'>0</span></span>
         <input type="button" id='runcreateorder' value="Create order">
     </span>
+    
     <div style="height: 20px;clear:both; text-align:right;" gstype='form' method='addProductToCart'>
         <input type='hidden' gsname='bookingid' value='<?php echo $booking->id; ?>'>
-        <select gsname='productid' id="selectproducttoadd">
-            <?php
-            foreach($products as $product) {
-                echo "<option value='".$product->id."'>" . $product->name . "</option>";
-            }
-            ?>
-        </select>
+        <span style='text-align:left;'>
+            <select gsname='productid' id="selectproducttoadd">
+                <?php
+                foreach($products as $product) {
+                    echo "<option value='".$product->id."'>" . $product->name . "</option>";
+                }
+                ?>
+            </select>
+        </span>
         <input type='button' value='Add product' class='addproducttocart'>
     </div>
 </div>

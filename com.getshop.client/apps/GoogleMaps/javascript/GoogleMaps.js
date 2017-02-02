@@ -279,7 +279,6 @@ googleMapsInitialized = function() {
     thundashop.app.GoogleMapsCommon.inizialized = true;
 }
 if (typeof(ns_17c48891_6f7a_47a0_849d_b50de9af218f_GoogleMaps_extravariables) !== "undefined" &&  typeof(ns_17c48891_6f7a_47a0_849d_b50de9af218f_GoogleMaps_extravariables.key) !== "undefined") {
-    debugger;
     var key = ns_17c48891_6f7a_47a0_849d_b50de9af218f_GoogleMaps_extravariables.key;
     var url = "https://maps.googleapis.com/maps/api/js?key="+key+"&v=3.exp&sensor=false&callback=googleMapsInitialized";
     $.getScript(url, function(){});

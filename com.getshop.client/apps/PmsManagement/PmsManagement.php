@@ -295,8 +295,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function addProductToCart() {
-        $this->getApi()->getCartManager()->addProductWithSource($_POST['data']['productid'], 1, "pmsquickproduct");
-        $this->showBookingInformation();
+        $item = $this->getApi()->getCartManager()->addProductWithSource($_POST['data']['productid'], 1, "pmsquickproduct");
+        $this->selectedBooking = null;
+        $this->printSingleCartItem($item, null);
     }
     
     public function loadOrderInfoOnBooking() {
@@ -2781,6 +2782,34 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function includeOrderCreationPanel() {
         $this->includefile("ordercreationpanel");
+    }
+    
+    public function loadCartItems() {
+        $this->includefile("ordergenerationcartitems");
+    }
+
+    public function printSingleCartItem($item, $lastSelectedId) {
+        echo "<div selectionroomrow='".$lastSelectedId."' class='cartitemselectionrow'>";
+        echo "<input type='checkbox' class='itemselection'>";
+        echo "<input type='hidden' gsname='itemid' value='".$item->cartItemId."'>";
+        if(isset($lastSelectedId)) {
+            echo "<input type='hidden' gsname='pmsRoomId' value='". $lastSelectedId . "' style='width:120px;'> ";
+        }
+
+        $start = "";
+        if(isset($item->startDate)) {
+            $start =  date("d.m.Y H:i", strtotime($item->startDate));
+        }
+        $end = "";
+        if(isset($item->startDate)) {
+            $end =  date("d.m.Y H:i", strtotime($item->endDate));
+        }
+        echo "<input type='txt' gsname='start' value='".$start . "' style='width:120px;'> ";
+        echo "<input type='txt' gsname='end' value='$end' style='width:120px;'> ";
+        echo "<input type='txt' gsname='count' style='width: 25px;text-align:center;' value='". $item->count . "' style='width:120px;' class='cartcount'> ";
+        echo "<input type='txt' gsname='name' value='". $item->product->name . "' style='width:550px;' class='itemname'> ";
+        echo "<input type='txt' gsname='price' style='width: 60px;' class='cartprice' value='". $item->product->price . "' style='width:120px;'>";
+        echo "</div>";
     }
 
 }

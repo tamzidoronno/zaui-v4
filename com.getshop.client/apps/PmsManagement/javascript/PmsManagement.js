@@ -44,6 +44,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .markpaidbutton', app.PmsManagement.markpaidform);
         $(document).on('click','.PmsManagement .changeGuestInformation', app.PmsManagement.changeGuestInformation);
         $(document).on('click','.PmsManagement .addonincludedinroomprice', app.PmsManagement.toggleAddonIncluded);
+        $(document).on('click','.PmsManagement .addproducttocart', app.PmsManagement.addProductToCart);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -81,6 +82,15 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .addPaymentMethod', app.PmsManagement.addPaymentMethod);
         $(document).on('click','.PmsManagement .removePaymentMethod', app.PmsManagement.removePaymentMethod);
         $(document).on('click','.PmsManagement .loadorderstatsentryfororder', app.PmsManagement.loadorderstatsentryfororder);
+    },
+    addProductToCart : function() {
+        var form = $(this).closest("[gstype='form']");
+        var data = thundashop.framework.createGsArgs(form);
+        
+        var event = thundashop.Ajax.createEvent('','addProductToCart',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.ordercreationpreview').prepend(res);
+        });
     },
     loadorderstatsentryfororder : function() {
         var event = thundashop.Ajax.createEvent('','loadOrderStatsForEntryCell',$(this),{

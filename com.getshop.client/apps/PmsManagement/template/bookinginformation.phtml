@@ -108,6 +108,7 @@ foreach($config->addonConfiguration as $addonConfig) {
 if($hasAddons) {
     echo "<span class='tab' area='addons'>Addons</span>";
 }
+echo "<span class='tab' area='otherbookingoptions'>Other</span>";
 if($hasArx) {
     echo "<span class='tab' area='carddata'>Card / code</span>";
 }
@@ -140,6 +141,10 @@ if($hasArx) {
     $this->mightInclude("carddata");
     echo "</div>";
 }
+
+echo "<div class='tabarea otherbookingoptions'>";
+$this->mightInclude("otherbookingoptions");
+echo "</div>";
 
 if ($config->functionsEnabled) {
     echo "<div class='tabarea functions'>";

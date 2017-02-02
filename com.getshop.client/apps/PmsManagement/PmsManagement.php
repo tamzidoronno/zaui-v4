@@ -675,6 +675,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
            case "orderpreview":
            case "carddata":
            case "functions":
+           case "otherbookingoptions":
                $this->includefile($area);
                break;
            default:
@@ -682,6 +683,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
                break;
        }
    } 
+   
+   public function saveOtherBookingOptions() {
+       $booking = $this->getSelectedBooking();
+       $booking->priceType = $_POST['data']['priceType'];
+       $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+       $this->selectedBooking = null;
+       $this->showBookingInformation();
+   }
    
     public function showBookingInformation() {
         $this->includefile("bookinginformation");

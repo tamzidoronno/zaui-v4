@@ -9,6 +9,7 @@ import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.Internal;
 import com.thundashop.core.ordermanager.data.CartItemDates;
+import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
@@ -269,4 +270,7 @@ public interface IOrderManager {
     public List<Order> getOrdersPaid(String paymentId, String userId, Date from, Date to);
     
     public void printInvoice(String orderId, String printerId);
+    
+    @Administrator
+    public void addClosedPeriode(ClosedOrderPeriode closed);
 }

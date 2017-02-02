@@ -19,6 +19,7 @@ import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.data.CartItemDates;
+import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.SalesStats;
@@ -56,6 +57,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public HashMap<String, Order> orders = new HashMap();
     
     public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
+    
+    public HashMap<String, ClosedOrderPeriode> closedPeriodes = new HashMap();
     
     @Autowired
     public MailFactory mailFactory;
@@ -221,6 +224,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     public void markAsPaidInternal(Order order, Date date) {
+        checkPaymentDateValidation(order, date);
+        
         order.paymentDate = date;
         order.status = Order.Status.PAYMENT_COMPLETED;
         
@@ -231,6 +236,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         if(order.payment != null && order.payment.transactionLog != null) {
             order.payment.transactionLog.put(System.currentTimeMillis(), "Order marked paid for by : " + name);
+        }
+    }
+
+    private void checkPaymentDateValidation(Order order, Date date) {
+        try {
+            Order cloned = (Order) order.clone();
+            cloned.paymentDate = date;
+            cloned.status = Order.Status.PAYMENT_COMPLETED;
+            validateOrder(cloned);
+        } catch (CloneNotSupportedException ex) {
+            logPrintException(ex);
         }
     }
     
@@ -503,6 +519,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void saveOrder(Order order) throws ErrorException {
+        validateOrder(order);
         saveOrderInternal(order);
     }
     
@@ -562,6 +579,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void changeOrderStatus(String id, int status) throws ErrorException {
         Order order = orders.get(id);
+        validateOrder(order);
         if (order == null) {
             order = getByTransactionId(id);
         }
@@ -1683,6 +1701,46 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             retval.add(vord.order);
         }
         return retval;
+    }
+    
+    @Override
+    public void addClosedPeriode(ClosedOrderPeriode closed) {
+        boolean alreadyClosed = closedPeriodes.values().stream()
+                .filter(periode -> periode.paymentTypeId.equals(closed.paymentTypeId))
+                .filter(periode -> periode.interCepts(closed.startDate, closed.endDate))
+                .count() > 0;
+        
+        if (alreadyClosed) {
+            throw new ErrorException(1038);
+        }
+        
+        saveObject(closed);
+        closedPeriodes.put(closed.id, closed);
+    }
+
+    private void validateOrder(Order incomeOrder) {
+        Order inMemory = null;
+        
+        if (incomeOrder.paymentDate == null)
+            return;
+        
+        if (incomeOrder.id != null && !incomeOrder.id.isEmpty()) {
+            inMemory = getOrderSecure(incomeOrder.id);
+        }
+        
+        if (inMemory != null && inMemory.isPaymentDate(incomeOrder.paymentDate)) {
+            return;
+        }
+        
+        boolean inClosedPeriode = closedPeriodes.values().stream()
+                .filter(periode -> periode.paymentTypeId.equals(incomeOrder.payment.paymentId))
+                .filter(periode -> periode.within(incomeOrder.paymentDate))
+                .count() > 0;
+                
+        if (inClosedPeriode) {
+            throw new ErrorException(1039);
+        }
+        
     }
 
 }

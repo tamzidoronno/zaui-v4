@@ -316,6 +316,18 @@ public class Order extends DataCommon implements Comparable<Order> {
         return false;
     }
 
+    public boolean isPaymentDate(Date paymentDate) {
+        if (paymentDate == null && this.paymentDate == null) {
+            return false;
+        }
+        
+        if (this.paymentDate == null) {
+            return false;
+        }
+        
+        return this.paymentDate.equals(paymentDate);
+    }
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;

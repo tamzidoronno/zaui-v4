@@ -1,0 +1,35 @@
+<?php
+/*@var $this ns_0f6913fb_b28d_49b1_9c6b_7aa023bd21bb\PmsBookingMultipleSelectionBooking*/
+$nextPage = $this->getText("next_page");
+if(!$nextPage) {
+    $nextPage = "/index.php?page=eada37a4-f35a-4550-9770-d221a47a726c";
+}
+?>
+<div>
+    <div class="title"><? echo $this->__w("Make a reservation")?> </div>
+    <div class="boxarea">
+            <ul class="tab">
+                <li><a href="javascript:void(0)" class="tablinks" area='Hotel' id="defaultOpen"><? echo $this->__w("Hotel"); ?></a></li>
+                <li><a href="javascript:void(0)" class="tablinks" area='Golfpark'><? echo $this->__w("Golfpark"); ?></a></li>
+                <li><a href="javascript:void(0)" class="tablinks" area='Artcenter'><? echo $this->__w("Kunstsenter"); ?></a></li>
+            </ul>
+    </div>
+    <div class="tabcontent" id="Hotel">
+        <input class="start_date_input dateinput fa" gsname="date" placeholder="Check in  &#xf133;"/>
+        <input class="end_date_input dateinput fa" gsname="date2" placeholder="Check out  &#xf133;"/>
+    </div>
+    <div class="tabcontent" id="Golfpark">
+        <p>Tabs 2</p>
+    </div>
+    <div class="tabcontent" id="Artcenter">
+        <p>Tabs 3</p>
+    </div>
+    <div class="bottomarea">
+        <div class="searchbooking" next_page='<? echo $nextPage; ?>'gstype="submit"><? echo $this->__w("Search"); ?> </div>
+    </div>
+</div>
+<script>
+    $('.dateinput[gsname="date"]').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.dateinput[gsname="date2"]').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('#defaultOpen').click();
+</script>

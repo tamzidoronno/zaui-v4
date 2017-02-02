@@ -1,0 +1,35 @@
+<?
+/* @var $this \ns_17c48891_6f7a_47a0_849d_b50de9af218f\GoogleMaps */
+?>
+<div class='gss_settings_header'>
+    <i class='fa fa-image'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <? echo $this->__f("Image displayer global settings"); ?>
+        </div>
+
+        <div class='gss_settings_header_description_inner'>
+            <?
+            echo $this->__f("Some global settings for the image displayer");
+            ?>	
+        </div>
+    </div>       
+</div>
+
+<div class='gss_settings_content'>
+    <div class="textfield gss_setting"  id="email">
+        <span class="title"><?php echo $this->__f("Google maps key"); ?></span>
+        <input type="textfield" gs_model='googlemapsmodel' gs_model_attr='key' value="<? echo $this->getConfigurationSetting("key") ?>">
+        <div class="description">
+            <?php echo $this->__("Google Maps Key"); ?>
+        </div>
+    </div>
+
+    
+    
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="googlemapsmodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Update"); ?></div>
+    </div>
+
+</div>

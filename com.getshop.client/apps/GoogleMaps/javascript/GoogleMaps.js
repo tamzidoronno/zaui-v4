@@ -278,5 +278,12 @@ thundashop.app.GoogleMapsCommon.initInfoBoxEvents();
 googleMapsInitialized = function() {
     thundashop.app.GoogleMapsCommon.inizialized = true;
 }
-$.getScript("https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=googleMapsInitialized", function(){
-});
+if (typeof(ns_17c48891_6f7a_47a0_849d_b50de9af218f_GoogleMaps_extravariables) !== "undefined" &&  typeof(ns_17c48891_6f7a_47a0_849d_b50de9af218f_GoogleMaps_extravariables.key) !== "undefined") {
+    debugger;
+    var key = ns_17c48891_6f7a_47a0_849d_b50de9af218f_GoogleMaps_extravariables.key;
+    var url = "https://maps.googleapis.com/maps/api/js?key="+key+"&v=3.exp&sensor=false&callback=googleMapsInitialized";
+    $.getScript(url, function(){});
+} else {
+    $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCS7XnBQXFqolWxs97eNmWpbVnMShfkj3s&v=3.exp&sensor=false&callback=googleMapsInitialized", function(){});
+}
+

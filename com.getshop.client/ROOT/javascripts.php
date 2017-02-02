@@ -42,6 +42,13 @@ $fileContentAllInOne = "";
 foreach ($apps as $app) {
     $appInstance = $factory->getApplicationPool()->createInstace($app);
     if ($appInstance) {
+        if (method_exists($appInstance, "getJavaScriptVariables") && $appInstance->getJavaScriptVariables()) {
+            echo "<script>";
+            echo str_replace("\\","_", get_class($appInstance))."_extravariables = ".json_encode($appInstance->getJavaScriptVariables());
+            echo "</script>";
+
+        }
+        
         if (method_exists($appInstance, "includeExtraJavascript")) {
             $extraJavascript = $appInstance->includeExtraJavascript();
             if (is_array($extraJavascript)) {

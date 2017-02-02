@@ -238,7 +238,13 @@ class FactoryBase {
         return $newArray;
     }
 
-
+    /*
+     * Used if needed to pass javascriptvariables to 
+     * javascript upon loading
+     */
+    public function getJavaScriptVariables() {
+        return false;
+    }
 }
 
 ?>

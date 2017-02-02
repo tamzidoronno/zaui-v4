@@ -191,6 +191,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if (order.incrementOrderId > incrementingOrderId) {
                     incrementingOrderId = order.incrementOrderId;
                 }
+                if (order.isVirtual) {
+                    continue;
+                }
                 orders.put(order.id, order);
             }
         }
@@ -199,6 +202,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
 
     private void saveOrderInternal(Order order) throws ErrorException {
+        if (order.isVirtual) {
+            return;
+        }
         User user = getSession().currentUser;
         if (user != null && order.userId == null) {
             order.userId = user.id;

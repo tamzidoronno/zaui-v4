@@ -644,6 +644,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter = new \core_pmsmanager_NewOrderFilter();
         $filter->onlyEnded = false;
         $filter->prepayment = $config->prepayment;
+        $filter->createNewOrder = true;
         if($config->increaseUnits > 0) {
             $filter->increaseUnits = $config->increaseUnits;
         }

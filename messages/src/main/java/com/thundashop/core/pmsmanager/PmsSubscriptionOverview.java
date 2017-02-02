@@ -17,7 +17,12 @@ public class PmsSubscriptionOverview {
     
     String orderPaymentType;
     Date orderCreationDate;
+    Date invoicedTo;
+    Date lastOrderInvoicedTo;
     Double orderValue;
     String paymentType;
     Integer cardsSaved = 0;
+    Date latestInvoiceEndDate;
+    Date latestInvoiceStartDate;
+    boolean confirmed = false;
 }

@@ -265,4 +265,8 @@ public class CartItem implements Serializable {
 
         return minutes;
     }
+
+    public void refreshCartItemId() {
+        cartItemId = UUID.randomUUID().toString();
+    }
 }

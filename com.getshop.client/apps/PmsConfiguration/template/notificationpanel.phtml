@@ -824,6 +824,18 @@ $channelConfig = $config->channelConfiguration;
                 <span class='configentry'>
                     <?
                     $checked = "";
+                    if($notificationSettings->ignoreRoomToEndDate) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='ignoreRoomToEndDate' <? echo $checked; ?>>
+                </span>
+                When creating orders, ignore the end date of the room.
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
                     if($notificationSettings->orderEndsFirstInMonth) {
                         $checked = "CHECKED";
                     }

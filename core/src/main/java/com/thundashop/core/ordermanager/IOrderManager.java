@@ -47,6 +47,9 @@ public interface IOrderManager {
     public String createRegisterCardOrder(String paymentType);
     
     @Administrator
+    public void deleteAllVirtualOrders();
+    
+    @Administrator
     public void forceDeleteOrder(String orderId, String password);
     
     /**

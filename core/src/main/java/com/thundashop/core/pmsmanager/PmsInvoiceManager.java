@@ -62,6 +62,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         cartManager.getCart().addCartItems(added);
     }
 
+    private boolean sameMonth(Date startDate, Date endDate) {
+        Calendar cal = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal.setTime(startDate);
+        cal2.setTime(endDate);
+        
+        if(cal.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) && cal.get(Calendar.YEAR) == cal.get(Calendar.YEAR)) {
+            return true;
+        }
+        return false;
+    }
+
     
 
     class BookingOrderSummary {
@@ -743,6 +755,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         Date startDate = room.getInvoiceStartDate();
         Date endDate = room.getInvoiceEndDate(filter, booking);
+        
         if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || room.invoicedTo.after(endDate))) {
             return;
         }
@@ -752,6 +765,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.invoicedTo == null && startDate.after(endDate)) {
             //Never invoiced, and a credit note is needed?
             return;
+        }
+        
+        if(pmsManager.getConfigurationSecure().ignoreRoomToEndDate && endDate.before(filter.endInvoiceAt)) {
+            endDate = filter.endInvoiceAt;
         }
         
         List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room, filter);
@@ -992,7 +1009,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                     if(roomIdsInCart.contains(room.pmsBookingRoomId)) {
                         room.invoicedFrom = room.date.start;
-                        if(filter.endInvoiceAt != null && room.date.end.before(filter.endInvoiceAt)) {
+                        if(filter.endInvoiceAt != null && room.date.end.before(filter.endInvoiceAt) && !pmsManager.getConfigurationSecure().ignoreRoomToEndDate) {
                             room.invoicedTo = room.date.end;
                         } else {
                             room.invoicedTo = filter.endInvoiceAt;
@@ -1012,7 +1029,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(lastOrderId.isEmpty() && !avoidOrderCreation) {
             logPrint("Returning an empty order id, this is wrong.");
         }
-        updateCart();
+        if(filter.addToOrderId.isEmpty()) {
+            updateCart();
+        }
         return lastOrderId;
     }
     
@@ -1224,7 +1243,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if (!booking.confirmed) {
             return false;
         }
-        if (!booking.payedFor) {
+        if (!booking.payedFor && !pmsManager.getConfigurationSecure().ignoreRoomToEndDate) {
             return false;
         }
         return true;
@@ -1999,6 +2018,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             List<Order> orders = getOrdersFromRoom(simple.pmsRoomId);
             Order latestOrder = getLatestOrder(orders, start, end);
             PmsSubscriptionOverview toAdd = new PmsSubscriptionOverview();
+            PmsBooking booking = pmsManager.getBooking(simple.bookingId);
+            PmsBookingRooms room = booking.getRoom(simple.pmsRoomId);
             
             toAdd.price = simple.price;
             toAdd.paid = false;
@@ -2007,7 +2028,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             toAdd.orderValue = 0.0;
             toAdd.start = simple.start;
             toAdd.end = simple.end;
+            toAdd.confirmed = booking.confirmed;
             toAdd.userId = pmsManager.getBookingUnfinalized(simple.bookingId).userId;
+            toAdd.invoicedTo = room.invoicedTo;
             
             User user = userManager.getUserById(toAdd.userId);
             toAdd.cardsSaved = user.savedCards.size();
@@ -2015,6 +2038,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(latestOrder != null) {
                 toAdd.orderCreationDate = latestOrder.rowCreatedDate;
                 toAdd.orderValue = getTotalValue(latestOrder, simple.pmsRoomId);
+                toAdd.latestInvoiceEndDate = latestOrder.getEndDateByItems();
+                toAdd.latestInvoiceStartDate = latestOrder.getStartDateByItems();
                 toAdd.paid = latestOrder.status == Order.Status.PAYMENT_COMPLETED;
                 toAdd.paymentType = latestOrder.payment.paymentType;
             }
@@ -2025,13 +2050,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     private Order getLatestOrder(List<Order> orders, Date start, Date end) {
-        List<Order> result = new ArrayList();
+        Order latest = null;
         for(Order ord : orders) {
-            if(ord.rowCreatedDate.after(start) && ord.rowCreatedDate.before(end)) {
-                return ord;
+            Date orderEnd = ord.getEndDateByItems();
+            System.out.println(orderEnd);
+            if(orderEnd != null) {
+                if(latest == null || orderEnd.after(latest.getEndDateByItems())) {
+                    latest = ord;
+                }
             }
         }
-        return null;
+        return latest;
     }
     
     private void checkIfOrderNeedsToBeSplitted() {
@@ -2048,6 +2077,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<CartItem> toRemove = new ArrayList();
         for(CartItem item : items) {
             if(item.startDate == null || item.endDate == null) {
+                continue;
+            }
+            if(sameMonth(item.startDate, item.endDate)) {
                 continue;
             }
             toRemove.add(item);
@@ -2089,6 +2121,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         
                         String copy = gson.toJson(item);
                         CartItem lastAdd = gson.fromJson(copy, CartItem.class);
+                        lastAdd.refreshCartItemId();
                         lastAdd.startDate = toAdd.endDate;
                         lastAdd.endDate = item.endDate;
                         lastAdd.setCount(1);
@@ -2113,6 +2146,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     public void createVirtualOrder(String bookingId) {
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        if(!booking.isCompletedBooking()) {
+            return;
+        }
         double total = booking.getTotalPrice();
         double totalOrder = getTotalOrderPrice(booking);
         double diff = totalOrder - total;

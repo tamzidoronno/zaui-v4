@@ -5,16 +5,19 @@ $end = strtotime(date("t.m.Y", time()));
 echo date("d.m.Y", $start) . " - " . date("d.m.Y", $end) . "<br><br>";
 $overview = $this->getApi()->getPmsInvoiceManager()->getSubscriptionOverview($this->getSelectedName(), $this->convertToJavaDate($start), $this->convertToJavaDate($end));  
 echo "<input type='checkbox' id='onlyunpaid'> Show only unpaid card orders<br>";
-echo "<table width='100%' id='showtable'>";
+echo "<table width='100%' id='showtable' cellspacing='0' cellpadding='0'>";
 echo "<thead>";
 echo "<tr>";
 echo "<th align='left'>Item</th>";
+echo "<th align='left'>Start</th>";
+echo "<th align='left'>End</th>";
 echo "<th align='left'>Owner</th>";
 echo "<th align='left'>Price</th>";
 echo "<th align='left'>Order price</th>";
+echo "<th align='left'>Room Invoiced to</th>";
+echo "<th align='left'>Invoice start</th>";
+echo "<th align='left'>Invoice end</th>";
 echo "<th align='left'>Paid</th>";
-echo "<th align='left'>Start</th>";
-echo "<th align='left'>End</th>";
 echo "<th align='left'>Order date</th>";
 echo "<th align='left'>Payment type</th>";
 echo "<th align='left'>Cards</th>";
@@ -25,18 +28,37 @@ echo "</thead>";
 echo "<tbody>";
 $totalCardsSaved = 0;
 foreach($overview as $room) {
+    if(!$room->price) {
+        continue;
+    }
     $type = $room->paymentType;
     $paid = $room->paid ? "Yes" : "No";
     $totalCardsSaved += $room->cardsSaved;
     $ptype = substr($type, strpos($room->paymentType, "\\")+1);
     echo "<tr class='$paid"."_".$ptype." overviewrow'>";
     echo "<td>" . $room->roomName . "</td>";
-    echo "<td>" . $room->usersName . "</td>";
-    echo "<td>" . $room->price . "</td>";
-    echo "<td>" . $room->orderValue . "</td>";
-    echo "<td>" . $paid . "</td>";
     echo "<td>" . date("d.m.Y", $room->start/1000). "</td>";
     echo "<td>" . date("d.m.Y", $room->end/1000). "</td>";
+    echo "<td>" . $room->usersName . "</td>";
+    echo "<td>" . $room->price . "</td>";
+    echo "<td>" . round($room->orderValue) . "</td>";
+    if($room->invoicedTo) {
+        echo "<td>" . date("d.m.Y", strtotime($room->invoicedTo)) . "</td>";
+    } else {
+        echo "<td></td>";
+    }
+    if($room->latestInvoiceStartDate) {
+        echo "<td>" . date("d.m.Y", strtotime($room->latestInvoiceStartDate)) . "</td>";
+    } else {
+        echo "<td></td>";
+    }
+    if($room->latestInvoiceEndDate) {
+        echo "<td>" . date("d.m.Y", strtotime($room->latestInvoiceEndDate)) . "</td>";
+    } else {
+        echo "<td></td>";
+    }
+    
+    echo "<td>" . $paid . "</td>";
     echo "<td>";
     if($room->orderCreationDate) {
         echo date("d.m.Y", strtotime($room->orderCreationDate));
@@ -44,6 +66,9 @@ foreach($overview as $room) {
     echo "</td>";
     echo "<td>" . $ptype . "</td>";
     echo "<td>" . $room->cardsSaved . "</td>";
+    if(!$room->confirmed) {
+        echo "<td>Not confirmed</td>";
+    }
     echo "</tr>";
 }
 echo "</tbody>";

@@ -79,7 +79,7 @@ class OrderManager extends GSTableCommon implements \Application {
         }
         
         $this->getApi()->getOrderManager()->saveOrder($order);
-    }    
+    }
     
     public function renderConfig() {
         $this->includefile("orderoverview");

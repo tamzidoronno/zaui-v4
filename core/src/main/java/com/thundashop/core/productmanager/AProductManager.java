@@ -56,14 +56,13 @@ public abstract class AProductManager extends ManagerBase {
             product.page = pageManager.getPage(product.pageId);
         }
         
-
         if (taxGroups.get(1) != null && product.taxGroupObject == null && product.taxgroup == -1) {
             product.taxGroupObject = taxGroups.get(1);
             product.taxgroup = 1;
         } else {
             product.taxGroupObject = taxGroups.get(product.taxgroup);
         }
-
+        
         setOriginalPriceIfNull(product);
         setGroupPrice(product);
         addSubProductsToTransientVariable(product);
@@ -75,14 +74,16 @@ public abstract class AProductManager extends ManagerBase {
         }
         
         product.uniqueName = product.name;
-        
         ensureUniqueNameWhenDuplicate(product);
     
-        if (product.pageId != null && !product.pageId.isEmpty()) {
+        if (product.pageId != null && !product.pageId.isEmpty() && !product.selectedProductTemplate.equals(product.currentSelectedProducTemplate)) {
             Page page = pageManager.getPage(product.pageId);
             if (page.isASlavePage() && !page.masterPageId.equals(product.selectedProductTemplate)) {
                 pageManager.changeTemplateForPage(product.pageId, product.selectedProductTemplate);
             }
+            
+            product.currentSelectedProducTemplate = product.selectedProductTemplate;
+            saveObject(product);
         }
         
         product.doFinalize();
@@ -91,6 +92,7 @@ public abstract class AProductManager extends ManagerBase {
         if (product.variations != null && product.variations.nodes.isEmpty()) {
             product.variations = null;
         }
+        
 //        updateTranslation(product);
         return product;
     }

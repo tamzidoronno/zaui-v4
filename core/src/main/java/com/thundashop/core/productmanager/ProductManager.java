@@ -155,6 +155,8 @@ public class ProductManager extends AProductManager implements IProductManager {
 
     @Override
     public List<Product> getAllProducts() throws ErrorException {
+        long time = System.currentTimeMillis();
+        
         ArrayList<Product> list = new ArrayList(products.values());
         ArrayList<Product> finalized = new ArrayList();
         for (Product prod : list) {

@@ -1749,4 +1749,45 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
     }
 
+    @Override
+    public List<Order> getAllUnpaidInvoices() {
+        String invoicePaymentAppId = "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment";
+        List<Order> retOrders = orders.values().stream()
+                .filter(order -> !order.isCreditNote)
+                .filter(order -> order.payment != null && order.payment.paymentType.equals(invoicePaymentAppId))
+                .filter(order -> order.paymentDate == null)
+                .collect(Collectors.toList());
+                
+        
+        removeCredittedOrders(retOrders);
+        
+        finalize(retOrders);
+        
+        return retOrders;
+    }
+
+    private void removeCredittedOrders(List<Order> retOrders) {
+        List<Order> toRemove = new ArrayList();
+        
+        for (Order order : retOrders) {
+            if (order.creditOrderId.isEmpty())
+                continue;
+            
+            double credittedSum = order.creditOrderId.stream()
+                    .map(id -> getOrder(id))
+                    .mapToDouble(iorder -> getTotalAmount(iorder))
+                    .sum();
+                    
+            
+            double sum = getTotalAmount(order);
+            double test = credittedSum + sum;
+            
+            if (test == 0) {
+                toRemove.add(order);
+            }
+        }
+        
+        retOrders.removeAll(toRemove);
+    }
+
 }

@@ -1,0 +1,40 @@
+<?
+/* @var $this \ns_b3654609_a195_464f_84c4_e083702c0bf2\InvoiceControl */
+$groupedOrders = $this->getGroupedOrders();
+
+$totalDue = 0;
+$total = 0;
+    
+foreach ($groupedOrders as $userId => $orders) {
+    $user = $this->getApi()->getUserManager()->getUserById($userId);
+    echo "<div class='orderview'>";
+    echo $user->fullName;
+    
+    foreach ($orders as $order) {
+        /* @var $order core_ordermanager_data_Order */
+        $ordersum = $this->getApi()->getOrderManager()->getTotalAmount($order);
+        
+        $fourTeenDaysInFuture = strtotime($order->rowCreatedDate) + 60*60*24*14;
+        $today = time();
+        $due = $today > $fourTeenDaysInFuture;
+        $printData = date("d/m-Y", strtotime($order->rowCreatedDate));
+        $dueColor = $due ? "color: red" : "color: #888";
+        $createdDate = "<span style='$dueColor'> ( ".$printData." ) </span>";
+        $paymentIcon = '<div class="gs_shop_small_icon"><i class="fa fa-dollar"></i></div>';
+        
+        $total += $ordersum;
+        
+        if ($due)
+            $totalDue += $ordersum;
+        
+        echo "<div class='row'><div class='col col1' style='cursor: pointer;' onclick='app.OrderManager.gssinterface.showOrder(\"$order->id\")'>$order->incrementOrderId $createdDate</div><div class='col col2'>$ordersum &nbsp;&nbsp;</div></div>";
+    }
+    echo "</div>";
+}
+
+?>
+
+<div style="padding: 50px;">
+    Total: <? echo number_format($total); ?>
+    <br/>Overdue: <? echo number_format($totalDue); ?>
+</div>

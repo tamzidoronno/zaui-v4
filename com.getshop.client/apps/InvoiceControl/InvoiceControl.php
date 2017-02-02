@@ -11,7 +11,22 @@ class InvoiceControl extends \MarketingApplication implements \Application {
     }
 
     public function render() {
-        
+        $this->includefile("invoice");
     }
+
+    public function getGroupedOrders() {
+        $orders = $this->getApi()->getOrderManager()->getAllUnpaidInvoices();
+        $groupedOrders = new \stdClass();
+        
+        foreach ($orders as $order) {
+            if (!isset($groupedOrders->{$order->userId})) {
+                $groupedOrders->{$order->userId} = array();
+            }
+            $groupedOrders->{$order->userId}[] = $order;
+        }
+        
+        return $groupedOrders;
+    }
+
 }
 ?>

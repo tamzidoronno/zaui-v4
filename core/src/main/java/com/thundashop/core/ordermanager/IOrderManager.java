@@ -276,4 +276,7 @@ public interface IOrderManager {
     
     @Administrator
     public void addClosedPeriode(ClosedOrderPeriode closed);
+    
+    @Administrator
+    public List<Order> getAllUnpaidInvoices();
 }

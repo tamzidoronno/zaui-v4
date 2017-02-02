@@ -1,0 +1,21 @@
+.InvoiceControl .orderview {
+    border: solid 1px #EEE;
+    padding: 20px;
+}
+
+.InvoiceControl .orderview .row .col {
+    display: inline-block;
+}
+
+.InvoiceControl .orderview .row {
+    text-align: right;
+}
+
+.InvoiceControl .orderview .col1 {
+    width: 300px;
+    text-align: left;
+}
+
+.InvoiceControl .orderview .col2 {
+    width: 200px;
+}

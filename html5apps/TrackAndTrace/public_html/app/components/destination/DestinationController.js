@@ -47,27 +47,22 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
         $scope.destination.startInfo.startedTimeStamp = new Date();
         $scope.destination.skipInfo.skippedReasonId = "";
         
-        setTimeout(function() {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            
+            $scope.destination.startInfo.lon = position.coords.longitude;
+            $scope.destination.startInfo.lat = position.coords.latitude;  
+            $scope.$apply();
+
             $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
             $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
-        }, 20000);
-        
-//        navigator.geolocation.getCurrentPosition(function(position) {
-//            
-//            $scope.destination.startInfo.lon = position.coords.longitude;
-//            $scope.destination.startInfo.lat = position.coords.latitude;  
-//            $scope.$apply();
-//
-//            $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
-//            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
-//            
-//            datarepository.save();
-//        }, function(failare, b, c) {
-//            $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
-//            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
-//            
-//            datarepository.save();
-//        }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
+            
+            datarepository.save();
+        }, function(failare, b, c) {
+            $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
+            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
+            
+            datarepository.save();
+        }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
     }
     
     $scope.getStatus = function(task) {

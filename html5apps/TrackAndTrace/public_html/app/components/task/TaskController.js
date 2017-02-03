@@ -6,6 +6,7 @@
 
 controllers.TaskController = function($scope, datarepository, $stateParams, $api, $state) {
     $scope.exceptions = [];
+    $scope.i = 1;
     
     $scope.doTheBack = function() {
         $state.transitionTo('base.destination', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId });
@@ -19,16 +20,43 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         $state.transitionTo('base.destination', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId });
     }
     
+    $scope.pickupExceptionSelected = function(exceptionid) {
+        for (var i in $scope.task.orders) {
+            var order = $scope.task.orders[i];
+            if (order.referenceNumber === $stateParams.orderId) {
+                order.exceptionId = exceptionid;
+                order.countedBundles = -1;
+                $api.getApi().TrackAndTraceManager.markOrderWithException($scope.task.id, order.referenceNumber, exceptionid);
+                datarepository.save();
+            }
+        }
+        
+        $scope.goBackToOrderView();
+    }
+    
+    $scope.anyOrderExceptions = function() {
+        for (var i in $scope.task.orders) {
+            var order = $scope.task.orders[i];
+            if (order.exceptionId)
+                return true;
+        }
+        
+        return false;
+    }
+    
     $scope.showExceptions = function() {
         $state.transitionTo('base.taskexceptions', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId, taskId : $scope.task.id });
     }
     
+    $scope.goBackToOrderView = function() {
+        $state.transitionTo('base.task', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId, taskId : $scope.task.id });
+    }
+    
     $scope.setPickupType = function() {
         $scope.task = datarepository.getTaskById($stateParams.taskId);
-        console.log($scope.task);
         
         if ($scope.task.className == "com.thundashop.core.trackandtrace.PickupTask") {
-            $scope.taskType = "pickup";
+            $scope.taskType = "pickup_parcels";
         }
         
         if ($scope.task.className == "com.thundashop.core.trackandtrace.DeliveryTask") {
@@ -170,7 +198,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     }
 
     $scope.orderFinished = function(order) {
-        if ($scope.taskType === "pickup" && order.countedBundles < 0) {
+        if ($scope.taskType === "pickup_parcels" && order.countedBundles < 0 && !order.exceptionId) {
             return false;
         }
         
@@ -254,6 +282,17 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         });
     }
     
+    $scope.openPickupException = function(order) {
+        var params = {
+            destinationId: $stateParams.destinationId,  
+            routeId: $stateParams.routeId, 
+            taskId : $scope.task.id,
+            orderId: order.referenceNumber
+        };
+        
+        $state.transitionTo('base.pickupexception', params);
+    }
+    
     $scope.barcodeReceived = function(barcode) {
         var labelNumber = barcode.substr(barcode.length - 3);
         var orderReference = barcode.substr(barcode.length - 13, 10);
@@ -267,7 +306,29 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         }
         
         if (orderFound) {
-            $scope.openCountedReturn(orderFound);
+            if (!orderFound.barcodeScanned) {
+                orderFound.barcodeScanned = [];
+            }
+            
+            if ($.inArray(barcode, orderFound.barcodeScanned) < 0) {
+                orderFound.barcodeScanned.push(barcode);
+            }
+            
+            if (!orderFound.mustScanBarcode) {
+                $scope.openCountedReturn(orderFound);
+            }
+            
+            var tast = datarepository.getTaskById($stateParams.taskId);
+            for (var i in tast.orders) {
+                var order = tast.orders[i];
+                if (order.referenceNumber.trim() == orderReference) {
+                    tast.orders[i] = orderFound;
+                }
+            }
+            
+            $api.getApi().TrackAndTraceManager.setScannedBarcodes($scope.task.id, orderFound.referenceNumber, orderFound.barcodeScanned);
+            datarepository.save();
+            
             return;
         }
         
@@ -276,7 +337,6 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     
     $scope.stopScanner = function() {
         if (typeof(cordova) === "undefined") {
-            alert("No cordova");
             return;
         }
         
@@ -284,8 +344,10 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     }
     
     $scope.startScanner = function() {
+        
         if (typeof(cordova) === "undefined") {
-            alert("No cordova");
+            $scope.barcodeReceived('165181712628700600'+$scope.i);
+            $scope.i++;
             return;
         }
         
@@ -293,8 +355,10 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         cordova.exec(function(a) { $scope.barcodeReceived(a); }, function(fail) {}, "HoneyWellBarcodeReaderE75", "echo", ["test"])
     }
     
-    if ($state.current.name === "base.taskexceptions") {
+    if ($state.current.name === "base.taskexceptions" || $state.current.name === "base.pickupexception") {
         $scope.loadExceptions();
     }
+    
+    
 
 }

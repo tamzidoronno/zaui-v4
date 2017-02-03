@@ -198,9 +198,6 @@ public class AcculogixDataImporter {
         }
         
         order.orderType = data[31];
-        if (order.orderDriverDeliveries > 0) 
-            System.out.println("Driver deliveries");
-        
         return order;
     }
 
@@ -254,6 +251,7 @@ public class AcculogixDataImporter {
         order.instruction = data[22] + " " + data[53];
         order.referenceNumber = data[33];
         order.podBarcode = data[34];
+        order.container = !data[60].isEmpty();
         order.mustScanBarcode = data[67].toLowerCase().equals("scan");
         return order;
     }

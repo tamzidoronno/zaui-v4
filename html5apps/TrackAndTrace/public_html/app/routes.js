@@ -126,6 +126,21 @@ angular.module('TrackAndTrace')
         }
     });
     
+    $stateProvider.state('base.pickupexception', {
+        url: '/destination/pickupexception/:destinationId/:routeId/:taskId/:orderId',
+        
+        views: {
+            main: {
+                templateUrl : 'components/task/pickupexceptions.html',
+                controller : controllers.TaskController
+            },
+            footer: {
+                templateUrl : 'components/task/footerpickupexception.html',
+                controller : controllers.TaskController
+            }
+        }
+    });
+    
     $stateProvider.state('base.destinationexception', {
         url: '/destinationexception/exceptions/:destinationId/:routeId/:taskId',
         

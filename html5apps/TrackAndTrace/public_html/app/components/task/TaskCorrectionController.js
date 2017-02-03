@@ -12,6 +12,9 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
     $scope.setOrder = function() {
         $scope.task = datarepository.getTaskById($stateParams.taskId);
         
+        if (!$scope.task)
+            return;
+        
         for (var i in $scope.task.orders) {
             var order = $scope.task.orders[i];
             if (order.referenceNumber === $stateParams.orderId) {
@@ -60,7 +63,10 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
         
         if ($stateParams.type === "returncountingnormal") {
             $scope.order.countedBundles = newQuantity;
+            $scope.order.exceptionId = null;
+            
             $scope.api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, $scope.order.referenceNumber, newQuantity);
+            $scope.api.getApi().TrackAndTraceManager.markOrderWithException($scope.task.id, $scope.order.referenceNumber, "");
             datarepository.save();
         }
         

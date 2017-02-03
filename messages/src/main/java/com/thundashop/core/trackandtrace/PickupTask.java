@@ -35,4 +35,22 @@ public class PickupTask extends Task {
             }
         }
     }
+
+    void setOrderException(String orderReference, String exceptionId) {
+        for (PickupOrder order : orders) {
+            if (order.referenceNumber.trim().equals(orderReference.trim())) {
+                order.exceptionId = exceptionId;
+            }
+        }
+    }
+
+    PickupOrder getOrder(String orderReference) {
+        for (PickupOrder order : orders) {
+            if (order.referenceNumber.trim().equals(orderReference.trim())) {
+                return order;
+            }
+        }
+        
+        return null;
+    }
 }

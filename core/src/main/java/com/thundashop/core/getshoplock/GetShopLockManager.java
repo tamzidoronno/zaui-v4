@@ -250,7 +250,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         logPrintException(e);
                     }
                 }
-                int codesAdded = 0;
+                
                 List<Integer> offsets = new ArrayList(device.codes.keySet());
                 offsets = Lists.reverse(offsets);
                 
@@ -262,18 +262,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                             code.refreshCode();
                         }
                         for(int i = 0; i < 10; i++) {
-                            if(codesAdded >= 2) {
-                                int minutesTried = getMinutesTriedSettingCodes(device);
-                                if(minutesTried > 10) {
-                                    Calendar future = Calendar.getInstance();
-                                    future.add(Calendar.HOUR_OF_DAY, 2);
-                                    device.lastTriedUpdate = future.getTime();
-                                } else {
-                                    device.lastTriedUpdate = new Date();
-                                }
-                                return; 
-                            }
-
                             logPrint("\t Need to add code to offsett: " + offset + " (" + device.name + ")");
                             setCode(offset, code.fetchCodeToAddToLock(), true);
                             try {
@@ -291,7 +279,8 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                             code.setAddedToLock();
                                             device.needSaving = true;
                                             logPrint("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")");
-                                            break;
+                                            device.lastTriedUpdate = new Date();
+                                            return;
                                         } else {
                                             logPrint("\t\t Failed to set code to offset " + offset + " on attempt: " + j+ " (" + device.name + ")");
                                         }
@@ -299,7 +288,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                     break;
                                 }
                                 if(code.isAddedToLock()) {
-                                    codesAdded++;
                                     break;
                                 }
                             } catch (Exception ex) {
@@ -388,11 +376,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
         }
 
-        private int getMinutesTriedSettingCodes(GetShopDevice device) {
-            Date now = new Date();
-            long diff = now.getTime() - device.lastTriedUpdate.getTime();
-            return (int)((diff / 1000) / 60);
-        }
     }
     
     @Autowired

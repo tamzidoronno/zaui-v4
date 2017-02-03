@@ -262,8 +262,15 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                             code.refreshCode();
                         }
                         for(int i = 0; i < 10; i++) {
-                            if(codesAdded >= 2) { 
-                                device.lastTriedUpdate = new Date();
+                            if(codesAdded >= 2) {
+                                int minutesTried = getMinutesTriedSettingCodes(device);
+                                if(minutesTried > 10) {
+                                    Calendar future = Calendar.getInstance();
+                                    future.add(Calendar.HOUR_OF_DAY, 2);
+                                    device.lastTriedUpdate = future.getTime();
+                                } else {
+                                    device.lastTriedUpdate = new Date();
+                                }
                                 return; 
                             }
 
@@ -379,6 +386,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     return;
                 }
             }
+        }
+
+        private int getMinutesTriedSettingCodes(GetShopDevice device) {
+            Date now = new Date();
+            long diff = now.getTime() - device.lastTriedUpdate.getTime();
+            return (int)((diff / 1000) / 60);
         }
     }
     

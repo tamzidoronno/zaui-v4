@@ -1099,6 +1099,11 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         if(file == null) {
             file = otherFiles.get(id);
         }
+        
+        if(file.configId != null && !file.configId.isEmpty() && file.startDate != null && file.endDate != null) {
+            file = downloadOrdeFileNewType(file.configId, file.startDate, file.endDate, file);
+        }
+
         finalizeFile(file);
         return file;
     }

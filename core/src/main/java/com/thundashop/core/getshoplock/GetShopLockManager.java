@@ -603,22 +603,31 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
         
         List<BookingItem> items = bookingEngine.getBookingItems();
+        GetShopDevice toSet = null;
         for(GetShopDevice dev : devices.values()) {
             if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null) {
                 continue;
             }
+            
+            //Always prioritise the one that has least codes set.
+            
             if(dev.isLock() && !dev.beingUpdated && dev.needUpdate()) {
-                dev.beingUpdated = true;
-                dev.lastTriedUpdate = new Date();
-                String user = getUsername(dev.serverSource);
-                String pass = getPassword(dev.serverSource);
-                String host = getHostname(dev.serverSource);
-                
-                GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(dev, user, pass, host, items, stopUpdatesOnLock);
-                mgr.start();
-                return;
+                if(toSet == null || (dev.numberOfCodesNeedsUpdate() > toSet.numberOfCodesNeedsUpdate())) {
+                    toSet = dev;
+                }
             }
         }
+        
+        toSet.beingUpdated = true;
+        toSet.lastTriedUpdate = new Date();
+        String user = getUsername(toSet.serverSource);
+        String pass = getPassword(toSet.serverSource);
+        String host = getHostname(toSet.serverSource);
+
+        GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock);
+        mgr.start();
+        return;
+        
     }
     
     private BookingItem connectedToBookingEngineItem(GetShopDevice device, List<BookingItem> items) {

@@ -7,6 +7,7 @@ package com.thundashop.core.getshoplock;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.util.Calendar;
@@ -36,6 +37,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.axis.encoding.Base64;
@@ -248,7 +250,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         logPrintException(e);
                     }
                 }
-                for(Integer offset : device.codes.keySet()) {
+                int codesAdded = 0;
+                List<Integer> offsets = new ArrayList(device.codes.keySet());
+                offsets = Lists.reverse(offsets);
+                
+                for(Integer offset : offsets) {
                     if(stopUpdatesOnLock) { return; }
                     GetShopLockCode code = device.codes.get(offset);
                     if(code.needUpdate()) {
@@ -282,11 +288,15 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                     break;
                                 }
                                 if(code.isAddedToLock()) {
+                                    codesAdded++;
                                     break;
                                 }
                             } catch (Exception ex) {
                                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                        }
+                        if(codesAdded >= 2) {
+                            break;
                         }
                         try { Thread.sleep(10000); }catch(Exception e) {}
                     }

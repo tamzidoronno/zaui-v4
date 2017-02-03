@@ -261,6 +261,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         if(code.needToBeRemoved()) {
                             code.refreshCode();
                         }
+                        boolean added = false;
                         for(int i = 0; i < 10; i++) {
                             if(codesAdded >= 2) {
                                 int minutesTried = getMinutesTriedSettingCodes(device);
@@ -293,6 +294,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                             device.needSaving = true;
                                             logPrint("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")");
                                             codesAdded++;
+                                            added = true;
                                             break;
                                         } else {
                                             logPrint("\t\t Failed to set code to offset " + offset + " on attempt: " + j+ " (" + device.name + ")");
@@ -306,6 +308,10 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                             } catch (Exception ex) {
                                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
                             }
+                        }
+                        if(!added) {
+                            logPrint("\t\t Where not able to set a code on " + offset + " moving on."+ " (" + device.name + ")");
+                            break;
                         }
                         try { Thread.sleep(10000); }catch(Exception e) {}
                     }

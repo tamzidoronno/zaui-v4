@@ -917,6 +917,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
     
     private void finalizeUser(User user) throws ErrorException {
+        user.fullName = trimIt(user.fullName);
+        user.emailAddress = trimIt(user.emailAddress);
+        user.emailAddressToInvoice = trimIt(user.emailAddressToInvoice);
+        user.cellPhone = trimIt(user.cellPhone);
+        user.prefix = trimIt(user.prefix);
+        
         if(user.customerId == -1) {
             user.customerId = counter.counter;
             counter.counter++;
@@ -1861,6 +1867,16 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             users.put(user.id, user);
         }
         return users;
+    }
+
+    private String trimIt(String variable) {
+        if (variable != null) {
+            variable = variable.replaceAll("(^\\h*)|(\\h*$)","");
+            variable = variable.trim();
+            return variable;
+        }
+        
+        return null;
     }
 
 }

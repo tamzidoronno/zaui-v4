@@ -262,7 +262,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                             code.refreshCode();
                         }
                         for(int i = 0; i < 10; i++) {
-                            if(codesAdded >= 1) {
+                            if(codesAdded >= 2) {
                                 int minutesTried = getMinutesTriedSettingCodes(device);
                                 if(minutesTried > 5) {
                                     Calendar future = Calendar.getInstance();

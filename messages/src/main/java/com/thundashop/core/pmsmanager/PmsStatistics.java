@@ -11,6 +11,7 @@ public class PmsStatistics implements Serializable {
     public LinkedList<StatisticsEntry> entries = new LinkedList();
     public LinkedList<SalesStatisticsEntry> salesEntries = new LinkedList(); 
     public SleepoverStatistics sleepoverstats = new SleepoverStatistics();
+    HashMap<String, PmsDeliverLogStats> deliveryStats;
     
     void addEntry(StatisticsEntry entry) {
         entries.add(entry);

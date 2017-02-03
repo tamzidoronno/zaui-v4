@@ -28,6 +28,8 @@ public interface IAccountingManager {
     public List<String> getFile(String id) throws Exception;
     @Administrator
     public SavedOrderFile getFileById(String id) throws Exception;
+    @Administrator
+    public SavedOrderFile getFileByIdResend(String id) throws Exception;
     
     @Administrator
     public List<String> createCombinedOrderFile(boolean newUsersOnly) throws Exception;

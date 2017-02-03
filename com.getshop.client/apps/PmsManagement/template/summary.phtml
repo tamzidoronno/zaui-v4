@@ -7,7 +7,6 @@ $types = $this->getTypes();
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 
 $saleStats = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedName(), $filter);
-
 $slept = $this->getTotalSlept($saleStats);
 $addons = $this->getTotalAddons($saleStats);
 $month = date("m", strtotime($filter->endDate));
@@ -133,6 +132,25 @@ foreach($stats as $cleaningstat) {
                         </tr>
                         <?php
                     }
+                    
+                    foreach($saleStats->deliveryStats as $deliveryStats) {
+                        ?>
+                        <tr>
+                            <?php
+                            $product = $this->getApi()->getProductManager()->getProduct($deliveryStats->productId);
+                            $taxes = $this->getApi()->getProductManager()->getTaxes();
+                            $price = $deliveryStats->priceInc;
+                            if(isset($taxes[$product->taxgroup])) {
+                                $tax = $taxes[$product->taxgroup]->taxRate;
+                                $priceEx = $price / (($tax / 100) + 1);
+                            }
+                            
+                            ?>
+                            <td><?php echo $deliveryStats->count; ?> x <?php echo $product->name; ?> delivered</td>
+                            <td><?php echo $price; ?> (ex taxes: <?php echo $priceEx; ?>)</td>
+                        </tr>
+                        <?php
+                    }
                     ?>
                 </table>
             </td>
@@ -140,54 +158,72 @@ foreach($stats as $cleaningstat) {
     </table>
 
     <br><br>
-    <h1><?php echo $this->__w("Sleepover statistics"); ?></h1>
+        <h1><?php echo $this->__w("Sleepover statistics"); ?></h1>
 
-    <table cellspacing='0'>
-        <tr>
-            <th>
-                Type
-            </th>
-            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-                echo "<th>" . $country . "</th>";
-            }?>
-        </tr>
-        <tr>
-            <td>Number of guests</td>
-            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-                echo "<td>" . $count . "</td>";
-            }
-            ?>
-        </tr>
-        <tr>
-            <td>Number of guests per night</td>
-            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-                echo "<td>" . $saleStats->sleepoverstats->guests->{$country} . "</td>";
-            }
-            ?>
-        </tr>
-        <tr>
-            <td>Number of company guests per night</td>
-            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-                $count = isset($saleStats->sleepoverstats->guestsCompany->{$country}) ? $saleStats->sleepoverstats->guestsCompany->{$country} : "0";
-                echo "<td>" . $count . "</td>";
-            }
-            ?>
-        </tr>
-        <tr>
-            <td>Number of regular guests per night</td>
-            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-                $count = isset($saleStats->sleepoverstats->guestsRegular->{$country}) ? $saleStats->sleepoverstats->guestsRegular->{$country} : "0";
-                echo "<td>" . $count . "</td>";
-            }
-            ?>
-        </tr>
-        <tr>
-            <td>Number of conference guests per night</td>
-            <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-                $count = isset($saleStats->sleepoverstats->guestsConference->{$country}) ? $saleStats->sleepoverstats->guestsConference->{$country} : "0";
-                echo "<td>" . $count . "</td>";
-            }
-            ?>
+        <table cellspacing='0'>
+            <tr>
+                <th>
+                    Type
+                </th>
+                <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                    echo "<th>" . $country . "</th>";
+                }?>
+                <th>Total</th>
+            </tr>
+            <tr>
+                <td>Number of guests</td>
+                <?php $total = 0; ?>
+                <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                    $total += $count;
+                    echo "<td>" . $count . "</td>";
+                }
+                echo "<td>$total</td>";
+                ?>
+            </tr>
+            <tr>
+                <td>Number of guests per night</td>
+                <?php $total = 0; ?>
+                <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                    $total += $saleStats->sleepoverstats->guests->{$country};
+                    echo "<td>" . $saleStats->sleepoverstats->guests->{$country} . "</td>";
+                }
+                echo "<td>$total</td>";
+                ?>
+            </tr>
+            <tr>
+                <td>Number of company guests per night</td>
+                <?php $total = 0; ?>
+                <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                    $count = isset($saleStats->sleepoverstats->guestsCompany->{$country}) ? $saleStats->sleepoverstats->guestsCompany->{$country} : "0";
+                    $total += $count;
+                    echo "<td>" . $count . "</td>";
+                }
+                echo "<td>$total</td>";
+                ?>
+            </tr>
+            <tr>
+                <td>Number of regular guests per night</td>
+                <?php $total = 0; ?>
+                <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                    $count = isset($saleStats->sleepoverstats->guestsRegular->{$country}) ? $saleStats->sleepoverstats->guestsRegular->{$country} : "0";
+                    $total += $count;
+                    echo "<td>" . $count . "</td>";
+                }
+                echo "<td>$total</td>";
+                ?>
+            </tr>
+            <tr>
+                <td>Number of conference guests per night</td>
+                <?php $total = 0; ?>
+                <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
+                    $count = isset($saleStats->sleepoverstats->guestsConference->{$country}) ? $saleStats->sleepoverstats->guestsConference->{$country} : "0";
+                    $total += $count;
+                    echo "<td>" . $count . "</td>";
+                }
+                echo "<td>$total</td>";
+                ?>
+            </tr>
+        </table>
         </tr>
     </table>
 </div>

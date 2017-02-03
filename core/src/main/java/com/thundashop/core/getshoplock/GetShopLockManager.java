@@ -261,8 +261,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         if(code.needToBeRemoved()) {
                             code.refreshCode();
                         }
+                        boolean added = false;
                         for(int i = 0; i < 10; i++) {
-                            if(codesAdded >= 1) {
+                            if(codesAdded >= 2) {
                                 int minutesTried = getMinutesTriedSettingCodes(device);
                                 if(minutesTried > 5) {
                                     Calendar future = Calendar.getInstance();
@@ -293,10 +294,16 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                             device.needSaving = true;
                                             logPrint("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")");
                                             codesAdded++;
+                                            added = true;
                                             break;
                                         } else {
                                             logPrint("\t\t Failed to set code to offset " + offset + " on attempt: " + j+ " (" + device.name + ")");
                                         }
+                                    }
+                                    if(!added) {
+                                        logPrint("\t\t Where not able to set a code on " + offset + " moving on."+ " (" + device.name + ")");
+                                        device.beingUpdated = false;
+                                        return; 
                                     }
                                     break;
                                 }
@@ -603,22 +610,31 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
         
         List<BookingItem> items = bookingEngine.getBookingItems();
+        GetShopDevice toSet = null;
         for(GetShopDevice dev : devices.values()) {
             if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null) {
                 continue;
             }
+            
+            //Always prioritise the one that has least codes set.
+            
             if(dev.isLock() && !dev.beingUpdated && dev.needUpdate()) {
-                dev.beingUpdated = true;
-                dev.lastTriedUpdate = new Date();
-                String user = getUsername(dev.serverSource);
-                String pass = getPassword(dev.serverSource);
-                String host = getHostname(dev.serverSource);
-                
-                GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(dev, user, pass, host, items, stopUpdatesOnLock);
-                mgr.start();
-                return;
+                if(toSet == null || (dev.numberOfCodesNeedsUpdate() > toSet.numberOfCodesNeedsUpdate())) {
+                    toSet = dev;
+                }
             }
         }
+        
+        toSet.beingUpdated = true;
+        toSet.lastTriedUpdate = new Date();
+        String user = getUsername(toSet.serverSource);
+        String pass = getPassword(toSet.serverSource);
+        String host = getHostname(toSet.serverSource);
+
+        GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock);
+        mgr.start();
+        return;
+        
     }
     
     private BookingItem connectedToBookingEngineItem(GetShopDevice device, List<BookingItem> items) {

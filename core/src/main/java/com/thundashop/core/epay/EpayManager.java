@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -106,8 +107,8 @@ public class EpayManager extends ManagerBase implements IEpayManager {
                     }
                     if(valid) {
                         order.payment.transactionLog.put(System.currentTimeMillis(), "Payment completion (EPAY) : " + resp.txnid);
-                        order.status = Order.Status.PAYMENT_COMPLETED;
                         order.captured = true;
+                        orderManager.markAsPaid(order.id, new Date());
                     }
                     orderManager.saveObject(order);
                 }catch(Exception e) {

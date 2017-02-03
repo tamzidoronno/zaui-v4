@@ -108,4 +108,14 @@ public class GetShopDevice extends DataCommon {
         }
         return false;
     }
+
+    public int numberOfCodesNeedsUpdate() {
+        int count = 0;
+        for(GetShopLockCode code : codes.values()) {
+            if(code.needUpdate()) {
+                count++;
+            }
+        }
+        return count;
+    }
 }

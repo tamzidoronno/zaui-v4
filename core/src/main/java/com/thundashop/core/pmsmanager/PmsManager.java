@@ -1320,6 +1320,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         result.setView(filter);
         result.buildTotal();
         result.buildTotalSales();
+
+        
+        HashMap<String, PmsDeliverLogStats> deliveryStats = new HashMap();
+        for(PmsAddonDeliveryLogEntry entry : deliveredAddons.values()) {
+            if(filter.startDate.before(entry.rowCreatedDate) && filter.endDate.after(entry.rowCreatedDate)) {
+                PmsDeliverLogStats res = new PmsDeliverLogStats();
+                if(deliveryStats.containsKey(entry.productId)) {
+                    res = deliveryStats.get(entry.productId);
+                }
+                res.productId = entry.productId;
+                res.count++;
+                res.priceInc += entry.price;
+                deliveryStats.put(res.productId, res);
+            }
+        }
+        
+        result.deliveryStats = deliveryStats;
+        
         return result;
     }
 

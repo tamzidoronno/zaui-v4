@@ -689,11 +689,21 @@ public class PmsManagerProcessor {
                 if(booking.createOrderAfterStay) {
                     payedfor = true;
                 }
+                
+                try {
+                    booking.calculateTotalCost();
+                    double totalPrice = booking.getTotalPrice();
+                    if(totalPrice == 0.0) {
+                        payedfor = true;
+                    }
+                }catch(Exception e) {}
+
             }
             boolean forceSend = (booking.channel != null && !booking.channel.isEmpty()) && booking.isRegisteredToday();
             if(!manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
                 forceSend = true;
             }
+            
             if(booking.payedFor != payedfor || forceSend) {
                 booking.payedFor = payedfor;
                 if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {

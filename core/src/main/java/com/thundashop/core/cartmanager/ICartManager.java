@@ -27,7 +27,7 @@ public interface ICartManager {
      */
     public Cart addProduct(String productId, int count, Map<String,String> variations) throws ErrorException;
     
-    public Cart addProductWithSource(String productId, int count, String source) throws ErrorException;
+    public CartItem addProductWithSource(String productId, int count, String source) throws ErrorException;
     
     public CartItem addProductItem(String productId, int count) throws ErrorException;
     

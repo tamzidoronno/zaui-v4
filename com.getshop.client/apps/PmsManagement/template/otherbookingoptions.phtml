@@ -1,0 +1,30 @@
+<?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$booking = $this->getSelectedBooking();
+$pricetypes = array();
+$pricetypes[1] = "Daily";
+$pricetypes[2] = "Monthly";
+$pricetypes[3] = "Weekly";
+$pricetypes[4] = "Per minute";
+$pricetypes[5] = "Per hour";
+$pricetypes[6] = "Per seconds";
+$pricetypes[7] = "Progressive";
+$pricetypes[8] = "Interval pricing";
+
+?>
+<br><br>
+<div gstype='form' method='saveOtherBookingOptions'>
+    <input type='hidden' gsname='bookingid' value='<?php echo $booking->id; ?>'>
+    Price type for this booking :
+    <select style='float:right;' gsname='priceType'>
+        <?php 
+        foreach($pricetypes as $id => $type) {
+            $selected = $booking->priceType == $id ? "SELECTED" : "";
+            echo "<option value='$id' $selected>$type</option>";
+        }
+        ?>
+    </select>
+    <div style='text-align:right;'>
+        <input type='button' gstype='submitToInfoBox' value='Save other options'>
+    </div>
+</div>

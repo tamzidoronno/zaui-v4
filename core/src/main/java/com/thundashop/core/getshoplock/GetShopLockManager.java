@@ -7,6 +7,7 @@ package com.thundashop.core.getshoplock;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.util.Calendar;
@@ -36,6 +37,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.axis.encoding.Base64;
@@ -237,7 +239,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         @Override
         public void run() {
-            if(stopUpdatesOnLock) { return; }
+            if(stopUpdatesOnLock) { device.beingUpdated = false; return; }
             if(hasConnectivity()) {
                 if(device.oldBatteryStatus()) {
                     try {
@@ -248,14 +250,31 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         logPrintException(e);
                     }
                 }
-                for(Integer offset : device.codes.keySet()) {
-                    if(stopUpdatesOnLock) { return; }
+                int codesAdded = 0;
+                List<Integer> offsets = new ArrayList(device.codes.keySet());
+                offsets = Lists.reverse(offsets);
+                
+                for(Integer offset : offsets) {
+                    if(stopUpdatesOnLock) { device.beingUpdated = false; return; }
                     GetShopLockCode code = device.codes.get(offset);
                     if(code.needUpdate()) {
                         if(code.needToBeRemoved()) {
                             code.refreshCode();
                         }
                         for(int i = 0; i < 10; i++) {
+                            if(codesAdded >= 1) {
+                                int minutesTried = getMinutesTriedSettingCodes(device);
+                                if(minutesTried > 5) {
+                                    Calendar future = Calendar.getInstance();
+                                    future.add(Calendar.HOUR_OF_DAY, 2);
+                                    device.lastTriedUpdate = future.getTime();
+                                } else {
+                                    device.lastTriedUpdate = new Date();
+                                }
+                                device.beingUpdated = false;
+                                return; 
+                            }
+
                             logPrint("\t Need to add code to offsett: " + offset + " (" + device.name + ")");
                             setCode(offset, code.fetchCodeToAddToLock(), true);
                             try {
@@ -272,8 +291,8 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                         if(res != null && res.hasCode != null && res.hasCode.value != null && res.hasCode.value.equals(true)) {
                                             code.setAddedToLock();
                                             device.needSaving = true;
-                                            device.lastTriedUpdate = null;
                                             logPrint("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")");
+                                            codesAdded++;
                                             break;
                                         } else {
                                             logPrint("\t\t Failed to set code to offset " + offset + " on attempt: " + j+ " (" + device.name + ")");
@@ -368,6 +387,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     return;
                 }
             }
+        }
+
+        private int getMinutesTriedSettingCodes(GetShopDevice device) {
+            Date now = new Date();
+            long diff = now.getTime() - device.lastTriedUpdate.getTime();
+            return (int)((diff / 1000) / 60);
         }
     }
     

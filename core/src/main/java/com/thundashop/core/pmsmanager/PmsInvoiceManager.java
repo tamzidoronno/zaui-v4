@@ -770,6 +770,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(pmsManager.getConfigurationSecure().ignoreRoomToEndDate && endDate.before(filter.endInvoiceAt)) {
             endDate = filter.endInvoiceAt;
         }
+        if(startDate.after(filter.endInvoiceAt)) {
+            //Why should it be possible to invoice a stay with an end date that is before the start date of the stay?
+            return;
+        }
         
         List<CartItem> items = createCartItemsForRoom(startDate,endDate, booking, room, filter);
 
@@ -841,6 +845,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     @Override
     public void clearOrder(String bookingId, String orderId) {
+        if(orderId.equals("createafterstay")) {
+            return;
+        }
         Order currentOrder = orderManager.getOrder(orderId);
         if(currentOrder.closed) {
             return;

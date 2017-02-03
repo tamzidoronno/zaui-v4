@@ -59,13 +59,19 @@ $products = $this->getApi()->getProductManager()->getAllProductsLight();
                     $toChangeObject->email = $user->emailAddress;
                     $toChangeObject->prefix = $user->prefix;
                     $toChangeObject->phone = $user->cellPhone;
-                    $toChangeObject->address = $user->address->address;
-                    $toChangeObject->postcode = $user->address->postCode;
-                    $toChangeObject->city = $user->address->city;
-                    $toChangeObject->countryname = $user->address->countryname;
+                    if(isset($user->address)) {
+                        $toChangeObject->address = $user->address->address;
+                        $toChangeObject->postcode = $user->address->postCode;
+                        $toChangeObject->city = $user->address->city;
+                        $toChangeObject->countryname = $user->address->countryname;
+                    }
                     $toChangeObject->userid = $user->id;
                      
-                    echo "<option value='".  json_encode($toChangeObject)."'>" . $user->fullName . " - " . $user->email . " - " . $user->cellPhone . "</option>";
+                    $fullname = isset($user->fullName) ? $user->fullName : "";
+                    $email = isset($user->fullName) ? $user->fullName : "";
+                    $cellPhone = isset($user->fullName) ? $user->fullName : "";
+                    
+                    echo "<option value='".  json_encode($toChangeObject)."'>" . $fullname . " - " . $email . " - " . $cellPhone . "</option>";
                  }
                 ?>
             </select>
@@ -90,18 +96,11 @@ $products = $this->getApi()->getProductManager()->getAllProductsLight();
         echo "<select class='paymenttypeunsetled' gsname='paymenttype'>";
        foreach($instances as $id => $app) {
            $selected = "";
-           if($id == $preferred) { $selected = "SELECTED"; }
            if(sizeof($user->savedCards) > 0) {
                $selected = "";
            }
 
            echo "<option value='".$app->appName."' $selected> ".$app->appName."</option>";
-       }
-
-       if($amount > 0) {
-           foreach($user->savedCards as $card) {
-               echo "<option value='savedcard_".$card->id."' SELECTED>Saved card (" . $card->savedByVendor  . ") : " . $card->mask . "</option>";
-           }
        }
 
        echo "</select> ";
@@ -111,16 +110,19 @@ $products = $this->getApi()->getProductManager()->getAllProductsLight();
         <span  style='float:left;'>Total : <span class='totalprice'>0</span></span>
         <input type="button" id='runcreateorder' value="Create order">
     </span>
+    
     <div style="height: 20px;clear:both; text-align:right;" gstype='form' method='addProductToCart'>
         <input type='hidden' gsname='bookingid' value='<?php echo $booking->id; ?>'>
-        <select gsname='productid' id="selectproducttoadd">
-            <?php
-            foreach($products as $product) {
-                echo "<option value='".$product->id."'>" . $product->name . "</option>";
-            }
-            ?>
-        </select>
-        <input type='button' value='Add product' gstype='submitToInfoBox'>
+        <span style='text-align:left;'>
+            <select gsname='productid' id="selectproducttoadd">
+                <?php
+                foreach($products as $product) {
+                    echo "<option value='".$product->id."'>" . $product->name . "</option>";
+                }
+                ?>
+            </select>
+        </span>
+        <input type='button' value='Add product' class='addproducttocart'>
     </div>
 </div>
 <div id="createorderresult"></div>
@@ -131,7 +133,13 @@ $products = $this->getApi()->getProductManager()->getAllProductsLight();
     .createorderpanelinfo input { padding: 3px !important; box-sizing: border-box;}
 </style>
 <script>
-    $('#selectproducttoadd').chosen();
+    
+    $(function() {
+        setTimeout(function() {
+            $('#selectproducttoadd').chosen();
+        }, "200");
+    });
+    
     function populateAreas(res) {
         $('.createorderpanelinfo [gsname="name"]').val(res.name);
          $('.createorderpanelinfo [gsname="prefix"]').val(res.prefix);
@@ -156,10 +164,14 @@ $products = $this->getApi()->getProductManager()->getAllProductsLight();
         } else {
             populateAreas({});
         }
+        if($('#selectguest').is(":visible")) {
+            $('#selectguest').chosen();
+        }
+        if($('#selectuser').is(":visible")) {
+            $('#selectuser').chosen();
+        }
     });
 
-    $('#selectguest').chosen();
-    $('#selectuser').chosen();
      $('.showarea').hide();
      
      $('#selectguest, #selectuser').on('change', function() {

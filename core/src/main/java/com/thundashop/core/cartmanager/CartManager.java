@@ -104,16 +104,15 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
     
     @Override
-    public Cart addProductWithSource(String productId, int count, String source) throws ErrorException {
+    public CartItem addProductWithSource(String productId, int count, String source) throws ErrorException {
         Product product = getProduct(productId, null);
 
         if (product != null) {
             Cart cart = getCart(getSession().id);
-            for(int i = 0; i < count; i++) {
-                CartItem item = cart.addProduct(product, null);
-                item.addedBy = source;
-            }
-            return cart;
+            CartItem item = cart.addProduct(product, null);
+            item.setCount(count);
+            item.addedBy = source;
+            return item;
         } else {
             throw new ErrorException(1011);
         }

@@ -1094,7 +1094,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     }
 
     @Override
-    public SavedOrderFile getFileById(String id) throws Exception {
+    public SavedOrderFile getFileByIdResend(String id) throws Exception {
         SavedOrderFile file = files.get(id);
         if(file == null) {
             file = otherFiles.get(id);
@@ -1104,6 +1104,17 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             file = downloadOrdeFileNewType(file.configId, file.startDate, file.endDate, file);
         }
 
+        finalizeFile(file);
+        return file;
+    }
+
+    @Override
+    public SavedOrderFile getFileById(String id) throws Exception {
+        SavedOrderFile file = files.get(id);
+        if(file == null) {
+            file = otherFiles.get(id);
+        }
+        
         finalizeFile(file);
         return file;
     }

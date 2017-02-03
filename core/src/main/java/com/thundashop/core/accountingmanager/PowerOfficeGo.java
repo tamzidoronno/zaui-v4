@@ -79,14 +79,11 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             }
             for(CartItem item : order.cart.getItems()) {
                 Product product = managers.productManager.getProduct(item.getProduct().id);
+                if(product.accountingSystemId == null || product.accountingSystemId.isEmpty()) {
+                    managers.webManager.logPrint("Failed to since product id is missing on product : " + product.name + " order: " + order.incrementOrderId);
+                    return null;
+                }
                 products.put(product.id, product);
-            }
-        }
-        
-        for(Product product : products.values()) {
-            if(product.accountingSystemId == null || product.accountingSystemId.isEmpty()) {
-                managers.webManager.logPrint("Failed to since product id is missing on product : " + product.name);
-                return null;
             }
         }
         

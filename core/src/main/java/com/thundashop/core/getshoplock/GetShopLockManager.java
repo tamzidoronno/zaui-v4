@@ -255,7 +255,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 offsets = Lists.reverse(offsets);
                 
                 for(Integer offset : offsets) {
-                    if(codesAdded >= 1) { return; }
+                    if(codesAdded >= 2) { return; }
                     if(stopUpdatesOnLock) { return; }
                     GetShopLockCode code = device.codes.get(offset);
                     if(code.needUpdate()) {

@@ -300,6 +300,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                             logPrint("\t\t Failed to set code to offset " + offset + " on attempt: " + j+ " (" + device.name + ")");
                                         }
                                     }
+                                    if(!added) {
+                                        logPrint("\t\t Where not able to set a code on " + offset + " moving on."+ " (" + device.name + ")");
+                                        device.beingUpdated = false;
+                                        return; 
+                                    }
                                     break;
                                 }
                                 if(code.isAddedToLock()) {
@@ -308,10 +313,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                             } catch (Exception ex) {
                                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                        }
-                        if(!added) {
-                            logPrint("\t\t Where not able to set a code on " + offset + " moving on."+ " (" + device.name + ")");
-                            break;
                         }
                         try { Thread.sleep(10000); }catch(Exception e) {}
                     }

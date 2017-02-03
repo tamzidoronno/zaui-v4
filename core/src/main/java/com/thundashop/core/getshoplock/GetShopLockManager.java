@@ -255,7 +255,10 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 offsets = Lists.reverse(offsets);
                 
                 for(Integer offset : offsets) {
-                    if(codesAdded >= 2) { return; }
+                    if(codesAdded >= 2) { 
+                        device.lastTriedUpdate = new Date();
+                        return; 
+                    }
                     if(stopUpdatesOnLock) { return; }
                     GetShopLockCode code = device.codes.get(offset);
                     if(code.needUpdate()) {
@@ -279,7 +282,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                         if(res != null && res.hasCode != null && res.hasCode.value != null && res.hasCode.value.equals(true)) {
                                             code.setAddedToLock();
                                             device.needSaving = true;
-                                            device.lastTriedUpdate = null;
                                             logPrint("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")");
                                             break;
                                         } else {

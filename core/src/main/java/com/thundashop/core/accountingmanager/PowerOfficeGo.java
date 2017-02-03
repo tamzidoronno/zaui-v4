@@ -213,6 +213,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         } else {
             goOrder.customerCode = new Integer(uniqueId);
         }
+        goOrder.reference = order.incrementOrderId + "";
         goOrder.mergeWithPreviousOrder = false;
         goOrder.salesOrderLines = new ArrayList();
         goOrder.orderNo = (int)order.incrementOrderId;

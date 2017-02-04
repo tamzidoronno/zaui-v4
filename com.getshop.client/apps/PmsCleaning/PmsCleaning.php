@@ -130,7 +130,6 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             $checkoutCleaningRooms = $this->getApi()->getPmsManager()->getRoomsNeedingCheckoutCleaning($this->getSelectedName(), $this->convertToJavaDate($time+(86400*$i)));
             $intervalResult = $this->getApi()->getPmsManager()->getRoomsNeedingIntervalCleaning($this->getSelectedName(), $this->convertToJavaDate($time+(86400*$i)));
             $all = $this->mergeIntervalAndCheckout($checkoutCleaningRooms, $intervalResult);
-            
             foreach($all as $room) {
                 $guestName = $room->guests[0]->name;
                 $icon = "<i class='fa fa-refresh'></i>";
@@ -348,9 +347,18 @@ class PmsCleaning extends \WebshopApplication implements \Application {
         $all = array_merge($checkoutCleaningRooms, $intervalResult);
         
         $newArray = array();
+        $i = 0;
+        $unsorted = array();
         foreach($all as $a) {
-            @$newArray[$items[$a->bookingItemId]->bookingItemName] = $a;
+            if($a->bookingItemId) {
+                @$newArray[$items[$a->bookingItemId]->bookingItemName] = $a;
+            } else {
+                $unsorted[] = $a;
+            }
         }
+        
+        $newArray = array_merge($newArray, $unsorted);
+        
         ksort($newArray);
         
         return $newArray;

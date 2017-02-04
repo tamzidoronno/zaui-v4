@@ -2533,7 +2533,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(getConfigurationSecure().autoExtend && !room.keyIsReturned) {
             return false;
         }
-        if (room.date.exitCleaningDate == null) {
+//        if (room.date.exitCleaningDate == null) {
             room.date.exitCleaningDate = room.date.end;
             if (configuration.cleaningNextDay) {
                 Calendar cal = Calendar.getInstance();
@@ -2541,8 +2541,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 cal.add(Calendar.DAY_OF_YEAR, 1);
                 room.date.exitCleaningDate = cal.getTime();
             }
-
-        }
+//        }
 
         return pmsInvoiceManager.isSameDay(room.date.exitCleaningDate, toDate);
     }

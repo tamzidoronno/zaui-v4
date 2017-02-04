@@ -100,13 +100,13 @@
     </div>
 </div>
 
-<div ng-if="taskType === 'pickup'" class="pickup_parcels">
+<div ng-if="taskType === 'pickup_parcels'" class="pickup_parcels">
     <div class="task_titleheader">How many parcels do you pickup?</div>
     
     <div class="summary"> 
         
         <div class="summaryrow">
-            <div class="col">Order Number</div>
+            <div class="col">Reference Number</div>
             <div class="col"></div>
             <div class="col"></div>
             <div class="col"></div>
@@ -114,27 +114,58 @@
             <div class="col">Total</div>
         </div>
         <div ng-repeat="order in task.orders" ng-mobile-click-end="toggleActionButton(order)" class="summaryrow" order="{{order.referenceNumber}}">
-            <div class="col"><span class="fa" ng-class="{'fa-check': orderFinished(order), 'fa-close' : !orderFinished(order)}"></span>{{order.referenceNumber}}</div>
+            <div class="col"><span class="fa" ng-class="{'fa-check': orderFinished(order), 'fa-close' : !orderFinished(order), 'fa-warning' : order.exceptionId }"> 
+                </span> {{order.referenceNumber}}
+                <div ng-if='order.container'>
+                    ( container )
+                </div>
+            </div>
             <div class="col"></div>
             <div class="col"></div>
             <div class="col"></div>
             <div class="col"></div>
+            
             <div class="col">
-                <div ng-if="order.countedBundles > -1"> {{ order.countedBundles }} </div>
-                <div ng-if="order.countedBundles < 0"> - </div>
+                <div ng-if="order.countedBundles > -1 || order.barcodeScanned.length">
+                    <span ng-if='order.countedBundles > 0'>  {{ order.countedBundles }} </span>
+                    <span ng-if='order.countedBundles < 0 && order.barcodeScanned.length > 0'> {{ order.barcodeScanned.length }} </span>
+                </div>
+                <div ng-if="order.countedBundles < 0 && !order.barcodeScanned.length"> - </div>
+            </div>
+            
+            <div class="deliverytaskaction" ng-class="{'alreadyasdf' :  shouldBeVisible(order)}" ng-if="!order.mustScanBarcode && !order.container">
+                <div style="border: solid 1px red; padding: 10px; text-align: center; margin-top: 10px;">
+                    <i class="fa fa-info"></i> Please scan one of the returnlabels or add an exception
+                    <br/>    
+                </div>
 
+                <div style='width: 100%; display: inline-block;'class="button exceptionButton" ng-mobile-click="openPickupException(order)">Add exception</div>
             </div>
-            <div class="deliverytaskaction" ng-class="{'alreadyasdf' :  shouldBeVisible(order)}" ng-if="!order.mustScanBarcode">
-                <div class="button orange exceptionButton order_task_completed" style='width: 100%; display: inline-block;' ng-mobile-click="openCountedReturn(order)">Enter counted parcels</div>
+            
+            <div class="deliverytaskaction" ng-class="{'alreadyasdf' :  shouldBeVisible(order)}" ng-if="order.mustScanBarcode && !order.container">
+                <div style="border: solid 1px red; padding: 10px; text-align: center; margin-top: 10px;">
+                    <i class="fa fa-info"></i> Scan all returnlabels or add an exception
+                    <br/>    
+                </div>
+                
+                <div style='width: 100%; display: inline-block;'class="button exceptionButton" ng-mobile-click="openPickupException(order)">Add exception</div>
             </div>
-            <div class="deliverytaskaction" ng-class="{'alreadyasdf' :  shouldBeVisible(order)}" ng-if="order.mustScanBarcode">
-                Please scan returnlabel.
+            
+            <div class="deliverytaskaction" ng-class="{'alreadyasdf' :  shouldBeVisible(order)}" ng-if="order.container">
+                <div style="border: solid 1px red; padding: 10px; text-align: center; margin-top: 10px;">
+                    <i class="fa fa-info"></i> Enter amount of containers
+                    <br/>    
+                </div>
+
+                <div style='width: 100%; display: inline-block;'class="button exceptionButton" ng-mobile-click="openPickupException(order)">Add exception</div>
+                <div style='width: 100%; display: inline-block; margin-top: 0px;'class="button exceptionButton order_task_completed" ng-mobile-click="openCountedReturn(order)">Enter containers</div>
             </div>
         </div>
     </div>
     
-    <div class="button" style="line-height: 100px; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none" ng-mobile-click="startScanner()" ng-mobile-click-end="stopScanner()">Scan</div>
+    <div class="button scanbutton" ng-mobile-click="startScanner()" ng-mobile-click-end="stopScanner()">Scan</div>
+<!--    <div class="button scanbutton" ng-mobile-click="startScanner()" ng-mobile-click-end="stopScanner()">Key reference</div>-->
     
-    <div ng-if='allOrdersFinished()' class="button" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Pickup completed</div>
+    <div ng-if='allOrdersFinished()' class="button" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Pickup completed <span ng-if='anyOrderExceptions()'> ( with exceptions )</span></div>
 </div>
 

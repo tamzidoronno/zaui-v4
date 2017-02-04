@@ -572,7 +572,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 break;
             }
             
-            System.out.println("Adding: " + iExp.exportSequence);
             exportedData.addAll(iExp.exportedData);
         }
     }
@@ -592,6 +591,30 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         exports.values().removeIf(o -> o.routeId != null && o.routeId.equals(routeId));
+    }
+
+    @Override
+    public void markOrderWithException(String taskId, String orderReferenceNumber, String exceptionId) {
+        Task task = tasks.get(taskId);
+        if (task instanceof PickupTask) {
+            ((PickupTask)task).setOrderException(orderReferenceNumber, exceptionId);
+            saveObjectInternal(task);
+        }
+    }
+
+    @Override
+    public void setScannedBarcodes(String taskId, String orderReference, List<String> barcodes) {
+        Task task = tasks.get(taskId);
+        if (task instanceof PickupTask) {
+            PickupOrder order = ((PickupTask)task).getOrder(orderReference);
+            if (order != null) {
+                order.barcodeScanned = barcodes;
+            }
+            
+            saveObjectInternal(task);
+        }
+        
+        
     }
     
 }

@@ -34,6 +34,9 @@ public interface ITrackAndTraceManager {
     public void markTaskWithExceptionDeliverd(String taskId, String exceptionId);
     
     @Customer
+    public void markOrderWithException(String taskId, String orderReferenceNumber, String exceptionId);
+    
+    @Customer
     public void saveRoute(Route route);
     
     public List<TrackAndTraceException> getExceptions();
@@ -103,4 +106,7 @@ public interface ITrackAndTraceManager {
     
     @Customer
     public List<PooledDestionation> getPooledDestiontions();
+    
+    @Customer
+    public void setScannedBarcodes(String taskId, String orderReference, List<String> barcodes);
 }

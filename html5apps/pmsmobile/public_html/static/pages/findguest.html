@@ -49,9 +49,10 @@
                     </span>
                     {{room.room}}
                     <div><i class='fa fa-users'></i> {{room.numberOfGuests}}</div>
-                    <div>{{room.code}}</div>
+                    <div ng-show='{{room.transferredToArx}}'>{{room.code}}</div>
+                    <div ng-show='{{!room.transferredToArx}}'>Code not active</div>
                 </div>
-            </span>
+            </span>            
             <span class='col-xs-8 guestinfoblock' style='padding-top:5px;'>
                 <div class='truncate'>{{room.owner}}</div>
                 <div class='truncate'>{{room.guest[0].name}}, {{room.guest[0].phone}}, {{room.guest[0].email}}

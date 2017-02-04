@@ -68,6 +68,7 @@ public class PmsBooking extends DataCommon {
     boolean isConference = false;
     double bookingAmountDiff;
     double totalUnsettledAmount = 0.0;
+    Double unsettled;
     
     
     public Double getTotalPrice() {

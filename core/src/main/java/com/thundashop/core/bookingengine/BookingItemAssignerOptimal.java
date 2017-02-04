@@ -339,8 +339,6 @@ public class BookingItemAssignerOptimal {
 
     private void printBookingLines(List<OptimalBookingTimeLine> bookingLines) {
         int i = 1;
-        Date lastCreated = null;
-    
         for (OptimalBookingTimeLine bookings : bookingLines) {
             GetShopLogHandler.logPrintStatic("Line " + i, null);
             for (Booking booking : bookings.bookings) {
@@ -348,7 +346,6 @@ public class BookingItemAssignerOptimal {
             }
             i++;
         }
-        System.out.println("Last created booking created at : " + lastCreated);
     }
 
     private boolean overlappingBooking(Booking booking, List<Booking> bookingLine) {

@@ -1,7 +1,8 @@
 <html>
   <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, user-scalable=no, maximum-scale=1, minimum-scale=1" />
     <link rel="stylesheet" href="vendors.css"/>
     <link rel="stylesheet" href="main.css"/>
     <title>Pms Management</title>
@@ -22,14 +23,18 @@
     <script>
         createGetshopClient();
 
-        function createGetshopClient() {
-            if(typeof(getshopclient) !== "undefined") {
+        function createGetshopClient(fromlogin) { 
+            if(!fromlogin && typeof(getshopclient) !== "undefined") {
                 return;
             }
             var hostToUse = localStorage.getItem("address");
             if(hostToUse) {
-                getshopclient = new GetShopApiWebSocket(hostToUse, "31332"); //Online
-//                getshopclient = new GetShopApiWebSocket(hostToUse, "31330"); //Local
+                if(typeof(getshopclient) === "undefined") {
+//                    getshopclient = new GetShopApiWebSocket("clients.getshop.com", "31332", hostToUse); //Online
+                    getshopclient = new GetShopApiWebSocket("localhost", "31330", hostToUse); //Local
+                }
+                getshopclient.identifier = hostToUse;
+                getshopclient.shouldConnect = true;
                 getshopclient.connect();
                 getshopclient.setConnectedEvent(function () {
                     $('.disconnectedPage').fadeOut();

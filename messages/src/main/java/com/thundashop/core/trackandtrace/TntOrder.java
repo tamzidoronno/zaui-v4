@@ -13,5 +13,7 @@ public class TntOrder {
     public String referenceNumber = "";
     public String comment = "";    
     public String podBarcode = "";
+    public String exceptionId;
+    public int originalQuantity = 0;
     
 }

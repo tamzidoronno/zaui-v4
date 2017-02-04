@@ -66,26 +66,15 @@ public class AcculogixDataExporter {
         
         AcculogixExport exp = new AcculogixExport();
         exp.ArrivalDateTime = dest.startInfo.started ? formatDate(dest.startInfo.startedTimeStamp) : "";
-        exp.PODBarcodeID = task.podBarcode;
         exp.RDDriver$ID = route.startInfo.startedByUserId;
-        exp.ReceiverName = dest.typedNameForSignature;
         exp.routeId = route.originalId;
         exp.RTRouteStopSeq = dest.seq;
         exp.TNTUID = startId;
+        exp.taskSource = task.source;
         
-        exp.TaskStatus = "DL";
+        setTaskStatus(exp, route, task, dest);
         
-        if (route.startInfo.started) {
-            exp.TaskStatus = "AF";
-        }
-        
-        if (dest.startInfo.completed) {
-            exp.TaskStatus = "D1";
-        }
-        
-        if (dest.skipInfo.skippedReasonId != null && !dest.skipInfo.skippedReasonId.isEmpty()) {
-            exp.TaskStatus = exceptions.get(dest.skipInfo.skippedReasonId).name;
-        }
+        exp.StatusDateTimeCompleted = formatDate(route.rowCreatedDate);
         
         if (route.startInfo.started) {
             exp.StatusDateTimeCompleted = formatDate(route.startInfo.startedTimeStamp);
@@ -115,13 +104,36 @@ public class AcculogixDataExporter {
         boolean anySignatures = dest.signatures != null && !dest.signatures.isEmpty();
         exp.SignatureObtained = anySignatures ? "Yes" : "No";
         
-        if (anySignatures && dest.getLatestSignatureImage() != null) {
+        TrackAndTraceSignature latestSignature = dest.getLatestSignatureImage();
+        if (anySignatures && latestSignature != null) {
             exp.signatureBase64 = base64Signature;
-            exp.signatureUuid = dest.getLatestSignatureImage().imageId;
+            exp.signatureUuid = latestSignature.imageId;
+            exp.ReceiverName = latestSignature.typedName;
         }
         
         
         return exp;
+    }
+
+    private void setTaskStatus(AcculogixExport exp, Route route1, Task task, Destination dest) {
+        exp.TaskStatus = "DL";
+        if (route1.startInfo.started) {
+            exp.TaskStatus = "AF";
+        }
+        
+        if (task instanceof DeliveryTask && task.completed) {
+            exp.TaskStatus = "D1";
+        }
+        
+        if (task instanceof PickupTask && task.completed) {
+            exp.TaskStatus = "RT";
+        }
+        
+        if (dest.skipInfo.skippedReasonId != null && !dest.skipInfo.skippedReasonId.isEmpty()) {
+            exp.TaskStatus = exceptions.get(dest.skipInfo.skippedReasonId).name;
+        }
+        
+        
     }
     
     private List<AcculogixExport> createExports(Route route, Destination dest, PickupTask task, String base64Signature) {
@@ -132,15 +144,30 @@ public class AcculogixDataExporter {
             if (exp == null)
                 continue;
             
-            exp.BarcodeValidated = task.barcodeValidated ? "Yes" : "No";
-            setOrderInfo(exp, order);
-
-            /** 
-             * TODO: Set fields: 
-             * exp.TaskContainerCount
-             */
+            setOrderInfo(exp, order, dest);
             
+            exp.PODBarcodeID = order.podBarcode;
+            exp.BarcodeValidated = task.barcodeValidated ? "Yes" : "No";
+            setOrderInfo(exp, order, dest);
+            
+            if (dest.signatures.size() > 0) {
+                exp.ORStatus = "PICKUP RETURN";
+            }
+           
             toAdd.add(exp);
+            
+            if (order.exceptionId != null && !order.exceptionId.isEmpty()) {
+                exp.TaskStatus = exceptions.get(order.exceptionId).name;
+                exp.ORStatus = exp.TaskStatus;
+            }
+            
+            if(order.countedBundles > 0) {
+                exp.ORPieceCount = order.countedBundles;
+            } else {
+                exp.ORPieceCount = order.barcodeScanned.size();
+            }
+            
+            exp.ORPieceCorrect = "NO";
         }
         
         return toAdd;
@@ -154,28 +181,37 @@ public class AcculogixDataExporter {
             if (exp == null)
                 continue;
             
+            setOrderInfo(exp, order, dest);
+            
+            exp.PODBarcodeID = order.podBarcode;
             boolean hasDriverCopies = order.driverDeliveryCopiesCounted != null && order.driverDeliveryCopiesCounted > 0;
             
-            exp.ORPieceCount = order.originalQuantity;
-            setOrderInfo(exp, order);
+            if (task.completed) {
+                exp.ORPieceCount = order.quantity;
+            }
+            
+            if (order.containerType != null) {
+                exp.TaskContainerCount = task.containerCounted;
+            }
+            
             
             if (task.completed) {
-                exp.TaskType = "DELIVERED";
+                exp.ORStatus = "DELIVERED";
             }
             
             if (order.originalQuantity > order.quantity && !hasDriverCopies) {
-                exp.TaskType = "SHORT # PACKAGES";
+                exp.ORStatus = "SHORT # PACKAGES";
             }
             
             if (order.originalQuantity < order.quantity && !hasDriverCopies) {
-                exp.TaskType = "OVER # PACKAGES";
+                exp.ORStatus = "OVER # PACKAGES";
             }
             
-            if (!order.exceptionId.isEmpty()) {
-                exp.TaskType = exceptions.get(order.exceptionId).name;
+            if (order.exceptionId != null && !order.exceptionId.isEmpty()) {
+                exp.ORStatus = exceptions.get(order.exceptionId).name;
             }
             
-            exp.TotalPieces = order.quantity;
+            exp.TotalPieces = order.originalQuantity;
             
             toAdd.add(exp);
         }
@@ -189,14 +225,18 @@ public class AcculogixDataExporter {
         return sdf.format(date);
     }
 
-    private void setOrderInfo(AcculogixExport exp, TntOrder order) {
+    private void setOrderInfo(AcculogixExport exp, TntOrder order, Destination dest) {
         exp.ORReferenceNumber = order.referenceNumber;
         exp.TaskType = order instanceof DeliveryOrder ? "DELIVERY" : "";
         exp.TaskType = order instanceof PickupOrder ? "PICKUP RETURNS" : exp.TaskType;
         exp.TaskComments = order.comment;
         
-        /**
-         * TODO: Set order status.
-         */
+        if (dest.exceptionId != null && !dest.exceptionId.isEmpty()) {
+            exp.TaskType = "EXCEPTION";
+        }
+        
+        if (order.exceptionId != null && !order.exceptionId.isEmpty()) {
+            exp.TaskType = "EXCEPTION";
+        }
     }
 }

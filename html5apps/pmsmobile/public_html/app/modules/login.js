@@ -11,11 +11,10 @@ getshop.loginController = function($scope, $state, $location) {
         localStorage.setItem("password", user.password);
         localStorage.setItem("multilevelname", "");
         
-        createGetshopClient();
+        createGetshopClient(true);
         
         $scope.loading=true;
         var logon = getshopclient.UserManager.logOn(user.username, user.password);
-        
         
         getshopclient.setDisconnectedEvent(function() {
             $('.disconnectedPage').fadeIn();

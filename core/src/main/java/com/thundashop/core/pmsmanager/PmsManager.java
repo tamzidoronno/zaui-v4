@@ -648,13 +648,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public PmsBooking getBooking(String bookingId) {
-//        dumpBookingOnOrders();
 
         PmsBooking booking = bookings.get(bookingId);
         if (booking == null) {
             return null;
         }
         checkSecurity(booking);
+        
+        booking.calculateTotalCost();
+        Double totalOrder = 0.0;
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            totalOrder += orderManager.getTotalAmount(order);
+        }
+        Double diff = booking.getTotalPrice() - totalOrder;
+        if(diff < 2 && diff > 2) {
+            diff = 0.0;
+        }
+        booking.unsettled = diff;
+        
         return finalize(booking);
     }
 
@@ -4119,6 +4131,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             forceMarkRoomAsCleaned(room.bookingItemId);
         }
         saveBooking(booking);
+        processor();
         return room.code;
     }
 

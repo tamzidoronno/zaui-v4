@@ -32,6 +32,9 @@ public interface IPmsInvoiceManager {
     public String createOrder(String bookingId, NewOrderFilter filter);
     
     @Administrator
+    public String createOrderOnUnsettledAmount(String bookingId);
+    
+    @Administrator
     public PmsUserDiscount getDiscountsForUser(String userId);
     
     @Administrator

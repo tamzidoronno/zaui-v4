@@ -5,8 +5,8 @@
     Orders</div>
 <div class='row'><br></div>
 <div class='row no-gutter' ng-show="unsettledAmount">
-    <div class='col-xs-7 col-lg-10'>You have an unsettled amount of {{unsettledAmount}}. </div>
-    <div class="col-xs-5 col-lg-2"><span class='btn btn-success form-control' ng-click="createOrderOnUnsettledAmount()">Create order</span></div>
+    <div class='col-xs-7 col-lg-8'>You have an unsettled amount of {{unsettledAmount}}. </div>
+    <div class="col-xs-5 col-lg-4"><span class='btn btn-success form-control' ng-click="createOrderOnUnsettledAmount()">Create order / add to existing</span></div>
     <br><br>
 </div>
 <div ng-repeat="order in orders" class='orderrow row no-gutter'>
@@ -260,15 +260,38 @@
 <div class='additionalinfobottom row'></div>
 
 <div class='additionalinfo row'>Addons</div>
-<div ng-repeat="addon in room.addons" class='guestrow row no-gutter'>
-    <div class='col-xs-12'>
-        {{addon.count}}x
-        {{addon.productName}} - 
-        (price: {{addon.price}})
+<div ng-show="!noAddons">
+
+    <div ng-repeat="addon in room.addons" class='guestrow row no-gutter' style='padding-top:3px; padding-bottom: 3px;'>
+        <div class='col-md-2 col-xs-4'>
+            <span class='btn btn-danger' ng-click='removeAddon(addon)'><i class='fa fa-trash-o'></i></span>
+            <input type="number" ng-model="addon.count" class='form-control' style='width: 60px; display:inline-block;'></div>
+        <div class='col-md-8 col-xs-4' style='padding-top:7px;'>{{addon.dateFormatted}} {{addon.productName}}</div>
+        <div class='col-md-2 col-xs-4'><input type='text' ng-model="addon.price" class='form-control'></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-6">
+            <span class='btn btn-success form-control' ng-click='saveAddons()'>Save addons</span>
+        </div>
+    <br><br>
     </div>
 </div>
 <div class="row" ng-show="noAddons">
+    <br>
     <div class="col-md-12">No addons added</div>
+    <br>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <select class="form-control" ng-model="selectedAddon" ng-options="item as item.name for item in addonsList"></select>
+    </div>
+    <div class="col-md-6">
+        <span class='btn btn-success form-control' ng-click='addAddon()'>Add addon</span>
+    </div>
+    <br>
+    <br>
+    <br>
 </div>
 
 <div class='additionalinfobottom row'>

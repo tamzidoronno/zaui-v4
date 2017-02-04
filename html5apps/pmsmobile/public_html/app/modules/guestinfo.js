@@ -144,10 +144,19 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         changed.done(function(res) {
             if(res.length != 0) {
                 alert('Stay has been changed');
-                $scope.loadGuest();
+                var reloadAddons = getshopclient.PmsManager.updateAddonsBasedOnGuestCount(getMultilevelName(), $scope.room.pmsBookingRoomId);
+                reloadAddons.done(function() {
+                    $scope.loadGuest();
+                });
             } else {
                 alert('Unable to update stay, room is not available.');
             }
+        });
+    }
+    $scope.saveAddons = function() {
+        var updating = getshopclient.PmsManager.updateAddons(getMultilevelName(), $scope.room.addons, $scope.booking.id);
+        updating.done(function() {
+            $scope.loadGuest();
         });
     }
 
@@ -234,6 +243,69 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         $scope.payOrderProcess = true;
     }
     
+    $scope.addAddon = function() {
+        var type = $scope.selectedAddon.type;
+        var roomId = $scope.room.pmsBookingRoomId;
+
+        var add = getshopclient.PmsManager.addAddonsToBooking(getMultilevelName(), type, roomId, false);
+        add.done(function() {
+            $scope.loadGuest();
+        });
+    }
+    $scope.formatDate = function(date) {
+        console.log(date);
+        var today = date;
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+
+        var yyyy = today.getFullYear();
+        if(dd<10){
+            dd='0'+dd;
+        } 
+        if(mm<10){
+            mm='0'+mm;
+        } 
+        var today = dd+'/'+mm+'/'+yyyy;
+        
+        return today;
+    }
+    $scope.removeAddon = function(addon) {
+        var confirmed = confirm("Are you sure you want to remove this addon?");
+        if(confirmed) {
+            var remove = getshopclient.PmsManager.removeAddonFromRoom(getMultilevelName(), addon.addonId, $scope.room.pmsBookingRoomId);
+            remove.done(function() {
+                $scope.loadGuest();
+            });
+        }
+    }
+    $scope.loadAddonsList = function() {
+        var productsLoading = getshopclient.ProductManager.getAllProductsLight(getMultilevelName());
+        productsLoading.done(function(products) {
+            var prodMap = {};
+            for(var k in products) {
+                var prod = products[k];
+                prodMap[prod.id] = prod;
+            }
+
+            var loading = getshopclient.PmsManager.getAddonsWithDiscount(getMultilevelName(), $scope.room.pmsBookingRoomId);
+            var simpleAddonsList = {};
+            loading.done(function(test) {
+                for(var k in test) {
+                    var addon = test[k];
+                    simpleAddonsList[addon.addonId] = {};
+                    simpleAddonsList[addon.addonId].name = prodMap[addon.productId].name;
+                    simpleAddonsList[addon.addonId].type = addon.addonType;
+                    simpleAddonsList[addon.addonId].productId = addon.productId;
+                    
+                    console.log(addon);
+                }
+                console.log(simpleAddonsList);
+                $scope.addonsList = simpleAddonsList;
+                $scope.$apply();
+            });
+        });
+    }
+    
     $scope.loadGuest = function() {
         $scope.loading = true;
         var booking = getshopclient.PmsManager.getBooking(getMultilevelName(), bookingid);
@@ -295,6 +367,7 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
                     $scope.products = res;
                     for(var key in $scope.room.addons) {
                         var item = $scope.room.addons[key];
+                        item.dateFormatted = $scope.formatDate(new Date(item.date));
                         for(var prodKey in res) {
                             var product = res[prodKey];
                             if(product.id == item.productId) {
@@ -308,6 +381,7 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             }
 
             $scope.booking = res;
+            $scope.loadAddonsList();
             $scope.$apply();
             var loadingUser = getshopclient.UserManager.getUserById(res.userId);
             loadingUser.done(function(user) {

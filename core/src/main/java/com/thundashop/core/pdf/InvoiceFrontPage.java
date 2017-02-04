@@ -392,7 +392,7 @@ public class InvoiceFrontPage {
             writeText(String.format("%.2f", price), 360, pos, false, 8, true);
             writeText(cartItem.getCount()+"", 385, pos, false, 8);
             
-            writeText(String.format("%.2f", (cartItem.getCount() * cartItem.getProduct().price))+"", 560, pos, false, 8, true);
+            writeText(String.format("%.2f", (cartItem.getCount() * cartItem.getProduct().price))+getCurrency(), 560, pos, false, 8, true);
             
             String name = createLineText(cartItem);
             
@@ -426,16 +426,24 @@ public class InvoiceFrontPage {
         return total;
     }
     
+    private String getCurrency() {
+        String currency = " kr";
+        if(details.currency != null && !details.currency.isEmpty()) {
+            currency = details.currency;
+        }
+        return currency;
+    }
+    
     private void addSummary() throws IOException {
         writeText("Netto beløp", 443, 405, false, 9);
-        writeText(String.format("%.2f", getNetto()), (int) 560, 405, false, 9, true);
+        writeText(String.format("%.2f", getNetto()) + getCurrency(), (int) 560, 405, false, 9, true);
         
         int i = 0;
         
         for (CartTax cartTax : order.cart.getCartTaxes()) {
             i++;
             writeText("Mva " + cartTax.taxGroup.taxRate + "%", 443, 404-(i*11), false, 9);
-            String sum = String.format("%.2f", cartTax.sum);
+            String sum = String.format("%.2f", cartTax.sum) + getCurrency();
             writeText(sum, (int) 560, 404-(i*11), false, 9, true);
         }
         
@@ -447,7 +455,7 @@ public class InvoiceFrontPage {
         }
         
         double total = order.cart.getShippingCost() + order.cart.getTotal(true);
-        writeText(String.format("%.2f", (total)), (int) 560, 404-(i*11), false, 9, true);
+        writeText(String.format("%.2f", (total)) + getCurrency(), (int) 560, 404-(i*11), false, 9, true);
     }
 
      private String createLineText(CartItem item) {

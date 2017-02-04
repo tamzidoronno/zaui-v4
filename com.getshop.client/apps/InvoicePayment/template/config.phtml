@@ -114,6 +114,14 @@ $kidMethods['customeridandorderid'] = "Orderid + customerid";
             <?php echo $this->__("If cartCustomerId is set, use this payment application id as default"); ?>
         </div>
     </div>
+
+    <div class="textfield gss_setting"  id="currency">
+        <span class="title"><?php echo $this->__f("Currency"); ?></span>
+        <input type='textfield' gs_model='invoicepaymentmodel' gs_model_attr='currency' value="<? echo $this->getConfigurationSetting("currency"); ?>" style='width: 50px;'>
+        <div class="description">
+            <?php echo $this->__("Currency text on invoice"); ?>
+        </div>
+    </div>
         
     <div class="gss_setting">
         <div class="text inline title"><?php echo $this->__f("Please select your language"); ?></div>

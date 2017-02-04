@@ -20,6 +20,7 @@ public class AccountingDetails {
     public int dueDays = 14;
     public String kidType = "";
     public Integer kidSize = 0;
+    public String currency = "";
     public String type = "type1";
 
     public boolean isTypeOne() {

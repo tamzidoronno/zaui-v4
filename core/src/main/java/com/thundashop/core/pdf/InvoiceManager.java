@@ -78,6 +78,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             }
             details.kidType = settings.getSetting("defaultKidMethod");
             details.type = settings.getSetting("type");
+            details.currency = settings.getSetting("currency");
         }
 
         return details;

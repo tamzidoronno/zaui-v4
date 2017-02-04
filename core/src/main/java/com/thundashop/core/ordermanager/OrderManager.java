@@ -1142,7 +1142,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return;
         }
         
-        if (order.status == Order.Status.PAYMENT_COMPLETED) {
+        if (order.closed) {
             return;
         }
         

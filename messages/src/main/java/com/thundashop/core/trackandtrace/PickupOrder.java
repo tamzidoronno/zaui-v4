@@ -15,10 +15,13 @@ import java.util.List;
 public class PickupOrder extends TntOrder {
     public String instruction = "";
     public List<String> barcodeScanned = new ArrayList();
+    
+    /**
+     * Counted bundles/parcels. 
+     * if conatiner is true its how many containers picked up.
+     */
     public int countedBundles = -1;
-    public int countedContainers = -1;
     public boolean mustScanBarcode;
     public String returnLabelNumber = "";
-    public String exceptionId;
     public boolean container = false;
 }

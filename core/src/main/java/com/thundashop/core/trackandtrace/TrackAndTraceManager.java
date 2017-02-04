@@ -8,6 +8,7 @@ package com.thundashop.core.trackandtrace;
 import com.thundashop.core.utils.ImageManager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.socket.WebSocketServerImpl;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -379,41 +381,57 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public List<AcculogixExport> getExport(String routeId) {
+    public List<AcculogixExport> getExport(String routeId, boolean currentState) {
         Route route = getRouteById(routeId);
         
-        if (route == null)
-            return new ArrayList();
+        if (route != null) {
+            return getExportInternal(route, currentState);
+        }
         
-        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress(), imageManager, getStartNumber(routeId));
+        List<AcculogixExport> everything = new ArrayList();
+        
+        routes.values().stream()
+                .forEach((Route route1) -> {
+                    everything.addAll(getExportInternal(route1, currentState));
+                });
+        
+        return everything;
+        
+    }
+
+    private List<AcculogixExport> getExportInternal(Route route, boolean currentState) throws ErrorException {
+        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress(), imageManager, getStartNumber(route.id), currentState);
         List<AcculogixExport> exportedData = exporter.getExport();
         
         if (!exportedData.isEmpty()) {
             ExportedData exported = new ExportedData();
-            exported.routeId = routeId;
-            exported.exportSequence = getExports(routeId).size() + 1;
+            exported.routeId = route.id;
+            exported.exportSequence = getExports(route.id).size() + 1;
             exported.exportedData = new ArrayList(exportedData);
             saveObject(exported);    
             exports.put(exported.id, exported);
         }
         
-        addLastExports(routeId, exportedData, exportedData.isEmpty() ? 4 : 3, !exportedData.isEmpty());
-        
-        markRouteAsClean(routeId);
-        
-        exportedData = exportedData.stream().sorted((o1, o2) -> {
-            if (o1.TNTUID == o2.TNTUID) {
-                return 0;
-            }
-            if (o1.TNTUID < o2.TNTUID) {
-                return 1;
-            }
-            if (o1.TNTUID > o2.TNTUID) {
-                return -1;
-            }
+        if (!currentState) {
+            addLastExports(route.id, exportedData, exportedData.isEmpty() ? 4 : 3, !exportedData.isEmpty());
             
-            return 0;
-        }).collect(Collectors.toList());
+            markRouteAsClean(route.id);
+            
+            exportedData = exportedData.stream().sorted((o1, o2) -> {
+                if (o1.TNTUID == o2.TNTUID) {
+                    return 0;
+                }
+                if (o1.TNTUID < o2.TNTUID) {
+                    return 1;
+                }
+                if (o1.TNTUID > o2.TNTUID) {
+                    return -1;
+                }
+
+                return 0;
+            }).collect(Collectors.toList());
+        }
+        
         return exportedData;
     }
     

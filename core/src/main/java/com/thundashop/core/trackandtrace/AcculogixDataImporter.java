@@ -182,10 +182,11 @@ public class AcculogixDataImporter {
         order.orderLargeDisplays = !data[56].isEmpty() ? Integer.parseInt(data[56]) : 0;
         order.orderDriverDeliveries = !data[57].isEmpty() ? Integer.parseInt(data[57]) : 0;
         order.quantity = !data[58].isEmpty() ? Integer.parseInt(data[58]) : 0;
-        order.originalQuantity = order.quantity;
+        order.originalQuantity = !data[32].isEmpty() ? Integer.parseInt(data[32]) : 0;
         order.referenceNumber = data[33];
         order.podBarcode = data[34];
         
+        System.out.println(data[32] + " | " + order.podBarcode);
         if (!data[61].isEmpty()) {
             if (data[62].equalsIgnoreCase("CAGE LG"))
                 order.containerType = ContainerType.CAGE_LG;
@@ -253,6 +254,8 @@ public class AcculogixDataImporter {
         order.podBarcode = data[34];
         order.container = !data[60].isEmpty();
         order.mustScanBarcode = data[67].toLowerCase().equals("scan");
+        order.originalQuantity = !data[32].isEmpty() ? Integer.parseInt(data[32]) : 0;
+        System.out.println(data[32] + " " + order.podBarcode);
         return order;
     }
 

@@ -346,7 +346,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     $scope.startScanner = function() {
         
         if (typeof(cordova) === "undefined") {
-            $scope.barcodeReceived('165181712628700600'+$scope.i);
+            $scope.barcodeReceived('651817721149242900'+$scope.i);
             $scope.i++;
             return;
         }

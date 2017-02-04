@@ -80,7 +80,7 @@ public interface ITrackAndTraceManager {
     public void unsetSkippedReason(String destinationId);
     
     @Customer
-    public List<AcculogixExport> getExport(String routeId);
+    public List<AcculogixExport> getExport(String routeId, boolean currentState);
     
     @Administrator
     public void setSequence(String exceptionId, int sequence);

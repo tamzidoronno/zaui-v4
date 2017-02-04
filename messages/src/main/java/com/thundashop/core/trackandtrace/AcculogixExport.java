@@ -47,7 +47,7 @@ public class AcculogixExport {
     
     public int TaskContainerCount;
     
-    public int taskSource;
+    public String taskSource;
     
     /**
      * Order fields
@@ -64,6 +64,7 @@ public class AcculogixExport {
     public String routeId = "";
     
     public int RTRouteStopSeq;
+    
     
     public String signatureBase64 = "";
     public String signatureUuid = "";

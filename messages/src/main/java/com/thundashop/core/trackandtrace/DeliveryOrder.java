@@ -15,10 +15,8 @@ public class DeliveryOrder extends TntOrder {
     public int orderFull = 0;
     public int orderLargeDisplays = 0;
     public int orderDriverDeliveries = 0;
-    public String exceptionId = "";
     public ContainerType containerType;
     public String orderType = "";
-    public int originalQuantity = 0;
     
     /**
      * Number of bundles delivered for 

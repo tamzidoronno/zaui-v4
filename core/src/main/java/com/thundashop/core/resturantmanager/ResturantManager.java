@@ -273,7 +273,10 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
     @Override
     public TableData getCurrentTableData(String tableId) {
         TableData data = new TableData();
-        data.cartItems = getCurrentTableSession(tableId).getCartItems();
+        if (getCurrentTableSession(tableId) != null) {
+            data.cartItems = getCurrentTableSession(tableId).getCartItems();
+        }
+        
         data.tableId = tableId;
         return data;
     }

@@ -22,13 +22,15 @@ public class AcculogixDataExporter {
     private final Map<String, TrackAndTraceException> exceptions;
     private final ImageManager imageManager;
     private int startId = 0;
+    private final boolean currentState;
     
-    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress, ImageManager imageManager, int startId) {
+    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress, ImageManager imageManager, int startId, boolean currentState) {
         this.route = route;
         this.startId = startId;
         this.exceptions = exceptions;
         this.address = storeAddress;
         this.imageManager = imageManager;
+        this.currentState = currentState;
     }
     
     public List<AcculogixExport> getExport() {
@@ -56,7 +58,7 @@ public class AcculogixDataExporter {
     }
 
     private AcculogixExport createExport(Route route, Destination dest, Task task, String base64Signature) {
-        if (!route.dirty && !dest.dirty && !task.dirty) {
+        if (!route.dirty && !dest.dirty && !task.dirty && !currentState) {
             return null;
         }
         
@@ -113,7 +115,7 @@ public class AcculogixDataExporter {
         boolean anySignatures = dest.signatures != null && !dest.signatures.isEmpty();
         exp.SignatureObtained = anySignatures ? "Yes" : "No";
         
-        if (anySignatures) {
+        if (anySignatures && dest.getLatestSignatureImage() != null) {
             exp.signatureBase64 = base64Signature;
             exp.signatureUuid = dest.getLatestSignatureImage().imageId;
         }

@@ -65,6 +65,7 @@ public class AcculogixExport {
     
     public int RTRouteStopSeq;
     
+    
     public String signatureBase64 = "";
     public String signatureUuid = "";
     

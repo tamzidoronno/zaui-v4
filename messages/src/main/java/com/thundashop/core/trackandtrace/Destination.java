@@ -82,6 +82,9 @@ public class Destination extends DataCommon {
         TrackAndTraceSignature signature = null;
         
         for (TrackAndTraceSignature sing : signatures) {
+            if (sing.imageId != null && sing.imageId.contains("Found")) {
+                continue;
+            }
             if (signature == null) {
                 signature = sing;
             } else {

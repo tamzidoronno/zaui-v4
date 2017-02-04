@@ -6,6 +6,22 @@ getshop.smsController = function($scope, $state) {
         sending.done(function() {
             alert('Message sent');
             $scope.isDisabled = false;
+            $scope.loadSmsMessages();
         });
     };
+    
+    $scope.loadSmsMessages = function() {
+        var end = new Date();
+        var d = new Date();
+        d.setDate(d.getDate()-3);
+//        d.setTime(start);
+        
+        var data = getshopclient.MessageManager.getAllSmsMessages(d, end);
+        data.done(function(res) {
+            $scope.smsMessages = res;
+            $scope.$apply();
+            console.log(res);
+        });
+    }
+    $scope.loadSmsMessages();
 };

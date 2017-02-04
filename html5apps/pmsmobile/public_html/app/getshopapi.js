@@ -5837,6 +5837,18 @@ GetShopApiWebSocket.MessageManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getAllSmsMessages' : function(start,end, gs_silent) {
+        var data = {
+            args : {
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getAllSmsMessages',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getCollectedEmails' : function(gs_silent) {
         var data = {
             args : {
@@ -12057,6 +12069,19 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'markOrderWithException' : function(taskId,orderReferenceNumber,exceptionId, gs_silent) {
+        var data = {
+            args : {
+                taskId : JSON.stringify(taskId),
+                orderReferenceNumber : JSON.stringify(orderReferenceNumber),
+                exceptionId : JSON.stringify(exceptionId),
+            },
+            method: 'markOrderWithException',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'markTaskWithExceptionDeliverd' : function(taskId,exceptionId, gs_silent) {
         var data = {
             args : {
@@ -12147,6 +12172,19 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 lat : JSON.stringify(lat),
             },
             method: 'setDesitionationException',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'setScannedBarcodes' : function(taskId,orderReference,barcodes, gs_silent) {
+        var data = {
+            args : {
+                taskId : JSON.stringify(taskId),
+                orderReference : JSON.stringify(orderReference),
+                barcodes : JSON.stringify(barcodes),
+            },
+            method: 'setScannedBarcodes',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);

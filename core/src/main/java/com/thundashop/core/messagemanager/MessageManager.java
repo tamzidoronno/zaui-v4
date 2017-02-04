@@ -329,4 +329,14 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         return messages;
     }
 
+    @Override
+    public List<SmsMessage> getAllSmsMessages(Date start, Date end) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", SmsMessage.class.getCanonicalName());
+        query.put("rowCreatedDate", BasicDBObjectBuilder.start("$gte", start).add("$lte", end).get());
+
+        List<DataCommon> datas = database.query(MessageManager.class.getSimpleName(), storeId+"_log", query);
+        return new ArrayList(datas);
+    }
+
 }

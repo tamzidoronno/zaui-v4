@@ -49,13 +49,20 @@ public interface IMessageManager  {
     @Administrator
     public int getSmsCount(int year, int month);
     
+    @Administrator
     public void collectEmail(String email);
     
+    @Administrator
     public List<String> getCollectedEmails();
     
+    @Administrator
     public MailMessage getMailMessage(String mailMessageId);
     
+    @Administrator
     public SmsMessage getSmsMessage(String smsMessageId);
+    
+    @Administrator
+    public List<SmsMessage> getAllSmsMessages(Date start, Date end);
     
     public void sendMessageToStoreOwner(String message, String subject);
     

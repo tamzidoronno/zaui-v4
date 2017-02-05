@@ -689,6 +689,9 @@ public class PmsManagerProcessor {
                 if(booking.createOrderAfterStay) {
                     payedfor = true;
                 }
+                if(booking.testReservation) {
+                    payedfor = true;
+                }
                 
                 try {
                     booking.calculateTotalCost();

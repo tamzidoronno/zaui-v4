@@ -5070,4 +5070,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return result;
     }
+
+    public List<String> getListOfAllRoomsThatHasPriceMatrix() {
+        List<String> ids = new ArrayList();
+        
+        for (PmsBooking book : bookings.values()) {
+            for (PmsBookingRooms room :  book.rooms) {
+                if (room.priceMatrix != null && !room.priceMatrix.isEmpty()) {
+                    ids.add(room.pmsBookingRoomId);
+                }
+            }
+        }
+        
+        return ids;
+    }
 }

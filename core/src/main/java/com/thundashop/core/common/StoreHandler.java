@@ -14,6 +14,7 @@ import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -72,7 +73,14 @@ public class StoreHandler {
         try {
             User user = findUser(getShopInterfaceClass, inObject);
             Annotation userLevel = authenticateUserLevel(executeMethod, aClass, getShopInterfaceClass, inObject);
-            Object result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
+            Object result;
+            
+            if (storeId != null && storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
+                result = invokeMethodUtsiktenDebug(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
+            } else {
+                result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
+            }
+            
             clearSessionObject();
             
             try {
@@ -154,6 +162,56 @@ public class StoreHandler {
             Object result = executeMethod.invoke(manager, argObjects);
             result = manager.preProcessMessage(result, executeMethod);
             
+            
+            TranslationHandler handle = new TranslationHandler();
+            updateLanguage(manager, handle, result);
+            return result;
+        } catch (IllegalAccessException ex) {
+            throw new ErrorException(84);
+        } catch (IllegalArgumentException ex) {
+            throw new ErrorException(85);
+        } catch (InvocationTargetException ex) {
+            Throwable cause = ex.getCause();
+            
+            if (cause instanceof ErrorException) {
+                throw (ErrorException) cause;
+            } else {
+                printStack(cause, scopedStoreId);
+                ex.printStackTrace();
+            }
+
+            ErrorException aex = new ErrorException(86);
+            aex.additionalInformation = cause.getLocalizedMessage() + " <br> " + stackTraceToString(cause);
+            throw aex;
+        } catch (Exception ex) {
+            printStack(ex, scopedStoreId);
+            throw ex;
+        }
+    }
+    
+    private Object invokeMethodUtsiktenDebug(Method executeMethod, Class aClass, Object[] argObjects, Class getShopInterfaceClass, JsonObject2 inObject) throws ErrorException {
+        String scopedStoreId = "ALL";
+        try {
+            ManagerSubBase manager = getManager(aClass, getShopInterfaceClass, inObject);
+            scopedStoreId = manager.getStoreId();
+            
+            GetShopSessionScope sessionScope = AppContext.appContext.getBean(GetShopSessionScope.class);
+            PmsManager pmsManager = sessionScope.getNamedSessionBean("default", PmsManager.class);
+            List<String> roomsWithPriceMatrixBefore = pmsManager.getListOfAllRoomsThatHasPriceMatrix();
+
+            Object result = executeMethod.invoke(manager, argObjects);
+            result = manager.preProcessMessage(result, executeMethod);
+            
+            List<String> roomsWithPriceMatrixAfter = pmsManager.getListOfAllRoomsThatHasPriceMatrix();
+            
+            roomsWithPriceMatrixBefore.removeAll(roomsWithPriceMatrixAfter);
+            
+            if (!roomsWithPriceMatrixBefore.isEmpty()) {
+                System.out.println("===================================================================================");
+                System.out.println("Missing pricematrix after: " + executeMethod);
+                System.out.println("Rooms: " + roomsWithPriceMatrixBefore);
+                System.out.println("===================================================================================");
+            }
             
             TranslationHandler handle = new TranslationHandler();
             updateLanguage(manager, handle, result);

@@ -534,7 +534,9 @@ public class PmsBookingRooms implements Serializable {
             sum += val;
         }
         
-        price = sum / priceMatrix.keySet().size();
+        if(priceMatrix.keySet().size() > 0) {
+            price = sum / priceMatrix.keySet().size();
+        }
     }
 
     void updateBreakfastCount() {

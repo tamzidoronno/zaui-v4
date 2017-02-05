@@ -9,6 +9,8 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ErrorMessage;
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.GetShopLogging;
 import com.thundashop.core.common.MessageBase;
 import com.thundashop.core.common.StorePool;
 import java.io.BufferedReader;
@@ -75,23 +77,11 @@ public class WebInterfaceSocketThread2 implements Runnable {
                 GsonBuilder builder = new GsonBuilder();
                 builder.serializeNulls();
                 builder.disableInnerClassSerialization();
-                builder.registerTypeAdapter(Double.class,  new JsonSerializer<Double>() {   
-
-                    @Override
-                    public JsonElement serialize(Double src, Type typeOfSrc, JsonSerializationContext context) {
-                        if(src.isNaN()) {
-                            return new JsonPrimitive(0);
-                        }
-                        if(src.isInfinite()) {
-                            return new JsonPrimitive(999999999);
-                        }
-                        return new JsonPrimitive(src);
-                    }
-                });
-                
+                builder.serializeSpecialFloatingPointValues();
                 Gson gson = builder.create();
                 json = gson.toJson((Object) result);
             }catch(Exception e) {
+                GetShopLogHandler.logPrintStatic(result, null);
                 e.printStackTrace();
             }
             dos.write((json + "\n").getBytes("UTF8"));

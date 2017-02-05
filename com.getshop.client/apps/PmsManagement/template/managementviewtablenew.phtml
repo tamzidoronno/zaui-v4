@@ -128,8 +128,10 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
     foreach($rooms as $room) {
         $booking = $this->getBooking($room->bookingId);
         $comments = "";
-        foreach($booking->comments as $time => $val) {
-            $comments .= $val->comment . "<br>";
+        if(isset($booking->comments)) {
+            foreach($booking->comments as $time => $val) {
+                $comments .= $val->comment . "<br>";
+            }
         }
         
         $row = array();

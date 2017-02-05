@@ -67,7 +67,6 @@ class CommunicationHelper {
         if (is_string($destination)) {
             $destination = new $destination();
         }
-
         $sourceReflection = new ReflectionObject($sourceObject);
         $destinationReflection = new ReflectionObject($destination);
         $sourceProperties = $sourceReflection->getProperties();
@@ -117,12 +116,15 @@ class CommunicationHelper {
         }
         
         $res = stream_get_line($this->socket, 2147483647, "\n");
-        
         if ($debug)
             echo $res;
         
         $object = json_decode($res, false);
         if (json_last_error() != 0) {
+            $object = new stdClass();
+            $object->errorCode = json_last_error();
+            $object->additionalInformation = "Something went wrong while doing json_decode of data.";
+            
             if (trim($res) == "false") {
                 return false;
             }
@@ -138,7 +140,6 @@ class CommunicationHelper {
                 exit(0);
             }
 
-            $object = $res;
         }
         if (isset($object->errorCode)) {
             $handler = new LanguageHandler();

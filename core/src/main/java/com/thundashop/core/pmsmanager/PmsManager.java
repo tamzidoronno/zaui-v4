@@ -4985,12 +4985,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for (PmsBookingRooms room : booking.rooms) {
                 boolean addonRemoved = room.decreaseAddonAndRemoveIfEmpty(addonId);
                 if (addonRemoved) {
-                    removed = true;
+                    saveBooking(booking);
+                    return;
                 }
-            }
-            
-            if (removed) {
-                saveBooking(booking);
             }
         }
     }

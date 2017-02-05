@@ -682,14 +682,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 room.priceMatrix.put(key, room.price);
             }
         }
-        String guestName = "";
-        if(room.guests != null && !room.guests.isEmpty()) {
-            guestName = room.guests.get(0).name;
-        }
-        guestName += room.date.start + " - " + room.date.end;
-        User user = userManager.getUserById(booking.userId);
-        guestName += " (" + user.fullName + ")";
-        messageManager.sendErrorNotification("The price matrix is invalid for this order, the pricematrix has been reconstructed, but why it happends has to be investigated: " + guestName, null);
     }
     
     public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {

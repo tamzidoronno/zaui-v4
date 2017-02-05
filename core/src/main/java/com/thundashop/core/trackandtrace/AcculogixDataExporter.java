@@ -132,8 +132,6 @@ public class AcculogixDataExporter {
         if (dest.skipInfo.skippedReasonId != null && !dest.skipInfo.skippedReasonId.isEmpty()) {
             exp.TaskStatus = exceptions.get(dest.skipInfo.skippedReasonId).name;
         }
-        
-        
     }
     
     private List<AcculogixExport> createExports(Route route, Destination dest, PickupTask task, String base64Signature) {
@@ -165,6 +163,12 @@ public class AcculogixDataExporter {
                 exp.ORPieceCount = order.countedBundles;
             } else {
                 exp.ORPieceCount = order.barcodeScanned.size();
+            }
+            
+            exp.BarcodeValidated = order.barcodeEnteredManually ? "NO" : "YES";
+            
+            if (order.barcodeScanned.isEmpty()) {
+                exp.BarcodeValidated = "";
             }
             
             exp.ORPieceCorrect = "NO";

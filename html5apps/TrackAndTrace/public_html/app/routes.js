@@ -98,6 +98,9 @@ angular.module('TrackAndTrace')
     
     $stateProvider.state('base.task', {
         url: '/destination/:destinationId/:routeId/:taskId',
+        params: { 
+            action : { state : 'normal' } 
+        },
         
         views: {
             main: {
@@ -106,7 +109,22 @@ angular.module('TrackAndTrace')
             },
             footer: {
                 templateUrl : 'components/task/footer.html',
-                controller : controllers.TaskController
+                controller : controllers.TaskFooterController
+            }
+        }
+    });
+    
+    $stateProvider.state('base.keyreference', {
+        url: '/keyreference/:destinationId/:routeId/:taskId',
+        
+        views: {
+            main: {
+                templateUrl : 'components/task/keyreference.html',
+                controller : controllers.KeyReferenceController
+            },
+            footer: {
+                templateUrl : 'components/task/footerkeyreference.html',
+                controller : controllers.KeyReferenceController
             }
         }
     });

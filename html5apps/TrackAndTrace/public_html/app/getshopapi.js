@@ -850,6 +850,17 @@ GetShopApiWebSocket.AccountingManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getFileByIdResend' : function(id, gs_silent) {
+        var data = {
+            args : {
+                id : JSON.stringify(id),
+            },
+            method: 'getFileByIdResend',
+            interfaceName: 'core.accountingmanager.IAccountingManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getNewFile' : function(type, gs_silent) {
         var data = {
             args : {
@@ -5826,6 +5837,18 @@ GetShopApiWebSocket.MessageManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getAllSmsMessages' : function(start,end, gs_silent) {
+        var data = {
+            args : {
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getAllSmsMessages',
+            interfaceName: 'core.messagemanager.IMessageManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getCollectedEmails' : function(gs_silent) {
         var data = {
             args : {
@@ -7515,6 +7538,18 @@ GetShopApiWebSocket.PmsInvoiceManager.prototype = {
                 filter : JSON.stringify(filter),
             },
             method: 'createOrder',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsInvoiceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'createOrderOnUnsettledAmount' : function(multilevelname, bookingId, gs_silent) {
+        var data = {
+            args : {
+                bookingId : JSON.stringify(bookingId),
+            },
+            method: 'createOrderOnUnsettledAmount',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsInvoiceManager',
         };
@@ -11948,10 +11983,11 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'getExport' : function(routeId, gs_silent) {
+    'getExport' : function(routeId,currentState, gs_silent) {
         var data = {
             args : {
                 routeId : JSON.stringify(routeId),
+                currentState : JSON.stringify(currentState),
             },
             method: 'getExport',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
@@ -12142,12 +12178,13 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'setScannedBarcodes' : function(taskId,orderReference,barcodes, gs_silent) {
+    'setScannedBarcodes' : function(taskId,orderReference,barcodes,barcodeEnteredManually, gs_silent) {
         var data = {
             args : {
                 taskId : JSON.stringify(taskId),
                 orderReference : JSON.stringify(orderReference),
                 barcodes : JSON.stringify(barcodes),
+                barcodeEnteredManually : JSON.stringify(barcodeEnteredManually),
             },
             method: 'setScannedBarcodes',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',

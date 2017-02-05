@@ -24,4 +24,5 @@ public class PickupOrder extends TntOrder {
     public boolean mustScanBarcode;
     public String returnLabelNumber = "";
     public boolean container = false;
+    boolean barcodeEnteredManually = false;
 }

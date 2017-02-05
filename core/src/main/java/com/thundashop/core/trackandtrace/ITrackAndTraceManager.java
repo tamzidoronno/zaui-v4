@@ -108,5 +108,5 @@ public interface ITrackAndTraceManager {
     public List<PooledDestionation> getPooledDestiontions();
     
     @Customer
-    public void setScannedBarcodes(String taskId, String orderReference, List<String> barcodes);
+    public void setScannedBarcodes(String taskId, String orderReference, List<String> barcodes, boolean barcodeEnteredManually);
 }

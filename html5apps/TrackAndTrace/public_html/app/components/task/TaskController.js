@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 
+if(typeof(controllers) === "undefined") { var controllers = {}; }
+
 controllers.TaskController = function($scope, datarepository, $stateParams, $api, $state) {
     $scope.exceptions = [];
     $scope.i = 1;
@@ -273,6 +275,14 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         });
     }
     
+    $scope.showKeyReference = function() {
+        $state.transitionTo('base.keyreference', { 
+            destinationId: $stateParams.destinationId,  
+            routeId: $stateParams.routeId, 
+            taskId: $scope.task.id
+        });
+    }
+    
     $scope.openDriverCopies = function(order) {
         $state.transitionTo('base.ordercorrection', { 
             destinationId: $stateParams.destinationId,  
@@ -293,7 +303,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         $state.transitionTo('base.pickupexception', params);
     }
     
-    $scope.barcodeReceived = function(barcode) {
+    $scope.barcodeReceived = function(barcode, barcodeEnteredManually) {
         var labelNumber = barcode.substr(barcode.length - 3);
         var orderReference = barcode.substr(barcode.length - 13, 10);
         
@@ -326,27 +336,33 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
                 }
             }
             
-            $api.getApi().TrackAndTraceManager.setScannedBarcodes($scope.task.id, orderFound.referenceNumber, orderFound.barcodeScanned);
+            var isBarcodeEnteredManually = !barcodeEnteredManually ? false : true;
+            
+            $api.getApi().TrackAndTraceManager.setScannedBarcodes($scope.task.id, orderFound.referenceNumber, orderFound.barcodeScanned, isBarcodeEnteredManually);
             datarepository.save();
             
             return;
         }
         
-        alert("Please check the return label");
+        if (virtual) {
+            alert("The entered reference is not part of this task.");
+        } else {
+            alert("Please check the return label");
+        }
     }
     
     $scope.stopScanner = function() {
         if (typeof(cordova) === "undefined") {
             return;
         }
-        
+        7211493121
         cordova.exec(function() {}, function() {}, "HoneyWellBarcodeReaderE75", "stop", ["test"])
     }
     
     $scope.startScanner = function() {
         
         if (typeof(cordova) === "undefined") {
-            $scope.barcodeReceived('651817721149242900'+$scope.i);
+            $scope.barcodeReceived('651817721149312100'+$scope.i);
             $scope.i++;
             return;
         }
@@ -359,6 +375,9 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         $scope.loadExceptions();
     }
     
+    if ($stateParams.action && $stateParams.action.state === "keyedReference") {
+        var barcode = datarepository.getDestinationById($stateParams.destinationId).company.id + $stateParams.action.keyReference + "000";
+        $scope.barcodeReceived(barcode, true);
+    }
     
-
 }

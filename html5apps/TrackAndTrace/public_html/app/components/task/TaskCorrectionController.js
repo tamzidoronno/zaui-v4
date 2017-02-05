@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.TaskCorrectionController = function($scope, datarepository, $stateParams, $api, $state) {
     $scope.numbers = 10;

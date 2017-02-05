@@ -621,18 +621,17 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void setScannedBarcodes(String taskId, String orderReference, List<String> barcodes) {
+    public void setScannedBarcodes(String taskId, String orderReference, List<String> barcodes, boolean barcodeEnteredManually) {
         Task task = tasks.get(taskId);
         if (task instanceof PickupTask) {
             PickupOrder order = ((PickupTask)task).getOrder(orderReference);
             if (order != null) {
                 order.barcodeScanned = barcodes;
+                order.barcodeEnteredManually = barcodeEnteredManually;
             }
             
             saveObjectInternal(task);
         }
-        
-        
     }
     
 }

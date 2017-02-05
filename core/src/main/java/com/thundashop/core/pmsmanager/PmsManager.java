@@ -593,15 +593,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         //Dump bookings
         if(getConfiguration().usePriceMatrixOnOrder) {
             for(PmsBooking booking : finalized) {
+                boolean needSave = false;
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(room.priceMatrix == null || room.priceMatrix.keySet().isEmpty()) {
                         pmsInvoiceManager.correctFaultyPriceMatrix(room, booking);
-                        logEntry("The pricematrix has been erased, it was rebuilt using the average price.", booking.id, room.pmsBookingRoomId);
-                        saveBooking(booking);
+                        needSave = true;
                     }
                 }
+                if(needSave) {
+                    logEntry("The pricematrix has been erased, it was rebuilt using the average price.", booking.id, null);
+                    saveBooking(booking);
+                }
+
             }
         }
+        
+
         
         return finalized;
     }

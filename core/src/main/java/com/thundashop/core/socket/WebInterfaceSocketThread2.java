@@ -3,6 +3,10 @@ package com.thundashop.core.socket;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ErrorMessage;
 import com.thundashop.core.common.MessageBase;
@@ -10,6 +14,7 @@ import com.thundashop.core.common.StorePool;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +69,31 @@ public class WebInterfaceSocketThread2 implements Runnable {
 
     private void sendMessage(Object result) {
         try {
-            Gson gson = new GsonBuilder().serializeNulls().disableInnerClassSerialization().create();
-            String json = gson.toJson((Object) result);
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+            String json = "";
+            try {
+                GsonBuilder builder = new GsonBuilder();
+                builder.serializeNulls();
+                builder.disableInnerClassSerialization();
+                builder.registerTypeAdapter(Double.class,  new JsonSerializer<Double>() {   
+
+                    @Override
+                    public JsonElement serialize(Double src, Type typeOfSrc, JsonSerializationContext context) {
+                        if(src.isNaN()) {
+                            return new JsonPrimitive(0);
+                        }
+                        if(src.isInfinite()) {
+                            return new JsonPrimitive(999999999);
+                        }
+                        return new JsonPrimitive(src);
+                    }
+                });
+                
+                Gson gson = builder.create();
+                json = gson.toJson((Object) result);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
             dos.write((json + "\n").getBytes("UTF8"));
             dos.flush();
         } catch (Exception d) {

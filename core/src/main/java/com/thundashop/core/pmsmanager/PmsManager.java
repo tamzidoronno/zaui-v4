@@ -871,28 +871,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             throw new ErrorException(1000015);
         }
         
-        try {
-            boolean sent = false;
-            for(PmsBookingRooms room : booking.getActiveRooms()) {
-                if(room.priceMatrix == null || room.priceMatrix.keySet().isEmpty()) {
-                    pmsInvoiceManager.correctFaultyPriceMatrix(room, booking);
+        if(getConfigurationSecure().usePriceMatrixOnOrder) {
+            try {
+                boolean sent = false;
+                for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    if(room.priceMatrix == null || room.priceMatrix.keySet().isEmpty()) {
+                        pmsInvoiceManager.correctFaultyPriceMatrix(room, booking);
 
-                    String guestName = "";
-                    if(room.guests != null && !room.guests.isEmpty()) {
-                        guestName = room.guests.get(0).name;
-                    }
-                    guestName += room.date.start + " - " + room.date.end;
-                    User user = userManager.getUserById(booking.userId);
-                    guestName += " (" + user.fullName + ")";
-                    if(!sent) {
-                        ErrorException ex = new ErrorException(11100000);
-                        logPrint("The price matrix is invalid for this order, the pricematrix has been reconstructed, but why it happends has to be investigated.");
-                        sent = true;
+                        String guestName = "";
+                        if(room.guests != null && !room.guests.isEmpty()) {
+                            guestName = room.guests.get(0).name;
+                        }
+                        guestName += room.date.start + " - " + room.date.end;
+                        User user = userManager.getUserById(booking.userId);
+                        guestName += " (" + user.fullName + ")";
+                        if(!sent) {
+                            ErrorException ex = new ErrorException(1000001000);
+                            messageManager.sendErrorNotification("The price matrix is invalid for this order, the pricematrix has been reconstructed, but why it happends has to be investigated: " + guestName, ex);
+                            sent = true;
+                        }
                     }
                 }
+            }catch(Exception e) {
+                e.printStackTrace();
             }
-        }catch(Exception e) {
-            
         }
         
         bookings.put(booking.id, booking);

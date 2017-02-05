@@ -3270,22 +3270,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsBookingAddonItem createAddonToAdd(PmsBookingAddonItem addonConfig, Date date) {
         
         Product product = productManager.getProduct(addonConfig.productId);
-        
-        PmsBookingAddonItem toReturn = new PmsBookingAddonItem();
-        toReturn.addonType = addonConfig.addonType;
-        toReturn.price = product.price;
-        toReturn.priceExTaxes = product.priceExTaxes;
-        toReturn.productId = product.id;
-        toReturn.date = date;
-        toReturn.descriptionWeb = addonConfig.descriptionWeb;
-        toReturn.isAvailableForBooking = addonConfig.isAvailableForBooking;
-        toReturn.isAvailableForCleaner = addonConfig.isAvailableForCleaner;
-        toReturn.isActive = addonConfig.isActive;
-        toReturn.isIncludedInRoomPrice = addonConfig.isIncludedInRoomPrice;
-        if(addonConfig.price > 0) {
-            toReturn.price = addonConfig.price;
-            toReturn.priceExTaxes = addonConfig.priceExTaxes;
-        }
+            PmsBookingAddonItem toReturn = new PmsBookingAddonItem();
+            toReturn.addonType = addonConfig.addonType;
+            if(product != null) {
+                toReturn.price = product.price;
+                toReturn.priceExTaxes = product.priceExTaxes;
+                toReturn.productId = product.id;
+            } else {
+                logPrint("Null propduct, product with id : " + (addonConfig.productId) + " has been lost / deleted.");
+            }
+            toReturn.date = date;
+            toReturn.descriptionWeb = addonConfig.descriptionWeb;
+            toReturn.isAvailableForBooking = addonConfig.isAvailableForBooking;
+            toReturn.isAvailableForCleaner = addonConfig.isAvailableForCleaner;
+            toReturn.isActive = addonConfig.isActive;
+            toReturn.isIncludedInRoomPrice = addonConfig.isIncludedInRoomPrice;
+            if(addonConfig.price > 0) {
+                toReturn.price = addonConfig.price;
+                toReturn.priceExTaxes = addonConfig.priceExTaxes;
+            }
         
         return toReturn;
     }

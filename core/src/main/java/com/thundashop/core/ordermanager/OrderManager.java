@@ -574,8 +574,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         
-        
-        throw null;
+        logPrint("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it.");
+        return null;
     }
     
     private Order getByTransactionId(String transactionId) {

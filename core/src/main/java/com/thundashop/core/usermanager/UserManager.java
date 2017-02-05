@@ -552,6 +552,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public User getLoggedOnUser() throws ErrorException {
+        if(sessionFactory == null || getSession() == null) {
+            return null;
+        }
         Object id = sessionFactory.getObjectPingLess(getSession().id, "user");
         UserStoreCollection collection = getUserStoreCollection(storeId);
         return collection.getUser((String) id);

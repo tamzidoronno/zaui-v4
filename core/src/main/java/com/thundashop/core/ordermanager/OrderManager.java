@@ -556,7 +556,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Order getOrder(String orderId) throws ErrorException {
-        if(getSession()) {
+        if(getSession() == null) {
             logPrint("Tried to fetch an order on id: " + orderId + " when session is null.");
             return null;
         }

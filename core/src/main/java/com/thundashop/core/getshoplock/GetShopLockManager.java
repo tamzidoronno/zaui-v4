@@ -624,15 +624,16 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 }
             }
         }
-        
-        toSet.beingUpdated = true;
-        toSet.lastTriedUpdate = new Date();
-        String user = getUsername(toSet.serverSource);
-        String pass = getPassword(toSet.serverSource);
-        String host = getHostname(toSet.serverSource);
+        if(toSet != null) {
+            toSet.beingUpdated = true;
+            toSet.lastTriedUpdate = new Date();
+            String user = getUsername(toSet.serverSource);
+            String pass = getPassword(toSet.serverSource);
+            String host = getHostname(toSet.serverSource);
 
-        GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock);
-        mgr.start();
+            GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock);
+            mgr.start();
+        }
         return;
         
     }

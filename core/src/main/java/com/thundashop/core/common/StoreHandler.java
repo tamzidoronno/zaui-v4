@@ -14,6 +14,7 @@ import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -210,6 +211,10 @@ public class StoreHandler {
                 System.out.println("===================================================================================");
                 System.out.println("Missing pricematrix after: " + executeMethod);
                 System.out.println("Rooms: " + roomsWithPriceMatrixBefore);
+                for(String roomId : roomsWithPriceMatrixBefore) {
+                    PmsBooking booking = pmsManager.getBookingFromRoom(roomId);
+                    System.out.println(booking.rowCreatedDate);
+                }
                 System.out.println("===================================================================================");
             }
             

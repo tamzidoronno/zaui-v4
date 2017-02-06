@@ -139,7 +139,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     private ApplicationInstance checkSecurity(ApplicationInstance secureClone) {
         overrideGlobalSettings(secureClone);
         
-        if(getSession().currentUser != null && (getSession().currentUser.isAdministrator() || getSession().currentUser.isEditor())) {
+        if(getSession() != null && getSession().currentUser != null && (getSession().currentUser.isAdministrator() || getSession().currentUser.isEditor())) {
             return secureClone;
         }
         

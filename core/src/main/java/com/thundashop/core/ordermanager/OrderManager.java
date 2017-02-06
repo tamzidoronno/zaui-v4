@@ -556,6 +556,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public Order getOrder(String orderId) throws ErrorException {
+        if(getSession() == null) {
+            logPrint("Tried to fetch an order on id: " + orderId + " when session is null.");
+            return null;
+        }
         User user = getSession().currentUser;
         for (Order order : getAllOrderIncludedVirtualNonFinalized()) {
             if (!order.id.equals(orderId)) {
@@ -574,8 +578,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         
-        
-        throw null;
+        logPrint("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it.");
+        return null;
     }
     
     private Order getByTransactionId(String transactionId) {

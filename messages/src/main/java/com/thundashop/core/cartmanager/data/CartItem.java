@@ -37,6 +37,7 @@ public class CartItem implements Serializable {
     public Date periodeStart = null;
     public String groupedById = "";
     public String addedBy = "";
+    public boolean removedAfterDeleted;
     
     public CartItem() {
     }

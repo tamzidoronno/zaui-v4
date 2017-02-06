@@ -47,7 +47,7 @@ if($amount != 0) {
         }
         echo "</div>";
     } else {
-        if($amount != 0) {
+        if($amount > 1 || $amount < -1) {
             echo "<div class='warnunsettled' gstype='form' method='fastordercreation'>";
             echo "<input type='hidden' gsname='bookingid' value='". $booking->id."'>";
             echo "<i class='fa fa-warning' style='color:red;'></i> You have an unsettled amount of $amount, what would you like to do with it?<br>";

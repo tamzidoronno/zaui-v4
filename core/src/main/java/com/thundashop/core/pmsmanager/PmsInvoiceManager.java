@@ -83,6 +83,35 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return createOrder(bookingId, filter);
     }
 
+    private List<CartItem> getLostItems(PmsBooking booking) {
+        List<String> rooms = new ArrayList();
+        for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            rooms.add(room.pmsBookingRoomId);
+        }
+        
+        List<CartItem> lostRooms = new ArrayList();
+
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            for(CartItem item : order.cart.getItems()) {
+                if(item.removedAfterDeleted) {
+                    continue;
+                }
+                if(item.getProduct().externalReferenceId != null && !rooms.contains(item.getProduct().externalReferenceId)) {
+                    if(!avoidOrderCreation) {
+                        item.removedAfterDeleted = true;
+                    }
+                    lostRooms.add(item);
+                    CartItem copy = item.copy();
+                    copy.setCount(item.getCount() * -1);
+                    itemsToReturn.add(copy);
+                }
+            }
+        }
+        
+        return lostRooms;
+    }
+
     
 
     class BookingOrderSummary {
@@ -1113,6 +1142,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(!booking.ignoreCheckChangesInBooking && !filter.ignoreCheckChangesInBooking) {
                 List<CartItem> changes = getChangesForBooking(booking.id, filter);
                 items.addAll(changes);
+                
+                //@TODO Make it global for all.
+                if(storeId.equals("9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0")) {
+                    List<CartItem> getLostItems = getLostItems(booking);
+                    items.addAll(getLostItems);
+                }
             }
         }
         

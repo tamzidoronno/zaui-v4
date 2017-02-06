@@ -43,7 +43,7 @@ echo "</div>";
 </style>
 
 <script>
-    $('.roomselectionbtn').on('click', function() {
+    $('.roomselectionbtn').on('click', function(e) {
         if($(this).hasClass('selectedButton')) {
             $(this).removeClass('selectedButton');
         } else {
@@ -71,7 +71,7 @@ echo "</div>";
                 $("[selectionroomrow='" + roomId + "']").hide();
             }
         });
-        app.PmsManagement.calculcateCartCost();
+        app.PmsManagement.calculcateCartCost(e);
     });
     $(document).on('keyup', '.PmsManagement .cartprice', app.PmsManagement.calculcateCartCost);
     $(document).on('keyup', '.PmsManagement .cartcount', app.PmsManagement.calculcateCartCost);

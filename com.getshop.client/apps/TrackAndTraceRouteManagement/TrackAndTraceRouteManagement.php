@@ -157,5 +157,9 @@ class TrackAndTraceRouteManagement extends \MarketingApplication implements \App
         $route->instruction = $_POST['data']['instruction'];
         $this->getApi()->getTrackAndTraceManager()->saveRoute($route);
     }
+    
+    public function deleteRoute() {
+        $this->getApi()->getTrackAndTraceManager()->deleteRoute($_POST['data']['routeid']);
+    }
 }
 ?>

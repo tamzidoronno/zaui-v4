@@ -8,7 +8,10 @@ if ($routes) {
     echo "<div class='routelist'>";
     echo "<h1>All routes:</h1>";
     foreach ($routes as $route) {
-        echo "<div class='routeview'> <div gsclick='changeToRouteView' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-edit'></i></div> ".$route->name."</div>";
+        echo "<div class='routeview'> "
+        . "<div gsclick='changeToRouteView' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-edit'></i></div> "
+        . "<div gsclick='deleteRoute' gs_confirm='are you sure you want to delete the route?' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-trash'></i></div> "
+                . " ".$route->name."</div>";
     }
     echo "</div>";
     echo "<br/>";

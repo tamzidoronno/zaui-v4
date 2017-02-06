@@ -21,10 +21,10 @@ public class AcculogixDataExporter {
     private final Route route;
     private final Map<String, TrackAndTraceException> exceptions;
     private final ImageManager imageManager;
-    private int startId = 0;
+    private long startId = 0;
     private final boolean currentState;
     
-    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress, ImageManager imageManager, int startId, boolean currentState) {
+    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress, ImageManager imageManager, long startId, boolean currentState) {
         this.route = route;
         this.startId = startId;
         this.exceptions = exceptions;
@@ -192,7 +192,6 @@ public class AcculogixDataExporter {
             setOrderInfo(exp, order, dest);
             
             exp.PODBarcodeID = order.podBarcode;
-            boolean hasDriverCopies = order.driverDeliveryCopiesCounted != null && order.driverDeliveryCopiesCounted > 0;
             
             if (task.completed) {
                 exp.ORPieceCount = order.quantity;
@@ -202,11 +201,24 @@ public class AcculogixDataExporter {
                 exp.TaskContainerCount = task.containerCounted;
             }
             
-            int diff = order.originalQuantity - order.quantity;
+            exp.ORPieceCorrect = "NO";
             
-            if (task.completed) {
-                exp.ORStatus = "DELIVERED";
-            }
+            setDeliveryStatusWhenDelivered(task, exp, order);
+            
+            exp.TotalPieces = order.originalQuantity;
+            
+            toAdd.add(exp);
+        }
+        
+        return toAdd;
+    }
+
+    private void setDeliveryStatusWhenDelivered(DeliveryTask task, AcculogixExport exp, DeliveryOrder order) {
+        int diff = order.originalQuantity - order.quantity;
+        boolean hasDriverCopies = order.driverDeliveryCopiesCounted != null && order.driverDeliveryCopiesCounted > 0;
+        
+        if (task.completed) {
+            exp.ORStatus = "DELIVERED";
             
             if (order.originalQuantity > order.quantity && !hasDriverCopies) {
                 exp.ORStatus = "SHORT # PACKAGES";
@@ -231,18 +243,13 @@ public class AcculogixDataExporter {
             
             if (diff != 0) {
                 exp.ORStatus = exp.ORStatus.replaceAll("#", ""+Math.abs(diff));
+                exp.ORPieceCorrect = "YES";
             }
             
             if (order.exceptionId != null && !order.exceptionId.isEmpty()) {
                 exp.ORStatus = exceptions.get(order.exceptionId).name;
             }
-            
-            exp.TotalPieces = order.originalQuantity;
-            
-            toAdd.add(exp);
         }
-        
-        return toAdd;
     }
     
     private String formatDate(Date date) {

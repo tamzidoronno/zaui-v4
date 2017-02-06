@@ -58,6 +58,16 @@ attribute gstypes;
     gs_show_modal:
         example: <div gs_show_modal="modalname">Open Modal</div>
 
+error handling:
+    In the GSForm you can add a error field,
+    <div class='gserrorfield' id='errorMessage'></div>
+
+    Then you can show the error message by using the following:
+    $obj = $this->getStdErrorObject(); // Get a default error message
+    $obj->fields->errorMessage = "Only valid numbers"; // The message you wish to display in the gserrorfield
+    $obj->gsfield->hours = 1; // Will highlight the field that has gsname "hours"
+    $this->doError($obj); // Code will stop here.
+
 attribute output:
     standard / not set: The default output.
     informationbox : Forward the result into an informationbox.

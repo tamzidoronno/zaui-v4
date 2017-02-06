@@ -202,6 +202,7 @@ public class AcculogixDataExporter {
                 exp.TaskContainerCount = task.containerCounted;
             }
             
+            int diff = order.originalQuantity - order.quantity;
             
             if (task.completed) {
                 exp.ORStatus = "DELIVERED";
@@ -213,6 +214,23 @@ public class AcculogixDataExporter {
             
             if (order.originalQuantity < order.quantity && !hasDriverCopies) {
                 exp.ORStatus = "OVER # PACKAGES";
+            }
+            
+            if (hasDriverCopies) {
+                int total = order.orderOdds + order.orderFull + order.orderLargeDisplays + order.driverDeliveryCopiesCounted;
+                if (total > order.quantity) {
+                    exp.ORStatus = "SHORT # PACKAGES";
+                } else if (total < order.quantity) {
+                    exp.ORStatus = "OVER # PACKAGES";
+                } else {
+                    exp.ORStatus = "DELIVERED";
+                }
+                
+                diff = order.quantity - total;
+            }
+            
+            if (diff != 0) {
+                exp.ORStatus = exp.ORStatus.replaceAll("#", ""+Math.abs(diff));
             }
             
             if (order.exceptionId != null && !order.exceptionId.isEmpty()) {

@@ -43,11 +43,7 @@ body {
 }
 
 .gsarea[area="header"] .Menu {
-    position: absolute;
-    top: 60px;
-    right: 0px;
-    width: 800px;
-    text-align: center;
+    margin-top: 40px;
 }   
 
 .gsarea[area="header"] .Menu .entry {
@@ -84,6 +80,15 @@ body {
     box-sizing: border-box;
 }
 
+.gsucell[cellid="31ac204b-0872-4733-b0b8-14b236987dfa"] {
+    position: absolute;
+}
+
+.gsucell[cellid="931bce3d-a7b9-4a17-be32-1e0d97da0495"] {
+    position: absolute;
+    margin-left: 300px;
+}
+
 .box_white_background_inner .gsinner,
 .box_white_background_withtoppicture_inner .gsinner {
     padding: 10px;
@@ -91,4 +96,47 @@ body {
 
 .box_white_background_withtoppicture_inner .gscount_0 {
     padding: 0px;
+}
+
+@media screen and (max-width: 800px) {
+    .gsarea[area="header"] .Menu .mobilenavigatemenu {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 50px;
+        
+        overflow: hidden;
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+        text-align: left;
+        border: solid 1px;
+        text-align: left;
+        padding-left: 3px;
+    }
+    
+    .gsarea[area="header"] .Menu .menuentries {
+        top: -130px;
+    }
+    
+    .gsarea[area="header"] .Menu .entries .entries,
+    .gsarea[area="header"] .Menu .entries .entries .entry,
+    .gsarea[area="header"] .Menu {
+        width: 100%;
+        text-align: left;
+    }
+
+    .gsucell[cellid="931bce3d-a7b9-4a17-be32-1e0d97da0495"] {
+        width: 100%;
+        margin-left: 0px;
+    }    
+    .gsarea[area="header"] .Menu .entries .entries .entry {
+        background-color: #2c2c2c;
+    }
+    
+    .gsarea[area="header"] .Menu .entry .entries .entry {
+        border-bottom: solid 0px #737172;
+        line-height: 40px;
+        padding-left: 40px;
+    }   
 }

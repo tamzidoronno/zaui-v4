@@ -121,6 +121,10 @@ public class AcculogixDataExporter {
             exp.TaskStatus = "AF";
         }
         
+        if (dest.startInfo.started) {
+            exp.TaskStatus = "Arrive";
+        }
+        
         if (task instanceof DeliveryTask && task.completed) {
             exp.TaskStatus = "D1";
         }

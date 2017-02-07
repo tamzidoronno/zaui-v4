@@ -1,0 +1,52 @@
+<?
+/* @var $this ns_cbe3bb0f_e54d_4896_8c70_e08a0d6e55ba\SamleFaktura */
+$orders = $this->getApi()->getOrderManager()->getAllUnpaid("ns_cbe3bb0f_e54d_4896_8c70_e08a0d6e55ba\SamleFaktura");
+$groupedOrders = $this->groupOrdersByUserId($orders);
+
+?>
+<div gstype='form' method='showSelectUser'>
+<?
+foreach ($groupedOrders as $userId => $orders) {
+    $user = $this->getApi()->getUserManager()->getUserById($userId);
+    ?>
+    <div class='groupedbyuser'>
+        <div class='userinfo'>
+            <?
+            echo $user->fullName;
+            ?>
+        </div>
+
+        <?
+        foreach ($orders as $order) {
+            $incremental = $order->incrementOrderId;
+            $name = $order->cart->address ? $order->cart->address->fullName : "";
+            $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+            $date = date("d/m-Y", strtotime($order->rowCreatedDate));
+            ?> 
+            <div class='row'>
+                <div class='col col1'><input type='checkbox' gsname='orderid_<? echo $order->id; ?>' value='<? echo $order->id; ?>'/></div>
+                <div class='col col2'><? echo $incremental; ?></div>
+                <div class='col col3'><? echo $date; ?></div>
+                <div class='col col4'>
+                    <?
+                    foreach ($order->cart->items as $item) {
+                        echo "<div style='display: inline-block; width: 49%;'>".$item->count . " x " . $item->product->name."</div>";
+                        if ($item->startDate && $item->endDate) {
+                            echo "<div style='display: inline-block; width: 49%;'>".date("d/m-Y", strtotime($item->startDate))." -".date("d/m-Y", strtotime($item->endDate))."</div>";
+                        }
+                    }
+                    ?>
+                
+                </div>
+                <div class='col col5'><? echo $total; ?></div>
+            </div>
+            <?
+        }
+    ?>
+    </div>
+    <?
+}
+?>
+    
+    <div gstype='submit' class='shop_button'><? echo $this->__f("Next"); ?></div>
+</div>

@@ -1343,13 +1343,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             order.rowCreatedDate = cal.getTime();
         }
 
-        if (order.cart.address == null || order.cart.address.address == null || order.cart.address.address.isEmpty()) {
-            if (!user.company.isEmpty()) {
-                Company company = userManager.getCompany(user.company.get(0));
-                order.cart.address = company.address;
-                order.cart.address.fullName = company.name;
-            }
-        }
+        orderManager.setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(order, user.id);
 
         if (virtual) {
             orderManager.saveVirtalOrder(virtualOrder);

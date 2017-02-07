@@ -279,4 +279,13 @@ public interface IOrderManager {
     
     @Administrator
     public List<Order> getAllUnpaidInvoices();
+    
+    @Administrator
+    public List<Order> getAllUnpaid(String paymentMethod);
+    
+    @Administrator
+    public Order mergeAndCreateNewOrder(String userId, List<String> orderIds, String paymentMethod, String note);
+    
+    @Administrator
+    public void sendRecieptWithText(String orderId, String email, String subject, String text);
 }

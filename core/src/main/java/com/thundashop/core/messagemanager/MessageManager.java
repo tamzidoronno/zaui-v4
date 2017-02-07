@@ -158,10 +158,10 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             return;
         }
         String email = user.emailAddress;
-        sendInvoiceForOrder(orderId, email);
+        sendInvoiceForOrder(orderId, email, null, null);
     }
     
-    public void sendInvoiceForOrder(String id, String email) {
+    public void sendInvoiceForOrder(String id, String email, String subject, String body) {
         Order order = orderManager.getOrderSecure(id);
         User user = userManager.getUserById(order.userId);
         if(user == null) {
@@ -171,7 +171,14 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         HashMap<String, String> attachments = new HashMap();
         attachInvioce(attachments, id);
         String title = "Receipt for payment";
+        if (subject != null)
+            title = subject;
+        
         String message = "Attached you will find your reciept for the payment for order id: " + order.incrementOrderId + ", amount: " + order.cart.getTotal(false);
+        
+        if (body != null)
+            message = body;
+        
         String name = user.fullName;
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
         sendMailWithAttachments(email, name, title, message, copyadress, copyadress, attachments);

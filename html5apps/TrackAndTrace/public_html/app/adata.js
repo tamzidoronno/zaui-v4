@@ -9,6 +9,7 @@ adata = {
     routes: [],
     exceptions: [],
     loaded: false,
+    driverMessages: [],
     
     loadAllData: function ($api, $scope) {
         var me = this;
@@ -39,6 +40,14 @@ adata = {
                 $('.loadingData').hide();
             }
         });
+        
+        if ($api.getLoggedOnUser()) {
+            $api.getApi().TrackAndTraceManager.getDriverMessages($api.getLoggedOnUser().id).done(function (res) {
+                me.driverMessages = res;
+                $scope.$apply();
+                me.save();
+            });
+        }
     },
     
     updateRoute: function(route, $api) {
@@ -119,6 +128,7 @@ adata = {
     save: function() {
         localStorage.setItem("aDataRoutes", JSON.stringify(this.routes));
         localStorage.setItem("aDataExceptions", JSON.stringify(this.exceptions));
+        localStorage.setItem("aDriverMessages", JSON.stringify(this.driverMessages));
     },
     
     loadFromLocalStorage: function() {
@@ -128,6 +138,10 @@ adata = {
         
         if (localStorage.getItem("aDataExceptions")) {
             this.exceptions = JSON.parse(localStorage.getItem("aDataExceptions"));
+        }
+        
+        if (localStorage.getItem("aDriverMessages")) {
+            this.driverMessages = JSON.parse(localStorage.getItem("aDriverMessages"));
         }
     }
 };

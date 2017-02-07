@@ -2,11 +2,15 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ManagerBase;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,22 +25,55 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     BookingEngine bookingEngine;
     
     @Override
-    public List<PmsMobileReport> getReport(Date start, Date end) {
+    public List<PmsMobileReport> getReport(Date start, Date end, String compareTo) {
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.startDate = start;
         filter.endDate = end;
+        
+        PmsBookingFilter filterCompare = new PmsBookingFilter();
+        filterCompare.startDate = new Date(start.getTime());
+        filterCompare.endDate = new Date(end.getTime());
+        
+        Calendar calStart = Calendar.getInstance();
+        Calendar calEnd = Calendar.getInstance();
+        calStart.setTime(filterCompare.startDate);
+        calEnd.setTime(filterCompare.endDate);
+
+        if(compareTo.equals("-1week")) {
+            int days = Days.daysBetween(new DateTime(filterCompare.startDate), new DateTime(filterCompare.endDate)).getDays();
+
+            
+            calStart.add(Calendar.DAY_OF_MONTH, days*-1);
+            calEnd.add(Calendar.DAY_OF_MONTH, days*-1);
+        }
+        if(compareTo.equals("-1month")) {
+            calStart.add(Calendar.MONTH, -1);
+            calEnd.add(Calendar.MONTH, -1);
+        }
+        if(compareTo.equals("-1year")) {
+            calStart.add(Calendar.YEAR, -1);
+            calEnd.add(Calendar.YEAR, -1);
+        }
+        filterCompare.startDate = calStart.getTime();
+        filterCompare.endDate = calEnd.getTime();
 
         List<PmsMobileReport> result = new ArrayList();
         
         PmsStatistics stats = pmsManager.getStatistics(filter);
-        result.add(buildTotal(stats, "All"));
+        PmsStatistics compare = pmsManager.getStatistics(filterCompare);
+        result.add(buildTotal(stats, "All", compare.getTotal()));
         
         List<BookingItemType> types = bookingEngine.getBookingItemTypes();
         for(BookingItemType type : types) {
             filter.typeFilter.clear();
             filter.typeFilter.add(type.id);
             stats = pmsManager.getStatistics(filter);
-            result.add(buildTotal(stats, type.name));
+            
+            filterCompare.typeFilter.clear();
+            filterCompare.typeFilter.add(type.id);
+            compare = pmsManager.getStatistics(filterCompare);
+            
+            result.add(buildTotal(stats, type.name, compare.getTotal()));
         }
         
         
@@ -46,7 +83,45 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
 
     @Override
     public List<PmsMobileRoomCoverage> getRoomCoverage(Date start, Date end) {
-        return new ArrayList();
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.startDate = start;
+        filter.endDate = end;
+        filter.itemFilter = new ArrayList();
+        
+        List<PmsMobileRoomCoverage> result = new ArrayList();
+        for(BookingItem item : items) {
+            filter.itemFilter.clear();
+            filter.itemFilter.add(item.id);
+            
+            PmsStatistics stats = pmsManager.getStatistics(filter);
+            StatisticsEntry total = stats.getTotal();
+            
+            PmsMobileRoomCoverage coverage = new PmsMobileRoomCoverage();
+            coverage.roomName = item.bookingItemName;
+            coverage.coverage = total.coverage;
+            coverage.avgPrice = (double) Math.round(total.avgPrice);
+            
+            coverage.revpar = (double) Math.round(coverage.avgPrice * (double)((double)coverage.coverage / 100));
+            
+            int squareMeters = 0;
+            PmsAdditionalItemInformation additional = pmsManager.getAdditionalInfo(item.id);
+            if(additional != null) {
+                squareMeters = additional.squareMetres;
+            }
+            if(squareMeters < 10) {
+                squareMeters = 0;
+            }
+            if(squareMeters > 0) {
+                coverage.sqaurePrice = (double) Math.round(coverage.avgPrice / squareMeters);
+                coverage.squarePricePeriode = (double) Math.round((double)coverage.sqaurePrice * (double)stats.entries.size()-1);
+            }
+            
+            result.add(coverage);
+            
+        }
+        return result;
     }
 
     @Override
@@ -54,7 +129,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         return new ArrayList();
     }
 
-    private PmsMobileReport buildTotal(PmsStatistics stats, String totalText) {
+    private PmsMobileReport buildTotal(PmsStatistics stats, String totalText, StatisticsEntry compare) {
         PmsMobileReport total = new PmsMobileReport();
         StatisticsEntry totalEntry = stats.getTotal();
         
@@ -78,6 +153,12 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
             total.squareMetresPrice =  (double)Math.round(total.totalRented / total.squareMeters);
             total.squareMetresPriceDaily =  (double)Math.round(total.squareMetresPrice / total.numberOfDays);
         }
+        
+        total.totalPastPeriode = compare.totalPrice;
+        total.totalPastPeriodeDaily = (double)Math.round(compare.totalPrice / total.numberOfDays);
+        
+        total.increaseFromLastPeriode = total.totalRented - total.totalPastPeriode;
+        total.increaseFromLastPeriodeDaily = (double)Math.round(total.increaseFromLastPeriode / total.numberOfDays);
         
         return total;
     }

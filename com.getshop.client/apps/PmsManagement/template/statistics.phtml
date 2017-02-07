@@ -62,7 +62,13 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
                 echo $day;
             echo "</td>";
             echo "<td>"; if($entry->spearRooms >= 0) { echo $entry->spearRooms; } echo "</td>";
-            echo "<td>"; if($entry->roomsRentedOut >= 0) { echo $entry->roomsRentedOut; } echo "</td>";
+            echo "<td>"; if($entry->roomsRentedOut >= 0) { 
+                echo $entry->roomsRentedOut; 
+                if($entry->roomsNotIncluded > 0) {
+                    echo " (" . $entry->roomsNotIncluded . ")";
+                }
+            }
+            echo "</td>";
             echo "<td>"; if($entry->avgPrice >= 0) { echo round($entry->avgPrice); } echo "</td>";
             if ($entry->date) {
                 echo "<td>"; if($entry->totalPrice >= 0) { echo $entry->totalPrice; } echo "</td>";

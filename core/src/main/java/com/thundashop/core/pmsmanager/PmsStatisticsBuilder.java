@@ -14,10 +14,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author boggi2
- */
 class PmsStatisticsBuilder {
     private final List<PmsBooking> bookings;
     private final List<PmsBooking> allBookings;
@@ -86,6 +82,11 @@ class PmsStatisticsBuilder {
                     continue;
                 }
                 if(isPaidFor(booking, cal) && !filter.includeVirtual) {
+                    for(PmsBookingRooms room : booking.getActiveRooms()) {
+                        if(room.isActiveOnDay(cal.getTime())) {
+                            entry.roomsNotIncluded++;
+                        }
+                    }
                     continue;
                 }
                 
@@ -94,10 +95,16 @@ class PmsStatisticsBuilder {
                 }
                 
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    if(filter.itemFilter != null && !filter.itemFilter.isEmpty()) {
+                        if(room.bookingItemId == null || room.bookingItemId.isEmpty() || !filter.itemFilter.contains(room.bookingItemId)) {
+                            continue;
+                        }
+                    }
                     if(!filter.typeFilter.isEmpty() && !filter.typeFilter.contains(room.bookingItemTypeId)) {
                         continue;
                     }
                     if(room.isActiveOnDay(cal.getTime())) {
+                        
                         entry.roomsIncluded.add(room.pmsBookingRoomId);
                         Double price = room.getDailyPrice(booking.priceType, cal);
                         if(!pricesExTax) {

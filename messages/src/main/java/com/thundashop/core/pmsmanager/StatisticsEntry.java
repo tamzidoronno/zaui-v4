@@ -13,6 +13,7 @@ public class StatisticsEntry {
     public Integer spearRooms = 0;
     public Integer totalRooms = 0;
     public Integer coverage = 0;
+    public Integer roomsNotIncluded = 0;
     public Double bugdet = 0.0;
     public HashMap<Integer, Integer> addonsCount = new HashMap();
     public HashMap<Integer, Double> addonsPrice = new HashMap();

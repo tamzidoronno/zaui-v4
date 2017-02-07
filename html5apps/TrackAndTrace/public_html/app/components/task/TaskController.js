@@ -344,8 +344,8 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
             return;
         }
         
-        if (virtual) {
-            alert("The entered reference is not part of this task.");
+        if (barcodeEnteredManually) {
+            alert("Unscheduled or invalid reference keyed.");
         } else {
             alert("Please check the return label");
         }

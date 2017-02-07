@@ -38,6 +38,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import java.util.*;
@@ -1438,15 +1439,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return null;
         }
         
-        Application paymentApplication = applicationPool.getApplication(user.preferredPaymentType);
-        if (paymentApplication != null) { 
-            Payment payment = new Payment();
-            payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
-            payment.paymentId = paymentApplication.id;
-            return payment;
-        }
-        
-        return null;
+        String paymentId = user.preferredPaymentType;
+        return createPayment(paymentId);
     }
 
     
@@ -1490,7 +1484,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void sendReciept(String orderId, String email) {
-        messageManager.sendInvoiceForOrder(orderId, email);
+        sendRecieptWithText(orderId, email, null, null);
+    }
+    
+    @Override
+    public void sendRecieptWithText(String orderId, String email, String subject, String text) {
+        Order order = getOrder(orderId);
+        if (order != null) {
+            messageManager.sendInvoiceForOrder(orderId, email, subject, text);
+            order.closed = true;
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Invoice or receipt sent to " + email);
+            saveObject(order);
+        }
     }
 
     @Override
@@ -1763,18 +1768,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public List<Order> getAllUnpaidInvoices() {
         String invoicePaymentAppId = "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment";
-        List<Order> retOrders = orders.values().stream()
-                .filter(order -> !order.isCreditNote)
-                .filter(order -> order.payment != null && order.payment.paymentType.equals(invoicePaymentAppId))
-                .filter(order -> order.paymentDate == null)
-                .collect(Collectors.toList());
-                
-        
-        removeCredittedOrders(retOrders);
-        
-        finalize(retOrders);
-        
-        return retOrders;
+        return getAllUnpaid(invoicePaymentAppId);
     }
 
     private void removeCredittedOrders(List<Order> retOrders) {
@@ -1799,6 +1793,91 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         retOrders.removeAll(toRemove);
+    }
+
+    @Override
+    public List<Order> getAllUnpaid(String paymentMethod) {
+        List<Order> retOrders = orders.values().stream()
+                .filter(order -> !order.isCreditNote)
+                .filter(order -> order.payment != null && order.payment.paymentType.equals(paymentMethod))
+                .filter(order -> order.paymentDate == null)
+                .collect(Collectors.toList());
+                
+        removeCredittedOrders(retOrders);
+        
+        finalize(retOrders);
+        
+        return retOrders;
+    }
+
+    @Override
+    public Order mergeAndCreateNewOrder(String userId, List<String> orderIds, String paymentMethod, String note) {
+        User user = userManager.getUserById(userId);
+        
+        if (user == null) {
+            throw new ErrorException(8);
+        }
+        
+        if (orderIds.isEmpty())
+            return null;
+       
+        orderIds.stream().forEach(orderId -> { 
+            Order order = getOrder(orderId);
+            creditOrder(orderId); 
+            markAsPaid(orderId, new Date()); 
+            order.closed = true;
+            saveObject(order);
+        });
+                
+       
+        cartManager.clear();
+        
+        orderIds.stream()
+                .map(orderId -> getOrder(orderId))
+                .forEach(order -> { cartManager.getCart().addCartItems(order.cart.getItems()); });
+        
+        Order newOrder = createOrder(user.address);
+        newOrder.userId = userId;
+        newOrder.payment = createPayment(paymentMethod);
+        newOrder.invoiceNote = note;
+        
+        setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(newOrder, userId);
+        
+        if (newOrder.cart.address == null || newOrder.cart.address.address == null || newOrder.cart.address.address.isEmpty()) {
+            newOrder.cart.address = user.address;
+        }
+        
+        if (newOrder.cart.address != null)
+            newOrder.cart.address.fullName = user.fullName;
+        
+        saveOrderInternal(newOrder);
+        
+        finalizeOrder(newOrder);
+        return newOrder;
+    }
+    
+    public void setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(Order order, String userId) {
+        User user = userManager.getUserById(userId);
+        if (order.cart.address == null || order.cart.address.address == null || order.cart.address.address.isEmpty()) {
+            if (!user.company.isEmpty()) {
+                Company company = userManager.getCompany(user.company.get(0));
+                order.cart.address = company.address;
+                order.cart.address.fullName = company.name;
+            }
+        }
+    }
+
+    private Payment createPayment(String paymentId) {
+        Application paymentApplication = applicationPool.getApplication(paymentId);
+        
+        if (paymentApplication != null) { 
+            Payment payment = new Payment();
+            payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+            payment.paymentId = paymentApplication.id;
+            return payment;
+        }
+        
+        return null;
     }
 
 }

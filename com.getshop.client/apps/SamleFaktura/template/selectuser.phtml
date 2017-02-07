@@ -1,0 +1,40 @@
+<?
+/* @var $this ns_cbe3bb0f_e54d_4896_8c70_e08a0d6e55ba\SamleFaktura */
+
+$orders = $this->getOrdersToBeConsilidated();
+
+$groupedByUserid = $this->groupOrdersByUserId($orders);
+
+$grandTotal = 0;
+foreach ($orders as $order) {
+    $grandTotal += $this->getApi()->getOrderManager()->getTotalAmount($order);
+}
+?>
+
+<h2>Summary</h2>
+Orders: <? echo count($orders); ?>
+<br/>Grand total: <? echo $grandTotal; ?>
+
+<h2>Invoice note?</h2>
+<textarea class='invoicenote' gsname='invoicenote'></textarea>
+<h2>Please select what account/user you want to create this invoice on.</h2>
+<?
+foreach ($groupedByUserid as $userId => $order) {
+    $user = $this->getApi()->getUserManager()->getUserById($userId);
+    ?>
+    <div class='selectUser'>
+        Name: <? echo $user->fullName; ?>
+        <br/>Email: <? echo $user->emailAddress; ?>
+        <br/>Cellphone: <? echo $user->cellPhone; ?>
+        <br/>
+        <br/>
+        <div class='shop_button' gs_also='invoicenote' gsclick='createInvoice' userid='<? echo $user->id; ?>'>Create on this user</div>
+    </div>
+    
+    <?
+}
+?>
+
+<div gsclick="cancel" class="shop_button">
+    <? echo $this->__f("Cancel"); ?>
+</div>

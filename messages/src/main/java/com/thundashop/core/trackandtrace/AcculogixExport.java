@@ -69,6 +69,6 @@ public class AcculogixExport {
     public String signatureBase64 = "";
     public String signatureUuid = "";
     
-    public int TNTUID = 0;
+    public long TNTUID = 0;
 
 }

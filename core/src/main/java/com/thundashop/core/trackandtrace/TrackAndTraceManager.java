@@ -46,6 +46,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     
     public HashMap<String, ExportedData> exports = new HashMap();
 
+    public ExportCounter exportCounter = null;
+    
     @Autowired
     private UserManager userManager;
     
@@ -62,6 +64,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             if (common instanceof Route) {
                 Route route = (Route)common;
                 routes.put(route.id, route);
+            }
+            
+            if (common instanceof ExportCounter) {
+                exportCounter = (ExportCounter)common;
             }
 
             if (common instanceof Destination) {
@@ -384,23 +390,33 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public List<AcculogixExport> getExport(String routeId, boolean currentState) {
         Route route = getRouteById(routeId);
         
-        if (route != null) {
-            return getExportInternal(route, currentState);
-        }
-        
         List<AcculogixExport> everything = new ArrayList();
         
-        routes.values().stream()
-                .forEach((Route route1) -> {
-                    everything.addAll(getExportInternal(route1, currentState));
-                });
+        if (route != null) {
+            everything = getExportInternal(route, currentState);
+        } else {
+            for (Route route1 : routes.values()) {
+                everything.addAll(getExportInternal(route1, currentState));   
+            }
+        }
+        
+        Collections.sort(everything, (o1, o2) -> {
+            if (o1.TNTUID < o2.TNTUID) {
+                return 1;
+            }
+            if (o1.TNTUID > o2.TNTUID) {
+                return -1;
+            }
+
+            return 0;
+        });
         
         return everything;
         
     }
 
     private List<AcculogixExport> getExportInternal(Route route, boolean currentState) throws ErrorException {
-        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress(), imageManager, getStartNumber(route.id), currentState);
+        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress(), imageManager, getStartNumber().exportCounter, currentState);
         List<AcculogixExport> exportedData = exporter.getExport();
         
         if (!exportedData.isEmpty()) {
@@ -410,39 +426,25 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             exported.exportedData = new ArrayList(exportedData);
             saveObject(exported);    
             exports.put(exported.id, exported);
+            
+            exportCounter.exportCounter += exportedData.size();
+            saveObject(exportCounter);
         }
         
         if (!currentState) {
             addLastExports(route.id, exportedData, exportedData.isEmpty() ? 4 : 3, !exportedData.isEmpty());
-            
             markRouteAsClean(route.id);
-            
-            exportedData = exportedData.stream().sorted((o1, o2) -> {
-                if (o1.TNTUID == o2.TNTUID) {
-                    return 0;
-                }
-                if (o1.TNTUID < o2.TNTUID) {
-                    return 1;
-                }
-                if (o1.TNTUID > o2.TNTUID) {
-                    return -1;
-                }
-
-                return 0;
-            }).collect(Collectors.toList());
         }
         
         return exportedData;
     }
     
-    private int getStartNumber(String routeId) {
-        List<ExportedData> retVal = getExports(routeId);
-        
-        return retVal
-                .stream()
-                .mapToInt(exp -> exp.exportedData.size())
-                .sum();
+    private ExportCounter getStartNumber() {
+        if (exportCounter == null) {
+            exportCounter = new ExportCounter();
+        }
                 
+        return exportCounter;
     }
     
     public List<ExportedData> getExports(String routeId) {

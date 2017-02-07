@@ -39,6 +39,15 @@ class ProMeisterCreateCompanyAccount extends \MarketingApplication implements \A
         }
         
         $user = $this->getApi()->getUserManager()->createUser($user);
+        if (!$user) {
+            $obj = $this->getStdErrorObject(); // Get a default error message
+            $obj->fields->errorMessage = "<i class='fa fa-warning'></i>".$this->__f("Can not create account, it already exists."); // The message you wish to display in the gserrorfield
+            $obj->gsfield->cellphone = 1; // Will highlight the field that has gsname "hours"
+            $obj->gsfield->email = 1; // Will highlight the field that has gsname "hours"
+            $this->doError($obj); // Code will stop here.
+            return;
+        }
+        
         $this->getApi()->getUserManager()->assignCompanyToUser($company, $user->id);
     }
 

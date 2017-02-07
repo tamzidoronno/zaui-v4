@@ -24,6 +24,8 @@ public class StatisticsEntry {
     public HashMap<String, Integer> guestsConference = new HashMap();
     public HashMap<String, Integer> guestsRegular = new HashMap();
     public List<String> roomsIncluded = new ArrayList();
+    boolean isTotal = false;
+    public Integer squareMetres = 0;
     
     public void finalize() {
         avgPrice = totalPrice / roomsRentedOut;

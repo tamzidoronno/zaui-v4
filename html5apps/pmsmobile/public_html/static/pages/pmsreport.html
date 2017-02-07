@@ -1,0 +1,106 @@
+<div class='additionalinfo row'>
+    <a ui-sref="mainpage"><i class='fa fa-arrow-left' style='color:#fff; float:left;'></i></a>
+    Pms Report</div>
+<div class='row'>
+        <br>
+    <div class='col-xs-6 col-md-4'>
+        <label>Start
+        <input type="date" class="form-control" ng-model="start">
+        </label>
+    </div>
+    <div class='col-xs-6 col-md-4'>
+        <label>End
+        <input type="date" class="form-control" ng-model="end">
+        </label>
+    </div>
+    <div class='col-xs-12 col-md-4'>
+        <br>
+        <span class="btn btn-success form-control" ng-click="reloadOverview()">Show</span>
+        <br><br>
+    </div>
+<div ng-repeat="report in pmsreportlist" class='caretakerrow row'>
+    <div class="col-xs-12">
+        <b>{{report.typeName}}</b>
+    </div>
+        <div class="col-xs-6">
+            {{report.numberOfRooms}} / {{report.totalNumberOfRooms}} romdøgn
+        </div>
+        <div class="col-xs-6">
+            {{report.avgCoverage}}% belegg.
+        </div>    
+    <div class="selectionrow"></div>
+    
+    <div class="col-xs-6">
+        Kvadratmeter
+    </div>
+    <div class="col-xs-6">
+        {{report.squareMeters}}
+    </div>    
+    <div class="selectionrow"></div>
+    
+    <div class="col-xs-6">Snittpris</div>
+    <div class="col-xs-6">
+        {{report.avgPrice}} / dagen.
+    </div>
+    <div class="selectionrow"></div>
+    
+    <div class="col-xs-6">Revpar</div>
+    <div class="col-xs-6">
+        {{report.revParDaily}} / dagen.<br>{{report.revPar}} / perioden.
+    </div>
+    <div class="selectionrow"></div>
+    
+    <div class="col-xs-6">Kvmpris</div>
+    <div class="col-xs-6">
+        {{report.squareMetresPriceDaily}} / dagen.<br>{{report.squareMetresPrice}} / perioden.
+    </div>
+    <div class="selectionrow"></div>
+    
+    <div class="col-xs-6">Totalt</div>
+    <div class="col-xs-6">
+        {{report.totalRentedDaily}} / dagen.<br>{{report.totalRented}} / perioden.
+    </div>
+    <div class="selectionrow"></div>
+    
+    <div class="col-xs-6">Forrige periode</div>
+    <div class="col-xs-6">
+        {{report.totalPastPeriodeDaily}} / dagen.<br>{{report.totalPastPeriode}} / perioden.
+    </div>
+    <div class="selectionrow"></div>
+    
+    <div class="col-xs-6">Økning</div>
+    <div class="col-xs-6">
+        {{report.increaseFromLastPeriodeDaily}} / dagen.<br>{{report.increaseFromLastPeriode}} / perioden.
+    </div>
+</div>
+
+<div class='row'><br><br>
+    <div class="col-xs-12"><b>Skader / feil på rom som må utbedres</b>
+        <div>
+            <div><i class='fa fa-check'></i> feilen er utbedret.</div>
+            <div><i class='fa fa-close'></i> feilen er ikke utbedret.</div>
+
+        </div>
+    </div>
+</div>
+
+<div ng-repeat="job in careTakerList" class='row'>
+    <div class='col-xs-3'>{{job.rowCreatedDateFormatted}}</div>
+    <div class='col-xs-2'>
+        {{job.roomName}}</div>
+    <div class='col-xs-7'>
+        <i class='fa fa-check' ng-show="job.completed"></i> 
+        <i class='fa fa-close' ng-show="!job.completed"></i> 
+
+        {{job.description}}</div>
+</div>
+        
+<div class='additionalinfobottom row'>
+    <div style='text-align:center; font-size: 20px; padding: 10px; color:#fff;'>
+        <a ui-sref="mainpage"><i class='fa fa-home' style='color:#fff;'></i></a>
+    </div>
+</div>
+        
+<style>
+    .selectionrow { border-bottom: solid 1px #ddd; clear:both; padding-bottom: 10px; margin-bottom: 10px; }
+</style>

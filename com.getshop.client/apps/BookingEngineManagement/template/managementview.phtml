@@ -112,9 +112,14 @@ $products=$products2;
                         <?php
                         if(is_array($bookingitems)) {
                             foreach ($bookingitems as $item) {
+                                $additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $item->id);
                                 /* @var $type core_bookingengine_data_BookingItem */
                                 echo "<tr entryid='" . $item->id . "'type='item'>";
-                                echo "<td><i class='fa fa-trash-o deletetype' bookingitemid='" . $item->id . "'></i></td><td><span class='currentname'>" . $item->bookingItemName . " (" . $item->bookingSize . ")" . "</span></td>";
+                                echo "<td><i class='fa fa-trash-o deletetype' bookingitemid='" . $item->id . "'></i></td><td><span class='currentname'>" . $item->bookingItemName . " (" . $item->bookingSize . ")";
+                                if($additional->squareMetres > 0) {
+                                    echo " (" . $additional->squareMetres . "kvm)";
+                                }
+                                echo "</span></td>";
                                 echo "<td align='right'>";
                                 echo $this->getType($item->bookingItemTypeId, $bookingtypes)->name;
                                 echo  "</td>";

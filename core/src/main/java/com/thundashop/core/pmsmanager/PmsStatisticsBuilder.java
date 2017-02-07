@@ -1,5 +1,7 @@
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -23,15 +25,39 @@ class PmsStatisticsBuilder {
     private HashMap<Integer, PmsBudget> budget;
     private final UserManager userManager;
     private final OrderManager orderManager;
+    private final BookingEngine bookingEngine;
+    private HashMap<String, Integer> cachedSquareMetersForType = new HashMap();
+    HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
 
-    PmsStatisticsBuilder(List<PmsBooking> bookingsInFilter, boolean pricesExTax, UserManager userManager, List<PmsBooking> allBookings, OrderManager orderManager) {
+    PmsStatisticsBuilder(List<PmsBooking> bookingsInFilter, 
+            boolean pricesExTax, 
+            UserManager userManager, 
+            List<PmsBooking> allBookings, 
+            HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo,
+            OrderManager orderManager, 
+            BookingEngine bookingEngine) {
         this.bookings = bookingsInFilter;
         this.userManager = userManager;
         this.pricesExTax = pricesExTax;
         this.allBookings = allBookings;
         this.orderManager = orderManager;
+        this.addiotionalItemInfo = addiotionalItemInfo;
+        this.bookingEngine = bookingEngine;
     }
 
+    public Integer getSquareMetres(PmsBookingRooms room) {
+        if(room.bookingItemId == null || room.bookingItemId.isEmpty()) {
+            return getAverageSquareMetersForType(room.bookingItemTypeId);
+        }
+        
+        PmsAdditionalItemInformation additional = addiotionalItemInfo.get(room.bookingItemId);
+        if(additional != null) {
+            return additional.squareMetres;
+        }
+        
+        return 0;
+    }
+    
     PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms) {
         PmsStatistics statics = new PmsStatistics();
         Calendar cal = Calendar.getInstance();
@@ -80,6 +106,7 @@ class PmsStatisticsBuilder {
 
                         entry.totalPrice += price;
                         entry.roomsRentedOut++;
+                        entry.squareMetres += getSquareMetres(room);
                         addGuests(entry, room, booking);
                         if(!roomsAddedForGuests.contains(room.pmsBookingRoomId)) {
                             addUniqueGuests(entry, room, booking);
@@ -264,6 +291,25 @@ class PmsStatisticsBuilder {
             }
         }
         return res;
+    }
+
+    private Integer getAverageSquareMetersForType(String bookingItemTypeId) {
+        if(cachedSquareMetersForType.containsKey(bookingItemTypeId)) {
+            return cachedSquareMetersForType.get(bookingItemTypeId);
+        }
+        double meters = 0.0;
+        int count = 0;
+        for(BookingItem item : bookingEngine.getBookingItemsByType(bookingItemTypeId)) {
+            count++;
+            PmsAdditionalItemInformation additional = addiotionalItemInfo.get(item.id);
+            if(additional != null) {
+                meters += additional.squareMetres;
+            }
+        }
+        int result;
+        result = (int)(meters / count);
+        cachedSquareMetersForType.put(bookingItemTypeId, result);
+        return result;
     }
     
 }

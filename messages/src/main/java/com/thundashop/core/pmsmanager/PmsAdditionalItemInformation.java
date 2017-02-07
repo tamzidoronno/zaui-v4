@@ -19,6 +19,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
     public HashMap<String, PmsInventory> inventory = new HashMap();
     public HashMap<Long, String> cleanedByUser = new HashMap();
     public String itemId = "";
+    public Integer squareMetres = 0;
     
     //This is a variable that can be set when sending messages.
     public String textMessageDescription = "";

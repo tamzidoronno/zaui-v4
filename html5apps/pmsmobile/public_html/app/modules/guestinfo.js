@@ -253,7 +253,6 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         });
     }
     $scope.formatDate = function(date) {
-        console.log(date);
         var today = date;
         var dd = today.getDate();
         var mm = today.getMonth()+1; //January is 0!

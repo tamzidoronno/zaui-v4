@@ -28,6 +28,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             });
             
             this.api.addListener("com.thundashop.core.trackandtrace.Route", this.refreshRoute, me);
+            this.api.addListener("com.thundashop.core.trackandtrace.DriverMessage", this.messageReceived, me);
         },
                 
         this.refreshRoute = function(route) {
@@ -35,6 +36,14 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                 return;
   
             $rootScope.$broadcast("refreshRouteEven1", route);
+            $rootScope.$apply();
+        },
+                
+        this.messageReceived = function(msg) {
+            if (this.api.sessionId === msg.sentFromSessionId)
+                return;
+  
+            $rootScope.$broadcast("messageReceived", msg);
             $rootScope.$apply();
         },
                 

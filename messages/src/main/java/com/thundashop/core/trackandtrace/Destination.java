@@ -51,6 +51,7 @@ public class Destination extends DataCommon {
     public String deliveryInstruction = "";
     public String pickupInstruction = "";
     public String onDemandInstructions = "" ;
+    public String extraInstructions = "" ;
     
     public String stopWindow;
     

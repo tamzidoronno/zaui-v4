@@ -8,13 +8,27 @@
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.BaseController = function($scope, $rootScope, datarepository, $api) {
+    $scope.messages = datarepository.driverMessages;
+    
     if($api.getApi()) {
         $scope.counter = $api.getApi().getUnsentMessageCount();
     }
     
+    
     $rootScope.$on('refreshRouteEven1', function(msg, data) {
         if(datarepository.updateRoute(data, $api)) {
             $rootScope.$broadcast('refreshRoute', data);
+        }
+    });
+    
+    $rootScope.$on('messageReceived', function(msg, data) {
+        if (data.driverId === $api.getLoggedOnUser().id) {
+            datarepository.driverMessages.push(data);
+            datarepository.save();
+            
+            $scope.messages = datarepository.driverMessages;
+            $scope.$apply();
+            $rootScope.$apply();
         }
     });
     
@@ -28,5 +42,19 @@ controllers.BaseController = function($scope, $rootScope, datarepository, $api) 
         if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
             $scope.$apply();
         }
-    })
+    });
+  
+    $scope.ackMessage = function(message) {
+        $api.getApi().TrackAndTraceManager.acknowledgeDriverMessage(message.id);
+        
+        for (var i in datarepository.driverMessages) {
+            var drv = datarepository.driverMessages[i];
+            if (drv.id == message.id) {
+                drv.isRead = true;
+            }
+        }
+        
+        message.isRead = true;
+        datarepository.save();
+    }
 };

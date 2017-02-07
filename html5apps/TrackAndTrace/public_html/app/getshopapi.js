@@ -6203,6 +6203,17 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getAllUnpaid' : function(paymentMethod, gs_silent) {
+        var data = {
+            args : {
+                paymentMethod : JSON.stringify(paymentMethod),
+            },
+            method: 'getAllUnpaid',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getAllUnpaidInvoices' : function(gs_silent) {
         var data = {
             args : {
@@ -6512,6 +6523,20 @@ GetShopApiWebSocket.OrderManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'mergeAndCreateNewOrder' : function(userId,orderIds,paymentMethod,note, gs_silent) {
+        var data = {
+            args : {
+                userId : JSON.stringify(userId),
+                orderIds : JSON.stringify(orderIds),
+                paymentMethod : JSON.stringify(paymentMethod),
+                note : JSON.stringify(note),
+            },
+            method: 'mergeAndCreateNewOrder',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'payWithCard' : function(orderId,cardId, gs_silent) {
         var data = {
             args : {
@@ -6567,6 +6592,20 @@ GetShopApiWebSocket.OrderManager.prototype = {
                 email : JSON.stringify(email),
             },
             method: 'sendReciept',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'sendRecieptWithText' : function(orderId,email,subject,text, gs_silent) {
+        var data = {
+            args : {
+                orderId : JSON.stringify(orderId),
+                email : JSON.stringify(email),
+                subject : JSON.stringify(subject),
+                text : JSON.stringify(text),
+            },
+            method: 'sendRecieptWithText',
             interfaceName: 'core.ordermanager.IOrderManager',
         };
         return this.communication.send(data, gs_silent);
@@ -11891,6 +11930,17 @@ GetShopApiWebSocket.TrackAndTraceManager = function(communication) {
 }
 
 GetShopApiWebSocket.TrackAndTraceManager.prototype = {
+    'acknowledgeDriverMessage' : function(msgId, gs_silent) {
+        var data = {
+            args : {
+                msgId : JSON.stringify(msgId),
+            },
+            method: 'acknowledgeDriverMessage',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'addDeliveryTaskToDestionation' : function(destionatId,task, gs_silent) {
         var data = {
             args : {
@@ -11968,6 +12018,17 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 destinationId : JSON.stringify(destinationId),
             },
             method: 'getDestinationById',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getDriverMessages' : function(userId, gs_silent) {
+        var data = {
+            args : {
+                userId : JSON.stringify(userId),
+            },
+            method: 'getDriverMessages',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);
@@ -12152,6 +12213,18 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'sendMessageToDriver' : function(driverId,message, gs_silent) {
+        var data = {
+            args : {
+                driverId : JSON.stringify(driverId),
+                message : JSON.stringify(message),
+            },
+            method: 'sendMessageToDriver',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'setCagesOrPalletCount' : function(taskId,quantity, gs_silent) {
         var data = {
             args : {
@@ -12173,6 +12246,19 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 lat : JSON.stringify(lat),
             },
             method: 'setDesitionationException',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'setInstructionOnDestination' : function(routeId,destinationId,message, gs_silent) {
+        var data = {
+            args : {
+                routeId : JSON.stringify(routeId),
+                destinationId : JSON.stringify(destinationId),
+                message : JSON.stringify(message),
+            },
+            method: 'setInstructionOnDestination',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);

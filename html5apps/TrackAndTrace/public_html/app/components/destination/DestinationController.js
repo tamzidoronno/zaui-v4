@@ -11,8 +11,6 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
     $scope.route = datarepository.getRouteById($stateParams.routeId);
     $scope.destination = datarepository.getDestinationById($stateParams.destinationId);
     
-    console.log($scope.destination);
-    
     $scope.doTheBack = function() {
         $state.transitionTo('base.routeoverview', { routeId : $stateParams.routeId });
     };
@@ -99,4 +97,14 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
     $scope.showDestinationExceptions = function() {
         $state.transitionTo('base.destinationexception', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId });
     }
+    
+    $scope.$on('refreshRoute', function(msg, route) {
+        for (var i in route.destinations) {
+            var dest = route.destinations[i];
+            if (dest.id == $stateParams.destinationId) {
+                $scope.destination = datarepository.getDestinationById($stateParams.destinationId);
+                $scope.$apply();
+            }
+        }
+    });
 }

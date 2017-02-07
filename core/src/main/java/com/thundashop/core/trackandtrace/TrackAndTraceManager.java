@@ -45,6 +45,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public HashMap<String, TrackAndTraceException> exceptions = new HashMap();
     
     public HashMap<String, ExportedData> exports = new HashMap();
+    
+    public HashMap<String, DriverMessage> driverMessages = new HashMap();
 
     public ExportCounter exportCounter = null;
     
@@ -98,6 +100,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             if (common instanceof DataLoadStatus) {
                 DataLoadStatus loadStatus = (DataLoadStatus)common;
                 loadStatuses.put(loadStatus.id, loadStatus);
+            }
+            
+            if (common instanceof DriverMessage) {
+                DriverMessage driverMessage = (DriverMessage)common;
+                driverMessages.put(driverMessage.id, driverMessage);
             }
         }
         
@@ -635,5 +642,48 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             saveObjectInternal(task);
         }
     }
+
+    @Override
+    public void sendMessageToDriver(String driverId, String message) {
+        DriverMessage driverMsg = new DriverMessage();
+        driverMsg.message = message;
+        driverMsg.driverId = driverId;
+        saveObject(driverMsg);
+        driverMessages.put(driverMsg.id, driverMsg);
+        
+        webSocketServer.sendMessage(driverMsg);
+    }
+
+    @Override
+    public void setInstructionOnDestination(String routeId, String destinationId, String message) {
+        Destination dest = getDestinationById(destinationId);
+        dest.extraInstructions = message;
+        saveObject(dest);
+        
+        Route route = getRouteById(routeId);
+        finalize(route);
+        notifyRoute(route);
+    }
+
+    @Override
+    public List<DriverMessage> getDriverMessages(String userId) {
+        return driverMessages.values()
+                .stream()
+                .filter(msg -> msg.driverId != null && msg.driverId.equals(userId) && !msg.isRead)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void acknowledgeDriverMessage(String msgId) {
+        DriverMessage msg = driverMessages.get(msgId);
+        if (msg != null) {
+            msg.isRead = true;
+            msg.ackDate = new Date();
+            msg.ackedByUserId = getSession().currentUser.id;
+            saveObject(msg);
+        }
+    }
+    
+    
     
 }

@@ -33,6 +33,9 @@ public interface IAccountingManager {
     
     @Administrator
     public List<String> createCombinedOrderFile(boolean newUsersOnly) throws Exception;
+
+    @Administrator
+    public List<String> getLatestLogEntries() throws Exception;
     
     @Administrator
     public void setAccountingManagerConfig(AccountingManagerConfig config);

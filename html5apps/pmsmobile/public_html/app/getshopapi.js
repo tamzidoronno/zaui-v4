@@ -9382,6 +9382,51 @@ GetShopApiWebSocket.PmsManagerProcessor.prototype = {
     },
 
 }
+GetShopApiWebSocket.PmsReportManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.PmsReportManager.prototype = {
+    'getReport' : function(multilevelname, start,end, gs_silent) {
+        var data = {
+            args : {
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getReport',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsReportManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getRoomCoverage' : function(multilevelname, start,end, gs_silent) {
+        var data = {
+            args : {
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getRoomCoverage',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsReportManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getUsage' : function(multilevelname, start,end, gs_silent) {
+        var data = {
+            args : {
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getUsage',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsReportManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
 GetShopApiWebSocket.PrintManager = function(communication) {
     this.communication = communication;
 }
@@ -11983,10 +12028,11 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'getExport' : function(routeId, gs_silent) {
+    'getExport' : function(routeId,currentState, gs_silent) {
         var data = {
             args : {
                 routeId : JSON.stringify(routeId),
+                currentState : JSON.stringify(currentState),
             },
             method: 'getExport',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
@@ -12177,12 +12223,13 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'setScannedBarcodes' : function(taskId,orderReference,barcodes, gs_silent) {
+    'setScannedBarcodes' : function(taskId,orderReference,barcodes,barcodeEnteredManually, gs_silent) {
         var data = {
             args : {
                 taskId : JSON.stringify(taskId),
                 orderReference : JSON.stringify(orderReference),
                 barcodes : JSON.stringify(barcodes),
+                barcodeEnteredManually : JSON.stringify(barcodeEnteredManually),
             },
             method: 'setScannedBarcodes',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
@@ -13622,6 +13669,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.PmsInvoiceManager = new GetShopApiWebSocket.PmsInvoiceManager(this);
     this.PmsManager = new GetShopApiWebSocket.PmsManager(this);
     this.PmsManagerProcessor = new GetShopApiWebSocket.PmsManagerProcessor(this);
+    this.PmsReportManager = new GetShopApiWebSocket.PmsReportManager(this);
     this.PrintManager = new GetShopApiWebSocket.PrintManager(this);
     this.StorePrintManager = new GetShopApiWebSocket.StorePrintManager(this);
     this.ProductManager = new GetShopApiWebSocket.ProductManager(this);

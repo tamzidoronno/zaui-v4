@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public class PmsBookingFilter implements Serializable {
+
     public static class PmsBookingFilterTypes {
         public static String registered = "registered";
         public static String active = "active";
@@ -32,4 +33,5 @@ public class PmsBookingFilter implements Serializable {
     public boolean includeCleaningInformation = false;
     public boolean includeVirtual = false;
     public List<String> typeFilter = new ArrayList();
+    public List<String> itemFilter = new ArrayList();
 }

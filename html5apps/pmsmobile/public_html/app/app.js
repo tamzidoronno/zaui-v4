@@ -19,6 +19,11 @@ angular.module('app', ['ui.router'])
         templateUrl: "pages/guestinfo.html",
         controller: getshop.guestInfoController
     })
+    .state('pmsreport', {
+        url: '/pmsreport',
+        templateUrl: "pages/pmsreport.html",
+        controller: getshop.pmsreportController
+    })
     .state('addonview', {
         url: '/addonview/:viewid',
         templateUrl: "pages/addonview.html",

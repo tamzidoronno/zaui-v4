@@ -8,6 +8,7 @@ getshop.mainpageController = function($scope, $state) {
     $scope.hasCleaning = true;
     $scope.hasCaretaker = true;
     $scope.hasConference = false;
+    $scope.hasStatistics = false;
     
     
     $scope.showAll = function() {
@@ -19,6 +20,7 @@ getshop.mainpageController = function($scope, $state) {
         $scope.doors = true;
         $scope.cleaning = true;
         $scope.caretaker = true;
+        $scope.hasStatistics = true;
     },
     
     $scope.LoadConfig = function() {

@@ -19,9 +19,12 @@ public class PmsStatistics implements Serializable {
 
     void buildTotal() {
         StatisticsEntry total = new StatisticsEntry();
+        total.isTotal = true;
         double budget = 0;
         for(StatisticsEntry entry : entries) {
             total.totalPrice += entry.totalPrice;
+            total.totalRooms += entry.totalRooms;
+            total.squareMetres += entry.squareMetres;
             budget = entry.bugdet;
             
             total.roomsRentedOut += entry.roomsRentedOut;
@@ -196,6 +199,15 @@ public class PmsStatistics implements Serializable {
             }
             sleepoverstats.uniqueGuests.put(k, count);
         }
+    }
+
+    StatisticsEntry getTotal() {
+        for(StatisticsEntry entry : entries) {
+            if(entry.isTotal) {
+                return entry;
+            }
+        }
+        return null;
     }
 
 }

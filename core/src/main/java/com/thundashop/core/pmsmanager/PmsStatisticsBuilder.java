@@ -1,5 +1,7 @@
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -12,10 +14,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author boggi2
- */
 class PmsStatisticsBuilder {
     private final List<PmsBooking> bookings;
     private final List<PmsBooking> allBookings;
@@ -23,15 +21,39 @@ class PmsStatisticsBuilder {
     private HashMap<Integer, PmsBudget> budget;
     private final UserManager userManager;
     private final OrderManager orderManager;
+    private final BookingEngine bookingEngine;
+    private HashMap<String, Integer> cachedSquareMetersForType = new HashMap();
+    HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
 
-    PmsStatisticsBuilder(List<PmsBooking> bookingsInFilter, boolean pricesExTax, UserManager userManager, List<PmsBooking> allBookings, OrderManager orderManager) {
+    PmsStatisticsBuilder(List<PmsBooking> bookingsInFilter, 
+            boolean pricesExTax, 
+            UserManager userManager, 
+            List<PmsBooking> allBookings, 
+            HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo,
+            OrderManager orderManager, 
+            BookingEngine bookingEngine) {
         this.bookings = bookingsInFilter;
         this.userManager = userManager;
         this.pricesExTax = pricesExTax;
         this.allBookings = allBookings;
         this.orderManager = orderManager;
+        this.addiotionalItemInfo = addiotionalItemInfo;
+        this.bookingEngine = bookingEngine;
     }
 
+    public Integer getSquareMetres(PmsBookingRooms room) {
+        if(room.bookingItemId == null || room.bookingItemId.isEmpty()) {
+            return getAverageSquareMetersForType(room.bookingItemTypeId);
+        }
+        
+        PmsAdditionalItemInformation additional = addiotionalItemInfo.get(room.bookingItemId);
+        if(additional != null) {
+            return additional.squareMetres;
+        }
+        
+        return 0;
+    }
+    
     PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms) {
         PmsStatistics statics = new PmsStatistics();
         Calendar cal = Calendar.getInstance();
@@ -60,6 +82,11 @@ class PmsStatisticsBuilder {
                     continue;
                 }
                 if(isPaidFor(booking, cal) && !filter.includeVirtual) {
+                    for(PmsBookingRooms room : booking.getActiveRooms()) {
+                        if(room.isActiveOnDay(cal.getTime())) {
+                            entry.roomsNotIncluded++;
+                        }
+                    }
                     continue;
                 }
                 
@@ -68,10 +95,16 @@ class PmsStatisticsBuilder {
                 }
                 
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    if(filter.itemFilter != null && !filter.itemFilter.isEmpty()) {
+                        if(room.bookingItemId == null || room.bookingItemId.isEmpty() || !filter.itemFilter.contains(room.bookingItemId)) {
+                            continue;
+                        }
+                    }
                     if(!filter.typeFilter.isEmpty() && !filter.typeFilter.contains(room.bookingItemTypeId)) {
                         continue;
                     }
                     if(room.isActiveOnDay(cal.getTime())) {
+                        
                         entry.roomsIncluded.add(room.pmsBookingRoomId);
                         Double price = room.getDailyPrice(booking.priceType, cal);
                         if(!pricesExTax) {
@@ -80,6 +113,7 @@ class PmsStatisticsBuilder {
 
                         entry.totalPrice += price;
                         entry.roomsRentedOut++;
+                        entry.squareMetres += getSquareMetres(room);
                         addGuests(entry, room, booking);
                         if(!roomsAddedForGuests.contains(room.pmsBookingRoomId)) {
                             addUniqueGuests(entry, room, booking);
@@ -264,6 +298,25 @@ class PmsStatisticsBuilder {
             }
         }
         return res;
+    }
+
+    private Integer getAverageSquareMetersForType(String bookingItemTypeId) {
+        if(cachedSquareMetersForType.containsKey(bookingItemTypeId)) {
+            return cachedSquareMetersForType.get(bookingItemTypeId);
+        }
+        double meters = 0.0;
+        int count = 0;
+        for(BookingItem item : bookingEngine.getBookingItemsByType(bookingItemTypeId)) {
+            count++;
+            PmsAdditionalItemInformation additional = addiotionalItemInfo.get(item.id);
+            if(additional != null) {
+                meters += additional.squareMetres;
+            }
+        }
+        int result;
+        result = (int)(meters / count);
+        cachedSquareMetersForType.put(bookingItemTypeId, result);
+        return result;
     }
     
 }

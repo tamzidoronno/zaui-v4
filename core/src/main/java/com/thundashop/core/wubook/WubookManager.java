@@ -241,6 +241,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         booking.reservationCode = table.get("reservation_code") + "";
         booking.channel_reservation_code = (String) table.get("channel_reservation_code");
         booking.status = new Integer(table.get("status") + "");
+        booking.isExpediaCollect = checkExpediaCollect(table);
         Vector modifications = (Vector) table.get("modified_reservations");
         if(modifications != null) {
             for(int i = 0; i < modifications.size(); i++) {
@@ -769,6 +770,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             room.guests.add(guest);
             newbooking.addRoom(room);
         }
+        if(booking.isExpediaCollect) {
+            newbooking.paymentType = "92bd796f-758e-4e03-bece-7d2dbfa40d7a";
+        }
         pmsManager.setBooking(newbooking);
         int i = 0;
         for(PmsBookingRooms room : newbooking.getActiveRooms()) {
@@ -1125,6 +1129,19 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         return false;
+    }
+
+    private boolean checkExpediaCollect(Hashtable table) {
+        try {
+            Gson gson = new Gson();
+            String text = gson.toJson(table);
+            text = text.toLowerCase();
+            return text.contains("expedia collect");
+        }catch(Exception e) {
+        }
+        return false;
+        
+        
     }
 
 }

@@ -25,4 +25,5 @@ public class WubookBooking implements Serializable {
     public List<Integer> modifiedReservation = new ArrayList();
     public Integer status;
     public String countryCode;
+    public boolean isExpediaCollect = false;
 }

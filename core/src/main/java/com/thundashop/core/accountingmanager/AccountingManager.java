@@ -97,6 +97,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     private AccountingManagerConfig config = new AccountingManagerConfig();
     
     private HashMap<String, AccountingTransferConfig> configs = new HashMap();
+    private List<String> logEntries = new ArrayList();
     
     @Override
     public List<AccountingTransferConfig> getAllConfigs() {
@@ -928,7 +929,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         saved.tamperedOrders.clear();
         for(String orderId : saved.orders) {
             Order order = orderManager.getOrderSecure(orderId);
-            if(order.cart == null) {
+            if(order == null || order.cart == null) {
                 continue;
             } 
             double total = orderManager.getTotalAmount(order);
@@ -985,6 +986,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     }
 
     private SavedOrderFile downloadOrdeFileNewType(String configId, Date start, Date end, SavedOrderFile fileToUse) throws Exception {
+        logEntries.clear();
         AccountingTransferConfig configToUse = configs.get(configId);
         
         if(configToUse == null) {
@@ -1015,6 +1017,17 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         transfer.setConfig(configToUse);
         
         SavedOrderFile res = transfer.generateFile();
+        
+                
+        if(transfer instanceof AccountingTransferOptions) {
+            AccountingTransferOptions toCheck = (AccountingTransferOptions)transfer;
+            this.logEntries = toCheck.logEntries;
+            for(String text : toCheck.logEntries) {
+                System.out.println(text);
+            }
+        }
+
+        
         if(res != null) {
             if(fileToUse != null) {
                 if(otherFiles.containsKey(fileToUse.id)) {
@@ -1032,17 +1045,17 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             saveObject(res);
 
             files.put(res.id, res);
-        }
         
-        for(String orderId : res.orders) {
-            Order order = orderManager.getOrder(orderId);
-            try {
-                order.payment.transactionLog.put(System.currentTimeMillis(), "Closed order from accounting system");
-            }catch(Exception e) {
-                
+            for(String orderId : res.orders) {
+                Order order = orderManager.getOrder(orderId);
+                try {
+                    order.payment.transactionLog.put(System.currentTimeMillis(), "Closed order from accounting system");
+                }catch(Exception e) {
+
+                }
+                order.closed = true;
+                orderManager.saveOrder(order);
             }
-            order.closed = true;
-            orderManager.saveOrder(order);
         }
         
         return res;    
@@ -1062,6 +1075,9 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
             for(String id : f.orders) {
                 Order order = orderManager.getOrder(id);
+                if(order == null) {
+                    continue;
+                }
                 ordersToUse.add(order); 
                 Date orderStartDate = order.getStartDateByItems();
                 if(f.startDate != null && start.after(f.startDate)) {
@@ -1117,6 +1133,11 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         
         finalizeFile(file);
         return file;
+    }
+
+    @Override
+    public List<String> getLatestLogEntries() throws Exception {
+        return logEntries;
     }
 
 }

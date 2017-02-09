@@ -7,6 +7,7 @@ package com.thundashop.core.accountingmanager;
 
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.User;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,11 @@ class AccountingTransferOptions {
     public List<Order> orders;
     public AccountingTransferConfig config;
     public AccountingManagers managers;
-
+    public List<String> logEntries = new ArrayList();
+    
+    public void addToLog(String text) {
+        logEntries.add(text);
+    }
     
     public Integer getAccountingId(String userId) {
         Integer idToUse = 0;

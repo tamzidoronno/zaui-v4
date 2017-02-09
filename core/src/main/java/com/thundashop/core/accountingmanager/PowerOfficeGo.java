@@ -57,12 +57,11 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
     public SavedOrderFile generateFile() {
         this.token = createAccessToken();
         if(token == null || token.isEmpty()) {
-            /* @TODO HANDLE PROPER WARNING */
-            managers.webManager.logPrint("Failed to fetch access token, authentication failed.");
+            addToLog("Failed to fetch access token, authentication failed.");
             return null;
         }
         
-        managers.webManager.logPrint("Access token: " + token);
+//        addToLog("Access token: " + token);
         HashMap<String, User> users = new HashMap();
         HashMap<String, Product> products = new HashMap();
         
@@ -80,7 +79,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             for(CartItem item : order.cart.getItems()) {
                 Product product = managers.productManager.getProduct(item.getProduct().id);
                 if(product.accountingSystemId == null || product.accountingSystemId.isEmpty()) {
-                    managers.webManager.logPrint("Failed to since product id is missing on product : " + product.name + " order: " + order.incrementOrderId);
+                    addToLog("Failed to since product id is missing on product : " + product.name + " order: " + order.incrementOrderId);
                     return null;
                 }
                 products.put(product.id, product);
@@ -89,10 +88,10 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         
         for(User user : users.values()) {
             if(!createUpdateUser(user)) {
-                managers.webManager.logPrint("failed Transferring user, accounting id " + user.accountingId + ", name" + user.fullName + ", customerid " + user.customerId);
+                addToLog("failed Transferring user, accounting id " + user.accountingId + ", name" + user.fullName + ", customerid " + user.customerId);
                 return null;
             } else {
-                managers.webManager.logPrint("Transferred user, accounting id " + user.accountingId + ", name" + user.fullName + ", customerid " + user.customerId);
+                addToLog("Transferred user, accounting id " + user.accountingId + ", name" + user.fullName + ", customerid " + user.customerId);
             }
         }
 
@@ -133,7 +132,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                 return true;
             } else {
                 /* @TODO HANDLE PROPER WARNING */
-                managers.webManager.logPrint("Failed to transfer customer: " + result + "(" + user.customerId + " - " + user.fullName);
+                addToLog("Failed to transfer customer: " + result + "(" + user.customerId + " - " + user.fullName);
             }
         }catch(Exception e) {
             /* @TODO HANDLE PROPER WARNING */
@@ -193,7 +192,7 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
                 }
             } else {
                 /* @TODO HANDLE PROPER WARNING */
-                managers.webManager.logPrint("Failed to transfer customer: " + result);
+                addToLog("Failed to transfer customer: " + result);
             }
         }catch(Exception e) {
             e.printStackTrace();

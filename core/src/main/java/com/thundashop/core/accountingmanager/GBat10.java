@@ -89,7 +89,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         cal.setTime(order.rowCreatedDate);
         
         Date periodeDate = order.rowCreatedDate;
-        if(config.orderFilterPeriode != null && config.orderFilterPeriode.equals("paymentdate")) {
+        if(config.orderFilterPeriode != null && config.orderFilterPeriode.equals("paymentdate") && order.paymentDate != null) {
             periodeDate = order.paymentDate;
         }
 
@@ -100,6 +100,12 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         
         int firstMonth = cal.get(Calendar.MONTH)+1;
         int year = cal.get(Calendar.YEAR);
+        int duedays = 14;
+        
+        if(order.dueDays != null) {
+            duedays = order.dueDays;
+        }
+        
         Integer customerId = getAccountingId(order.userId);
         String unique = getUniqueCustomerIdForOrder(order);
         if(unique != null) {
@@ -115,7 +121,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(order.rowCreatedDate);
-        cal2.add(Calendar.DAY_OF_YEAR, order.dueDays);
+        cal2.add(Calendar.DAY_OF_YEAR, duedays);
         Date dueDate = cal2.getTime();
         
         HashMap<Integer, String> line = new HashMap();

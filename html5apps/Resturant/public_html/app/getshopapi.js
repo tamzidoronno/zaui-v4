@@ -2050,6 +2050,17 @@ GetShopApiWebSocket.C3Manager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'calculateSum' : function(periodeId, gs_silent) {
+        var data = {
+            args : {
+                periodeId : JSON.stringify(periodeId),
+            },
+            method: 'calculateSum',
+            interfaceName: 'core.c3.IC3Manager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'canAdd' : function(hour, gs_silent) {
         var data = {
             args : {
@@ -11698,6 +11709,17 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getExport' : function(routeId, gs_silent) {
+        var data = {
+            args : {
+                routeId : JSON.stringify(routeId),
+            },
+            method: 'getExport',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getLoadStatus' : function(statusId, gs_silent) {
         var data = {
             args : {
@@ -11808,6 +11830,19 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'setCagesOrPalletCount' : function(taskId,orderReference,quantity, gs_silent) {
+        var data = {
+            args : {
+                taskId : JSON.stringify(taskId),
+                orderReference : JSON.stringify(orderReference),
+                quantity : JSON.stringify(quantity),
+            },
+            method: 'setCagesOrPalletCount',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'setDesitionationException' : function(destinationId,exceptionId,lon,lat, gs_silent) {
         var data = {
             args : {
@@ -11817,6 +11852,18 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 lat : JSON.stringify(lat),
             },
             method: 'setDesitionationException',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'setSequence' : function(exceptionId,sequence, gs_silent) {
+        var data = {
+            args : {
+                exceptionId : JSON.stringify(exceptionId),
+                sequence : JSON.stringify(sequence),
+            },
+            method: 'setSequence',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);
@@ -12119,6 +12166,17 @@ GetShopApiWebSocket.UserManager.prototype = {
                 groupId : JSON.stringify(groupId),
             },
             method: 'getAllCompaniesForGroup',
+            interfaceName: 'core.usermanager.IUserManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getAllCompanyFiltered' : function(filter, gs_silent) {
+        var data = {
+            args : {
+                filter : JSON.stringify(filter),
+            },
+            method: 'getAllCompanyFiltered',
             interfaceName: 'core.usermanager.IUserManager',
         };
         return this.communication.send(data, gs_silent);

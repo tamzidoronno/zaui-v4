@@ -260,14 +260,16 @@ adata = {
     },
     
     sortProductList: function() {
-        this.productLists.sort(function(a, b) {
-            var nameA=a.listName.toLowerCase(), nameB=b.listName.toLowerCase();
-            if (nameA < nameB) //sort string ascending
-              return -1;
-            if (nameA > nameB)
-              return 1;
-            return 0; //default return value (no sorting)
-        });        
+        if (this.productLists) {
+            this.productLists.sort(function(a, b) {
+                var nameA=a.listName.toLowerCase(), nameB=b.listName.toLowerCase();
+                if (nameA < nameB) //sort string ascending
+                  return -1;
+                if (nameA > nameB)
+                  return 1;
+                return 0; //default return value (no sorting)
+            });        
+        }
     },
     
     getDeletedCartItems: function(tableId) {

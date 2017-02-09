@@ -14,6 +14,11 @@ class InvoiceControl extends \MarketingApplication implements \Application {
         $this->includefile("invoice");
     }
 
+    public function markpaid() {
+        $date = $this->convertToJavaDate(strtotime($_POST['data']['paymentdate']));
+        $this->getApi()->getOrderManager()->markAsPaid($_POST['data']['orderid'], $date);
+    }
+    
     public function getGroupedOrders() {
         $orders = $this->getApi()->getOrderManager()->getAllUnpaidInvoices();
         $groupedOrders = new \stdClass();

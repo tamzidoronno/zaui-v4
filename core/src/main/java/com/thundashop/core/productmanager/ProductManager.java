@@ -360,4 +360,14 @@ public class ProductManager extends AProductManager implements IProductManager {
     public Product getProductUnfinalized(String productId) {
         return products.get(productId);
     }
+
+    public String getFirstProductList(String productId) {
+        for (ProductList list : productList.values()) {
+            if (list.productIds != null && list.productIds.contains(productId)) {
+                return list.id;
+            }
+        }
+        
+        return "";
+    }
 }

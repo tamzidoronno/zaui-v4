@@ -403,6 +403,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             everything = getExportInternal(route, currentState);
         } else {
             for (Route route1 : routes.values()) {
+                finalize(route1);
                 everything.addAll(getExportInternal(route1, currentState));   
             }
         }
@@ -436,11 +437,12 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             
             exportCounter.exportCounter += exportedData.size();
             saveObject(exportCounter);
+            
+            markRouteAsClean(route.id);
         }
         
         if (!currentState) {
             addLastExports(route.id, exportedData, exportedData.isEmpty() ? 4 : 3, !exportedData.isEmpty());
-            markRouteAsClean(route.id);
         }
         
         return exportedData;

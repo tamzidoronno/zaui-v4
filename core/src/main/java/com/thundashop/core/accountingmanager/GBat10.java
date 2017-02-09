@@ -15,6 +15,7 @@ import com.thundashop.core.usermanager.data.User;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.joda.time.DateTime;
@@ -87,12 +88,24 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         Calendar cal = Calendar.getInstance();
         cal.setTime(order.rowCreatedDate);
         
+        Date periodeDate = order.rowCreatedDate;
+        if(config.orderFilterPeriode != null && config.orderFilterPeriode.equals("paymentdate") && order.paymentDate != null) {
+            periodeDate = order.paymentDate;
+        }
+
+        
         managers.invoiceManager.generateKidOnOrder(order);
         
         List<HashMap<Integer, String>> lines = new ArrayList();
         
         int firstMonth = cal.get(Calendar.MONTH)+1;
         int year = cal.get(Calendar.YEAR);
+        int duedays = 14;
+        
+        if(order.dueDays != null) {
+            duedays = order.dueDays;
+        }
+        
         Integer customerId = getAccountingId(order.userId);
         String unique = getUniqueCustomerIdForOrder(order);
         if(unique != null) {
@@ -105,11 +118,16 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         if(kid == null) {
             kid = "";
         }
-        System.out.println(kid);
+        
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(order.rowCreatedDate);
+        cal2.add(Calendar.DAY_OF_YEAR, duedays);
+        Date dueDate = cal2.getTime();
+        
         HashMap<Integer, String> line = new HashMap();
         line.put(0, "GBAT10");
         line.put(1, order.incrementOrderId+ "");
-        line.put(2, format.format(order.rowCreatedDate));
+        line.put(2, format.format(periodeDate));
         line.put(3, "1");
         line.put(4, firstMonth + "");
         line.put(5, year + "");
@@ -124,10 +142,10 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         line.put(14, user.address.city);
         line.put(15, order.incrementOrderId + "");
         line.put(16, kid); //KID
-        line.put(17, format.format(order.rowCreatedDate)); //Forfallsdato
+        line.put(17, format.format(dueDate)); //Forfallsdato
         line.put(18, "");
         line.put(19, "");
-        line.put(20, "GetShop order: " + order.incrementOrderId); //Forfallsdato
+        line.put(20, "GetShop order: " + order.incrementOrderId);
         line.put(21, order.payment.readablePaymentType()); //Forfallsdato
         line.put(22, "");
         line.put(23, "");
@@ -142,7 +160,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
             
             subLine.put(0, "GBAT10");
             subLine.put(1, order.incrementOrderId+ "");
-            subLine.put(2, format.format(order.rowCreatedDate));
+            subLine.put(2, format.format(periodeDate));
             subLine.put(3, "1");
             subLine.put(4, firstMonth + "");
             subLine.put(5, year + "");

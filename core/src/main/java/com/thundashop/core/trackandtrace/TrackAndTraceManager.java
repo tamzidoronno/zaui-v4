@@ -646,7 +646,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void sendMessageToDriver(String driverId, String message) {
+    public DriverMessage sendMessageToDriver(String driverId, String message) {
         DriverMessage driverMsg = new DriverMessage();
         driverMsg.message = message;
         driverMsg.driverId = driverId;
@@ -654,6 +654,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         driverMessages.put(driverMsg.id, driverMsg);
         
         webSocketServer.sendMessage(driverMsg);
+        return driverMsg;
     }
 
     @Override
@@ -685,7 +686,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             saveObject(msg);
         }
     }
-    
-    
-    
+
+    @Override
+    public DriverMessage getDriverMessage(String msgId) {
+        return driverMessages.get(msgId);
+    }
 }

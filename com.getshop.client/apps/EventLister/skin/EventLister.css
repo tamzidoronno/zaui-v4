@@ -94,6 +94,17 @@
     color: #BBB !important;
 }
 
+.EventLister .downloadpdfrow {
+    padding-bottom: 20px;
+    text-align: center;
+    display: none;
+}
+
+.gsbody_inner[gsStoreId='6524eb45-fa17-4e8c-95a5-7387d602a69b'] .EventLister .downloadpdfrow {
+    display: block;
+}
+
+
 @media screen and (max-width: 599px) {
     
     .EventLister .col { display: inline-block; width: 100% !important;  padding: 4px; box-sizing: border-box; }   

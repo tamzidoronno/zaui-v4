@@ -30,11 +30,27 @@ function getEvents($factory) {
     return $retArray;
 }
 
+function translate($name) {
+    $name = str_replace("February", "Februari", $name);
+    $name = str_replace("March", "Mars", $name);
+    $name = str_replace("April", "April", $name);
+    $name = str_replace("May", "Maj", $name);
+    $name = str_replace("June", "Juni", $name);
+    $name = str_replace("July", "Juli", $name);
+    $name = str_replace("August", "Augusti", $name);
+    $name = str_replace("September", "September", $name);
+    $name = str_replace("October", "Oktober", $name);
+    $name = str_replace("November", "November", $name);
+    $name = str_replace("December", "December", $name);
+    
+    return $name;
+}
+
 function makeEnd() {
     echo "</div>";
         echo "<div class='footer'>";
 
-        echo date("d/m-Y", time())."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".date("H:i", time());
+        echo "www.promeisteracademy.se";
         echo "</div>";
     echo "</div>";
 }
@@ -42,6 +58,9 @@ function makeEnd() {
 $events = getEvents($factory);
 ?>
 <style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
     .col {
         display: inline-block;
         vertical-align: top; 
@@ -57,11 +76,11 @@ $events = getEvents($factory);
 
     .page {
         width: 1049px; 
-        height: 1484px; 
+        height: 1520px; 
         box-sizing: border-box; 
         font-size: 14px; 
     }
-
+    
     .row:last-child {
         border-bottom: solid 0px;
     }
@@ -74,13 +93,17 @@ $events = getEvents($factory);
     .pageheader {
         background-color: #000;
         height: 80px;
-        
+        padding: 20px;
+        margin-left: 20px;
+        margin-right: 20px;
     }
 
     .bodycontent {
         padding-top: 40px;
         height: 1304px;
         box-sizing: border-box;
+        padding-left: 20px;
+        padding-right: 20px;
     }
     
     h1 {
@@ -110,7 +133,7 @@ $events = getEvents($factory);
     
 </style>
 <?
-$numberOfRowsEachPage = 35;
+$numberOfRowsEachPage = 33;
 $i = 0;
 foreach ($events as $monthName => $month) {
     $useMonthName = $monthName;
@@ -122,22 +145,22 @@ foreach ($events as $monthName => $month) {
             echo "<div class='bodycontent'>";
          
             if ($useMonthName) {
-                echo "<h1>" . str_replace("_", " - ", $monthName) . "</h1>";
+                
+                echo "<h1>" . translate(str_replace("_", " - ", $monthName)) . "</h1>";
                 $useMonthName = false;
             }
             
             ?>
             <div class='row'>
-                <div class="col col1 location"><? echo $factory->__w("Location"); ?></div>
-                <div class="col col2 eventname"><? echo $factory->__w("Event name"); ?></div>
-                <div class='col col3 daysinformation'><? echo $factory->__w("Dates"); ?></div>
-                <div class="col col4 availablespots"><? echo $factory->__w("Available spots"); ?></div>
+                <div class="col col1 location"><b><? echo $factory->__w("Location"); ?></b></div>
+                <div class="col col2 eventname"><b><? echo $factory->__w("Event name"); ?></b></div>
+                <div class='col col3 daysinformation'><b><? echo $factory->__w("Dates"); ?></b></div>
             </div>
             <?
         }
         
         if ($useMonthName) {
-            echo "<h1>" . str_replace("_", " - ", $monthName) . "</h1>";
+            echo "<h1>" . translate(str_replace("_", " - ", $monthName)) . "</h1>";
             $useMonthName = false;
         }
         
@@ -160,7 +183,6 @@ foreach ($events as $monthName => $month) {
             <div class="col col1"><? echo $location; ?></div>
             <div class="col col2"><? echo $name; ?></div>
             <div class="col col3"><? echo $date; ?></div>
-            <div class='col col4'><? echo $event->bookingItem->freeSpots; ?> </div>
         </div>
         <?
         
@@ -172,30 +194,4 @@ foreach ($events as $monthName => $month) {
 }
 if ($i>0) {
     makeEnd();
-}
-
-$types = $factory->getApi()->getEventBookingManager()->getBookingItemTypes("booking");
-
-foreach ($types as $type) {
-    ?>
-    <div class='page'>
-        <div class='pageheader'>
-            <img src='http://promeisterse30.3.0.local.getshop.com/displayImage.php?id=444ebe28-701f-44cc-be1c-9ba7e7bff243&width=247'/>
-        </div>
-        <div class='bodycontent'>
-            <h1><? echo $type->name;?></h1>
-            <div>
-                <?
-                $javaPage = $factory->getApi()->getPageManager()->getPage($type->pageId);
-                $page = new Page($javaPage, $factory);
-                $layout = $page->javapage->layout;
-                $page->printArea($layout->areas->body, false);
-                ?>
-            </div>
-        </div>
-        <div class='footer'>
-        
-        </div>
-    </div>
-    <?
 }

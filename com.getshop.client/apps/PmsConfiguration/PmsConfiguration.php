@@ -838,6 +838,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $config->mobileViews->{$viewId}->icon = $_POST['data']['icon'];
         $config->mobileViews->{$viewId}->paidFor = $_POST['data']['paidFor'] == "true";
         $config->mobileViews->{$viewId}->daysDisplacement = $_POST['data']['daysDisplacement'];
+        $config->mobileViews->{$viewId}->sortType = $_POST['data']['sortType'];
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
     }
     

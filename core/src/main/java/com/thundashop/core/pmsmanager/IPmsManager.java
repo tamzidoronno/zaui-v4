@@ -284,6 +284,10 @@ public interface IPmsManager {
     @Administrator
     public List<PmsBookingAddonItem> getAddonsForRoom(String roomId);
     
+    @Administrator
+    public void markRoomDirty(String itemId) throws Exception;
+
+    
     public void addAddonsToBooking(Integer type, String roomId, boolean remove);
     public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
     

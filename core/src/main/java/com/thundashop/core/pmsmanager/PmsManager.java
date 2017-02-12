@@ -4783,11 +4783,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
-        Collections.sort(items, new Comparator<PmsBookingAddonViewItem>(){
-            public int compare(PmsBookingAddonViewItem s1, PmsBookingAddonViewItem s2) {
-                return s1.owner.compareTo(s2.owner);
-            }
-        });
+        if(view.sortType == PmsMobileView.PmsMobileSortyType.BYOWNER) {
+            Collections.sort(items, new Comparator<PmsBookingAddonViewItem>(){
+                public int compare(PmsBookingAddonViewItem s1, PmsBookingAddonViewItem s2) {
+                    return s1.owner.compareTo(s2.owner);
+                }
+            });
+        }
+        if(view.sortType == PmsMobileView.PmsMobileSortyType.BYROOM) {
+            Collections.sort(items, new Comparator<PmsBookingAddonViewItem>(){
+                public int compare(PmsBookingAddonViewItem s1, PmsBookingAddonViewItem s2) {
+                    if(s1.roomName == null || s2.roomName == null) {
+                        return 0;
+                    }
+                    return s1.roomName.compareTo(s2.roomName);
+                }
+            });
+        }
         
         return items;
     }
@@ -5096,5 +5108,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return ids;
+    }
+
+    @Override
+    public void markRoomDirty(String itemId) throws Exception {
+        PmsAdditionalItemInformation item = getAdditionalInfo(itemId);
+        item.forceMarkDirty();
+        saveObject(item);
     }
 }

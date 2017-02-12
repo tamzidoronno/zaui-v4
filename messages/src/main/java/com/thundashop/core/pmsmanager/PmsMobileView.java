@@ -10,6 +10,11 @@ public class PmsMobileView implements Serializable {
         public static Integer DAILY = 1;
         public static Integer ALLACTIVE = 2;
     }
+    static class PmsMobileSortyType {
+        public static Integer BYROOM = 1;
+        public static Integer BYOWNER = 2;
+    }
+    
     public String id = UUID.randomUUID().toString();
     public String name = "";
     public String icon = "";
@@ -17,4 +22,5 @@ public class PmsMobileView implements Serializable {
     public Integer daysDisplacement = 0;
     public List<String> products = new ArrayList();
     public boolean paidFor = false;
+    public Integer sortType = 1;
 }

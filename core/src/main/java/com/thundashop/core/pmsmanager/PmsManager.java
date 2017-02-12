@@ -3415,6 +3415,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
                 userManager.saveUserSecure(newuser);
                 booking.userId = newuser.id;
+            } else {
+                newuser = createUser(booking);
+                booking.userId = newuser.id;
             }
         } else {
             booking.registrationData.resultAdded = new LinkedHashMap();

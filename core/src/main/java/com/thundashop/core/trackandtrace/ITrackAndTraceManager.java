@@ -111,7 +111,7 @@ public interface ITrackAndTraceManager {
     public void setScannedBarcodes(String taskId, String orderReference, List<String> barcodes, boolean barcodeEnteredManually);
     
     @Administrator
-    public void sendMessageToDriver(String driverId, String message);
+    public DriverMessage sendMessageToDriver(String driverId, String message);
     
     @Administrator
     public void setInstructionOnDestination(String routeId, String destinationId, String message);
@@ -121,4 +121,7 @@ public interface ITrackAndTraceManager {
     
     @Customer
     public void acknowledgeDriverMessage(String msgId);
+    
+    @Administrator
+    public DriverMessage getDriverMessage(String msgId);
 }

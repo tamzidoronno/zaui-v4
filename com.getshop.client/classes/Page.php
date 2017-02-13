@@ -2025,7 +2025,8 @@ class Page {
 
                     if ($company) {
                         $selected = $companyId == $user->companyObject->id ? "SELECTED='SELECTED'" : "";
-                        echo "<option $selected value='$companyId'>$company->name</option>";
+                        $reference = $company->reference ? "- ".$company->reference : "";
+                        echo "<option $selected value='$companyId'>$company->name $reference</option>";
                     }
                 }
 

@@ -239,7 +239,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
     }
 
     private void logError(String string) {
-        System.out.println(string);
+        addToLog(string);
     }
 
 }

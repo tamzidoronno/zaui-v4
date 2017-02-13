@@ -1230,7 +1230,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         item.getProduct().price = price;
         
-        if(name != null) {
+        if(name != null && !name.equals("null")) {
             item.getProduct().name = name;
         }
         if (bookingitem != null) {

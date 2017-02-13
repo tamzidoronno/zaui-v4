@@ -172,7 +172,7 @@ if($booking->orderIds) {
         echo "<td>" . round($totalEx) . "<br><span style='color:#bbb'>" . round($total) . "</span></td>";
         echo "<td>";
         $show = true;
-        if(stristr($order->payment->paymentType, "dibs") || stristr($order->payment->paymentType, "\\Epay")) {
+        if(stristr($order->payment->paymentType, "dibs")) {
             $show = false;
         }
         if($order->status == 7) {

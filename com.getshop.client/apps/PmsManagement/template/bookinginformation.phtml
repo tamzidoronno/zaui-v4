@@ -79,7 +79,7 @@ switch($config->bookingProfile) {
         echo "Rooms booked";
         break;
 }
-if($booking->totalPrice) {
+if($booking->totalPrice && ($booking->totalPrice < 1000000)) {
     echo " (kr " . round($booking->totalPrice) . ")";
 }
 echo "</span>";

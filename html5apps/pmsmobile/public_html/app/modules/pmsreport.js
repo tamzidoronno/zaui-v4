@@ -1,10 +1,20 @@
 if(typeof(getshop) === "undefined") { var getshop = {}; }
 getshop.pmsreportController = function($scope, $state) {
     $scope.loadOverviews = function() {
-        var loading = getshopclient.PmsReportManager.getReport(getMultilevelName(), $scope.start, $scope.end);
+        
+        var loading = getshopclient.PmsReportManager.getReport(getMultilevelName(), $scope.start, $scope.end, $scope.comparePeriode);
         loading.done(function(res) {
             $scope.pmsreportlist = res;
             $scope.$apply();
+        });
+    }
+    
+    $scope.loadRoomCoverage = function() {
+        var loading = getshopclient.PmsReportManager.getRoomCoverage(getMultilevelName(), $scope.start, $scope.end);
+        loading.done(function(res) {
+            $scope.roomCoverageList = res;
+            $scope.$apply();
+            console.log(res);
         });
     }
     
@@ -45,11 +55,13 @@ getshop.pmsreportController = function($scope, $state) {
     $scope.loadView = function() {
         $scope.loadOverviews();
         $scope.loadNeedsFixes();
+        $scope.loadRoomCoverage();
     }
     
     $scope.end = new Date();
     $scope.start = new Date();
-    $scope.start.setDate($scope.start.getDate()-5);
+    $scope.start.setDate($scope.start.getDate()-7);
+    $scope.comparePeriode = "-1week";
     
     $scope.loadView();
 }

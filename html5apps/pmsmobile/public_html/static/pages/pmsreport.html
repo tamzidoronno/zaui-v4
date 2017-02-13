@@ -3,17 +3,27 @@
     Pms Report</div>
 <div class='row'>
         <br>
-    <div class='col-xs-6 col-md-4'>
+    <div class='col-xs-6 col-md-3'>
         <label>Start
         <input type="date" class="form-control" ng-model="start">
         </label>
     </div>
-    <div class='col-xs-6 col-md-4'>
+    <div class='col-xs-6 col-md-3'>
         <label>End
         <input type="date" class="form-control" ng-model="end">
         </label>
     </div>
-    <div class='col-xs-12 col-md-4'>
+    <div class='col-xs-12 col-md-3'>
+        <label style="width:100%;">Compare periode
+            <select class="form-control" style="width:100% !important;" ng-model="comparePeriode">
+                <option value="-1week">-1 uke</option>
+                <option value="-1month">-1 måned</option>
+                <option value="-1year">-1 år</option>
+            </select>
+        </label>
+    </div>
+
+    <div class='col-xs-12 col-md-3'>
         <br>
         <span class="btn btn-success form-control" ng-click="reloadOverview()">Show</span>
         <br><br>
@@ -22,6 +32,7 @@
     <div class="col-xs-12">
         <b>{{report.typeName}}</b>
     </div>
+    <div class="selectionrow"></div>
         <div class="col-xs-6">
             {{report.numberOfRooms}} / {{report.totalNumberOfRooms}} romdøgn
         </div>
@@ -74,6 +85,25 @@
     </div>
 </div>
 
+<table border='1' width='100%'>
+    <tr style='font-size:10px;'>
+        <th>Room</th>
+        <th>Belegg(%)</th>
+        <th>Kvmpris<br>dag</th>
+        <th>Kvm<br>periode</th>
+        <th>Snittpris</th>
+        <th>Revpar</th>
+    </tr>
+    <tr ng-repeat="room in roomCoverageList" style='font-size:12px;' >
+        <td style='padding:2px;'>{{room.roomName}}</td>
+        <td style='padding:2px;'>{{room.coverage}}%</td>
+        <td style='padding:2px;'>{{room.sqaurePrice}}</td>
+        <td style='padding:2px;'>{{room.squarePricePeriode}}</td>
+        <td style='padding:2px;'>{{room.avgPrice}}</td>
+        <td style='padding:2px;'>{{room.revpar}}</td>
+    </tr>
+</table>        
+        
 <div class='row'><br><br>
     <div class="col-xs-12"><b>Skader / feil på rom som må utbedres</b>
         <div>

@@ -585,9 +585,14 @@ public class PmsBookingRooms implements Serializable {
         return false;
     }
 
-    void calculateTotalCost() {
+    void calculateTotalCost(Integer priceType) {
         totalCost = 0.0;
         Integer days = getNumberOfNights();
+        
+        if(priceType.equals(PriceType.monthly)) {
+            days = getNumberOfMonths();
+        }
+        
         totalCost += days * price;
         for(PmsBookingAddonItem item : addons) {
             if(item.isIncludedInRoomPrice) {
@@ -627,5 +632,24 @@ public class PmsBookingRooms implements Serializable {
         }
         
         return false;
+    }
+
+    private int getNumberOfMonths() {
+        Date startDate = date.start;
+        Date endDate = date.end;
+        int months = 1;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        while(true) {
+            cal.add(Calendar.MONTH, 1);
+            if(cal.getTime().after(endDate)) {
+                break;
+            }
+            if(cal.getTime().equals(endDate)) {
+                break;
+            }
+            months++;
+        }
+        return months;
     }
 }

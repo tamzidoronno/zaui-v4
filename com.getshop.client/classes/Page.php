@@ -2025,8 +2025,16 @@ class Page {
 
                     if ($company) {
                         $selected = $companyId == $user->companyObject->id ? "SELECTED='SELECTED'" : "";
-                        $reference = $company->reference ? "- ".$company->reference : "";
-                        echo "<option $selected value='$companyId'>$company->name $reference</option>";
+                        $groupName = "";
+                        if ($user->companyObject && $user->companyObject->groupId) {
+                            $group = $this->factory->getApi()->getUserManager()->getGroup($user->companyObject->groupId);
+                            if ($group) {
+                                $groupName = " - ".$group->groupName;
+                            }
+                        }
+                        
+                        $reference = $company->reference ? " - ".$company->reference : "";
+                        echo "<option $selected value='$companyId'>$company->name $groupName$reference</option>";
                     }
                 }
 

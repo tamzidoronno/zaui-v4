@@ -253,6 +253,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         List<Order> ordersToUse = new ArrayList();
         for(Order order : orders) {
+            if(order == null || order.cart == null) {
+                continue;
+            }
             if(order.cart.getItems().isEmpty()) {
                 continue;
             }
@@ -2183,6 +2186,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     public void createVirtualOrder(String bookingId) {
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        if(booking == null) {
+            return;
+        }
         if(!booking.isCompletedBooking()) {
             return;
         }

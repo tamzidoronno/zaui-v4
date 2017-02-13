@@ -5036,6 +5036,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking != null) {
             data.attendeesCount = booking.getTotalGuestCount();
             data.date = booking.getStartDate();
+            if (booking.userId != null && !booking.userId.isEmpty() && userManager.getUserById(booking.bookedByUserId) != null) {
+                data.nameOfEvent = userManager.getUserById(booking.userId).fullName;
+            }
         }
     }
 

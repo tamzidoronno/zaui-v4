@@ -18,6 +18,8 @@ import org.mongodb.morphia.annotations.Transient;
 public class ConferenceData extends DataCommon {
     public String note;
     
+    public String nameOfEvent = "";
+    
     /**
      * Always finalized to the count of guests on the booking
      */

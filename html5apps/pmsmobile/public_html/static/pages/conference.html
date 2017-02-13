@@ -4,7 +4,7 @@
 </div>
 <div class='row'>
     <div ng-repeat="conf in conferences" class="conferencerow">
-        <div class="conf_title"> {{ conf.date }}</div>
+        <div class="conf_title"> {{ conf.nameOfEvent }}</div>
         <div class="conf_note" ng-if="conf.note" style='background-color: #c9ffc3; padding: 10px;'>
             <b>Note:</B><br/>
             {{ conf.note }}

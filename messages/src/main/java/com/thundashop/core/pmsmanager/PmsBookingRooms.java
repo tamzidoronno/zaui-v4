@@ -585,6 +585,19 @@ public class PmsBookingRooms implements Serializable {
         return false;
     }
 
+    public double calculateNonRefundAddons() {
+        double total = 0.0;
+
+        for(PmsBookingAddonItem item : addons) {
+            if(item.noRefundable) {
+                continue;
+            }
+            total += (item.price * item.count);
+        }
+        
+        return total;
+    }
+    
     void calculateTotalCost(Integer priceType) {
         totalCost = 0.0;
         Integer days = getNumberOfNights();

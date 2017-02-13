@@ -376,6 +376,7 @@ public class PmsBooking extends DataCommon {
         for(PmsBookingRooms room : rooms) {
             room.calculateTotalCost(PriceType.daily);
             if(room.isDeleted()) {
+                total += room.calculateNonRefundAddons();
                 continue;
             }
             total += room.totalCost;

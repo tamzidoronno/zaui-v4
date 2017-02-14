@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class Deltaker.No extends UpdateScriptBase implements UpdateScript {
+public class DeltakerNo extends UpdateScriptBase implements UpdateScript {
 
     @Override
     public Date getAddedDate() {
@@ -29,7 +29,7 @@ public class Deltaker.No extends UpdateScriptBase implements UpdateScript {
     
     @Override
     public String getId() {
-        return "486568cf-dca5-4731-a99a-f016207d1fa0";
+        return "9ae8b369-5f2a-418e-bf58-af28c54055aa";
     }
 
     @SuppressWarnings("empty-statement")
@@ -49,7 +49,7 @@ public class Deltaker.No extends UpdateScriptBase implements UpdateScript {
     }
     
     public static void main(String[] args) {
-        new Deltaker.No().runSingle();
+        new DeltakerNo().runSingle();
     }
     
     @Override
@@ -66,16 +66,16 @@ public class Deltaker.No extends UpdateScriptBase implements UpdateScript {
         credentials.password = "ADFASDF";
         credentials.storeid = "all";
 
-        Application Deltaker.No = createSettings("Deltaker.No",
-        "4c124a23-7920-4ac5-8759-64ef77e5b67a",
+        Application DeltakerNo = createSettings("DeltakerNo",
+        "c0ee35dc-77fc-4a36-98fe-2cb3a47c3bc3",
         allowed2,
         " ",
         Application.Type.Payment, true);
-        Deltaker.No.isPublic = true;
-        Deltaker.No.isFrontend = true;
-        Deltaker.No.moduleId = "WebShop";
-        Deltaker.No.defaultActivate = false;
-        Deltaker.No.storeId = "all";
-        database.save(Deltaker.No, credentials);
+        DeltakerNo.isPublic = true;
+        DeltakerNo.isFrontend = true;
+        DeltakerNo.moduleId = "WebShop";
+        DeltakerNo.defaultActivate = false;
+        DeltakerNo.storeId = "all";
+        database.save(DeltakerNo, credentials);
     }
 }

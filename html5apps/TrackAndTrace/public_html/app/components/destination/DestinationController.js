@@ -107,4 +107,6 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
             }
         }
     });
+    
+    
 }

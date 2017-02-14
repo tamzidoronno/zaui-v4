@@ -44,7 +44,35 @@ controllers.RouteOverviewController = function($scope, datarepository, $rootScop
         $state.transitionTo("base.home");
     }
     
+    $scope.updateTimeStamp = function(destination) {
+        $scope.destination = destination;
+        $scope.destination.startInfo.startedTimeStamp = new Date();
+        
+        navigator.geolocation.getCurrentPosition(function(position) {
+            
+            $scope.destination.startInfo.lon = position.coords.longitude;
+            $scope.destination.startInfo.lat = position.coords.latitude;  
+            $scope.$apply();
+
+            $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
+            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
+            
+            datarepository.save();
+        }, function(failare, b, c) {
+            $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
+            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
+            
+            datarepository.save();
+        }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
+    }
+    
     $scope.showDestination = function(destinationId, routeId) {
+        var destination = datarepository.getDestinationById(destinationId);
+        
+        if ($scope.getFinishedState(destination) === "yellow") {
+            $scope.updateTimeStamp(destination);
+        }
+        
         $state.transitionTo("base.destination", {destinationId: destinationId, routeId: routeId});
     }
     $scope.isBoth = function(destination) {

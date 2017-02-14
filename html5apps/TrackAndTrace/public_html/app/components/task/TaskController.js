@@ -198,11 +198,28 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         var orders = $scope.getCages();
         return $scope.countIt(orders);
     }
+    
+    $scope.resetPickupOrder = function(referenceNumber) {
+        var task = datarepository.getTaskById($stateParams.taskId);
+        for (var i in task.orders) {
+            var order = task.orders[i];
+            if (order.referenceNumber === referenceNumber) {
+                order.barcodeScanned = [];
+                order.countedBundles = -1;
+                
+                $api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, referenceNumber, -1);
+                $api.getApi().TrackAndTraceManager.setScannedBarcodes($scope.task.id, referenceNumber, [], false);                
+                datarepository.save();
+            }
+        }
+        
+    }
 
     $scope.orderFinished = function(order) {
-        if ($scope.taskType === "pickup_parcels" && order.countedBundles < 0 && !order.exceptionId) {
+        if ($scope.taskType === "pickup_parcels" && order.countedBundles < 0 && order.barcodeScanned.length == 0 &&!order.exceptionId) {
             return false;
         }
+        
         
         if (order.orderDriverDeliveries && !order.hasOwnProperty("driverDeliveryCopiesCounted")) {
             return false;
@@ -379,5 +396,10 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         var barcode = datarepository.getDestinationById($stateParams.destinationId).company.id + $stateParams.action.keyReference + "000";
         $scope.barcodeReceived(barcode, true);
     }
+    
+    $scope.$on('refreshRoute', function(msg, route) {
+        $scope.setPickupType();
+        $scope.$apply();
+    });
     
 }

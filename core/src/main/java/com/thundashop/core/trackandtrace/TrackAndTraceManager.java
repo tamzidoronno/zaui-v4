@@ -131,6 +131,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public List<Route> getRoutesById(String routeId) {
         Route foundroute = getRouteById(routeId);
         
+        if (foundroute == null) {
+            return new ArrayList();
+        }
+        
         ArrayList<Route> retList = new ArrayList();
         retList.add(foundroute);
         retList.stream().forEach(route -> finalize(route));
@@ -313,7 +317,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         AcculogixDataImporter ret = new AcculogixDataImporter(base64, userManager, this, fileName);
         ret.getRoutes().stream().forEach(route -> notifyRoute(getRouteById(route.id)));
-        
         
     }
 
@@ -639,7 +642,28 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
+        route.destinationIds.stream().forEach(destId -> {
+            deleteDestination(destId);
+        });
+        
         exports.values().removeIf(o -> o.routeId != null && o.routeId.equals(routeId));
+    }
+    
+    private void deleteDestination(String destId) {
+        Destination dest = destinations.remove(destId);
+        if (dest != null) {
+            deleteObject(dest);
+            dest.taskIds.stream().forEach(taskId -> { 
+                deleteTask(taskId);
+            });
+        }
+    }
+    
+    private void deleteTask(String taskId) {
+        Task task = tasks.remove(taskId);
+        if (task != null) {
+            deleteObject(task);
+        }
     }
 
     @Override
@@ -747,5 +771,35 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         route.isVritual = true;
         route.dirty = false;
         return route;
+    }
+
+    public DeliveryTask getDeliveryTaskForDestination(String id) {
+        Destination dest = getDestinationById(id);
+        
+        if (dest != null) {
+            for (String taskId : dest.taskIds) {
+                Task task = tasks.get(taskId);
+                if (task instanceof DeliveryTask) {
+                    return (DeliveryTask)task;
+                }
+            };
+        }
+        
+        return null;
+    }
+
+    public PickupTask getPickupTask(String id) {
+        Destination dest = getDestinationById(id);
+        
+        if (dest != null) {
+            for (String taskId : dest.taskIds) {
+                Task task = tasks.get(taskId);
+                if (task instanceof PickupTask) {
+                    return (PickupTask)task;
+                }
+            };
+        }
+        
+        return null;
     }
 }

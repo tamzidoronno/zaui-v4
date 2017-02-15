@@ -262,6 +262,9 @@ public class PmsManagerProcessor {
                         (room.deleted && room.addedToArx) || 
                         (!manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId) && room.addedToArx) || 
                         (room.blocked && room.addedToArx)) {
+                    if(booking.forceGrantAccess) {
+                        continue;
+                    }
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;

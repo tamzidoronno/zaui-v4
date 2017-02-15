@@ -264,7 +264,7 @@ public class PmsManagerProcessor {
                 if (((room.isEnded() || !room.isStarted()) && room.addedToArx) || 
                         (room.deleted && room.addedToArx) || 
                         (!manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId) && room.addedToArx) || 
-                        (room.blocked && room.addedToArx)) {
+                        (room.blocked && room.addedToArx) && !booking.forceGrantAccess) {
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;

@@ -206,9 +206,6 @@ public class PmsManagerProcessor {
                 if(room.blocked) {
                     continue;
                 }
-                if(!manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
-                    continue;
-                }
 
                 if (room.guests.isEmpty() || room.guests.get(0).name == null) {
                     room.guests.clear();
@@ -264,7 +261,10 @@ public class PmsManagerProcessor {
                 if (((room.isEnded() || !room.isStarted()) && room.addedToArx) || 
                         (room.deleted && room.addedToArx) || 
                         (!manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId) && room.addedToArx) || 
-                        (room.blocked && room.addedToArx) && !booking.forceGrantAccess) {
+                        (room.blocked && room.addedToArx)) {
+                    if(booking.forceGrantAccess) {
+                        continue;
+                    }
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;

@@ -8,6 +8,7 @@ package com.thundashop.core.trackandtrace;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.usermanager.data.Company;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +57,7 @@ public class Destination extends DataCommon {
     public String stopWindow;
     
     public boolean dirty = false;
+    public Date movedFromPool;
     
    
     public Destination() {

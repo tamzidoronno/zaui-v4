@@ -125,6 +125,11 @@ public class AcculogixDataExporter {
 
     private void setTaskStatus(AcculogixExport exp, Route route1, Task task, Destination dest) {
         exp.TaskStatus = "DL";
+        
+        if (dest.movedFromPool != null) {
+            exp.TaskStatus = "Route Assigned";
+        }
+        
         if (route1.startInfo.started) {
             exp.TaskStatus = "AF";
         }

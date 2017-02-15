@@ -8574,6 +8574,17 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getGroupedConferenceData' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getGroupedConferenceData',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getIntervalAvailability' : function(multilevelname, filter, gs_silent) {
         var data = {
             args : {
@@ -12086,6 +12097,17 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 destinationId : JSON.stringify(destinationId),
             },
             method: 'getDestinationById',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getDriverMessage' : function(msgId, gs_silent) {
+        var data = {
+            args : {
+                msgId : JSON.stringify(msgId),
+            },
+            method: 'getDriverMessage',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);

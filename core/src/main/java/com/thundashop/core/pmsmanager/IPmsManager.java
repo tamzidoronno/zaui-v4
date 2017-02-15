@@ -11,6 +11,7 @@ import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Property management system.<br>
@@ -360,4 +361,11 @@ public interface IPmsManager {
     
     @Administrator
     public List<ConferenceData> getFutureConferenceData();
+    
+    /**
+     * Key = date / day
+     * @return 
+     */
+    @Administrator
+    public Map<Long, List<ConferenceData>> getGroupedConferenceData();
 }

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -93,8 +94,15 @@ public class AcculogixDataImporter {
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         
         for (String[] row : datas) {
+            String id = row[49] + " " + row[30];
+            List<Route> alreadyExistingRotues = trackAndTraceManager.getRoutesById(id);
+            if (!alreadyExistingRotues.isEmpty()) {
+                routes.put(id, trackAndTraceManager.getRoutesById(id).get(0));
+                continue;
+            }
+            
             Route route = new Route();
-            route.id = row[49] + " " + row[30];
+            route.id = id;
             route.name = route.id;
             route.originalId = row[49];
             route.userIds.add(row[63]);
@@ -115,19 +123,31 @@ public class AcculogixDataImporter {
             List<Destination> rows = datas.stream()
                     .filter(row -> row[49].equals(route.originalId))
                     .filter(distinctByKey(d -> d[20].trim()))
-                    .map(row -> createDestionation(row))
+                    .map(row -> createDestionation(row, route))
                     .sorted((o1, o2) -> o1.seq.compareTo(o2.seq))
                     .collect(Collectors.toList());
             
             for (Destination dest : rows) {
-                route.destinationIds.add(dest.id);
-                trackAndTraceManager.saveRoute(route);
+                if (!route.destinationIds.contains(dest.id)) {
+                    route.destinationIds.add(dest.id);
+                    trackAndTraceManager.saveRoute(route);
+                }
             }
         }
     }
     
-    private Destination createDestionation(String[] args) {
-        Destination destination = new Destination();
+    private Destination createDestionation(String[] args, Route route) {
+        String id = route.id + "_" + args[50] + "_" + Integer.parseInt(args[20]);
+        
+        Destination destination = trackAndTraceManager.getDestinationById(id);
+        
+        if (destination != null) {
+            destinations.put(destination.id, destination);
+            return destination;
+        }
+        
+        destination = new Destination();    
+        destination.id = id;
         destination.companyIds.addAll(getCompanyIdsForRouteSeq(args[20]));
         destination.seq = Integer.parseInt(args[20]);
         destination.podBarcode = args[34];
@@ -162,14 +182,22 @@ public class AcculogixDataImporter {
                 continue;
             }
             
-            DeliveryTask task = new DeliveryTask();
-            task.taskType = Integer.parseInt(deliveryOrderDatas.get(0)[65]);
-            task.orders = deliveryOrders;
-            task.podBarcode = deliveryOrderDatas.get(0)[34];
+            DeliveryTask task = trackAndTraceManager.getDeliveryTaskForDestination(destination.id);
+            
+            if (task == null) {
+                task = new DeliveryTask();
+                task.id = UUID.randomUUID().toString();
+                task.taskType = Integer.parseInt(deliveryOrderDatas.get(0)[65]);
+                task.orders = deliveryOrders;
+                task.podBarcode = deliveryOrderDatas.get(0)[34];
+                destination.taskIds.add(task.id);
+            } else {
+                task.orders.addAll(deliveryOrders);
+            }
             
             trackAndTraceManager.saveTaskGeneral(task);
             tasks.put(task.id, task);
-            destination.taskIds.add(task.id);
+            
             trackAndTraceManager.saveObject(destination);
         }
     }
@@ -233,15 +261,22 @@ public class AcculogixDataImporter {
                 continue;
             }
             
-            PickupTask task = new PickupTask();
-            task.taskType = Integer.parseInt(pickupTasksDatas.get(0)[65]);
-            task.orders = pickupOrders;
-            task.cage = !pickupTasksDatas.get(0)[60].isEmpty();
-            task.podBarcode = pickupTasksDatas.get(0)[34];
+            PickupTask task = trackAndTraceManager.getPickupTask(destination.id);
+            
+            if (task == null) {
+                task = new PickupTask();
+                task.id = UUID.randomUUID().toString();
+                task.taskType = Integer.parseInt(pickupTasksDatas.get(0)[65]);
+                task.orders = pickupOrders;
+                task.cage = !pickupTasksDatas.get(0)[60].isEmpty();
+                task.podBarcode = pickupTasksDatas.get(0)[34];
+                destination.taskIds.add(task.id);
+            } else {
+                task.orders.addAll(pickupOrders);
+            }
             
             trackAndTraceManager.saveTaskGeneral(task);
             tasks.put(task.id, task);
-            destination.taskIds.add(task.id);
             trackAndTraceManager.saveObject(destination);
         }
     }

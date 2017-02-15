@@ -38,6 +38,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.InvoiceGeneratorCartItem;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
@@ -59,6 +60,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
@@ -5110,5 +5112,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsAdditionalItemInformation item = getAdditionalInfo(itemId);
         item.forceMarkDirty();
         saveObject(item);
+    }
+    
+    @Override
+    public Map<Long, List<ConferenceData>> getGroupedConferenceData() {
+        List<ConferenceData> futureConfData = getFutureConferenceData();
+        List<ConferenceData> eachDayConfData = new ArrayList();
+        
+        futureConfData.stream().forEach(fut -> eachDayConfData.addAll(fut.getForEachDay()));
+        eachDayConfData.stream().forEach(fut -> finalize(fut));
+        
+        Map<Long, List<ConferenceData>> result = eachDayConfData.stream()
+            .collect(
+                Collectors.groupingBy(e -> e.days.get(0).getParsedDate() != null 
+                        ? e.days.get(0).getParsedDate().getTime() 
+                        : e.date.getTime(), Collectors.toList())
+            );
+
+        
+        return result;
     }
 }

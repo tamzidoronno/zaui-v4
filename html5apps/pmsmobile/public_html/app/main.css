@@ -89,6 +89,7 @@ a, a:hover { color:#000; }
 .conferencerow {
     background-color: #FFF;
     margin: 10px;
+    margin-bottom: 100px;
 }
 
 .conferencerow .conf_title {
@@ -101,6 +102,12 @@ a, a:hover { color:#000; }
 .conferencerow .conf_action {
     padding: 10px;
     border-top: solid 1px #DDD;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.conferencerow .conf_action:first-child {
+    border-top: solid 0px;
 }
 
 .conferencerow .conf_col {
@@ -114,4 +121,13 @@ a, a:hover { color:#000; }
 }
 .conferencerow .conf_note {
     padding: 10px;
+    margin: 0px 10px 20px 10px;
+}
+
+.conf_title_name {
+    margin: 20px 10px 0px 10px;
+    background-color: #ff8e09;
+    padding: 10px;
+    text-align: center;
+    color: #FFF;
 }

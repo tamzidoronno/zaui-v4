@@ -149,6 +149,7 @@
                 </div>
                 
                 <div style='width: 100%; display: inline-block;'class="button exceptionButton" ng-mobile-click="openPickupException(order)">Add exception</div>
+                <div style='width: 100%; display: inline-block;'class="button" ng-mobile-click="resetPickupOrder(order.referenceNumber)">Reset count/scan</div>
             </div>
             
             <div class="deliverytaskaction" ng-class="{'alreadyasdf' :  shouldBeVisible(order)}" ng-if="order.container">

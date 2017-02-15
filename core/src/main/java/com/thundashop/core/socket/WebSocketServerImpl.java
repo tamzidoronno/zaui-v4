@@ -111,6 +111,9 @@ public class WebSocketServerImpl extends WebSocketServer implements Runnable, Ap
     }
 
     public void sendMessage(Object data) {
+        if (data == null)
+            return;
+        
         WebSocketWrappedMessage wrapped = new WebSocketWrappedMessage();
         wrapped.payLoad = data;
         wrapped.coninicalName = data.getClass().getCanonicalName();

@@ -30,7 +30,10 @@ public class AcculogixDriverImporter {
 
     private void loadLines() {
         for (String line : rawData.split("\n")) {
-            String[] values = line.split("\\t", -1);
+            if (line.contains("DP$ID"))
+                continue;
+            
+            String[] values = line.split(",", -1);
             datas.add(values);
         }
     }

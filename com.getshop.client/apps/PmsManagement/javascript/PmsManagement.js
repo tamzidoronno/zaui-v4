@@ -127,6 +127,31 @@ app.PmsManagement = {
         $(this).closest('.action_point_row').remove();
     },
     
+    isValidDate: function (dateString) {
+        // First check for the pattern
+        if(!/^\d{1,2}.\d{1,2}.\d{2}$/.test(dateString))
+            return false;
+
+        // Parse the date parts to integers
+        var parts = dateString.split(".");
+        var day = parseInt(parts[0], 10);
+        var month = parseInt(parts[1], 10);
+        var year = parseInt(parts[2], 10) + 2000;
+
+        // Check the ranges of month and year
+        if(year < 1000 || year > 3000 || month == 0 || month > 12)
+            return false;
+
+        var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+        // Adjust for leap years
+        if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+            monthLength[1] = 29;
+
+        // Check the range of the day
+        return day > 0 && day <= monthLength[month - 1];
+    },
+
     save_conference_data: function() {
         var container = $(this).closest('.conference_data_form');
         
@@ -135,12 +160,23 @@ app.PmsManagement = {
         data.bookingid = container.find('[gsname="bookingid"]').val();
         data.note = container.find('[gsname="note"]').val();
         
+        var error = false;
+        
         container.find('.dayform.with_data').each(function() {
             var day = {
                 dayid : $(container).attr('dayid'),
                 day : $(this).find('input[gsname="day"]').val(),
                 rows : []
             }
+            
+            if (day.day.length !== 8) {
+                error = true;
+            }
+            
+            var isValid = app.PmsManagement.isValidDate(day.day);
+            if (!isValid)
+                error = true;
+            
             
             $(this).find('.action_point_row.with_data').each(function() {
                 var row = {
@@ -157,6 +193,11 @@ app.PmsManagement = {
             
             data.days.push(day);
         });
+        
+        if (error) {
+            alert("FAILED! Did not save... The day must be specified in this format dd.mm.yy");
+            return;
+        }
         
         console.log(data);
         

@@ -206,7 +206,7 @@ public class PmsManagerProcessor {
                 if(room.blocked) {
                     continue;
                 }
-                if(manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
+                if(!manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
                     continue;
                 }
 

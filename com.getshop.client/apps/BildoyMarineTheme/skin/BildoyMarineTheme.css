@@ -52,7 +52,7 @@ h2 { font-weight: 700; }
     margin-top: 100px;
 }
 
-.gsarea[area="header"] img {
+.gsarea[area="header"] [cellid="2cd45f3b-0488-43ec-a405-2523b0b99379"] img {
     height: 80px !important;
     padding-top: 20px !important;
 }
@@ -328,6 +328,32 @@ h2 { font-weight: 700; }
     background-color: #e3e3e3;
 }
 
+.weatherheader {
+    background-color: #EFEFEF;
+    text-align: right;
+    height: 30px;
+    font-size: 16px;
+    line-height: 30px;
+    vertical-align: top;
+    color: #333;
+}
+
+.weatherheader a {
+    color: #444;
+}
+
+.weatherheader #topWeatherLink {
+    padding-left: 35px;
+    position: relative;
+    margin-left: 10px;
+}
+
+.weatherheader img {
+    width: 30px;
+    position: absolute;
+    left: 0px;
+}
+
 .News .newsboxtemplate_2 .news_container { border: solid 1px #e8e8e9; }
 .News .newsboxtemplate_2 .newscontent { border-left: solid 1px #e8e8e9; }
 .News .newsboxtemplate_2 .date { border: solid 0px; }
@@ -438,4 +464,4 @@ h1,h2,h3 { color: #006699; }
     margin-top: 8px;
     line-height: 18px;
 }
-    
+ 

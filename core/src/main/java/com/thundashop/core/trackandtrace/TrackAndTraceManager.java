@@ -110,6 +110,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         new ArrayList(pooledDestinations.values()).stream().forEach(pool -> ensureRemoval((PooledDestionation)pool));
+        
+        deleteRoute("&quot;2131&quot; &quot;Wed 02/01/2017&quot;");
     }
     
     private void ensureRemoval(PooledDestionation dest) {
@@ -632,6 +634,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     @Override
     public void deleteRoute(String routeId) {
         Route route = getRouteById(routeId);
+        
         if (route != null) {
             deleteObject(route);
             routes.remove(route.id);
@@ -643,9 +646,13 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
-        route.destinationIds.stream().forEach(destId -> {
-            deleteDestination(destId);
-        });
+        if (route != null) {
+            if (route.destinationIds != null) {
+                route.destinationIds.stream().forEach(destId -> {
+                    deleteDestination(destId);
+                });
+            }
+        }
         
         exports.values().removeIf(o -> o.routeId != null && o.routeId.equals(routeId));
     }

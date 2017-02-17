@@ -5,7 +5,7 @@ $locations = $this->getLocations($groupedEvents);
 $eventTypes = $this->getEventTypes($groupedEvents);
 $loggedOnUser = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
 
-
+echo "<div class='downloadpdfrow'><a target='_blank' class='gs_ignorenavigate' href='/scripts/promeister/doDownloadCoursesPdf.php'><div class='shop_button'><i class='fa fa-download'></i> ".$this->__f("Download PDF")."</div></a></div>";
 echo "<div class='locationlist'>";
     echo "<div class='locationlist_inner'>";
     foreach ($locations as $loc) {

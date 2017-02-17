@@ -3,8 +3,13 @@ app.UserFileUpload = {
         $(document).on('click', '.gss_user_save_file', app.UserFileUpload.uploadBoxClick);
         $(document).on('input', '.gss_user_save_description', app.UserFileUpload.saveDescription);
         $(document).on('click', '.userfiledeletebutton', app.UserFileUpload.deleteUploadedFile);
+        $(document).on('click', '.downloadfilebutton', app.UserFileUpload.downloadfilebutton);
         
     },
+    downloadfilebutton : function() {
+        window.open('/scripts/downloadUserFile.php?id='+$(this).attr('fileId')+"&userId=" + $(this).attr('userId'),'_blank');
+    },
+    
     deleteUploadedFile: function(){
         var button = $(this);
         var fileid = button.attr('fileId');

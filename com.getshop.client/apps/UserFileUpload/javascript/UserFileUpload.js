@@ -78,7 +78,9 @@ app.UserFileUpload = {
             };
 
             var userid = $('[gs_model_attr="userid"]').attr('value');
-            
+            if($('#selecteduseridoverride').length > 0) {
+                userid = $('#selecteduseridoverride').val();
+            }
             var field = $('<div/>');
             field.attr('gss_view', "gs_user_workarea");
             field.attr('gss_fragment', "user");

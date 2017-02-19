@@ -123,7 +123,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         cal2.setTime(order.rowCreatedDate);
         cal2.add(Calendar.DAY_OF_YEAR, duedays);
         Date dueDate = cal2.getTime();
-        
+
         HashMap<Integer, String> line = new HashMap();
         line.put(0, "GBAT10");
         line.put(1, order.incrementOrderId+ "");
@@ -155,7 +155,10 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         line.put(27, df.format(total)+"");
         lines.add(line);
         
+        Double linesTotal = 0.0;
         for(CartItem item : order.cart.getItems()) {
+            linesTotal += item.getProduct().price * item.getCount();
+            
             HashMap<Integer, String> subLine = new HashMap();
             
             subLine.put(0, "GBAT10");
@@ -189,6 +192,9 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
             
             lines.add(subLine);
 
+        }
+        if(!linesTotal.equals(total)) {
+            logError("Lines are not the same as the total for order : " + order.incrementOrderId);
         }
         
         return lines;

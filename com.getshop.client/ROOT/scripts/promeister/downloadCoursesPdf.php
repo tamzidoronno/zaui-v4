@@ -135,12 +135,15 @@ $events = getEvents($factory);
 <?
 $numberOfRowsEachPage = 33;
 $i = 0;
+$webaddress = $_SERVER['SERVER_NAME'];
+$url = "http:///scripts/promeister/downloadCoursesPdf.php";
+
 foreach ($events as $monthName => $month) {
     $useMonthName = $monthName;
     foreach ($month as $event) {
         if ($i == 0) {
             echo "<div class='page'>";
-            echo "<div class='pageheader'><img src='http://promeisterse30.3.0.local.getshop.com/displayImage.php?id=444ebe28-701f-44cc-be1c-9ba7e7bff243&width=247'/></div>";
+            echo "<div class='pageheader'><img src='http://$webaddress/displayImage.php?id=444ebe28-701f-44cc-be1c-9ba7e7bff243&width=247'/></div>";
                 
             echo "<div class='bodycontent'>";
          

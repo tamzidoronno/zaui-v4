@@ -503,8 +503,8 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     }
                 }
                 for(GetShopDevice torev : toRemove) {
-                    devices.remove(torev.id);
-                    deleteObject(torev);
+//                    devices.remove(torev.id);
+//                    deleteObject(torev);
                 }
 
             } catch (Exception ex) {
@@ -676,7 +676,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     
     private void addDeviceIfNotExists(GetShopDevice gsdevice) {
         boolean found = false;
-        for(GetShopDevice dev : devices.values()) {
+        String deviceid  = gsdevice.id;
+        if(gsdevice.serverSource != null && !gsdevice.serverSource.isEmpty() && !gsdevice.serverSource.equals("default")) {
+            deviceid = gsdevice.zwaveid + "_" + gsdevice.serverSource;
+        }
+        if(devices.containsKey(deviceid)) {
+            GetShopDevice dev = devices.get(deviceid);
             if(dev.zwaveid.equals(gsdevice.zwaveid)) {
                 dev.type = gsdevice.type;
                 dev.name = gsdevice.name;
@@ -697,7 +702,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
         saveObject(gsdevice);
         if(!found) {
-            devices.put(gsdevice.id, gsdevice);
+            devices.put(deviceid, gsdevice);
         }
         
     }

@@ -21,6 +21,7 @@ function getEvents($factory) {
         $startDate = $event->days[0]->startDate;
         $date = getdate(strtotime($startDate));
         $key = $date["month"] . "_" . $date["year"];
+        
         if (!isset($retArray[$key])) {
             $retArray[$key] = array();
         }
@@ -78,7 +79,8 @@ $events = getEvents($factory);
         width: 1049px; 
         height: 1520px; 
         box-sizing: border-box; 
-        font-size: 14px; 
+        font-size: 14px;
+        padding-right: 50px;
     }
     
     .row:last-child {

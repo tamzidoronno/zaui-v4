@@ -71,7 +71,7 @@ $events = getEvents($factory);
         padding: 4px;
     }
     .col1 { width: 300px; }
-    .col2 { width: 400px; }
+    .col2 { width: 260px; }
     .col3 { width: 227px; }
     .col4 { width: 100px; text-align: center;}
 
@@ -81,6 +81,7 @@ $events = getEvents($factory);
         box-sizing: border-box; 
         font-size: 14px;
         padding-right: 50px;
+        padding-left: 50px;
     }
     
     .row:last-child {

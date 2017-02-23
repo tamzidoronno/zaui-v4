@@ -2331,10 +2331,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         });
         
-        long seed = System.nanoTime();
-        Collections.shuffle(items, new Random(seed));
-        Collections.shuffle(items, new Random(seed));
-        
+        if(!getConfigurationSecure().avoidRandomRoomAssigning) {
+            long seed = System.nanoTime();
+            Collections.shuffle(items, new Random(seed));
+            Collections.shuffle(items, new Random(seed));
+        }
+            
         if (items.isEmpty()) {
             logPrint("No items available?");
         } else {

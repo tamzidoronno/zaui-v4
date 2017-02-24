@@ -189,5 +189,8 @@ if(!$booking->confirmed) {
         $('.tab[area="'+area+'"]').click();
     }
     
+    PubSub.subscribe("backendviewloaded", function() {
+        app.PmsManagement.reloadtab();
+    });
     
 </script>

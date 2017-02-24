@@ -7,11 +7,18 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
     private $selectedUser;
     
     public function getDescription() {
-        
+
     }
     
     public function saveFileUploaded() {
         $content = strstr($_POST['fileBase64'], "base64,");
+        $rawContent = $_POST['fileBase64'];
+        $contentType = substr($rawContent, 0, strpos($rawContent, ";base64,"));
+        if($contentType) {
+            $contentType = str_replace("data:", "", $contentType);
+            $contentType = trim($contentType);
+        }
+
         $content = str_replace("base64,", "", $content);
         $content = base64_decode($content);
         $imgId = \FileUpload::storeFile($content);
@@ -20,6 +27,7 @@ class Users extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imple
         $entry->fileName = $_POST['fileName'];
         $entry->fileId = $imgId;
         $entry->createdDate = $this->convertToJavaDate(time());
+        $entry->contentType = $contentType;
         
         $user = $this->getApi()->getUserManager()->getUserById($_POST['value']);
         $user->files[] = $entry;

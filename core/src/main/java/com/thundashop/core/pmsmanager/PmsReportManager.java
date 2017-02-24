@@ -144,7 +144,8 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         
         total.avgPrice = (double)Math.round(total.totalRented / total.numberOfRooms);
 
-        total.revParDaily = (double)Math.round(total.avgPrice * (total.avgCoverage / 100));
+        total.revParDaily = (double)Math.round(total.totalRented / total.totalNumberOfRooms);
+        total.revParLastPeriode = (double)Math.round(compare.totalPrice / total.totalNumberOfRooms);
         total.revPar = (double)Math.round(total.revParDaily * total.numberOfDays);
         
         total.squareMeters = totalEntry.squareMetres;

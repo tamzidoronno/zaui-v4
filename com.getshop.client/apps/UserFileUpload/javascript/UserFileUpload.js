@@ -3,8 +3,13 @@ app.UserFileUpload = {
         $(document).on('click', '.gss_user_save_file', app.UserFileUpload.uploadBoxClick);
         $(document).on('input', '.gss_user_save_description', app.UserFileUpload.saveDescription);
         $(document).on('click', '.userfiledeletebutton', app.UserFileUpload.deleteUploadedFile);
+        $(document).on('click', '.downloadfilebutton', app.UserFileUpload.downloadfilebutton);
         
     },
+    downloadfilebutton : function() {
+        window.open('/scripts/downloadUserFile.php?id='+$(this).attr('fileId')+"&userId=" + $(this).attr('userId'),'_blank');
+    },
+    
     deleteUploadedFile: function(){
         var button = $(this);
         var fileid = button.attr('fileId');
@@ -73,7 +78,9 @@ app.UserFileUpload = {
             };
 
             var userid = $('[gs_model_attr="userid"]').attr('value');
-            
+            if($('#selecteduseridoverride').length > 0) {
+                userid = $('#selecteduseridoverride').val();
+            }
             var field = $('<div/>');
             field.attr('gss_view', "gs_user_workarea");
             field.attr('gss_fragment', "user");

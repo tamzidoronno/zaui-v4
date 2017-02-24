@@ -21,4 +21,5 @@ public class PmsMobileReport {
     public Integer totalNumberOfRooms = 0;
     double squareMetresPrice = 0.0;
     double squareMetresPriceDaily;
+    double revParLastPeriode = 0.0;
 }

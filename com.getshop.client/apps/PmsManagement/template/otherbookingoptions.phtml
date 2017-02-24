@@ -11,7 +11,11 @@ $pricetypes[6] = "Per seconds";
 $pricetypes[7] = "Progressive";
 $pricetypes[8] = "Interval pricing";
 
+$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+
+$isActiveFileUpload = $this->getApi()->getStoreApplicationPool()->isActivated("ed0c5af9-32a9-426a-9908-c7ac67e7b2f4");
 ?>
+<input type='txt' value='<?php echo $user->id; ?>' id='selecteduseridoverride' style='display:none;'>
 <br><br>
 <div gstype='form' method='saveOtherBookingOptions'>
     <input type='hidden' gsname='bookingid' value='<?php echo $booking->id; ?>'>
@@ -24,7 +28,21 @@ $pricetypes[8] = "Interval pricing";
         }
         ?>
     </select>
-    <div style='text-align:right;'>
+    <div style="clear:both"></div>
+<?php
+
+if($isActiveFileUpload) {
+    ?>
+    Files connected to the user, <span class='gss_user_save_file' style='cursor:pointer; color:blue;' >upload new file</span><br>
+    <?php
+    foreach($user->files as $file) {
+        echo "<span style='cursor:pointer; color:blue;' onclick='window.open(\"/scripts/downloadUserFile.php?userId=".$user->id. "&id=".$file->fileId."\", \"_blank\")'>". $file->fileName . "</span><br>";
+    }
+    ?>
+    <div style="clear:both"></div>
+<?php } ?>
+    
+    <div style='text-align:right; margin-top: 30px;'>
         <input type='button' gstype='submitToInfoBox' value='Save other options'>
     </div>
 </div>

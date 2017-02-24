@@ -21,6 +21,7 @@ function getEvents($factory) {
         $startDate = $event->days[0]->startDate;
         $date = getdate(strtotime($startDate));
         $key = $date["month"] . "_" . $date["year"];
+        
         if (!isset($retArray[$key])) {
             $retArray[$key] = array();
         }
@@ -70,7 +71,7 @@ $events = getEvents($factory);
         padding: 4px;
     }
     .col1 { width: 300px; }
-    .col2 { width: 400px; }
+    .col2 { width: 260px; }
     .col3 { width: 227px; }
     .col4 { width: 100px; text-align: center;}
 
@@ -78,7 +79,9 @@ $events = getEvents($factory);
         width: 1049px; 
         height: 1520px; 
         box-sizing: border-box; 
-        font-size: 14px; 
+        font-size: 14px;
+        padding-right: 50px;
+        padding-left: 50px;
     }
     
     .row:last-child {
@@ -135,12 +138,15 @@ $events = getEvents($factory);
 <?
 $numberOfRowsEachPage = 33;
 $i = 0;
+$webaddress = $_SERVER['SERVER_NAME'];
+$url = "http:///scripts/promeister/downloadCoursesPdf.php";
+
 foreach ($events as $monthName => $month) {
     $useMonthName = $monthName;
     foreach ($month as $event) {
         if ($i == 0) {
             echo "<div class='page'>";
-            echo "<div class='pageheader'><img src='http://promeisterse30.3.0.local.getshop.com/displayImage.php?id=444ebe28-701f-44cc-be1c-9ba7e7bff243&width=247'/></div>";
+            echo "<div class='pageheader'><img src='http://$webaddress/displayImage.php?id=444ebe28-701f-44cc-be1c-9ba7e7bff243&width=247'/></div>";
                 
             echo "<div class='bodycontent'>";
          

@@ -675,6 +675,22 @@ app.PmsManagement = {
             });
         }
     },
+    
+    reloadtab : function() {
+        var id = $('#openedbookingid').val();
+        var area = localStorage.getItem('selectedbookinginfotab');
+        var event = thundashop.Ajax.createEvent('','loadBookingDataArea', $('#openedbookingid'), {
+            "bookingid" : id,
+            "area" : area
+        });
+
+        $('.tabarea.'+area).html('<div style="text-align:center; padding-top: 40px; padding-bottom: 40px;font-size: 50px;"><i class="fa fa-spin fa-spinner"></i></div>');
+
+        thundashop.Ajax.postWithCallBack(event, function(result) {
+            $('.tabarea.'+area).html(result);
+        });
+    },
+    
     sendpaymentlink : function() {
         $(this).closest('td').find('.sendpaymentlinkbox').toggle();
     },

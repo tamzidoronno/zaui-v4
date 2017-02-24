@@ -127,6 +127,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             }
         }
         
+        if (events.isEmpty()) {
+            return;
+        }
+        
         cleanBookingItemsThatDoesNotExsist();
 //        createScheduler("event_questback_checked", "0 * * * *", CheckSendQuestBackScheduler.class);
         stopScheduler("event_booking_scheduler");

@@ -148,8 +148,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .collect(Collectors.toList());
         
         for (Booking booking : bookingsWithType) {
-            booking.bookingItemTypeId = newTypeId;
-            saveObject(booking);
+            if (booking.bookingItemId != null && booking.bookingItemId.equals(itemId)) {
+                booking.bookingItemTypeId = newTypeId;
+                saveObject(booking);
+            }
         }
         
         item.bookingItemTypeId = newTypeId;

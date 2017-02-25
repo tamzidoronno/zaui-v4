@@ -1574,7 +1574,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter) {
         PmsIntervalResult res = new PmsIntervalResult();
+        List<String> types = new ArrayList();
+        if(filter.selectedDefinedFilter != null && !filter.selectedDefinedFilter.isEmpty()) {
+            PmsBookingFilter bookingfilter = getPmsBookingFilter(filter.selectedDefinedFilter);
+            types = bookingfilter.typeFilter;
+        }
+            
         for (BookingItemType type : bookingEngine.getBookingItemTypes()) {
+            if(!types.isEmpty() && !types.contains(type.id)) {
+                continue;
+            }
             BookingTimeLineFlatten line = bookingEngine.getTimelines(type.id, filter.start, filter.end);
             res.typeTimeLines.put(type.id, line.getTimelines(filter.interval-21600, 21600));
         }
@@ -1582,6 +1591,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<BookingItem> items = bookingEngine.getBookingItems();
 
         for (BookingItem item : items) {
+            if(!types.isEmpty() && !types.contains(item.bookingItemTypeId)) {
+                continue;
+            }
             BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
             List<BookingTimeLine> timelines = line.getTimelines(filter.interval-21600, 21600);
             LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap();

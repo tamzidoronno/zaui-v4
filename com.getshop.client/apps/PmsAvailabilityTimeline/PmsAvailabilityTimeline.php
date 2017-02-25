@@ -256,6 +256,14 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         return 60*60*24;
     }
 
+    public function getSelectedDefinedFilter() {
+        $data = $this->getData();
+        if(isset($data['filtertouse'])) {
+            return $data['filtertouse'];
+        }
+        return "";
+    }
+    
     public function showTimeLine() {
         $_POST['data']['start'] = strtotime($_POST['data']['start']);
         $_POST['data']['end'] = strtotime($_POST['data']['end']);

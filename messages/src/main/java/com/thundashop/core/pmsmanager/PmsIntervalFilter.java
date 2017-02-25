@@ -8,4 +8,5 @@ public class PmsIntervalFilter implements Serializable {
     Date end;
     Integer interval;
     boolean compactMode = false;
+    String selectedDefinedFilter = "";
 }

@@ -3,9 +3,11 @@ getshop.pmsreportController = function($scope, $state) {
     $scope.loadOverviews = function() {
         
         var loading = getshopclient.PmsReportManager.getReport(getMultilevelName(), $scope.start, $scope.end, $scope.comparePeriode);
+        $scope.showLoading = true;
         loading.done(function(res) {
             $scope.pmsreportlist = res;
             $scope.$apply();
+            $scope.showLoading = false;
         });
     }
     

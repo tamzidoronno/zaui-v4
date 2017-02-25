@@ -1214,30 +1214,41 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsInvoiceManager()->validateAllInvoiceToDates($this->getSelectedName());
     }
     
+    public function deleteDefinedFilter() {
+        $this->getApi()->getPmsManager()->deletePmsFilter($this->getSelectedName(), $_POST['data']['name']);
+    }
+    
     public function setQuickFilter() {
         $this->emptyfilter();
-        $filter = $this->getSelectedFilter();
-        $filter->filterType = $_POST['data']['type'];
-        $filter->startDate = $this->convertToJavaDate(time());
-        $filter->endDate = $this->convertToJavaDate(time());
-        
-        if($filter->filterType == "stats" || $filter->filterType == "orderstats") {
-            $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime($filter->startDate))));
-            $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime($filter->endDate))));
-        }
-        if($filter->filterType == "orderstats") {
-            $this->setDefaultIncomeFilter();
-        }
-        
-        if($_POST['data']['type'] == "stats") {
-            $savedFilter = $this->getApi()->getPmsManager()->getPmsBookingFilter($this->getSelectedName(), "coverage");
-            if($savedFilter) {
-                $savedFilter->startDate = $filter->startDate;
-                $savedFilter->endDate = $filter->endDate;
-                $filter = $savedFilter;
+        if(stristr($_POST['data']['type'], "defined_")) {
+            $filterName = str_replace("defined_","", $_POST['data']['type']);
+            $filter = $this->getApi()->getPmsManager()->getPmsBookingFilter($this->getSelectedName(), $filterName);
+            $filter->startDate = $this->getApi()->getPmsManager()->convertTextDate($this->getSelectedName(), $filter->startDateAsText);
+            $filter->endDate = $this->getApi()->getPmsManager()->convertTextDate($this->getSelectedName(), $filter->endDateAsText);
+        } else {
+            $filter = $this->getSelectedFilter();
+            $filter->filterType = $_POST['data']['type'];
+            $filter->startDate = $this->convertToJavaDate(time());
+            $filter->endDate = $this->convertToJavaDate(time());
+
+            if($filter->filterType == "stats" || $filter->filterType == "orderstats") {
+                $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime($filter->startDate))));
+                $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime($filter->endDate))));
+            }
+            if($filter->filterType == "orderstats") {
+                $this->setDefaultIncomeFilter();
+            }
+
+            if($_POST['data']['type'] == "stats") {
+                $savedFilter = $this->getApi()->getPmsManager()->getPmsBookingFilter($this->getSelectedName(), "coverage");
+                if($savedFilter) {
+                    $savedFilter->startDate = $filter->startDate;
+                    $savedFilter->endDate = $filter->endDate;
+                    $filter = $savedFilter;
+                }
             }
         }
-
+        
         $this->setCurrentFilter($filter);
     }
     
@@ -2840,6 +2851,49 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "<input type='txt' gsname='name' value='". $item->product->name . "' style='width:550px;' class='itemname'> ";
         echo "<input type='txt' gsname='price' style='width: 60px;' class='cartprice' value='". $item->product->price . "' style='width:120px;'>";
         echo "</div>";
+    }
+
+    public function createSpecialFilter() {
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->filterName = $_POST['data']['name'];
+        $filter->filterType = $_POST['data']['searchtype'];
+        $filter->startDateAsText = $_POST['data']['startDate'];
+        $filter->endDateAsText = $_POST['data']['endDate'];
+        
+        foreach($_POST['data'] as $key => $val) {
+            if($val !== "true") {
+                continue;
+            }
+            if(stristr($key, "typetoinclude_")) {
+                $item = str_replace("typetoinclude_", "", $key);
+                $filter->typeFilter[] = $item;
+            }
+        }
+        
+        $this->getApi()->getPmsManager()->saveFilter($this->getSelectedName(), $filter->filterName, $filter);
+    }
+    
+    public function getSearchTypes() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $searchtypes = array();
+        $searchtypes['registered'] = "Registered";
+        $searchtypes['active'] = "Active";
+        $searchtypes['uncofirmed'] = "Unconfirmed";
+        $searchtypes['checkin'] = "Checking in";
+        $searchtypes['checkout'] = "Checking out";
+        $searchtypes['inhouse'] = "Inhouse";
+        $searchtypes['deleted'] = "Deleted";
+        $searchtypes['stats'] = "Coverage";
+        $searchtypes['summary'] = "Summary";
+        if($config->requirePayments) {
+            $searchtypes['orderstats'] = "Order statistics";
+            $searchtypes['invoicecustomers'] = "Invoice customers";
+            $searchtypes['unbilled'] = "Unbilled cust.";
+            $searchtypes['unpaid'] = "Unpaid";
+            $searchtypes['afterstayorder'] = "Order created after stay";
+            $searchtypes['unsettled'] = "Bookings with unsettled amounts";
+        }
+        return $searchtypes;
     }
 
 }

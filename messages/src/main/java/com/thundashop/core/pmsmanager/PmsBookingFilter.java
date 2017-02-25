@@ -20,6 +20,11 @@ public class PmsBookingFilter extends DataCommon {
     public Integer state;
     public Date startDate;
     public Date endDate;
+    
+    public String startDateAsText;
+    public String endDateAsText;
+    
+    
     public String filterType;
     public String searchWord;
     public Boolean needToBeConfirmed = false;

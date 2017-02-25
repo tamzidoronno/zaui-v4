@@ -6,24 +6,7 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedN
 $channels = $this->getChannelMatrix();
 
 
-$searchtypes = array();
-$searchtypes['registered'] = "Registered";
-$searchtypes['active'] = "Active";
-$searchtypes['uncofirmed'] = "Unconfirmed";
-$searchtypes['checkin'] = "Checking in";
-$searchtypes['checkout'] = "Checking out";
-$searchtypes['inhouse'] = "Inhouse";
-$searchtypes['deleted'] = "Deleted";
-$searchtypes['stats'] = "Coverage";
-$searchtypes['summary'] = "Summary";
-if($config->requirePayments) {
-    $searchtypes['orderstats'] = "Order statistics";
-    $searchtypes['invoicecustomers'] = "Invoice customers";
-    $searchtypes['unbilled'] = "Unbilled cust.";
-    $searchtypes['unpaid'] = "Unpaid";
-    $searchtypes['afterstayorder'] = "Order created after stay";
-    $searchtypes['unsettled'] = "Bookings with unsettled amounts";
-}
+$searchtypes = $this->getSearchTypes();
 ?>
 
 
@@ -78,7 +61,11 @@ if($config->requirePayments) {
         <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="checkout" gsname="type">Checking out</span> - 
         <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="active" gsname="type">Active today</span> - 
         <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="stats" gsname="type">Coverage</span> - 
-        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="orderstats" gsname="type">Income report</span>
+        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="orderstats" gsname="type">Income report</span> - 
+        <span style="color:blue; cursor:pointer;" onclick="$('.morefilteroptions').slideDown();">more filters</span>
+        <?php
+            $this->includefile("morefilteroptions");
+        ?>
         
     </div>
    <br>

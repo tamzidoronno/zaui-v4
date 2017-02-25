@@ -1342,6 +1342,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
+        convertTextDates(filter);
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
         PmsPricing prices = getDefaultPriceObject();
@@ -5153,5 +5154,79 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBookingFilter getPmsBookingFilter(String name) {
         return savedFilters.get(name);
+    }
+
+    @Override
+    public List<PmsBookingFilter> getAllPmsFilters() {
+        return new ArrayList(savedFilters.values());
+    }
+
+    @Override
+    public void deletePmsFilter(String name) {
+        PmsBookingFilter object = savedFilters.get(name);
+        if(object != null) {
+            savedFilters.remove(name);
+            deleteObject(object);
+        }
+    }
+
+    private void convertTextDates(PmsBookingFilter filter) {
+        System.out.println("This is converting");
+        if(filter.startDate == null && filter.startDateAsText != null) {
+            filter.startDate = convertTextDate(filter.startDateAsText);
+        }
+        if(filter.endDate == null && filter.endDateAsText != null) {
+            filter.endDate = convertTextDate(filter.endDateAsText);
+        }
+    }
+
+    
+    @Override
+    public Date convertTextDate(String text) {
+        Calendar now = Calendar.getInstance();
+        switch(text) {
+            case "startofyear":
+                now.set(Calendar.DAY_OF_YEAR, 1);
+                break;
+            case "startofmonth":
+                now.set(Calendar.DAY_OF_MONTH, 1);
+                break;
+            case "startofweek":
+                now.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                now.add(Calendar.DAY_OF_YEAR, -7);
+                break;
+            case "endofyear":
+                now.set(Calendar.MONTH, Calendar.DECEMBER); // 11 = december
+                now.set(Calendar.DAY_OF_MONTH, 31); // new years eve                
+                break;
+            case "endofmonth":
+                now.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH));
+                break;
+            case "endofweek":
+                now.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+                break;
+        }
+        switch(text) {
+            case "startofyear":
+            case "startofmonth":
+            case "startofday":
+            case "startofweek":
+                now.set(Calendar.HOUR_OF_DAY, 00);
+                now.set(Calendar.MINUTE, 00);
+                now.set(Calendar.SECOND, 00);
+                now.set(Calendar.MILLISECOND, 00);
+                break;
+            case "endofyear":
+            case "endofmonth":
+            case "endofday":
+            case "endofweek":
+                now.set(Calendar.HOUR_OF_DAY, 23);
+                now.set(Calendar.MINUTE, 59);
+                now.set(Calendar.SECOND, 59);
+                now.set(Calendar.MILLISECOND, 59);
+                break;
+        }
+        
+        return now.getTime();
     }
 }

@@ -14,7 +14,7 @@ $periodeTypes['daypaid'] = "Display as day paid";
 $pricetypes = array();
 $pricetypes['inctaxes'] = "Prices inc taxes";
 $pricetypes['extaxes'] = "Prices ex taxes";
-
+$checkedVirtual = $filter->includeVirtual ? "CHECKED" : "";
 ?>
 
 <style>
@@ -65,8 +65,8 @@ $pricetypes['extaxes'] = "Prices ex taxes";
     </select>
     <div>
     <label>
-        <input type="checkbox" gsname='includevirtual'> Include virtual orders
-        <input type="number" gsname='shift' value='0' style='width: 40px;'> Shift with hours
+        <input type="checkbox" gsname='includevirtual' <?php echo $checkedVirtual; ?>> Include virtual orders
+        <input type="number" gsname='shift' style='width: 40px;' value='<?php echo $filter->shiftHours; ?>'> Shift with hours
     </label>
     </div>
 </div>

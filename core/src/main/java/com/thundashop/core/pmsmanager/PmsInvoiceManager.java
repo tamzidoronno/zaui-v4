@@ -39,6 +39,11 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsInvoiceManager {
+    
+    private boolean avoidChangeInvoicedTo;
+    private boolean avoidChangingInvoicedFrom;
+    private List<String> roomIdsInCart = null;
+    private PmsOrderStatsFilter latestInvoiceStatsFilter = null;
 
     private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
         double res = 0.0;
@@ -112,6 +117,23 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return lostRooms;
     }
 
+    @Override
+    public PmsOrderStatsFilter getLatestInvoiceStatsFilter() {
+        return latestInvoiceStatsFilter;
+    }
+
+    private void saveLatestPmsOrderStatsFilter(PmsOrderStatsFilter filter) {
+        if(latestInvoiceStatsFilter != null) {
+            filter.id = latestInvoiceStatsFilter.id;
+        }
+        
+        Gson test = new Gson();
+        String copy = test.toJson(filter);
+        latestInvoiceStatsFilter = test.fromJson(copy, PmsOrderStatsFilter.class);
+        saveObject(latestInvoiceStatsFilter);
+        
+    }
+
     
 
     class BookingOrderSummary {
@@ -119,10 +141,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Double price = 0.0;
         String productId = "";
     }
-
-    private boolean avoidChangeInvoicedTo;
-    private boolean avoidChangingInvoicedFrom;
-    private List<String> roomIdsInCart = null;
 
     @Override
     public void markOrderAsPaid(String bookingId, String orderId) {
@@ -246,6 +264,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(filter == null) {
             return new PmsOrderStatistics(null, userManager.getAllUsersMap());
         }
+        
+        saveLatestPmsOrderStatsFilter(filter);
+        
         List<Order> orders = orderManager.getOrders(null, null, null);
         if(filter.includeVirtual) {
             pmsManager.createAllVirtualOrders();
@@ -266,7 +287,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(filter.methods.isEmpty()) {
                 ordersToUse.add(order);
             }
-            for(PmsOrderStatsFilter.PaymentMethods pmethod : filter.methods) {
+            for(PmsPaymentMethods pmethod : filter.methods) {
                 boolean avoid = false;
                 String filterMethod = pmethod.paymentMethod;
                 Integer filterStatus = pmethod.paymentStatus;
@@ -589,6 +610,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(dataCommon instanceof PmsUserDiscount) {
                 PmsUserDiscount res = (PmsUserDiscount)dataCommon;
                 discounts.put(res.userId, res);
+            }
+            if(dataCommon instanceof PmsOrderStatsFilter) {
+                PmsOrderStatsFilter res = (PmsOrderStatsFilter)dataCommon;
+                latestInvoiceStatsFilter = res;
             }
         }
         createScheduler("checkinvoicedtodate", "1 04 * * *", DailyInvoiceChecker.class);

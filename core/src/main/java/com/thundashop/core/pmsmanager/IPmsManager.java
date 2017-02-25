@@ -55,6 +55,12 @@ public interface IPmsManager {
     public void reportMissingInventory(List<SimpleInventory> inventories, String itemId, String roomId);
     
     @Administrator
+    public void saveFilter(String name, PmsBookingFilter filter);
+    
+    @Administrator
+    public PmsBookingFilter getPmsBookingFilter(String name);
+    
+    @Administrator
     public void removeAddonFromRoomById(String addonId, String roomId);
     
     @Administrator

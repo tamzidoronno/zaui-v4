@@ -99,6 +99,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String prefixToSend;
     private List<Order> tmpOrderList;
     
+    private HashMap<String, PmsBookingFilter> savedFilters = new HashMap();
+    
     @Autowired
     BookingEngine bookingEngine;
 
@@ -168,6 +170,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsCareTaker) {
                 careTaker.put(dataCommon.id, (PmsCareTaker) dataCommon);
+            }
+            if (dataCommon instanceof PmsBookingFilter) {
+                savedFilters.put(((PmsBookingFilter) dataCommon).filterName, (PmsBookingFilter)dataCommon);
             }
             if (dataCommon instanceof PmsConfiguration) {
                 checkConvertLockConfigs((PmsConfiguration) dataCommon);
@@ -5132,5 +5137,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         
         return result;
+    }
+
+    @Override
+    public void saveFilter(String name, PmsBookingFilter filter) {
+        if(savedFilters.get(name) != null) {
+            PmsBookingFilter tmpFilter = savedFilters.get(name);
+            filter.id = tmpFilter.id;
+        }
+        filter.filterName = name;
+        saveObject(filter);
+        savedFilters.put(name, filter);
+    }
+
+    @Override
+    public PmsBookingFilter getPmsBookingFilter(String name) {
+        return savedFilters.get(name);
     }
 }

@@ -36,6 +36,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function saveCoverageSettings() {
+        $filter = $this->getSelectedFilter();
+        $this->getApi()->getPmsManager()->saveFilter($this->getSelectedName(), "coverage", $filter);
+    }
+    
     public function loadStatsForDay() {
         $this->includefile("orderstatsday");
     }
@@ -1224,11 +1229,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->setDefaultIncomeFilter();
         }
         
+        if($_POST['data']['type'] == "stats") {
+            $savedFilter = $this->getApi()->getPmsManager()->getPmsBookingFilter($this->getSelectedName(), "coverage");
+            if($savedFilter) {
+                $savedFilter->startDate = $filter->startDate;
+                $savedFilter->endDate = $filter->endDate;
+                $filter = $savedFilter;
+            }
+        }
+
         $this->setCurrentFilter($filter);
     }
     
     public function loadCoverage() {
-        echo "TEST";
     }
     
     public function exportBookingStats() {
@@ -2345,9 +2358,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function addPaymentTypeToFilter() {
         $filter = $this->getOrderStatsFilter();
-        $method = array();
-        $method['paymentMethod'] = $_POST['data']['paymentmethod'];
-        $method['paymentStatus'] = $_POST['data']['paymentstatus'];
+        $method = new \core_pmsmanager_PmsPaymentMethods();
+        $method->paymentMethod = $_POST['data']['paymentmethod'];
+        $method->paymentStatus = $_POST['data']['paymentstatus'];
         $filter->methods[] = $method;
         $_SESSION['pmsorderstatsfilter'] = serialize($filter);
         $this->includefile("orderstatsresult");
@@ -2357,7 +2370,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter = $this->getOrderStatsFilter();
         $newMethods = array();
         foreach($filter->methods as $method) {
-            if($method['paymentMethod']."-".$method['paymentStatus'] != $_POST['data']['toRemove']) {
+            if($method->{'paymentMethod'}."-".$method->{'paymentStatus'} != $_POST['data']['toRemove']) {
                 $newMethods[] = $method;
             }
         }
@@ -2753,27 +2766,35 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach ($paymentMethods as $key => $method) {
             $id = $method->id;
             if($id == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
-                //Ignore invoices
-                $method = array();
-                $method['paymentMethod'] = $id;
-                $method['paymentStatus'] = 0;
+                //Invoices needs to include everything
+                $method = new \core_pmsmanager_PmsPaymentMethods();
+                $method->paymentMethod = $id;
+                $method->paymentStatus = 0;
                 $filter->methods[] = $method;
                 continue;
             }
-            $method = array();
-            $method['paymentMethod'] = $id;
-            $method['paymentStatus'] = 7;
+            $method = new \core_pmsmanager_PmsPaymentMethods();
+            $method->paymentMethod = $id;
+            $method->paymentStatus = 7;
             $filter->methods[] = $method;
             
-            $method = array();
-            $method['paymentMethod'] = $id;
-            $method['paymentStatus'] = -9;
+            $method = new \core_pmsmanager_PmsPaymentMethods();
+            $method->paymentMethod = $id;
+            $method->paymentStatus = -9;
             $filter->methods[] = $method;
         }
         $filter->priceType = "extaxes";
         $filter->displayType = "dayslept";
         $filter->start = $this->getSelectedFilter()->startDate;
         $filter->end = $this->getSelectedFilter()->endDate;
+        
+        $latest = $this->getApi()->getPmsInvoiceManager()->getLatestInvoiceStatsFilter($this->getSelectedName());
+        if($latest) {
+            $latest->start = $filter->start;
+            $latest->end = $filter->end;
+            $filter = $latest;
+        }
+        
         $_SESSION['pmsorderstatsfilter'] = serialize($filter);
     }
 

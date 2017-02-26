@@ -110,8 +110,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         new ArrayList(pooledDestinations.values()).stream().forEach(pool -> ensureRemoval((PooledDestionation)pool));
-        
-        deleteRoute("&quot;2131&quot; &quot;Wed 02/01/2017&quot;");
     }
     
     private void ensureRemoval(PooledDestionation dest) {
@@ -412,6 +410,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public List<AcculogixExport> getExport(String routeId, boolean currentState) {
+        long time = System.currentTimeMillis();
+        
         Route route = getRouteById(routeId);
         
         List<AcculogixExport> everything = new ArrayList();
@@ -438,6 +438,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             return 0;
         });
         
+        System.out.println("Time used : " + (System.currentTimeMillis()-time));
         return everything;
         
     }
@@ -809,5 +810,35 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         return null;
+    }
+
+    @Override
+    public List<Route> addPickupOrder(String destnationId, PickupOrder order) {
+        Destination dest = getDestination(destnationId);
+        PickupTask task = dest.getPickupTask();
+        
+        if (task == null) {
+            task = new PickupTask();
+            saveObject(task);
+            dest.taskIds.add(task.id);
+            tasks.put(task.id, task);
+            saveObjectInternal(task);
+        }
+        
+        order.source = "tnt";
+        task.completed = false;
+        task.orders.add(order);
+        saveObjectInternal(task);
+        saveObjectInternal(dest);
+        
+        List<Route> retRoutes = new ArrayList();
+        for (Route route : this.routes.values()) {
+            if (route.destinationIds.contains(destnationId)) {
+                finalize(route);
+                retRoutes.add(route);
+            }
+        }
+        
+        return retRoutes;
     }
 }

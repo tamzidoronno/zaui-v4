@@ -109,4 +109,14 @@ public class Destination extends DataCommon {
     DeliveryTask getDeliveryTask() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    public PickupTask getPickupTask() {
+        for (Task task : tasks) {
+            if (task instanceof PickupTask) {
+                return (PickupTask)task;
+            }
+        }
+        
+        return null;
+    }
 }

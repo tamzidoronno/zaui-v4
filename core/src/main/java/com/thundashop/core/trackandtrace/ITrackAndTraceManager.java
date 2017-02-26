@@ -124,4 +124,7 @@ public interface ITrackAndTraceManager {
     
     @Administrator
     public DriverMessage getDriverMessage(String msgId);
+    
+    @Customer
+    public List<Route> addPickupOrder(String destnationId, PickupOrder order);
 }

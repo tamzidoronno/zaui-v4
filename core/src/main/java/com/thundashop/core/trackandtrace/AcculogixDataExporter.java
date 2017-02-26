@@ -78,7 +78,6 @@ public class AcculogixDataExporter {
         exp.RDDriver$ID = route.startInfo.startedByUserId;
         exp.routeId = route.originalId;
         exp.RTRouteStopSeq = dest.seq;
-        exp.taskSource = task.source;
         
         setTaskStatus(exp, route, task, dest);
         
@@ -280,5 +279,6 @@ public class AcculogixDataExporter {
         exp.TaskType = order instanceof DeliveryOrder ? "DELIVERY" : "";
         exp.TaskType = order instanceof PickupOrder ? "PICKUP RETURNS" : exp.TaskType;
         exp.TaskComments = order.comment;
+        exp.taskSource = order.source;
     }
 }

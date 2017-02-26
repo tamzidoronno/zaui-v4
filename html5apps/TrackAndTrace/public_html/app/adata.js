@@ -50,6 +50,20 @@ adata = {
         }
     },
     
+    updateDestination: function(destination, $api) {
+        for (var i in this.routes) {
+            var route = this.routes[i];
+            for (var j in route.destinations) {
+                if (route.destinations[j].id === destination.id) {
+                    debugger;
+                    route.destinations[j] = destination;
+                    console.log("replaced");
+                }
+            }
+        }
+        this.save();
+    },
+    
     updateRoute: function(route, $api) {
         if (!route)
             return;

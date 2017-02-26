@@ -393,6 +393,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     }
     
     if ($stateParams.action && $stateParams.action.state === "keyedReference") {
+        debugger;
         var barcode = datarepository.getDestinationById($stateParams.destinationId).company.id + $stateParams.action.keyReference + "000";
         $scope.barcodeReceived(barcode, true);
     }

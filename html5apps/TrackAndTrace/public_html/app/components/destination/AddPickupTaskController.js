@@ -8,6 +8,7 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.AddPickupTaskController = function($scope, datarepository, $stateParams, $api, $state) {
     $scope.taskType = false;
+    $scope.numbers = "";
     
     $scope.goBack = function() {
         $state.transitionTo("base.destination",  { 
@@ -20,9 +21,36 @@ controllers.AddPickupTaskController = function($scope, datarepository, $statePar
         $scope.taskType = type;
     }
     
+    $scope.stopScanner = function() {
+        if (typeof(cordova) === "undefined") {
+            return;
+        }
+        
+        cordova.exec(function() {}, function() {}, "HoneyWellBarcodeReaderE75", "stop", ["test"])
+    }
+    
+    $scope.barcodeReceived = function(barcode) {
+        var labelNumber = barcode.substr(barcode.length - 3);
+        var orderReference = barcode.substr(barcode.length - 13, 10);
+        
+        $scope.numbers = orderReference;
+    }
+    
+    $scope.startScanner = function() {
+        
+        if (typeof(cordova) === "undefined") {
+            $scope.barcodeReceived('651817721149312100');
+            $scope.i++;
+            return;
+        }
+        
+        $scope.stopScanner();
+        cordova.exec(function(a) { $scope.barcodeReceived(a); }, function(fail) {}, "HoneyWellBarcodeReaderE75", "echo", ["test"])
+    }
+    
     $scope.createTask = function($event, numbers) {
-        if (numbers.length < 13) {
-            alert("Must be atleast 13 digits");
+        if (numbers.length !== 10) {
+            alert("Must be 10 digits");
             return;
         }
         

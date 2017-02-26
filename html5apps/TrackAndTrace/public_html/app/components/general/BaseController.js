@@ -16,9 +16,16 @@ controllers.BaseController = function($scope, $rootScope, datarepository, $api) 
     
     
     $rootScope.$on('refreshRouteEven1', function(msg, data) {
-        if(datarepository.updateRoute(data, $api)) {
-            $rootScope.$broadcast('refreshRoute', data);
+        var loggedOnUserId = $api.getLoggedOnUser().id;
+
+        for (var i in data.userIds) {
+            if (data.userIds[i] === loggedOnUserId) {
+                datarepository.updateRoute(data, $api);
+                $rootScope.$broadcast('refreshRoute', data);
+            }
         }
+        
+        
     });
     
     $rootScope.$on('messageReceived', function(msg, data) {

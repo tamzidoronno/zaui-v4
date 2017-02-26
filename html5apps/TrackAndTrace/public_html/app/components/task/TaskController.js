@@ -372,7 +372,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         if (typeof(cordova) === "undefined") {
             return;
         }
-        7211493121
+        
         cordova.exec(function() {}, function() {}, "HoneyWellBarcodeReaderE75", "stop", ["test"])
     }
     
@@ -393,7 +393,6 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     }
     
     if ($stateParams.action && $stateParams.action.state === "keyedReference") {
-        debugger;
         var barcode = datarepository.getDestinationById($stateParams.destinationId).company.id + $stateParams.action.keyReference + "000";
         $scope.barcodeReceived(barcode, true);
     }

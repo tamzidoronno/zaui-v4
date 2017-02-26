@@ -32,6 +32,9 @@ public interface IAccountingManager {
     public SavedOrderFile getFileByIdResend(String id) throws Exception;
     
     @Administrator
+    public SavedOrderFile transferSingleOrders(String configId, List<Integer> incOrderIds) throws Exception;
+    
+    @Administrator
     public List<String> createCombinedOrderFile(boolean newUsersOnly) throws Exception;
 
     @Administrator

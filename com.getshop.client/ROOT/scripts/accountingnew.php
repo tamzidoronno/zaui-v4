@@ -8,12 +8,25 @@ if(isset($_GET['configid'])) {
     $end = date("M d, Y h:i:s A", strtotime($_GET['end']));
     $config = $factory->getApi()->getAccountingManager()->getAccountingConfig($_GET['configid']);
     $file = $factory->getApi()->getAccountingManager()->downloadOrderFileNewType($config->id, $start, $end);
-}
-if(isset($_GET['id'])) {
+} else if(isset($_GET['id'])) {
     $file = $factory->getApi()->getAccountingManager()->getFileByIdResend($_GET['id']);
     $config = $factory->getApi()->getAccountingManager()->getAccountingConfig($file->configId);
     $start = $file->startDate;
     $end = $file->endDate;
+} else if(isset($_GET['singleids'])) {
+    $ids = $_GET['ids'];
+    if(!trim($ids)) {
+        $ids = array();
+    } else {
+        $ids = explode(",", $ids);
+    }
+    
+    if(!is_array($ids)) {
+        $ids = array();
+    }
+    print_r($ids);
+    $file = $factory->getApi()->getAccountingManager()->transferSingleOrders($_GET['singleids'], $ids);
+    $config = $factory->getApi()->getAccountingManager()->getAccountingConfig($_GET['singleids']);
 }
 
 if(!$file) {
@@ -33,8 +46,11 @@ $date = date("d.m.Y_H_i", time());
 if(!isset($_GET['type'])) {
     $_GET['type'] = "order";
 }
-
-$name = $config->subType . "_".date("d.m.Y", strtotime($start)) . "-" . date("d.m.Y", strtotime($end));
+if(isset($_GET['singleids'])) {
+    $name = $config->subType;
+} else {
+    $name = $config->subType . "_".date("d.m.Y", strtotime($start)) . "-" . date("d.m.Y", strtotime($end));
+}
 
 header("Content-type: text/csv");
 header("Content-Disposition: attachment; filename=$name.csv");

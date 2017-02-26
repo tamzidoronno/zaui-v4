@@ -55,7 +55,6 @@ adata = {
             var route = this.routes[i];
             for (var j in route.destinations) {
                 if (route.destinations[j].id === destination.id) {
-                    debugger;
                     route.destinations[j] = destination;
                     console.log("replaced");
                 }
@@ -81,7 +80,7 @@ adata = {
             }
         }
         
-        if (!found && $api && route.userIds.indexOf($api.getLoggedOnUser().id)) {
+        if (!found && $api) {
             toAdd.push(route);
         }
         

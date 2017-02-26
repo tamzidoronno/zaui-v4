@@ -1235,9 +1235,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime($filter->startDate))));
                 $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime($filter->endDate))));
             }
-            if($filter->filterType == "orderstats") {
-                $this->setDefaultIncomeFilter();
-            }
 
             if($_POST['data']['type'] == "stats") {
                 $savedFilter = $this->getApi()->getPmsManager()->getPmsBookingFilter($this->getSelectedName(), "coverage");
@@ -2134,7 +2131,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->filterType = "registered";
         $filter->startDate = $this->convertToJavaDate(strtotime($start));
-        $filter->endDate = $this->convertToJavaDate(strtotime($end));        
+        $filter->endDate = $this->convertToJavaDate(strtotime($end));
         
         $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
         echo "<br>Bookings registered<br><br>";
@@ -2770,14 +2767,23 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $sortedMatrix;
     }
 
-    public function setDefaultIncomeFilter() {
+    public function setPaymentMethodFilter() {
+        $this->setIncomeFilter($_POST['data']['type']);
+    }
+    
+    public function setIncomeFilter($type) {
         $filter = new \core_pmsmanager_PmsOrderStatsFilter();
         
         $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+//        print_r($paymentMethods);
         foreach ($paymentMethods as $key => $method) {
+            if($type != "all" && $method->appName != $type) {
+                continue;
+            }
+            
             $id = $method->id;
-            if($id == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
-                //Invoices needs to include everything
+            if($id == "70ace3f0-3981-11e3-aa6e-0800200c9a66" || $id == "cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba") {
+                //Invoices and samlefaktura needs to include everything
                 $method = new \core_pmsmanager_PmsPaymentMethods();
                 $method->paymentMethod = $id;
                 $method->paymentStatus = 0;
@@ -2803,6 +2809,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if($latest) {
             $latest->start = $filter->start;
             $latest->end = $filter->end;
+            $latest->methods = $filter->methods;
             $filter = $latest;
         }
         

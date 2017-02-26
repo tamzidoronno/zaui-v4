@@ -69,6 +69,14 @@ $checkedVirtual = $filter->includeVirtual ? "CHECKED" : "";
         <input type="number" gsname='shift' style='width: 40px;' value='<?php echo $filter->shiftHours; ?>'> Shift with hours
     </label>
     </div>
+    
+    <?php
+    $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+    foreach ($paymentMethods as $key => $method) {
+        echo "<span style='font-size: 12px;color:blue;cursor:pointer;' gstype='clicksubmit' method='setPaymentMethodFilter' gsname='type' gsvalue='".$method->appName."'>" . $method->appName . "</span> - ";
+    }
+    echo "<span style='font-size: 12px;color:blue;cursor:pointer;' gstype='clicksubmit' method='setPaymentMethodFilter' gsname='type' gsvalue='all'>All methods</span> ";
+    ?>
 </div>
 
 <div class='orderstatsres'>

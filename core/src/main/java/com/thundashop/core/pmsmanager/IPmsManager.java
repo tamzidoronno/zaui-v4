@@ -55,6 +55,18 @@ public interface IPmsManager {
     public void reportMissingInventory(List<SimpleInventory> inventories, String itemId, String roomId);
     
     @Administrator
+    public void saveFilter(String name, PmsBookingFilter filter);
+    
+    @Administrator
+    public List<PmsBookingFilter> getAllPmsFilters();
+    
+    @Administrator
+    public void deletePmsFilter(String name);
+    
+    @Administrator
+    public PmsBookingFilter getPmsBookingFilter(String name);
+    
+    @Administrator
     public void removeAddonFromRoomById(String addonId, String roomId);
     
     @Administrator
@@ -181,6 +193,8 @@ public interface IPmsManager {
     
     @Administrator
     public PmsStatistics getStatistics(PmsBookingFilter filter);
+    
+    public Date convertTextDate(String text);
     
     @Administrator
     public List<PmsBookingAddonItem> getAddonsAvailable();
@@ -317,7 +331,6 @@ public interface IPmsManager {
     public void checkDoorStatusControl() throws Exception;
     public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
     public List<PmsBookingAddonItem> getAddonsWithDiscount(String pmsBookingRoomId);
-    
     
     public PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception;
     

@@ -29,6 +29,9 @@ public interface IPmsInvoiceManager {
     public void sendRecieptOrInvoice(String orderId, String email, String bookingId);
     
     @Administrator
+    public PmsOrderStatsFilter getLatestInvoiceStatsFilter();
+    
+    @Administrator
     public String createOrder(String bookingId, NewOrderFilter filter);
     
     @Administrator

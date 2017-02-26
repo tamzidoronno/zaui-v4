@@ -1,0 +1,53 @@
+<?php
+ /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$savedFilter = $this->getApi()->getPmsManager()->getAllPmsFilters($this->getSelectedName());
+?>
+
+<div class='morefilteroptions' style='width: 500px; border: solid 1px; position:absolute; background-color:#fff; padding: 10px; display:none;'>
+    <?php
+    foreach($savedFilter as $saved) {
+        if($saved->filterName == "coverage") {
+            continue;
+        }
+        
+        echo "<i class='fa fa-trash-o' style='cursor:pointer;' gstype='clicksubmit' "
+        . "gsname='name' method='deleteDefinedFilter' gsvalue='".$saved->filterName."'></i> "
+                . "<span gstype='clicksubmit' method='setQuickFilter' "
+                . "gsvalue='defined_".$saved->filterName."' gsname='type' "
+                . "style='cursor:pointer; color:blue;'>" . $saved->filterName . 
+                "</span><br>";
+    }
+    ?>
+    <div gstype='form' method='createSpecialFilter'>
+        <b>Create a new filter:</b><br>
+        <select gsname='startDate'>
+            <option value='startofyear'>Start of year</option>
+            <option value='startofmonth'>Start of month</option>
+            <option value='startofday'>Start of day</option>
+            <option value='startofweek'>Start of week</option>
+        </select>
+        <select gsname='endDate'>
+            <option value='endofyear'>End of year</option>
+            <option value='endofmonth'>End of month</option>
+            <option value='endofoday'>End of day</option>
+            <option value='endofweek'>End of week</option>
+        </select>
+        <?php
+        $searchtypes = $this->getSearchTypes();
+        echo "<select gsname='searchtype'>";
+        foreach($searchtypes as $type => $name) {
+            echo "<option value='$type'>$name</option>";
+        }
+        echo "</select>";
+        ?>
+        <?php
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        echo "<br>";
+        foreach($types as $type) {
+            echo "<input type='checkbox' gsname='typetoinclude_".$type->id."'>" . $type->name . " ";
+        }
+        ?><br>
+        <input gsname='name' placeholder='Name of filter'>
+        <input type='button' value='Create filter' gstype='submit'>
+    </div>
+</div>

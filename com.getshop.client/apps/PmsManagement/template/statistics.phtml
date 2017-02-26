@@ -93,6 +93,7 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
 </div>
 <div class="pdfPageSizer">
 <b>Sale statistics</b><br>
+    <?php if(!$filter->channel && sizeof($filter->typeFilter) == 0) { ?>
     <div>
         <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
             <tr>
@@ -143,5 +144,6 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
             ?>
         </table>
     </div>
+<?php } ?>
 </div>
 <div style='clear:both;'></div>

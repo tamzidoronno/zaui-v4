@@ -5,13 +5,13 @@
  */
 package com.getshop.scope;
 
-import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.ManagerSubBase;
 
 /**
  *
  * @author ktonder
  */
-public class GetShopSessionBeanNamed extends ManagerBase {
+public class GetShopSessionBeanNamed extends ManagerSubBase {
     
     public GetShopSessionBeanNamed() {
     }

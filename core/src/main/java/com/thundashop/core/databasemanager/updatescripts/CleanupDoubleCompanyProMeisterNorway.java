@@ -42,39 +42,39 @@ public class CleanupDoubleCompanyProMeisterNorway extends UpdateScriptBase imple
     
     @Override
     public void run() {
-        Store store = new Store();
-        store.id = "17f52f76-2775-4165-87b4-279a860ee92c";
-        
-        UserManager userManager = getManager(UserManager.class, store, null);
-        
-        List<Company> companies = userManager.getAllCompanies();
-        
-        Map<String, List<Company>> result = companies.stream()
-            .collect(
-                Collectors.groupingBy(e -> e.vatNumber, Collectors.toList())
-            );
-        
-        for (String companyId : result.keySet()) {
-            if (result.get(companyId).size() > 1) {
-                Company mainCompany = result.get(companyId).get(0);
-                for (Company comp : result.get(companyId)) {
-                    if (comp.equals(mainCompany))
-                        continue;
-                    
-                    List<User> users = userManager.getUsersThatHasCompany(comp.id);
-                    for (User user: users) {
-                        if (user.company != null) {
-                            user.company.clear();
-                            user.company.add(mainCompany.id);
-                            userManager.saveCustomerDirect(user);
-                        }
-                    }
-                    
-                    userManager.deleteCompany(comp.id);
-                }
-                System.out.println("Merge: " + companyId);
-            }
-        }
+//        Store store = new Store();
+//        store.id = "17f52f76-2775-4165-87b4-279a860ee92c";
+//        
+//        UserManager userManager = getManager(UserManager.class, store, null);
+//        
+//        List<Company> companies = userManager.getAllCompanies();
+//        
+//        Map<String, List<Company>> result = companies.stream()
+//            .collect(
+//                Collectors.groupingBy(e -> e.vatNumber, Collectors.toList())
+//            );
+//        
+//        for (String companyId : result.keySet()) {
+//            if (result.get(companyId).size() > 1) {
+//                Company mainCompany = result.get(companyId).get(0);
+//                for (Company comp : result.get(companyId)) {
+//                    if (comp.equals(mainCompany))
+//                        continue;
+//                    
+//                    List<User> users = userManager.getUsersThatHasCompany(comp.id);
+//                    for (User user: users) {
+//                        if (user.company != null) {
+//                            user.company.clear();
+//                            user.company.add(mainCompany.id);
+//                            userManager.saveCustomerDirect(user);
+//                        }
+//                    }
+//                    
+//                    userManager.deleteCompany(comp.id);
+//                }
+//                System.out.println("Merge: " + companyId);
+//            }
+//        }
         // Your magic code goes here :D
     }
 }

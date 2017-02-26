@@ -22,8 +22,6 @@ public class Task extends DataCommon {
     @Transient
     public String podBarcode = "";
     
-    public String source = "acculogix";
-    
     public int getOrderCount() {
         return 0;
     }

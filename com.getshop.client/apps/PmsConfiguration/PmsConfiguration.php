@@ -96,7 +96,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     public function togglePaymentOnChannel() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         foreach($config->channelConfiguration as $key => $chanConfig) {
-            if($key != $_POST['data']['id']) {
+            if($key != $_POST['data']['channel_id']) {
                 continue;
             }
             $config->channelConfiguration->{$key}->ignoreUnpaidForAccess = !$config->channelConfiguration->{$key}->ignoreUnpaidForAccess;
@@ -114,7 +114,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     public function toggleVisibleInBooking() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         foreach($config->channelConfiguration as $key => $chanConfig) {
-            if($key != $_POST['data']['id']) {
+            if($key != $_POST['data']['channel_id']) {
                 continue;
             }
             $config->channelConfiguration->{$key}->displayOnBookingProcess = !$config->channelConfiguration->{$key}->displayOnBookingProcess;
@@ -272,7 +272,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     
     public function saveNotifications() {
         $notifications = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-        echo $notifications->id;
+
         foreach($_POST['data'] as $key => $value) {
             if($this->endsWith($key, "_email")) {
                 $key = substr($key, 0, strlen($key)-6);
@@ -322,9 +322,6 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 continue;
             }
             if(property_exists($notifications, $key)) {
-                if($key == "id") {
-                    echo "yes";
-                }
                 $notifications->{$key} = $value;
             }
         }

@@ -14,14 +14,14 @@ if(sizeof($channels) > 0 && $this->isHotel($notificationSettings)) { ?>
             <i class='fa fa-trash-o removeChannel' style='cursor:pointer' channel='<?php echo $chan; ?>'></i> <?php echo $chan; ?>
             <?php
                 if($channelConfig->{$chan}->ignoreUnpaidForAccess) {
-                    echo ", does not need payment (<span gstype='clicksubmit' method='togglePaymentOnChannel' gsname='id' gsvalue='$chan'>toggle</span>)";
+                    echo ", does not need payment (<span gstype='clicksubmit' method='togglePaymentOnChannel' gsname='channel_id' gsvalue='$chan'>toggle</span>)";
                 } else {
-                    echo ", need payment (<span gstype='clicksubmit' method='togglePaymentOnChannel' gsname='id' gsvalue='$chan'>toggle</span>)";
+                    echo ", need payment (<span gstype='clicksubmit' method='togglePaymentOnChannel' gsname='channel_id' gsvalue='$chan'>toggle</span>)";
                 }
                 if($channelConfig->{$chan}->displayOnBookingProcess) {
-                    echo ", is visible booking process (<span gstype='clicksubmit' method='toggleVisibleInBooking' gsname='id' gsvalue='$chan'>toggle</span>)";
+                    echo ", is visible booking process (<span gstype='clicksubmit' method='toggleVisibleInBooking' gsname='channel_id' gsvalue='$chan'>toggle</span>)";
                 } else {
-                    echo ", is not visible booking process (<span gstype='clicksubmit' method='toggleVisibleInBooking' gsname='id' gsvalue='$chan'>toggle</span>)";
+                    echo ", is not visible booking process (<span gstype='clicksubmit' method='toggleVisibleInBooking' gsname='channel_id' gsvalue='$chan'>toggle</span>)";
                 }
             ?>
         </div>

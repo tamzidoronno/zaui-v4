@@ -8,7 +8,6 @@ package com.thundashop.core.accountingmanager;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ForAccountingSystem;
-import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
@@ -91,9 +90,9 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         Date periodeDate = order.rowCreatedDate;
         if(config.orderFilterPeriode != null && config.orderFilterPeriode.equals("paymentdate") && order.paymentDate != null) {
             periodeDate = order.paymentDate;
+            cal.setTime(periodeDate);
         }
 
-        
         managers.invoiceManager.generateKidOnOrder(order);
         
         List<HashMap<Integer, String>> lines = new ArrayList();
@@ -237,7 +236,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
             for(CartItem item : order.cart.getItems()) {
                 Product prod = managers.productManager.getProduct(item.getProduct().id);
                 if(prod.sku == null || prod.sku.trim().isEmpty()) {
-                    logError("Tax code not set for product: " + prod.name);
+                    logError("Tax code not set for product: " + prod.name + ", regarding order: " + order.incrementOrderId);
                     hasFail = true;
                 }
             }

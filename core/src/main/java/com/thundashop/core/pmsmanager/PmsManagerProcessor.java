@@ -260,7 +260,7 @@ public class PmsManagerProcessor {
             for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                 if (((room.isEnded() || !room.isStarted()) && room.addedToArx) || 
                         (room.deleted && room.addedToArx) || 
-                        (!manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId) && room.addedToArx) || 
+//                        (!manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId) && room.addedToArx) || 
                         (room.blocked && room.addedToArx)) {
                     if(booking.forceGrantAccess) {
                         continue;
@@ -268,7 +268,7 @@ public class PmsManagerProcessor {
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;
-                        manager.doNotification("room_removed_from_arx", booking, room);
+                        manager.doNotification("room_remobved_from_arx", booking, room);
                     }
                 }
             }
@@ -491,7 +491,7 @@ public class PmsManagerProcessor {
                             PmsBookingRooms res = manager.changeDates(room.pmsBookingRoomId, booking.id, start, end);
                             if(res == null && (room.warnedAboutAutoExtend == null || !room.isSameDay(room.warnedAboutAutoExtend, new Date()))) {
                                 text = "Not able to extend stay for room: " + item.bookingItemName;
-                                manager.warnAboutUnableToAutoExtend(item.bookingItemName,"Not able to extend");
+                                manager.warnAboutUnableToAutoExtend(room, item,"Not able to extend");
                                 room.warnedAboutAutoExtend = new Date();
                                 needSaving = true;
                                 

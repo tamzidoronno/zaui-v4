@@ -2393,6 +2393,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
      */
     public function getOrderStatsFilter() {
         $filter = new \core_pmsmanager_PmsOrderStatsFilter();
+        $filter->displayType = "dayslept";
+        $filter->priceType = "extaxes";
+        
         if(isset($_SESSION['pmsorderstatsfilter'])) {
             $filter = unserialize($_SESSION['pmsorderstatsfilter']);
         }

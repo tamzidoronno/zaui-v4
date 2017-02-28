@@ -5165,7 +5165,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBookingFilter getPmsBookingFilter(String name) {
-        return savedFilters.get(name);
+        PmsBookingFilter res = savedFilters.get(name);
+        Gson gson = new Gson();
+        String test = gson.toJson(res);
+        PmsBookingFilter copy = gson.fromJson(test, PmsBookingFilter.class);
+        return copy;
     }
 
     @Override

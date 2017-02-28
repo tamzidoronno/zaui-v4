@@ -96,8 +96,6 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
             result.add(buildTotal(stats, type.name, compare.getTotal()));
         }
         
-        
-        
         return result;
     }
 

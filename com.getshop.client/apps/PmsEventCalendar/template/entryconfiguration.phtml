@@ -7,19 +7,29 @@ if(isset($_GET['time']) && $_GET['time']) {
     $time = $_GET['time'];
     $day = date("Y-m-d", $time);
 }
-
+$_SESSION['timeusedpmsmanager'] = @$_GET['time'];
+$_SESSION['pmseventid'] = $_GET['eventid'];
+ 
 $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_GET['eventid'], $day);
 
-$imgDisplayer = $this->getImageDisplayer($event->id);
-$fileid = $imgDisplayer->getImageId();
-if($fileid && !$event->imageId) {
-    $event->imageId = $fileid;
-    $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
-}
+//$imgDisplayer = $this->getImageDisplayer($event->id);
+//$fileid = $imgDisplayer->getImageId();
+//if($fileid && !$event->imageId) {
+//    $event->imageId = $fileid;
+//    $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
+//}
 
 $starttime = $event->dateRanges[0]->start;
 if(!$event->starttime) {
     $event->starttime = date("H:i", strtotime($starttime));
+}
+$imgSrc = "";
+if($event->imageId) {
+    $imgSrc = "/displayImage.php?id=".$event->imageId . "&width=250";
+}
+$logoSrc = "";
+if($event->logoId) {
+    $logoSrc = "/displayImage.php?id=".$event->logoId . "&width=250";
 }
 ?>
 <?php if(sizeof($event->dateRanges) > 1) { ?>
@@ -60,24 +70,33 @@ if(!$event->starttime) {
             <span class='text'>Starttidspunkt for arrangementet</span>
             <input type='text' gsname='starttime' value='<?php echo $event->starttime; ?>'>
         </label>
-        <div class='imagecontainer'>
-            <span class='text'>Last opp et bilde</span>
-            <div style="margin-top: 10px">
-                <?php
-                    //Upload image here.
-                    $imgDisplayer = $this->getImageDisplayer($_GET['eventid']);
-                    $app = $this->wrapApp("994d7fed-d0cf-4a78-a5ff-4aad16b9bcab", "imageuploaderforeventcalendarpms");
-                    $_SESSION['timeusedpmsmanager'] = @$_GET['time'];
-                    $_SESSION['pmseventid'] = $_GET['eventid'];
-                ?>
-            </div>
-            
-            <?php
-            if($event->imageId) {
-                echo "<img id='imgtodisplay' src='/displayImage.php?id=" . $event->imageId . "' style='max-width: 600px; max-height: 600px;'>";
-            }
-            ?>
-        </div>
+        <label>
+            <span class='text'>Kontaktinformasjon</span>
+            <input type='text' gsname='contact' value='<?php echo $event->contact; ?>'>
+        </label>
+        <!--Picture & logo upload display table-->
+        <table id="entryconfigurationTable">
+            <tr>
+                <td id="entryconfigurationImage">
+                    <form id="uploadImage" action="" method="post" enctype="multipart/form-data">
+                        <input type="file" name="file" id="file"/>
+                        <label for="file" id="labelFile">Last opp bilde</label>
+                        <div id="imagePreview"><img id="previewing" src="<?php echo $imgSrc; ?>" /></div>  
+                    </form>
+                </td>
+                <td id="entryconfigurationLogo">
+                    <form id="uploadLogo" action="" method="post" enctype="multipart/form-data">
+                        <input type="file" name="logo" id="logo"/>
+                        <label for="logo" id="labelLogo">Last opp logo</label>
+                        <div id="logoPreview"><img id="previewingLogo" src="<?php echo $logoSrc; ?>"/></div>
+                    </form>
+                </td>
+            </tr>
+        </table>
+        <div id="message"></div>
+        
+        <br>
+        <br>
         <label>
             <span class='text'><?echo $this->__w("Select a category"); ?></span>
             <select gsname='category'>
@@ -136,16 +155,19 @@ if(!$event->starttime) {
     <div style='text-align: right;'>
     </div>
 </div>
-<div style='text-align:right; padding-right: 300px;'>
+<div style='text-align:right; padding-right: 200px;'>
     <?php echo "<a href='?page=".$this->getPage()->javapage->id."'>"; ?>
         <span class='pmsbutton'>Ferdig å editere, gå til listen</span>
     </a>
     <?php 
-    $shortId = explode("-", $event->id);
-    
-    echo "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."'>"; ?>
+    $shortId = explode("-", $event->id); 
+    echo "<a href='scripts/generatepmssimpleeventpdf.php?engine=furuset"."&readevent=" . $shortId[0] . "&time=$time' target='_blank' >"; ?>
+        <span class='pmsbutton'>Last ned PDF</span>
+    </a>
+    <?php echo "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."'>"; ?>
         <span class='pmsbutton'>Ferdig å editere, gå til eventet</span>
     </a>
+    
 </div>
 
 

@@ -55,3 +55,34 @@
 .PmsEventCalendar .cat { background-color:#bbb; padding: 1px; display:inline-block; color:#efefef; margin-top: 5px; margin-bottom: 5px; padding-left: 10px; padding-right: 10px; font-size: 12px; }
 .PmsEventCalendar .arrangedby { font-size: 12px; color:#bbb; font-weight: bold; margin-top: 5px; margin-bottom: 5px; }
 .PmsEventCalendar .filelist { display:none; }
+
+.PmsEventCalendar #entryconfigurationTable{width: 100%;}
+.PmsEventCalendar #entryconfigurationImage{width:65%;}
+.PmsEventCalendar #previewing,.PmsEventCalendar #previewingLogo{width:100%;height:175px;}
+
+.PmsEventCalendar #file,
+.PmsEventCalendar #logo{
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;  
+}
+
+.PmsEventCalendar #file + label,
+.PmsEventCalendar #logo + label{
+
+    text-align: center;
+    font-weight: 500;
+    padding-top:10px;
+    background-color:#eee;
+    border-top:1px solid #ddd;
+}
+
+.PmsEventCalendar #file + label:hover,
+.PmsEventCalendar #logo + label:hover{
+    border-top:1px solid #bbb;
+    background-color: #f3f3f3;
+    cursor: pointer;
+}

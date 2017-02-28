@@ -37,6 +37,51 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
     }
     
+    public function  savePrimaryImage() {
+        $content = strstr($_POST['data']['data'], "base64,");
+        $content = str_replace("base64,", "", $content);
+        $content = base64_decode($content);
+        $imgId = \FileUpload::storeFile($content);
+        
+        $time = $_SESSION['timeusedpmsmanager'];
+        $eventid = $_SESSION['pmseventid'];
+        
+        $day = "";
+        if($time) {
+            $day = date("Y-m-d", $time);
+        }
+
+        $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $eventid, $day);
+        $event->imageId = $imgId;
+        $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
+        echo "SAVED IMG: " . $imgId;
+        print_r($event);
+    }
+    
+    public function savePrimaryLogo(){
+        $content = strstr($_POST['data']['data'], "base64" );
+        $content = str_replace("base64", "", $content);
+        $content = base64_decode($content);
+        $logoId = \FileUpload::storeFile($content);
+        
+        $time = $_SESSION['timeusedpmsmanager'];
+        $eventid = $_SESSION['pmseventid'];
+        
+        $day = "";
+        if($time){
+            $day = date("Y-m-d", $time);
+        }
+        
+        echo ":::".$_SESSION['timeusedpmsmanager'];
+        
+        $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $eventid, $day);
+        $event->logoId = $logoId;
+        $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
+        $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $eventid, $day);
+        echo 'SAVED LOGO: '. $logoId;
+        echo $event->logoId;
+        print_r($event);
+    }
     
     public function requestAdminRights() {
         $this->requestAdminRight("StoreApplicationPool", "setSetting", $this->__o("Need to update configurationskeys."));
@@ -135,6 +180,7 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         $event->{"starttime"} = $_POST['data']['starttime'];
         $event->{"category"} = $_POST['data']['category'];
         $event->{"description"} = $_POST['data']['description'];
+        $event->{"contact"} = $_POST['data']['contact'];
         
         
         $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);

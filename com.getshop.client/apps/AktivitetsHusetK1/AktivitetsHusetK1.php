@@ -13,5 +13,12 @@ class AktivitetsHusetK1 extends \ThemeApplication implements \Application {
     public function render() {
         
     }
+    public function isAllowingSideBar() {
+        return true;
+    }
+
+    public function sideBarShouldBeInner() {
+        return true;
+    }
 }
 ?>

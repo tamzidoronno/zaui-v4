@@ -8,6 +8,7 @@ package com.thundashop.core.trackandtrace;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.usermanager.data.Company;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +57,7 @@ public class Destination extends DataCommon {
     public String stopWindow;
     
     public boolean dirty = false;
+    public Date movedFromPool;
     
    
     public Destination() {
@@ -76,7 +78,10 @@ public class Destination extends DataCommon {
     }
     
     void setPodBarcodeStringToTasks() {
-        tasks.stream().forEach(task -> task.setPodBarcodeStringToTasks());
+        tasks.stream().forEach(task -> {
+            if (task != null)
+                task.setPodBarcodeStringToTasks();
+        });
     }
 
     public TrackAndTraceSignature getLatestSignatureImage() {
@@ -99,5 +104,19 @@ public class Destination extends DataCommon {
             return null;
         
         return signature;
+    }
+
+    DeliveryTask getDeliveryTask() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public PickupTask getPickupTask() {
+        for (Task task : tasks) {
+            if (task instanceof PickupTask) {
+                return (PickupTask)task;
+            }
+        }
+        
+        return null;
     }
 }

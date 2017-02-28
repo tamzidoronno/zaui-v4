@@ -23,6 +23,14 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
         return "unkown";
     };
     
+    
+    $scope.showAddPickupTask = function() {
+        $state.transitionTo("base.addPickupTask",  { 
+            destinationId: $stateParams.destinationId,
+            routeId: $stateParams.routeId 
+        });
+    },
+    
       $scope.getCurrentException = function() {
         var exceptions = datarepository.getDestionationsExceptions();
         for (var i in exceptions) {
@@ -107,4 +115,6 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
             }
         }
     });
+    
+    
 }

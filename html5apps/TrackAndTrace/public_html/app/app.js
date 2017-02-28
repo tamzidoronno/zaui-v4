@@ -13,6 +13,16 @@ angular.module('TrackAndTrace').factory('datarepository', function($api) {
     
 });
 
+angular.module('TrackAndTrace').factory('$exceptionHandler', 
+
+    function() {
+      return function(exception, cause) {
+            exception.message += ' (caused by "' + cause + '")';
+            alert("Unexpected error: \n" + exception.message + "\n" + exception.stack);
+            throw exception;
+      };
+    });
+
 angular.module('TrackAndTrace')
  .run( function($rootScope, $location) {
     $rootScope.$on("$locationChangeSuccess",function(event, next, current){

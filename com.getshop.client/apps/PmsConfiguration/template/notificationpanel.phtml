@@ -315,6 +315,18 @@ $channelConfig = $config->channelConfiguration;
             <span class='configentry'>
                 <?
                 $checked = "";
+                if($notificationSettings->avoidRandomRoomAssigning) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='avoidRandomRoomAssigning' <? echo $checked; ?>>
+            </span>
+            Avoid random assigning of room, use sorted list instead.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
                 if($notificationSettings->manualcheckincheckout) {
                     $checked = "CHECKED";
                 }

@@ -8,8 +8,14 @@ app.OrderExport = {
         $(document).on('click', '.gss_downloadaccountingfile', app.OrderExport.downloadFile);
         $(document).on('click', '.viewstatsforfile', app.OrderExport.viewstatsforfile);
         $(document).on('click', '.openorderexportconfig', app.OrderExport.viewConfig);
+        $(document).on('click', '.gss_transferSingleOrders', app.OrderExport.transferSingleOrders);
     },
-    
+    transferSingleOrders : function() {
+       var form = $(this).closest('form');
+       var ids = form.find('.idstotransfer').val();
+       var action = form.attr('action');
+       window.open(action + "&ids=" + ids, "_fdsaf");
+    },
     viewConfig : function() {
         var event = thundashop.Ajax.createEvent('','loadDataForConfig', $(this), {
             "id" : $(this).attr('configid')

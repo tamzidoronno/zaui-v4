@@ -179,21 +179,21 @@ header('Expires: 0');  // no cache
 header("Content-type:application/pdf");
 header("Content-Disposition:attachment;filename=".$_GET['incrementalOrderId'].".pdf");
 
-    echo base64_decode($pdf);
-//    $attachment = array();
-//    $attachment['statistics.pdf'] = $pdf;
-//
-//    $instances = $factory->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("7e828cd0-8b44-4125-ae4f-f61983b01e0a");
-//    $emailtitle = "Weekly update on monthly statistic";
-//    foreach($instances as $instance) {
-//        /* @var $instance ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
-//        $config = $api->getPmsManager()->getConfiguration($app->getSelectedName());
-//        $app = $factory->getFactory()->getApplicationPool()->createAppInstance($instance);
-//        $emails = $config->emailsToNotify->{'report'};
-//        foreach($emails as $email) {
-//            $api->getMessageManager()->sendMailWithAttachments($email, $email, $emailtitle, "Attached you will find the statistics for this periode.", "post@wh.no", "post@wh.no", $attachment);
-//        }
-//    }
+//    echo base64_decode($pdf);
+    $attachment = array();
+    $attachment['statistics.pdf'] = $pdf;
+
+    $instances = $factory->getApi()->getStoreApplicationInstancePool()->getApplicationInstances("7e828cd0-8b44-4125-ae4f-f61983b01e0a");
+    $emailtitle = "Weekly update on monthly statistic";
+    foreach($instances as $instance) {
+        /* @var $instance ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+        $config = $api->getPmsManager()->getConfiguration($app->getSelectedName());
+        $app = $factory->getFactory()->getApplicationPool()->createAppInstance($instance);
+        $emails = $config->emailsToNotify->{'report'};
+        foreach($emails as $email) {
+            $api->getMessageManager()->sendMailWithAttachments($email, $email, $emailtitle, "Attached you will find the statistics for this periode.", "post@wh.no", "post@wh.no", $attachment);
+        }
+    }
 }
 
 ?>

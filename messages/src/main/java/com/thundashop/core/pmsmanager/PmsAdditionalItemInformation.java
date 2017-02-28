@@ -144,4 +144,24 @@ public class PmsAdditionalItemInformation extends DataCommon {
                 && now.get(Calendar.DAY_OF_YEAR) == timeToCheck.get(Calendar.DAY_OF_YEAR));
     }
 
+    void forceMarkDirty() {
+        isClean = false;
+        lastCleaned = null;
+        lastUsed = null;
+        
+        Calendar cal1 = Calendar.getInstance();
+        
+        String todayDate = cal1.get(Calendar.YEAR) + "_"  + cal1.get(Calendar.DAY_OF_YEAR);
+        
+        List<Date> toRemove = new ArrayList();
+        for(Date cleaningDate : cleaningDates) {
+            cal1.setTime(cleaningDate);
+            String other = cal1.get(Calendar.YEAR) + "_"  + cal1.get(Calendar.DAY_OF_YEAR);
+            if(other.equals(todayDate)) {
+                toRemove.add(cleaningDate);
+            }
+        }
+        
+        cleaningDates.removeAll(toRemove);
+    }
 }

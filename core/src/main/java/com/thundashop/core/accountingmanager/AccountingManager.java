@@ -984,6 +984,43 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         
         return needSaving;
     }
+    
+    @Override
+    public SavedOrderFile transferSingleOrders(String configId, List<Integer> incOrderIds) throws Exception {
+        logEntries.clear();
+        AccountingTransferConfig configToUse = configs.get(configId);
+        
+        if(configToUse == null) {
+            logEntries.add("Could not find config : " + configId);
+            return null;
+        }
+        
+        List<Order> orders = new ArrayList();
+        if(incOrderIds.isEmpty()) {
+            logEntries.add("No orders to transfer.");
+            return null;
+        }
+        for(Integer incOrderId : incOrderIds) {
+            Order order = orderManager.getOrderByincrementOrderId(incOrderId);
+            if(orderInFilter(configToUse, order)) {
+                orders.add(order);
+            } else {
+                logEntries.add(incOrderId + " does not match this configuration. order is not of type: " + configToUse.subType);
+            }
+        }
+        if(!logEntries.isEmpty()) {
+            return null;
+        }
+        List<User> users = getUsersFromNewFilter(configToUse, orders);
+        
+        AccountingTransferInterface transfer = getAccoutingInterface(configToUse.transferType);
+        transfer.setOrders(orders);
+        transfer.setUsers(users);
+        transfer.setConfig(configToUse);
+        
+        SavedOrderFile res = transfer.generateFile();
+        return res;
+    }
 
     private SavedOrderFile downloadOrdeFileNewType(String configId, Date start, Date end, SavedOrderFile fileToUse) throws Exception {
         logEntries.clear();
@@ -1138,6 +1175,34 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     @Override
     public List<String> getLatestLogEntries() throws Exception {
         return logEntries;
+    }
+
+    private boolean orderInFilter(AccountingTransferConfig configToUse, Order order) {
+        if(order.testOrder) {
+            return false;
+        }
+        if(order.payment == null || order.payment.paymentType == null || order.payment.paymentType.isEmpty()) {
+            return false;
+        }
+        Double amount = orderManager.getTotalAmount(order);
+        long totalAmount = Math.round(amount);
+        if(totalAmount == 0.0) {
+            return false;
+        }
+
+        for(AccountingTransferConfigTypes actype : configToUse.paymentTypes) {
+            String paymentMethod = actype.paymentType;
+            paymentMethod = paymentMethod.replace("-", "_");
+            if(order.payment.paymentType.contains(paymentMethod)) {
+                if(order.status == actype.status || actype.status == 0) {
+                    return true;
+                }
+                if(actype.status == -1 && amount < 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

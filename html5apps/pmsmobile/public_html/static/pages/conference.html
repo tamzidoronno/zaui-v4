@@ -3,26 +3,28 @@
     Conferences
 </div>
 <div class='row'>
-    <div ng-repeat="conf in conferences" class="conferencerow">
-        <div class="conf_title"> {{ conf.date }}</div>
-        <div class="conf_note" ng-if="conf.note" style='background-color: #c9ffc3; padding: 10px;'>
-            <b>Note:</B><br/>
-            {{ conf.note }}
-        </div>
-        <div ng-repeat="day in conf.days" class="conf_action">
-            <div style='background-color: #DDD; text-align: center;'>
-                Day: {{ day.day}}
+    <div ng-repeat="date in dates" class="conferencerow">
+        <div class="conf_title"> {{ date.toLocaleDateString("nb-NO"); }} </div>
+        
+        <div ng-repeat="conf in getConference(date)">
+            <div class="conf_title_name"> {{ conf.nameOfEvent }}</div>
+            <div class="conf_note" ng-if="conf.note" style='background-color: #c9ffc3; padding: 10px;'>
+                {{ conf.note }}
             </div>
-            <div ng-repeat="act in day.conferences" class="conf_action">
-                <div class="conf_col col1">{{ act.place }}</div>
-                <div class="conf_col col2">{{ act.from }}</div>
-                <div class="conf_col col3">- {{ act.to }}</div>
-                <div class="conf_col col4">( {{ act.attendeesCount }} )</div>
-                <div class="conf_col col5">{{ act.actionName }}</div>
+            <div ng-repeat="day in conf.days" >
+                <div ng-repeat="act in day.conferences" class="conf_action">
+                    <div class="conf_col col1">{{ act.place }}</div>
+                    <div class="conf_col col2">{{ act.from }}</div>
+                    <div class="conf_col col3">- {{ act.to }}</div>
+                    <div class="conf_col col4">( {{ act.attendeesCount }} )</div>
+                    <div class="conf_col col5">{{ act.actionName }}</div>
 
+                </div>
             </div>
         </div>
+                
     </div>
+    
 </div>
 <div class='additionalinfobottom row'>
     <div style='text-align:center; font-size: 20px; padding: 10px; color:#fff;'>

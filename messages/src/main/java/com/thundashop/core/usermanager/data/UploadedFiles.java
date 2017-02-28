@@ -7,4 +7,5 @@ public class UploadedFiles {
     public String description;
     public String fileId;
     public String fileName;
+    public String contentType;
 }

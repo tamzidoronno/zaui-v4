@@ -49,6 +49,28 @@ if($compact) {
         }
         ?>
     </select>
+    <?php
+    
+    $filters = $this->getApi()->getPmsManager()->getAllPmsFilters($this->getSelectedName());
+    $found = false;
+    foreach($filters as $filter) {
+        if($filter->filterName == "coverage") { continue; }
+        $found = true;
+    }
+    if($found) {
+        echo "<select gsname='filtertouse'>";
+        echo "<option value=''>All</option>";
+        foreach($filters as $filter) {
+            if($filter->filterName == "coverage") {
+                continue;
+            }
+            $selected = $this->getSelectedDefinedFilter() == $filter->filterName ? "SELECTED" : "";
+            echo "<option value='".$filter->filterName."' $selected>".$filter->filterName."</option>";
+        }
+        echo "</select>";
+    }
+
+    ?>
     <input gstype="submit" type="button" value="<? echo $this->__w("Show"); ?>">
     <input type='button' class='closeRoomOptionsButton' value="Close a room" style='float:right;'>
 </div>
@@ -60,6 +82,7 @@ if($compact) {
     $filter->start = $this->convertToJavaDate($this->getStart());
     $filter->end = $this->convertToJavaDate($this->getEnd());
     $filter->interval = $this->getInterval();
+    $filter->selectedDefinedFilter = $this->getSelectedDefinedFilter();
     
     $result = $this->getApi()->getPmsManager()->getIntervalAvailability($this->getSelectedName(), $filter);
 

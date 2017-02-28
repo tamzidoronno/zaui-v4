@@ -22,10 +22,12 @@ public class AcculogixDataExporter {
     private final Map<String, TrackAndTraceException> exceptions;
     private final ImageManager imageManager;
     private long startId = 0;
+    private TrackAndTraceManager trackAndTraceManager;
     private final boolean currentState;
     
-    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress, ImageManager imageManager, long startId, boolean currentState) {
+    public AcculogixDataExporter(Route route, Map<String, TrackAndTraceException> exceptions, String storeAddress, ImageManager imageManager, long startId, boolean currentState, TrackAndTraceManager trackAndTraceManager) {
         this.route = route;
+        this.trackAndTraceManager = trackAndTraceManager;
         this.startId = startId;
         this.exceptions = exceptions;
         this.address = storeAddress;
@@ -54,6 +56,15 @@ public class AcculogixDataExporter {
             }
         }
         
+        exports.stream().forEach(exp -> { exp.createMd5Sum(); });
+        
+        exports.removeIf(exp -> trackAndTraceManager.alreadyExported(exp.md5sum));
+        
+        exports.stream().forEach(exp -> {
+            startId++;
+            exp.TNTUID = startId;
+        });
+        
         return exports;
     }
 
@@ -62,15 +73,11 @@ public class AcculogixDataExporter {
             return null;
         }
         
-        startId++;
-        
         AcculogixExport exp = new AcculogixExport();
         exp.ArrivalDateTime = dest.startInfo.started ? formatDate(dest.startInfo.startedTimeStamp) : "";
         exp.RDDriver$ID = route.startInfo.startedByUserId;
         exp.routeId = route.originalId;
         exp.RTRouteStopSeq = dest.seq;
-        exp.TNTUID = startId;
-        exp.taskSource = task.source;
         
         setTaskStatus(exp, route, task, dest);
         
@@ -117,6 +124,11 @@ public class AcculogixDataExporter {
 
     private void setTaskStatus(AcculogixExport exp, Route route1, Task task, Destination dest) {
         exp.TaskStatus = "DL";
+        
+        if (dest.movedFromPool != null) {
+            exp.TaskStatus = "Route Assigned";
+        }
+        
         if (route1.startInfo.started) {
             exp.TaskStatus = "AF";
         }
@@ -135,6 +147,10 @@ public class AcculogixDataExporter {
         
         if (dest.skipInfo.skippedReasonId != null && !dest.skipInfo.skippedReasonId.isEmpty()) {
             exp.TaskStatus = exceptions.get(dest.skipInfo.skippedReasonId).name;
+        }
+        
+        if (route1.isVritual) {
+            exp.TaskStatus = "UNASSIGNED";
         }
     }
     
@@ -263,13 +279,6 @@ public class AcculogixDataExporter {
         exp.TaskType = order instanceof DeliveryOrder ? "DELIVERY" : "";
         exp.TaskType = order instanceof PickupOrder ? "PICKUP RETURNS" : exp.TaskType;
         exp.TaskComments = order.comment;
-        
-        if (dest.exceptionId != null && !dest.exceptionId.isEmpty()) {
-            exp.TaskType = "EXCEPTION";
-        }
-        
-        if (order.exceptionId != null && !order.exceptionId.isEmpty()) {
-            exp.TaskType = "EXCEPTION";
-        }
+        exp.taskSource = order.source;
     }
 }

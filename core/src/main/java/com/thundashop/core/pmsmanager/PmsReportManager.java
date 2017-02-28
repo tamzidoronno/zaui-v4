@@ -26,9 +26,29 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     
     @Override
     public List<PmsMobileReport> getReport(Date start, Date end, String compareTo) {
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        cal.set(Calendar.HOUR_OF_DAY, 00);
+        cal.set(Calendar.MINUTE, 00);
+        start = cal.getTime();
+        
+        cal.setTime(end);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        end = cal.getTime();
+        
+        
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.startDate = start;
         filter.endDate = end;
+        
+        PmsBookingFilter savedFilter = pmsManager.getPmsBookingFilter("coverage");
+        if(savedFilter != null) {
+            savedFilter.startDate = filter.startDate;
+            savedFilter.endDate = filter.endDate;
+            filter = savedFilter;
+        }
         
         PmsBookingFilter filterCompare = new PmsBookingFilter();
         filterCompare.startDate = new Date(start.getTime());
@@ -144,7 +164,8 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         
         total.avgPrice = (double)Math.round(total.totalRented / total.numberOfRooms);
 
-        total.revParDaily = (double)Math.round(total.avgPrice * (total.avgCoverage / 100));
+        total.revParDaily = (double)Math.round(total.totalRented / total.totalNumberOfRooms);
+        total.revParLastPeriode = (double)Math.round(compare.totalPrice / total.totalNumberOfRooms);
         total.revPar = (double)Math.round(total.revParDaily * total.numberOfDays);
         
         total.squareMeters = totalEntry.squareMetres;

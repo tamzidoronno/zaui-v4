@@ -96,6 +96,17 @@ angular.module('TrackAndTrace')
         }
     });
     
+    $stateProvider.state('base.addPickupTask', {
+        url: '/addPickupTask/:destinationId/:routeId',
+        
+        views: {
+            main: {
+                templateUrl : 'components/destination/addPickupTask.html',
+                controller : controllers.AddPickupTaskController
+            }
+        }
+    });
+    
     $stateProvider.state('base.task', {
         url: '/destination/:destinationId/:routeId/:taskId',
         params: { 

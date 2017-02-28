@@ -1800,7 +1800,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> retOrders = orders.values().stream()
                 .filter(order -> !order.isCreditNote)
                 .filter(order -> order.payment != null && order.payment.paymentType.equals(paymentMethod))
-                .filter(order -> order.paymentDate == null)
+                .filter(order -> order.status != 7)
                 .collect(Collectors.toList());
                 
         removeCredittedOrders(retOrders);

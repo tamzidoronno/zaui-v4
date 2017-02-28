@@ -127,6 +127,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             }
         }
         
+        if (events.isEmpty()) {
+            return;
+        }
+        
         cleanBookingItemsThatDoesNotExsist();
 //        createScheduler("event_questback_checked", "0 * * * *", CheckSendQuestBackScheduler.class);
         stopScheduler("event_booking_scheduler");
@@ -924,6 +928,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         if (!loggedOnUser.useGroupId.isEmpty())
             return metaData.visibleForGroup.get(loggedOnUser.useGroupId);
+        
+        if (getSession().currentUser.groups == null) {
+            return metaData.publicVisible;
+        }
         
         return metaData.visibleForGroup.get(getSession().currentUser.groups.get(0));
     }

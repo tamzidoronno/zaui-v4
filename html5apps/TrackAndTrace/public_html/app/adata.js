@@ -50,6 +50,19 @@ adata = {
         }
     },
     
+    updateDestination: function(destination, $api) {
+        for (var i in this.routes) {
+            var route = this.routes[i];
+            for (var j in route.destinations) {
+                if (route.destinations[j].id === destination.id) {
+                    route.destinations[j] = destination;
+                    console.log("replaced");
+                }
+            }
+        }
+        this.save();
+    },
+    
     updateRoute: function(route, $api) {
         if (!route)
             return;
@@ -67,7 +80,7 @@ adata = {
             }
         }
         
-        if (!found && $api && route.userIds.indexOf($api.getLoggedOnUser().id)) {
+        if (!found && $api) {
             toAdd.push(route);
         }
         

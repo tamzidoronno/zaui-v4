@@ -5,13 +5,21 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author ktonder
  */
-public class AcculogixExport {
+public class AcculogixExport implements Serializable {
     public String PODBarcodeID = "";
     
     /** Format: YYYYMMDDHHMMSS */
@@ -70,5 +78,33 @@ public class AcculogixExport {
     public String signatureUuid = "";
     
     public long TNTUID = 0;
+    
+    public transient String md5sum = "";
 
+    public void createMd5Sum() {
+        try {
+            MessageDigest instance = MessageDigest.getInstance("MD5");
+            
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(this);
+            oos.close();
+
+            instance.update(baos.toByteArray());
+            byte[] b = instance.digest();
+           
+            String result = "";
+
+            
+            for (int i=0; i < b.length; i++) {
+                result += Integer.toString( ( b[i] & 0xff ) + 0x100, 16).substring( 1 );
+            }
+       
+            md5sum = result;
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(AcculogixExport.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AcculogixExport.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

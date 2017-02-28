@@ -56,8 +56,8 @@
         </div>
     </div>
     
-    <div class='destination_task addTask'>
-        <i class='fa fa-plus'></i> New task
+    <div class='destination_task addTask' ng-mobile-click="showAddPickupTask()">
+        <i class='fa fa-plus'></i> New pickup task
     </div>
     
     <div class='button' ng-if="allTaskCompleted() == true" ng-mobile-click="departedTapped()">Departing</div>

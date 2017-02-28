@@ -490,8 +490,10 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         if (!anyFoodProducts(session)) {
             return;
         }
+    
+        List<CartItem> groupedCartItems = getGroupedCartItems(session.getCartItems(), true);
         
-        PdfKitchenNote note = new PdfKitchenNote(session, productManager);
+        PdfKitchenNote note = new PdfKitchenNote(session, productManager, groupedCartItems);
         ResturantTable table = tables.get(session.tableId);
 
         List<Printer> printers = storePrintManager.getPrinters();

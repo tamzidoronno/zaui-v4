@@ -1,11 +1,12 @@
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.common.DataCommon;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PmsBookingFilter implements Serializable {
+public class PmsBookingFilter extends DataCommon {
 
     public static class PmsBookingFilterTypes {
         public static String registered = "registered";
@@ -19,6 +20,11 @@ public class PmsBookingFilter implements Serializable {
     public Integer state;
     public Date startDate;
     public Date endDate;
+    
+    public String startDateAsText;
+    public String endDateAsText;
+    
+    
     public String filterType;
     public String searchWord;
     public Boolean needToBeConfirmed = false;
@@ -34,4 +40,5 @@ public class PmsBookingFilter implements Serializable {
     public boolean includeVirtual = false;
     public List<String> typeFilter = new ArrayList();
     public List<String> itemFilter = new ArrayList();
+    public String filterName = "";
 }

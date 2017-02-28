@@ -45,6 +45,8 @@ public class Route extends DataCommon {
 
     public boolean dirty = false;
     
+    public boolean isVritual = false;
+    
     public Route() {
         shortDescription = "A route description";
     }

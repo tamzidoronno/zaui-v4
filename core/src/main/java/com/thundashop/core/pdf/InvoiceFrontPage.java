@@ -483,7 +483,9 @@ public class InvoiceFrontPage {
             lineText = item.getProduct().additionalMetaData; 
         }
         
-        lineText += " " + item.getProduct().name;
+        if(item.getProduct() != null && item.getProduct().name != null && !item.getProduct().name.equals("null")) {
+            lineText += " " + item.getProduct().name;
+        }
         
         if(item.getProduct() != null && item.getProduct().metaData != null && !item.getProduct().metaData.isEmpty()) {
             lineText += " " + item.getProduct().metaData;

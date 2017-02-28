@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,6 +131,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public List<Route> getRoutesById(String routeId) {
         Route foundroute = getRouteById(routeId);
         
+        if (foundroute == null) {
+            return new ArrayList();
+        }
+        
         ArrayList<Route> retList = new ArrayList();
         retList.add(foundroute);
         retList.stream().forEach(route -> finalize(route));
@@ -141,6 +146,17 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         finalize(retRoute);
         return retRoute;
+    }
+    
+    public boolean alreadyExported(String md5Sum) {
+        for (ExportedData exportedData : exports.values()) {
+            for (AcculogixExport exp : exportedData.exportedData) {
+                if (exp.md5sum.equals(md5Sum))
+                    return true;
+            }
+        }
+        
+        return false;
     }
 
     private Destination getDestination(String destinationId) {
@@ -302,7 +318,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         AcculogixDataImporter ret = new AcculogixDataImporter(base64, userManager, this, fileName);
         ret.getRoutes().stream().forEach(route -> notifyRoute(getRouteById(route.id)));
         
-        
     }
 
     void saveTask(DeliveryTask task) {
@@ -395,6 +410,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public List<AcculogixExport> getExport(String routeId, boolean currentState) {
+        long time = System.currentTimeMillis();
+        
         Route route = getRouteById(routeId);
         
         List<AcculogixExport> everything = new ArrayList();
@@ -408,6 +425,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
+        addUnassignedDestinations(everything, currentState);
+        
         Collections.sort(everything, (o1, o2) -> {
             if (o1.TNTUID < o2.TNTUID) {
                 return 1;
@@ -419,12 +438,13 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             return 0;
         });
         
+        System.out.println("Time used : " + (System.currentTimeMillis()-time));
         return everything;
         
     }
 
     private List<AcculogixExport> getExportInternal(Route route, boolean currentState) throws ErrorException {
-        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress(), imageManager, getStartNumber().exportCounter, currentState);
+        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress(), imageManager, getStartNumber().exportCounter, currentState, this);
         List<AcculogixExport> exportedData = exporter.getExport();
         
         if (!exportedData.isEmpty()) {
@@ -438,7 +458,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             exportCounter.exportCounter += exportedData.size();
             saveObject(exportCounter);
             
-            markRouteAsClean(route.id);
+            markRouteAsClean(route);
         }
         
         if (!currentState) {
@@ -496,6 +516,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 saveObjectInternal(dest);
                 pooledDestinations.put(dest.id, dest);
                 saveObjectInternal(route);
+                
+                // Touching the destination to mark it dirty (because it needs to be in order to be exported)
+                saveObjectInternal(destinations.get(destinationId));
             }
         }
         
@@ -529,6 +552,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             Route route = getRouteById(routeId);
             if (route != null) {
                 Destination dest = getDestination(pooledDest.destionationId);
+                dest.movedFromPool = new Date();
                 route.destinationIds.add(dest.id);
                 saveObjectInternal(route);
                 notifyRoute(route);
@@ -556,8 +580,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         saveObject(data);
     }
 
-    private void markRouteAsClean(String routeId) {
-        Route route = getRouteById(routeId);
+    private void markRouteAsClean(Route route) {
         if (route != null) {
             route.dirty = false;
             for (Destination dest : route.getDestinations()) {
@@ -568,7 +591,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 }
                 saveObject(dest);
             }
-            saveObject(route);
+            
+            if (!route.isVritual) {
+                saveObject(route);    
+            }
+            
         }
     }
 
@@ -608,6 +635,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     @Override
     public void deleteRoute(String routeId) {
         Route route = getRouteById(routeId);
+        
         if (route != null) {
             deleteObject(route);
             routes.remove(route.id);
@@ -619,7 +647,32 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
+        if (route != null) {
+            if (route.destinationIds != null) {
+                route.destinationIds.stream().forEach(destId -> {
+                    deleteDestination(destId);
+                });
+            }
+        }
+        
         exports.values().removeIf(o -> o.routeId != null && o.routeId.equals(routeId));
+    }
+    
+    private void deleteDestination(String destId) {
+        Destination dest = destinations.remove(destId);
+        if (dest != null) {
+            deleteObject(dest);
+            dest.taskIds.stream().forEach(taskId -> { 
+                deleteTask(taskId);
+            });
+        }
+    }
+    
+    private void deleteTask(String taskId) {
+        Task task = tasks.remove(taskId);
+        if (task != null) {
+            deleteObject(task);
+        }
     }
 
     @Override
@@ -646,7 +699,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void sendMessageToDriver(String driverId, String message) {
+    public DriverMessage sendMessageToDriver(String driverId, String message) {
         DriverMessage driverMsg = new DriverMessage();
         driverMsg.message = message;
         driverMsg.driverId = driverId;
@@ -654,6 +707,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         driverMessages.put(driverMsg.id, driverMsg);
         
         webSocketServer.sendMessage(driverMsg);
+        return driverMsg;
     }
 
     @Override
@@ -685,7 +739,106 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             saveObject(msg);
         }
     }
-    
-    
-    
+
+    @Override
+    public DriverMessage getDriverMessage(String msgId) {
+        return driverMessages.get(msgId);
+    }
+
+    private void addUnassignedDestinations(List<AcculogixExport> everything, boolean currentState) {
+        List<PooledDestionation> localPooledDestinations = getPooledDestiontions();
+        
+        if (localPooledDestinations.isEmpty()) {
+            return;
+        }
+        
+        Map<String, Route> usingRoutes = new HashMap();
+        
+        for (PooledDestionation dest : localPooledDestinations) {
+            Route virtualRoute = createVirtualRouteBasedOnRouteId(dest);
+            
+            if (!usingRoutes.containsKey(virtualRoute.id)) {
+                usingRoutes.put(virtualRoute.id, virtualRoute);
+            } else {
+                virtualRoute = usingRoutes.get(virtualRoute.id);
+            }
+            
+            virtualRoute.destinationIds.add(dest.destionationId);
+        }
+        
+        for (Route route1 : usingRoutes.values()) {
+            finalize(route1);
+            everything.addAll(getExportInternal(route1, currentState));   
+        }
+    }
+
+    private Route createVirtualRouteBasedOnRouteId(PooledDestionation dest) {
+        Route route = new Route();
+        route.id = dest.originalRouteId.substring(0, 2) + "99";
+        route.originalId = route.id;
+        route.rowCreatedDate = new Date();
+        route.isVritual = true;
+        route.dirty = false;
+        return route;
+    }
+
+    public DeliveryTask getDeliveryTaskForDestination(String id) {
+        Destination dest = getDestinationById(id);
+        
+        if (dest != null) {
+            for (String taskId : dest.taskIds) {
+                Task task = tasks.get(taskId);
+                if (task instanceof DeliveryTask) {
+                    return (DeliveryTask)task;
+                }
+            };
+        }
+        
+        return null;
+    }
+
+    public PickupTask getPickupTask(String id) {
+        Destination dest = getDestinationById(id);
+        
+        if (dest != null) {
+            for (String taskId : dest.taskIds) {
+                Task task = tasks.get(taskId);
+                if (task instanceof PickupTask) {
+                    return (PickupTask)task;
+                }
+            };
+        }
+        
+        return null;
+    }
+
+    @Override
+    public List<Route> addPickupOrder(String destnationId, PickupOrder order) {
+        Destination dest = getDestination(destnationId);
+        PickupTask task = dest.getPickupTask();
+        
+        if (task == null) {
+            task = new PickupTask();
+            saveObject(task);
+            dest.taskIds.add(task.id);
+            tasks.put(task.id, task);
+            saveObjectInternal(task);
+        }
+        
+        order.source = "tnt";
+        task.completed = false;
+        task.orders.add(order);
+        saveObjectInternal(task);
+        saveObjectInternal(dest);
+        
+        List<Route> retRoutes = new ArrayList();
+        for (Route route : this.routes.values()) {
+            if (route.destinationIds.contains(destnationId)) {
+                finalize(route);
+                retRoutes.add(route);
+            }
+        }
+        
+        return retRoutes;
+    }
 }

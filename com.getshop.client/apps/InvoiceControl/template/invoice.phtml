@@ -5,40 +5,111 @@ $groupedOrders = $this->getGroupedOrders();
 $totalDue = 0;
 $total = 0;
     
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th align='left'></th>";
+echo "<th align='left'>Owner</th>";
+echo "<th align='left'>Orderid</th>";
+echo "<th align='left'>Order date</th>";
+echo "<th align='left'>Due date</th>";
+echo "<th align='left'>Total</th>";
+echo "<th align='left'>Payment date</th>";
+echo "<th align='left'></th>";
+echo "</tr>";
+
+$orderList=array();
 foreach ($groupedOrders as $userId => $orders) {
-    $user = $this->getApi()->getUserManager()->getUserById($userId);
-    echo "<div class='orderview'>";
-    echo $user->fullName;
-    
+    foreach ($orders as $order) {
+            /* @var $order core_ordermanager_data_Order */
+            $dueDays = 14;
+            if(isset($order->dueDays)) {
+                $dueDays = $order->dueDays;
+            }
+            $fourTeenDaysInFuture = strtotime($order->rowCreatedDate) + (60*60*24)*$dueDays;
+            $today = time();
+            $due = $today > $fourTeenDaysInFuture;
+            if($due) {
+                $orderList[] = $order;
+            }
+     }
+}
+foreach ($groupedOrders as $userId => $orders) {
     foreach ($orders as $order) {
         /* @var $order core_ordermanager_data_Order */
-        $ordersum = $this->getApi()->getOrderManager()->getTotalAmount($order);
-        
-        $fourTeenDaysInFuture = strtotime($order->rowCreatedDate) + 60*60*24*14;
+        $dueDays = 14;
+        if(isset($order->dueDays)) {
+            $dueDays = $order->dueDays;
+        }
+        $fourTeenDaysInFuture = strtotime($order->rowCreatedDate) + (60*60*24)*$dueDays;
         $today = time();
         $due = $today > $fourTeenDaysInFuture;
-        $printData = date("d/m-Y", strtotime($order->rowCreatedDate));
-        $dueColor = $due ? "color: red" : "color: #888";
-        $createdDate = "<span style='$dueColor'> ( ".$printData." ) </span>";
-        $paymentIcon = '<div class="gs_shop_small_icon"><i class="fa fa-dollar"></i></div>';
-        
-        $total += $ordersum;
-        
-        if ($due)
-            $totalDue += $ordersum;
-        
-        if($ordersum > -1 && $ordersum < 1) {
-            continue;
+        if(!$due) {
+            $orderList[] = $order;
         }
-        $download = "<a style='cursor:pointer;' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'><i class='fa fa-file-pdf-o'></i></a>";
-        echo "<div class='row'>$download <div class='col col1' style='cursor: pointer;' onclick='app.OrderManager.gssinterface.showOrder(\"$order->id\")'> $order->incrementOrderId $createdDate</div><div class='col col2'>$ordersum &nbsp;&nbsp;</div></div>";
     }
-    echo "</div>";
 }
+
+foreach ($orderList as $order) {
+    $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+
+    /* @var $order core_ordermanager_data_Order */
+    $ordersum = $this->getApi()->getOrderManager()->getTotalAmount($order);
+    $dueDays = 14;
+    if(isset($order->dueDays)) {
+        $dueDays = $order->dueDays;
+    }
+    $fourTeenDaysInFuture = strtotime($order->rowCreatedDate) + (60*60*24)*$dueDays;
+    $today = time();
+    $due = $today > $fourTeenDaysInFuture;
+    $printData = date("d/m-Y", strtotime($order->rowCreatedDate));
+    $dueColor = $due ? "color: red" : "color: #888";
+    $createdDate = "<span style='$dueColor'> ( ".$printData." ) </span>";
+    $paymentIcon = '<div class="gs_shop_small_icon"><i class="fa fa-dollar"></i></div>';
+
+    $total += $ordersum;
+
+    if ($due)
+        $totalDue += $ordersum;
+
+    if($ordersum > -1 && $ordersum < 1 || $ordersum < 0) {
+        continue;
+    }
+
+    $style = "";
+    if($due) {
+        $style = "style='color:red; font-weight:bold;'";
+    }
+    
+    $title = $user->fullName . "<br>";
+    $title .= $user->emailAddress . "<br>";
+    $title .= $user->emailAddressToInvoice . "<br>";
+    $title .= "+" . $user->prefix . " " . $user->cellPhone . "<br>";
+    
+    $curDate = date("d.m.Y H:i");
+    
+    echo "<tr gstype='form' method='markpaid' $style>";
+    $download = "<a style='cursor:pointer;' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'><i class='fa fa-file-pdf-o'></i></a>";
+    echo "<td>" . $download . "</td>";
+    echo "<td title='$title'>" . $user->fullName . "</td>";
+    echo "<td>" . $order->incrementOrderId . "</td>";
+    echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
+    echo "<td>" . date("d.m.Y", $fourTeenDaysInFuture) . "</td>";
+    echo "<td>" . $ordersum . "</td>";
+    echo "<td>";
+    echo "<input type='hidden' value='".$order->id."' gsname='orderid'>";
+    echo "<input type='text' class='paymentdateselection' value='$curDate' style='width:120px; text-align:center;' gsname='paymentdate'></td>";
+    echo "<td><input type='submit' gstype='submit' value='Mark as paid'</td>";
+    echo "</tr>";
+}
+echo "</table>";
 
 ?>
 
-<div style="padding: 50px;">
+<div style="padding-top: 50px;">
     Total: <? echo number_format($total); ?>
     <br/>Overdue: <? echo number_format($totalDue); ?>
 </div>
+
+<script>
+    $(".paymentdateselection").datetimepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>

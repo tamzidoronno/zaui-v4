@@ -1,18 +1,15 @@
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.common.DataCommon;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PmsOrderStatsFilter implements Serializable {
-    class PaymentMethods {
-        String paymentMethod = "";
-        Integer paymentStatus;
-    }
+public class PmsOrderStatsFilter extends DataCommon {
     public Date start;
     public Date end;
-    List<PaymentMethods> methods = new ArrayList();
+    List<PmsPaymentMethods> methods = new ArrayList();
     public String displayType;
     public String priceType;
     public boolean includeVirtual = false;

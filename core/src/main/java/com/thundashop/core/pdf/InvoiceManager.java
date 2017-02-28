@@ -8,12 +8,14 @@ import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.File;
@@ -40,6 +42,9 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
 
     @Autowired
     private UserManager userManager;
+
+    @Autowired
+    private ProductManager productManager;
     
     @Autowired
     private StoreApplicationPool storeApplicationPool;
@@ -48,6 +53,8 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     public void createInvoice(String orderId) throws ErrorException {
         Order order = orderManager.getOrder(orderId);
 
+        checkForNullNameOnProduct(order);
+        
         generateKidOnOrder(order);
         InvoiceGenerator generator = new InvoiceGenerator(order, getAccountingDetails());
         try {
@@ -87,7 +94,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
     @Override
     public String getBase64EncodedInvoice(String orderId) {
         Order order = orderManager.getOrder(orderId);
-
+        checkForNullNameOnProduct(order);
         AccountingDetails details = getAccountingDetails();
         generateKidOnOrder(order);
         InvoiceGenerator generator = new InvoiceGenerator(order, details);
@@ -181,6 +188,14 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
                     User user = userManager.getUserById(order.userId);
                     order.generateKidLuhn(user.customerId + "" + order.incrementOrderId, details.kidSize);
                 }
+            }
+        }
+    }
+
+    private void checkForNullNameOnProduct(Order order) {
+        for(CartItem item : order.cart.getItems()) {
+            if(item.getProduct() != null && item.getProduct().name == null) {
+                item.getProduct().name = productManager.getProduct(item.getProduct().id).name;
             }
         }
     }

@@ -221,7 +221,7 @@ public class GBAT10Special extends AccountingTransferOptions implements Accounti
     }
 
     private void logError(String string) {
-        System.out.println(string);
+        addToLog(string);
     }
 
 }

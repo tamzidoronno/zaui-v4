@@ -18,6 +18,8 @@ import org.mongodb.morphia.annotations.Transient;
 public class ConferenceData extends DataCommon {
     public String note;
     
+    public String nameOfEvent = "";
+    
     /**
      * Always finalized to the count of guests on the booking
      */
@@ -30,4 +32,20 @@ public class ConferenceData extends DataCommon {
     List<ConferenceDataDay> days = new ArrayList();
     
     public String bookingId;
+    
+    public List<ConferenceData> getForEachDay() {
+        List<ConferenceData> data = new ArrayList();
+        
+        for (ConferenceDataDay day : days) {
+            ConferenceData singleDay = new ConferenceData();
+            singleDay.attendeesCount = this.attendeesCount;
+            singleDay.nameOfEvent = this.nameOfEvent;
+            singleDay.note = this.note;
+            singleDay.bookingId = this.bookingId;
+            singleDay.days.add(day);
+            data.add(singleDay);
+        }
+        
+        return data;
+    }
 }

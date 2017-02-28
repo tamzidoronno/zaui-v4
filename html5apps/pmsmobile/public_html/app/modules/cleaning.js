@@ -98,9 +98,21 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
     };
     
     $scope.toggleCleaningOnRoom = function(room) {
-        var confirmed = confirm("Are you sure you want to toggle cleaning on this room?");
+        var confirmed = false;
+        if(room.inUseState === "inuse") {
+            console.log(room);
+            $state.go('cleaningCheckout', {  roomName : room.bookingItemName });
+        } else if(room.inUseState === "clean") {
+            confirmed = confirm("Are you sure you want to mark this room as DIRTY?");
+        } else {
+            confirmed = confirm("Are you sure you want to mark this room as CLEAN?");
+        }
         if(confirmed) {
-            getshopclient.PmsManager.forceMarkRoomAsCleaned(getMultilevelName(), room.id);
+            if(room.inUseState === "clean") {
+                getshopclient.PmsManager.markRoomDirty(getMultilevelName(), room.id);
+            } else {
+                getshopclient.PmsManager.forceMarkRoomAsCleaned(getMultilevelName(), room.id);
+            }
             $scope.loadRooms();
         }
     }

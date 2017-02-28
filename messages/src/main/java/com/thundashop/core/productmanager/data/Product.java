@@ -2,6 +2,7 @@ package com.thundashop.core.productmanager.data;
 
 import org.mongodb.morphia.annotations.Transient;
 import com.google.gson.Gson;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 
 /**
  * 

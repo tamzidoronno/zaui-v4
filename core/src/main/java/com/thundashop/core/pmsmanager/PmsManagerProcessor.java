@@ -258,7 +258,13 @@ public class PmsManagerProcessor {
             
             //Also deleted rooms needs to be removed from arx.
             for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
-                if (((room.isEnded() || !room.isStarted()) && room.addedToArx) || (room.deleted && room.addedToArx) || (room.blocked && room.addedToArx)) {
+                if (((room.isEnded() || !room.isStarted()) && room.addedToArx) || 
+                        (room.deleted && room.addedToArx) || 
+                        (!manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId) && room.addedToArx) || 
+                        (room.blocked && room.addedToArx)) {
+                    if(booking.forceGrantAccess) {
+                        continue;
+                    }
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;

@@ -9,11 +9,12 @@
         foreach ($user->files as $file){
             /* core_usermanager_data_UploadedFiles */
             $fileId = $file->fileId;
-            echo "<div class='userfileuploadline' value='$fileId'><a href='#'>";
+            echo "<div class='userfileuploadline' value='$fileId'>";
+            echo "<div class='downloadfilebutton gss_button fa fa-file-pdf-o' fileId='$fileId' userId='".$_POST['value']."'></div> ";
             echo $file->fileName;
             echo ": &nbsp";
             echo $file->createdDate;
-            echo "</a>&nbsp";
+            echo "&nbsp";
             echo "<div class='userfiledeletebutton gss_button fa fa-trash' fileId='$fileId' userId='".$_POST['value']."'></div>";
             echo "<input class='gss_user_save_description'type='textfield' fileId='$fileId' userId='".$_POST['value']."'value='$file->description'>&nbsp";
             echo "<span class='titleDescription'>";

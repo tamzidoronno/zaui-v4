@@ -15,7 +15,7 @@ controllers.DestinationExceptionController = function($scope, datarepository, $s
     $scope.goBackToDestionation = function() {
         $state.transitionTo("base.destination", {destinationId: $stateParams.destinationId, routeId: $stateParams.routeId});
     }
-  
+    
     $scope.setDesitinationException = function(ex) {
         $scope.destination.skipInfo.skippedReasonId = ex.id;
         $scope.destination.skipInfo.startedTimeStamp = new Date();

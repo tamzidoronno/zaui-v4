@@ -56,8 +56,11 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             
             $getShopApi.UserManager.logOn(username, password).done(function(user) {
                 if (user.errorCode) {
-                    alert("Wrong username or password, please try again.");
+                    if (fromLogin) {
+                        alert("Wrong username or password, please try again.");
+                    }
                     me.$state.transitionTo('base.login');
+                    $('.loginbutton').find('.login-shower').remove();
                 } else {
                     $getShopApi.sendUnsentMessages();
                     localStorage.setItem("loggedInUserId", JSON.stringify(user));
@@ -86,9 +89,10 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             
             if (!username || !password) {
                 if (fromLogin) {
-                    alert("Wrong username or password, please try again.");
+                    alert("Wrong username or password, please try again .");
                 }
-                
+             
+                $('.loginbutton').find('.login-shower').remove();
                 this.$state.transitionTo('base.login');
                 return;
             }

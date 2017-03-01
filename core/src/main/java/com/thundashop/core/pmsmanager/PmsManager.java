@@ -2571,12 +2571,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     }
 
-    void warnAboutUnableToAutoExtend(String bookingItemName, String reason) {
+    void warnAboutUnableToAutoExtend(PmsBookingRooms room, BookingItem item, String reason) {
+        String bookingItemName = item.bookingItemName;
         Calendar cal = Calendar.getInstance();
         Integer day = cal.get(Calendar.DAY_OF_YEAR);
         String warningString = bookingItemName + "-" + day;
         String copyadress = storeManager.getMyStore().configuration.emailAdress;
-        messageManager.sendMail(copyadress, copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
+        messageManager.sendMail(copyadress, copyadress, "Unable to autoextend stay for room: " + bookingItemName + "(" + room.date.start + " - " + room.date.end + ")", "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
         messageManager.sendMail("pal@getshop.com", copyadress, "Unable to autoextend stay for room: " + bookingItemName, "This happends when the room is occupied. Reason: " + reason, copyadress, copyadress);
         warnedAbout.add(warningString);
     }
@@ -5092,6 +5093,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<PmsBooking> filterByUnsettledAmounts(List<PmsBooking> finalized) {
         List<PmsBooking> result = new ArrayList();
         for(PmsBooking test : finalized) {
+            if(test.testReservation) {
+                continue;
+            }
             if(!test.payedFor) {
                 continue;
             }
@@ -5165,7 +5169,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBookingFilter getPmsBookingFilter(String name) {
-        return savedFilters.get(name);
+        PmsBookingFilter res = savedFilters.get(name);
+        Gson gson = new Gson();
+        String test = gson.toJson(res);
+        PmsBookingFilter copy = gson.fromJson(test, PmsBookingFilter.class);
+        return copy;
     }
 
     @Override

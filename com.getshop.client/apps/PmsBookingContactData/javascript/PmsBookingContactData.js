@@ -147,7 +147,7 @@ app.PmsBookingContactData = {
                     icon: "fa-edit",
                     iconsize: "30",
                     title: __f("Show settings"),
-                    click: app.PmsBookingCalendar.showSettings
+                    click: app.PmsBookingContactData.showSettings
                 }
             ]
         }

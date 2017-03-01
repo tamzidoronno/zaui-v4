@@ -1,0 +1,36 @@
+<?php
+$entries = $this->getEventList();
+$this->__w("Oct");
+$this->__w("Dec");
+$i = 0;
+
+echo "<div class='eventlistbox'>";
+foreach($entries as $eventEntry) {
+    if($i > 5) {
+        break;
+    }
+    $shortId = explode("-", $eventEntry->eventId);
+    $time = strtotime($eventEntry->date);
+    $imgSrc = "";
+    $title = $eventEntry->title;
+    $day = date("d.m", $time);
+    $weekday = $this->__w(date("l", $time));
+    
+    if(isset($eventEntry->imageid)) {
+        $imgSrc = "/displayImage.php?id=".$eventEntry->imageid;
+    }
+    if(!$eventEntry->starttime) {
+        $eventEntry->starttime = date("H:i", strtotime($eventEntry->date));
+    }
+    
+    
+    echo "<a href='/?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=".$time."'><div class='eventlistboxes'>";
+    echo "<div id='boximage'><img id='boxid' src='" . $imgSrc . "' /></div>";
+    echo "<div class='boxtext'><h1>" . $day . "</h1><br>" . $title . "</div>";
+    echo "</div></a>";
+    
+    
+    $i++;
+}
+echo "</div>";
+?>

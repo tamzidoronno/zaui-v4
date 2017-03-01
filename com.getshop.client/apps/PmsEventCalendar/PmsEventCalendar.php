@@ -196,7 +196,12 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         } else if(isset($_GET['readevent'])) {
             $this->includefile("eventview");
         } else {
-            $this->includefile("eventlist");
+            $name = $this->getConfigurationSetting("template_name");
+            if($name && $name == "box") {
+                $this->includefile("eventlistbox");
+            } else {
+                $this->includefile("eventlist");
+            }
         }
     }
     

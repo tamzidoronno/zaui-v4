@@ -98,7 +98,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Calendar endCal = Calendar.getInstance();
             startcal.set(Calendar.HOUR_OF_DAY, 16);
             Vector days = new Vector();
-            for (int i = 0; i < 365; i++) {
+            for (int i = 0; i < 730; i++) {
                 Date start = startcal.getTime();
                 endCal.setTime(startcal.getTime());
                 endCal.add(Calendar.HOUR_OF_DAY, 16);
@@ -110,6 +110,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(isRestricted(rdata.bookingEngineTypeId, start, end)) {
                     count = 0;
                 }
+                
+                if(i > 305) {
+                    count = 0;
+                }
+                
                 Hashtable result = new Hashtable();
                 result.put("avail", count);
                 result.put("no_ota", 0);

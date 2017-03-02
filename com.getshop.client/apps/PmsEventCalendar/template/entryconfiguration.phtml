@@ -164,7 +164,7 @@ if($event->logoId) {
     echo "<a href='scripts/generatepmssimpleeventpdf.php?engine=furuset"."&readevent=" . $shortId[0] . "&time=$time' target='_blank' >"; ?>
         <span class='pmsbutton'>Last ned PDF</span>
     </a>
-    <?php echo "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."'>"; ?>
+    <?php echo "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=$time'>"; ?>
         <span class='pmsbutton'>Ferdig å editere, gå til eventet</span>
     </a>
     

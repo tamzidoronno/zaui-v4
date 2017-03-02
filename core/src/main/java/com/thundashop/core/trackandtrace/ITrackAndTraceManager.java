@@ -5,10 +5,9 @@
  */
 package com.thundashop.core.trackandtrace;
 
-import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
+import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,30 +40,30 @@ public interface ITrackAndTraceManager {
     
     public List<TrackAndTraceException> getExceptions();
     
-    @Administrator
+    @Editor
     public void deleteRoute(String routeId);
     
-    @Administrator
+    @Editor
     public void saveException(TrackAndTraceException exception);
     
-    @Administrator
+    @Editor
     public List<Route> getAllRoutes();
     
-//    @Administrator
+//    @Editor
 //    public void addCompanyToRoute(String routeId, String companyId);
     
     public void addDeliveryTaskToDestionation(String destionatId, DeliveryTask task);
     
-    @Administrator
+    @Editor
     public void loadData(String base64, String fileName);
     
-    @Administrator
+    @Editor
     public List<DataLoadStatus> getLoadStatuses();
     
-    @Administrator
+    @Editor
     public DataLoadStatus getLoadStatus(String statusId);
     
-    @Administrator
+    @Editor
     public void addDriverToRoute(String userId, String routeId);
     
     @Customer
@@ -82,10 +81,10 @@ public interface ITrackAndTraceManager {
     @Customer
     public List<AcculogixExport> getExport(String routeId, boolean currentState);
     
-    @Administrator
+    @Editor
     public void setSequence(String exceptionId, int sequence);
     
-    @Administrator
+    @Editor
     public Destination getDestinationById(String destinationId);
     
     @Customer
@@ -101,7 +100,7 @@ public interface ITrackAndTraceManager {
     @Customer
     public Route moveDesitinationToPool(String routeId, String destinationId);
     
-    @Administrator
+    @Editor
     public void moveDestinationFromPoolToRoute(String destId, String routeId);
     
     @Customer
@@ -110,10 +109,10 @@ public interface ITrackAndTraceManager {
     @Customer
     public void setScannedBarcodes(String taskId, String orderReference, List<String> barcodes, boolean barcodeEnteredManually);
     
-    @Administrator
+    @Editor
     public DriverMessage sendMessageToDriver(String driverId, String message);
     
-    @Administrator
+    @Editor
     public void setInstructionOnDestination(String routeId, String destinationId, String message);
     
     @Customer
@@ -122,7 +121,7 @@ public interface ITrackAndTraceManager {
     @Customer
     public void acknowledgeDriverMessage(String msgId);
     
-    @Administrator
+    @Editor
     public DriverMessage getDriverMessage(String msgId);
     
     @Customer

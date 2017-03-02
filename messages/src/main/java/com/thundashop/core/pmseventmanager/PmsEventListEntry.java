@@ -19,6 +19,7 @@ public class PmsEventListEntry {
     public String description = "";
     public List<PmsBookingEventLink> lenker = new ArrayList();
     public String imageid;
+    public String eventDateId = "";
     
     PmsEventListEntry(PmsBookingEventEntry entry, Date start, String roomName) {
         try {
@@ -26,11 +27,10 @@ public class PmsEventListEntry {
                 entry.starttime = entry.starttime.trim();
                 String startTime = entry.starttime;
                 if(startTime.length() >= 4) {
-                    startTime = startTime.substring(0, 4);
+                    startTime = startTime.substring(0, 5);
                     String startTimes[] = startTime.split(":");
                     Integer hour = new Integer(startTimes[0]);
                     Integer minute = new Integer(startTimes[1]);
-                    
                     Calendar test = Calendar.getInstance();
                     test.setTime(start);
                     test.set(Calendar.HOUR_OF_DAY, hour);

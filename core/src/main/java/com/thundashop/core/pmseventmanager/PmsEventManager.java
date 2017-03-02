@@ -2,17 +2,12 @@ package com.thundashop.core.pmseventmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.pmseventmanager.PmsBookingEventEntry;
-import com.thundashop.core.pmseventmanager.PmsEventFilter;
-import com.thundashop.core.pmsmanager.IPmsManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingDateRange;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
@@ -185,7 +180,9 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         Date todayDate = today.getTime();
         for(PmsBookingEventEntry entry : eventlist) {
             int i = 0;
+            int offset = 0;
             for(PmsBookingDateRange range : entry.dateRanges) {
+                offset++;
                 if(!range.start.after(todayDate)) {
                     continue;
                 }
@@ -195,6 +192,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
                 PmsBookingEventEntry overrideEntry = entry.getDay(day);
                 PmsEventListEntry newEntry = new PmsEventListEntry(overrideEntry, range.start, entry.roomNames.get(i));
                 newEntry.eventId = entry.id;
+                newEntry.eventDateId = entry.id + "_" + day;
                 result.add(newEntry);
                 i++;
             }

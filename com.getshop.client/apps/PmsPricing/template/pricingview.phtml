@@ -101,6 +101,7 @@ $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($this->getSelected
 <br>
 <div gstype='form' method='updateProgressivePrices'>
     <?php
+    echo "<input type='hidden' gsname='priceType' value='" . $priceObject->defaultPriceType . "'>";
     echo "<h1>Step 3 / 3: Verify the new pricing table</h1>";
     if($priceObject->defaultPriceType == 7 || $priceObject->defaultPriceType == 8) {
         $this->includefile("progressivepricing");

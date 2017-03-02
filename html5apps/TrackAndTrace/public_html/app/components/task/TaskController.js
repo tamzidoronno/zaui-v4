@@ -57,6 +57,9 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     $scope.setPickupType = function() {
         $scope.task = datarepository.getTaskById($stateParams.taskId);
         
+        if (!$scope.task)
+            return;
+        
         if ($scope.task.className == "com.thundashop.core.trackandtrace.PickupTask") {
             $scope.taskType = "pickup_parcels";
         }
@@ -236,7 +239,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         return $scope.task.containerCounted;
     }
     
-    $scope.isContainerCounted = function() {
+    $scope.isAnyContainers = function() {
         var anyCont = false;
         for (var i in $scope.task.orders) {
             var order = $scope.task.orders[i];
@@ -244,11 +247,17 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
                 anyCont = true;
             }
         }
+       
+        return anyCont;
+    }
+    
+    $scope.isContainerCounted = function() {
+        var anyCont = $scope.isAnyContainers();
         
         if (!anyCont) {
             return true;
         }
-        
+
         if ($scope.task.hasOwnProperty('containerCounted') && $scope.task.containerCounted > 0) 
             return true;
         

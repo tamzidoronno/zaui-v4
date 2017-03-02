@@ -93,7 +93,13 @@
         <center ng-if='getBundleCount(getCages())'><span ng-if='getContainerCount()'>{{ getContainerCount() }} x </span>Container bundles: {{ getBundleCount(getContainerBundles()); }}</center>
     </div>
     <br/>
-    <div ng-if='!isContainerCounted()' class="button" ng-mobile-click="openCountPalletsOrCages()">Count containers.</div>
+    <div ng-if="isAnyContainers()">
+        <div class="button" ng-mobile-click="openCountPalletsOrCages()">
+            <div ng-if='!isContainerCounted()'>Count containers.</div>
+            <div ng-if='isContainerCounted()'>Recount containers.</div>
+        </div>
+    </div>
+    
     <div ng-if='allOrdersFinished() && isContainerCounted()' class="button deliveredbutton" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
     <div ng-if='!allOrdersFinished() && isContainerCounted()'>
         Please complete all the tasks above.

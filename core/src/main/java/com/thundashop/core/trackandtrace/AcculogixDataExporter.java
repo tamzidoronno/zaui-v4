@@ -165,6 +165,11 @@ public class AcculogixDataExporter {
             setOrderInfo(exp, order, dest);
             
             exp.PODBarcodeID = order.podBarcode;
+            
+            if (order.source != null && order.source.toLowerCase().equals("tnt")) {
+                exp.PODBarcodeID = findFirstPODBarcode(dest);
+            }
+            
             exp.BarcodeValidated = task.barcodeValidated ? "Yes" : "No";
             setOrderInfo(exp, order, dest);
             
@@ -280,5 +285,29 @@ public class AcculogixDataExporter {
         exp.TaskType = order instanceof PickupOrder ? "PICKUP RETURNS" : exp.TaskType;
         exp.TaskComments = order.comment;
         exp.taskSource = order.source;
+    }
+
+    private String findFirstPODBarcode(Destination dest) {
+        for (Task iTak : dest.tasks) {
+            if (iTak instanceof PickupTask) {
+                PickupTask task = (PickupTask)iTak;
+                for (PickupOrder order : task.orders) {
+                    if (order.podBarcode != null && !order.podBarcode.isEmpty()) {
+                        return order.podBarcode;
+                    }
+                }
+            }
+            
+            if (iTak instanceof DeliveryTask) {
+                DeliveryTask task = (DeliveryTask)iTak;
+                for (DeliveryOrder order : task.orders) {
+                    if (order.podBarcode != null && !order.podBarcode.isEmpty()) {
+                        return order.podBarcode;
+                    }
+                }
+            }
+        }
+        
+        return "";
     }
 }

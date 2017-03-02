@@ -100,6 +100,11 @@
 .summary .summaryrow .col:nth-of-type(4) {width: 40px;}
 .summary .summaryrow .col:nth-of-type(5) {width: 40px;}
 .summary .summaryrow .col:nth-of-type(6) {width: 30px;}
+
+
+.pickup_parcels .summary .summaryrow .col:nth-of-type(4) {width: 10px;}
+.pickup_parcels .summary .summaryrow .col:nth-of-type(6) {width: 40px;}
+
 .summary {
     text-align: left;
 }

@@ -210,7 +210,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
                 order.barcodeScanned = [];
                 order.countedBundles = -1;
                 
-                $api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, referenceNumber, -1);
+                $api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, referenceNumber, -1, -1);
                 $api.getApi().TrackAndTraceManager.setScannedBarcodes($scope.task.id, referenceNumber, [], false);                
                 datarepository.save();
             }

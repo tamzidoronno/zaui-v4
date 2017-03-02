@@ -20,6 +20,7 @@ public class PickupOrder extends TntOrder {
      * Counted bundles/parcels. 
      * if conatiner is true its how many containers picked up.
      */
+    public int countedContainers = -1;
     public int countedBundles = -1;
     public boolean mustScanBarcode;
     public String returnLabelNumber = "";

@@ -190,6 +190,11 @@ public class AcculogixDataExporter {
                 exp.ORPieceCount = order.barcodeScanned.size();
             }
             
+            if (order.countedContainers > 0) {
+                exp.ORPieceCount = 0;
+                exp.TaskContainerCount = order.countedContainers;
+            }
+            
             exp.BarcodeValidated = order.barcodeEnteredManually ? "NO" : "YES";
             
             if (order.barcodeScanned.isEmpty()) {
@@ -216,10 +221,6 @@ public class AcculogixDataExporter {
             
             if (task.completed) {
                 exp.ORPieceCount = order.quantity;
-            }
-            
-            if (order.containerType != null) {
-                exp.TaskContainerCount = task.containerCounted;
             }
             
             exp.ORPieceCorrect = "NO";

@@ -67,7 +67,7 @@ public interface ITrackAndTraceManager {
     public void addDriverToRoute(String userId, String routeId);
     
     @Customer
-    public void changeQuantity(String taskId, String orderReference, int quantity);
+    public void changeQuantity(String taskId, String orderReference, int parcels, int containers);
     
     @Customer
     public void changeCountedDriverCopies(String taskId, String orderReference, int quantity);

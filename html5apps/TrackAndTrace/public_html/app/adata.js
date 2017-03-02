@@ -145,7 +145,7 @@ adata = {
     },
     
     loadFromLocalStorage: function() {
-        if (localStorage.getItem("aDataToSave")) {
+        if (localStorage.getItem("aDataRoutes")) {
             this.routes = JSON.parse(localStorage.getItem("aDataRoutes"));
         }
         

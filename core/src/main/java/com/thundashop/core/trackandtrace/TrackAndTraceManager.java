@@ -364,13 +364,13 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void changeQuantity(String taskId, String orderReference, int quantity) {
+    public void changeQuantity(String taskId, String orderReference, int parcels, int containers) {
         Task task = tasks.get(taskId);
         if (task instanceof PickupTask) {
-            ((PickupTask)task).changeCountedCopies(orderReference, quantity);
+            ((PickupTask)task).changeCountedCopies(orderReference, parcels, containers);
         }
         if (task instanceof DeliveryTask) {
-            ((DeliveryTask)task).changeQuantity(orderReference, quantity);
+            ((DeliveryTask)task).changeQuantity(orderReference, parcels);
             saveObjectInternal(task);
         }
     }

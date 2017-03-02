@@ -813,7 +813,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public List<Route> addPickupOrder(String destnationId, PickupOrder order) {
+    public TaskAdded addPickupOrder(String destnationId, PickupOrder order) {
         Destination dest = getDestination(destnationId);
         PickupTask task = dest.getPickupTask();
         
@@ -826,8 +826,16 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         order.source = "tnt";
+        
+        PickupOrder existingOrder = task.getOrder(order.referenceNumber);
+        
+        if (existingOrder == null) {
+            task.orders.add(order);
+        } else {
+            order = existingOrder;
+        }
+        
         task.completed = false;
-        task.orders.add(order);
         saveObjectInternal(task);
         saveObjectInternal(dest);
         
@@ -839,6 +847,13 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
-        return retRoutes;
+        TaskAdded ret = new TaskAdded();
+        ret.route = retRoutes.get(0);
+        ret.orderReferenceNumber = order.referenceNumber;
+        ret.task = task;
+        finalize(dest);
+        ret.destination = dest;
+        
+        return ret;
     }
 }

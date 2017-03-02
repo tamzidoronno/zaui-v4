@@ -63,6 +63,34 @@ adata = {
         this.save();
     },
     
+    updateTask: function(destination, task, $api) {
+        for (var i in this.routes) {
+            var route = this.routes[i];
+            for (var j in route.destinations) {
+                if (route.destinations[j].id === destination.id) {
+                    var found = false;
+                    var kdest = route.destinations[j];
+                    for (var k in kdest.tasks) {
+                        var inTask = kdest.tasks[k];
+                        if (inTask.id === task.id) {
+                            kdest.tasks[k] = task;
+                            found = true;
+                        }
+                    }
+                    
+                    if (!found) {
+                        if (!route.destinations[j].tasks)
+                            route.destinations[j].tasks = [];
+                        
+                        route.destinations[j].tasks.push(task);
+                    }
+                    
+                }
+            }
+        }
+        this.save();
+    },
+    
     updateRoute: function(route, $api) {
         if (!route)
             return;

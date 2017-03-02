@@ -219,6 +219,10 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     }
 
     $scope.orderFinished = function(order) {
+        if ($scope.taskType === "pickup_parcels" && order.container && order.countedBundles < 0 && order.countedContainers < 0 &&!order.exceptionId) {
+            return false;
+        }
+        
         if ($scope.taskType === "pickup_parcels" && order.countedBundles < 0 && order.barcodeScanned.length == 0 &&!order.exceptionId) {
             return false;
         }

@@ -34,12 +34,13 @@ controllers.AddPickupTaskController = function($scope, datarepository, $statePar
         var orderReference = barcode.substr(barcode.length - 13, 10);
         
         $scope.numbers = orderReference;
+        $scope.createTask(null, $scope.numbers);
     }
     
     $scope.startScanner = function() {
         
         if (typeof(cordova) === "undefined") {
-            $scope.barcodeReceived('651817721149312100');
+            $scope.barcodeReceived('651817211486929100');
             $scope.i++;
             return;
         }
@@ -62,11 +63,20 @@ controllers.AddPickupTaskController = function($scope, datarepository, $statePar
         
         $('.loadingData').show();
         $api.getApi().TrackAndTraceManager.addPickupOrder($stateParams.destinationId, pickupOrder).done(function(res) {
-            datarepository.updateRoute(res[0], $api);
+            datarepository.updateTask(res.destination, res.task, $api);
             $('.loadingData').hide();
-            $state.transitionTo("base.destination",  { 
-                destinationId: $stateParams.destinationId,
-                routeId: $stateParams.routeId 
+//            $state.transitionTo("base.destination",  { 
+//                destinationId: $stateParams.destinationId,
+//                routeId: $stateParams.routeId 
+//            });
+            $state.go('base.task', { 
+                destinationId: $stateParams.destinationId,  
+                routeId: $stateParams.routeId, 
+                taskId: res.task.id,
+                'action' : { 
+                    state: 'keyedReference',
+                    keyReference : res.orderReferenceNumber
+                }
             });
         });
     }

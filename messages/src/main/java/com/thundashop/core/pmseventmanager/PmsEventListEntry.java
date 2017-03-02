@@ -19,6 +19,7 @@ public class PmsEventListEntry {
     public String description = "";
     public List<PmsBookingEventLink> lenker = new ArrayList();
     public String imageid;
+    public String eventDateId = "";
     
     PmsEventListEntry(PmsBookingEventEntry entry, Date start, String roomName) {
         try {

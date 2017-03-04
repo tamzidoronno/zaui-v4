@@ -719,14 +719,26 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void setInstructionOnDestination(String routeId, String destinationId, String message) {
+    public String setInstructionOnDestination(String routeId, String destinationId, String message) {
         Destination dest = getDestinationById(destinationId);
+        if (dest == null) {
+            return "Destination not found";
+        }
+        
         dest.extraInstructions = message;
         saveObject(dest);
         
         Route route = getRouteById(routeId);
+        
+        if (route == null) {
+            return "Route not found";
+        }
+        
+        
         finalize(route);
         notifyRoute(route);
+        
+        return "Received";
     }
 
     @Override

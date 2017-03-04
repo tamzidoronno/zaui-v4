@@ -117,7 +117,7 @@ public interface ITrackAndTraceManager {
     public DriverMessage sendMessageToDriver(String driverId, String message);
     
     @Editor
-    public void setInstructionOnDestination(String routeId, String destinationId, String message);
+    public String setInstructionOnDestination(String routeId, String destinationId, String message);
     
     @Customer
     public List<DriverMessage> getDriverMessages(String userId);

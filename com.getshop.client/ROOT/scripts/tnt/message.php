@@ -88,7 +88,8 @@ if ($_GET['type'] == "driver") {
 } else if ($_GET['type'] == "destination") {
     $route = validateRoute(@$_GET['routeid'], $factory);
     $dest = validateDestination(@$_GET['stopseq'], $route);
-    $factory->getApi()->getTrackAndTraceManager()->setInstructionOnDestination($_GET['routeid'], $dest->id, $_GET['message']);
+    $msg = $factory->getApi()->getTrackAndTraceManager()->setInstructionOnDestination($_GET['routeid'], $dest->id, $_GET['message']);
+    echo $msg;
 } else if ($_GET['type'] === "status") { 
     $msg = $factory->getApi()->getTrackAndTraceManager()->getDriverMessage($_GET['messageid']);
     echo json_encode($msg);

@@ -65,6 +65,9 @@ public interface ITrackAndTraceManager {
     
     @Editor
     public void addDriverToRoute(String userId, String routeId);
+
+    @Editor
+    public void removeDriverToRoute(String userId, String routeId);
     
     @Customer
     public void changeQuantity(String taskId, String orderReference, int parcels, int containers);

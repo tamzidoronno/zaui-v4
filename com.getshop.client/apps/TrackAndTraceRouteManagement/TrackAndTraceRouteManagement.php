@@ -161,5 +161,12 @@ class TrackAndTraceRouteManagement extends \MarketingApplication implements \App
     public function deleteRoute() {
         $this->getApi()->getTrackAndTraceManager()->deleteRoute($_POST['data']['routeid']);
     }
+    
+    public function removeUser() {
+        $route = $this->getRoute();
+        $this->getApi()->getTrackAndTraceManager()->removeDriverToRoute($_POST['data']['userid'], $route->id);
+        
+        
+    }
 }
 ?>

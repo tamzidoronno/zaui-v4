@@ -63,6 +63,18 @@ adata = {
         this.save();
     },
     
+    removeRoute: function(routeId) {
+        var newRoutes = [];
+        for (var i in this.routes) {
+            var route = this.routes[i];
+            if (route.id !== routeId) {
+                newRoutes.push(route);
+            }
+        }
+        this.routes = newRoutes;
+        this.save();
+    },
+    
     updateTask: function(destination, task, $api) {
         for (var i in this.routes) {
             var route = this.routes[i];

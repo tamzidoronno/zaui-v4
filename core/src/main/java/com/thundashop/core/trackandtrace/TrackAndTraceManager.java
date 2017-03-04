@@ -872,4 +872,21 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             saveObjectInternal(route);
         }
     }
+
+    @Override
+    public void removeDriverToRoute(String userId, String routeId) {
+        Route route = getRouteById(routeId);
+        if (route != null) {
+            route.userIds.remove(userId);
+            saveObjectInternal(route);
+            
+            finalize(route);
+            
+            DriverRemoved driverRemoved = new DriverRemoved();
+            driverRemoved.routeId = routeId;
+            driverRemoved.userId = userId;
+            
+            webSocketServer.sendMessage(driverRemoved);
+        }
+    }
 }

@@ -1,7 +1,7 @@
 <div ng-if='!datarepository.selectedRouteForPoolController'>
     <div style='text-align: center; font-weight: bold;'>Please select route you wish to modify.</div>
     <br/>
-    <div ng-repeat='route in datarepository.routes ' class='select_route_row'>
+    <div ng-repeat='route in routes ' class='select_route_row'>
         {{ route.name }} <div class="button modifyRouteButton" ng-mobile-click="selectRoute(route)"><i class='fa fa-arrow-right'></i></div>
     </div>
 </div>

@@ -7,6 +7,16 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.PoolController = function($scope, $api, $rootScope, datarepository, $state) {
     $scope.datarepository = datarepository;
+    $scope.routes = [];
+    
+    $scope.init = function() {
+        for (var i in datarepository.routes) {
+            var route = datarepository.routes[i];
+            if (!route.completedInfo.completed) {
+                $scope.routes.push(route);
+            }
+        }
+    }
     
     $scope.selectRoute = function(route) {
         datarepository.selectedRouteForPoolController = route;

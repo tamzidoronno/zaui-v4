@@ -49,5 +49,7 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
             $scope.datarepository.selectedRouteForPoolController = route;
         }
     });
+    
+    $scope.init();
 };
 

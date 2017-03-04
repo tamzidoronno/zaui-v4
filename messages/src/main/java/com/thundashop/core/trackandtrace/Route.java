@@ -8,6 +8,7 @@ package com.thundashop.core.trackandtrace;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -96,5 +97,22 @@ public class Route extends DataCommon {
         destinations.clear();;
     }
 
+    public boolean shouldBeDeletedDueToOverdue() {
+        if (!completedInfo.completed)
+            return false;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(completedInfo.completedTimeStamp);
+        cal.add(Calendar.DAY_OF_WEEK, 2);
+        Date dateToPass = cal.getTime();
+        
+        Date now = new Date();
+        System.out.println("Now: " + now);
+        
+        if (now.after(dateToPass))
+            return true;
+        
+        return false;
+    }
 
 }

@@ -7,6 +7,7 @@ package com.thundashop.core.trackandtrace;
 
 import com.thundashop.core.utils.ImageManager;
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.bookingengine.CheckConsistencyCron;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
@@ -110,6 +111,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         new ArrayList(pooledDestinations.values()).stream().forEach(pool -> ensureRemoval((PooledDestionation)pool));
+        
+        createScheduler("checkRemovalOfRoutes", "0 0 * * *", CheckConsistencyCron.class);
     }
     
     private void ensureRemoval(PooledDestionation dest) {
@@ -655,6 +658,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
+        if (route != null) {
+            route.userIds.stream()
+                .forEach(userId -> sendRouteRemovedMessage(routeId, userId));
+        }
+        
         exports.values().removeIf(o -> o.routeId != null && o.routeId.equals(routeId));
     }
     
@@ -882,11 +890,22 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             
             finalize(route);
             
-            DriverRemoved driverRemoved = new DriverRemoved();
-            driverRemoved.routeId = routeId;
-            driverRemoved.userId = userId;
-            
-            webSocketServer.sendMessage(driverRemoved);
+            sendRouteRemovedMessage(routeId, userId);
         }
+    }
+
+    private void sendRouteRemovedMessage(String routeId, String userId) {
+        DriverRemoved driverRemoved = new DriverRemoved();
+        driverRemoved.routeId = routeId;
+        driverRemoved.userId = userId;
+        
+        webSocketServer.sendMessage(driverRemoved);
+    }
+
+    @Override
+    public void checkRemovalOfRoutes() {
+        routes.values().stream()
+                .filter(r -> r.shouldBeDeletedDueToOverdue())
+                .forEach(r -> deleteRoute(r.id));
     }
 }

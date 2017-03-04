@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
@@ -132,4 +133,7 @@ public interface ITrackAndTraceManager {
     
     @Customer
     public void markAsCompleted(String routeId, double lat, double lon);
+    
+    @Administrator
+    public void checkRemovalOfRoutes();
 }

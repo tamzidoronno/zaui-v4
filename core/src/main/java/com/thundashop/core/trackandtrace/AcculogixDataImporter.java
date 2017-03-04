@@ -191,8 +191,11 @@ public class AcculogixDataImporter {
                 task.orders = deliveryOrders;
                 task.podBarcode = deliveryOrderDatas.get(0)[34];
                 destination.taskIds.add(task.id);
+                task.completed = false;
             } else {
                 task.orders.addAll(deliveryOrders);
+                task.completed = false;
+                destination.unStart();
             }
             
             trackAndTraceManager.saveTaskGeneral(task);
@@ -273,6 +276,8 @@ public class AcculogixDataImporter {
                 destination.taskIds.add(task.id);
             } else {
                 task.orders.addAll(pickupOrders);
+                task.completed = false;
+                destination.unStart();
             }
             
             trackAndTraceManager.saveTaskGeneral(task);

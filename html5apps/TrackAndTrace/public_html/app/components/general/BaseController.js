@@ -20,7 +20,7 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
         for (var i in data.userIds) {
             if (data.userIds[i] === loggedOnUserId) {
                 datarepository.updateRoute(data, $api);
-                $rootScope.$broadcast('refreshRoute', data);
+//                $rootScope.$broadcast('refreshRoute', data);
                 $state.go($state.current, {}, {reload: true});
             }
         }

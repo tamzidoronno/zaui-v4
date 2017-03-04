@@ -38,6 +38,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
   
             $rootScope.$broadcast("refreshRouteEven1", route);
             $rootScope.$apply();
+            
         },
                 
         this.messageReceived = function(msg) {

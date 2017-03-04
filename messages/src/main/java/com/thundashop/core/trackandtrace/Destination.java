@@ -119,4 +119,8 @@ public class Destination extends DataCommon {
         
         return null;
     }
+
+    public void unStart() {
+        signatures.clear();
+    }
 }

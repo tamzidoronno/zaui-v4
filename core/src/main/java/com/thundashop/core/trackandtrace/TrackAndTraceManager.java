@@ -723,6 +723,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public List<DriverMessage> getDriverMessages(String userId) {
+        if (userId == null || userId.isEmpty())
+            return new ArrayList();
+        
         return driverMessages.values()
                 .stream()
                 .filter(msg -> msg.driverId != null && msg.driverId.equals(userId) && !msg.isRead)
@@ -855,5 +858,18 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         ret.destination = dest;
         
         return ret;
+    }
+
+    @Override
+    public void markAsCompleted(String routeId, double lat, double lon) {
+        Route route = getRouteById(routeId);
+        if (route != null) {
+            route.completedInfo.completed = true;
+            route.completedInfo.completedByUserId = getSession().currentUser.id;
+            route.completedInfo.completedTimeStamp = new Date();
+            route.completedInfo.completedLat = lat;
+            route.completedInfo.completedLon = lon;
+            saveObjectInternal(route);
+        }
     }
 }

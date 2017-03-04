@@ -126,4 +126,7 @@ public interface ITrackAndTraceManager {
     
     @Customer
     public TaskAdded addPickupOrder(String destnationId, PickupOrder order);
+    
+    @Customer
+    public void markAsCompleted(String routeId, double lat, double lon);
 }

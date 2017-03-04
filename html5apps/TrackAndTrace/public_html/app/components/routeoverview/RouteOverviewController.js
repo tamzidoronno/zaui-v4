@@ -117,4 +117,10 @@ controllers.RouteOverviewController = function($scope, datarepository, $rootScop
         
         return false;
     }
+    
+    $scope.markRouteCompleted = function() {
+        $state.transitionTo("base.completeRoute", {
+            routeId: $stateParams.routeId
+        });
+    }
 };

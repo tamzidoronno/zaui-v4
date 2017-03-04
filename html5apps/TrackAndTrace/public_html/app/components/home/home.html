@@ -15,7 +15,7 @@
         </div>
     </div>
     
-    <div class="route" ng-repeat="route in datarepository.routes">
+    <div class="route" ng-repeat="route in routes">
         {{ route.name }}
         <br/> Destinations {{ getUncompletedTasksNumber(route) }} / {{ route.destinations.length }}
 

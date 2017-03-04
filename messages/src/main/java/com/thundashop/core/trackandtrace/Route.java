@@ -30,6 +30,8 @@ public class Route extends DataCommon {
 
     public StartInfo startInfo = new StartInfo();
     
+    public StartInfo completedInfo = new StartInfo();
+    
     public List<String> destinationIds = new ArrayList();
     
     public List<String> userIds = new ArrayList();

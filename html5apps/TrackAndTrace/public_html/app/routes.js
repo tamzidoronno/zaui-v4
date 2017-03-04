@@ -192,6 +192,17 @@ angular.module('TrackAndTrace')
         }
     });
     
+    $stateProvider.state('base.completeRoute', {
+        url: '/completeRoute/:routeId',
+        
+        views: {
+            main: {
+                templateUrl : 'components/routeoverview/completeRoute.html',
+                controller : controllers.RouteCompleteController
+            }
+        }
+    });
+    
     $stateProvider.state("base.pagenotfound", {
         url: "*path",
         views: {

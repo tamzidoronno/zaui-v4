@@ -22,4 +22,7 @@ public interface IPmsReportManager {
     
     @Administrator
     public List<PmsMobileUsage> getUsage(Date start, Date end);
+    
+    @Administrator
+    public PmsConferenceStatistics getConferenceStatistics(Date start, Date end);
 }

@@ -1,0 +1,50 @@
+<?php
+/* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$filter = $this->getSelectedFilter();
+
+$start = $this->convertToJavaDate(strtotime($filter->startDate));
+$end = $this->convertToJavaDate(strtotime($filter->endDate));
+
+$saleStats = $this->getApi()->getPmsReportManager()->getConferenceStatistics($this->getSelectedName(), $start, $end);
+?>
+
+<table cellspacing='0' cellpadding='0'>
+    <tr>
+        <th>Title</th>
+        <th>Value</th>
+    </tr>
+    <tr>
+        <td>Number of bookings</td>
+        <td><?php echo $saleStats->numberOfBookings; ?></td>
+    </tr>
+    <tr>
+        <td>Number of bookers</td>
+        <td><?php echo $saleStats->numberOfBookers; ?></td>
+    </tr>
+    <tr>
+        <td>Number of private bookers</td>
+        <td><?php echo $saleStats->numberOfPrivateBookers; ?></td>
+    </tr>
+    <tr>
+        <td>Number of organisations</td>
+        <td><?php echo $saleStats->numberOfOrgansitionBookers; ?></td>
+    </tr>
+    <tr>
+        <td>Number of rooms</td>
+        <td><?php echo $saleStats->numberOfRooms; ?></td>
+    </tr>
+    
+<?php
+foreach($saleStats->fieldStatistics as $field => $value) {
+    if(is_numeric($value)) {
+        echo "<tr><td>" . $this->translateFields($field) . "</td><td>" . $value . "</td></tr>";
+    } else {
+        foreach($value as $key => $val) {
+            echo "<tr>";
+            echo "<td>" . " " . $key . "(" . $field . ")" . "</td><td>" . $val . "</td>";
+            echo "</tr>";
+        }
+    }
+}
+?>
+</table>

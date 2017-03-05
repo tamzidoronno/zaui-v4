@@ -10,6 +10,7 @@ adata = {
     exceptions: [],
     loaded: false,
     driverMessages: [],
+    currentVersion: "",
     
     loadAllData: function ($api, $scope) {
         var me = this;
@@ -29,6 +30,8 @@ adata = {
             if (me.routeLoadCompleted && me.exceptionLoadCompleted) {
                 $('.loadingData').hide();
             }
+            
+            localStorage.setItem("currentVersion", "1.0.15");
         });
         
         $api.getApi().TrackAndTraceManager.getExceptions().done(function (res) {
@@ -185,6 +188,10 @@ adata = {
     },
     
     loadFromLocalStorage: function() {
+        if (localStorage.getItem("currentVersion") !== "1.0.15") {
+            return;
+        }
+        
         if (localStorage.getItem("aDataRoutes")) {
             this.routes = JSON.parse(localStorage.getItem("aDataRoutes"));
         }

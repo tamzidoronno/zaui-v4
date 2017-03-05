@@ -51,6 +51,9 @@ public class Route extends DataCommon {
     
     public boolean dirty = false;
     
+    /**
+     * This flag is used for exporting data that is not connected to any route.
+     */
     public boolean isVritual = false;
     
     public Route() {

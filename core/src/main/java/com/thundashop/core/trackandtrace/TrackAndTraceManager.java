@@ -320,6 +320,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             return;
         }
         
+        if (fileName.toLowerCase().contains("virtualroutes")) {
+            new AcculogixVirtualRoutesImporter(this, base64);
+            return;
+        }
+        
         AcculogixDataImporter ret = new AcculogixDataImporter(base64, userManager, this, fileName);
         ret.getRoutes().stream().forEach(route -> notifyRoute(getRouteById(route.id)));
         

@@ -1158,6 +1158,12 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         Date to = (Date)getSession().get("to");
         Date today = new Date();
         
+        if ((from == null || to == null) && getSession().currentUser != null && getSession().currentUser.type == 100) {
+            return retEvents.stream()
+                    .filter(o -> o.getLastDate() != null && o.getLastDate().after(today))
+                    .collect(Collectors.toList());
+        }
+        
         if (from == null || to == null) {
             return retEvents.stream()
                     .filter(o -> o.mainEndDate != null && o.mainEndDate.after(today))

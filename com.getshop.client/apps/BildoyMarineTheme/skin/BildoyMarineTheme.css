@@ -19,7 +19,7 @@ h2 { font-weight: 700; }
 }
 
 .gsarea[area="header"] {
-    height: 100px;
+    height: 120px;
     box-sizing: border-box;
     padding-top: 30px;
     position: fixed;
@@ -54,7 +54,7 @@ h2 { font-weight: 700; }
 
 .gsarea[area="header"] [cellid="2cd45f3b-0488-43ec-a405-2523b0b99379"] img {
     height: 80px !important;
-    padding-top: 20px !important;
+    padding-top: 45px !important;
 }
     
 
@@ -97,6 +97,7 @@ h2 { font-weight: 700; }
 
 .gsarea[area="header"] .Menu {
     text-align: right;
+    margin-top: 20px;
 }
 .gsarea[area="header"] .Menu .entry {
     text-align: left;

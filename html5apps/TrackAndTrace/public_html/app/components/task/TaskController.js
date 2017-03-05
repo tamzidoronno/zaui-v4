@@ -345,6 +345,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
             }
         }
         
+        debugger;
         if (orderFound) {
             if (!orderFound.barcodeScanned) {
                 orderFound.barcodeScanned = [];
@@ -353,6 +354,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
             if ($.inArray(barcode, orderFound.barcodeScanned) < 0) {
                 orderFound.barcodeScanned.push(barcode);
             }
+            
             
             if (!orderFound.mustScanBarcode) {
                 $scope.openCountedReturn(orderFound);
@@ -392,7 +394,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     $scope.startScanner = function() {
         
         if (typeof(cordova) === "undefined") {
-            $scope.barcodeReceived('651817721149312100'+$scope.i);
+            $scope.barcodeReceived('721148692910'+$scope.i);
             $scope.i++;
             return;
         }

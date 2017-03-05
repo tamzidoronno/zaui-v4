@@ -6,6 +6,7 @@ import com.thundashop.core.bcomratemanager.RateManagerConfig;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
@@ -67,7 +68,11 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        
+        for(DataCommon d : data.data) {
+            if(d instanceof RateManagerConfig) {
+                config = (RateManagerConfig) d;
+            }
+        }
     }
     
     @Override

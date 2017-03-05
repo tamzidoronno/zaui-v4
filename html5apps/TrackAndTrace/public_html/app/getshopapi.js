@@ -12166,6 +12166,16 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'checkRemovalOfRoutes' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'checkRemovalOfRoutes',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'deleteRoute' : function(routeId, gs_silent) {
         var data = {
             args : {
@@ -12283,6 +12293,16 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getPooledDestiontionsByUsersDepotId' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getPooledDestiontionsByUsersDepotId',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getRoutesById' : function(routeId, gs_silent) {
         var data = {
             args : {
@@ -12374,6 +12394,18 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 routeId : JSON.stringify(routeId),
             },
             method: 'moveDestinationFromPoolToRoute',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'removeDriverToRoute' : function(userId,routeId, gs_silent) {
+        var data = {
+            args : {
+                userId : JSON.stringify(userId),
+                routeId : JSON.stringify(routeId),
+            },
+            method: 'removeDriverToRoute',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);

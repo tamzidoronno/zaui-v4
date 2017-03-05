@@ -104,11 +104,14 @@ public interface ITrackAndTraceManager {
     @Customer
     public Route moveDesitinationToPool(String routeId, String destinationId);
     
-    @Editor
-    public void moveDestinationFromPoolToRoute(String destId, String routeId);
+    @Customer
+    public Route moveDestinationFromPoolToRoute(String destId, String routeId);
     
     @Customer
     public List<PooledDestionation> getPooledDestiontions();
+    
+    @Customer
+    public List<PooledDestionation> getPooledDestiontionsByUsersDepotId();
     
     @Customer
     public void setScannedBarcodes(String taskId, String orderReference, List<String> barcodes, boolean barcodeEnteredManually);

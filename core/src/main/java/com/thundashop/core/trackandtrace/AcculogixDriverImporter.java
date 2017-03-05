@@ -49,6 +49,8 @@ public class AcculogixDriverImporter {
             userManager.saveUser(user);
             userManager.updatePassword(user.id, data[1].toLowerCase(), data[1].toLowerCase());
             
+            userManager.addMetaData(user.id, "depotId", data[0]);
+            
             String groupId = data[6];
             if (!groupId.isEmpty()) {
                 Group group = userManager.getGroup(groupId);

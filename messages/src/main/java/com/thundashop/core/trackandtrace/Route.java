@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -46,6 +47,8 @@ public class Route extends DataCommon {
     
     public String originalId;
 
+    public String depotId = "";
+    
     public boolean dirty = false;
     
     public boolean isVritual = false;
@@ -113,6 +116,12 @@ public class Route extends DataCommon {
             return true;
         
         return false;
+    }
+
+    void sortDestinations() {
+        destinations = destinations.stream().sorted((o1, o2) -> {
+            return o1.seq.compareTo(o2.seq);
+        }).collect(Collectors.toList());
     }
 
 }

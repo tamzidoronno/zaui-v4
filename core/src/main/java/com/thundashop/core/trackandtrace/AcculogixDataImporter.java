@@ -106,9 +106,9 @@ public class AcculogixDataImporter {
             route.name = route.id;
             route.originalId = row[49];
             route.userIds.add(row[63]);
+            route.depotId = row[2];
             
-            try {    
-                
+            try {
                 route.deliveryServiceDate = sdf.parse(row[30].split(" ")[1]);
             } catch (ParseException ex) {
                 throw new RuntimeException(ex);

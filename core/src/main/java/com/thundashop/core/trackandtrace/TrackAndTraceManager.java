@@ -182,6 +182,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         retRoute.getDestinations().stream().forEach(dest -> finalize(dest));
 
         retRoute.setPodBarcodeStringToTasks();
+        
+        retRoute.sortDestinations();
     }
 
     private void finalize(Destination dest) {
@@ -548,8 +550,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void moveDestinationFromPoolToRoute(String destId, String routeId) {
+    public Route moveDestinationFromPoolToRoute(String destId, String routeId) {
         PooledDestionation pooledDest = pooledDestinations.remove(destId);
+        
         if (pooledDest != null) {
             deleteObject(pooledDest);
             Route route = getRouteById(routeId);
@@ -559,10 +562,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 route.destinationIds.add(dest.id);
                 saveObjectInternal(route);
                 notifyRoute(route);
+                return route;
             }
         }
         
-        
+        return null;
     }
 
     private void notifyRoute(Route route) {
@@ -919,5 +923,28 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         routes.values().stream()
                 .filter(r -> r.shouldBeDeletedDueToOverdue())
                 .forEach(r -> deleteRoute(r.id));
+    }
+
+    @Override
+    public List<PooledDestionation> getPooledDestiontionsByUsersDepotId() {
+        User user = userManager.getUserById(getSession().currentUser.id);
+        
+        String depotId = user.metaData.get("depotId");
+        
+        if (depotId == null)
+            return new ArrayList();
+        
+        List<PooledDestionation> dests = getPooledDestiontions().stream()
+                .filter(dest -> getRouteById(dest.originalRouteId) != null)
+                .filter(dest -> getRouteById(dest.originalRouteId).depotId.equals(depotId))
+                .collect(Collectors.toList());
+        
+        dests.stream().forEach(dest -> finalize(dest));
+        return dests;
+    }
+    
+    private void finalize(PooledDestionation dest) {
+        dest.destination = getDestinationById(dest.destionationId);
+        dest.originalRoute = getRouteById(dest.originalRouteId);
     }
 }

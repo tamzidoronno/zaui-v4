@@ -9,6 +9,7 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 controllers.TaskCorrectionController = function($scope, datarepository, $stateParams, $api, $state) {
     $scope.numbers = 10;
     $scope.api = $api;
+    $scope.countPickupContainerType = "";
     
     $scope.setOrder = function() {
         $scope.task = datarepository.getTaskById($stateParams.taskId);
@@ -23,6 +24,13 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
                 $scope.numbers = order.quantity;
             }
         }
+    }
+    
+    $scope.needToPreselectType = function() {
+        if ($scope.order && $scope.order.container && !$scope.countPickupContainerType)
+            return true;
+        
+        return false;
     }
     
     $scope.getOldQuantity = function(order) {
@@ -53,7 +61,7 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
         if ($stateParams.type === "normal") {
             $scope.order.quantity = newQuantity;
             datarepository.save();
-            $scope.api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, $scope.order.referenceNumber, b);
+            $scope.api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, $scope.order.referenceNumber, b, -1);
         }
         
         if ($stateParams.type === "cagecount") {
@@ -63,10 +71,23 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
         }
         
         if ($stateParams.type === "returncountingnormal") {
-            $scope.order.countedBundles = newQuantity;
+            
+            if ($scope.order.container) {
+                if ($scope.countPickupContainerType === "container") {
+                    $scope.order.countedBundles = -1;
+                    $scope.order.countedContainers = newQuantity;
+                } else {
+                    $scope.order.countedBundles = newQuantity;
+                    $scope.order.countedContainers = -1;    
+                }
+            } else {
+                $scope.order.countedBundles = newQuantity;
+                $scope.order.countedContainers = -1;
+            }
+            
             $scope.order.exceptionId = null;
             
-            $scope.api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, $scope.order.referenceNumber, newQuantity);
+            $scope.api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, $scope.order.referenceNumber, $scope.order.countedBundles, $scope.order.countedContainers);
             $scope.api.getApi().TrackAndTraceManager.markOrderWithException($scope.task.id, $scope.order.referenceNumber, "");
             datarepository.save();
         }
@@ -80,10 +101,14 @@ controllers.TaskCorrectionController = function($scope, datarepository, $statePa
             
             datarepository.save();
             $scope.api.getApi().TrackAndTraceManager.changeCountedDriverCopies($scope.task.id, $scope.order.referenceNumber, b);
-            $scope.api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, $scope.order.referenceNumber, $scope.order.quantity);
+            $scope.api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, $scope.order.referenceNumber, $scope.order.quantity, -1);
         }
         
         $state.transitionTo('base.task', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId, taskId: $stateParams.taskId });
+    }
+    
+    $scope.setContainerType = function(type) {
+        $scope.countPickupContainerType = type;
     }
     
     $scope.goBack = function(a, b) {

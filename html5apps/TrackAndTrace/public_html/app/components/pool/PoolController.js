@@ -7,6 +7,8 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.PoolController = function($scope, $api, $rootScope, datarepository, $state) {
     $scope.datarepository = datarepository;
+
+    $scope.pooledDestinations = [];
     
     $scope.selectRoute = function(route) {
         datarepository.selectedRouteForPoolController = route;
@@ -17,12 +19,26 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
         if (conf) {
             $api.getApi().TrackAndTraceManager.moveDesitinationToPool(datarepository.selectedRouteForPoolController.id, destination.id).done(function(route) {
                 datarepository.updateRoute(route);
-                console.log(route.destinations);
                 datarepository.selectedRouteForPoolController = route;
                 $scope.$apply();
+                $scope.fetchPooledDestination();
             });
             
         }
+    }
+    
+    $scope.moveFromPool = function(destination, id) {
+        
+        var conf = confirm("Are you sure you want to move " + destination.company.name + " from pool?");
+        if (conf) {
+            $api.getApi().TrackAndTraceManager.moveDestinationFromPoolToRoute(id, datarepository.selectedRouteForPoolController.id).done(function(route) {
+                datarepository.updateRoute(route);
+                datarepository.selectedRouteForPoolController = route;
+                $scope.$apply();
+                $scope.fetchPooledDestination();
+            });
+        }
+            
     }
     
     $scope.goBack = function() {
@@ -39,5 +55,14 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
             $scope.datarepository.selectedRouteForPoolController = route;
         }
     });
+    
+    $scope.fetchPooledDestination = function() {
+        $api.getApi().TrackAndTraceManager.getPooledDestiontionsByUsersDepotId().done(function(res) {
+            $scope.pooledDestinations = res;
+            $scope.$apply();
+        });
+    }
+    
+    $scope.fetchPooledDestination();
 };
 

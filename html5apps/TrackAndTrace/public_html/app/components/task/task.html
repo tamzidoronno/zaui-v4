@@ -117,7 +117,8 @@
             <div class="col"></div>
             <div class="col"></div>
             <div class="col"></div>
-            <div class="col">Total</div>
+            <div class="col">parcels</div>
+            <div class="col">containers</div>
         </div>
         <div ng-repeat="order in task.orders" ng-mobile-click-end="toggleActionButton(order)" class="summaryrow" order="{{order.referenceNumber}}">
             <div class="col"><span class="fa" ng-class="{'fa-check': orderFinished(order), 'fa-close' : !orderFinished(order), 'fa-warning' : order.exceptionId }"> 
@@ -134,7 +135,16 @@
             <div class="col">
                 <div ng-if="order.countedBundles > -1 || order.barcodeScanned.length">
                     <span ng-if='order.countedBundles > 0'>  {{ order.countedBundles }} </span>
-                    <span ng-if='order.countedBundles < 0 && order.barcodeScanned.length > 0'> {{ order.barcodeScanned.length }} </span>
+                    <span ng-if='order.countedBundles < 0 && order.barcodeScanned.length > 0 && !order.container'> {{ order.barcodeScanned.length }} </span>
+                    <span ng-if='order.countedBundles < 0 && order.container'> - </span>
+                </div>
+                <div ng-if="order.countedBundles < 0 && !order.barcodeScanned.length"> - </div>
+            </div>
+            
+            <div class="col">
+                <div ng-if="order.countedContainers > -1 || order.barcodeScanned.length">
+                    <span ng-if='order.countedContainers > 0'>  {{ order.countedContainers }} </span>
+                    <span ng-if='order.countedContainers < 0'> - </span>
                 </div>
                 <div ng-if="order.countedBundles < 0 && !order.barcodeScanned.length"> - </div>
             </div>
@@ -165,7 +175,6 @@
                 </div>
 
                 <div style='width: 100%; display: inline-block;'class="button exceptionButton" ng-mobile-click="openPickupException(order)">Add exception</div>
-                <div style='width: 100%; display: inline-block; margin-top: 0px;'class="button exceptionButton order_task_completed" ng-mobile-click="openCountedReturn(order)">Enter containers</div>
             </div>
         </div>
     </div>

@@ -14,7 +14,7 @@ public class UpdateLockList extends GetShopSchedulerBase {
         
     @Override
     public void execute() throws Exception {
-        getApi().getGetShopLockManager().getAllLocks(getMultiLevelName());
+//        getApi().getGetShopLockManager().getAllLocks(getMultiLevelName());
     }
 }
 

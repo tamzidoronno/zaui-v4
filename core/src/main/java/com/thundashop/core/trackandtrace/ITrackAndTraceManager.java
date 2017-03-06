@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
@@ -65,9 +66,12 @@ public interface ITrackAndTraceManager {
     
     @Editor
     public void addDriverToRoute(String userId, String routeId);
+
+    @Editor
+    public void removeDriverToRoute(String userId, String routeId);
     
     @Customer
-    public void changeQuantity(String taskId, String orderReference, int quantity);
+    public void changeQuantity(String taskId, String orderReference, int parcels, int containers);
     
     @Customer
     public void changeCountedDriverCopies(String taskId, String orderReference, int quantity);
@@ -100,11 +104,14 @@ public interface ITrackAndTraceManager {
     @Customer
     public Route moveDesitinationToPool(String routeId, String destinationId);
     
-    @Editor
-    public void moveDestinationFromPoolToRoute(String destId, String routeId);
+    @Customer
+    public Route moveDestinationFromPoolToRoute(String destId, String routeId);
     
     @Customer
     public List<PooledDestionation> getPooledDestiontions();
+    
+    @Customer
+    public List<PooledDestionation> getPooledDestiontionsByUsersDepotId();
     
     @Customer
     public void setScannedBarcodes(String taskId, String orderReference, List<String> barcodes, boolean barcodeEnteredManually);
@@ -113,7 +120,7 @@ public interface ITrackAndTraceManager {
     public DriverMessage sendMessageToDriver(String driverId, String message);
     
     @Editor
-    public void setInstructionOnDestination(String routeId, String destinationId, String message);
+    public String setInstructionOnDestination(String routeId, String destinationId, String message);
     
     @Customer
     public List<DriverMessage> getDriverMessages(String userId);
@@ -125,5 +132,11 @@ public interface ITrackAndTraceManager {
     public DriverMessage getDriverMessage(String msgId);
     
     @Customer
-    public List<Route> addPickupOrder(String destnationId, PickupOrder order);
+    public TaskAdded addPickupOrder(String destnationId, PickupOrder order);
+    
+    @Customer
+    public void markAsCompleted(String routeId, double lat, double lon);
+    
+    @Administrator
+    public void checkRemovalOfRoutes();
 }

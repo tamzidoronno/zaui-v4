@@ -7,13 +7,12 @@
 
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
-controllers.BaseController = function($scope, $rootScope, datarepository, $api) {
+controllers.BaseController = function($scope, $rootScope, $state, datarepository, $api) {
     $scope.messages = datarepository.driverMessages;
     
     if($api.getApi()) {
         $scope.counter = $api.getApi().getUnsentMessageCount();
     }
-    
     
     $rootScope.$on('refreshRouteEven1', function(msg, data) {
         var loggedOnUserId = $api.getLoggedOnUser().id;
@@ -21,11 +20,10 @@ controllers.BaseController = function($scope, $rootScope, datarepository, $api) 
         for (var i in data.userIds) {
             if (data.userIds[i] === loggedOnUserId) {
                 datarepository.updateRoute(data, $api);
-                $rootScope.$broadcast('refreshRoute', data);
+//                $rootScope.$broadcast('refreshRoute', data);
+                $state.go($state.current, {}, {reload: true});
             }
         }
-        
-        
     });
     
     $rootScope.$on('messageReceived', function(msg, data) {
@@ -39,6 +37,16 @@ controllers.BaseController = function($scope, $rootScope, datarepository, $api) 
         }
     });
     
+    $rootScope.$on('driverRemoved', function(msg, data) {
+        if (data.userId === $api.getLoggedOnUser().id) {
+            datarepository.removeRoute(data.routeId);
+            $state.transitionTo('base.home', {}, {reload: true});
+            
+            $scope.$apply();
+            $rootScope.$apply();
+        }
+    });
+    
     $rootScope.$on('refreshData', function() {
         $('.loadingData').show();
         datarepository.loadAllData($api, $scope);
@@ -46,7 +54,7 @@ controllers.BaseController = function($scope, $rootScope, datarepository, $api) 
     
     $rootScope.$on('messageCountChanged', function() {
         $scope.counter = $api.getApi().messagesToSendJson.length;
-        if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+        if ($scope.$root != null && $scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
             $scope.$apply();
         }
     });

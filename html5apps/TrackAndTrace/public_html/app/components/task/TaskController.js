@@ -210,7 +210,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
                 order.barcodeScanned = [];
                 order.countedBundles = -1;
                 
-                $api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, referenceNumber, -1);
+                $api.getApi().TrackAndTraceManager.changeQuantity($scope.task.id, referenceNumber, -1, -1);
                 $api.getApi().TrackAndTraceManager.setScannedBarcodes($scope.task.id, referenceNumber, [], false);                
                 datarepository.save();
             }
@@ -219,6 +219,10 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     }
 
     $scope.orderFinished = function(order) {
+        if ($scope.taskType === "pickup_parcels" && order.container && order.countedBundles < 0 && order.countedContainers < 0 &&!order.exceptionId) {
+            return false;
+        }
+        
         if ($scope.taskType === "pickup_parcels" && order.countedBundles < 0 && order.barcodeScanned.length == 0 &&!order.exceptionId) {
             return false;
         }
@@ -341,6 +345,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
             }
         }
         
+        debugger;
         if (orderFound) {
             if (!orderFound.barcodeScanned) {
                 orderFound.barcodeScanned = [];
@@ -349,6 +354,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
             if ($.inArray(barcode, orderFound.barcodeScanned) < 0) {
                 orderFound.barcodeScanned.push(barcode);
             }
+            
             
             if (!orderFound.mustScanBarcode) {
                 $scope.openCountedReturn(orderFound);
@@ -388,7 +394,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     $scope.startScanner = function() {
         
         if (typeof(cordova) === "undefined") {
-            $scope.barcodeReceived('651817721149312100'+$scope.i);
+            $scope.barcodeReceived('721148692910'+$scope.i);
             $scope.i++;
             return;
         }

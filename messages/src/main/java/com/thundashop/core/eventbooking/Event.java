@@ -149,4 +149,19 @@ public class Event extends DataCommon {
         return isInfure;    
     }
 
+    public Date getLastDate() {
+        Date higestDate = null;
+        
+        for (Day day : days) {
+            if (higestDate == null) {
+                higestDate = day.endDate;
+                continue;
+            }
+            
+            if (day.endDate.after(higestDate))
+                higestDate = day.endDate;
+        }
+        
+        return higestDate;
+    }
 }

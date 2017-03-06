@@ -9,9 +9,17 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 controllers.HomeController = function($scope, $api, $rootScope, datarepository, $state) {
     $scope.name = "";
     $scope.datarepository = datarepository;
+    $scope.routes = [];
     
     $scope.init = function($api) {
         $scope.name = $api.getLoggedOnUser().fullName;
+        
+        for (var i in datarepository.routes) {
+            var route = datarepository.routes[i];
+            if (!route.completedInfo.completed) {
+                $scope.routes.push(route);
+            }
+        }
     }
     
     $scope.loadData = function() {

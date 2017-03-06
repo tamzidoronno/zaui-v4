@@ -10,6 +10,7 @@ adata = {
     exceptions: [],
     loaded: false,
     driverMessages: [],
+    currentVersion: "",
     
     loadAllData: function ($api, $scope) {
         var me = this;
@@ -29,6 +30,8 @@ adata = {
             if (me.routeLoadCompleted && me.exceptionLoadCompleted) {
                 $('.loadingData').hide();
             }
+            
+            localStorage.setItem("currentVersion", "1.0.15");
         });
         
         $api.getApi().TrackAndTraceManager.getExceptions().done(function (res) {
@@ -57,6 +60,46 @@ adata = {
                 if (route.destinations[j].id === destination.id) {
                     route.destinations[j] = destination;
                     console.log("replaced");
+                }
+            }
+        }
+        this.save();
+    },
+    
+    removeRoute: function(routeId) {
+        var newRoutes = [];
+        for (var i in this.routes) {
+            var route = this.routes[i];
+            if (route.id !== routeId) {
+                newRoutes.push(route);
+            }
+        }
+        this.routes = newRoutes;
+        this.save();
+    },
+    
+    updateTask: function(destination, task, $api) {
+        for (var i in this.routes) {
+            var route = this.routes[i];
+            for (var j in route.destinations) {
+                if (route.destinations[j].id === destination.id) {
+                    var found = false;
+                    var kdest = route.destinations[j];
+                    for (var k in kdest.tasks) {
+                        var inTask = kdest.tasks[k];
+                        if (inTask.id === task.id) {
+                            kdest.tasks[k] = task;
+                            found = true;
+                        }
+                    }
+                    
+                    if (!found) {
+                        if (!route.destinations[j].tasks)
+                            route.destinations[j].tasks = [];
+                        
+                        route.destinations[j].tasks.push(task);
+                    }
+                    
                 }
             }
         }
@@ -145,7 +188,11 @@ adata = {
     },
     
     loadFromLocalStorage: function() {
-        if (localStorage.getItem("aDataToSave")) {
+        if (localStorage.getItem("currentVersion") !== "1.0.15") {
+            return;
+        }
+        
+        if (localStorage.getItem("aDataRoutes")) {
             this.routes = JSON.parse(localStorage.getItem("aDataRoutes"));
         }
         

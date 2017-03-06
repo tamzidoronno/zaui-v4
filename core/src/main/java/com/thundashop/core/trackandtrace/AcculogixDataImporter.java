@@ -106,9 +106,9 @@ public class AcculogixDataImporter {
             route.name = route.id;
             route.originalId = row[49];
             route.userIds.add(row[63]);
+            route.depotId = row[2];
             
-            try {    
-                
+            try {
                 route.deliveryServiceDate = sdf.parse(row[30].split(" ")[1]);
             } catch (ParseException ex) {
                 throw new RuntimeException(ex);
@@ -191,8 +191,11 @@ public class AcculogixDataImporter {
                 task.orders = deliveryOrders;
                 task.podBarcode = deliveryOrderDatas.get(0)[34];
                 destination.taskIds.add(task.id);
+                task.completed = false;
             } else {
                 task.orders.addAll(deliveryOrders);
+                task.completed = false;
+                destination.unStart();
             }
             
             trackAndTraceManager.saveTaskGeneral(task);
@@ -273,6 +276,8 @@ public class AcculogixDataImporter {
                 destination.taskIds.add(task.id);
             } else {
                 task.orders.addAll(pickupOrders);
+                task.completed = false;
+                destination.unStart();
             }
             
             trackAndTraceManager.saveTaskGeneral(task);

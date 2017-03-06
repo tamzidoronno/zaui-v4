@@ -20,7 +20,7 @@ $route = $this->getRoute();
         $userIds = $route->userIds;
         foreach ($userIds as $userId) {
             $user = $this->getApi()->getUserManager()->getUserById($userId);
-            echo "<div>".$user->fullName."</div>";
+            echo "<div><div gsclick='removeUser' userid='$userId' class='gs_shop_small_icon'><i class='fa fa-trash'></i></div> ".$user->fullName."</div>";
         }
         ?>
         
@@ -62,7 +62,7 @@ $route = $this->getRoute();
             ?>
             <div class='destinationrow'>
                 <div class='gs_shop_small_icon' gsclick='addDestinationToRoute' destid='<? echo $poolDest->id; ?>'><i class='fa fa-arrow-up'></i></div>
-                <span style='width: 800px; display: inline-block;'><? echo $destination->company->name; ?></span>
+                <span style='width: 800px; display: inline-block;'><? echo $destination->seq." - ". $destination->company->name; ?></span>
                 <span><? echo $poolDest->originalRouteId; ?></span>
             </div>
             <?

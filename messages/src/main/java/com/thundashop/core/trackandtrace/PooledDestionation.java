@@ -6,6 +6,7 @@
 package com.thundashop.core.trackandtrace;
 
 import com.thundashop.core.common.DataCommon;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -15,4 +16,10 @@ public class PooledDestionation extends DataCommon {
     public String destionationId;
     public String pooledByUserId = "";
     public String originalRouteId = "";
+    
+    @Transient
+    public Destination destination;
+    
+    @Transient
+    public Route originalRoute;
 }

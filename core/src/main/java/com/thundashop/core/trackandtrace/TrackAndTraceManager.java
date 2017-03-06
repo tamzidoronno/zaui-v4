@@ -7,6 +7,7 @@ package com.thundashop.core.trackandtrace;
 
 import com.thundashop.core.utils.ImageManager;
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.bookingengine.CheckConsistencyCron;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
@@ -110,6 +111,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         new ArrayList(pooledDestinations.values()).stream().forEach(pool -> ensureRemoval((PooledDestionation)pool));
+        
+        createScheduler("checkRemovalOfRoutes", "0 0 * * *", CheckConsistencyCron.class);
     }
     
     private void ensureRemoval(PooledDestionation dest) {
@@ -179,6 +182,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         retRoute.getDestinations().stream().forEach(dest -> finalize(dest));
 
         retRoute.setPodBarcodeStringToTasks();
+        
+        retRoute.sortDestinations();
     }
 
     private void finalize(Destination dest) {
@@ -315,6 +320,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             return;
         }
         
+        if (fileName.toLowerCase().contains("virtualroutes")) {
+            new AcculogixVirtualRoutesImporter(this, base64);
+            return;
+        }
+        
         AcculogixDataImporter ret = new AcculogixDataImporter(base64, userManager, this, fileName);
         ret.getRoutes().stream().forEach(route -> notifyRoute(getRouteById(route.id)));
         
@@ -364,13 +374,13 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void changeQuantity(String taskId, String orderReference, int quantity) {
+    public void changeQuantity(String taskId, String orderReference, int parcels, int containers) {
         Task task = tasks.get(taskId);
         if (task instanceof PickupTask) {
-            ((PickupTask)task).changeCountedCopies(orderReference, quantity);
+            ((PickupTask)task).changeCountedCopies(orderReference, parcels, containers);
         }
         if (task instanceof DeliveryTask) {
-            ((DeliveryTask)task).changeQuantity(orderReference, quantity);
+            ((DeliveryTask)task).changeQuantity(orderReference, parcels);
             saveObjectInternal(task);
         }
     }
@@ -545,8 +555,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void moveDestinationFromPoolToRoute(String destId, String routeId) {
+    public Route moveDestinationFromPoolToRoute(String destId, String routeId) {
         PooledDestionation pooledDest = pooledDestinations.remove(destId);
+        
         if (pooledDest != null) {
             deleteObject(pooledDest);
             Route route = getRouteById(routeId);
@@ -556,10 +567,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 route.destinationIds.add(dest.id);
                 saveObjectInternal(route);
                 notifyRoute(route);
+                return route;
             }
         }
         
-        
+        return null;
     }
 
     private void notifyRoute(Route route) {
@@ -655,6 +667,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
+        if (route != null) {
+            route.userIds.stream()
+                .forEach(userId -> sendRouteRemovedMessage(routeId, userId));
+        }
+        
         exports.values().removeIf(o -> o.routeId != null && o.routeId.equals(routeId));
     }
     
@@ -711,18 +728,33 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void setInstructionOnDestination(String routeId, String destinationId, String message) {
+    public String setInstructionOnDestination(String routeId, String destinationId, String message) {
         Destination dest = getDestinationById(destinationId);
+        if (dest == null) {
+            return "Destination not found";
+        }
+        
         dest.extraInstructions = message;
         saveObject(dest);
         
         Route route = getRouteById(routeId);
+        
+        if (route == null) {
+            return "Route not found";
+        }
+        
+        
         finalize(route);
         notifyRoute(route);
+        
+        return "Received";
     }
 
     @Override
     public List<DriverMessage> getDriverMessages(String userId) {
+        if (userId == null || userId.isEmpty())
+            return new ArrayList();
+        
         return driverMessages.values()
                 .stream()
                 .filter(msg -> msg.driverId != null && msg.driverId.equals(userId) && !msg.isRead)
@@ -813,7 +845,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public List<Route> addPickupOrder(String destnationId, PickupOrder order) {
+    public TaskAdded addPickupOrder(String destnationId, PickupOrder order) {
         Destination dest = getDestination(destnationId);
         PickupTask task = dest.getPickupTask();
         
@@ -826,8 +858,16 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         order.source = "tnt";
+        
+        PickupOrder existingOrder = task.getOrder(order.referenceNumber);
+        
+        if (existingOrder == null) {
+            task.orders.add(order);
+        } else {
+            order = existingOrder;
+        }
+        
         task.completed = false;
-        task.orders.add(order);
         saveObjectInternal(task);
         saveObjectInternal(dest);
         
@@ -839,6 +879,77 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
-        return retRoutes;
+        TaskAdded ret = new TaskAdded();
+        ret.route = retRoutes.get(0);
+        ret.orderReferenceNumber = order.referenceNumber;
+        ret.task = task;
+        finalize(dest);
+        ret.destination = dest;
+        
+        return ret;
+    }
+
+    @Override
+    public void markAsCompleted(String routeId, double lat, double lon) {
+        Route route = getRouteById(routeId);
+        if (route != null) {
+            route.completedInfo.completed = true;
+            route.completedInfo.completedByUserId = getSession().currentUser.id;
+            route.completedInfo.completedTimeStamp = new Date();
+            route.completedInfo.completedLat = lat;
+            route.completedInfo.completedLon = lon;
+            saveObjectInternal(route);
+        }
+    }
+
+    @Override
+    public void removeDriverToRoute(String userId, String routeId) {
+        Route route = getRouteById(routeId);
+        if (route != null) {
+            route.userIds.remove(userId);
+            saveObjectInternal(route);
+            
+            finalize(route);
+            
+            sendRouteRemovedMessage(routeId, userId);
+        }
+    }
+
+    private void sendRouteRemovedMessage(String routeId, String userId) {
+        DriverRemoved driverRemoved = new DriverRemoved();
+        driverRemoved.routeId = routeId;
+        driverRemoved.userId = userId;
+        
+        webSocketServer.sendMessage(driverRemoved);
+    }
+
+    @Override
+    public void checkRemovalOfRoutes() {
+        routes.values().stream()
+                .filter(r -> r.shouldBeDeletedDueToOverdue())
+                .forEach(r -> deleteRoute(r.id));
+    }
+
+    @Override
+    public List<PooledDestionation> getPooledDestiontionsByUsersDepotId() {
+        User user = userManager.getUserById(getSession().currentUser.id);
+        
+        String depotId = user.metaData.get("depotId");
+        
+        if (depotId == null)
+            return new ArrayList();
+        
+        List<PooledDestionation> dests = getPooledDestiontions().stream()
+                .filter(dest -> getRouteById(dest.originalRouteId) != null)
+                .filter(dest -> getRouteById(dest.originalRouteId).depotId.equals(depotId))
+                .collect(Collectors.toList());
+        
+        dests.stream().forEach(dest -> finalize(dest));
+        return dests;
+    }
+    
+    private void finalize(PooledDestionation dest) {
+        dest.destination = getDestinationById(dest.destionationId);
+        dest.originalRoute = getRouteById(dest.originalRouteId);
     }
 }

@@ -95,10 +95,15 @@ public abstract class SmsHandlerAbstract implements Runnable {
         } else {
             try {
                 if(countryCode != null && !countryCode.isEmpty()) {
-                    int fromutil = phoneUtil.getCountryCodeForRegion(countryCode);
-                    if(fromutil > 0) {
-                        if(!("+" + fromutil).equals(phonePrefix)) {
-                            phonePrefix = "+" + fromutil;
+                    String defaultCountryCodeSetByStore = "no";
+                    if(!countryCode.equalsIgnoreCase(defaultCountryCodeSetByStore)) {
+                        //If the country code is a different one then the default set for the store, 
+                        //That countrycode should have priority.
+                        int fromutil = phoneUtil.getCountryCodeForRegion(countryCode);
+                        if(fromutil > 0) {
+                            if(!("+" + fromutil).equals(phonePrefix)) {
+                                phonePrefix = "+" + fromutil;
+                            }
                         }
                     }
                 }

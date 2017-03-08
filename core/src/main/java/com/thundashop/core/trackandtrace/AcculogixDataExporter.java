@@ -58,7 +58,7 @@ public class AcculogixDataExporter {
         
         exports.stream().forEach(exp -> { exp.createMd5Sum(); });
         
-        exports.removeIf(exp -> trackAndTraceManager.alreadyExported(exp.md5sum));
+        exports.removeIf(exp -> trackAndTraceManager.alreadyExported(exp));
         
         exports.stream().forEach(exp -> {
             startId++;
@@ -222,7 +222,11 @@ public class AcculogixDataExporter {
             if (task.completed) {
                 exp.ORPieceCount = order.quantity;
             }
-            
+
+            if (order.containerType != null) {
+                exp.TaskContainerCount = task.containerCounted;
+            }
+                        
             exp.ORPieceCorrect = "NO";
             
             setDeliveryStatusWhenDelivered(task, exp, order);

@@ -16,6 +16,7 @@ import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -60,6 +61,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     
     @Autowired
     public WebSocketServerImpl webSocketServer;
+    
+    private List<AcculogixExport> sortedExports = new ArrayList();
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -151,12 +154,32 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         return retRoute;
     }
     
-    public boolean alreadyExported(String md5Sum) {
-        for (ExportedData exportedData : exports.values()) {
-            for (AcculogixExport exp : exportedData.exportedData) {
-                if (exp.md5sum.equals(md5Sum))
-                    return true;
+    private void sortExportedData() {
+        List<AcculogixExport> acculogixExports = new ArrayList();
+        exports.values().stream().forEach(o -> o.exportedData.stream().forEach( ex -> acculogixExports.add(ex)));
+        
+        sortedExports = acculogixExports.stream().sorted((AcculogixExport o1, AcculogixExport o2) -> {
+            Long l1 = o1.TNTUID;
+            Long l2 = o2.TNTUID;
+            return l2.compareTo(l1);
+        }).collect(Collectors.toList());
+        
+    }
+    
+    
+    
+    public boolean alreadyExported(AcculogixExport inExp) {
+        String md5Sum = inExp.md5sum;
+        
+        sortExportedData();
+        
+        for (AcculogixExport exp : sortedExports) {
+            if (exp.routeId.equals(inExp.routeId) && exp.PODBarcodeID.equals(inExp.PODBarcodeID) && exp.ORReferenceNumber.equals(inExp.ORReferenceNumber) && !exp.md5sum.equals(md5Sum)) {
+                return false;
             }
+            
+            if (exp.md5sum.equals(md5Sum))
+                return true;
         }
         
         return false;
@@ -378,6 +401,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         Task task = tasks.get(taskId);
         if (task instanceof PickupTask) {
             ((PickupTask)task).changeCountedCopies(orderReference, parcels, containers);
+            saveObjectInternal(task);
         }
         if (task instanceof DeliveryTask) {
             ((DeliveryTask)task).changeQuantity(orderReference, parcels);
@@ -465,6 +489,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             saveObject(exported);    
             exports.put(exported.id, exported);
             
+            sortExportedData();
+            
             exportCounter.exportCounter += exportedData.size();
             saveObject(exportCounter);
             
@@ -512,6 +538,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public Route moveDesitinationToPool(String routeId, String destinationId) {
+        System.out.println("Moving to pool");
         Route route = getRouteById(routeId);
         if (route != null) {
             boolean removed = route.removeDestination(destinationId);
@@ -871,16 +898,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         saveObjectInternal(task);
         saveObjectInternal(dest);
         
-        List<Route> retRoutes = new ArrayList();
-        for (Route route : this.routes.values()) {
-            if (route.destinationIds.contains(destnationId)) {
-                finalize(route);
-                retRoutes.add(route);
-            }
-        }
         
         TaskAdded ret = new TaskAdded();
-        ret.route = retRoutes.get(0);
+        ret.route = getFirstRouteForDestination(destnationId); 
         ret.orderReferenceNumber = order.referenceNumber;
         ret.task = task;
         finalize(dest);
@@ -951,5 +971,30 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     private void finalize(PooledDestionation dest) {
         dest.destination = getDestinationById(dest.destionationId);
         dest.originalRoute = getRouteById(dest.originalRouteId);
+    }
+
+    private Route getFirstRouteForDestination(String destnationId) {
+        for (Route route : this.routes.values()) {
+            if (route.destinationIds.contains(destnationId)) {
+                finalize(route);
+                return route;
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public List<Route> getRoutesCompletedPast24Hours() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.HOUR, -24);
+        Date hoursAgo = cal.getTime();
+        
+        return routes.values().stream()
+                .filter(r -> r.completedInfo != null)
+                .filter(r -> r.completedInfo.completed)
+                .filter(r -> r.completedInfo.completedTimeStamp.after(hoursAgo))
+                .collect(Collectors.toList());
     }
 }

@@ -139,4 +139,7 @@ public interface ITrackAndTraceManager {
     
     @Administrator
     public void checkRemovalOfRoutes();
+    
+    @Administrator
+    public List<Route> getRoutesCompletedPast24Hours();
 }

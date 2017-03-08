@@ -65,7 +65,7 @@ angular.module('TrackAndTrace')
             },
             footer: {
                 templateUrl : 'components/pool/footer.html',
-                controller : controllers.PoolController
+                controller : controllers.PoolControllerFooter
             }
         }
     });

@@ -127,7 +127,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             } else if (stristr($value->name, "company_vatRegistered")) {
                 $this->printTitle($value->title, $value->required, $value->type);
                 echo "<div class='formspacer'><input type='checkbox' gsname='".$value->name."'></div>";
-            } else if ($value->type == "text" || $value->type == "mobile" || $value->type == "email") {
+            } else if ($value->type == "text" || $value->type == "number" || $value->type == "mobile" || $value->type == "email") {
                $this->printTitle($value->title, $value->required, $value->type);
                echo "<input type='text' gsname='".$value->name."' value='$valueSet'>";
             } else if($value->type == "radio") {

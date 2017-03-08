@@ -2344,7 +2344,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if($filter->filterType == "stats") {
             $this->includefile("statistics");
         } else if($filter->filterType == "summary") {
-            $this->includefile("summary");
+            if($config->bookingProfile == "conferense") {
+                $this->includefile("summaryconference");
+            } else {
+                $this->includefile("summary");
+            }
         } else if($filter->filterType == "unbilled") {
             $this->includefile("unbilled");
         } else if($filter->filterType == "invoicecustomers") {
@@ -2904,6 +2908,17 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $searchtypes['unsettled'] = "Bookings with unsettled amounts";
         }
         return $searchtypes;
+    }
+
+    public function translateFields($field) {
+        $fields = $this->getApi()->getBookingEngine()->getDefaultRegistrationRules($this->getSelectedName());
+        
+        foreach($fields->data as $t => $f) {
+            if($f->name == $field) {
+                return $f->title;
+            }
+        }
+        return "Non translatable";
     }
 
 }

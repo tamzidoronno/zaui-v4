@@ -97,6 +97,7 @@ $channelConfig = $config->channelConfiguration;
 <span class="changeview pmsbutton" data-panel='discounts' data-type='new'>Discounts</span>
 <span class="changeview pmsbutton" data-panel='inventory' data-type='new'>Room inventory</span>
 <span class="changeview pmsbutton" data-panel='mobileviews' data-type='new'>Mobile views</span>
+<span class="changeview pmsbutton" data-panel='bcomratemanager' data-type='new'>Booking.com ratemanager</span>
 <div style='padding-top: 20px;' data-include-for-type='old'>
     Variables: {code},
     {roomName}, 
@@ -128,6 +129,7 @@ $channelConfig = $config->channelConfiguration;
 <div class='inventory notificationpanel'><?php $this->includefile("inventory"); ?></div>
 <div class='discounts notificationpanel'><?php $this->includeFile("discounts"); ?></div>
 <div class='mobileviews notificationpanel'><?php $this->includeFile("mobileviews"); ?></div>
+<div class='bcomratemanager notificationpanel'><?php $this->includeFile("bcomratemanager"); ?></div>
 
 
 <div gstype="form" method="saveNotifications">
@@ -605,7 +607,7 @@ $channelConfig = $config->channelConfiguration;
                 ?>
                 </select>
             </span>
-            Sms name
+            Booking type
         </div>
        
         <br><br>

@@ -10,6 +10,14 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         return "PmsConfiguration";
     }
     
+    public function updateBComInventory() {
+        $this->getApi()->getBookingComRateManagerManager()->pushInventoryList($this->getSelectedName());
+    }
+    
+    public function pushAllRoomsBookingComRateManager() {
+        $this->getApi()->getBookingComRateManagerManager()->pushAllBookings($this->getSelectedName());
+    }
+    
     public function updateMobileViewRestriction() {
         $toSave = array();
         foreach($_POST['data'] as $key => $val) {
@@ -25,7 +33,6 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 $toSave[$userId][] = $area;
             }
         }
-//        print_r($toSave);
         
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         $config->mobileViewRestrictions = $toSave;

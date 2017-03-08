@@ -174,7 +174,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         sortExportedData();
         
         for (AcculogixExport exp : sortedExports) {
-            if (exp.routeId.equals(inExp.routeId) && exp.PODBarcodeID.equals(inExp.PODBarcodeID) && exp.ORReferenceNumber.equals(inExp.ORReferenceNumber) && !exp.md5sum.equals(md5Sum)) {
+            if (exp.routeId != null && exp.routeId.equals(inExp.routeId) && exp.PODBarcodeID != null &&  exp.PODBarcodeID.equals(inExp.PODBarcodeID) &&  exp.ORReferenceNumber != null && exp.ORReferenceNumber.equals(inExp.ORReferenceNumber) && exp.md5sum != null && !exp.md5sum.equals(md5Sum)) {
                 return false;
             }
             
@@ -459,7 +459,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
-        addUnassignedDestinations(everything, currentState);
+        if (!currentState) {
+            addUnassignedDestinations(everything, currentState);
+        }
         
         Collections.sort(everything, (o1, o2) -> {
             if (o1.TNTUID < o2.TNTUID) {
@@ -538,7 +540,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public Route moveDesitinationToPool(String routeId, String destinationId) {
-        System.out.println("Moving to pool");
         Route route = getRouteById(routeId);
         if (route != null) {
             boolean removed = route.removeDestination(destinationId);

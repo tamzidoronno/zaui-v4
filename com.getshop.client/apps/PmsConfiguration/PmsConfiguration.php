@@ -10,6 +10,23 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         return "PmsConfiguration";
     }
     
+    public function updateRateManagerConfig() {
+        $hotelid = $_POST['data']['hotelid'];
+        $typeMap = array();
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "typeid_")) {
+                $id = str_replace("typeid_", "", $key);
+                $typeMap[$id] = $val;
+            }
+        }
+        
+        $config = $this->getApi()->getBookingComRateManagerManager()->getRateManagerConfig($this->getSelectedName());
+        $config->roomTypeIdMap = $typeMap;
+        $config->hotelId = $hotelid;
+        
+        $this->getApi()->getBookingComRateManagerManager()->saveRateManagerConfig($this->getSelectedName(), $config);
+    }
+    
     public function updateBComInventory() {
         $this->getApi()->getBookingComRateManagerManager()->pushInventoryList($this->getSelectedName());
     }

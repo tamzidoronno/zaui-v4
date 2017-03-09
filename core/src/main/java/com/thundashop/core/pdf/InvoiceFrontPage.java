@@ -290,6 +290,11 @@ public class InvoiceFrontPage {
             writeText("Faktura nr: " + order.incrementOrderId, left+120, 710, false, 8);
             writeText("Forfallsdato: " + getDueDate(), left, 698, false, 8);
             writeText("Til konto: " + details.accountNumber, left+120, 698, false, 8);
+            if(details.iban != null && !details.iban.isEmpty()) {
+                writeText("IBAN: " + details.iban, left, 686, false, 8);
+                writeText("BIC/SWIFT: " + details.swift, left+120, 686, false, 8);
+            }
+                
         } else {
             writeText("Bestillingsdato: " + order.getDateCreated().split(" ")[0].replace("/", "."), left, 710, false, 8);
             writeText("Ordrenr: " + order.incrementOrderId, left+120, 710, false, 8);

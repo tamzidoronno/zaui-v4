@@ -129,7 +129,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 .collect(Collectors.toList());
         
         retList.stream().forEach(route -> finalize(route));
-        
+        retList.sort(Route.getSortedById());
         return retList;
     }
 
@@ -281,6 +281,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public List<Route> getAllRoutes() {
         ArrayList<Route> retList = new ArrayList(routes.values());
         retList.stream().forEach(route -> finalize(route));
+        retList.sort(Route.getSortedById());
         return retList;
     }
 

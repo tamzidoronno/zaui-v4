@@ -112,41 +112,42 @@ class PmsBookingMessageFormatter {
     }
 
     String formatBookingData(String message, PmsBooking booking, BookingEngine bookingEngine) {
+        booking.calculateTotalCost();
         String simpleRoomList = "";
         String bookingData = "";
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             String simpleRoom = "";
             if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
-                simpleRoom += "<td>" + bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "</td>";
+                simpleRoom += "<td style='font-size:12px;'>" + bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "</td>";
             }
             long diff = 365*60*60*100;
             if(room.date.end != null && room.date.start != null) {
                 diff = (room.date.end.getTime() - room.date.start.getTime()) / 1000;
             }
             if(diff > (365*60*60)) {
-                simpleRoom += "<td>" + formatDate(room.date.start) + "</td><td></td>";
+                simpleRoom += "<td style='font-size:12px;'>" + formatDate(room.date.start) + "</td><td></td>";
             } else {
-                simpleRoom += "<td>" + formatDate(room.date.start) + "</td><td>" + formatDate(room.date.end) + "</td>";
+                simpleRoom += "<td style='font-size:12px;'>" + formatDate(room.date.start) + "</td><td>" + formatDate(room.date.end) + "</td>";
             }
             if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                 if(item != null) {
-                    simpleRoom += "<td>" + item.bookingItemName + "</td>";
+                    simpleRoom += "<td style='font-size:12px;'>" + item.bookingItemName + "</td>";
                 }
             } else {
-                simpleRoom += "<td></td>";
+                simpleRoom += "<td style='font-size:12px;'></td>";
             }
             if(room.totalCost > 0 && room.totalCost < 100000) {
-                simpleRoom += "<td>" + room.totalCost + "</td>";
+                simpleRoom += "<td style='font-size:12px;'>" + room.totalCost + "</td>";
             }
             
-            simpleRoomList += "<tr>" + simpleRoom +  "</tr>";
+            simpleRoomList += "<tr bgcolor='#fff'>" + simpleRoom +  "</tr>";
             
-            bookingData += "<tr style='font-size: 12px;'>" + simpleRoom + "</tr>";
+            bookingData += "<tr style='font-size: 12px;' bgcolor='#fff'>" + simpleRoom + "</tr>";
             String guests = "";
             for(PmsGuests guest : room.guests) {
                 if(guest.name != null && !guest.name.isEmpty()) {
-                    guests += "<tr style='font-size: 10px;'>";
+                    guests += "<tr style='font-size: 10px;' bgcolor='#fff'>";
                     guests += "<td style='font-size: 10px;'>&nbsp;&nbsp;&nbsp;&nbsp;" + guest.name + "</td>";
                     if(guest.phone != null && !guest.phone.isEmpty()) {
                         guests += "<td style='font-size: 10px;'>+" + guest.prefix + " " + guest.phone + "</td>";
@@ -167,7 +168,7 @@ class PmsBookingMessageFormatter {
                 HashMap<String, Double> addonsPrice = new HashMap(); 
                 String addonText = "";
                 for(PmsBookingAddonItem addon : room.addons) {
-                    addonText += "<tr>";
+                    addonText += "<tr bgcolor='#fff'>";
                     int count = 0;
                     if(addonsCount.get(addon.productId) != null) {
                         count = addonsCount.get(addon.productId);
@@ -184,7 +185,7 @@ class PmsBookingMessageFormatter {
                 }
                 for(String prodId : addonsCount.keySet()) {
                     Product product = productManager.getProduct(prodId);
-                    addonText += "<tr>";
+                    addonText += "<tr bgcolor='#fff'>";
                     addonText += "<td style='font-size: 10px;'>&nbsp;&nbsp;&nbsp;&nbsp;" + addonsCount.get(prodId) + " x " + product.name + "</td>";
                     addonText += "<td style='font-size: 10px;'></td>";
                     addonText += "<td style='font-size: 10px;'></td>";
@@ -198,7 +199,7 @@ class PmsBookingMessageFormatter {
             }
         }
         
-        bookingData += "<tr>";
+        bookingData += "<tr bgcolor='#fff'>";
         bookingData += "<td></td>";
         bookingData += "<td></td>";
         bookingData += "<td></td>";
@@ -249,15 +250,19 @@ class PmsBookingMessageFormatter {
             }
             
         }catch(Exception e) {}
-        String header = "<tr>";
-        header = "<th>Room</th><th>Start</th><th>End</th><th></th>";
+        String header = "<tr bgcolor='#efefef'>";
+        header += "<th align='left' style='font-size:12px;'>Room</th>";
+        header += "<th align='left' style='font-size:12px;'>Start</th>";
+        header += "<th align='left' style='font-size:12px;'>End</th><th align='left'></th>";
         if(booking.getTotalPrice() > 0 && booking.getTotalPrice() < 100000) {
-            header += "<th>Amount</th>";
+            header += "<th align='left' style='font-size:12px;'>Amount</th>";
         }
         header += "</tr>";
-        message = message.replace("{rooms}", "<table cellspacing='0' cellpadding='0'>" + header + bookingData + "</table>");
-        message = message.replace("{roomlist}", "<table cellspacing='0' cellpadding='0'>" + header + bookingData + "</table>");
-        message = message.replace("{simpleRoomList}", "<table cellspacing='0' cellpadding='0'>" + simpleRoomList + "</table>");
+        
+        
+        message = message.replace("{rooms}", "<table cellspacing='1' cellpadding='3' bgcolor='#efefef'>" + header + bookingData + "</table>");
+        message = message.replace("{roomlist}", "<table cellspacing='1' cellpadding='3' bgcolor='#efefef'>" + header + bookingData + "</table>");
+        message = message.replace("{simpleRoomList}", "<table cellspacing='1' cellpadding='3' bgcolor='#efefef'>" + simpleRoomList + "</table>");
         message = message.replace("{bookingid}", booking.id);
         message = message.replace("{bookinginformation}", bookinginfo);
         message = message.replace("{totalcost}", total + "");

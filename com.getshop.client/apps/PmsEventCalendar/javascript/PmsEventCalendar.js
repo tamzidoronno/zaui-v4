@@ -10,7 +10,7 @@ app.PmsEventCalendar = {
         $(document).on('change', '.PmsManagement .addToEventList', app.PmsEventCalendar.addToEventList);
         $(document).on('change', '.PmsEventCalendar #file', app.PmsEventCalendar.imagePreview);
         $(document).on('change', '.PmsEventCalendar #logo', app.PmsEventCalendar.logoPreview);
-        $(document).on('click', '.PmsEventCalendar .deleteevent', app.PmsEventCalendar.deleteevent);        
+        $(document).on('click', '.PmsEventCalendar .deleteevent', app.PmsEventCalendar.deleteevent);
     },
     
     imagePreview : function(){
@@ -20,7 +20,6 @@ app.PmsEventCalendar = {
         var imagefile = file.type;
         var match =["image/jpeg","image/png","image/jpg"];
         if(!((imagefile == match[0]) || (imagefile == match[1]) || (imagefile == match[2]))){
-            $('#previewing').attr('src', 'noimage.png');
             $('#message').html("<p id='error'>Please Select A valid Image File!"+"<br><b>Note: </b> Only jpeg, jpg and png Images type allowed</p>");
             $('#labelFile').css("color", "red");
             return false;

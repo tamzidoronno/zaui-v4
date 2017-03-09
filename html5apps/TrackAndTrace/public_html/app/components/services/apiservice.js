@@ -27,6 +27,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                 me.logon(false);
             });
             
+            this.api.listeners = [];
             this.api.addListener("com.thundashop.core.trackandtrace.Route", this.refreshRoute, me);
             this.api.addListener("com.thundashop.core.trackandtrace.DriverMessage", this.messageReceived, me);
             this.api.addListener("com.thundashop.core.trackandtrace.DriverRemoved", this.driverRemoved, me);

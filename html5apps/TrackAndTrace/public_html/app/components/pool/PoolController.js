@@ -39,12 +39,6 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
             
     }
     
-    $rootScope.$on('refreshRoute', function(msg, route) {
-        if ($scope.datarepository.selectedRouteForPoolController && $scope.datarepository.selectedRouteForPoolController.id == route.id) {
-            $scope.datarepository.selectedRouteForPoolController = route;
-        }
-    });
-    
     $scope.fetchPooledDestination = function() {
         $api.getApi().TrackAndTraceManager.getPooledDestiontionsByUsersDepotId().done(function(res) {
             $scope.pooledDestinations = res;

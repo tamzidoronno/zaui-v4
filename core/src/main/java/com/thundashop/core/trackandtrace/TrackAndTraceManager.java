@@ -113,8 +113,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
-        new ArrayList(pooledDestinations.values()).stream().forEach(pool -> ensureRemoval((PooledDestionation)pool));
-        
         createScheduler("checkRemovalOfRoutes", "0 0 * * *", CheckConsistencyCron.class);
     }
     
@@ -605,6 +603,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     private void notifyRoute(Route route) {
         finalize(route);
+        
         webSocketServer.sendMessage(route);
     }
     

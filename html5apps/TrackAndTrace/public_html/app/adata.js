@@ -19,7 +19,7 @@ adata = {
         me.exceptions = [];
         me.routeLoadCompleted = false;
         me.exceptionLoadCompleted = false;
-            
+                
         $api.getApi().TrackAndTraceManager.getMyRoutes().done(function (res) {
             me.routes = res;
             me.loaded = true;

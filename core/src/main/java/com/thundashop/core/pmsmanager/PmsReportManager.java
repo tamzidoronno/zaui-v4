@@ -4,11 +4,17 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.RegistrationRules;
+import com.thundashop.core.bookingengine.data.RegistrationRulesField;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +29,9 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
 
     @Autowired
     BookingEngine bookingEngine;
+    
+    @Autowired
+    UserManager userManager;
     
     @Override
     public List<PmsMobileReport> getReport(Date start, Date end, String compareTo) {
@@ -180,6 +189,98 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         total.increaseFromLastPeriodeDaily = (double)Math.round(total.increaseFromLastPeriode / total.numberOfDays);
         
         return total;
+    }
+
+    @Override
+    public PmsConferenceStatistics getConferenceStatistics(Date start, Date end) {
+        PmsBookingFilter filter = new PmsBookingFilter();
+        PmsConfiguration config = pmsManager.getConfigurationSecure();
+        filter.startDate = start;
+        filter.endDate = end;
+        filter.filterType = "active";
+        
+        
+        List<PmsBooking> bookings = pmsManager.getAllBookings(filter);
+        
+        PmsConferenceStatistics stats = new PmsConferenceStatistics();
+        stats.numberOfBookings = bookings.size();
+        stats.numberOfRooms = 0;
+        
+        List<String> usersIdsCounted = new ArrayList();
+        stats.fieldStatistics = new HashMap();
+        
+        for(PmsBooking booking : bookings) {
+            if(!usersIdsCounted.contains(booking.userId)) {
+                stats.numberOfBookers++;
+                usersIdsCounted.add(booking.userId);
+                
+                User user = userManager.getUserById(booking.userId);
+                if(user.companyObject != null) {
+                    stats.numberOfOrgansitionBookers++;
+                } else {
+                    stats.numberOfPrivateBookers++;
+                }
+            }
+            
+            for(String field : booking.registrationData.resultAdded.keySet()) {
+                if(field.startsWith("user_") || field.startsWith("company_")) {
+                    continue;
+                }
+                addFieldToStatistics(stats, field, booking.registrationData.resultAdded.get(field));
+            }
+        }
+        
+        return stats;
+    }
+
+    private void addFieldToStatistics(PmsConferenceStatistics stats, String field, String value) {
+        RegistrationRules rules = bookingEngine.getDefaultRegistrationRules();
+        
+        if(value == null) {
+            return;
+        }
+
+        RegistrationRulesField toUse = null;
+        for(RegistrationRulesField toCheck : rules.data.values()) {
+            if(toCheck.name.equals(field)) {
+                toUse = toCheck;
+                break;
+            }
+        }
+        
+        if(toUse == null) {
+            return;
+        }
+        String type = toUse.type;
+        if(type.equals("text") || type.equals("textarea")) {
+            return;
+        }
+        
+        int res = 0;
+        if(type.equals("number")) {
+            res = new Scanner(value).useDelimiter("\\D+").nextInt();
+            Integer currentResult = (Integer) stats.fieldStatistics.get(field);
+            if(currentResult == null) {
+                currentResult = res;
+            } else {
+                currentResult += res;
+            }
+            stats.fieldStatistics.put(field, currentResult);
+        } else {
+            HashMap<String, Integer> currentCounter = (HashMap<String, Integer>) stats.fieldStatistics.get(field);
+            if(currentCounter == null) {
+                currentCounter = new HashMap();
+                stats.fieldStatistics.put(field, currentCounter);
+            }
+            int counter = 0;
+            if(currentCounter.containsKey(value)) {
+                counter = currentCounter.get(value);
+            }
+            counter++;
+            currentCounter.put(value, counter);
+        }
+        
+        System.out.println(type + " : " + field + " - " + value + "(" + res + ")");
     }
     
 }

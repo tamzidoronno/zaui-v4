@@ -230,6 +230,7 @@ class FieldGenerator {
     public function printAdditionalFields($rules) {
         $types = array();
         $types['text']="Input field";
+        $types['number']="Number";
         $types['select']="Dropdown";
         $types['radio']="Radio buttons";
         $types['checkbox']="Checkbox";

@@ -136,9 +136,15 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         line.put(9, customerId+"");
         line.put(10, "");
         line.put(11, user.fullName);
-        line.put(12, user.address.address);
-        line.put(13, user.address.postCode);
-        line.put(14, user.address.city);
+        if(user.address != null) {
+            line.put(12, user.address.address);
+            line.put(13, user.address.postCode);
+            line.put(14, user.address.city);
+        } else {
+            line.put(12, "");
+            line.put(13, "");
+            line.put(14, "");
+        }
         line.put(15, order.incrementOrderId + "");
         line.put(16, kid); //KID
         line.put(17, format.format(dueDate)); //Forfallsdato

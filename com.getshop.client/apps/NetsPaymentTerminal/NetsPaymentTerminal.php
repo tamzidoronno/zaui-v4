@@ -5,6 +5,15 @@ class NetsPaymentTerminal extends \PaymentApplication implements \Application {
     public function getDescription() {
         
     }
+    
+    public function addPaymentMethods() {
+        $namespace = __NAMESPACE__;
+        $this->addPaymentMethod($this->getName(), "/showApplicationImages.php?appNamespace=$namespace&image=skin/images/invoice.png", "Invoice");
+    }
+    
+    public function simplePayment() {
+        header('Location: ' . "/?page=payment_success");
+    }
 
     public function getName() {
         return "NetsPaymentTerminal";

@@ -42,6 +42,7 @@ import com.thundashop.core.pdf.InvoiceGeneratorCartItem;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.ratemanager.BookingComRateManagerManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
@@ -146,7 +147,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     GetShop getShop;
     
-
+    @Autowired
+    BookingComRateManagerManager bookingComRateManagerManager;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         Calendar toCheck = Calendar.getInstance();
@@ -914,6 +917,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             pmsInvoiceManager.createVirtualOrder(booking.id);
         }
         saveObject(booking);
+        bookingUpdated(booking.id, "modified", null);
     }
 
 
@@ -1465,6 +1469,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(booking.getActiveRooms().isEmpty()) {
             deleteBooking(booking.id);
         }
+        
+        bookingUpdated(bookingId, "ROOM_REMOVED", roomId);
+        
         return addResult;
     }
 
@@ -4311,6 +4318,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                     }
                 }
+                bookingUpdated(booking.id, "created", null);
                 return booking;
             }
         } catch (Exception e) {
@@ -5248,5 +5256,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return now.getTime();
+    }
+
+    private void bookingUpdated(String bookingId, String type, String roomId) {
+        try {
+            System.out.println("Booking has been updated");
+            PmsBooking booking = getBooking(bookingId);
+            if(type.equals("created")) {
+                bookingComRateManagerManager.pushBooking(booking, "Commit");
+            } else {
+                bookingComRateManagerManager.pushBooking(booking, "Modify");
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
     }
 }

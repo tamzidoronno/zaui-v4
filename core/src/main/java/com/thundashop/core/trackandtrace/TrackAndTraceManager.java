@@ -874,16 +874,19 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public TaskAdded addPickupOrder(String destnationId, PickupOrder order) {
+    public TaskAdded addPickupOrder(String destnationId, PickupOrder order, PickupTask inTask) {
         Destination dest = getDestination(destnationId);
         PickupTask task = dest.getPickupTask();
         
         if (task == null) {
-            task = new PickupTask();
+            task = inTask;
             saveObject(task);
-            dest.taskIds.add(task.id);
             tasks.put(task.id, task);
-            saveObjectInternal(task);
+            
+            if (!dest.taskIds.contains(task.id)) {
+                dest.taskIds.add(task.id);
+                saveObject(dest);
+            }
         }
         
         order.source = "tnt";

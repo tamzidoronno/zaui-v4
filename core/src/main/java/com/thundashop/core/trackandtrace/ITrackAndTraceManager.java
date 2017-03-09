@@ -132,7 +132,7 @@ public interface ITrackAndTraceManager {
     public DriverMessage getDriverMessage(String msgId);
     
     @Customer
-    public TaskAdded addPickupOrder(String destnationId, PickupOrder order);
+    public TaskAdded addPickupOrder(String destnationId, PickupOrder order, PickupTask inTask);
     
     @Customer
     public void markAsCompleted(String routeId, double lat, double lon);

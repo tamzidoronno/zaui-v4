@@ -10,7 +10,9 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.core.webmanager.WebManager;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -27,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import javax.xml.bind.JAXBContext;
@@ -55,6 +58,9 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
     
     @Autowired
     PmsManager pmsManager;
+    
+    @Autowired
+    PmsInvoiceManager pmsInvoiceManager;
     
     @Autowired
     BookingEngine bookingEngine;
@@ -446,6 +452,42 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             logPrintException(e);
         }
         return null;
+    }
+
+    @Override
+    public String updateRate(Date start, Date end, String roomId, Double rate) {
+        PmsPricing prices = pmsManager.getPriceObject("default");
+        
+        String roomTypeId = "";
+        for(String key : config.roomTypeIdMap.keySet()) {
+            if(config.roomTypeIdMap.get(key).equals(roomId)) {
+                roomTypeId = key;
+                break;
+            }
+        }
+        
+        if(roomTypeId.isEmpty()) {
+            return "Invalid room mapping for roomid: " + roomId;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        while(true) {
+            String offset = PmsBookingRooms.getOffsetKey(cal, PmsBooking.PriceType.daily);
+            HashMap<String, Double> map = prices.dailyPrices.get(roomTypeId);
+            
+            if(map == null) {
+                map = new HashMap();
+            }
+            map.put(offset, rate);
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(cal.getTime().after(end)) {
+                break;
+            }
+        }
+        
+        pmsManager.setPrices("default", prices);
+        return "";
     }
 
 

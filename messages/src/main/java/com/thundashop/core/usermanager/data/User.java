@@ -179,6 +179,7 @@ public class User extends DataCommon implements Comparable<User> {
     public Address address;
     public String fullName = "";
     public String emailAddress = "";
+    public String relationship = "";
     public String emailAddressToInvoice = "";
     public String prefix = "47";
     public String password = "";

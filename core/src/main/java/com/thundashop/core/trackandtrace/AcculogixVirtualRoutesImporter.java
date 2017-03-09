@@ -47,6 +47,8 @@ public class AcculogixVirtualRoutesImporter {
             route.name = data[0]+" - "+data[2].replace("\"", "")+ " "+data[4].replace("\"", "");
             route.depotId = data[1].replace("\"", "");
             route.userIds.add(data[3].replace("\n", ""));
+            route.isVritual = false;
+            route.originalId = data[0];
             trackAndTraceManager.saveRoute(route);
         }
         

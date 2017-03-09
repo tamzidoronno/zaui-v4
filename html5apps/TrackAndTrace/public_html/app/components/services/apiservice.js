@@ -5,8 +5,8 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         
         
         this.setConnectionDetails = function(identifier) {
-            this.api = new GetShopApiWebSocket('trackandtrace.getshop.com', '31332', identifier, true);
-//            this.api = new GetShopApiWebSocket('trackandtrace.3.0.local.getshop.com', '31330', identifier, true);
+//            this.api = new GetShopApiWebSocket('trackandtrace.getshop.com', '31332', identifier, true);
+            this.api = new GetShopApiWebSocket('trackandtrace.3.0.local.getshop.com', '31330', identifier, true);
 //            this.api = new GetShopApiWebSocket('192.168.1.240', '31330', identifier, true);
 //            this.api = new GetShopApiWebSocket('trackandtrace.3.0.mpal.getshop.com', '31330', identifier, true);
 
@@ -27,6 +27,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                 me.logon(false);
             });
             
+            this.api.listeners = [];
             this.api.addListener("com.thundashop.core.trackandtrace.Route", this.refreshRoute, me);
             this.api.addListener("com.thundashop.core.trackandtrace.DriverMessage", this.messageReceived, me);
             this.api.addListener("com.thundashop.core.trackandtrace.DriverRemoved", this.driverRemoved, me);
@@ -74,10 +75,18 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                 } else {
                     $getShopApi.sendUnsentMessages();
                     localStorage.setItem("loggedInUserId", JSON.stringify(user));
-                    if (fromLogin)
-                        me.$state.transitionTo('base.home');
+                    
+                    if (fromLogin) {
+                        me.loadDataAndGoToHome(me);
+                    }
                 }
             });
+        },
+                
+        this.loadDataAndGoToHome = function($api) {
+            adata.loadAllData($api, null, function() {
+                $state.transitionTo('base.home');
+            })
         },
         
         this.getLoggedOnUser = function() {

@@ -9542,6 +9542,19 @@ GetShopApiWebSocket.PmsReportManager = function(communication) {
 }
 
 GetShopApiWebSocket.PmsReportManager.prototype = {
+    'getConferenceStatistics' : function(multilevelname, start,end, gs_silent) {
+        var data = {
+            args : {
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getConferenceStatistics',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsReportManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getReport' : function(multilevelname, start,end,compareTo, gs_silent) {
         var data = {
             args : {
@@ -10403,6 +10416,57 @@ GetShopApiWebSocket.QuestBackManager.prototype = {
             },
             method: 'sendQuestBack',
             interfaceName: 'core.questback.IQuestBackManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
+GetShopApiWebSocket.BookingComRateManagerManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.BookingComRateManagerManager.prototype = {
+    'getRateManagerConfig' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getRateManagerConfig',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.ratemanager.IBookingComRateManagerManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'pushAllBookings' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'pushAllBookings',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.ratemanager.IBookingComRateManagerManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'pushInventoryList' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'pushInventoryList',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.ratemanager.IBookingComRateManagerManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'saveRateManagerConfig' : function(multilevelname, config, gs_silent) {
+        var data = {
+            args : {
+                config : JSON.stringify(config),
+            },
+            method: 'saveRateManagerConfig',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.ratemanager.IBookingComRateManagerManager',
         };
         return this.communication.send(data, gs_silent);
     },
@@ -12127,11 +12191,12 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'addPickupOrder' : function(destnationId,order, gs_silent) {
+    'addPickupOrder' : function(destnationId,order,inTask, gs_silent) {
         var data = {
             args : {
                 destnationId : JSON.stringify(destnationId),
                 order : JSON.stringify(order),
+                inTask : JSON.stringify(inTask),
             },
             method: 'addPickupOrder',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
@@ -12309,6 +12374,16 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 routeId : JSON.stringify(routeId),
             },
             method: 'getRoutesById',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getRoutesCompletedPast24Hours' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getRoutesCompletedPast24Hours',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);
@@ -13947,6 +14022,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.ProductManager = new GetShopApiWebSocket.ProductManager(this);
     this.PullServerManager = new GetShopApiWebSocket.PullServerManager(this);
     this.QuestBackManager = new GetShopApiWebSocket.QuestBackManager(this);
+    this.BookingComRateManagerManager = new GetShopApiWebSocket.BookingComRateManagerManager(this);
     this.ReportingManager = new GetShopApiWebSocket.ReportingManager(this);
     this.ResturantManager = new GetShopApiWebSocket.ResturantManager(this);
     this.SalesManager = new GetShopApiWebSocket.SalesManager(this);

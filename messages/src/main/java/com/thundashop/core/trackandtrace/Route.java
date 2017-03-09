@@ -9,6 +9,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.mongodb.morphia.annotations.Transient;
  * @author ktonder
  */
 public class Route extends DataCommon {
+
     public String name = "Routename";
     public int seq = 0;
     
@@ -126,5 +128,27 @@ public class Route extends DataCommon {
             return o1.seq.compareTo(o2.seq);
         }).collect(Collectors.toList());
     }
+    
+    static Comparator<? super Route> getSortedById() {
+        return (Route o1, Route o2) -> {
+            try {
+                Integer o1Id = Integer.parseInt(o1.originalId);
+                Integer o2Id = Integer.parseInt(o2.originalId);
+                return o2Id.compareTo(o1Id);
+            } catch (Exception ex) {
+            }
+            
+            try {
+                Integer o1Id = Integer.parseInt(o1.id.split(" ")[0]);
+                Integer o2Id = Integer.parseInt(o2.id.split(" ")[0]);
+                return o2Id.compareTo(o1Id);
+            } catch (Exception ex) {
+            }
+            
+            
+            return 0;
+        };
+    }
+
 
 }

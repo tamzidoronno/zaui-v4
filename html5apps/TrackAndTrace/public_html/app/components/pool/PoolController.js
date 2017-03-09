@@ -21,7 +21,6 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
                 datarepository.updateRoute(route);
                 datarepository.selectedRouteForPoolController = route;
                 $scope.$apply();
-                $scope.fetchPooledDestination();
             });
             
         }
@@ -35,26 +34,10 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
                 datarepository.updateRoute(route);
                 datarepository.selectedRouteForPoolController = route;
                 $scope.$apply();
-                $scope.fetchPooledDestination();
             });
         }
             
     }
-    
-    $scope.goBack = function() {
-        if (datarepository.selectedRouteForPoolController) {
-            datarepository.selectedRouteForPoolController = null;
-            return;
-        }
-        
-        $state.transitionTo("base.home");
-    }
-    
-    $rootScope.$on('refreshRoute', function(msg, route) {
-        if ($scope.datarepository.selectedRouteForPoolController && $scope.datarepository.selectedRouteForPoolController.id == route.id) {
-            $scope.datarepository.selectedRouteForPoolController = route;
-        }
-    });
     
     $scope.fetchPooledDestination = function() {
         $api.getApi().TrackAndTraceManager.getPooledDestiontionsByUsersDepotId().done(function(res) {

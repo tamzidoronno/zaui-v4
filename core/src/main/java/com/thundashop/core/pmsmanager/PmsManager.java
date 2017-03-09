@@ -1909,6 +1909,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         user.fullName = result.get("user_fullName");
         user.cellPhone = result.get("user_cellPhone");
         user.emailAddress = result.get("user_emailAddress");
+        user.relationship = result.get("user_relationship");
         if (result.get("prefix") != null) {
             user.prefix = result.get("user_prefix");
         }
@@ -1922,6 +1923,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         if (user.emailAddress == null) {
             user.emailAddress = "";
+        }
+        if (user.relationship == null){
+            user.relationship = "";
         }
         if (user.fullName == null) {
             user.fullName = "";

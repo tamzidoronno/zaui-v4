@@ -118,6 +118,7 @@ body {
     .gsarea[area="header"] .Menu .menuentries {
         height: 500px;
         overflow: scroll;
+        padding-bottom: 50px;
     }
     
     .gsarea[area="header"] .Menu .entries .entries,

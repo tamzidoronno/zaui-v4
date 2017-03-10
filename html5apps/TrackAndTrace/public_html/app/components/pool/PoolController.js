@@ -18,8 +18,8 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
         var conf = confirm("Are you sure you want to move " + destination.company.name + " to pool?");
         if (conf) {
             $api.getApi().TrackAndTraceManager.moveDesitinationToPool(datarepository.selectedRouteForPoolController.id, destination.id).done(function(route) {
-                datarepository.updateRoute(route);
-                datarepository.selectedRouteForPoolController = route;
+                datarepository.updateRoute(route[0]);
+                datarepository.selectedRouteForPoolController = route[0];
                 $scope.$apply();
             });
             
@@ -31,8 +31,8 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
         var conf = confirm("Are you sure you want to move " + destination.company.name + " from pool?");
         if (conf) {
             $api.getApi().TrackAndTraceManager.moveDestinationFromPoolToRoute(id, datarepository.selectedRouteForPoolController.id).done(function(route) {
-                datarepository.updateRoute(route);
-                datarepository.selectedRouteForPoolController = route;
+                datarepository.updateRoute(route[0]);
+                datarepository.selectedRouteForPoolController = route[0];
                 $scope.$apply();
             });
         }

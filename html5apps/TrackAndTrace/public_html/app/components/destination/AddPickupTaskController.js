@@ -79,7 +79,8 @@ controllers.AddPickupTaskController = function($scope, datarepository, $statePar
         var pickupOrder = {
             mustScanBarcode: false,
             referenceNumber: numbers,
-            container: $scope.taskType === "container"
+            container: $scope.taskType === "container",
+            source: "tnt"
         };
         
         var pickupTask = $scope.getPickupTask();
@@ -94,8 +95,6 @@ controllers.AddPickupTaskController = function($scope, datarepository, $statePar
                 id: $scope.generateUUID(),
                 className: "com.thundashop.core.trackandtrace.PickupTask",
                 rowCreatedDate: new Date(),
-                
-                
             }
         }
         

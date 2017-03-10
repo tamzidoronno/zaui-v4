@@ -48,7 +48,6 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
     });
     
     $scope.$on('refreshData', function() {
-        $('.loadingData').show();
         datarepository.loadAllData($api, $scope);
     });
     

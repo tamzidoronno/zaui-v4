@@ -19,7 +19,7 @@ foreach($entries as $eventEntry) {
     if(isset($eventEntry->imageid) && $eventEntry->imageid) {
         $imgSrc = "/displayImage.php?id=".$eventEntry->imageid;
     }
-//    $onimgerror = "this.style.display = 'none' ";
+
     if(!$eventEntry->starttime) {
         $eventEntry->starttime = date("H:i", strtotime($eventEntry->date));
     }

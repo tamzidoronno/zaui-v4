@@ -13,6 +13,9 @@ class AktivitetsHusetK1 extends \ThemeApplication implements \Application {
     public function render() {
         
     }
+    public function addScripts() {
+        echo "<link href='https://fonts.googleapis.com/css?family=Noto+Serif' rel='stylesheet'>";
+    }
     public function isAllowingSideBar() {
         return true;
     }

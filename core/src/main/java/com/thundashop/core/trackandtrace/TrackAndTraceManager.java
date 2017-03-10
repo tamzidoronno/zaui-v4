@@ -113,7 +113,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
-        createScheduler("checkRemovalOfRoutes", "0 0 * * *", CheckConsistencyCron.class);
+        createScheduler("checkRemovalOfRoutes", "0 * * * *", CheckRemovalOfFinishedRoutes.class);
     }
     
     private void ensureRemoval(PooledDestionation dest) {
@@ -955,9 +955,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public void checkRemovalOfRoutes() {
-        routes.values().stream()
+        List<Route> routesToDelete = routes.values().stream()
                 .filter(r -> r.shouldBeDeletedDueToOverdue())
-                .forEach(r -> deleteRoute(r.id));
+                .collect(Collectors.toList());
+        
+        routesToDelete.forEach(r -> deleteRoute(r.id));
     }
 
     @Override

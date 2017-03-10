@@ -106,7 +106,7 @@ public class Route extends DataCommon {
     }
 
     public boolean shouldBeDeletedDueToOverdue() {
-        if (!completedInfo.completed)
+        if (completedInfo.completedTimeStamp == null)
             return false;
         
         Calendar cal = Calendar.getInstance();
@@ -115,7 +115,6 @@ public class Route extends DataCommon {
         Date dateToPass = cal.getTime();
         
         Date now = new Date();
-        System.out.println("Now: " + now);
         
         if (now.after(dateToPass))
             return true;

@@ -72,6 +72,8 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         AccountingDetails details = new AccountingDetails();
         if(settings != null) {
             details.accountNumber = settings.getSetting("accountNumber");
+            details.iban = settings.getSetting("iban");
+            details.swift = settings.getSetting("swift");
             details.address = settings.getSetting("address");
             details.city = settings.getSetting("city");
             details.companyName = settings.getSetting("companyName");

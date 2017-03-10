@@ -71,6 +71,11 @@ public interface IListManager {
     @Administrator
     public Entry addEntry(String listId, Entry entry, String parentPageId) throws ErrorException;
     
+    //Unsecure lists used for open data.
+    public Entry addUnsecureEntry(String listId, Entry entry) throws ErrorException;
+    
+    public void confirmEntry(String entryId);
+    
     /**
      * Delete an already existing entry from a list.
      * @param id The of the entry to delete.
@@ -183,4 +188,6 @@ public interface IListManager {
     public List<Menu> getMenues(String applicationInstanceId);
     
     public TreeNode getJSTreeNode(String nodeId);
+    
+    public void askConfirmationOnEntry(String entryId, String text);
 }

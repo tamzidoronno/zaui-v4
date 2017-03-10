@@ -13,6 +13,7 @@ import com.thundashop.core.listmanager.data.JsTreeList;
 import com.thundashop.core.listmanager.data.ListType;
 import com.thundashop.core.listmanager.data.Menu;
 import com.thundashop.core.listmanager.data.TreeNode;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import java.util.ArrayList;
@@ -47,6 +48,9 @@ public class ListManager extends ManagerBase implements IListManager {
     
     @Autowired
     private PageManager pageManager;
+    
+    @Autowired
+    private MessageManager messageManager;
     
     @Autowired
     private List<ListBadgetAware> badgeAwareManagers;
@@ -365,6 +369,11 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         
         return entry;
+    }
+    
+    @Override
+    public Entry addUnsecureEntry(String listId, Entry entry) throws ErrorException {
+        return addEntry("unsecure_" + listId, entry, "");
     }
 
     @Override
@@ -887,5 +896,26 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         
         return null;
+    }
+
+    @Override
+    public void askConfirmationOnEntry(String entryId, String text) {
+        Entry entry = getEntry(entryId);
+        messageManager.sendSms("sveve", entry.phone, text, entry.prefix);
+    }
+
+    @Override
+    public void confirmEntry(String entryId) {
+        Entry entry = getEntry(entryId);
+        entry.confirmed = true;
+        updateEntry(entry);
+        
+        String content = "";
+        
+        for(String key : entry.metaData.keySet()) {
+            content += key + " : " + entry.metaData.get(key) + "<br>";
+        }
+        
+        messageManager.sendMail(entry.emailToSendConfirmationTo, entry.emailToSendConfirmationTo, "Message entry confirmed", content, "", "");
     }
 }

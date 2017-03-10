@@ -112,70 +112,102 @@ class PmsBookingMessageFormatter {
     }
 
     String formatBookingData(String message, PmsBooking booking, BookingEngine bookingEngine) {
+        booking.calculateTotalCost();
         String simpleRoomList = "";
         String bookingData = "";
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             String simpleRoom = "";
             if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
-                simpleRoom += bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " ";
+                simpleRoom += "<td style='font-size:12px;'>" + bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "</td>";
             }
             long diff = 365*60*60*100;
             if(room.date.end != null && room.date.start != null) {
                 diff = (room.date.end.getTime() - room.date.start.getTime()) / 1000;
             }
             if(diff > (365*60*60)) {
-                simpleRoom += formatDate(room.date.start);
+                simpleRoom += "<td style='font-size:12px;'>" + formatDate(room.date.start) + "</td><td></td>";
             } else {
-                simpleRoom += formatDate(room.date.start) + " - " + formatDate(room.date.end) + " ";
+                simpleRoom += "<td style='font-size:12px;'>" + formatDate(room.date.start) + "</td><td>" + formatDate(room.date.end) + "</td>";
             }
             if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                 if(item != null) {
-                    simpleRoom += "(" + item.bookingItemName + ")";
+                    simpleRoom += "<td style='font-size:12px;'>" + item.bookingItemName + "</td>";
                 }
-            } else if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
-                BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                if(item != null) {
-                    simpleRoom += "(" + item.name + ")";
-                }
-
+            } else {
+                simpleRoom += "<td style='font-size:12px;'></td>";
+            }
+            if(room.totalCost > 0 && room.totalCost < 100000) {
+                simpleRoom += "<td style='font-size:12px;'>" + room.totalCost + "</td>";
             }
             
-            simpleRoomList += simpleRoom +  "<br>";
+            simpleRoomList += "<tr bgcolor='#fff'>" + simpleRoom +  "</tr>";
             
-            bookingData += simpleRoom;
+            bookingData += "<tr style='font-size: 12px;' bgcolor='#fff'>" + simpleRoom + "</tr>";
+            String guests = "";
             for(PmsGuests guest : room.guests) {
                 if(guest.name != null && !guest.name.isEmpty()) {
-                    bookingData += "<br>";
-                    bookingData += guest.name;
+                    guests += "<tr style='font-size: 10px;' bgcolor='#fff'>";
+                    guests += "<td style='font-size: 10px;'>&nbsp;&nbsp;&nbsp;&nbsp;" + guest.name + "</td>";
                     if(guest.phone != null && !guest.phone.isEmpty()) {
-                        bookingData += " " + guest.prefix + guest.phone + " ";
+                        guests += "<td style='font-size: 10px;'>+" + guest.prefix + " " + guest.phone + "</td>";
                     }
                     if(guest.email != null && !guest.email.isEmpty()) {
-                        bookingData += " " + guest.email;
+                        guests += "<td style='font-size: 10px;'>" + guest.email + "</td>";
                     }
-                    bookingData += "<br>";
+                    guests += "<td></td>";
+                    guests += "<td></td>";
+                    guests += "</tr>";
                 }
             }
+            
+            bookingData += guests;
             
             try {
                 HashMap<String, Integer> addonsCount = new HashMap(); 
+                HashMap<String, Double> addonsPrice = new HashMap(); 
+                String addonText = "";
                 for(PmsBookingAddonItem addon : room.addons) {
+                    addonText += "<tr bgcolor='#fff'>";
                     int count = 0;
                     if(addonsCount.get(addon.productId) != null) {
                         count = addonsCount.get(addon.productId);
                     }
                     count += addon.count;
+                    
+                    double price = 0;
+                    if(addonsPrice.get(addon.productId) != null) {
+                        price = addonsPrice.get(addon.productId);
+                    }
+                    price += addon.price;
                     addonsCount.put(addon.productId, count);
+                    addonsPrice.put(addon.productId, price);
                 }
                 for(String prodId : addonsCount.keySet()) {
                     Product product = productManager.getProduct(prodId);
-                    bookingData += addonsCount.get(prodId) + " x " + product.name + "<br>";
-                    }
+                    addonText += "<tr bgcolor='#fff'>";
+                    addonText += "<td style='font-size: 10px;'>&nbsp;&nbsp;&nbsp;&nbsp;" + addonsCount.get(prodId) + " x " + product.name + "</td>";
+                    addonText += "<td style='font-size: 10px;'></td>";
+                    addonText += "<td style='font-size: 10px;'></td>";
+                    addonText += "<td style='font-size: 10px;'></td>";
+                    addonText += "<td style='font-size: 10px;'>" + addonsPrice.get(prodId) + "</td>";
+                    addonText += "</tr>";
+                }
+                bookingData += addonText;
             }catch(Exception e) {
                 e.printStackTrace();
             }
         }
+        
+        bookingData += "<tr bgcolor='#fff'>";
+        bookingData += "<td></td>";
+        bookingData += "<td></td>";
+        bookingData += "<td></td>";
+        bookingData += "<td></td>";
+        if(booking.getTotalPrice() > 0 && booking.getTotalPrice() < 100000) {
+            bookingData += "<td>"+booking.getTotalPrice()+"</td>";
+        }
+        bookingData += "</tr>";
         
         String bookinginfo = "<table>";
         for(String key : booking.registrationData.resultAdded.keySet()) {
@@ -218,9 +250,19 @@ class PmsBookingMessageFormatter {
             }
             
         }catch(Exception e) {}
-        message = message.replace("{rooms}", bookingData);
-        message = message.replace("{roomlist}", bookingData);
-        message = message.replace("{simpleRoomList}", simpleRoomList);
+        String header = "<tr bgcolor='#efefef'>";
+        header += "<th align='left' style='font-size:12px;'>Room</th>";
+        header += "<th align='left' style='font-size:12px;'>Start</th>";
+        header += "<th align='left' style='font-size:12px;'>End</th><th align='left'></th>";
+        if(booking.getTotalPrice() > 0 && booking.getTotalPrice() < 100000) {
+            header += "<th align='left' style='font-size:12px;'>Amount</th>";
+        }
+        header += "</tr>";
+        
+        
+        message = message.replace("{rooms}", "<table cellspacing='1' cellpadding='3' bgcolor='#efefef'>" + header + bookingData + "</table>");
+        message = message.replace("{roomlist}", "<table cellspacing='1' cellpadding='3' bgcolor='#efefef'>" + header + bookingData + "</table>");
+        message = message.replace("{simpleRoomList}", "<table cellspacing='1' cellpadding='3' bgcolor='#efefef'>" + simpleRoomList + "</table>");
         message = message.replace("{bookingid}", booking.id);
         message = message.replace("{bookinginformation}", bookinginfo);
         message = message.replace("{totalcost}", total + "");

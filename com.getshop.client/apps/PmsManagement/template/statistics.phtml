@@ -93,7 +93,9 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
 </div>
 <div class="pdfPageSizer">
 <b>Sale statistics</b><br>
-    <?php if(!$filter->channel && sizeof($filter->typeFilter) == 0) { ?>
+    <?php 
+    
+    if(!$filter->channel && sizeof($filter->typeFilter) == 0 || $_SERVER['REQUEST_URI'] == "/handler.php") { ?>
     <div>
         <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
             <tr>

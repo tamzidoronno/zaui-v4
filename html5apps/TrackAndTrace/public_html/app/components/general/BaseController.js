@@ -14,7 +14,7 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
         $scope.counter = $api.getApi().getUnsentMessageCount();
     }
     
-    $rootScope.$on('refreshRouteEven1', function(msg, data) {
+    $scope.$on('refreshRouteEven1', function(msg, data) {
         var loggedOnUserId = $api.getLoggedOnUser().id;
 
         for (var i in data.userIds) {
@@ -26,7 +26,7 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
         }
     });
     
-    $rootScope.$on('messageReceived', function(msg, data) {
+    $scope.$on('messageReceived', function(msg, data) {
         if (data.driverId === $api.getLoggedOnUser().id) {
             datarepository.driverMessages.push(data);
             datarepository.save();
@@ -37,7 +37,7 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
         }
     });
     
-    $rootScope.$on('driverRemoved', function(msg, data) {
+    $scope.$on('driverRemoved', function(msg, data) {
         if (data.userId === $api.getLoggedOnUser().id) {
             datarepository.removeRoute(data.routeId);
             $state.transitionTo('base.home', {}, {reload: true});
@@ -47,12 +47,11 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
         }
     });
     
-    $rootScope.$on('refreshData', function() {
-        $('.loadingData').show();
+    $scope.$on('refreshData', function() {
         datarepository.loadAllData($api, $scope);
     });
     
-    $rootScope.$on('messageCountChanged', function() {
+    $scope.$on('messageCountChanged', function() {
         $scope.counter = $api.getApi().messagesToSendJson.length;
         if ($scope.$root != null && $scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
             $scope.$apply();

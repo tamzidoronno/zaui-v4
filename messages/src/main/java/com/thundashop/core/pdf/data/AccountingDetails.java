@@ -22,6 +22,8 @@ public class AccountingDetails {
     public Integer kidSize = 0;
     public String currency = "";
     public String type = "type1";
+    public String iban = "";
+    public String swift = "";
 
     public boolean isTypeOne() {
         if (type == null || type.isEmpty() || type.equals("type1"))

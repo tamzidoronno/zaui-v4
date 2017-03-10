@@ -9,6 +9,7 @@ import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -33,6 +34,11 @@ public class Entry extends TranslationHandler implements Serializable {
     public int counter = -1;
     public boolean hidden = false;
     public boolean openInSeperatedTab = false;
+    public boolean confirmed = false;
+    public String prefix = "";
+    public String phone = "";
+    public String emailToSendConfirmationTo = "";
+    public HashMap<String, String> metaData = new HashMap();
     public int badges = 0;
     
     //Appended when fetching the list.

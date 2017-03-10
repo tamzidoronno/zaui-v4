@@ -18,10 +18,9 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
         var conf = confirm("Are you sure you want to move " + destination.company.name + " to pool?");
         if (conf) {
             $api.getApi().TrackAndTraceManager.moveDesitinationToPool(datarepository.selectedRouteForPoolController.id, destination.id).done(function(route) {
-                datarepository.updateRoute(route);
-                datarepository.selectedRouteForPoolController = route;
+                datarepository.updateRoute(route[0]);
+                datarepository.selectedRouteForPoolController = route[0];
                 $scope.$apply();
-                $scope.fetchPooledDestination();
             });
             
         }
@@ -32,29 +31,13 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
         var conf = confirm("Are you sure you want to move " + destination.company.name + " from pool?");
         if (conf) {
             $api.getApi().TrackAndTraceManager.moveDestinationFromPoolToRoute(id, datarepository.selectedRouteForPoolController.id).done(function(route) {
-                datarepository.updateRoute(route);
-                datarepository.selectedRouteForPoolController = route;
+                datarepository.updateRoute(route[0]);
+                datarepository.selectedRouteForPoolController = route[0];
                 $scope.$apply();
-                $scope.fetchPooledDestination();
             });
         }
             
     }
-    
-    $scope.goBack = function() {
-        if (datarepository.selectedRouteForPoolController) {
-            datarepository.selectedRouteForPoolController = null;
-            return;
-        }
-        
-        $state.transitionTo("base.home");
-    }
-    
-    $rootScope.$on('refreshRoute', function(msg, route) {
-        if ($scope.datarepository.selectedRouteForPoolController && $scope.datarepository.selectedRouteForPoolController.id == route.id) {
-            $scope.datarepository.selectedRouteForPoolController = route;
-        }
-    });
     
     $scope.fetchPooledDestination = function() {
         $api.getApi().TrackAndTraceManager.getPooledDestiontionsByUsersDepotId().done(function(res) {

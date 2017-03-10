@@ -12,23 +12,28 @@ adata = {
     driverMessages: [],
     currentVersion: "",
     
-    loadAllData: function ($api, $scope) {
+    loadAllData: function ($api, $scope, completedFunction) {
         var me = this;
         
         me.routes = [];
         me.exceptions = [];
         me.routeLoadCompleted = false;
         me.exceptionLoadCompleted = false;
-            
+                
         $api.getApi().TrackAndTraceManager.getMyRoutes().done(function (res) {
             me.routes = res;
             me.loaded = true;
             me.save();
             
             me.routeLoadCompleted = true;
-            $scope.$apply();
+            if ($scope) {
+                $scope.$apply();
+            }
+            
             if (me.routeLoadCompleted && me.exceptionLoadCompleted) {
-                $('.loadingData').hide();
+                if (typeof(completedFunction) === "function") {
+                    completedFunction();
+                }
             }
             
             localStorage.setItem("currentVersion", "1.0.15");
@@ -38,16 +43,25 @@ adata = {
             me.exceptions = res;
             me.save();
             me.exceptionLoadCompleted = true;
-            $scope.$apply();
+            
+            if ($scope) {
+                $scope.$apply();
+            }  
+           
             if (me.routeLoadCompleted && me.exceptionLoadCompleted) {
-                $('.loadingData').hide();
+                if (typeof(completedFunction) === "function" ) {
+                    completedFunction();
+                }
             }
         });
         
         if ($api.getLoggedOnUser()) {
             $api.getApi().TrackAndTraceManager.getDriverMessages($api.getLoggedOnUser().id).done(function (res) {
                 me.driverMessages = res;
-                $scope.$apply();
+                if ($scope) {
+                    $scope.$apply();
+                } 
+
                 me.save();
             });
         }

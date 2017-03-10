@@ -8,10 +8,20 @@ if ($routes) {
     echo "<div class='routelist'>";
     echo "<h1>All routes:</h1>";
     foreach ($routes as $route) {
+        $completed = "";
+        if ($route->completedInfo->completedTimeStamp) {
+            $future = strtotime($route->completedInfo->completedTimeStamp);
+            $future = $future + (24*3600*2);
+            $date = time();
+            $hours = ($future - $date)/60/60;
+            $hours = ceil($hours);
+            $completedInfo = $route->completedInfo->completed ? "Completed, " : "";
+            $completed = " ( $completedInfo will be deleted in $hours hours ) ";
+        }
         echo "<div class='routeview'> "
         . "<div gsclick='changeToRouteView' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-edit'></i></div> "
         . "<div gsclick='deleteRoute' gs_confirm='are you sure you want to delete the route?' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-trash'></i></div> "
-                . " ".$route->name."</div>";
+                . " ".$route->name." $completed</div>";
     }
     echo "</div>";
     echo "<br/>";

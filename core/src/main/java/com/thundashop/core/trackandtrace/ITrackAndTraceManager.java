@@ -102,10 +102,10 @@ public interface ITrackAndTraceManager {
      * @return 
      */
     @Customer
-    public Route moveDesitinationToPool(String routeId, String destinationId);
+    public List<Route> moveDesitinationToPool(String routeId, String destinationId);
     
     @Customer
-    public Route moveDestinationFromPoolToRoute(String destId, String routeId);
+    public List<Route> moveDestinationFromPoolToRoute(String destId, String routeId);
     
     @Customer
     public List<PooledDestionation> getPooledDestiontions();
@@ -132,11 +132,14 @@ public interface ITrackAndTraceManager {
     public DriverMessage getDriverMessage(String msgId);
     
     @Customer
-    public TaskAdded addPickupOrder(String destnationId, PickupOrder order);
+    public TaskAdded addPickupOrder(String destnationId, PickupOrder order, PickupTask inTask);
     
     @Customer
     public void markAsCompleted(String routeId, double lat, double lon);
     
     @Administrator
     public void checkRemovalOfRoutes();
+    
+    @Administrator
+    public List<Route> getRoutesCompletedPast24Hours();
 }

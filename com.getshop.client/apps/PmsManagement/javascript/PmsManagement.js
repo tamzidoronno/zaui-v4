@@ -17,6 +17,7 @@ app.PmsManagement = {
         $(document).on('click', '.PmsManagement .edituseronorderviewbutton', app.PmsManagement.loadedituseronorder);
         $(document).on('click', '.PmsManagement .createanewuserfromeditbox', app.PmsManagement.createNewUserOnBooking);
         $(document).on('click', '.PmsManagement .savenewfielddata', app.PmsManagement.savenewfielddata);
+        $(document).on('click', '.PmsManagement .uploadfiletobooking', app.PmsManagement.uploadBoxClick);
         $(document).on('keyup','.PmsManagement .newroomstartdate', app.PmsManagement.updateRoomList);
         $(document).on('keyup','.PmsManagement .newroomenddate', app.PmsManagement.updateRoomList);
         $(document).on('keyup','.PmsManagement .newroomstarttime', app.PmsManagement.updateRoomList);
@@ -83,6 +84,65 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .removePaymentMethod', app.PmsManagement.removePaymentMethod);
         $(document).on('click','.PmsManagement .loadorderstatsentryfororder', app.PmsManagement.loadorderstatsentryfororder);
     },
+    uploadBoxClick: function () {
+        $('#getshop_select_files_link').remove();
+        $('#your-files').remove();
+
+        var selectDialogueLink = $('<a href="" id="getshop_select_files_link">Select files</a>');
+        var fileSelector = $('<input type="file" id="your-files" multiple/>');
+
+        selectDialogueLink.click(function () {
+            fileSelector.click();
+        });
+        $('body').append(fileSelector);
+        $('body').append(selectDialogueLink);
+
+        var control = document.getElementById("your-files");
+        var me = this;
+        control.addEventListener("change", function () {
+            fileSelector.remove();
+            app.PmsManagement.imageSelected(control.files);
+        });
+
+        selectDialogueLink.click();
+        selectDialogueLink.remove();
+    },
+    imageSelected: function (files) {
+        var file = files[0];
+        var fileName = file.name;
+
+        var reader = new FileReader();
+
+        reader.onload = function (event) {
+            var dataUri = event.target.result;
+
+            var data = {
+                fileBase64: dataUri,
+                fileName: fileName,
+                userId : $('#filetouploaduserbutton').attr('userid')
+            };
+
+            var userid = $('[gs_model_attr="userid"]').attr('value');
+            if($('#selecteduseridoverride').length > 0) {
+                userid = $('#selecteduseridoverride').val();
+            }
+            var field = $('<div/>');
+            field.attr('gss_view', "gs_user_workarea");
+            field.attr('gss_fragment', "user");
+            field.attr('gss_value', userid);
+            var event = thundashop.Ajax.createEvent('','saveUploadedUserFile',$('#openedbookingid'), data);
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                app.PmsManagement.reloadtab();
+            });
+        };
+
+        reader.onerror = function (event) {
+            console.error("File could not be read! Code " + event.target.error.code);
+        };
+
+        reader.readAsDataURL(file);
+    },
+    
     addProductToCart : function() {
         var form = $(this).closest("[gstype='form']");
         var data = thundashop.framework.createGsArgs(form);

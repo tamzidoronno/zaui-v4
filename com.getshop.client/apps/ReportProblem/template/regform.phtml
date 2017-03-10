@@ -1,0 +1,48 @@
+<table width="100%" gstype="form" method="submitForm">
+    <tr>
+        <td>Velg eiendom</td>
+        <td>
+            <select style="width:100%; box-sizing: border-box;" gsname="property">
+                <option>Jernbanegata</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>Skriv inn seksjonsnummer</td>
+        <td colspan="2">
+            <input type="text" style="width:100%; box-sizing: border-box;" gsname="sectionnumber">
+        </td>
+    </tr>
+    <tr>
+        <td>Skriv inn ditt navn</td>
+        <td colspan="2">
+            <input type="text" style="width:100%; box-sizing: border-box;" gsname="name">
+        </td>
+    </tr>
+    <tr>
+        <td>Skriv inn telefonnummer</td>
+        <td colspan="2">
+            <input type="text" style="width:100%; box-sizing: border-box;" gsname="phone">
+        </td>
+    </tr>
+    <tr>
+        <td><br>Hva ønsker du å formidle?</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <textarea style="width:100%; box-sizing: border-box;" gsname="message"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="button" value="Send inn bedskjeden" style="width:100%;" gstype="submit">
+        </td>
+    </tr>
+</table>
+
+<?php
+/* @var $this \ns_cbb4df6d_3990_41cc_8b41_3cef9c850e12\ReportProblem */
+if($this->failed) {
+    echo "<i class='fa fa-warning'></i> Alle felt mye fylles ut.";
+}
+?>

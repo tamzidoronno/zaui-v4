@@ -31,7 +31,6 @@ adata = {
             }
             
             if (me.routeLoadCompleted && me.exceptionLoadCompleted) {
-                $('.loadingData').hide();
                 if (typeof(completedFunction) === "function") {
                     completedFunction();
                 }
@@ -47,10 +46,9 @@ adata = {
             
             if ($scope) {
                 $scope.$apply();
-            } 
-            
+            }  
+           
             if (me.routeLoadCompleted && me.exceptionLoadCompleted) {
-                $('.loadingData').hide();
                 if (typeof(completedFunction) === "function" ) {
                     completedFunction();
                 }

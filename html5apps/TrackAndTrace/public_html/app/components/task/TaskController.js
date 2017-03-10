@@ -345,7 +345,6 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
             }
         }
         
-        debugger;
         if (orderFound) {
             if (!orderFound.barcodeScanned) {
                 orderFound.barcodeScanned = [];

@@ -102,10 +102,10 @@ public interface ITrackAndTraceManager {
      * @return 
      */
     @Customer
-    public Route moveDesitinationToPool(String routeId, String destinationId);
+    public List<Route> moveDesitinationToPool(String routeId, String destinationId);
     
     @Customer
-    public Route moveDestinationFromPoolToRoute(String destId, String routeId);
+    public List<Route> moveDestinationFromPoolToRoute(String destId, String routeId);
     
     @Customer
     public List<PooledDestionation> getPooledDestiontions();

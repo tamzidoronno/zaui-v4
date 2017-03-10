@@ -538,7 +538,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public Route moveDesitinationToPool(String routeId, String destinationId) {
+    public List<Route> moveDesitinationToPool(String routeId, String destinationId) {
         Route route = getRouteById(routeId);
         if (route != null) {
             boolean removed = route.removeDestination(destinationId);
@@ -562,7 +562,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         finalize(route);
         
         notifyRoute(route);
-        return route;
+        
+        List<Route> retRoutes = new ArrayList();
+        retRoutes.add(route);
+        return retRoutes;
     }
 
     @Override
@@ -582,8 +585,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public Route moveDestinationFromPoolToRoute(String destId, String routeId) {
+    public List<Route> moveDestinationFromPoolToRoute(String destId, String routeId) {
         PooledDestionation pooledDest = pooledDestinations.remove(destId);
+        
+        List<Route> retRoutes = new ArrayList();
         
         if (pooledDest != null) {
             deleteObject(pooledDest);
@@ -594,11 +599,12 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 route.destinationIds.add(dest.id);
                 saveObjectInternal(route);
                 notifyRoute(route);
-                return route;
+                finalize(route);
+                retRoutes.add(route);
             }
         }
         
-        return null;
+        return retRoutes;
     }
 
     private void notifyRoute(Route route) {

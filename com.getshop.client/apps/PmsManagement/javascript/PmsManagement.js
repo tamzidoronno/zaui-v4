@@ -121,9 +121,9 @@ app.PmsManagement = {
                 fileName: fileName,
                 userId : $('#filetouploaduserbutton').attr('userid')
             };
-
-            var userid = $('[gs_model_attr="userid"]').attr('value');
-            if($('#selecteduseridoverride').length > 0) {
+            
+            var userid = $('[gs_model_attr="userid"]').attr('value'); 
+           if($('#selecteduseridoverride').length > 0) {
                 userid = $('#selecteduseridoverride').val();
             }
             var field = $('<div/>');

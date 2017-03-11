@@ -112,6 +112,7 @@ adata = {
                             route.destinations[j].tasks = [];
                         
                         route.destinations[j].tasks.push(task);
+                        route.destinations[j].taskIds.push(task.id);
                     }
                     
                 }

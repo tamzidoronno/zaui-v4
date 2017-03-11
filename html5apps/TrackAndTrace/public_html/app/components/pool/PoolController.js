@@ -15,6 +15,11 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
     }
     
     $scope.moveToPool = function(destination) {
+        if (!$api.getApi().connectionEstablished) {
+            alert("This function is not available offline, please make sure you are connected to internet.");
+            return;
+        }
+        
         var conf = confirm("Are you sure you want to move " + destination.company.name + " to pool?");
         if (conf) {
             $api.getApi().TrackAndTraceManager.moveDesitinationToPool(datarepository.selectedRouteForPoolController.id, destination.id).done(function(route) {
@@ -27,6 +32,10 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
     }
     
     $scope.moveFromPool = function(destination, id) {
+        if (!$api.getApi().connectionEstablished) {
+            alert("This function is not available offline, please make sure you are connected to internet.");
+            return;
+        }
         
         var conf = confirm("Are you sure you want to move " + destination.company.name + " from pool?");
         if (conf) {

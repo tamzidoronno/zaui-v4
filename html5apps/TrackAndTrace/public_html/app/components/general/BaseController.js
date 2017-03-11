@@ -59,7 +59,11 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
     });
   
     $scope.ackMessage = function(message) {
-        $api.getApi().TrackAndTraceManager.acknowledgeDriverMessage(message.id);
+        if ($api.getApi() != null && typeof($api.getApi().TrackAndTraceManager) !== "undefined") {
+            $api.getApi().TrackAndTraceManager.acknowledgeDriverMessage(message.id);
+        }
+        
+        
         
         for (var i in datarepository.driverMessages) {
             var drv = datarepository.driverMessages[i];

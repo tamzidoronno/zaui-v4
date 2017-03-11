@@ -5203,6 +5203,30 @@ GetShopApiWebSocket.ListManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'addUnsecureEntry' : function(listId,entry, gs_silent) {
+        var data = {
+            args : {
+                listId : JSON.stringify(listId),
+                entry : JSON.stringify(entry),
+            },
+            method: 'addUnsecureEntry',
+            interfaceName: 'core.listmanager.IListManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'askConfirmationOnEntry' : function(entryId,text, gs_silent) {
+        var data = {
+            args : {
+                entryId : JSON.stringify(entryId),
+                text : JSON.stringify(text),
+            },
+            method: 'askConfirmationOnEntry',
+            interfaceName: 'core.listmanager.IListManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'clearList' : function(listId, gs_silent) {
         var data = {
             args : {
@@ -5221,6 +5245,17 @@ GetShopApiWebSocket.ListManager.prototype = {
                 newListId : JSON.stringify(newListId),
             },
             method: 'combineList',
+            interfaceName: 'core.listmanager.IListManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'confirmEntry' : function(entryId, gs_silent) {
+        var data = {
+            args : {
+                entryId : JSON.stringify(entryId),
+            },
+            method: 'confirmEntry',
             interfaceName: 'core.listmanager.IListManager',
         };
         return this.communication.send(data, gs_silent);
@@ -10465,6 +10500,21 @@ GetShopApiWebSocket.BookingComRateManagerManager.prototype = {
                 config : JSON.stringify(config),
             },
             method: 'saveRateManagerConfig',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.ratemanager.IBookingComRateManagerManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'updateRate' : function(multilevelname, start,end,roomId,rate, gs_silent) {
+        var data = {
+            args : {
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+                roomId : JSON.stringify(roomId),
+                rate : JSON.stringify(rate),
+            },
+            method: 'updateRate',
             multiLevelName: multilevelname,
             interfaceName: 'core.ratemanager.IBookingComRateManagerManager',
         };

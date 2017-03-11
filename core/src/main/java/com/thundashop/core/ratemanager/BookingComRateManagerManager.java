@@ -83,7 +83,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
     
     @Override
     public void pushInventoryList() {
-        OTAHotelInvCountNotifRQ res = createInventoryListToPush();
+        OTAHotelInvCountNotifRQ res = createInventoryListToPush(null, null, null);
         
         try {
             StringWriter sw = new StringWriter();
@@ -169,7 +169,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         return items.size();
     }
     
-    private OTAHotelInvCountNotifRQ createInventoryListToPush() {
+    private OTAHotelInvCountNotifRQ createInventoryListToPush(Date startCheck, Date endCheck, List<String> types) {
         OTAHotelInvCountNotifRQ res = new OTAHotelInvCountNotifRQ();
         
         InvCountType type = new InvCountType();
@@ -206,17 +206,22 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                 physicals.setCount(BigInteger.valueOf(roomSize));
                 invCountList.add(physicals);
 
-                BaseInvCountType.InvCounts.InvCount takenRooms = new BaseInvCountType.InvCounts.InvCount();
-                takenRooms.setCountType("2");
-                takenRooms.setCount(BigInteger.valueOf(roomSize - numberOfAvailable));
-                invCountList.add(takenRooms);
-
                 BaseInvCountType.InvCounts.InvCount freeRooms = new BaseInvCountType.InvCounts.InvCount();
-                freeRooms.setCountType("3");
+                freeRooms.setCountType("2");
                 freeRooms.setCount(BigInteger.valueOf(numberOfAvailable));
                 invCountList.add(freeRooms);
 
-                for(int j = 4; j <= 8; j++) {
+                BaseInvCountType.InvCounts.InvCount nothing = new BaseInvCountType.InvCounts.InvCount();
+                nothing.setCountType("3");
+                nothing.setCount(BigInteger.valueOf(0));
+                invCountList.add(nothing);
+
+                BaseInvCountType.InvCounts.InvCount takenRooms = new BaseInvCountType.InvCounts.InvCount();
+                takenRooms.setCountType("4");
+                takenRooms.setCount(BigInteger.valueOf(roomSize - numberOfAvailable));
+                invCountList.add(takenRooms);
+
+                for(int j = 5; j <= 8; j++) {
                     if(j == 7) {
                         continue;
                     }
@@ -268,7 +273,6 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
         for(PmsBooking booking : allbookings) {
             pushBooking(booking, "Commit");
-            break;
         }
     }
 
@@ -277,6 +281,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             return;
         }
         
+        String uuid = UUID.randomUUID().toString();
         String toPush ="";
         try {
             String date = convertDateToApi(booking.rowCreatedDate);
@@ -288,6 +293,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                         "      <Password>HeeqwFNVLbyC</Password>\n" +
                         "    </UsertextToken>\n" +
                         "  </Security>\n" +
+                        "  <MessageID>"+uuid+"</MessageID>" +
                         "</Header>\n";
             
             

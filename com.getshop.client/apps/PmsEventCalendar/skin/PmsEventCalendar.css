@@ -110,11 +110,12 @@
 .PmsEventCalendar .noimg{display: block;}
 
 @media only all and (max-width: 800px){
+    .PmsEventCalendar .eventlistbox{font-size:12px;letter-spacing: 2px;width:100%;}
     .PmsEventCalendar .eventlistboxframe{position:relative;right:5px;}
     .PmsEventCalendar .eventlistbox h1{font-size: 1.5em;}
-    .PmsEventCalendar .boxtext{top:-28px;}
+    .PmsEventCalendar .boxtext{top:-22px;}
     .PmsEventCalendar .eventlistboxes{height:180px;}
     .PmsEventCalendar .boxcolor{height:85px;}
-    .PmsEventCalendar #boxid{height:95px;}
+    .PmsEventCalendar .boxid{height:105px;}
     
 }

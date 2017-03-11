@@ -190,7 +190,7 @@ public class PmsBooking extends DataCommon {
         return endDate;
     }
     
-    Date getStartDate() {
+    public Date getStartDate() {
         Date startDate = null;
         for(PmsBookingRooms room : rooms) {
             if(startDate == null || room.date.start.before(startDate)) {
@@ -392,6 +392,14 @@ public class PmsBooking extends DataCommon {
             }
         }
         return false;
+    }
+
+    public List<String> getTypes() {
+        HashMap<String, Integer> typesToReturn = new HashMap();
+        for(PmsBookingRooms r : getActiveRooms()) {
+            typesToReturn.put(r.bookingItemTypeId, 1);
+        }
+        return new ArrayList(typesToReturn.keySet());
     }
 
     public static class PriceType {

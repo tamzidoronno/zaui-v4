@@ -26,10 +26,10 @@ class ScormManager extends \MarketingApplication implements \Application {
         
         $inPackages = $this->getScorms();
         
-        foreach ($dataObject as $scormId => $groups) {
+        foreach ($inPackages as $ipackage) {
             $package = new \core_scormmanager_ScormPackage();
-            $package->id = $scormId;
-            $package->activatedGroups = $groups;
+            $package->id = $ipackage->id;
+            $package->activatedGroups = @$dataObject[$ipackage->id];
             $package->name = $this->getScormName($package->id, $inPackages);
             $this->getApi()->getScormManager()->saveSetup($package);
         }

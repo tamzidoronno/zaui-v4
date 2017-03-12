@@ -102,7 +102,13 @@ public class ScormManager extends ManagerBase implements IScormManager {
     public void updateResult(ScormResult result) {
         Scorm scorm = getScorm(result.username, result.scormid);
         scorm.completed = result.isCompleted();
-        scorm.score = Integer.parseInt(result.score);
+        
+        try {
+            scorm.score = Integer.parseInt(result.score);
+        } catch (NumberFormatException ex) {
+            scorm.score = 0;
+        }
+        
         saveObject(scorm);
     }
     

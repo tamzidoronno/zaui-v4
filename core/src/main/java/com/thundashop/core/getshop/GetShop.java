@@ -22,6 +22,7 @@ import com.thundashop.core.getshop.data.PartnerData;
 import com.thundashop.core.getshop.data.SmsResponse;
 import com.thundashop.core.getshop.data.StartData;
 import com.thundashop.core.getshop.data.WebPageData;
+import com.thundashop.core.mecamanager.MecaManager;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pdf.InvoiceManager;
@@ -305,7 +306,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         
         String newAddress = nextStoreId + ".getshop.com";
         if (!frameworkConfig.productionMode) {
-            newAddress = nextStoreId + ".2.0.local.getshop.com";
+            newAddress = nextStoreId + ".3.0.local.getshop.com";
         }
         
         
@@ -322,6 +323,10 @@ public class GetShop extends ManagerBase implements IGetShop {
             
             OrderManager orderManager = AppContext.appContext.getBean(OrderManager.class);
             orderManager.clear();
+            
+            MecaManager mecaManager = AppContext.appContext.getBean(MecaManager.class);
+            mecaManager.clear();
+            
             
             saveCustomerToGetShop(user, scope);
             if (startData.language.equals("nb_NO")) {

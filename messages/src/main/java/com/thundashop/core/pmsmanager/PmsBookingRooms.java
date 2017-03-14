@@ -119,6 +119,9 @@ public class PmsBookingRooms implements Serializable {
 
     Integer getNumberOfNights() {
         int days = 0;
+        if(date.end == null) {
+            return 0;
+        }
         Calendar cal = Calendar.getInstance();
         cal.setTime(date.start);
         cal.set(Calendar.HOUR_OF_DAY, 23);
@@ -651,6 +654,9 @@ public class PmsBookingRooms implements Serializable {
 
     private int getNumberOfMonths() {
         Date startDate = date.start;
+        if(date.end == null) {
+            return 0;
+        }
         Date endDate = date.end;
         int months = 1;
         Calendar cal = Calendar.getInstance();

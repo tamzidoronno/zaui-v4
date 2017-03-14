@@ -88,6 +88,9 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
      */
     public function getCompletedScorms() {
         $scorms = $this->getApi()->getScormManager()->getMyScorm();
+        if (!$scorms)
+            return array();
+        
         $ret = array();
         foreach ($scorms as $scorm) {
             if ($scorm->completed) {

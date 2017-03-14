@@ -207,3 +207,4 @@
 .PmsManagement .action_point_row .col5 { width: 50px; }
 .PmsManagement .action_point_row input { width: 100%; box-sizing: border-box;}
 .PmsManagement .dayform { border-top: solid 1px #DDD; border-bottom: solid 1px #DDD; margin-bottom: 20px; padding-top: 10px; padding-bottom: 10px; }
+.PmsManagement .contactdatadropdown{max-width:330px;}

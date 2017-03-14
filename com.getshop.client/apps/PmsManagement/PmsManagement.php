@@ -77,7 +77,30 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $this->getApi()->getPmsManager()->saveConferenceData($this->getSelectedName(), $conferenceData);
     }
-    
+    public function sendBookingInformationRadioButton(){
+        $bookingid = $_POST['data']['bookingid'];
+        $radio = $_POST['data']['radiobutton'];
+        $field = $_POST['data']['field'];
+        
+        $booking = $this->getSelectedBooking();
+        $booking->registrationData->resultAdded->{$field} = $radio;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        
+        $this->showBookingInformation();
+    }
+    public function sendupdateBookingInformationDropdown(){
+        $bookingId = $_POST['data']['bookingid'];
+        $dropdown = $_POST['data']['dropdown'];
+        $field = $_POST['data']['field'];
+        
+        $booking = $this->getSelectedBooking();
+        $booking->registrationData->resultAdded->{$field} = $dropdown;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        
+        $this->showBookingInformation();
+    }
     public function removeAddonsFromRoom() {
         $roomId = $_POST['data']['roomId'];
         foreach($_POST['data']['idstoremove'] as $id) {
@@ -831,6 +854,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->postCode = $_POST['data']['address.postCode'];
         $user->address->city = $_POST['data']['address.city'];
         $user->birthDay = $_POST['data']['birthDay'];
+        $user->relationship = $_POST['data']['relationship'];
         $this->getApi()->getUserManager()->saveUser($user);
         
         $this->selectedBooking = null;

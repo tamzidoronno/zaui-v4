@@ -82,6 +82,26 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .addPaymentMethod', app.PmsManagement.addPaymentMethod);
         $(document).on('click','.PmsManagement .removePaymentMethod', app.PmsManagement.removePaymentMethod);
         $(document).on('click','.PmsManagement .loadorderstatsentryfororder', app.PmsManagement.loadorderstatsentryfororder);
+        $(document).on('click','.PmsManagement .radioinput', app.PmsManagement.updateBookingInformationRadioButton);
+        $(document).on('change','.PmsManagement .contactdatadropdown', app.PmsManagement.updateBookingInformationDropdown);
+    },
+    updateBookingInformationRadioButton: function(){
+        var data = {
+            "bookingid" : $('#openedbookingid').val(),
+            "radiobutton" : $(this).val(),
+            "field" : $(this).attr('field')
+        }
+        var event = thundashop.Ajax.createEvent('','sendBookingInformationRadioButton', $(this),data);
+        thundashop.common.showInformationBoxNew(event, 'Booking information');
+    },
+    updateBookingInformationDropdown: function(){
+        var data = {
+            "bookingid" : $('#openedbookingid').val(),
+            "dropdown" : $(this).val(),
+            "field" : $(this).attr('field')
+        }
+        var event = thundashop.Ajax.createEvent('','sendupdateBookingInformationDropdown', $(this),data);
+        thundashop.common.showInformationBoxNew(event, 'Booking information');
     },
     addProductToCart : function() {
         var form = $(this).closest("[gstype='form']");

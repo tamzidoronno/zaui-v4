@@ -33,7 +33,7 @@ $isActiveFileUpload = $this->getApi()->getStoreApplicationPool()->isActivated("e
 
 if($isActiveFileUpload) {
     ?>
-    Files connected to the user, <span class='gss_user_save_file' style='cursor:pointer; color:blue;' >upload new file</span><br>
+    Files connected to the user, <span class='uploadfiletobooking' id='filetouploaduserbutton' userid='<?php echo $user->id; ?>' style='cursor:pointer; color:blue;' >upload new file</span><br>
     <?php
     foreach($user->files as $file) {
         echo "<span style='cursor:pointer; color:blue;' onclick='window.open(\"/scripts/downloadUserFile.php?userId=".$user->id. "&id=".$file->fileId."\", \"_blank\")'>". $file->fileName . "</span><br>";

@@ -1,6 +1,6 @@
 ###### framework ######
-&nbsp;&nbsp;Upload file;-;
 Add actionpoint;-;
+Add day;-;
 Booking value;-;
 By who subheading;-;
 Check for rooms to close;-;
@@ -13,8 +13,12 @@ Extra beds;-;
 Footer news;-;
 From;-;
 Full;-;
+Golfpark;-;
 Hide navdots;-;
 Hide this cell on desktop;-;
+Hotel;-;
+Kunstsenter;-;
+Make a reservation;-;
 Need collecting;-;
 No Results!;-;
 No key set yet, please add the API key provided by mailchimp.;-;
@@ -28,6 +32,9 @@ Sleepover statistics;-;
 Suspend;-;
 The cellphone must be 8 digit;-;
 This event has been locked for signup;-;
+Uncancel event;-;
+Upload file;-;
+View template;-;
 correct;-;
 
 

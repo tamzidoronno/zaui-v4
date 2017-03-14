@@ -11,6 +11,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
+import com.thundashop.core.pmsmanager.PmsMailStatistics;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.core.webmanager.WebManager;
@@ -79,34 +80,15 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                 config = (RateManagerConfig) d;
             }
         }
+        
+        createScheduler("pmsmailstats", "1 23 * * *", RateManagerInvetoryUpdater.class);
+
     }
     
     @Override
     public void pushInventoryList() {
-        OTAHotelInvCountNotifRQ res = createInventoryListToPush();
-        
-        try {
-            StringWriter sw = new StringWriter();
-            BookingRateManageSoapEnvelope envelope = new BookingRateManageSoapEnvelope();
-            envelope.soapBody = (OTAHotelInvCountNotifRQ) res;
-            JAXBContext jaxbContext = JAXBContext.newInstance(envelope.getClass(), res.getClass());
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-            sw = new StringWriter();
-            jaxbMarshaller.marshal(envelope, sw);  
-
-            String body = sw.toString();
-            body = replaceHeader(body);
-            
-            body = body.replace("<soap:Body>", "<soap:Body><OTA_HotelInvCountNotifRQ xmlns=\"http://www.opentravel.org/OTA/2003/05\">");
-            body = body.replace("</soap:Body>", "</OTA_HotelInvCountNotifRQ></soap:Body>");
-
-            String url = "https://api.pricematch.travel/htng_message";
-            String result = htmlPost(url, body);
-         }catch(Exception e) {
-             e.printStackTrace();
-         }
+        OTAHotelInvCountNotifRQ res = createInventoryListToPush(null, null, null);
+        pushInventory(res);
     }
     
     public String htmlPost(String url, String data)  throws Exception {
@@ -169,7 +151,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         return items.size();
     }
     
-    private OTAHotelInvCountNotifRQ createInventoryListToPush() {
+    private OTAHotelInvCountNotifRQ createInventoryListToPush(Date startCheck, Date endCheck, List<String> types) {
         OTAHotelInvCountNotifRQ res = new OTAHotelInvCountNotifRQ();
         
         InvCountType type = new InvCountType();
@@ -181,6 +163,11 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         
         Calendar startcal = Calendar.getInstance();
         Calendar endCal = Calendar.getInstance();
+        
+        if(startCheck != null) {
+            startcal.setTime(startCheck);
+        }
+        
         startcal.set(Calendar.HOUR_OF_DAY, 16);
         for (int i = 0; i < 365; i++) {
             Date start = startcal.getTime();
@@ -188,6 +175,11 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             endCal.add(Calendar.HOUR_OF_DAY, 16);
 
             for(BookingItemType tmpType : bookingEngine.getBookingItemTypes()) {
+                
+                if(types != null && !types.contains(tmpType.id)) {
+                    continue;
+                }
+                
                 int numberOfAvailable = bookingEngine.getNumberOfAvailable(tmpType.id, start, endCal.getTime());
                 BaseInvCountType toAdd = new BaseInvCountType();
 
@@ -206,17 +198,22 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                 physicals.setCount(BigInteger.valueOf(roomSize));
                 invCountList.add(physicals);
 
-                BaseInvCountType.InvCounts.InvCount takenRooms = new BaseInvCountType.InvCounts.InvCount();
-                takenRooms.setCountType("2");
-                takenRooms.setCount(BigInteger.valueOf(roomSize - numberOfAvailable));
-                invCountList.add(takenRooms);
-
                 BaseInvCountType.InvCounts.InvCount freeRooms = new BaseInvCountType.InvCounts.InvCount();
-                freeRooms.setCountType("3");
+                freeRooms.setCountType("2");
                 freeRooms.setCount(BigInteger.valueOf(numberOfAvailable));
                 invCountList.add(freeRooms);
 
-                for(int j = 4; j <= 8; j++) {
+                BaseInvCountType.InvCounts.InvCount nothing = new BaseInvCountType.InvCounts.InvCount();
+                nothing.setCountType("3");
+                nothing.setCount(BigInteger.valueOf(0));
+                invCountList.add(nothing);
+
+                BaseInvCountType.InvCounts.InvCount takenRooms = new BaseInvCountType.InvCounts.InvCount();
+                takenRooms.setCountType("4");
+                takenRooms.setCount(BigInteger.valueOf(roomSize - numberOfAvailable));
+                invCountList.add(takenRooms);
+
+                for(int j = 5; j <= 8; j++) {
                     if(j == 7) {
                         continue;
                     }
@@ -232,6 +229,9 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                 inventories.add(toAdd);
             }
             startcal.add(Calendar.DAY_OF_YEAR, 1);
+            if(endCheck != null && startcal.getTime().after(endCheck)) {
+                break;
+            }
         }
         
         type.setInventory(inventories);
@@ -265,10 +265,12 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
 
     @Override
     public void pushAllBookings() {
+        if(config.hotelId == null || config.hotelId.trim().isEmpty()) {
+            return;
+        }
         List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
         for(PmsBooking booking : allbookings) {
             pushBooking(booking, "Commit");
-            break;
         }
     }
 
@@ -277,6 +279,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             return;
         }
         
+        String uuid = UUID.randomUUID().toString();
         String toPush ="";
         try {
             String date = convertDateToApi(booking.rowCreatedDate);
@@ -288,6 +291,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                         "      <Password>HeeqwFNVLbyC</Password>\n" +
                         "    </UsertextToken>\n" +
                         "  </Security>\n" +
+                        "  <MessageID>"+uuid+"</MessageID>" +
                         "</Header>\n";
             
             
@@ -302,6 +306,9 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             System.out.println(toPush);
             e.printStackTrace();
         }
+        
+        OTAHotelInvCountNotifRQ res = createInventoryListToPush(booking.getStartDate(), booking.getEndDate(), booking.getTypes());
+        pushInventory(res);
     }
     
     private String createReservationXml(PmsBooking booking) throws DatatypeConfigurationException {
@@ -488,6 +495,31 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         
         pmsManager.setPrices("default", prices);
         return "";
+    }
+
+    private void pushInventory(OTAHotelInvCountNotifRQ res) {
+        try {
+            StringWriter sw = new StringWriter();
+            BookingRateManageSoapEnvelope envelope = new BookingRateManageSoapEnvelope();
+            envelope.soapBody = (OTAHotelInvCountNotifRQ) res;
+            JAXBContext jaxbContext = JAXBContext.newInstance(envelope.getClass(), res.getClass());
+            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            sw = new StringWriter();
+            jaxbMarshaller.marshal(envelope, sw);  
+
+            String body = sw.toString();
+            body = replaceHeader(body);
+            
+            body = body.replace("<soap:Body>", "<soap:Body><OTA_HotelInvCountNotifRQ xmlns=\"http://www.opentravel.org/OTA/2003/05\">");
+            body = body.replace("</soap:Body>", "</OTA_HotelInvCountNotifRQ></soap:Body>");
+
+            String url = "https://api.pricematch.travel/htng_message";
+            String result = htmlPost(url, body);
+         }catch(Exception e) {
+             e.printStackTrace();
+         }
     }
 
 

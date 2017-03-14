@@ -101,6 +101,32 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $this->showBookingInformation();
     }
+    
+    public function saveUploadedUserFile() {
+        $content = strstr($_POST['data']['fileBase64'], "base64,");
+        $rawContent = $_POST['data']['fileBase64'];
+        $contentType = substr($rawContent, 0, strpos($rawContent, ";base64,"));
+        if($contentType) {
+            $contentType = str_replace("data:", "", $contentType);
+            $contentType = trim($contentType);
+        }
+
+        $content = str_replace("base64,", "", $content);
+        $content = base64_decode($content);
+        $imgId = \FileUpload::storeFile($content);
+        
+        $entry = new \core_usermanager_data_UploadedFiles();
+        $entry->fileName = $_POST['data']['fileName'];
+        $entry->fileId = $imgId;
+        $entry->createdDate = $this->convertToJavaDate(time());
+        $entry->contentType = $contentType;
+        
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userId']);
+        $user->files[] = $entry;
+        $this->getApi()->getUserManager()->saveUser($user);
+        
+    }
+    
     public function removeAddonsFromRoom() {
         $roomId = $_POST['data']['roomId'];
         foreach($_POST['data']['idstoremove'] as $id) {

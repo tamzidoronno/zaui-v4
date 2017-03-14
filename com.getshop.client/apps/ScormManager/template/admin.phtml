@@ -1,0 +1,27 @@
+<?
+/* @var $this \ns_f4c3fce7_123c_4dcc_b9ce_dfea2ac6b755\CreateEvent */
+
+$scorms = $this->getScorms();
+$groups = $this->getApi()->getUserManager()->getAllGroups();
+$packages = $this->getApi()->getScormManager()->getAllPackages();
+
+
+?>
+<div gstype="form" method="saveScormPackage">
+    
+
+<?
+foreach ($scorms as $scorm) {
+    echo "<h2>".$scorm->name."</h2>";
+    foreach ($groups as $group) {
+        $combinedId = $group->id."_".$scorm->id;
+        $checked = $this->isActivated($packages, $group->id, $scorm->id) ? "checked='true'" : "";
+        echo "<input $checked type='checkbox' gsname='$combinedId'/> ".$group->groupName."<br/>";
+    }
+}
+?>
+    <br/>
+    <div class="shop_button" gstype="submit">Save</div>
+    <br/>
+    <br/>
+</div>

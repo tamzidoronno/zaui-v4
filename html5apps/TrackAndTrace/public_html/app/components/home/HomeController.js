@@ -32,6 +32,11 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     }
     
     $scope.openPool = function() {
+        if (!$api.getApi().connectionEstablished) {
+            alert("This function is not available offline, please make sure you are connected to internet.");
+            return;
+        }
+        
         $scope.loadData();
         $state.transitionTo("base.pool", {});
     }

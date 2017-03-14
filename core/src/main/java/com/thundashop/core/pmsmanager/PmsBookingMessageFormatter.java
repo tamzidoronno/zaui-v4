@@ -115,10 +115,12 @@ class PmsBookingMessageFormatter {
         booking.calculateTotalCost();
         String simpleRoomList = "";
         String bookingData = "";
+        String rooms = "";
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             String simpleRoom = "";
             if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
                 simpleRoom += "<td style='font-size:12px;'>" + bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "</td>";
+                rooms += bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
             }
             long diff = 365*60*60*100;
             if(room.date.end != null && room.date.start != null) {
@@ -126,13 +128,16 @@ class PmsBookingMessageFormatter {
             }
             if(diff > (365*60*60)) {
                 simpleRoom += "<td style='font-size:12px;'>" + formatDate(room.date.start) + "</td><td></td>";
+                rooms += formatDate(room.date.start);
             } else {
                 simpleRoom += "<td style='font-size:12px;'>" + formatDate(room.date.start) + "</td><td>" + formatDate(room.date.end) + "</td>";
+                rooms += formatDate(room.date.start) + " - " + formatDate(room.date.end);
             }
             if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                 if(item != null) {
                     simpleRoom += "<td style='font-size:12px;'>" + item.bookingItemName + "</td>";
+                    rooms += item.bookingItemName;
                 }
             } else {
                 simpleRoom += "<td style='font-size:12px;'></td>";
@@ -140,7 +145,7 @@ class PmsBookingMessageFormatter {
             if(room.totalCost > 0 && room.totalCost < 100000) {
                 simpleRoom += "<td style='font-size:12px;'>" + room.totalCost + "</td>";
             }
-            
+            rooms += "\n";
             simpleRoomList += "<tr bgcolor='#fff'>" + simpleRoom +  "</tr>";
             
             bookingData += "<tr style='font-size: 12px;' bgcolor='#fff'>" + simpleRoom + "</tr>";
@@ -260,7 +265,7 @@ class PmsBookingMessageFormatter {
         header += "</tr>";
         
         
-        message = message.replace("{rooms}", "<table cellspacing='1' cellpadding='3' bgcolor='#efefef'>" + header + bookingData + "</table>");
+        message = message.replace("{rooms}", rooms);
         message = message.replace("{roomlist}", "<table cellspacing='1' cellpadding='3' bgcolor='#efefef'>" + header + bookingData + "</table>");
         message = message.replace("{simpleRoomList}", "<table cellspacing='1' cellpadding='3' bgcolor='#efefef'>" + simpleRoomList + "</table>");
         message = message.replace("{bookingid}", booking.id);

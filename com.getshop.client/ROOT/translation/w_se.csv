@@ -23,6 +23,7 @@ Company invoice city;-;Ort
 Company invoice postcode;-;Postnummer
 Company postcode;-;Postnummer
 Company's main email;-;Företagsmail
+Completed;-;Genomförd
 Contact information;-;Kontaktuppgifter
 Country prefix for mobile phone;-;Landsnummer för mobiltelefon
 Create a new account;-;Skapa ett nytt konto
@@ -72,6 +73,7 @@ New password;-;Nytt lösenord
 New user;-;Ny användare
 NewsLetter;-;Nyheter
 Next;-;Vidare
+No;-;Nej
 No available spots left for this event;-; Det finns inga lediga platser på denna kurs
 No events available;-;Inga kurstillfällen tillgängliga
 Not participated illegal reason;-;Deltog ej, ogiltig frånvaro
@@ -119,6 +121,7 @@ Upcoming events;-;Kommande kurstillfällen
 Username / Email;-;Användarnamn/Epost
 Users in your company;-;Dina medarbetare
 Waitinglist;-;Väntelista
+Yes;-;Ja
 You have not participated in any events yet.;-;Du har inte deltagit i några kurser än
 You have not signed up for any events yet.;-;Du har inte anmält dig till några kurser än
 Your message has been delivered;-;Ditt meddelande har levererats

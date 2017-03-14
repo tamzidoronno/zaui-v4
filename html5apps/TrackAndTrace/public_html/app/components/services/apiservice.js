@@ -84,9 +84,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         },
                 
         this.loadDataAndGoToHome = function($api) {
-            adata.loadAllData($api, null, function() {
-                $state.transitionTo('base.home');
-            })
+            $state.transitionTo('base.home');
         },
         
         this.getLoggedOnUser = function() {
@@ -98,6 +96,11 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
          * @returns GetShopApiWebSocket
          */
         this.getApi = function() {
+            if (!this.api && localStorage.getItem("company")) {
+                this.setConnectionDetails(localStorage.getItem("company"));
+                this.api.connect();
+            }
+            
             return this.api;
         }
         

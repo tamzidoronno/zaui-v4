@@ -88,9 +88,9 @@ public class BrRegEngine implements CompanySearchEngine {
         try {
             organisationUrl = URLEncoder.encode(organisationUrl, "UTF-8");
             if (subdep) {
-                return getContent("http://hotell.difi.no/api/json/brreg/underenheter?query=" + organisationUrl);
+                return getContent("https://hotell.difi.no/api/json/brreg/underenheter?query=" + organisationUrl);
             }
-            return getContent("http://hotell.difi.no/api/json/brreg/enhetsregisteret?query=" + organisationUrl);
+            return getContent("https://hotell.difi.no/api/json/brreg/enhetsregisteret?query=" + organisationUrl);
         } catch (MalformedURLException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {

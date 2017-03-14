@@ -40,6 +40,8 @@ class ZReport extends \ReportingApplication implements \Application {
             $orders = $this->getApi()->getOrderManager()->getOrdersPaid($_POST['data']['paymentid'], $_POST['data']['userid'], $javaFrom, $javaTo);
         }
         
+        usort($orders, array('ns_b6143df9_a5cd_424c_9f17_8e24616b2c3f\ZReport', 'sortByTimestamp'));
+        
         return $orders;
     }
 
@@ -83,6 +85,19 @@ class ZReport extends \ReportingApplication implements \Application {
         
         echo json_encode($rows);
         die();
+    }
+    
+    public static function sortByTimestamp($a, $b) {
+        $time1 = strtotime($b->paymentDate);
+        $time2 = strtotime($a->paymentDate);
+        
+        
+        if ($time1 == $time2) {
+            return 0;
+        }
+        
+        return ($time2 > $time1) ? -1 : 1;
+        
     }
    
     /**

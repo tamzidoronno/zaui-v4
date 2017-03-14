@@ -352,6 +352,10 @@ public class ManagerSubBase {
                 return;
             
             User user = userManager.getInternalApiUser();
+            
+            if (storePool.getStore(storeId) == null)
+                return;
+            
             String webAddress = storePool.getStore(storeId).getDefaultWebAddress();
 
             if(autostart) {

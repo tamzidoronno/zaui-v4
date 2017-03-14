@@ -1,0 +1,109 @@
+body {
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    color: #222;
+}
+
+.gs_page_width {
+    max-width: 1160px;
+    margin: 0 auto;
+}
+
+.gsarea[area="header"] .Menu .entry {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-left: solid 1px #DDD;
+    border-top: solid 1px #DDD;
+}
+
+.gsarea[area="header"] .Menu .entry:last-child {
+    border-right: solid 1px #DDD;
+}
+
+.gsarea[area="header"] {
+    border-bottom: solid 1px #DDD;
+}
+
+.gsarea[area="header"] .Menu {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.CartManager .shoppingcartheader {
+    font-size: 16px;
+    padding: 10px;
+    background-color: #febd11;
+    color: #FFF;
+}
+.CartManager .leftcart {
+    width: 650px;
+    margin-bottom: 100px;
+}
+
+.CartManager .emptycart i {
+    font-size: 50px;
+    color: #febd11;
+    display: block;
+    padding-bottom: 20px;
+}
+.CartManager .emptycart {
+    padding: 30px;
+    font-size: 24px;
+    color: #333;
+    border: solid 2px #febd11;
+    margin: 0px;
+}
+
+.CartManager .checkout_area {
+    background-color: #a7d0ff;
+    color: #333;
+    margin-left: 20px;
+    margin-top: 60px;
+}
+
+.CartManager .checkout_area .checkout {
+    border-left: solid 2px rgba(0,0,0,0.2);
+}
+
+
+.CartManager .checkout_area {
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 20px;
+    border-radius: 10px;
+    /*position: relative;*/
+}
+
+.CartManager .checkout_area .checkout {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    color: #333;
+    top: 0px;
+    width: 100px;
+    color: #000;
+    text-align: center;
+}
+.CartManager .checkout_area i {
+    padding-right: 10px;
+    font-size: 25px;
+}
+
+.gsarea[area="body"] {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.gsarea[area="footer"] {
+    border-top: solid 1px #DDD;
+    background-color: #79ffbe;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.shop_button {
+    background-color: #a7d0ff;
+    color: #333;
+}

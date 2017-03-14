@@ -1,0 +1,8 @@
+.ScormList .scormrow div {
+    display: inline-block;
+    line-height: 30px;
+}
+
+.ScormList .scormrow div:nth-child(1) { width: 300px; }
+.ScormList .scormrow div:nth-child(2) { width: 150px; }
+.ScormList .scormrow div:nth-child(3) { width: 150px; }

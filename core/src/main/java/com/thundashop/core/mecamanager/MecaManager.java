@@ -726,4 +726,12 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         
         return fleet.cars.contains(carId);
     }
+
+    public void clear() {
+        List<String> carIds = new ArrayList(cars.keySet());
+        List<String> fleetIds = new ArrayList(fleets.keySet());
+        
+        carIds.stream().forEach(id -> deleteCar(id));
+        fleetIds.stream().forEach(id -> deleteFleet(id));
+    }
 }

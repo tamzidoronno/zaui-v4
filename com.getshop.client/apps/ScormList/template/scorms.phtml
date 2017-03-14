@@ -1,0 +1,27 @@
+<?
+/* @var $this ns_83df5ae3_ee55_47cf_b289_f88ca201be6e\EventList */
+
+$scorms = $this->getApi()->getScormManager()->getMyScorm();
+if (!$scorms)
+    return;
+
+?>
+<div class="scormrow">
+    <div><? echo $this->__f("Name"); ?></div>
+    <div><? echo $this->__f("Score"); ?></div>
+    <div><? echo $this->__f("Completed"); ?></div>
+    <div><? echo $this->__f("Link"); ?></div>
+</div>
+
+<?
+foreach ($scorms as $scorm) {
+    ?>
+    <div class="scormrow">
+        <div><? echo $scorm->scormName; ?></div>
+        <div><? echo $scorm->score; ?></div>
+        <div><? echo $scorm->completed ? $this->__f("Yes") : $this->__f("No"); ?></div>
+        <div><a style="color:blue;" target="_blank" href="http://moodle.getshop.com/mod/scorm/getshopplayer.php?userid=<? echo \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id; ?>&scormid=<? echo $scorm->scormId;?>"><? echo $this->__f("Go to test"); ?></a></div>
+    </div>
+    <?
+}
+?>

@@ -17,3 +17,17 @@
     margin-top: 30px;
     padding-top: 30px;
 }
+
+.UserEventList .scormoverview table th,
+.UserEventList .scormoverview table td {
+    font-size: 16px;
+    text-align: left;
+}
+
+.UserEventList .scormoverview table td:nth-child(1) { width: 300px; }
+.UserEventList .scormoverview table td:nth-child(2) { width: 100px; }
+
+.UserEventList .scormoverview {
+    border-top: solid 1px #DDD;
+    margin-top: 50px;
+}

@@ -60,6 +60,7 @@ if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferred
         <tr><td>Postcode</td><td><input type="txt" gsname="address.postCode" value="<?php echo $user->address->postCode; ?>" <?php echo $disabled; ?>></td><tr>
         <tr><td>City</td><td><input type="txt" gsname="address.city" value="<?php echo $user->address->city; ?>" <?php echo $disabled; ?>></td><tr>
         <tr><td>Birthdate</td><td><input type="txt" gsname="birthDay" value="<?php echo $user->birthDay; ?>" <?php echo $disabled; ?>></td><tr>
+        <tr><td>Relationship</td><td><input type="txt" gsname="relationship" value="<?php echo $user->relationship; ?>" <?php echo $disabled; ?>></td><tr>
             <?php 
                 if($this->hasAccountingTransfer()) {
                     ?>

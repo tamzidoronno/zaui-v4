@@ -122,6 +122,7 @@ class FieldGenerator {
         $fields["user_prefix"] = "Phone prefix";
         $fields["user_cellPhone"] = "Cell phone number";
         $fields["user_emailAddress"] = "Email address";
+        $fields["user_relationship"] = "Relationship";
         
         $fields["title_2"] = "Users address details";
         $fields["user_birthday"] = "Birth day of user";

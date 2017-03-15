@@ -88,6 +88,12 @@ body {
     position: absolute;
     margin-left: 300px;
 }
+/*Trying to get rid of the iphone black phone number bug*/
+.gsucell[cellid="c7c79620-eee5-4024-986a-81c9df9bab08"],
+.gsucell[cellid="c7c79620-eee5-4024-986a-81c9df9bab08"] a:link,
+.gsucell[cellid="c7c79620-eee5-4024-986a-81c9df9bab08"] a:visited,
+.gsucell[cellid="c7c79620-eee5-4024-986a-81c9df9bab08"] a:hover,
+.gsucell[cellid="c7c79620-eee5-4024-986a-81c9df9bab08"] a:active {color:#D3D3D3 !important;}
 
 .box_white_background_inner .gsinner,
 .box_white_background_withtoppicture_inner .gsinner {
@@ -135,9 +141,8 @@ body {
     .gsarea[area="header"] .Menu .entries .entries .entry {
         background-color: #2c2c2c;
     }
-    .gsarea[area="header"] .Menu .entry .entries a{
-    color:#DDD !important;
-}
+    .gsarea[area="header"] .Menu .entry .entries a{color:#DDD !important;}
+    .gsarea[area="header"] .Menu .entry .entries .active a{color:#fff !important;}
     
     .gsarea[area="header"] .Menu .entry .entries .entry {
         border-bottom: solid 0px #737172;

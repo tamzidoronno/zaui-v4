@@ -39,6 +39,8 @@ $config = $this->getConfigurationToUse();
                 echo "<br>"; 
             }
 
+            $isselect = false;
+            
             foreach($config->data as $key => $field) {
                 $key = $field->name;
                 $value = "";
@@ -57,6 +59,23 @@ $config = $this->getConfigurationToUse();
                 if($key == "choosetyperadio") {
                     continue;
                 }
+                if($field->type == "radio"){
+                    $checked = $field->title == $value ? "CHECKED" : "";
+                    echo "<input class='radioinput' type='radio' name='".$name."' field='".$key."' value='" . $field->title . "' $checked>".$field->title;
+                    continue;
+                }
+                if($field->type == "select"){
+                    if(!$isselect) {
+                        echo "<select class='contactdatadropdown' field='".$key."'>";
+                    }
+                    $isselect = true;
+                    $selected = $field->title == $value ? "SELECTED" : "";
+                    echo "<option value='" . $field->title . "' $selected>".$field->title."</option>";
+                    continue;
+                }
+                if($isselect) {
+                    echo "</select>";
+                }
                 $name = "";
                 foreach($booking->registrationData->data as $val) {
                     if($val->name == $key) {
@@ -74,16 +93,12 @@ $config = $this->getConfigurationToUse();
                         $value = $this->__w("Yes");
                     }
                 }
-                if($key == "openforpublic") {
-                    $name = "Open for public";
-                }
-
                 if($key == "choosetyperadio") {
                     $name = "Registration type";
-                }
+                }                
                 if(!$name) {
                     continue;
-                }
+                }   
             ?>
             <div class='editfieldrow'>
                 <b><i class='fa fa-edit editfield'></i> <? echo $name; ?></b><br>
@@ -91,7 +106,7 @@ $config = $this->getConfigurationToUse();
                 <div style='text-align:right'>
                     <input type='button' value='Save' class='savenewfielddata' style='display:none;' field='<?php echo $key; ?>'>
                 </div>
-            </div>
+            </div>         
             <?php
             }
             ?>            

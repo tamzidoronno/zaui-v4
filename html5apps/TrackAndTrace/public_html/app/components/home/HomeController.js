@@ -81,14 +81,14 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
                 $routeToUse.startInfo.lat = position.coords.latitude;  
                 $scope.$apply();
                
-                $api.getApi().TrackAndTraceManager.saveRoute($routeToUse);
+                $api.getApi().TrackAndTraceManager.markRouteAsStarted($routeToUse.id, new Date(), $routeToUse.startInfo.lon, $routeToUse.startInfo.lat);
                 datarepository.save();
             }, function(failare, b, c) {
                 $routeToUse.startInfo.started = true;
                 $routeToUse.startInfo.startedTimeStamp = new Date();
                 $scope.$apply();
                
-                $api.getApi().TrackAndTraceManager.saveRoute($routeToUse);
+                $api.getApi().TrackAndTraceManager.markRouteAsStarted($routeToUse.id, new Date(), 0, 0);
                 datarepository.save();
             }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
         }

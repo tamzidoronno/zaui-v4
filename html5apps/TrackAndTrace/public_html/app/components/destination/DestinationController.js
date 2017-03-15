@@ -64,14 +64,11 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
             $scope.destination.startInfo.lat = position.coords.latitude;  
             $scope.$apply();
 
-            $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
-            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
-            
+            $api.getApi().TrackAndTraceManager.markAsArrived($scope.destination.id, new Date(), position.coords.longitude, position.coords.latitude);
+
             datarepository.save();
         }, function(failare, b, c) {
-            $api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
-            $api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
-            
+            $api.getApi().TrackAndTraceManager.markAsArrived($scope.destination.id, new Date(), 0, 0);
             datarepository.save();
         }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
     }

@@ -10895,6 +10895,54 @@ GetShopApiWebSocket.SalesManager.prototype = {
     },
 
 }
+GetShopApiWebSocket.ScormManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.ScormManager.prototype = {
+    'getAllPackages' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getAllPackages',
+            interfaceName: 'core.scormmanager.IScormManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getMyScorm' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getMyScorm',
+            interfaceName: 'core.scormmanager.IScormManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'saveSetup' : function(scormPackage, gs_silent) {
+        var data = {
+            args : {
+                scormPackage : JSON.stringify(scormPackage),
+            },
+            method: 'saveSetup',
+            interfaceName: 'core.scormmanager.IScormManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'updateResult' : function(inResult, gs_silent) {
+        var data = {
+            args : {
+                inResult : JSON.stringify(inResult),
+            },
+            method: 'updateResult',
+            interfaceName: 'core.scormmanager.IScormManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
 GetShopApiWebSocket.SearchManager = function(communication) {
     this.communication = communication;
 }
@@ -12206,6 +12254,17 @@ GetShopApiWebSocket.TrackAndTraceManager = function(communication) {
 }
 
 GetShopApiWebSocket.TrackAndTraceManager.prototype = {
+    'acceptTodaysInstruction' : function(routeId, gs_silent) {
+        var data = {
+            args : {
+                routeId : JSON.stringify(routeId),
+            },
+            method: 'acceptTodaysInstruction',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'acknowledgeDriverMessage' : function(msgId, gs_silent) {
         var data = {
             args : {
@@ -12451,6 +12510,20 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'markAsArrived' : function(destinationId,startedTimeStamp,lon,lat, gs_silent) {
+        var data = {
+            args : {
+                destinationId : JSON.stringify(destinationId),
+                startedTimeStamp : JSON.stringify(startedTimeStamp),
+                lon : JSON.stringify(lon),
+                lat : JSON.stringify(lat),
+            },
+            method: 'markAsArrived',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'markAsCompleted' : function(routeId,lat,lon, gs_silent) {
         var data = {
             args : {
@@ -12475,6 +12548,22 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'markDeparting' : function(destinationId,latitude,longitude,timeStamp,signatureImage,typedSignature, gs_silent) {
+        var data = {
+            args : {
+                destinationId : JSON.stringify(destinationId),
+                latitude : JSON.stringify(latitude),
+                longitude : JSON.stringify(longitude),
+                timeStamp : JSON.stringify(timeStamp),
+                signatureImage : JSON.stringify(signatureImage),
+                typedSignature : JSON.stringify(typedSignature),
+            },
+            method: 'markDeparting',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'markOrderWithException' : function(taskId,orderReferenceNumber,exceptionId, gs_silent) {
         var data = {
             args : {
@@ -12483,6 +12572,20 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 exceptionId : JSON.stringify(exceptionId),
             },
             method: 'markOrderWithException',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'markRouteAsStarted' : function(routeId,startedTimeStamp,lon,lat, gs_silent) {
+        var data = {
+            args : {
+                routeId : JSON.stringify(routeId),
+                startedTimeStamp : JSON.stringify(startedTimeStamp),
+                lon : JSON.stringify(lon),
+                lat : JSON.stringify(lat),
+            },
+            method: 'markRouteAsStarted',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);
@@ -14076,6 +14179,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.ReportingManager = new GetShopApiWebSocket.ReportingManager(this);
     this.ResturantManager = new GetShopApiWebSocket.ResturantManager(this);
     this.SalesManager = new GetShopApiWebSocket.SalesManager(this);
+    this.ScormManager = new GetShopApiWebSocket.ScormManager(this);
     this.SearchManager = new GetShopApiWebSocket.SearchManager(this);
     this.SedoxProductManager = new GetShopApiWebSocket.SedoxProductManager(this);
     this.SimpleEventManager = new GetShopApiWebSocket.SimpleEventManager(this);

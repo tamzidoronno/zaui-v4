@@ -9,6 +9,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -142,4 +143,16 @@ public interface ITrackAndTraceManager {
     
     @Administrator
     public List<Route> getRoutesCompletedPast24Hours();
+    
+    @Customer
+    public void markRouteAsStarted(String routeId, Date startedTimeStamp, double lon, double lat);
+    
+    @Customer
+    public void markAsArrived(String destinationId, Date startedTimeStamp, double lon, double lat);
+    
+    @Customer
+    public void acceptTodaysInstruction(String routeId);
+    
+    @Customer
+    public void markDeparting(String destinationId, double latitude, double longitude, Date timeStamp, String signatureImage, String typedSignature);
 }

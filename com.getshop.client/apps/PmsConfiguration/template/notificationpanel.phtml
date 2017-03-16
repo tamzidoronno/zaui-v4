@@ -51,11 +51,6 @@ $notifications['room_ended_24_hours_'.$langauge] = "Booking ended 1 day ago";
 $notifications['room_ended_48_hours_'.$langauge] = "Booking ended two days ago";
 $notifications['sendreciept_'.$langauge] = "When sending a reciept";
 $notifications['sendinvoice_'.$langauge] = "When sending an invoice";
-if($notificationSettings->requirePayments) {
-    $notifications['booking_paymentmissing_'.$langauge] = "When payment is missing";
-    $notifications['booking_sendpaymentlink_'.$langauge] = "Sending the payment link";
-    $notifications['booking_unabletochargecard_'.$langauge] = "Not able to charge card";
-}
 if($notificationSettings->runAutoPayWithCard) {
     $notifications['order_unabletopaywithsavecardwarning_'.$langauge] = "Warning sent 3 days before order expire (unable to pay with saved card)";
     $notifications['order_unabletopaywithsavecard_'.$langauge] = "Message sent when the order has expired and payment has not been completed.";
@@ -98,6 +93,11 @@ $channelConfig = $config->channelConfiguration;
 <span class="changeview pmsbutton" data-panel='inventory' data-type='new'>Room inventory</span>
 <span class="changeview pmsbutton" data-panel='mobileviews' data-type='new'>Mobile views</span>
 <span class="changeview pmsbutton" data-panel='bcomratemanager' data-type='new'>Booking.com ratemanager</span>
+<?php
+if($notificationSettings->requirePayments) {
+    echo "<span class='changeview pmsbutton' data-panel='paymentlinks' data-type='new'>Payment link setups</span>";
+}
+?>
 <div style='padding-top: 20px;' data-include-for-type='old'>
     Variables: {code},
     {roomName}, 
@@ -130,6 +130,7 @@ $channelConfig = $config->channelConfiguration;
 <div class='discounts notificationpanel'><?php $this->includeFile("discounts"); ?></div>
 <div class='mobileviews notificationpanel'><?php $this->includeFile("mobileviews"); ?></div>
 <div class='bcomratemanager notificationpanel'><?php $this->includeFile("bcomratemanager"); ?></div>
+<div class='paymentlinks notificationpanel'><?php $this->includeFile("paymentlinks"); ?></div>
 
 
 <div gstype="form" method="saveNotifications">
@@ -229,7 +230,7 @@ $channelConfig = $config->channelConfiguration;
         ?>
     </div>
 
-    <div class='admin_notifications notificationpanel'>'
+    <div class='admin_notifications notificationpanel'>
           <br>
         <select class='admintypeselection'>
         <?php
@@ -260,11 +261,13 @@ $channelConfig = $config->channelConfiguration;
         <h2>
             Contracts
         </h2>
-        <div id="contractfield" gsname='<? echo $contractfield; ?>' style="border: solid 1px; min-height: 400px;"><?
+        <div id="contractfield" gsname='<? echo $contractfield; ?>' style="border: solid 1px; min-height: 400px;">
+        <?
             if(isset($notificationSettings->contracts->{$langauge})) {
                 echo $notificationSettings->contracts->{$langauge};
             }
-        ?></div>
+        ?>
+        </div>
     </div>
     
     <div class='instructions notificationpanel'>
@@ -361,6 +364,19 @@ $channelConfig = $config->channelConfiguration;
                 <input type='checkbox' gsname='needConfirmation' <? echo $checked; ?>>
             </span>
             Need confirmation
+        </div>
+        
+        <div class='configrow'>
+            <span class='configentry'>
+                <?
+                $checked = "";
+                if($notificationSettings->needConfirmationInWeekEnds) {
+                    $checked = "CHECKED";
+                }
+                ?>
+                <input type='checkbox' gsname='needConfirmationInWeekEnds' <? echo $checked; ?>>
+            </span>
+            Need confirmation in weekends
         </div>
         
         <div class='configrow'>

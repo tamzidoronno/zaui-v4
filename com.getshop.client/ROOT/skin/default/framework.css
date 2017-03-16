@@ -3,6 +3,7 @@ h1 {
     display: inline-block;
     width: 100%;
 }
+a[href^=tel] { color: inherit; }
 .ui-datepicker { z-index: 1000 !important; }
 .gscell .gscellsettings,.gscontainercell .gscellsettings { z-index:5; position:absolute; color:#000; right: 0px; top: 0px; display:none;background-color:#FFF;cursor:pointer; font-size:9px; padding-left: 2px; padding-bottom: 2px; border: solid 1px rgba(0,0,0,0.1); }
 .jstree-default-contextmenu { z-index: 111113 !important;  }
@@ -133,7 +134,7 @@ h1 {
 
 .cke_skin_office2003 { border: solid 1px; }
 
-.upload_information_panel { display:none; position: fixed; bottom: 10px; left: 10px; border: 1px solid; padding: 2px; z-index: 10000000; background-color: rgb(255, 255, 255); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; }
+.upload_information_panel { display:none; position: fixed; bottom: 10px; left: 10px; border: 1px solid; padding: 2px; z-index: 10000000; background-color: rgb(255, 255, 255); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; }
 .upload_information_panel .uploading { padding-left: 30px; padding-right: 10px; }
 .upload_information_panel .uploading img { position:absolute; left: 5px; }
 .header .Login .applicationinner { margin-right: 0px; }

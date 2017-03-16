@@ -195,6 +195,9 @@ public class PmsManagerProcessor {
         
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
         for (PmsBooking booking : bookings) {
+            if(!booking.confirmed) {
+                continue;
+            }
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if(room.addedToArx) {

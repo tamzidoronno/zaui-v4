@@ -38,7 +38,6 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pdf.InvoiceGeneratorCartItem;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
@@ -50,7 +49,6 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utils.UtilManager;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -427,7 +425,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 booking.invoiceNote = booking.registrationData.resultAdded.get("company_invoicenote");
             }
 
-            if (!configuration.needConfirmation) {
+            if (!needConfirmation(booking)) {
                 booking.confirmed = true;
             }
 
@@ -1300,6 +1298,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
         formater.setProductManager(productManager);
+        formater.setConfig(getConfigurationSecure());
 
         if (this.specifiedMessage != null && message != null) {
             String specifiedmsg = this.specifiedMessage.replace("\n", "<br>\n");
@@ -5265,7 +5264,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void bookingUpdated(String bookingId, String type, String roomId) {
         try {
             System.out.println("Booking has been updated");
-            PmsBooking booking = getBooking(bookingId);
+            PmsBooking booking = getBookingUnsecure(bookingId);
             if(type.equals("created")) {
                 bookingComRateManagerManager.pushBooking(booking, "Commit");
             } else {
@@ -5276,4 +5275,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
     }
+
+    private boolean needConfirmation(PmsBooking booking) {
+        if(configuration.needConfirmationInWeekEnds && booking.isWeekendBooking() && booking.isStartingToday()) {
+            return true;
+        }
+        return configuration.needConfirmation;
+    }
+
 }

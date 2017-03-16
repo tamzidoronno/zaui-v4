@@ -44,6 +44,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private boolean avoidChangingInvoicedFrom;
     private List<String> roomIdsInCart = null;
     private PmsOrderStatsFilter latestInvoiceStatsFilter = null;
+    private PmsPaymentLinksConfiguration paymentLinkConfig = new PmsPaymentLinksConfiguration();
+    
 
     private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
         double res = 0.0;
@@ -132,6 +134,25 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         latestInvoiceStatsFilter = test.fromJson(copy, PmsOrderStatsFilter.class);
         saveObject(latestInvoiceStatsFilter);
         
+    }
+
+    @Override
+    public PmsPaymentLinksConfiguration getPaymentLinkConfig() {
+        return paymentLinkConfig;
+    }
+
+    @Override
+    public void savePaymentLinkConfig(PmsPaymentLinksConfiguration config) {
+        if(paymentLinkConfig.id != null && !paymentLinkConfig.id.isEmpty()) {
+            if(!paymentLinkConfig.id.equals(config.id)) {
+                Exception ex = new Exception("Incorrect id when saving paymentlink config");
+                logPrint(ex);
+                return;
+            }
+        }
+        
+        saveObject(config);
+        paymentLinkConfig = config;
     }
 
     

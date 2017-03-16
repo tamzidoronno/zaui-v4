@@ -21,6 +21,9 @@
 .PmsConfiguration .pmsbutton.active {
     border-color:darkgreen;
 }
+.PmsConfiguration .selectProductsToMessage-outer { position: absolute; display:none; }
+.PmsConfiguration .selectProductsToMessage { max-height: 200px; overflow-y: auto; border: solid 1px; padding: 5px; background-color:#fff; z-index: 2;   }
+
 .PmsConfiguration .addwebtext.added { color: green; }
 
 .PmsConfiguration .cloneroompanel { position:absolute; border: solid 5px; padding: 5px; display:none; background-color: #fff; }

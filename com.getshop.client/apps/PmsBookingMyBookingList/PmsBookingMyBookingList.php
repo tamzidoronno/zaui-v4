@@ -108,6 +108,7 @@ class PmsBookingMyBookingList extends \WebshopApplication implements \Applicatio
         
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->userId = $this->getTmpUser();
+        $filter->sorting = "periode_desc";
         
         return $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
       

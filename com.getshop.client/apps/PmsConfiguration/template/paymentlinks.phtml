@@ -1,0 +1,121 @@
+<?php 
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$langauge = $this->getFactory()->getCurrentLanguage();
+
+$notifications = array();
+$notifications['booking_paymentmissing_'.$langauge] = "When payment is missing";
+$notifications['booking_sendpaymentlink_'.$langauge] = "Sending the payment link";
+$notifications['booking_unabletochargecard_'.$langauge] = "Not able to charge card";
+
+$products = $this->indexList($this->getApi()->getProductManager()->getAllProducts());
+
+?>
+<div style='padding-top: 20px;'>
+    Variables: 
+    {rooms}, 
+    {name},
+    {email}, 
+    {city},
+    {phone},
+    {address}, 
+    {postCode},
+    {contact_prefix},
+    {personalMessage},
+    {bookinginformation},
+    {extrafield},
+    {userid},
+    {roomDescription}, {orderprice}, {paymentlink}.
+</div><br>
+<div gstype='form' method='savepaymentlinksetup'>
+    Web address: <input type='text' gsname='webadress'><br>
+    <?php
+    
+    foreach($notifications as $key => $val) {
+        echo "<bR><b> " . $val . " email</b><span style='float:right;'>SMS</span><br>";
+        echo "<div>";
+               
+        $text = "";
+        if(isset($config->smses->{$key})) {
+            $text = $config->smses->{$key};
+        }
+        echo "<textarea style='width:49%; float:right;height: 160px;' gsname='defaultplink_sms_$key'>" . $text . "</textarea>";
+        
+        $text = "";
+        $title = "";
+        if(isset($config->emails->{$key})) { $text = $config->emails->{$key}; }
+        if(isset($config->emailTitles->{$key})) { $title = $config->emailTitles->{$key}; }
+        echo "<input type='text' style='width:49%; float:left;height: 15px;' gsname='defaultplink_emailtitle_$key' value='$title'></input><br>";
+        echo "<textarea style='width:49%; float:left;height: 130px;' gsname='defaultplink_email_$key'>" . $text . "</textarea>";
+        
+        echo "</div>";
+        echo "<div style='clear:both;'></div>";
+    }
+    ?>
+    <span class="pmsbutton" style='float:right;' gstype='submit'>Save</span>
+</div>
+
+<br><br><br><div gstype='form' method='createProductPaymentMessage'>
+    <?php
+    /* @var $this \ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+    echo "<h2>Product messages email<span style='float:right;'>SMS</span></h2>";
+    echo "<textarea style='width:49%; float:right;height: 160px;' gsname='sms'></textarea>";
+    echo "<input type='text' style='width:49%; float:left;height: 15px;' gsname='title'></input><br>";
+    echo "<textarea style='width:49%; float:left;height: 130px;' gsname='email'></textarea>";
+    echo "<div style='clear:both;'></div>";
+    echo "<span class='pmsbutton' style='float:right;' gstype='submit'>Create a product message</span>";
+    echo "<div style='clear:both;'></div>";
+    ?>
+</div>
+
+<?php
+$paymentProductConfig = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedName());
+
+echo "<h2>Existing product messages email<span style='float:right;'>SMS</span></h2>";
+foreach($paymentProductConfig->productPaymentLinks as $conf) {
+    /* @var $conf core_pmsmanager_PmsProductMessageConfig */
+    echo "<div class='editproductmessage-outer'>";
+    echo "<div class='selectProductsToMessage-outer'  gstype='form' method='updateProductsForProductMessage'>";
+    echo "<div class='selectProductsToMessage'>";
+    echo "<input type='hidden' gsname='idtouse' value='".$conf->id."'>";
+    foreach($products as $prod) {
+        $checked = "";
+        if(in_array($prod->id, $conf->productIds)) {
+            $checked = "CHECKED";
+        }
+        
+        echo "<input type='checkbox' gsname='product_".$prod->id."' $checked> " . $prod->name . "<bR>";
+    }
+    echo "</div>";
+    echo "<span class='pmsbutton' style='float:right;' gstype='submit'>Save products</span>";
+    echo "</div>";
+    
+    echo "<i class='fa fa-edit showeditproducts' style='cursor:pointer;'></i> Products: ";
+    $found = false;
+    foreach($conf->productIds as $productId) {
+        echo "<span style='border: solid 1px; border-radius: 3px; font-size: 12px; padding-left: 10px; padding-right: 10px;'>" . $products[$productId]->name . "</span> ";
+        $found = true;
+    }
+    if(!$found) {
+        echo " all products";
+    }
+    
+    echo "<div gstype='form' method='updateTextForProductMessage'>";
+    echo "<div style='clear:both;'></div>";
+    echo "<input type='hidden' gsname='idtouse' value='".$conf->id."'>";
+    
+    
+    $title = $conf->emailTitle;
+    $email = $conf->email;
+    $sms = $conf->sms;
+    
+    echo "<textarea style='width:49%; float:right;height: 160px;' gsname='sms'>$sms</textarea>";
+    echo "<input type='text' style='width:49%; float:left;height: 15px;' gsname='title' value='$title'></input><br>";
+    echo "<textarea style='width:49%; float:left;height: 130px;' gsname='email'>$email</textarea>";
+    echo "<div style='clear:both;'></div>";
+    echo "<span class='pmsbutton' style='float:right;' gstype='submit'>Save changes</span>";
+    echo "<div style='clear:both;'></div>";    
+    echo "</div>";
+    echo "</div>";
+}
+
+?>

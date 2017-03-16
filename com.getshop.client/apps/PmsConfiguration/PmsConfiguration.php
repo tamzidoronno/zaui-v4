@@ -10,6 +10,65 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         return "PmsConfiguration";
     }
     
+    public function createProductPaymentMessage() {
+        $toAdd = new \core_pmsmanager_PmsProductMessageConfig();
+        $toAdd->email = $_POST['data']['email'];
+        $toAdd->sms = $_POST['data']['sms'];
+        $toAdd->emailTitle = $_POST['data']['title'];
+        
+        $config = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedName());
+        $config->productPaymentLinks[] = $toAdd;
+        $this->getApi()->getPmsInvoiceManager()->savePaymentLinkConfig($this->getSelectedName(), $config);
+    }
+    
+    public function updateTextForProductMessage() {
+        $config = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedName());
+        foreach($config->productPaymentLinks as $plink) {
+            if($plink->id == $_POST['data']['idtouse']) {
+                $plink->sms = $_POST['data']['sms'];
+                $plink->emailTitle = $_POST['data']['title'];
+                $plink->email = $_POST['data']['email'];
+            }
+        }
+        
+        $this->getApi()->getPmsInvoiceManager()->savePaymentLinkConfig($this->getSelectedName(), $config);
+    }
+    
+    public function updateProductsForProductMessage() {
+        $ids = array();
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "product_") && $val == "true") {
+                $ids[] = str_replace("product_", "", $key);
+            }
+        }
+        
+        $config = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedName());
+        foreach($config->productPaymentLinks as $plink) {
+            if($plink->id == $_POST['data']['idtouse']) {
+                $plink->productIds = $ids;
+            }
+        }
+        
+        $this->getApi()->getPmsInvoiceManager()->savePaymentLinkConfig($this->getSelectedName(), $config);
+    }
+    
+    public function savepaymentlinksetup() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        foreach($_POST['data'] as $key => $val) {
+            if(strstr($key, "defaultplink_sms_")) {
+                $key = str_replace("defaultplink_sms_", "", $key);
+                $config->smses->{$key} = $val;
+            } else if(strstr($key, "defaultplink_email_")) {
+                $key = str_replace("defaultplink_email_", "", $key);
+                $config->emails->{$key} = $val;
+            } else if(strstr($key, "defaultplink_emailtitle_")) {
+                $key = str_replace("defaultplink_emailtitle_", "", $key);
+                $config->emailTitles->{$key} = $val;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
     public function updateRateManagerConfig() {
         $hotelid = $_POST['data']['hotelid'];
         $typeMap = array();

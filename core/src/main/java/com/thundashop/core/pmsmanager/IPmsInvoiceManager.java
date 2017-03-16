@@ -61,6 +61,12 @@ public interface IPmsInvoiceManager {
     @Administrator
     public void createPeriodeInvoice(Date start, Date end, Double amount, String roomId);
     
+    @Administrator
+    public PmsPaymentLinksConfiguration getPaymentLinkConfig();
+    
+    @Administrator
+    public void savePaymentLinkConfig(PmsPaymentLinksConfiguration config);
+    
     public boolean isRoomPaidFor(String pmsRoomId);
     
     public List<PmsSubscriptionOverview> getSubscriptionOverview(Date start, Date end); 

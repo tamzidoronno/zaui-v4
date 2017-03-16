@@ -244,6 +244,11 @@ class PmsStatisticsBuilder {
 
         User user = userManager.getUserById(booking.userId);
         
+        if(user == null) {
+            user = new User();
+//            return;
+        }
+        
         int totalGuests = 0;
         if(entry.guests.containsKey(countryCode)) {
             totalGuests = entry.guests.get(countryCode);
@@ -258,7 +263,7 @@ class PmsStatisticsBuilder {
             }
             confGuests += room.numberOfGuests;
             entry.guestsConference.put(countryCode, confGuests);
-        } else if(!user.company.isEmpty()) {
+        } else if(user.company != null && !user.company.isEmpty()) {
             int confCompany = 0;
             if(entry.guestsCompany.containsKey(countryCode)) {
                 confCompany = entry.guestsCompany.get(countryCode);

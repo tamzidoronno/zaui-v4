@@ -52,6 +52,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean fastCheckIn = false;
     public boolean denyUpdateUserWhenTransferredToAccounting = false;
     public boolean functionsEnabled = false;
+    public boolean needConfirmationInWeekEnds = false;
     public HashMap<Integer, PmsBookingAddonItem> addonConfiguration = new HashMap();
     public HashMap<String, PmsInventory> inventoryList = new HashMap();
     public HashMap<String, CleaningStatistics> cleaningPriceConfig = new HashMap();
@@ -172,7 +173,7 @@ public class PmsConfiguration extends DataCommon {
         }
         return false;
     }
-
+    
     boolean channelExists(String channel) {
         return channelConfiguration.containsKey(channel);
     }

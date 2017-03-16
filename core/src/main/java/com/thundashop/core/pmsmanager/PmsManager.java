@@ -425,7 +425,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 booking.invoiceNote = booking.registrationData.resultAdded.get("company_invoicenote");
             }
 
-            if (!configuration.needConfirmation) {
+            if (!needConfirmation(booking)) {
                 booking.confirmed = true;
             }
 
@@ -5275,4 +5275,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
     }
+
+    private boolean needConfirmation(PmsBooking booking) {
+        if(configuration.needConfirmationInWeekEnds && booking.isWeekendBooking() && booking.isStartingToday()) {
+            return true;
+        }
+        return configuration.needConfirmation;
+    }
+
 }

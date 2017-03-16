@@ -75,6 +75,36 @@ public class PmsBooking extends DataCommon {
         return totalPrice;
     }
     
+    public boolean isStartingToday() {
+        for(PmsBookingRooms room : getActiveRooms()) {
+            if(room.isStartingToday()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    
+    public boolean isWeekendBooking() {
+        Calendar cal = Calendar.getInstance();
+        if(rowCreatedDate != null) {
+            cal.setTime(rowCreatedDate);
+        }
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+            return true;
+        }
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+            return true;
+        }
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
+            if(cal.get(Calendar.HOUR_OF_DAY) > 15) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();
         for(PmsBookingRooms room : rooms) {

@@ -232,10 +232,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public void saveRoute(Route inRoute) {
-        if (inRoute.startInfo.started && inRoute.startInfo.startedByUserId.isEmpty()) {
-            inRoute.startInfo.startedByUserId = getSession().currentUser.id;
-        }
-        
         saveObjectInternal(inRoute);
         routes.put(inRoute.id, inRoute);
     }
@@ -997,6 +993,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         route.startInfo.startedTimeStamp = startedTimeStamp;
         route.startInfo.lon = lon;
         route.startInfo.lat = lat;
+        route.startInfo.startedByUserId = getSession().currentUser.id;
         saveObjectInternal(route);
         
         notifyRoute(route);

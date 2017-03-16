@@ -12,13 +12,33 @@ adata = {
     driverMessages: [],
     currentVersion: "",
     
-    loadAllData: function ($api, $scope, completedFunction) {
+    allLoaded: function($scope, completedFunction, $state) {
+        if (this.routeLoadCompleted && this.exceptionLoadCompleted && this.messagesLoaded) {
+            if (typeof(completedFunction) === "function") {
+                completedFunction();
+            }
+            
+            if ($state) {
+                $state.go($state.current, {}, {reload: true});
+                return;
+            }
+            
+            if ($scope) {
+                setTimeout($scope.$apply(), 1);
+            }
+            
+            localStorage.setItem("currentVersion", "1.0.15");
+        }
+    },
+    
+    loadAllData: function ($api, $scope, completedFunction, $state) {
         var me = this;
         
         me.routes = [];
         me.exceptions = [];
         me.routeLoadCompleted = false;
         me.exceptionLoadCompleted = false;
+        me.messagesLoaded = false;
                 
         $api.getApi().TrackAndTraceManager.getMyRoutes().done(function (res) {
             me.routes = res;
@@ -26,44 +46,26 @@ adata = {
             me.save();
             
             me.routeLoadCompleted = true;
-            if ($scope) {
-                $scope.$apply();
-            }
-            
-            if (me.routeLoadCompleted && me.exceptionLoadCompleted) {
-                if (typeof(completedFunction) === "function") {
-                    completedFunction();
-                }
-            }
-            
-            localStorage.setItem("currentVersion", "1.0.15");
+            me.allLoaded($scope, completedFunction, $state);
         });
         
         $api.getApi().TrackAndTraceManager.getExceptions().done(function (res) {
             me.exceptions = res;
             me.save();
             me.exceptionLoadCompleted = true;
-            
-            if ($scope) {
-                $scope.$apply();
-            }  
-           
-            if (me.routeLoadCompleted && me.exceptionLoadCompleted) {
-                if (typeof(completedFunction) === "function" ) {
-                    completedFunction();
-                }
-            }
+            me.allLoaded($scope, completedFunction, $state);
         });
         
         if ($api.getLoggedOnUser()) {
             $api.getApi().TrackAndTraceManager.getDriverMessages($api.getLoggedOnUser().id).done(function (res) {
                 me.driverMessages = res;
-                if ($scope) {
-                    $scope.$apply();
-                } 
-
                 me.save();
+                me.messagesLoaded = true;
+                me.allLoaded($scope, completedFunction, $state);
             });
+        } else {
+            me.messagesLoaded = true;
+            me.allLoaded($scope, completedFunction);
         }
     },
     

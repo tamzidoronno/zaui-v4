@@ -224,34 +224,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public Destination saveDestination(Destination inDestination) {
-        storeAndSaveSignatureImage(inDestination);
         saveObjectInternal(inDestination);
         destinations.put(inDestination.id, inDestination);
         
         return inDestination;
-    }
-
-    private void storeAndSaveSignatureImage(Destination inDestination) {
-        Destination memDest = destinations.get(inDestination.id);
-        if (memDest != null)
-            inDestination.signatures = memDest.signatures;
-        
-        if (inDestination.signatureImage != null && !inDestination.signatureImage.isEmpty()) {
-            String imageId = imageManager.saveImageLocally(inDestination.signatureImage);
-            
-            
-            if (imageId != null && !imageId.isEmpty()) {
-                TrackAndTraceSignature signature = new TrackAndTraceSignature();
-                signature.imageId = imageId;
-                signature.operatorUserId = getSession().currentUser.id;
-                signature.sigutureAddedDate = new Date();
-                signature.typedName = inDestination.typedNameForSignature.toUpperCase();
-                inDestination.signatures.add(signature);
-            }
-            
-            inDestination.typedNameForSignature = "";
-            inDestination.signatureImage = "";
-        }
     }
 
     @Override
@@ -1008,5 +984,75 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 .filter(r -> r.completedInfo.completed)
                 .filter(r -> r.completedInfo.completedTimeStamp.after(hoursAgo))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void markRouteAsStarted(String routeId, Date startedTimeStamp, double lon, double lat) {
+        Route route = getRouteById(routeId);
+        if (route == null) {
+            return;
+        }
+        
+        route.startInfo.started = true;
+        route.startInfo.startedTimeStamp = startedTimeStamp;
+        route.startInfo.lon = lon;
+        route.startInfo.lat = lat;
+        saveObjectInternal(route);
+        
+        notifyRoute(route);
+    }
+
+    @Override
+    public void acceptTodaysInstruction(String routeId) {
+        Route route = getRouteById(routeId);
+        if (route == null) {
+            return;
+        }
+        
+        route.instructionAccepted = true;
+        saveObjectInternal(route);
+        
+        notifyRoute(route);
+    }
+
+    @Override
+    public void markDeparting(String destinationId, double latitude, double longitude, Date timeStamp, String signatureImage, String typedSignature) {
+        Destination destination = getDestination(destinationId);
+        
+        if (destination == null)
+            return;
+        
+        String imageId = imageManager.saveImageLocally(signatureImage);
+            
+        if (imageId != null && !imageId.isEmpty()) {
+            TrackAndTraceSignature signature = new TrackAndTraceSignature();
+            signature.imageId = imageId;
+            signature.operatorUserId = getSession().currentUser.id;
+            signature.sigutureAddedDate = new Date();
+            signature.typedName = typedSignature.toUpperCase();
+            destination.signatures.add(signature);
+        }
+
+        destination.startInfo.completed = true;
+        destination.startInfo.completedTimeStamp = new Date();
+        destination.startInfo.completedLon = longitude;
+        destination.startInfo.completedLat = latitude; 
+        
+        saveObjectInternal(destination);
+    }
+
+    @Override
+    public void markAsArrived(String destinationId, Date startedTimeStamp, double lon, double lat) {
+        Destination destination = getDestination(destinationId);
+        if (destination == null)
+            return;
+        
+        destination.startInfo.started = true;
+        destination.startInfo.startedTimeStamp = new Date();
+        destination.skipInfo.skippedReasonId = "";
+        destination.startInfo.lon = lon;
+        destination.startInfo.lat = lat;  
+        
+        saveObjectInternal(destination);
     }
 }

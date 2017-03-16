@@ -3,6 +3,7 @@
 
 $userId = $this->getUserId();
 $events = $this->getEventsToPrint();
+$completedScorms = $this->getCompletedScorms();
 
 if (!count($events)) {
     echo $this->__w("No events available");
@@ -36,6 +37,24 @@ foreach ($events as $event) {
         echo "</div>";
     echo "</div>";
 }
+
+if (count($completedScorms)) {
+    echo "<div class='scormoverview'>";
+    echo "<h2 style='font-size: 20px;'>Webutbildningar ".$_SESSION['{ProMeisterSpiderDiagram.FullName}']." har genomfört:</h2>";
+    
+    foreach ($completedScorms as $scorm) {
+        $date = date('d/m-Y', strtotime($scorm->rowCreatedDate));
+        
+        echo "<table>";
+        echo "<th>Titel</th>";
+        echo "<th>Datum</th>";
+        echo "<th>Poäng</th>";
+        echo "<tr><td>".$scorm->scormName."</td><td>$date</td><td>$scorm->score</td></tr>";
+        echo "</table>";
+    }   
+    echo "</div>";
+}
+
 
 ?>
 <div class=""></div>

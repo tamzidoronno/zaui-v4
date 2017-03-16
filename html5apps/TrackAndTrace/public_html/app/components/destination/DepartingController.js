@@ -70,7 +70,7 @@ controllers.DepartingController = function($scope, datarepository, $stateParams,
         $scope.destination.startInfo.completedLon = longitude;
         $scope.destination.startInfo.completedLat = latitude;  
             
-        $scope.api.getApi().TrackAndTraceManager.saveDestination($scope.destination);
+        $scope.api.getApi().TrackAndTraceManager.markDeparting($scope.destination.id, latitude, longitude, new Date(), $scope.destination.signatureImage, $scope.destination.typedNameForSignature);
         $scope.api.getApi().TrackAndTraceManager.unsetSkippedReason($scope.destination.id);
         $scope.destination.skipInfo.skippedReasonId = "";
         datarepository.save();

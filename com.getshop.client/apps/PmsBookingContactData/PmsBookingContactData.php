@@ -124,6 +124,9 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             if (stristr($value->name, "prefix")) {
                 $this->printTitle($value->title, $value->required, $value->type);
                 $this->printPhoneCodes($value, $valueSet);
+            } else if (stristr($value->name, "relationship")){
+                $this->printTitle($value->title, $value->required, $value->type);
+                $this->printRelationship($value);
             } else if (stristr($value->name, "company_vatRegistered")) {
                 $this->printTitle($value->title, $value->required, $value->type);
                 echo "<div class='formspacer'><input type='checkbox' gsname='".$value->name."'></div>";
@@ -398,6 +401,13 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         }
         echo "</select>";
     }
-
+    public function printRelationship($value){
+        
+        echo "<select gsname='".$value->name."'>";
+        echo "<option value='Singel'>Singel</option>";
+        echo "<option value='Samboer'>Samboer</option>";
+        echo "<option value='Gift'>Gift</option>";
+        echo "</select>";
+    }
 }
 ?>

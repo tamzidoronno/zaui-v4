@@ -7,7 +7,7 @@
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 $this->checkForAddonProductsToCreate($config);
 
-$products = $this->getApi()->getProductManager()->getAllProducts();
+$products = $this->getApi()->getProductManager()->getAllProductsIncDeleted();
 $addonConfig = $config->addonConfiguration;
 $taxgroups = $this->getApi()->getProductManager()->getTaxes();
 
@@ -50,8 +50,11 @@ foreach($products as $product) {
     if(isset($addonItems[$prodid])) {
         $addonItem = $addonItems[$prodid];
     }
-    
-    echo "<tr>";
+    $style = "";
+    if($product->deleted) {
+        $style = "style='color:red'";
+    }
+    echo "<tr $style>";
     echo "<td><i class='fa fa-edit loadproductConfig' gsvalue='".$product->id."'></i> " . $addonItem->count . "</td>";
     echo "<td><input type='text' value='".$product->name."' gsname='addonconfig_".$prodid."_name' style='width: 80px;'></input> ".$product->tag."</td>";
     $checked = $selectedAddonConfig->isAvailableForCleaner ? "CHECKED" : "";

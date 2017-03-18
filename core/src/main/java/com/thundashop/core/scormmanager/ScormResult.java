@@ -23,6 +23,6 @@ public class ScormResult {
     public String score = "";
     
     public boolean isCompleted() {
-        return status.equals("completed");
+        return status.equals("completed") || status.equals("passed") || status.equals("failed");
     }
 }

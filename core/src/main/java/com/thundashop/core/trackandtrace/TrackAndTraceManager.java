@@ -997,6 +997,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         route.startInfo.startedTimeStamp = startedTimeStamp;
         route.startInfo.lon = lon;
         route.startInfo.lat = lat;
+        route.startInfo.startedByUserId = getSession().currentUser.id;
         saveObjectInternal(route);
         
         notifyRoute(route);

@@ -67,6 +67,10 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             }
         }
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+        
+        $defaultPaymentConfig = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedName());
+        $defaultPaymentConfig->webAdress = $_POST['data']['webadress'];
+        $this->getApi()->getPmsInvoiceManager()->savePaymentLinkConfig($this->getSelectedName(), $defaultPaymentConfig);
     }
     
     public function updateRateManagerConfig() {
@@ -447,7 +451,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $notifications->defaultMessage->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['defaultmessage'];
         
         //Save addonsfromproduct
-        $prods = $this->getApi()->getProductManager()->getAllProducts();
+        $prods = $this->getApi()->getProductManager()->getAllProductsIncDeleted();
         $counter = -100000;
         foreach($prods as $prod) {
             $conf = new \core_pmsmanager_PmsBookingAddonItem();

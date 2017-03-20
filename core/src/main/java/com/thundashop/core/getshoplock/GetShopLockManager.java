@@ -93,6 +93,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         for(int i = 1; i <= 5; i++) {
             GetShopLockCode code = dev.codes.get(i);
             String masterCode = masterCodes.codes.get(i);
+            if(code == null) {
+                System.out.println("Null code?");
+            }
             if(!code.fetchCodeToAddToLock().equals(masterCode)) {
                 code.setCode(masterCode);
             }
@@ -583,11 +586,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             logPrint("Lock updates stopped");
         }
         if(!frameworkConfig.productionMode) {
-            return;
+//            return;
         }
         if(!pmsManager.getConfigurationSecure().isGetShopHotelLock()) {
             return;
         }
+        finalizeLocks();
         for(GetShopDevice dev : devices.values()) {
             if(dev.needSaving) {
                 dev.needSaving = false;

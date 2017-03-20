@@ -4518,6 +4518,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsRoomSimple> getMyRooms() {
         PmsBookingSimpleFilter filter = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
+        if(getSession().currentUser == null) {
+            System.out.println("jaja?");
+        }
         String userId = getSession().currentUser.id;
         List<PmsRoomSimple> result = new ArrayList();
         for(PmsBooking booking : bookings.values()) {

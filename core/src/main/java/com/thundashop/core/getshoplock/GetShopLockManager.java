@@ -586,7 +586,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             logPrint("Lock updates stopped");
         }
         if(!frameworkConfig.productionMode) {
-//            return;
+            return;
         }
         if(!pmsManager.getConfigurationSecure().isGetShopHotelLock()) {
             return;

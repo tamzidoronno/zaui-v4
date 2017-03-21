@@ -246,37 +246,7 @@ public class Database extends StoreComponent {
     }
 
     public List<DataCommon> find(String collection, Date startDate, Date endDate, String db, HashMap<String, String> searchCriteria) {
-        DB mongoDb = mongo.getDB(db);
-
-        DBCollection dbCollection = mongoDb.getCollection(collection);
-        BasicDBObject query = new BasicDBObject();
-        query.put("rowCreatedDate", BasicDBObjectBuilder.start("$gte", startDate).add("$lte", endDate).get());
-        DBCursor cursor = dbCollection.find(query);
-
-        if (searchCriteria != null) {
-            for (String key : searchCriteria.keySet()) {
-                query.put(key, searchCriteria.get(key));
-            }
-        }
-
-        List<DataCommon> all = new ArrayList<DataCommon>();
-        while (cursor.hasNext()) {
-            DBObject dbObject = cursor.next();
-
-            try {
-                DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
-                if (dataCommon.deleted == null) {
-                    all.add(dataCommon);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        Collections.sort(all, new DataCommonSorter());
-
-        return all;
-
+          return findWithDeleted(collection, startDate, endDate, db, searchCriteria, false);
     }
 
     public DataCommon getObject(Credentials credentials, String id) {
@@ -496,6 +466,44 @@ public class Database extends StoreComponent {
         
         return false;
     }
+
+    public List<DataCommon> findWithDeleted(String collection, Date startDate, Date endDate, String db, HashMap<String, String> searchCriteria, boolean incDeleted) {
+        DB mongoDb = mongo.getDB(db);
+
+        DBCollection dbCollection = mongoDb.getCollection(collection);
+        BasicDBObject query = new BasicDBObject();
+        if(startDate != null && endDate != null) {
+            query.put("rowCreatedDate", BasicDBObjectBuilder.start("$gte", startDate).add("$lte", endDate).get());
+        }
+        DBCursor cursor = dbCollection.find(query);
+
+        if (searchCriteria != null) {
+            for (String key : searchCriteria.keySet()) {
+                query.put(key, searchCriteria.get(key));
+            }
+        }
+
+        List<DataCommon> all = new ArrayList<DataCommon>();
+        while (cursor.hasNext()) {
+            DBObject dbObject = cursor.next();
+
+            try {
+                DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
+                boolean add = dataCommon.deleted == null;
+                if(incDeleted) {
+                    add = true;
+                }
+                if (add) {
+                    all.add(dataCommon);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        Collections.sort(all, new DataCommonSorter());
+
+        return all;    }
 }
 
 class DataCommonSorter implements Comparator<DataCommon> {

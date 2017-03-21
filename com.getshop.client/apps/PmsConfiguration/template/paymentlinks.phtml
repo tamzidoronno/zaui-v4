@@ -8,6 +8,7 @@ $notifications['booking_sendpaymentlink_'.$langauge] = "Sending the payment link
 $notifications['booking_unabletochargecard_'.$langauge] = "Not able to charge card";
 
 $products = $this->indexList($this->getApi()->getProductManager()->getAllProducts());
+$paymentProductConfig = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedName());
 
 ?>
 <div style='padding-top: 20px;'>
@@ -27,7 +28,7 @@ $products = $this->indexList($this->getApi()->getProductManager()->getAllProduct
     {roomDescription}, {orderprice}, {paymentlink}.
 </div><br>
 <div gstype='form' method='savepaymentlinksetup'>
-    Web address: <input type='text' gsname='webadress'><br>
+    Web address: <input type='text' gsname='webadress' value='<?php echo $paymentProductConfig->webAdress; ?>'><br>
     <?php
     
     foreach($notifications as $key => $val) {
@@ -68,7 +69,6 @@ $products = $this->indexList($this->getApi()->getProductManager()->getAllProduct
 </div>
 
 <?php
-$paymentProductConfig = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedName());
 
 echo "<h2>Existing product messages email<span style='float:right;'>SMS</span></h2>";
 foreach($paymentProductConfig->productPaymentLinks as $conf) {

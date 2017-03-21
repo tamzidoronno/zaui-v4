@@ -155,8 +155,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         paymentLinkConfig = config;
     }
 
-    
-
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -635,6 +633,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(dataCommon instanceof PmsOrderStatsFilter) {
                 PmsOrderStatsFilter res = (PmsOrderStatsFilter)dataCommon;
                 latestInvoiceStatsFilter = res;
+            }
+            if(dataCommon instanceof PmsPaymentLinksConfiguration) {
+                PmsPaymentLinksConfiguration res = (PmsPaymentLinksConfiguration)dataCommon;
+                paymentLinkConfig = res;
             }
         }
         createScheduler("checkinvoicedtodate", "1 04 * * *", DailyInvoiceChecker.class);

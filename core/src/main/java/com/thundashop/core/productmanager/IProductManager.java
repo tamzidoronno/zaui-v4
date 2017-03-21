@@ -116,6 +116,9 @@ public interface IProductManager {
      */
     public Product getProduct(String id) throws ErrorException;
     
+    @Administrator
+    public Product getDeletedProduct(String id) throws ErrorException;
+    
     /**
      * Method for setting a known product image as main image.
      * 
@@ -132,6 +135,8 @@ public interface IProductManager {
      */
     public List<Product> getAllProducts() throws ErrorException;
     
+    @Administrator
+    public List<Product> getAllProductsIncDeleted() throws ErrorException;
     
     /**
      * Get price for a product with variations

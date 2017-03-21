@@ -1122,32 +1122,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(booking != null && booking.silentNotification) {
             return "Not notified, silent booking: " + type;
         }
-        String message = configuration.smses.get(key);
+        String message = getMessageToSend(key, type, booking);
+        message = formatMessage(message, booking, room, null);    
         
-        if (type.equals("email")) {
-            message = configuration.emails.get(key);
-            if (message != null) {
-                message = configuration.emailTemplate.replace("{content}", message);
-                message = message.trim();
-                message = message.replace("\n", "<br>\n");
-            }
-        }
-        if (message == null || message.isEmpty()) {
-            return "";
-        }
-        if((message == null || message.isEmpty()) && key.toLowerCase().contains("room_resendcode")) {
-            message = "Code {code} room {roomName}.";
-        }
-
-        if(key.startsWith("booking_sendpaymentlink") || 
-                key.startsWith("booking_unabletochargecard") || 
-                key.startsWith("booking_paymentmissing") || 
-                key.startsWith("order_")) {
-            message = message.replace("{orderid}", this.orderIdToSend);
-        }
-        
-
-        message = formatMessage(message, booking, room, null);
         if (room != null) {
             notifyGuest(booking, message, type, key, room);
         } else {
@@ -4541,6 +4518,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsRoomSimple> getMyRooms() {
         PmsBookingSimpleFilter filter = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
+        if(getSession().currentUser == null) {
+            System.out.println("jaja?");
+        }
         String userId = getSession().currentUser.id;
         List<PmsRoomSimple> result = new ArrayList();
         for(PmsBooking booking : bookings.values()) {
@@ -5281,6 +5261,96 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return true;
         }
         return configuration.needConfirmation;
+    }
+
+    private String getMessageToSend(String key, String type, PmsBooking booking) {
+        String message = "";
+        
+        if (type.equals("email")) {
+            message = configuration.emails.get(key);
+        } else {
+            message = configuration.smses.get(key);
+        }
+        
+        if(key.startsWith("booking_sendpaymentlink") || 
+                key.startsWith("booking_unabletochargecard") || 
+                key.startsWith("booking_paymentmissing") || 
+                key.startsWith("order_")) {
+            if(booking.orderIds != null && booking.orderIds.size() >= 2) {
+                PmsProductMessageConfig orderMessage = getOrderMessage(orderIdToSend);
+                if(orderMessage != null) {
+                    if (type.equals("email")) {
+                        message = orderMessage.email;
+                    } else {
+                        message = orderMessage.sms;
+                    }
+                }
+            }
+        }
+        
+        if (type.equals("email")) {
+            if (message != null) {
+                message = configuration.emailTemplate.replace("{content}", message);
+                message = message.trim();
+                message = message.replace("\n", "<br>\n");
+            }
+        }
+        
+        if (message == null || message.isEmpty()) {
+            return "";
+        }
+        if((message == null || message.isEmpty()) && key.toLowerCase().contains("room_resendcode")) {
+            message = "Code {code} room {roomName}.";
+        }
+
+        if(key.startsWith("booking_sendpaymentlink") || 
+                key.startsWith("booking_unabletochargecard") || 
+                key.startsWith("booking_paymentmissing") || 
+                key.startsWith("order_")) {
+            message = message.replace("{orderid}", this.orderIdToSend);
+            Order order = orderManager.getOrder(this.orderIdToSend);
+            message = message.replace("{paymentlink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/p.php?id="+order.incrementOrderId);
+        }
+        
+        return message;
+    }
+
+    private PmsProductMessageConfig getOrderMessage(String orderIdToSend) {
+        
+        
+        Order order = orderManager.getOrderSecure(orderIdToSend);
+        if(order.cart == null || order.cart.getItems() == null) {
+            return null;
+        }
+        
+        if(hasBookingEngineProducts(order)) {
+            return null;
+        }
+        
+        PmsPaymentLinksConfiguration paymentlinkConfig = pmsInvoiceManager.getPaymentLinkConfig();
+        for(CartItem item : order.cart.getItems()) {
+            for(PmsProductMessageConfig toCheck : paymentlinkConfig.productPaymentLinks) {
+                if(toCheck.productIds.contains(item.getProduct().id)) {
+                    return toCheck;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean hasBookingEngineProducts(Order order) {
+        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        List<String> productIds = new ArrayList();
+        for(BookingItemType type : types) {
+            productIds.add(type.productId);
+        }
+        
+        for(CartItem item : order.cart.getItems()) {
+            if(productIds.contains(item.getProduct().id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

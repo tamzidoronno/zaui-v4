@@ -262,6 +262,11 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         SmsHandler handler = null;
         String res = "";
         
+        if(message == null || message.trim().isEmpty()) {
+            logPrint("Tried to send empty sms to :" + to + " using: " + provider);
+            return "";
+        }
+        
         User user = userManager.getUserByCellphone(to);
         if (user != null && user.smsDisabled) {
             return "";

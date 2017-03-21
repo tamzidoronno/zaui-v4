@@ -479,6 +479,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        test();
         boolean unsettled = false;
         if(filter != null && filter.filterType != null && filter.filterType.equals("unsettled")) {
             unsettled = true;
@@ -5351,6 +5352,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return false;
+    }
+
+    private void test() {
+        for(PmsAdditionalItemInformation pinfo : addiotionalItemInfo.values()) {
+            if(pinfo.itemId.equals("c0a8454a-6ebf-4d82-88c6-e2dae164fbbf")) {
+                System.out.println("Cleaned: " + pinfo.isClean());
+                List<Date> dates = pinfo.getAllCleaningDates();
+                System.out.println("Last used: " + pinfo.getLastUsed());
+                for(Date d : dates) {
+                    System.out.println("Cleaning date : " + d);
+                }
+            }
+        }
     }
 
 }

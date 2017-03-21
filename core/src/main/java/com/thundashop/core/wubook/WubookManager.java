@@ -371,8 +371,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }catch(Exception e) {
                     logPrintException(e);
                 }
-                toReturn.add(wubooking);
-                addBookingToPms(wubooking);
+                if(!bookingAlreadyExists(wubooking)) {
+                    toReturn.add(wubooking);
+                    addBookingToPms(wubooking);
+                } else {
+                    messageManager.sendErrorNotification("A booking that already exists where tried to download twice from wubook: " + wubooking. reservationCode, null);
+                }
             }
         }
         
@@ -1145,6 +1149,19 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return false;
         
         
+    }
+
+    private boolean bookingAlreadyExists(WubookBooking wubooking) {
+        List<PmsBooking> allBookings = pmsManager.getAllBookings(null);
+        for(PmsBooking booking : allBookings){
+            if(booking.wubookreservationid.equals(wubooking.reservationCode)) {
+                return true;
+            }
+            if(booking.wubookModifiedResId.contains(wubooking.reservationCode)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

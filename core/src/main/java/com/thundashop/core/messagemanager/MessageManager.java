@@ -77,6 +77,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         if(content == null || content.trim().isEmpty() || subject == null || subject.trim().isEmpty()) {
             logPrint("Sending empty email. Throw exception.");
             logPrintException(new Exception());
+            return null;
         }
         
         String res = mailFactory.send(from, to, subject, content);

@@ -76,4 +76,7 @@ public interface IAccountingManager {
     @Administrator
     public void deleteFile(String fileId) throws Exception;
     
+    @Administrator
+    public void resetAllAccounting();
+    
 }

@@ -479,7 +479,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
-        test();
         boolean unsettled = false;
         if(filter != null && filter.filterType != null && filter.filterType.equals("unsettled")) {
             unsettled = true;

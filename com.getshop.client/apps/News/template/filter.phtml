@@ -6,6 +6,10 @@ $bottom = null;
 $startOnRightSide = $this->getStartOnRightSide();
 $startOnRightSideClass = $startOnRightSide ? "startOnRightSide" : "";
 
+$displaymonth = $this->getConfigurationSetting("displaymonth");
+$rightSideArchive = $this->getConfigurationSetting("rightsidearchive");
+$hidearchive = $this->getConfigurationSetting("hidearchive");
+
 foreach ($entries as $entry) {
     $created = strtotime($entry->rowCreatedDate);
     if ($created > $top || !$top) {
@@ -15,79 +19,105 @@ foreach ($entries as $entry) {
         $bottom = $created;
     }
 }
+if($hidearchive != "true"){
+        $diff = ($top - $bottom) / (86400);
 
-$diff = ($top - $bottom) / (86400);
+        $type = "monthly";
+        if($displaymonth == "true"){
+            $type = "monthly";
+        }
+        else{
+        if ($diff > 30) {
+            $type = "monthly";
+        }
+        if ($diff > 365) {
+                $type = "yearly";
+        }
+    }
 
-$type = "monthly";
-if ($diff > 30) {
-    $type = "monthly";
-}
-if ($diff > 365) {
-    $type = "yearly";
+    if($rightSideArchive == "true"){
+        echo "<i class='fa fa-bars rightsidearchivemobile'></i>";
+        echo "<ul class='rightsidearchivelist'>";
+        echo "<span id='rightsidearchiveheader' >Arkiv</span><span class='rightsidearchiveresetfilter fa fa-times'>Filter</span><br><br>";
+            $time = strtotime(date('Y-m-d H:i:s', $top));
+
+            for($i = 13; $i >= 1; $i--){
+                $type = date("M Y", $time);
+                $month = $this->__w(date("F Y", $time));
+                echo "<li class='rightsidearchivelistfilter' value='".$month."' type='$type'>". $month ."</li>";
+                $time = strtotime(date('Y-m-d H:i:s', $time) . ' ' . "-1" . ' month');
+
+            }
+        echo "</ul>";
+    }
+    else{
+    ?>
+    <div class="news_dates <? echo $startOnRightSideClass; ?>">
+        <div id="slider-range-max" type="<?php echo $type; ?>"></div>
+        <br>
+        <div class="dates">
+            <?php
+            echo!$startOnRightSide ? "<span style='width:6%; display:inline-block;'>" . $this->__w("Latest") . "</span>" : "";
+            if ($type == "monthly") {
+                $time = $top;
+                if ($startOnRightSide) {
+                    $time = strtotime(date('Y-m-d H:i:s', $top) . ' -12 month');
+                }
+                $offset = 1;
+                for ($i = 13; $i >= 1; $i--) {
+                    $type = date("m.Y", $time);
+                    echo "<span class='grid13' offset='$offset' type='$type'>" . $this->__w(date("M-y", $time)) . "</span>";
+                    $incrementer = $startOnRightSide ? "+1" : "-1";
+                    $time = strtotime(date('Y-m-d H:i:s', $time) . ' ' . $incrementer . ' month');
+                    $offset++;
+                }
+            } else {
+
+                if ($startOnRightSide) {
+                    $top = strtotime(date('Y-m-d H:i:s', $top) . ' -12 year');
+                }
+
+                $startyear = date("Y", $top);
+
+                $offset = 1;
+                for ($i = 0; $i < 13; $i++) {
+                    $type = date("Y", $startyear);
+                    echo "<span class='grid13' offset='$offset' type='$type'>" . $startyear . "</span>";
+                    if ($startOnRightSide) {
+                        $startyear++;
+                    } else {
+                        $startyear--;
+                    }
+
+                    $offset++;
+                }
+            }
+            echo $startOnRightSide ? "<span style='width: 7.142857143%; display:inline-block;'>" . $this->__w("Latest") . "</span>" : "";
+            ?>
+        </div>
+    </div>
+
+    <br><br>
+    <style>
+        .grid13 { display:inline-block; width: 7.692307692%; text-align: left; box-sizing: border-box; }
+    </style>
+    <script>
+        <? 
+        $startValue = $startOnRightSide ? 13 : 0;
+        ?>
+        $(function () {
+            $("#slider-range-max").slider({
+                range: "max",
+                min: 0,
+                max: 13,
+                value: <? echo $startValue; ?>,
+                stop: app.News.loadFilteredNews
+            });
+            $("#amount").val($("#slider-range-max").slider("value"));
+        });
+    </script>
+    <?php
+    }
+
 }
 ?>
-
-<div class="news_dates <? echo $startOnRightSideClass; ?>">
-    <div id="slider-range-max" type="<?php echo $type; ?>"></div>
-    <br>
-    <div class="dates">
-        <?php
-        echo!$startOnRightSide ? "<span style='width:6%; display:inline-block;'>" . $this->__w("Latest") . "</span>" : "";
-        if ($type == "monthly") {
-            $time = $top;
-            if ($startOnRightSide) {
-                $time = strtotime(date('Y-m-d H:i:s', $top) . ' -12 month');
-            }
-            $offset = 1;
-            for ($i = 13; $i >= 1; $i--) {
-                $type = date("m.Y", $time);
-                echo "<span class='grid13' offset='$offset' type='$type'>" . $this->__w(date("M-y", $time)) . "</span>";
-                $incrementer = $startOnRightSide ? "+1" : "-1";
-                $time = strtotime(date('Y-m-d H:i:s', $time) . ' ' . $incrementer . ' month');
-                $offset++;
-            }
-        } else {
-            
-            if ($startOnRightSide) {
-                $top = strtotime(date('Y-m-d H:i:s', $top) . ' -12 year');
-            }
-            
-            $startyear = date("Y", $top);
-            
-            $offset = 1;
-            for ($i = 0; $i < 13; $i++) {
-                $type = date("Y", $startyear);
-                echo "<span class='grid13' offset='$offset' type='$type'>" . $startyear . "</span>";
-                if ($startOnRightSide) {
-                    $startyear++;
-                } else {
-                    $startyear--;
-                }
-                
-                $offset++;
-            }
-        }
-        echo $startOnRightSide ? "<span style='width: 7.142857143%; display:inline-block;'>" . $this->__w("Latest") . "</span>" : "";
-        ?>
-    </div>
-</div>
-
-<br><br>
-<style>
-    .grid13 { display:inline-block; width: 7.692307692%; text-align: left; box-sizing: border-box; }
-</style>
-<script>
-    <? 
-    $startValue = $startOnRightSide ? 13 : 0;
-    ?>
-    $(function () {
-        $("#slider-range-max").slider({
-            range: "max",
-            min: 0,
-            max: 13,
-            value: <? echo $startValue; ?>,
-            stop: app.News.loadFilteredNews
-        });
-        $("#amount").val($("#slider-range-max").slider("value"));
-    });
-</script>

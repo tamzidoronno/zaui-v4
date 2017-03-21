@@ -15,6 +15,7 @@ import java.util.List;
  * @author boggi
  */
 class AccountingTransferOptions {
+    public boolean hasFail = false;
     public List<User> users;
     public List<Order> orders;
     public AccountingTransferConfig config;
@@ -32,7 +33,6 @@ class AccountingTransferOptions {
         }
 
         User user = managers.userManager.getUserById(userId);
-
         Integer accountingId = user.customerId;
         if(user.accountingId != null && !user.accountingId.trim().isEmpty() && !user.accountingId.equals("0")) {
             accountingId = new Integer(user.accountingId);

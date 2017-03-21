@@ -347,8 +347,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(1);
         params.addElement(1);
         
-        logPrint("Fetching new bookings: fetch_new_bookings");
-
         Vector result = (Vector) client.execute("fetch_new_bookings", params);
         List<WubookBooking> toReturn = new ArrayList();
         if (!result.get(0).equals(0)) {

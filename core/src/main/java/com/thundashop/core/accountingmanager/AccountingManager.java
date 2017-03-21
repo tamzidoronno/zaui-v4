@@ -916,6 +916,11 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
             
             if(dateToUse.after(start) && (dateToUse.before(end) || dateToUse.equals(end))) {
+                User user = userManager.getUserById(order.userId);
+                if(user == null) {
+                    logEntries.add("user does not exists anymore for order: " + order.incrementOrderId + ", userid: " + order.userId);
+                }
+
                 toReturn.add(order);
             }
         }
@@ -1006,6 +1011,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             Order order = orderManager.getOrderByincrementOrderId(incOrderId);
             if(orderInFilter(configToUse, order)) {
                 orders.add(order);
+                User user = userManager.getUserById(order.userId);
+                if(user == null) {
+                    logEntries.add("user does not exists anymore for order: " + order.incrementOrderId + ", userid: " + order.userId);
+                }
             } else {
                 logEntries.add(incOrderId + " does not match this configuration. order is not of type: " + configToUse.subType);
             }

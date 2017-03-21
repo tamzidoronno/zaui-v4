@@ -30,7 +30,7 @@ if(isset($_GET['configid'])) {
 }
 
 if(!$file) {
-    echo "Unable to download this file, check if the specified time periode is correct. Please note that you can not transfer orders a second time, time periode tried downloading: $start - $end";
+    echo "Unable to download this filetime periode tried downloading: $start - $end";
     $logentries = $factory->getApi()->getAccountingManager()->getLatestLogEntries();
     echo "<br><br><b>From log</b><br>";
     foreach($logentries as $entry) {

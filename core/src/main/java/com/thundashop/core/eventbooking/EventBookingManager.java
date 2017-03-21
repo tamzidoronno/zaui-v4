@@ -1259,7 +1259,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
             String mailId = messageManager.sendMail(event, user.emailAddress, user.fullName, subject, content, getStoreEmailAddress(), getStoreName());
-            logEventEntry(event, "SIGNUP_MAIL_SENT", "Signupmail sent to user " + user.fullName + ", email: " + user.emailAddress, mailId);
+            if (!mailId.isEmpty()) {
+                logEventEntry(event, "SIGNUP_MAIL_SENT", "Signupmail sent to user " + user.fullName + ", email: " + user.emailAddress, mailId);
+            }
         } else {
             logEventEntry(event, "SIGNUP_MAIL_SENT_FAILED", "Couldnot send mail to user " + user.fullName + ", no email registered.", "");
         }
@@ -1328,7 +1330,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
             String res = messageManager.sendSms(event, phoneNumber, content, prefix, storeName);
-            logEventEntry(event, "SMS_SIGNUP_SENT", "Signup sms sent to " + user.fullName, res);
+            if (!res.isEmpty()) {
+                logEventEntry(event, "SMS_SIGNUP_SENT", "Signup sms sent to " + user.fullName, res);
+            }
         } else {
             logEventEntry(event, "SMS_SIGNUP_SENT_FAILED", "Failed to send signup sms to use " + user.fullName, "");
         }

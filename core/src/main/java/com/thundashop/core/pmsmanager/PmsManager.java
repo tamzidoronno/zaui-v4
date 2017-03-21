@@ -1125,7 +1125,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         String message = getMessageToSend(key, type, booking);
         message = formatMessage(message, booking, room, null);    
-        
+        if(message == null || message.trim().isEmpty()) {
+            return "No message to notify on key: " + key + " for booking : " +booking.id;
+        }
         if (room != null) {
             notifyGuest(booking, message, type, key, room);
         } else {

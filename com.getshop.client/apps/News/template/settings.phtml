@@ -43,6 +43,30 @@
         </td>
     </tr>
     <tr>
+        <td width="50%">Right side archive</td>
+        <td width="50%">
+            <? 
+            $checked = $this->getConfigurationSetting("rightsidearchive") == "true" ? "checked='true'" : ""; ?>
+            <input <? echo $checked; ?>type="checkbox" gsname="setting_rightsidearchive" value="<?php echo $this->getConfigurationSetting("rightsidearchive"); ?>">
+        </td>
+    </tr>
+    <tr>
+        <td width="50%">Display month</td>
+        <td width="50%">
+            <? 
+            $checked = $this->getConfigurationSetting("displaymonth") == "true" ? "checked='true'" : ""; ?>
+            <input <? echo $checked; ?>type="checkbox" gsname="setting_displaymonth" value="<?php echo $this->getConfigurationSetting("displaymonth"); ?>">
+        </td>
+    </tr>
+    <tr>
+        <td width="50%">Hide Archive</td>
+        <td width="50%">
+            <? 
+            $checked = $this->getConfigurationSetting("hidearchive") == "true" ? "checked='true'" : ""; ?>
+            <input <? echo $checked; ?>type="checkbox" gsname="setting_hidearchive" value="<?php echo $this->getConfigurationSetting("hidearchive"); ?>">
+        </td>
+    </tr>
+    <tr>
         <td width="50%">Latest on the right side</td>
         <td width="50%">
             <? 

@@ -37,6 +37,9 @@ class News extends \MarketingApplication implements \Application {
         $this->includefile("NewsTemplate");
     }
     
+    public function loadMonthlyNews() {
+        $this->includefile("NewsTemplate");
+    }
     /**
      * @return \app_newsmanager_data_NewsEntry[]
      */
@@ -47,6 +50,10 @@ class News extends \MarketingApplication implements \Application {
             $type = $_POST['data']['type'];
             $offset = $_POST['data']['offset'];
             $res = $this->filterNews($type, $offset, $res);
+        }
+        if(isset($_POST['event']) && $_POST['event'] == "loadMonthlyNews") {
+            $date = $_POST['data']['date'];
+            $res = $this->filterNewsMonthly($date, $res);
         }
         if(sizeof($res) == 0) {
             $this->noNewsFound = true;
@@ -144,5 +151,14 @@ class News extends \MarketingApplication implements \Application {
         return $this->getConfigurationSetting("latestOnTheRightSide") === "true";
     }
 
+    public function filterNewsMonthly($date, $news) {
+        $res = array();
+        foreach($news as $new) {
+            if(date("F Y", strtotime($new->rowCreatedDate)) == ($date)) {
+                $res[] = $new;
+            }
+        }
+        return $res;
+    }
 }
 ?>

@@ -5,6 +5,9 @@ app.News = {
         $(document).on('click', '.News .delete', this.deleteEvent );
         $(document).on('click', '.News .publish', this.publishEvent );
         $(document).on('click', '.News .showimageeditor', app.News.showEditImage);
+        $(document).on('click', '.News .rightsidearchivelistfilter', app.News.loadMonthlyNews);
+        $(document).on('click', '.News .rightsidearchiveresetfilter', app.News.resetFilter);
+        $(document).on('click', '.News .rightsidearchivemobile', app.News.showMobileArchive);
         
         PubSub.subscribe('NAVIGATION_COMPLETED', function() {
             if (typeof(CKEDITOR) !== "undefined") {
@@ -21,6 +24,13 @@ app.News = {
         });
 
     },
+    showMobileArchive: function(){
+        $('.rightsidearchivelist').toggle();
+    },
+    resetFilter : function(){
+        $(".rightsidearchiveresetfilter").hide();
+        thundashop.framework.reprintPage();
+    },
     showEditImage: function(application) {
         var app = $(application).hasClass('app') ? application : this;
         var event = thundashop.Ajax.createEvent("", "showImageEditor", app);
@@ -33,6 +43,23 @@ app.News = {
         }
         var event = thundashop.Ajax.createEvent('', 'publishEntry', $('.News'), data);
         thundashop.Ajax.post(event);
+    },
+    loadMonthlyNews: function(event){
+        $(".rightsidearchiveresetfilter").show();
+        var date = $(this).html();
+        var event = thundashop.Ajax.createEvent('','loadMonthlyNews',$('.News'), {
+            "date" : date
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.globalnewsbox').html(res);
+            if(app.News.needPackery) {
+                $(document).find('img').batchImageLoad({
+                    loadingCompleteCallback: function() {
+                        $('.newscontainerbox').packery({ gutter: 10 });
+                    }
+                });
+            }
+        });
     },
     loadFilteredNews : function(event, ui) {
         var offset = ui.value;

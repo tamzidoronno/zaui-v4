@@ -1,0 +1,35 @@
+body{background:#fff; font-family: "Exo";}
+.gs_page_width { max-width:  1400px; margin: auto; background:#fff;}
+
+.gsarea[area="header"] .gs_page_width { max-width: 100%; padding: 0 30px 0 30px; height: 50px;}
+.gsarea[area="body"]{background:#fff;padding:50px 0 100px 0;min-height: 640px;}
+.gsarea[area="footer"],.gsarea[area="footer"] .gs_page_width{ background-color: #f5f5f5; min-height: 150px;margin-bottom:0;padding-bottom: 0;color:#333;font-family:"Exo"; }
+.gsarea[area="footer"]{border-top: 1px solid #bbb;padding-top: 20px;}
+/*.Menu .mobilenavigatemenu{display: inline-block;}
+.Menu .mobilenavigatemenu i:before{color:#2b4075; font-size:28px;cursor:pointer;}
+.Menu .mobilenavigatemenu {
+    color:rgba(0,0,0,0);
+    cursor: default;
+    padding:10px 0 0 0;
+    -webkit-touch-callout: none;  iOS Safari 
+      -webkit-user-select: none;  Safari 
+       -khtml-user-select: none;  Konqueror HTML 
+         -moz-user-select: none;  Firefox 
+          -ms-user-select: none;  Internet Explorer/Edge 
+              user-select: none;  Non-prefixed version, currently supported by Chrome and Opera 
+}
+.Menu .menuentries.horizontal{display:none;}
+.Menu .menuentries.horizontal .entry{display:block;background:#2b4075;color:#fff;padding-left:40px;width:200px;}*/
+.Menu .menuentries.horizontal .entry {display:inline-block;padding:10px 0 0 40px;}
+.Menu .menuentries.horizontal .entry .entries{border: 1px solid #bbb;}
+.Menu .menuentries.horizontal .entry .entries .entry {background:#fff;width:250px;}
+.Menu a div{color:#2b4075;font-size:16px;line-height: 2; text-transform: uppercase;letter-spacing: 2px;font-weight: 700;font-family: "Exo"}
+.Menu a div:hover{opacity: 0.7;}
+
+.PmsBookingCalendar .calendar .calendar_header,
+.PmsBookingCalendar .calendar .day.selected,
+.PmsBookingProductList .continue_button,
+.PmsBookingProductList .complete_button,
+.PmsBooking .pmsfront .fa-calendar,
+.PmsBooking .pmsfront .check_available_button{background:#2b4075;}
+.PmsBooking .pmsfront {font-size:13px;}

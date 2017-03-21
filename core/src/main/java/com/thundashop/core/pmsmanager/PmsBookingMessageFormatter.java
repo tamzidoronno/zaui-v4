@@ -10,10 +10,12 @@ import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 class PmsBookingMessageFormatter { 
 
     private ProductManager productManager;
+    private PmsConfiguration config;
     public String formatRoomData(String message, PmsBookingRooms room, BookingEngine bookingEngine) {
         if(message == null) {
             return "";
@@ -116,7 +118,13 @@ class PmsBookingMessageFormatter {
         String simpleRoomList = "";
         String bookingData = "";
         String rooms = "";
-        for(PmsBookingRooms room : booking.getActiveRooms()) {
+        
+        List<PmsBookingRooms> roomsToIterate = booking.getActiveRooms();
+        if(config != null && config.deleteAllWhenAdded) {
+            roomsToIterate = booking.getAllRoomsIncInactive();
+        }
+        
+        for(PmsBookingRooms room : roomsToIterate) {
             String simpleRoom = "";
             if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
                 simpleRoom += "<td style='font-size:12px;'>" + bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "</td>";
@@ -297,6 +305,10 @@ class PmsBookingMessageFormatter {
 
     void setProductManager(ProductManager productManager) {
         this.productManager = productManager;
+    }
+
+    void setConfig(PmsConfiguration configurationSecure) {
+        this.config = configurationSecure;
     }
 
 }

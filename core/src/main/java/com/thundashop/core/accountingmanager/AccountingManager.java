@@ -50,6 +50,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -1203,6 +1205,33 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
         }
         return false;
+    }
+
+    @Override
+    public void resetAllAccounting() {
+        new ArrayList<SavedOrderFile>(files.values()).stream().forEach(file -> {
+            try {
+                deleteFile(file.id);
+            } catch (Exception ex) {
+                Logger.getLogger(AccountingManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+        new ArrayList<SavedOrderFile>(otherFiles.values()).stream().forEach(file -> {
+            try {
+                deleteFile(file.id);
+            } catch (Exception ex) {
+                Logger.getLogger(AccountingManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        
+        List<Order> orders = new ArrayList<Order>(orderManager.getOrders(null, null, null));
+        orders.stream().forEach(order -> {
+            if (order.transferredToAccountingSystem) {
+                order.transferredToAccountingSystem = false;
+                orderManager.saveOrder(order);
+            }
+        });
     }
 
 }

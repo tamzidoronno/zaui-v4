@@ -1,7 +1,9 @@
 package com.thundashop.core.productmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.Product;
@@ -37,6 +39,10 @@ import org.springframework.stereotype.Component;
 public class ProductManager extends AProductManager implements IProductManager {
     @Autowired
     private PageManager pageManager;
+    
+    
+    @Autowired
+    private Database database;
     
     @Override
     public Product saveProduct(Product product) throws ErrorException {
@@ -369,5 +375,29 @@ public class ProductManager extends AProductManager implements IProductManager {
         }
         
         return "";
+    }
+
+    @Override
+    public Product getDeletedProduct(String id) throws ErrorException {
+        HashMap<String,String> searchCriteria = new HashMap();
+        searchCriteria.put("_id", id);
+        List<DataCommon> res = database.findWithDeleted("col_" + storeId, null, null, "ProductManager", searchCriteria, true);
+        if(res.isEmpty()) {
+            return null;
+        }
+        return (Product) res.get(0);
+    }
+
+    @Override
+    public List<Product> getAllProductsIncDeleted() throws ErrorException {
+        List<DataCommon> res = database.findWithDeleted("col_" + storeId, null, null, "ProductManager", null, true);
+        System.out.println("Products: " + res.size());
+        List<Product> result = new ArrayList();
+        for(DataCommon com : res) {
+            if(com instanceof Product) {
+                result.add((Product) com);
+            }
+        }
+        return result;
     }
 }

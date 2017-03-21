@@ -18,6 +18,7 @@ class UserFileUpload extends \WebshopApplication implements \Application {
     }
 
     public function render() {
+        $this->includefile("userfileuploadfront");   
     }
 }
 ?>

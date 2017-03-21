@@ -164,8 +164,6 @@ public class PmsBookingSimpleFilter {
             } else {
                 simple.progressState = "active";
             }
-        } else if(!booking.confirmed) {
-            simple.progressState = "unconfirmed";
         } else if(room.isEnded()) {
             simple.progressState = "ended";
         } else if(booking.confirmed) {
@@ -176,6 +174,10 @@ public class PmsBookingSimpleFilter {
                 manager.getConfigurationSecure().requirePayments && 
                 !simple.progressState.equals("deleted")) {
             simple.progressState = "notpaid";
+        } 
+        
+        if(!booking.confirmed) {
+            simple.progressState = "unconfirmed";
         }
         
         if(booking.testReservation) {

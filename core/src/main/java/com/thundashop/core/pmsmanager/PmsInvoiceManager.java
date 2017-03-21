@@ -44,6 +44,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private boolean avoidChangingInvoicedFrom;
     private List<String> roomIdsInCart = null;
     private PmsOrderStatsFilter latestInvoiceStatsFilter = null;
+    private PmsPaymentLinksConfiguration paymentLinkConfig = new PmsPaymentLinksConfiguration();
+    
 
     private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
         double res = 0.0;
@@ -134,7 +136,24 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
     }
 
-    
+    @Override
+    public PmsPaymentLinksConfiguration getPaymentLinkConfig() {
+        return paymentLinkConfig;
+    }
+
+    @Override
+    public void savePaymentLinkConfig(PmsPaymentLinksConfiguration config) {
+        if(paymentLinkConfig.id != null && !paymentLinkConfig.id.isEmpty()) {
+            if(!paymentLinkConfig.id.equals(config.id)) {
+                Exception ex = new Exception("Incorrect id when saving paymentlink config");
+                logPrint(ex);
+                return;
+            }
+        }
+        
+        saveObject(config);
+        paymentLinkConfig = config;
+    }
 
     class BookingOrderSummary {
         Integer count = 0;
@@ -614,6 +633,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(dataCommon instanceof PmsOrderStatsFilter) {
                 PmsOrderStatsFilter res = (PmsOrderStatsFilter)dataCommon;
                 latestInvoiceStatsFilter = res;
+            }
+            if(dataCommon instanceof PmsPaymentLinksConfiguration) {
+                PmsPaymentLinksConfiguration res = (PmsPaymentLinksConfiguration)dataCommon;
+                paymentLinkConfig = res;
             }
         }
         createScheduler("checkinvoicedtodate", "1 04 * * *", DailyInvoiceChecker.class);

@@ -1,0 +1,23 @@
+<?
+/* @var $this ns_ed0c5af9_32a9_426a_9908_c7ac67e7b2f4\UserFileUpload */
+$userId = $this->getApi()->getUserManager()->getLoggedOnUser()->id;
+$user = $this->getApi()->getUserManager()->getUserById($userId);
+
+$files = (array)$user->files;
+if(!$files) {
+    echo "Ingen filer er lastet opp enda.";
+    return;
+}
+
+foreach ($files as $file){
+    /* core_usermanager_data_UploadedFiles */
+    $fileId = $file->fileId;
+    echo "<div class='userfileuploadline' value='$fileId'>";
+    echo "<div class='downloadfilebutton gss_button fa fa-file-pdf-o' fileId='$fileId' userId='$userId' style='float:right;'></div> ";
+    echo date("d.m.Y", strtotime($file->createdDate)) . " : " ;
+    echo $file->fileName;
+    echo "&nbsp";
+    echo "</div>";
+    echo "<div style='clear:both;'></div>";
+}
+?>

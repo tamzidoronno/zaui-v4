@@ -1124,7 +1124,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         String message = getMessageToSend(key, type, booking);
         message = formatMessage(message, booking, room, null);    
-        
+        if(message == null || message.trim().isEmpty()) {
+            return "No message to notify on key: " + key + " for booking : " +booking.id;
+        }
         if (room != null) {
             notifyGuest(booking, message, type, key, room);
         } else {
@@ -2630,7 +2632,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
                 
-                if(!room.addedToArx && getConfiguration().hasLockSystem()) {
+                if(!room.addedToArx && getConfiguration().hasLockSystem() && !getConfiguration().markDirtyEvenWhenCodeNotPressed) {
                     continue;
                 }
 
@@ -5351,6 +5353,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return false;
+    }
+
+    private void test() {
+        for(PmsAdditionalItemInformation pinfo : addiotionalItemInfo.values()) {
+            if(pinfo.itemId.equals("c0a8454a-6ebf-4d82-88c6-e2dae164fbbf")) {
+                System.out.println("Cleaned: " + pinfo.isClean());
+                List<Date> dates = pinfo.getAllCleaningDates();
+                System.out.println("Last used: " + pinfo.getLastUsed());
+                for(Date d : dates) {
+                    System.out.println("Cleaning date : " + d);
+                }
+            }
+        }
     }
 
 }

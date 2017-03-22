@@ -21,7 +21,6 @@ import org.joda.time.DateTime;
 
 @ForAccountingSystem(accountingSystem="gbat10")
 public class GBat10 extends AccountingTransferOptions implements AccountingTransferInterface {
-    boolean hasFail = false;
     
     @Override
     public void setManagers(AccountingManagers managers) {
@@ -135,11 +134,11 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         line.put(8, df.format(total)+"");
         line.put(9, customerId+"");
         line.put(10, "");
-        line.put(11, user.fullName);
+        line.put(11, makeSureIsOkay(user.fullName));
         if(user.address != null) {
-            line.put(12, user.address.address);
-            line.put(13, user.address.postCode);
-            line.put(14, user.address.city);
+            line.put(12, makeSureIsOkay(user.address.address));
+            line.put(13, makeSureIsOkay(user.address.postCode));
+            line.put(14, makeSureIsOkay(user.address.city));
         } else {
             line.put(12, "");
             line.put(13, "");
@@ -166,14 +165,19 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
             
             HashMap<Integer, String> subLine = new HashMap();
             
+            Product product = managers.productManager.getProduct(item.getProduct().id);
+            if(product == null) {
+                product = managers.productManager.getDeletedProduct(item.getProduct().id);
+            }
+            
             subLine.put(0, "GBAT10");
             subLine.put(1, order.incrementOrderId+ "");
             subLine.put(2, format.format(periodeDate));
             subLine.put(3, "1");
             subLine.put(4, firstMonth + "");
             subLine.put(5, year + "");
-            subLine.put(6, managers.productManager.getProduct(item.getProduct().id).accountingAccount);
-            subLine.put(7, managers.productManager.getProduct(item.getProduct().id).sku);
+            subLine.put(6, product.accountingAccount);
+            subLine.put(7, product.sku);
             subLine.put(8, df.format(item.getProduct().price * item.getCount() * -1)+"");
             subLine.put(9, "");
             subLine.put(10, "");
@@ -233,7 +237,7 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
         }
         
         lineText = lineText.trim();
-    
+        lineText = makeSureIsOkay(lineText);
         return lineText;
     }
 
@@ -257,6 +261,13 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
 
     private void logError(String string) {
         addToLog(string);
+    }
+
+    private String makeSureIsOkay(String text) {
+        if(text == null) {
+            return "";
+        }
+        return text.replaceAll(",", " ");
     }
 
 }

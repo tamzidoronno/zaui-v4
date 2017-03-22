@@ -46,6 +46,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .changeGuestInformation', app.PmsManagement.changeGuestInformation);
         $(document).on('click','.PmsManagement .addonincludedinroomprice', app.PmsManagement.toggleAddonIncluded);
         $(document).on('click','.PmsManagement .addproducttocart', app.PmsManagement.addProductToCart);
+        $(document).on('click','.PmsManagement .changeduedates', app.PmsManagement.changeDueDates);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -84,8 +85,39 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .removePaymentMethod', app.PmsManagement.removePaymentMethod);
         $(document).on('click','.PmsManagement .loadorderstatsentryfororder', app.PmsManagement.loadorderstatsentryfororder);
         $(document).on('click','.PmsManagement .radioinput', app.PmsManagement.updateBookingInformationRadioButton);
+        $(document).on('click','.PmsManagement .setNewPasswordOnUser', app.PmsManagement.setNewPasswordOnUser);
         $(document).on('change','.PmsManagement .contactdatadropdown', app.PmsManagement.updateBookingInformationDropdown);
     },
+    setNewPasswordOnUser : function() {
+        var newPassword = prompt("New password");
+        if(!newPassword) {
+            return;
+        }
+        var data = {
+            "password" : newPassword,
+            "userid" : $('.edituserbox [gsname="userid"]').val()
+        }
+        var event = thundashop.Ajax.createEvent('','setNewPasswordOnUser', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            thundashop.common.Alert("Password updated", "The password has been changed", false);
+        });
+    },
+    changeDueDates : function() {
+        var days = $(this).attr('days');
+        var newDays = prompt("Please enter the new due days", days);
+        if(!newDays) {
+            return;
+        }
+        var orderId = $(this).attr('orderid');
+        var data = {
+            "bookingid" : $('#openedbookingid').val(),
+            "days" : newDays,
+            "orderid" : orderId
+        }
+        var event = thundashop.Ajax.createEvent('','updateDueDaysOnOrder', $(this),data);
+        thundashop.common.showInformationBoxNew(event, 'Booking information');
+    },
+    
     updateBookingInformationRadioButton: function(){
         var data = {
             "bookingid" : $('#openedbookingid').val(),

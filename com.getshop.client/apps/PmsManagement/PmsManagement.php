@@ -746,6 +746,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
        $this->showBookingInformation();
    }
    
+   public function setNewPasswordOnUser() {
+       $userId = $_POST['data']['userid'];
+       $password = $_POST['data']['password'];
+       $this->getApi()->getUserManager()->updatePasswordSecure($userId, $password);
+   }
+   
     public function showBookingInformation() {
         $this->includefile("bookinginformation");
     }
@@ -766,6 +772,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         } else {
             echo "Booking not found";
         }
+    }
+    
+    public function updateDueDaysOnOrder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->dueDays = $_POST['data']['days'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->showBookingInformation();
     }
     
     public function updateInvoiceNote() {
@@ -1086,6 +1099,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $text = $this->createPaymentTypeText($instanceToUse);
         $order = $this->getApi()->getOrderManager()->getOrder($orderId);
         $order->payment->paymentType = $text;
+        $order->dueDays = $_POST['data']['dueDays'];
         $this->getApi()->getOrderManager()->saveOrder($order);
         
         echo "Order has been created, what would you like to do <br>";

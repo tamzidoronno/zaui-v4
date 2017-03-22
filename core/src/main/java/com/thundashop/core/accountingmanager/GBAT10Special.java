@@ -118,10 +118,12 @@ public class GBAT10Special extends AccountingTransferOptions implements Accounti
         line.put(8, df.format(total)+"");
         line.put(9, customerId+"");
         line.put(10, "");
-        line.put(11, user.fullName);
-        line.put(12, user.address.address);
-        line.put(13, user.address.postCode);
-        line.put(14, user.address.city);
+        line.put(11, makeSureIsOkay(user.fullName));
+        if(user.address != null) {
+            line.put(12, makeSureIsOkay(user.address.address));
+            line.put(13, makeSureIsOkay(user.address.postCode));
+            line.put(14, makeSureIsOkay(user.address.city));
+        }
         line.put(15, order.incrementOrderId + "");
         line.put(16, kid); //KID
         line.put(17, format.format(order.rowCreatedDate)); //Forfallsdato
@@ -176,6 +178,13 @@ public class GBAT10Special extends AccountingTransferOptions implements Accounti
         return lines;
     }
     
+    private String makeSureIsOkay(String text) {
+        if(text == null) {
+            return "";
+        }
+        return text.replaceAll(",", " ");
+    }
+
      private String createLineText(CartItem item) {
         String lineText = "";
         String startDate = "";
@@ -204,7 +213,8 @@ public class GBAT10Special extends AccountingTransferOptions implements Accounti
         }
         
         lineText = lineText.trim();
-    
+        lineText = makeSureIsOkay(lineText);
+        
         return lineText;
     }
 

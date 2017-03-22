@@ -164,4 +164,8 @@ public class PmsAdditionalItemInformation extends DataCommon {
         
         cleaningDates.removeAll(toRemove);
     }
+
+    Date getLastUsed() {
+        return lastUsed;
+   }
 }

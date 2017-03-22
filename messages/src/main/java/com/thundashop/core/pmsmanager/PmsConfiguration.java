@@ -61,6 +61,7 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<String, PmsMobileView> mobileViews = new HashMap();
     public HashMap<String, List<String>> mobileViewRestrictions = new HashMap();
     public String bookingProfile = "hotel";
+    public boolean markDirtyEvenWhenCodeNotPressed = false;
 
     /* Invoice creation options */
     public boolean fastOrderCreation = false;

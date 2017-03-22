@@ -82,6 +82,18 @@ echo "</table>";
     Max number of checkout cleaning possible to do for a day (0, disabled)
 </div>
 <div class='configrow'>
+        <span class='configentry'>
+            <?
+                $checked = "";
+                if(isset($notificationSettings->markDirtyEvenWhenCodeNotPressed) && $notificationSettings->markDirtyEvenWhenCodeNotPressed) {
+                    $checked = "CHECKED";
+                }
+            ?>
+            <input type='checkbox' gsname='markDirtyEvenWhenCodeNotPressed' <?php echo $checked; ?>>
+        </span>
+        Mark room as dirty even when the code has not been pressed on the door.
+</div>
+<div class='configrow'>
     <span class='configentry'>
         <input type='number' style='width: 40px;' gsname='numberOfIntervalCleaning' value='<? echo $notificationSettings->numberOfIntervalCleaning; ?>'>
     </span>

@@ -347,8 +347,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(1);
         params.addElement(1);
         
-        logPrint("Fetching new bookings: fetch_new_bookings");
-
         Vector result = (Vector) client.execute("fetch_new_bookings", params);
         List<WubookBooking> toReturn = new ArrayList();
         if (!result.get(0).equals(0)) {
@@ -373,8 +371,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }catch(Exception e) {
                     logPrintException(e);
                 }
-                toReturn.add(wubooking);
-                addBookingToPms(wubooking);
+                if(!bookingAlreadyExists(wubooking) || wubooking.delete) {
+                    toReturn.add(wubooking);
+                    addBookingToPms(wubooking);
+                } else {
+                    messageManager.sendErrorNotification("A booking that already exists where tried to download twice from wubook: " + wubooking. reservationCode, null);
+                }
             }
         }
         
@@ -1147,6 +1149,19 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return false;
         
         
+    }
+
+    private boolean bookingAlreadyExists(WubookBooking wubooking) {
+        List<PmsBooking> allBookings = pmsManager.getAllBookings(null);
+        for(PmsBooking booking : allBookings){
+            if(booking.wubookreservationid.equals(wubooking.reservationCode)) {
+                return true;
+            }
+            if(booking.wubookModifiedResId.contains(wubooking.reservationCode)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

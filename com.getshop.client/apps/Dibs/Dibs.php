@@ -100,7 +100,7 @@ class Dibs extends \PaymentApplication implements \Application {
             <input value="' . $currency . '" name="currency" type="hidden" />
             <input value="' . $orderId . '" name="orderId" type="hidden" />
             <input value="' . $amount . '" name="amount" type="hidden" />
-            <input value="' . $language .  '" name="language" type="hidden" />
+            <input value="EN" name="language" type="hidden" />
             <input value="' . $redirect_url . 'payment_success" name="acceptReturnUrl" type="hidden" />
             <input value="' . $redirect_url . 'payment_failed" name="cancelReturnUrl" type="hidden" />
             <input value="' . $callBack . '" name="callbackUrl" type="hidden" />';

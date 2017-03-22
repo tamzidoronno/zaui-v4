@@ -21,6 +21,7 @@ public class StoreConfiguration extends DataCommon {
     public String postalCode;
     public String streetAddress;
     public String emailAdress;
+    public String accountingEmailAdress;
     public String orgNumber;
     public String contactContent;
     public String theeme;

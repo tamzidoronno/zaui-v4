@@ -768,6 +768,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function updateDueDaysOnOrder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->dueDays = $_POST['data']['days'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->showBookingInformation();
+    }
+    
     public function updateInvoiceNote() {
         $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $_POST['data']['bookingid']);
         $booking->invoiceNote = $_POST['data']['invoicenote'];
@@ -1086,6 +1093,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $text = $this->createPaymentTypeText($instanceToUse);
         $order = $this->getApi()->getOrderManager()->getOrder($orderId);
         $order->payment->paymentType = $text;
+        $order->dueDays = $_POST['data']['dueDays'];
         $this->getApi()->getOrderManager()->saveOrder($order);
         
         echo "Order has been created, what would you like to do <br>";

@@ -46,6 +46,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .changeGuestInformation', app.PmsManagement.changeGuestInformation);
         $(document).on('click','.PmsManagement .addonincludedinroomprice', app.PmsManagement.toggleAddonIncluded);
         $(document).on('click','.PmsManagement .addproducttocart', app.PmsManagement.addProductToCart);
+        $(document).on('click','.PmsManagement .changeduedates', app.PmsManagement.changeDueDates);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -86,6 +87,19 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .radioinput', app.PmsManagement.updateBookingInformationRadioButton);
         $(document).on('change','.PmsManagement .contactdatadropdown', app.PmsManagement.updateBookingInformationDropdown);
     },
+    changeDueDates : function() {
+        var days = $(this).attr('days');
+        var newDays = prompt("Please enter the new due days", days);
+        var orderId = $(this).attr('orderid');
+        var data = {
+            "bookingid" : $('#openedbookingid').val(),
+            "days" : newDays,
+            "orderid" : orderId
+        }
+        var event = thundashop.Ajax.createEvent('','updateDueDaysOnOrder', $(this),data);
+        thundashop.common.showInformationBoxNew(event, 'Booking information');
+    },
+    
     updateBookingInformationRadioButton: function(){
         var data = {
             "bookingid" : $('#openedbookingid').val(),

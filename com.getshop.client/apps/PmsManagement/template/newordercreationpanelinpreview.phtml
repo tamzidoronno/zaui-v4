@@ -18,6 +18,15 @@ $toChangeObject->city = $user->address->city;
 $toChangeObject->countryname = $user->address->countryname;
 $toChangeObject->userid = $user->id;
 
+$invoiceApp = $this->getApi()->getStoreApplicationPool()->getApplication("70ace3f0-3981-11e3-aa6e-0800200c9a66");
+$dueDays = 14;
+if(isset($invoiceApp->settings->duedays)) {
+    $dueDays = $invoiceApp->settings->duedays->value;
+}
+if($booking->dueDays) {
+    $dueDays = $booking->dueDays;
+}
+
 $products = $this->getApi()->getProductManager()->getAllProductsLight();
 ?>
 <div class='createorderpanelinfo'>
@@ -104,6 +113,7 @@ $products = $this->getApi()->getProductManager()->getAllProductsLight();
        }
 
        echo "</select> ";
+       echo "<div>Due days <input type='text' value='$dueDays' id='dueDaysOnNewOrderBooking' style='width:40px; float:right; text-align:center;'></div>";
        ?>
     </span>
     <span style="border: solid 1px #bbb; width: 100%; display:inline-block;float:left; box-sizing: border-box; padding: 10px; text-align: right">
@@ -196,6 +206,7 @@ $products = $this->getApi()->getProductManager()->getAllProductsLight();
          }
          
          var data = {
+             "dueDays" : $('#dueDaysOnNewOrderBooking').val(),
              "user" : user,
              "items" : items,
              "bookingid" : $('#openedbookingid').val()

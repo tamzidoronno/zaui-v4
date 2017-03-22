@@ -190,7 +190,19 @@ if($booking->orderIds) {
         }
         echo "</td>";
         echo "<td valign='top'>";
-        
+        if(stristr($order->payment->paymentType, "invoice")) {
+            $change = "";
+            if(!isset($order->closed) || !$order->closed) {
+                $change = "changeduedates";
+            }
+            $days = "default";
+            if(isset($order->dueDays)) {
+                $days = $order->dueDays;
+            }
+            $days = "<span style='color:#bbb;' title='Due days' days='$days' class='$change' orderid='".$order->id."'>" . $days . "</span>";
+            echo "<span style='float:right;'>$days</span>";
+        }
+
         
         echo "<span class='sendpaymentlinkbox' gstype='form' method='sendPaymentLink'>";
         echo "<div style='padding-bottom: 10px;'>";

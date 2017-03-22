@@ -7,6 +7,27 @@ app.PmsAvailabilityTimeline = {
         $(document).on('mouseover', '.PmsAvailabilityTimeline .valueentry', app.PmsAvailabilityTimeline.mouseOver);
         $(document).on('mouseout', '.PmsAvailabilityTimeline .valueentry', app.PmsAvailabilityTimeline.mouseOut);
         $(document).on('click', '.PmsAvailabilityTimeline .closeRoomOptionsButton', app.PmsAvailabilityTimeline.closeRoomOptionsButton);
+        $(document).on('change', '.PmsAvailabilityTimeline .changetypeonbookingselector', app.PmsAvailabilityTimeline.ifNeedMoveTypes);
+    },
+    
+    ifNeedMoveTypes : function() {
+        var count = $(this).find('option:selected').attr('count');
+        var form = $(this).closest('[gstype="form"]');
+        var roomId = form.find('[gsname="roomid"]').val();
+        var warnMessage = $(this).closest('tr').find('.warnmovepeople');
+        warnMessage.hide();
+        if(count === "0") {
+            var data = {
+                "movetotype" : $(this).val(),
+                "moveRoom" : roomId
+            }
+            var event = thundashop.Ajax.createEvent('','findTypesToMove', $(this), data);
+            
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                warnMessage.html(res);
+                warnMessage.fadeIn();
+            });
+        }
     },
     checkallclosingroom : function() {
         var checked = $(this).is(':checked');

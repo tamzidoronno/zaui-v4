@@ -64,6 +64,7 @@ public class PmsConfiguration extends DataCommon {
 
     /* Invoice creation options */
     public boolean fastOrderCreation = false;
+    public boolean markDirtyEvenWhenCodeNotPressed = false;
     public boolean autoSendPaymentReminder;
     public boolean supportRemoveWhenFull = false;
     public boolean supportDiscounts = false;

@@ -2632,7 +2632,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
                 
-                if(!room.addedToArx && getConfiguration().hasLockSystem()) {
+                if(!room.addedToArx && getConfiguration().hasLockSystem() && !getConfiguration().markDirtyEvenWhenCodeNotPressed) {
                     continue;
                 }
 

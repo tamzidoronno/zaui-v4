@@ -205,6 +205,9 @@ public interface IUserManager {
      */
     public void updatePassword(String userId, String oldPassword, String newPassword) throws ErrorException;
     
+    @Administrator
+    public void updatePasswordSecure(String userId, String newPassword) throws ErrorException;
+    
     /**
      * Gets the count of how many customers 
      * is available for the page

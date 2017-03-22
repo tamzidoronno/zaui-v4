@@ -81,6 +81,6 @@ if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferred
             echo "<tr><td colspan='2'>This user has been transferred to accounting, and can not be updated anymore.</td></tr>";
         }
         ?>
-        <tr><td></td><td><span class='pmsbutton closeadduser' style='background-color:red;'>Close</span> <span class='pmsbutton' gstype='submitToInfoBox'>Save changes</span></td><tr>
+        <tr><td style='font-size: 12px; line-height: 12px; color:blue; cursor:pointer;' class='setNewPasswordOnUser'>New<br>password</td><td><span class='pmsbutton closeadduser' style='background-color:red;'>Close</span> <span class='pmsbutton' gstype='submitToInfoBox'>Save changes</span></td><tr>
     </table>
 </div>

@@ -667,6 +667,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
 
+    @Override
+    public void updatePasswordSecure(String userId, String newPassword) throws ErrorException {
+        newPassword = encryptPassword(newPassword);
+        UserStoreCollection collection = getUserStoreCollection(storeId);
+        User user = collection.getUser(userId);
+        user.password = newPassword;
+        collection.addUser(user);
+    }
+
     private int getUserCount(int type) throws ErrorException {
         int i = 0;
         for (User user : getUserStoreCollection(storeId).filterUsers(getSession().currentUser, getUserStoreCollection(storeId).getAllUsers())) 

@@ -746,6 +746,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
        $this->showBookingInformation();
    }
    
+   public function setNewPasswordOnUser() {
+       $userId = $_POST['data']['userid'];
+       $password = $_POST['data']['password'];
+       $this->getApi()->getUserManager()->updatePasswordSecure($userId, $password);
+   }
+   
     public function showBookingInformation() {
         $this->includefile("bookinginformation");
     }

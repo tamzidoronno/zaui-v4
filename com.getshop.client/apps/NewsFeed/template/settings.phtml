@@ -22,6 +22,19 @@
             </select>
         </td>
     </tr>
+    <tr>
+        <td width="50%">Antall Nyheter</td>
+        <td width="50%">
+            <?php
+            $numberofnews = $this->getConfigurationSetting('numberofnews'); 
+            if(!$numberofnews || $numberofnews == "" || $numberofnews == 0){
+                $numberofnews = 5;
+            }
+            echo "<input class='numberofnewsfeed'gsname='setting_numberofnews' type='number' value='".$numberofnews."'>";
+            
+            ?>
+        </td>
+    </tr>
     </table>
     <input gstype="submit" type="button" value='Save' class='logoutclick'>
 </div>

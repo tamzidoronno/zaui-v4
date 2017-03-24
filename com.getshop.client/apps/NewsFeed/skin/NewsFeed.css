@@ -80,6 +80,7 @@
     width: 100%;
     height: 200px;
 }
+.NewsFeed .numberofnewsfeed{width:85px;}
 @media only screen and (max-width: 799px){
     
     .NewsFeed .frigonewsentrysmall{

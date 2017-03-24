@@ -1125,7 +1125,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String message = getMessageToSend(key, type, booking);
         message = formatMessage(message, booking, room, null);    
         if(message == null || message.trim().isEmpty()) {
-            return "No message to notify on key: " + key + " for booking : " +booking.id;
+            return "";
         }
         if (room != null) {
             notifyGuest(booking, message, type, key, room);
@@ -5366,6 +5366,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    @Override
+    public List<PmsRoomSimple> getRoomsToSwap(String roomId, String moveToType) {
+        PmsBookingSimpleFilter filter = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
+        PmsBooking roomToCheckBooking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = roomToCheckBooking.getRoom(roomId);
+        
+        List<PmsRoomSimple> roomsToSwap = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms tmpRoom : booking.getActiveRooms()) {
+                if(!tmpRoom.bookingItemTypeId.equals(moveToType)) {
+                    continue;
+                }
+                if(tmpRoom.isActiveInPeriode(room.date.start, room.date.end)) {
+                    roomsToSwap.add(filter.convertRoom(tmpRoom, booking));
+                }
+            }
+        }
+        return roomsToSwap;
+    }
+
+    @Override
+    public String swapRoom(String roomId, List<String> roomIds) {
+        return "OK";
     }
 
 }

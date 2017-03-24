@@ -65,6 +65,14 @@ $states['fi_FI'] = "Finish";
             <?php echo $this->__("This is the main email address, if you change this all orders, contact forms and etc will be sent to this email address."); ?>
         </div>
     </div>
+    
+    <div class="textfield gss_setting"  id="accountingemailaddress">
+        <span class="title"><?php echo $this->__f("Accounting email address"); ?></span>
+        <input type="textfield" gs_model='storesettings' gs_model_attr='accountingemailaddress' value="<? echo $this->getAccountingEmail(); ?>">
+        <div class="description">
+            <?php echo $this->__("This is the accounting email address, its used to notify the accounting crew."); ?>
+        </div>
+    </div>
 
     <div class="textfield gss_setting"  id="mainmobilephone">
         <span class="title"><?php echo $this->__f("Main mobile phone number"); ?></span>

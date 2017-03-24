@@ -49,6 +49,12 @@ public interface IPmsManager {
     public List<SimpleInventory> getSimpleInventoryList(String roomName);
     
     @Administrator
+    public List<PmsRoomSimple> getRoomsToSwap(String roomId, String moveToType);
+    
+    @Administrator
+    public String swapRoom(String roomId, List<String> roomIds);
+    
+    @Administrator
     public void sendConfirmation(String email, String bookingId);
     
     @Administrator

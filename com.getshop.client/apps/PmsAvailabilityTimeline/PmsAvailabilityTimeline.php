@@ -83,6 +83,27 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         $this->includefile("closeRoomOptions");
     }
     
+    public function findTypesToMove() {
+        echo "<div style='font-size: 12px;'>";
+        echo "Hey there, there are no rooms available, do you wish to swap room with someone?<br><br>";
+        $movetotype = $_POST['data']['movetotype'];
+        $moveRoom = $_POST['data']['moveRoom'];
+        $rooms = $this->getApi()->getPmsManager()->getRoomsToSwap($this->getSelectedName(), $moveRoom, $movetotype);
+        
+        foreach($rooms as $room) {
+            /* @var $room \core_pmsmanager_PmsRoomSimple */
+            $guest = $room->guest[0]->name;
+            if($guest) {
+                $guest = "($guest)";
+            }
+            echo "<div style=' width: 350px;white-space: nowrap; overflow: hidden;text-overflow: ellipsis;'>";
+            echo "<input type='checkbox' gsname='swapwithroom_".$room->pmsRoomId."'></input> ";
+            echo date("d.m.Y", $room->start/1000) . " - " .  date("d.m.Y", $room->end/1000) . " " . $room->owner;
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+    
     public function loadBookingList() {
         $type = $_POST['data']['type'];
         $selectedType = $type;
@@ -127,10 +148,12 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
             echo "<td>";
             if(!$started) {
                 echo '<div gstype="form" method="changeItemForBooking">';
+                echo "<div class='warnmovepeople'></div>";
                 echo "<input type='hidden' gsname='roomid' value='". $room->pmsRoomId . "'>";
                 echo "<input type='hidden' gsname='day' value='". $_POST['data']['day'] . "'>";
                 echo "<input type='hidden' gsname='type' value='". $_POST['data']['type'] . "'>";
-                echo "<select gsname='newtype'>";
+                echo "<select gsname='newtype' class='changetypeonbookingselector'>";
+                echo "<option>Select a type to move to</option>";
                 foreach($types as $type) {
                     $items = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), 
                             $type->id, 
@@ -140,7 +163,7 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
                     if($type->id == $type) {
                         continue;
                     }
-                    echo "<option value='".$type->id."'>" . $type->name . " (" . $items .")". "</option>";
+                    echo "<option value='".$type->id."' count='".$items."'>" . $type->name . " (" . $items .")". "</option>";
                 }
                 echo "</select>";
                 echo "<input type='button' value='change' gstype='submitToInfoBox'>";
@@ -159,7 +182,19 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     public function changeItemForBooking() {
         $newType = $_POST['data']['newtype'];
         $roomId = $_POST['data']['roomid'];
-        $error = $this->getApi()->getPmsManager()->setNewRoomType($this->getSelectedName(), $roomId, null, $newType);
+        
+        $swapRoomList = array();
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "swapwithroom_") && $val == "true") {
+                $swapRoomList[] = str_replace("swapwithroom_", "", $key);
+            }
+        }
+        
+        if(sizeof($swapRoomList) > 0) {
+            $error = $this->getApi()->getPmsManager()->swapRoom($this->getSelectedName(), $roomId, $swapRoomList);
+        } else {
+            $error = $this->getApi()->getPmsManager()->setNewRoomType($this->getSelectedName(), $roomId, null, $newType);
+        }
         if($error) {
             echo "<hr>";
             echo $error;

@@ -1,5 +1,6 @@
 .PmsAvailabilityTimeline .timelineresult { margin-top: 30px; }
 .PmsAvailabilityTimeline .full { background-color:#7e0505; color: white; cursor: pointer;}
+.PmsAvailabilityTimeline .warnmovepeople { position:absolute; background-color:#fff; padding: 10px; width: 340px; margin-top: 20px; display:none; border: solid 1px; }
 .PmsAvailabilityTimeline .available { background-color:green; color: white; }
 .PmsAvailabilityTimeline th { background-color:#efefef; padding-left: 5px; padding-right: 5px; }
 .PmsAvailabilityTimeline .valueentry_item { width: 50px; font-size: 10px; height: 12px; position:absolute; border-bottom: solid 1px #efefef; left:0px; background-color:#fff; display:inline-block; margin-top: 1px; }

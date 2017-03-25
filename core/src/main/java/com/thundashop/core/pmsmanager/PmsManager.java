@@ -5390,7 +5390,71 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String swapRoom(String roomId, List<String> roomIds) {
-        return "OK";
+        PmsBooking bookingToSwap1 = getBookingFromRoom(roomId);
+        PmsBookingRooms roomToSwap1 = bookingToSwap1.getRoom(roomId);
+        String typeToSwap1 = roomToSwap1.bookingItemTypeId;
+        String typeToSwap2 = "";
+        
+        HashMap<String, PmsBookingRooms> bookingsToSwap2 = new HashMap();
+        
+        for(String id : roomIds) {
+            PmsBooking bookingToSwap2 = getBookingFromRoom(id);
+            PmsBookingRooms roomToSwap2 = bookingToSwap2.getRoom(id);
+            typeToSwap2 = roomToSwap2.bookingItemTypeId;
+            bookingsToSwap2.put(id, bookingToSwap2.getRoom(id));
+        }
+        
+        //Okey, try to swap.
+        try {
+            doSwapRoom(roomToSwap1, bookingsToSwap2, typeToSwap2, typeToSwap1);
+        }catch(Exception e) {
+            //It failed, revert the changes.
+            try {
+                doSwapRoom(roomToSwap1, bookingsToSwap2, typeToSwap1, typeToSwap2);
+                return "The swap you tried to do is not possible";
+            }catch(Exception d) {
+                String swap  ="";
+                for(String a : roomIds) {
+                    swap += a + ",";
+                }
+                messageManager.sendErrorNotification("Critical swap error happend. This should never occure and could cause overbooking, swap: " + roomId  + " -> "  + swap, d);
+                return "A critical error occured, getshop has been notified.";
+            }
+        }
+        
+        return "Swap complete!";
+    }
+
+    private void doSwapRoom(PmsBookingRooms mainRoomToSwap, HashMap<String, PmsBookingRooms> bookingsToSwapWith, String typeToSwapTo, String mainTypeToSwap) throws ErrorException, Exception {
+        //First delete the bookings.
+        bookingEngine.deleteBooking(mainRoomToSwap.bookingId);
+        for(String rid : bookingsToSwapWith.keySet()) {
+            PmsBookingRooms room = bookingsToSwapWith.get(rid);
+            bookingEngine.deleteBooking(room.bookingId);
+        }
+        String error = "";
+        
+        //Now insert new bookings swapped.
+        mainRoomToSwap.bookingItemTypeId = typeToSwapTo;
+        error = addBookingToBookingEngine(getBookingFromRoom(mainRoomToSwap.pmsBookingRoomId), mainRoomToSwap);
+        if(!error.isEmpty()) {
+            throw new Exception("Failed to add room");
+        }
+        
+        for(String rid : bookingsToSwapWith.keySet()) {
+            PmsBookingRooms room = bookingsToSwapWith.get(rid);
+            room.bookingItemTypeId = mainTypeToSwap;
+            error = addBookingToBookingEngine(getBookingFromRoom(room.pmsBookingRoomId), room);
+            if(!error.isEmpty()) {
+                throw new Exception("Failed to add room");
+            }
+        }
+        
+        //Then save the bookings.
+        saveBooking(getBookingFromRoom(mainRoomToSwap.pmsBookingRoomId));
+        for(String rid : bookingsToSwapWith.keySet()) {
+            saveBooking(getBookingFromRoom(mainRoomToSwap.pmsBookingRoomId));
+        }
     }
 
 }

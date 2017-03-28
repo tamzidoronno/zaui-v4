@@ -10,7 +10,7 @@ $appId = $this->getAppInstanceId();
     <?
         foreach ($slideIds as $slideId) {
     ?>
-            <input type="radio" name="slides" id="slides_<? echo $slideId; ?>" <? echo $slideId == $slideIds[0] ? "checked" : ""?>>
+            <input type="radio" name="<?php echo 'slides'. $appId ?>" id="slides_<? echo $slideId; ?>" <? echo $slideId == $slideIds[0] ? "checked" : ""?>>
     <?
         }
     ?>

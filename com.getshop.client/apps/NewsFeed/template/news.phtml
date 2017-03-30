@@ -2,7 +2,11 @@
 /* @var $this \ns_eaaf0123_f479_4b0f_839f_1948c9b927ef\NewsFeed */
 
 $news = $this->getApi()->getNewsManager()->getAllNews(null);
-$news = array_slice($news, 0, 5, true);
+$numberofnews = $this->getConfigurationSetting('numberofnews');
+if(!$numberofnews || $numberofnews == "" || $numberofnews == 0){
+    $numberofnews = 5;
+}
+$news = array_slice($news, 0, $numberofnews, true);
 
 foreach ($news as $new) {
     

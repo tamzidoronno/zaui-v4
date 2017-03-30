@@ -59,7 +59,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             }
             return;
         }
-        if(!$this->getFactory()->isMobile()) {
+        if(!$this->getFactory()->isMobileIgnoreDisabled()) {
             $this->includefile("roomlist");
         } else {
             if($this->isItemPage()) {

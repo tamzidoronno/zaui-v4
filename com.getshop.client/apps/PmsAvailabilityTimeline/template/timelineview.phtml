@@ -48,7 +48,7 @@ if($compact) {
             echo "<option value='$minutes' $selected>$name</option>";
         }
         ?>
-    </select>
+    </select>  
     <?php
     
     $filters = $this->getApi()->getPmsManager()->getAllPmsFilters($this->getSelectedName());
@@ -110,11 +110,11 @@ if($compact) {
     }
     $taken = ($totalRooms-$freecount);
     echo "Rooms free: " . $freecount . " of " . $totalRooms . " in total giving " . $taken .  " rooms taken.<bR><bR>";
-
+    
     echo "<div class='timelineoverviewouter'>";
     echo "<div class='timelineoverview'>";
     echo "<table cellspacing='1'>";
-
+    
     $printHeading = true;
     foreach($result->typeTimeLines as $type => $lines) {
         if($printHeading) {

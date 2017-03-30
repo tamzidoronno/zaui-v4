@@ -35,8 +35,7 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
             }
             $lock->needPriority = true;
             $lock->codes = $newarray;
-            echo "<pre>";
-            print_r($lock);
+
             $this->getApi()->getGetShopLockManager()->saveLock($this->getSelectedName(), $lock);
         }
         

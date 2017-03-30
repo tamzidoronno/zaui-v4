@@ -630,6 +630,16 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 }
             }
         }
+        
+        //If forced priotiry.
+        for(GetShopDevice dev : devices.values()) {
+            if(dev.needPriority) {
+                dev.needPriority = false;
+                saveLock(dev);
+                toSet = dev;
+            }
+        }
+        
         if(toSet != null) {
             toSet.beingUpdated = true;
             toSet.lastTriedUpdate = new Date();

@@ -8,6 +8,10 @@ app.PmsAvailabilityTimeline = {
         $(document).on('mouseout', '.PmsAvailabilityTimeline .valueentry', app.PmsAvailabilityTimeline.mouseOut);
         $(document).on('click', '.PmsAvailabilityTimeline .closeRoomOptionsButton', app.PmsAvailabilityTimeline.closeRoomOptionsButton);
         $(document).on('change', '.PmsAvailabilityTimeline .changetypeonbookingselector', app.PmsAvailabilityTimeline.ifNeedMoveTypes);
+        $(document).on('drag dragstart dragend dragover dragenter dragleave drop', '.PmsAvailabilityTimeline .full', app.PmsAvailabilityTimeline.dragBoxPrevent);
+        $(document).on('dragover dragenter', '.PmsAvailabilityTimeline .full', app.PmsAvailabilityTimeline.dragBoxEnter);
+        $(document).on('dragleave dragend drop', '.PmsAvailabilityTimeline .full', app.PmsAvailabilityTimeline.dragBoxLeave);
+        $(document).on('drop', '.PmsAvailabilityTimeline .full', app.PmsAvailabilityTimeline.dragBoxDrop);
     },
     
     ifNeedMoveTypes : function() {
@@ -28,6 +32,54 @@ app.PmsAvailabilityTimeline = {
                 warnMessage.fadeIn();
             });
         }
+    },
+    dragBoxDrop : function(jevt){
+        var box = $(this);
+        box.removeClass('is-dragover');
+        
+        var files = jevt.originalEvent.dataTransfer.files;
+        app.PmsAvailabilityTimeline.showUploadProgress(files[0], box);
+    },
+    dragBoxEnter : function(){
+        $(this).addClass('is-dragover');
+    },
+    dragBoxLeave : function(){
+        $(this).removeClass('is-dragover');
+    },
+    dragBoxPrevent : function(e){
+        e.preventDefault();
+        e.stopPropagation();
+    },
+    showUploadProgress: function(file, box) {
+        box.addClass('is-uploading');
+        box.append('<i class="fa fa-spin fa-spinner" aria-hidden="true"></i>');
+        
+        var bookingid = box.attr('bid');
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            var fileName = file.name;
+            var dataUri = event.target.result;
+            
+            var data = {
+                fileBase64: dataUri,
+                fileName: fileName,
+                "bookingid" : bookingid
+            };
+            
+            var event = thundashop.Ajax.createEvent(null, "uploadFile", box, data);
+            
+            thundashop.Ajax.postWithCallBack(event, function() {
+                box.find('i').remove();
+                box.addClass('is-success').removeClass('is-uploading');
+                box.append('<i class="fa fa-file" aria-hidden="true"></i>');
+            });
+        };
+        reader.onerror = function(event) {
+            console.error("File could not be read! Code " + event.target.error.code);
+            box.addClass('is-success').removeClass('is-uploading');
+            box.append('<i class="fa fa-times" aria-hidden="true"></i>');
+        };
+        reader.readAsDataURL(file);
     },
     checkallclosingroom : function() {
         var checked = $(this).is(':checked');
@@ -128,5 +180,5 @@ app.PmsAvailabilityTimeline = {
         toolbox.attachToElement(application, 2);
     }
 };
-
+    
 app.PmsAvailabilityTimeline.init();

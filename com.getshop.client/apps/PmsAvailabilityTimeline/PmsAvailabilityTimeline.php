@@ -345,6 +345,31 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     public function createDeleteBookingIcon($id) {
         return "<i class='fa fa-trash-o' gstype='clicksubmit' method='deletebooking' gsvalue='".$id."' gsname='id' style='cursor:pointer;float:left; padding-left: 5px; padding-top: 3px;'></i>";
     }
+    public function uploadFile() {
+        $content = strstr($_POST['data']['fileBase64'], "base64,");
+        $rawContent = $_POST['data']['fileBase64'];
+        $contentType = substr($rawContent, 0, strpos($rawContent, ";base64,"));
+        if($contentType) {
+            $contentType = str_replace("data:", "", $contentType);
+            $contentType = trim($contentType);
+        }
 
+        $content = str_replace("base64,", "", $content);
+        $content = base64_decode($content);
+        $imgId = \FileUpload::storeFile($content);
+        
+        $entry = new \core_usermanager_data_UploadedFiles();
+        $entry->fileName = $_POST['data']['fileName'];
+        $entry->fileId = $imgId;
+        $entry->createdDate = $this->convertToJavaDate(time());
+        $entry->contentType = $contentType;
+        
+        $bid = $_POST['data']['bookingid'];
+        $name = $this->getSelectedName();
+        $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($name, $bid);
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        $user->files[] = $entry;
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
 }
 ?>

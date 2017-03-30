@@ -7,7 +7,7 @@
 .PmsAvailabilityTimeline .valueentry_placeholder { border: solid 0px; width: 60px; font-size: 10px; line-height: 10px; float:left; left:0px; background-color:#fff; display:inline-block; margin-top: 1px; }
 .PmsAvailabilityTimeline .full.loadBookingList { text-align: center; }
 .PmsAvailabilityTimeline .valueentry {
-        border-left: solid 1px #bbb;
+    border-left: solid 1px #bbb;
     border-top: solid 1px #bbb;
     display:inline-block; float: left; width: 75px; text-align: center; font-size: 8px; height: 10px; line-height: 10px;}
 .PmsAvailabilityTimeline .valueentry.date { 
@@ -33,3 +33,7 @@
 .PmsAvailabilityTimeline .needcleaning { background-color: #efefef;}
 .PmsAvailabilityTimeline .room_desc {   width: 150px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;display:block; font-size: 10px; }
 .PmsAvailabilityTimeline .available { background-color: #a4ffa4;color: black; border-color:#bbb; }
+
+.PmsAvailabilityTimeline .is-dragover {background-color: #2b537d !important;}
+.PmsAvailabilityTimeline .is-success i{font-size:10px;position:relative;top:3px;padding-right:2px;float:right;}
+.PmsAvailabilityTimeline .is-uploading i{font-size:10px;position:relative;top:3px;padding-right:2px;float:right;}

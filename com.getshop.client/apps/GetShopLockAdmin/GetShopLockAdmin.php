@@ -127,6 +127,19 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $title .= "To update : $toUpdate<br>";
         $title .= "To remove : $toRemove<br>";
         $title .= "Total codes : $total<br>";
+        $i = 0;
+        $title .= "<br>Code list:<br>";
+        foreach($lock->codes as $code) {
+             $title .= $i . " : " . $code->code;
+             if($code->addedToLock) {
+                 $title .= ", added to lock";
+             }
+             if($code->needToBeRemoved) {
+                 $title .= ", need removing";
+             }
+             $title .= "<br>";
+             $i++;
+        }
         
         echo "<span title='$title'>$inuse - $toUpdate - $toRemove - $total</span>";
     }

@@ -260,13 +260,11 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
     }
 
     public function getCategories() {
-        $categories = array();
-        $categories[1] = "Åpent møte";
-        $categories[2] = "Medlemsmøte";
-        $categories[3] = "Forestilling";
-        $categories[4] = "Konsert";
-        $categories[5] = "Kurs";
-        $categories[6] = "Annet";
+        $categoryitems = $this->getConfigurationSetting('setting_categoryitems');
+        if(!$categoryitems){
+            $categoryitems = "Legg inn kategori i instillinger";
+        }
+        $categories = explode(";", $categoryitems);
         return $categories;
     }
 

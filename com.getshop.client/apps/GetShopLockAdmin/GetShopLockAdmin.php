@@ -133,9 +133,14 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
              $title .= $i . " : " . $code->code;
              if($code->addedToLock) {
                  $title .= ", added to lock";
+             } else {
+                 $title .= ", to update";
              }
              if($code->needToBeRemoved) {
                  $title .= ", need removing";
+             }
+             if($code->used) {
+                 $title .= ", in use";
              }
              $title .= "<br>";
              $i++;

@@ -33,9 +33,9 @@ foreach($lockServers as $name => $server) {
             $battery = $this->getBattery($lock);
             echo "<tr>";
             echo "<td>" . $lock->zwaveid;
-            if($lock->isFailed) {
-                echo " <i class='fa fa-ban' title='Lock is offline.'></i>";
-            }
+//            if($lock->isFailed) {
+//                echo " <i class='fa fa-ban' title='Lock is offline.'></i>";
+//            }
 
             echo "</td>";
             echo "<td>" . $lock->name . " (" . $lock->type . ")";
@@ -47,7 +47,7 @@ foreach($lockServers as $name => $server) {
                 echo ", <span $warn>battery : $battery%</span>, last updated : " . date("d.m H:i", strtotime($lock->batteryLastUpdated));
             }
             echo "</td>";
-            echo "<td align='center'>";
+            echo '<td lock="'.$lock->id.'" class="loadlocklist" source="'.$name.'">';
             $this->printCodeList($lock);
             echo "</td>";
             echo "<td align='center'>";

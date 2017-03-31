@@ -7,12 +7,12 @@ import java.util.Date;
 import java.util.Random;
 
 public class GetShopLockCode implements Serializable {
-    String code;
-    Boolean used = false;
-    Date codeRefreshed = null;
-    Date addedToLock = null;
-    Date needToBeRemoved = null;
-    Integer slot = 0;
+    public String code;
+    public Boolean used = false;
+    public Date codeRefreshed = null;
+    public Date addedToLock = null;
+    public Date needToBeRemoved = null;
+    public Integer slot = 0;
     
     public Integer getSlot() {
         return slot;

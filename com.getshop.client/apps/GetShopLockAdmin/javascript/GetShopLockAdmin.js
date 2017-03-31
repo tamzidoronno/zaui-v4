@@ -1,6 +1,15 @@
 app.GetShopLockAdmin = {
     init: function() {
         $(document).on('change','.GetShopLockAdmin .connectlock', app.GetShopLockAdmin.connectLock);
+        $(document).on('click','.GetShopLockAdmin .loadlocklist', app.GetShopLockAdmin.loadLockList);
+    },
+    loadLockList : function() {
+        var id = $(this).attr('lock');
+        var event = thundashop.Ajax.createEvent('','loadLockList', $(this), {
+            "id" : id,
+            "source" : $(this).attr('source')
+        });
+        thundashop.common.showInformationBoxNew(event, 'Lock list');
     },
     connectLock : function() {
         var data = {

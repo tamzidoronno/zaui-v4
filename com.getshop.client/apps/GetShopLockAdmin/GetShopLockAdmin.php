@@ -10,6 +10,83 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $this->getApi()->getGetShopLockManager()->deleteAllDevices($this->getSelectedName(), "fdsafbvvre4234235t", $_POST['data']['serverSource']);
     }
     
+    public function updateLockData() {
+        
+        $serverSource = $_POST['data']['source'];
+        $id = $_POST['data']['lockid'];
+        $locks = $this->getApi()->getGetShopLockManager()->getAllLocks($this->getSelectedName(), $serverSource);
+        
+        foreach($locks as $lock) {
+            if($lock->id != $id) {
+                continue;
+            }
+            $newarray = array();
+            foreach($lock->codes as $key => $code) {
+                $code->used = ($_POST['data']['used_'.$key] == "true");
+                if($_POST['data']['addedToLock_'.$key] != "true") {
+                    $code->addedToLock = null;
+                }
+                $code->needToBeRemoved = ($_POST['data']['needToBeRemoved_'.$key] == "true");
+                if($_POST['data']['code_'.$key] != $code->code) {
+                    $code->code = $_POST['data']['code_'.$key];
+                    $code->addedToLock = (boolean)false;
+                }
+                $newarray[$key] = $code;
+            }
+            $lock->needPriority = true;
+            $lock->codes = $newarray;
+
+            $this->getApi()->getGetShopLockManager()->saveLock($this->getSelectedName(), $lock);
+        }
+        
+    }
+    
+    public function loadLockList() {
+        $serverSource = $_POST['data']['source'];
+        $id = $_POST['data']['id'];
+        $locks = $this->getApi()->getGetShopLockManager()->getAllLocks($this->getSelectedName(), $serverSource);
+        foreach($locks as $lock) {
+            if($lock->id != $id) {
+                continue;
+            }
+            echo '<div gstype="form" method="updateLockData">';
+            echo "<input type='hidden' gsname='lockid' value='".$id."'>";
+            echo "<input type='hidden' gsname='source' value='".$serverSource."'>";
+            echo "<table>";
+            echo "<tr>";
+            echo "<td></td>";
+            echo "<td>Code</td>";
+            echo "<td>In use</td>";
+            echo "<td>Added</td>";
+            echo "<td>Remove</td>";
+            echo "</tr>";
+            
+            foreach($lock->codes as $key => $code) {
+                echo "<tr>";
+                echo "<td>" . $key . " </td><td> <input type='text' gsname='code_$key' value='" .  $code->code . "'></td>";
+                echo "<td align='center'>";
+                $used = $code->used ? "CHECKED" : "";
+                echo "<input type='checkbox' gsname='used_$key' $used>";
+                echo "</td>";
+                echo "<td align='center'>";
+                $addedToLock = $code->addedToLock ? "CHECKED" : "";
+                echo "<input type='checkbox' gsname='addedToLock_$key' $addedToLock>";
+                echo "</td>";
+                echo "<td align='center'>";
+                $needToBeRemoved = $code->needToBeRemoved ? "CHECKED" : "";
+                echo "<input type='checkbox' gsname='needToBeRemoved_$key' $needToBeRemoved>";
+                echo "</td>";
+                echo "</tr>";
+            }
+            echo "</table>";
+            echo "<br><br>";
+            echo "<br><b>WARNING: This has to be handled with, care.. if you are unsure what you are doing, please contact GetShop support team.</b>";
+            echo "<br><br>";
+            echo "<input type='button' value='Save settings' gstype='submit'>";
+            echo "</div>";
+        }
+    }
+    
     public function getName() {
         return "GetShopLockAdmin";
     }
@@ -127,6 +204,24 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $title .= "To update : $toUpdate<br>";
         $title .= "To remove : $toRemove<br>";
         $title .= "Total codes : $total<br>";
+        $i = 0;
+        $title .= "<br>Code list:<br>";
+        foreach($lock->codes as $code) {
+             $title .= $i . " : " . $code->code;
+             if($code->addedToLock) {
+                 $title .= ", added to lock";
+             } else {
+                 $title .= ", to update";
+             }
+             if($code->needToBeRemoved) {
+                 $title .= ", need removing";
+             }
+             if($code->used) {
+                 $title .= ", in use";
+             }
+             $title .= "<br>";
+             $i++;
+        }
         
         echo "<span title='$title'>$inuse - $toUpdate - $toRemove - $total</span>";
     }

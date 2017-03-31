@@ -198,10 +198,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
     }
 
+    @Override
     public void saveLock(GetShopDevice lock) {
         saveObject(lock);
         devices.put(lock.id, lock);
     }
+
 
     class GetshopLockCodeManagemnt extends Thread {
 
@@ -469,7 +471,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
         return "";
     }
-
+    
     @Override
     public List<GetShopDevice> getAllLocks(String serverSource) {
         String hostname = getHostname(serverSource);
@@ -628,6 +630,16 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 }
             }
         }
+        
+        //If forced priotiry.
+        for(GetShopDevice dev : devices.values()) {
+            if(dev.needPriority) {
+                dev.needPriority = false;
+                saveLock(dev);
+                toSet = dev;
+            }
+        }
+        
         if(toSet != null) {
             toSet.beingUpdated = true;
             toSet.lastTriedUpdate = new Date();

@@ -11,6 +11,7 @@ public class GetShopDevice extends DataCommon {
     public boolean beingUpdated = false;
     public boolean isFailed = false;
     public boolean isAwake = false;
+    public boolean needPriority = false;
     public String name;
     public Integer maxNumberOfCodes = 20;
     public Integer batteryStatus = 0;

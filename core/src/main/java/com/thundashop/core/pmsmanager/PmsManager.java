@@ -479,6 +479,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        if(getSession() == null || getSession().currentUser == null || getSession().currentUser == null) {
+            return new ArrayList();
+        }
+        //This method is exposed unsecure, an additional check needs to be added here.
+        if(!getSession().currentUser.isAdministrator()) {
+            if(!getSession().currentUser.id.equals(filter.userId)) {
+                return new ArrayList();
+            }
+        }
+        
         boolean unsettled = false;
         if(filter != null && filter.filterType != null && filter.filterType.equals("unsettled")) {
             unsettled = true;
@@ -597,26 +607,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(unsettled) {
             finalized = filterByUnsettledAmounts(finalized);
         }
-        
-        //Dump bookings
-        if(getConfiguration().usePriceMatrixOnOrder) {
-            for(PmsBooking booking : finalized) {
-                boolean needSave = false;
-                for(PmsBookingRooms room : booking.getActiveRooms()) {
-                    if(room.priceMatrix == null || room.priceMatrix.keySet().isEmpty()) {
-                        pmsInvoiceManager.correctFaultyPriceMatrix(room, booking);
-                        needSave = true;
-                    }
-                }
-                if(needSave) {
-                    logEntry("The pricematrix has been erased, it was rebuilt using the average price.", booking.id, null);
-                    saveBooking(booking);
-                }
-
-            }
-        }
-        
-
         
         return finalized;
     }

@@ -2,6 +2,8 @@
 namespace ns_b675ce83_d771_4332_ba09_a54ed8537282;
 
 class PmsBookingMyBookingList extends \WebshopApplication implements \Application {
+    var $errorsWhenChanging = array();
+    
     public function getDescription() {
         
     }
@@ -30,6 +32,16 @@ class PmsBookingMyBookingList extends \WebshopApplication implements \Applicatio
     }
     
     public function render() {
+        if(sizeof($this->errorsWhenChanging) > 0) {
+            $errormsgs = array();
+            $errormsgs[0] = "Your stay has started, it can not be changed after it has started";
+            $errormsgs[1] = "Your stay has ended, its to late to change it.";
+            $errormsgs[2] = "Its not possible to update the stay since its not available rooms at that time periode,.";
+            foreach($this->errorsWhenChanging as $error) {
+                echo "<div style='color:red; font-weight:bold;'>" . $errormsgs[$error] . "</div>";
+            }
+        }
+
         if($this->isEditorMode()) {
 //            $this->includefile("allusersdropdown");
         }
@@ -64,7 +76,7 @@ class PmsBookingMyBookingList extends \WebshopApplication implements \Applicatio
             $room->guests[] = $guest;
         }
         
-        $this->getApi()->getPmsManager()->updateRoomByUser($this->getSelectedName(), $bookingid, $room);
+        $this->errorsWhenChanging = $this->getApi()->getPmsManager()->updateRoomByUser($this->getSelectedName(), $bookingid, $room);
     }
     
     public function deleteRoom() {
@@ -108,10 +120,31 @@ class PmsBookingMyBookingList extends \WebshopApplication implements \Applicatio
         
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->userId = $this->getTmpUser();
-        $filter->sorting = "periode_desc";
         
-        return $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
-      
+        $res = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+        
+        $newArray = array();
+        foreach($res as $b) {
+            $startTime = null;
+            foreach($b->rooms as $room) {
+                $startTime = strtotime($room->date->start);
+            }
+            if(!isset($newArray[$startTime])) {
+                $newArray[$startTime] = array();
+            }
+            $newArray[$startTime][] = $b;
+        }
+        
+        krsort($newArray);
+        
+        $finalArray = array();
+        
+        foreach($newArray as $arr) {
+            foreach($arr as $booking) {
+                $finalArray[] = $booking;
+            }
+        }
+        return $finalArray;
     }
 
 }

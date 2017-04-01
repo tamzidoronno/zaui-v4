@@ -1105,6 +1105,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                 }
                 lastOrderId = order.id;
+                
+                if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
+                    order.attachedToRoom = filter.pmsRoomId;
+                    orderManager.saveOrder(order);
+                }
+                
                 pmsManager.saveBooking(booking);
                 cartManager.clear();
             }
@@ -2141,7 +2147,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Order latest = null;
         for(Order ord : orders) {
             Date orderEnd = ord.getEndDateByItems();
-            System.out.println(orderEnd);
             if(orderEnd != null) {
                 if(latest == null || orderEnd.after(latest.getEndDateByItems())) {
                     latest = ord;

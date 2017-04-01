@@ -1122,11 +1122,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(booking != null && booking.silentNotification) {
             return "Not notified, silent booking: " + type;
         }
+        
+        if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+            room = getRoomFromOrderToSend();
+        }
+        
         String message = getMessageToSend(key, type, booking);
         message = formatMessage(message, booking, room, null);    
         if(message == null || message.trim().isEmpty()) {
             return "";
         }
+        
+        
         if (room != null) {
             notifyGuest(booking, message, type, key, room);
         } else {
@@ -5455,6 +5462,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(String rid : bookingsToSwapWith.keySet()) {
             saveBooking(getBookingFromRoom(mainRoomToSwap.pmsBookingRoomId));
         }
+    }
+
+    private PmsBookingRooms getRoomFromOrderToSend() {
+        Order order = orderManager.getOrder(orderIdToSend);
+        if(order == null) {
+            return null;
+        }
+        if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {
+            PmsBooking booking = getBookingFromRoom(order.attachedToRoom);
+            return booking.getRoom(order.attachedToRoom);
+        }
+        return null;
     }
 
 }

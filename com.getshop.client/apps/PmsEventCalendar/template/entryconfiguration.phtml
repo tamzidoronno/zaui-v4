@@ -1,6 +1,6 @@
 <?php
 /* @var $this ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
-$cagetories = $this->getCategories();
+$categories = $this->getCategories();
 $time = "";
 $day = "";
 if(isset($_GET['time']) && $_GET['time']) {
@@ -103,10 +103,10 @@ if($event->logoId) {
             <?php
             foreach($categories as $cat => $val) {
                 $selected = "";
-                if($event->category == $cat) {
+                if($event->category == $val) {
                     $selected = "SELECTED";
                 }
-                echo "<option value='$cat' $selected>$val</option>";
+                echo "<option value='$val' $selected>$val</option>";
             }
             ?>
             </select>

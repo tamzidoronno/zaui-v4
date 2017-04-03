@@ -18,6 +18,7 @@ import org.mongodb.morphia.annotations.Transient;
  */
 public class MecaCar extends DataCommon {
     public String licensePlate = "";
+    public String carOwner  = "";
     
     public Date prevControll = null;
     public int kilometers = 0;

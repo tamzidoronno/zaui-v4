@@ -1,5 +1,11 @@
 <div gstype="form" method="createFleet">
-    <div> <input class="gsniceinput1" gsname="fleetName" class="checkbox" placeholder="Navn på flåteavtalen"/></div>
+    <span>
+        <input class="gsniceinput1" gsname="fleetName" class="checkbox" placeholder="Navn på flåteavtalen"/>
+        <input class="gsniceinput1" gsname="contactName" class="checkbox" placeholder="Kontaktperson"/>
+        <input class="gsniceinput1" gsname="contactEmail" class="checkbox" placeholder="E-post"/>
+        <input class="gsniceinput1" gsname="contactPhone" class="checkbox" placeholder="Telefon"/>
+    </span>
+    <br/>
     <br/>
     <?
     if (isset($_POST['data']['fleetName']) && !$_POST['data']['fleetName']) {

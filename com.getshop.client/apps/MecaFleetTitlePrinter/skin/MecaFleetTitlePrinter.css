@@ -3,5 +3,79 @@
     background-color: #EFEFEF;
     text-align: center;
     font-size: 26px;
+    border: 1px solid #e6e6e6;
+    color:#555;
     
+    
+}
+.MecaFleetTitlePrinter input.gsniceinput1{width:13%;padding:5px;}
+.MecaFleetTitlePrinter .fa-plus-square{
+    padding:10px;
+    position: relative;
+    top:-1px;
+    border:1px solid #e6e6e6;
+    border-top-color: #EFEFEF;
+    border-radius: 0 0 4px 4px;
+    cursor:pointer;
+    background:#efefef;
+    color: #555;
+    
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+.MecaFleetTitlePrinter .editmecafleetform{
+    float:right;
+    width:87%;
+    display:none;
+    position: relative;
+    top:-1px;
+    background:#EFEFEF;
+    border: 1px solid #e6e6e6;
+    padding: 7px 7px 17px 7px;
+    border-top:0;
+    border-radius: 0 0 4px 4px;
+    margin-bottom:20px;
+    z-index: 2;
+    
+}
+.MecaFleetTitlePrinter .saveform{
+    padding: 0 3px 0 3px;
+    height:50px;
+    line-height: 50px;
+    width:100px;
+}
+.MecaFleetTitlePrinter .fleetfield{
+    color:#555;
+    border: solid 1px #dcdcdc;
+    border-radius: 4px 0 0 4px;
+    padding-bottom: 4px;
+    padding-top:2px;
+    padding-left:5px;
+    cursor:default;
+    font-size:14px;
+    margin-right:10px;
+    background: linear-gradient(to bottom,#fff 0,#dcdcdc 100%);
+}
+.MecaFleetTitlePrinter .fleetarea{
+    color:#555;
+    border: solid 1px #dcdcdc;
+    border-radius: 4px 0 0 4px;
+    padding:15px;
+    padding-bottom:16px;
+    cursor:default;
+    font-size:14px;
+    margin-right:10px;
+    background: linear-gradient(to bottom,#fff 0,#dcdcdc 100%);
+}
+.MecaFleetTitlePrinter .fleetarea textarea{
+    position: relative;
+    padding:10px;
+    top:21px;
+    left:20px;
+    width:767px;
+    border:1px solid #dcdcdc;
 }

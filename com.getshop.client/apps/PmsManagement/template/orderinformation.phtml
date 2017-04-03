@@ -138,9 +138,14 @@ if($booking->orderIds) {
         }
         
         $guests = array();
+        $guestSelectedOffset = 0;
         foreach($booking->rooms as $room) {
             if(in_array($room->pmsBookingRoomId, $roomIds)) {
                 $guests = array_merge($guests, $room->guests);
+                if(isset($order->attachedToRoom) && $order->attachedToRoom && $room->pmsBookingRoomId == $order->attachedToRoom) {
+                    $guestSelectedOffset = sizeof($guests);
+                }
+
             }
         }
         $user = $this->getApi()->getUserManager()->getUserById($order->userId);
@@ -215,6 +220,7 @@ if($booking->orderIds) {
         
         echo "<select style='width:100%; margin-bottom: 5px;' class='sendlinktouser'>";
         echo "<option value='$phonePrefix:$phoneNumber:$invoiceEmail'>Booker : $bookerName</option>";
+        $k = 1;
         foreach($guests as $guest) {
             /* @var $guest core_pmsmanager_PmsGuests */
             if(!$guest->name) {
@@ -223,7 +229,13 @@ if($booking->orderIds) {
             $pref = $guest->prefix;
             $phone = $guest->phone;
             $email = $guest->email;
-            echo "<option value='$pref:$phone:$email'>Guest : " . $guest->name . "</option>";
+            $selected = "";
+            if($k == $guestSelectedOffset) {
+                $selected = "SELECTED";
+            }
+
+            echo "<option value='$pref:$phone:$email' $selected>Guest : " . $guest->name . "</option>";
+            $k++;
         }
         echo "</select><br>";
         echo "<input type='txt' value='".$invoiceEmail."' placeholder='Email' gsname='bookerEmail' style='width:100%; margin-bottom: 5px;box-sizing:border-box;'><br>";

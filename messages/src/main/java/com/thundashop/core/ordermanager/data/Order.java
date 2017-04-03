@@ -64,6 +64,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean isVirtual = false;
     public boolean forcedOpen = false;
     public boolean warnedNotAbleToPay = false;
+    public String attachedToRoom = null;
     
     public Order jsonClone() {
         Gson gson = new Gson();

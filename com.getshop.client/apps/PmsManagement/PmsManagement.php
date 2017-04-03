@@ -277,7 +277,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $filter = new \core_pmsmanager_NewOrderFilter();
                 $bookingId = $_POST['data']['bookingid'];
                 $filter->endInvoiceAt = $selectedroom->date->end;
-                $filter->avoidOrderCreation = $_POST['data']['preview'] == "true";
+                if(isset($_POST['data']['preview'])) {
+                    $filter->avoidOrderCreation = $_POST['data']['preview'] == "true";
+                }
                 $filter->pmsRoomId = $selectedroom->pmsBookingRoomId;
                 $filter->prepayment = true;
                 $filter->createNewOrder = true;

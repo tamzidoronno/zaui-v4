@@ -935,7 +935,17 @@ public class PmsManagerProcessor {
                         order.payment.paymentType.contains("invoice")) {
                     continue;
                 }
+                
+                
                 String key = "autosendmissingpayment_" + book.id;
+                if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {
+                    PmsBookingRooms room = book.getRoom(order.attachedToRoom);
+                    if(!room.date.start.before(cal.getTime())) {
+                        continue;
+                    }
+                    key = key + "_" + order.id;
+                }
+                
                 if(book.notificationsSent.contains(key)) {
                     continue;
                 }

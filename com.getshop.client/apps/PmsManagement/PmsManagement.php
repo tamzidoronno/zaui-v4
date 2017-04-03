@@ -19,6 +19,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return 1;
     }
     
+    public function updateRecieptEmailOnOrder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->recieptEmail = $_POST['data']['newEmail'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->showBookingInformation();
+    }
+    
     public function saveOrderSettingsOnBooking() {
         $booking = $this->getSelectedBooking();
         $booking->dueDays = $_POST['data']['duedays'];

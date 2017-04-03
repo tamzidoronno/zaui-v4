@@ -1173,6 +1173,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 emailToSendTo = null;
             }
             
+            if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+                Order order = orderManager.getOrder(orderIdToSend);
+                if(order != null) {
+                    order.recieptEmail = recipientEmail;
+                    orderManager.saveOrder(order);
+                }
+            }
+            
             messageManager.sendMailWithAttachments(recipientEmail, user.fullName, title, message, fromEmail, fromName, attachments);
 
             if (configuration.copyEmailsToOwnerOfStore) {
@@ -1198,6 +1206,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if(emailToSendTo != null) {
                         email = emailToSendTo;
                         emailToSendTo = null;
+                    }
+                    
+                    if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+                        Order order = orderManager.getOrder(orderIdToSend);
+                        if(order != null) {
+                            order.recieptEmail = email;
+                            orderManager.saveOrder(order);
+                        }
                     }
                     
                     String name = userManager.getUserById(booking.userId).fullName;

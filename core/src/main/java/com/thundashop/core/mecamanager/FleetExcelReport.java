@@ -42,6 +42,8 @@ public class FleetExcelReport extends ExcelBase {
         sheet.autoSizeColumn(2);
         sheet.autoSizeColumn(3);
         sheet.autoSizeColumn(4);
+        sheet.autoSizeColumn(5);
+        sheet.autoSizeColumn(6);
     }
     
     public void createReport() {
@@ -110,6 +112,14 @@ public class FleetExcelReport extends ExcelBase {
         if (car.needAttentionToControl()) {
             setRedColor(cell);
         }
+        
+        cell = row.createCell(5);
+        cell.setCellValue(car.carOwner);
+        cell.setCellStyle(cellStyle);
+        
+        cell = row.createCell(6);
+        cell.setCellValue(car.cellPhone);
+        cell.setCellStyle(cellStyle);
     }
 
     private void setRedColor(XSSFCell cell) {
@@ -136,6 +146,14 @@ public class FleetExcelReport extends ExcelBase {
         
         cell = row.createCell(4);
         cell.setCellValue("Dato for neste PKK");
+        
+        cell = row.createCell(5);
+        cell.setCellValue("Bileier");
+        
+        cell = row.createCell(6);
+        cell.setCellValue("Telefon");
+        
+        
     }
 
     private void createTitle() {

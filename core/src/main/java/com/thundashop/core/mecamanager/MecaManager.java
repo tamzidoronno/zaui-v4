@@ -734,4 +734,10 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         carIds.stream().forEach(id -> deleteCar(id));
         fleetIds.stream().forEach(id -> deleteFleet(id));
     }
+
+    @Override
+    public void saveFleet(MecaFleet fleet) {
+        fleets.put(fleet.id, fleet);
+        saveObject(fleet);
+    }
 }

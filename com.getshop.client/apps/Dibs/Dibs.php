@@ -95,7 +95,7 @@ class Dibs extends \PaymentApplication implements \Application {
         
         $protocol = "http";
         
-        if(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') {
+        if($hasssl == "true") {
            $protocol = "https"; 
         }
         
@@ -155,6 +155,7 @@ class Dibs extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("hmac", $_POST['hmac']);
         $this->setConfigurationSetting("savecard", $_POST['savecard']);
         $this->setConfigurationSetting("testmode", $_POST['testmode']);
+        $this->setConfigurationSetting("hasssl", $_POST['hasssl']);
     }
     
     public function saveCard() {

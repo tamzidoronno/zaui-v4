@@ -90,3 +90,20 @@ startShowingOfGpsFetching = function() {
     window.scroll(0,0);
     $('.fetchingGpsCoordinates').show();
 }
+
+var db = null;
+
+angular.module('TrackAndTrace').run(function($state, $api) {
+    document.addEventListener('deviceready', function() {
+        db = window.sqlitePlugin.openDatabase({name: 'tntdatabase.db', location: 'default'});
+        
+        if (typeof(adata) !== "undefined" && adata) {
+            adata.loadFromLocalStorage($state);
+        }
+        
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
+            messagePersister.load($api);
+        }
+        
+    });
+});

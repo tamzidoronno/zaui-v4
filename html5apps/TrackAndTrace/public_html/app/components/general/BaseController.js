@@ -55,7 +55,7 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
     });
     
     $scope.$on('messageCountChanged', function() {
-        $scope.counter = $api.getApi().messagesToSendJson.length;
+        $scope.counter = $api.getApi().getUnsentMessageCount();
         if ($scope.$root != null && $scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
             $scope.$apply();
         }

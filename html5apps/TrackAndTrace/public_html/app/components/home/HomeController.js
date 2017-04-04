@@ -42,6 +42,11 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     }
     
     $scope.logOut = function() {
+        var conf = confirm("Are you sure you want to logout?");
+        
+        if (!conf)
+            return;
+        
         localStorage.setItem("username", "");
         localStorage.setItem("password", "");
         $api.reconnect();
@@ -66,11 +71,10 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
         return count;
     }
     
-    $scope.startRoute = function(routeId) {
+    $scope.startRoute = function($routeToUse) {
         var confirmed = confirm("Are you sure you want to start this route?");
         
         if (confirmed) {
-            var $routeToUse = datarepository.getRouteById(routeId);        
             $routeToUse.startInfo.started = true;
             $routeToUse.startInfo.startedTimeStamp = new Date();
 

@@ -1,0 +1,23 @@
+<?php
+$fleet = $this->getApi()->getMecaManager()->getFleetPageId($this->getPage()->getId());
+
+?>
+<div class='title'><? echo $fleet->name; ?></div>
+<i class="fa fa-plus-square"> Mer info</i>
+<span class="editmecafleetform" gstype="form" method="updateFleet">
+    <span>
+        <span class="fleetfield">Navn på flåteavtalen <input class="gsniceinput1" gsname="fleetName" class="checkbox" placeholder="Navn på flåteavtalen" value="<? echo $fleet->name; ?>"/></span>
+        <span class="fleetfield">Kontaktperson <input class="gsniceinput1" gsname="contactName" class="checkbox" placeholder="Kontaktperson" value="<? echo $fleet->contactName; ?>"/></span>
+        <span class="fleetfield">E-post <input class="gsniceinput1" gsname="contactEmail" class="checkbox" placeholder="E-post" value="<? echo $fleet->contactEmail; ?>"/></span>
+        <span class="fleetfield">Telefon <input class="gsniceinput1" gsname="contactPhone" class="checkbox" placeholder="Telefon" value="<? echo $fleet->contactPhone; ?>"/></span><br>
+        <span class="fleetarea">Detaljer <textarea class="gsniceinput1" gsname="contactDetails" class="checkbox" placeholder="Detaljer" value="<? echo $fleet->contactDetails; ?>"><? echo $fleet->contactDetails; ?></textarea></span>
+    </span>
+    <?
+    if (isset($_POST['data']['fleetName']) && !$_POST['data']['fleetName']) {
+        ?>
+        <div class="warning"><i class="fa fa-warning"></i>Navnet kan ikke være blankt.</div><br/>
+        <?
+    }
+    ?>
+    <span class="saveform shop_button" gstype="submit"> Lagre </span>
+</span>

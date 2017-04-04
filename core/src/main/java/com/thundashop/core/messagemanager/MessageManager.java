@@ -165,6 +165,11 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             return;
         }
         String email = user.emailAddress;
+        
+        if(order.recieptEmail != null && !order.recieptEmail.isEmpty()) {
+            email = order.recieptEmail;
+        }
+        
         sendInvoiceForOrder(orderId, email, null, null);
     }
     

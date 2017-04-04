@@ -479,13 +479,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
-        if(getSession() == null || getSession().currentUser == null || getSession().currentUser == null) {
-            return new ArrayList();
-        }
-        //This method is exposed unsecure, an additional check needs to be added here.
-        if(!getSession().currentUser.isAdministrator()) {
-            if(!getSession().currentUser.id.equals(filter.userId)) {
+        if(!getConfigurationSecure().exposeUnsecureBookings) {
+            if(getSession() == null || getSession().currentUser == null || getSession().currentUser == null) {
                 return new ArrayList();
+            }
+            //This method is exposed unsecure, an additional check needs to be added here.
+            if(!getSession().currentUser.isAdministrator()) {
+                if(!getSession().currentUser.id.equals(filter.userId)) {
+                    return new ArrayList();
+                }
             }
         }
         
@@ -1173,6 +1175,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 emailToSendTo = null;
             }
             
+            if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+                Order order = orderManager.getOrder(orderIdToSend);
+                if(order != null) {
+                    order.recieptEmail = recipientEmail;
+                    orderManager.saveOrder(order);
+                }
+            }
+            
             messageManager.sendMailWithAttachments(recipientEmail, user.fullName, title, message, fromEmail, fromName, attachments);
 
             if (configuration.copyEmailsToOwnerOfStore) {
@@ -1198,6 +1208,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if(emailToSendTo != null) {
                         email = emailToSendTo;
                         emailToSendTo = null;
+                    }
+                    
+                    if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+                        Order order = orderManager.getOrder(orderIdToSend);
+                        if(order != null) {
+                            order.recieptEmail = email;
+                            orderManager.saveOrder(order);
+                        }
                     }
                     
                     String name = userManager.getUserById(booking.userId).fullName;

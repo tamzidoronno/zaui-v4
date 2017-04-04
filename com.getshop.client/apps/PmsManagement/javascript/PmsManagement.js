@@ -86,8 +86,22 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .loadorderstatsentryfororder', app.PmsManagement.loadorderstatsentryfororder);
         $(document).on('click','.PmsManagement .radioinput', app.PmsManagement.updateBookingInformationRadioButton);
         $(document).on('click','.PmsManagement .setNewPasswordOnUser', app.PmsManagement.setNewPasswordOnUser);
+        $(document).on('click','.PmsManagement .changeRecieptEmail', app.PmsManagement.changeRecieptEmail);
         $(document).on('change','.PmsManagement .contactdatadropdown', app.PmsManagement.updateBookingInformationDropdown);
     },
+    changeRecieptEmail : function() {
+        var newEmail = prompt("New reciept email adress?");
+        if(!newEmail) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','updateRecieptEmailOnOrder', $(this), {
+           "orderid" : $(this).attr('orderid'),
+           "newEmail" : newEmail,
+           "bookingid" : $('#openedbookingid').val()
+        });
+        thundashop.common.showInformationBoxNew(event, 'Booking information');
+    },
+    
     setNewPasswordOnUser : function() {
         var newPassword = prompt("New password");
         if(!newPassword) {

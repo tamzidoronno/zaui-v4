@@ -23,6 +23,7 @@ class MecaFleetCarCreate extends \MarketingApplication implements \Application {
         }
         
         $mecaCar->cellPhone = $_POST['data']['phone'];
+        $mecaCar->carOwner = $_POST['data']['carowner'];
         $mecaCar->kilometers = $_POST['data']['kmstand'];
         $mecaCar->licensePlate = $_POST['data']['regnr'];
         $mecaCar->prevControll = $this->convertToJavaDate(strtotime($_POST['data']['eukontroll'] . " - 2 year"));

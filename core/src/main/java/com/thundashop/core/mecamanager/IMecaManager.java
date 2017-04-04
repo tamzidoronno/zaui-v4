@@ -28,6 +28,8 @@ public interface IMecaManager {
     @Customer
     public MecaFleet getFleetPageId(String pageId);
     
+    @Customer
+    public void saveFleet(MecaFleet fleet);
     @Editor
     public void saveFleetCar(String pageId, MecaCar car);
     

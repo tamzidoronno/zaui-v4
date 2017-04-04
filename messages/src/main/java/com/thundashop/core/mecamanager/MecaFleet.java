@@ -15,6 +15,10 @@ import java.util.List;
  */
 public class MecaFleet extends DataCommon {
     public String name = "";
+    public String contactName = "";
+    public String contactEmail = "";
+    public String contactPhone = "";
+    public String contactDetails = "";
     public String pageId = "";
     public List<String> cars = new ArrayList();
 }

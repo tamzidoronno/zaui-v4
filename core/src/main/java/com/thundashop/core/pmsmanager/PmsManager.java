@@ -479,11 +479,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
-        if(getSession() == null || getSession().currentUser == null || getSession().currentUser == null) {
-            return new ArrayList();
-        }
-        //This method is exposed unsecure, an additional check needs to be added here.
         if(!getConfigurationSecure().exposeUnsecureBookings) {
+            if(getSession() == null || getSession().currentUser == null || getSession().currentUser == null) {
+                return new ArrayList();
+            }
+            //This method is exposed unsecure, an additional check needs to be added here.
             if(!getSession().currentUser.isAdministrator()) {
                 if(!getSession().currentUser.id.equals(filter.userId)) {
                     return new ArrayList();

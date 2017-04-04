@@ -483,9 +483,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return new ArrayList();
         }
         //This method is exposed unsecure, an additional check needs to be added here.
-        if(!getSession().currentUser.isAdministrator()) {
-            if(!getSession().currentUser.id.equals(filter.userId)) {
-                return new ArrayList();
+        if(!getConfigurationSecure().exposeUnsecureBookings) {
+            if(!getSession().currentUser.isAdministrator()) {
+                if(!getSession().currentUser.id.equals(filter.userId)) {
+                    return new ArrayList();
+                }
             }
         }
         

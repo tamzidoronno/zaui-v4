@@ -35,6 +35,7 @@ echo "<th width='100'>Room type</th>";
 if($config->requirePayments) {
     echo "<th width='100'>".$this->__w("Price")."</th>";
     echo "<th width='100'>".$this->__w("Invoiced to")."</th>";
+    echo "<th width='100'>".$this->__w("Paid")."</th>";
 }
 if($this->getConfigurationSetting("can_end_stay") == "true") {
     echo "<th width='10' class='endstay'>End</th>";
@@ -88,6 +89,17 @@ foreach($bookings as $booking) {
             } else {
                 echo "<td>".$this->__w("Not invoiced yet")."</td>";
             }
+            echo "<td>";
+            if($this->getApi()->getPmsInvoiceManager()->isRoomPaidFor($this->getSelectedName(), $room->pmsBookingRoomId)) {
+                echo "<i class='fa fa-check'></i>";
+            } else {
+                echo "Missing:<bR>";
+                $toPay = $this->getApi()->getPmsInvoiceManager()->getOrdersForRoomToPay($this->getSelectedName(), $room->pmsBookingRoomId);
+                foreach($toPay as $incId) {
+                    echo $incId . "<br>";
+                }
+            }
+            echo "</td>";
         }
         
         if($this->getConfigurationSetting("can_end_stay") == "true") {

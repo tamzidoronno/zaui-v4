@@ -178,16 +178,6 @@ class CartManager extends \SystemApplication implements \Application {
         
     public function render() {
         if(isset($_GET['payorder'])) {
-            if($this->getFactory()->getStore()->id == "a152b5bd-80b6-417b-b661-c7c522ccf305") {
-                echo "<center><br><br>Hei. En feil oppstod ved behandlingen av din betaling. FastHotel er informert om feilen.<br>";
-                echo "Du vil beholde din reservasjon og feilen blir rettet opp iløpet av neste uke.<br>";
-                echo "Prøv igjen i slutten av neste uke.<br>";
-                echo "<br>";
-                echo "Hi. An error occured while trying to handle your transaction. FastHotels have been informed about the problem and will handle it accordingly.<br>";
-                echo "You will keep the reservation as long as the error exists.<br>";
-                echo "Please try again by the end of next week.<br><br><br></center>";
-                return;
-            }
             $toChooseFrom = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchPaymethodsToChooseFrom();
             if(!isset($_POST['data']['paymentmethod']) && sizeof($toChooseFrom) > 0) {
                 $this->includefile("choosepaymentmethod");

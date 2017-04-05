@@ -90,7 +90,11 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         
         PmsStatistics stats = pmsManager.getStatistics(filter);
         PmsStatistics compare = pmsManager.getStatistics(filterCompare);
-        result.add(buildTotal(stats, "All", compare.getTotal()));
+        PmsMobileReport res = buildTotal(stats, "All", compare.getTotal());
+        res.squareMeters = calculateSquareMetres(null);
+        res.squareMetresPrice = Math.round(res.totalRented / res.squareMeters);
+        res.squareMetresPriceDaily = Math.round(res.totalRentedDaily / res.squareMeters);
+        result.add(res);
         
         List<BookingItemType> types = bookingEngine.getBookingItemTypes();
         for(BookingItemType type : types) {
@@ -101,8 +105,11 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
             filterCompare.typeFilter.clear();
             filterCompare.typeFilter.add(type.id);
             compare = pmsManager.getStatistics(filterCompare);
-            
-            result.add(buildTotal(stats, type.name, compare.getTotal()));
+            res = buildTotal(stats, type.name, compare.getTotal());
+            res.squareMeters = calculateSquareMetres(type);
+            res.squareMetresPrice = Math.round(res.totalRented / res.squareMeters);
+            res.squareMetresPriceDaily = Math.round(res.totalRentedDaily / res.squareMeters);
+            result.add(res);
         }
         
         return result;
@@ -129,7 +136,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
             coverage.roomName = item.bookingItemName;
             coverage.coverage = total.coverage;
             coverage.avgPrice = (double) Math.round(total.avgPrice);
-            
+            coverage.roomType = bookingEngine.getBookingItemType(item.bookingItemTypeId).name;
             coverage.revpar = (double) Math.round(coverage.avgPrice * (double)((double)coverage.coverage / 100));
             
             int squareMeters = 0;
@@ -144,6 +151,9 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
                 coverage.sqaurePrice = (double) Math.round(coverage.avgPrice / squareMeters);
                 coverage.squarePricePeriode = (double) Math.round((double)coverage.sqaurePrice * (double)stats.entries.size()-1);
             }
+            if(coverage.squarePricePeriode == null || coverage.squarePricePeriode < 0) {
+                coverage.squarePricePeriode = 0.0;
+            } 
             
             result.add(coverage);
             
@@ -281,6 +291,23 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         }
         
         System.out.println(type + " : " + field + " - " + value + "(" + res + ")");
+    }
+
+    private Integer calculateSquareMetres(BookingItemType type) {
+        int meters = 0;
+        List<BookingItem> items = null;
+        if(type == null) {
+            items = bookingEngine.getBookingItems();
+        } else {
+            items = bookingEngine.getBookingItemsByType(type.id);
+        }
+        for(BookingItem item : items) {
+            PmsAdditionalItemInformation add = pmsManager.getAdditionalInfo(item.id);
+            if(add.squareMetres != null && add.squareMetres > 0) {
+                meters += add.squareMetres;
+            }
+        }
+        return meters;
     }
     
 }

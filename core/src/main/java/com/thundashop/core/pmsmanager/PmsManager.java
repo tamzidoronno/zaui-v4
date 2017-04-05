@@ -5200,7 +5200,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void convertTextDates(PmsBookingFilter filter) {
-        System.out.println("This is converting");
         if(filter.startDate == null && filter.startDateAsText != null) {
             filter.startDate = convertTextDate(filter.startDateAsText);
         }

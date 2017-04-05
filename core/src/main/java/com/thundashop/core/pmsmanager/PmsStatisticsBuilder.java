@@ -113,7 +113,6 @@ class PmsStatisticsBuilder {
 
                         entry.totalPrice += price;
                         entry.roomsRentedOut++;
-                        entry.squareMetres += getSquareMetres(room);
                         addGuests(entry, room, booking);
                         if(!roomsAddedForGuests.contains(room.pmsBookingRoomId)) {
                             addUniqueGuests(entry, room, booking);

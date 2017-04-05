@@ -17,7 +17,6 @@
         <label style="width:100%;">Compare periode
             <select class="form-control" style="width:100% !important;" ng-model="comparePeriode">
                 <option value="-1week">-1 uke</option>
-                <option value="-1month">-1 måned</option>
                 <option value="-1year">-1 år</option>
             </select>
         </label>
@@ -98,7 +97,7 @@
         <th>Revpar</th>
     </tr>
     <tr ng-repeat="room in roomCoverageList" style='font-size:12px;' >
-        <td style='padding:2px;'>{{room.roomName}}</td>
+        <td style='padding:2px;'>{{room.roomName}} ({{room.roomType}})</td>
         <td style='padding:2px;'>{{room.coverage}}%</td>
         <td style='padding:2px;'>{{room.sqaurePrice}}</td>
         <td style='padding:2px;'>{{room.squarePricePeriode}}</td>

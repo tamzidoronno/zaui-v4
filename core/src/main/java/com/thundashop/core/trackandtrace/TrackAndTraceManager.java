@@ -426,12 +426,27 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         List<AcculogixExport> everything = new ArrayList();
         
         if (route != null) {
-            everything = getExportInternal(route, currentState);
+            everything = getExportInternal(route, currentState, true);
         } else {
+            
             for (Route route1 : routes.values()) {
                 finalize(route1);
-                everything.addAll(getExportInternal(route1, currentState));   
+                everything.addAll(getExportInternal(route1, currentState, false));   
             }
+            
+            if (!everything.isEmpty()) {
+                ExportedData exported = new ExportedData();
+                exported.exportSequence = exports.size() + 1;
+                exported.exportedData = new ArrayList(everything);
+                saveObject(exported);    
+                exports.put(exported.id, exported);
+
+                sortExportedData();
+                
+            }
+            
+            addLastExports(null, everything, everything.isEmpty() ? 4 : 3, !everything.isEmpty());
+            
         }
         
         if (!currentState) {
@@ -454,11 +469,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
     }
 
-    private List<AcculogixExport> getExportInternal(Route route, boolean currentState) throws ErrorException {
+    private List<AcculogixExport> getExportInternal(Route route, boolean currentState, boolean addLastExports) throws ErrorException {
         AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress(), imageManager, getStartNumber().exportCounter, currentState, this);
         List<AcculogixExport> exportedData = exporter.getExport();
         
-        if (!exportedData.isEmpty()) {
+        if (!exportedData.isEmpty() && addLastExports) {
             ExportedData exported = new ExportedData();
             exported.routeId = route.id;
             exported.exportSequence = getExports(route.id).size() + 1;
@@ -467,14 +482,16 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             exports.put(exported.id, exported);
             
             sortExportedData();
-            
+        }
+        
+        if (!exportedData.isEmpty()) {
             exportCounter.exportCounter += exportedData.size();
             saveObject(exportCounter);
             
             markRouteAsClean(route);
         }
         
-        if (!currentState) {
+        if (!currentState && addLastExports) {
             addLastExports(route.id, exportedData, exportedData.isEmpty() ? 4 : 3, !exportedData.isEmpty());
         }
         
@@ -490,9 +507,15 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
     
     public List<ExportedData> getExports(String routeId) {
-        return exports.values().stream()
-                .filter(exp -> exp.routeId != null && exp.routeId.equals(routeId))
+        if (routeId == null) {
+            return exports.values().stream()
                 .collect(Collectors.toList());
+        } else {
+            return exports.values().stream()
+                .filter(exp -> exp.routeId != null && exp.routeId.equals(routeId))
+                .collect(Collectors.toList());    
+        }
+        
     }
 
     @Override
@@ -622,6 +645,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     private void addLastExports(String routeId, List<AcculogixExport> exportedData, int max, boolean skipFirst) {
+        
         
         List<ExportedData> sortedRoutes = getExports(routeId).stream().sorted((o1, o2) -> {
             if (o1.exportSequence == o2.exportSequence) {
@@ -810,7 +834,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         for (Route route1 : usingRoutes.values()) {
             finalize(route1);
-            everything.addAll(getExportInternal(route1, currentState));   
+            everything.addAll(getExportInternal(route1, currentState, false));   
         }
     }
 
@@ -1029,13 +1053,13 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             TrackAndTraceSignature signature = new TrackAndTraceSignature();
             signature.imageId = imageId;
             signature.operatorUserId = getSession().currentUser.id;
-            signature.sigutureAddedDate = new Date();
+            signature.sigutureAddedDate = timeStamp;
             signature.typedName = typedSignature.toUpperCase();
             destination.signatures.add(signature);
         }
 
         destination.startInfo.completed = true;
-        destination.startInfo.completedTimeStamp = new Date();
+        destination.startInfo.completedTimeStamp = timeStamp;
         destination.startInfo.completedLon = longitude;
         destination.startInfo.completedLat = latitude; 
         
@@ -1049,11 +1073,12 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             return;
         
         destination.startInfo.started = true;
-        destination.startInfo.startedTimeStamp = new Date();
+        destination.startInfo.startedTimeStamp = startedTimeStamp;
         destination.skipInfo.skippedReasonId = "";
         destination.startInfo.lon = lon;
         destination.startInfo.lat = lat;  
         
         saveObjectInternal(destination);
     }
+
 }

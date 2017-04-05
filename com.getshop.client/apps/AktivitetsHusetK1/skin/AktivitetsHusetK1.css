@@ -61,7 +61,7 @@ body {font-family: 'Noto Serif', serif, Fallback, sans-serif;background:#5A8298;
     
 @media only all and (max-width: 800px) {
     body {font-family: 'Noto Serif', Fallback, sans-serif;}
-    .gsarea[area="header"] { height: 250px; }
+    .gsarea[area="header"] { height: 200px; }
     .gsarea[area="header"] .ImageDisplayer { left: 36%; }
     .gsarea[area="header"] .ContentManager { margin-top: 20px; }
     .gsarea[area="header"] .Menu { top: 13px; color:#000; left:0px;padding:5px;z-index: 999;}
@@ -92,6 +92,9 @@ body {font-family: 'Noto Serif', serif, Fallback, sans-serif;background:#5A8298;
     .PmsCalendar .statedesrow{top:0;position:relative;}
     .PmsCalendar .dayorweekdiv{padding:0;}
     .PmsCalendar .weektimeheader{font-size:6px;}
+    .PmsCalendar .singleroomentry{position:relative;top:0px;}
+    .PmsCalendar .singleroomoverview{padding-top:80px !important;}
+    .PmsCalendar .pmscalendarmobilemenudiv{display:none;} 
     
     .gs_page_width { padding-left: 0; padding-right: 0; }
     .gs_language_selection { top: -10px; }

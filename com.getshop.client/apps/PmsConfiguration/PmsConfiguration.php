@@ -10,6 +10,14 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         return "PmsConfiguration";
     }
     
+    public function includeDeleted() {
+        if(!isset($_SESSION['includeDeletedProducts'])) {
+            $_SESSION['includeDeletedProducts'] = true;
+        } else {
+            unset($_SESSION['includeDeletedProducts']);
+        }
+    }
+    
     public function createProductPaymentMessage() {
         $toAdd = new \core_pmsmanager_PmsProductMessageConfig();
         $toAdd->email = $_POST['data']['email'];

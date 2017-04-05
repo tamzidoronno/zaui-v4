@@ -55,3 +55,11 @@ $includedIn = (array)$selectedAddonConfig->includedInBookingItemTypes;
     
     <input gstype="submit" type="button" value='Save'>
 </div>
+
+
+<?php
+$validDateranges = (array)$selectedAddonConfig->validDates;
+if(empty($validDateranges)) {
+    echo "Valid for all dates<br>";
+}
+?>

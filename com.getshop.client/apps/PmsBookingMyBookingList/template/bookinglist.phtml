@@ -23,9 +23,7 @@ echo "</b>";
 
 echo "<table cellspacing='0' cellpadding='0' width='100%'>";
 echo "<tr>";
-if($this->getConfigurationSetting("can_not_change") != "true") {
-    echo "<th width='10'></th>";
-}
+echo "<th width='10'></th>";
 echo "<th width='10'>".$this->__w("Room")."</th>";
 echo "<th width='200'>".$this->__w("Time periode")."</th>";
 if($rules->includeGuestData) {
@@ -53,14 +51,12 @@ foreach($bookings as $booking) {
     }
     foreach($booking->rooms as $room) {
         echo "<tr bookingid='".$booking->id."' roomid='".$room->pmsBookingRoomId ."'>";
-        if($this->getConfigurationSetting("can_not_change") != "true" || $booking->createOrderAfterStay) {
-            echo "<td width='30'>";
+        echo "<td width='30'>";
+        if($this->isEditorMode() || $this->isAdminMode()) {
             echo "<i class='fa fa-trash-o deleteroom'></i> ";
-            if($this->isEditorMode() || $this->isAdminMode() || $config->autoconfirmRegisteredUsers) {
-                echo "<i class='fa fa-edit editroom' style='cursor:pointer;'></i>";
-            }
-            echo "</td>";
         }
+        echo "<i class='fa fa-edit editroom' style='cursor:pointer;'></i>";
+        echo "</td>";
         echo "<td>";
         if(isset($items[$room->bookingItemId])) {
             echo $items[$room->bookingItemId]->bookingItemName;
@@ -135,6 +131,7 @@ if($config->requirePayments) {
     echo "<th>".$this->__w("Order date")."</th>";
     echo "<th>".$this->__w("Orderlines")."</th>";
     echo "<th width='150'>".$this->__w("Total")."</th>";
+    echo "<th>Paid</th>";
     echo "</tr>";
     $total = 0;
     $totalTaxes = 0;
@@ -176,6 +173,16 @@ if($config->requirePayments) {
         echo "<td valign='top'>";
         echo "Eks mva <span style='float:right;'>" . round($rowTotal,0) . "</span><br>";
         echo "Ink mva <span style='float:right;'>" . round($rowTotal+$taxsum,0) . "</span><br>";
+        echo "</td>";
+        echo "<td>";
+        if(!stristr($order->payment->paymentType, "invoice") && $rowTotal > 0) {
+            if($order->status == 7) {
+                echo "<i class='fa fa-check'></i>";
+            } else {
+                echo "<a href='/?page=cart&payorder=".$order->id."' style='color:blue; cursor:pointer;'>Pay</a>";
+            }
+        }
+        echo "";
         echo "</td>";
         echo "</tr>";
     }

@@ -40,6 +40,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public boolean isIncludedInRoomPrice = false;
     List<String> includedInBookingItemTypes = new ArrayList();
     public String addedBy;
+    public List<PmsBookingAddonItemValidDateRange> validDates = new ArrayList();
     
     Map<String, String> variations = new HashMap();
     String description;

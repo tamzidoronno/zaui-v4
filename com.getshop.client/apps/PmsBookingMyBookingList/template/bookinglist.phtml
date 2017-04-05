@@ -139,6 +139,12 @@ if($config->requirePayments) {
         if(!in_array($order->id, $orderIds) && $order->status != 7) {
             continue;
         }
+        
+        if($order->status == 5) {
+            //Do not print cancelled orderes.
+            continue;
+        }
+        
         echo "<tr>";
         echo "<td valign='top'>";
         if($this->isEditorMode()) {

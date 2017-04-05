@@ -66,6 +66,7 @@ class Dibs extends \PaymentApplication implements \Application {
     public function preProcess() {
         
         $merchid = $this->getConfigurationSetting("merchantid");
+        $hasssl = $this->getConfigurationSetting("hasssl");
         $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
         $order = $this->getOrder();
         $orderId = $order->incrementOrderId;
@@ -92,8 +93,14 @@ class Dibs extends \PaymentApplication implements \Application {
             $key .= "-debug";
         }
         
+        $protocol = "http";
+        
+        if($hasssl == "true") {
+           $protocol = "https"; 
+        }
+        
         $callBack = "http://pullserver_".$key."_".$store->id.".nettmannen.no";
-        $redirect_url = "http://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
+        $redirect_url = $protocol."://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
         
         echo '<form method="post" id="dibsform" action="https://sat1.dibspayment.com/dibspaymentwindow/entrypoint">
             <input value="' . $merchid . '" name="merchant" type="hidden" />
@@ -148,6 +155,7 @@ class Dibs extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("hmac", $_POST['hmac']);
         $this->setConfigurationSetting("savecard", $_POST['savecard']);
         $this->setConfigurationSetting("testmode", $_POST['testmode']);
+        $this->setConfigurationSetting("hasssl", $_POST['hasssl']);
     }
     
     public function saveCard() {

@@ -199,26 +199,82 @@ adata = {
     },
     
     save: function() {
-        localStorage.setItem("aDataRoutes", JSON.stringify(this.routes));
-        localStorage.setItem("aDataExceptions", JSON.stringify(this.exceptions));
-        localStorage.setItem("aDriverMessages", JSON.stringify(this.driverMessages));
+        if (db) {
+            me = this;
+            db.transaction(function(tx) {
+                var insertingData = JSON.stringify(me.routes);
+                
+                tx.executeSql('CREATE TABLE IF NOT EXISTS DataTable (name, score)');
+                tx.executeSql('delete from DataTable', []);
+                tx.executeSql('INSERT INTO DataTable VALUES (?,?)', ['aDataRoutes', insertingData]);
+                tx.executeSql('INSERT INTO DataTable VALUES (?,?)', ['aDataExceptions', JSON.stringify(me.exceptions)]);
+                tx.executeSql('INSERT INTO DataTable VALUES (?,?)', ['aDriverMessages', JSON.stringify(me.driverMessages)]);
+            }, function(error) {
+                alert('Failed to store data, msg: ' + error.message);
+            }, function() {
+            });
+
+            
+        } else {
+            localStorage.setItem("aDataRoutes", JSON.stringify(this.routes));
+            localStorage.setItem("aDataExceptions", JSON.stringify(this.exceptions));
+            localStorage.setItem("aDriverMessages", JSON.stringify(this.driverMessages));    
+        }
+        
     },
     
-    loadFromLocalStorage: function() {
+    loadFromLocalStorage: function($state) {
         if (localStorage.getItem("currentVersion") !== "1.0.15") {
             return;
         }
         
-        if (localStorage.getItem("aDataRoutes")) {
-            this.routes = JSON.parse(localStorage.getItem("aDataRoutes"));
-        }
+        var me = this;
         
-        if (localStorage.getItem("aDataExceptions")) {
-            this.exceptions = JSON.parse(localStorage.getItem("aDataExceptions"));
-        }
-        
-        if (localStorage.getItem("aDriverMessages")) {
-            this.driverMessages = JSON.parse(localStorage.getItem("aDriverMessages"));
+        if (db) {
+            db.transaction(function(tx) {
+                tx.executeSql('CREATE TABLE IF NOT EXISTS DataTable (name, score)');
+                
+                tx.executeSql('SELECT score as value FROM DataTable WHERE name = ?', ['aDataRoutes'], function(tx, rs) {
+                    if (rs.rows && rs.rows.item) {
+                        me.routes = JSON.parse(rs.rows.item(0).value);
+                        $state.go($state.current, {}, {reload: true});
+                    }
+                }, function(tx, error) {
+                    alert("error: " + error.message);
+                    this.routes = [];
+                });
+                
+                tx.executeSql('SELECT score AS value FROM DataTable where name like "aDataExceptions" ', [], function(tx, rs) {
+                    if (rs.rows && rs.rows.item) {
+                        me.exceptions = JSON.parse(rs.rows.item(0).value);
+                        $state.go($state.current, {}, {reload: true});
+                    }
+                }, function(tx, error) {
+                    this.exceptions = [];
+                });
+                
+                tx.executeSql('SELECT score AS value FROM DataTable where name like "aDriverMessages" ', [], function(tx, rs) {
+                    if (rs.rows && rs.rows.item) {
+                        me.driverMessages = JSON.parse(rs.rows.item(0).value);
+                        $state.go($state.current, {}, {reload: true});
+                    }
+                }, function(tx, error) {
+                    this.driverMessages = [];
+                });
+            });
+            
+        } else {
+            if (localStorage.getItem("aDataRoutes")) {
+                this.routes = JSON.parse(localStorage.getItem("aDataRoutes"));
+            }
+
+            if (localStorage.getItem("aDataExceptions")) {
+                this.exceptions = JSON.parse(localStorage.getItem("aDataExceptions"));
+            }
+
+            if (localStorage.getItem("aDriverMessages")) {
+                this.driverMessages = JSON.parse(localStorage.getItem("aDriverMessages"));
+            }
         }
     }
 };

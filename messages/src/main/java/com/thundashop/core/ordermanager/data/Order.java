@@ -35,6 +35,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Shipping shipping;
     public Payment payment = new Payment();
     public String session;
+    public String recieptEmail = "";
     public String trackingNumber = "";
     public long incrementOrderId = 0;
     public String reference = "";

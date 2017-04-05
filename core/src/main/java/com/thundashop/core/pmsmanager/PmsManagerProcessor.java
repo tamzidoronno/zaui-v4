@@ -200,14 +200,19 @@ public class PmsManagerProcessor {
             }
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
-                if(room.addedToArx) {
-                    continue;
-                }
-                if (!manager.isClean(room.bookingItemId) && manager.getConfigurationSecure().cleaningInterval > 0) {
-                    continue;
-                }
-                if(room.blocked) {
-                    continue;
+                if(!room.forceUpdateLocks) {
+                    if(room.addedToArx) {
+                        continue;
+                    }
+                    if (!manager.isClean(room.bookingItemId) && manager.getConfigurationSecure().cleaningInterval > 0) {
+                        continue;
+                    }
+                    if(room.blocked) {
+                        continue;
+                    }
+                } else {
+                    room.forceUpdateLocks = false;
+                    manager.saveBooking(booking);
                 }
 
                 if (room.guests.isEmpty() || room.guests.get(0).name == null) {

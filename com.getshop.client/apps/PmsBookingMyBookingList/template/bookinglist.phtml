@@ -51,6 +51,9 @@ foreach($bookings as $booking) {
         $orderIds[] = $id;
     }
     foreach($booking->rooms as $room) {
+        if($room->deleted) {
+            continue;
+        }
         echo "<tr bookingid='".$booking->id."' roomid='".$room->pmsBookingRoomId ."'>";
         echo "<td width='30'>";
         if($this->isEditorMode() || $this->isAdminMode()) {

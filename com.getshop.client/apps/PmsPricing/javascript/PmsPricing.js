@@ -8,6 +8,7 @@ app.PmsPricing = {
         $(document).on('click', '.PmsPricing .selectrow', app.PmsPricing.selectRow);
         $(document).on('keyup', '.PmsPricing .priceinputsetter', app.PmsPricing.priceinput);
         $(document).on('click', '.PmsPricing .loadcouponmoredates', app.PmsPricing.loadMoreDates);
+        $(document).on('click', '.PmsPricing .loadaddonstoinclude', app.PmsPricing.loadAddonsToInclude);
         $(document).on('click','.PmsPricing .togglerepeatbox', app.PmsConfiguration.closeTheRepeatBox);
         $(document).on('change','.PmsPricing .repeat_type', app.PmsConfiguration.changeRepeatType);
     },
@@ -47,6 +48,19 @@ app.PmsPricing = {
         thundashop.Ajax.postWithCallBack(event, function(res) {
             panel.html(res);
             panel.find('.addMoredatesPanel').fadeIn();
+        });
+    },
+    
+    loadAddonsToInclude : function() {
+        var panel = $(this).closest('td').find('.addaddonsinludepanel');
+        panel.show();
+        
+        var event = thundashop.Ajax.createEvent('','loadCouponAddonIncludePanel',$(this), {
+            "id" : $(this).attr('data-couponid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            panel.html(res);
+            panel.show();
         });
     },
     

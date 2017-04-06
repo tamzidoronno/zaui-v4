@@ -14,6 +14,22 @@ class PmsPricing extends \WebshopApplication implements \Application {
         return $this->getConfigurationSetting("engine_name");
     }
     
+    public function loadCouponAddonIncludePanel() {
+        $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelectedName());
+        echo "<div style='height: 350px; overflow:auto;'>";
+        foreach($addons as $addon) {
+            if(!$addon->name) {
+                continue;
+            }
+            echo "<input type='checkbox' title='Include'> ";
+            echo "<input type='checkbox' title='Include in room price'> ";
+            echo $addon->name  . "<span style='float:right;'>" . $addon->price . "</span> ". "<br>";
+        }
+        echo "</div>";
+        
+        echo "<span class='pmsbutton' style='width:100%; margin-top: 10px; box-sizing:border-box;'>Save settings</span>";
+    }
+    
     public function saveAddonPriceOnPricePlan() {
         $res = array();
         foreach($_POST['data'] as $key => $val) {

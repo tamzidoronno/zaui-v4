@@ -25,7 +25,22 @@
 .PmsPricing .title { display:inline-block; width: 110px; text-align: left; font-size: 12px; padding: 2px; float:left;}
 .PmsPricing .optionbox { width: 200px; display: inline-block; min-height: 30px; float:left; }
 .PmsPricing .eventrow { clear:both; }
-.PmsPricing .addMoredatesPanel {  padding: 5px; border: solid 1px #bbb; display:none; position:absolute; left: 0px; top: 5px; background-color:#fff; box-shadow: 0px 0px 5px 1px #bbb; width: 330px; z-index: 2; }
+.PmsPricing .addMoredatesPanel, 
+.PmsPricing .addaddonsinludepanel { 
+    padding: 5px; 
+    border: solid 1px #bbb; 
+    display:none; 
+    position:absolute; 
+    left: 0px; 
+    top: 5px; 
+    background-color:#fff; 
+    box-shadow: 0px 0px 5px 1px #bbb; 
+    width: 330px; 
+    z-index: 2;
+    height: 400px;
+    overflow-y: auto;
+}
+
 .PmsPricing .addMoredatesPanel .fa-close { right: 5px; top: 3px; position:absolute; font-size: 10px; color:#bbb; cursor:pointer; }
 .PmsPricing .addMoredatesPanel .optionbox { padding-left: 5px; }
 .PmsPricing .addMoredatesPanel .optionbox select,

@@ -177,7 +177,7 @@ class CartManager extends \SystemApplication implements \Application {
     }
         
     public function render() {
-        if(isset($_GET['payorder'])) {
+        if(isset($_GET['payorder']) || isset($_GET['incid'])) {
             $toChooseFrom = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchPaymethodsToChooseFrom();
             if(!isset($_POST['data']['paymentmethod']) && sizeof($toChooseFrom) > 0) {
                 $this->includefile("choosepaymentmethod");
@@ -550,11 +550,12 @@ class CartManager extends \SystemApplication implements \Application {
     
     public function payOrderDirect() {
         $orderId = $_GET['payorder'];
-        
+        if(isset($_GET['incid'])) {
+            $orderId = $_GET['incid'];
+        }
         $this->startAdminImpersonation("OrderManager", "getOrder");
         $order = $this->getApi()->getOrderManager()->getOrder($orderId);
         $this->stopImpersionation();
-        
         if (!$order) {
             echo "<center><br/><br/><br/>";
             echo "<h1>Fant ikke denne bestillingen, ta kontakt med oss.</h1>";

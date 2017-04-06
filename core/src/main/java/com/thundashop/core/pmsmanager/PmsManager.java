@@ -4282,9 +4282,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBookingAddonItem item : addons.values()) {
             if(item.productId != null && !item.productId.isEmpty()) {
                 Product product = productManager.getProduct(item.productId);
-                product.updateTranslation(getSession().language);
-                item.name = product.name;
-                result.add(item);
+                if(product != null) {
+                    product.updateTranslation(getSession().language);
+                    item.name = product.name;
+                    result.add(item);
+                }
             }
         }
         return result;

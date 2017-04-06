@@ -51,4 +51,20 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     
     @Transient
     public String name = "";
+    
+    public boolean isValidForPeriode(Date start, Date end, Date regDate) {
+        if(validDates == null || validDates.isEmpty()) {
+            return true;
+        }
+        
+        for(PmsBookingAddonItemValidDateRange range : validDates) {
+            if(range.containsPeriode(start, end, regDate)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    
 }

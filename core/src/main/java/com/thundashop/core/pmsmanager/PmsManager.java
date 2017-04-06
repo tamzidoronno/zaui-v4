@@ -3258,6 +3258,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         checkSecurity(booking);
         PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
+
+        if(!remove) {
+            PmsBookingRooms room = booking.getRoom(roomId);
+            if(!addonConfig.isValidForPeriode(room.date.start, room.date.end, booking.rowCreatedDate)) {
+                return;
+            }
+        }
+
         
         List<String> roomIds = new ArrayList();
         if(!foundRoom) {
@@ -3309,6 +3317,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             toReturn.isAvailableForCleaner = addonConfig.isAvailableForCleaner;
             toReturn.isActive = addonConfig.isActive;
             toReturn.isIncludedInRoomPrice = addonConfig.isIncludedInRoomPrice;
+            toReturn.validDates = addonConfig.validDates;
             if(addonConfig.price > 0) {
                 toReturn.price = addonConfig.price;
                 toReturn.priceExTaxes = addonConfig.priceExTaxes;
@@ -3328,6 +3337,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBookingAddonItem item : allAddons) {
             List<PmsBookingAddonItem> addons = createAddonForTimePeriodeWithDiscount(item.addonType, room, booking);
             PmsBookingAddonItem addon = createAddonToAdd(item, room.date.start);
+            Date created = booking.rowCreatedDate;
+            if(created == null) {
+                created = new Date();
+            }
+            if(!addon.isValidForPeriode(room.date.start, room.date.end,created)) {
+                continue;
+            }
             addon.count = item.count;
 
             Double price = 0.0;

@@ -2759,7 +2759,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     $row[] = "0";
                 } else {
                     $row[] = round($prices->{$id});
-                    $totalRow+= round($prices->{$id});
+                    $totalRow+= round($prices->{$id}, 2);
                 }
             }
             $row[] = $totalRow;
@@ -2829,7 +2829,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach($productIds as $id => $val) {
            $product = $this->getApi()->getProductManager()->getProduct($id);
            if(!$product) {
-               continue;
+               $product = $this->getApi()->getProductManager()->getDeletedProduct($id);
            }
            if(!isset($accounts[$product->accountingAccount])) {
                $accounts[$product->accountingAccount] = 0;
@@ -2839,7 +2839,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach($accounts as $account => $val) {
             $row = array();
             $row[] = $account;
-            $row[] = round($val);
+            $row[] = round($val, 2);
             
             $sortedMatrix[] = $row;
         }

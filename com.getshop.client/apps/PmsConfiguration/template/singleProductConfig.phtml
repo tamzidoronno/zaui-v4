@@ -59,7 +59,12 @@ $includedIn = (array)$selectedAddonConfig->includedInBookingItemTypes;
 
 <?php
 $validDateranges = (array)$selectedAddonConfig->validDates;
+echo "<br>";
 if(empty($validDateranges)) {
     echo "Valid for all dates<br>";
+} else {
+    foreach($validDateranges as $vdate) {
+        
+    }
 }
 ?>

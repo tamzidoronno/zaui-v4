@@ -948,6 +948,14 @@ public class PmsManagerProcessor {
                     if(!room.date.start.before(cal.getTime())) {
                         continue;
                     }
+                    
+                    if(order.recieptEmail == null || order.recieptEmail.isEmpty()
+                            && room.guests != null && !room.guests.isEmpty()) {
+                        //Make sure it asks for the correct person to send email to.
+                        order.recieptEmail = room.guests.get(0).email;
+                        manager.orderManager.saveOrder(order);
+                    }
+                    
                     key = key + "_" + order.id;
                 }
                 

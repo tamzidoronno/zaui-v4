@@ -93,6 +93,9 @@ class PmsBookingMessageFormatter {
         if(booking.registrationData.resultAdded.containsKey("user_cellPhone")) {
             message = message.replace("{phone}", booking.registrationData.resultAdded.get("user_cellPhone"));
         }
+        if(booking.registrationData.resultAdded.containsKey("user_prefix")) {
+            message = message.replace("{prefix}", booking.registrationData.resultAdded.get("user_prefix"));
+        }
         if(booking.registrationData.resultAdded.containsKey("user_emailAddress")) {
             message = message.replace("{email}", booking.registrationData.resultAdded.get("user_emailAddress"));
         }

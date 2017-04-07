@@ -3261,7 +3261,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         if(!remove) {
             PmsBookingRooms room = booking.getRoom(roomId);
-            if(!addonConfig.isValidForPeriode(room.date.start, room.date.end, booking.rowCreatedDate)) {
+            if(room != null && !addonConfig.isValidForPeriode(room.date.start, room.date.end, booking.rowCreatedDate)) {
                 return;
             }
         }

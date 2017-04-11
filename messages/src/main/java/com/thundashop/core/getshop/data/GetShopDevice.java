@@ -1,6 +1,7 @@
 package com.thundashop.core.getshop.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,7 +24,8 @@ public class GetShopDevice extends DataCommon {
     public HashMap<String, Object> instances;
     public Date batteryLastUpdated;
     public String serverSource = "";
-
+    TimeRepeaterData openingHoursData = null;
+ 
     public void setDevice(ZWaveDevice device) {
         zwaveid = device.id;
         type = device.data.deviceTypeString.value + "";

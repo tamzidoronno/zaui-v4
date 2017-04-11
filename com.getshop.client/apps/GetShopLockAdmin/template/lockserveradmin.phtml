@@ -7,6 +7,7 @@ $locktype = array();
 $locktype['arx'] = "Arx";
 $locktype['getshop'] = "GetShop";
 $locktype['getshophotellock'] = "GetShop hotel lock";
+$locktype['getshoplockbox'] = "GetShop Lock Box";
 
 ?>
 <table width="100%">
@@ -64,3 +65,26 @@ $locktype['getshophotellock'] = "GetShop hotel lock";
     <input type='text' placeholder='Server name' gsname='servername'><input type='button' value='Set up another lock server' gstype='submit'>
 </span>
 <br><br><br>
+<div style="border: solid 1px #DDD; padding-left: 20px; padding-right: 20px;" gstype="form" method="addExternalLock">
+    <h2>External Lock Setup</h2>
+    <table>
+        <tr><td>Server</td>
+            <td>
+                <?php
+                echo "<select gsname='servertype'>";
+                foreach($lockservers as $name => $server) {
+                    echo "<option value='$name' >" . $name . "</option>";
+                }
+                echo "</select>";
+                ?>
+            </td>
+        </tr>
+        <tr><td>Device Id:</td><td><input gsname="deviceid" class="gsniceinput1"/></td></tr>
+        <tr><td>Name:</td><td><input gsname="name" class="gsniceinput1"/></td></tr>
+    </table>
+    <br/>
+    <div class="shop_button" gstype="submit">Add</div>
+    <br/>
+    <br/>
+</div>
+    

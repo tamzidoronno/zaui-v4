@@ -205,16 +205,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         devices.put(lock.id, lock);
     }
 
-    @Override
-    public void saveLock(String name, Integer id) {
-        GetShopDevice dev = new GetShopDevice();
-        dev.name = name;
-        dev.zwaveid = id;
-        dev.serverSource = "internal";
-        saveObject(dev);
-        devices.put(dev.id, dev);
-    }
-
     private PmsLockServer getLockServerForDevice(GetShopDevice dev) {
         for(String serverName : pmsManager.getConfigurationSecure().lockServerConfigs.keySet()) {
             if(serverName.equals(dev.serverSource)) {
@@ -250,7 +240,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
 
        
     }
-
 
     class GetshopLockCodeManagemnt extends Thread {
 

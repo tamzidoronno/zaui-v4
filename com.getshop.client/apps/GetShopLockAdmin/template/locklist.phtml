@@ -51,17 +51,22 @@ foreach($lockServers as $name => $server) {
             $this->printCodeList($lock);
             echo "</td>";
             echo "<td align='center'>";
-            echo "<select class='connectlock' lockid='".$lock->id."'>";
-            echo "<option value=''></option>";
-            foreach($items as $item) {
-                $selected = "";
-                if($item->bookingItemAlias == $lock->id) {
-                    $selected = "SELECTED";
-                } 
-                echo "<option value='". $item->id ."' $selected>" . $item->bookingItemName . "</option>";
+            
+            
+            if ($lock->type === "Secure Keypad") {
+                echo "<select class='connectlock' lockid='".$lock->id."'>";
+                echo "<option value=''></option>";
+                foreach($items as $item) {
+                    $selected = "";
+                    if($item->bookingItemAlias == $lock->id) {
+                        $selected = "SELECTED";
+                    } 
+                    echo "<option value='". $item->id ."' $selected>" . $item->bookingItemName . "</option>";
+                }
+                echo "</select>";
+                echo " <i style='cursor:pointer;' class='fa fa-refresh' title='Resend codes to lock' gstype='clicksubmit' method='resetLock' gsname='id' gsvalue='".$lock->id."'></i>";                
             }
-            echo "</select>";
-            echo " <i style='cursor:pointer;' class='fa fa-refresh' title='Resend codes to lock' gstype='clicksubmit' method='resetLock' gsname='id' gsvalue='".$lock->id."'></i>";
+            
             echo "</td>";
             echo "</tr>";
         }

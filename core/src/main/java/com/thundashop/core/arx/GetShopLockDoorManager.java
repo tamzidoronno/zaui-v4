@@ -53,7 +53,6 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
         return new ArrayList();
     }
 
-    @Override
     public List<AccessCategory> getAllAccessCategories() throws Exception {
         return new ArrayList();
     }

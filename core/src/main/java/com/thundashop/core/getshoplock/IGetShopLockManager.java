@@ -77,8 +77,6 @@ public interface IGetShopLockManager {
     @Administrator
     public boolean getUpdatesOnLock();
     
-    
-    @Administrator
-    public void saveLock(String name, Integer id);
+   
     
 }

@@ -56,6 +56,10 @@ body {
     font-size: 20px;
 }
 
+.gsbody_inner[pageId="6a41bd20-5cc4-454c-8725-2da32d8c186f"] .gsarea[area="footer"] {
+    margin-top: 0px;
+}
+
 .shop_button {
     background: none;
     background-color: #cd1719;

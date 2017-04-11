@@ -79,6 +79,6 @@ public interface IGetShopLockManager {
     
     
     @Administrator
-    public void createLock(String name, Integer id);
+    public void saveLock(String name, Integer id);
     
 }

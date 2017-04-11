@@ -205,7 +205,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
 
     @Override
-    public void createLock(String name, Integer id) {
+    public void saveLock(String name, Integer id) {
         GetShopDevice dev = new GetShopDevice();
         dev.name = name;
         dev.zwaveid = id;

@@ -226,10 +226,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             } else {
                 postfix += "off";
             }
-            
-            try {
-                postfix = URLEncoder.encode(postfix, "UTF-8");
-            }catch(Exception e) {}
             String address = "http://"+lockServer.arxHostname+":18080/" + postfix;
             try {
                 httpLoginRequest(address, dev.serverSource);

@@ -54,7 +54,7 @@ public class GetShopDevice extends DataCommon {
     }
     
     public boolean isLock() {
-        return type.equals("Secure Keypad");
+        return type.equals("Secure Keypad") || type.equals("getshop_lock");
     }
 
     public void removeCode(String code) {

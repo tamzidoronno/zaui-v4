@@ -1872,7 +1872,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return false;
         }
         if (!room.isActiveOnDay(day)) {
-            return false;
+            if(getConfiguration().autoExtend && room.isEndingToday(day)) {
+                //This is atleast a safe bet.
+            } else {
+                return false;
+            }
         }
         int days = Days.daysBetween(new LocalDate(room.date.cleaningDate), new LocalDate(day)).getDays();
         if (days == 0 && room.isSameDay(room.date.start, room.date.cleaningDate)) {

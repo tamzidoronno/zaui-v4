@@ -1749,11 +1749,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         additionalInfo.isClean();
         additionalInfo.inUseByCleaning = false;
         additionalInfo.inUse = bookingEngine.itemInUseBetweenTime(start.getTime(), end.getTime(), additionalInfo.itemId);
+        
+        BookingItem bitem = bookingEngine.getBookingItem(additionalInfo.itemId);
+        if(bitem.bookingItemName.equals("205")) {
+            System.out.println(bitem.bookingItemName);
+        }
+        
         if(additionalInfo.inUse) {
             BookingTimeLineFlatten timeline = bookingEngine.getTimeLinesForItem(start.getTime(), end.getTime(), additionalInfo.itemId);
             for(Booking book : timeline.getBookings()) {
                 if(book.source != null && book.source.equals("cleaning")) {
                     additionalInfo.inUseByCleaning = true;
+                    break;
+                }
+            }
+            for(Booking book : timeline.getBookings()) {
+                additionalInfo.closed = false;
+                if(book.source != null && book.source.toLowerCase().contains("closed")) {
+                    additionalInfo.closed = true;
+                    break;
                 }
             }
         }
@@ -2669,7 +2683,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Booking started without item (nullitem)", "Owner: " + ownerMail + ", address:" + addressMail, "pal@getshop.com", "pal@getshop.com");
                 } else {
                     PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
-                    if (additional.isClean(false)) {
+                    if (additional.isClean(false) && !additional.closed) {
                         additional.markDirty();
                         needSaving = true;
                         logEntry("Marking item " + item.bookingItemName + " as dirty (failure in marking)", booking.id, item.id);
@@ -3011,14 +3025,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
         List<PmsRoomSimple> res = filtering.filterRooms(filter);
         doSorting(res, filter);
+        List<PmsRoomSimple> remove = new ArrayList();
         if(filter.includeCleaningInformation) {
             for(PmsRoomSimple r : res) {
                 if(r.bookingItemId != null && !r.bookingItemId.isEmpty()) {
+                    if(getAdditionalInfo(r.bookingItemId).hideFromCleaningProgram) {
+                        remove.add(r);
+                    }
+
                     r.roomCleaned = isClean(r.bookingItemId);
                     r.hasBeenCleaned = (r.roomCleaned || isUsedToday(r.bookingItemId));
                 }
             }
         }
+        res.removeAll(remove);
         return res;
     }
 
@@ -4520,13 +4540,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.endDate = new Date();
         
         List<PmsRoomSimple> checkoutRooms = getSimpleRooms(filter);
+        
+        filter.filterType = "checkin";
+        List<PmsRoomSimple> checkinRooms = getSimpleRooms(filter);
+        
         List<PmsBookingRooms> intervalCleanings = getRoomsNeedingIntervalCleaning(new Date());
         
         for(PmsAdditionalItemInformation room : allRooms) {
             RoomCleanedInformation info = new RoomCleanedInformation();
             info.roomId = room.itemId;
-            
+            info.hideFromCleaningProgram = room.hideFromCleaningProgram;
             boolean checkoutToday = false;
+            boolean checkinToday = false;
             boolean needInterval = false;
             
             for(PmsRoomSimple simple : checkoutRooms) {
@@ -4534,13 +4559,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     checkoutToday = true;
                 }
             }
+            for(PmsRoomSimple simple : checkinRooms) {
+                if(simple.bookingItemId != null && simple.bookingItemId.equals(room.itemId)) {
+                    checkinToday = true;
+                }
+            }
             for(PmsBookingRooms tmproom : intervalCleanings) {
                 if(tmproom.bookingItemId.equals(room.itemId)) {
                     needInterval = true;
                 }
             }
-            
-            if(room.inUse && !checkoutToday) {
+            if(room.inUse && !checkoutToday && !room.closed && !checkinToday) {
                 info.cleaningState = RoomCleanedInformation.CleaningState.inUse;
             } else if(room.isClean() || room.isUsedToday()) {
                 info.cleaningState = RoomCleanedInformation.CleaningState.isClean;

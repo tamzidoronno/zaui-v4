@@ -45,6 +45,13 @@ $additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSele
             <td width="50%"><textarea type="text" gsname="textMessageDescription" style='width:100%; height:80px;'><? echo $additional->textMessageDescription; ?></textarea></td>
         </tr>
         <tr>
+            <?php
+            $checked = ($additional->hideFromCleaningProgram) ? "CHECKED" : "";
+            ?>
+            <td width="50%">Hide room from cleaning program</td>
+            <td width="50%"><input type='checkbox' <?php echo $checked; ?> gsname='hideFromCleaningProgram'></td>
+        </tr>
+        <tr>
             <td width="50%">Type</td>
             <td width="50%">
                 <select gsname='bookingitemtype'>

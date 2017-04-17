@@ -21,4 +21,5 @@ public class RoomCleanedInformation implements Serializable {
     }
     String roomId = "";
     Integer cleaningState = 0;
+    public boolean hideFromCleaningProgram = false;
 }

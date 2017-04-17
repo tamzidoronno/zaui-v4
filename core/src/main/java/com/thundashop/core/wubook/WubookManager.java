@@ -672,59 +672,28 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         long start = System.currentTimeMillis();
         boolean isUpdate = false;
         if(booking.modifiedReservation.size() > 0 && !booking.delete) {
-            List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
-
-            for(PmsBooking pmsbook : allbookings) {
-                List<String> resIdInPmsBooking = getAllResCodesForPmsBooking(pmsbook);
-                if(pmsbook.wubookreservationid != null) {
-                    for(Integer oldCode : booking.modifiedReservation) {
-                        for(String pmsWubookResId : resIdInPmsBooking) {
-                            if(pmsWubookResId.equals(oldCode+"")) {
-                                pmsManager.logEntry("Modified by channel manager", pmsbook.id, null);
-                                for(PmsBookingRooms room : pmsbook.getActiveRooms()) {
-                                    pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
-                                }
-                                newbooking = pmsManager.getBooking(pmsbook.id);
-                                newbooking.wubookModifiedResId.add(booking.reservationCode);
-                                isUpdate = true;
-                            }
-                            if(newbooking != null) { break; }
-                        }
-                        if(newbooking != null) { break; }
-                    }
-                    if(newbooking != null) { break; }
-                }
+            newbooking = findCorrelatedBooking(booking);
+            if(newbooking == null) {
+                messageManager.sendErrorNotification("Could not find existing booking for a modification on reservation id: " + booking.reservationCode, null);
+            } else {
+                
+                isUpdate = true;
             }
         } else if(booking.delete) {
-            List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
-            boolean found = false;
-            PmsBooking foundbooking = null;
-            for(PmsBooking pmsbook : allbookings) {
-                if(pmsbook.wubookreservationid != null && pmsbook.wubookreservationid.equals(booking.reservationCode)) {
-                    pmsManager.logEntry("Deleted by channel manager", pmsbook.id, null);
-                    pmsManager.deleteBooking(pmsbook.id);
-                    foundbooking = pmsbook;
-                    found = true;
-                }
-                for(Integer oldCode : booking.modifiedReservation) {
-                    if(pmsbook.wubookreservationid.equals(oldCode+"")) {
-                        pmsManager.logEntry("Deleted by channel manager", pmsbook.id, null);
-                        pmsManager.deleteBooking(pmsbook.id);
-                        foundbooking = pmsbook;
-                        found = true;
-                    }
-                }
-            }
-            if(!found) {
+            newbooking = findCorrelatedBooking(booking);
+            if(newbooking == null) {
+                messageManager.sendErrorNotification("Could not find deleted booking for a modification on reservation id: " + booking.reservationCode, null);
                 return "Did not find booking to delete.";
+            } else {
+                pmsManager.deleteBooking(newbooking.id);
             }
             
             NewOrderFilter filter = new NewOrderFilter();
             filter.avoidOrderCreation = false;
             filter.createNewOrder = false;
             filter.prepayment = true;
-            filter.endInvoiceAt = foundbooking.getEndDate();
-            pmsInvoiceManager.createOrder(foundbooking.id,filter);
+            filter.endInvoiceAt = newbooking.getEndDate();
+            pmsInvoiceManager.createOrder(newbooking.id,filter);
             
             return "";
         }
@@ -1162,6 +1131,31 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         return false;
+    }
+
+    private PmsBooking findCorrelatedBooking(WubookBooking booking) throws Exception {
+        PmsBooking newbooking = null;
+        List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
+
+        for(PmsBooking pmsbook : allbookings) {
+            List<String> resIdInPmsBooking = getAllResCodesForPmsBooking(pmsbook);
+            if(pmsbook.wubookreservationid != null) {
+                for(Integer oldCode : booking.modifiedReservation) {
+                    for(String pmsWubookResId : resIdInPmsBooking) {
+                        if(pmsWubookResId.equals(oldCode+"")) {
+                            pmsManager.logEntry("Modified by channel manager", pmsbook.id, null);
+                            for(PmsBookingRooms room : pmsbook.getActiveRooms()) {
+                                pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
+                            }
+                            newbooking = pmsManager.getBooking(pmsbook.id);
+                            newbooking.wubookModifiedResId.add(booking.reservationCode);
+                            return newbooking;
+                        }
+                    }
+                }
+            }
+        }
+        return newbooking;
     }
 
 }

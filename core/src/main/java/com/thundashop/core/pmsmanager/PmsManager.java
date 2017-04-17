@@ -566,6 +566,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     result.add(booking);
                 }
             }
+        } else if (filter.filterType.equals("requestedending")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.hasRequestedEnding(filter.startDate, filter.endDate)) {
+                    result.add(booking);
+                }
+            }
         } else if (filter.filterType.equals("uncofirmed")) {
             for (PmsBooking booking : bookings.values()) {
                 if (!booking.confirmed) {

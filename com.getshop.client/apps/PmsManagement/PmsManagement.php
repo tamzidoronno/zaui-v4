@@ -2980,6 +2980,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $searchtypes['afterstayorder'] = "Order created after stay";
             $searchtypes['unsettled'] = "Bookings with unsettled amounts";
         }
+        if($config->bookingProfile == "storage") {
+            $searchtypes['requestedending'] = "Requested to be ended";
+        }
         return $searchtypes;
     }
 

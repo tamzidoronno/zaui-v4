@@ -233,6 +233,10 @@ public class PmsBookingSimpleFilter {
             if(!pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
                 return true;
             }
+        } else if (filter.filterType == null || filter.filterType.equals("requestedending")) {
+            if(room.requestedEndDate(filter.startDate, filter.endDate)) {
+                return true;
+            }
         } else if (filter.filterType == null || filter.filterType.equals("afterstayorder")) {
             if(booking.createOrderAfterStay) {
                 return true;

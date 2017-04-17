@@ -1140,6 +1140,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         for(PmsBooking pmsbook : allbookings) {
             List<String> resIdInPmsBooking = getAllResCodesForPmsBooking(pmsbook);
             if(pmsbook.wubookreservationid != null) {
+                if(pmsbook.wubookreservationid.trim().equals(booking.reservationCode.trim())) {
+                    return pmsbook;
+                }
                 for(Integer oldCode : booking.modifiedReservation) {
                     for(String pmsWubookResId : resIdInPmsBooking) {
                         if(pmsWubookResId.equals(oldCode+"")) {

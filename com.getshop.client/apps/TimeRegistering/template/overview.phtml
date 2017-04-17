@@ -1,0 +1,30 @@
+<?php
+/* @var $this ns_49f47d6c_9663_4063_b239_9ea77ec7ed14\TimeRegistering */
+
+$hours = $this->getApi()->getTimeRegisteringManager()->getAllTimesRegistered();
+
+$ids = array();
+foreach($hours as $hour) {
+    $ids[$hour->userId] = "";
+}
+echo "<span gstype='form' method='downloadRegisteredHours'>";
+echo "Select a time periode and what user you want a report from.<br>";
+echo "<input type='text' gsname='startdate'> ";
+echo "<input type='text' gsname='enddate'>";
+echo "<br>";
+echo "<br>";
+
+foreach($ids as $userId => $d) {
+    $user = $this->getApi()->getUserManager()->getUserById($userId);
+    echo "<span class='downloaduserbutton' userid='".$user->id."' gs_fileName='report_".$user->fullName."'>" . $user->fullName . "</span>";
+}
+echo "<br>";
+echo "<br>";
+echo "</span>";
+?>
+
+<script>
+    $("[gsname='startdate']").datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true});
+    $("[gsname='enddate']").datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true});
+    
+</script>

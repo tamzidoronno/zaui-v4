@@ -8,9 +8,8 @@ getshop.timeregisteringController = function($scope, $state) {
     $scope.hourlist = new Array();
     
     $scope.loadMyHours = function() {
-        var loading = getshopclient.TimeRegisteringManager.getMyHours(getMultilevelName());
+        var loading = getshopclient.TimeRegisteringManager.getMyHours();
         loading.done(function(res) {
-            console.log(res);
             $scope.hourlist = res;
             $scope.$apply();
         });
@@ -19,7 +18,7 @@ getshop.timeregisteringController = function($scope, $state) {
     $scope.deleteDate = function(id) {
         var confirmed = confirm("Are you sure you want to delete this?");
         if(confirmed) {
-            var deleted = getshopclient.TimeRegisteringManager.deleteTimeUnsecure(getMultilevelName(), id);
+            var deleted = getshopclient.TimeRegisteringManager.deleteTimeUnsecure(id);
             deleted.done(function() {
                 $scope.loadMyHours();
             });
@@ -37,9 +36,10 @@ getshop.timeregisteringController = function($scope, $state) {
         $scope.enddate.setMinutes($scope.endtime.getMinutes());
         $scope.enddate.setSeconds($scope.endtime.getSeconds());
         
-        var saving = getshopclient.TimeRegisteringManager.registerTime(getMultilevelName(), $scope.startdate, $scope.enddate, $scope.comment);
+        var saving = getshopclient.TimeRegisteringManager.registerTime($scope.startdate, $scope.enddate, $scope.comment);
         
         saving.done(function(res) {
+            $scope.loadMyHours();
             $scope.addingHour = false;
             setTimeout(function() {
                 $('.addTimeButton').html('<i class="fa fa-check"></i>');

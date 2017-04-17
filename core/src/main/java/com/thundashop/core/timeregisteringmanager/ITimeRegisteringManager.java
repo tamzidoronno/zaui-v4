@@ -12,7 +12,6 @@ import java.util.List;
  */
 
 @GetShopApi
-@GetShopMultiLayerSession
 public interface ITimeRegisteringManager {
     public void registerTime(Date start, Date end, String comment);
     public void deleteTimeUnsecure(String id);
@@ -20,4 +19,7 @@ public interface ITimeRegisteringManager {
     
     @Administrator
     public List<TimeRegistered> getAllTimesRegistered();
+    
+    @Administrator
+    public List<TimeRegistered> getRegisteredHoursForUser(String userId, Date start, Date end);
 }

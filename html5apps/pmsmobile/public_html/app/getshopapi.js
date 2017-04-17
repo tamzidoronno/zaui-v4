@@ -12369,41 +12369,38 @@ GetShopApiWebSocket.TimeRegisteringManager = function(communication) {
 }
 
 GetShopApiWebSocket.TimeRegisteringManager.prototype = {
-    'deleteTimeUnsecure' : function(multilevelname, id, gs_silent) {
+    'deleteTimeUnsecure' : function(id, gs_silent) {
         var data = {
             args : {
                 id : JSON.stringify(id),
             },
             method: 'deleteTimeUnsecure',
-            multiLevelName: multilevelname,
             interfaceName: 'core.timeregisteringmanager.ITimeRegisteringManager',
         };
         return this.communication.send(data, gs_silent);
     },
 
-    'getAllTimesRegistered' : function(multilevelname, gs_silent) {
+    'getAllTimesRegistered' : function(gs_silent) {
         var data = {
             args : {
             },
             method: 'getAllTimesRegistered',
-            multiLevelName: multilevelname,
             interfaceName: 'core.timeregisteringmanager.ITimeRegisteringManager',
         };
         return this.communication.send(data, gs_silent);
     },
 
-    'getMyHours' : function(multilevelname, gs_silent) {
+    'getMyHours' : function(gs_silent) {
         var data = {
             args : {
             },
             method: 'getMyHours',
-            multiLevelName: multilevelname,
             interfaceName: 'core.timeregisteringmanager.ITimeRegisteringManager',
         };
         return this.communication.send(data, gs_silent);
     },
 
-    'registerTime' : function(multilevelname, start,end,comment, gs_silent) {
+    'registerTime' : function(start,end,comment, gs_silent) {
         var data = {
             args : {
                 start : JSON.stringify(start),
@@ -12411,7 +12408,6 @@ GetShopApiWebSocket.TimeRegisteringManager.prototype = {
                 comment : JSON.stringify(comment),
             },
             method: 'registerTime',
-            multiLevelName: multilevelname,
             interfaceName: 'core.timeregisteringmanager.ITimeRegisteringManager',
         };
         return this.communication.send(data, gs_silent);

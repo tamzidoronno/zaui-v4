@@ -332,6 +332,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 $config->addonConfiguration->{$addonKey}->count = $_POST['data']['count'];
                 $config->addonConfiguration->{$addonKey}->descriptionWeb = $_POST['data']['descriptionWeb'];
                 $config->addonConfiguration->{$addonKey}->noRefundable = $_POST['data']['noRefundable'] == "true";
+                $config->addonConfiguration->{$addonKey}->dependsOnGuestCount = $_POST['data']['dependsOnGuestCount'] == "true";
                 
                 $includedRes = array();
                 foreach($_POST['data'] as $key => $val) {

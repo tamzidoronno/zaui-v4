@@ -87,7 +87,22 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .radioinput', app.PmsManagement.updateBookingInformationRadioButton);
         $(document).on('click','.PmsManagement .setNewPasswordOnUser', app.PmsManagement.setNewPasswordOnUser);
         $(document).on('click','.PmsManagement .changeRecieptEmail', app.PmsManagement.changeRecieptEmail);
+        $(document).on('click','.PmsManagement .loadadditionalinfo', app.PmsManagement.loadadditionalinfo);
         $(document).on('change','.PmsManagement .contactdatadropdown', app.PmsManagement.updateBookingInformationDropdown);
+    },
+    loadadditionalinfo : function() {
+        var event = thundashop.Ajax.createEvent('','loadAdditionalInformationForRoom', $(this), {
+            "roomid" : $(this).attr('roomid')
+        });
+        var box = $('.additionalroominfobox');
+        var infobutton = $(this);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.additionalroominfobox_inner').html(res);
+            box.fadeIn();
+            box.css('left', infobutton.position().left);
+            box.css('top', infobutton.position().top+20);
+            console.log(res);
+        });
     },
     changeRecieptEmail : function() {
         var newEmail = prompt("New reciept email adress?");

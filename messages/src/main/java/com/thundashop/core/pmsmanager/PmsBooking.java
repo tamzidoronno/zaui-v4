@@ -432,6 +432,15 @@ public class PmsBooking extends DataCommon {
         return new ArrayList(typesToReturn.keySet());
     }
 
+    boolean hasRequestedEnding(Date startDate, Date endDate) {
+        for(PmsBookingRooms room : rooms) {
+            if(room.requestedEndDate(startDate, endDate)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -360,7 +361,15 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         query.put("rowCreatedDate", BasicDBObjectBuilder.start("$gte", start).add("$lte", end).get());
 
         List<DataCommon> datas = database.query(MessageManager.class.getSimpleName(), storeId+"_log", query);
-        return new ArrayList(datas);
+        ArrayList result = new ArrayList(datas);
+        
+        Collections.sort(result, new Comparator<DataCommon>(){
+             public int compare(DataCommon o1, DataCommon o2){
+                 return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+             }
+        });
+        
+        return result;
     }
 
 }

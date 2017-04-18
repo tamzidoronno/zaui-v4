@@ -167,14 +167,19 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             $row['visitor'] .= "<i class='fa fa-cutlery' title='Breakfast included: $breakfasts'></i> ";
         }
         
-        foreach($room->guest as $guest) {
-            $row['visitor'] .= $guest->name;
-            if($guest->email) { $row['visitor'] .= " - " . $guest->email; }
-            if($guest->phone) { $row['visitor'] .= "<span style='float:right;' class='secondary_text'>+" . $guest->prefix . $guest->phone . "</span>"; }
-            $row['visitor'] .= "<br>";
+        if($config->bookingProfile != "storage") {
+            foreach($room->guest as $guest) {
+                $row['visitor'] .= $guest->name;
+                if($guest->email) { $row['visitor'] .= " - " . $guest->email; }
+                if($guest->phone) { $row['visitor'] .= "<span style='float:right;' class='secondary_text'>+" . $guest->prefix . $guest->phone . "</span>"; }
+                $row['visitor'] .= "<br>";
+            }
+            $row['visitor'] .= "<div style='clear:both;'></div><span style='float:right;' class='secondary_text'>" .$room->numberOfGuests  . " guests</span>";
         }
-        $row['visitor'] .= "<div style='clear:both;'></div><span style='float:right;' class='secondary_text'>" .$room->numberOfGuests  . " guests</span>";
         $row['visitor'] .= "<div class='secondary_text'>" . $room->owner . "</div>";
+        if($room->requestedEndDate) {
+            $row['visitor'] .= "<div class='secondary_text'> Requested end date <span style='float:right;'>" . date("d.m.Y", strtotime($room->requestedEndDate)) . "</span></div>";
+        }
         if(@$filter->groupByBooking && $room->numberOfRoomsInBooking > 1) {
             $row['visitor'] .=  '<div>+ ' . ($room->numberOfRoomsInBooking-1) . " addititional entries.</div>";
         }

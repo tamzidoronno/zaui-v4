@@ -74,6 +74,7 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
             console.log(addinfo);
             var loadrooms = getshopclient.BookingEngine.getBookingItems(getMultilevelName());
             loadrooms.done(function(rooms) {
+                var allRoomsToPrint = [];
                 for(var roomk in rooms) {
                     var room = rooms[roomk];
                     for(var addk in addinfo) {
@@ -88,10 +89,14 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
                             } else {
                                 room.inUseState = "notclean";
                             }
+                            
+                            if(!addinfoitem.hideFromCleaningProgram) {
+                                allRoomsToPrint.push(room);
+                            }
                         }
                     }
                 }
-               $scope.rooms = rooms;
+               $scope.rooms = allRoomsToPrint;
                $scope.$apply();
             });
         });

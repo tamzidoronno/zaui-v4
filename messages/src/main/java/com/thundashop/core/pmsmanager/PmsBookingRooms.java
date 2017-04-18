@@ -674,4 +674,15 @@ public class PmsBookingRooms implements Serializable {
         }
         return months;
     }
+
+    boolean requestedEndDate(Date startDate, Date endDate) {
+        if(requestedEndDate != null) {
+            System.out.println(requestedEndDate);
+        }
+        if(requestedEndDate != null && requestedEndDate.after(startDate) && requestedEndDate.before(endDate)) {
+            System.out.println("\t true");
+            return true;
+        }
+        return false;
+    }
 }

@@ -16,6 +16,8 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     }
     
     public function closeRooms() {
+        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+        $comment = "closed by: " . $user->fullName . ", ";
         if($_POST['event'] == "closeRooms") {
             $startTime = $_POST['data']['start'];
             $endTime = $_POST['data']['end'];
@@ -24,7 +26,7 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
             } else {
                 $start = $this->convertToJavaDate(strtotime($startTime . " 14:00"));
                 $end = $this->convertToJavaDate(strtotime($endTime . " 11:00"));
-                $comment = "closed: " . $_POST['data']['closeroomcomment'];
+                $comment .= $_POST['data']['closeroomcomment'];
                 foreach($_POST['data'] as $key => $val) {
                     if(strstr($key, "item_") && $val == "true") {
                         $itemId = str_replace("item_", "", $key);

@@ -1,0 +1,41 @@
+<?php
+ /* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
+$room = null;
+foreach($booking->rooms as $r) {
+    if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
+        $room = $r;
+        break;
+    }
+}
+$cleaningState = "";
+if(!$room->bookingItemId) {
+    $cleaningState = "No room assigned yet.";
+}
+$code = "Code not active yet, make sure the time periode is within the correct timespan, the payment is correct and the room has been cleaned.";
+if($room->addedToArx) {
+    $code = $room->code;
+}
+?>
+<table cellspacing='0' cellpadding='0' width='100%'>
+    <tr>
+        <th style='width:100px;'></th>
+        <th></th>
+    <tr>
+        <td>Cleaning state</td>
+        <td><?php echo $cleaningState; ?></td>
+    </tr>
+    <tr>
+        <td>Code</td>
+        <td><?php echo $code; ?></td>
+    </tr>
+    <tr>
+        <td>Resend code</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>Renew code</td>
+        <td></td>
+    </tr>
+</table>
+   

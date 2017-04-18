@@ -31,7 +31,7 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
         List<BookingItem> items = bookingEngine.getBookingItems();
         for(GetShopDevice lock : locks) {
             if(lock.isLock()) {
-                String name = "unkown";
+                String name = lock.name;
                 for(BookingItem item : items) {
                     if(item.bookingItemAlias.equals(lock.id)) {
                         name = item.bookingItemName;
@@ -53,7 +53,6 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
         return new ArrayList();
     }
 
-    @Override
     public List<AccessCategory> getAllAccessCategories() throws Exception {
         return new ArrayList();
     }
@@ -61,9 +60,7 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
     @Override
     public void doorAction(String externalId, String state) throws Exception {
         logPrint("External id: " + externalId + ", state: " + state);
-        if(state.equals("pulseOpen") || state.equals("forceOpenOn") || state.equals("forceOpenOff")) {
-            getShopLockManager.openLock(externalId);
-        }
+        getShopLockManager.openLock(externalId, state);
     }
 
     @Override

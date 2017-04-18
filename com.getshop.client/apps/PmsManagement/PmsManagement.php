@@ -19,6 +19,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return 1;
     }
     
+    public function loadAdditionalInformationForRoom() {
+           $this->includefile("additionalinformationforroom");
+    }
+    
     public function updateRecieptEmailOnOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $order->recieptEmail = $_POST['data']['newEmail'];
@@ -1284,7 +1288,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
             $this->includefile("managementview");
         }
-        $this->getApi()->getPmsInvoiceManager()->validateAllInvoiceToDates($this->getSelectedName());
     }
     
     public function deleteDefinedFilter() {
@@ -2979,6 +2982,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $searchtypes['unpaid'] = "Unpaid";
             $searchtypes['afterstayorder'] = "Order created after stay";
             $searchtypes['unsettled'] = "Bookings with unsettled amounts";
+        }
+        if($config->bookingProfile == "storage") {
+            $searchtypes['requestedending'] = "Requested to be ended";
         }
         return $searchtypes;
     }

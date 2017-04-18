@@ -398,6 +398,9 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             if(!$value) {
                 continue;
             }
+            if($key == "id") {
+                continue;
+            }
             if(stristr($key, "emailtonotify_")) {
                 $indexed = explode("_", $key);
                 $type = $indexed[1];
@@ -414,6 +417,9 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 continue;
             }
             if($key == "fireinstructions") {
+                continue;
+            }
+            if($key == "id") {
                 continue;
             }
             if(property_exists($notifications, $key)) {

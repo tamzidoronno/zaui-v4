@@ -708,6 +708,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         bookings.values().stream().
                 filter(o -> o.within(start, end)).
                 filter(o -> (o.bookingItemId != null && o.bookingItemId.equals(itemId))).
+                filter(o -> (o.within(start, end))).
                 forEach(o -> line.add(o));
         return line;
    }

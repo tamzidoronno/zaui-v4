@@ -119,6 +119,9 @@ $products=$products2;
                                 if($additional->squareMetres > 0) {
                                     echo " (" . $additional->squareMetres . "kvm)";
                                 }
+                                if($additional->hideFromCleaningProgram) {
+                                    echo ", hidden from cleaning program.";
+                                }
                                 echo "</span></td>";
                                 echo "<td align='right'>";
                                 echo $this->getType($item->bookingItemTypeId, $bookingtypes)->name;

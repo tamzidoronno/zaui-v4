@@ -97,6 +97,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String phoneToSend;
     private String prefixToSend;
     private List<Order> tmpOrderList;
+    private boolean warnedAboutAutoassigning = false;
     
     private HashMap<String, PmsBookingFilter> savedFilters = new HashMap();
     
@@ -2362,7 +2363,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public String getDefaultMessage(String bookingId) {
         PmsBooking booking = getBookingUnsecure(bookingId);
-        String message = getConfiguration().defaultMessage.get(booking.language);
+        if(getConfigurationSecure().defaultMessage == null) {
+            return "";
+        }
+        String message = getConfigurationSecure().defaultMessage.get(booking.language);
         if (message == null) {
             return "";
         }
@@ -2395,6 +2399,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
             
         if (items.isEmpty()) {
+            if(!warnedAboutAutoassigning) {
+                messageManager.sendErrorNotification("Failed to autoassign room, its critical since someone will not recieve the code for the room now.", null);
+                warnedAboutAutoassigning = true;
+            }
             logPrint("No items available?");
         } else {
             BookingItem item = null;

@@ -3,6 +3,9 @@
 $car = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
 $date = $car && $car->lastService ? date('Y-m-d',strtotime($car->lastService)) : date('Y-m-d', time());
 $veihjelp = $car && $car->mecaVeihjelpExpiry ? date('Y-m-d',strtotime($car->mecaVeihjelpExpiry)) : "";
+if($veihjelp == "1970-01-01"){
+    $veihjelp = "";
+}
 
 $nextServiceDate = $car ? date('d/m-Y',strtotime($car->nextService)) : "";
 $nextControll = $car ? date('d/m-Y',strtotime($car->nextControll)) : "";

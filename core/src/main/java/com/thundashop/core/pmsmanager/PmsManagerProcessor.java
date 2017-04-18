@@ -200,14 +200,19 @@ public class PmsManagerProcessor {
             }
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
-                if(room.addedToArx) {
-                    continue;
-                }
-                if (!manager.isClean(room.bookingItemId) && manager.getConfigurationSecure().cleaningInterval > 0) {
-                    continue;
-                }
-                if(room.blocked) {
-                    continue;
+                if(!room.forceUpdateLocks) {
+                    if(room.addedToArx) {
+                        continue;
+                    }
+                    if (!manager.isClean(room.bookingItemId) && manager.getConfigurationSecure().cleaningInterval > 0) {
+                        continue;
+                    }
+                    if(room.blocked) {
+                        continue;
+                    }
+                } else {
+                    room.forceUpdateLocks = false;
+                    manager.saveBooking(booking);
                 }
 
                 if (room.guests.isEmpty() || room.guests.get(0).name == null) {
@@ -943,6 +948,14 @@ public class PmsManagerProcessor {
                     if(!room.date.start.before(cal.getTime())) {
                         continue;
                     }
+                    
+                    if(order.recieptEmail == null || order.recieptEmail.isEmpty()
+                            && room.guests != null && !room.guests.isEmpty()) {
+                        //Make sure it asks for the correct person to send email to.
+                        order.recieptEmail = room.guests.get(0).email;
+                        manager.orderManager.saveOrder(order);
+                    }
+                    
                     key = key + "_" + order.id;
                 }
                 

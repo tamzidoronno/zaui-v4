@@ -173,17 +173,19 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             $scope.resendcode = false;
             return;
         }
-        $scope.numbertosendcodeto = "+" + $scope.room.guests[0].prefix + " " + $scope.room.guests[0].phone;
+        $scope.prefixtosendcodeto = $scope.room.guests[0].prefix;
+        $scope.numbertosendcodeto = $scope.room.guests[0].phone;
         $scope.resendcode = true;
     },
     $scope.resendCode = function() {
         var number = $scope.numbertosendcodeto;
         var roomId = $scope.room.pmsBookingRoomId;
-        var sending = getshopclient.PmsManager.sendCode(getMultilevelName(), number, roomId);
+        var prefix = $scope.prefixtosendcodeto;
+        var sending = getshopclient.PmsManager.sendCode(getMultilevelName(), prefix, number, roomId);
         sending.done(function() {
             alert('Code has been sent');
             $scope.resendcode = false;
-            $scope.room.addedToArx = false;
+//            $scope.room.addedToArx = false;
             $scope.$apply();
         });
     },

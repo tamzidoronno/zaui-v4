@@ -34,6 +34,7 @@ if(sizeof($channels) > 0 && $this->isHotel($notificationSettings)) { ?>
         <div class='configrow'>
             <span class='configentry'>
                 <select gsname='channel_payment_<?php echo $chan; ?>'>
+                    <option value=''>Default</option>
                     <?php
                     foreach($payment as $test) {
                         $selected = "";

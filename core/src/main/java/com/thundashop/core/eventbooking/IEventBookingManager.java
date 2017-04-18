@@ -79,6 +79,9 @@ public interface IEventBookingManager {
     @Editor
     public void setParticipationStatus(String eventId, String userId, String status);
     
+    @Editor
+    public void setGroupInvoiceingStatus(String eventId, String userId, String groupId);
+    
     public void addLocationFilter(String locationId);
     
     public void addTypeFilter(String bookingItemTypeId);
@@ -228,4 +231,16 @@ public interface IEventBookingManager {
 
     @Administrator
     public void unCancelEvent(String eventId);
+    
+    @Administrator
+    public void saveGroupInvoicing(InvoiceGroup invoiceGroup);
+    
+    @Administrator
+    public List<InvoiceGroup> getInvoiceGroups(String eventId);
+    
+    @Administrator
+    public InvoiceGroup getInvoiceGroup(String groupId);
+    
+    @Administrator
+    public void deleteInvoiceGroup(String groupId);
 }

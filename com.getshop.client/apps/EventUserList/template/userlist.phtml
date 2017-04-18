@@ -3,9 +3,16 @@
 $event = $this->getEvent();
 $users = $this->getApi()->getEventBookingManager()->getUsersForEvent($this->getBookingEngineName(), $event->id);
 $waitingListUsers = $this->getApi()->getEventBookingManager()->getUsersForEventWaitinglist($this->getBookingEngineName(), $event->id);
+$invoiceGroups = $this->getApi()->getEventBookingManager()->getInvoiceGroups($this->getBookingEngineName(), $event->id);
+
 if (!$waitingListUsers) {
-    $waitingListUsers = [];
+    $waitingListUsers = array();
 }
+
+if (!$invoiceGroups) {
+    $invoiceGroups = array();
+}
+
 $groups = $this->getApi()->getUserManager()->getAllGroups();
 $isAdministrator = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
 
@@ -53,10 +60,27 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
     if ($event && !$event->markedAsReady) {
         echo "<div class='shop_button' gsclick='markAsReady' eventid='$event->id' gs_confirm='Are you sure you want to mark this as ready ?'>".$this->__w("Mark as ready")."</div>";
     }
+    if ($this->isInvoiceGroupActivated()) {
+    ?>
+        <div class='shop_button' gs_show_modal="modifyGroupInvoice" eventid="<? echo $event->id; ?>"><? echo $this->__f("Create invoicegroup"); ?></div>
+    <?
+    }
     ?>
 </div>
 <?
 }
+
+if (count($invoiceGroups)) {
+    echo "<div class='invoicegroups'>";
+        echo "Invoice groups created for this event:<br/>";
+        foreach ($invoiceGroups as $invoiceGroup) {
+            ?>
+            <div class='invoicegroup'><i class='fa fa-trash' gsclick="deleteInvoiceGroup" groupid="<? echo $invoiceGroup->id; ?>"></i> <? echo $invoiceGroup->name. " (Price: $invoiceGroup->price)"; ?> <span style="cursor: pointer; color: blue;" groupid="<? echo $invoiceGroup->id;?>" eventid="<? echo $event->id; ?>" gs_downloadExcelReport='downloadReportGroupedReport' gs_filename="<? echo $invoiceGroup->name; ?>">( Download report )</span></div>
+            <?
+        }
+    echo "</div>";
+}
+
 
 if (count($waitingListUsers)) {
     echo "<div class='waitinglistusers'>";

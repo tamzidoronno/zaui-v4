@@ -29,6 +29,9 @@
 .PmsManagement .continueorderbutton { border: solid 1px; border-radius: 3px; cursor:pointer; padding-left: 10px; padding-right: 10px; display:inline-block; margin: 3px; }
 .PmsManagement .roominfosub {  width: 140px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:inline-block; }
 .PmsManagement .otherOrderOptions { position:absolute;  background-color:#fff;  width: 300px; left: -300px; }
+.PmsManagement .additionalroominfobox { position:absolute; z-index: 2; background-color: #fff; border: solid 1px #bbb; width: 400px; display:none; }
+.PmsManagement .additionalroominfobox_inner { }
+.PmsManagement .additionalroominfobox_header { background-color:#efefef; padding: 5px; margin-bottom: 3px; }
 .PmsManagement .Confirmed,
 .PmsManagement .active,
 .PmsManagement .confirmed { color:green; }

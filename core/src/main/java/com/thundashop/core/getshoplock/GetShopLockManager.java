@@ -86,6 +86,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         for(GetShopLockCode code : dev.codes.values()) {
             code.resetOnLock();
         }
+        saveObject(dev);
     }
     
 
@@ -204,6 +205,37 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         devices.put(lock.id, lock);
     }
 
+    private PmsLockServer getLockServerForDevice(GetShopDevice dev) {
+        for(String serverName : pmsManager.getConfigurationSecure().lockServerConfigs.keySet()) {
+            if(serverName.equals(dev.serverSource)) {
+                return pmsManager.getConfigurationSecure().lockServerConfigs.get(serverName);
+            }
+        }
+        return null;
+    }
+
+    private void openGetShopLockBox(String lockId, String action) {
+       GetShopDevice dev = devices.get(lockId);
+       PmsLockServer lockServer = getLockServerForDevice(dev);
+
+            String hostname = getHostname(dev.serverSource);
+            if(hostname == null || hostname.isEmpty()) { return; }
+            String postfix = "?username="+lockServer.arxUsername+"&password="+lockServer.arxPassword+"&deviceid="+dev.zwaveid+"&forceopen=";
+            if(action.equalsIgnoreCase("forceOpenOn")) {
+                postfix += "on";
+            } else {
+                postfix += "off";
+            }
+            String address = "http://"+lockServer.arxHostname+":18080/" + postfix;
+            try {
+                httpLoginRequest(address, dev.serverSource);
+            } catch (Exception ex) {
+                Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
+            }
+
+       
+    }
 
     class GetshopLockCodeManagemnt extends Thread {
 
@@ -546,22 +578,30 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         return res;
     }
 
-    @Override
-    public void openLock(String lockId) {
+    public void openLock(String lockId, String action) {
         GetShopDevice dev = devices.get(lockId);
-        String hostname = getHostname(dev.serverSource);
-        if(hostname == null || hostname.isEmpty()) { return; }
-        String postfix = "ZWave.zway/Run/devices["+dev.zwaveid+"].instances[0].commandClasses[98].Set(1)";
-        try {
-            postfix = URLEncoder.encode(postfix, "UTF-8");
-        }catch(Exception e) {}
-        String address = "http://"+getHostname(dev.serverSource)+":8083/" + postfix;
-        try {
-            httpLoginRequest(address, dev.serverSource);
-        } catch (Exception ex) {
-            Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
-            ex.printStackTrace();
+        PmsLockServer lockServer = getLockServerForDevice(dev);
+        if(lockServer != null && lockServer.locktype.equals("getshoplockbox")) {
+            openGetShopLockBox(lockId, action);
+        } else {
+            String hostname = getHostname(dev.serverSource);
+            if(hostname == null || hostname.isEmpty()) { return; }
+            String postfix = "ZWave.zway/Run/devices["+dev.zwaveid+"].instances[0].commandClasses[98].Set(1)";
+            try {
+                postfix = URLEncoder.encode(postfix, "UTF-8");
+            }catch(Exception e) {}
+            String address = "http://"+getHostname(dev.serverSource)+":8083/" + postfix;
+            try {
+                httpLoginRequest(address, dev.serverSource);
+            } catch (Exception ex) {
+                Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
+            }
         }
+    }
+    
+    public void openLock(String lockId) {
+        openLock(lockId, "");
     }
 
     @Override

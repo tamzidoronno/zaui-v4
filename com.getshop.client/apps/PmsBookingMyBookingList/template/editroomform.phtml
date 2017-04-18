@@ -8,14 +8,21 @@ foreach($booking->rooms as $room) {
         break;
     }
 }
+$canChangeDates = ($this->getConfigurationSetting("can_not_change") != "true" || $booking->createOrderAfterStay);
+
+$showUpdate = "";
+if(!$canChangeDates) {
+    $showUpdate = "style='display:none;'";
+}
+
 ?>
 <span gstype="form" method="updateBooking">
     <input type='hidden' gsname='bookingid' value='<?php echo $_POST['data']['bookingid']; ?>'>
     <input type='hidden' gsname='roomid' value='<?php echo $_POST['data']['roomid']; ?>'>
     <table cellspacing='0' cellpadding='0'>
         <tr><th></th><th></th></tr>
-        <tr><td>Start date</td><td><input type="txt" value='<?php echo date("d.m.Y", strtotime($room->date->start)); ?>' gsname='startdate'></td></tr>
-        <tr><td>end date</td><td><input type="txt" value='<?php echo date("d.m.Y", strtotime($room->date->end)); ?>' gsname='enddate'></td></tr>
+        <tr <?php echo $showUpdate; ?>><td>Start date</td><td><input type="txt" value='<?php echo date("d.m.Y", strtotime($room->date->start)); ?>' gsname='startdate'></td></tr>
+        <tr <?php echo $showUpdate; ?>><td>end date</td><td><input type="txt" value='<?php echo date("d.m.Y", strtotime($room->date->end)); ?>' gsname='enddate'></td></tr>
         <tr><td>Number of guests</td><td>
             <select class='changeGuestCount' gsname='guestcount'>
                 <?php for($i = 1; $i <= 10; $i++) {

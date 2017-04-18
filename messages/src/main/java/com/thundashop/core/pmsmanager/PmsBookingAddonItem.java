@@ -40,6 +40,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public boolean isIncludedInRoomPrice = false;
     List<String> includedInBookingItemTypes = new ArrayList();
     public String addedBy;
+    public List<PmsBookingAddonItemValidDateRange> validDates = new ArrayList();
     
     Map<String, String> variations = new HashMap();
     String description;
@@ -50,4 +51,20 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     
     @Transient
     public String name = "";
+    
+    public boolean isValidForPeriode(Date start, Date end, Date regDate) {
+        if(validDates == null || validDates.isEmpty()) {
+            return true;
+        }
+        
+        for(PmsBookingAddonItemValidDateRange range : validDates) {
+            if(range.containsPeriode(start, end, regDate)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    
 }

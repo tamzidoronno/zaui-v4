@@ -1,0 +1,38 @@
+<?
+/* @var $this \ns_7214108c_a926_4057_8bc9_6b43cd6917f0\EventBookingGroupInvoicing */
+$companyNamedSearchFor = isset($_POST['data']['companyname']) ? $_POST['data']['companyname'] : "";
+?>
+
+<?
+if ($this->isStep1()) {
+?>
+    <div class="step step1" gstype="form" method="goToStep2">
+        <table>
+            <tr><td>Name</td><td><input gsname="name" class="gsniceinput1"/></td></tr>
+            <tr><td>Price</td><td><input gsname="price"  class="gsniceinput1"/></td></tr>
+        </table>
+        <br/>
+        <div class="shop_button" gstype="submit">Next</div>
+    </div>
+<?
+}
+
+if ($this->isStep2()) {
+?>
+    <div class="step step2" gstype="form" method="serachForCompanies">
+        Search for company:<br/>
+        <input class="gsniceinput1" placeholder="Company name" gsname="companyname" value="<? echo $companyNamedSearchFor; ?>"/>
+        <br/>
+        <br/>
+        <div class="shop_button" gstype="submit">Search</div>
+        <br/>
+        <br/>
+        <div class="company_search_results">
+             <? 
+             $this->includefile("serachForCompanies");
+             ?>
+        </div>
+    </div>
+<?
+}
+?>

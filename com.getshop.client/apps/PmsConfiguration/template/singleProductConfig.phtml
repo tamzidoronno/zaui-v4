@@ -1,21 +1,7 @@
 <?php
 /* @var $this \ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
-$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
-$this->checkForAddonProductsToCreate($config);
-
-$addonConfig = $config->addonConfiguration;
-
+$selectedAddonConfig = $this->getSelectedAddonConfig();
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
-$addonItems = array();
-foreach($config->addonConfiguration as $item) {
-    $addonItems[$item->productId] = $item;
-}
-foreach($addonConfig as $conf) {
-    if($_POST['data']['id'] == $conf->productId) {
-        $selectedAddonConfig = $conf;
-        break;
-    }
-}
 
 if(!$selectedAddonConfig) {
     $selectedAddonConfig = new core_pmsmanager_PmsBookingAddonItem();
@@ -55,3 +41,44 @@ $includedIn = (array)$selectedAddonConfig->includedInBookingItemTypes;
     
     <input gstype="submit" type="button" value='Save'>
 </div>
+
+
+<?php
+$validDateranges = (array)$selectedAddonConfig->validDates;
+$rangetype = array();
+$rangetype[1] = "On stay";
+$rangetype[2] = "On booking";
+echo "<br>";
+if(empty($validDateranges)) {
+    echo "Valid for all dates<br>";
+} else {
+    echo "<div gstype='form' method='removeValidTimeRange'>";
+    echo "<input type='hidden' value='".$_POST['data']['id']."' type='hidden' gsname='id'>";
+    foreach($validDateranges as $vdate) {
+        echo "<i class='fa fa-trash-o' style='cursor:pointer;' gstype='forceClicksubmitToInfoBox' gsname='rangeid' gsvalue='".$vdate->id."'></i> ";
+        echo date("d.m.Y", strtotime($vdate->start));
+        echo " - ";
+        echo date("d.m.Y", strtotime($vdate->end));
+        echo " (" . $rangetype[$vdate->validType]. ")<br>";
+    }
+    echo "</div>";
+}
+echo "<br>";
+echo "<div gstype='form' method='addDateRange'>";
+echo "<input type='hidden' value='".$_POST['data']['id']."' type='hidden' gsname='id'>";
+echo "<b>Create a new date range:</b><br>";
+echo "<input type='text' gsname='start' class='start_date_input'>";
+echo "<input type='text' gsname='end' class='end_date_input'>";
+echo "<select gsname='validtype'>";
+foreach($rangetype as $id => $name) {
+    echo "<option value='$id'>$name</option>";
+}
+echo "</select> ";
+echo "<input type='button' gstype='submitToInfoBox' value='Set valid date range'>";
+echo "</div>";
+?>
+
+<script>
+     $('.start_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true});
+     $('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true});
+</script>

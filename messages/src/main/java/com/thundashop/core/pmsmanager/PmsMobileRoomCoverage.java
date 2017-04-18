@@ -11,6 +11,7 @@ package com.thundashop.core.pmsmanager;
  */
 public class PmsMobileRoomCoverage {
     public String roomName;
+    public String roomType;
     public Integer coverage;
     public Double sqaurePrice;
     public Double squarePricePeriode;

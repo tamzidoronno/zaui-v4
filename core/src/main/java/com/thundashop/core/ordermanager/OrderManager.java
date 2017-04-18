@@ -563,7 +563,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         User user = getSession().currentUser;
         for (Order order : getAllOrderIncludedVirtualNonFinalized()) {
-            if (!order.id.equals(orderId)) {
+            String incOrderId = order.incrementOrderId + "";
+            if (!order.id.equals(orderId) && !incOrderId.equals(orderId)) {
                 continue;
             }
             finalizeOrder(order);

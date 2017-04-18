@@ -1,0 +1,18 @@
+<?
+/* @var $this \ns_7214108c_a926_4057_8bc9_6b43cd6917f0\EventBookingGroupInvoicing */
+
+if (!isset($_POST['data']['companyname']))
+    return;
+
+echo "<b>Please select company</b><br/><br/>";
+
+$companies = $this->getApi()->getUtilManager()->getCompaniesFromBrReg($_POST['data']['companyname']);
+foreach ($companies as $company) {
+    ?>
+    <div class='selectCompany' gsclick="selectCompany" vatnumber="<? echo $company->vatNumber; ?> ">
+        <? echo $company->vatNumber . " - ". $company->name; ?>
+    </div>
+    <?
+}
+
+?>

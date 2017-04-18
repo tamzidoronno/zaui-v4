@@ -183,6 +183,11 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
      * @param \core_getshop_data_GetShopLock $lock
      */
     public function printCodeList($lock) {
+        if ($lock->type !== "Secure Keypad") {
+            echo "-";
+            return;
+        }
+        
         $total = $lock->maxNumberOfCodes;
         
         $inuse = 0;
@@ -229,6 +234,15 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
     public function getBattery($lock) {
 //        print_r($lock);
         return $lock->batteryStatus;
+    }
+    
+    public function addExternalLock() {
+        $newLock = new \core_getshop_data_GetShopDevice();
+        $newLock->name = $_POST['data']['name'];
+        $newLock->type = "getshop_lock";
+        $newLock->zwaveid = $_POST['data']['deviceid'];
+        $newLock->serverSource = $_POST['data']['servertype'];
+        $this->getApi()->getGetShopLockManager()->saveLock($this->getSelectedName(), $newLock);
     }
 
 }

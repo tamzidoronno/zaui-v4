@@ -10,6 +10,14 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         return "PmsConfiguration";
     }
     
+    public function includeDeleted() {
+        if(!isset($_SESSION['includeDeletedProducts'])) {
+            $_SESSION['includeDeletedProducts'] = true;
+        } else {
+            unset($_SESSION['includeDeletedProducts']);
+        }
+    }
+    
     public function createProductPaymentMessage() {
         $toAdd = new \core_pmsmanager_PmsProductMessageConfig();
         $toAdd->email = $_POST['data']['email'];
@@ -390,6 +398,9 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             if(!$value) {
                 continue;
             }
+            if($key == "id") {
+                continue;
+            }
             if(stristr($key, "emailtonotify_")) {
                 $indexed = explode("_", $key);
                 $type = $indexed[1];
@@ -406,6 +417,9 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
                 continue;
             }
             if($key == "fireinstructions") {
+                continue;
+            }
+            if($key == "id") {
                 continue;
             }
             if(property_exists($notifications, $key)) {
@@ -940,5 +954,62 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
 
     }
 
+     public function addDateRange() {
+        if($_POST['data']['start'] && $_POST['data']['end']) {
+            $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+            foreach($config->addonConfiguration as $conf) {
+                if($_POST['data']['id'] == $conf->productId) {
+                    $range = new \core_pmsmanager_PmsBookingAddonItemValidDateRange();
+                    $range->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+                    $range->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+                    $range->validType = $_POST['data']['validtype'];
+                    $conf->validDates[] = $range;
+                    $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+                    break;
+                }
+            }
+        }
+        
+        $this->includefile("singleProductConfig");
+    }
+    
+    public function removeValidTimeRange() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        foreach($config->addonConfiguration as $conf) {
+            if($_POST['data']['id'] == $conf->productId) {
+                foreach($conf->validDates as $idx => $vdate) {
+                    if($vdate->id == $_POST['data']['rangeid']) {
+                        unset($conf->validDates[$idx]);
+                    }
+                }
+                $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+                break;
+            }
+        }
+
+        $this->includefile("singleProductConfig");
+    }
+    
+    public function getSelectedAddonConfig() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $this->checkForAddonProductsToCreate($config);
+
+        $addonConfig = $config->addonConfiguration;
+
+        $addonItems = array();
+        foreach($config->addonConfiguration as $item) {
+            $addonItems[$item->productId] = $item;
+        }
+        foreach($addonConfig as $conf) {
+            if($_POST['data']['id'] == $conf->productId) {
+                $selectedAddonConfig = $conf;
+                break;
+            }
+        }
+        return $selectedAddonConfig; 
+    }
+
+    
+    
 }
 ?>

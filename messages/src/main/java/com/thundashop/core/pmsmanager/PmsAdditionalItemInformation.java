@@ -20,6 +20,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
     public HashMap<Long, String> cleanedByUser = new HashMap();
     public String itemId = "";
     public Integer squareMetres = 0;
+    public boolean hideFromCleaningProgram = false;
     
     //This is a variable that can be set when sending messages.
     public String textMessageDescription = "";
@@ -36,6 +37,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
     
     @Transient
     boolean inUseByCleaning;
+    public boolean closed = false;
 
     Boolean isClean() {
         isCleanNotToday = isClean(false);
@@ -168,4 +170,13 @@ public class PmsAdditionalItemInformation extends DataCommon {
     Date getLastUsed() {
         return lastUsed;
    }
+
+    void setLastCleaned(Date latestCleaningBeforeThat) {
+        lastCleaned = latestCleaningBeforeThat;
+    }
+
+    void removeCleaning(Date latestCleaning) {
+        cleanedByUser.remove(latestCleaning.getTime());
+        isClean = false;
+    }
 }

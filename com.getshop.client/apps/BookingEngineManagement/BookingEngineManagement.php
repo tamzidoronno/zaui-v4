@@ -246,6 +246,7 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $additional = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $_POST['data']['itemid']);
         $additional->textMessageDescription = $_POST['data']['textMessageDescription'];
         $additional->squareMetres = $_POST['data']['squareMetres'];
+        $additional->hideFromCleaningProgram = $_POST['data']['hideFromCleaningProgram'] == "true";
         $this->getApi()->getPmsManager()->updateAdditionalInformationOnRooms($this->getSelectedName(), $additional);
     }
     

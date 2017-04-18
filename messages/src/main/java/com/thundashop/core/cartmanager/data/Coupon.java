@@ -14,6 +14,11 @@ import java.util.List;
  * @author ktonder
  */
 public class Coupon extends DataCommon {
+    class AddonsInclude {
+        String productId = "";
+        boolean includeInRoomPrice = false;
+    }
+    
     public String code;
     public CouponType type;
     public int amount;
@@ -23,5 +28,6 @@ public class Coupon extends DataCommon {
     public PmsRepeatingData whenAvailable = null;
     public String pmsWhenAvailable = "";
     public List<String> productsToSupport = new ArrayList();
+    public List<AddonsInclude> addonsToInclude = new ArrayList();
     public String priceCode = "default";
 }

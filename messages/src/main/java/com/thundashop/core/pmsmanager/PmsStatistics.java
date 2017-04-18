@@ -21,6 +21,7 @@ public class PmsStatistics implements Serializable {
         StatisticsEntry total = new StatisticsEntry();
         total.isTotal = true;
         double budget = 0;
+        int avgCounter = 0;
         for(StatisticsEntry entry : entries) {
             total.totalPrice += entry.totalPrice;
             total.totalRooms += entry.totalRooms;
@@ -39,7 +40,7 @@ public class PmsStatistics implements Serializable {
         
         total.bugdet = budget;
         total.coverage = total.coverage / entries.size();
-        total.avgPrice = total.avgPrice / entries.size();
+        total.avgPrice = total.avgPrice / total.roomsRentedOut;
         
         
         entries.add(total);

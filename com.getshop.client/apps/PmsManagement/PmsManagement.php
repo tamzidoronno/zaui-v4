@@ -19,6 +19,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return 1;
     }
     
+    public function loadAdditionalInformationForRoom() {
+           $this->includefile("additionalinformationforroom");
+    }
+    
     public function updateRecieptEmailOnOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $order->recieptEmail = $_POST['data']['newEmail'];
@@ -1284,7 +1288,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
             $this->includefile("managementview");
         }
-        $this->getApi()->getPmsInvoiceManager()->validateAllInvoiceToDates($this->getSelectedName());
     }
     
     public function deleteDefinedFilter() {

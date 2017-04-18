@@ -112,6 +112,14 @@ if(sizeof($addons) > 0) {
 function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasArx, $config, $object, $products) {
     $bookingId = $booking->id;
     ?>
+<div class='additionalroominfobox'>
+    <div style='text-align: right' class='additionalroominfobox_header'>
+        <span style='float:left;'>Additional information</span>
+        <span class='fa fa-close' onclick="$(this).closest('.additionalroominfobox').fadeOut();" style='cursor:pointer;'></span>
+    </div>
+    <div class='additionalroominfobox_inner'></div>
+    
+</div>
 
 <table width='100%' cellspacing='0' cellpadding='0' class='guestoverviewtable'>
     <tr>
@@ -278,7 +286,9 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     }
                     echo "</span>";
                 }
-                
+                if($config->bookingProfile == "hotel") {
+//                    echo "<i class='fa fa-info-circle loadadditionalinfo' roomid='".$room->pmsBookingRoomId."' title='Additional information' style='cursor:pointer;'></i>";
+                }
                 $typesAdded = array();
                 $total = 0;
                 foreach($room->addons as $addon) {

@@ -109,7 +109,7 @@ if($hasAddons) {
     echo "<span class='tab' area='addons'>Addons</span>";
 }
 echo "<span class='tab' area='otherbookingoptions'>Other</span>";
-if($hasArx) {
+if($hasArx && $config->bookingProfile == "subscription") {
     echo "<span class='tab' area='carddata'>Card / code</span>";
 }
 if($config->functionsEnabled) {

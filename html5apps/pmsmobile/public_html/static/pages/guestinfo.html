@@ -185,7 +185,14 @@
 <div class='row' ng-show="resendcode">
     <div class='col-xs-6'>
         <label> Phone number
-            <input type='text' ng-model="numbertosendcodeto" placeholder='Phone number'  class="form-control" >
+            <div class='row'>
+                <div class='col-xs-3'>
+                    <input type='text' ng-model="prefixtosendcodeto" placeholder='Prefix' class="form-control" >
+                </div>
+                <div class='col-xs-9'>
+                    <input type='text' ng-model="numbertosendcodeto" placeholder='Phone number' class="form-control" >                    
+                </div>
+            </div>
         </label>
     </div>
     <div class='col-xs-6'>

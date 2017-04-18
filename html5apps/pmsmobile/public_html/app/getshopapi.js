@@ -9296,9 +9296,10 @@ GetShopApiWebSocket.PmsManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'sendCode' : function(multilevelname, phoneNumber,roomId, gs_silent) {
+    'sendCode' : function(multilevelname, prefix,phoneNumber,roomId, gs_silent) {
         var data = {
             args : {
+                prefix : JSON.stringify(prefix),
                 phoneNumber : JSON.stringify(phoneNumber),
                 roomId : JSON.stringify(roomId),
             },
@@ -9565,6 +9566,18 @@ GetShopApiWebSocket.PmsManager.prototype = {
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'undeleteBooking',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'undoLastCleaning' : function(multilevelname, itemId, gs_silent) {
+        var data = {
+            args : {
+                itemId : JSON.stringify(itemId),
+            },
+            method: 'undoLastCleaning',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
@@ -12395,6 +12408,19 @@ GetShopApiWebSocket.TimeRegisteringManager.prototype = {
             args : {
             },
             method: 'getMyHours',
+            interfaceName: 'core.timeregisteringmanager.ITimeRegisteringManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getRegisteredHoursForUser' : function(userId,start,end, gs_silent) {
+        var data = {
+            args : {
+                userId : JSON.stringify(userId),
+                start : JSON.stringify(start),
+                end : JSON.stringify(end),
+            },
+            method: 'getRegisteredHoursForUser',
             interfaceName: 'core.timeregisteringmanager.ITimeRegisteringManager',
         };
         return this.communication.send(data, gs_silent);

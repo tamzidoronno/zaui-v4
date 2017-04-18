@@ -1,23 +1,63 @@
 <?php
  /* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
-$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
-$room = null;
-foreach($booking->rooms as $r) {
-    if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
-        $room = $r;
-        break;
-    }
-}
+$room = $this->getSelectedPmsRoom();
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $room->pmsBookingRoomId);
 $cleaningState = "";
+$lastCleaned = "";
+
+$code = "Not active yet";
+$withinTime = "<i class='fa fa-close'></i>";
+$paidFor = "<i class='fa fa-close'></i>";
+$isClean = "<i class='fa fa-close'></i>";
+$forcedAccess = "<i class='fa fa-close'></i>";
+$blockedAccess = "<i class='fa fa-close'></i>";
+$resend = "Code not active yet";
+$renew = "Code not active yet";
+
 if(!$room->bookingItemId) {
     $cleaningState = "No room assigned yet.";
+    $lastCleaned = "No room assigned yet.";
+    $isClean = "";
+} else {
+    $addition = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $room->bookingItemId);
+    if($addition->isClean) {
+        $cleaningState = "Room is clean.";
+        $isClean = "<i class='fa fa-check'></i>";
+    } else {
+        $cleaningState = "Rooms is dirty, <span class='markroomclean' style='color:blue; cursor:pointer;'> mark as clean</span>";
+    }
+    $res = (array)$addition->cleanedByUser;
+    ksort($res);
+    $res = array_reverse($res);
+    $userId = @array_shift(array_values($res));
+
+    $lastCleanedUser = $this->getApi()->getUserManager()->getUserById($userId);
+    $lastCleaned = date("d.m.Y H:i", strtotime($addition->lastCleaned)) . " by " . $lastCleanedUser->fullName . ", <span class='undocleaning' style='color:blue; cursor:pointer;'> undo</span>";
+    $lastAccess = date("d.m.Y H:i", strtotime($addition->lastUsed));
 }
-$code = "Code not active yet, make sure the time periode is within the correct timespan, the payment is correct and the room has been cleaned.";
+
+if($this->getApi()->getPmsInvoiceManager()->isRoomPaidFor($this->getSelectedName(), $room->pmsBookingRoomId)) {
+    $paidFor = "<i class='fa fa-check'></i>";
+}
+
+if(strtotime($room->date->start) < time() && strtotime($room->date->end) > time()) {
+    $withinTime = "<i class='fa fa-check'></i>";
+}
+if($booking->forceGrantAccess) {
+    $forcedAccess = "<i class='fa fa-check'></i>";
+}
+
+if($room->blocked) {
+    $blockedAccess = "<i class='fa fa-check'></i>";
+}
+
 if($room->addedToArx) {
     $code = $room->code;
+    $resend = "<span class='resendcode' style='color:blue; cursor:pointer;'>Resend</span>";
+    $renew = "<span class='renewcode' style='color:blue; cursor:pointer;'>Renew</span>";
 }
 ?>
-<table cellspacing='0' cellpadding='0' width='100%'>
+<table cellspacing='0' cellpadding='0' width='100%' roomid='<?php echo $_POST['data']['roomid']; ?>'>
     <tr>
         <th style='width:100px;'></th>
         <th></th>
@@ -26,16 +66,116 @@ if($room->addedToArx) {
         <td><?php echo $cleaningState; ?></td>
     </tr>
     <tr>
+        <td>Last cleaned</td>
+        <td><?php echo $lastCleaned; ?></td>
+    </tr>
+    <tr>
+        <td>Last marked dirty</td>
+        <td><?php echo $lastAccess; ?></td>
+    </tr>
+    <tr>
         <td>Code</td>
-        <td><?php echo $code; ?></td>
+        <td>Code: <?php echo $code; ?><br>
+        <?php echo $withinTime; ?> is active by date range.<br>
+        <?php echo $paidFor; ?> room is paid for.<br>
+        <?php echo $isClean; ?> room is clean.<br>
+        <?php echo $forcedAccess; ?> has forced access.<br>
+        <?php echo $blockedAccess; ?> has been blocked.<br>
+        </td>
     </tr>
     <tr>
         <td>Resend code</td>
-        <td></td>
+        <td><?php echo $resend; ?>
+            <div class='resendcodepanel' style='display:none;'>
+                <?php
+                $prefix = $room->guests[0]->prefix;
+                $phone = $room->guests[0]->phone;
+                
+                ?>
+                <input type='text' toSend='prefix' value='<?php echo $prefix; ?>'>
+                <input type='text' toSend='phone' value='<?php echo $phone; ?>'>
+                <input type='button' value='Resend' class='doresend'>
+            </div>
+        </td>
     </tr>
     <tr>
         <td>Renew code</td>
-        <td></td>
+        <td><?php echo $renew; ?></td>
+    </tr>
+    <tr>
+        <td>Force access</td>
+        <?php if(!$booking->forceGrantAccess) { ?>
+            <td><span class='forcegrantaccess' style='color:blue; cursor:pointer;'>Force access regardless of payment.</span></td>
+        <?php } else { ?>
+            <td><span class='unforcegrantaccess' style='color:blue; cursor:pointer;'>Unforce access regardless of payment.</span></td>
+        <?php } ?>
+    </tr>
+    <tr>
+        <td>Block access</td>
+        <?php if($room->blocked) { ?>
+            <td><span class='unblockaccess' style='color:blue; cursor:pointer;'>Unblock access for this room.</span></td>
+        <?php } else { ?>
+            <td><span class='blockaccess' style='color:blue; cursor:pointer;'>Block access for this room.</span></td>
+        <?php } ?>
     </tr>
 </table>
    
+
+<script>
+$('.markroomclean').on('click', function() {
+    var event = thundashop.Ajax.createEvent('','markRoomCleaned', $(this), { "roomid" : $(this).closest('table').attr('roomid')});
+    thundashop.Ajax.postWithCallBack(event, function(res) {
+        $('.additionalroominfobox_inner').html(res);
+    });
+});
+$('.renewcode').on('click', function() {
+    var event = thundashop.Ajax.createEvent('','renewCode', $(this), { "roomid" : $(this).closest('table').attr('roomid')});
+    thundashop.Ajax.postWithCallBack(event, function(res) {
+        $('.additionalroominfobox_inner').html(res);
+    });
+});
+$('.undocleaning').on('click', function() {
+    var event = thundashop.Ajax.createEvent('','undoLastCleaning', $(this), { "roomid" : $(this).closest('table').attr('roomid')});
+    thundashop.Ajax.postWithCallBack(event, function(res) {
+        $('.additionalroominfobox_inner').html(res);
+    });
+});
+$('.forcegrantaccess').on('click', function() {
+    var event = thundashop.Ajax.createEvent('','forceGrantAccess', $(this), { "roomid" : $(this).closest('table').attr('roomid')});
+    thundashop.Ajax.postWithCallBack(event, function(res) {
+        $('.additionalroominfobox_inner').html(res);
+    });
+});
+$('.unforcegrantaccess').on('click', function() {
+    var event = thundashop.Ajax.createEvent('','forceUnGrantAccess', $(this), { "roomid" : $(this).closest('table').attr('roomid')});
+    thundashop.Ajax.postWithCallBack(event, function(res) {
+        $('.additionalroominfobox_inner').html(res);
+    });
+});
+$('.blockaccess').on('click', function() {
+    var event = thundashop.Ajax.createEvent('','forceBlockAccess', $(this), { "roomid" : $(this).closest('table').attr('roomid')});
+    thundashop.Ajax.postWithCallBack(event, function(res) {
+        $('.additionalroominfobox_inner').html(res);
+    });
+});
+$('.unblockaccess').on('click', function() {
+    var event = thundashop.Ajax.createEvent('','forceUnBlockAccess', $(this), { "roomid" : $(this).closest('table').attr('roomid')});
+    thundashop.Ajax.postWithCallBack(event, function(res) {
+        $('.additionalroominfobox_inner').html(res);
+    });
+});
+$('.resendcode').on('click', function() {
+    $('.resendcodepanel').show();
+});
+$('.doresend').on('click', function() {
+    var event = thundashop.Ajax.createEvent('','resendCode', $(this), { 
+        "roomid" : $(this).closest('table').attr('roomid'),
+        "prefix" : $('[toSend="prefix"]').val(),
+        "phone" : $('[toSend="phone"]').val()
+    });
+    thundashop.Ajax.postWithCallBack(event, function(res) {
+        $('.additionalroominfobox_inner').html(res);
+    });
+});
+    
+</script>

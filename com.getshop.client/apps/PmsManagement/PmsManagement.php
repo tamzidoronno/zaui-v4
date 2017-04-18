@@ -20,7 +20,76 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function loadAdditionalInformationForRoom() {
-           $this->includefile("additionalinformationforroom");
+        $this->includefile("additionalinformationforroom");
+    }
+    
+    public function markRoomCleaned() {
+        $room = $this->getSelectedPmsRoom();
+        $this->getApi()->getPmsManager()->markRoomAsCleaned($this->getSelectedName(), $room->bookingItemId);
+        $this->includefile("additionalinformationforroom");
+    }
+    
+    public function forceBlockAccess() {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $room->blocked = true;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        
+        echo "<br><center><b><i class='fa fa-check'></i> User has been blocked<br></center><br></b>";
+        $this->includefile("additionalinformationforroom");
+    }
+    
+    public function forceUnBlockAccess() {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $room->blocked = false;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        
+        echo "<br><center><b><i class='fa fa-check'></i> User has been blocked<br></center><br></b>";
+        $this->includefile("additionalinformationforroom");
+    }
+    
+    public function forceUnGrantAccess() {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
+        $booking->forceGrantAccess = false;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        echo "<br><center><b><i class='fa fa-check'></i> Forced access has been removed from user<br></center><br></b>";
+        $this->includefile("additionalinformationforroom");
+    }
+    
+    public function forceGrantAccess() {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
+        $booking->forceGrantAccess = true;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        echo "<br><center><b><i class='fa fa-check'></i> User has been forced access<br></center><br></b>";
+        $this->includefile("additionalinformationforroom");
+    }
+    public function undoLastCleaning() {
+        $room = $this->getSelectedPmsRoom();
+        $this->getApi()->getPmsManager()->undoLastCleaning($this->getSelectedName(), $room->bookingItemId);
+        $this->includefile("additionalinformationforroom");
+    }
+    
+    public function resendCode() {
+        $prefix = $_POST['data']['prefix'];
+        $phoneNumber = $_POST['data']['phone'];
+        $roomId = $_POST['data']['roomid'];
+        
+        $this->getApi()->getPmsManager()->sendCode($this->getSelectedName(),$prefix,$phoneNumber,$roomId);
+        echo "<br><center><b><i class='fa fa-check'></i> Code has been sent<br></center><br></b>";
+        $this->includefile("additionalinformationforroom");
+    }
+    
+    public function renewCode() {
+        $this->getApi()->getPmsManager()->generateNewCodeForRoom($this->getSelectedName(), $_POST['data']['roomid']);
+        echo "<br><center><b><i class='fa fa-check'></i> Code has been renewed<br></center><br></b>";
+        $this->includefile("additionalinformationforroom");
     }
     
     public function updateRecieptEmailOnOrder() {
@@ -2998,6 +3067,21 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         return "Non translatable";
+    }
+
+    /**
+     * @return \core_pmsmanager_PmsBookingRooms
+     */
+    public function getSelectedPmsRoom() {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
+        $room = null;
+        foreach($booking->rooms as $r) {
+            if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $room = $r;
+                break;
+            }
+        }
+        return $room;
     }
 
 }

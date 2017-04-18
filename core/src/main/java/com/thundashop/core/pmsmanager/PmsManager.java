@@ -1232,6 +1232,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 } else {
                     String phone = userManager.getUserById(booking.userId).cellPhone;
                     String prefix = userManager.getUserById(booking.userId).prefix;
+                    
+                    if(phoneToSend != null) {
+                        phone = phoneToSend;
+                        prefix = prefixToSend;
+                        phoneToSend = null;
+                    }
+                    
                     if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
                         messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
                     } else {
@@ -1256,15 +1263,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         repicientList.add(email);
                     } else {
                         String phone = guest.phone;
+                        String prefix = guest.prefix;
                         if (phone == null || phone.isEmpty()) {
                             logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
                             continue;
                         }
 
-                        if(guest.prefix != null && (guest.prefix.equals("47") || guest.prefix.equals("+47"))) {
-                            messageManager.sendSms("sveve", phone, message, guest.prefix, configuration.smsName);
+                        if(phoneToSend != null) {
+                            phone = phoneToSend;
+                            prefix = prefixToSend;
+                            phoneToSend = null;
+                        }
+                        
+                        
+                        if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
+                            messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
                         } else {
-                            messageManager.sendSms("nexmo", phone, message, guest.prefix, configuration.smsName);
+                            messageManager.sendSms("nexmo", phone, message, prefix, configuration.smsName);
                         }
                         repicientList.add(phone);
                     }
@@ -1713,7 +1728,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logText += " not in use";
         }
         logEntry(logText, null, additional.itemId);
-        
+        processor();
     }
 
     void markRoomAsDirty(String bookingItemId) {
@@ -3586,10 +3601,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void sendCode(String phoneNumber, String roomId) {
+    public void sendCode(String prefix, String phoneNumber, String roomId) {
         PmsBooking booking = getBookingFromRoom(roomId);
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             if(room.pmsBookingRoomId.equals(roomId)) {
+                phoneToSend = phoneNumber;
+                prefixToSend = prefix;
                 doNotification("room_resendcode", booking, room);
             }
         }
@@ -5366,11 +5383,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
-        if (message == null || message.isEmpty()) {
-            return "";
-        }
         if((message == null || message.isEmpty()) && key.toLowerCase().contains("room_resendcode")) {
             message = "Code {code} room {roomName}.";
+        }
+        
+        if (message == null || message.isEmpty()) {
+            return "";
         }
 
         if(key.startsWith("booking_sendpaymentlink") || 
@@ -5535,6 +5553,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return booking.getRoom(order.attachedToRoom);
         }
         return null;
+    }
+
+    @Override
+    public void undoLastCleaning(String itemId) {
+        PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
+        if(additional == null) {
+            return;
+        }
+        
+        Date latestCleaning = null;
+        Date latestCleaningBeforeThat = null;
+        for(Date test : additional.getAllCleaningDates()) {
+            if(latestCleaning == null || latestCleaning.before(test)) {
+                if(latestCleaning != null) {
+                    latestCleaningBeforeThat = latestCleaning;
+                }
+                latestCleaning = test;
+            }
+        }
+        
+        additional.setLastUsed(latestCleaningBeforeThat);
+        additional.setLastCleaned(latestCleaningBeforeThat);
+        additional.removeCleaning(latestCleaning);
+        saveObject(additional);
     }
 
 }

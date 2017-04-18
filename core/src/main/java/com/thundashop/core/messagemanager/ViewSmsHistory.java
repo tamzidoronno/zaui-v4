@@ -58,7 +58,7 @@ public class ViewSmsHistory {
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         Database database = context.getBean(Database.class);
         
-        int month = 2;
+        int month = 3;
         int year = 2017;
         
         ViewSmsHistory hist = new ViewSmsHistory(month, year);

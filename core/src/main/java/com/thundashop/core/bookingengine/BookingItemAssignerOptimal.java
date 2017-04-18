@@ -315,26 +315,11 @@ public class BookingItemAssignerOptimal {
         
         List<String> availableItems = availableBookingItems
                 .stream()
-                .filter(o -> ( start != null && end != null && o.isAvailable(start, end) || (o.notInUseAtAll()) ))
+                .filter(o -> ( start != null && end != null && o.isAvailableWithBookingConcidered(start, end, bookingToConsider) || (o.notInUseAtAll()) ))
                 .map(o -> o.bookingItemId)
                 .collect(Collectors.toList());
         
-        addItemIfConcideredBookingItemIsAssigned(bookingToConsider, availableBookingItems, availableItems);
-        
         return availableItems;
-    }
-
-    private void addItemIfConcideredBookingItemIsAssigned(String bookingToConsider, List<BookingItemTimeline> availableBookingItems, List<String> availableItems) {
-        if (bookingToConsider != null && !bookingToConsider.isEmpty()) {
-            for (Booking booking : assigned.keySet()) {
-                if (booking.id.equals(bookingToConsider)) {
-                    BookingItem item = assigned.get(booking);
-                    if (!availableBookingItems.contains(item.id)) {
-                        availableItems.add(item.id);
-                    }
-                }
-            }
-        }
     }
 
     private void printBookingLines(List<OptimalBookingTimeLine> bookingLines) {

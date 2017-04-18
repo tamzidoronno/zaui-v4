@@ -23,9 +23,17 @@ public class BookingItemTimeline {
         this.bookingItemTypeId = typeId;
     }
     
-    public boolean isAvailable(Date start, Date end) {
+    public boolean isAvailableWithBookingConcidered(Date start, Date end, String bookingIdToConcider) {
         if (start == null || end == null) {
             return true;
+        }
+        
+        // Check if the booking is already assigned to this timeline.
+        if (bookingIdToConcider != null) {
+            for (String bookingId : dates.keySet()) {
+                if (bookingId.equals(bookingIdToConcider))
+                    return true;
+            }
         }
         
         for (String bookingId : dates.keySet()) {
@@ -44,6 +52,10 @@ public class BookingItemTimeline {
         }
         
         return true;
+    }
+    
+    public boolean isAvailable(Date start, Date end) {
+        return isAvailableWithBookingConcidered(start, end, null);
     }
     
     public void add(String bookingId, Date start, Date end) {

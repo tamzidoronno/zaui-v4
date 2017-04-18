@@ -708,7 +708,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         bookings.values().stream().
                 filter(o -> o.within(start, end)).
                 filter(o -> (o.bookingItemId != null && o.bookingItemId.equals(itemId))).
-                filter(o -> (o.within(start, end))).
                 forEach(o -> line.add(o));
         return line;
    }
@@ -806,7 +805,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
     
     List<BookingItem> getAvailbleItemsWithBookingConsidered(String typeId, Date start, Date end, String bookingId) {
-        BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(typeId, start, end, bookingId);
+        BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(typeId, start, end, null);
 
         List<BookingItem> retList = assigner.getAvailableItems(bookingId, start, end).stream()
                 .map(o -> items.get(o))
@@ -976,7 +975,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         for (Booking booking : bookings) {
             if (booking.id != null && !booking.id.isEmpty()) {
                 
-                BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(booking.bookingItemTypeId, booking.startDate, booking.endDate, booking.id);
+                BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(booking.bookingItemTypeId, booking.startDate, booking.endDate, null);
                 
                 List<BookingItem> availableItems = assigner.getAvailableItems(booking.id, booking.startDate, booking.endDate).stream()
                 .map(o -> items.get(o))

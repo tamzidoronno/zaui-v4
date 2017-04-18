@@ -18,6 +18,10 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         $this->getApi()->getEventBookingManager()->removeUserFromEvent($this->getBookingEngineName(), $_POST['data']['eventid'], $_POST['data']['userid'], false);
     }
     
+    public function setGroupInvoiceing() {
+        $this->getApi()->getEventBookingManager()->setGroupInvoiceingStatus($this->getBookingEngineName(), $_POST['data']['eventId'], $_POST['data']['userId'], $_POST['data']['groupId']);
+    }
+    
     public function showComments() {
         $this->includefile("showcomments");
     }
@@ -130,6 +134,62 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         $this->getApi()->getEventBookingManager()->transferUserFromWaitingToEvent($this->getBookingEngineName(), $_POST['data']['userid'], $_POST['data']['eventid']);
     }
     
+    public function downloadReportGroupedReport() {
+        $event = $this->getApi()->getEventBookingManager()->getEvent($this->getBookingEngineName(), $_POST['data']['eventid']);
+        $users = $this->getApi()->getEventBookingManager()->getUsersForEvent($this->getBookingEngineName(), $event->id);
+        $usersWaitingList = $this->getApi()->getEventBookingManager()->getUsersForEventWaitinglist($this->getBookingEngineName(), $event->id);
+        $group = $this->getApi()->getUserManager()->getGroup($_POST['data']['groupid']);
+        $groupName = "All";
+        
+        
+        $usersFiltered = $this->filterUsers($users, $group);
+        
+        $usersWaitingListFiltered = $this->filterUsers($usersWaitingList, $group);
+        
+        $excel = array();
+        $excel[] = $this->getHeaderColumns();
+        $excel[] = $this->getEventInformation($event, $groupName);
+        
+        $excel[] = array();
+        
+        $groupInfos = $this->getGroupedInvoiceInformation($event, $groupName, $_POST['data']['groupid']);
+        
+        foreach ($groupInfos as $groupInfo) {
+            $excel[] = $groupInfo;
+        }
+        
+        $excel[] = array();
+        $excel[] = ["VAT", "Reference", "Company Information", "Company email", "Candiate name", "Candidate email", "Comment", "Group", "Status"];
+        
+        foreach ($usersFiltered as $user) {
+            $invoiceGroupId = @$event->groupInvoiceStatus->{$user->id};
+            if ($invoiceGroupId != $_POST['data']['groupid'])
+                continue;
+            
+            $excel[] = $this->createUserRow($user, $event, false, true);
+        }
+        
+        $excel[] = array();
+        if (count($usersWaitingListFiltered)) {
+            $excel[] = ["Waitinglist"];
+
+            foreach ($usersWaitingListFiltered as $user) {
+                $excel[] = $this->createUserRow($user, $event, true, true);
+            }
+        }
+        
+        echo json_encode($excel);
+    }
+    
+    public function deleteInvoiceGroup() {
+        $this->getApi()->getEventBookingManager()->deleteInvoiceGroup($this->getBookingEngineName(), $_POST['data']['groupid']);
+    }
+    
+    public function isInvoiceGroupActivated() {
+        // Only activated for promeister norway.
+        return $this->getFactory()->getStore()->id == "17f52f76-2775-4165-87b4-279a860ee92c";
+    }
+    
     public function downloadReport() {
         $event = $this->getApi()->getEventBookingManager()->getEvent($this->getBookingEngineName(), $_POST['data']['eventid']);
         $users = $this->getApi()->getEventBookingManager()->getUsersForEvent($this->getBookingEngineName(), $event->id);
@@ -142,23 +202,27 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         
         $usersWaitingListFiltered = $this->filterUsers($usersWaitingList, $group);
         
-        $excel = [];
+        $excel = array();
         $excel[] = $this->getHeaderColumns();
         $excel[] = $this->getEventInformation($event, $groupName);
         
-        $excel[] = [];
+        $excel[] = array();
         $excel[] = ["VAT", "Reference", "Company Information", "Company email", "Candiate name", "Candidate email", "Comment", "Group", "Status", "Price"];
         
         foreach ($usersFiltered as $user) {
-            $excel[] = $this->createUserRow($user, $event, false);
+            $invoiceGroupId= @$event->groupInvoiceStatus->{$user->id};
+            if ($invoiceGroupId)
+                continue;
+            
+            $excel[] = $this->createUserRow($user, $event, false, false);
         }
         
-        $excel[] = [];
+        $excel[] = array();
         if (count($usersWaitingListFiltered)) {
             $excel[] = ["Waitinglist"];
 
             foreach ($usersWaitingListFiltered as $user) {
-                $excel[] = $this->createUserRow($user, $event, true);
+                $excel[] = $this->createUserRow($user, $event, true, false);
             }
         }
         
@@ -178,13 +242,26 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
     public function getEventInformation($event, $groupName) {
         return [$event->bookingItemType->name, $event->location->name." ".$event->subLocation->name, $event->mainStartDate, $groupName, count($event->days)];
     }
+    
+    public function getGroupedInvoiceInformation($event, $groupName, $groupId) {
+        $groupInfo = $this->getApi()->getEventBookingManager()->getInvoiceGroup($this->getBookingEngineName(), $groupId);
+        $company = $this->getApi()->getUserManager()->getCompany($groupInfo->companyId);
+                
+        $ret = array();
+        $ret[] = array("Grouped invoice information");
+        $ret[] = array("Group: ", $groupInfo->name);
+        $ret[] = array("Price", $groupInfo->price);
+        $ret[] = array("Company", $company->name, $company->vatNumber, $company->invoiceEmail);
+        
+        return $ret;
+    }
 
     /**
      * 
      * @param \core_usermanager_data_User $user
      * @param \core_eventbooking_Event $event
      */
-    public function createUserRow($user, $event, $waitinglist) {
+    public function createUserRow($user, $event, $waitinglist, $dropPrice) {
         $row = [];
         
         $row[] = $user->companyObject ? $user->companyObject->vatNumber : "-";
@@ -208,7 +285,9 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         
         if (!$waitinglist) {
             $row[] = $this->getParticiationText(@$event->participationStatus->{$user->id});
-            $row[] = $this->getPriceForEvent($event, $user);
+            if (!$dropPrice) {
+                $row[] = $this->getPriceForEvent($event, $user);
+            }
         }
         
         return $row;

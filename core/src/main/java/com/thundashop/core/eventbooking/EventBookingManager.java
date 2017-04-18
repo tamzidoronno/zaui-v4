@@ -15,13 +15,12 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.getshop.GetShop;
-import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.utils.UtilManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,10 +29,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +55,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public HashMap<String, BookingItemTypeMetadata> bookingTypeMetaDatas = new HashMap();
     public HashMap<String, ExternalCertificate> externalCertificates = new HashMap();
     public HashMap<String, WaitingListBooking> waitingListBookings = new HashMap();
+    public HashMap<String, InvoiceGroup> groupInvoicing = new HashMap();
     
     @Autowired
     public EventLoggerHandler eventLoggerHandler;
@@ -81,7 +79,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public Database database;
 
     @Autowired
-    public GetShop getshop;
+    public UtilManager utilManager;
     
     @Override
     public void dataFromDatabase(DataRetreived datas) {
@@ -104,6 +102,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             if (data instanceof ReminderTemplate) {
                 ReminderTemplate reminder = (ReminderTemplate)data;
                 reminderTemplates.put(reminder.id, reminder);
+            }
+            
+            if (data instanceof InvoiceGroup) {
+                InvoiceGroup invoiceGroup = (InvoiceGroup)data;
+                groupInvoicing.put(invoiceGroup.id, invoiceGroup);
             }
             
             if (data instanceof Certificate) {
@@ -651,6 +654,17 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         event.participationStatus.put(userId, status);
+        saveObject(event);
+    }
+
+    @Override
+    public void setGroupInvoiceingStatus(String eventId, String userId, String groupId) {
+        Event event = getEvent(eventId);
+        if (event == null) {
+            throw new ErrorException(1035);
+        }
+        
+        event.groupInvoiceStatus.put(userId, groupId);
         saveObject(event);
     }
 
@@ -2131,5 +2145,50 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         reminders.put(reminder.id, reminder);
         log("REMINDER_SENT", event, reminder.type);
    }
-    
+
+    @Override
+    public void saveGroupInvoicing(InvoiceGroup invoiceGroup) {
+        List<Company> companies = userManager.getCompaniesByVatNumber(invoiceGroup.vatnumber);
+        if (companies == null || companies.isEmpty()) {
+            Company company = utilManager.getCompanyFromBrReg(invoiceGroup.vatnumber);
+            userManager.saveCompany(company);
+            invoiceGroup.companyId = company.id;
+        } else {
+            invoiceGroup.companyId = companies.get(0).id;
+        }
+        
+        saveObject(invoiceGroup);
+        groupInvoicing.put(invoiceGroup.id, invoiceGroup);
+    }
+
+    @Override
+    public List<InvoiceGroup> getInvoiceGroups(String eventId) {
+        return groupInvoicing.values().stream()
+            .filter(o -> o.eventId.equals(eventId))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public InvoiceGroup getInvoiceGroup(String groupId) {
+        return groupInvoicing.get(groupId);
+    }
+
+    @Override
+    public void deleteInvoiceGroup(String groupId) {
+        InvoiceGroup group = groupInvoicing.remove(groupId);
+        if (group != null) {
+            Event event = getEvent(group.eventId);
+            if (event.participationStatus != null) {
+                for (String userId : event.participationStatus.keySet()) {
+                    if (event.participationStatus.get(userId) == groupId) {
+                        event.participationStatus.put(userId, "");
+                    }
+                }
+            }
+            
+            deleteObject(group);
+        }
+        
+        
+    }
 }

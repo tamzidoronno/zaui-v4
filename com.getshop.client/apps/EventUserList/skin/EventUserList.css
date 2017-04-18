@@ -95,6 +95,28 @@
     z-index: 1;
 }
 
+.EventUserList .invoicegroups {
+    padding: 20px;
+}
+
+.EventUserList .invoicegroups .invoicegroup {
+    border-top: solid 1px #DDD;
+    padding: 5px;
+    margin-top: 5px;
+}
+
 .EventUserList .companyInfoSpan {
     position: relative;
+}
+
+.EventUserList .group_invoicing .inner {
+    padding: 20px;
+}
+
+.EventUserList .group_invoicing {
+    display: none;
+}
+
+.gsbody_inner[gsStoreId='17f52f76-2775-4165-87b4-279a860ee92c'] .EventUserList .questbacks {
+    display: none;
 }

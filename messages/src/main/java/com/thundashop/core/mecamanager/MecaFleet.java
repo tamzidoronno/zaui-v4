@@ -15,10 +15,15 @@ import java.util.List;
  */
 public class MecaFleet extends DataCommon {
     public String name = "";
+    public Boolean followup = false;
     public String contactName = "";
     public String contactEmail = "";
     public String contactPhone = "";
+    
+    public String discount = "";
+    public String rentalcar = "";
     public String contactDetails = "";
+    public String contactOther = "";
     public String pageId = "";
     public List<String> cars = new ArrayList();
 }

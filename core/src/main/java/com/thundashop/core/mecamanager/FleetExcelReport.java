@@ -136,7 +136,7 @@ public class FleetExcelReport extends ExcelBase {
         cell.setCellValue("Regnr");
         
         cell = row.createCell(1);
-        cell.setCellValue("Kilomter til neste service");
+        cell.setCellValue("Kilometer til neste service");
         
         cell = row.createCell(2);
         cell.setCellValue("Måneder til neste service");
@@ -148,7 +148,7 @@ public class FleetExcelReport extends ExcelBase {
         cell.setCellValue("Dato for neste PKK");
         
         cell = row.createCell(5);
-        cell.setCellValue("Bileier");
+        cell.setCellValue("Bilansvarlig");
         
         cell = row.createCell(6);
         cell.setCellValue("Telefon");

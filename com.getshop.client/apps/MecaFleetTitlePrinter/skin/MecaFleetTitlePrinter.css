@@ -1,81 +1,77 @@
-.MecaFleetTitlePrinter .title {
-    padding: 20px;
-    background-color: #EFEFEF;
-    text-align: center;
-    font-size: 26px;
-    border: 1px solid #e6e6e6;
-    color:#555;
-    
-    
-}
-.MecaFleetTitlePrinter input.gsniceinput1{width:13%;padding:5px;}
-.MecaFleetTitlePrinter .fa-plus-square{
-    padding:10px;
+.MecaFleetTitlePrinter .title {padding: 20px;background-color: #EFEFEF;text-align: center;font-size: 26px;border: 1px solid #dcdcdc;color:#555;}
+.MecaFleetTitlePrinter .editmecafleetform{border:1px solid #dcdcdc;min-height: 400px;}
+
+.MecaFleetTitlePrinter .leftFleetbox{width:50%;float:left;min-height:400px;background-color: #EFEFEF;color:#666;margin-bottom: 50px;z-index: 1;}
+.MecaFleetTitlePrinter .leftFleetbox .fleetfield{margin-left:50px;margin-right: 50px;line-height: 35px;height:35px;background-color:#fff;margin-bottom: 25px;padding-left:10px;border:1px solid #dcdcdc;}
+.MecaFleetTitlePrinter .leftFleetbox input{position:relative;top:-1px;left:1px;float:right;z-index:1;}
+
+.MecaFleetTitlePrinter .rightFleetbox{width:50%;float:right;min-height:368px;background-color: #EFEFEF;color:#666;margin-bottom: 50px;z-index:1;padding-top:32px;}
+.MecaFleetTitlePrinter .rightFleetbox .fleetfield{margin-left:50px;margin-right: 50px;line-height: 35px;height:35px;background-color:#fff;margin-bottom: 25px;padding-left:10px;border:1px solid #dcdcdc;}
+.MecaFleetTitlePrinter .rightFleetbox .fleetarea{margin:25px 50px 0 50px;border:1px solid #dcdcdc;background-color:#fff;}
+.MecaFleetTitlePrinter .rightFleetbox textarea{width:99%;height:34px;position: relative;bottom:-5px;border:0;border-top:1px solid #dcdcdc;}
+/*.MecaFleetTitlePrinter .rightFleetbox textarea:focus{height:80px;}*/
+.MecaFleetTitlePrinter .rightFleetbox input{position:relative;top:-1px;left:1px;float:right;z-index:1;}
+.MecaFleetTitlePrinter .rightFleetbox .saveform{position:relative;float:right;top:10px;right:50px;width:80px;}
+
+
+/*gsniceslider1*/
+.MecaFleetTitlePrinter .gsniceslider1 {
+    width: 50px;
+    height: 10px;
+    background: #dcdcdc;
+    margin: 20px auto;
     position: relative;
-    top:-1px;
-    border:1px solid #e6e6e6;
-    border-top-color: #EFEFEF;
-    border-radius: 0 0 4px 4px;
-    cursor:pointer;
-    background:#efefef;
-    color: #555;
-    
+    border-radius: 50px;
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.4), 0px 1px 0px rgba(255, 255, 255, 0.3);
+}
+.MecaFleetTitlePrinter .gsniceslider1 label {
+    display: block;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    cursor: pointer;
+    background: #00b0e0;
+    border-radius: 50px;
+    box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.3);
+    -webkit-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+.MecaFleetTitlePrinter .gsniceslider1 input[type=checkbox] {visibility: hidden;}
+.MecaFleetTitlePrinter .gsniceslider1 input[type=checkbox]:checked + label {left: 37px;}
+
+.MecaFleetTitlePrinter .manualfollowup{position: relative;left:300px;top:-35px;padding:5px;color:#666;cursor: pointer;}
+.MecaFleetTitlePrinter .directfollowup{position: relative;left:50px;top:35px;padding:5px;color:#666;cursor: pointer;}
+.MecaFleetTitlePrinter .manualfollowup.active,
+.MecaFleetTitlePrinter .directfollowup.active{color:#00b0e0;text-shadow:0px 0.1px 0.1px #c1c1c1;cursor:default;opacity: 1 !important;}
+.MecaFleetTitlePrinter .manualfollowup:hover,
+.MecaFleetTitlePrinter .directfollowup:hover{opacity: 0.8;}
+
+.MecaFleetTitlePrinter #createfleetfollowup{max-width: 500px;margin:auto;}
+
+.MecaFleetTitlePrinter .createfleetinfo{position:absolute;left:310px;top:5px;color:#666;}
+.MecaFleetTitlePrinter .createfleetinfo[data-title]:hover:after{
+    content: attr(data-title);
+    position:absolute;
+    width:400px;
+    left:30px;
+    top:5px;
+    padding: 4px 8px;
+    z-index: 20;
+    border:2px solid #dcdcdc;
+    border-radius: 5px;
+    color:#666;
+    background:#fff;
+}
+.MecaFleetTitlePrinter .gsniceslider1,
+.MecaFleetTitlePrinter .gsniceslider1 label,
+.MecaFleetTitlePrinter .directfollowup,
+.MecaFleetTitlePrinter .manualfollowup{   
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
        -khtml-user-select: none; /* Konqueror HTML */
          -moz-user-select: none; /* Firefox */
           -ms-user-select: none; /* Internet Explorer/Edge */
               user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
-}
-.MecaFleetTitlePrinter .editmecafleetform{
-    float:right;
-    width:87%;
-    display:none;
-    position: relative;
-    top:-1px;
-    background:#EFEFEF;
-    border: 1px solid #e6e6e6;
-    padding: 7px 7px 17px 7px;
-    border-top:0;
-    border-radius: 0 0 4px 4px;
-    margin-bottom:20px;
-    z-index: 2;
-    
-}
-.MecaFleetTitlePrinter .saveform{
-    padding: 0 3px 0 3px;
-    height:50px;
-    line-height: 50px;
-    width:100px;
-}
-.MecaFleetTitlePrinter .fleetfield{
-    color:#555;
-    border: solid 1px #dcdcdc;
-    border-radius: 4px 0 0 4px;
-    padding-bottom: 4px;
-    padding-top:2px;
-    padding-left:5px;
-    cursor:default;
-    font-size:14px;
-    margin-right:10px;
-    background: linear-gradient(to bottom,#fff 0,#dcdcdc 100%);
-}
-.MecaFleetTitlePrinter .fleetarea{
-    color:#555;
-    border: solid 1px #dcdcdc;
-    border-radius: 4px 0 0 4px;
-    padding:15px;
-    padding-bottom:16px;
-    cursor:default;
-    font-size:14px;
-    margin-right:10px;
-    background: linear-gradient(to bottom,#fff 0,#dcdcdc 100%);
-}
-.MecaFleetTitlePrinter .fleetarea textarea{
-    position: relative;
-    padding:10px;
-    top:21px;
-    left:20px;
-    width:767px;
-    border:1px solid #dcdcdc;
 }

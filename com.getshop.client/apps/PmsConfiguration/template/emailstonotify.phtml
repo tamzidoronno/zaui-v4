@@ -8,7 +8,7 @@ $types["caretaker"] = "When caretaker tasks are added";
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 
 foreach($types as $type => $heading) {
-    echo "<div style='display:inline-block; float:left; margin-right: 20px;'>";
+    echo "<div style='display:inline-block; float:left;font-family:Times New Roman; margin-right: 20px;'>";
     echo "<h3>$heading</h3>";
     for($i = 1; $i <= 10; $i++) {
         $value = "";

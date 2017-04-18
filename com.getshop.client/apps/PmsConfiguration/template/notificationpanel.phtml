@@ -76,7 +76,7 @@ $channelConfig = $config->channelConfiguration;
 
 <h1>Booking configuration</h1>
 
-<span class="changeview pmsbutton active" data-panel='email_notifcations'>Emails</span>
+<span class="changeview pmsbutton" data-panel='email_notifcations'>Emails</span>
 <span class="changeview pmsbutton" data-panel='sms_notifcations'>Sms'es</span>
 <span class="changeview pmsbutton" data-panel='admin_notifications'>Admin msg</span>
 <span class="changeview pmsbutton" data-panel='email_template'>Email template</span>
@@ -1085,7 +1085,7 @@ if($notificationSettings->requirePayments) {
         <? } ?>
         <div style='text-align: right;'>
             <span gstype="form" method="deleteAllBookings">
-                <input type="txt" style="float:left;" gsname="code" placeholder="code">
+                <input type="txt" style="float:left;margin:6px 6px 0 0; padding:3px;font-size:16px;" gsname="code" placeholder="code">
                 <span class='pmsbutton' gstype='submit' method="deleteAllBookings" style="background-color:red; float:left;">Delete all orders / users / bookings</span>
             </span>
             <span class='pmsbutton' gstype='clicksubmit' method="markAllKeyDelivered">Mark all rooms as key delivered</span>

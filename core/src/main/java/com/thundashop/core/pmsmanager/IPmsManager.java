@@ -25,6 +25,9 @@ public interface IPmsManager {
     public void markRoomAsCleaned(String itemId);
     
     @Administrator
+    public void undoLastCleaning(String itemId);
+    
+    @Administrator
     public void createAllVirtualOrders();
     
     @Administrator
@@ -180,7 +183,7 @@ public interface IPmsManager {
     public void saveConfiguration(PmsConfiguration notifications);
     
     @Administrator
-    public void sendCode(String phoneNumber, String roomId);
+    public void sendCode(String prefix, String phoneNumber, String roomId);
     
     @Administrator
     public void setGuestOnRoom(List<PmsGuests> guests, String bookingId, String roomId);

@@ -374,8 +374,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(!bookingAlreadyExists(wubooking) || wubooking.delete) {
                     toReturn.add(wubooking);
                     addBookingToPms(wubooking);
-                } else {
-                    messageManager.sendErrorNotification("A booking that already exists where tried to download twice from wubook: " + wubooking. reservationCode, null);
                 }
             }
         }

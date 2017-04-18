@@ -170,4 +170,13 @@ public class PmsAdditionalItemInformation extends DataCommon {
     Date getLastUsed() {
         return lastUsed;
    }
+
+    void setLastCleaned(Date latestCleaningBeforeThat) {
+        lastCleaned = latestCleaningBeforeThat;
+    }
+
+    void removeCleaning(Date latestCleaning) {
+        cleanedByUser.remove(latestCleaning.getTime());
+        isClean = false;
+    }
 }

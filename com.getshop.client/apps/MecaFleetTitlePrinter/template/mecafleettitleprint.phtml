@@ -1,17 +1,41 @@
 <?php
 $fleet = $this->getApi()->getMecaManager()->getFleetPageId($this->getPage()->getId());
+$followup = $fleet->followup;
+if($followup == "true"){
+    $followuptext = "manuel";
+    $directtext = "<span class='directfollowup'>Direkte oppfølging</span>";
+    $manualtext = "<span class='manualfollowup active'>Manuel oppfølging</span>";
+    $sliderinput = "<input type='checkbox' value='<? echo $followup; ?>' gsname='fleetFollowup' id='followupslider' checked/>";
+}else{
+    $followuptext = "direkte";
+    $directtext = "<span class='directfollowup active'>Direkte oppfølging</span>";
+    $manualtext = "<span class='manualfollowup'>Manuel oppfølging</span>";
+    $sliderinput = "<input type='checkbox' value='<? echo $followup; ?>' gsname='fleetFollowup' id='followupslider'/>";
+}
 
 ?>
-<div class='title'><? echo $fleet->name; ?></div>
-<i class="fa fa-plus-square"> Mer info</i>
-<span class="editmecafleetform" gstype="form" method="updateFleet">
-    <span>
-        <span class="fleetfield">Navn på flåteavtalen <input class="gsniceinput1" gsname="fleetName" class="checkbox" placeholder="Navn på flåteavtalen" value="<? echo $fleet->name; ?>"/></span>
-        <span class="fleetfield">Kontaktperson <input class="gsniceinput1" gsname="contactName" class="checkbox" placeholder="Kontaktperson" value="<? echo $fleet->contactName; ?>"/></span>
-        <span class="fleetfield">E-post <input class="gsniceinput1" gsname="contactEmail" class="checkbox" placeholder="E-post" value="<? echo $fleet->contactEmail; ?>"/></span>
-        <span class="fleetfield">Telefon <input class="gsniceinput1" gsname="contactPhone" class="checkbox" placeholder="Telefon" value="<? echo $fleet->contactPhone; ?>"/></span><br>
-        <span class="fleetarea">Detaljer <textarea class="gsniceinput1" gsname="contactDetails" class="checkbox" placeholder="Detaljer" value="<? echo $fleet->contactDetails; ?>"><? echo $fleet->contactDetails; ?></textarea></span>
-    </span>
+<div class='title'><? echo $fleet->name ."<br><span style='font-size:16px;font-style:italic;'>En ".$followuptext." oppfølgingsflåte.</span>";?></div>
+<div class="editmecafleetform" gstype="form" method="updateFleet">
+    <div class="leftFleetbox">
+        <div id="createfleetfollowup">
+            <?echo $directtext?>
+            <div class="gsniceslider1">
+                <? echo $sliderinput;?>
+                <label for="followupslider"></label>
+            </div>
+            <?echo $manualtext; ?>
+        </div>
+        <div class="fleetfield">Navn på flåteavtalen <input class="gsniceinput1" gsname="fleetName" placeholder="Navn på flåteavtalen" value="<? echo $fleet->name; ?>"/></div>
+        <div class="fleetfield">Kontaktperson <input class="gsniceinput1" gsname="contactName" placeholder="Kontaktperson" value="<? echo $fleet->contactName; ?>"/></div>
+        <div class="fleetfield">E-post <input class="gsniceinput1" gsname="contactEmail" placeholder="E-post" value="<? echo $fleet->contactEmail; ?>"/></div>
+        <div class="fleetfield">Telefon <input class="gsniceinput1" gsname="contactPhone" placeholder="Telefon" value="<? echo $fleet->contactPhone; ?>"/></div><br>
+        
+    </div>
+    <div class="rightFleetbox">
+        <div class="fleetfield">Rabatt<input class="gsniceinput1" gsname="discount" placeholder="Rabatt" value="<? echo $fleet->discount; ?>"/></div>
+        <div class="fleetfield">Leiebil<input class="gsniceinput1" gsname="rentalcar" placeholder="Leiebil" value="<? echo $fleet->rentalcar; ?>"/></div>
+        <div class="fleetarea">&nbsp;&nbsp;Detaljer <textarea class="gsniceinput1" gsname="contactDetails" value="<? echo $fleet->contactDetails; ?>"><? echo $fleet->contactDetails; ?></textarea></div>
+        <div class="fleetarea">&nbsp;&nbsp;Annet <textarea class="gsniceinput1" gsname="contactOther" value="<? echo $fleet->contactOther; ?>"><? echo $fleet->contactOther; ?></textarea></div>
     <?
     if (isset($_POST['data']['fleetName']) && !$_POST['data']['fleetName']) {
         ?>
@@ -20,4 +44,6 @@ $fleet = $this->getApi()->getMecaManager()->getFleetPageId($this->getPage()->get
     }
     ?>
     <span class="saveform shop_button" gstype="submit"> Lagre </span>
-</span>
+    </div>
+    
+</div>

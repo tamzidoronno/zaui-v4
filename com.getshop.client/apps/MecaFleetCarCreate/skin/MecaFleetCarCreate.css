@@ -8,3 +8,4 @@
     width: 100%;
     box-sizing: border-box;
 }
+.MecaFleetCarCreate textarea[gsname="carinfo"]{width:99.5%;}

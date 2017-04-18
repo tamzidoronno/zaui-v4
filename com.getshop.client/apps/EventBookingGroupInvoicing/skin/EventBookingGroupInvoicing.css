@@ -1,0 +1,22 @@
+.EventBookingGroupInvoicing .selectCompany {
+    border-top: solid 1px #DDD;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.EventBookingGroupInvoicing .selectCompany:hover {
+    background-color: #DDD;
+}
+
+.EventBookingGroupInvoicing .group_invoicing .title {
+    background-color: #f9f9f9;
+    padding: 5px;
+    text-align: center;
+    line-height: 50px;
+    margin-top: 20px;
+    
+}
+
+.gsbody_inner[gsStoreId='17f52f76-2775-4165-87b4-279a860ee92c'] .EventBookingGroupInvoicing .group_invoicing {
+    display: block;
+}

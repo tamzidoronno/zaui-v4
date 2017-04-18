@@ -59,6 +59,13 @@ public class Event extends DataCommon {
     @Editor
     public HashMap<String, String> participationStatus = new HashMap();
     
+    /**
+     * Key = userid
+     * Value = invoicegroupid
+     */
+    @Editor
+    public HashMap<String, String> groupInvoiceStatus = new HashMap();
+    
     @Transient
     public BookingItem bookingItem;
     

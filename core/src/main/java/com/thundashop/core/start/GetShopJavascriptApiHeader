@@ -2,7 +2,6 @@ var GetShopApiWebSocket = function(address, port, identifier, persistMessages) {
     this.sentMessages =  [];
     this.messagesToSendJson =  [];
     this.address = address;
-    this.persistMessages = persistMessages;
 
     if (typeof(port) === "undefined" || !port) {
         this.port = "31330";
@@ -26,9 +25,6 @@ GetShopApiWebSocket.prototype = {
     sessionId: false,
     unsentMessageLoaded: false,
     messageCountChangedEvent: null,
-    firstResendOfUnsentMessages: false,
-    firstUnsentMessages: false,
-    transferCompletedFirstTimeAfterUnsentMessageSent: false,
     listeners: [],
     
     connect: function() {
@@ -52,23 +48,8 @@ GetShopApiWebSocket.prototype = {
         };
         
         this.createManagers();
-        this.loadUnsentMessages();
     },
-    
-    setTransferCompletedFirstTimeAfterUnsentMessageSent: function(func) {
-        this.transferCompletedFirstTimeAfterUnsentMessageSent = func;
-    },
-    
-    loadUnsentMessages: function() {
-        try {
-            this.messagesToSendJson = JSON.parse(localStorage.getItem("gs_api_messagetopush"));
-        } catch (Ex) {
-            this.messagesToSendJson = [];
-        }
 
-        this.unsentMessageLoaded = true;
-    },
-    
     guid: function() {
         function s4() {
           return Math.floor((1 + Math.random()) * 0x10000)
@@ -108,6 +89,11 @@ GetShopApiWebSocket.prototype = {
             this.transferCompletedFirstTimeAfterUnsentMessageSent();
             this.firstUnsentMessages = false;
         }
+        
+        if (typeof('messagePersister') !== "undefined" && messagePersister) {
+            messagePersister.markAsSent(corrolatingMessage);
+            this.fireMessageCountChanged();
+        }
     },
 
     handleIncomingMessage: function(msg) {
@@ -146,39 +132,13 @@ GetShopApiWebSocket.prototype = {
     },
     
     getUnsentMessageCount: function() {
-        try {
-            return JSON.parse(localStorage.getItem("gs_api_messagetopush")).length;
-        } catch (Ex) {
-            return 0;
+        if (typeof('messagePersister') !== "undefined" && messagePersister) {
+            return messagePersister.getUnsetMessageCount();
         }
+        
+        return 0;
     },
-    
-    sendUnsentMessages: function() {
-        if (!this.persistMessages) {
-            this.unsentMessageLoaded = false;
-            return;
-        }
-        
-        this.firstResendOfUnsentMessages = true;
-        
-        var anySent = false;
-        for (var i in this.messagesToSendJson) {
-            var msg = this.messagesToSendJson[i];
-            this.send(msg);
-            anySent = true;
-        }
-        
-        this.firstResendOfUnsentMessages = false;
-        this.firstUnsentMessages = true;
-        
-        if (!anySent) {
-            if (this.sentMessages.length === 0 && this.transferCompletedFirstTimeAfterUnsentMessageSent) {
-                this.firstUnsentMessages = false;
-                this.transferCompletedFirstTimeAfterUnsentMessageSent();
-            }
-        }
-    },
-    
+
     setSessionId: function() {
         if (sessionStorage.getItem("getshop.sessionId")) {
             this.sessionId = sessionStorage.getItem("getshop.sessionId");
@@ -242,22 +202,40 @@ GetShopApiWebSocket.prototype = {
     send: function(message, silent) {
         var deferred = $.Deferred();
         message.messageId = this.makeid();
-        deferred.messageId = message.messageId;
-        var messageJson = JSON.stringify(message);
         
-        if (this.unsentMessageLoaded && !this.firstResendOfUnsentMessages) {
-            if (!this.messagesToSendJson) {
-                this.messagesToSendJson = [];
-            }
-            this.messagesToSendJson.push(message);
-            localStorage.setItem("gs_api_messagetopush", JSON.stringify(this.messagesToSendJson));
+        if (typeof('messagePersister') !== "undefined" && messagePersister) {
+            messagePersister.persist(message);
             this.fireMessageCountChanged();
         }
+        
+        deferred.messageId = message.messageId;
+        var messageJson = JSON.stringify(message);
         
         if (this.sentMessages.length === 0 && this.transferStarted && silent !== true) {
             this.transferStarted();
         }
+        
         this.sentMessages.push(deferred);
+        
+        var sendFunc = function(messageJson, me) {
+            if (me.socket.readyState !== 1) {
+                setTimeout(function() {
+                    sendFunc(messageJson, me);
+                }, 50);
+            } else {
+                me.socket.send(messageJson);
+                var messageObject = JSON.parse(messageJson);
+            }
+        }
+        
+        sendFunc(messageJson, this);
+        
+        this.sendUnsentMessages();
+        
+        return deferred;
+    },
+    
+    sendUnsentMessages: function() {
         var sendFunc = function(messageJson, me) {
             if (me.socket.readyState !== 1) {
                 setTimeout(function() {
@@ -268,9 +246,31 @@ GetShopApiWebSocket.prototype = {
             }
         }
         
-        sendFunc(messageJson, this);
+        if (typeof('messagePersister') !== "undefined" && messagePersister) {
+            var allUnsetMessages = messagePersister.getAllUnsentMessages();
+            
+            for (var k in allUnsetMessages) {
+                var unsentMessage = allUnsetMessages[k];
+                
+                if (!this.inUnsentMessages(unsentMessage.messageId)) {
+                    var messageJson2 = JSON.stringify(unsentMessage);
+                    var deferred2 = $.Deferred();
+                    deferred2.messageId = unsentMessage.messageId;
+                    this.sentMessages.push(deferred2);
+                    sendFunc(messageJson2, this);
+                }
+            }
+        }
+    },
+    
+    inUnsentMessages: function(msgId) {
+        for (var i in this.sentMessages) {
+            if (this.sentMessages[i].messageId === msgId) {
+                return true;
+            }
+        }
         
-        return deferred;
+        return false;
     },
 
     getMessage: function(id) {

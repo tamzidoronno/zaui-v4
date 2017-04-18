@@ -60,3 +60,30 @@ body {font-family: "Exo", "open-sans";color:#555;}
     background-color:#2d2d2d;/*Fallback*/
     background-color:rgba(45,45,45,1)
 }
+.BookingEngineManagement .addGroupOptions input,
+.PmsManagement .pmsinput{padding:3px;}
+.PmsManagement .actions{background-color:#1b75af;}
+.PmsManagement .actions:hover{background-color:#3c93cc;}
+.PmsManagement th{background-color:#146da6;border-color:#bbb;color:#fff;}
+.PmsManagement td{border-color:#ccc;}
+.PmsManagement td:nth-child(1){border-left-color:#ccc;}
+.PmsManagement .highlight td{background:#fff !important;}
+.PmsManagement .roomsbookedactions{background-color:#efefef;box-shadow: 0px 1px 3px #000;}
+.PmsManagement .roomsbookedactions .fa{color:#555;text-shadow: 0px 1px 1px #000;}
+
+.PmsManagement .bookinginfo select,
+.PmsManagement .bookinginfo input{font-size:14px;border:1px solid #bdbdbd;background-color:#fff;}
+.PmsManagement .pmsbutton[gstype="submitToInfoBox"], .PmsManagement .pmsbutton.closeadduser{line-height:15px;height:15px;font-size: 14px;max-width: 90px;box-sizing: initial !important;}
+.PmsManagement .pmsbutton.showlog{background-color: #146da6 !important;color:#fff !important;}
+.PmsManagement .tabs .tab{border-color:#fff;margin-right:5px;border-radius: 0;background-color:#146da6;color:#fff;font-weight:700;letter-spacing:1.5px;}
+.PmsManagement .tabs .tab.selected{border-color:#146da6;color:#146da6;}
+.PmsManagement .tabarea{border-top-color:#146da6;}
+.PmsManagement .viewmode:hover { color:#146da6;}
+.PmsManagement .selectedbooker{background-color:#146da6;}
+
+.PmsConfiguration .createPmsViewinput {position:relative;top:-2px;padding:5px;margin-right:5px;}
+.PmsConfiguration .paymentlinks input{width:49.2%!important;height:23px !important;}
+.PmsConfiguration .paymentlinks .webadressclass{width:42%!important;height:23px !important;}
+.PmsConfiguration #createproductinput{position:relative;top:-1px;padding:5px;}
+.PmsConfiguration .configentry select[gsname="locktype"]{width:172px;}
+.PmsConfiguration .configentry select[gsname="bookingProfile"]{width:125px;}

@@ -98,5 +98,5 @@ gsarea[area="body"] { margin-top: 0px; }
         left: 0px;
         top: 35px;
     }
-
+    .gsarea[area="footer"] .ContentManager{text-align: center;}
 }

@@ -28,7 +28,7 @@ $paymentProductConfig = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkC
     {roomDescription}, {orderprice}, {paymentlink}.
 </div><br>
 <div gstype='form' method='savepaymentlinksetup'>
-    Web address: <input type='text' gsname='webadress' value='<?php echo $paymentProductConfig->webAdress; ?>'><br>
+    Web address: <input class='webadressclass' type='text' gsname='webadress' value='<?php echo $paymentProductConfig->webAdress; ?>'><br>
     <?php
     
     foreach($notifications as $key => $val) {

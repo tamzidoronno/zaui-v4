@@ -279,11 +279,7 @@ GetShopApiWebSocket.prototype = {
                 this.messagesToSendJson.splice(i, 1);
             }
         }
-        
-        if (this.persistMessages) {
-            localStorage.setItem("gs_api_messagetopush", JSON.stringify(this.messagesToSendJson));
-            this.fireMessageCountChanged();
-        }
+    
         
         for (var i=0;i<this.sentMessages.length; i++) {
             if (this.sentMessages[i].messageId === id) {

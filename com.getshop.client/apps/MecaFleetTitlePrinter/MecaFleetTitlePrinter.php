@@ -21,11 +21,17 @@ class MecaFleetTitlePrinter extends \MarketingApplication implements \Applicatio
     public function updateFleet() {
         if (isset($_POST['data']['fleetName']) && $_POST['data']['fleetName']) {
             $fleet = $this->getApi()->getMecaManager()->getFleetPageId($this->getPage()->getId());
+            
             $fleet->name = $_POST['data']['fleetName'];
             $fleet->contactName = $_POST['data']['contactName'];
             $fleet->contactEmail = $_POST['data']['contactEmail'];
             $fleet->contactPhone = $_POST['data']['contactPhone'];
+            $fleet->followup = $_POST['data']['fleetFollowup'];
+            
+            $fleet->discount = $_POST['data']['discount'];
+            $fleet->rentalcar = $_POST['data']['rentalcar'];
             $fleet->contactDetails = $_POST['data']['contactDetails'];
+            $fleet->contactOther = $_POST['data']['contactOther'];
             
             $this->getApi()->getMecaManager()->saveFleet($fleet);
         }

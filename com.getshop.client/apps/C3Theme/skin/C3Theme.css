@@ -23,9 +23,10 @@ body {
 }
 
 .gsarea[area="header"] .gs_page_width { height: 150px;  margin-bottom: 20px; padding-top: 20px; }
-.gsarea[area="footer"] .gs_page_width { background-color:#000;
-                                        padding-top: 20px;
-                                        padding-bottom: 20px;
+.gsarea[area="footer"] .gs_page_width { 
+    background-color:#000;
+    padding-top: 20px;
+    padding-bottom: 20px;
     background: #f58348; /* For browsers that do not support gradients */
     background: -webkit-linear-gradient(#f58348, #fbbea0); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(#f58348, #fbbea0); /* For Opera 11.1 to 12.0 */
@@ -280,6 +281,13 @@ h2 { margin: 0px; color: #28b4af; margin-top: 5px; margin-bottom: 5px; }
     background-color: #EEE;
     padding: 10px;
 }
+div[appid="9bc6c5ac-4392-4542-9825-683bd04e73bb"].SimpleFileUpload hr{display:none;}
+div[appid="9bc6c5ac-4392-4542-9825-683bd04e73bb"].SimpleFileUpload .filelist{text-align: center;}
+div[appid="9bc6c5ac-4392-4542-9825-683bd04e73bb"].SimpleFileUpload .filelist:before{content:"Årsrapport ";text-align: center;color: rgb(255, 140, 0);font-weight:700;}
+div[appid="9bc6c5ac-4392-4542-9825-683bd04e73bb"].SimpleFileUpload .filelist td{display:none;padding-bottom: 30px;}
+div[appid="9bc6c5ac-4392-4542-9825-683bd04e73bb"].SimpleFileUpload .filelist td:nth-child(2n + 1){display:inline;border:0;padding-left:5px;}
+div[appid="9bc6c5ac-4392-4542-9825-683bd04e73bb"].SimpleFileUpload .filelist a{padding-left:5px;color:#28b4af;font-weight:700;line-height:2;}
+
 @media only all and (max-width: 800px) {
     
     .gsarea[area="footer"] .gs_page_width {

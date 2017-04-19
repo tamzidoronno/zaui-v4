@@ -237,6 +237,16 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
        
     }
 
+    @Override
+    public void changeZWaveId(String lockId, Integer newId) {
+        GetShopDevice toChange = devices.get(lockId);
+        toChange.zwaveid = newId;
+        for(GetShopLockCode code : toChange.codes.values()) {
+            code.addedToLock = null;
+        }
+        saveObject(toChange);
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;

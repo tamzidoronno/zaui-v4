@@ -10,6 +10,12 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $this->getApi()->getGetShopLockManager()->deleteAllDevices($this->getSelectedName(), "fdsafbvvre4234235t", $_POST['data']['serverSource']);
     }
     
+    public function changeZwaveid() {
+        $lock = $_POST['data']['lockid'];
+        $newId = $_POST['data']['newzwaveid'];
+        $this->getApi()->getGetShopLockManager()->changeZWaveId($this->getSelectedName(), $lock, $newId);
+    }
+    
     public function updateLockData() {
         
         $serverSource = $_POST['data']['source'];

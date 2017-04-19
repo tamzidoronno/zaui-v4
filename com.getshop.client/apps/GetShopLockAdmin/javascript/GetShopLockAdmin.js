@@ -2,6 +2,22 @@ app.GetShopLockAdmin = {
     init: function() {
         $(document).on('change','.GetShopLockAdmin .connectlock', app.GetShopLockAdmin.connectLock);
         $(document).on('click','.GetShopLockAdmin .loadlocklist', app.GetShopLockAdmin.loadLockList);
+        $(document).on('click','.GetShopLockAdmin .changezwaveid', app.GetShopLockAdmin.changeZWaveId);
+    },
+    changeZWaveId : function() {
+        var newId = prompt("New z-wave id");
+        if(!newId) {
+            return;
+        }
+        var lockid = $(this).attr('lockid');
+        var event = thundashop.Ajax.createEvent('','changeZwaveid',$(this), {
+            "newzwaveid" : newId,
+            "lockid" : lockid
+        });
+        var td = $(this);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            td.html(newId);
+        });
     },
     loadLockList : function() {
         var id = $(this).attr('lock');

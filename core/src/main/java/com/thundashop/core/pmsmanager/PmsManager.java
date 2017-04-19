@@ -1616,7 +1616,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(!types.isEmpty() && !types.contains(item.bookingItemTypeId)) {
                 continue;
             }
-            BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
+            BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItemWithOptimal(filter.start, filter.end, item.id);
             List<BookingTimeLine> timelines = line.getTimelines(filter.interval-21600, 21600);
             LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap();
             for (BookingTimeLine tl : timelines) {
@@ -1624,6 +1624,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 tmpres.bookingIds = tl.bookingIds;
                 tmpres.count = tl.count;
                 tmpres.time = tl.start.getTime();
+                
+                addVirtuallyAssignedBookingIds(tmpres, tl);
                 
                 if(!tmpres.bookingIds.isEmpty()) {
                     Booking bookingEngineBooking = bookingEngine.getBooking(tmpres.bookingIds.get(0));
@@ -1646,6 +1648,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         return res;
+    }
+
+    private void addVirtuallyAssignedBookingIds(IntervalResultEntry tmpres, BookingTimeLine tl) {
+        tmpres.virtuallyAssigned = tl.bookingIds.stream()
+                .map(id -> bookingEngine.getBooking(id))
+                .filter(booking -> booking.bookingItemId == null || booking.bookingItemId.isEmpty())
+                .map(booking -> booking.id)
+                .collect(Collectors.toList());
     }
 
     @Override

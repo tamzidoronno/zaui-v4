@@ -226,6 +226,11 @@ if($compact) {
                     $name = $this->createDeleteBookingIcon($id);
             }
             
+            if ($this->isVirtuallyAssigned($id, $value)) {
+                $free = "virtually_added";
+            }
+            
+            
             echo "<span class='valueentry $free' time='$time' itemid='".$itemId."' bid='$id'>&nbsp;&nbsp;$name</span>";
             if($isTaken) {
                 $printed = true;
@@ -236,6 +241,10 @@ if($compact) {
     echo "</div>";
     echo "</div>";
     ?>
+</div>
+
+<div style="border: solid 1px red; padding: 20px; margin-top: 20px;">
+    <i class="fa fa-info"></i> Grey boxes are just a forcast on how the system thinks the assigning should be with the current coverage. If more bookings added or manually assigning is being made this will change at any time.
 </div>
 
 <script>

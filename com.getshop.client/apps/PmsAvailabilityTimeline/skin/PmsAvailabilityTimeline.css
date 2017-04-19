@@ -23,6 +23,7 @@
 .PmsAvailabilityTimeline .topspacingitemoverview { height: 50px; clear:both;}
 .PmsAvailabilityTimeline .full_second { background-color: #e5731f; cursor: pointer;}
 .PmsAvailabilityTimeline .full { text-align: left; }
+.PmsAvailabilityTimeline .virtually_added { background-color: #DDD; }
 .PmsAvailabilityTimeline .detailedview .valueentry,
 .PmsAvailabilityTimeline .detailedview .valueentry_item
 { height: 24px !important; font-size: 14px; line-height: 24px; }

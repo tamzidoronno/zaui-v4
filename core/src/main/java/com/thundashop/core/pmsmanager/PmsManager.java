@@ -4728,9 +4728,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!room.isStartingToday() && room.isStarted() && (!room.isEnded() || room.isEndingToday())
                 && (start.before(now) && end.after(now))) {
             //This is extending a stay, we need to remove cleaning and mark it as cleaned.
-            if(room.addedToArx) {
-                room.forceUpdateLocks = true;
-            }
+            room.forceUpdateLocks = true;
         }
         if(room.bookingId != null && !room.bookingId.isEmpty()) {
             bookingEngine.changeDatesOnBooking(room.bookingId, start, end);

@@ -18,6 +18,7 @@ foreach($ids as $userId => $d) {
     $user = $this->getApi()->getUserManager()->getUserById($userId);
     echo "<span class='downloaduserbutton' userid='".$user->id."' gs_fileName='report_".$user->fullName."'>" . $user->fullName . "</span>";
 }
+echo "<span class='downloaduserbutton' userid='' gs_fileName='report_all'>Everyone</span>";
 echo "<br>";
 echo "<br>";
 echo "</span>";

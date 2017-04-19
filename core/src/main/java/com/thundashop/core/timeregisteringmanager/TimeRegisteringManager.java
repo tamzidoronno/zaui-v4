@@ -87,7 +87,7 @@ public class TimeRegisteringManager  extends ManagerBase implements ITimeRegiste
     public List<TimeRegistered> getRegisteredHoursForUser(String userId, Date start, Date end) {
         List<TimeRegistered> toCheck = new ArrayList();
         for(TimeRegistered test : registeredTimes.values()) {
-            if(test.userId.equals(userId)) {
+            if(userId.isEmpty() || test.userId.equals(userId)) {
                 toCheck.add(test);
             }
         }

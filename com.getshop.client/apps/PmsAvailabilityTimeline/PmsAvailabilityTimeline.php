@@ -265,7 +265,11 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         foreach($booking->rooms as $room) {
             if($room->bookingId == $_POST['data']['bookingid']) {
                 echo date("d.m.Y", strtotime($room->date->start)) . " - " . date("d.m.Y", strtotime($room->date->end)) . "<br>";
-                echo "Room : " . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . "<bR>";
+                if($room->bookingItemId) {
+                    echo "Room : " . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . "<bR>";
+                } else {
+                    echo "Room : Forecasted this room<br>";
+                }
                 if($room->guests[0]->name)
                     echo "Guest : " . $room->guests[0]->name;
             }

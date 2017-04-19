@@ -31,6 +31,8 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
                 $code->used = ($_POST['data']['used_'.$key] == "true");
                 if($_POST['data']['addedToLock_'.$key] != "true") {
                     $code->addedToLock = null;
+                } else if(!$code->addedToLock) {
+                    $code->addedToLock = $this->convertToJavaDate(time());
                 }
                 $code->needToBeRemoved = ($_POST['data']['needToBeRemoved_'.$key] == "true");
                 if($_POST['data']['code_'.$key] != $code->code) {

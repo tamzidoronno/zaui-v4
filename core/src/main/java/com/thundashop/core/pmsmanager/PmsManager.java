@@ -4269,7 +4269,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.code = generateCode();
         room.addedToArx = false;
         if(room.isStarted() && !room.isEnded()) {
-            forceMarkRoomAsCleaned(room.bookingItemId);
+            room.forceUpdateLocks = true;
         }
         saveBooking(booking);
         processor();

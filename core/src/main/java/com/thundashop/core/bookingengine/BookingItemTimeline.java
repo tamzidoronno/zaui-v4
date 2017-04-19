@@ -5,8 +5,10 @@
  */
 package com.thundashop.core.bookingengine;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -81,6 +83,10 @@ public class BookingItemTimeline {
 
     void remove(String id) {
         dates.remove(id);
+    }
+
+    public List<String> getBookingIds() {
+        return new ArrayList(dates.keySet());
     }
     
 }

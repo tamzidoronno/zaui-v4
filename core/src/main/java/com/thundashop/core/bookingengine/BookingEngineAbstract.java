@@ -710,7 +710,29 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 filter(o -> (o.bookingItemId != null && o.bookingItemId.equals(itemId))).
                 forEach(o -> line.add(o));
         return line;
-   }
+    }
+   
+    BookingTimeLineFlatten getTimeLinesForItemWithOptimal(Date start, Date end, String itemId) {
+        BookingItem item = getBookingItem(itemId);
+        BookingTimeLineFlatten line = new BookingTimeLineFlatten(item.bookingSize, item.bookingItemTypeId);
+        line.start = start;
+        line.end = end;
+        bookings.values().stream().
+                filter(o -> o.within(start, end)).
+                filter(o -> (o.bookingItemId != null && o.bookingItemId.equals(itemId))).
+                forEach(o -> line.add(o));
+        
+        
+        BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(item.bookingItemTypeId, start, end, null);
+        List<String> autoAssignedBookings = assigner.getBookingsFromTimeLine(itemId);
+        
+        autoAssignedBookings.stream()
+                .map(o -> bookings.get(o))
+                .filter(o -> !line.containsBooking(o))
+                .forEach(o -> line.add(o));
+        
+        return line;
+    }
 
     void saveRules(RegistrationRules rules) {
         config.rules = rules;

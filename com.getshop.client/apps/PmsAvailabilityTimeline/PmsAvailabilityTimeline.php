@@ -229,6 +229,16 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         }
     }
     
+    public function isVirtuallyAssigned($itemId, $value) {
+        foreach ($value->virtuallyAssigned as $key => $assignedItemId) {
+            if ($assignedItemId == $itemId) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     public function getData() {
         if(isset($_SESSION['pmsavailabilitytimelinedata'])) {
             return unserialize($_SESSION['pmsavailabilitytimelinedata']);

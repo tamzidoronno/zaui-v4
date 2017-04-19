@@ -147,7 +147,7 @@ public class BookingItemAssignerOptimal {
 
     private void assignBookings(List<OptimalBookingTimeLine> bookingLines) {
         List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
-        assignLeftovers(bookingLines, availableBookingItems);
+        assignLeftovers(bookingLines, availableBookingItems, true);
     }
 
     private List<BookingItemTimeline> getAvailableBookingItems(List<OptimalBookingTimeLine> bookingLines) throws BookingEngineException {
@@ -163,7 +163,7 @@ public class BookingItemAssignerOptimal {
         return bookingItemsFlatten;
     }
 
-    private void assignLeftovers(List<OptimalBookingTimeLine> bookingLines, List<BookingItemTimeline> bookingItemsFlatten) throws BookingEngineException {
+    private void assignLeftovers(List<OptimalBookingTimeLine> bookingLines, List<BookingItemTimeline> bookingItemsFlatten, boolean removeRoomsIfTheyCanBeUsedElsewhere) throws BookingEngineException {
         // Do the rest of the timelines
         
         for (OptimalBookingTimeLine bookingLine : bookingLines) {
@@ -184,7 +184,9 @@ public class BookingItemAssignerOptimal {
             }
         }
         
-        removeBookingsThatCanBeAssignedToDifferentRooms(bookingLines, bookingItemsFlatten);
+        if (removeRoomsIfTheyCanBeUsedElsewhere) {
+            removeBookingsThatCanBeAssignedToDifferentRooms(bookingLines, bookingItemsFlatten);
+        }
     }
 
     private List<Booking> assignAllLinesThatAlreadyHasElementsWithBookingItemId(List<OptimalBookingTimeLine> bookingLines, List<BookingItemTimeline> bookingItemsFlatten) throws BookingEngineException {
@@ -311,7 +313,7 @@ public class BookingItemAssignerOptimal {
         List<OptimalBookingTimeLine> bookingLines = preCheck();
         dryRun = true;
         List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
-        assignLeftovers(bookingLines, availableBookingItems);
+        assignLeftovers(bookingLines, availableBookingItems, true);
         
         List<String> availableItems = availableBookingItems
                 .stream()
@@ -407,4 +409,18 @@ public class BookingItemAssignerOptimal {
         }
     }
 
+    public List<String> getBookingsFromTimeLine(String bookingItemId) {
+        List<OptimalBookingTimeLine> bookingLines = preCheck();
+        dryRun = true;
+        List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
+        assignLeftovers(bookingLines, availableBookingItems, false);
+        
+        for (BookingItemTimeline timeLine : availableBookingItems) {
+            if (timeLine.bookingItemId.equals(bookingItemId)) {
+                return timeLine.getBookingIds();
+            }
+        }
+        
+        return new ArrayList();
+    }
 }

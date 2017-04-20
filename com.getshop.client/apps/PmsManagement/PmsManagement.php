@@ -2598,7 +2598,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->createNewOrder = true;
         $filter->addToOrderId = $_POST['data']['appendToOrderId'];
         
-        $this->getApi()->getPmsInvoiceManager()->clearOrder($this->getSelectedName(), $bookingId, $_POST['data']['appendToOrderId']);
+        if($_POST['data']['appendToOrderId']) {
+            $this->getApi()->getPmsInvoiceManager()->clearOrder($this->getSelectedName(), $bookingId, $_POST['data']['appendToOrderId']);
+        }
         
         $instanceToUse = null;
         $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
@@ -2671,6 +2673,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $this->showBookingInformation();
     }
+    
+    public function loadOrderInformation() {
+        $this->orderToDisplay = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $this->includefile("detailedorderinformation");
+    }
 
     public function createOrderPreview($booking, $config) {
         $endDate = time();
@@ -2710,7 +2717,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $result[$order->incrementOrderId] = $order;
         }
         if(sizeof($result) > 0) {
-            krsort($result);
+            ksort($result);
         }
         $this->selectedOrders = $result;
         return $result;

@@ -976,6 +976,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->city = $_POST['data']['address.city'];
         $user->birthDay = $_POST['data']['birthDay'];
         $user->relationship = $_POST['data']['relationship'];
+        $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];
         $this->getApi()->getUserManager()->saveUser($user);
         
         $this->selectedBooking = null;
@@ -2597,10 +2598,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->createNewOrder = true;
         $filter->addToOrderId = $_POST['data']['appendToOrderId'];
         
-        if($_POST['data']['appendToOrderId'] && $this->getFactory()->getStore()->id == "178330ad-4b1d-4b08-a63d-cca9672ac329" ||
-            $_POST['data']['appendToOrderId'] && $this->getFactory()->getStore()->id == "9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0") {
-            $this->getApi()->getPmsInvoiceManager()->clearOrder($this->getSelectedName(), $bookingId, $_POST['data']['appendToOrderId']);
-        }
+        $this->getApi()->getPmsInvoiceManager()->clearOrder($this->getSelectedName(), $bookingId, $_POST['data']['appendToOrderId']);
         
         $instanceToUse = null;
         $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
@@ -2712,7 +2710,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $result[$order->incrementOrderId] = $order;
         }
         if(sizeof($result) > 0) {
-            ksort($result);
+            krsort($result);
         }
         $this->selectedOrders = $result;
         return $result;

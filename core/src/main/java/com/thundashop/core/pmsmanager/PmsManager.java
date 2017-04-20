@@ -947,6 +947,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (room == null) {
                 return "Room does not exists";
             }
+
+            String from = "none";
+            if (room.bookingItemId != null) {
+                BookingItem oldItem = bookingEngine.getBookingItem(room.bookingItemId);
+                if (oldItem != null) {
+                    from = oldItem.bookingItemName + "";
+                }
+            }
+            
             if(split) { 
                 room = splitBookingIfNesesary(booking, room);
             }
@@ -964,14 +973,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
             finalize(booking);
-
-            String from = "none";
-            if (room.bookingItemId != null) {
-                BookingItem oldItem = bookingEngine.getBookingItem(room.bookingItemId);
-                if (oldItem != null) {
-                    from = oldItem.bookingItemName;
-                }
-            }
 
             String logText = "";
             if (bookingEngine.getBookingItem(itemId) != null) {

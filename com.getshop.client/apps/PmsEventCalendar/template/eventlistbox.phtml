@@ -17,7 +17,7 @@ foreach($entries as $eventEntry) {
     $weekday = $this->__w(date("l", $time));
     
     if(isset($eventEntry->imageid) && $eventEntry->imageid) {
-        $imgSrc = "/displayImage.php?id=".$eventEntry->imageid;
+        $imgSrc = "/displayImage.php?id=".$eventEntry->imageid . "&width=300";
     }
 
     if(!$eventEntry->starttime) {

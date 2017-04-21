@@ -97,6 +97,11 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
 
         SavedOrderFile file = new SavedOrderFile();
         String transferId = transferOrders(orders);
+        
+        if(!logEntries.isEmpty()) {
+            return null;
+        }
+        
         if(!transferId.isEmpty()) {
             file.orders= new ArrayList();
             for(Order ord : orders) {
@@ -173,7 +178,6 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
         transferObject.description = "getshop file of type : " + config.subType;
         transferObject.salesOrders = salesOrdersToTransfer;
         transferObject.importLines = importLinesToTransfer;
-        
         Gson gson = new Gson();
         String data = gson.toJson(transferObject);
         try {
@@ -289,6 +293,17 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             for(CartItem item : order.cart.getItems()) {
                 Product prod =  managers.productManager.getProduct(item.getProduct().id);
                 PowerOfficeGoImportLine line = new PowerOfficeGoImportLine();
+                if(prod == null) {
+                    prod = managers.productManager.getDeletedProduct(item.getProduct().id);
+                }
+                if(prod == null) {
+                    addToLog("Product does not exists on order " + order.incrementOrderId);
+                    continue;
+                }
+                if(prod.accountingAccount == null) {
+                    addToLog("Product : " + prod.name + " does not have an accounting number, orderid: " + order.incrementOrderId);
+                    continue;
+                }
                 line.accountNumber = new Integer(prod.accountingAccount);
                 line.description = createLineText(item);
                 line.productCode = prod.accountingSystemId;

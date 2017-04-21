@@ -23,6 +23,8 @@ $disabled = "";
 if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferredToAccounting) {
     $disabled = "DISABLED";
 }
+$paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+
 ?>
 <div class="edituserbox" gstype='form' method='saveUser'>
     <input type='hidden' value='<? echo $type; ?>' class='changeusertype'>
@@ -61,6 +63,24 @@ if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferred
         <tr><td>City</td><td><input type="txt" gsname="address.city" value="<?php echo $user->address->city; ?>" <?php echo $disabled; ?>></td><tr>
         <tr><td>Birthdate</td><td><input type="txt" gsname="birthDay" value="<?php echo $user->birthDay; ?>" <?php echo $disabled; ?>></td><tr>
         <tr><td>Relationship</td><td><input type="txt" gsname="relationship" value="<?php echo $user->relationship; ?>" <?php echo $disabled; ?>></td><tr>
+        <tr><td>Payment type</td><td>
+                <select gsname='preferredpaymenttype'>
+                    <?php
+                    echo "<option value='' $selected>Default</option>";
+                    foreach($paymentApps as $id => $type) {
+                        $selected = "";
+                        $instance = $this->getFactory()->getApplicationPool()->createInstace($type);
+                        if($type->id == $user->preferredPaymentType) {
+                            $selected = "SELECTED";
+                        }
+                        if(method_exists($instance, "getName")) {
+                            echo "<option value='".$type->id."' $selected>".$instance->getName()."</option>";
+                        }
+                    }
+                    ?>
+                </select>
+                
+            </td><tr>
             <?php 
                 if($this->hasAccountingTransfer()) {
                     ?>

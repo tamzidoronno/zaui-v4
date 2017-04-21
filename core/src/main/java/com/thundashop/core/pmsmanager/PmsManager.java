@@ -947,6 +947,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (room == null) {
                 return "Room does not exists";
             }
+
+            String from = "none";
+            if (room.bookingItemId != null) {
+                BookingItem oldItem = bookingEngine.getBookingItem(room.bookingItemId);
+                if (oldItem != null) {
+                    from = oldItem.bookingItemName + "";
+                }
+            }
+            
             if(split) { 
                 room = splitBookingIfNesesary(booking, room);
             }
@@ -964,14 +973,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
             finalize(booking);
-
-            String from = "none";
-            if (room.bookingItemId != null) {
-                BookingItem oldItem = bookingEngine.getBookingItem(room.bookingItemId);
-                if (oldItem != null) {
-                    from = oldItem.bookingItemName;
-                }
-            }
 
             String logText = "";
             if (bookingEngine.getBookingItem(itemId) != null) {
@@ -4269,7 +4270,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.code = generateCode();
         room.addedToArx = false;
         if(room.isStarted() && !room.isEnded()) {
-            forceMarkRoomAsCleaned(room.bookingItemId);
+            room.forceUpdateLocks = true;
         }
         saveBooking(booking);
         processor();
@@ -4729,7 +4730,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 && (start.before(now) && end.after(now))) {
             //This is extending a stay, we need to remove cleaning and mark it as cleaned.
             room.forceUpdateLocks = true;
-            forceMarkRoomAsCleaned(room.bookingItemId);
         }
         if(room.bookingId != null && !room.bookingId.isEmpty()) {
             bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
@@ -4740,10 +4740,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.cleaningDate = null;
         if(room.addedToArx) {
             if(room.isStarted() && !room.isEnded()) {
-                forceMarkRoomAsCleaned(room.bookingItemId);
-                room.addedToArx = false;
-                if(getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
-                    room.addedToArx = true;
+                if(!getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
+                    room.forceUpdateLocks = true;
                 }
             }
         }

@@ -32,7 +32,7 @@ foreach($lockServers as $name => $server) {
         foreach($locks as $lock) {
             $battery = $this->getBattery($lock);
             echo "<tr>";
-            echo "<td>" . $lock->zwaveid;
+            echo "<td class='changezwaveid' style='cursor:pointer;' lockid='".$lock->id."'>" . $lock->zwaveid;
 //            if($lock->isFailed) {
 //                echo " <i class='fa fa-ban' title='Lock is offline.'></i>";
 //            }

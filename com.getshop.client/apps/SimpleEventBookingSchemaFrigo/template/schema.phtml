@@ -38,8 +38,8 @@
         <div class='col1 <?php if(!$this->isValidField("sex")) { echo "invalidfield"; } ?>'>* Kjønn</div>
         <select class="gsniceselect1" gsname="sex">
             <option value="">Velg kjønn</option>
-            <option value="dame" <?php if (isset ($_POST['data']['sex']) && $_POST['data']['sex'] == "dame") echo 'selected="selected" '; ?>>Dame</option>
-            <option value="mann" <?php if (isset ($_POST['data']['sex']) && $_POST['data']['sex'] == "mann") echo 'selected="selected" '; ?>>Mann</option>
+            <option value="jente" <?php if (isset ($_POST['data']['sex']) && $_POST['data']['sex'] == "jente") echo 'selected="selected" '; ?>>Jente</option>
+            <option value="gutt" <?php if (isset ($_POST['data']['sex']) && $_POST['data']['sex'] == "gutt") echo 'selected="selected" '; ?>>Gutt</option>
         </select>
     </div>
     
@@ -54,6 +54,10 @@
         <div class='col1 <?php if(!$this->isValidField("parentname") ||!$this->isValidField("parentcell") ) { echo "invalidfield"; } ?>'>* Foresatte</div>
         <div class='col2'> <input class='gsniceinput1' placeholder='Navn på far/mor'  gsname="parentname" value="<?if(isset ($_POST['data']['parentname'])){ echo $_POST['data']['parentname'];}?>"/> </div>
         <div class='col2'> <input class='gsniceinput1' placeholder="Mobilnr"  gsname="parentcell" value="<?if(isset ($_POST['data']['parentcell'])){ echo $_POST['data']['parentcell'];}?>"/> </div>
+    </div>
+    <div class='row'>
+        <div class="col1">Kommentar</div>
+        <div class="col2"><textarea class="gsniceinput1" style="width:99.5%;" placeholder="Kommentar" gsname="comments" value="<?if(isset ($_POST['data']['comments'])){ echo $_POST['data']['comments'];}?>"></textarea>
     </div>
     <br/>
     * Grunnet behandling av sensitiv informasjon ønsker vi at dere kontaker oss dersom din sønn/datter trenger spesielle har angående mat eller annet.

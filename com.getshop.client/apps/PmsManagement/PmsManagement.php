@@ -1358,6 +1358,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
             $this->includefile("managementview");
         }
+        
+        if($this->getApi()->getStoreManager()->getMyStore()->id == "cd94ea1c-01a1-49aa-8a24-836a87a67d3b") {
+            $res = (array)$this->getApi()->getPmsInvoiceManager()->validateAllInvoiceToDates($this->getSelectedName());
+            foreach($res as $r) {
+                echo "<b>$r</b><br>";
+            }
+        }
+        
     }
     
     public function deleteDefinedFilter() {
@@ -2589,6 +2597,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->prepayment = true;
         $filter->createNewOrder = true;
         $filter->addToOrderId = $_POST['data']['appendToOrderId'];
+        $filter->paymentType = $_POST['data']['paymenttype'];
         
         if($_POST['data']['appendToOrderId']) {
             $this->getApi()->getPmsInvoiceManager()->clearOrder($this->getSelectedName(), $bookingId, $_POST['data']['appendToOrderId']);
@@ -2621,39 +2630,32 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         $this->paymentLinkSent = false;
-        if($filter->addToOrderId == "createafterstay") {
-            $booking->paymentType = $instanceToUse->id;
-            $booking->createOrderAfterStay = true;
-            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
-        } else {
-            $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
-            
-            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-            if(!isset($_POST['data']['appendToOrderId']) || !$_POST['data']['appendToOrderId']) {
-                $order->avoidAutoSending = true;
-            }
-            $this->getApi()->getOrderManager()->saveOrder($order);
-            
-            
-            $this->getManager()->processor($this->getSelectedName());
+        $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
 
-            if($_POST['data']['paymenttype'] != "InvoicePayment" && 
-                    (isset($_POST['data']['sendpaymentlink']) && $_POST['data']['sendpaymentlink'] === "true") &&
-                    !$savedcard) {
-                $email = $_POST['data']['paymentlinkemail'];
-                $phone = $_POST['data']['paymentlinkphone'];
-                $prefix = $_POST['data']['paymentlinkprefix'];
-                $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);
-                $this->paymentLinkSent = true;
-            }
-
-            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-            $order->payment->paymentType = $this->createPaymentTypeText($instanceToUse);
-            if($_POST['data']['paymenttype'] == "InvoicePayment") {
-                $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
-            }
-            $this->getApi()->getOrderManager()->saveOrder($order);
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        if(!isset($_POST['data']['appendToOrderId']) || !$_POST['data']['appendToOrderId']) {
+            $order->avoidAutoSending = true;
         }
+        $this->getApi()->getOrderManager()->saveOrder($order);
+
+
+        $this->getManager()->processor($this->getSelectedName());
+
+        if($_POST['data']['paymenttype'] != "70ace3f0-3981-11e3-aa6e-0800200c9a66" && 
+                (isset($_POST['data']['sendpaymentlink']) && $_POST['data']['sendpaymentlink'] === "true") &&
+                !$savedcard) {
+            $email = $_POST['data']['paymentlinkemail'];
+            $phone = $_POST['data']['paymentlinkphone'];
+            $prefix = $_POST['data']['paymentlinkprefix'];
+            $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);
+            $this->paymentLinkSent = true;
+        }
+
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        if($_POST['data']['paymenttype'] == "InvoicePayment") {
+            $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
+        }
+        $this->getApi()->getOrderManager()->saveOrder($order);
         
         if(isset($savedcard) && $savedcard) {
             if($this->getApi()->getOrderManager()->payWithCard($order->id, $savedcard->id)) {

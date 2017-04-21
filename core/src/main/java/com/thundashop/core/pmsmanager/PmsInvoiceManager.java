@@ -155,6 +155,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         paymentLinkConfig = config;
     }
 
+
+    private Payment getOverriddenPaymentType(NewOrderFilter filter) {
+        Application paymentApplication = applicationPool.getApplication(filter.paymentType);
+        Payment payment = new Payment();
+        payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+        payment.paymentId = paymentApplication.id;
+        return payment;
+
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -429,7 +439,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     if(invoicedTo == null) {
                         continue;
                     }
-                    
+
                     if(pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(invoicedTo);
@@ -437,19 +447,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         invoicedTo = cal.getTime();
                     }
                     if(!room.isSameDay(room.invoicedTo, invoicedTo)) {
-                       String item = "";
+                        String item = "";
                        if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
-                           item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
-                       }
-                       String userName = userManager.getUserById(booking.userId).fullName;
-                       
+                            item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+                        }
+                        String userName = userManager.getUserById(booking.userId).fullName;
+
                        if(room.invoicedTo.after(invoicedTo)) {
                             String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
                             result.add(msg);
                             room.invoicedTo = invoicedTo;
                             messageManager.sendErrorNotification(msg, null);
                             pmsManager.saveBooking(booking);
-                       }
+                        }
                     }
                 }
             }
@@ -1069,6 +1079,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
                 if(order != null) {
                     order.cart.addCartItems(itemsToReturn);
+                    if(filter.paymentType != null && !filter.paymentType.isEmpty()) {
+                        order.payment = getOverriddenPaymentType(filter);
+                    }
                     orderManager.saveOrder(order);
                 } else {
                     if(filter.itemsToCreate.isEmpty()) {
@@ -1407,6 +1420,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         order.userId = booking.userId;
 
         Payment preferred = getPreferredPaymentMethod(booking.id, filter);
+        
+        if(filter.paymentType != null && !filter.paymentType.isEmpty()) {
+            preferred = getOverriddenPaymentType(filter);
+        }
         
         order.payment = preferred;
         order.invoiceNote = booking.invoiceNote;

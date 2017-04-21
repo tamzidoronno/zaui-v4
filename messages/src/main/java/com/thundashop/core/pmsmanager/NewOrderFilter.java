@@ -21,6 +21,7 @@ public class NewOrderFilter implements Serializable {
     public boolean fromAdministrator = false;
     public String addToOrderId = "";
     public boolean ignoreCheckChangesInBooking = false;
+    public String paymentType = "";
     public List<String> itemsToCreate = new ArrayList();
     public String userId = new String();
 }

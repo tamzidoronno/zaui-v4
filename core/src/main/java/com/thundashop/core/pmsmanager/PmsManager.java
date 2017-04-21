@@ -1868,6 +1868,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room.date.cleaningDate == null) {
             room.date.cleaningDate = room.date.start;
         }
+        
+        if(getAdditionalInfo(room.bookingItemId).hideFromCleaningProgram) {
+            return false;
+        }
+        
         if (room.isEndingToday(day) && !getConfiguration().autoExtend) {
             return false;
         }

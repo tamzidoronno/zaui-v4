@@ -976,7 +976,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             String logText = "";
             if (bookingEngine.getBookingItem(itemId) != null) {
-                logText = "Changed room to " + bookingEngine.getBookingItem(itemId).bookingItemName + " from " + from;
+                String newName = bookingEngine.getBookingItem(itemId).bookingItemName;
+                logText = "Changed room to " + newName + " from " + from;
+                
+                for(String orderId : booking.orderIds) {
+                    Order order = orderManager.getOrder(orderId);
+                    if(!order.closed && !newName.isEmpty()) {
+                        for(CartItem item : order.cart.getItems()) {
+                            if(item.getProduct().externalReferenceId != null && item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                                item.getProduct().additionalMetaData = newName;
+                            }
+                        }
+                    }
+                }
+
+
+
+                
             } else {
                 logText = "Unassigned room from " + from;
             }

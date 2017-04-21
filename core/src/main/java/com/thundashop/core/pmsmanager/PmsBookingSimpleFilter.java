@@ -176,7 +176,7 @@ public class PmsBookingSimpleFilter {
             simple.progressState = "notpaid";
         } 
         
-        if(!booking.confirmed) {
+        if(!booking.confirmed && !room.deleted && !booking.isDeleted) {
             simple.progressState = "unconfirmed";
         }
         

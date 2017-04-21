@@ -1709,18 +1709,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $guests[] = $guest;
         }
         
-        $booking = $this->getSelectedBooking();
-        $selectedRoom = null;
-        foreach($booking->rooms as $room) {
-            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
-                $room->guests = $guests;
-                $room->numberOfGuests = $_POST['data']['numberofguests'];
-                $selectedRoom = $room;
-            }
-        }
-        $this->setLastSelectedRoom($_POST['data']['roomid']);
+        $bookingId = $_POST['data']['bookingid'];
+        $roomId = $_POST['data']['roomid'];
+        $this->getManager()->setGuestOnRoom($this->getSelectedName(), $guests, $bookingId, $roomId);
         
-        $this->getManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->setLastSelectedRoom($_POST['data']['roomid']);
         
         if($_POST['data']['updateprices'] == "true") {
             $this->getApi()->getPmsManager()->resetPriceForRoom($this->getSelectedName(), $_POST['data']['roomid']);
@@ -1729,11 +1722,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->getApi()->getPmsManager()->updateAddonsBasedOnGuestCount($this->getSelectedName(), $_POST['data']['roomid']);
         }
         
-        $this->selectedBooking = $this->getManager()->getBooking($this->getSelectedName(), $booking->id);
         if($_POST['data']['updateprices'] == "true" || $_POST['data']['updateaddons'] == "true") {
             $this->showBookingInformation();
         } else {
-            $this->printGuests($selectedRoom);
+            $this->printGuests($guests);
         }
     }
 
@@ -2755,11 +2747,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->selectedBooking = null;
     }
 
-    public function printGuests($room) {
-        if(sizeof((array)$room->guests) == 0) {
+    public function printGuests($guests) {
+        if(sizeof((array)$guests) == 0) {
             echo "No guest registered";
         }
-        foreach ($room->guests as $guest) {
+        foreach ($guests as $guest) {
             if(isset($guest)) {
                 echo (isset($guest->name) && $guest->name) ? $guest->name : "No name";
             }

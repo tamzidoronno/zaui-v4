@@ -3099,7 +3099,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingRooms room = booking.getRoom(roomId);
         room.guests = guests;
         room.numberOfGuests = guests.size();
-        logEntry("Changed guest information", bookingId, roomId);
+        String newguestinfo = "";
+        String newGuestName = "";
+        for(PmsGuests guest : guests) {
+            if(guest.name != null) {
+                newguestinfo += guest.name + " - "; 
+                if(newGuestName.isEmpty()) {
+                    newGuestName = guest.name;
+                }
+            }
+            if(guest.email != null) { newguestinfo += guest.email + " - "; }
+            if(guest.prefix != null) { newguestinfo += "+"+guest.prefix; }
+            if(guest.phone != null) { newguestinfo += guest.phone + " - "; }
+            newguestinfo += "<br>";
+        }
+        
+        logEntry("Changed guest information, new guest information:<br> " + newguestinfo, bookingId, roomId);
+        
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            if(!order.closed && !newGuestName.isEmpty()) {
+                for(CartItem item : order.cart.getItems()) {
+                    if(item.getProduct().externalReferenceId != null && item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                        item.getProduct().metaData = newGuestName;
+                    }
+                }
+            }
+        }
+        
         saveBooking(booking);
     }
 

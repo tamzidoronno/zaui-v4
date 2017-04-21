@@ -324,6 +324,12 @@ if($booking->orderIds) {
         
         echo "</td>";
         echo "</tr>";
+        
+        if(!@$order->closed) {
+            $this->orderToDisplay = $order;
+            $this->includefile("detailedorderinformation");
+        }
+        
     }
     
     echo "<tr>";

@@ -161,11 +161,12 @@ if($booking->orderIds) {
         echo "<tr orderid='".$order->id."'>";
         echo "<td width='200'> <a class='showorderbutton' orderid='".$order->id."'>" . $order->incrementOrderId . "</a> - ".date("d.m.Y", strtotime($order->rowCreatedDate));
         echo "<br>";
-        echo "<span style='color:#bbb; width: 160px;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='$addr' class='changeRecieptEmail' orderid='".$order->id."'>";
+        echo "<i style='float:right; color:#bbb; margin-right: 5px; cursor:pointer;' class='fa fa-info-circle loadorderinformation' orderid='".$order->id."'></i>";
+        echo "<span style='color:#bbb; width: 160px;display: block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' title='$addr' orderid='".$order->id."'>";
         if(!isset($order->closed) || !$order->closed) {
             echo "<i class='fa fa-edit edituseronorderviewbutton' orderid='".$order->id."'></i> <span class='edituseronorderview edituserview'></span> ";
         }
-        echo $user->fullName . "(" . $user->customerId . ")</span></td>";
+        echo "<span class='changeRecieptEmail'>" . $user->fullName . "(" . $user->customerId . ")</span></span></td>";
         echo "<td width='120'>";
         $names = "";
         $name = "";
@@ -177,6 +178,8 @@ if($booking->orderIds) {
         }
         
         echo "<span style='width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;display:inline-block;' title='$names'>$name</span>";
+        
+        
         echo "</td>";
         echo "<td>" . round($totalEx) . "<br><span style='color:#bbb'>" . round($total) . "</span></td>";
         echo "<td>";

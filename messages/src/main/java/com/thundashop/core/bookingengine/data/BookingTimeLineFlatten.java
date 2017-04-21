@@ -5,8 +5,6 @@
  */
 package com.thundashop.core.bookingengine.data;
 
-import com.thundashop.core.bookingengine.data.Booking;
-import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.common.GetShopLogHandler;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,8 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Add bookings to this class and it will flatten the bookings on a timeline
@@ -163,6 +159,10 @@ public class BookingTimeLineFlatten implements Serializable {
        });
         
         return result;
+    }
+    
+    public boolean containsBooking(Booking booking) {
+        return bookings.contains(booking);
     }
 
 }

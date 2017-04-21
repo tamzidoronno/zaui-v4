@@ -13,11 +13,11 @@ $forcedAccess = "<i class='fa fa-close'></i>";
 $blockedAccess = "<i class='fa fa-close'></i>";
 $resend = "Code not active yet";
 $renew = "Code not active yet";
+$lastAccess = "Room not assigned yet.";
 
 if(!$room->bookingItemId) {
     $cleaningState = "No room assigned yet.";
     $lastCleaned = "No room assigned yet.";
-    $isClean = "";
 } else {
     $addition = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedName(), $room->bookingItemId);
     if($addition->isClean) {

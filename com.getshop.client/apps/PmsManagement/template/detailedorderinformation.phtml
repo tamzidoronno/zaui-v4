@@ -1,0 +1,51 @@
+<?php
+ /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+/* @var $order core_ordermanager_data_Order */
+$order = $this->orderToDisplay;
+$booking = $this->getSelectedBooking();
+?>
+<tr>
+    <td colspan='70' style='padding: 5px; background-color:#fff;' fororder='<?php echo $order->id; ?>'>
+        <?php
+        
+        $toprint = array();
+        foreach($order->cart->items as $item) {
+            if(!isset($toprint[$item->product->externalReferenceId])) {
+                $toprint[$item->product->externalReferenceId] = array();
+            }
+            $toprint[$item->product->externalReferenceId][] = $item;
+        }
+        foreach($toprint as $extid => $items) {
+            foreach($booking->rooms as $room) {
+                if($room->pmsBookingRoomId == $extid) {
+                    $heading = "";
+                    if($room->bookingItemId) {
+                        $heading .= "<span style='float:left;'>" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . " ";
+                        $heading .= $room->guests[0]->name . "</span>";
+                        $heading .= " ";
+                    }
+                    
+                    $heading .= "<span style='display:inline-block; width: 125px; float:right;'>" .date("d.m.Y H:i", strtotime($room->date->end)) . "</span> ";
+                    $heading .= "<span style='display:inline-block; width: 125px; float:right;'>" .date("d.m.Y H:i", strtotime($room->date->start)) . " - </span> ";
+                    $heading .= "<div style='clear:both;'></div>";
+                }
+            }
+            echo "<div style='border: solid 1px #bbb; text-align:center; font-weight:bold; padding: 5px;'>" . $heading . "</div>";
+            echo "<div style='border: solid 1px #bbb;border-top: 0px; padding: 10px; margin-bottom: 10px;'>";
+            foreach($items as $item) {
+                /* @var $item core_cartmanager_data_CartItem */
+                echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->startDate)) . " - </span> ";
+                echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->endDate)) . "</span> ";
+                echo "<span style='display:inline-block; width: 300px;'>" . $item->product->name . "</span>" ;
+                echo "<span style='display:inline-block; width: 50px;'>" . $item->product->additionalMetaData . "</span> " ;
+                echo "<span style='display:inline-block; width: 200px;'>" .$item->product->metaData . "</span> " ;
+                echo "<span style='float:right;'>";
+                echo "<span style='display:inline-block; width: 10px; text-align:right'>" . $item->count . "</span>" . " x ";
+                echo "" . $item->product->price;
+                echo "</span><br>";
+            }
+            echo "</div>";
+        }
+        ?>
+    </td>
+</tr>

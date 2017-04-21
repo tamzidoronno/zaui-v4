@@ -97,6 +97,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String phoneToSend;
     private String prefixToSend;
     private List<Order> tmpOrderList;
+    private boolean warnedAboutAutoassigning = false;
     
     private HashMap<String, PmsBookingFilter> savedFilters = new HashMap();
     
@@ -946,6 +947,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (room == null) {
                 return "Room does not exists";
             }
+
+            String from = "none";
+            if (room.bookingItemId != null) {
+                BookingItem oldItem = bookingEngine.getBookingItem(room.bookingItemId);
+                if (oldItem != null) {
+                    from = oldItem.bookingItemName + "";
+                }
+            }
+            
             if(split) { 
                 room = splitBookingIfNesesary(booking, room);
             }
@@ -963,14 +973,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
             finalize(booking);
-
-            String from = "none";
-            if (room.bookingItemId != null) {
-                BookingItem oldItem = bookingEngine.getBookingItem(room.bookingItemId);
-                if (oldItem != null) {
-                    from = oldItem.bookingItemName;
-                }
-            }
 
             String logText = "";
             if (bookingEngine.getBookingItem(itemId) != null) {
@@ -1615,7 +1617,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(!types.isEmpty() && !types.contains(item.bookingItemTypeId)) {
                 continue;
             }
-            BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItem(filter.start, filter.end, item.id);
+            BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItemWithOptimal(filter.start, filter.end, item.id);
             List<BookingTimeLine> timelines = line.getTimelines(filter.interval-21600, 21600);
             LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap();
             for (BookingTimeLine tl : timelines) {
@@ -1623,6 +1625,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 tmpres.bookingIds = tl.bookingIds;
                 tmpres.count = tl.count;
                 tmpres.time = tl.start.getTime();
+                
+                addVirtuallyAssignedBookingIds(tmpres, tl);
                 
                 if(!tmpres.bookingIds.isEmpty()) {
                     Booking bookingEngineBooking = bookingEngine.getBooking(tmpres.bookingIds.get(0));
@@ -1645,6 +1649,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         return res;
+    }
+
+    private void addVirtuallyAssignedBookingIds(IntervalResultEntry tmpres, BookingTimeLine tl) {
+        tmpres.virtuallyAssigned = tl.bookingIds.stream()
+                .map(id -> bookingEngine.getBooking(id))
+                .filter(booking -> booking.bookingItemId == null || booking.bookingItemId.isEmpty())
+                .map(booking -> booking.id)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -2362,7 +2374,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public String getDefaultMessage(String bookingId) {
         PmsBooking booking = getBookingUnsecure(bookingId);
-        String message = getConfiguration().defaultMessage.get(booking.language);
+        if(getConfigurationSecure().defaultMessage == null) {
+            return "";
+        }
+        String message = getConfigurationSecure().defaultMessage.get(booking.language);
         if (message == null) {
             return "";
         }
@@ -2395,6 +2410,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
             
         if (items.isEmpty()) {
+            if(!warnedAboutAutoassigning) {
+                messageManager.sendErrorNotification("Failed to autoassign room, its critical since someone will not recieve the code for the room now.", null);
+                warnedAboutAutoassigning = true;
+            }
             logPrint("No items available?");
         } else {
             BookingItem item = null;
@@ -3359,6 +3378,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             toReturn.isActive = addonConfig.isActive;
             toReturn.isIncludedInRoomPrice = addonConfig.isIncludedInRoomPrice;
             toReturn.validDates = addonConfig.validDates;
+            toReturn.dependsOnGuestCount = addonConfig.dependsOnGuestCount;
             if(addonConfig.price > 0) {
                 toReturn.price = addonConfig.price;
                 toReturn.priceExTaxes = addonConfig.priceExTaxes;
@@ -4250,7 +4270,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.code = generateCode();
         room.addedToArx = false;
         if(room.isStarted() && !room.isEnded()) {
-            forceMarkRoomAsCleaned(room.bookingItemId);
+            room.forceUpdateLocks = true;
         }
         saveBooking(booking);
         processor();
@@ -4710,7 +4730,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 && (start.before(now) && end.after(now))) {
             //This is extending a stay, we need to remove cleaning and mark it as cleaned.
             room.forceUpdateLocks = true;
-            forceMarkRoomAsCleaned(room.bookingItemId);
         }
         if(room.bookingId != null && !room.bookingId.isEmpty()) {
             bookingEngine.changeDatesOnBooking(room.bookingId, start, end);
@@ -4721,10 +4740,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date.cleaningDate = null;
         if(room.addedToArx) {
             if(room.isStarted() && !room.isEnded()) {
-                forceMarkRoomAsCleaned(room.bookingItemId);
-                room.addedToArx = false;
-                if(getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
-                    room.addedToArx = true;
+                if(!getConfigurationSecure().isGetShopHotelLock() && !room.isEnded()) {
+                    room.forceUpdateLocks = true;
                 }
             }
         }

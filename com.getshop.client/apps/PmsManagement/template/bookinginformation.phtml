@@ -91,7 +91,7 @@ if($config->requirePayments) {
     }
     echo "<span class='tab' area='orderinformation'>Orders";
     if($totalOrders) {
-        echo " (kr " . $totalOrders . ")";
+        echo " (kr " . round($totalOrders) . ")";
     }
     echo "</span>";
     

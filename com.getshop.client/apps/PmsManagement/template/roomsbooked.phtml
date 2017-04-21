@@ -199,6 +199,21 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
     </tr>
 
     <?php
+    
+    $newRoomList = array();
+    foreach($rooms as $room) {
+        if(!$room->deleted) {
+            $newRoomList[] = $room;
+        }
+    }
+    foreach($rooms as $room) {
+        if($room->deleted) {
+            $newRoomList[] = $room;
+        }
+    }
+    $rooms = $newRoomList;
+    
+    
     foreach ($rooms as $room) {
         /* @var $room core_pmsmanager_PmsBookingRooms */
         $date = $room->date;
@@ -225,7 +240,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     <?php if(!$deleted) { ?>
                         <input type='checkbox' class='checkboxforbookedroom' roomid='<?php echo $room->pmsBookingRoomId; ?>'>
                     <?php } else { ?>
-                        <i class='fa fa-trash-o'></i><i class='fa fa-undo'  gstype='submitToInfoBox' title="Undelete" style='cursor:pointer;'></i>
+                        <i class='fa fa-undo'  gstype='submitToInfoBox' title="Undelete" style='cursor:pointer;'></i>
                     <?php } ?>
                 </span>
                     <?php
@@ -509,7 +524,12 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
             <td align='center'>
                 <? 
                 $paidFor = $object->getApi()->getPmsInvoiceManager()->isRoomPaidFor($object->getSelectedName(), $room->pmsBookingRoomId);
-                echo ($paidFor) ? "yes" : "no"; ?>
+                if($room->deleted) {
+                    echo "-";
+                } else {
+                    echo ($paidFor) ? "yes" : "no";
+                }
+                ?>
             </td>
             <? } ?>
             <td><?php if($room->totalCost) { echo round($room->totalCost); } ?></td>

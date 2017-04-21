@@ -166,6 +166,10 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public BookingTimeLineFlatten getTimeLinesForItem(Date start, Date end, String itemId) {
         return deepClone(bookingEngineAbstract.getTimeLinesForItem(start,end,itemId));
     }
+    
+    public BookingTimeLineFlatten getTimeLinesForItemWithOptimal(Date start, Date end, String itemId) {
+        return deepClone(bookingEngineAbstract.getTimeLinesForItemWithOptimal(start,end,itemId));
+    }
 
     public boolean hasBookingsStartingBetweenTime(Date start, Date end, String itemId) {
         return true;

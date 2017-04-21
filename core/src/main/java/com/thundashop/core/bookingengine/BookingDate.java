@@ -15,4 +15,5 @@ public class BookingDate {
     public String bookingId = "";
     public Date startDate = null;
     public Date endDate = null;
+    public boolean assignedByOptimalAssigner = false;
 }

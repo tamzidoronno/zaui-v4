@@ -102,11 +102,23 @@ while(true) {
     $time = date("H", $curTime);
     $startTime = $curTime;
     $endTime = $startTime + 1800;
+    $lines = $this->getApi()->getPmsManager()->getAvailabilityForType($this->getSelectedName(), $room->id, $this->convertToJavaDate($startTime), $this->convertToJavaDate($endTime), 30);
     $state = $this->getBlockState($room->id, $curTime, $startTime, $endTime);
+    if(!$lines[0]) {
+         if(!$this->isAdminMode()) {
+             $state = "not_available";
+         }
+     }
     
     $startTime2 = $endTime;
     $endTime2 = $startTime2 + 1800;
     $state2 = $this->getBlockState($room->id, $curTime, $startTime2, $endTime2);
+    $lines = $this->getApi()->getPmsManager()->getAvailabilityForType($this->getSelectedName(), $room->id, $this->convertToJavaDate($startTime2), $this->convertToJavaDate($endTime2), 30);
+    if(!$lines[0]) {
+         if(!$this->isAdminMode()) {
+             $state2 = "not_available";
+         }
+     }
     
     echo "<div class='timerow'><span class='timebox'>$time</span>";
     echo "<span class='halfourbox first $state mobileentry' startTime='".date("H", $startTime)."' startMinute='".date("i", $startTime)."' endTime='".date("H", $endTime)."' endMinute='".date("i", $endTime)."'></span>";

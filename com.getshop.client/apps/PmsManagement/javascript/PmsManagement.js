@@ -89,7 +89,25 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .changeRecieptEmail', app.PmsManagement.changeRecieptEmail);
         $(document).on('click','.PmsManagement .loadadditionalinfo', app.PmsManagement.loadadditionalinfo);
         $(document).on('change','.PmsManagement .contactdatadropdown', app.PmsManagement.updateBookingInformationDropdown);
+        $(document).on('click','.PmsManagement .loadorderinformation', app.PmsManagement.loadOrderInformation);
     },
+    loadOrderInformation : function() {
+        var tr = $(this).closest('tr');
+        var orderid = $(this).attr('orderid');
+        if($("[fororder='"+orderid+"']").length > 0) {
+            $("[fororder='"+orderid+"']").remove();
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','loadOrderInformation', $(this), {
+            "orderid" : orderid,
+           "bookingid" : $('#openedbookingid').val()
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $("[fororder='"+orderid+"']").remove();
+            tr.after(res);
+        });
+    },
+    
     loadadditionalinfo : function() {
         var event = thundashop.Ajax.createEvent('','loadAdditionalInformationForRoom', $(this), {
             "roomid" : $(this).attr('roomid')

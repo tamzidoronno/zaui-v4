@@ -10,6 +10,12 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
         $this->getApi()->getGetShopLockManager()->deleteAllDevices($this->getSelectedName(), "fdsafbvvre4234235t", $_POST['data']['serverSource']);
     }
     
+    public function changeZwaveid() {
+        $lock = $_POST['data']['lockid'];
+        $newId = $_POST['data']['newzwaveid'];
+        $this->getApi()->getGetShopLockManager()->changeZWaveId($this->getSelectedName(), $lock, $newId);
+    }
+    
     public function updateLockData() {
         
         $serverSource = $_POST['data']['source'];
@@ -25,6 +31,8 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
                 $code->used = ($_POST['data']['used_'.$key] == "true");
                 if($_POST['data']['addedToLock_'.$key] != "true") {
                     $code->addedToLock = null;
+                } else if(!$code->addedToLock) {
+                    $code->addedToLock = $this->convertToJavaDate(time());
                 }
                 $code->needToBeRemoved = ($_POST['data']['needToBeRemoved_'.$key] == "true");
                 if($_POST['data']['code_'.$key] != $code->code) {

@@ -50,7 +50,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
         double res = 0.0;
         for(PmsBookingAddonItem item : room.addons) {
-            if(item.date.after(startDate) && item.date.before(endDate)) {
+            if((item.date.after(startDate) || room.isSameDay(item.date, startDate)) && item.date.before(endDate)) {
                 if(item.isIncludedInRoomPrice) {
                     res += (item.price * item.count);
                 }

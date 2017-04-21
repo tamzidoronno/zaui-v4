@@ -118,6 +118,7 @@ $config = $this->getConfigurationToUse();
             </div>         
             <?php
             }
+            echo "Created : " . date("d.m.Y H:i", strtotime($booking->rowCreatedDate));
             ?>            
         </td>
         <td valign="top">
@@ -138,17 +139,18 @@ $config = $this->getConfigurationToUse();
                     /* @var $obj core_pmsmanager_PmsBookingComment */
                     echo $obj->comment . "<br>";
                     echo "<div class='commentbottom'>";
-                    echo "By " . $this->getApi()->getUserManager()->getUserById($obj->userId)->fullName . ", " . date("d.m.Y H:i", $time / 1000);
+                    if($this->getApi()->getUserManager()->getUserById($obj->userId)) {
+                        echo "By " . $this->getApi()->getUserManager()->getUserById($obj->userId)->fullName . ", " . date("d.m.Y H:i", $time / 1000);
+                    }
                     echo "</div>";
                 }
                 ?>
             </span>
         </td>
     </tr>
-</table>
+</table><br>
 
 <?php
-echo "<div style='padding-left: 5px; padding-top: 5px; color:#bbb;'>Created " . date("d.m.Y H:i", strtotime($booking->rowCreatedDate)) . "</div>";
 if(sizeof($booking->registrationData->contactsList) > 0) {
     echo '<h2>Kontaktliste</h2>';
     echo "<table cellspacing='0' cellpadding='0'>";
@@ -178,15 +180,16 @@ if(!$user->fullName) {
 ?>
 
 <div class='contactdata'>
-    <h2>User data</h2>
-    <?php if($booking->testReservation) { ?>
-    This is in test mode
-    <?php } else { ?>
-    <span gstype='form' method="markTest">
-        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-        <span gstype='submitToInfoBox' style='font-size: 10px;'>(Mark booking as test)</span>
+    <span style='float:right; cursor:pointer;'>
+        <?php if($booking->testReservation) { ?>
+        This is in test mode
+        <?php } else { ?>
+        <span gstype='form' method="markTest">
+            <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+            <span gstype='submitToInfoBox' style='font-size: 10px;'>(Mark booking as test)</span>
+        </span>
+        <?php } ?>
     </span>
-    <?php } ?>
 
     
     <div style='padding-left: 10px;'>
@@ -255,26 +258,13 @@ if(!$user->fullName) {
             ?>
             <span class='roomprefix'>Company</span>
             <span class='roompostfix' style="font-size: 12px;">
-                <a onclick='$(".PmsManagement .editcompanybox").fadeIn(function() {$(".editcompanybox select").chosen(); });'>No company connected to this user</a>
+                <span onclick='$(".PmsManagement .editcompanybox").fadeIn(function() {$(".editcompanybox select").chosen(); });'>No company connected to this user</span>
             </span>
             <div style='clear:both;'></div>
             <?php
         } 
         $this->includefile("companydata");
         ?>
-        <?php if($avtalegiro) { 
-            echo "<span class='roomprefix'>Avtalegiro</span>";
-            echo "<span class='roompostfix'>";
-            /* @var $autogiroapp ns_8f5f7f8f_de42_4867_82cc_63eb0cb55fa1\Avtalegiro */
-            $autogiroapp = $this->getFactory()->getApplicationPool()->createInstace($avtalegiro);
-            $link = $autogiroapp->createLink($user->id);
-            echo "<a href='".$autogiroapp->createLink($user->id)."' target='_new'>Avtalegiro</a>";
-            echo " - <a href='".$autogiroapp->createLink($user->id)."' target='_new'>Efaktura</a>";
-            echo " - <a href='".$autogiroapp->createLink($user->id)."' target='_new'>Avtalegiro + efaktura</a>";
-            echo "</span>";
-            echo "<div style='clear:both;'></div>";
-            ?>
-        <? } ?>
         <div style='clear:both;'></div>
     </div>
 </div>

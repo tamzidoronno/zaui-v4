@@ -545,7 +545,8 @@ public class PmsBookingRooms implements Serializable {
 
     void updateBreakfastCount() {
         for(PmsBookingAddonItem item : addons) {
-            if(item.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST) {
+            
+            if(item.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST || item.dependsOnGuestCount) {
                 item.count = numberOfGuests;
             }
         }

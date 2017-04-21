@@ -29,6 +29,7 @@ class TimeRegistering extends \WebshopApplication implements \Application {
         $header[] = "End date";
         $header[] = "Hours";
         $header[] = "Minutes";
+        $header[] = "Comment";
         $rows[] = $header;
         
         foreach($hours as $hour) {
@@ -37,6 +38,7 @@ class TimeRegistering extends \WebshopApplication implements \Application {
             $row[] = date("d.m.Y H:i", strtotime($hour->end));
             $row[] = $hour->hours;
             $row[] = $hour->minutes;
+            $row[] = $hour->comment;
             $rows[] = $row;
         }
         

@@ -976,6 +976,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->city = $_POST['data']['address.city'];
         $user->birthDay = $_POST['data']['birthDay'];
         $user->relationship = $_POST['data']['relationship'];
+        $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];
         $this->getApi()->getUserManager()->saveUser($user);
         
         $this->selectedBooking = null;
@@ -2597,8 +2598,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->createNewOrder = true;
         $filter->addToOrderId = $_POST['data']['appendToOrderId'];
         
-        if($_POST['data']['appendToOrderId'] && $this->getFactory()->getStore()->id == "178330ad-4b1d-4b08-a63d-cca9672ac329" ||
-            $_POST['data']['appendToOrderId'] && $this->getFactory()->getStore()->id == "9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0") {
+        if($_POST['data']['appendToOrderId']) {
             $this->getApi()->getPmsInvoiceManager()->clearOrder($this->getSelectedName(), $bookingId, $_POST['data']['appendToOrderId']);
         }
         
@@ -2672,6 +2672,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         $this->showBookingInformation();
+    }
+    
+    public function loadOrderInformation() {
+        $this->orderToDisplay = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $this->includefile("detailedorderinformation");
     }
 
     public function createOrderPreview($booking, $config) {

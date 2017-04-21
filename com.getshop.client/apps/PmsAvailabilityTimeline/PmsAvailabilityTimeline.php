@@ -229,6 +229,16 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         }
     }
     
+    public function isVirtuallyAssigned($itemId, $value) {
+        foreach ($value->virtuallyAssigned as $key => $assignedItemId) {
+            if ($assignedItemId == $itemId) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     public function getData() {
         if(isset($_SESSION['pmsavailabilitytimelinedata'])) {
             return unserialize($_SESSION['pmsavailabilitytimelinedata']);
@@ -255,7 +265,11 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         foreach($booking->rooms as $room) {
             if($room->bookingId == $_POST['data']['bookingid']) {
                 echo date("d.m.Y", strtotime($room->date->start)) . " - " . date("d.m.Y", strtotime($room->date->end)) . "<br>";
-                echo "Room : " . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . "<bR>";
+                if($room->bookingItemId) {
+                    echo "Room : " . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . "<bR>";
+                } else {
+                    echo "Room : Forecasted this room<br>";
+                }
                 if($room->guests[0]->name)
                     echo "Guest : " . $room->guests[0]->name;
             }

@@ -30,6 +30,9 @@ public interface IGetShopLockManager {
     public String getCodeForLock(String lockId);
     
     @Administrator
+    public void changeZWaveId(String lockId, Integer newId);
+   
+    @Administrator
     public List<GetShopDevice> getAllLocks(String serverSource);
     
     @Administrator

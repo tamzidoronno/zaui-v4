@@ -4,6 +4,7 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerSubBase;
@@ -253,7 +254,9 @@ public class GenerateApi {
         generateJavaApi();
 //        generatePythonApi();
 //        buildDocumentation();
-        analyseApplications();
+        if (!GetShopLogHandler.isDeveloper) {
+            analyseApplications();
+        }
     }
     
     

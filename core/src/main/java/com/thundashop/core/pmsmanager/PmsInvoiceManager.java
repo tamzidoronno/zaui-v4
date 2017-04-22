@@ -1227,24 +1227,24 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
-        if(true) {
-            PmsBooking booking = pmsManager.getBooking(bookingId);
-            if(supportsDailyPmsInvoiceing(booking)) {
-                pmsDailyOrderGeneration.createCart(bookingId, filter);
-                if(!filter.avoidOrderCreation) {
-                    Order order = createOrderFromCartNew(booking, filter, false);
-                    order.createByManager = "PmsDailyOrderGeneration";
-                    orderManager.saveOrder(order);
-                    booking.orderIds.add(order.id);
-                    List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
-                    booking.orderIds = uniqueList;
-
-                    pmsManager.saveBooking(booking);
-                    return order.id;
-                }
-                return "";
-            }
-        }
+//        if(true) {
+//            PmsBooking booking = pmsManager.getBooking(bookingId);
+//            if(supportsDailyPmsInvoiceing(booking)) {
+//                pmsDailyOrderGeneration.createCart(bookingId, filter);
+//                if(!filter.avoidOrderCreation) {
+//                    Order order = createOrderFromCartNew(booking, filter, false);
+//                    order.createByManager = "PmsDailyOrderGeneration";
+//                    orderManager.saveOrder(order);
+//                    booking.orderIds.add(order.id);
+//                    List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
+//                    booking.orderIds = uniqueList;
+//
+//                    pmsManager.saveBooking(booking);
+//                    return order.id;
+//                }
+//                return "";
+//            }
+//        }
         return createOrderOld(bookingId, filter);
     }
     

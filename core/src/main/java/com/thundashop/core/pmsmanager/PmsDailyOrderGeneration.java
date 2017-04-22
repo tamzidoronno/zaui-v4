@@ -11,6 +11,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -60,21 +61,19 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     }
 
     private void calculateRoomPrices() {
-        currentBooking.getActiveRooms().stream().map((room) -> {
+        for(PmsBookingRooms room : currentBooking.getActiveRooms()) {
             //Sleepover prices.
             HashMap<String, Double> priceMatrix = generatePriceMatrix(room);
             generateDailyPriceItems(priceMatrix, room);
-            return room;            
-        }).forEach((room) -> {
+            
             //Addon prices.
             HashMap<String, List<PmsBookingAddonItem>> items = getAddonsForRoom(room);
-            items.keySet().stream().map((productId) -> {
+            for(String productId : items.keySet()) {
                 generateAddonsCostForProduct(items.get(productId), room, true);
-                return productId;
-            }).forEach((productId) -> {
                 generateAddonsCostForProduct(items.get(productId), room, false);
-            });
-        });
+            }
+            
+        }
     }
 
     private HashMap<String, Double> generatePriceMatrix(PmsBookingRooms room) {
@@ -117,6 +116,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             if(nextDay != null && !room.isSameDay(nextDay, dayToIterate)) {
                 addCartItem(createCartItemForRoom(count, total, room, startDate, nextDay, null));
                 startDate = null;
+                nextDay = null;
                 count = 0;
                 total = 0.0;
             }
@@ -130,7 +130,11 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     
     
     private void generateAddonsCostForProduct(List<PmsBookingAddonItem> items, PmsBookingRooms room, boolean positiveValues) {
-        Collections.sort(items, (PmsBookingAddonItem o1, PmsBookingAddonItem o2) -> o1.date.compareTo(o2.date));
+        Collections.sort(items, new Comparator<PmsBookingAddonItem>(){
+            public int compare(PmsBookingAddonItem o1, PmsBookingAddonItem o2){
+                return o1.date.compareTo(o2.date);
+            }
+        });
         
         Date start = null;
         Date end = null;
@@ -209,20 +213,17 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     
     private TreeMap<Date, DailyPriceObject> createDailyPriceObjects(HashMap<String, Double> priceMatrix) {
         TreeMap<Date, DailyPriceObject> result = new TreeMap();
-        priceMatrix.keySet().stream().map((day) -> {
+        for(String day : priceMatrix.keySet()) {
             DailyPriceObject price = new DailyPriceObject();
             price.price = priceMatrix.get(day);
             price.start = PmsBookingRooms.convertOffsetToDate(day);
-            return price;
-        }).map((price) -> {
+
             Calendar cal = Calendar.getInstance();
             cal.setTime(price.start);
             cal.add(Calendar.DAY_OF_YEAR, 1);
             price.end = cal.getTime();
-            return price;
-        }).forEach((price) -> {
             result.put(price.start, price);
-        });
+        }
         return result;
     }
 
@@ -252,20 +253,26 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         if(priceOne < 0 && priceTwo > 0) {
             return true;
         }
-        return priceOne > 0 && priceTwo < 0;
+        if(priceOne > 0 && priceTwo < 0) {
+            return true;
+        }
+        
+        return false;
         
     }
 
     private HashMap<String, List<PmsBookingAddonItem>> getAddonsForRoom(PmsBookingRooms room) {
         HashMap<String, List<PmsBookingAddonItem>> result = new HashMap();
-        room.addons.stream().forEach((item) -> {
+        for(PmsBookingAddonItem item : room.addons) {
             List<PmsBookingAddonItem> items = new ArrayList();
             if(result.containsKey(item.productId)) {
                 items = result.get(item.productId);
             }
             items.add(item);
             result.put(item.productId, items);
-        });
+        }
         return result;
     }
+
+
 }

@@ -594,7 +594,7 @@ public class PmsBookingRooms implements Serializable {
         double total = 0.0;
 
         for(PmsBookingAddonItem item : addons) {
-            if(item.noRefundable) {
+            if(!item.noRefundable) {
                 continue;
             }
             total += (item.price * item.count);

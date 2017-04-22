@@ -238,8 +238,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     booking.orderIds.add(order.id);
                     Double total = orderManager.getTotalAmount(order);
                     if(total < 0) {
-
-                    List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
+                        List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
                         String message = "Order " + order.incrementOrderId + " has been credited from external channel, total amount: " + total + "<br><br>";
                         try {
                             User user = userManager.getUserById(order.userId);
@@ -305,6 +304,58 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             updateCart();
         }
         return lastOrderId;
+    }
+
+    private boolean supportsDailyPmsInvoiceing(PmsBooking booking) {
+        if(booking.orderIds.isEmpty()) {
+            return true;
+        }
+        
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            if(order.createByManager == null || !order.createByManager.equals("PmsDailyOrderGeneration")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void notifyAboutCreditedOrders(Order order, double total, PmsBooking booking) {
+        List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
+        String message = "Order " + order.incrementOrderId + " has been credited from external channel, total amount: " + total + "<br><br>";
+        try {
+            User user = userManager.getUserById(order.userId);
+            message += "Name: " + user.fullName + ", " + user.emailAddress + ", " + "(" + user.prefix + ") " + user.cellPhone + "<br>";
+            message += "Other orders connected to booking:<br>";
+            for(String orderId : booking.orderIds) {
+                Order otherOrder = orderManager.getOrder(orderId);
+                message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(otherOrder) + ")<br>";
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        if(emails != null) {
+            for(String email : emails) {
+                messageManager.sendMail(email, email, "Credited order", message, email, email);
+            }
+        }
+    }
+
+    private User getUserForBooking(PmsBooking booking) {
+        User user = userManager.getUserById(booking.userId);
+        if (user == null) {
+            logPrint("User does not exists: " + booking.userId + " for booking : " + booking.id);
+            Exception ex = new Exception();
+            logPrintException(ex);
+            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed (userid: " + booking.userId + ").", ex);
+            return null;
+        }
+
+        if(user.address == null) {
+            user.address = new Address();
+        }
+        user.address.fullName = user.fullName;
+        return user;
     }
 
     class BookingOrderSummary {
@@ -1176,20 +1227,24 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
-//        if(true) {
-//            PmsBooking booking = pmsManager.getBooking(bookingId);
-//            pmsDailyOrderGeneration.createCart(bookingId, filter);
-//            if(!filter.avoidOrderCreation) {
-//                Order order = createOrderFromCartNew(booking, filter, false);
-//                booking.orderIds.add(order.id);
-//                List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
-//                booking.orderIds = uniqueList;
-//                        
-//                pmsManager.saveBooking(booking);
-//                return order.id;
-//            }
-//            return "";
-//        }
+        if(true) {
+            PmsBooking booking = pmsManager.getBooking(bookingId);
+            if(supportsDailyPmsInvoiceing(booking)) {
+                pmsDailyOrderGeneration.createCart(bookingId, filter);
+                if(!filter.avoidOrderCreation) {
+                    Order order = createOrderFromCartNew(booking, filter, false);
+                    order.createByManager = "PmsDailyOrderGeneration";
+                    orderManager.saveOrder(order);
+                    booking.orderIds.add(order.id);
+                    List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
+                    booking.orderIds = uniqueList;
+
+                    pmsManager.saveBooking(booking);
+                    return order.id;
+                }
+                return "";
+            }
+        }
         return createOrderOld(bookingId, filter);
     }
     
@@ -1467,6 +1522,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             cal.add(Calendar.DAY_OF_YEAR, -1);
             order.rowCreatedDate = cal.getTime();
         }
+        
+        order.dueDays = booking.dueDays;
+        
+        
 
         orderManager.setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(order, user.id);
 
@@ -1480,19 +1539,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private Order createOrderFromCartNew(PmsBooking booking, NewOrderFilter filter, boolean virtual) {
        
-        User user = userManager.getUserById(booking.userId);
-        if (user == null) {
-            logPrint("User does not exists: " + booking.userId + " for booking : " + booking.id);
-            Exception ex = new Exception();
-            logPrintException(ex);
-            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed (userid: " + booking.userId + ").", ex);
-            return null;
-        }
-
-        if(user.address == null) {
-            user.address = new Address();
-        }
-        user.address.fullName = user.fullName;
+        User user = getUserForBooking(booking);
 
         VirtualOrder virtualOrder = null;
         Order order = null;
@@ -1516,10 +1563,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         order.userId = booking.userId;
+        
+        if(filter.userId != null && !filter.userId.isEmpty()) {
+            order.userId = filter.userId;
+        }
+        
+        autoSendInvoice(order, booking.id);
 
         Payment preferred = getPreferredPaymentMethod(booking.id, filter);
         
-        if(filter.paymentType != null && !filter.paymentType.isEmpty()) {
+        if(filter.paymentType != null && !filter.paymentType.isEmpty() && !filter.paymentType.startsWith("savedcard_")) {
             preferred = getOverriddenPaymentType(filter);
         }
         
@@ -1533,6 +1586,21 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 order.captured = true;
                 order.payment.captured = true;
             }
+        }
+        
+        Double total = orderManager.getTotalAmount(order);
+        if(total < 0) {
+            notifyAboutCreditedOrders(order, total, booking);
+            
+            if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+                Order baseOrder = orderManager.getOrder(filter.addToOrderId);
+                baseOrder.creditOrderId.add(order.id);
+                order.payment = baseOrder.payment;
+            }
+        }
+        
+        if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
+            order.attachedToRoom = filter.pmsRoomId;
         }
 
         if (pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
@@ -1549,6 +1617,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         } else {
             orderManager.saveOrder(order);
         }
+        
         return order;
     }
 

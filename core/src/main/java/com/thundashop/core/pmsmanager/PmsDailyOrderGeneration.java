@@ -73,6 +73,11 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
 
     private void calculateRoomPrices() {
         for(PmsBookingRooms room : currentBooking.getAllRoomsIncInactive()) {
+            if(currentFilter.pmsRoomId != null && !currentFilter.pmsRoomId.isEmpty()) {
+                if(!currentFilter.pmsRoomId.equals(room.pmsBookingRoomId)) {
+                    continue;
+                }
+            }
             //Sleepover prices.
             HashMap<String, Double> priceMatrix = generatePriceMatrix(room);
             generateDailyPriceItems(priceMatrix, room);
@@ -175,7 +180,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             }
         }
     }
-    
     
     private void generateAddonsCostForProduct(List<PmsBookingAddonItem> items, PmsBookingRooms room, boolean positiveValues) {
         Collections.sort(items, new Comparator<PmsBookingAddonItem>(){
@@ -345,8 +349,15 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         
         if(room.deleted) { 
             addonsToAdd = new HashMap();
+            //Include non refundable addons.
+            for(PmsBookingAddonItem item : room.addons) {
+                PmsBookingAddonItem baseItem = pmsManager.getConfigurationSecure().getAddonFromProductId(item.productId);
+                if(baseItem.noRefundable) {
+                    addonsToAdd.put(item.addonId, item);
+                }
+            }
         }
-
+        
         
         Type type = new TypeToken<HashMap<String, PmsBookingAddonItem>>(){}.getType();
         

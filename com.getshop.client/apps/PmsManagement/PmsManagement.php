@@ -307,7 +307,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $roomId = $_POST['data']['roomid'];
         foreach($config->addonConfiguration as $addonItem) {
             if($addonItem->productId == $_POST['data']['clicksubmit']) {
-                $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $addonItem->addonType, $roomId, true);
+//                $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $addonItem->addonType, $roomId, true);
                 $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $addonItem->addonType, $roomId, false);
                 break;
             }

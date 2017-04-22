@@ -668,7 +668,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return null;
         }
         checkSecurity(booking);
-        
+
         booking.calculateTotalCost();
         Double totalOrder = 0.0;
         for(String orderId : booking.orderIds) {
@@ -3393,7 +3393,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for(String tmpRoomId : roomIds) {
             PmsBookingRooms room = booking.getRoom(tmpRoomId);
-            room.clearAddonType(type);
+            if(remove) {
+                room.clearAddonType(type);
+            }
             changeTimeFromAddon(addonConfig, room, remove);
             if(remove) {
                 continue;
@@ -3401,13 +3403,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
 
             List<PmsBookingAddonItem> result = createAddonForTimePeriodeWithDiscount(type, room, booking);
-            for(PmsBookingAddonItem toReturn : result) {
+            result = combineExistingAddons(room.addons, result);
+            room.addons.addAll(result);
+            for(PmsBookingAddonItem toReturn : room.addons) {
                 if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST || addonConfig.dependsOnGuestCount) {
                     toReturn.count = room.numberOfGuests;
                 }
             }
             
-            room.addons.addAll(result);
             setAddonPricesOnRoom(room, booking);
             updateRoomPriceFromAddons(room, booking);
         }
@@ -3434,6 +3437,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             toReturn.isIncludedInRoomPrice = addonConfig.isIncludedInRoomPrice;
             toReturn.validDates = addonConfig.validDates;
             toReturn.dependsOnGuestCount = addonConfig.dependsOnGuestCount;
+            toReturn.noRefundable = addonConfig.noRefundable;
             if(addonConfig.price > 0) {
                 toReturn.price = addonConfig.price;
                 toReturn.priceExTaxes = addonConfig.priceExTaxes;
@@ -5649,6 +5653,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         additional.setLastCleaned(latestCleaningBeforeThat);
         additional.removeCleaning(latestCleaning);
         saveObject(additional);
+    }
+
+    private List<PmsBookingAddonItem> combineExistingAddons(List<PmsBookingAddonItem> addons, List<PmsBookingAddonItem> newAddons) {
+        List<PmsBookingAddonItem> newAddonList = new ArrayList();
+        for(PmsBookingAddonItem item : newAddons) {
+            if(!item.isSingle) {
+                System.out.println("Need to check:" + item.productId + " - " + item.date);
+                boolean found = false;
+                for(PmsBookingAddonItem existingAddon : addons) {
+                    if(existingAddon.isSame(item)) {
+                        found = true;
+                    }
+                }
+                if(!found) {
+                    newAddonList.add(item);
+                }
+            }
+        }
+        return newAddonList;
     }
 
 }

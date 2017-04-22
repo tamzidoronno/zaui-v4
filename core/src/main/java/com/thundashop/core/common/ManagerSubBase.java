@@ -151,7 +151,7 @@ public class ManagerSubBase {
                     this.managerSettings = (ManagerSetting)common;
                 }
             }
-            
+    
             dataFromDatabase(dataRetreived);
             
             for (DataCommon common : dataRetreived.data) {
@@ -161,7 +161,7 @@ public class ManagerSubBase {
                 }
             }
         }
-
+        
         this.ready = true;
     }
 

@@ -177,8 +177,14 @@ public class Database extends StoreComponent {
         
         DBCursor cur = collection.find(query);
         List<DataCommon> all = new ArrayList<DataCommon>();
+        
+        List<DBObject> dbObjects = new ArrayList();
+        
         while (cur.hasNext()) {
-            DBObject dbObject = cur.next();
+            dbObjects.add(cur.next());
+        }
+        
+        for (DBObject dbObject : dbObjects) {
             String className = (String) dbObject.get("className");
             if (className != null) {
                 try {

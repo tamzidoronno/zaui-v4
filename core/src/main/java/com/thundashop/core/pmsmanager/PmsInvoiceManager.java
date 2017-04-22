@@ -1505,6 +1505,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         } else {
             if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
                 order = orderManager.getOrder(filter.addToOrderId);
+            }
+            
+            if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty() && !order.closed) {
+                order = orderManager.getOrder(filter.addToOrderId);
                 order.cart.addCartItems(cartManager.getCart().getItems());
             } else {
                 order = orderManager.createOrder(user.address);

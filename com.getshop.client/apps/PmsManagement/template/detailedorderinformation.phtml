@@ -41,7 +41,7 @@ $booking = $this->getSelectedBooking();
                 echo "<span style='display:inline-block; width: 200px;'>" .@$item->product->metaData . "</span> " ;
                 echo "<span style='float:right;'>";
                 echo "<span style='display:inline-block; width: 10px; text-align:right'>" . $item->count . "</span>" . " x ";
-                echo "" . $item->product->price;
+                echo "" . round($item->product->price);
                 echo "</span><br>";
             }
             echo "</div>";

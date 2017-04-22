@@ -1445,7 +1445,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         Payment preferred = getPreferredPaymentMethod(booking.id, filter);
         
-        if(filter != null && filter.paymentType != null && !filter.paymentType.isEmpty()) {
+        if(filter != null && filter.paymentType != null && !filter.paymentType.isEmpty() && !filter.paymentType.startsWith("savedcard_")) {
             preferred = getOverriddenPaymentType(filter);
         }
         

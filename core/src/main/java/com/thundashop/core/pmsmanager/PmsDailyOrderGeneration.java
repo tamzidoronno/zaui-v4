@@ -2,11 +2,14 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.TreeMap;
@@ -39,17 +43,22 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     ProductManager productManager;
     
     @Autowired
+    OrderManager orderManager;
+    
+    @Autowired
     CartManager cartManager;
     
     private void addCartItem(CartItem cartItem) {
-        generatedCartItems.add(cartItem);
+        if(cartItem != null) {
+            generatedCartItems.add(cartItem);
+        }
     }
     
     private void clearGenerateCart() {
         generatedCartItems.clear();
     }
     
-    public String createOrder(String bookingId, NewOrderFilter filter) {
+    public String createCart(String bookingId, NewOrderFilter filter) {
         clearGenerateCart();
         
         currentBooking = pmsManager.getBooking(bookingId);
@@ -78,6 +87,30 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
 
     private HashMap<String, Double> generatePriceMatrix(PmsBookingRooms room) {
         LinkedHashMap<String, Double> currentMatrix = room.priceMatrix;
+        Gson gson = new Gson();
+        String res = gson.toJson(currentMatrix);
+        currentMatrix = gson.fromJson(res, LinkedHashMap.class);
+        
+        List<String> uniqueList = new ArrayList<String>(new HashSet<String>( currentBooking.orderIds ));
+        
+        for(String orderId : uniqueList) {
+            Order order = orderManager.getOrder(orderId);
+            for(CartItem item : order.cart.getItems()) {
+                if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                    HashMap<String, Double> orderMatrix = item.priceMatrix;
+                    if(orderMatrix != null) {
+                        for(String offset : orderMatrix.keySet()) {
+                            Double price = orderMatrix.get(offset);
+                            if(currentMatrix.containsKey(offset)) {
+                                price = currentMatrix.get(offset) - price;
+                            }
+                            currentMatrix.put(offset, price);
+                        }
+                    }
+                }
+            }
+        }
+        
         return currentMatrix;
     }
 
@@ -106,13 +139,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                 nextDay = null;
             }
             
-            count++;
-            DailyPriceObject priceobject = dailyPrices.get(dayToIterate);
-            total += priceobject.price;
-            if(startDate == null) {
-                startDate = dayToIterate;
-            }
-            
             if(nextDay != null && !room.isSameDay(nextDay, dayToIterate)) {
                 addCartItem(createCartItemForRoom(count, total, room, startDate, nextDay, null));
                 startDate = null;
@@ -121,11 +147,24 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                 total = 0.0;
             }
             
+            if(startDate == null) {
+                startDate = dayToIterate;
+            }
+
+            count++;
+            DailyPriceObject priceobject = dailyPrices.get(dayToIterate);
+            total += priceobject.price;
+            
             nextDay = priceobject.end;
             lastDay = dayToIterate;
         }
-        
-        addCartItem(createCartItemForRoom(count, total, room,startDate, nextDay, null));
+        if(count > 0 && total != 0.0) {
+            CartItem item = createCartItemForRoom(count, total, room,startDate, nextDay, null);
+            if(item != null) {
+                item.priceMatrix = priceMatrix;
+                addCartItem(item);
+            }
+        }
     }
     
     
@@ -141,6 +180,8 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         int count = 0;
         Double total = 0.0;
         String productId = "";
+        
+        List<PmsBookingAddonItem> itemsAdded = new ArrayList();
         for(PmsBookingAddonItem item : items) {
             if(positiveValues && item.price < 0.0) {
                 continue;
@@ -157,6 +198,14 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             productId = item.productId;
             count += item.count;
             total += item.price * item.count;
+            itemsAdded.add(item);
+        }
+        
+        if(itemsAdded.isEmpty()) {
+            return;
+        }
+        if(end == null) {
+            end = start;
         }
         
         Calendar cal = Calendar.getInstance();
@@ -164,7 +213,11 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         cal.add(Calendar.DAY_OF_YEAR, 1);
         end = cal.getTime();
         
-        addCartItem(createCartItemForRoom(count, total, room,start, end, productId));
+        CartItem item = createCartItemForRoom(count, total, room,start, end, productId);
+        if(item != null) {
+            item.itemsAdded = itemsAdded;
+            addCartItem(item);
+        }
     }
 
     
@@ -203,7 +256,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         item.endDate = end;
         item.getProduct().externalReferenceId = room.pmsBookingRoomId;
         item.getProduct().metaData = guestName;
-        item.getProduct().externalReferenceId = roomName;
+        item.getProduct().additionalMetaData = roomName;
         if(useTypeName) {
             item.getProduct().name = type.name;
         }
@@ -224,7 +277,16 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             price.end = cal.getTime();
             result.put(price.start, price);
         }
-        return result;
+        
+        TreeMap<Date, DailyPriceObject> finalresult = new TreeMap();
+        for(Date date : result.keySet()) {
+            if(result.get(date).price == 0.0) {
+                continue;
+            }
+            finalresult.put(date,result.get(date));
+        }
+        
+        return finalresult;
     }
 
     private CartItem createCartItem(String productId, int count, Double total) {
@@ -262,8 +324,35 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     }
 
     private HashMap<String, List<PmsBookingAddonItem>> getAddonsForRoom(PmsBookingRooms room) {
-        HashMap<String, List<PmsBookingAddonItem>> result = new HashMap();
+        
+        HashMap<String, PmsBookingAddonItem> addonsToAdd = new HashMap();
         for(PmsBookingAddonItem item : room.addons) {
+            addonsToAdd.put(item.addonId, item);
+        }
+      
+        List<String> uniqueList = new ArrayList<String>(new HashSet<String>( currentBooking.orderIds ));
+        for(String orderId : uniqueList) {
+            Order order = orderManager.getOrder(orderId);
+            for(CartItem item : order.cart.getItems()) {
+                if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                    if(item.itemsAdded != null) {
+                        for(PmsBookingAddonItem addonAlreadyBilled : item.itemsAdded) {
+                            PmsBookingAddonItem toCheck = addonAlreadyBilled;
+                            if(addonsToAdd.containsKey(addonAlreadyBilled.addonId)) {
+                                toCheck = addonsToAdd.get(addonAlreadyBilled.addonId);
+                            } else {
+                                toCheck.price *= -1;
+                            }
+                            
+                            addonsToAdd.put(toCheck.addonId, toCheck);
+                        }
+                    }
+                }
+            }
+        }
+        
+        HashMap<String, List<PmsBookingAddonItem>> result = new HashMap();
+        for(PmsBookingAddonItem item : addonsToAdd.values()) {
             List<PmsBookingAddonItem> items = new ArrayList();
             if(result.containsKey(item.productId)) {
                 items = result.get(item.productId);
@@ -271,6 +360,8 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             items.add(item);
             result.put(item.productId, items);
         }
+        
+        
         return result;
     }
 

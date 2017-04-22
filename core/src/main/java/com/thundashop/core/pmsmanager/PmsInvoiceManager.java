@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import org.joda.time.Days;
@@ -1175,9 +1176,20 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
-        if(true) {
-            return pmsDailyOrderGeneration.createOrder(bookingId, filter);
-        }
+//        if(true) {
+//            PmsBooking booking = pmsManager.getBooking(bookingId);
+//            pmsDailyOrderGeneration.createCart(bookingId, filter);
+//            if(!filter.avoidOrderCreation) {
+//                Order order = createOrderFromCartNew(booking, filter, false);
+//                booking.orderIds.add(order.id);
+//                List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
+//                booking.orderIds = uniqueList;
+//                        
+//                pmsManager.saveBooking(booking);
+//                return order.id;
+//            }
+//            return "";
+//        }
         return createOrderOld(bookingId, filter);
     }
     
@@ -1427,6 +1439,76 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             order = virtualOrder.order;
         } else {
             order = orderManager.createOrder(user.address);
+        }
+        
+        order.userId = booking.userId;
+
+        Payment preferred = getPreferredPaymentMethod(booking.id, filter);
+        
+        if(filter != null && filter.paymentType != null && !filter.paymentType.isEmpty()) {
+            preferred = getOverriddenPaymentType(filter);
+        }
+        
+        order.payment = preferred;
+        order.invoiceNote = booking.invoiceNote;
+        
+        if(order.payment != null) {
+            String type = order.payment.paymentType.toLowerCase();
+            if(type.contains("expedia")) {
+                order.status = Order.Status.PAYMENT_COMPLETED;
+                order.captured = true;
+                order.payment.captured = true;
+            }
+        }
+
+        if (pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(order.rowCreatedDate);
+            cal.add(Calendar.DAY_OF_YEAR, -1);
+            order.rowCreatedDate = cal.getTime();
+        }
+
+        orderManager.setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(order, user.id);
+
+        if (virtual) {
+            orderManager.saveVirtalOrder(virtualOrder);
+        } else {
+            orderManager.saveOrder(order);
+        }
+        return order;
+    }
+
+    private Order createOrderFromCartNew(PmsBooking booking, NewOrderFilter filter, boolean virtual) {
+       
+        User user = userManager.getUserById(booking.userId);
+        if (user == null) {
+            logPrint("User does not exists: " + booking.userId + " for booking : " + booking.id);
+            Exception ex = new Exception();
+            logPrintException(ex);
+            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed (userid: " + booking.userId + ").", ex);
+            return null;
+        }
+
+        if(user.address == null) {
+            user.address = new Address();
+        }
+        user.address.fullName = user.fullName;
+
+        VirtualOrder virtualOrder = null;
+        Order order = null;
+        
+        orderManager.deleteVirtualOrders(booking.id);
+        
+        if (virtual) {
+            virtualOrder = orderManager.createVirtualOrder(user.address, booking.id);
+            order = virtualOrder.order;
+        } else {
+            if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+                order = orderManager.getOrder(filter.addToOrderId);
+                order.cart.addCartItems(cartManager.getCart().getItems());
+            } else {
+                order = orderManager.createOrder(user.address);
+            }
         }
         
         order.userId = booking.userId;

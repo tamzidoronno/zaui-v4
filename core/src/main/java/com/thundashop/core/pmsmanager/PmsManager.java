@@ -1852,6 +1852,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }
+            if(!booking.isActiveOnDay(day)) {
+                continue;
+            }
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (needIntervalCleaning(room, day)) {
                     finalize(booking);

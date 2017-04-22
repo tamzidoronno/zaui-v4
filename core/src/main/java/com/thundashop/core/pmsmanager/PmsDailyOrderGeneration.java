@@ -11,7 +11,6 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -61,18 +60,21 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     }
 
     private void calculateRoomPrices() {
-        for(PmsBookingRooms room : currentBooking.getActiveRooms()) {
+        currentBooking.getActiveRooms().stream().map((room) -> {
             //Sleepover prices.
             HashMap<String, Double> priceMatrix = generatePriceMatrix(room);
             generateDailyPriceItems(priceMatrix, room);
-            
+            return room;            
+        }).forEach((room) -> {
             //Addon prices.
             HashMap<String, List<PmsBookingAddonItem>> items = getAddonsForRoom(room);
-            for(String productId : items.keySet()) {
+            items.keySet().stream().map((productId) -> {
                 generateAddonsCostForProduct(items.get(productId), room, true);
+                return productId;
+            }).forEach((productId) -> {
                 generateAddonsCostForProduct(items.get(productId), room, false);
-            }
-        }
+            });
+        });
     }
 
     private HashMap<String, Double> generatePriceMatrix(PmsBookingRooms room) {
@@ -207,17 +209,20 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     
     private TreeMap<Date, DailyPriceObject> createDailyPriceObjects(HashMap<String, Double> priceMatrix) {
         TreeMap<Date, DailyPriceObject> result = new TreeMap();
-        for(String day : priceMatrix.keySet()) {
+        priceMatrix.keySet().stream().map((day) -> {
             DailyPriceObject price = new DailyPriceObject();
             price.price = priceMatrix.get(day);
             price.start = PmsBookingRooms.convertOffsetToDate(day);
-
+            return price;
+        }).map((price) -> {
             Calendar cal = Calendar.getInstance();
             cal.setTime(price.start);
             cal.add(Calendar.DAY_OF_YEAR, 1);
             price.end = cal.getTime();
+            return price;
+        }).forEach((price) -> {
             result.put(price.start, price);
-        }
+        });
         return result;
     }
 

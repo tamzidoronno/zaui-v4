@@ -976,7 +976,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             String logText = "";
             if (bookingEngine.getBookingItem(itemId) != null) {
-                logText = "Changed room to " + bookingEngine.getBookingItem(itemId).bookingItemName + " from " + from;
+                String newName = bookingEngine.getBookingItem(itemId).bookingItemName;
+                logText = "Changed room to " + newName + " from " + from;
+                
+                for(String orderId : booking.orderIds) {
+                    Order order = orderManager.getOrder(orderId);
+                    if(!order.closed && !newName.isEmpty()) {
+                        for(CartItem item : order.cart.getItems()) {
+                            if(item.getProduct().externalReferenceId != null && item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                                item.getProduct().additionalMetaData = newName;
+                            }
+                        }
+                    }
+                }
+
+
+
+                
             } else {
                 logText = "Unassigned room from " + from;
             }
@@ -1836,6 +1852,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }
+            if(!booking.isActiveOnDay(day)) {
+                continue;
+            }
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (needIntervalCleaning(room, day)) {
                     finalize(booking);
@@ -1852,11 +1871,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room.date.cleaningDate == null) {
             room.date.cleaningDate = room.date.start;
         }
+        
+        if(getAdditionalInfo(room.bookingItemId).hideFromCleaningProgram) {
+            return false;
+        }
+        
         if (room.isEndingToday(day) && !getConfiguration().autoExtend) {
             return false;
         }
         if (!room.isActiveOnDay(day)) {
-            return false;
+            if(getConfiguration().autoExtend && room.isEndingToday(day)) {
+                //This is atleast a safe bet.
+            } else {
+                return false;
+            }
         }
         int days = Days.daysBetween(new LocalDate(room.date.cleaningDate), new LocalDate(day)).getDays();
         if (days == 0 && room.isSameDay(room.date.start, room.date.cleaningDate)) {
@@ -3099,7 +3127,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingRooms room = booking.getRoom(roomId);
         room.guests = guests;
         room.numberOfGuests = guests.size();
-        logEntry("Changed guest information", bookingId, roomId);
+        String newguestinfo = "";
+        String newGuestName = "";
+        for(PmsGuests guest : guests) {
+            if(guest.name != null) {
+                newguestinfo += guest.name + " - "; 
+                if(newGuestName.isEmpty()) {
+                    newGuestName = guest.name;
+                }
+            }
+            if(guest.email != null) { newguestinfo += guest.email + " - "; }
+            if(guest.prefix != null) { newguestinfo += "+"+guest.prefix; }
+            if(guest.phone != null) { newguestinfo += guest.phone + " - "; }
+            newguestinfo += "<br>";
+        }
+        
+        logEntry("Changed guest information, new guest information:<br> " + newguestinfo, bookingId, roomId);
+        
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            if(!order.closed && !newGuestName.isEmpty()) {
+                for(CartItem item : order.cart.getItems()) {
+                    if(item.getProduct().externalReferenceId != null && item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                        item.getProduct().metaData = newGuestName;
+                    }
+                }
+            }
+        }
+        
         saveBooking(booking);
     }
 

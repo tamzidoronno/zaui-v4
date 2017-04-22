@@ -5,7 +5,7 @@ $order = $this->orderToDisplay;
 $booking = $this->getSelectedBooking();
 ?>
 <tr>
-    <td colspan='70' style='padding: 5px; background-color:#fff;' fororder='<?php echo $order->id; ?>'>
+    <td colspan='70' style='padding: 5px; background-color:#fff; font-size:12px;' fororder='<?php echo $order->id; ?>'>
         <?php
         
         $toprint = array();
@@ -37,8 +37,8 @@ $booking = $this->getSelectedBooking();
                 echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->startDate)) . " - </span> ";
                 echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->endDate)) . "</span> ";
                 echo "<span style='display:inline-block; width: 300px;'>" . $item->product->name . "</span>" ;
-                echo "<span style='display:inline-block; width: 50px;'>" . $item->product->additionalMetaData . "</span> " ;
-                echo "<span style='display:inline-block; width: 200px;'>" .$item->product->metaData . "</span> " ;
+                echo "<span style='display:inline-block; width: 50px;'>" . @$item->product->additionalMetaData . "</span> " ;
+                echo "<span style='display:inline-block; width: 200px;'>" .@$item->product->metaData . "</span> " ;
                 echo "<span style='float:right;'>";
                 echo "<span style='display:inline-block; width: 10px; text-align:right'>" . $item->count . "</span>" . " x ";
                 echo "" . $item->product->price;

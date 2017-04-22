@@ -418,7 +418,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                         <span class='roompostfix editGuestToggle'>
                             <span class="viewmode">
                                 <?php
-                                $object->printGuests($room);
+                                $object->printGuests($room->guests);
                                 ?>
                             </span>
                             <span class="editmode" gstype='form' method="setGuests" style="width:350px;">

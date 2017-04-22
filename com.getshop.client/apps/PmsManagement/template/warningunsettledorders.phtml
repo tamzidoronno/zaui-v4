@@ -23,6 +23,19 @@ $endDate = date("d.m.Y", $end);
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 $result = $this->getOrdersForSelectedBooking();
 
+$newres = array();
+foreach($result as $order) {
+    if(!@$order->closed) {
+       $newres[] = $order; 
+    }
+}
+foreach($result as $order) {
+    if($order->closed) {
+       $newres[] = $order; 
+    }
+}
+$result = $newres;
+
 if($amount != 0) {
     $preferred = $booking->paymentType;
     if(!$preferred) {
@@ -59,7 +72,7 @@ if($amount != 0) {
                     $selected = "";
                 }
                 
-                echo "<option value='".$app->appName."' $selected> ".$app->appName."</option>";
+                echo "<option value='".$id."' $selected> ".$app->appName."</option>";
             }
             
             if($amount > 0) {

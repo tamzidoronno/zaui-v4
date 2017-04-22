@@ -122,7 +122,16 @@ public class PmsManagerProcessor {
 
     private boolean pushToLock(PmsBookingRooms room, boolean deleted) {
         PmsConfiguration config = manager.getConfigurationSecure();
-        
+        try {
+            PmsBooking booking = manager.getBookingFromRoom(room.pmsBookingRoomId);
+            if(deleted) {
+                manager.logEntry("Removing code from lock code (" + room.code + ")", booking.id , room.pmsBookingRoomId);
+            } else {
+                manager.logEntry("Getting code from lock.", booking.id , room.pmsBookingRoomId);
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
         if (config.getDefaultLockServer().locktype.isEmpty() || config.getDefaultLockServer().locktype.equals("arx")) {
             if(!deleted) {
                 //Make sure everything is 100% updated.

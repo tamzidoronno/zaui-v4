@@ -48,6 +48,7 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
             @$user->metaData->{'school'} = $_POST['data']['school'];
             @$user->metaData->{'schoolclass'} = $_POST['data']['schoolclass'];
             @$user->metaData->{'usepictures'} = $_POST['data']['usepicutres'];
+            @$user->metaData->{'comments'} = $_POST['data']['comments'];
             @$user->metaData->{'overAge'} = $_POST['data']['overAge'] && $_POST['data']['overAge'] == "true" ? "Ja" : "Nei";
 
             $craetedUser  =  $this->getApi()->getUserManager()->createUser($user);

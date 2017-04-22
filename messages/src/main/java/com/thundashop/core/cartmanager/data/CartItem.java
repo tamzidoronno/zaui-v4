@@ -5,6 +5,7 @@
 package com.thundashop.core.cartmanager.data;
 
 import com.google.gson.Gson;
+import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.data.Product;
 import java.io.Serializable;
 import java.time.Duration;
@@ -16,6 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,6 +40,8 @@ public class CartItem implements Serializable {
     public String groupedById = "";
     public String addedBy = "";
     public boolean removedAfterDeleted;
+    public List<PmsBookingAddonItem> itemsAdded;
+    public HashMap<String, Double> priceMatrix;
     
     public CartItem() {
     }

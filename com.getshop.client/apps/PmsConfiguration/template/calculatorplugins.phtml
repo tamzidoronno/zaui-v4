@@ -1,0 +1,28 @@
+<br><br>
+
+<?php
+/* @var $this ns_9de81608_5cec_462d_898c_1266d1749320\PmsConfiguration */
+
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+
+$daily = @$config->priceCalcPlugins->{"dailypriceplugin"};
+
+$types = array();
+$types[''] = "Default";
+$types['pmsdailyordergeneration'] = "Pms daily order generation";
+?>
+<div gstype='form' method="savePricePlugin">
+    Daily price plugin
+    <select gsname='dailypriceplugin' style="float:right">
+        <?php
+        foreach($types as $id => $type) {
+            $selected = $id == $daily ? "SELECTED" : "";
+            echo "<option value='$id' $selected>$type</option>";
+        }
+        ?>
+    </select>
+    <br><br>
+    <div style="text-align: right;">
+        <input type="button" gstype="submit" value="Save">
+    </div>
+</div>

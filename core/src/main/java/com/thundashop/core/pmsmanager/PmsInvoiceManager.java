@@ -358,6 +358,22 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return user;
     }
 
+    private String findPricePluginForBooking(PmsBooking booking) {
+        try {
+            PmsConfiguration config = pmsManager.getConfigurationSecure();
+            if(booking.priceType.equals(PmsBooking.PriceType.daily)) {
+                if(config.priceCalcPlugins.containsKey("dailypriceplugin")) {
+                    return config.priceCalcPlugins.get("dailypriceplugin");
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
+        return "";
+
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0;
@@ -1227,25 +1243,27 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
-        if(true) {
-            PmsBooking booking = pmsManager.getBooking(bookingId);
-            if(supportsDailyPmsInvoiceing(booking)) {
-                pmsDailyOrderGeneration.createCart(bookingId, filter);
-                if(!filter.avoidOrderCreation) {
-                    Order order = createOrderFromCartNew(booking, filter, false);
-                    order.createByManager = "PmsDailyOrderGeneration";
-                    orderManager.saveOrder(order);
-                    booking.orderIds.add(order.id);
-                    List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
-                    booking.orderIds = uniqueList;
-
-                    pmsManager.saveBooking(booking);
-                    return order.id;
-                }
-                return "";
-            }
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        String plugin = findPricePluginForBooking(booking);
+        
+        if(plugin.equals("pmsdailyordergeneration") && supportsDailyPmsInvoiceing(booking)) {
+            pmsDailyOrderGeneration.createCart(bookingId, filter);
+        } else {
+            return createOrderOld(bookingId, filter);
         }
-        return createOrderOld(bookingId, filter);
+        
+        if(!filter.avoidOrderCreation) {
+            Order order = createOrderFromCartNew(booking, filter, false);
+            order.createByManager = "PmsDailyOrderGeneration";
+            orderManager.saveOrder(order);
+            booking.orderIds.add(order.id);
+            List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
+            booking.orderIds = uniqueList;
+
+            pmsManager.saveBooking(booking);
+            return order.id;
+        }
+        return "";
     }
     
     public void updateAddonsByDates(PmsBookingRooms room) {

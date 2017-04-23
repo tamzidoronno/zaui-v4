@@ -60,6 +60,12 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsInvoiceManager()->savePaymentLinkConfig($this->getSelectedName(), $config);
     }
     
+    public function savePricePlugin() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config->priceCalcPlugins->{"dailypriceplugin"} = $_POST['data']['dailypriceplugin'];
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+    }
+    
     public function savepaymentlinksetup() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         foreach($_POST['data'] as $key => $val) {

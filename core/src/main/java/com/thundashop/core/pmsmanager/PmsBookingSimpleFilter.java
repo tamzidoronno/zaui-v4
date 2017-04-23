@@ -142,6 +142,7 @@ public class PmsBookingSimpleFilter {
         }
         simple.pmsRoomId = room.pmsBookingRoomId;
         simple.bookingId = booking.id;
+        simple.nonrefundable = booking.nonrefundable;
         User user = manager.userManager.getUserById(booking.userId);
         if(user != null) {
             simple.owner = user.fullName;

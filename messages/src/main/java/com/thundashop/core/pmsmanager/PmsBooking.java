@@ -69,6 +69,7 @@ public class PmsBooking extends DataCommon {
     double bookingAmountDiff;
     double totalUnsettledAmount = 0.0;
     Double unsettled;
+    public boolean nonrefundable = false;
     
     
     public Double getTotalPrice() {
@@ -405,7 +406,7 @@ public class PmsBooking extends DataCommon {
         double total = 0.0;
         for(PmsBookingRooms room : rooms) {
             room.calculateTotalCost(priceType);
-            if(room.isDeleted()) {
+            if(room.isDeleted() && !nonrefundable) {
                 total += room.calculateNonRefundAddons();
                 continue;
             }

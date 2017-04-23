@@ -4,7 +4,6 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.CartManager;
@@ -15,6 +14,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -95,7 +95,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     private HashMap<String, Double> generatePriceMatrix(PmsBookingRooms room) {
         LinkedHashMap<String, Double> currentMatrix = room.priceMatrix;
         
-        if(room.deleted) {
+        if(room.deleted && !currentBooking.nonrefundable) {
             currentMatrix = new LinkedHashMap();
         }
         
@@ -122,6 +122,22 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                         }
                     }
                 }
+            }
+        }
+        
+        //Include addons which is included in room price.
+        Calendar cal = Calendar.getInstance();
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.isIncludedInRoomPrice) {
+                cal.setTime(item.date);
+                String offset = PmsBookingRooms.getOffsetKey(cal, currentBooking.priceType);
+                Double price = (item.price * item.count);
+                if(currentMatrix.containsKey(offset)) {
+                    price = currentMatrix.get(offset) - price;
+                } else {
+                    price *= -1;
+                }
+                currentMatrix.put(offset, price);
             }
         }
         
@@ -347,7 +363,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             addonsToAdd.put(item.addonId, item);
         }
         
-        if(room.deleted) { 
+        if(room.deleted && !currentBooking.nonrefundable) { 
             addonsToAdd = new HashMap();
             //Include non refundable addons.
             for(PmsBookingAddonItem item : room.addons) {

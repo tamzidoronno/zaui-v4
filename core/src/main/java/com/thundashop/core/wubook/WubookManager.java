@@ -247,6 +247,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         booking.channel_reservation_code = (String) table.get("channel_reservation_code");
         booking.status = new Integer(table.get("status") + "");
         booking.isExpediaCollect = checkExpediaCollect(table);
+        booking.isNonRefundable = checkNonRefundable(table);
         Vector modifications = (Vector) table.get("modified_reservations");
         if(modifications != null) {
             for(int i = 0; i < modifications.size(); i++) {
@@ -720,6 +721,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         newbooking.registrationData.resultAdded.put("user_address_city", booking.city);
         newbooking.registrationData.resultAdded.put("user_emailAddress", booking.email);
         newbooking.registrationData.resultAdded.put("user_address_postCode", booking.postCode);
+        newbooking.nonrefundable = booking.isNonRefundable;
         
         Calendar calStart = Calendar.getInstance();
         
@@ -790,6 +792,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             filter.createNewOrder = false;
             filter.prepayment = true;
             filter.endInvoiceAt = end;
+            pmsInvoiceManager.clearOrdersOnBooking(newbooking);
             pmsInvoiceManager.createOrder(newbooking.id, filter);
         }
         
@@ -1105,6 +1108,17 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return false;
     }
 
+    private boolean checkNonRefundable(Hashtable table) {
+        try {
+            Gson gson = new Gson();
+            String text = gson.toJson(table);
+            text = text.toLowerCase();
+            return (text.contains("non refundable") || text.contains("non-refundable"));
+        }catch(Exception e) {
+        }
+        return false;
+    }
+    
     private boolean checkExpediaCollect(Hashtable table) {
         try {
             Gson gson = new Gson();

@@ -15,10 +15,11 @@ class MecaFleetCarCreate extends \MarketingApplication implements \Application {
     }
     
     public function saveCar() {
-        
+        $newCar = false;
         $mecaCar = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
         
         if (!$mecaCar) {
+            $newCar = true;
             $mecaCar = new \core_mecamanager_MecaCar();
         }
 
@@ -29,7 +30,9 @@ class MecaFleetCarCreate extends \MarketingApplication implements \Application {
         $mecaCar->licensePlate = $_POST['data']['regnr'];
         $mecaCar->prevControll = $this->convertToJavaDate(strtotime($_POST['data']['eukontroll'] . " - 2 year"));
         
-        $this->getApi()->getMecaManager()->saveFleetCar($this->getPage()->getId(), $mecaCar);
+        $car = $this->getApi()->getMecaManager()->saveFleetCar($this->getPage()->getId(), $mecaCar);
+        echo $car->pageId;
+        die();
     }
     
     public function sendKilomterRequest() {

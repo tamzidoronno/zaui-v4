@@ -135,7 +135,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     }
 
     @Override
-    public void saveFleetCar(String pageId, MecaCar car) {
+    public MecaCar saveFleetCar(String pageId, MecaCar car) {
         MecaFleet fleet = getFleetPageId(pageId);
         
         if (fleet == null) {
@@ -156,6 +156,8 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             fleet.cars.add(car.id);
             saveObject(fleet);
         }
+        
+        return car;
     }
 
     @Override
@@ -403,7 +405,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         if (car != null) {
             String title = storeManager.getMyStore().identifier;
             String message = getMailContent("signupSms").replace("{MecaFleet.StoreTitle}", title);
-            messageManager.sendSms("nexmo", car.cellPhone, message, getStoreDefaultPrefix());
+            messageManager.sendSms("sveve", car.cellPhone, message, getStoreDefaultPrefix());
             car.inivitationSent = new Date();
             saveObject(car);
         }
@@ -527,13 +529,21 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     @Override
     public void sendKilometerRequest(String carId) {
         MecaCar car = getCar(carId);
-        if (car != null) {
-            String msg = getMailContent("pushRequestKilometers");
-            msg += " (" + car.licensePlate + ")";
-            notifyByPush(car.cellPhone, msg);
-            car.requestKilomters.markAsSentPushNotification();
-            saveObject(car);
+        if (car != null && shouldBeFollowedUpAutomatically(car)) {
+            if (car.tokens == null || car.tokens.isEmpty()) {
+                sendSmsKilometersRequest(car);
+            } else {
+                sendRequestByPushNotification(car);
+            }
         }
+    }
+
+    private void sendRequestByPushNotification(MecaCar car) throws ErrorException {
+        String msg = getMailContent("pushRequestKilometers");
+        msg += " (" + car.licensePlate + ")";
+        notifyByPush(car.cellPhone, msg);
+        car.requestKilomters.markAsSentPushNotification();
+        saveObject(car);
     }
 
     @Override
@@ -603,10 +613,21 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             }
             
             if (car.requestKilomters.canSendSmsNotification()) {
-                messageManager.sendSms("sveve", car.cellPhone, getMailContent("smsRequestKilomters"), getStoreDefaultPrefix());
-                car.requestKilomters.markAsSentSmsNotification();
+                sendSmsKilometersRequest(car);
             }
         }
+    }
+
+    private void sendSmsKilometersRequest(MecaCar car) {
+        if (!shouldBeFollowedUpAutomatically(car)) {
+            return;
+        }
+        
+        String message = getMailContent("smsRequestKilomters");
+        message = replaceContactVariables(car, message, car.cellPhone, "");
+        messageManager.sendSms("sveve", car.cellPhone, message, getStoreDefaultPrefix());
+        
+        car.requestKilomters.markAsSentSmsNotification();
     }
     
     @Override
@@ -674,6 +695,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
             content = content.replace("{MecaFleet.LicensePlate}", currentCar.licensePlate);
         }
         
+        content = content.replace("{MecaFleet.KilometersLink}", createLink(currentCar));
         content = content.replace("{MecaFleet.CellPhone}", cellPhone);
         content = content.replace("{MecaFleet.ContactMessage}", message);
         
@@ -739,5 +761,22 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     public void saveFleet(MecaFleet fleet) {
         fleets.put(fleet.id, fleet);
         saveObject(fleet);
+    }
+
+    private boolean shouldBeFollowedUpAutomatically(MecaCar car) {
+        if (car == null)
+            return false;
+        
+        MecaFleet fleet = getFleetByCar(car);
+        if (fleet != null) {
+            return !fleet.followup;
+        }
+        
+        return false;
+    }
+
+    private String createLink(MecaCar currentCar) {
+        String address = getStoreDefaultAddress();
+        return "http://"+address+"/scripts/mecafleet/sendkilometers.php?cellphone="+currentCar.cellPhone;
     }
 }

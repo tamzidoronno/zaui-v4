@@ -30,8 +30,9 @@ public interface IMecaManager {
     
     @Customer
     public void saveFleet(MecaFleet fleet);
+    
     @Editor
-    public void saveFleetCar(String pageId, MecaCar car);
+    public MecaCar saveFleetCar(String pageId, MecaCar car);
     
     @Customer
     public List<MecaCar> getCarsForMecaFleet(String pageId);

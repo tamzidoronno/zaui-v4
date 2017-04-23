@@ -29,6 +29,7 @@ controllers.HomeController = function($scope, $api, $rootScope) {
             $scope.agreeDate = res[0].agreeDate || res[0].agreeDate === "true" || res[0].agreeDate === true || res[0].agreeDateControl;
             $scope.sendKilometer = res[0].requestKilomters.requestActive;
 
+            $scope.car = res[0];
             $scope.$apply();
         })
     };

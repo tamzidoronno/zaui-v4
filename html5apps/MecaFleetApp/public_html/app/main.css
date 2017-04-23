@@ -39,6 +39,7 @@ body {
 }
 
 textarea,
+input[type="number"],
 input[type="textfield"] {
     padding: 10px;
     border: solid 1px #dcdcdc;

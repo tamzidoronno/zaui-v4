@@ -25,9 +25,16 @@
 <div class='topinfobox'>
     Status på ditt kjøretøy.
 </div>
+
+<div ng-if="car.nextServiceAcceptedByCarOwner && car.nextServiceAgreed" class="nextServiceAgreed">
+    Bilen din skal inn på service:
+    <br/>
+    {{ car.nextServiceAgreed }}
+</div>
+
 <br/>
 <br/>
-    
+
 <div class='car_row'>
     <i class='fa fa-car'></i>
     <b>Bilnr</b>

@@ -13,6 +13,10 @@ attribute gstypes;
     submit, when click event is triggered, form is submitted
         example: <input gstype="submit" type="button">
 
+    callback on submit:
+        example: <div class='shop_button' gstype='submit' gs_callback='app.Manager.functioName'>Save</div>
+        Then it will be saved.
+
     value, attributes to attach to the form. need gsname attribute aswell.
         example: <input gstype="value" type="txt" name='example' placeholder="Enter a menu name">
 

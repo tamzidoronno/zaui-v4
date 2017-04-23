@@ -70,6 +70,12 @@ public class MecaCarRequestKilomters implements Serializable {
         return cal.getTime();
     }
 
+    /**
+     * Returns true if kilometers has not been received 7 days
+     * after push notifications has been sent to request kilometers.
+     * 
+     * @return 
+     */
     public boolean canSendSmsNotification() {
         
         Date date1 = getDateInFuture(lastReceivedKilomters, 1, 7);

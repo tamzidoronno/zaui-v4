@@ -3,12 +3,12 @@ $fleet = $this->getApi()->getMecaManager()->getFleetPageId($this->getPage()->get
 $followup = $fleet->followup;
 if($followup == "true"){
     $followuptext = "manuel";
-    $directtext = "<span class='directfollowup'>Direkte oppfølging</span>";
+    $directtext = "<span class='directfollowup'>Automatisk oppfølging</span>";
     $manualtext = "<span class='manualfollowup active'>Manuel oppfølging</span>";
     $sliderinput = "<input type='checkbox' value='<? echo $followup; ?>' gsname='fleetFollowup' id='followupslider' checked/>";
 }else{
     $followuptext = "direkte";
-    $directtext = "<span class='directfollowup active'>Direkte oppfølging</span>";
+    $directtext = "<span class='directfollowup active'>Automatisk oppfølging</span>";
     $manualtext = "<span class='manualfollowup'>Manuel oppfølging</span>";
     $sliderinput = "<input type='checkbox' value='<? echo $followup; ?>' gsname='fleetFollowup' id='followupslider'/>";
 }
@@ -34,11 +34,10 @@ if($followup == "true"){
     <div class="rightFleetbox">
         <div class="fleetfield">Rabatt<input class="gsniceinput1" gsname="discount" placeholder="Rabatt" value="<? echo $fleet->discount; ?>"/></div>
         <div class="fleetfield">Leiebil<input class="gsniceinput1" gsname="rentalcar" placeholder="Leiebil" value="<? echo $fleet->rentalcar; ?>"/></div>
-        <div class="fleetarea">&nbsp;&nbsp;Detaljer <textarea class="gsniceinput1" gsname="contactDetails" value="<? echo $fleet->contactDetails; ?>"><? echo $fleet->contactDetails; ?></textarea></div>
         <div class="fleetarea">&nbsp;&nbsp;Annet <textarea class="gsniceinput1" gsname="contactOther" value="<? echo $fleet->contactOther; ?>"><? echo $fleet->contactOther; ?></textarea></div>
     <?
     if (isset($_POST['data']['fleetName']) && !$_POST['data']['fleetName']) {
-        ?>
+//        ?>
         <div class="warning"><i class="fa fa-warning"></i>Navnet kan ikke være blankt.</div><br/>
         <?
     }

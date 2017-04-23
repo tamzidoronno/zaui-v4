@@ -1445,7 +1445,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         Payment preferred = getPreferredPaymentMethod(booking.id, filter);
         
-        if(filter != null && filter.paymentType != null && !filter.paymentType.isEmpty()) {
+        if(filter != null && filter.paymentType != null && !filter.paymentType.isEmpty() && !filter.paymentType.startsWith("savedcard_")) {
             preferred = getOverriddenPaymentType(filter);
         }
         
@@ -1504,6 +1504,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             order = virtualOrder.order;
         } else {
             if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+                order = orderManager.getOrder(filter.addToOrderId);
+            }
+            
+            if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty() && !order.closed) {
                 order = orderManager.getOrder(filter.addToOrderId);
                 order.cart.addCartItems(cartManager.getCart().getItems());
             } else {

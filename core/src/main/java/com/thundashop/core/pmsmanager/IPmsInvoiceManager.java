@@ -29,9 +29,6 @@ public interface IPmsInvoiceManager {
     public void sendRecieptOrInvoice(String orderId, String email, String bookingId);
     
     @Administrator
-    public PmsOrderStatsFilter getLatestInvoiceStatsFilter();
-    
-    @Administrator
     public String createOrder(String bookingId, NewOrderFilter filter);
     
     @Administrator
@@ -54,6 +51,15 @@ public interface IPmsInvoiceManager {
     
     @Administrator
     public PmsOrderStatistics generateStatistics(PmsOrderStatsFilter filter);
+    
+    @Administrator
+    public void saveStatisticsFilter(PmsOrderStatsFilter filter);
+    
+    @Administrator
+    public void deleteStatisticsFilter(String id);
+    
+    @Administrator
+    public List<PmsOrderStatsFilter> getAllStatisticsFilters();
     
     @Administrator
     public List<String> validateAllInvoiceToDates();

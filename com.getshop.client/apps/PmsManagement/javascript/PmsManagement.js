@@ -90,6 +90,11 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .loadadditionalinfo', app.PmsManagement.loadadditionalinfo);
         $(document).on('change','.PmsManagement .contactdatadropdown', app.PmsManagement.updateBookingInformationDropdown);
         $(document).on('click','.PmsManagement .loadorderinformation', app.PmsManagement.loadOrderInformation);
+        $(document).on('click','.PmsManagement .createnewfilter', app.PmsManagement.createNewIncomeReportFilter);
+    },
+    createNewIncomeReportFilter : function() {
+        var event = thundashop.Ajax.createEvent('','displayCreateNewIncomeReportFilter', $(this), {});
+        thundashop.common.showInformationBoxNew(event, 'New income report filter');
     },
     loadOrderInformation : function() {
         var tr = $(this).closest('tr');
@@ -543,7 +548,7 @@ app.PmsManagement = {
     
     loadorderstatistics : function() {
         var data = thundashop.framework.createGsArgs($('.statsorderfilter'));
-        var event = thundashop.Ajax.createEvent('','loadOrderStats',$(this), data);
+        var event = thundashop.Ajax.createEvent('','loadOrderStats',$('.PmsManagement'), data);
         $('.orderstatsres').html("<center style='font-size: 50px;'><i class='fa fa-spin fa-spinner'></i></center>");
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.orderstatsres').html(res);

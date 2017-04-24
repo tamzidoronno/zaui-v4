@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public class PmsOrderStatsFilter extends DataCommon {
+    public String name = "";
     public Date start;
     public Date end;
     List<PmsPaymentMethods> methods = new ArrayList();
@@ -14,4 +15,6 @@ public class PmsOrderStatsFilter extends DataCommon {
     public String priceType;
     public boolean includeVirtual = false;
     public Integer shiftHours = 0;
+    
+    public String savedPaymentMethod = "";
 }

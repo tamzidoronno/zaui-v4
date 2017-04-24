@@ -44,7 +44,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private boolean avoidChangeInvoicedTo;
     private boolean avoidChangingInvoicedFrom;
     private List<String> roomIdsInCart = null;
-    private PmsOrderStatsFilter latestInvoiceStatsFilter = null;
+    private HashMap<String, PmsOrderStatsFilter> savedIncomeFilters = new HashMap();
     private PmsPaymentLinksConfiguration paymentLinkConfig = new PmsPaymentLinksConfiguration();
     
 
@@ -118,23 +118,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         return lostRooms;
-    }
-
-    @Override
-    public PmsOrderStatsFilter getLatestInvoiceStatsFilter() {
-        return latestInvoiceStatsFilter;
-    }
-
-    private void saveLatestPmsOrderStatsFilter(PmsOrderStatsFilter filter) {
-        if(latestInvoiceStatsFilter != null) {
-            filter.id = latestInvoiceStatsFilter.id;
-        }
-        
-        Gson test = new Gson();
-        String copy = test.toJson(filter);
-        latestInvoiceStatsFilter = test.fromJson(copy, PmsOrderStatsFilter.class);
-        saveObject(latestInvoiceStatsFilter);
-        
     }
 
     @Override
@@ -374,9 +357,27 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     }
 
+    @Override
+    public void saveStatisticsFilter(PmsOrderStatsFilter filter) {
+        saveObject(filter);
+        savedIncomeFilters.put(filter.id, filter);
+    }
+
+    @Override
+    public List<PmsOrderStatsFilter> getAllStatisticsFilters() {
+        return new ArrayList(savedIncomeFilters.values());
+    }
+
+    @Override
+    public void deleteStatisticsFilter(String id) {
+        PmsOrderStatsFilter filter = savedIncomeFilters.get(id);
+        deleteObject(filter);
+        savedIncomeFilters.remove(id);
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
-        Double price = 0.0;
+        Double price = 0.0; 
         String productId = "";
     }
 
@@ -529,8 +530,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(filter == null) {
             return new PmsOrderStatistics(null, userManager.getAllUsersMap());
         }
-        
-        saveLatestPmsOrderStatsFilter(filter);
         
         List<Order> orders = orderManager.getOrders(null, null, null);
         if(filter.includeVirtual) {
@@ -881,7 +880,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             if(dataCommon instanceof PmsOrderStatsFilter) {
                 PmsOrderStatsFilter res = (PmsOrderStatsFilter)dataCommon;
-                latestInvoiceStatsFilter = res;
+                savedIncomeFilters.put(res.id, res);
             }
             if(dataCommon instanceof PmsPaymentLinksConfiguration) {
                 PmsPaymentLinksConfiguration res = (PmsPaymentLinksConfiguration)dataCommon;

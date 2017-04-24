@@ -436,6 +436,22 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->printSingleCartItem($item, null);
     }
     
+    public function displayCreateNewIncomeReportFilter() {
+        $this->includefile("newincomereportfilter");
+    }
+    
+    public function createNewIncomeReportFilter() {
+        $filter = new \core_pmsmanager_PmsOrderStatsFilter();
+        $filter->name = $_POST['data']['filtername'];
+        $filter->includeVirtual = $_POST['data']['virtualorders'] == "true";
+        $filter->priceType = $_POST['data']['taxtype'];
+        $filter->shiftHours = $_POST['data']['shifthour'];
+        $filter->displayType = $_POST['data']['periodisation'];
+        $filter->savedPaymentMethod = $_POST['data']['paymentmethod'];
+        
+        $this->getApi()->getPmsInvoiceManager()->saveStatisticsFilter($this->getSelectedName(), $filter);
+    }
+    
     public function loadOrderInfoOnBooking() {
          $states = array();
         $states['0'] = "All";
@@ -2514,16 +2530,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     }
 
-    public function addPaymentTypeToFilter() {
-        $filter = $this->getOrderStatsFilter();
-        $method = new \core_pmsmanager_PmsPaymentMethods();
-        $method->paymentMethod = $_POST['data']['paymentmethod'];
-        $method->paymentStatus = $_POST['data']['paymentstatus'];
-        $filter->methods[] = $method;
-        $_SESSION['pmsorderstatsfilter'] = serialize($filter);
-        $this->includefile("orderstatsresult");
-    }
-
     public function removePaymentMethod() {
         $filter = $this->getOrderStatsFilter();
         $newMethods = array();
@@ -2543,36 +2549,32 @@ class PmsManagement extends \WebshopApplication implements \Application {
      */
     public function getOrderStatsFilter() {
         $filter = new \core_pmsmanager_PmsOrderStatsFilter();
-        $filter->displayType = "dayslept";
         $filter->priceType = "extaxes";
+        $filter->savedPaymentMethod = "allmethods";
         
-        if(isset($_SESSION['pmsorderstatsfilter'])) {
-            $filter = unserialize($_SESSION['pmsorderstatsfilter']);
-        }
-        if(isset($_POST['data']['paymentmethod'])) {
-            $method = array();
-            $method['paymentMethod'] = $_POST['data']['paymentmethod'];
-            $method['paymentStatus'] = $_POST['data']['paymentstatus'];
-            
-            if(!$filter->methods) {
-               $filter->methods = array();
+        if(isset($_SESSION['orderstatsfilterset']) && $_SESSION['orderstatsfilterset']) {
+            $savedFilters = $this->getApi()->getPmsInvoiceManager()->getAllStatisticsFilters($this->getSelectedName());
+            foreach($savedFilters as $tmpFilter) {
+                if($tmpFilter->name == $_SESSION['orderstatsfilterset']) {
+                    $filter = $tmpFilter;
+                }
             }
-            if($_POST['data']['paymentmethod']) {
-//                $filter->methods[] = $method;
-            }
-            $filter->displayType = $_POST['data']['viewtype'];
-            $filter->priceType = $_POST['data']['priceType'];
-            $filter->includeVirtual = $_POST['data']['includevirtual'] == "true";
-            $filter->shiftHours = $_POST['data']['shift'];
-            
-            
-            $_SESSION['pmsorderstatsfilter'] = serialize($filter);
         }
         
+        $filter = $this->addPaymentTypeToFilter($filter);
         $filter->start = $this->getSelectedFilter()->startDate;
         $filter->end = $this->getSelectedFilter()->endDate;
+ 
         return $filter;
         
+    }
+    
+    public function setneworderstatsfilter() {
+        $_SESSION['orderstatsfilterset'] = $_POST['data']['filtertype'];
+    }
+    
+    public function deleteOrderStatsFilter() {
+        $this->getApi()->getPmsInvoiceManager()->deleteStatisticsFilter($this->getSelectedName(), $_POST['data']['id']);
     }
 
     public function addRoomCount($start, $end, $typeId) {
@@ -2922,13 +2924,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->setIncomeFilter($_POST['data']['type']);
     }
     
-    public function setIncomeFilter($type) {
-        $filter = new \core_pmsmanager_PmsOrderStatsFilter();
+    /**
+     * @param \core_pmsmanager_PmsOrderStatsFilter $filter
+     */
+    public function addPaymentTypeToFilter($filter) {
         
         $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-//        print_r($paymentMethods);
+
         foreach ($paymentMethods as $key => $method) {
-            if($type != "all" && $method->appName != $type) {
+            if($filter->savedPaymentMethod != "allmethods" && $method->id != $filter->savedPaymentMethod) {
                 continue;
             }
             
@@ -2951,20 +2955,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $method->paymentStatus = -9;
             $filter->methods[] = $method;
         }
-        $filter->priceType = "extaxes";
-        $filter->displayType = "dayslept";
-        $filter->start = $this->getSelectedFilter()->startDate;
-        $filter->end = $this->getSelectedFilter()->endDate;
         
-        $latest = $this->getApi()->getPmsInvoiceManager()->getLatestInvoiceStatsFilter($this->getSelectedName());
-        if($latest) {
-            $latest->start = $filter->start;
-            $latest->end = $filter->end;
-            $latest->methods = $filter->methods;
-            $filter = $latest;
+        if($filter->savedPaymentMethod == "transferredtoaccounting") {
+            $method = new \core_pmsmanager_PmsPaymentMethods();
+            $method->paymentMethod = "";
+            $method->paymentStatus = -10;
+            $filter->methods[] = $method;
         }
         
-        $_SESSION['pmsorderstatsfilter'] = serialize($filter);
+        return $filter;
     }
 
     public function mightInclude($area) {

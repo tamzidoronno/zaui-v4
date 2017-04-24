@@ -6,39 +6,13 @@ if(isset($_POST['data']['priceType'])) {
     $priceType = $_POST['data']['priceType'];
 }
 
-$states = \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager::getOrderStatuses();
-$states["0"] = "All states";
-$states[-9] = "Credit notes";
-$states[-10] = "Everything transferred to accounting";
-
-$paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-$pmethodToPrint = array();
-$pmethodToPrint[""] = "All payment methods";
-foreach ($paymentMethods as $key => $method) {
-    $pmethodToPrint[$method->id] = $method->appName;
-}
-if(isset($filter->methods)) {
-    echo "<table cellspacing='0' cellpadding='0'>";
-    echo "<tr>";
-    echo "<th></th>";
-    echo "<th></th>";
-    echo "<th></th>";
-    echo "</tr>"; 
-    foreach($filter->methods as $method) {
-        echo "<tr>";
-        echo "<td><i class='fa fa-trash-o removePaymentMethod' style='cursor:pointer;' toremove='".
-                $method->{'paymentMethod'}."-".
-                $method->{'paymentStatus'}."'></i></td><td>" . 
-                $pmethodToPrint[$method->{'paymentMethod'}] . " </td><td> " . 
-                $states[$method->{'paymentStatus'}] . "</td>";
-        echo "</tr>";
-    }
-    echo "</table>";
-}
-
 $resultMatrix = $this->buildResultMatrix(true);
 
-
+if($filter->name) {
+    echo "Filter selected: " . $filter->name . "<br>";
+} else {
+    echo "Filter selected: default<br>";
+}
 echo "<table cellspacing='0' cellpadding='0'>";
 
 foreach($resultMatrix as $index => $row) {
@@ -60,5 +34,44 @@ foreach($resultMatrix as $index => $row) {
 }
 
 echo "</table>";
-?>    
-</pre>
+echo "<br><hr><br>";
+echo "<b>Filter selected is:<br></b>";
+
+$states = \ns_27716a58_0749_4601_a1bc_051a43a16d14\OrderManager::getOrderStatuses();
+$states["0"] = "All states";
+$states[-9] = "Credit notes";
+$states[-10] = "Everything transferred to accounting";
+
+$paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$pmethodToPrint = array();
+$pmethodToPrint[""] = "All payment methods";
+foreach ($paymentMethods as $key => $method) {
+    $pmethodToPrint[$method->id] = $method->appName;
+}
+if(isset($filter->methods)) {
+    echo "<table cellspacing='0' cellpadding='0'>";
+    echo "<tr>";
+    echo "<th></th>";
+    echo "<th></th>";
+    echo "<th></th>";
+    echo "</tr>"; 
+    foreach($filter->methods as $method) {
+        echo "<tr>";
+        echo "<td>" . 
+                $pmethodToPrint[$method->{'paymentMethod'}] . " </td><td> " . 
+                $states[$method->{'paymentStatus'}] . "</td>";
+        echo "</tr>";
+    }
+    
+    $hasVirtuals = $filter->includeVirtual ? "yes" : "no";
+    $priceTypePrintable = $filter->priceType == "extaxes" ? " taxes excluded. " : " taxes included.";
+    echo "<tr><td>Has virtual orders</td><td>" . $hasVirtuals . "</td></tr>";
+    echo "<tr><td>Shifting with hours</td><td>" . $filter->shiftHours . "</td></tr>";
+    echo "<tr><td>Saved with payment options</td><td>" . $filter->savedPaymentMethod . "</td></tr>";
+    echo "<tr><td>Taxes</td><td>" . $priceTypePrintable . "</td></tr>";
+    echo "<tr><td>Price type</td><td>" . $filter->priceType . "</td></tr>";
+    echo "<tr><td>Delete this filter</td><td><i class='fa fa-trash-o' gstype='clicksubmit' method='deleteOrderStatsFilter' gsvalue='".$filter->id."' gsname='id'></i></td></tr>";
+    echo "</table>";
+}
+
+?>

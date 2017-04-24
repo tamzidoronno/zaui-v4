@@ -27,7 +27,7 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedN
 $dates = $this->getApi()->getPmsManager()->getDefaultDateRange($this->getSelectedName());
 $start = $this->convertToJavaDate(strtotime($dates->start));
 $end = $this->convertToJavaDate(strtotime($dates->end));
-$products = $this->indexList($this->getApi()->getProductManager()->getAllProductsLight());
+$products = $this->getAllProducts();
 $defaultType = $booking->rooms[0]->bookingItemTypeId;
 
 $cleaningInterval = $config->cleaningInterval;
@@ -317,7 +317,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 $res = array();
                 foreach($typesAdded as $prodId => $val) {
                     $title = $val . " x " . $products[$prodId]->name;
-                    $name = strtoupper(substr($products[$prodId]->name,0, 1));
+                    $name = $object->getFirstWords($products[$prodId]->name);
                     $res[] = "<span title='$title' class='listaddonsaddedtoroom' style='cursor:pointer;' productId='".$prodId."' pmsRoomId='".$room->pmsBookingRoomId."'>($name)</span>";
                 }
                 echo join(",", $res);

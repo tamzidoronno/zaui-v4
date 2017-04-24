@@ -163,11 +163,13 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             $row['visitor'] .= "<i class='fa fa-comment' title='$comments'></i> ";
         }
         
+        
         $breakfasts = $this->hasAddon($room, 1);
         
         if($breakfasts) {
             $row['visitor'] .= "<i class='fa fa-cutlery' title='Breakfast included: $breakfasts'></i> ";
         }
+        $row['visitor'] .= $this->createAddonText($room) . " ";
         
         if($config->bookingProfile != "storage") {
             foreach($room->guest as $guest) {

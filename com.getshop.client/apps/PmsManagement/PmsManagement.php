@@ -3082,5 +3082,53 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $room;
     }
 
+    /**
+     * @param \core_pmsmanager_PmsAdditionalItemInformation[] $addons
+     */
+    public function createAddonText($room) {
+        $products = $this->getAllProducts();
+        $typesAdded = array();
+        $total = 0;
+        foreach($room->addons as $addon) {
+            if($addon->addonType == 1) {
+                continue;
+            }
+            if(!isset($typesAdded[$addon->productId])) {
+                $typesAdded[$addon->productId]=0;
+            }
+            $typesAdded[$addon->productId] += $addon->count;
+            $total += ($addon->price * $addon->count);
+        }
+        $res = array();
+        foreach($typesAdded as $prodId => $val) {
+            $title = $val . " x " . $products[$prodId]->name;
+            $name = $this->getFirstWords($products[$prodId]->name);
+            $res[] = "<span title='$title' style='cursor:pointer;'>($name)</span>";
+        }
+        
+        return join(",", $res);
+    }
+
+    public function getAllProducts() {
+        if(!isset($this->allProducts) || !$this->allProducts) {
+            $this->allProducts = $this->indexList($this->getApi()->getProductManager()->getAllProductsLight());
+        }
+        
+        return $this->allProducts;
+    }
+
+    public function getFirstWords($sentence) {
+        if(!trim($sentence)) {
+            return "";
+        }
+        $words = explode(" ", $sentence);
+        $acronym = "";
+
+        foreach ($words as $w) {
+          $acronym .= $w[0];
+        }
+        return strtoupper($acronym);
+    }
+
 }
 ?>

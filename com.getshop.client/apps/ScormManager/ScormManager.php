@@ -14,7 +14,7 @@ class ScormManager extends \MarketingApplication implements \Application {
         $dataObject = array();
         
         foreach ($_POST['data'] as $key => $value) {
-            if ($value == "false") {
+            if ($value == "false" ) {
                 continue;
             }
             
@@ -24,15 +24,35 @@ class ScormManager extends \MarketingApplication implements \Application {
             $dataObject[$scormId][] = $groupId;
         }
         
+        $alreadySavedPackages = $this->getApi()->getScormManager()->getAllPackages();
+        
         $inPackages = $this->getScorms();
         
         foreach ($inPackages as $ipackage) {
+            if ($this->isGroupedScormPackage($alreadySavedPackages, $ipackage->id)) {
+                continue;
+            }
+                    
             $package = new \core_scormmanager_ScormPackage();
             $package->id = $ipackage->id;
             $package->activatedGroups = @$dataObject[$ipackage->id];
             $package->name = $this->getScormName($package->id, $inPackages);
             $this->getApi()->getScormManager()->saveSetup($package);
         }
+        
+        // Save all grouped scorm packages
+        foreach ($alreadySavedPackages as $package) {
+            if (!count($package->groupedScormPackages)) {
+                continue;
+            }
+            
+            $package->activatedGroups = @$dataObject[$package->id];
+            $this->getApi()->getScormManager()->saveSetup($package);
+        }
+    }
+    
+    public function deletePackage() {
+        $this->getApi()->getScormManager()->deleteScormPackage($_POST['data']['packageid']);
     }
     
     private function getScormName($id, $scorms) {
@@ -65,5 +85,42 @@ class ScormManager extends \MarketingApplication implements \Application {
         
         return false;
     }
+
+    public function isGroupedScormPackage($packages, $scormId) {
+        foreach ($packages as $package) {
+            if ($package->groupedScormPackages) {
+                foreach ($package->groupedScormPackages as $id) {
+                    if ($scormId === $id)
+                        return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    public function createGroupedScormPackage() {
+        $scormPackage = new \core_scormmanager_ScormPackage();
+        $scormPackage->name = $_POST['data']['name'];
+        $scormPackage->groupedScormPackages = array();
+        foreach ($_POST['data'] as $key => $value) {
+            if (strstr($key, "scormpackage_") && $_POST['data'][$key] === "true") {
+                $vals = explode("_", $key);
+                $scormPackage->groupedScormPackages[] = $vals[1];
+            }
+        }
+        
+        $this->getApi()->getScormManager()->saveSetup($scormPackage);
+    }
+
+    public function getScorm($scorms, $scormId) {
+        foreach ($scorms as  $scorm) {
+            if ($scorm->id == $scormId)
+                return $scorm;
+        }
+        
+        return null;
+    }
+
 }
 ?>

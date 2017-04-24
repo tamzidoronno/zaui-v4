@@ -7,6 +7,10 @@ app.MecaFleetCarCreate = {
         if(!ownerid){ownerid = "Eieren";}
         var regnr = $(this).attr('regnr')
         thundashop.common.Alert('Kilometerforespørsel er sendt til:', ownerid + " med reg nr: " + regnr , false);
+    },
+    
+    goToCar: function(res) {
+        thundashop.common.goToPage(res);
     }
     
 };

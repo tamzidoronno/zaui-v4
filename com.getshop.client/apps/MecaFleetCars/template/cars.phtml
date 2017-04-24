@@ -2,13 +2,19 @@
 /* @var $this ns_13e03ff7_8334_45eb_a280_c772c3262325\MecaFleetCars */
 $cars = $this->getApi()->getMecaManager()->getCarsForMecaFleet($this->getPage()->getId());
 
+$fleet = $this->getApi()->getMecaManager()->getFleetPageId($this->getPage()->getId());
 
+
+if ($fleet == null || $fleet->followup) {
+    ?>
+        <center><div class="shop_button green" gs_show_modal="updateKilomters">Oppdatere kilometerstanden</div></center>
+        <br/>
+    <?
+}
 
 if (!count($cars)) {
     return;
 }
-
-
 
 usort($cars,  array('\\ns_13e03ff7_8334_45eb_a280_c772c3262325\\MecaFleetCars','sortByDate'));
 
@@ -18,7 +24,6 @@ foreach ($cars as $car) {
         <div class="carrowouter">
             <a href='/?page=<? echo $car->pageId; ?>'>
                 <div class='car'>
-                
                     <div><? echo $car->licensePlate; ?></div>
                     <div>Telefonnr: <? echo $car->cellPhone; ?></div>
                     <div>Nåværende kilometerstand: <? echo $car->kilometers; ?></div>

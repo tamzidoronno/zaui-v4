@@ -668,7 +668,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return null;
         }
         checkSecurity(booking);
-        
+
         booking.calculateTotalCost();
         Double totalOrder = 0.0;
         for(String orderId : booking.orderIds) {
@@ -976,7 +976,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             String logText = "";
             if (bookingEngine.getBookingItem(itemId) != null) {
-                logText = "Changed room to " + bookingEngine.getBookingItem(itemId).bookingItemName + " from " + from;
+                String newName = bookingEngine.getBookingItem(itemId).bookingItemName;
+                logText = "Changed room to " + newName + " from " + from;
+                
+                for(String orderId : booking.orderIds) {
+                    Order order = orderManager.getOrder(orderId);
+                    if(!order.closed && !newName.isEmpty()) {
+                        for(CartItem item : order.cart.getItems()) {
+                            if(item.getProduct().externalReferenceId != null && item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                                item.getProduct().additionalMetaData = newName;
+                            }
+                        }
+                    }
+                }
+
+
+
+                
             } else {
                 logText = "Unassigned room from " + from;
             }
@@ -1836,6 +1852,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }
+            if(!booking.isActiveOnDay(day)) {
+                continue;
+            }
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (needIntervalCleaning(room, day)) {
                     finalize(booking);
@@ -1852,11 +1871,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room.date.cleaningDate == null) {
             room.date.cleaningDate = room.date.start;
         }
+        
+        if(getAdditionalInfo(room.bookingItemId).hideFromCleaningProgram) {
+            return false;
+        }
+        
         if (room.isEndingToday(day) && !getConfiguration().autoExtend) {
             return false;
         }
         if (!room.isActiveOnDay(day)) {
-            return false;
+            if(getConfiguration().autoExtend && room.isEndingToday(day)) {
+                //This is atleast a safe bet.
+            } else {
+                return false;
+            }
         }
         int days = Days.daysBetween(new LocalDate(room.date.cleaningDate), new LocalDate(day)).getDays();
         if (days == 0 && room.isSameDay(room.date.start, room.date.cleaningDate)) {
@@ -3099,7 +3127,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingRooms room = booking.getRoom(roomId);
         room.guests = guests;
         room.numberOfGuests = guests.size();
-        logEntry("Changed guest information", bookingId, roomId);
+        String newguestinfo = "";
+        String newGuestName = "";
+        for(PmsGuests guest : guests) {
+            if(guest.name != null) {
+                newguestinfo += guest.name + " - "; 
+                if(newGuestName.isEmpty()) {
+                    newGuestName = guest.name;
+                }
+            }
+            if(guest.email != null) { newguestinfo += guest.email + " - "; }
+            if(guest.prefix != null) { newguestinfo += "+"+guest.prefix; }
+            if(guest.phone != null) { newguestinfo += guest.phone + " - "; }
+            newguestinfo += "<br>";
+        }
+        
+        logEntry("Changed guest information, new guest information:<br> " + newguestinfo, bookingId, roomId);
+        
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            if(!order.closed && !newGuestName.isEmpty()) {
+                for(CartItem item : order.cart.getItems()) {
+                    if(item.getProduct().externalReferenceId != null && item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                        item.getProduct().metaData = newGuestName;
+                    }
+                }
+            }
+        }
+        
         saveBooking(booking);
     }
 
@@ -3338,7 +3393,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for(String tmpRoomId : roomIds) {
             PmsBookingRooms room = booking.getRoom(tmpRoomId);
-            room.clearAddonType(type);
+            if(remove) {
+                room.clearAddonType(type);
+            }
             changeTimeFromAddon(addonConfig, room, remove);
             if(remove) {
                 continue;
@@ -3346,13 +3403,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
 
             List<PmsBookingAddonItem> result = createAddonForTimePeriodeWithDiscount(type, room, booking);
-            for(PmsBookingAddonItem toReturn : result) {
+            result = combineExistingAddons(room.addons, result);
+            room.addons.addAll(result);
+            for(PmsBookingAddonItem toReturn : room.addons) {
                 if(addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST || addonConfig.dependsOnGuestCount) {
                     toReturn.count = room.numberOfGuests;
                 }
             }
             
-            room.addons.addAll(result);
             setAddonPricesOnRoom(room, booking);
             updateRoomPriceFromAddons(room, booking);
         }
@@ -3379,6 +3437,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             toReturn.isIncludedInRoomPrice = addonConfig.isIncludedInRoomPrice;
             toReturn.validDates = addonConfig.validDates;
             toReturn.dependsOnGuestCount = addonConfig.dependsOnGuestCount;
+            toReturn.noRefundable = addonConfig.noRefundable;
             if(addonConfig.price > 0) {
                 toReturn.price = addonConfig.price;
                 toReturn.priceExTaxes = addonConfig.priceExTaxes;
@@ -5594,6 +5653,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         additional.setLastCleaned(latestCleaningBeforeThat);
         additional.removeCleaning(latestCleaning);
         saveObject(additional);
+    }
+
+    private List<PmsBookingAddonItem> combineExistingAddons(List<PmsBookingAddonItem> addons, List<PmsBookingAddonItem> newAddons) {
+        List<PmsBookingAddonItem> newAddonList = new ArrayList();
+        for(PmsBookingAddonItem item : newAddons) {
+            if(!item.isSingle) {
+                System.out.println("Need to check:" + item.productId + " - " + item.date);
+                boolean found = false;
+                for(PmsBookingAddonItem existingAddon : addons) {
+                    if(existingAddon.isSame(item)) {
+                        found = true;
+                    }
+                }
+                if(!found) {
+                    newAddonList.add(item);
+                }
+            }
+        }
+        return newAddonList;
     }
 
 }

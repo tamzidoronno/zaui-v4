@@ -2,6 +2,12 @@
     Velkommen til MECA Flåtestyring.<br/> Trykk på et av punktene under for mer informasjon.
 </div>
 
+<div ng-if="car.nextServiceAcceptedByCarOwner && car.nextServiceAgreed" class="nextServiceAgreed">
+    Bilen din skal inn på service:
+    <br/>
+    {{ car.nextServiceAgreed }}
+</div>
+    
 <div class="frontepage">
     <a href='#/car'>    
         <div class="frontbox">

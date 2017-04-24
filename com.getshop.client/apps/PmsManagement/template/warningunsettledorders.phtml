@@ -23,6 +23,19 @@ $endDate = date("d.m.Y", $end);
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 $result = $this->getOrdersForSelectedBooking();
 
+$newres = array();
+foreach($result as $order) {
+    if(!@$order->closed) {
+       $newres[] = $order; 
+    }
+}
+foreach($result as $order) {
+    if($order->closed) {
+       $newres[] = $order; 
+    }
+}
+$result = $newres;
+
 if($amount != 0) {
     $preferred = $booking->paymentType;
     if(!$preferred) {
@@ -50,7 +63,7 @@ if($amount != 0) {
         if($amount > 1 || $amount < -1) {
             echo "<div class='warnunsettled' gstype='form' method='fastordercreation'>";
             echo "<input type='hidden' gsname='bookingid' value='". $booking->id."'>";
-            echo "<i class='fa fa-warning' style='color:red;'></i> You have an unsettled amount of $amount, what would you like to do with it?<br>";
+            echo "<i class='fa fa-warning' style='color:red;'></i> You have an unsettled amount of ".round($amount).", what would you like to do with it?<br>";
             echo "<select class='paymenttypeunsetled' gsname='paymenttype'>";
             foreach($instances as $id => $app) {
                 $selected = "";
@@ -59,7 +72,7 @@ if($amount != 0) {
                     $selected = "";
                 }
                 
-                echo "<option value='".$app->appName."' $selected> ".$app->appName."</option>";
+                echo "<option value='".$id."' $selected> ".$app->appName."</option>";
             }
             
             if($amount > 0) {

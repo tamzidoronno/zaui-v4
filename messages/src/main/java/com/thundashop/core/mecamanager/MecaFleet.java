@@ -15,7 +15,12 @@ import java.util.List;
  */
 public class MecaFleet extends DataCommon {
     public String name = "";
-    public Boolean followup = false;
+    
+    /**
+     * If this flag is set to true it means that the 
+     * fleet should be followed up manually.
+     */
+    public boolean followup = true;
     public String contactName = "";
     public String contactEmail = "";
     public String contactPhone = "";

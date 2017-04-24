@@ -142,6 +142,7 @@ public class PmsBookingSimpleFilter {
         }
         simple.pmsRoomId = room.pmsBookingRoomId;
         simple.bookingId = booking.id;
+        simple.nonrefundable = booking.nonrefundable;
         User user = manager.userManager.getUserById(booking.userId);
         if(user != null) {
             simple.owner = user.fullName;
@@ -176,7 +177,7 @@ public class PmsBookingSimpleFilter {
             simple.progressState = "notpaid";
         } 
         
-        if(!booking.confirmed) {
+        if(!booking.confirmed && !room.deleted && !booking.isDeleted) {
             simple.progressState = "unconfirmed";
         }
         

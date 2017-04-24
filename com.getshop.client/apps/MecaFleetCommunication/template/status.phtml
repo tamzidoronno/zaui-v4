@@ -2,12 +2,24 @@
 /* @var $this ns_99e7671e_1f11_4902_8459_faa3aaeeb885\MecaFleetCommunication */
 $mecaCar = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
 $inviteSentClass = $mecaCar->inivitationSent != null ? "inviteSent" : "";
+$fleet = $this->getApi()->getMecaManager()->getFleetByCar($mecaCar);
 
 if (!$mecaCar) {
     echo "Did not find the car";
     return;
 }
 ?>
+
+<?
+if ($fleet->followup) {
+    return;
+}
+?>
+<br/>
+<br/>
+<div style="text-align: center;"><strong><span style="font-size:36px;">Kommunikasjon med bruker av kjøretøy</span></strong><br>
+<br>
+Her ser du status&nbsp;på om bruker av kjøreøy har tatt i bruk MECA Fleet app. Send&nbsp;purring dersom vedkommende ikke tar i bruk appen.</div>
 
 <div>
     <div class="row">

@@ -1957,8 +1957,24 @@ thundashop.framework = {
             args['submit'] = element.attr('gsvalue');
         }
         form.callback = element.callback;
+        
+        
+        var javascriptCallback = $(element).attr('gs_callback');
         var event = thundashop.Ajax.createEvent("", method, element, args);
-        thundashop.framework.postToChannel(event, form);
+        
+        if (javascriptCallback) {
+            var callbackFunction = function(res, javascriptCallbackFunction) {
+                var funtionBody = javascriptCallbackFunction[0] + "(res);";
+                var toExecute = new Function("res", funtionBody);
+                toExecute(res);
+            }
+            
+            event['synchron'] = true;
+            thundashop.Ajax.post(event, callbackFunction, [javascriptCallback]);
+        } else {
+            thundashop.framework.postToChannel(event, form);
+        }
+        
     },
     reprintPage: function () {
         var event = thundashop.Ajax.createEvent("", "systemReloadPage", null, null);

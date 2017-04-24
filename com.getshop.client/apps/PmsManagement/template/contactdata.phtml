@@ -47,7 +47,9 @@ $config = $this->getConfigurationToUse();
                 echo $booking->wubookNoShow ? "Yes" : "no";
                 echo "<br>"; 
             }
-
+            if($booking->nonrefundable) {
+                echo "This booking is non refundable.<br>";
+            }
             $isselect = false;
             
             foreach($config->data as $key => $field) {

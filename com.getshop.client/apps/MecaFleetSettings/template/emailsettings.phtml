@@ -64,6 +64,7 @@
 <br/>
 <div class="textfield gss_setting"  id="">
     <span class="title"><?php echo $this->__f("SMS Car notification"); ?></span>
+    <? // echo nl2br($this->getConfigurationSetting("smsRequestKilomters")); ?>
     <textarea gs_model='emailmodel' gs_model_attr='smsRequestKilomters' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("smsRequestKilomters"); ?></textarea>
     <div class="description">
         <div>

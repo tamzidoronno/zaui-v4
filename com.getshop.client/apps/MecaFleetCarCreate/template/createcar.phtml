@@ -2,7 +2,9 @@
 /* @var $this ns_cf32e5a8_faf9_4039_92cd_176b5d3113ec\MecaFleetCarCreate */
 $car = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
 
-//$fleet = $this->getApi()->getMecaManager()->getFleetPageId($this->getPage()->getId());
+if ($car) {
+    $fleet = $this->getApi()->getMecaManager()->getFleetByCar($car);
+}
 //$fleet = $this->getApi()->getMecaManager()->getFleetByCar($car);
 //$followup = $fleet ? $fleet->followup : "";
 
@@ -37,7 +39,7 @@ $eu =date('Y-m-d', $eutime);
     <br/>
     
     <div>
-        Bilansvarlig:
+        Navn på sjåfør:
         <br/><input class="gsniceinput1" type="textfield" gsname="carowner" placeholder=""  value='<? echo $carowner; ?>'/>
     </div>
     <br>
@@ -46,13 +48,13 @@ $eu =date('Y-m-d', $eutime);
 //    }?>
     
     <div>
-        Modell og merke:
+        Bilmerke og modell:
         <br/><textarea class="gsniceinput1" gsname="carinfo" value='<? echo $carinfo; ?>'><? echo $carinfo; ?></textarea>
     </div>
     <br/>
-    <div class="shop_button" gstype="submit"  gs_close_modal='true' ><i class="fa fa-save"></i> Lagre</div>
+    <div class="shop_button" gstype="submit" gs_close_modal='true' gs_callback='app.MecaFleetCarCreate.goToCar'><i class="fa fa-save"></i> Lagre</div>
     <?
-    if ($car) {
+    if ($car && !$fleet->followup) {
         echo "<div class='shop_button sendKilomterRequest' gsclick='sendKilomterRequest' regnr='$car->licensePlate' ownerid='$car->carOwner' carid='$car->id'><i class='fa fa-envelope'></i> Send ny kilometerforspørsel</div>";
     }
     ?>

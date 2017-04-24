@@ -119,7 +119,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
-        addGetShopAdmins(); 
+        addGetShopAdmins();
+        degradeGetSuperShopAdmins();
     }
 
     private void addGetShopAdmins() throws ErrorException {
@@ -1889,6 +1890,15 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         return null;
+    }
+
+    private void degradeGetSuperShopAdmins() {
+        getAllUsers().stream().forEach(user -> {
+            if (user.type > 100) {
+                user.type = 100;
+                saveUserSecure(user);
+            }
+        });
     }
 
 }

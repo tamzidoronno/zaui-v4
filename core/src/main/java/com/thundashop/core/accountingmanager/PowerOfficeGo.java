@@ -268,6 +268,13 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             postingDate = order.paymentDate;
         }
         
+        if(config.postingDateType != null && config.postingDateType.contains("checkout")) {
+            postingDate = order.getEndDateByItems();
+        }
+        if(config.postingDateType != null && config.postingDateType.contains("checkin")) {
+            postingDate = order.getStartDateByItems();
+        }
+        
         PowerOfficeGoImportLine totalline = new PowerOfficeGoImportLine();
         totalline.description = "GetShop order: " + order.incrementOrderId;
         totalline.invoiceNo = (int)order.incrementOrderId;

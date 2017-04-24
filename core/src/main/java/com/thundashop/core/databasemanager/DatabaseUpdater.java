@@ -36,8 +36,9 @@ public class DatabaseUpdater {
         Collections.sort(scripts, (UpdateScript u1, UpdateScript u2) -> u1.getAddedDate().compareTo(u2.getAddedDate()));
     }
     
-    public void check(ApplicationContext context) {
+    public boolean check(ApplicationContext context) {
         GetShopLogHandler.logPrintStatic(" ============ Checing db scripts ==============", null);
+        boolean found = false;
         for (UpdateScript script : scripts) {
             
             if (script.doNotRun()) {
@@ -52,6 +53,7 @@ public class DatabaseUpdater {
             if (!database.exists("GetShop", "dbscripts", dbScript)) {
                 GetShopLogHandler.logPrintStatic("DB UPDATING... " + script.getClass().getSimpleName(), null);
                 try {
+                    found = true;
                     script.run();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -64,6 +66,7 @@ public class DatabaseUpdater {
         }
         
         GetShopLogHandler.logPrintStatic(" ============ Done ==============", null);
+        return found;
     }
     
 }

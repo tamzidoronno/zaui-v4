@@ -284,6 +284,9 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     }
                     $hasAddons = true;
                 }
+                if($config->bookingProfile == "hotel") {
+                    echo "<i class='fa fa-info-circle loadadditionalinfo' roomid='".$room->pmsBookingRoomId."' title='Additional information' style='cursor:pointer;'></i> ";
+                }
                 if($hasAddons) {
                     ?>
                     <i class='fa fa-plus-circle' title='Add addons' onclick='$(this).closest("td").find(".addaddonpanel").toggle()' style='cursor:pointer;'></i>
@@ -300,9 +303,6 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                         echo "<span class='addaddonsoption' gsvalue='".$addonToPrint->productId."' gsname='addonProduct' gstype='submitToInfoBox'>" . $object->__w("Add") . " "  . strtolower($products[$addonToPrint->productId]->name) . "</span><br>";
                     }
                     echo "</span>";
-                }
-                if($config->bookingProfile == "hotel") {
-                    echo "<i class='fa fa-info-circle loadadditionalinfo' roomid='".$room->pmsBookingRoomId."' title='Additional information' style='cursor:pointer;'></i> ";
                 }
                 $typesAdded = array();
                 $total = 0;
@@ -418,7 +418,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                         <span class='roompostfix editGuestToggle'>
                             <span class="viewmode">
                                 <?php
-                                $object->printGuests($room);
+                                $object->printGuests($room->guests);
                                 ?>
                             </span>
                             <span class="editmode" gstype='form' method="setGuests" style="width:350px;">

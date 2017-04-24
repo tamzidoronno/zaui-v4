@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import org.joda.time.Days;
@@ -153,6 +154,224 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         saveObject(config);
         paymentLinkConfig = config;
+    }
+
+
+    private Payment getOverriddenPaymentType(NewOrderFilter filter) {
+        Application paymentApplication = applicationPool.getApplication(filter.paymentType);
+        Payment payment = new Payment();
+        payment.paymentType = "ns_" + paymentApplication.id.replace("-", "_") + "\\" + paymentApplication.appName;
+        payment.paymentId = paymentApplication.id;
+        return payment;
+
+    }
+
+    private String createOrderOld(String bookingId, NewOrderFilter filter) {
+
+        
+        avoidChangeInvoicedTo = false;
+        avoidChangingInvoicedFrom = false;
+        runningDiffRoutine = false;
+        if(filter.itemsToCreate.isEmpty()) {
+            itemsToReturn.clear();
+        }
+        this.avoidOrderCreation = filter.avoidOrderCreation;
+        
+        List<PmsBooking> allbookings = new ArrayList();
+        if(bookingId == null) {
+            List<PmsBooking> tocheck = pmsManager.getAllBookings(null);
+            for(PmsBooking book : tocheck) {
+                if(book.isEndedOverTwoMonthsAgo() || !shouldBeProcessed(book)) {
+                    continue;
+                }
+                allbookings.add(book);
+            }
+        } else {
+            PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+            if(booking != null) {
+                allbookings.add(booking);
+            }
+        }
+        
+        String lastOrderId = "";
+        for(PmsBooking booking : allbookings) {
+            if(filter.itemsToCreate.isEmpty()) {
+                clearCart();
+                addBookingToCart(booking, filter);
+            } else {
+                clearCartExcept(filter.itemsToCreate);
+            }
+            if(!itemsToReturn.isEmpty() || !filter.itemsToCreate.isEmpty()) {
+                if(avoidOrderCreation) {
+                    continue;
+                }
+                Order order = null;
+                order = getUnpaidOrder(booking);
+                if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+                    order = orderManager.getOrder(filter.addToOrderId);
+                    if(order.closed) {
+                        order = null;
+                    }
+                } else if(filter.createNewOrder) {
+                    order = null;
+                }
+                if(order != null) {
+                    order.cart.addCartItems(itemsToReturn);
+                    if(filter.paymentType != null && !filter.paymentType.isEmpty()) {
+                        order.payment = getOverriddenPaymentType(filter);
+                    }
+                    orderManager.saveOrder(order);
+                } else {
+                    if(filter.itemsToCreate.isEmpty()) {
+                        updateCart();
+                    }
+                    order = createOrderFromCart(booking, filter, false);
+                    if (order == null) {
+                        return "Could not create order.";
+                    }
+                    order.dueDays = booking.dueDays;
+                    if(filter.userId != null && !filter.userId.isEmpty()) {
+                        order.userId = filter.userId;
+                        orderManager.saveOrder(order);
+                    }
+                    autoSendInvoice(order, booking.id);
+                    booking.orderIds.add(order.id);
+                    Double total = orderManager.getTotalAmount(order);
+                    if(total < 0) {
+                        List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
+                        String message = "Order " + order.incrementOrderId + " has been credited from external channel, total amount: " + total + "<br><br>";
+                        try {
+                            User user = userManager.getUserById(order.userId);
+                            message += "Name: " + user.fullName + ", " + user.emailAddress + ", " + "(" + user.prefix + ") " + user.cellPhone + "<br>";
+                            message += "Other orders connected to booking:<br>";
+                            for(String orderId : booking.orderIds) {
+                                Order otherOrder = orderManager.getOrder(orderId);
+                                message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(otherOrder) + ")<br>";
+                            }
+                        }catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                        if(emails != null) {
+                            for(String email : emails) {
+                                messageManager.sendMail(email, email, "Credited order", message, email, email);
+                            }
+                        }
+                    }
+                    Double amount = orderManager.getTotalAmount(order);
+                    if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty() && amount < 0) {
+                        Order baseOrder = orderManager.getOrder(filter.addToOrderId);
+                        baseOrder.creditOrderId.add(order.id);
+                        order.payment = baseOrder.payment;
+                        orderManager.saveOrder(order);
+                    }
+                }
+                
+                for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+                    if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
+                        if(!room.pmsBookingRoomId.equals(filter.pmsRoomId)) {
+                            continue;
+                        }
+                    }
+                    if(roomIdsInCart.contains(room.pmsBookingRoomId)) {
+                        room.invoicedFrom = room.date.start;
+                        if(filter.endInvoiceAt != null && room.date.end.before(filter.endInvoiceAt) && !pmsManager.getConfigurationSecure().ignoreRoomToEndDate) {
+                            room.invoicedTo = room.date.end;
+                        } else {
+                            room.invoicedTo = filter.endInvoiceAt;
+                        }
+                    }
+                }
+                lastOrderId = order.id;
+                
+                if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
+                    order.attachedToRoom = filter.pmsRoomId;
+                    orderManager.saveOrder(order);
+                }
+                
+                pmsManager.saveBooking(booking);
+                cartManager.clear();
+            }
+        }
+        
+        if(lastOrderId.isEmpty() && itemsToReturn.isEmpty() && filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+            lastOrderId = filter.addToOrderId;
+        }
+        
+        if(lastOrderId.isEmpty() && !avoidOrderCreation) {
+            logPrint("Returning an empty order id, this is wrong.");
+        }
+        if(filter.addToOrderId.isEmpty()) {
+            updateCart();
+        }
+        return lastOrderId;
+    }
+
+    private boolean supportsDailyPmsInvoiceing(PmsBooking booking) {
+        if(booking.orderIds.isEmpty()) {
+            return true;
+        }
+        
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            if(order.createByManager == null || !order.createByManager.equals("PmsDailyOrderGeneration")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void notifyAboutCreditedOrders(Order order, double total, PmsBooking booking) {
+        List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
+        String message = "Order " + order.incrementOrderId + " has been credited from external channel, total amount: " + total + "<br><br>";
+        try {
+            User user = userManager.getUserById(order.userId);
+            message += "Name: " + user.fullName + ", " + user.emailAddress + ", " + "(" + user.prefix + ") " + user.cellPhone + "<br>";
+            message += "Other orders connected to booking:<br>";
+            for(String orderId : booking.orderIds) {
+                Order otherOrder = orderManager.getOrder(orderId);
+                message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(otherOrder) + ")<br>";
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        if(emails != null) {
+            for(String email : emails) {
+                messageManager.sendMail(email, email, "Credited order", message, email, email);
+            }
+        }
+    }
+
+    private User getUserForBooking(PmsBooking booking) {
+        User user = userManager.getUserById(booking.userId);
+        if (user == null) {
+            logPrint("User does not exists: " + booking.userId + " for booking : " + booking.id);
+            Exception ex = new Exception();
+            logPrintException(ex);
+            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed (userid: " + booking.userId + ").", ex);
+            return null;
+        }
+
+        if(user.address == null) {
+            user.address = new Address();
+        }
+        user.address.fullName = user.fullName;
+        return user;
+    }
+
+    private String findPricePluginForBooking(PmsBooking booking) {
+        try {
+            PmsConfiguration config = pmsManager.getConfigurationSecure();
+            if(booking.priceType.equals(PmsBooking.PriceType.daily)) {
+                if(config.priceCalcPlugins.containsKey("dailypriceplugin")) {
+                    return config.priceCalcPlugins.get("dailypriceplugin");
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
+        return "";
+
     }
 
     class BookingOrderSummary {
@@ -429,7 +648,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     if(invoicedTo == null) {
                         continue;
                     }
-                    
+
                     if(pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(invoicedTo);
@@ -437,19 +656,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         invoicedTo = cal.getTime();
                     }
                     if(!room.isSameDay(room.invoicedTo, invoicedTo)) {
-                       String item = "";
+                        String item = "";
                        if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
-                           item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
-                       }
-                       String userName = userManager.getUserById(booking.userId).fullName;
-                       
+                            item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+                        }
+                        String userName = userManager.getUserById(booking.userId).fullName;
+
                        if(room.invoicedTo.after(invoicedTo)) {
                             String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
                             result.add(msg);
                             room.invoicedTo = invoicedTo;
                             messageManager.sendErrorNotification(msg, null);
                             pmsManager.saveBooking(booking);
-                       }
+                        }
                     }
                 }
             }
@@ -614,6 +833,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     @Autowired
     MessageManager messageManager;
+    
+    @Autowired
+    PmsDailyOrderGeneration pmsDailyOrderGeneration;
     
     private boolean runningDiffRoutine = false;
     
@@ -1021,139 +1243,28 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
-        avoidChangeInvoicedTo = false;
-        avoidChangingInvoicedFrom = false;
-        runningDiffRoutine = false;
-        if(filter.itemsToCreate.isEmpty()) {
-            itemsToReturn.clear();
-        }
-        this.avoidOrderCreation = filter.avoidOrderCreation;
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        String plugin = findPricePluginForBooking(booking);
         
-        List<PmsBooking> allbookings = new ArrayList();
-        if(bookingId == null) {
-            List<PmsBooking> tocheck = pmsManager.getAllBookings(null);
-            for(PmsBooking book : tocheck) {
-                if(book.isEndedOverTwoMonthsAgo() || !shouldBeProcessed(book)) {
-                    continue;
-                }
-                allbookings.add(book);
-            }
+        if(plugin.equals("pmsdailyordergeneration") && supportsDailyPmsInvoiceing(booking)) {
+            pmsDailyOrderGeneration.createCart(bookingId, filter);
         } else {
-            PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
-            if(booking != null) {
-                allbookings.add(booking);
-            }
+            return createOrderOld(bookingId, filter);
         }
         
-        String lastOrderId = "";
-        for(PmsBooking booking : allbookings) {
-            if(filter.itemsToCreate.isEmpty()) {
-                clearCart();
-                addBookingToCart(booking, filter);
-            } else {
-                clearCartExcept(filter.itemsToCreate);
-            }
-            if(!itemsToReturn.isEmpty() || !filter.itemsToCreate.isEmpty()) {
-                if(avoidOrderCreation) {
-                    continue;
-                }
-                Order order = null;
-                order = getUnpaidOrder(booking);
-                if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
-                    order = orderManager.getOrder(filter.addToOrderId);
-                    if(order.closed) {
-                        order = null;
-                    }
-                } else if(filter.createNewOrder) {
-                    order = null;
-                }
-                if(order != null) {
-                    order.cart.addCartItems(itemsToReturn);
-                    orderManager.saveOrder(order);
-                } else {
-                    if(filter.itemsToCreate.isEmpty()) {
-                        updateCart();
-                    }
-                    order = createOrderFromCart(booking, filter, false);
-                    if (order == null) {
-                        return "Could not create order.";
-                    }
-                    order.dueDays = booking.dueDays;
-                    if(filter.userId != null && !filter.userId.isEmpty()) {
-                        order.userId = filter.userId;
-                        orderManager.saveOrder(order);
-                    }
-                    autoSendInvoice(order, booking.id);
-                    booking.orderIds.add(order.id);
-                    Double total = orderManager.getTotalAmount(order);
-                    if(total < 0) {
+        if(!filter.avoidOrderCreation) {
+            Order order = createOrderFromCartNew(booking, filter, false);
+            order.createByManager = "PmsDailyOrderGeneration";
+            orderManager.saveOrder(order);
+            booking.orderIds.add(order.id);
+            List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
+            booking.orderIds = uniqueList;
 
-                    List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
-                        String message = "Order " + order.incrementOrderId + " has been credited from external channel, total amount: " + total + "<br><br>";
-                        try {
-                            User user = userManager.getUserById(order.userId);
-                            message += "Name: " + user.fullName + ", " + user.emailAddress + ", " + "(" + user.prefix + ") " + user.cellPhone + "<br>";
-                            message += "Other orders connected to booking:<br>";
-                            for(String orderId : booking.orderIds) {
-                                Order otherOrder = orderManager.getOrder(orderId);
-                                message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(otherOrder) + ")<br>";
-                            }
-                        }catch(Exception e) {
-                            e.printStackTrace();
-                        }
-                        if(emails != null) {
-                            for(String email : emails) {
-                                messageManager.sendMail(email, email, "Credited order", message, email, email);
-                            }
-                        }
-                    }
-                    Double amount = orderManager.getTotalAmount(order);
-                    if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty() && amount < 0) {
-                        Order baseOrder = orderManager.getOrder(filter.addToOrderId);
-                        baseOrder.creditOrderId.add(order.id);
-                        order.payment = baseOrder.payment;
-                        orderManager.saveOrder(order);
-                    }
-                }
-                
-                for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
-                    if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
-                        if(!room.pmsBookingRoomId.equals(filter.pmsRoomId)) {
-                            continue;
-                        }
-                    }
-                    if(roomIdsInCart.contains(room.pmsBookingRoomId)) {
-                        room.invoicedFrom = room.date.start;
-                        if(filter.endInvoiceAt != null && room.date.end.before(filter.endInvoiceAt) && !pmsManager.getConfigurationSecure().ignoreRoomToEndDate) {
-                            room.invoicedTo = room.date.end;
-                        } else {
-                            room.invoicedTo = filter.endInvoiceAt;
-                        }
-                    }
-                }
-                lastOrderId = order.id;
-                
-                if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
-                    order.attachedToRoom = filter.pmsRoomId;
-                    orderManager.saveOrder(order);
-                }
-                
-                pmsManager.saveBooking(booking);
-                cartManager.clear();
-            }
+            pmsManager.saveBooking(booking);
+            messageManager.sendErrorNotification("TMP: order created with new order system, id: " + order.incrementOrderId, null);
+            return order.id;
         }
-        
-        if(lastOrderId.isEmpty() && itemsToReturn.isEmpty() && filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
-            lastOrderId = filter.addToOrderId;
-        }
-        
-        if(lastOrderId.isEmpty() && !avoidOrderCreation) {
-            logPrint("Returning an empty order id, this is wrong.");
-        }
-        if(filter.addToOrderId.isEmpty()) {
-            updateCart();
-        }
-        return lastOrderId;
+        return "";
     }
     
     public void updateAddonsByDates(PmsBookingRooms room) {
@@ -1408,6 +1519,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         Payment preferred = getPreferredPaymentMethod(booking.id, filter);
         
+        if(filter != null && filter.paymentType != null && !filter.paymentType.isEmpty() && !filter.paymentType.startsWith("savedcard_")) {
+            preferred = getOverriddenPaymentType(filter);
+        }
+        
         order.payment = preferred;
         order.invoiceNote = booking.invoiceNote;
         
@@ -1426,6 +1541,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             cal.add(Calendar.DAY_OF_YEAR, -1);
             order.rowCreatedDate = cal.getTime();
         }
+        
+        order.dueDays = booking.dueDays;
+        
+        
 
         orderManager.setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(order, user.id);
 
@@ -1434,6 +1553,101 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         } else {
             orderManager.saveOrder(order);
         }
+        return order;
+    }
+
+    private Order createOrderFromCartNew(PmsBooking booking, NewOrderFilter filter, boolean virtual) {
+       
+        User user = getUserForBooking(booking);
+
+        VirtualOrder virtualOrder = null;
+        Order order = null;
+        
+        orderManager.deleteVirtualOrders(booking.id);
+        
+        if (virtual) {
+            virtualOrder = orderManager.createVirtualOrder(user.address, booking.id);
+            order = virtualOrder.order;
+        } else {
+            if(!filter.createNewOrder) {
+                for(String tmpOrderId : booking.orderIds) {
+                    Order tmpOrder = orderManager.getOrder(tmpOrderId);
+                    if(!tmpOrder.closed) {
+                        order = tmpOrder;
+                        break;
+                    }
+                }
+            }
+            
+            if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+                order = orderManager.getOrder(filter.addToOrderId);
+            }
+            
+            if(order != null && !order.closed) {
+                order.cart.addCartItems(cartManager.getCart().getItems());
+            } else {
+                if(order == null) {
+                    order = orderManager.createOrder(user.address);
+                }
+            }
+        }
+        
+        order.userId = booking.userId;
+        
+        if(filter.userId != null && !filter.userId.isEmpty()) {
+            order.userId = filter.userId;
+        }
+        
+        autoSendInvoice(order, booking.id);
+
+        Payment preferred = getPreferredPaymentMethod(booking.id, filter);
+        
+        if(filter.paymentType != null && !filter.paymentType.isEmpty() && !filter.paymentType.startsWith("savedcard_")) {
+            preferred = getOverriddenPaymentType(filter);
+        }
+        
+        order.payment = preferred;
+        order.invoiceNote = booking.invoiceNote;
+        
+        if(order.payment != null) {
+            String type = order.payment.paymentType.toLowerCase();
+            if(type.contains("expedia")) {
+                order.status = Order.Status.PAYMENT_COMPLETED;
+                order.captured = true;
+                order.payment.captured = true;
+            }
+        }
+        
+        Double total = orderManager.getTotalAmount(order);
+        if(total < 0) {
+            notifyAboutCreditedOrders(order, total, booking);
+            
+            if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+                Order baseOrder = orderManager.getOrder(filter.addToOrderId);
+                baseOrder.creditOrderId.add(order.id);
+                order.payment = baseOrder.payment;
+            }
+        }
+        
+        if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
+            order.attachedToRoom = filter.pmsRoomId;
+        }
+
+        if (pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(order.rowCreatedDate);
+            cal.add(Calendar.DAY_OF_YEAR, -1);
+            order.rowCreatedDate = cal.getTime();
+        }
+
+        orderManager.setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(order, user.id);
+
+        if (virtual) {
+            orderManager.saveVirtalOrder(virtualOrder);
+        } else {
+            orderManager.saveOrder(order);
+        }
+        
         return order;
     }
 

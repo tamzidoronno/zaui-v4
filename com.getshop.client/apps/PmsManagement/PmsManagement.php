@@ -3102,11 +3102,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $res = array();
         foreach($typesAdded as $prodId => $val) {
             $title = $val . " x " . $products[$prodId]->name;
-            $name = $this->getFirstWords($products[$prodId]->name);
-            $res[] = "<span title='$title' style='cursor:pointer;'>($name)</span>";
+            if(isset($products[$prodId]->name)) {
+                $name = $this->getFirstWords($products[$prodId]->name);
+//                $res[] = $name;
+                $res[] = "<span title='$title' style='cursor:pointer;'>($name)</span>";
+            }
         }
-        
-        return join(",", $res);
+        $text = "";
+        $i = 0;
+        if(sizeof($res) > 0) {
+            $text = join("," , $res);
+        }
+
+        return $text;
     }
 
     public function getAllProducts() {
@@ -3125,8 +3133,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $acronym = "";
 
         foreach ($words as $w) {
-          $acronym .= $w[0];
+          $acronym .= mb_substr($w, 0, 1, "UTF-8");
         }
+
         return strtoupper($acronym);
     }
 

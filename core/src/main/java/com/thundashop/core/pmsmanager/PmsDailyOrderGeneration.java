@@ -126,18 +126,20 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         
         //Include addons which is included in room price.
-        Calendar cal = Calendar.getInstance();
-        for(PmsBookingAddonItem item : room.addons) {
-            if(item.isIncludedInRoomPrice) {
-                cal.setTime(item.date);
-                String offset = PmsBookingRooms.getOffsetKey(cal, currentBooking.priceType);
-                Double price = (item.price * item.count);
-                if(currentMatrix.containsKey(offset)) {
-                    price = currentMatrix.get(offset) - price;
-                } else {
-                    price *= -1;
+        if(!room.deleted) {
+            Calendar cal = Calendar.getInstance();
+            for(PmsBookingAddonItem item : room.addons) {
+                if(item.isIncludedInRoomPrice) {
+                    cal.setTime(item.date);
+                    String offset = PmsBookingRooms.getOffsetKey(cal, currentBooking.priceType);
+                    Double price = (item.price * item.count);
+                    if(currentMatrix.containsKey(offset)) {
+                        price = currentMatrix.get(offset) - price;
+                    } else {
+                        price *= -1;
+                    }
+                    currentMatrix.put(offset, price);
                 }
-                currentMatrix.put(offset, price);
             }
         }
         

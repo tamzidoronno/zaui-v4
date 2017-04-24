@@ -307,7 +307,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $roomId = $_POST['data']['roomid'];
         foreach($config->addonConfiguration as $addonItem) {
             if($addonItem->productId == $_POST['data']['clicksubmit']) {
-                $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $addonItem->addonType, $roomId, true);
+//                $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $addonItem->addonType, $roomId, true);
                 $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedName(), $addonItem->addonType, $roomId, false);
                 break;
             }
@@ -434,6 +434,22 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $item = $this->getApi()->getCartManager()->addProductWithSource($_POST['data']['productid'], 1, "pmsquickproduct");
         $this->selectedBooking = null;
         $this->printSingleCartItem($item, null);
+    }
+    
+    public function displayCreateNewIncomeReportFilter() {
+        $this->includefile("newincomereportfilter");
+    }
+    
+    public function createNewIncomeReportFilter() {
+        $filter = new \core_pmsmanager_PmsOrderStatsFilter();
+        $filter->name = $_POST['data']['filtername'];
+        $filter->includeVirtual = $_POST['data']['virtualorders'] == "true";
+        $filter->priceType = $_POST['data']['taxtype'];
+        $filter->shiftHours = $_POST['data']['shifthour'];
+        $filter->displayType = $_POST['data']['periodisation'];
+        $filter->savedPaymentMethod = $_POST['data']['paymentmethod'];
+        
+        $this->getApi()->getPmsInvoiceManager()->saveStatisticsFilter($this->getSelectedName(), $filter);
     }
     
     public function loadOrderInfoOnBooking() {
@@ -2514,16 +2530,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     }
 
-    public function addPaymentTypeToFilter() {
-        $filter = $this->getOrderStatsFilter();
-        $method = new \core_pmsmanager_PmsPaymentMethods();
-        $method->paymentMethod = $_POST['data']['paymentmethod'];
-        $method->paymentStatus = $_POST['data']['paymentstatus'];
-        $filter->methods[] = $method;
-        $_SESSION['pmsorderstatsfilter'] = serialize($filter);
-        $this->includefile("orderstatsresult");
-    }
-
     public function removePaymentMethod() {
         $filter = $this->getOrderStatsFilter();
         $newMethods = array();
@@ -2543,36 +2549,32 @@ class PmsManagement extends \WebshopApplication implements \Application {
      */
     public function getOrderStatsFilter() {
         $filter = new \core_pmsmanager_PmsOrderStatsFilter();
-        $filter->displayType = "dayslept";
         $filter->priceType = "extaxes";
+        $filter->savedPaymentMethod = "allmethods";
         
-        if(isset($_SESSION['pmsorderstatsfilter'])) {
-            $filter = unserialize($_SESSION['pmsorderstatsfilter']);
-        }
-        if(isset($_POST['data']['paymentmethod'])) {
-            $method = array();
-            $method['paymentMethod'] = $_POST['data']['paymentmethod'];
-            $method['paymentStatus'] = $_POST['data']['paymentstatus'];
-            
-            if(!$filter->methods) {
-               $filter->methods = array();
+        if(isset($_SESSION['orderstatsfilterset']) && $_SESSION['orderstatsfilterset']) {
+            $savedFilters = $this->getApi()->getPmsInvoiceManager()->getAllStatisticsFilters($this->getSelectedName());
+            foreach($savedFilters as $tmpFilter) {
+                if($tmpFilter->name == $_SESSION['orderstatsfilterset']) {
+                    $filter = $tmpFilter;
+                }
             }
-            if($_POST['data']['paymentmethod']) {
-//                $filter->methods[] = $method;
-            }
-            $filter->displayType = $_POST['data']['viewtype'];
-            $filter->priceType = $_POST['data']['priceType'];
-            $filter->includeVirtual = $_POST['data']['includevirtual'] == "true";
-            $filter->shiftHours = $_POST['data']['shift'];
-            
-            
-            $_SESSION['pmsorderstatsfilter'] = serialize($filter);
         }
         
+        $filter = $this->addPaymentTypeToFilter($filter);
         $filter->start = $this->getSelectedFilter()->startDate;
         $filter->end = $this->getSelectedFilter()->endDate;
+ 
         return $filter;
         
+    }
+    
+    public function setneworderstatsfilter() {
+        $_SESSION['orderstatsfilterset'] = $_POST['data']['filtertype'];
+    }
+    
+    public function deleteOrderStatsFilter() {
+        $this->getApi()->getPmsInvoiceManager()->deleteStatisticsFilter($this->getSelectedName(), $_POST['data']['id']);
     }
 
     public function addRoomCount($start, $end, $typeId) {
@@ -2922,13 +2924,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->setIncomeFilter($_POST['data']['type']);
     }
     
-    public function setIncomeFilter($type) {
-        $filter = new \core_pmsmanager_PmsOrderStatsFilter();
+    /**
+     * @param \core_pmsmanager_PmsOrderStatsFilter $filter
+     */
+    public function addPaymentTypeToFilter($filter) {
         
         $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-//        print_r($paymentMethods);
+
         foreach ($paymentMethods as $key => $method) {
-            if($type != "all" && $method->appName != $type) {
+            if($filter->savedPaymentMethod != "allmethods" && $method->id != $filter->savedPaymentMethod) {
                 continue;
             }
             
@@ -2951,20 +2955,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $method->paymentStatus = -9;
             $filter->methods[] = $method;
         }
-        $filter->priceType = "extaxes";
-        $filter->displayType = "dayslept";
-        $filter->start = $this->getSelectedFilter()->startDate;
-        $filter->end = $this->getSelectedFilter()->endDate;
         
-        $latest = $this->getApi()->getPmsInvoiceManager()->getLatestInvoiceStatsFilter($this->getSelectedName());
-        if($latest) {
-            $latest->start = $filter->start;
-            $latest->end = $filter->end;
-            $latest->methods = $filter->methods;
-            $filter = $latest;
+        if($filter->savedPaymentMethod == "transferredtoaccounting") {
+            $method = new \core_pmsmanager_PmsPaymentMethods();
+            $method->paymentMethod = "";
+            $method->paymentStatus = -10;
+            $filter->methods[] = $method;
         }
         
-        $_SESSION['pmsorderstatsfilter'] = serialize($filter);
+        return $filter;
     }
 
     public function mightInclude($area) {
@@ -3081,6 +3080,63 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         return $room;
+    }
+
+    /**
+     * @param \core_pmsmanager_PmsAdditionalItemInformation[] $addons
+     */
+    public function createAddonText($room) {
+        $products = $this->getAllProducts();
+        $typesAdded = array();
+        $total = 0;
+        foreach($room->addons as $addon) {
+            if($addon->addonType == 1) {
+                continue;
+            }
+            if(!isset($typesAdded[$addon->productId])) {
+                $typesAdded[$addon->productId]=0;
+            }
+            $typesAdded[$addon->productId] += $addon->count;
+            $total += ($addon->price * $addon->count);
+        }
+        $res = array();
+        foreach($typesAdded as $prodId => $val) {
+            $title = $val . " x " . $products[$prodId]->name;
+            if(isset($products[$prodId]->name)) {
+                $name = $this->getFirstWords($products[$prodId]->name);
+//                $res[] = $name;
+                $res[] = "<span title='$title' style='cursor:pointer;'>($name)</span>";
+            }
+        }
+        $text = "";
+        $i = 0;
+        if(sizeof($res) > 0) {
+            $text = join("," , $res);
+        }
+
+        return $text;
+    }
+
+    public function getAllProducts() {
+        if(!isset($this->allProducts) || !$this->allProducts) {
+            $this->allProducts = $this->indexList($this->getApi()->getProductManager()->getAllProductsLight());
+        }
+        
+        return $this->allProducts;
+    }
+
+    public function getFirstWords($sentence) {
+        if(!trim($sentence)) {
+            return "";
+        }
+        $words = explode(" ", $sentence);
+        $acronym = "";
+
+        foreach ($words as $w) {
+          $acronym .= mb_substr($w, 0, 1, "UTF-8");
+        }
+
+        return strtoupper($acronym);
     }
 
 }

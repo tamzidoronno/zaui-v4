@@ -4,6 +4,7 @@ import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +66,23 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
         
         return false;
     }
+    
+    
+    boolean isSame(PmsBookingAddonItem item) {
+        if(item.productId.equals(productId)) {
+            Calendar cal1 = Calendar.getInstance();
+            Calendar cal2 = Calendar.getInstance();
+            cal1.setTime(item.date);
+            cal2.setTime(date);
+            boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                              cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+            if(sameDay) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     
 }

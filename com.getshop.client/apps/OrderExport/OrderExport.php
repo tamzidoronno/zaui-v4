@@ -122,6 +122,7 @@ class OrderExport extends \WebshopApplication implements \Application {
                 $conf->password = $_POST['password'];
                 $conf->subType = $_POST['subtype'];
                 $conf->startCustomerCodeOffset = $_POST['startCustomerCodeOffset'];
+                $conf->postingDateType = $_POST['postingDateType'];
                 
                 $this->getApi()->getAccountingManager()->saveConfig($conf);
                 break;

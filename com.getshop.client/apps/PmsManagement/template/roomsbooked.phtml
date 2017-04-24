@@ -27,7 +27,7 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedN
 $dates = $this->getApi()->getPmsManager()->getDefaultDateRange($this->getSelectedName());
 $start = $this->convertToJavaDate(strtotime($dates->start));
 $end = $this->convertToJavaDate(strtotime($dates->end));
-$products = $this->indexList($this->getApi()->getProductManager()->getAllProductsLight());
+$products = $this->getAllProducts();
 $defaultType = $booking->rooms[0]->bookingItemTypeId;
 
 $cleaningInterval = $config->cleaningInterval;
@@ -284,6 +284,9 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     }
                     $hasAddons = true;
                 }
+                if($config->bookingProfile == "hotel") {
+                    echo "<i class='fa fa-info-circle loadadditionalinfo' roomid='".$room->pmsBookingRoomId."' title='Additional information' style='cursor:pointer;'></i> ";
+                }
                 if($hasAddons) {
                     ?>
                     <i class='fa fa-plus-circle' title='Add addons' onclick='$(this).closest("td").find(".addaddonpanel").toggle()' style='cursor:pointer;'></i>
@@ -301,9 +304,6 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     }
                     echo "</span>";
                 }
-                if($config->bookingProfile == "hotel") {
-                    echo "<i class='fa fa-info-circle loadadditionalinfo' roomid='".$room->pmsBookingRoomId."' title='Additional information' style='cursor:pointer;'></i> ";
-                }
                 $typesAdded = array();
                 $total = 0;
                 foreach($room->addons as $addon) {
@@ -317,7 +317,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 $res = array();
                 foreach($typesAdded as $prodId => $val) {
                     $title = $val . " x " . $products[$prodId]->name;
-                    $name = strtoupper(substr($products[$prodId]->name,0, 1));
+                    $name = $object->getFirstWords($products[$prodId]->name);
                     $res[] = "<span title='$title' class='listaddonsaddedtoroom' style='cursor:pointer;' productId='".$prodId."' pmsRoomId='".$room->pmsBookingRoomId."'>($name)</span>";
                 }
                 echo join(",", $res);

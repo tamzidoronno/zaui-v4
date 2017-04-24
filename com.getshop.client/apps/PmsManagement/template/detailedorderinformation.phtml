@@ -25,8 +25,8 @@ $booking = $this->getSelectedBooking();
                         $heading .= " ";
                     }
                     
-                    $heading .= "<span style='display:inline-block; width: 125px; float:right;'>" .date("d.m.Y H:i", strtotime($room->date->end)) . "</span> ";
-                    $heading .= "<span style='display:inline-block; width: 125px; float:right;'>" .date("d.m.Y H:i", strtotime($room->date->start)) . " - </span> ";
+                    $heading .= "<span style='display:inline-block; width: 145px; float:right;'>" .date("d.m.Y H:i", strtotime($room->date->end)) . "</span> ";
+                    $heading .= "<span style='display:inline-block; width: 145px; float:right;'>" .date("d.m.Y H:i", strtotime($room->date->start)) . " - </span> ";
                     $heading .= "<div style='clear:both;'></div>";
                 }
             }

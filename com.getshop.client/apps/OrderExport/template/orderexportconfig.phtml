@@ -59,6 +59,13 @@ $orderFiltertype["started"] = "Order started";
 $orderFiltertype["ended"] = "Order ended";
 $orderFiltertype["paymentdate"] = "Order paid for";
 
+
+$postingDateconfig = array();
+$postingDateconfig["paymentdate"] = "Payment date";
+$postingDateconfig["checkin"] = "Checkin";
+$postingDateconfig["checkout"] = "Checkout";
+
+
 $start = date("d.m.Y", time()-86400);
 $end = date("d.m.Y", time()-86400);
 
@@ -317,6 +324,23 @@ foreach($configs as $config) {
                     foreach($userIncludeTypes as $id => $type) {
                         $selected = "";
                         if($config->includeUsers == $id) {
+                            $selected = "SELECTED";
+                        }
+                        echo "<option value='".$id."' $selected>".$type."</option>";
+                    }
+                    ?>
+                </select>
+             </div>
+        </div>
+
+        <div class="textfield gss_setting"  id="postingDateType">
+            <span class="title"><?php echo $this->__f("Posting date to use"); ?></span>
+             <div class="gss_dropdown">
+                <select class="property_select" gs_model="adminconfig_<?php echo $config->id; ?>" gs_model_attr="postingDateType">
+                    <?php
+                    foreach($postingDateconfig as $id => $type) {
+                        $selected = "";
+                        if($config->postingDateType == $id) {
                             $selected = "SELECTED";
                         }
                         echo "<option value='".$id."' $selected>".$type."</option>";

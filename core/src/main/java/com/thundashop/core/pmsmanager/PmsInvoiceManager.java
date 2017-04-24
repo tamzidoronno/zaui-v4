@@ -44,7 +44,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private boolean avoidChangeInvoicedTo;
     private boolean avoidChangingInvoicedFrom;
     private List<String> roomIdsInCart = null;
-    private PmsOrderStatsFilter latestInvoiceStatsFilter = null;
+    private HashMap<String, PmsOrderStatsFilter> savedIncomeFilters = new HashMap();
     private PmsPaymentLinksConfiguration paymentLinkConfig = new PmsPaymentLinksConfiguration();
     
 
@@ -118,23 +118,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         return lostRooms;
-    }
-
-    @Override
-    public PmsOrderStatsFilter getLatestInvoiceStatsFilter() {
-        return latestInvoiceStatsFilter;
-    }
-
-    private void saveLatestPmsOrderStatsFilter(PmsOrderStatsFilter filter) {
-        if(latestInvoiceStatsFilter != null) {
-            filter.id = latestInvoiceStatsFilter.id;
-        }
-        
-        Gson test = new Gson();
-        String copy = test.toJson(filter);
-        latestInvoiceStatsFilter = test.fromJson(copy, PmsOrderStatsFilter.class);
-        saveObject(latestInvoiceStatsFilter);
-        
     }
 
     @Override
@@ -238,8 +221,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     booking.orderIds.add(order.id);
                     Double total = orderManager.getTotalAmount(order);
                     if(total < 0) {
-
-                    List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
+                        List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
                         String message = "Order " + order.incrementOrderId + " has been credited from external channel, total amount: " + total + "<br><br>";
                         try {
                             User user = userManager.getUserById(order.userId);
@@ -307,9 +289,95 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return lastOrderId;
     }
 
+    private boolean supportsDailyPmsInvoiceing(PmsBooking booking) {
+        if(booking.orderIds.isEmpty()) {
+            return true;
+        }
+        
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            if(order.createByManager == null || !order.createByManager.equals("PmsDailyOrderGeneration")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void notifyAboutCreditedOrders(Order order, double total, PmsBooking booking) {
+        List<String> emails = pmsManager.getConfigurationSecure().emailsToNotify.get("creditorder");
+        String message = "Order " + order.incrementOrderId + " has been credited from external channel, total amount: " + total + "<br><br>";
+        try {
+            User user = userManager.getUserById(order.userId);
+            message += "Name: " + user.fullName + ", " + user.emailAddress + ", " + "(" + user.prefix + ") " + user.cellPhone + "<br>";
+            message += "Other orders connected to booking:<br>";
+            for(String orderId : booking.orderIds) {
+                Order otherOrder = orderManager.getOrder(orderId);
+                message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(otherOrder) + ")<br>";
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        if(emails != null) {
+            for(String email : emails) {
+                messageManager.sendMail(email, email, "Credited order", message, email, email);
+            }
+        }
+    }
+
+    private User getUserForBooking(PmsBooking booking) {
+        User user = userManager.getUserById(booking.userId);
+        if (user == null) {
+            logPrint("User does not exists: " + booking.userId + " for booking : " + booking.id);
+            Exception ex = new Exception();
+            logPrintException(ex);
+            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed (userid: " + booking.userId + ").", ex);
+            return null;
+        }
+
+        if(user.address == null) {
+            user.address = new Address();
+        }
+        user.address.fullName = user.fullName;
+        return user;
+    }
+
+    private String findPricePluginForBooking(PmsBooking booking) {
+        try {
+            PmsConfiguration config = pmsManager.getConfigurationSecure();
+            if(booking.priceType.equals(PmsBooking.PriceType.daily)) {
+                if(config.priceCalcPlugins.containsKey("dailypriceplugin")) {
+                    return config.priceCalcPlugins.get("dailypriceplugin");
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
+        return "";
+
+    }
+
+    @Override
+    public void saveStatisticsFilter(PmsOrderStatsFilter filter) {
+        saveObject(filter);
+        savedIncomeFilters.put(filter.id, filter);
+    }
+
+    @Override
+    public List<PmsOrderStatsFilter> getAllStatisticsFilters() {
+        return new ArrayList(savedIncomeFilters.values());
+    }
+
+    @Override
+    public void deleteStatisticsFilter(String id) {
+        PmsOrderStatsFilter filter = savedIncomeFilters.get(id);
+        deleteObject(filter);
+        savedIncomeFilters.remove(id);
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
-        Double price = 0.0;
+        Double price = 0.0; 
         String productId = "";
     }
 
@@ -462,8 +530,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(filter == null) {
             return new PmsOrderStatistics(null, userManager.getAllUsersMap());
         }
-        
-        saveLatestPmsOrderStatsFilter(filter);
         
         List<Order> orders = orderManager.getOrders(null, null, null);
         if(filter.includeVirtual) {
@@ -814,7 +880,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             if(dataCommon instanceof PmsOrderStatsFilter) {
                 PmsOrderStatsFilter res = (PmsOrderStatsFilter)dataCommon;
-                latestInvoiceStatsFilter = res;
+                savedIncomeFilters.put(res.id, res);
             }
             if(dataCommon instanceof PmsPaymentLinksConfiguration) {
                 PmsPaymentLinksConfiguration res = (PmsPaymentLinksConfiguration)dataCommon;
@@ -1176,21 +1242,28 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
-//        if(true) {
-//            PmsBooking booking = pmsManager.getBooking(bookingId);
-//            pmsDailyOrderGeneration.createCart(bookingId, filter);
-//            if(!filter.avoidOrderCreation) {
-//                Order order = createOrderFromCartNew(booking, filter, false);
-//                booking.orderIds.add(order.id);
-//                List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
-//                booking.orderIds = uniqueList;
-//                        
-//                pmsManager.saveBooking(booking);
-//                return order.id;
-//            }
-//            return "";
-//        }
-        return createOrderOld(bookingId, filter);
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        String plugin = findPricePluginForBooking(booking);
+        
+        if(plugin.equals("pmsdailyordergeneration") && supportsDailyPmsInvoiceing(booking)) {
+            pmsDailyOrderGeneration.createCart(bookingId, filter);
+        } else {
+            return createOrderOld(bookingId, filter);
+        }
+        
+        if(!filter.avoidOrderCreation) {
+            Order order = createOrderFromCartNew(booking, filter, false);
+            order.createByManager = "PmsDailyOrderGeneration";
+            orderManager.saveOrder(order);
+            booking.orderIds.add(order.id);
+            List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
+            booking.orderIds = uniqueList;
+
+            pmsManager.saveBooking(booking);
+            messageManager.sendErrorNotification("TMP: order created with new order system, id: " + order.incrementOrderId, null);
+            return order.id;
+        }
+        return "";
     }
     
     public void updateAddonsByDates(PmsBookingRooms room) {
@@ -1467,6 +1540,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             cal.add(Calendar.DAY_OF_YEAR, -1);
             order.rowCreatedDate = cal.getTime();
         }
+        
+        order.dueDays = booking.dueDays;
+        
+        
 
         orderManager.setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(order, user.id);
 
@@ -1480,19 +1557,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private Order createOrderFromCartNew(PmsBooking booking, NewOrderFilter filter, boolean virtual) {
        
-        User user = userManager.getUserById(booking.userId);
-        if (user == null) {
-            logPrint("User does not exists: " + booking.userId + " for booking : " + booking.id);
-            Exception ex = new Exception();
-            logPrintException(ex);
-            messageManager.sendErrorNotification("User does not exists on booking, this has to be checked and fixed (userid: " + booking.userId + ").", ex);
-            return null;
-        }
-
-        if(user.address == null) {
-            user.address = new Address();
-        }
-        user.address.fullName = user.fullName;
+        User user = getUserForBooking(booking);
 
         VirtualOrder virtualOrder = null;
         Order order = null;
@@ -1503,23 +1568,40 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             virtualOrder = orderManager.createVirtualOrder(user.address, booking.id);
             order = virtualOrder.order;
         } else {
+            if(!filter.createNewOrder) {
+                for(String tmpOrderId : booking.orderIds) {
+                    Order tmpOrder = orderManager.getOrder(tmpOrderId);
+                    if(!tmpOrder.closed) {
+                        order = tmpOrder;
+                        break;
+                    }
+                }
+            }
+            
             if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
                 order = orderManager.getOrder(filter.addToOrderId);
             }
             
-            if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty() && !order.closed) {
-                order = orderManager.getOrder(filter.addToOrderId);
+            if(order != null && !order.closed) {
                 order.cart.addCartItems(cartManager.getCart().getItems());
             } else {
-                order = orderManager.createOrder(user.address);
+                if(order == null) {
+                    order = orderManager.createOrder(user.address);
+                }
             }
         }
         
         order.userId = booking.userId;
+        
+        if(filter.userId != null && !filter.userId.isEmpty()) {
+            order.userId = filter.userId;
+        }
+        
+        autoSendInvoice(order, booking.id);
 
         Payment preferred = getPreferredPaymentMethod(booking.id, filter);
         
-        if(filter.paymentType != null && !filter.paymentType.isEmpty()) {
+        if(filter.paymentType != null && !filter.paymentType.isEmpty() && !filter.paymentType.startsWith("savedcard_")) {
             preferred = getOverriddenPaymentType(filter);
         }
         
@@ -1533,6 +1615,21 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 order.captured = true;
                 order.payment.captured = true;
             }
+        }
+        
+        Double total = orderManager.getTotalAmount(order);
+        if(total < 0) {
+            notifyAboutCreditedOrders(order, total, booking);
+            
+            if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+                Order baseOrder = orderManager.getOrder(filter.addToOrderId);
+                baseOrder.creditOrderId.add(order.id);
+                order.payment = baseOrder.payment;
+            }
+        }
+        
+        if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
+            order.attachedToRoom = filter.pmsRoomId;
         }
 
         if (pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
@@ -1549,6 +1646,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         } else {
             orderManager.saveOrder(order);
         }
+        
         return order;
     }
 

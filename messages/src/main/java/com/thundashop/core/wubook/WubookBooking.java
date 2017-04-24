@@ -26,4 +26,5 @@ public class WubookBooking implements Serializable {
     public Integer status;
     public String countryCode;
     public boolean isExpediaCollect = false;
+    boolean isNonRefundable = false;
 }

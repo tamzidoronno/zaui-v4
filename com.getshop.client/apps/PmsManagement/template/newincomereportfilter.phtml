@@ -1,0 +1,85 @@
+<?php
+$periodeTypes = array();
+$periodeTypes['dayregistered'] = "Display as day registered";
+$periodeTypes['dayslept'] = "Display as day slept";
+$periodeTypes['firstdayslept'] = "Display as first day slept";
+$periodeTypes['daypaid'] = "Display as day paid";
+
+$pricetypes = array();
+$pricetypes['inctaxes'] = "Prices inc taxes";
+$pricetypes['extaxes'] = "Prices ex taxes";
+?>
+
+<table cellspacing='0' cellpadding='0' gstype='form' method='createNewIncomeReportFilter'>
+    <tr>
+        <th>Name</th>
+        <th>Action</th>
+    </tr>
+    <tr>
+        <td>Filter name</td>
+        <td><input type='txt' gsname='filtername' style='width:100%; box-sizing: border-box;'></td>
+    </tr>
+    <tr>
+        <td>Payment method</td>
+        <td>
+            <select gsname='paymentmethod' style='width:100%; box-sizing: border-box;'>
+                <option value="allmethods">All payment methods</option>
+                <option value="transferredtoaccounting">Everything transferred to accounting</option>
+                <? 
+                $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+                foreach ($paymentMethods as $key => $method) {
+                    $selected = $filter->paymentMethod == $method->id ? "SELECTED" : "";
+                    ?>
+                    <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $method->appName; ?></option>
+                    <?php
+                 }
+                ?>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>Include virtual orders</td>
+        <td><input type='checkbox' gsname='virtualorders' style='width:100%; box-sizing: border-box;'></td>
+    </tr>
+    <tr>
+        <td>Shift with hours</td>
+        <td><input type='txt' style='width:100%; box-sizing: border-box;' gsname='shifthour'></td>
+    </tr>
+    <tr>
+        <td>Periodization</td>
+        <td>
+            <select gsname='periodisation' style='width:100%; box-sizing: border-box;'>
+                <? 
+                foreach ($periodeTypes as $type => $name) {
+                    $selected = $filter->paymentMethod == $method->id ? "SELECTED" : "";
+                    ?>
+                    <option value="<? echo $type; ?>"><? echo $name; ?></option>
+                    <?php
+                 }
+                ?>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>Taxes</td>
+        <td>
+            <select gsname='taxtype' style='width:100%; box-sizing: border-box;'>
+                <?
+                foreach ($pricetypes as $type => $name) {
+                    $selected = $filter->paymentMethod == $method->id ? "SELECTED" : "";
+                    ?>
+                    <option value="<? echo $type; ?>"><? echo $name; ?></option>
+                    <?php
+                 }
+                ?>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+        </td>
+        <td>
+            <span class='pmsbutton' style='width:100%;box-sizing: border-box; text-align: center;' gstype='submit'>Create filter</span>
+        </td>
+    </tr>
+</table>

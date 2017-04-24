@@ -156,16 +156,20 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             $row['periode'] =  date("d.m.y H:i", $room->start/1000) . "<br>" . date("d.m.y H:i", $room->end/1000);
         }
         $row['visitor'] = "";
-        
+        if($room->nonrefundable) {
+            $row['visitor'] .= "<i class='fa fa-usd' title='Non refundable'></i> ";
+        }
         if(trim($comments)) {
             $row['visitor'] .= "<i class='fa fa-comment' title='$comments'></i> ";
         }
+        
         
         $breakfasts = $this->hasAddon($room, 1);
         
         if($breakfasts) {
             $row['visitor'] .= "<i class='fa fa-cutlery' title='Breakfast included: $breakfasts'></i> ";
         }
+        $row['visitor'] .= $this->createAddonText($room) . " ";
         
         if($config->bookingProfile != "storage") {
             foreach($room->guest as $guest) {

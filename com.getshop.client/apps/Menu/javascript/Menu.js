@@ -209,10 +209,11 @@ getshop.MenuEditor = {
         $(this).children('.entries').hide();
     },
     showMenu : function() {
-        if($('.Menu .menuentries').is(':visible')) {
-            $('.Menu .menuentries').slideUp();
+        var menuentries = $(this).closest('.Menu').find(".menuentries");
+        if($(menuentries).is(':visible')) {
+            $(menuentries).slideUp();
         } else {
-            $('.Menu .menuentries').slideDown();
+            $(menuentries).slideDown();
         }
     },
     closeMenuEditor : function() {

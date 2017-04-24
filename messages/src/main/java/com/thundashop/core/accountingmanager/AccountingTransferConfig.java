@@ -15,5 +15,6 @@ public class AccountingTransferConfig extends DataCommon {
     public HashMap<String, String> paymentTypeCustomerIds = new HashMap();
     public String username;
     public String password;
+    public String postingDateType;
     public Integer startCustomerCodeOffset;
 }

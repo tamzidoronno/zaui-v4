@@ -24,9 +24,10 @@ class PmsBookingMultipleSelectionBooking extends \WebshopApplication implements 
     }
     
     public function initBooking() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
-        $booking->sessionStartDate = $this->convertToJavaDate( strtotime($_POST['data']['start']));
-        $booking->sessionEndDate = $this->convertToJavaDate( strtotime($_POST['data']['end']));
+        $booking->sessionStartDate = $this->convertToJavaDate(strtotime(date("d.m.Y", strtotime($_POST['data']['start'])) . " " . $config->defaultStart));
+        $booking->sessionEndDate = $this->convertToJavaDate(strtotime(date("d.m.Y", strtotime($_POST['data']['end'])) . " " . $config->defaultEnd));
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
     }
     

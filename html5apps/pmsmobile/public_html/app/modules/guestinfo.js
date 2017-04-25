@@ -60,21 +60,15 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             return;
         }
         var generated = getshopclient.PmsManager.generateNewCodeForRoom(getMultilevelName(), roomId);
+        $scope.waitingForCode = true;
         generated.done(function(res) {
             $scope.room.code = res;
-            $scope.room.addedToArx = false;
-            $scope.waitForCode();
+            $scope.room.addedToArx = true;
+            $scope.waitingForCode = false;
+            alert('test');
             $scope.$apply();
         });
     },
-    $scope.waitForCode = function() {
-        $scope.waitingForCode = true;
-        setTimeout(function() {
-            $scope.loadGuest();
-            $scope.waitingForCode = false;
-        }, "2000");
-    },
-            
     $scope.forceGrantAccess = function() {
         $scope.booking.forceGrantAccess = true;
         getshopclient.PmsManager.saveBooking(getMultilevelName(), $scope.booking);

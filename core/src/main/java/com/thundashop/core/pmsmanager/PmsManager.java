@@ -1276,9 +1276,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         if(title == null) {
                             title = "";
                         }
+                        if(title.isEmpty() && key.startsWith("room_resendcode")) {
+                            title = "Code for your room";
+                        }
+                        
                         title = formatMessage(title, booking, room, guest);
-                        messageManager.sendMail(guest.email, guest.name, title, message, getFromEmail(), getFromName());
-                        repicientList.add(email);
+                        if(guest.email != null && guest.email.contains("@")) {
+                            messageManager.sendMail(guest.email, guest.name, title, message, getFromEmail(), getFromName());
+                            repicientList.add(email);
+                        }
                     } else {
                         String phone = guest.phone;
                         String prefix = guest.prefix;
@@ -1350,7 +1356,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         message = message.replace("{extrafield}", configuration.extraField);
         
-
         return message;
     }
 

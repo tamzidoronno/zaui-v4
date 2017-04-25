@@ -207,6 +207,7 @@
         <div class="ng-hide" ng-show="!booking.payedFor"><b style='color:red'>Not payed for yet</b></div>
         <div ng-show="!room.addedToArx && roomIsStarted()"><b>Waiting for cleaning / code not active yet</b></div>
         <div ng-show="room.addedToArx && roomIsStarted()">Code is active on door</div>
+        <div ng-show="!room.addedToArx && !roomIsStarted()">The stay has not started yet</div>
     </div>
 </div>
 <div class='row'>

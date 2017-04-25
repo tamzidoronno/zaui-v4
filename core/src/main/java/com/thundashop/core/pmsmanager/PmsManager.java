@@ -1417,7 +1417,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             totalRooms = filter.itemFilter.size();
         }
         
-        PmsStatistics result = builder.buildStatistics(filter, totalRooms);
+        PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager);
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
         result.setView(filter);
         result.buildTotal();

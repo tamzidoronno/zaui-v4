@@ -1025,7 +1025,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public List<WubookAvailabilityRestrictions> getAllRestriction() {
-        return new ArrayList(restrictions.values());
+        return new ArrayList(restrictions.values()); 
     }
 
     private boolean isRestricted(String bookingEngineTypeId, Date start, Date end) {

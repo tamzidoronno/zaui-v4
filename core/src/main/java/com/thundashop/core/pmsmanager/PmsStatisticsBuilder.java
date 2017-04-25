@@ -54,7 +54,7 @@ class PmsStatisticsBuilder {
         return 0;
     }
     
-    PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms) {
+    PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms, PmsInvoiceManager invoiceManager) {
         PmsStatistics statics = new PmsStatistics();
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
@@ -81,20 +81,14 @@ class PmsStatisticsBuilder {
                 if(booking.isDeleted) {
                     continue;
                 }
-                if(isPaidFor(booking, cal) && !filter.includeVirtual) {
-                    for(PmsBookingRooms room : booking.getActiveRooms()) {
+                
+                for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    if(((!booking.payedFor && !invoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) && !filter.includeVirtual) && room.isEnded()) {
                         if(room.isActiveOnDay(cal.getTime())) {
                             entry.roomsNotIncluded++;
                         }
+                        continue;
                     }
-                    continue;
-                }
-                
-                if(booking.isEnded() && (!booking.payedFor && ! filter.includeVirtual)) {
-                    continue;
-                }
-                
-                for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(filter.itemFilter != null && !filter.itemFilter.isEmpty()) {
                         if(room.bookingItemId == null || room.bookingItemId.isEmpty() || !filter.itemFilter.contains(room.bookingItemId)) {
                             continue;

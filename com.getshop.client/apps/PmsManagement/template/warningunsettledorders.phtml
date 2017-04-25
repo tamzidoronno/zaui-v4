@@ -72,7 +72,7 @@ if($amount != 0) {
                     $selected = "";
                 }
                 
-                echo "<option value='".$id."' $selected> ".$app->appName."</option>";
+                echo "<option name='".$app->appName."' value='".$id."' $selected> ".$app->appName."</option>";
             }
             
             if($amount > 0) {
@@ -133,7 +133,7 @@ if($amount != 0) {
 <script>
 
 function loadPaymentTypeAreas() {
-    var val = $('.paymenttypeunsetled').val();
+    var val = $('.paymenttypeunsetled').find('option:selected', this).attr('name');
     if(val === "Dibs" || val === "Epay") {
         val = "sendpaymentlink";
     }

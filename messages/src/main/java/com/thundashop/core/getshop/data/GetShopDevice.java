@@ -121,4 +121,17 @@ public class GetShopDevice extends DataCommon {
         }
         return count;
     }
+
+    public boolean isSameSource(String domain) {
+        String source = serverSource;
+        if(source == null || source.trim().isEmpty()) {
+            source = "default";
+        }
+        
+        if(domain == null || domain.trim().isEmpty()) {
+            domain = "default";
+        }
+        
+        return domain.equals(source);
+    }
 }

@@ -9,11 +9,11 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.trackandtrace.CheckRemovalOfFinishedRoutes;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 /**
@@ -91,6 +91,8 @@ public class ScormManager extends ManagerBase implements IScormManager {
     private void finalizeScorm(Scorm scorm) {
         ScormPackage scormPackage = packages.get(scorm.scormId);
         scorm.scormName = scormPackage.name;
+        scorm.groupedScormPackage = !scormPackage.groupedScormPackages.isEmpty();
+        scorm.groupedScormPackageIds = scormPackage.groupedScormPackages;
     }
 
     @Override
@@ -110,6 +112,19 @@ public class ScormManager extends ManagerBase implements IScormManager {
         }
         
         saveObject(scorm);
+    }
+
+    @Override
+    public void deleteScormPackage(String packageId) {
+        ScormPackage res = packages.remove(packageId);
+        if (res != null) {
+            List<Scorm> scormsToBeRemoved = scorms.values().stream().filter(o -> o.id.equals(packageId)).collect(Collectors.toList());
+            scormsToBeRemoved.stream().forEach(o -> {
+                scorms.remove(o);
+                deleteObject(o);
+            });
+            deleteObject(res);
+        }
     }
     
 }

@@ -28,4 +28,7 @@ public interface IScormManager {
     
     @Administrator
     public void updateResult(ScormResult inResult);
+    
+    @Administrator
+    public void deleteScormPackage(String packageId);
 }

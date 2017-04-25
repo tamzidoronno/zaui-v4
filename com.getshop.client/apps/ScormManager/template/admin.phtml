@@ -1,5 +1,5 @@
 <?
-/* @var $this \ns_f4c3fce7_123c_4dcc_b9ce_dfea2ac6b755\CreateEvent */
+/* @var $this \ns_9fa1d284_3eb2_4ca5_b0bc_fe45cde07f66\ScormManager */
 
 $scorms = $this->getScorms();
 $groups = $this->getApi()->getUserManager()->getAllGroups();
@@ -11,8 +11,36 @@ $packages = $this->getApi()->getScormManager()->getAllPackages();
     
 
 <?
+foreach ($packages as $package) {
+    if (!count($package->groupedScormPackages))
+        continue;
+    
+    echo "<h2> <i class='fa fa-trash' gsclick='deletePackage' packageid='$package->id'></i> ".$package->name."</h2>";
+    
+    echo "Scorms in this package";
+    
+    echo "<ul>";
+    foreach ($package->groupedScormPackages as $scormId) {
+        $scorm = $this->getScorm($scorms, $scormId);
+        echo "<li>".$scorm->name."</li>";
+    }
+    
+    echo "</ul>";
+    
+    foreach ($groups as $group) {
+        $combinedId = $group->id."_".$package->id;
+        $checked = $this->isActivated($packages, $group->id, $package->id) ? "checked='true'" : "";
+        echo "<input $checked type='checkbox' gsname='$combinedId'/> ".$group->groupName."<br/>";
+    }
+}
+
 foreach ($scorms as $scorm) {
+    if ($this->isGroupedScormPackage($packages, $scorm->id)) {
+        continue;
+    }
+    
     echo "<h2>".$scorm->name."</h2>";
+    
     foreach ($groups as $group) {
         $combinedId = $group->id."_".$scorm->id;
         $checked = $this->isActivated($packages, $group->id, $scorm->id) ? "checked='true'" : "";
@@ -24,4 +52,23 @@ foreach ($scorms as $scorm) {
     <div class="shop_button" gstype="submit">Save</div>
     <br/>
     <br/>
+    <div class="groupscormarea" gstype="form" method="createGroupedScormPackage">
+        <h2>Create a grouped scorm package.</h2>
+        1. Name of Scorm
+        <br/><input class="gsniceinput1" gsname="name"/>
+        <br/> 
+        <br/> 2. Select packages that should be part of this group scorm package.
+        
+        <?
+        foreach ($scorms as $scorm) {
+            if ($this->isGroupedScormPackage($packages, $scorm->id)) {
+                continue;
+            }
+            echo "<br/><input $checked type='checkbox' gsname='scormpackage_$scorm->id'/> ".$scorm->name;
+        }
+        ?>
+        <br/>
+        <br/> 
+        <div class="shop_button" gstype="submit">3. Create Scorm Package.</div>
+    </div>
 </div>

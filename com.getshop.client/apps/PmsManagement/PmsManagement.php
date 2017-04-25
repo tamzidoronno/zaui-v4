@@ -2654,7 +2654,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
 
         $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-        if($_POST['data']['paymenttype'] == "InvoicePayment") {
+        if($_POST['data']['paymenttype'] == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
             $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
         }
         $this->getApi()->getOrderManager()->saveOrder($order);

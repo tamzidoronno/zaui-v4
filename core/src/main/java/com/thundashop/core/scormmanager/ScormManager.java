@@ -7,6 +7,7 @@ package com.thundashop.core.scormmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.data.User;
@@ -75,6 +76,17 @@ public class ScormManager extends ManagerBase implements IScormManager {
         
         return retList;   
     }
+    
+    @Override
+    public Scorm getScormForCurrentUser(String scormId) {
+        User user = getSession().currentUser;
+        if (user == null)
+            throw new ErrorException(26);
+        
+        Scorm scorm= getScorm(user.id, scormId);
+        finalizeScorm(scorm);
+        return scorm;
+    }
 
     private Scorm getScorm(String userId, String scormId) {
         Scorm scorm = new Scorm();
@@ -125,6 +137,11 @@ public class ScormManager extends ManagerBase implements IScormManager {
             });
             deleteObject(res);
         }
+    }
+
+    @Override
+    public ScormPackage getPackage(String packageId) {
+        return packages.get(packageId);
     }
     
 }

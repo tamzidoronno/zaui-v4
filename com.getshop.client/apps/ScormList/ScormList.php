@@ -13,5 +13,43 @@ class ScormList extends \MarketingApplication implements \Application {
     public function render() {
         $this->includefile("scorms");
     }
+
+    public function printRow($scorm, $subgroup = false) {
+        $isGroupedScormPackage = $scorm->groupedScormPackage;
+    
+        $link = "http://moodle.getshop.com/mod/scorm/getshopplayer.php?userid=".\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id."&scormid=".$scorm->scormId;
+        if ($isGroupedScormPackage) {
+            $ids = implode(",", $scorm->groupedScormPackageIds);
+            $link = "http://moodle.getshop.com/mod/scorm/getshopplayer.php?userid=".\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id."&scormid=&scormids=".$ids;
+        }
+        
+        $subgroupclass = $subgroup ? "subgroup" : "";
+        ?>
+        <div class="scormrow <? echo $subgroupclass; ?>">
+            <div><? echo $scorm->scormName; ?></div>
+            <div><? echo $scorm->groupedScormPackage ? "" : $scorm->score; ?></div>
+            <div>
+                <? 
+                if ($scorm->groupedScormPackage) {
+                    echo "";
+                } else {
+                    echo $scorm->completed ? $this->__f("Yes") : $this->__f("No"); 
+                }
+                ?>
+            </div>
+            <div>
+                <? if (!$subgroup) { ?>
+                <a style="color:blue;" target="_blank" href="<? echo $link; ?>"><? echo $this->__f("Go to test"); ?></a>
+                <? } ?>
+            
+            </div>
+        </div>
+        <?
+        
+        if ($isGroupedScormPackage) {
+            echo "<div class='groupedInformation'>".$this->__w("This course consist of multiple parts, make sure to complete all of them")."</div>";
+        }
+    }
+
 }
 ?>

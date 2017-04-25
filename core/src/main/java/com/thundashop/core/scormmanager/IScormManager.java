@@ -31,4 +31,9 @@ public interface IScormManager {
     
     @Administrator
     public void deleteScormPackage(String packageId);
+    
+    public ScormPackage getPackage(String packageId);
+    
+    @Customer
+    public Scorm getScormForCurrentUser(String scormId);
 }

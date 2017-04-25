@@ -83,6 +83,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
     private HashMap<String, PmsPricing> priceMap = new HashMap();
     private HashMap<String, ConferenceData> conferenceDatas = new HashMap();
+    private HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap();
     private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList();
     private List<String> warnedAbout = new ArrayList();
@@ -161,6 +162,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof ConferenceData) {
                 ConferenceData conferenceRoomData = (ConferenceData) dataCommon;
                 conferenceDatas.put(conferenceRoomData.id, conferenceRoomData);
+            }
+            if (dataCommon instanceof FailedWubookInsertion) {
+                FailedWubookInsertion failure = (FailedWubookInsertion) dataCommon;
+                failedWubooks.put(failure.wubookResId, failure);
             }
             if (dataCommon instanceof PmsPricing) {
                 PmsPricing price = (PmsPricing) dataCommon;
@@ -2968,7 +2973,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 logEntry(text, booking.id, null);
                 if(!getConfigurationSecure().supportRemoveWhenFull) {
-                    messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text, null);
+                    boolean hasBeenWarned = false;
+                    if(booking.wubookreservationid != null && !booking.wubookreservationid.isEmpty()) {
+                        if(failedWubooks.containsKey(booking.wubookreservationid)) {
+                            hasBeenWarned = true;
+                        } else {
+                            FailedWubookInsertion failed = new FailedWubookInsertion();
+                            failed.wubookResId = booking.wubookreservationid;
+                            failed.when = new Date();
+                            saveObject(failed);
+                            failedWubooks.put(failed.wubookResId, failed);
+                        }
+                    }
+                    
+                    if(!hasBeenWarned) {
+                        messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text, null);
+                    }
                 }
             }
             

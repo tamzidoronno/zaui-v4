@@ -1,5 +1,5 @@
 <?
-/* @var $this ns_83df5ae3_ee55_47cf_b289_f88ca201be6e\EventList */
+/* @var $this \ns_b3f563f6_2408_4989_8499_beabaad36574\ScormList */
 
 $scorms = $this->getApi()->getScormManager()->getMyScorm();
 if (!$scorms)
@@ -15,18 +15,14 @@ if (!$scorms)
 
 <?
 foreach ($scorms as $scorm) {
-    $link = "http://moodle.getshop.com/mod/scorm/getshopplayer.php?userid=".\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id."&scormid=".$scorm->scormId;
+    $this->printRow($scorm);
+
     if ($scorm->groupedScormPackage) {
-        $ids = implode(",", $scorm->groupedScormPackageIds);
-        $link = "http://moodle.getshop.com/mod/scorm/getshopplayer.php?userid=".\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id."&scormid=&scormids=".$ids;
+        foreach ($scorm->groupedScormPackageIds as $id) {
+            $iScorm = $this->getApi()->getScormManager()->getScormForCurrentUser($id);
+            $this->printRow($iScorm, true);
+        }
     }
-    ?>
-    <div class="scormrow">
-        <div><? echo $scorm->scormName; ?></div>
-        <div><? echo $scorm->score; ?></div>
-        <div><? echo $scorm->completed ? $this->__f("Yes") : $this->__f("No"); ?></div>
-        <div><a style="color:blue;" target="_blank" href="<? echo $link; ?>"><? echo $this->__f("Go to test"); ?></a></div>
-    </div>
-    <?
+    
 }
 ?>

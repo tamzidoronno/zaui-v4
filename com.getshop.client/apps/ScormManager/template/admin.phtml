@@ -20,9 +20,13 @@ foreach ($packages as $package) {
     echo "Scorms in this package";
     
     echo "<ul>";
+    $i = 0;
     foreach ($package->groupedScormPackages as $scormId) {
+        $up = $i > 0 ? "<i gsclick='moveUp' index='$i' packageid='$package->id' class='fa fa-arrow-up'></i>" : "";
+        $down = $i < count($package->groupedScormPackages)-1 ? "<i gsclick='moveDown' index='$i' packageid='$package->id' class='fa fa-arrow-down'></i>" : "" ;
         $scorm = $this->getScorm($scorms, $scormId);
-        echo "<li>".$scorm->name."</li>";
+        echo "<li> $up $down ".$scorm->name."</li>";
+        $i++;
     }
     
     echo "</ul>";

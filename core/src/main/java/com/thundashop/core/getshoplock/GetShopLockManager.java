@@ -794,12 +794,10 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     
     @Override
     public void accessEvent(String id, String code, String domain) throws Exception {
-        if(domain.equals("default")) {
-            for(GetShopDevice dev : devices.values()) {
-                Integer zwaveid = new Integer(id);
-                if(dev.zwaveid.equals(zwaveid)) {
-                    dev.accessLog.add(new Date());
-                }
+        for(GetShopDevice dev : devices.values()) {
+            Integer zwaveid = new Integer(id);
+            if(dev.zwaveid.equals(zwaveid) && dev.isSameSource(domain)) {
+                dev.accessLog.add(new Date());
             }
         }
     }

@@ -48,7 +48,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     String token = "";
     private HashMap<String, WubookRoomData> wubookdata = new HashMap();
     private HashMap<String, WubookAvailabilityRestrictions> restrictions = new HashMap();
-    
+    private Date availabilityHasBeenChanged = null;
+    private Date availabilityLastUpdated = null;
+
     @Autowired
     PmsManager pmsManager;
     
@@ -76,74 +78,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         createScheduler("wubookprocessor", "* * * * *", WuBookManagerProcessor.class);
-        createScheduler("wubookprocessor2", "1 * * * *", WuBookHourlyProcessor.class);
+        createScheduler("wubookprocessor2", "1 1,5,7,9,12,18,22 * * *", WuBookHourlyProcessor.class);
     }
     
     @Override
     public String updateAvailability() throws Exception {
-        if(!frameworkConfig.productionMode) { return ""; }
-        if(!connectToApi()) { return "Faield to connect to api"; }
-        Vector<Hashtable> tosend = new Vector();
-        int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
-        
-        for (WubookRoomData rdata : wubookdata.values()) {
-            if(!rdata.addedToWuBook) {
-                continue;
-            }
-            
-            Hashtable roomToUpdate = new Hashtable();
-            roomToUpdate.put("id", rdata.wubookroomid);
-
-            Calendar startcal = Calendar.getInstance();
-            Calendar endCal = Calendar.getInstance();
-            startcal.set(Calendar.HOUR_OF_DAY, 16);
-            Vector days = new Vector();
-            for (int i = 0; i < 730; i++) {
-                Date start = startcal.getTime();
-                endCal.setTime(startcal.getTime());
-                endCal.add(Calendar.HOUR_OF_DAY, 16);
-                Date end = startcal.getTime();
-                int count = bookingEngine.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
-                if(count > 0) {
-                    count -= toRemove;
-                }
-                if(isRestricted(rdata.bookingEngineTypeId, start, end)) {
-                    count = 0;
-                }
-                
-                if(i > 305) {
-                    count = 0;
-                }
-                
-                Hashtable result = new Hashtable();
-                result.put("avail", count);
-                result.put("no_ota", 0);
-                days.add(result);
-                startcal.add(Calendar.DAY_OF_YEAR, 1);
-            }
-            roomToUpdate.put("days", days);
-            tosend.add(roomToUpdate);
-        }
-
-        String pattern = "dd/MM/yyyy";
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
-        String todayString = format.format(new Date());
-
-        Vector params = new Vector();
-        params.addElement(token);
-        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
-        params.addElement(todayString);
-        params.addElement(tosend);
-
-        Vector result = (Vector) client.execute("update_rooms_values", params);
-
-        if ((Integer)result.get(0) != 0) {
-            logPrint("Failed to update availability, send mail about it.");
-            logPrint("0:" + result.get(0));
-            logPrint("1:" + result.get(1));
-            return (String) result.get(1);
-        }
-        return "";
+        return updateAvailabilityInternal(730);
     }
     
     private boolean isWubookActive() {
@@ -1171,6 +1111,98 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         return newbooking;
+    }
+
+    public void setAvailabilityChanged() {
+        logPrint("Wubook availability needs to be updated");
+        if(availabilityHasBeenChanged == null) {
+            availabilityHasBeenChanged = new Date();
+        }
+    }
+
+    private String updateAvailabilityInternal(int numberOfDays) throws Exception {
+        if(availabilityLastUpdated != null && numberOfDays < 700) {
+            long diff = System.currentTimeMillis() - availabilityLastUpdated.getTime();
+            if(diff < (10*60*1000)) {
+                return "";
+            }
+        }
+        availabilityLastUpdated = new Date();
+        if(!frameworkConfig.productionMode) { return ""; }
+        
+        if(!connectToApi()) { return "Faield to connect to api"; }
+        Vector<Hashtable> tosend = new Vector();
+        int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
+        
+        for (WubookRoomData rdata : wubookdata.values()) {
+            if(!rdata.addedToWuBook) {
+                continue;
+            }
+            
+            Hashtable roomToUpdate = new Hashtable();
+            roomToUpdate.put("id", rdata.wubookroomid);
+
+            Calendar startcal = Calendar.getInstance();
+            Calendar endCal = Calendar.getInstance();
+            startcal.set(Calendar.HOUR_OF_DAY, 16);
+            Vector days = new Vector();
+            for (int i = 0; i < numberOfDays; i++) {
+                Date start = startcal.getTime();
+                endCal.setTime(startcal.getTime());
+                endCal.add(Calendar.HOUR_OF_DAY, 16);
+                Date end = startcal.getTime();
+                int count = bookingEngine.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
+                if(count > 0) {
+                    count -= toRemove;
+                }
+                if(isRestricted(rdata.bookingEngineTypeId, start, end)) {
+                    count = 0;
+                }
+                
+                if(i > 305) {
+                    count = 0;
+                }
+                
+                Hashtable result = new Hashtable();
+                result.put("avail", count);
+                result.put("no_ota", 0);
+                days.add(result);
+                startcal.add(Calendar.DAY_OF_YEAR, 1);
+            }
+            roomToUpdate.put("days", days);
+            tosend.add(roomToUpdate);
+        }
+
+        String pattern = "dd/MM/yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        String todayString = format.format(new Date());
+
+        Vector params = new Vector();
+        params.addElement(token);
+        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+        params.addElement(todayString);
+        params.addElement(tosend);
+
+        Vector result = (Vector) client.execute("update_rooms_values", params);
+
+        if ((Integer)result.get(0) != 0) {
+            logPrint("Failed to update availability, send mail about it.");
+            logPrint("0:" + result.get(0));
+            logPrint("1:" + result.get(1));
+            return (String) result.get(1);
+        }
+        availabilityHasBeenChanged = null;
+
+        return "";    
+    }
+
+    @Override
+    public String updateShortAvailability() throws Exception {
+        if(availabilityHasBeenChanged == null) {
+            return "";
+        }
+        
+        return updateAvailabilityInternal(300);
     }
 
 }

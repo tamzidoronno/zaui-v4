@@ -10,6 +10,7 @@ import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingGroup;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import java.util.ArrayList;
@@ -169,6 +170,12 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     
     public BookingTimeLineFlatten getTimeLinesForItemWithOptimal(Date start, Date end, String itemId) {
         return deepClone(bookingEngineAbstract.getTimeLinesForItemWithOptimal(start,end,itemId));
+    }
+    
+    @Override
+    public List<BookingTimeLine> getTimelinesDirect(Date start, Date end, String itemTypeId) {
+        BookingTimeLineFlatten res = getTimelines(itemTypeId, start, end);
+        return res.getTimelines();
     }
 
     public boolean hasBookingsStartingBetweenTime(Date start, Date end, String itemId) {

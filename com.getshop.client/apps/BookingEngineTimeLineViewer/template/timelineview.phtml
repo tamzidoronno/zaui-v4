@@ -1,0 +1,51 @@
+<?
+/* @var $this \ns_e098f200_ea77_4367_9b8a_a760cc4c1818\BookingEngineTimeLineViewer */
+$start = $this->convertToJavaDate(strtotime('26.04.2017'));
+$end = $this->convertToJavaDate(strtotime('28.04.2017'));
+
+$timelines = array();
+
+$id = "";
+if (isset($_POST['data']['from'])) {
+    $start = $this->convertToJavaDate(strtotime($_POST['data']['from']));
+    $end = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+    $id = $_POST['data']['bookingitemtypeid'];
+    $timelines = $this->getApi()->getBookingEngine()->getTimelinesDirect($this->getBookingEgineName(), $start, $end, $id);
+}
+$bookingItemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getBookingEgineName());
+?>
+
+
+<div gstype="form" method="showReport">
+    <div class="col1">Dato/tid: </div><input type="textfield" class="gsniceinput1" gsname="from" id="from" value="<? echo @$_POST['data']['from']; ?>"/> - <input type="textfield" class="gsniceinput1" id="to" gsname="to" value="<? echo @$_POST['data']['to']; ?>"/>
+    <br/>
+    <br/><div class="col1">Room type: </div>
+    <select gsname="bookingitemtypeid" class="gsniceselect1">
+        <?
+        foreach ($bookingItemTypes as $type) {
+            $selected = $id == $type->id ? "selected='true'" : '';
+            echo "<option $selected value='$type->id'>$type->name</option>";
+        }
+        ?>
+    </select>
+    <div class="shop_button" gstype="submit">Show</div>
+
+</div>
+<br/>
+<?
+foreach ($timelines as $line) {
+    $freeSpots = $line->totalAvailableSpots - count($line->bookingIds);
+    $freeSpotClass = !$freeSpots ? "full" : "";
+    ?>
+    <div class="boxview <? echo $freeSpotClass; ?>">
+        <div>Time: <? echo $this->formatTime($line->start); ?> - <? echo $this->formatTime($line->end); ?> | Free spots: <? echo $freeSpots; ?></div>
+    </div>
+    <?
+}
+?>
+
+
+<script>
+    $('#from').datetimepicker();
+    $('#to').datetimepicker();
+</script>

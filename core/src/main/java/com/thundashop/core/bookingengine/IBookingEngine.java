@@ -5,6 +5,7 @@ import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
@@ -110,4 +111,7 @@ public interface IBookingEngine {
     
     @Administrator
     public void changeBookingItemType(String itemId, String newTypeId);
+    
+    @Administrator
+    public List<BookingTimeLine> getTimelinesDirect(Date start, Date end, String itemTypeId);
 }

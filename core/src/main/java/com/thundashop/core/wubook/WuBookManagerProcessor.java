@@ -23,11 +23,11 @@ public class WuBookManagerProcessor extends GetShopSchedulerBase {
     
     @Override
     public void execute() throws Exception {
-        getApi().getWubookManager().updateShortAvailability(getMultiLevelName());
         if(!getApi().getStoreManager().isProductMode()) {
             return;
         }
 
+        getApi().getWubookManager().updateShortAvailability(getMultiLevelName());
         getApi().getWubookManager().fetchNewBookings(getMultiLevelName());
     }
     

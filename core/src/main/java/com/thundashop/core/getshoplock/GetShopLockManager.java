@@ -659,19 +659,17 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
         }
         
-        for(GetShopDevice dev : devices.values()) {
-            if(dev.beingUpdated) {
-                return;
-            }
-        }
-        
         List<BookingItem> items = bookingEngine.getBookingItems();
         GetShopDevice toSet = null;
         for(GetShopDevice dev : devices.values()) {
             if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null) {
                 continue;
             }
-            
+                    
+            if(isUpdatingSource(dev.serverSource)) {
+                return;
+            }
+
             //Always prioritise the one that has least codes set.
             
             if(dev.isLock() && !dev.beingUpdated && dev.needUpdate()) {
@@ -703,6 +701,23 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         return;
         
     }
+    
+    private boolean isUpdatingSource(String serverSource) {
+        if(serverSource == null) {
+            serverSource = "";
+        }
+        for(GetShopDevice dev : devices.values()) {
+            String toCheck = dev.serverSource;
+            if(toCheck == null) {
+                toCheck = "";
+            }
+            if(toCheck.equals(serverSource) && dev.beingUpdated) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     
     private BookingItem connectedToBookingEngineItem(GetShopDevice device, List<BookingItem> items) {
         for(BookingItem item : items) {

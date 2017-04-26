@@ -150,6 +150,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.doFinalize();
         saveOrder(credited);
         saveOrder(order);
+        
+        if (!order.createdBasedOnOrderIds.isEmpty()) {
+            resetMergedOrders(order.id);
+        }
+        
         return credited;
     }
     
@@ -244,6 +249,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(order.payment != null && order.payment.transactionLog != null) {
             order.payment.transactionLog.put(System.currentTimeMillis(), "Order marked paid for by : " + name);
         }
+    }
+    
+    private void unMarkPaidOrder(Order order) {
+        order.paymentDate = null;
+        order.status = Order.Status.WAITING_FOR_PAYMENT;
+        order.markedAsPaidByUserId = "";
+        order.payment.transactionLog.put(System.currentTimeMillis(), "Order unmarked as paid : " + getSession().currentUser.fullName);
+        saveObject(order);
     }
 
     private void checkPaymentDateValidation(Order order, Date date) {
@@ -1824,6 +1837,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return retOrders;
     }
 
+    private void resetMergedOrders(String orderId) {
+        Order mergedOrder = getOrder(orderId);
+        mergedOrder.createdBasedOnOrderIds.stream()
+            .forEach(orderToResetId -> {
+                Order orderToReset = getOrder(orderToResetId);
+                for (String credittedOrderId : orderToReset.creditOrderId) {
+                     Order orderToDelete = orders.remove(credittedOrderId);
+                     deleteObject(orderToDelete);
+                }
+                orderToReset.creditOrderId = new ArrayList();
+                unMarkPaidOrder(orderToReset);
+                saveObject(orderToReset);
+            });
+    }
+    
     @Override
     public Order mergeAndCreateNewOrder(String userId, List<String> orderIds, String paymentMethod, String note) {
         User user = userManager.getUserById(userId);
@@ -1854,6 +1882,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         newOrder.userId = userId;
         newOrder.payment = createPayment(paymentMethod);
         newOrder.invoiceNote = note;
+        newOrder.createdBasedOnOrderIds = orderIds;
         
         setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(newOrder, userId);
         
@@ -1893,5 +1922,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return null;
     }
+
 
 }

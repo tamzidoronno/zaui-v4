@@ -10,11 +10,13 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,6 +28,9 @@ import org.springframework.stereotype.Component;
 public class ScormManager extends ManagerBase implements IScormManager {
     private HashMap<String, Scorm> scorms = new HashMap();
     private HashMap<String, ScormPackage> packages = new HashMap();
+    
+    @Autowired
+    private UserManager userManager;
 
     @Override
     public void dataFromDatabase(DataRetreived datas) {
@@ -53,8 +58,17 @@ public class ScormManager extends ManagerBase implements IScormManager {
         createScheduler("checkScormResults", "0 * * * *", FetchScormResult.class);
     }
     
-    public List<Scorm> getMyScorm() {
-        User user = getSession().currentUser;
+    @Override
+    public List<Scorm> getMyScorm(String userId) {
+        User user = null;
+        if (userId == null) {
+            user = getSession().currentUser;
+        } else {
+            user = userManager.getUserById(userId);
+        }
+        
+        userManager.checkUserAccess(user);
+        
         
         List<Scorm> retList = new ArrayList();
         
@@ -78,10 +92,15 @@ public class ScormManager extends ManagerBase implements IScormManager {
     }
     
     @Override
-    public Scorm getScormForCurrentUser(String scormId) {
+    public Scorm getScormForCurrentUser(String scormId, String userId) {
         User user = getSession().currentUser;
         if (user == null)
             throw new ErrorException(26);
+        
+        if (userId != null) {
+            user = userManager.getUserById(userId);
+            userManager.checkUserAccess(user);
+        }
         
         Scorm scorm= getScorm(user.id, scormId);
         finalizeScorm(scorm);

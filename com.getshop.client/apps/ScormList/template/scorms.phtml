@@ -1,7 +1,12 @@
 <?
 /* @var $this \ns_b3f563f6_2408_4989_8499_beabaad36574\ScormList */
+//
+if ($this->isCompanySelected()) {
+    echo $this->__w("Company does not have scorm packages, please select a user instead.");
+    return;
+}
 
-$scorms = $this->getApi()->getScormManager()->getMyScorm();
+$scorms = $this->getApi()->getScormManager()->getMyScorm($this->getUserId());
 if (!$scorms)
     return;
 
@@ -19,7 +24,7 @@ foreach ($scorms as $scorm) {
 
     if ($scorm->groupedScormPackage) {
         foreach ($scorm->groupedScormPackageIds as $id) {
-            $iScorm = $this->getApi()->getScormManager()->getScormForCurrentUser($id);
+            $iScorm = $this->getApi()->getScormManager()->getScormForCurrentUser($id, $this->getUserId());
             $this->printRow($iScorm, true);
         }
     }

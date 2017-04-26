@@ -50,6 +50,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private HashMap<String, WubookAvailabilityRestrictions> restrictions = new HashMap();
     private Date availabilityHasBeenChanged = null;
     private Date availabilityLastUpdated = null;
+    private WubookLog log = new WubookLog();
 
     @Autowired
     PmsManager pmsManager;
@@ -74,6 +75,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             if(dataCommon instanceof WubookAvailabilityRestrictions) {
                 restrictions.put(dataCommon.id, (WubookAvailabilityRestrictions) dataCommon);
+            }
+            if(dataCommon instanceof WubookLog) {
+                log = (WubookLog) dataCommon;
             }
         }
         
@@ -1114,7 +1118,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     public void setAvailabilityChanged() {
-        logPrint("Wubook availability needs to be updated");
+        logText("Wubook availability needs to be updated");
         if(availabilityHasBeenChanged == null) {
             availabilityHasBeenChanged = new Date();
         }
@@ -1128,6 +1132,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         availabilityLastUpdated = new Date();
+
+        logText("Availability is being updated: " + numberOfDays + " days ahead.");
         if(!frameworkConfig.productionMode) { return ""; }
         
         if(!connectToApi()) { return "Faield to connect to api"; }
@@ -1203,6 +1209,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         return updateAvailabilityInternal(300);
+    }
+
+    private void logText(String string) {
+        log.logEntries.put(System.currentTimeMillis(), string);
+        saveObject(log);
+    }
+
+    @Override
+    public HashMap<Long, String> getLogEntries() {
+        return log.logEntries;
     }
 
 }

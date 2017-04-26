@@ -2894,9 +2894,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         Session sess = getSession();
         if(sess != null && sess.currentUser != null) {
-            if(sess.currentUser.isAdministrator()) {
+            if(sess.currentUser.isAdministrator() && !sess.currentUser.isProcessUser()) {
                 return true;
             }
+        }
+        
+        Date closeduntil = getConfigurationSecure().closedUntil;
+        if(closeduntil != null && start.before(closeduntil)) {
+            return false;
         }
         
         List<TimeRepeaterData> openingshours = bookingEngine.getOpeningHours(itemType);

@@ -53,6 +53,10 @@ public class User extends DataCommon implements Comparable<User> {
             toClean = toClean.trim();
         
     }
+    
+    public boolean isProcessUser() {
+        return id != null && id.equals("gs_system_scheduler_user");
+    }
 
     public String getName() {
         if (fullName == null)

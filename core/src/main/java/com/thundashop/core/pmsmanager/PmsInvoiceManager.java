@@ -1246,6 +1246,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         String plugin = findPricePluginForBooking(booking);
         
         if(plugin.equals("pmsdailyordergeneration") && supportsDailyPmsInvoiceing(booking)) {
+            if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+                Order order = orderManager.getOrder(filter.addToOrderId);
+                if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {
+                    filter.pmsRoomId = order.attachedToRoom;
+                }
+            }
+            
             pmsDailyOrderGeneration.createCart(bookingId, filter);
         } else {
             return createOrderOld(bookingId, filter);

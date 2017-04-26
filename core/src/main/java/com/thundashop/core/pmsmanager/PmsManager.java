@@ -109,7 +109,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     BookingEngine bookingEngine;
 
-    @Autowired
+    @Autowired 
     MessageManager messageManager;
 
     @Autowired
@@ -1289,6 +1289,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 for (PmsGuests guest : room.guests) {
                     if (type.equals("email")) {
                         String email = guest.email;
+                        if(emailToSendTo != null && !emailToSendTo.isEmpty()) {
+                            email = emailToSendTo;
+                            emailToSendTo = null;
+                        }
                         if (email == null || email.isEmpty()) {
                             logEntry("Email not sent due to no email set for guest " + guest.name, booking.id, null);
                             continue;
@@ -1302,17 +1306,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                         
                         title = formatMessage(title, booking, room, guest);
-                        if(guest.email != null && guest.email.contains("@")) {
-                            messageManager.sendMail(guest.email, guest.name, title, message, getFromEmail(), getFromName());
+                        if(email != null && email.contains("@")) {
+                            messageManager.sendMail(email, guest.name, title, message, getFromEmail(), getFromName());
                             repicientList.add(email);
+                            
+                            if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+                                Order order = orderManager.getOrder(orderIdToSend);
+                                if(order != null) {
+                                    order.recieptEmail = email;
+                                    orderManager.saveOrder(order);
+                                }
+                            }
+
+                            
                         }
                     } else {
                         String phone = guest.phone;
                         String prefix = guest.prefix;
-                        if (phone == null || phone.isEmpty()) {
-                            logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
-                            continue;
-                        }
 
                         if(phoneToSend != null) {
                             phone = phoneToSend;
@@ -1320,6 +1330,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             phoneToSend = null;
                         }
                         
+                        if (phone == null || phone.isEmpty()) {
+                            logEntry("Sms not sent due to no phone number set for guest " + guest.name, booking.id, null);
+                            continue;
+                        }
                         
                         if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
                             messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);

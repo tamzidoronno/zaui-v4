@@ -48,6 +48,7 @@ import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utils.UtilManager;
+import com.thundashop.core.wubook.WubookManager;
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,6 +102,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private boolean warnedAboutAutoassigning = false;
     
     private HashMap<String, PmsBookingFilter> savedFilters = new HashMap();
+
+    @Autowired
+    WubookManager wubookManager;
     
     @Autowired
     BookingEngine bookingEngine;
@@ -983,7 +987,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (bookingEngine.getBookingItem(itemId) != null) {
                 String newName = bookingEngine.getBookingItem(itemId).bookingItemName;
                 logText = "Changed room to " + newName + " from " + from;
-                
+                bookingUpdated(booking.id, "room_changed", room.pmsBookingRoomId);
+        
                 for(String orderId : booking.orderIds) {
                     Order order = orderManager.getOrder(orderId);
                     if(!order.closed && !newName.isEmpty()) {
@@ -1412,7 +1417,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             totalRooms = filter.itemFilter.size();
         }
         
-        PmsStatistics result = builder.buildStatistics(filter, totalRooms);
+        PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager);
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
         result.setView(filter);
         result.buildTotal();
@@ -1512,7 +1517,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             deleteBooking(booking.id);
         }
         
-        bookingUpdated(bookingId, "ROOM_REMOVED", roomId);
+        bookingUpdated(bookingId, "room_removed", roomId);
         
         return addResult;
     }
@@ -1735,6 +1740,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         for(Booking remove : bookingsToDelete) {
             bookingEngine.deleteBooking(remove.id);
+            wubookManager.setAvailabilityChanged();
         }
     }
     
@@ -2939,6 +2945,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.isDeleted = false;
         saveBooking(booking);
         logEntry("booking has been undeleted", bookingId, null);
+        bookingUpdated(bookingId, "booking_undeleted", null);
     }
 
     private List<Booking> buildRoomsToAddToEngineList(PmsBooking booking) {
@@ -4344,6 +4351,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         bookingEngine.addBookings(toAdd);
+        wubookManager.setAvailabilityChanged();
+
         return true;
     }
 
@@ -4834,6 +4843,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             setPriceOnRoom(room, true, booking);
         }
         pmsInvoiceManager.updateAddonsByDates(room);
+        bookingUpdated(getBookingFromRoom(room.pmsBookingRoomId).id, "date_changed", room.pmsBookingRoomId);
         saveBooking(booking);
     }
 
@@ -5431,12 +5441,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void bookingUpdated(String bookingId, String type, String roomId) {
         try {
-            System.out.println("Booking has been updated");
             PmsBooking booking = getBookingUnsecure(bookingId);
             if(type.equals("created")) {
                 bookingComRateManagerManager.pushBooking(booking, "Commit");
-            } else {
+            } else if(type.equals("room_removed") || 
+                    type.equals("room_changed") ||
+                    type.equals("date_changed") ||
+                    type.equals("booking_undeleted")) {
                 bookingComRateManagerManager.pushBooking(booking, "Modify");
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            if(type.equals("room_removed") || 
+                    type.equals("room_changed") ||
+                    type.equals("date_changed") ||
+                    type.equals("booking_undeleted") ||
+                    type.equals("created")) {
+                wubookManager.setAvailabilityChanged();
             }
         }catch(Exception e) {
             e.printStackTrace();

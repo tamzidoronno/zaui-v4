@@ -36,6 +36,8 @@ public interface IWubookManager {
     @Administrator
     public String updateAvailability() throws Exception;
     @Administrator
+    public String updateShortAvailability() throws Exception;
+    @Administrator
     public String markNoShow(String rcode) throws Exception;
     @Administrator
     public String updatePrices() throws Exception;

@@ -20,6 +20,7 @@ public class PmsEventListEntry {
     public List<PmsBookingEventLink> lenker = new ArrayList();
     public String imageid;
     public String eventDateId = "";
+    public boolean isDeleted = false;
     
     PmsEventListEntry(PmsBookingEventEntry entry, Date start, String roomName) {
         try {

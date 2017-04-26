@@ -6,6 +6,7 @@ package com.thundashop.core.usermanager.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thundashop.core.common.Administrator;
 import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -41,6 +42,9 @@ public class User extends DataCommon implements Comparable<User> {
     @Transient
     public String useGroupId = "";
     public String externalAccountingId;
+    
+    @Administrator
+    public String internalPassword;
  
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);

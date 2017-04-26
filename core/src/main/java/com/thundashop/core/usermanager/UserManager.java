@@ -1424,7 +1424,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             internalApiUser.storeId = storeId;
             internalApiUser.password = encryptPassword(internalApiUserPassword);
             internalApiUser.username = UUID.randomUUID().toString();
-            internalApiUser.metaData.put("password", this.internalApiUserPassword);
+            internalApiUser.internalPassword = this.internalApiUserPassword;
             internalApiUser.emailAddress = "post@getshop.com";
             
             getUserStoreCollection(storeId).addUserDirect(internalApiUser);

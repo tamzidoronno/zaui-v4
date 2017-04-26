@@ -243,4 +243,15 @@ public interface IEventBookingManager {
     
     @Administrator
     public void deleteInvoiceGroup(String groupId);
+    
+    @Administrator
+    public void addManuallyParticipatedEvent(ManuallyAddedEventParticipant man);
+    
+    @Customer
+    public List<ManuallyAddedEventParticipant> getManuallyAddedEvents(String userId);
+    
+    public void deleteManullyParticipatedEvent(String id);
+    
+    @Administrator
+    public ManuallyAddedEventParticipant getManuallyAddedEventParticipant(String id);
 }

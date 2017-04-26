@@ -38,6 +38,20 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
             }
         }
         
+        $manEvents = $this->getApi()->getEventBookingManager()->getManuallyAddedEvents($this->getBookingEngineName(), $userId);
+        if ($manEvents) {
+            foreach ($manEvents as $man) {
+                $test = new \core_eventbooking_Event();
+                $test->bookingItemType = new \core_bookingengine_data_BookingItemType();
+                $test->bookingItemType->name = $man->name;
+                $test->currentUserId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+                $test->mainStartDate = $man->date;
+                $test->manEvent = $man;
+                $events[] = $test;
+            }
+        }
+        
+        
         return $events;
     }
     

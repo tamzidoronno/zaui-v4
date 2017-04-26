@@ -56,6 +56,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public HashMap<String, ExternalCertificate> externalCertificates = new HashMap();
     public HashMap<String, WaitingListBooking> waitingListBookings = new HashMap();
     public HashMap<String, InvoiceGroup> groupInvoicing = new HashMap();
+    public HashMap<String, ManuallyAddedEventParticipant> manualEvents = new HashMap();
     
     @Autowired
     public EventLoggerHandler eventLoggerHandler;
@@ -84,6 +85,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     @Override
     public void dataFromDatabase(DataRetreived datas) {
         for (DataCommon data : datas.data) {
+            if (data instanceof ManuallyAddedEventParticipant) {
+                ManuallyAddedEventParticipant event = (ManuallyAddedEventParticipant)data;
+                manualEvents.put(event.id, event);
+            }
+            
             if (data instanceof Event) {
                 Event event = (Event)data;
                 events.put(event.id, event);
@@ -2190,5 +2196,33 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         
+    }
+
+    @Override
+    public void addManuallyParticipatedEvent(ManuallyAddedEventParticipant man) {
+        saveObject(man);
+        manualEvents.put(man.id, man);
+    }
+
+    @Override
+    public List<ManuallyAddedEventParticipant> getManuallyAddedEvents(String userId) {
+        User user = userManager.getUserByCellphone(userId);
+        userManager.checkUserAccess(user);
+        return manualEvents.values().stream()
+                .filter(man -> man.userId != null &&  man.userId.equals(userId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteManullyParticipatedEvent(String id) {
+        ManuallyAddedEventParticipant res = manualEvents.remove(id);
+        if (res != null) {
+            deleteObject(res);
+        }
+    }
+
+    @Override
+    public ManuallyAddedEventParticipant getManuallyAddedEventParticipant(String id) {
+        return manualEvents.get(id);
     }
 }

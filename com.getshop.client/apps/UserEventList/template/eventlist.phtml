@@ -18,6 +18,13 @@ foreach ($events as $event) {
             echo "<a class='gs_ignorenavigate' href='/scripts/promeister/download.php?eventId=$event->id&userId=$userId'><div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;</a>";
         }
         
+        if (isset($event->manEvent)) {
+            foreach ($event->manEvent->files as $file ){
+                $fileId = $file->fileId;
+                echo "<a target='_blank' class='gs_ignorenavigate' href='/scripts/downloadExternalCertificate.php?id=$fileId&userId=$userId'><div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;</a>";
+            }
+        }
+        
         $user = $this->getApi()->getUserManager()->getUserWithPermissionCheck($event->currentUserId);
         if ($userId == "company")
             echo "<div>".$user->fullName."</div>";

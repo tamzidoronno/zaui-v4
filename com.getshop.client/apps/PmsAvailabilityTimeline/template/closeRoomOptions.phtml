@@ -13,8 +13,32 @@ if(isset($_POST['event']) && $_POST['event'] == "closeOtas") {
     $endCloseOta = $_POST['data']['end'];
 }
 
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$closed = $config->closedUntil;
+
 $allRestrictions = $this->getApi()->getWubookManager()->getAllRestriction($this->getSelectedName());
 ?>
+<h2>Close all rooms for incoming bookings</h2>
+<?php
+if($closed) {
+    ?>
+    <b style='color:red;'>All rooms are closed for booking until: <?php echo date("d.m.Y", strtotime($closed)); ?></b><br>
+    <div gstype='form' method='openAllRoomsForBooking'>
+        <input type='button' value='Reopen' gstype="submitToInfoBox" >
+    </div>
+    <?php
+} else {
+    ?>
+    * This function will not close the rooms but make them unavailable for booking.<br>
+    * Example: If you don't want more bookings for this week, specify the start of next week in the field below.<br>
+    <div gstype='form' method='closeAllRoomsForBooking'>
+        <input type='text' class='closeallroomsoption' gsname='closeRoomDate'>
+        <input type='button' value='Set time periode for closing' gstype="submitToInfoBox" >
+    </div>
+    <?php
+}
+?>
+
 <table width='100%'>
     <tr>
         <td valign='top' width='50%' gstype="form" method="closeRooms">
@@ -86,4 +110,5 @@ $allRestrictions = $this->getApi()->getWubookManager()->getAllRestriction($this-
 <script>
     $('.startdate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
     $('.enddate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.closeallroomsoption').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
 </script>

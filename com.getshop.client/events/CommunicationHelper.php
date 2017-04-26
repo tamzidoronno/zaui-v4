@@ -122,9 +122,8 @@ class CommunicationHelper {
         $object = json_decode($res, false);
         if (json_last_error() != 0) {
             $object = new stdClass();
-            $object->errorCode = json_last_error();
+            $object->jsonDecodeErorCode = json_last_error();
             $object->additionalInformation = "Something went wrong while doing json_decode of data.";
-            
             if (trim($res) == "false") {
                 return false;
             }
@@ -141,6 +140,23 @@ class CommunicationHelper {
             }
 
         }
+        if (isset($object->jsonDecodeErorCode)) {
+            $handler = new LanguageHandler();
+            $result = array();
+            $result['error'] = "json decode error: " . $object->jsonDecodeErorCode . ", Failed to parse json object after being fetched from api. PHP object could not be created.";
+            $result['error_text'] = $result['error'];
+            $result['error_method'] = $event['method'];
+            $result['interfaceName'] = $event['interfaceName'];
+            $this->errors[] = $result;
+            $this->errorCodes[] = $object->jsonDecodeErorCode;
+            
+            if (isset($_POST['synchron'])) {
+                http_response_code(400);
+                echo json_encode($result);
+                die();
+            }
+        }
+        
         if (isset($object->errorCode)) {
             $handler = new LanguageHandler();
             $result = array();

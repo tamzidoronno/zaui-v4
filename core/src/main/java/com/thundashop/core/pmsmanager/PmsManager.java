@@ -749,6 +749,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return booking;
         }
         boolean needSaving = false;
+        for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            if(room.price.isNaN() || room.price.isInfinite()) {
+                room.price = 0.0;
+            }
+            if(room.priceMatrix != null) {
+                for(String offset : room.priceMatrix.keySet()) {
+                    Double res = room.priceMatrix.get(offset);
+                    if(res != null && res.isInfinite() || res.isNaN()) {
+                        room.priceMatrix.put(offset, 0.0);
+                    }
+                }
+            }
+        }
+        
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             if(room.code == null || room.code.isEmpty()) {
                 room.code = generateCode();
@@ -779,9 +793,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                     }
                 }
-            }
-            if(room.price.isNaN() || room.price.isInfinite()) {
-                room.price = 0.0;
             }
         }
         
@@ -3277,6 +3288,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBooking booking : bookings.values()) {
             for(PmsBookingRooms room : booking.getActiveRooms()) {
                 if(room.bookingId != null && room.bookingId.equals(bookingEngineId)) {
+                    finalize(booking);
                     return booking;
                 }
             }

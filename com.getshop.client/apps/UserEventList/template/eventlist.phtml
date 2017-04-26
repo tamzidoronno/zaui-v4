@@ -11,7 +11,12 @@ if (!count($events)) {
 foreach ($events as $event) {
     echo "<div class='downloadrow'>";
         echo "<div>".$event->bookingItemType->name."</div>";
-        echo "<div>".$this->__w("Date").": ". ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatMainStartDates($event)."</div>";
+        if (isset($event->manEvent)) {
+            echo "<div>".$this->__w("Date").": ". ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatOnlyStartDates($event)."</div>";
+        } else {
+            echo "<div>".$this->__w("Date").": ". ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatMainStartDates($event)."</div>";
+        }
+        
         echo "<div class='downloadcertificates'>";
         $userId = $this->getUserId();
         if ($event->markedAsReady && $this->getApi()->getEventBookingManager()->canDownloadCertificate($this->getBookingEngineName(), $event->id)) {

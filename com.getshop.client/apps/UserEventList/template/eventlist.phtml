@@ -11,11 +11,23 @@ if (!count($events)) {
 foreach ($events as $event) {
     echo "<div class='downloadrow'>";
         echo "<div>".$event->bookingItemType->name."</div>";
-        echo "<div>".$this->__w("Date").": ". ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatMainStartDates($event)."</div>";
+        if (isset($event->manEvent)) {
+            echo "<div>".$this->__w("Date").": ". ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatOnlyStartDates($event)."</div>";
+        } else {
+            echo "<div>".$this->__w("Date").": ". ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatMainStartDates($event)."</div>";
+        }
+        
         echo "<div class='downloadcertificates'>";
         $userId = $this->getUserId();
         if ($event->markedAsReady && $this->getApi()->getEventBookingManager()->canDownloadCertificate($this->getBookingEngineName(), $event->id)) {
             echo "<a class='gs_ignorenavigate' href='/scripts/promeister/download.php?eventId=$event->id&userId=$userId'><div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;</a>";
+        }
+        
+        if (isset($event->manEvent)) {
+            foreach ($event->manEvent->files as $file ){
+                $fileId = $file->fileId;
+                echo "<a target='_blank' class='gs_ignorenavigate' href='/scripts/downloadExternalCertificate.php?id=$fileId&userId=$userId'><div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;</a>";
+            }
         }
         
         $user = $this->getApi()->getUserManager()->getUserWithPermissionCheck($event->currentUserId);

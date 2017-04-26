@@ -27,6 +27,10 @@ class Event extends EventCommon implements \Application {
         return date("d/m-Y", strtotime($event->mainStartDate))."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".date("H:i", strtotime($event->mainStartDate))." - ".date("H:i", strtotime($event->mainEndDate));
     }
     
+    public static function formatOnlyStartDates($event) {
+        return date("d/m-Y", strtotime($event->mainStartDate));
+    }
+    
     public static function formatDates($date1, $date2) {
         return date("d/m-Y", strtotime($date1))."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".date("H:i", strtotime($date1))." - ".date("H:i", strtotime($date2));
     }

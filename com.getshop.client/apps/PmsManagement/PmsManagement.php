@@ -19,6 +19,21 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return 1;
     }
     
+    public function removeOrderFromBooking() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        if(!@$order->closed) {
+            $order->cart->items = array();
+            $this->getApi()->getOrderManager()->saveOrder($order);
+            
+            $booking = $this->getSelectedBooking();
+            $index = array_search($order->id,$booking->orderIds);
+            unset($booking->orderIds[$index]);
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+            $this->selectedBooking = null;
+        }
+        $this->showBookingInformation();
+    }
+    
     public function loadAdditionalInformationForRoom() {
         $this->includefile("additionalinformationforroom");
     }

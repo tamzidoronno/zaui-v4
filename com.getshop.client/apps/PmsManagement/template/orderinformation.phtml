@@ -125,7 +125,7 @@ if($booking->orderIds) {
     foreach($result as $order) {
         $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
         $totalEx = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
-        
+        $createByManager = $order->createByManager;
         $totalAmount += $total;
         $totalAmountEx += $totalEx;
         
@@ -301,8 +301,12 @@ if($booking->orderIds) {
             echo "<i class='fa fa-close'>";
         }
         echo "</td>";
-        echo "<td style='position:relative;'>";
+        echo "<td style='position:relative; text-align:center;'>";
         echo "<i class='fa fa-edit' onclick='$(this).closest(\"td\").find(\".otherOrderOptions\").toggle()'></i>";
+        if(!@$order->closed && $createByManager == "PmsDailyOrderGeneration") {
+            echo " <i class='fa fa-trash-o removeOrderFromBooking' style='cursor:pointer;' title='Remove this order' orderid='".$order->id."'></i>"; 
+        }
+
         echo "<span class='otherOrderOptions' style='display:none; position:absolute;'>";
         echo "<table cellspacing='0' cellpadding='0'>";
         echo "<tr><th>Option</th><th>Action</th></tr>";

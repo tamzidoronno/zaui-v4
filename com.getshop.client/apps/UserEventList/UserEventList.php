@@ -82,24 +82,5 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         return isset($_SESSION['ProMeisterSpiderDiager_current_user_id_toshow']) ? $_SESSION['ProMeisterSpiderDiager_current_user_id_toshow'] : \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
     }
 
-    /**
-     * 
-     * @return \core_scormmanager_Scorm[]
-     */
-    public function getCompletedScorms() {
-        $scorms = $this->getApi()->getScormManager()->getMyScorm();
-        if (!$scorms)
-            return array();
-        
-        $ret = array();
-        foreach ($scorms as $scorm) {
-            if ($scorm->completed) {
-                $ret[] = $scorm;
-            }
-        }
-        
-        return $ret;
-    }
-
 }
 ?>

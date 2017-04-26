@@ -51,5 +51,13 @@ class ScormList extends \MarketingApplication implements \Application {
         }
     }
 
+    public function isCompanySelected() {
+        return isset($_SESSION['ProMeisterSpiderDiager_current_user_id']) && $_SESSION['ProMeisterSpiderDiager_current_user_id'] == "company";
+    }
+    
+    public function getUserId() {
+        return isset($_SESSION['ProMeisterSpiderDiager_current_user_id_toshow']) ? $_SESSION['ProMeisterSpiderDiager_current_user_id_toshow'] : \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+    }
+
 }
 ?>

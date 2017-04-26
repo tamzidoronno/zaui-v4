@@ -21,7 +21,7 @@ public interface IScormManager {
     public void saveSetup(ScormPackage scormPackage);
     
     @Customer
-    public List<Scorm> getMyScorm();
+    public List<Scorm> getMyScorm(String userId);
     
     @Administrator
     public List<ScormPackage> getAllPackages();
@@ -35,5 +35,5 @@ public interface IScormManager {
     public ScormPackage getPackage(String packageId);
     
     @Customer
-    public Scorm getScormForCurrentUser(String scormId);
+    public Scorm getScormForCurrentUser(String scormId, String userId);
 }

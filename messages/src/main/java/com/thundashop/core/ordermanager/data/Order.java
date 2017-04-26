@@ -67,6 +67,12 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean warnedNotAbleToPay = false;
     public String attachedToRoom = null;
     
+    /**
+     * This will be populated if the order is created by merging multiple 
+     * of other orders.
+     */
+    public List<String> createdBasedOnOrderIds = new ArrayList();
+    
     public Order jsonClone() {
         Gson gson = new Gson();
         String gsonOrder = gson.toJson(this);

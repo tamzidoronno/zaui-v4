@@ -4292,7 +4292,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         User user = userManager.getInternalApiUser();
         String webAddress = storePool.getStore(storeId).getDefaultWebAddress();
         
-        PmsMailStatistics mailer = new PmsMailStatistics(webAddress, user.username, user.metaData.get("password"), null, "");
+        PmsMailStatistics mailer = new PmsMailStatistics(webAddress, user.username, user.internalPassword, null, "");
         Thread t = new Thread(mailer, "My Thread");
         t.start();
     }

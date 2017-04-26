@@ -170,7 +170,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Vector result = (Vector) client.execute("fetch_bookings_codes", params);
         List<Integer> toReturn = new ArrayList();
         if((Integer)result.get(0) != 0) {
-            logPrint("Failed to fetch all reservations: " + result.get(1));
+            logText("Failed to fetch all reservations: " + result.get(1));
         } else {
             Vector getAllBookings = (Vector) result.get(1);
             
@@ -295,8 +295,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Vector result = (Vector) client.execute("fetch_new_bookings", params);
         List<WubookBooking> toReturn = new ArrayList();
         if (!result.get(0).equals(0)) {
-            logPrint("0:" + result.get(0));
-            logPrint("1:" + result.get(1));
+            logText("0:" + result.get(0));
+            logText("1:" + result.get(1));
             Exception ex = new Exception();
             logPrintException(ex);
         } else {

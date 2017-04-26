@@ -47,6 +47,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .addonincludedinroomprice', app.PmsManagement.toggleAddonIncluded);
         $(document).on('click','.PmsManagement .addproducttocart', app.PmsManagement.addProductToCart);
         $(document).on('click','.PmsManagement .changeduedates', app.PmsManagement.changeDueDates);
+        $(document).on('click','.PmsManagement .removeOrderFromBooking', app.PmsManagement.removeOrderFromBooking);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -135,6 +136,17 @@ app.PmsManagement = {
         var event = thundashop.Ajax.createEvent('','updateRecieptEmailOnOrder', $(this), {
            "orderid" : $(this).attr('orderid'),
            "newEmail" : newEmail,
+           "bookingid" : $('#openedbookingid').val()
+        });
+        thundashop.common.showInformationBoxNew(event, 'Booking information');
+    },
+    removeOrderFromBooking : function() {
+        var confirmed = confirm("Are you sure you want to remove this booking?");
+        if(!confirmed) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','removeOrderFromBooking', $(this), {
+           "orderid" : $(this).attr('orderid'),
            "bookingid" : $('#openedbookingid').val()
         });
         thundashop.common.showInformationBoxNew(event, 'Booking information');

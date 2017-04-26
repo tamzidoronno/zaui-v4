@@ -1740,6 +1740,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         for(Booking remove : bookingsToDelete) {
             bookingEngine.deleteBooking(remove.id);
+            wubookManager.setAvailabilityChanged();
         }
     }
     
@@ -2944,6 +2945,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.isDeleted = false;
         saveBooking(booking);
         logEntry("booking has been undeleted", bookingId, null);
+        bookingUpdated(bookingId, "booking_undeleted", null);
     }
 
     private List<Booking> buildRoomsToAddToEngineList(PmsBooking booking) {
@@ -4349,6 +4351,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         bookingEngine.addBookings(toAdd);
+        wubookManager.setAvailabilityChanged();
+
         return true;
     }
 
@@ -5440,7 +5444,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             PmsBooking booking = getBookingUnsecure(bookingId);
             if(type.equals("created")) {
                 bookingComRateManagerManager.pushBooking(booking, "Commit");
-            } else {
+            } else if(type.equals("room_removed") || 
+                    type.equals("room_changed") ||
+                    type.equals("date_changed") ||
+                    type.equals("booking_undeleted")) {
                 bookingComRateManagerManager.pushBooking(booking, "Modify");
             }
         }catch(Exception e) {
@@ -5451,6 +5458,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(type.equals("room_removed") || 
                     type.equals("room_changed") ||
                     type.equals("date_changed") ||
+                    type.equals("booking_undeleted") ||
                     type.equals("created")) {
                 wubookManager.setAvailabilityChanged();
             }

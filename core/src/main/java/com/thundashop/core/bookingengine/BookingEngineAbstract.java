@@ -228,19 +228,19 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
 
     private void checkOverLappingAvailibility(BookingItem item, Availability availability) {
         for (Availability iAvailbility : item.availabilities) {
-            if (iAvailbility.startDate.before(availability.startDate) && iAvailbility.endDate.after(availability.startDate)) {
+            if (iAvailbility.startDate.before(availability.startDate) && iAvailbility.endDate.after(availability.startDate) && shouldThrowException()) {
                 throw new BookingEngineException("The availability overlaps in the beginning of another availbility");
             }
             
-            if (availability.startDate.before(iAvailbility.endDate) && availability.startDate.after(iAvailbility.startDate)) {
+            if (availability.startDate.before(iAvailbility.endDate) && availability.startDate.after(iAvailbility.startDate) && shouldThrowException()) {
                 throw new BookingEngineException("The availability overlaps in the end of another availbility");
             }
             
-            if (availability.startDate.before(iAvailbility.startDate) && availability.endDate.after(iAvailbility.endDate)) {
+            if (availability.startDate.before(iAvailbility.startDate) && availability.endDate.after(iAvailbility.endDate) && shouldThrowException()) {
                 throw new BookingEngineException("The availability overlaps a whole periode");
             }
             
-            if (availability.startDate.equals(iAvailbility.startDate) && availability.endDate.equals(iAvailbility.endDate)) {
+            if (availability.startDate.equals(iAvailbility.startDate) && availability.endDate.equals(iAvailbility.endDate) && shouldThrowException()) {
                 throw new BookingEngineException("The availability overlaps exact same periode");
             }
         }
@@ -330,7 +330,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 verifier.throwExceptionIfBookingItemIdMissing(booking, items);
             }   
             
-            if (booking.startDate != null && booking.endDate != null && booking.startDate.after(booking.endDate)) {
+            if (booking.startDate != null && booking.endDate != null && booking.startDate.after(booking.endDate) && shouldThrowException()) {
                 throw new BookingEngineException("Startdate can not be after enddate");
             }            
             
@@ -373,7 +373,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             BookingTimeLineFlatten flattenTimeLine = getFlattenTimelinesFromBooking(booking);
             bookingsToConsider.stream().forEach(o -> flattenTimeLine.add(o));
             
-            if (!flattenTimeLine.canAdd(booking)) {
+            if (!flattenTimeLine.canAdd(booking) && shouldThrowException()) {
                 throw new BookingEngineException("There is no space for this booking, " + booking.getInformation());
             }
            
@@ -498,7 +498,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .filter(o -> o.bookingItemId != null && o.bookingItemId.equals(id))
                 .count();
         
-        if (count > 0) {
+        if (count > 0 && shouldThrowException()) {
             throw new BookingEngineException("Can not delete a bookingItem when there is bookings connected to it");
         }
         
@@ -517,7 +517,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             throw new BookingEngineException("The type you tried to change to does not exists");
         }
         
-        if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
+        if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty() && shouldThrowException()) {
             throw new BookingEngineException("Can not change BookingItemType on booking that already is assigned to a bookingItem");
         }
         
@@ -543,7 +543,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
 
     private void checkBookingItemIds(List<Booking> bookings) {
         for (Booking booking : bookings) {
-            if (booking.id != null &&  !booking.id.isEmpty()) {
+            if (booking.id != null &&  !booking.id.isEmpty() && shouldThrowException()) {
                 throw new BookingEngineException("Use saveBooking to update old bookings.");
             }
         }
@@ -636,7 +636,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             List<BookingItem> itemInUse = items.values().stream().filter( o -> o.bookingItemTypeId.equals(id)).collect(Collectors.toList());
             long count = itemInUse.size();
             
-            if (count > 0) {
+            if (count > 0 && shouldThrowException()) {
                 throw new BookingEngineException("Can not delete a bookingitemtype that already has booking items, Existing items: " + count);
             }
             types.remove(id);
@@ -940,7 +940,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             return false;
         }
         
-        return null;
+        return true;
     }
 
     boolean canAdd(Booking bookingToAdd) {
@@ -959,7 +959,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         int newSize = bookings.size() + bookingItem.waitingListBookingIds.size();
-        if (bookingItem.waitingListSize > newSize) {
+        if (bookingItem.waitingListSize > newSize && shouldThrowException()) {
             throw new BookingEngineException("There is not enough space left to add user to waitinglist.");
         }
         
@@ -1023,7 +1023,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                             }
                         }
                         
-                        if (i > 0) {
+                        if (i > 0 && shouldThrowException()) {
                             throw new BookingEngineException("This bookingitem can not be used as it is not available, there is other bookings that depends on this." + extra);
                         }
                     }

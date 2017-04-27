@@ -94,7 +94,9 @@ public class ArxConnection {
                 return result.trim();
             }
         } finally {
-            client.getConnectionManager().shutdown();
+            if (client != null) {
+                client.getConnectionManager().shutdown();
+            }
         }
             
         return "failed";

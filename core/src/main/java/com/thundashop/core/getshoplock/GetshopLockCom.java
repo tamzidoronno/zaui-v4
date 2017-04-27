@@ -63,7 +63,9 @@ public class GetshopLockCom {
         } catch (Exception x) {
             x.printStackTrace();
         } finally {
-            client.getConnectionManager().shutdown();
+            if (client != null) {
+                client.getConnectionManager().shutdown();
+            }
         }
         
         return "failed";

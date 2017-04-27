@@ -31,35 +31,41 @@ public class GetshopLockCom {
         HttpConnectionParams.setSoTimeout(my_httpParams, 6000);
         
         DefaultHttpClient client = new DefaultHttpClient(my_httpParams);
-        client = wrapClient(client);
-        HttpResponse httpResponse;
-        
+        try {
+            client = wrapClient(client);
+            HttpResponse httpResponse;
 
-        HttpEntity entity;
-        HttpGet request = new HttpGet(loginUrl);
-        byte[] bytes = (username + ":" + password).getBytes();
-        String encoding = Base64.encode(bytes);
 
-        request.addHeader("Authorization", "Basic " + encoding);
-        httpResponse = client.execute(request);
+            HttpEntity entity;
+            HttpGet request = new HttpGet(loginUrl);
+            byte[] bytes = (username + ":" + password).getBytes();
+            String encoding = Base64.encode(bytes);
 
-        Integer statusCode = httpResponse.getStatusLine().getStatusCode();
-        if(statusCode == 401) {
-            return "401";
-        }
-        entity = httpResponse.getEntity();
+            request.addHeader("Authorization", "Basic " + encoding);
+            httpResponse = client.execute(request);
 
-        if (entity != null) {
-            InputStream instream = entity.getContent();
-            int ch;
-            StringBuilder sb = new StringBuilder();
-            while ((ch = instream.read()) != -1) {
-                sb.append((char) ch);
+            Integer statusCode = httpResponse.getStatusLine().getStatusCode();
+            if(statusCode == 401) {
+                return "401";
             }
-            String result = sb.toString();
-            return result.trim();
+            entity = httpResponse.getEntity();
+
+            if (entity != null) {
+                InputStream instream = entity.getContent();
+                int ch;
+                StringBuilder sb = new StringBuilder();
+                while ((ch = instream.read()) != -1) {
+                    sb.append((char) ch);
+                }
+                String result = sb.toString();
+                return result.trim();
+            }
+        } catch (Exception x) {
+            x.printStackTrace();
+        } finally {
+            client.getConnectionManager().shutdown();
         }
-            
+        
         return "failed";
     }
 }

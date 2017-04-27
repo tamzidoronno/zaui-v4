@@ -813,6 +813,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             Integer zwaveid = new Integer(id);
             if(dev.zwaveid.equals(zwaveid) && dev.isSameSource(domain)) {
                 dev.accessLog.add(new Date());
+                saveObject(dev);
             }
         }
     }

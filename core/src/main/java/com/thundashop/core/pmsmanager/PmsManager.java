@@ -4223,6 +4223,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     for(BookingItem tmpItem : items) {
                         if(tmpItem.bookingItemAlias != null && tmpItem.bookingItemAlias.equals(deviceId)) {
                             item = tmpItem;
+                            break;
                         }
                     }
                     

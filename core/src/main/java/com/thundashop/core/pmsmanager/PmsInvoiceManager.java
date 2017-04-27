@@ -665,7 +665,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
                             result.add(msg);
                             room.invoicedTo = invoicedTo;
-                            messageManager.sendErrorNotification(msg, null);
                             pmsManager.saveBooking(booking);
                         }
                     }
@@ -1246,6 +1245,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         String plugin = findPricePluginForBooking(booking);
         
         if(plugin.equals("pmsdailyordergeneration") && supportsDailyPmsInvoiceing(booking)) {
+            if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+                Order order = orderManager.getOrder(filter.addToOrderId);
+                if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {
+                    filter.pmsRoomId = order.attachedToRoom;
+                }
+            }
+            
             pmsDailyOrderGeneration.createCart(bookingId, filter);
         } else {
             return createOrderOld(bookingId, filter);
@@ -1260,7 +1266,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             booking.orderIds = uniqueList;
 
             pmsManager.saveBooking(booking);
-            messageManager.sendErrorNotification("TMP: order created with new order system, id: " + order.incrementOrderId, null);
+            if(storeId != null && storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
+                messageManager.sendErrorNotification("TMP: order created with new order system, id: " + order.incrementOrderId, null);
+            }
             return order.id;
         }
         return "";

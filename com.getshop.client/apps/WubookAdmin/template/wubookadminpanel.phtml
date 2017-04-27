@@ -73,7 +73,8 @@
 
 <h3>Log</h3>
 <?php
-$logentries = $this->getApi()->getWubookManager()->getLogEntries($this->getSelectedName());
+$logentries = (array)$this->getApi()->getWubookManager()->getLogEntries($this->getSelectedName());
+ksort($logentries);
 foreach($logentries as $time => $text) {
     echo date("d.m.Y H:i", $time / 1000) . " : " . $text . "<bR>";
 }

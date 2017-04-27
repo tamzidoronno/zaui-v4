@@ -26,8 +26,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->getApi()->getOrderManager()->saveOrder($order);
             
             $booking = $this->getSelectedBooking();
-            $index = array_search($order->id,$booking->orderIds);
-            unset($booking->orderIds[$index]);
+            $newArray = array();
+            foreach($booking->orderIds as $ordid) {
+                if($order->id == $ordid) {
+                    continue;
+                }
+                $newArray[] = $ordid;
+            }
+            $booking->orderIds = $newArray;
             $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
             $this->selectedBooking = null;
         }
@@ -227,7 +233,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach($_POST['data']['idstoremove'] as $id) {
             $this->getApi()->getPmsManager()->removeAddonFromRoomById($this->getSelectedName(), $id, $roomId);
         }
-        
         $this->showBookingInformation();
     }
     
@@ -530,6 +535,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function runProcessor() {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
         $this->getApi()->getPmsManager()->hourlyProcessor($this->getSelectedName());
+        $this->getApi()->getPmsManager()->checkIfGuestHasArrived($this->getSelectedName());
     }
     
     public function updateRegistrationData() {
@@ -2606,79 +2612,88 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function fastordercreation() {
+        $appendToOrders = array();
         
-        $filter = new \core_pmsmanager_NewOrderFilter();
-        $bookingId = $_POST['data']['bookingid'];
-        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingId);
-        $filter->avoidOrderCreation = false;
-        $filter->prepayment = true;
-        $filter->createNewOrder = true;
-        $filter->addToOrderId = $_POST['data']['appendToOrderId'];
-        $filter->paymentType = $_POST['data']['paymenttype'];
-        
-        if($_POST['data']['appendToOrderId']) {
-            $this->getApi()->getPmsInvoiceManager()->clearOrder($this->getSelectedName(), $bookingId, $_POST['data']['appendToOrderId']);
+        if(stristr($_POST['data']['appendToOrderId'], ",")) {
+            $appendToOrders = explode(",", $_POST['data']['appendToOrderId']);
+        } else {
+            $appendToOrders[] = $_POST['data']['appendToOrderId'];
         }
         
-        $instanceToUse = null;
-        $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-        $ptype = $_POST['data']['paymenttype'];
-        
-        if(stristr($ptype, "savedcard_")) {
-            $cardid = str_replace("savedcard_", "", $ptype);
-            $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
-            $savedcard = null;
-            foreach($user->savedCards as $card) {
-                if($cardid == $card->id) {
-                    $savedcard = $card;
+        foreach($appendToOrders as $appendToOrder) {
+            $filter = new \core_pmsmanager_NewOrderFilter();
+            $bookingId = $_POST['data']['bookingid'];
+            $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingId);
+            $filter->avoidOrderCreation = false;
+            $filter->prepayment = true;
+            $filter->createNewOrder = true;
+            $filter->addToOrderId = $appendToOrder;
+            $filter->paymentType = $_POST['data']['paymenttype'];
+
+            if($appendToOrder) {
+                $this->getApi()->getPmsInvoiceManager()->clearOrder($this->getSelectedName(), $bookingId, $appendToOrder);
+            }
+
+            $instanceToUse = null;
+            $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+            $ptype = $_POST['data']['paymenttype'];
+
+            if(stristr($ptype, "savedcard_")) {
+                $cardid = str_replace("savedcard_", "", $ptype);
+                $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+                $savedcard = null;
+                foreach($user->savedCards as $card) {
+                    if($cardid == $card->id) {
+                        $savedcard = $card;
+                    }
+                }
+                if(!$savedcard) {
+                    echo "Failed to find saved card.";
+                } else {
+                    $ptype = $savedcard->savedByVendor;
                 }
             }
-            if(!$savedcard) {
-                echo "Failed to find saved card.";
-            } else {
-                $ptype = $savedcard->savedByVendor;
+
+            foreach($instances as $instance) {
+                if(strtolower($instance->appName) == strtolower($ptype)) {
+                    $instanceToUse = $instance;
+                    break;
+                }
             }
-        }
-        
-        foreach($instances as $instance) {
-            if(strtolower($instance->appName) == strtolower($ptype)) {
-                $instanceToUse = $instance;
-                break;
+            $this->paymentLinkSent = false;
+            $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
+
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            if(!isset($appendToOrder) || !$appendToOrder) {
+                $order->avoidAutoSending = true;
             }
-        }
-        $this->paymentLinkSent = false;
-        $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
-
-        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-        if(!isset($_POST['data']['appendToOrderId']) || !$_POST['data']['appendToOrderId']) {
-            $order->avoidAutoSending = true;
-        }
-        $this->getApi()->getOrderManager()->saveOrder($order);
+            $this->getApi()->getOrderManager()->saveOrder($order);
 
 
-        $this->getManager()->processor($this->getSelectedName());
+            $this->getManager()->processor($this->getSelectedName());
 
-        if($_POST['data']['paymenttype'] != "70ace3f0-3981-11e3-aa6e-0800200c9a66" && 
-                (isset($_POST['data']['sendpaymentlink']) && $_POST['data']['sendpaymentlink'] === "true") &&
-                !$savedcard) {
-            $email = $_POST['data']['paymentlinkemail'];
-            $phone = $_POST['data']['paymentlinkphone'];
-            $prefix = $_POST['data']['paymentlinkprefix'];
-            $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);
-            $this->paymentLinkSent = true;
-        }
+            if($_POST['data']['paymenttype'] != "70ace3f0-3981-11e3-aa6e-0800200c9a66" && 
+                    (isset($_POST['data']['sendpaymentlink']) && $_POST['data']['sendpaymentlink'] === "true") &&
+                    !$savedcard) {
+                $email = $_POST['data']['paymentlinkemail'];
+                $phone = $_POST['data']['paymentlinkphone'];
+                $prefix = $_POST['data']['paymentlinkprefix'];
+                $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);
+                $this->paymentLinkSent = true;
+            }
 
-        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-        if($_POST['data']['paymenttype'] == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
-            $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
-        }
-        $this->getApi()->getOrderManager()->saveOrder($order);
-        
-        if(isset($savedcard) && $savedcard) {
-            if($this->getApi()->getOrderManager()->payWithCard($order->id, $savedcard->id)) {
-                echo "<i class='fa fa-check'></i> Successfully paid with saved card subscription id : " . $savedcard->card . " (" . $savedcard->mask . ")";
-            } else {
-                echo "<i class='fa fa-warning'></i> Failed to pay with card  subscription id : " . $savedcard->card . " (" . $savedcard->mask;
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            if($_POST['data']['paymenttype'] == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
+                $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
+            }
+            $this->getApi()->getOrderManager()->saveOrder($order);
+
+            if(isset($savedcard) && $savedcard) {
+                if($this->getApi()->getOrderManager()->payWithCard($order->id, $savedcard->id)) {
+                    echo "<i class='fa fa-check'></i> Successfully paid with saved card subscription id : " . $savedcard->card . " (" . $savedcard->mask . ")";
+                } else {
+                    echo "<i class='fa fa-warning'></i> Failed to pay with card  subscription id : " . $savedcard->card . " (" . $savedcard->mask;
+                }
             }
         }
         
@@ -2712,6 +2727,23 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->prepayment = $config->prepayment;
         $filter->avoidOrderCreation = true;
         $filter->pmsRoomId = $invoiceRoomId;
+
+        $filter->endInvoiceAt = $this->convertToJavaDate($endDate);
+        $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), $booking->id, $filter);
+    }
+
+    public function createOrderPreviewUnsettledAmount($booking, $config) {
+        $endDate = time();
+        foreach($booking->rooms as $room) {
+            if($endDate < strtotime($room->date->end)) {
+                $endDate = strtotime($room->date->end);
+            }
+        }
+        
+        $filter = new \core_pmsmanager_NewOrderFilter();
+        $filter->onlyEnded = false;
+        $filter->prepayment = $config->prepayment;
+        $filter->avoidOrderCreation = true;
 
         $filter->endInvoiceAt = $this->convertToJavaDate($endDate);
         $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), $booking->id, $filter);
@@ -3153,6 +3185,5 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
         return strtoupper($acronym);
     }
-
 }
 ?>

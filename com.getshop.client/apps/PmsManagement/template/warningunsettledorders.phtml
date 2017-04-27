@@ -83,14 +83,42 @@ if($amount != 0) {
             
             echo "</select> ";
 
-            echo "<select gsname='appendToOrderId'>";
+            $needToGroupAddingTo = 0;
             foreach($result as $order) {
-                if(!$order->closed || $amount < 0) {
-                    $text = "Add to order " . $order->incrementOrderId;
-                    if($amount < 0) {
-                        $text = "Create credit based on " . $order->incrementOrderId;
+                if($order->attachedToRoom) {
+                    $needToGroupAddingTo++;
+                }
+            }
+
+            $orderToCombine = array();
+
+            if($needToGroupAddingTo > 0) {
+                $this->createOrderPreviewUnsettledAmount($this->getSelectedBooking(), $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName()));
+                $cart = $this->getApi()->getCartManager()->getCart();
+                $itemsToCharge = array();
+                foreach($cart->items as $item) {
+                    $itemsToCharge[] = $item->product->externalReferenceId;
+                }
+                foreach($result as $order) {
+                    if($order->createByManager && $order->createByManager == "PmsDailyOrderGeneration" && 
+                            $order->attachedToRoom && in_array($order->attachedToRoom, $itemsToCharge)) {
+                        $orderToCombine[$order->id] = $order->incrementOrderId;
                     }
-                    echo "<option value='" . $order->id . "'>$text</option>";
+                }
+            }
+        
+            echo "<select gsname='appendToOrderId'>";
+            if(sizeof($orderToCombine) > 0) {
+                echo "<option value='".join(",", array_keys($orderToCombine))."'>Add to room order(s) " . join(",", $orderToCombine) . "</option>";
+            } else {
+                foreach($result as $order) {
+                    if(!$order->closed || $amount < 0) {
+                        $text = "Add to order " . $order->incrementOrderId;
+                        if($amount < 0) {
+                            $text = "Create credit based on " . $order->incrementOrderId;
+                        }
+                        echo "<option value='" . $order->id . "'>$text</option>";
+                    }
                 }
             }
             $createOrderText = "Create a new order";

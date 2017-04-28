@@ -23,9 +23,9 @@ foreach ($routes as $route) {
     $stdClass->endLon = $route->completedInfo->completedLon;
     $stdClass->routeId = $route->id;
     $stdClass->driverId = $route->startInfo->startedByUserId;
-    $stdClass->completedTime = date('m/d/Y h:i', strtotime($route->completedInfo->completedTimeStamp));
-    $stdClass->startedTime = date('m/d/Y h:i', strtotime($route->startInfo->startedTimeStamp));
-    $stdClass->deliveryServiceDate = date('m/d/Y h:i', strtotime($route->deliveryServiceDate));;
+    $stdClass->completedTime = date('m/d/Y H:i', strtotime($route->completedInfo->completedTimeStamp));
+    $stdClass->startedTime = date('m/d/Y H:i', strtotime($route->startInfo->startedTimeStamp));
+    $stdClass->deliveryServiceDate = date('m/d/Y H:i', strtotime($route->deliveryServiceDate));;
     $retRoutes[] = $stdClass;
 }
 

@@ -418,6 +418,30 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
+    public List<AcculogixExport> getAllExportedDataForRoute(String routeId) {
+        List<AcculogixExport> dats = new ArrayList();
+        
+        exports.values().stream()
+                .filter(data -> data.routeId != null && data.routeId.equals(routeId))
+                .forEach(data -> {
+                    dats.addAll(data.exportedData);
+                });
+        
+        Collections.sort(dats, (o1, o2) -> {
+            if (o1.TNTUID < o2.TNTUID) {
+                return 1;
+            }
+            if (o1.TNTUID > o2.TNTUID) {
+                return -1;
+            }
+
+            return 0;
+        });
+        
+        return dats;
+    }
+    
+    @Override
     public List<AcculogixExport> getExport(String routeId, boolean currentState) {
         long time = System.currentTimeMillis();
         
@@ -1000,14 +1024,16 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public List<Route> getRoutesCompletedPast24Hours() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.HOUR, -24);
+        cal.add(Calendar.HOUR, -204);
         Date hoursAgo = cal.getTime();
         
-        return routes.values().stream()
+        List<Route> retRoutes = routes.values().stream()
                 .filter(r -> r.completedInfo != null)
                 .filter(r -> r.completedInfo.completed)
                 .filter(r -> r.completedInfo.completedTimeStamp.after(hoursAgo))
                 .collect(Collectors.toList());
+        
+        return retRoutes;
     }
 
     @Override

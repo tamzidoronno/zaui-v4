@@ -2,11 +2,6 @@
 package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSchedulerBase;
-import com.ibm.icu.util.Calendar;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
  *

@@ -45,51 +45,58 @@ public class ArxConnection {
         
         DefaultHttpClient client = new DefaultHttpClient(my_httpParams);
         client = wrapClient(client);
-        HttpResponse httpResponse;
-        
-
-        HttpEntity entity;
-        HttpPost request = new HttpPost(loginUrl);
-        byte[] bytes = (username + ":" + password).getBytes();
-        String encoding = Base64.encode(bytes);
-
-        request.addHeader("Authorization", "Basic " + encoding);
-
-        StringBody comment = new StringBody("A binary file of some kind", ContentType.TEXT_PLAIN);
-
-        StringBody body = new StringBody(content, ContentType.TEXT_PLAIN);
-
-        HttpEntity reqEntity = MultipartEntityBuilder.create()
-                .addPart("upfile", body)
-                .addPart("comment", comment)
-                .build();
-
-        request.setEntity(reqEntity);
         
         try {
-            httpResponse = client.execute(request);
-        }catch(Exception e) {
-            GetShopLogHandler.logPrintStatic("Failed lookup on address: " + address, null);
-            e.printStackTrace();
-            throw e;
-        }
-        
-        Integer statusCode = httpResponse.getStatusLine().getStatusCode();
-        if(statusCode == 401) {
-            return "401";
-        }
+            HttpResponse httpResponse;
 
-        entity = httpResponse.getEntity();
 
-        if (entity != null) {
-            InputStream instream = entity.getContent();
-            int ch;
-            StringBuilder sb = new StringBuilder();
-            while ((ch = instream.read()) != -1) {
-                sb.append((char) ch);
+            HttpEntity entity;
+            HttpPost request = new HttpPost(loginUrl);
+            byte[] bytes = (username + ":" + password).getBytes();
+            String encoding = Base64.encode(bytes);
+
+            request.addHeader("Authorization", "Basic " + encoding);
+
+            StringBody comment = new StringBody("A binary file of some kind", ContentType.TEXT_PLAIN);
+
+            StringBody body = new StringBody(content, ContentType.TEXT_PLAIN);
+
+            HttpEntity reqEntity = MultipartEntityBuilder.create()
+                    .addPart("upfile", body)
+                    .addPart("comment", comment)
+                    .build();
+
+            request.setEntity(reqEntity);
+
+            try {
+                httpResponse = client.execute(request);
+            }catch(Exception e) {
+                GetShopLogHandler.logPrintStatic("Failed lookup on address: " + address, null);
+                e.printStackTrace();
+                throw e;
             }
-            String result = sb.toString();
-            return result.trim();
+
+            Integer statusCode = httpResponse.getStatusLine().getStatusCode();
+            if(statusCode == 401) {
+                return "401";
+            }
+
+            entity = httpResponse.getEntity();
+
+            if (entity != null) {
+                InputStream instream = entity.getContent();
+                int ch;
+                StringBuilder sb = new StringBuilder();
+                while ((ch = instream.read()) != -1) {
+                    sb.append((char) ch);
+                }
+                String result = sb.toString();
+                return result.trim();
+            }
+        } finally {
+            if (client != null) {
+                client.getConnectionManager().shutdown();
+            }
         }
             
         return "failed";

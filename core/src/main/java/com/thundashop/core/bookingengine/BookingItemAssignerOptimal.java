@@ -171,12 +171,12 @@ public class BookingItemAssignerOptimal {
             for (Booking booking : bookingLine.bookings) {
                 BookingItemTimeline timeLineUsed = isThereAFreeItemForBookings(booking, bookingItemsFlatten, bookingLine);
 
-                if (timeLineUsed == null) {
+                if (timeLineUsed == null && throwException) {
                     throw new BookingEngineException("Did not find an available bookingitem for booking: " + booking.getHumanReadableDates());
                 }
 
                 BookingItem item = getBookingItem(timeLineUsed.bookingItemId);
-                if (item == null) {
+                if (item == null && throwException) {
                     throw new BookingEngineException("Did not find the booking item with id (it possible has been deleted): " + timeLineUsed.bookingItemId);
                 }
 

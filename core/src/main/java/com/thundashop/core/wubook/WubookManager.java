@@ -113,6 +113,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if (response == 0) {
             return true;
         }
+        try {
+            logText("Failed to connect to api, " + response);
+            logText("Failed to connect to api, " + result.get(1));
+        }catch(Exception e) {
+            
+        }
+
         return false;
     }
     
@@ -1136,7 +1143,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         logText("Availability is being updated: " + numberOfDays + " days ahead.");
         if(!frameworkConfig.productionMode) { return ""; }
         
-        if(!connectToApi()) { return "Faield to connect to api"; }
+        if(!connectToApi()) {
+            return "Faield to connect to api"; 
+        }
         Vector<Hashtable> tosend = new Vector();
         int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
         

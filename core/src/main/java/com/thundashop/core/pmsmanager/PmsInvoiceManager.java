@@ -1266,9 +1266,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             booking.orderIds = uniqueList;
 
             pmsManager.saveBooking(booking);
-            if(storeId != null && storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
-                messageManager.sendErrorNotification("TMP: order created with new order system, id: " + order.incrementOrderId, null);
-            }
+//            if(storeId != null && storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
+//                messageManager.sendErrorNotification("TMP: order created with new order system, id: " + order.incrementOrderId, null);
+//            }
             return order.id;
         }
         return "";

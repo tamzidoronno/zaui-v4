@@ -916,6 +916,10 @@ public class PmsManagerProcessor {
         filter.endDate = cal.getTime();
         
         List<PmsBooking> bookingsCheckingIn = manager.getAllBookings(filter);
+        List<PmsBooking> nonRefBookings = getLatestNonRefBookings();
+        
+        bookingsCheckingIn.addAll(nonRefBookings);
+        
         for(PmsBooking book : bookingsCheckingIn) {
             if(book.payedFor) {
                 continue;
@@ -1041,5 +1045,24 @@ public class PmsManagerProcessor {
                 manager.getShopLockManager.saveLock(lock);
             }
         }
+    }
+
+    private List<PmsBooking> getLatestNonRefBookings() {
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = "registered";
+        filter.endDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR_OF_DAY, -6);
+        filter.startDate = cal.getTime();
+        
+        List<PmsBooking> latestBookings = manager.getAllBookings(filter);
+        List<PmsBooking> result = new ArrayList();
+        
+        for(PmsBooking booking : latestBookings) {
+            if(booking.nonrefundable) {
+                result.add(booking);
+            }
+        }
+        return result;
     }
 }

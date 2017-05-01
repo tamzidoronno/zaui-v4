@@ -48,6 +48,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .addproducttocart', app.PmsManagement.addProductToCart);
         $(document).on('click','.PmsManagement .changeduedates', app.PmsManagement.changeDueDates);
         $(document).on('click','.PmsManagement .removeOrderFromBooking', app.PmsManagement.removeOrderFromBooking);
+        $(document).on('click','.PmsManagement .marknoshowwubook', app.PmsManagement.marknoshowwubook);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -93,6 +94,19 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .loadorderinformation', app.PmsManagement.loadOrderInformation);
         $(document).on('click','.PmsManagement .createnewfilter', app.PmsManagement.createNewIncomeReportFilter);
     },
+    marknoshowwubook : function() {
+        var confirmed = confirm("Are you sure you want to mark this booking as no show?");
+        if(!confirmed) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','markBookingAsNoShow', $(this), {
+            "wubookid" : $(this).attr('wubookid')
+        });
+        thundashop.Ajax.postWithCallBack(event,function() {
+            alert('No show set');
+        });
+    },
+    
     createNewIncomeReportFilter : function() {
         var event = thundashop.Ajax.createEvent('','displayCreateNewIncomeReportFilter', $(this), {});
         thundashop.common.showInformationBoxNew(event, 'New income report filter');

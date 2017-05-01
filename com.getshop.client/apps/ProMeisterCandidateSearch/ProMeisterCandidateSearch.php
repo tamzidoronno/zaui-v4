@@ -90,6 +90,20 @@ class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3
             }
         }
         
+        
+        if ($this->currentlyLoading == "searchview") {
+            $searchValue = isset($_POST['data']['txt']) ? $_POST['data']['txt'] : false;
+            echo $searchValue;
+            if ($searchValue) {
+                $companies = $this->getApi()->getUserManager()->searchForCompanies($searchWord);
+                foreach ($companies as $company) {
+                    if (!isset($retValues[$company->id])) {
+                        $retValues[$company->id] = array();
+                    }
+                }
+            }
+        }
+        
         return $retValues;
     }
    

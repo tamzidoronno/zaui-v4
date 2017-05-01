@@ -43,9 +43,9 @@ $config = $this->getConfigurationToUse();
                 
             }
             if($booking->channel) {
-                echo "Wubook no show : ";
+                echo "<span class='marknoshowwubook' wubookid='".$booking->wubookreservationid."'> Wubook no show : ";
                 echo $booking->wubookNoShow ? "Yes" : "no";
-                echo "<br>"; 
+                echo "</span><br>"; 
             }
             if($booking->nonrefundable) {
                 echo "This booking is non refundable.<br>";

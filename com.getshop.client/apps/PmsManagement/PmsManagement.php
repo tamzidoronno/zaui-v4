@@ -19,6 +19,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return 1;
     }
     
+    public function markBookingAsNoShow() {
+        $this->getApi()->getWubookManager()->markNoShow($this->getSelectedName(), $_POST['data']['wubookid']);
+    }
+    
     public function removeOrderFromBooking() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         if(!@$order->closed) {

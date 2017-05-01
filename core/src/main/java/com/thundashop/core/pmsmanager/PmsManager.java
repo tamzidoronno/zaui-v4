@@ -3015,11 +3015,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         if(failedWubooks.containsKey(booking.wubookreservationid)) {
                             hasBeenWarned = true;
                         } else {
-                            FailedWubookInsertion failed = new FailedWubookInsertion();
-                            failed.wubookResId = booking.wubookreservationid;
-                            failed.when = new Date();
-                            saveObject(failed);
-                            failedWubooks.put(failed.wubookResId, failed);
+                            markSentErrorMessageForWubookId(booking.wubookreservationid);
                         }
                     }
                     
@@ -5753,6 +5749,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return newAddonList;
+    }
+
+    public void markSentErrorMessageForWubookId(String wubookId) {
+        FailedWubookInsertion failed = new FailedWubookInsertion();
+        failed.wubookResId = wubookId;
+        failed.when = new Date(); 
+        saveObject(failed);
+        failedWubooks.put(failed.wubookResId, failed);
+    }
+
+    public boolean hasSentErrorNotificationForWubookId(String wubookId) {
+        return failedWubooks.containsKey(wubookId);
     }
 
 }

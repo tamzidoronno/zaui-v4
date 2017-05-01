@@ -10,7 +10,6 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
-import com.thundashop.core.pmsmanager.CheckPmsProcessing;
 import com.thundashop.core.pmsmanager.NewOrderFilter;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
@@ -22,7 +21,6 @@ import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
-import com.thundashop.core.pmsmanager.PmsRoomSimple;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -352,6 +350,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Override
     public String markNoShow(String rcode) throws Exception {
         if(!connectToApi()) { return "Failed to connect to ap"; }
+
+        if(numberOfBookingsHavingWuBookId(rcode) != 1) {
+            sendErrorForReservation(rcode, "Failed to mark booking as no show since there are multiple bookings related to this one... should not happen, number of bookings found: " + numberOfBookingsHavingWuBookId(rcode));
+            return "";
+        }
+
         logPrint("Setting no show on rcode: " + rcode);
         Vector params = new Vector();
         params.addElement(token);
@@ -624,7 +628,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(booking.modifiedReservation.size() > 0 && !booking.delete) {
             newbooking = findCorrelatedBooking(booking);
             if(newbooking == null) {
-                messageManager.sendErrorNotification("Could not find existing booking for a modification on reservation id: " + booking.reservationCode, null);
+                sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
             } else {
                 
                 isUpdate = true;
@@ -632,7 +636,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         } else if(booking.delete) {
             newbooking = findCorrelatedBooking(booking);
             if(newbooking == null) {
-                messageManager.sendErrorNotification("Could not find deleted booking for a modification on reservation id: " + booking.reservationCode, null);
+                sendErrorForReservation(booking.reservationCode, "Could not find deleted booking for a modification on reservation");
                 return "Did not find booking to delete.";
             } else {
                 pmsManager.deleteBooking(newbooking.id);
@@ -1228,6 +1232,31 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Override
     public HashMap<Long, String> getLogEntries() {
         return log.logEntries;
+    }
+
+    private Integer numberOfBookingsHavingWuBookId(String idToMark) {
+        int count = 0;
+        
+        for(PmsBooking booking : pmsManager.getAllBookingsFlat()) {
+            if(booking.wubookreservationid != null && booking.wubookreservationid.equals(idToMark)) {
+                count++;
+                continue;
+            }
+            for(String modified : booking.wubookModifiedResId) {
+                if(modified.equals(idToMark)) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+
+    private void sendErrorForReservation(String wubookId, String message) {
+        if(!pmsManager.hasSentErrorNotificationForWubookId(wubookId)) {
+            messageManager.sendErrorNotification("Error for wubookreservation: " + wubookId + " : "  + message, null);
+            pmsManager.markSentErrorMessageForWubookId(wubookId);
+        }
     }
 
 }

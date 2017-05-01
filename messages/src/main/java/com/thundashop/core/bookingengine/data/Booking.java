@@ -3,6 +3,7 @@ package com.thundashop.core.bookingengine.data;
 import com.thundashop.core.common.DataCommon;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -100,5 +101,19 @@ public class Booking extends DataCommon implements Comparable<Booking> {
 
     public boolean isUnassigned() {
         return bookingItemId == null || bookingItemId.isEmpty();
+    }
+    
+    public static Comparator sortByStartDate() {
+    
+        return new Comparator<Booking>() {
+            @Override
+            public int compare(Booking o1, Booking o2) {
+                if (o1.startDate.equals(o2.startDate)) {
+                    return o2.endDate.compareTo(o1.endDate);
+                }
+
+                return o1.startDate.compareTo(o2.startDate);
+            }
+        };
     }
 }

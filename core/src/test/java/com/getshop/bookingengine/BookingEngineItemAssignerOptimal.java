@@ -124,10 +124,9 @@ public class BookingEngineItemAssignerOptimal {
         bookings.add(getBooking("2015-01-05 09:00", "2015-01-05 10:00", item2));
         
         List<String> res = getAvailableResult(bookings);
-        Assert.assertEquals(3, res.size()); 
+        Assert.assertEquals(2, res.size()); 
         Assert.assertEquals(item1.id, res.get(0)); 
-        Assert.assertEquals(item2.id, res.get(1)); 
-        Assert.assertEquals(item3.id, res.get(2)); 
+        Assert.assertEquals(item3.id, res.get(1)); 
     }
     
     /**

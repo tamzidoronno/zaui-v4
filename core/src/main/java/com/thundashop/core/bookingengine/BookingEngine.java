@@ -168,8 +168,8 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         return deepClone(bookingEngineAbstract.getTimeLinesForItem(start,end,itemId));
     }
     
-    public BookingTimeLineFlatten getTimeLinesForItemWithOptimal(Date start, Date end, String itemId) {
-        return deepClone(bookingEngineAbstract.getTimeLinesForItemWithOptimal(start,end,itemId));
+    public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimal(Date start, Date end) {
+        return deepClone(bookingEngineAbstract.getTimeLinesForItemWithOptimal(start,end));
     }
     
     @Override
@@ -183,16 +183,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     }
 
     public boolean itemInUseBetweenTime(Date start, Date end, String itemId) {
-        Booking booking = new Booking();
-        booking.startDate = start;
-        booking.endDate = end;
-        booking.bookingItemId = itemId;
-        booking.bookingItemTypeId = getBookingItem(itemId).bookingItemTypeId;
-        
-        List<Booking> toCheck = new ArrayList();
-        toCheck.add(booking);
-        boolean canAdd = canAdd(toCheck);
-        return !canAdd;
+        return bookingEngineAbstract.itemInUseBetweenTime(start, end, itemId);
     }
 
     /**

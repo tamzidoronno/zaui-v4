@@ -88,5 +88,9 @@ public class BookingItemTimeline {
     public List<String> getBookingIds() {
         return new ArrayList(dates.keySet());
     }
+
+    public Long getStartTime() {
+        return new Date().getTime();
+    }
     
 }

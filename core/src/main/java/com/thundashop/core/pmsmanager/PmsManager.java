@@ -1669,11 +1669,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         List<BookingItem> items = bookingEngine.getBookingItems();
 
+        List<BookingTimeLineFlatten> lines = bookingEngine.getTimeLinesForItemWithOptimal(filter.start, filter.end);
+        
         for (BookingItem item : items) {
             if(!types.isEmpty() && !types.contains(item.bookingItemTypeId)) {
                 continue;
             }
-            BookingTimeLineFlatten line = bookingEngine.getTimeLinesForItemWithOptimal(filter.start, filter.end, item.id);
+            
+            BookingTimeLineFlatten line = lines.stream()
+                    .filter(li -> li.bookingItemId.equals(item.id))
+                    .findFirst()
+                    .orElse(null);
+            
             List<BookingTimeLine> timelines = line.getTimelines(filter.interval-21600, 21600);
             LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap();
             for (BookingTimeLine tl : timelines) {

@@ -15,6 +15,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
     private $fetchedBookings = array();
     public $showBookersData = false;
     
+    public function loadBookingOrdersRoom() {
+        $this->includefile("ordersforroom");
+    }
+    
     public function getUserSettingsOrder() {
         return 1;
     }

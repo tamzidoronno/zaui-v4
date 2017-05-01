@@ -49,6 +49,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .changeduedates', app.PmsManagement.changeDueDates);
         $(document).on('click','.PmsManagement .removeOrderFromBooking', app.PmsManagement.removeOrderFromBooking);
         $(document).on('click','.PmsManagement .marknoshowwubook', app.PmsManagement.marknoshowwubook);
+        $(document).on('click','.PmsManagement .displayordersforroom', app.PmsManagement.displayOrdersForRoom);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -93,6 +94,17 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .contactdatadropdown', app.PmsManagement.updateBookingInformationDropdown);
         $(document).on('click','.PmsManagement .loadorderinformation', app.PmsManagement.loadOrderInformation);
         $(document).on('click','.PmsManagement .createnewfilter', app.PmsManagement.createNewIncomeReportFilter);
+    },
+    displayOrdersForRoom : function() {
+        $('.orderforrromview').remove();
+        var event = thundashop.Ajax.createEvent('','loadBookingOrdersRoom', $(this), {
+            "roomid" : $(this).closest('tr').attr('roomid'),
+           "bookingid" : $('#openedbookingid').val()
+        });
+        var box = $(this);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            box.after(res);
+        });
     },
     marknoshowwubook : function() {
         var confirmed = confirm("Are you sure you want to mark this booking as no show?");

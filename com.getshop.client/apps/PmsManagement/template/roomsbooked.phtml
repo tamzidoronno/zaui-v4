@@ -532,7 +532,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 ?>
             </td>
             <? } ?>
-            <td><?php if($room->totalCost) { echo round($room->totalCost); } ?></td>
+            <td><?php if($room->totalCost) { echo "<span class='displayordersforroom' style='position:relative; cursor:pointer;'>" . round($room->totalCost) . "</span>"; } ?></td>
         </tr>
     <?php } ?>
 </table>

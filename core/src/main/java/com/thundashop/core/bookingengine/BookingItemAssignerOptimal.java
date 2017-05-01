@@ -95,7 +95,6 @@ public class BookingItemAssignerOptimal {
         
         List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
         addUnassignedBookingsToLine(bookingLines, unassignedBookings);
-        
         return bookingLines;
     }
 
@@ -379,12 +378,18 @@ public class BookingItemAssignerOptimal {
         }
     }
 
-    public List<String> getBookingsFromTimeLine(String bookingItemId) {
+    public List<BookingItemTimeline> getTimeLines() {
         List<OptimalBookingTimeLine> bookingLines = preCheck();
         dryRun = true;
+        
         List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
         assignLeftovers(bookingLines, availableBookingItems, false);
-        
+        return availableBookingItems;
+    }
+    
+    public List<String> getBookingsFromTimeLine(String bookingItemId) {
+        List<BookingItemTimeline> availableBookingItems = getTimeLines();
+       
         for (BookingItemTimeline timeLine : availableBookingItems) {
             if (timeLine.bookingItemId.equals(bookingItemId)) {
                 return timeLine.getBookingIds();

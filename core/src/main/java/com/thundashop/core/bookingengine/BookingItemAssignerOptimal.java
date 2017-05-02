@@ -49,13 +49,6 @@ public class BookingItemAssignerOptimal {
     public void canAssign() {
         List<OptimalBookingTimeLine> bookingLines = preCheck();
         dryRun = true;
-        assignBookings(bookingLines);
-    }
-    
-    public void assign() {
-        List<OptimalBookingTimeLine> bookingLines = preCheck();
-        dryRun = false;
-        assignBookings(bookingLines);
     }
     
     private List<OptimalBookingTimeLine> preCheck() {
@@ -99,11 +92,6 @@ public class BookingItemAssignerOptimal {
         setItemIdsToLines(bookingLines);
         
         return bookingLines;
-    }
-
-    private void assignBookings(List<OptimalBookingTimeLine> bookingLines) {
-        List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
-        assignLeftovers(bookingLines, availableBookingItems, true);
     }
 
     private List<BookingItemTimeline> getAvailableBookingItems(List<OptimalBookingTimeLine> bookingLines) throws BookingEngineException {
@@ -525,20 +513,18 @@ public class BookingItemAssignerOptimal {
         for (OptimalBookingTimeLine line : bookingLines) {
             if (line.bookingItemId.isEmpty()) {
                 BookingItemTimeline itemToUse = getNextAvailableItem(line, bookingLines, itemIdsUsed);
-                if (itemToUse == null) {
+                if (itemToUse == null && throwException) {
                     throw new BookingEngineException("Not enough space for this booking");
+                } else {
+                    if (itemToUse != null) {
+                        line.bookingItemId = itemToUse.bookingItemId;
+                    } else {
+                        List<BookingItemTimeline> flatten = getBookingItemsFlatten();
+                        printBookingLines(bookingLines);
+                    }
                 }
-                line.bookingItemId = itemToUse.bookingItemId;
             }
         }
-        
-        bookingLines.stream().forEach(o -> {
-            Collections.sort(o.bookings, Booking.sortByStartDate());
-            System.out.println(o.bookingItemId);
-            o.bookings.stream().forEach(b -> {
-                System.out.println(b.id + " | " + b.getHumanReadableDates());
-            });
-        });
     }
     
     public List<OptimalBookingTimeLine> getOptimalAssigned() {
@@ -550,16 +536,22 @@ public class BookingItemAssignerOptimal {
         List<BookingItemTimeline> flatten = getBookingItemsFlatten();
         
         for (String id : itemIdsUsed) {
+            BookingItemTimeline toRemove = null;
             for (BookingItemTimeline flat : flatten) {
                 if (flat.bookingItemId.equals(id)) {
-                    flatten.remove(flat);
-                    break;
+                    toRemove = flat;
                 }
+            }
+            
+            if (toRemove != null) {
+                flatten.remove(toRemove);
             }
         }
         
         if (flatten.size() > 0) {
-            return flatten.get(0);
+            BookingItemTimeline toUse = flatten.get(0);
+            itemIdsUsed.add(toUse.bookingItemId);
+            return toUse;
         }
         
         return null;

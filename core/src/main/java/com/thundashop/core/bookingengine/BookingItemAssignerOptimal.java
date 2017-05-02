@@ -95,6 +95,9 @@ public class BookingItemAssignerOptimal {
         
         List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
         addUnassignedBookingsToLine(bookingLines, unassignedBookings);
+        
+        setItemIdsToLines(bookingLines);
+        
         return bookingLines;
     }
 
@@ -393,21 +396,12 @@ public class BookingItemAssignerOptimal {
         }
     }
 
-    public List<BookingItemTimeline> getTimeLines() {
-        List<OptimalBookingTimeLine> bookingLines = preCheck();
-        dryRun = true;
-        
-        List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
-        assignLeftovers(bookingLines, availableBookingItems, false);
-        return availableBookingItems;
-    }
-    
     public List<String> getBookingsFromTimeLine(String bookingItemId) {
-        List<BookingItemTimeline> availableBookingItems = getTimeLines();
+        List<OptimalBookingTimeLine> availableBookingItems = preCheck();
        
-        for (BookingItemTimeline timeLine : availableBookingItems) {
+        for (OptimalBookingTimeLine timeLine : availableBookingItems) {
             if (timeLine.bookingItemId.equals(bookingItemId)) {
-                return timeLine.getBookingIds();
+                return timeLine.bookings.stream().map(b -> b.id).collect(Collectors.toList());
             }
         }
         
@@ -477,7 +471,7 @@ public class BookingItemAssignerOptimal {
             for (OptimalBookingTimeLine timeLine : bookingLines) {
                 for (Booking booking : unassignedBookings) {
                     long closestDistanceInBooking = timeLine.getDistanceBetweenBookings(booking);
-                    if (closestDistanceInBooking < closestDistance) {
+                    if (closestDistanceInBooking < closestDistance && !overlappingBooking(booking, timeLine.bookings)) {
                         closestDistance = closestDistanceInBooking;
                         timeLineToUse = timeLine;
                         bookingToUse = booking;
@@ -513,5 +507,61 @@ public class BookingItemAssignerOptimal {
         }
         
         return prevBooking;
+    }
+
+    private void setItemIdsToLines(List<OptimalBookingTimeLine> bookingLines) {
+        List<String> itemIdsUsed = new ArrayList();
+        
+        for (OptimalBookingTimeLine line : bookingLines) {
+            for (Booking booking : line.bookings) {
+                if (!booking.bookingItemId.isEmpty()) {
+                    line.bookingItemId = booking.bookingItemId;
+                    itemIdsUsed.add(line.bookingItemId);
+                    break;
+                }
+            }
+        }
+        
+        for (OptimalBookingTimeLine line : bookingLines) {
+            if (line.bookingItemId.isEmpty()) {
+                BookingItemTimeline itemToUse = getNextAvailableItem(line, bookingLines, itemIdsUsed);
+                if (itemToUse == null) {
+                    throw new BookingEngineException("Not enough space for this booking");
+                }
+                line.bookingItemId = itemToUse.bookingItemId;
+            }
+        }
+        
+        bookingLines.stream().forEach(o -> {
+            Collections.sort(o.bookings, Booking.sortByStartDate());
+            System.out.println(o.bookingItemId);
+            o.bookings.stream().forEach(b -> {
+                System.out.println(b.id + " | " + b.getHumanReadableDates());
+            });
+        });
+    }
+    
+    public List<OptimalBookingTimeLine> getOptimalAssigned() {
+        dryRun = true;
+        return preCheck();
+    }
+
+    private BookingItemTimeline getNextAvailableItem(OptimalBookingTimeLine line, List<OptimalBookingTimeLine> bookingLines, List<String> itemIdsUsed) {
+        List<BookingItemTimeline> flatten = getBookingItemsFlatten();
+        
+        for (String id : itemIdsUsed) {
+            for (BookingItemTimeline flat : flatten) {
+                if (flat.bookingItemId.equals(id)) {
+                    flatten.remove(flat);
+                    break;
+                }
+            }
+        }
+        
+        if (flatten.size() > 0) {
+            return flatten.get(0);
+        }
+        
+        return null;
     }
 }

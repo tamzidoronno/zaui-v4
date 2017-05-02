@@ -17,6 +17,7 @@ import java.util.UUID;
 public class OptimalBookingTimeLine {
     public String uuid = UUID.randomUUID().toString();
     public List<Booking> bookings = new ArrayList();
+    public String bookingItemId = "";
 
     long getDistanceBetweenBookings(Booking booking) {
         long shortestDistance = Long.MAX_VALUE;

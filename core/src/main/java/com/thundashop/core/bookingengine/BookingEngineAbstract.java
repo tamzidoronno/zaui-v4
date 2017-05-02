@@ -717,7 +717,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         for (String bookingItemTypeId : types.keySet()) {
             BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(bookingItemTypeId, start, end, null);
-            List<BookingItemTimeline> availableBookingItems = assigner.getTimeLines();
+            List<OptimalBookingTimeLine> availableBookingItems = assigner.getOptimalAssigned();
             
             for (BookingItem item : items.values()) {
                 if (!item.bookingItemTypeId.equals(bookingItemTypeId)) {
@@ -734,10 +734,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                         forEach(o -> line.add(o));
 
 
-                for (BookingItemTimeline timeLine : availableBookingItems) {
+                for (OptimalBookingTimeLine timeLine : availableBookingItems) {
                     if (timeLine.bookingItemId.equals(item.id)) {
-                        timeLine.getBookingIds().stream()
-                        .map(o -> bookings.get(o))
+                        timeLine.bookings.stream()
                         .filter(o -> !line.containsBooking(o))
                         .forEach(o -> line.add(o));
                     }

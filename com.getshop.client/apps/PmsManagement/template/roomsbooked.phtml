@@ -212,7 +212,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
         }
     }
     $rooms = $newRoomList;
-    
+    $selectedRooms = $object->getSelectedRooms();
     
     foreach ($rooms as $room) {
         /* @var $room core_pmsmanager_PmsBookingRooms */
@@ -237,8 +237,13 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 <span gstype='form' method="removeRoom">
                     <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                     <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
-                    <?php if(!$deleted) { ?>
-                        <input type='checkbox' class='checkboxforbookedroom' roomid='<?php echo $room->pmsBookingRoomId; ?>'>
+                    <?php if(!$deleted) { 
+                        $checked = "";
+                        if(in_array($room->pmsBookingRoomId, $selectedRooms)) {
+                            $checked = "CHECKED";
+                        }
+                        ?>
+                        <input type='checkbox' class='checkboxforbookedroom' roomid='<?php echo $room->pmsBookingRoomId; ?>' <?php echo $checked; ?>>
                     <?php } else { ?>
                         <i class='fa fa-undo'  gstype='submitToInfoBox' title="Undelete" style='cursor:pointer;'></i>
                     <?php } ?>

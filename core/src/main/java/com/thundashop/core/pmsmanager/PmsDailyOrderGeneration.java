@@ -78,6 +78,13 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                     continue;
                 }
             }
+            
+            if(currentFilter.pmsRoomIds != null && !currentFilter.pmsRoomIds.isEmpty()) {
+                if(!currentFilter.pmsRoomIds.contains(room.pmsBookingRoomId)) {
+                    continue;
+                }
+            }
+            
             //Sleepover prices.
             HashMap<String, Double> priceMatrix = generatePriceMatrix(room);
             generateDailyPriceItems(priceMatrix, room);
@@ -88,7 +95,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                 generateAddonsCostForProduct(items.get(productId), room, true);
                 generateAddonsCostForProduct(items.get(productId), room, false);
             }
-            
         }
     }
 

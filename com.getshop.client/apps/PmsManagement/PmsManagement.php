@@ -2636,6 +2636,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->prepayment = true;
             $filter->createNewOrder = true;
             $filter->addToOrderId = $appendToOrder;
+            if($this->supportNewDaily()) {
+                $filter->pmsRoomIds = $this->getSelectedRooms();
+            }
             $filter->paymentType = $_POST['data']['paymenttype'];
 
             if($appendToOrder) {
@@ -2735,6 +2738,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->prepayment = $config->prepayment;
         $filter->avoidOrderCreation = true;
         $filter->pmsRoomId = $invoiceRoomId;
+        if($this->supportNewDaily()) {
+            $filter->pmsRoomIds = $this->getSelectedRooms();
+        }
 
         $filter->endInvoiceAt = $this->convertToJavaDate($endDate);
         $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), $booking->id, $filter);
@@ -3193,5 +3199,66 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
         return strtoupper($acronym);
     }
+
+    public function supportNewDaily() {
+        $booking = $this->getSelectedBooking();
+        return $this->getApi()->getPmsInvoiceManager()->supportsDailyPmsInvoiceing($this->getSelectedName(), $booking->id);
+    }
+
+    public function getEndDateForBooking() {
+        $end = null;
+        $booking = $this->getSelectedBooking();
+        foreach($booking->rooms as $room) {
+            if($end == null || $end < strtotime($room->date->end)) {
+                $end = strtotime($room->date->end);
+            }
+        }
+        return $end;
+    }
+
+    public function loadUnsettledAmount() {
+        if(isset($_POST['data']['roomIdsSelected'])) {
+            $_SESSION['savedSelectedRooms'] = json_encode($_POST['data']['roomIdsSelected']);
+        } else {
+            unset($_SESSION['savedSelectedRooms']);
+        }
+        $this->includefile("warningunsettledorders");
+    }
+    
+    public function changeOrderDatePeriode() {
+        $_SESSION['SAVED_ORDER_DATE'][$_POST['data']['type']] = $_POST['data']['newDate'];
+        $this->includefile("warningunsettledorders");
+    }
+    
+    public function getSavedOrderDate($type) {
+        if(isset($_SESSION['SAVED_ORDER_DATE'][$type])) {
+            return $_SESSION['SAVED_ORDER_DATE'][$type];
+        }
+        return null;
+    }
+    
+    public function getSelectedRooms() {
+        if(!isset($_SESSION['savedSelectedRooms'])) {
+            return array();
+        }
+        return (array)json_decode($_SESSION['savedSelectedRooms']);
+    }
+    
+    public function getStartDateForBooking() {
+        $start = null;
+        $booking = $this->getSelectedBooking();
+        foreach($booking->rooms as $room) {
+            if($start == null || $start > strtotime($room->date->start)) {
+                $start = strtotime($room->date->start);
+            }
+        }
+        return $start;
+    }
+
+    public function clearSavedBookingData() {
+        unset($_SESSION['SAVED_ORDER_DATE']);
+        unset($_SESSION['savedSelectedRooms']);
+    }
+
 }
 ?>

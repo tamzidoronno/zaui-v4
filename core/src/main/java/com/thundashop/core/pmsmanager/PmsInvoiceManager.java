@@ -289,7 +289,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return lastOrderId;
     }
 
-    private boolean supportsDailyPmsInvoiceing(PmsBooking booking) {
+    @Override
+    public boolean supportsDailyPmsInvoiceing(String bookingId) {
+        PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        String plugin = findPricePluginForBooking(booking);
+        
+        if(!plugin.equals("pmsdailyordergeneration")) {
+            return false;
+        }
+        
         if(booking.orderIds.isEmpty()) {
             return true;
         }
@@ -1242,9 +1250,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
         PmsBooking booking = pmsManager.getBooking(bookingId);
-        String plugin = findPricePluginForBooking(booking);
-        
-        if(plugin.equals("pmsdailyordergeneration") && supportsDailyPmsInvoiceing(booking)) {
+        if(supportsDailyPmsInvoiceing(booking.id)) {
             if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
                 Order order = orderManager.getOrder(filter.addToOrderId);
                 if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {

@@ -41,6 +41,9 @@ public interface IPmsInvoiceManager {
     public void saveDiscounts(PmsUserDiscount discounts);
     
     @Administrator
+    public boolean supportsDailyPmsInvoiceing(String bookingId);
+    
+    @Administrator
     public void markOrderAsPaid(String bookingId, String orderId);
     
     @Administrator

@@ -18,6 +18,8 @@ foreach($booking->rooms as $room) {
     }
 }
 
+$roomIds = $this->getSelectedRooms();
+
 $endDate = date("d.m.Y", $end);
 
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
@@ -125,12 +127,25 @@ if($amount != 0) {
             if($amount < 0) {
                 $createOrderText = "Create a new credit note";
             }
-
+            
             echo "<option value=''>$createOrderText</option>";
             echo "<option value='createafterstay'>Create order after booking has been completed</option>";
             echo "</select> ";
-
             echo " <input type='button' value='Execute' gstype='submitToInfoBox'><br>";
+            if($this->supportNewDaily()) {
+                $start = date("d.m.Y", $this->getStartDateForBooking());
+                if($this->getSavedOrderDate("start")) {
+                    $start = $this->getSavedOrderDate("start");
+                }
+                $end = date("d.m.Y", $this->getEndDateForBooking());
+                if($this->getSavedOrderDate("end")) {
+                    $end = $this->getSavedOrderDate("end");
+                }
+                
+                echo "For periode:<br>";
+                echo "<input type='txt' class='ordernewstartdate changeorderdates' datetype='start' style='width: 90px;' value='$start'>";
+                echo "<input type='txt' class='ordernewenddate changeorderdates' datetype='end' style='width: 90px;' value='".$end."'>";
+            }
             echo "<div class='paymenttypeinfoarea' type='sendpaymentlink' style='font-size: 12px;'>";
             if($amount > 0) {
                 echo "<input type='checkbox' checked gsname='sendpaymentlink' > Send payment link";
@@ -149,10 +164,60 @@ if($amount != 0) {
             echo "<br>Note on invoice:<br>";
             echo "<textarea style='width:100%; height: 100px;' gsname='invoicenoteinfo'>" . $booking->invoiceNote . "</textarea>";
             echo "</div>";
+            
+            if((sizeof($roomIds) > 0 || $this->getSavedOrderDate("start") || $this->getSavedOrderDate("end")) && $this->supportNewDaily()) {
+                echo "<br>";
+                echo "This order will look like this:<br>";
+                echo "<table cellspacing='0' cellpadding='0' width='100%'>";
+                echo "<tr>";
+                echo "<th>Start</th>";
+                echo "<th>End</th>";
+                echo "<th>Product</th>";
+                echo "<th>Room</th>";
+                echo "<th>Guest</th>";
+                echo "<th>Count</th>";
+                echo "<th>Price</th>";
+                echo "<th>Total</th>";
+                echo "</tr>";
+                
+                $booking = $this->getSelectedBooking();
+                $this->createOrderPreview($booking, $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName()));
+                $cart = $this->getApi()->getCartManager()->getCart();
+                $total = 0;
+                foreach($cart->items as $item) {
+                    echo "<tr>";
+                    echo "<td>" . date("d.m.Y H:i", strtotime($item->startDate)) . "</td>";
+                    echo "<td>" . date("d.m.Y H:i", strtotime($item->endDate)) . "</td>";
+                    echo "<td>" . $item->product->name . "</td>";
+                    echo "<td>".$item->product->additionalMetaData."</td>";
+                    echo "<td>" . $item->product->metaData . "</td>";
+                    echo "<td>" . $item->count . "</td>";
+                    echo "<td>" . round($item->product->price) . "</td>";
+                    echo "<td>" . round($item->count * $item->product->price) . "</td>";
+                    echo "</tr>";
+                    $total += $item->count * $item->product->price;
+                }
+                
+                echo "<tr>";
+                echo "<td></td>";
+                echo "<td></td>";
+                echo "<td></td>";
+                echo "<td></td>";
+                echo "<td></td>";
+                echo "<td></td>";
+                echo "<td></td>";
+                echo "<td>".round($total)."</td>";
+                echo "</tr>";
+                echo "</table>";
+            }
+
+            
             echo "</div>";
         }
     }
 }
+
+
 ?>
 
 <style>
@@ -170,5 +235,16 @@ function loadPaymentTypeAreas() {
     $('[gsname="sendpaymentlink"]').attr('checked', $('[gsname="sendpaymentlink"]').is(':visible'));
 }
 loadPaymentTypeAreas();
+
+$('.ordernewstartdate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+    onSelect: function(dateText,e) {
+        app.PmsManagement.changeOrderPeriode(e);
+    }
+});
+$('.ordernewenddate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+    onSelect: function(dateText,e) {
+        app.PmsManagement.changeOrderPeriode(e);
+    }
+});
 $('.paymenttypeunsetled').on('change',loadPaymentTypeAreas);
 </script>

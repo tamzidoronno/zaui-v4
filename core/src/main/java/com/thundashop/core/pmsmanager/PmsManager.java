@@ -2490,6 +2490,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 messageManager.sendErrorNotification("Failed to autoassign room, its critical since someone will not recieve the code for the room now.", null);
                 warnedAboutAutoassigning = true;
             }
+            logPrint("....");
             logPrint("No items available?");
         } else {
             BookingItem item = null;

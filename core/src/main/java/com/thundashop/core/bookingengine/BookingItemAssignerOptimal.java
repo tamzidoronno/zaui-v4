@@ -263,21 +263,36 @@ public class BookingItemAssignerOptimal {
      * @return 
      */
     public List<String> getAvailableItems(String bookingToConsider, Date start, Date end) {
+        dryRun = true;
+        
+        if (start == null) {
+            start = new Date(Long.MIN_VALUE);   
+        }
+        
+        if (end == null) {
+            end = new Date(Long.MAX_VALUE);
+        }
+        
         Booking booking = bookings.stream().filter(book -> book.id.equals(bookingToConsider)).findFirst().orElse(null);
         
         if (booking == null) {
-            return new ArrayList();
+            booking = new Booking();
+            booking.startDate = start;
+            booking.endDate = end;
+            booking.bookingItemTypeId = type.id;
+            booking.id = "TMP_BOOKING_TO_TEST_AVAILABILITY";
+            bookings.add(booking);
+        } else {
+            try {
+                booking = (Booking)booking.clone();
+            } catch (CloneNotSupportedException ex) {
+                ex.printStackTrace();
+                return new ArrayList();
+            }
+
+            bookings.removeIf(book -> book.id.equals(bookingToConsider));
+            bookings.add(booking);    
         }
-        
-        try {
-            booking = (Booking)booking.clone();
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-            return new ArrayList();
-        }
-        
-        bookings.removeIf(book -> book.id.equals(bookingToConsider));
-        bookings.add(booking);
         
         List<String> retItems = new ArrayList();
         for (BookingItem item : items) {

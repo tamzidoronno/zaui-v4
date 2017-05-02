@@ -107,8 +107,12 @@ class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3
     
     public function getCompanies() {
         $searchValue = isset($_SESSION['ProMeisterCandidateSearch_searchword']) ? $_SESSION['ProMeisterCandidateSearch_searchword'] : "";
-        $companies = $this->getApi()->getUserManager()->searchForCompanies($searchValue);
-        return $companies;
+        if ($searchValue) {
+            $companies = $this->getApi()->getUserManager()->searchForCompanies($searchValue);
+            return $companies;
+        }
+        
+        return array();
     }
    
     public function getUsers($mode) {

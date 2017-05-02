@@ -36,6 +36,10 @@ public class OptimalBookingTimeLine {
                 shortestDistance = timeBetweenNext;
             }
             
+            if (timeBetweenPrev == 0 || timeBetweenNext == 0) {
+                shortestDistance = 0;
+            }
+            
         }
         
         return shortestDistance;

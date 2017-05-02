@@ -19,6 +19,8 @@ if(isset($_POST['event']) && $_POST['event'] == "fastordercreation") {
     }
     echo "</div>";
 }
+$this->clearSavedBookingData();
+
 $bookingid = $_POST['data']['bookingid'];
 echo "<input type='hidden' id='openedbookingid' value='".$bookingid."'>";
 $pmsManager = $this->getApi()->getPmsManager();
@@ -65,7 +67,9 @@ if($booking->isDeleted) {
 
 $this->includefile("contactdata");
 if($config->fastOrderCreation) {
+    echo "<div class='warnunsettledamountouter'>";
     $this->includefile("warningunsettledorders");
+    echo "</div>";
 }
 
 echo "<div class='bookinginfo'>";

@@ -49,6 +49,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .changeduedates', app.PmsManagement.changeDueDates);
         $(document).on('click','.PmsManagement .removeOrderFromBooking', app.PmsManagement.removeOrderFromBooking);
         $(document).on('click','.PmsManagement .marknoshowwubook', app.PmsManagement.marknoshowwubook);
+        $(document).on('click','.PmsManagement .displayordersforroom', app.PmsManagement.displayOrdersForRoom);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -93,6 +94,59 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .contactdatadropdown', app.PmsManagement.updateBookingInformationDropdown);
         $(document).on('click','.PmsManagement .loadorderinformation', app.PmsManagement.loadOrderInformation);
         $(document).on('click','.PmsManagement .createnewfilter', app.PmsManagement.createNewIncomeReportFilter);
+        $(document).on('click','.PmsManagement .checkboxforbookedroom', app.PmsManagement.updateCheckedRoomUnsettledAmount);
+        $(document).on('click','.PmsManagement .checkallbookedrooms', app.PmsManagement.updateCheckedRoomUnsettledAmount);
+        $(document).on('keyup','.PmsManagement .changeorderdates', app.PmsManagement.changeOrderPeriode);
+    },
+    changeOrderPeriode : function(e) {
+        var field = null;
+        if(e.input) {
+            field = $(e.input);
+        } else {
+            field = $(e.target);
+        }
+      
+        var val = field.val();
+        
+        var data = {
+            "newDate" : val,
+            "type" : field.attr('datetype'),
+            "bookingid" : $('#openedbookingid').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent('','changeOrderDatePeriode',field, data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.warnunsettledamountouter').html(res);
+        });
+    },
+    
+    updateCheckedRoomUnsettledAmount : function() {
+        var rooms = [];
+        $('.checkboxforbookedroom').each(function() {
+            if($(this).is(':checked')) {
+                rooms.push($(this).attr('roomid'));
+            }
+        });
+        var data = {
+            "roomIdsSelected" : rooms,
+            "bookingid" : $('#openedbookingid').val()
+        };
+       
+        var event = thundashop.Ajax.createEvent('','loadUnsettledAmount', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.warnunsettledamountouter').html(res);
+        });
+    },
+    displayOrdersForRoom : function() {
+        $('.orderforrromview').remove();
+        var event = thundashop.Ajax.createEvent('','loadBookingOrdersRoom', $(this), {
+            "roomid" : $(this).closest('tr').attr('roomid'),
+           "bookingid" : $('#openedbookingid').val()
+        });
+        var box = $(this);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            box.after(res);
+        });
     },
     marknoshowwubook : function() {
         var confirmed = confirm("Are you sure you want to mark this booking as no show?");

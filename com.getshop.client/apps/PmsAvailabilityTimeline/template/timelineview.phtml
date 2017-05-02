@@ -226,12 +226,15 @@ if($compact) {
                     $name = $this->createDeleteBookingIcon($id);
             }
             
+            $type = $free;
+            
             if ($this->isVirtuallyAssigned($id, $value)) {
                 $free = "virtually_added full";
+                $type = "virtually_added";
             }
             
             
-            echo "<span class='valueentry $free' time='$time' itemid='".$itemId."' bid='$id'>&nbsp;&nbsp;$name</span>";
+            echo "<span class='valueentry $free' time='$time' itemid='".$itemId."' bid='$id' type='$type'>&nbsp;&nbsp;$name</span>";
             if($isTaken) {
                 $printed = true;
             }

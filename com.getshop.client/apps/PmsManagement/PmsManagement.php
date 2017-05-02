@@ -753,7 +753,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
                 $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
                 
-                $available = (array)$this->getApi()->getBookingEngine()->getAvailbleItems($name, $newRoom->bookingItemTypeId, $start, $end);
+                $available = (array)$this->getApi()->getBookingEngine()->getAvailbleItemsWithBookingConsidered($name, $newRoom->bookingItemTypeId, $start, $end, $room->bookingId);
                 $incUnnassigned = false;
                 if(sizeof($available) == 0) {
                     echo "<b><i>This room can not be selected since unassiged bookings are depending on it:</i><br></b>";

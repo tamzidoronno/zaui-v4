@@ -288,6 +288,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return lastOrderId;
     }
+    
+    //comment here as well.
 
     @Override
     public boolean supportsDailyPmsInvoiceing(String bookingId) {

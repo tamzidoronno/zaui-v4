@@ -2496,6 +2496,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for(BookingItem tmpitem : items) {
                 item = tmpitem;
                 PmsAdditionalItemInformation additionalroominfo = getAdditionalInfo(item.id);
+                //Comment to commit.
                 if(additionalroominfo.isClean()) {
                     break;
                 }

@@ -514,7 +514,7 @@ public class BookingItemAssignerOptimal {
         
         for (OptimalBookingTimeLine line : bookingLines) {
             for (Booking booking : line.bookings) {
-                if (!booking.bookingItemId.isEmpty()) {
+                if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
                     line.bookingItemId = booking.bookingItemId;
                     itemIdsUsed.add(line.bookingItemId);
                     break;

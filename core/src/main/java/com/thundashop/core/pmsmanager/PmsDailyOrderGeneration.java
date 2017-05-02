@@ -64,7 +64,10 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         clearGenerateCart();
         
         currentBooking = pmsManager.getBooking(bookingId);
+        
         currentFilter = filter;
+        makeSureEndStartDateIsCorrect();
+        
         
         calculateRoomPrices();
         updateCart();
@@ -104,6 +107,15 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         if(room.deleted && !currentBooking.nonrefundable) {
             currentMatrix = new LinkedHashMap();
         }
+        
+        LinkedHashMap<String, Double> newPriceMatrix = new LinkedHashMap();
+        for(String offset : currentMatrix.keySet()) {
+            Date toCheck = room.convertOffsetToDate(offset);
+            if(dateIsFiltered(toCheck)) {
+                newPriceMatrix.put(offset, currentMatrix.get(offset));
+            }
+        }
+        currentMatrix = newPriceMatrix;
         
         Gson gson = new Gson();
         String res = gson.toJson(currentMatrix);
@@ -161,10 +173,16 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         Date startDate = null;
         int count = 0;
         Double total = 0.0;
+        HashMap<String, Double> priceMatrixToSave = new HashMap();
         
         for(Date dayToIterate : dailyPrices.keySet()) {
             Double priceOne = null;
             Double priceTwo = null;
+            
+            if(!dateIsFiltered(dayToIterate)) {
+                continue;
+            }
+            
             
             if(lastDay != null && dailyPrices.containsKey(lastDay)) { priceOne = dailyPrices.get(lastDay).price; }
             if(dailyPrices.containsKey(dayToIterate)) { priceTwo = dailyPrices.get(dayToIterate).price; }
@@ -316,7 +334,10 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             cal.setTime(price.start);
             cal.add(Calendar.DAY_OF_YEAR, 1);
             price.end = cal.getTime();
-            result.put(price.start, price);
+            if(dateIsFiltered(price.start)) {
+                result.put(price.start, price);
+            }
+ 
         }
         
         TreeMap<Date, DailyPriceObject> finalresult = new TreeMap();
@@ -368,6 +389,9 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         
         HashMap<String, PmsBookingAddonItem> addonsToAdd = new HashMap();
         for(PmsBookingAddonItem item : room.addons) {
+            if(!dateIsFiltered(item.date)) {
+                continue;
+            }
             addonsToAdd.put(item.addonId, item);
         }
         
@@ -375,6 +399,9 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             addonsToAdd = new HashMap();
             //Include non refundable addons.
             for(PmsBookingAddonItem item : room.addons) {
+                if(!dateIsFiltered(item.date)) {
+                    continue;
+                }
                 PmsBookingAddonItem baseItem = pmsManager.getConfigurationSecure().getAddonFromProductId(item.productId);
                 if(baseItem.noRefundable) {
                     addonsToAdd.put(item.addonId, item);
@@ -440,6 +467,38 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         double newPrice = (totalOnRoom - totalBilled) / addonOnRoom.count;
         addonOnRoom.price = newPrice;
         
+    }
+
+    private boolean dateIsFiltered(Date dayToIterate) {
+        if(currentFilter.endInvoiceAt != null) {
+            if(dayToIterate.after(currentFilter.endInvoiceAt)) {
+                return false;
+            }
+        }
+        if(currentFilter.startInvoiceAt != null) {
+            if(dayToIterate.before(currentFilter.startInvoiceAt)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void makeSureEndStartDateIsCorrect() {
+        Calendar cal = Calendar.getInstance();
+        if(currentFilter.endInvoiceAt != null) {
+            cal.setTime(currentFilter.endInvoiceAt);
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            currentFilter.endInvoiceAt = cal.getTime();
+        }
+        if(currentFilter.startInvoiceAt != null) {
+            cal.setTime(currentFilter.startInvoiceAt);
+            cal.set(Calendar.HOUR_OF_DAY, 00);
+            cal.set(Calendar.MINUTE, 00);
+            cal.set(Calendar.SECOND, 00);
+            currentFilter.startInvoiceAt = cal.getTime();
+        }
     }
 
 

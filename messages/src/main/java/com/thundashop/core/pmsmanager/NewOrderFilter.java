@@ -8,6 +8,7 @@ import java.util.List;
 
 public class NewOrderFilter implements Serializable {
     public Date endInvoiceAt = null;
+    public Date startInvoiceAt = null;
     public String pmsRoomId = "";
     public List<String> pmsRoomIds = new ArrayList();
     public boolean onlyEnded = false;

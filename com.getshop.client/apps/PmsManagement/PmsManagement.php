@@ -3,6 +3,7 @@ namespace ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a;
 
 class PmsManagement extends \WebshopApplication implements \Application {
     private $selectedBooking;
+    private $ordersOnBooking;
     private $types = null;
     private $items = null;
     private $channels = null;
@@ -2638,6 +2639,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->addToOrderId = $appendToOrder;
             if($this->supportNewDaily()) {
                 $filter->pmsRoomIds = $this->getSelectedRooms();
+                if($this->getSavedOrderDate("start")) {
+                    $filter->startInvoiceAt = $this->convertToJavaDate(strtotime($this->getSavedOrderDate("start")));
+                }
+                if($this->getSavedOrderDate("end")) {
+                    $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($this->getSavedOrderDate("end")));
+                }
             }
             $filter->paymentType = $_POST['data']['paymenttype'];
 
@@ -2649,10 +2656,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $instances = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
             $ptype = $_POST['data']['paymenttype'];
 
+            $savedcard = null;
             if(stristr($ptype, "savedcard_")) {
                 $cardid = str_replace("savedcard_", "", $ptype);
                 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
-                $savedcard = null;
                 foreach($user->savedCards as $card) {
                     if($cardid == $card->id) {
                         $savedcard = $card;
@@ -2707,6 +2714,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 }
             }
         }
+        $this->selectedBooking = null;
         
         $this->showBookingInformation();
     }
@@ -2738,11 +2746,17 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->prepayment = $config->prepayment;
         $filter->avoidOrderCreation = true;
         $filter->pmsRoomId = $invoiceRoomId;
+        $filter->endInvoiceAt = $this->convertToJavaDate($endDate);
         if($this->supportNewDaily()) {
             $filter->pmsRoomIds = $this->getSelectedRooms();
+            if($this->getSavedOrderDate("start")) {
+                $filter->startInvoiceAt = $this->convertToJavaDate(strtotime($this->getSavedOrderDate("start")));
+            }
+            if($this->getSavedOrderDate("end")) {
+                $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($this->getSavedOrderDate("end")));
+            }
         }
 
-        $filter->endInvoiceAt = $this->convertToJavaDate($endDate);
         $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), $booking->id, $filter);
     }
 
@@ -3258,6 +3272,34 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function clearSavedBookingData() {
         unset($_SESSION['SAVED_ORDER_DATE']);
         unset($_SESSION['savedSelectedRooms']);
+    }
+
+    public function getTotalForRoomCreatedOnOrders($roomId) {
+        $orders = $this->getOrdersOnBooking();
+        $total = 0;
+        foreach($orders as $order) {
+            foreach($order->cart->items as $item) {
+                if($item->product->externalReferenceId == $roomId) {
+                    $total += $item->count * $item->product->price;
+                }
+            }
+        }
+        
+        return $total;
+    }
+
+    public function getOrdersOnBooking() {
+        if($this->ordersOnBooking) {
+            return $this->ordersOnBooking;
+        }
+        $booking = $this->getSelectedBooking();
+        $orders = array();
+        foreach($booking->orderIds as $orderId) {
+            $orders[] = $this->getApi()->getOrderManager()->getOrder($orderId);
+        }
+        
+        $this->ordersOnBooking = $orders;
+        return $orders;
     }
 
 }

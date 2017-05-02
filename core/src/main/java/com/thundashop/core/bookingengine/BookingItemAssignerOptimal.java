@@ -10,7 +10,6 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.ManagerSubBase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -56,6 +55,7 @@ public class BookingItemAssignerOptimal {
         long maximumNumberOfLines = items.stream().mapToInt(o -> o.bookingSize).sum();
         
         if (bookingLines.size() > maximumNumberOfLines) {
+            printBookingLines(bookingLines);
             if (throwException) {
                 throw new BookingEngineException("The setup of bookings can not be fitted into the booking, you have more bookings than you have items of this type");
             }
@@ -501,12 +501,16 @@ public class BookingItemAssignerOptimal {
         List<String> itemIdsUsed = new ArrayList();
         
         for (OptimalBookingTimeLine line : bookingLines) {
+            String idToUse = "";
             for (Booking booking : line.bookings) {
                 if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
-                    line.bookingItemId = booking.bookingItemId;
-                    itemIdsUsed.add(line.bookingItemId);
-                    break;
+                    idToUse = booking.bookingItemId;
                 }
+            }
+            
+            if (!idToUse.isEmpty()) {
+                line.bookingItemId = idToUse;
+                itemIdsUsed.add(idToUse);
             }
         }
         

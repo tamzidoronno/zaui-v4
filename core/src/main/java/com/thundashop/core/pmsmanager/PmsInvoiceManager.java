@@ -289,8 +289,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return lastOrderId;
     }
     
-    //comment here as well.
-
     @Override
     public boolean supportsDailyPmsInvoiceing(String bookingId) {
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
@@ -1252,7 +1250,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
         PmsBooking booking = pmsManager.getBooking(bookingId);
-        if(supportsDailyPmsInvoiceing(booking.id)) {
+        if(booking != null && supportsDailyPmsInvoiceing(booking.id)) {
             if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
                 Order order = orderManager.getOrder(filter.addToOrderId);
                 if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {

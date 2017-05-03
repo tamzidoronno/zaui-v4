@@ -252,6 +252,10 @@ public class GBat10 extends AccountingTransferOptions implements AccountingTrans
                     logError("Product does not exists anymore on order, regarding order: " + order.incrementOrderId);
                     hasFail = true;
                 } else if(prod.sku == null || prod.sku.trim().isEmpty()) {
+                    if(prod.deleted != null && (prod.name == null || prod.name.trim().isEmpty())) {
+                        prod.name = item.getProduct().name;
+                        managers.productManager.saveProduct(prod);
+                    }
                     logError("Tax code not set for product: " + prod.name + ", regarding order: " + order.incrementOrderId);
                     hasFail = true;
                 }

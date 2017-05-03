@@ -118,9 +118,11 @@ app.PmsPricing = {
             var itemPriceRow = {};
             $(this).find('.priceinput').each(function() {
                 var price = $(this).val();
+                var date = $(this).attr('date');
                 if(price) {
-                    var date = $(this).attr('date');
                     itemPriceRow[date] = price;
+                } else {
+                    itemPriceRow[date] = -999999;
                 }
             });
             prices[itemid] = itemPriceRow;

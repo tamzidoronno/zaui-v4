@@ -121,6 +121,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         updateBookingTypesIfTypeChanged();
         createScheduler("pmsprocessor", "0 6,16 * * *", CheckConsistencyCron.class);
+        
+        bookings.remove("012c73ac-3d77-40e6-bfd3-2a67b3de1c02");
+        bookings.remove("8e2d9936-6cc6-418c-9f3c-43e1b67fe6fb");
+        bookings.remove("0e46b786-8b00-4b11-a001-40c06bda41f0");
+        bookings.remove("b303c63a-b928-4e49-b7f7-49aea9075443");
+       
     }
     
     public Availability getAvailbility(String id) {
@@ -285,6 +291,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
      * @return 
      */
     public BookingGroup addBookings(List<Booking> bookings) {
+        preventOverBookingByItemId(bookings);
         checkBookingItemIds(bookings);
         preProcessBookings(bookings);
         
@@ -312,6 +319,16 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         saveObject(bookingGroup);
         return bookingGroup;
+    }
+
+    private void preventOverBookingByItemId(List<Booking> bookings1) throws BookingEngineException {
+        for (Booking booking : bookings1) {
+            if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
+                if (itemInUseBetweenTime(booking.startDate, booking.endDate, booking.bookingItemId)) {
+                    throw new BookingEngineException("Alread in use, can not add booking");
+                }
+            }
+        }
     }
     
     private void preProcessBookings(List<Booking> bookings) {

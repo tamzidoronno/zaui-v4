@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -526,6 +527,19 @@ public class BookingItemAssignerOptimal {
                         List<BookingItemTimeline> flatten = getBookingItemsFlatten();
                         printBookingLines(bookingLines);
                     }
+                }
+            }
+        }
+        
+        Map<String, List<OptimalBookingTimeLine>> groupedBookings = bookingLines.stream()
+                .collect(Collectors.groupingBy(o -> o.bookingItemId, Collectors.toList()));
+        
+        for (String itemId : groupedBookings.keySet()) {
+            BookingItem item2 = getBookingItem(itemId);
+            if (item2.bookingSize < groupedBookings.get(itemId).size()) {
+                printBookingLines(groupedBookings.get(itemId));
+                if (throwException) {
+                    throw new BookingEngineException("Not enough space for this booking");
                 }
             }
         }

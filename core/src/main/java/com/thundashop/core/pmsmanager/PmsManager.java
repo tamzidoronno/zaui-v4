@@ -1057,7 +1057,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     existingPriceRange = new HashMap();
                     prices.dailyPrices.put(typeId, existingPriceRange);
                 }
-                existingPriceRange.put(date, priceMap.get(date));
+                Double price = priceMap.get(date);
+                if(price == -999999.0) {
+                    if(existingPriceRange.containsKey(date)) {
+                        existingPriceRange.remove(date);
+                    }
+                } else {
+                    existingPriceRange.put(date, priceMap.get(date));
+                }
             }
         }
         saveObject(prices);

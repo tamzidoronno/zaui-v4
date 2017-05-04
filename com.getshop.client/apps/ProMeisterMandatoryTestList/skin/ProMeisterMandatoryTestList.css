@@ -1,0 +1,7 @@
+.ProMeisterMandatoryTestList .madatorylist .fa-check {
+    color: green;
+}
+
+.ProMeisterMandatoryTestList .madatorylist .fa-close {
+    color: red;
+}

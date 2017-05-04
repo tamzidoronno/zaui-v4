@@ -96,7 +96,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     $scope.isAllDriverCopiedOrdersCounted = function() {
         for (var i in $scope.task.orders) {
             var order = $scope.task.orders[i];
-            if (order.orderDriverDeliveries && !order.driverDeliveryCopiesCounted) {
+            if (order.orderDriverDeliveries && typeof(order.driverDeliveryCopiesCounted) === "undefined") {
                 return false;
             }
         }

@@ -15,6 +15,9 @@ class ScormList extends \MarketingApplication implements \Application {
     }
 
     public function printRow($scorm, $subgroup = false) {
+        if (!$scorm)
+            return;
+        
         $isGroupedScormPackage = $scorm->groupedScormPackage;
     
         $link = "http://moodle.getshop.com/mod/scorm/getshopplayer.php?userid=".\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id."&scormid=".$scorm->scormId;
@@ -33,7 +36,7 @@ class ScormList extends \MarketingApplication implements \Application {
                 if ($scorm->groupedScormPackage) {
                     echo "";
                 } else {
-                    echo $scorm->completed ? $this->__f("Yes") : $this->__f("No"); 
+                    echo $scorm->passed ? $this->__f("Yes") : $this->__f("No"); 
                 }
                 ?>
             </div>

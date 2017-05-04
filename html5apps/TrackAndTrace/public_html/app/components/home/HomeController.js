@@ -74,7 +74,8 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     $scope.refresh = function() {
         $('.refreshicon').addClass('fa-spin');
         var completed = function() {
-            $('.refreshicon').removeClass('fa-spin');
+            $('.refreshicon').removeClass('fa-spin'); 
+            $state.go($state.current, {}, {reload: true});
         }
         datarepository.loadAllData($api, $scope, completed);
     }

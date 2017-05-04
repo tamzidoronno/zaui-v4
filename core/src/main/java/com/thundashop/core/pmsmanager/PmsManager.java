@@ -77,7 +77,7 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
-    private HashMap<String, PmsBooking> bookings = new HashMap();
+    private HashMap<String, PmsBooking> bookings = new HashMap(); 
     private HashMap<String, Product> fetchedProducts = new HashMap();
     private HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap();
     private HashMap<String, PmsCareTaker> careTaker = new HashMap();
@@ -3111,6 +3111,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBooking(bookingId);
         PmsBookingRooms oldRoom = booking.getRoom(room.pmsBookingRoomId);
         
+        makeSureMinuteAndHourAreTheSame(oldRoom, room);
+
         List<Integer> errors = new ArrayList();
         if(!oldRoom.date.start.equals(room.date.start)) {
             logPrint("Need to set a new start date");
@@ -3137,6 +3139,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         oldRoom.guests = room.guests;
         
         return errors;
+    }
+            
+
+    private void makeSureMinuteAndHourAreTheSame(PmsBookingRooms oldRoom, PmsBookingRooms room) {
+        //Make sure end and start is the same hour.
+        Calendar oldStartCal = Calendar.getInstance();
+        oldStartCal.setTime(oldRoom.date.start);
+        
+        Calendar oldEndCal = Calendar.getInstance();
+        oldEndCal.setTime(oldRoom.date.end);
+        
+        Calendar newStartCal = Calendar.getInstance();
+        newStartCal.setTime(room.date.start);
+        
+        Calendar newEndCal = Calendar.getInstance();
+        newEndCal.setTime(room.date.end);
+        
+        newStartCal.set(Calendar.HOUR_OF_DAY, oldStartCal.get(Calendar.HOUR_OF_DAY));
+        newStartCal.set(Calendar.MINUTE, oldStartCal.get(Calendar.MINUTE));
+        newStartCal.set(Calendar.SECOND, oldStartCal.get(Calendar.SECOND));
+        
+        newEndCal.set(Calendar.HOUR_OF_DAY, oldEndCal.get(Calendar.HOUR_OF_DAY));
+        newEndCal.set(Calendar.MINUTE, oldEndCal.get(Calendar.MINUTE));
+        newEndCal.set(Calendar.SECOND, oldEndCal.get(Calendar.SECOND));
+        
+        room.date.start = newStartCal.getTime();
+        room.date.end = newEndCal.getTime();
     }
 
     private Coupon getCouponCode(PmsBooking booking) {

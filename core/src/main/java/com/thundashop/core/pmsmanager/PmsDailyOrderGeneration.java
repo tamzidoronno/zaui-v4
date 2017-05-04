@@ -131,6 +131,12 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                     if(orderMatrix != null) {
                         for(String offset : orderMatrix.keySet()) {
                             Double price = orderMatrix.get(offset);
+                            
+                            if(order.isCreditNote) {
+                                price *= -1;
+                            }
+                            
+                            System.out.println("\t\t\t" + price);
                             if(currentMatrix.containsKey(offset)) {
                                 price = currentMatrix.get(offset) - price;
                             } else {

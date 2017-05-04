@@ -77,7 +77,7 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
-    private HashMap<String, PmsBooking> bookings = new HashMap();
+    private HashMap<String, PmsBooking> bookings = new HashMap(); 
     private HashMap<String, Product> fetchedProducts = new HashMap();
     private HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap();
     private HashMap<String, PmsCareTaker> careTaker = new HashMap();
@@ -3140,6 +3140,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return errors;
     }
+            
 
     private void makeSureMinuteAndHourAreTheSame(PmsBookingRooms oldRoom, PmsBookingRooms room) {
         //Make sure end and start is the same hour.

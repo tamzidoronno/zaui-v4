@@ -1,7 +1,6 @@
 
 package com.thundashop.core.pmsmanager;
 
-import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PmsBookingSimpleFilter {
+public class PmsBookingSimpleFilter { 
 
     private final PmsManager manager;
     private final PmsInvoiceManager pmsInvoiceManager;

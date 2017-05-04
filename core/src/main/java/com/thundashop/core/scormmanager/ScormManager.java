@@ -80,7 +80,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
         
         
         for (ScormPackage scormPackage : packages.values()) {
-            if (scormPackage.isGroupActive(user.companyObject.groupId)) {
+            if (scormPackage.isGroupActive(user.companyObject.groupId) || alreadyCompletedOrStartedTest(scormPackage, userId)) {
                 Scorm scorm = getScorm(user.id, scormPackage.id);
                 finalizeScorm(scorm);
                 retList.add(scorm);
@@ -121,9 +121,11 @@ public class ScormManager extends ManagerBase implements IScormManager {
 
     private void finalizeScorm(Scorm scorm) {
         ScormPackage scormPackage = packages.get(scorm.scormId);
-        scorm.scormName = scormPackage.name;
-        scorm.groupedScormPackage = !scormPackage.groupedScormPackages.isEmpty();
-        scorm.groupedScormPackageIds = scormPackage.groupedScormPackages;
+        if (scormPackage != null) {
+            scorm.scormName = scormPackage.name;
+            scorm.groupedScormPackage = !scormPackage.groupedScormPackages.isEmpty();
+            scorm.groupedScormPackageIds = scormPackage.groupedScormPackages;
+        }
     }
 
     @Override
@@ -135,6 +137,8 @@ public class ScormManager extends ManagerBase implements IScormManager {
     public void updateResult(ScormResult result) {
         Scorm scorm = getScorm(result.username, result.scormid);
         scorm.completed = result.isCompleted();
+        scorm.passed = result.isPassed();
+        scorm.failed = result.isFailed();
         
         try {
             scorm.score = Integer.parseInt(result.score);
@@ -161,6 +165,15 @@ public class ScormManager extends ManagerBase implements IScormManager {
     @Override
     public ScormPackage getPackage(String packageId) {
         return packages.get(packageId);
+    }
+
+    private boolean alreadyCompletedOrStartedTest(ScormPackage scormPackage, String userId) {
+        Scorm res = scorms.values().stream()
+                .filter(o -> o.scormId.equals(scormPackage.id) && o.userId.equals(userId))
+                .findFirst()
+                .orElse(null);
+        
+        return res != null;
     }
     
 }

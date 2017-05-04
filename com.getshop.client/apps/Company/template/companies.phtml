@@ -16,7 +16,9 @@ foreach ($userCompanies as $company) {
     $reference = $company->reference ? "- ".$company->reference : "";
     $companyId = $company->id;
     $remove = "<i gss_confirmation='Area you sure you want to remove this company from this user?' gss_method='removeCompanyFromUser' gss_fragment='companies' gss_view='gss_view_of_companies_user_has' gss_value='$userid' gss_value_2='$companyId' class='fa fa-trash' title='Remove company'></i><div class='gss_show_company'>";
-    echo "<div class='gss_companyrow'>$remove ".$company->name." $reference</div></div>";
+    $setMainUser = "<span style='cursor: pointer;' gss_method='setMainCompanyForUser' gss_fragment='companies' gss_view='gss_view_of_companies_user_has' gss_value='$userid' gss_value_2='$companyId' title='Set this to the main company'> ( set as main company )</span>";
+    $main = $this->selectedUser->mainCompanyId == $companyId ? "<i class='fa fa-check' title='this is the main company for this user'></i>" : "";
+    echo "<div class='gss_companyrow'>$remove $main ".$company->name." $reference </div>$setMainUser</div> ";
 }
 
 ?>

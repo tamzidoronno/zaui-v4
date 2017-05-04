@@ -469,6 +469,7 @@ public class UserStoreCollection {
     public List<User> getUsersThatHasCompany(String companyId) {
         return users.values().stream()
                 .filter(o -> o.company != null && o.company.contains(companyId))
+                .filter(o -> !o.visibleOnlyInMainCompany || (o.visibleOnlyInMainCompany && o.mainCompanyId.equals(companyId)))
                 .collect(Collectors.toList());
     }
 

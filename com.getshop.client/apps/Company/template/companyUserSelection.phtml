@@ -1,9 +1,26 @@
 <?
+/* @var $this \ns_a6d68820_a8e3_4eac_b2b6_b05043c28d78\Company */
+
+if (!$this->selectedUser && $_POST['value']) {
+   $this->selectedUser = $this->getApi()->getUserManager()->getUserById($_POST['value']);
+}
 
 ?>
+
 <div class="gss_overrideapp" gss_use_app_id="a6d68820-a8e3-4eac-b2b6-b05043c28d78">      
-    <input type='hidden' gs_model='companymodel' gs_model_attr='userid' value='<?php echo $user->id; ?>'>
+    <input type='hidden' gs_model='companymodel' gs_model_attr='userid' value='<?php echo $this->selectedUser->id; ?>'>
       
+    <div class="textfield gss_setting">
+        <span class="title">Should user only be visible for the main company ?</span>
+        <div class="gss_onoff" gs_model="companysearch" gs_model_attr="visibleOnlyInMainCompany" mainCompanyVisibleToggle="true" userid="<? echo $this->selectedUser->id; ?>" >
+            <?
+            $faclass = $this->selectedUser->visibleOnlyInMainCompany ? "fa-toggle-on" : "fa-toggle-off";;
+            ?>
+            Off<i class="fa <? echo $faclass; ?> "></i>On
+        </div>
+        <div class="description"></div>
+    </div>
+
     <div class="gss_view_of_companies_user_has">
         <?
         $this->includefile("companies");

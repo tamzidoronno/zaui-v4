@@ -93,4 +93,11 @@ public class Transporter {
         }
         return false;
     }
+   
+    public void close() throws IOException {
+        out.close();
+        in.close();
+        socket.close();
+        connected = false;
+    }
 }

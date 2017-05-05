@@ -2,14 +2,14 @@
 $fleet = $this->getApi()->getMecaManager()->getFleetPageId($this->getPage()->getId());
 $followup = $fleet->followup;
 if($followup == "true"){
-    $followuptext = "manuel";
+    $followuptext = "manuell";
     $directtext = "<span class='directfollowup'>Automatisk oppfølging</span>";
-    $manualtext = "<span class='manualfollowup active'>Manuel oppfølging</span>";
+    $manualtext = "<span class='manualfollowup active'>Manuell oppfølging</span>";
     $sliderinput = "<input type='checkbox' value='<? echo $followup; ?>' gsname='fleetFollowup' id='followupslider' checked/>";
 }else{
     $followuptext = "direkte";
     $directtext = "<span class='directfollowup active'>Automatisk oppfølging</span>";
-    $manualtext = "<span class='manualfollowup'>Manuel oppfølging</span>";
+    $manualtext = "<span class='manualfollowup'>Manuell oppfølging</span>";
     $sliderinput = "<input type='checkbox' value='<? echo $followup; ?>' gsname='fleetFollowup' id='followupslider'/>";
 }
 

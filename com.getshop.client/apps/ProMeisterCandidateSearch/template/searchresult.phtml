@@ -3,18 +3,18 @@
 $users = $this->getUsers("search");
 $favList = $this->getFavList();
 $inSearchView = $this->currentlyLoading === "searchview";
-
+$companies = $this->getCompanies();
 ?>
 <div class="searchresult_content">
 <?
-if (!count($users) && $this->currentlyLoading != "favor") {
+if (!count($users) && $this->currentlyLoading != "favor" && !count($companies)) {
     if (isset($_SESSION['ProMeisterCandidateSearch_searchword']) && $_SESSION['ProMeisterCandidateSearch_searchword'] != "") {
         echo "<div class='errormessage'>";
         $this->wrapContentManager("no_users_found", "Did not find the users by the criteria you inserted, please try to modify and retry");
         echo "</div>";
     }
 } else {
-    $grouped = $this->groupByCompany($users);
+    $grouped = $this->groupByCompany($users, $companies);
     foreach ($grouped as $companyId => $users) {
         $company = $this->getApi()->getUserManager()->getCompany($companyId);
         $blocked = $inSearchView || $this->isCompanyVisible($companyId) ? 'display: block' : "";
@@ -31,6 +31,10 @@ if (!count($users) && $this->currentlyLoading != "favor") {
             }
             echo "&nbsp; $companyName ( $groupName $reference)</div>";
 
+            if (!count($users)) {
+                echo "<div style='padding: 20px;'>".$this->__f("This company does not have any candidates yet.")."</div>";
+            }
+            
             echo "<div class='companyUsers' style='$blocked'>";
                 foreach ($users as $user) {
 

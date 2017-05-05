@@ -26,7 +26,8 @@ public class WuBookManagerProcessor extends GetShopSchedulerBase {
         if(!getApi().getStoreManager().isProductMode()) {
             return;
         }
-        long start = System.currentTimeMillis();
+
+        getApi().getWubookManager().updateShortAvailability(getMultiLevelName());
         getApi().getWubookManager().fetchNewBookings(getMultiLevelName());
     }
     

@@ -10,7 +10,6 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
-import com.thundashop.core.pmsmanager.CheckPmsProcessing;
 import com.thundashop.core.pmsmanager.NewOrderFilter;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
@@ -22,7 +21,6 @@ import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
-import com.thundashop.core.pmsmanager.PmsRoomSimple;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,7 +46,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     String token = "";
     private HashMap<String, WubookRoomData> wubookdata = new HashMap();
     private HashMap<String, WubookAvailabilityRestrictions> restrictions = new HashMap();
-    
+    private Date availabilityHasBeenChanged = null;
+    private Date availabilityLastUpdated = null;
+    private WubookLog log = new WubookLog();
+
     @Autowired
     PmsManager pmsManager;
     
@@ -73,77 +74,18 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(dataCommon instanceof WubookAvailabilityRestrictions) {
                 restrictions.put(dataCommon.id, (WubookAvailabilityRestrictions) dataCommon);
             }
+            if(dataCommon instanceof WubookLog) {
+                log = (WubookLog) dataCommon;
+            }
         }
         
         createScheduler("wubookprocessor", "* * * * *", WuBookManagerProcessor.class);
-        createScheduler("wubookprocessor2", "1 * * * *", WuBookHourlyProcessor.class);
+        createScheduler("wubookprocessor2", "1 1,5,7,9,12,18,22 * * *", WuBookHourlyProcessor.class);
     }
     
     @Override
     public String updateAvailability() throws Exception {
-        if(!frameworkConfig.productionMode) { return ""; }
-        if(!connectToApi()) { return "Faield to connect to api"; }
-        Vector<Hashtable> tosend = new Vector();
-        int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
-        
-        for (WubookRoomData rdata : wubookdata.values()) {
-            if(!rdata.addedToWuBook) {
-                continue;
-            }
-            
-            Hashtable roomToUpdate = new Hashtable();
-            roomToUpdate.put("id", rdata.wubookroomid);
-
-            Calendar startcal = Calendar.getInstance();
-            Calendar endCal = Calendar.getInstance();
-            startcal.set(Calendar.HOUR_OF_DAY, 16);
-            Vector days = new Vector();
-            for (int i = 0; i < 730; i++) {
-                Date start = startcal.getTime();
-                endCal.setTime(startcal.getTime());
-                endCal.add(Calendar.HOUR_OF_DAY, 16);
-                Date end = startcal.getTime();
-                int count = bookingEngine.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
-                if(count > 0) {
-                    count -= toRemove;
-                }
-                if(isRestricted(rdata.bookingEngineTypeId, start, end)) {
-                    count = 0;
-                }
-                
-                if(i > 305) {
-                    count = 0;
-                }
-                
-                Hashtable result = new Hashtable();
-                result.put("avail", count);
-                result.put("no_ota", 0);
-                days.add(result);
-                startcal.add(Calendar.DAY_OF_YEAR, 1);
-            }
-            roomToUpdate.put("days", days);
-            tosend.add(roomToUpdate);
-        }
-
-        String pattern = "dd/MM/yyyy";
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
-        String todayString = format.format(new Date());
-
-        Vector params = new Vector();
-        params.addElement(token);
-        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
-        params.addElement(todayString);
-        params.addElement(tosend);
-
-        Vector result = (Vector) client.execute("update_rooms_values", params);
-
-        if ((Integer)result.get(0) != 0) {
-            logPrint("Failed to update availability, send mail about it.");
-            logPrint("0:" + result.get(0));
-            logPrint("1:" + result.get(1));
-            return (String) result.get(1);
-        }
-        return "";
+        return updateAvailabilityInternal(730);
     }
     
     private boolean isWubookActive() {
@@ -169,6 +111,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if (response == 0) {
             return true;
         }
+        try {
+            logText("Failed to connect to api, " + response);
+            logText("Failed to connect to api, " + result.get(1));
+        }catch(Exception e) {
+            
+        }
+
         return false;
     }
     
@@ -226,7 +175,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Vector result = (Vector) client.execute("fetch_bookings_codes", params);
         List<Integer> toReturn = new ArrayList();
         if((Integer)result.get(0) != 0) {
-            logPrint("Failed to fetch all reservations: " + result.get(1));
+            logText("Failed to fetch all reservations: " + result.get(1));
         } else {
             Vector getAllBookings = (Vector) result.get(1);
             
@@ -351,8 +300,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Vector result = (Vector) client.execute("fetch_new_bookings", params);
         List<WubookBooking> toReturn = new ArrayList();
         if (!result.get(0).equals(0)) {
-            logPrint("0:" + result.get(0));
-            logPrint("1:" + result.get(1));
+            logText("0:" + result.get(0));
+            logText("1:" + result.get(1));
             Exception ex = new Exception();
             logPrintException(ex);
         } else {
@@ -401,6 +350,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Override
     public String markNoShow(String rcode) throws Exception {
         if(!connectToApi()) { return "Failed to connect to ap"; }
+
+        if(numberOfBookingsHavingWuBookId(rcode) != 1) {
+            sendErrorForReservation(rcode, "Failed to mark booking as no show since there are multiple bookings related to this one... should not happen, number of bookings found: " + numberOfBookingsHavingWuBookId(rcode));
+            return "";
+        }
+
         logPrint("Setting no show on rcode: " + rcode);
         Vector params = new Vector();
         params.addElement(token);
@@ -673,7 +628,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(booking.modifiedReservation.size() > 0 && !booking.delete) {
             newbooking = findCorrelatedBooking(booking);
             if(newbooking == null) {
-                messageManager.sendErrorNotification("Could not find existing booking for a modification on reservation id: " + booking.reservationCode, null);
+                sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
             } else {
                 
                 isUpdate = true;
@@ -681,7 +636,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         } else if(booking.delete) {
             newbooking = findCorrelatedBooking(booking);
             if(newbooking == null) {
-                messageManager.sendErrorNotification("Could not find deleted booking for a modification on reservation id: " + booking.reservationCode, null);
+                sendErrorForReservation(booking.reservationCode, "Could not find deleted booking for a modification on reservation");
                 return "Did not find booking to delete.";
             } else {
                 pmsManager.deleteBooking(newbooking.id);
@@ -1085,7 +1040,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public List<WubookAvailabilityRestrictions> getAllRestriction() {
-        return new ArrayList(restrictions.values());
+        return new ArrayList(restrictions.values()); 
     }
 
     private boolean isRestricted(String bookingEngineTypeId, Date start, Date end) {
@@ -1171,6 +1126,137 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         return newbooking;
+    }
+
+    public void setAvailabilityChanged() {
+        logText("Wubook availability needs to be updated");
+        if(availabilityHasBeenChanged == null) {
+            availabilityHasBeenChanged = new Date();
+        }
+    }
+
+    private String updateAvailabilityInternal(int numberOfDays) throws Exception {
+        if(availabilityLastUpdated != null && numberOfDays < 700) {
+            long diff = System.currentTimeMillis() - availabilityLastUpdated.getTime();
+            if(diff < (10*60*1000)) {
+                return "";
+            }
+        }
+        availabilityLastUpdated = new Date();
+
+        logText("Availability is being updated: " + numberOfDays + " days ahead.");
+        if(!frameworkConfig.productionMode) { return ""; }
+        
+        if(!connectToApi()) {
+            return "Faield to connect to api"; 
+        }
+        Vector<Hashtable> tosend = new Vector();
+        int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
+        
+        for (WubookRoomData rdata : wubookdata.values()) {
+            if(!rdata.addedToWuBook) {
+                continue;
+            }
+            
+            Hashtable roomToUpdate = new Hashtable();
+            roomToUpdate.put("id", rdata.wubookroomid);
+
+            Calendar startcal = Calendar.getInstance();
+            Calendar endCal = Calendar.getInstance();
+            startcal.set(Calendar.HOUR_OF_DAY, 16);
+            Vector days = new Vector();
+            for (int i = 0; i < numberOfDays; i++) {
+                Date start = startcal.getTime();
+                endCal.setTime(startcal.getTime());
+                endCal.add(Calendar.HOUR_OF_DAY, 16);
+                Date end = startcal.getTime();
+                int count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
+                if(count > 0) {
+                    count -= toRemove;
+                }
+                if(isRestricted(rdata.bookingEngineTypeId, start, end)) {
+                    count = 0;
+                }
+                
+                if(i > 305) {
+                    count = 0;
+                }
+                
+                Hashtable result = new Hashtable();
+                result.put("avail", count);
+                result.put("no_ota", 0);
+                days.add(result);
+                startcal.add(Calendar.DAY_OF_YEAR, 1);
+            }
+            roomToUpdate.put("days", days);
+            tosend.add(roomToUpdate);
+        }
+
+        String pattern = "dd/MM/yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        String todayString = format.format(new Date());
+
+        Vector params = new Vector();
+        params.addElement(token);
+        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+        params.addElement(todayString);
+        params.addElement(tosend);
+
+        Vector result = (Vector) client.execute("update_rooms_values", params);
+
+        if ((Integer)result.get(0) != 0) {
+            logPrint("Failed to update availability, send mail about it.");
+            logPrint("0:" + result.get(0));
+            logPrint("1:" + result.get(1));
+            return (String) result.get(1);
+        }
+        availabilityHasBeenChanged = null;
+
+        return "";    
+    }
+
+    @Override
+    public String updateShortAvailability() throws Exception {
+        if(availabilityHasBeenChanged == null) {
+            return "";
+        }
+        
+        return updateAvailabilityInternal(300);
+    }
+
+    private void logText(String string) {
+        log.logEntries.put(System.currentTimeMillis(), string);
+        saveObject(log);
+    }
+
+    @Override
+    public HashMap<Long, String> getLogEntries() {
+        return log.logEntries;
+    }
+
+    private Integer numberOfBookingsHavingWuBookId(String idToMark) {
+        int count = 0;
+        
+        for(PmsBooking booking : pmsManager.getAllBookingsFlat()) {
+            if(booking.wubookreservationid != null && booking.wubookreservationid.equals(idToMark)) {
+                count++;
+                continue;
+            }
+            for(String modified : booking.wubookModifiedResId) {
+                if(modified.equals(idToMark)) {
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+
+    private void sendErrorForReservation(String wubookId, String message) {
+        if(!pmsManager.hasSentErrorNotificationForWubookId(wubookId)) {
+            messageManager.sendErrorNotification("Error for wubookreservation: " + wubookId + " : "  + message, null);
+            pmsManager.markSentErrorMessageForWubookId(wubookId);
+        }
     }
 
 }

@@ -34,36 +34,42 @@ public class PlivoSmsHandler extends SmsHandlerAbstract implements SmsHandler, R
     @Override
     public void postSms() throws Exception {
         DefaultHttpClient client = new DefaultHttpClient();
-        client = wrapClient(client);
-        HttpResponse httpResponse = null;
-        
-        String encoding = Base64.encode(("MAMGUYNGZMMWMWOWM2MD:ODJjZmQyYjExZDZhMjdmMTg4YWI2MjJiZWQ3NDky").getBytes());
+        try {
+            client = wrapClient(client);
+            HttpResponse httpResponse = null;
 
-        HttpPost request = new HttpPost("https://api.plivo.com/v1/Account/MAMGUYNGZMMWMWOWM2MD/Message/");
-        request.addHeader("Authorization", "Basic " + encoding);
+            String encoding = Base64.encode(("MAMGUYNGZMMWMWOWM2MD:ODJjZmQyYjExZDZhMjdmMTg4YWI2MjJiZWQ3NDky").getBytes());
 
-        HttpEntity reqEntity = createHttpEntity();
-        request.setEntity(reqEntity);
-        httpResponse = client.execute(request);
+            HttpPost request = new HttpPost("https://api.plivo.com/v1/Account/MAMGUYNGZMMWMWOWM2MD/Message/");
+            request.addHeader("Authorization", "Basic " + encoding);
 
-        HttpEntity entity = httpResponse.getEntity();
+            HttpEntity reqEntity = createHttpEntity();
+            request.setEntity(reqEntity);
+            httpResponse = client.execute(request);
 
-        if (entity != null) {
-            InputStream instream = entity.getContent();
-            int ch;
-            StringBuilder sb = new StringBuilder();
-            while ((ch = instream.read()) != -1) {
-                sb.append((char) ch);
+            HttpEntity entity = httpResponse.getEntity();
+
+            if (entity != null) {
+                InputStream instream = entity.getContent();
+                int ch;
+                StringBuilder sb = new StringBuilder();
+                while ((ch = instream.read()) != -1) {
+                    sb.append((char) ch);
+                }
+                String result = sb.toString();
+                if (result.contains("error")) {
+                    logMessage("failed", result);
+                } else {
+                    logMessage("delivered", result);
+                }
+            } 
+
+            logMessage("failed", "");
+        } finally {
+            if (client != null) {
+                client.getConnectionManager().shutdown();
             }
-            String result = sb.toString();
-            if (result.contains("error")) {
-                logMessage("failed", result);
-            } else {
-                logMessage("delivered", result);
-            }
-        } 
-
-        logMessage("failed", "");
+        }
     }
 
     private HttpEntity createHttpEntity() {

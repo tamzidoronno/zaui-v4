@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<String, String> contracts = new HashMap();
     public String fireinstructions = "";
     public String otherinstructions = "";
+    public boolean avoidCombiningUsers = false;
     
     /* other configurations */
     public boolean needConfirmation = false;
@@ -54,6 +56,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean denyUpdateUserWhenTransferredToAccounting = false;
     public boolean functionsEnabled = false;
     public boolean needConfirmationInWeekEnds = false;
+    public Date closedUntil = null;
     public HashMap<Integer, PmsBookingAddonItem> addonConfiguration = new HashMap();
     public HashMap<String, PmsInventory> inventoryList = new HashMap();
     public HashMap<String, CleaningStatistics> cleaningPriceConfig = new HashMap();

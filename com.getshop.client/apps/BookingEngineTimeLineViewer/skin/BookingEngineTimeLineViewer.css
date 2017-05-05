@@ -1,0 +1,9 @@
+.BookingEngineTimeLineViewer .boxview {
+    border: solid 1px #DDD;
+    padding: 10px;
+}
+
+.BookingEngineTimeLineViewer .boxview.full {
+    background-color: #ff6565;
+    color: #FFF;
+}

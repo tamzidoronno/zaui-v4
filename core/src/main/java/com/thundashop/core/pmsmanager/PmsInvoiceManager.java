@@ -288,8 +288,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return lastOrderId;
     }
-
-    private boolean supportsDailyPmsInvoiceing(PmsBooking booking) {
+    
+    @Override
+    public boolean supportsDailyPmsInvoiceing(String bookingId) {
+        PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        String plugin = findPricePluginForBooking(booking);
+        
+        if(!plugin.equals("pmsdailyordergeneration")) {
+            return false;
+        }
+        
         if(booking.orderIds.isEmpty()) {
             return true;
         }
@@ -665,7 +673,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
                             result.add(msg);
                             room.invoicedTo = invoicedTo;
-                            messageManager.sendErrorNotification(msg, null);
                             pmsManager.saveBooking(booking);
                         }
                     }
@@ -1243,9 +1250,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
         PmsBooking booking = pmsManager.getBooking(bookingId);
-        String plugin = findPricePluginForBooking(booking);
-        
-        if(plugin.equals("pmsdailyordergeneration") && supportsDailyPmsInvoiceing(booking)) {
+        if(booking != null && supportsDailyPmsInvoiceing(booking.id)) {
+            if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+                Order order = orderManager.getOrder(filter.addToOrderId);
+                if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {
+                    filter.pmsRoomId = order.attachedToRoom;
+                }
+            }
+            
             pmsDailyOrderGeneration.createCart(bookingId, filter);
         } else {
             return createOrderOld(bookingId, filter);
@@ -1260,7 +1272,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             booking.orderIds = uniqueList;
 
             pmsManager.saveBooking(booking);
-            messageManager.sendErrorNotification("TMP: order created with new order system, id: " + order.incrementOrderId, null);
+//            if(storeId != null && storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
+//                messageManager.sendErrorNotification("TMP: order created with new order system, id: " + order.incrementOrderId, null);
+//            }
             return order.id;
         }
         return "";

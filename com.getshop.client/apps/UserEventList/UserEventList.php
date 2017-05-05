@@ -26,6 +26,21 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         }
     }
     
+    public static function sortByDate($a, $b) {
+        if (!isset($a->mainStartDate) || !isset($b->mainStartDate))
+            return 0;
+        
+        $time1 = strtotime($a->mainStartDate);
+        $time2 = strtotime($b->mainStartDate);
+        if ($time1 > $time2) {
+            return 1;
+        }
+        if ($time1 == $time2) {
+            return 0;
+        }
+        
+        return -1;
+    }
     private function downlaodEvents($userId) {       
         $evnts = $this->getApi()->getEventBookingManager()->getEventsForUser($this->getBookingEngineName(), $userId);
         
@@ -37,6 +52,22 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
                 $events[] = $event;
             }
         }
+        
+        $manEvents = $this->getApi()->getEventBookingManager()->getManuallyAddedEvents($this->getBookingEngineName(), $userId);
+        if ($manEvents) {
+            foreach ($manEvents as $man) {
+                $test = new \core_eventbooking_Event();
+                $test->bookingItemType = new \core_bookingengine_data_BookingItemType();
+                $test->bookingItemType->name = $man->name;
+                $test->currentUserId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+                $test->mainStartDate = $man->date;
+                $test->isInFuture = strtotime($man->date) > time();
+                $test->manEvent = $man;
+                $events[] = $test;
+            }
+        }
+        
+        $res = usort($events, array("ns_138a1b9a_d8e3_4fec_8f3f_1cae11bca54f\UserEventList", "sortByDate"));
         
         return $events;
     }
@@ -80,25 +111,6 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
 
     public function getUserId() {
         return isset($_SESSION['ProMeisterSpiderDiager_current_user_id_toshow']) ? $_SESSION['ProMeisterSpiderDiager_current_user_id_toshow'] : \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
-    }
-
-    /**
-     * 
-     * @return \core_scormmanager_Scorm[]
-     */
-    public function getCompletedScorms() {
-        $scorms = $this->getApi()->getScormManager()->getMyScorm();
-        if (!$scorms)
-            return array();
-        
-        $ret = array();
-        foreach ($scorms as $scorm) {
-            if ($scorm->completed) {
-                $ret[] = $scorm;
-            }
-        }
-        
-        return $ret;
     }
 
 }

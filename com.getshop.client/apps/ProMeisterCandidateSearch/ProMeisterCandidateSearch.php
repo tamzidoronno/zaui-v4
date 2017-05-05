@@ -82,15 +82,37 @@ class ProMeisterCandidateSearch extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3
      * 
      * @param \core_usermanager_data_User[] $users
      */
-    public function groupByCompany($users) {
+    public function groupByCompany($users, $companies) {
         $retValues = [];
-        foreach ($users as $user) {
-            foreach ($user->company as $company) {
-                $retValues[$company][] = $user;
+        if (is_array($users)) {
+            foreach ($users as $user) {
+                foreach ($user->company as $company) {
+                    $retValues[$company][] = $user;
+                }
             }
         }
         
+        if ($this->currentlyLoading == "searchview" && is_array($companies)) {
+            foreach ($companies as $company) {
+                if (!isset($retValues[$company->id])) {
+                    $retValues[$company->id] = array();
+                }
+            }
+        }
+        
+        $companies = $this->getCompanies();
+        
         return $retValues;
+    }
+    
+    public function getCompanies() {
+        $searchValue = isset($_SESSION['ProMeisterCandidateSearch_searchword']) ? $_SESSION['ProMeisterCandidateSearch_searchword'] : "";
+        if ($searchValue) {
+            $companies = $this->getApi()->getUserManager()->searchForCompanies($searchValue);
+            return $companies;
+        }
+        
+        return array();
     }
    
     public function getUsers($mode) {

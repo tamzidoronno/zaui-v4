@@ -15,6 +15,24 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         $this->includefile("settings");
     }
     
+    public function showShortInformation() {
+        $this->includefile("showShortInformation");
+    }
+    
+    public function closeAllRoomsForBooking() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config->closedUntil = $this->convertToJavaDate(strtotime($_POST['data']['closeRoomDate'] . " " . "12:00"));
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+        $this->loadCloseRoomBox();
+    }
+    
+    public function openAllRoomsForBooking() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config->closedUntil = null;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedName(), $config);
+        $this->loadCloseRoomBox();
+    }
+    
     public function closeRooms() {
         $user = $this->getApi()->getUserManager()->getLoggedOnUser();
         $comment = "closed by: " . $user->fullName . ", ";
@@ -237,6 +255,11 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         }
         
         return false;
+    }
+    
+    public function prepareAction() {
+        echo "Preparing action:<br>";
+        echo json_encode($_POST['data']);
     }
     
     public function getData() {

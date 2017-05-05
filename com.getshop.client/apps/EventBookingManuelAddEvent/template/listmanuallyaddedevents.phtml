@@ -1,0 +1,22 @@
+<?
+/* @var $this ns_723546d2_c113_4c6f_b7bd_23e7f68620e8\EventBookingManuelAddEvent */
+
+$userId = isset($_POST['value']) ? $_POST['value'] : $_POST['userid'];
+
+$mans = $this->getApi()->getEventBookingManager()->getManuallyAddedEvents("booking", $userId);
+if (!$mans) {
+    return;
+}
+
+foreach ($mans as $man) {
+    ?>
+    <div style="border: solid 1px #DDD; padding: 10px; position: relative;">
+        <div>Event name: <? echo $man->name; ?></div>
+        <div>Date: <? echo $man->date; ?></div>
+        <div> Files added: <? echo count($man->files); ?></div>
+        <div class="gs_shop_small_icon gss_upload_file_to_row" manualid="<? echo $man->id; ?>"><i class="fa fa-upload"></i></div>
+        <div class="gs_shop_small_icon gss_delete_manual_added_event" gss_method="delete" gss_value="<? echo $userId; ?>" gss_fragment="listmanuallyaddedevents" gss_view="manuallyaddedevents" gss_value_2="<? echo  $man->id; ?>"><i class="fa fa-trash"></i></div>
+    </div>
+    <?
+}
+?>

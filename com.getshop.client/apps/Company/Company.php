@@ -24,6 +24,22 @@ class Company extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imp
         return $this->getName();
     }
     
+    public function saveVisibleState() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['value']);
+        $user->visibleOnlyInMainCompany = $_POST['state'];
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
+    public function setMainCompanyForUser() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['value']);
+        if ($_POST['value2'] != $user->mainCompanyId) {
+            $user->mainCompanyId = $_POST['value2'];
+        } else {
+            $user->mainCompanyId = "";
+        }
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
     public function updateUser() {
         $user = $this->getApi()->getUserManager()->getUserById($_POST['userid']);
         $user->company = array();

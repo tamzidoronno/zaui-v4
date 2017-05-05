@@ -3,6 +3,24 @@ app.GetShopLockAdmin = {
         $(document).on('change','.GetShopLockAdmin .connectlock', app.GetShopLockAdmin.connectLock);
         $(document).on('click','.GetShopLockAdmin .loadlocklist', app.GetShopLockAdmin.loadLockList);
         $(document).on('click','.GetShopLockAdmin .changezwaveid', app.GetShopLockAdmin.changeZWaveId);
+        
+        $(document).on('change','.GetShopLockAdmin .repeat_type', app.GetShopLockAdmin.changeRepeatType);
+        
+    },
+    changeRepeatType: function() {
+         var toChange = $(this).closest('.itemrow');
+        var type = $(this).val();
+        toChange.find('.repeatrow').hide();
+        if(type !== "0") {
+            toChange.find('.repeatrow').show();
+        } 
+        toChange.find('.repeateachdaterow').hide();
+        if(type === "1") {
+            toChange.find('.repeateachdaterow').show();
+        }
+        
+        toChange.find('.repeatoption').hide();
+        toChange.find('.repeat_' + type).show();
     },
     changeZWaveId : function() {
         var newId = prompt("New z-wave id");

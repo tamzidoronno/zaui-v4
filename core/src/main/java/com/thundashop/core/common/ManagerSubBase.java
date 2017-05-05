@@ -362,13 +362,13 @@ public class ManagerSubBase {
                 GetShopSchedulerBase base = (GetShopSchedulerBase)gsscheduler.getShopSchedulerBase;
                 base.setWebAddress(webAddress);
                 base.setUsername(user.username);
-                base.setPassword(user.metaData.get("password"));
+                base.setPassword(user.internalPassword);
                 base.setMultiLevelName(gsscheduler.multilevelName);
                 new Thread(base).start();
             } else {
                 Class<?> clazz = Class.forName(gsscheduler.schedulerClassName.getCanonicalName());
                 Constructor<?> ctor = clazz.getConstructor(String.class,String.class,String.class,String.class, String.class);
-                GetShopSchedulerBase ret = (GetShopSchedulerBase) ctor.newInstance(webAddress, user.username, user.metaData.get("password"), gsscheduler.scheduler, gsscheduler.multilevelName);
+                GetShopSchedulerBase ret = (GetShopSchedulerBase) ctor.newInstance(webAddress, user.username, user.internalPassword, gsscheduler.scheduler, gsscheduler.multilevelName);
 
                 schedulersBases.put(gsscheduler.id, ret);
                 schedulers.put(gsscheduler.id, gsscheduler);

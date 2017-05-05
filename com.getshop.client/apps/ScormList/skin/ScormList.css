@@ -1,8 +1,25 @@
+.ScormList .scormrow:not(.subgroup) {
+    border-top: solid 1px #DDD;   
+    padding-left: 10px;
+    padding-right: 10px;
+    border-right: solid 1px #DDD;   
+}
+
+.ScormList .scormrow {
+    border-left: solid 1px #DDD;
+    border-right: solid 1px #DDD; 
+}
 .ScormList .scormrow div {
     display: inline-block;
     line-height: 30px;
 }
 
-.ScormList .scormrow div:nth-child(1) { width: 300px; }
-.ScormList .scormrow div:nth-child(2) { width: 150px; }
+.ScormList .scormrow div:nth-child(1) { width: 350px; }
+.ScormList .scormrow.subgroup div:nth-child(1) { width: 331px; }
+.ScormList .scormrow div:nth-child(2) { width: 100px; }
 .ScormList .scormrow div:nth-child(3) { width: 150px; }
+
+.ScormList .scormrow.subgroup { padding-left: 30px; }
+.ScormList .groupedInformation { padding-left: 30px; color: red; border-left: solid 1px #DDD; border-right: solid 1px #DDD; }
+
+.ScormList { border-bottom: solid 1px #DDD; }

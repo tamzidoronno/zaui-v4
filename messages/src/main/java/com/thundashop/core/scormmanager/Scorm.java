@@ -19,6 +19,8 @@ public class Scorm extends DataCommon {
     public String userId = "";
     public int score = 0;
     public boolean completed = false;
+    public boolean passed;
+    public boolean failed;
     
     @Transient
     public String scormName = "";

@@ -56,6 +56,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public HashMap<String, ExternalCertificate> externalCertificates = new HashMap();
     public HashMap<String, WaitingListBooking> waitingListBookings = new HashMap();
     public HashMap<String, InvoiceGroup> groupInvoicing = new HashMap();
+    public HashMap<String, ManuallyAddedEventParticipant> manualEvents = new HashMap();
+    public HashMap<String, ForcedParcipated> forcedParticipated = new HashMap();
     
     @Autowired
     public EventLoggerHandler eventLoggerHandler;
@@ -84,9 +86,19 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     @Override
     public void dataFromDatabase(DataRetreived datas) {
         for (DataCommon data : datas.data) {
+            if (data instanceof ManuallyAddedEventParticipant) {
+                ManuallyAddedEventParticipant event = (ManuallyAddedEventParticipant)data;
+                manualEvents.put(event.id, event);
+            }
+            
             if (data instanceof Event) {
                 Event event = (Event)data;
                 events.put(event.id, event);
+            }
+            
+            if (data instanceof ForcedParcipated) {
+                ForcedParcipated forced = (ForcedParcipated)data;
+                forcedParticipated.put(forced.userId, forced);
             }
             
             if (data instanceof Location) {
@@ -187,6 +199,16 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         return retEvents;
     }
 
+    private Event shortFinalize(Event event) {
+        setBookingItem(event, true);
+        
+        if (event.bookingItem != null) {
+            event.bookingItemType = bookingEngine.getBookingItemType(event.bookingItem.bookingItemTypeId);
+        }
+        
+        return event;
+    }
+    
     private Event finalize(Event event) {
         bookingEngine.removeBookingsWhereUserHasBeenDeleted(event.bookingItemId);
         setBookingItem(event, true);
@@ -2190,5 +2212,118 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         
+    }
+
+    @Override
+    public void addManuallyParticipatedEvent(ManuallyAddedEventParticipant man) {
+        saveObject(man);
+        manualEvents.put(man.id, man);
+    }
+
+    @Override
+    public List<ManuallyAddedEventParticipant> getManuallyAddedEvents(String userId) {
+        User user = userManager.getUserByCellphone(userId);
+        userManager.checkUserAccess(user);
+        return manualEvents.values().stream()
+                .filter(man -> man.userId != null &&  man.userId.equals(userId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteManullyParticipatedEvent(String id) {
+        ManuallyAddedEventParticipant res = manualEvents.remove(id);
+        if (res != null) {
+            deleteObject(res);
+        }
+    }
+
+    @Override
+    public ManuallyAddedEventParticipant getManuallyAddedEventParticipant(String id) {
+        return manualEvents.get(id);
+    }
+
+    @Override
+    public List<BookingItemType> getMandatoryCourses(String userId) {
+        if (userId == null || userId.isEmpty()) {
+            userId = getSession().currentUser.id;
+        }
+        
+        User user = userManager.getUserById(userId);
+        userManager.checkUserAccess(user);
+        
+        if (user.companyObject == null || user.companyObject.groupId == null || user.companyObject.groupId == null) {
+            return new ArrayList();
+        }
+        
+        String groupId = user.companyObject.groupId;
+        
+        return getBookingItemTypes().stream()
+                .filter(type -> getBookingTypeMetaData(type.id).mandatoryForGroup.get(groupId) == true)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean hasCompletedMandatoryEvent(String eventTypeId, String userId) {
+        if (userId == null || userId.isEmpty()) {
+            userId = getSession().currentUser.id;
+        }
+        
+        User user = userManager.getUserById(userId);
+        userManager.checkUserAccess(user);
+        
+        if (hasForcedMandatoryTest(eventTypeId, user.id)) {
+            return true;
+        }
+
+        events.values().stream().forEach(ev -> shortFinalize(ev));
+ 
+        List<Event> eventsOfType = events.values().stream()
+                .filter(b -> b.bookingItemType != null && b.bookingItemType.id.equals(eventTypeId))
+                .collect(Collectors.toList());
+        
+        for (Event event : eventsOfType) {
+            if (!event.bookingItemType.id.equals(eventTypeId)) {
+                continue;
+            }
+            
+            if (isUserSignedUpForEvent(event.id, user.id) && hasUserParticipated(event, user.id) ) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    @Override
+    public boolean hasForcedMandatoryTest(String eventTypeId, String userId) {
+        User user = userManager.getUserById(userId);
+        userManager.checkUserAccess(user);
+        
+        if (user != null) {
+            ForcedParcipated forced = forcedParticipated.get(userId);
+            if (forced == null)
+                return false;
+            
+            return forced.eventTypeIds.contains(eventTypeId);
+        }
+        
+        return false;
+    }
+
+    @Override
+    public void setForcedMandatoryAccess(String userId, List<String> bookingItemIds) {
+        User user = userManager.getUserById(userId);
+        if (user != null) {
+            ForcedParcipated forced = forcedParticipated.get(userId);
+            if (forced == null) {
+                forced = new ForcedParcipated();
+            }
+            
+            forced.userId = userId;
+            forced.eventTypeIds = bookingItemIds;
+            
+            saveObject(forced);
+            forcedParticipated.put(forced.userId, forced);
+        }
     }
 }

@@ -1,0 +1,42 @@
+<?php
+/* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$roomId = $_POST['data']['roomid'];
+$booking = $this->getManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
+?>
+<span style="position:absolute;border:solid 1px;padding: 10px; border-radius: 5px;background-color:#fff;right: 30px; z-index:2;margin-top:15px;" class='orderforrromview'>
+    Orders related to this room
+    <i class="fa fa-close" onclick='$(this).closest(".orderforrromview").remove()' style='float:right; cursor:pointer;'></i>
+    <table cellspacing='0' cellpadding='0'>
+        <tr>
+            <th>Orderid</th>
+            <th>Inc taxes</th>
+            <th>Ex taxes</th>
+            <th>Paid</th>
+        </tr>
+    <?php
+    foreach($booking->orderIds as $orderId) {
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        $found = false;
+        foreach($order->cart->items as $item) {
+            if($item->product->externalReferenceId == $roomId) {
+                $found = true;
+                break;
+            }
+        }
+        if(!$found) {
+            continue;
+        }
+        
+        $paid =  $order->status == 7 ? "YES" : "NO" ;
+        echo "<tr>";
+        echo "<td><b>" . $order->incrementOrderId . "</b></td>";
+        echo "<td>" . round($this->getApi()->getOrderManager()->getTotalAmount($order)) . "</td>";
+        echo "<td>" . round($this->getApi()->getOrderManager()->getTotalAmountExTaxes($order)) . "</td>";
+        echo "<td>" . $paid . "</td>";
+        echo "</tr>";
+        $this->orderToDisplay = $order;
+        $this->includefile("detailedorderinformation");
+    }
+    ?>
+    </table>
+</span>

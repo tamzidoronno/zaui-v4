@@ -22,6 +22,9 @@ public interface IWubookManager {
     @Administrator
     public boolean testConnection() throws Exception;
     @Administrator
+    public HashMap<Long, String> getLogEntries();
+    
+    @Administrator
     public List<WubookBooking> fetchAllBookings(Integer daysback) throws Exception;
     @Administrator
     public List<Integer> fetchBookingCodes(Integer daysback) throws Exception;
@@ -35,6 +38,8 @@ public interface IWubookManager {
     public void addBooking(String rcode) throws Exception;
     @Administrator
     public String updateAvailability() throws Exception;
+    @Administrator
+    public String updateShortAvailability() throws Exception;
     @Administrator
     public String markNoShow(String rcode) throws Exception;
     @Administrator

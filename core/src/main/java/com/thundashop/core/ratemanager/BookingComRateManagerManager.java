@@ -92,47 +92,9 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
     }
     
     public String htmlPost(String url, String data)  throws Exception {
-        String encoding = "UTF-8";
-        
-        URL urlObj = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
-        
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-        
-        connection.setRequestProperty("Content-Type", "application/xml");
-        connection.setRequestProperty("Accept", "application/xml");
-        
-        connection.setDoOutput(true);
-        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-        outputStream.writeBytes(new String(data.getBytes(), encoding));
-        outputStream.flush();
-        outputStream.close();
-        
-        try {
-            BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        
-            String responseLine;
-            StringBuilder responseBuffer = new StringBuilder();
-
-            while((responseLine = responseStream.readLine()) != null) {
-                responseBuffer.append(responseLine);
-            }
-            return responseBuffer.toString();
-        }catch(IOException ex) {
-            BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-        
-            String responseLine;
-            StringBuilder responseBuffer = new StringBuilder();
-
-            while((responseLine = responseStream.readLine()) != null) {
-                responseBuffer.append(responseLine);
-            }
-            String res = responseBuffer.toString();
-            System.out.println(res);
-            
-            throw ex;
-        }    
+        RateManagerPushBookingThread pusher = new RateManagerPushBookingThread(url, data);
+        pusher.start();
+        return "";
     }
     
     @Override

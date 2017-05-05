@@ -10,6 +10,28 @@ class ScormManager extends \MarketingApplication implements \Application {
         return "ScormManager";
     }
     
+    public function moveDown() {
+        $package = $this->getApi()->getScormManager()->getPackage($_POST['data']['packageid']);
+        $index = intval($_POST['data']['index']);
+        
+        $item = $package->groupedScormPackages[ $index ];
+        $package->groupedScormPackages[ $index ] = $package->groupedScormPackages[ $index + 1 ];
+        $package->groupedScormPackages[ $index + 1 ] = $item;
+        
+        $this->getApi()->getScormManager()->saveSetup($package);
+    }
+    
+    public function moveUp() {
+        $package = $this->getApi()->getScormManager()->getPackage($_POST['data']['packageid']);
+        $index = intval($_POST['data']['index']);
+        
+        $item = $package->groupedScormPackages[ $index ];
+        $package->groupedScormPackages[ $index ] = $package->groupedScormPackages[ $index - 1 ];
+        $package->groupedScormPackages[ $index - 1 ] = $item;
+        
+        $this->getApi()->getScormManager()->saveSetup($package);
+    }
+    
     public function saveScormPackage() {
         $dataObject = array();
         

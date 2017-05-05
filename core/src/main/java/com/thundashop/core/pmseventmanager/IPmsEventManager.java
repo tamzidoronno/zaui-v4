@@ -16,12 +16,14 @@ import java.util.List;
 public interface IPmsEventManager {
     public List<PmsBookingEventEntry> getEventEntries(PmsEventFilter filter);
     public List<PmsEventListEntry> getEventList();
+    public List<PmsEventListEntry> getEventListWithDeleted();
     
     public void saveEntry(PmsBookingEventEntry entry, String day);
     @Administrator
     public void deleteEntry(String entryId, String day);
     @Administrator
     public PmsBookingEventEntry createEvent(String id);
+
             
     public PmsBookingEventEntry getEntry(String entryId, String day);
     public PmsBookingEventEntry getEntryShort(String shortId, String day);

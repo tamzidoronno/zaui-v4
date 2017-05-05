@@ -49,20 +49,11 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     
     @Override
     public List<PmsBookingEventEntry> getEventEntries(PmsEventFilter filter) {
-        removeDeadEvents();
-        List<PmsBookingEventEntry> result = new ArrayList();
-        if(filter == null) {
-            result = new ArrayList(entries.values());
-            for(PmsBookingEventEntry entry : result) {
-                finalize(entry);
-            }
-            return result;
-        }
-        for(String id : filter.bookingIds) {
-            result.add(getEntry(id, ""));
-        }
-        
-        return result;
+        return getEventEntriesInternal(filter, false);
+    }
+    
+    public List<PmsBookingEventEntry> getEventEntriesWithDeleted(PmsEventFilter filter) {
+        return getEventEntriesInternal(filter, true);
     }
 
     @Override
@@ -158,54 +149,25 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     private void removeDeadEvents() {
         List<PmsBookingEventEntry> toremove = new ArrayList();
         for(PmsBookingEventEntry event : entries.values()) {
+            if(event.isDeleted) {
+                continue;
+            }
             PmsBooking booking = pmsManager.getBookingUnsecure(event.id);
             if(booking == null || booking.isDeleted) {
-                toremove.add(event);
+                event.isDeleted = true;
+                saveObject(event);
             }
-        }
-        
-        for(PmsBookingEventEntry remove : toremove) {
-            entries.remove(remove.id);
-            deleteObject(remove);
         }
     }
 
     @Override
     public List<PmsEventListEntry> getEventList() {
-        List<PmsBookingEventEntry> eventlist = getEventEntries(null);
-        List<PmsEventListEntry> result = new ArrayList();
-        Calendar cal = Calendar.getInstance();
-        Calendar today = Calendar.getInstance();
-        today.set(Calendar.HOUR_OF_DAY, 6);
-        Date todayDate = today.getTime();
-        for(PmsBookingEventEntry entry : eventlist) {
-            int i = 0;
-            int offset = 0;
-            for(PmsBookingDateRange range : entry.dateRanges) {
-                offset++;
-                if(!range.start.after(todayDate)) {
-                    continue;
-                }
-                cal.setTime(range.start);
-                String day = getDayString(cal);
-                
-                PmsBookingEventEntry overrideEntry = entry.getDay(day);
-                PmsEventListEntry newEntry = new PmsEventListEntry(overrideEntry, range.start, entry.roomNames.get(i));
-                newEntry.eventId = entry.id;
-                newEntry.eventDateId = entry.id + "_" + day;
-                result.add(newEntry);
-                i++;
-            }
-        }
-        
-        Collections.sort(result, new Comparator<PmsEventListEntry>(){
-            public int compare(PmsEventListEntry o1, PmsEventListEntry o2){
-                return o1.date.compareTo(o2.date);
-            }
-       });
-        
-        
-        return result;
+        return getEventListInternal(false);
+    }
+
+    @Override
+    public List<PmsEventListEntry> getEventListWithDeleted() {
+        return getEventListInternal(true);
     }
 
     private String getDayString(Calendar cal) {
@@ -229,6 +191,68 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         }
         
         return timeString;
+    }
+
+    private List<PmsBookingEventEntry> getEventEntriesInternal(PmsEventFilter filter, boolean includeDeleted) {
+        removeDeadEvents();
+        List<PmsBookingEventEntry> result = new ArrayList();
+        if(filter == null) {
+            result = new ArrayList(entries.values());
+            for(PmsBookingEventEntry entry : result) {
+                if(entry.isDeleted && !includeDeleted) {
+                    continue;
+                }
+                finalize(entry);
+            }
+            return result;
+        }
+        for(String id : filter.bookingIds) {
+            result.add(getEntry(id, ""));
+        }
+        
+        return result;
+    }
+
+    private List<PmsEventListEntry> getEventListInternal(boolean includeDeleted) {
+        List<PmsBookingEventEntry> eventlist = null;
+        if(includeDeleted) {
+            eventlist = getEventEntries(null);
+        } else {
+            eventlist = getEventEntriesWithDeleted(null);
+        }
+        List<PmsEventListEntry> result = new ArrayList();
+        Calendar cal = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 6);
+        Date todayDate = today.getTime();
+        for(PmsBookingEventEntry entry : eventlist) {
+            int i = 0;
+            int offset = 0;
+            for(PmsBookingDateRange range : entry.dateRanges) {
+                offset++;
+                if(!range.start.after(todayDate)) {
+                    continue;
+                }
+                cal.setTime(range.start);
+                String day = getDayString(cal);
+                
+                PmsBookingEventEntry overrideEntry = entry.getDay(day);
+                PmsEventListEntry newEntry = new PmsEventListEntry(overrideEntry, range.start, entry.roomNames.get(i));
+                newEntry.eventId = entry.id;
+                newEntry.eventDateId = entry.id + "_" + day;
+                newEntry.isDeleted = entry.isDeleted;
+                result.add(newEntry);
+                i++;
+            }
+        }
+        
+        Collections.sort(result, new Comparator<PmsEventListEntry>(){
+            public int compare(PmsEventListEntry o1, PmsEventListEntry o2){
+                return o1.date.compareTo(o2.date);
+            }
+       });
+        
+        return result;  
     }
     
 }

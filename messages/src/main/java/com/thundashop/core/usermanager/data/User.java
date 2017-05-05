@@ -6,6 +6,7 @@ package com.thundashop.core.usermanager.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thundashop.core.common.Administrator;
 import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -32,7 +33,13 @@ public class User extends DataCommon implements Comparable<User> {
     public String lastRegisteredToken;
     public boolean triedToFetch = false;
     public boolean suspended = false;
-    
+    public boolean visibleOnlyInMainCompany = false;
+    /**
+     * If user is connected to multiple companies 
+     * but it still has a main company, this would be the id of
+     * that.
+     */
+    public String mainCompanyId = "";
     @Transient
     public Company companyObject;
     
@@ -41,6 +48,9 @@ public class User extends DataCommon implements Comparable<User> {
     @Transient
     public String useGroupId = "";
     public String externalAccountingId;
+    
+    @Administrator
+    public String internalPassword;
  
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);
@@ -52,6 +62,10 @@ public class User extends DataCommon implements Comparable<User> {
         if (toClean != null) 
             toClean = toClean.trim();
         
+    }
+    
+    public boolean isProcessUser() {
+        return id != null && id.equals("gs_system_scheduler_user");
     }
 
     public String getName() {

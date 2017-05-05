@@ -121,6 +121,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         updateBookingTypesIfTypeChanged();
         createScheduler("pmsprocessor", "0 6,16 * * *", CheckConsistencyCron.class);
+        
+        bookings.remove("012c73ac-3d77-40e6-bfd3-2a67b3de1c02");
+        bookings.remove("8e2d9936-6cc6-418c-9f3c-43e1b67fe6fb");
+        bookings.remove("0e46b786-8b00-4b11-a001-40c06bda41f0");
+        bookings.remove("b303c63a-b928-4e49-b7f7-49aea9075443");
+       
     }
     
     public Availability getAvailbility(String id) {
@@ -228,19 +234,19 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
 
     private void checkOverLappingAvailibility(BookingItem item, Availability availability) {
         for (Availability iAvailbility : item.availabilities) {
-            if (iAvailbility.startDate.before(availability.startDate) && iAvailbility.endDate.after(availability.startDate)) {
+            if (iAvailbility.startDate.before(availability.startDate) && iAvailbility.endDate.after(availability.startDate) && shouldThrowException()) {
                 throw new BookingEngineException("The availability overlaps in the beginning of another availbility");
             }
             
-            if (availability.startDate.before(iAvailbility.endDate) && availability.startDate.after(iAvailbility.startDate)) {
+            if (availability.startDate.before(iAvailbility.endDate) && availability.startDate.after(iAvailbility.startDate) && shouldThrowException()) {
                 throw new BookingEngineException("The availability overlaps in the end of another availbility");
             }
             
-            if (availability.startDate.before(iAvailbility.startDate) && availability.endDate.after(iAvailbility.endDate)) {
+            if (availability.startDate.before(iAvailbility.startDate) && availability.endDate.after(iAvailbility.endDate) && shouldThrowException()) {
                 throw new BookingEngineException("The availability overlaps a whole periode");
             }
             
-            if (availability.startDate.equals(iAvailbility.startDate) && availability.endDate.equals(iAvailbility.endDate)) {
+            if (availability.startDate.equals(iAvailbility.startDate) && availability.endDate.equals(iAvailbility.endDate) && shouldThrowException()) {
                 throw new BookingEngineException("The availability overlaps exact same periode");
             }
         }
@@ -285,6 +291,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
      * @return 
      */
     public BookingGroup addBookings(List<Booking> bookings) {
+        preventOverBookingByItemId(bookings);
         checkBookingItemIds(bookings);
         preProcessBookings(bookings);
         
@@ -313,6 +320,16 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         saveObject(bookingGroup);
         return bookingGroup;
     }
+
+    private void preventOverBookingByItemId(List<Booking> bookings1) throws BookingEngineException {
+        for (Booking booking : bookings1) {
+            if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
+                if (itemInUseBetweenTime(booking.startDate, booking.endDate, booking.bookingItemId)) {
+                    throw new BookingEngineException("Alread in use, can not add booking");
+                }
+            }
+        }
+    }
     
     private void preProcessBookings(List<Booking> bookings) {
         validateBookings(bookings);
@@ -330,7 +347,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 verifier.throwExceptionIfBookingItemIdMissing(booking, items);
             }   
             
-            if (booking.startDate != null && booking.endDate != null && booking.startDate.after(booking.endDate)) {
+            if (booking.startDate != null && booking.endDate != null && booking.startDate.after(booking.endDate) && shouldThrowException()) {
                 throw new BookingEngineException("Startdate can not be after enddate");
             }            
             
@@ -373,7 +390,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             BookingTimeLineFlatten flattenTimeLine = getFlattenTimelinesFromBooking(booking);
             bookingsToConsider.stream().forEach(o -> flattenTimeLine.add(o));
             
-            if (!flattenTimeLine.canAdd(booking)) {
+            if (!flattenTimeLine.canAdd(booking) && shouldThrowException()) {
                 throw new BookingEngineException("There is no space for this booking, " + booking.getInformation());
             }
            
@@ -498,7 +515,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .filter(o -> o.bookingItemId != null && o.bookingItemId.equals(id))
                 .count();
         
-        if (count > 0) {
+        if (count > 0 && shouldThrowException()) {
             throw new BookingEngineException("Can not delete a bookingItem when there is bookings connected to it");
         }
         
@@ -517,7 +534,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             throw new BookingEngineException("The type you tried to change to does not exists");
         }
         
-        if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
+        if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty() && shouldThrowException()) {
             throw new BookingEngineException("Can not change BookingItemType on booking that already is assigned to a bookingItem");
         }
         
@@ -543,7 +560,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
 
     private void checkBookingItemIds(List<Booking> bookings) {
         for (Booking booking : bookings) {
-            if (booking.id != null &&  !booking.id.isEmpty()) {
+            if (booking.id != null &&  !booking.id.isEmpty() && shouldThrowException()) {
                 throw new BookingEngineException("Use saveBooking to update old bookings.");
             }
         }
@@ -636,7 +653,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             List<BookingItem> itemInUse = items.values().stream().filter( o -> o.bookingItemTypeId.equals(id)).collect(Collectors.toList());
             long count = itemInUse.size();
             
-            if (count > 0) {
+            if (count > 0 && shouldThrowException()) {
                 throw new BookingEngineException("Can not delete a bookingitemtype that already has booking items, Existing items: " + count);
             }
             types.remove(id);
@@ -712,26 +729,42 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         return line;
     }
    
-    BookingTimeLineFlatten getTimeLinesForItemWithOptimal(Date start, Date end, String itemId) {
-        BookingItem item = getBookingItem(itemId);
-        BookingTimeLineFlatten line = new BookingTimeLineFlatten(item.bookingSize, item.bookingItemTypeId);
-        line.start = start;
-        line.end = end;
-        bookings.values().stream().
-                filter(o -> o.within(start, end)).
-                filter(o -> (o.bookingItemId != null && o.bookingItemId.equals(itemId))).
-                forEach(o -> line.add(o));
+    List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimal(Date start, Date end) {
+        List<BookingTimeLineFlatten> retList = new ArrayList();        
         
+        for (String bookingItemTypeId : types.keySet()) {
+            BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(bookingItemTypeId, start, end, null);
+            List<OptimalBookingTimeLine> availableBookingItems = assigner.getOptimalAssigned();
+            
+            for (BookingItem item : items.values()) {
+                if (!item.bookingItemTypeId.equals(bookingItemTypeId)) {
+                    continue;
+                }
+                
+                BookingTimeLineFlatten line = new BookingTimeLineFlatten(item.bookingSize, item.bookingItemTypeId);
+                line.bookingItemId = item.id;
+                line.start = start;
+                line.end = end;
+                bookings.values().stream().
+                        filter(o -> o.within(start, end)).
+                        filter(o -> (o.bookingItemId != null && o.bookingItemId.equals(item.id))).
+                        forEach(o -> line.add(o));
+
+
+                for (OptimalBookingTimeLine timeLine : availableBookingItems) {
+                    if (timeLine.bookingItemId.equals(item.id)) {
+                        timeLine.bookings.stream()
+                        .filter(o -> !line.containsBooking(o))
+                        .forEach(o -> line.add(o));
+                    }
+                }
+
+                retList.add(line);
+            }
         
-        BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(item.bookingItemTypeId, start, end, null);
-        List<String> autoAssignedBookings = assigner.getBookingsFromTimeLine(itemId);
+        }
         
-        autoAssignedBookings.stream()
-                .map(o -> bookings.get(o))
-                .filter(o -> !line.containsBooking(o))
-                .forEach(o -> line.add(o));
-        
-        return line;
+        return retList;
     }
 
     void saveRules(RegistrationRules rules) {
@@ -779,6 +812,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
  
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
+        if (itemType.equals("aee14a7f-dc19-475c-91ee-5d3310475887")) {
+            System.out.println("Found one");
+        }
         BookingTimeLineFlatten timeline = getTimelines(itemType, start, end);
         int higest = 9999;
         List<BookingTimeLine> timeLines = timeline.getTimelines();
@@ -937,7 +973,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             return false;
         }
         
-        return null;
+        return true;
     }
 
     boolean canAdd(Booking bookingToAdd) {
@@ -956,7 +992,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         }
         
         int newSize = bookings.size() + bookingItem.waitingListBookingIds.size();
-        if (bookingItem.waitingListSize > newSize) {
+        if (bookingItem.waitingListSize > newSize && shouldThrowException()) {
             throw new BookingEngineException("There is not enough space left to add user to waitinglist.");
         }
         
@@ -1020,7 +1056,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                             }
                         }
                         
-                        if (i > 0) {
+                        if (i > 0 && shouldThrowException()) {
                             throw new BookingEngineException("This bookingitem can not be used as it is not available, there is other bookings that depends on this." + extra);
                         }
                     }
@@ -1045,5 +1081,15 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
 
     private void unassignBookings(List<Booking> assignedBookings) {
         assignedBookings.stream().forEach(booking -> changeBookingItemOnBooking(booking.id, ""));
+    }
+
+    boolean itemInUseBetweenTime(Date start, Date end, String itemId) {
+        Booking ret = bookings.values().stream()
+                .filter(book -> book.interCepts(start, end))
+                .filter(book -> book.bookingItemId != null && book.bookingItemId.equals(itemId))
+                .findAny()
+                .orElse(null);
+        
+        return ret != null;
     }
 }

@@ -178,7 +178,12 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
                 if($guest->phone) { $row['visitor'] .= "<span style='float:right;' class='secondary_text'>+" . $guest->prefix . $guest->phone . "</span>"; }
                 $row['visitor'] .= "<br>";
             }
-            $row['visitor'] .= "<div style='clear:both;'></div><span style='float:right;' class='secondary_text'>" .$room->numberOfGuests  . " guests</span>";
+            $row['visitor'] .= "<div style='clear:both;'></div><span style='float:right;' class='secondary_text'>" .$room->numberOfGuests  . " guests";
+            if($room->checkedIn) {
+                $row['visitor'] .= " <i class='fa fa-smile-o' title='Guest has checked in'></i>";
+            }
+            $row['visitor'] .= "</span>";
+
         }
         $row['visitor'] .= "<div class='secondary_text'>" . $room->owner . "</div>";
         if($room->requestedEndDate) {

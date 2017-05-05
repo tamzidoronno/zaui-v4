@@ -47,6 +47,9 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .addonincludedinroomprice', app.PmsManagement.toggleAddonIncluded);
         $(document).on('click','.PmsManagement .addproducttocart', app.PmsManagement.addProductToCart);
         $(document).on('click','.PmsManagement .changeduedates', app.PmsManagement.changeDueDates);
+        $(document).on('click','.PmsManagement .removeOrderFromBooking', app.PmsManagement.removeOrderFromBooking);
+        $(document).on('click','.PmsManagement .marknoshowwubook', app.PmsManagement.marknoshowwubook);
+        $(document).on('click','.PmsManagement .displayordersforroom', app.PmsManagement.displayOrdersForRoom);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -91,7 +94,73 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .contactdatadropdown', app.PmsManagement.updateBookingInformationDropdown);
         $(document).on('click','.PmsManagement .loadorderinformation', app.PmsManagement.loadOrderInformation);
         $(document).on('click','.PmsManagement .createnewfilter', app.PmsManagement.createNewIncomeReportFilter);
+        $(document).on('click','.PmsManagement .checkboxforbookedroom', app.PmsManagement.updateCheckedRoomUnsettledAmount);
+        $(document).on('click','.PmsManagement .checkallbookedrooms', app.PmsManagement.updateCheckedRoomUnsettledAmount);
+        $(document).on('keyup','.PmsManagement .changeorderdates', app.PmsManagement.changeOrderPeriode);
     },
+    changeOrderPeriode : function(e) {
+        var field = null;
+        if(e.input) {
+            field = $(e.input);
+        } else {
+            field = $(e.target);
+        }
+      
+        var val = field.val();
+        
+        var data = {
+            "newDate" : val,
+            "type" : field.attr('datetype'),
+            "bookingid" : $('#openedbookingid').val()
+        }
+        
+        var event = thundashop.Ajax.createEvent('','changeOrderDatePeriode',field, data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.warnunsettledamountouter').html(res);
+        });
+    },
+    
+    updateCheckedRoomUnsettledAmount : function() {
+        var rooms = [];
+        $('.checkboxforbookedroom').each(function() {
+            if($(this).is(':checked')) {
+                rooms.push($(this).attr('roomid'));
+            }
+        });
+        var data = {
+            "roomIdsSelected" : rooms,
+            "bookingid" : $('#openedbookingid').val()
+        };
+       
+        var event = thundashop.Ajax.createEvent('','loadUnsettledAmount', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.warnunsettledamountouter').html(res);
+        });
+    },
+    displayOrdersForRoom : function() {
+        $('.orderforrromview').remove();
+        var event = thundashop.Ajax.createEvent('','loadBookingOrdersRoom', $(this), {
+            "roomid" : $(this).closest('tr').attr('roomid'),
+           "bookingid" : $('#openedbookingid').val()
+        });
+        var box = $(this);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            box.after(res);
+        });
+    },
+    marknoshowwubook : function() {
+        var confirmed = confirm("Are you sure you want to mark this booking as no show?");
+        if(!confirmed) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','markBookingAsNoShow', $(this), {
+            "wubookid" : $(this).attr('wubookid')
+        });
+        thundashop.Ajax.postWithCallBack(event,function() {
+            alert('No show set');
+        });
+    },
+    
     createNewIncomeReportFilter : function() {
         var event = thundashop.Ajax.createEvent('','displayCreateNewIncomeReportFilter', $(this), {});
         thundashop.common.showInformationBoxNew(event, 'New income report filter');
@@ -135,6 +204,17 @@ app.PmsManagement = {
         var event = thundashop.Ajax.createEvent('','updateRecieptEmailOnOrder', $(this), {
            "orderid" : $(this).attr('orderid'),
            "newEmail" : newEmail,
+           "bookingid" : $('#openedbookingid').val()
+        });
+        thundashop.common.showInformationBoxNew(event, 'Booking information');
+    },
+    removeOrderFromBooking : function() {
+        var confirmed = confirm("Are you sure you want to remove this booking?");
+        if(!confirmed) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','removeOrderFromBooking', $(this), {
+           "orderid" : $(this).attr('orderid'),
            "bookingid" : $('#openedbookingid').val()
         });
         thundashop.common.showInformationBoxNew(event, 'Booking information');

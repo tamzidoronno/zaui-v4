@@ -71,6 +71,15 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
         return count;
     }
     
+    $scope.refresh = function() {
+        $('.refreshicon').addClass('fa-spin');
+        var completed = function() {
+            $('.refreshicon').removeClass('fa-spin'); 
+            $state.go($state.current, {}, {reload: true});
+        }
+        datarepository.loadAllData($api, $scope, completed);
+    }
+    
     $scope.startRoute = function($routeToUse) {
         var confirmed = confirm("Are you sure you want to start this route?");
         

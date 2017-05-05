@@ -22,7 +22,17 @@ public class ScormResult {
     @SerializedName(value = "cmi.core.score.raw")
     public String score = "";
     
-    public boolean isCompleted() {
-        return status.equals("completed") || status.equals("passed") || status.equals("failed");
+    public boolean isPassed() {
+        return status.equals("completed") || status.equals("passed");
     }
+    
+    public boolean isFailed() {
+        return status.equals("failed");
+    }
+    
+    public boolean isCompleted() {
+        return isPassed() || isFailed();
+    }
+    
+    
 }

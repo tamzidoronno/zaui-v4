@@ -3,7 +3,6 @@
 
 $userId = $this->getUserId();
 $events = $this->getEventsToPrint();
-$completedScorms = $this->getCompletedScorms();
 
 if (!count($events)) {
     echo $this->__w("No events available");
@@ -12,11 +11,23 @@ if (!count($events)) {
 foreach ($events as $event) {
     echo "<div class='downloadrow'>";
         echo "<div>".$event->bookingItemType->name."</div>";
-        echo "<div>".$this->__w("Date").": ". ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatMainStartDates($event)."</div>";
+        if (isset($event->manEvent)) {
+            echo "<div>".$this->__w("Date").": ". ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatOnlyStartDates($event)."</div>";
+        } else {
+            echo "<div>".$this->__w("Date").": ". ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatMainStartDates($event)."</div>";
+        }
+        
         echo "<div class='downloadcertificates'>";
         $userId = $this->getUserId();
         if ($event->markedAsReady && $this->getApi()->getEventBookingManager()->canDownloadCertificate($this->getBookingEngineName(), $event->id)) {
             echo "<a class='gs_ignorenavigate' href='/scripts/promeister/download.php?eventId=$event->id&userId=$userId'><div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;</a>";
+        }
+        
+        if (isset($event->manEvent)) {
+            foreach ($event->manEvent->files as $file ){
+                $fileId = $file->fileId;
+                echo "<a target='_blank' class='gs_ignorenavigate' href='/scripts/downloadExternalCertificate.php?id=$fileId&userId=$userId'><div class='gs_shop_small_icon' title='Download certificate'><i class='fa fa-download'></i></div>&nbsp;</a>";
+            }
         }
         
         $user = $this->getApi()->getUserManager()->getUserWithPermissionCheck($event->currentUserId);
@@ -37,24 +48,6 @@ foreach ($events as $event) {
         echo "</div>";
     echo "</div>";
 }
-
-if (count($completedScorms)) {
-    echo "<div class='scormoverview'>";
-    echo "<h2 style='font-size: 20px;'>Webutbildningar ".$_SESSION['{ProMeisterSpiderDiagram.FullName}']." har genomfört:</h2>";
-    
-    foreach ($completedScorms as $scorm) {
-        $date = date('d/m-Y', strtotime($scorm->rowCreatedDate));
-        
-        echo "<table>";
-        echo "<th>Titel</th>";
-        echo "<th>Datum</th>";
-        echo "<th>Poäng</th>";
-        echo "<tr><td>".$scorm->scormName."</td><td>$date</td><td>$scorm->score</td></tr>";
-        echo "</table>";
-    }   
-    echo "</div>";
-}
-
 
 ?>
 <div class=""></div>

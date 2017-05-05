@@ -3,7 +3,6 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSchedulerBase;
 import com.ibm.icu.util.Calendar;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -39,7 +38,11 @@ public class PmsMailStatistics extends GetShopSchedulerBase {
         String sessionId = getApi().getStoreManager().getCurrentSession();
         String url = storeAddr + "/scripts/generatePmsStatistics.php?username=" + getUsername() + "&password=" + getPassword();
         HttpClient client = new DefaultHttpClient();
-        HttpGet request = new HttpGet(url);
-        client.execute(request);
+        try {
+            HttpGet request = new HttpGet(url);
+            client.execute(request);
+        } finally {
+            client.getConnectionManager().shutdown();
+        }
     }
 }

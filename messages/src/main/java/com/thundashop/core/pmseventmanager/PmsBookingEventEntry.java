@@ -17,6 +17,7 @@ public class PmsBookingEventEntry extends DataCommon {
     public String arrangedBy = "";
     public String location = "";
     public String contact = "";
+    public boolean isDeleted = false;
     
     public String starttime = "";
     public String description = "";

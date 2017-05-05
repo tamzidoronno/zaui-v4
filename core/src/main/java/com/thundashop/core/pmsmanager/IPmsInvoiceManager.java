@@ -1,6 +1,4 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package com.thundashop.core.pmsmanager;
@@ -39,6 +37,9 @@ public interface IPmsInvoiceManager {
     
     @Administrator
     public void saveDiscounts(PmsUserDiscount discounts);
+    
+    @Administrator
+    public boolean supportsDailyPmsInvoiceing(String bookingId);
     
     @Administrator
     public void markOrderAsPaid(String bookingId, String orderId);

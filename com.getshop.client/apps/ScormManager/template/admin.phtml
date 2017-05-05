@@ -15,37 +15,46 @@ foreach ($packages as $package) {
     if (!count($package->groupedScormPackages))
         continue;
     
-    echo "<h2> <i class='fa fa-trash' gsclick='deletePackage' packageid='$package->id'></i> ".$package->name."</h2>";
-    
-    echo "Scorms in this package";
-    
-    echo "<ul>";
-    foreach ($package->groupedScormPackages as $scormId) {
-        $scorm = $this->getScorm($scorms, $scormId);
-        echo "<li>".$scorm->name."</li>";
-    }
-    
-    echo "</ul>";
-    
-    foreach ($groups as $group) {
-        $combinedId = $group->id."_".$package->id;
-        $checked = $this->isActivated($packages, $group->id, $package->id) ? "checked='true'" : "";
-        echo "<input $checked type='checkbox' gsname='$combinedId'/> ".$group->groupName."<br/>";
-    }
+    echo "<div class='scormrow'>";
+        echo "<h2> <i class='fa fa-edit showgroups'></i>&nbsp;&nbsp;&nbsp; <i class='fa fa-trash' gsclick='deletePackage' packageid='$package->id'></i> ".$package->name."</h2>";
+
+        echo "Scorms in this package";
+
+        echo "<ul>";
+        $i = 0;
+        foreach ($package->groupedScormPackages as $scormId) {
+            $up = $i > 0 ? "<i gsclick='moveUp' index='$i' packageid='$package->id' class='fa fa-arrow-up'></i>" : "";
+            $down = $i < count($package->groupedScormPackages)-1 ? "<i gsclick='moveDown' index='$i' packageid='$package->id' class='fa fa-arrow-down'></i>" : "" ;
+            $scorm = $this->getScorm($scorms, $scormId);
+            echo "<li> $up $down ".$scorm->name."</li>";
+            $i++;
+        }
+
+        echo "</ul>";
+        echo "<div class='scormgroups'>";
+        foreach ($groups as $group) {
+            $combinedId = $group->id."_".$package->id;
+            $checked = $this->isActivated($packages, $group->id, $package->id) ? "checked='true'" : "";
+            echo "<input $checked type='checkbox' gsname='$combinedId'/> ".$group->groupName."<br/>";
+        }
+        echo "</div>";
+    echo "</div>";
 }
 
 foreach ($scorms as $scorm) {
     if ($this->isGroupedScormPackage($packages, $scorm->id)) {
         continue;
     }
-    
-    echo "<h2>".$scorm->name."</h2>";
-    
-    foreach ($groups as $group) {
-        $combinedId = $group->id."_".$scorm->id;
-        $checked = $this->isActivated($packages, $group->id, $scorm->id) ? "checked='true'" : "";
-        echo "<input $checked type='checkbox' gsname='$combinedId'/> ".$group->groupName."<br/>";
-    }
+    echo "<div class='scormrow'>";
+        echo "<h2><i class='fa fa-edit showgroups'></i>&nbsp;&nbsp;&nbsp; ".$scorm->name."</h2>";
+        echo "<div class='scormgroups'>";
+        foreach ($groups as $group) {
+            $combinedId = $group->id."_".$scorm->id;
+            $checked = $this->isActivated($packages, $group->id, $scorm->id) ? "checked='true'" : "";
+            echo "<input $checked type='checkbox' gsname='$combinedId'/> ".$group->groupName."<br/>";
+        }
+        echo "</div>";
+    echo "</div>";
 }
 ?>
     <br/>
@@ -72,3 +81,4 @@ foreach ($scorms as $scorm) {
         <div class="shop_button" gstype="submit">3. Create Scorm Package.</div>
     </div>
 </div>
+

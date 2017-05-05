@@ -11,6 +11,8 @@ import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.usermanager.data.User;
 import it.sauronsoftware.cron4j.Scheduler;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -85,6 +87,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
     public void run() {
         try {
             execute();
+            closeConnection();
         } catch (Exception ex) {
             GetShopLogHandler.logPrintStatic("Problem with scheduled task....", null);
             ex.printStackTrace();
@@ -101,5 +104,18 @@ public abstract class GetShopSchedulerBase implements Runnable {
     
     public String getMultiLevelName() {
         return multiLevelName;
+    }
+
+    private void closeConnection() {
+        if (this.api != null) {
+            try {
+                this.loggedOn = false;
+                this.api.getUserManager().logLogout();
+                this.api.transport.close();
+                this.api = null;
+            } catch (Exception ex) {
+                Logger.getLogger(GetShopSchedulerBase.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

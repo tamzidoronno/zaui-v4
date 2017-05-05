@@ -36,7 +36,7 @@ public class GetShopLogHandler {
             if (!logFileName.exists()) {
                 logFileName.createNewFile(); 
             }
-            
+
             String textToLog = new Date().toString() + "\t" + key + "\n";
             Files.write(Paths.get(fileName), textToLog.getBytes(), StandardOpenOption.APPEND);
         } catch (Exception ex) {

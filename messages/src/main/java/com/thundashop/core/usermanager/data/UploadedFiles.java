@@ -8,4 +8,5 @@ public class UploadedFiles {
     public String fileId;
     public String fileName;
     public String contentType;
+    public Date otherDate;
 }

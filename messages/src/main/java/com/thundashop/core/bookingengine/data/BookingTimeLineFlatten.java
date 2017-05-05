@@ -27,6 +27,7 @@ public class BookingTimeLineFlatten implements Serializable {
     private List<Booking> bookings = new ArrayList();
     private final int totalAvailableSpots;
     private final String bookingItemTypeId;
+    public String bookingItemId = "";
     public  Date end;
     public  Date start;
 

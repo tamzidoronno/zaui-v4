@@ -9,7 +9,7 @@ getshop.loginController = function($scope, $state, $location) {
         localStorage.setItem("address", user.address);
         localStorage.setItem("username", user.username);
         localStorage.setItem("password", user.password);
-        localStorage.setItem("multilevelname", "");
+//        localStorage.setItem("multilevelname", "");
         
         createGetshopClient(true);
         

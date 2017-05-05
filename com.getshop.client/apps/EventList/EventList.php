@@ -22,5 +22,7 @@ class EventList extends EngineCommon implements \Application {
     public function deleteEvent() {
         $this->getApi()->getEventBookingManager()->deleteEvent($this->getBookingEgineName(), $_POST['data']['eventid']);
     }
+
+
 }
 ?>

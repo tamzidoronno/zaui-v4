@@ -10,12 +10,12 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.ManagerSubBase;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -49,13 +49,6 @@ public class BookingItemAssignerOptimal {
     public void canAssign() {
         List<OptimalBookingTimeLine> bookingLines = preCheck();
         dryRun = true;
-        assignBookings(bookingLines);
-    }
-    
-    public void assign() {
-        List<OptimalBookingTimeLine> bookingLines = preCheck();
-        dryRun = false;
-        assignBookings(bookingLines);
     }
     
     private List<OptimalBookingTimeLine> preCheck() {
@@ -88,66 +81,18 @@ public class BookingItemAssignerOptimal {
      * @return 
      */
     private List<OptimalBookingTimeLine> makeOptimalTimeLines() {
-        List<Booking> bookingsToAssign = new ArrayList(bookings);
+        List<Booking> unassignedBookings = new ArrayList(getAllUnassignedBookings());
+        List<Booking> assignedBookings = new ArrayList(getAllAssginedBookings());
         
-        Collections.sort(bookingsToAssign, (Booking o1, Booking o2) -> {
-            
-            if (o1.isUnassigned() && !o2.isUnassigned()) {
-                return 1;
-            }
-
-            if (!o1.isUnassigned() && o2.isUnassigned()) {
-                return -1;
-            }
-
-            if (o1.startDate.equals(o2.startDate)) {
-                return o2.endDate.compareTo(o1.endDate);
-            }
-
-            return o1.startDate.compareTo(o2.startDate);
-        });
+        Collections.sort(unassignedBookings, Booking.sortByStartDate());
+        Collections.sort(assignedBookings, Booking.sortByStartDate());
         
-        List<OptimalBookingTimeLine> bookingLines = new ArrayList();
-        while(bookingsToAssign.size() > 0) {
-            OptimalBookingTimeLine bookingLine = new OptimalBookingTimeLine();
-            Booking currentBooking = bookingsToAssign.remove(0);
-            bookingLine.bookings.add(currentBooking);
-            String currentBookingItemId = currentBooking.bookingItemId;
-            
-            for (Booking booking : bookingsToAssign) {
-                if (currentBooking.endDate.getTime() <= booking.startDate.getTime()) {
-                    if (!canBeOnTheSameLine(booking, currentBookingItemId)) {
-                        continue;
-                    }
-                    
-                    if (overlappingBooking(booking, bookingLine.bookings)) {
-                        continue;
-                    }
-                    
-                    if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
-                        currentBookingItemId = booking.bookingItemId;
-                    }
-                    
-                    bookingLine.bookings.add(booking);
-                }
-                
-                if (booking.bookingItemId == null || booking.bookingItemId.isEmpty()) {
-                    if (!overlappingBooking(booking, bookingLine.bookings)) {
-                        bookingLine.bookings.add(booking);
-                    }
-                }
-            }
-            
-            bookingsToAssign.removeAll(bookingLine.bookings);
-            bookingLines.add(bookingLine);
-        }
+        List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
+        addUnassignedBookingsToLine(bookingLines, unassignedBookings);
+        
+        setItemIdsToLines(bookingLines);
         
         return bookingLines;
-    }
-
-    private void assignBookings(List<OptimalBookingTimeLine> bookingLines) {
-        List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
-        assignLeftovers(bookingLines, availableBookingItems, true);
     }
 
     private List<BookingItemTimeline> getAvailableBookingItems(List<OptimalBookingTimeLine> bookingLines) throws BookingEngineException {
@@ -171,12 +116,12 @@ public class BookingItemAssignerOptimal {
             for (Booking booking : bookingLine.bookings) {
                 BookingItemTimeline timeLineUsed = isThereAFreeItemForBookings(booking, bookingItemsFlatten, bookingLine);
 
-                if (timeLineUsed == null) {
+                if (timeLineUsed == null && throwException) {
                     throw new BookingEngineException("Did not find an available bookingitem for booking: " + booking.getHumanReadableDates());
                 }
 
                 BookingItem item = getBookingItem(timeLineUsed.bookingItemId);
-                if (item == null) {
+                if (item == null && throwException) {
                     throw new BookingEngineException("Did not find the booking item with id (it possible has been deleted): " + timeLineUsed.bookingItemId);
                 }
 
@@ -310,20 +255,51 @@ public class BookingItemAssignerOptimal {
      * @return 
      */
     public List<String> getAvailableItems(String bookingToConsider, Date start, Date end) {
-        List<OptimalBookingTimeLine> bookingLines = preCheck();
         dryRun = true;
-        List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
-        assignLeftovers(bookingLines, availableBookingItems, true);
         
-        List<String> availableItems = availableBookingItems
-                .stream()
-                .filter(o -> ( start != null && end != null && o.isAvailableWithBookingConcidered(start, end, bookingToConsider) || (o.notInUseAtAll()) ))
-                .map(o -> o.bookingItemId)
-                .collect(Collectors.toList());
+        if (start == null) {
+            start = new Date(Long.MIN_VALUE);   
+        }
         
-        return availableItems;
-    }
+        if (end == null) {
+            end = new Date(Long.MAX_VALUE);
+        }
+        
+        Booking booking = bookings.stream().filter(book -> book.id.equals(bookingToConsider)).findFirst().orElse(null);
+        
+        if (booking == null) {
+            booking = new Booking();
+            booking.startDate = start;
+            booking.endDate = end;
+            booking.bookingItemTypeId = type.id;
+            booking.id = "TMP_BOOKING_TO_TEST_AVAILABILITY";
+            bookings.add(booking);
+        } else {
+            try {
+                booking = (Booking)booking.clone();
+            } catch (CloneNotSupportedException ex) {
+                ex.printStackTrace();
+                return new ArrayList();
+            }
 
+            bookings.removeIf(book -> book.id.equals(bookingToConsider));
+            bookings.add(booking);    
+        }
+        
+        List<String> retItems = new ArrayList();
+        for (BookingItem item : items) {
+            booking.bookingItemId = item.id;
+            try {
+                canAssign();
+                retItems.add(item.id);
+            } catch (BookingEngineException ex) {
+                continue;
+            }
+        }
+        
+        return retItems;
+    }
+    
     private void printBookingLines(List<OptimalBookingTimeLine> bookingLines) {
         int i = 1;
         for (OptimalBookingTimeLine bookings : bookingLines) {
@@ -410,17 +386,192 @@ public class BookingItemAssignerOptimal {
     }
 
     public List<String> getBookingsFromTimeLine(String bookingItemId) {
-        List<OptimalBookingTimeLine> bookingLines = preCheck();
-        dryRun = true;
-        List<BookingItemTimeline> availableBookingItems = getAvailableBookingItems(bookingLines);
-        assignLeftovers(bookingLines, availableBookingItems, false);
-        
-        for (BookingItemTimeline timeLine : availableBookingItems) {
+        List<OptimalBookingTimeLine> availableBookingItems = preCheck();
+       
+        for (OptimalBookingTimeLine timeLine : availableBookingItems) {
             if (timeLine.bookingItemId.equals(bookingItemId)) {
-                return timeLine.getBookingIds();
+                return timeLine.bookings.stream().map(b -> b.id).collect(Collectors.toList());
             }
         }
         
         return new ArrayList();
+    }
+
+    private List<Booking> getAllUnassignedBookings() {
+        return bookings.stream()
+                .filter(book -> book.bookingItemId == null || book.bookingItemId.isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    private List<Booking>  getAllAssginedBookings() {
+        return bookings.stream()
+                .filter(book -> book.bookingItemId != null && !book.bookingItemId.isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    private List<OptimalBookingTimeLine> makeLinesOfAssignedBookings(List<Booking> assignedBookings) {
+        List<OptimalBookingTimeLine> bookingLines = new ArrayList();
+        
+        while(assignedBookings.size() > 0) {
+            OptimalBookingTimeLine bookingLine = new OptimalBookingTimeLine();
+            Booking currentBooking = assignedBookings.remove(0);
+            bookingLine.bookings.add(currentBooking);
+            String currentBookingItemId = currentBooking.bookingItemId;
+            
+            for (Booking booking : assignedBookings) {
+                if (currentBooking.endDate.getTime() <= booking.startDate.getTime()) {
+                    if (!canBeOnTheSameLine(booking, currentBookingItemId)) {
+                        continue;
+                    }
+                    
+                    if (overlappingBooking(booking, bookingLine.bookings)) {
+                        continue;
+                    }
+                    
+                    if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
+                        currentBookingItemId = booking.bookingItemId;
+                    }
+                    
+                    bookingLine.bookings.add(booking);
+                }
+                
+                if (booking.bookingItemId == null || booking.bookingItemId.isEmpty()) {
+                    if (!overlappingBooking(booking, bookingLine.bookings)) {
+                        bookingLine.bookings.add(booking);
+                    }
+                }
+            }
+            
+            assignedBookings.removeAll(bookingLine.bookings);
+            bookingLines.add(bookingLine);
+        }
+        
+        return bookingLines;
+    }
+
+    private void addUnassignedBookingsToLine(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
+        
+        
+        while(true) {
+            long closestDistance = Long.MAX_VALUE;
+            OptimalBookingTimeLine timeLineToUse = null;
+            Booking bookingToUse = null;
+            
+            for (OptimalBookingTimeLine timeLine : bookingLines) {
+                for (Booking booking : unassignedBookings) {
+                    long closestDistanceInBooking = timeLine.getDistanceBetweenBookings(booking);
+                    if (closestDistanceInBooking < closestDistance && !overlappingBooking(booking, timeLine.bookings)) {
+                        closestDistance = closestDistanceInBooking;
+                        timeLineToUse = timeLine;
+                        bookingToUse = booking;
+                    }
+                }
+            }
+            
+            if (bookingToUse == null || timeLineToUse == null || closestDistance == Long.MAX_VALUE)
+                break;
+            
+            unassignedBookings.remove(bookingToUse);
+            timeLineToUse.bookings.add(bookingToUse);
+        }
+
+        List<OptimalBookingTimeLine> rest = makeLinesOfAssignedBookings(unassignedBookings);
+        bookingLines.addAll(rest);
+    }
+
+    private Booking getPrevBooking(Booking booking, List<Booking> unassignedBookings) {
+        Booking prevBooking = null;
+        long shortesTimeBetween = Long.MAX_VALUE;
+        long startDate = booking.startDate.getTime();
+        
+        for (Booking ibook : unassignedBookings) {
+            long timeBetween = startDate - ibook.endDate.getTime();
+            if (timeBetween < 0)
+                continue;
+            
+            if (timeBetween < shortesTimeBetween) {
+                shortesTimeBetween = timeBetween;
+                prevBooking = ibook;
+            }
+        }
+        
+        return prevBooking;
+    }
+
+    private void setItemIdsToLines(List<OptimalBookingTimeLine> bookingLines) {
+        List<String> itemIdsUsed = new ArrayList();
+        
+        for (OptimalBookingTimeLine line : bookingLines) {
+            String idToUse = "";
+            for (Booking booking : line.bookings) {
+                if (booking.bookingItemId != null && !booking.bookingItemId.isEmpty()) {
+                    idToUse = booking.bookingItemId;
+                }
+            }
+            
+            if (!idToUse.isEmpty()) {
+                line.bookingItemId = idToUse;
+                itemIdsUsed.add(idToUse);
+            }
+        }
+        
+        for (OptimalBookingTimeLine line : bookingLines) {
+            if (line.bookingItemId.isEmpty()) {
+                BookingItemTimeline itemToUse = getNextAvailableItem(line, bookingLines, itemIdsUsed);
+                if (itemToUse == null && throwException) {
+                    throw new BookingEngineException("Not enough space for this booking");
+                } else {
+                    if (itemToUse != null) {
+                        line.bookingItemId = itemToUse.bookingItemId;
+                    } else {
+                        List<BookingItemTimeline> flatten = getBookingItemsFlatten();
+                        printBookingLines(bookingLines);
+                    }
+                }
+            }
+        }
+        
+        Map<String, List<OptimalBookingTimeLine>> groupedBookings = bookingLines.stream()
+                .collect(Collectors.groupingBy(o -> o.bookingItemId, Collectors.toList()));
+        
+        for (String itemId : groupedBookings.keySet()) {
+            BookingItem item2 = getBookingItem(itemId);
+            if (item2.bookingSize < groupedBookings.get(itemId).size()) {
+                printBookingLines(groupedBookings.get(itemId));
+                if (throwException) {
+                    throw new BookingEngineException("Not enough space for this booking");
+                }
+            }
+        }
+    }
+    
+    public List<OptimalBookingTimeLine> getOptimalAssigned() {
+        dryRun = true;
+        return preCheck();
+    }
+
+    private BookingItemTimeline getNextAvailableItem(OptimalBookingTimeLine line, List<OptimalBookingTimeLine> bookingLines, List<String> itemIdsUsed) {
+        List<BookingItemTimeline> flatten = getBookingItemsFlatten();
+        
+        for (String id : itemIdsUsed) {
+            BookingItemTimeline toRemove = null;
+            for (BookingItemTimeline flat : flatten) {
+                if (flat.bookingItemId.equals(id)) {
+                    toRemove = flat;
+                }
+            }
+            
+            if (toRemove != null) {
+                flatten.remove(toRemove);
+            }
+        }
+        
+        if (flatten.size() > 0) {
+            BookingItemTimeline toUse = flatten.get(0);
+            itemIdsUsed.add(toUse.bookingItemId);
+            return toUse;
+        }
+        
+        return null;
     }
 }

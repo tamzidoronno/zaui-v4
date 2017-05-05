@@ -1,0 +1,36 @@
+<?php
+/* @var $this \ns_99d42f8c_e446_40fe_a038_af9f316dfb3a\GetShopLockAdmin */
+if(isset($_POST['data']['lockid'])) {
+    $lockId = $_POST['data']['lockid'];
+} else {
+    $lockId = $_POST['data']['clicksubmit'];
+}
+
+$currentLock = $this->getApi()->getGetShopLockManager()->getDevice($this->getSelectedName(), $lockId);
+
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<td valign='top' width='50%'>";
+echo "<b>Configure opening hours:</b><br>";
+$this->includefile("addmoredates");
+echo "</td>";
+echo "<td valign='top' gstype='form' method='saveMasterLocks'>";
+echo '<input type="hidden" gsname="lockid" value="'. $lockId .'">';
+
+$locks = $this->getApi()->getGetShopLockManager()->getAllLocks($this->getSelectedName(), null);
+echo "<b>This lock is a sublock for:</b><br>";
+foreach($locks as $lock) {
+    if(!$lock->name || $lock->name == "null") {
+        continue;
+    }
+    $checked = in_array($lock->id, $currentLock->masterLocks) ? "CHECKED" : "";
+    echo "<div>";
+    echo "<input type='checkbox' gsname='sublock_".$lock->id."' style='margin-top:7px;float:left;' $checked>" .  $lock->name;
+    echo "</div>";
+}
+
+echo "<input type='button' value='Save sublock settings' gstype='submitToInfoBox'>";
+echo "</td>";
+echo "</tr>";
+echo "</table>";
+?>

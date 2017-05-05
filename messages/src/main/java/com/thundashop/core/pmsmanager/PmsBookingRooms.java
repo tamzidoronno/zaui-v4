@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -363,6 +364,11 @@ public class PmsBookingRooms implements Serializable {
 
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();
+        
+        if (isInBookingId(searchWord)) {
+            return true;
+        }
+        
         for(PmsGuests guest : guests) {
             if(searchWord != null && searchWord.contains("@")) {
                 if(guest.email != null && guest.email.toLowerCase().contains(searchWord)) {
@@ -682,6 +688,15 @@ public class PmsBookingRooms implements Serializable {
         }
         if(requestedEndDate != null && requestedEndDate.after(startDate) && requestedEndDate.before(endDate)) {
             System.out.println("\t true");
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean isInBookingId(String searchWord) {
+        List<String> ids = Arrays.asList(searchWord.split(","));
+
+        if (ids.contains(bookingId)) {
             return true;
         }
         return false;

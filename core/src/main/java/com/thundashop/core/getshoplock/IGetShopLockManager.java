@@ -36,6 +36,9 @@ public interface IGetShopLockManager {
     public List<GetShopDevice> getAllLocks(String serverSource);
     
     @Administrator
+    public GetShopDevice getDevice(String deviceId);
+    
+    @Administrator
     public void saveLock(GetShopDevice lock);
     
     @Administrator

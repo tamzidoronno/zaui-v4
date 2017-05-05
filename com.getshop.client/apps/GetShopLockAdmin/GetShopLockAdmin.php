@@ -186,7 +186,83 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
     public function toggleLockUpdate() {
         $this->getApi()->getGetShopLockManager()->stopUpdatesOnLock($this->getSelectedName());
     }
-
+    
+    public function getRepeatingSummary() {
+        return "";
+    }
+    
+    /**
+     * 
+     * @return \core_pmsmanager_TimeRepeaterData
+     */
+    public function getOpeningHours($lockId) {
+        $device = $this->getApi()->getGetShopLockManager()->getDevice($this->getSelectedName(), $lockId);
+        if($device->openingHoursData) {
+            return $device->openingHoursData;
+        }
+        
+        return new \core_pmsmanager_TimeRepeaterData();
+    }
+    
+    
+    public function saveOpeningHours() {
+        $data = new \core_pmsmanager_TimeRepeaterData();
+        $data->repeatMonday = $_POST['data']['repeatMonday'] == "true";
+        $data->repeatTuesday = $_POST['data']['repeatTuesday'] == "true";
+        $data->repeatWednesday = $_POST['data']['repeatWednesday'] == "true";
+        $data->repeatThursday = $_POST['data']['repeatThursday'] == "true";
+        $data->repeatFriday = $_POST['data']['repeatFriday'] == "true";
+        $data->repeatSaturday = $_POST['data']['repeatSaturday'] == "true";
+        $data->repeatSunday = $_POST['data']['repeatSunday'] == "true";
+        $data->endingAt = $this->convertToJavaDate(strtotime($_POST['data']['endingAt']));
+        $data->repeatEachTime = $_POST['data']['repeateachtime'];
+        if(isset($_POST['data']['repeatmonthtype'])) {
+            $data->data->repeatAtDayOfWeek = $_POST['data']['repeatmonthtype'] == "dayofweek";
+        }
+        $data->repeatPeride = $_POST['data']['repeat_periode'];
+        
+        $data->firstEvent = new \core_pmsmanager_TimeRepeaterDateRange();
+        $data->firstEvent->start = $this->convertToJavaDate(strtotime($_POST['data']['eventStartsAt'] . " " . $_POST['data']['starttime']));
+        if(isset($_POST['data']['eventEndsAt'])) {
+            $data->firstEvent->end = $this->convertToJavaDate(strtotime($_POST['data']['eventEndsAt'] . " " . $_POST['data']['endtime']));
+        } else {
+            $data->firstEvent->end = $this->convertToJavaDate(strtotime($_POST['data']['eventStartsAt'] . " " . $_POST['data']['endtime']));
+        }
+        
+        if($data->repeatPeride == "0") {
+            $data->repeatEachTime = 1;
+        }
+        
+        $device = $this->getApi()->getGetShopLockManager()->getDevice($this->getSelectedName(), $_POST['data']['lockid']);
+        $device->openingHoursData = $data;
+        if(isset($_POST['data']['clicksubmit']) && $_POST['data']['clicksubmit'] == "removeSavedSettings") {
+            $device->openingHoursData = null;
+        }
+        $device->openingType = $_POST['data']['openingtype'];
+        $this->getApi()->getGetShopLockManager()->saveLock($this->getSelectedName(), $device);
+        echo "Saved<br>";
+        $this->editlock();
+        
+    }
+    
+    public function saveMasterLocks() {
+        $lockList = array();
+        foreach($_POST['data'] as $key => $val) {
+            if($val == "true" && stristr($key, "sublock_")) {
+                $lockList[] = str_replace("sublock_", "", $key);
+            }
+        }
+        $device = $this->getApi()->getGetShopLockManager()->getDevice($this->getSelectedName(), $_POST['data']['lockid']);
+        $device->masterLocks = $lockList;
+        $this->getApi()->getGetShopLockManager()->saveLock($this->getSelectedName(), $device);
+        
+        $this->editlock();
+    }
+    
+    public function editlock() {
+        $this->includefile("editlocksettings");
+    }
+    
     /**
      * @param \core_getshop_data_GetShopLock $lock
      */
@@ -240,7 +316,6 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
     }
 
     public function getBattery($lock) {
-//        print_r($lock);
         return $lock->batteryStatus;
     }
     

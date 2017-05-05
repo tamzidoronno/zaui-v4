@@ -18,6 +18,7 @@
     padding-left: 5px;
     box-sizing: border-box;
 }
+.PmsAvailabilityTimeline .fixedscroll{ position:absolute;background-color:#fff;left:0;}
 .PmsAvailabilityTimeline .timelineoverviewouter { width: 100%;  max-height: 800px;overflow: auto; box-sizing: border-box; position:relative; }
 .PmsAvailabilityTimeline .dateheadingrow { background-color:#fff; height: 20px; padding-top: 30px; }
 .PmsAvailabilityTimeline .topspacingitemoverview { height: 50px; clear:both;}

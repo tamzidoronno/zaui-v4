@@ -327,6 +327,9 @@ thundashop.framework = {
         }
         
         var method = form.attr('method');
+        if(typeof(method) === "undefined") {
+            method = $(this).attr('method');
+        }
         var event = thundashop.Ajax.createEvent('',method,$(this),data);
         var title = $('#informationboxtitle').text();
         thundashop.common.showInformationBoxNew(event, title, true);

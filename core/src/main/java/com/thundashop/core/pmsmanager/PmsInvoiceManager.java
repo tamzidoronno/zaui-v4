@@ -781,6 +781,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         Payment preferredUser = orderManager.getUserPrefferedPaymentMethodOnly(booking.userId);
         
+        if(preferredUser != null && preferredUser.paymentType != null && preferredUser.paymentType.toLowerCase().contains("invoice")) {
+            if(userManager.getLoggedOnUser() == null) {
+                preferredUser = null;
+            }
+        }
+        
         Payment preferredBooking = getPreferredPaymentTypeFromBooking(booking);
         
         if(preferredChannel != null) {
@@ -1272,9 +1278,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             booking.orderIds = uniqueList;
 
             pmsManager.saveBooking(booking);
-//            if(storeId != null && storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
-//                messageManager.sendErrorNotification("TMP: order created with new order system, id: " + order.incrementOrderId, null);
-//            }
             return order.id;
         }
         return "";

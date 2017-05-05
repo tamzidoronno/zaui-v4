@@ -2,10 +2,12 @@ package com.thundashop.core.getshop.data;
 
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 public class GetShopDevice extends DataCommon {
     public boolean needSaving = false;
@@ -25,7 +27,9 @@ public class GetShopDevice extends DataCommon {
     public Date batteryLastUpdated;
     public String serverSource = "";
     TimeRepeaterData openingHoursData = null;
- 
+    public List<String> masterLocks = new ArrayList();
+    public String openingType = "";
+    
     public void setDevice(ZWaveDevice device) {
         zwaveid = device.id;
         type = device.data.deviceTypeString.value + "";

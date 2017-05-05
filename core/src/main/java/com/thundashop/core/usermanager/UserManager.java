@@ -1901,4 +1901,16 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         });
     }
 
+    @Override
+    public void toggleMainContact(String userId) {
+        User user = getUserById(userId);
+        List<User> users = getUsersByCompanyId(user.mainCompanyId);
+        for(User tmp : users) {
+            tmp.isCompanyMainContact = false;
+            saveUser(tmp);
+        }
+        user.isCompanyMainContact = !user.isCompanyMainContact;
+        saveUser(user);
+    }
+
 }

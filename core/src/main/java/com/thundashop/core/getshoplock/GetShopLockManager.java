@@ -247,6 +247,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         saveObject(toChange);
     }
 
+    @Override
+    public GetShopDevice getDevice(String deviceId) {
+        return devices.get(deviceId);
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;

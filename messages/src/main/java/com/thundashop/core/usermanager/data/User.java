@@ -34,6 +34,7 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean triedToFetch = false;
     public boolean suspended = false;
     public boolean visibleOnlyInMainCompany = false;
+    public boolean primaryCompanyUser = false;
     /**
      * If user is connected to multiple companies 
      * but it still has a main company, this would be the id of
@@ -216,6 +217,7 @@ public class User extends DataCommon implements Comparable<User> {
     public String referenceKey = "";
     public String pinCode = null;
     public boolean isCompanyOwner = false;
+    public boolean isCompanyMainContact = false;
     public boolean wantToBecomeCompanyOwner = false;
     public String preferredPaymentType = "";
     public Integer invoiceDuePeriode = 14;

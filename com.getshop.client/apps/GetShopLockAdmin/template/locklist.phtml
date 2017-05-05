@@ -23,6 +23,7 @@ foreach($lockServers as $name => $server) {
     } else {
         echo "<table width='100%'>";
         echo "<tr>";
+        echo "<th align='left'></th>";
         echo "<th align='left'>Id</th>";
         echo "<th align='left'>Type</th>";
         echo "<th>Code status</th>";
@@ -32,11 +33,11 @@ foreach($lockServers as $name => $server) {
         foreach($locks as $lock) {
             $battery = $this->getBattery($lock);
             echo "<tr>";
-            echo "<td class='changezwaveid' style='cursor:pointer;' lockid='".$lock->id."'>" . $lock->zwaveid;
-//            if($lock->isFailed) {
-//                echo " <i class='fa fa-ban' title='Lock is offline.'></i>";
-//            }
-
+            echo "<td>";
+            echo "<i class='fa fa-edit' gstype='forceClicksubmitToInfoBox' style='cursor:pointer;' method='editlock' gsname='id' gsvalue='".$lock->id."'></i> ";
+            echo "</td>";
+            echo "<td class='changezwaveid' style='cursor:pointer;' lockid='".$lock->id."'>";
+            echo $lock->zwaveid;
             echo "</td>";
             echo "<td>" . $lock->name . " (" . $lock->type . ")";
             if($battery >= 0) {
@@ -86,8 +87,4 @@ foreach($masterCodes->codes as $offset => $code) {
     <?php
 }
 echo "<br>";
-
-
 ?>
-
-    

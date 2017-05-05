@@ -18,8 +18,16 @@
 
 .PmsPricing .weeked { border: solid 1px red; }
 .PmsPricing .priceinput { width: 50px; }
-.PmsPricing .pricetableview { width: 100%; overflow: auto; }
+.PmsPricing .pricetableview { width: 80%; overflow: auto;margin-left:20%;}
 .PmsPricing .selectedpriceplan { color: #000; }
+.PmsPricing .fixedpricerow{
+    position:absolute;
+    left:0;
+    width: 20%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 .PmsPricing .addmoredates { color:blue; cursor:pointer; }
 .PmsPricing .title { display:inline-block; width: 110px; text-align: left; font-size: 12px; padding: 2px; float:left;}

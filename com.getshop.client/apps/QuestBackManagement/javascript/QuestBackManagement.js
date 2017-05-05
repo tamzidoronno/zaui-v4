@@ -16,10 +16,11 @@ app.QuestBackManagement = {
         $(document).on('click', '.QuestBackManagement .assignTestsToUser', app.QuestBackManagement.assignTestsToUser);
         $(document).on('click', '.QuestBackManagement .createTest', app.QuestBackManagement.createTest);
         $(document).on('change', '.QuestBackManagement #testToSeeResultFor', app.QuestBackManagement.testToSeeResultFor);
-        $(document).on('keyup', '.QuestBackManagement #usermanagementInput', app.QuestBackManagement.filterUsers);
+        $(document).on('change', '.QuestBackManagement #usermanagementInput', app.QuestBackManagement.filterUsers);
         $(document).on('click', '.QuestBackManagement .dropdown dt a', app.QuestBackManagement.slideToggle);
         $(document).on('click', '.QuestBackManagement .dropdown dd ul li a', app.QuestBackManagement.somethinghide);
         $(document).on('click', '.QuestBackManagement .multiSelect input[type="checkbox"]', app.QuestBackManagement.something);
+        $(document).on('change', '.QuestBackManagement .user_to_send', app.QuestBackManagement.toggleUserSelected);
         
         $(document).bind('click', function(e) {
           var $clicked = $(e.target);
@@ -27,6 +28,21 @@ app.QuestBackManagement = {
         });
     
     },
+    
+    toggleUserSelected: function() {
+        var data = {
+            userid : $(this).val(),
+            checked: $(this).is(':checked')
+        }
+        
+        var event = thundashop.Ajax.createEvent(null, "toggleCheckBox", this, data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            $('.QuestBackManagement .summary').html(res);
+        }, [], true, true);
+    },
+    
     slideToggle : function() {
         $(".QuestBackManagement .dropdown dd ul").slideToggle('fast');
     },
@@ -54,20 +70,15 @@ app.QuestBackManagement = {
     
     
     filterUsers: function()  {
-        var value = $(this).val().toUpperCase();
-        var table = $('#usermanagementTable');
+        var data = {
+            searchWord : $(this).val()
+        }
+        var event = thundashop.Ajax.createEvent(null, "searchForUsers", this, data);
+        event['synchron'] = true;
         
-        table.find('tr').each(function() {
-            var row = $(this);
-            var text = $(this).text();
-            if(text.toUpperCase().indexOf(value) > -1) {
-                row.show();
-            } else {
-                if(!row.find('.user_to_send').is(':checked')) {
-                    row.hide();
-                }
-            }
-        });
+        thundashop.Ajax.post(event, function(res) {
+            $('.QuestBackManagement .testUserSearchResult').html(res);
+        },[], true);
     },
     
     testToSeeResultFor: function() {

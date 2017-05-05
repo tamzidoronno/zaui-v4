@@ -215,6 +215,12 @@ and open the template in the editor.
 
 }
 
+.QuestBackManagement .groupedByCompany {
+    border:  solid 1px #DDD;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
 .QuestBackManagement a {
   color: #dcdcdc;
 }

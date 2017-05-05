@@ -111,7 +111,7 @@ if($compact) {
     $taken = ($totalRooms-$freecount);
     echo "Rooms free: " . $freecount . " of " . $totalRooms . " in total giving " . $taken .  " rooms taken.<bR><bR>";
     
-    echo "<div class='timelineoverviewouter'>";
+    echo "<div class='timelineoverviewouter roomoverview'>";
     echo "<div class='timelineoverview'>";
     echo "<table cellspacing='1'>";
     
@@ -119,7 +119,7 @@ if($compact) {
     foreach($result->typeTimeLines as $type => $lines) {
         if($printHeading) {
             echo "<tr>";
-            echo "<th></th>";
+            echo "<th style='width:150px;'></th>";
             foreach($lines as $line) {
                 echo "<th style='width: 65px;'>" . date("d.m.y", strtotime($line->start)) . "</th>";
             }
@@ -128,7 +128,7 @@ if($compact) {
         }
         /* @var $line core_bookingengine_data_BookingTimeLine */
         echo "<tr>";
-        echo "<td><span class='room_desc'>" . $types[$type]->name .  "</span></td>";
+        echo "<td class='fixedscroll'><span class=' room_desc '>" . $types[$type]->name .  "</span></td>";
         foreach($lines as $day => $line) {
             $full = "available";
             if($lines[0]->totalAvailableSpots == $line->count) {
@@ -176,7 +176,7 @@ if($compact) {
             $text = $items[$itemId]->bookingItemName;
         }
         
-        echo "<span class='valueentry_item'><span class='room_desc' title='$text'><i class='fa fa-paint-brush $isClean'></i> " . $text . "</span></span>";
+        echo "<span class='valueentry_item fixedscroll2'><span class='room_desc' title='$text'><i class='fa fa-paint-brush $isClean'></i> " . $text . "</span></span>";
         echo "<span class='valueentry_placeholder'>&nbsp;</span>";
         $printed = false;
         $free = "available";
@@ -252,14 +252,19 @@ if($compact) {
     $('.PmsAvailabilityTimeline .dateheadingrow').width('<? echo ($numberOfDays*80)+200; ?>px');
     $('.PmsAvailabilityTimeline .dateheadingrow').css('position','absolute');
     $('.PmsAvailabilityTimeline .dateheadingrow').css('top','0px');
+    $('.PmsAvailabilityTimeline .dateheadingrow').css('z-index','1');
     $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
     $('input[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
     <?php if(!$printTypeOverview) { ?>
         $('select[gsname="viewtype"]').val('items');
     <?php } ?>
-        $('.timelineoverviewouter').scroll(function() {
+        $('.timelineoverviewouter.detailedview').scroll(function() {
             var left = $(this).scrollLeft();
-            $('.valueentry_item').css('left',left+"px");
+            $('.fixedscroll2').css('left',left+"px");
             $('.PmsAvailabilityTimeline .dateheadingrow').css('top',$(this).scrollTop());
+        });
+        $('.timelineoverviewouter.roomoverview').scroll(function() {
+            var left = $(this).scrollLeft();
+            $('.fixedscroll').css('left',left+"px");
         });
 </script>

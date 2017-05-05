@@ -29,7 +29,45 @@ if(!$nextPage) {
     </div>
 </div>
 <script>
-    $('.dateinput[gsname="date"]').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
-    $('.dateinput[gsname="date2"]').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.dateinput[gsname="date"]').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+    onSelect: function(dateText) {
+           var date = moment(dateText, "DD.MM.YYYY");
+           var month = (moment(date).get('month')+1);
+           if(month < 10) {
+               month = "0" + month;
+           }
+           var currentEnd = $('.dateinput[gsname="date2"]').val();
+           var endMoment = moment(currentEnd, "DD.MM.YYYY");
+
+           var diff = endMoment.diff(date, "minutes");
+           if(diff < 0 || currentEnd == 0) {
+               var day = moment(date).get('date')+1;
+               if(day < 10) {
+                   day = "0" + day;
+               }
+               $('.dateinput[gsname="date2"]').val(day + "." + month + "." + moment(date).get('year'));
+           }
+         }
+     });
+    $('.dateinput[gsname="date2"]').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+    onSelect: function(dateText){
+        var date = moment(dateText, "DD.MM.YYYY");
+           var month = (moment(date).get('month')+1);
+           if(month < 10) {
+               month = "0" + month;
+           }
+           var currentStart = $('.dateinput[gsname="date"]').val();
+           var startMoment = moment(currentStart, "DD.MM.YYYY");
+
+           var diff = startMoment.diff(date, "minutes");
+           if(diff > 0 ||currentStart == 0) {
+               var day = moment(date).get('date')-1;
+               if(day < 10) {
+                   day = "0" + day;
+               }
+               $('.dateinput[gsname="date"]').val(day + "." + month + "." + moment(date).get('year'));
+           }
+         }
+    });
     $('#defaultOpen').click();
 </script>

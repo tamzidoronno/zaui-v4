@@ -3,3 +3,9 @@
     line-height: 40px;
     padding-left: 20px;
 }
+
+.EventTypesBrowserSmall .grouptitle {
+    text-align: center;
+    background-color: #DDD;
+    padding: 5px;
+}

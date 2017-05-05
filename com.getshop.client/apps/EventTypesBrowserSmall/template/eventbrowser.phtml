@@ -2,7 +2,22 @@
 /* @var $this ns_7e6c4a3f_d0d6_4096_84cc_a5829c93581d\EventBrowserSmall */
 $types = $this->getApi()->getEventBookingManager()->getBookingItemTypes($this->getBookingEgineName());
 
-foreach ($types as $type) {
-    echo "<a href='/?page=$type->pageId'><div class='eventtype'>$type->name</div></a>";
+$groupedTypes = $this->groupThem($types);
+if (count($groupedTypes) === 1) {
+    $types = $groupedTypes[""];
+    foreach ($types as $type) {
+        $this->printLine($type);
+    }
+} else {
+    foreach ($groupedTypes as $key => $types) {
+        if ($key) {
+            echo "<div class='grouptitle'>$key</div>";
+        } else {
+            echo "<div class='grouptitle'>".$this->__f("Uncatagorized")."</div>";
+        }
+        foreach ($types as $type) {
+            $this->printLine($type);
+        }
+    }
 }
 ?>

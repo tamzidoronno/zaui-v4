@@ -30,6 +30,7 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<String, String> contracts = new HashMap();
     public String fireinstructions = "";
     public String otherinstructions = "";
+    public boolean avoidCombiningUsers = false;
     
     /* other configurations */
     public boolean needConfirmation = false;

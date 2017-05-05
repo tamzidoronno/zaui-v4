@@ -443,7 +443,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (loggedonuser != null && configuration.autoconfirmRegisteredUsers) {
                 booking.confirmed = true;
             }
-           if(loggedonuser != null && (loggedonuser.isAdministrator() || loggedonuser.isEditor())) {
+            if(loggedonuser != null && (loggedonuser.isAdministrator() || loggedonuser.isEditor())) {
                 booking.confirmed = true;
             }
         }
@@ -3653,6 +3653,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Company curcompany = createCompany(booking);
             if (curcompany != null) {
                 List<User> existingUsers = userManager.getUsersThatHasCompany(curcompany.id);
+                
+                if(getConfigurationSecure().avoidCombiningUsers) {
+                    existingUsers = new ArrayList();
+                }
+                
                 if(!existingUsers.isEmpty()) {
                     newuser = existingUsers.get(0);
                 } else {

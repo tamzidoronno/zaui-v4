@@ -92,7 +92,6 @@ Checkout;-;Utsjekking
 Children;-;Barn
 Choose;-;Velg
 City;-;By
-Cleaning cost;-;Vaskekostnader
 Cleaning count;-;Antall vask
 Click here if you need to add more contacts;-;Trykk her hvis du vil legge til flere kontaktpersoner
 Click next to select shipping options;-;Trykk neste for å velge en betalings metode
@@ -486,6 +485,7 @@ Select company;-;Velg firma
 Select your car;-;Velg din bil
 Selected;-;Valgt
 Send;-;Send
+Send confirmation to an alternate email address;-;Send bekreftelse til en alternativ epost
 Send me a code;-;Send meg koden
 Send message;-;Send melding
 Send to invoice;-;Sent til faktura

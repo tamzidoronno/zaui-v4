@@ -36,5 +36,6 @@ public class BookingItemType extends DataCommon {
     @Translation
     public String description = "";
     public Integer capacity = 0;
+    public String eventItemGroup = "";
 
 }

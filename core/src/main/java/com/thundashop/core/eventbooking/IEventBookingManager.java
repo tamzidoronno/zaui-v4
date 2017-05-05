@@ -254,4 +254,16 @@ public interface IEventBookingManager {
     
     @Administrator
     public ManuallyAddedEventParticipant getManuallyAddedEventParticipant(String id);
+    
+    @Customer
+    public List<BookingItemType> getMandatoryCourses(String userId);
+    
+    @Customer
+    public boolean hasCompletedMandatoryEvent(String eventTypeId, String userId);
+    
+    @Customer
+    public boolean hasForcedMandatoryTest(String eventTypeId, String userId);
+    
+    @Administrator
+    public void setForcedMandatoryAccess(String userId, List<String> bookingItemIds);
 }

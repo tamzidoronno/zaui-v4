@@ -1,0 +1,15 @@
+<?
+/* @var $this ns_009cd387_0ca4_4b05_98b4_d6dae4ad6a4a\ProMeisterMandatoryTestList */
+$bookingEngineName = "booking";
+$userId = $this->getUserId();
+$types = $this->getApi()->getEventBookingManager()->getMandatoryCourses($bookingEngineName, $userId);
+
+echo "<div class='madatorylist'>";
+    foreach ($types as $type) {
+        $participated = $this->getApi()->getEventBookingManager()->hasCompletedMandatoryEvent($bookingEngineName, $type->id, $userId);
+        $icon = $participated ? "fa-check" : "fa-close";
+        echo "<div class='madatorylist_row'><i class='fa $icon'></i>".$type->name."</div>";
+    }
+echo "</div>";
+
+?>

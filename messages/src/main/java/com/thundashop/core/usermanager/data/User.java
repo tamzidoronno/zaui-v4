@@ -33,7 +33,13 @@ public class User extends DataCommon implements Comparable<User> {
     public String lastRegisteredToken;
     public boolean triedToFetch = false;
     public boolean suspended = false;
-    
+    public boolean visibleOnlyInMainCompany = false;
+    /**
+     * If user is connected to multiple companies 
+     * but it still has a main company, this would be the id of
+     * that.
+     */
+    public String mainCompanyId = "";
     @Transient
     public Company companyObject;
     

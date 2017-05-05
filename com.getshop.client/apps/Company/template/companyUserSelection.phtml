@@ -20,6 +20,16 @@ if (!$this->selectedUser && $_POST['value']) {
         </div>
         <div class="description"></div>
     </div>
+    <div class="textfield gss_setting">
+        <span class="title">Is this user the company owner?</span>
+        <div class="gss_onoff" gs_model="companysearch" gs_model_attr="primaryCompanyUser" mainCompanyUserToggle="true" userid="<? echo $this->selectedUser->id; ?>" >
+            <?
+            $faclass = $this->selectedUser->isCompanyMainContact ? "fa-toggle-on" : "fa-toggle-off";
+            ?>
+            Off<i class="fa <? echo $faclass; ?> "></i>On
+        </div>
+        <div class="description"></div>
+    </div>
 
     <div class="gss_view_of_companies_user_has">
         <?

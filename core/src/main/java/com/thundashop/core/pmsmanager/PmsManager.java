@@ -479,14 +479,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return null;
     }
 
-    private boolean hasAccessUser(String userId) {
-        User loggedOn = userManager.getLoggedOnUser();
-        if (loggedOn.isAdministrator() || loggedOn.id.equals(userId)) {
-            return true;
-        }
-        return false;
-    }
-    
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
         if(!getConfigurationSecure().exposeUnsecureBookings) {
@@ -3653,24 +3645,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Company curcompany = createCompany(booking);
             if (curcompany != null) {
                 List<User> existingUsers = userManager.getUsersThatHasCompany(curcompany.id);
-                
-                if(getConfigurationSecure().avoidCombiningUsers) {
-                    existingUsers = new ArrayList();
-                }
-                
                 if(!existingUsers.isEmpty()) {
                     newuser = existingUsers.get(0);
+                    for(User tmp : existingUsers) {
+                        if(tmp.isCompanyMainContact) {
+                            newuser = tmp;
+                            break;
+                        }
+                    }
                 } else {
                     newuser = createUser(booking);
                     curcompany = userManager.saveCompany(curcompany);
                     newuser.company.add(curcompany.id);
+                    newuser.fullName = curcompany.name;
+                    newuser.emailAddress = curcompany.email;
+                    newuser.cellPhone = curcompany.phone;
+                    newuser.prefix = curcompany.prefix;
+                    newuser.address = curcompany.address;
+                    newuser.isCompanyMainContact = true;
                 }
-                newuser.fullName = curcompany.name;
-                newuser.emailAddress = curcompany.email;
-                newuser.cellPhone = curcompany.phone;
-                newuser.prefix = curcompany.prefix;
-                newuser.address = curcompany.address;
-                newuser.isCompanyOwner = true;
 
                 userManager.saveUserSecure(newuser);
                 booking.userId = newuser.id;

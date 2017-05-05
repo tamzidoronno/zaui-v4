@@ -334,18 +334,6 @@ if($notificationSettings->requirePayments) {
             <span class='configentry'>
                 <?
                 $checked = "";
-                if($notificationSettings->avoidCombiningUsers) {
-                    $checked = "CHECKED";
-                }
-                ?>
-                <input type='checkbox' gsname='avoidCombiningUsers' <? echo $checked; ?>>
-            </span>
-            If someone books when not logged on, make sure new accounts are being created.
-        </div>
-        <div class='configrow'>
-            <span class='configentry'>
-                <?
-                $checked = "";
                 if($notificationSettings->manualcheckincheckout) {
                     $checked = "CHECKED";
                 }

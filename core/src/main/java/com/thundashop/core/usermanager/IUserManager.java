@@ -69,6 +69,9 @@ public interface IUserManager {
     
     public void updateUserCounter(Integer counter, String password);
     
+    @Administrator
+    public void toggleMainContact(String userId);
+    
     /**
      * Sometimes it is needed for someone to logon using a generated key instead.<br>
      * The key is unique and attached to the user trying to logon.<br>

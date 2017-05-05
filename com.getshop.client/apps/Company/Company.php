@@ -30,6 +30,10 @@ class Company extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imp
         $this->getApi()->getUserManager()->saveUser($user);
     }
     
+    public function saveMainCompanyState() {
+        $this->getApi()->getUserManager()->toggleMainContact($_POST['value']);
+    }
+    
     public function setMainCompanyForUser() {
         $user = $this->getApi()->getUserManager()->getUserById($_POST['value']);
         if ($_POST['value2'] != $user->mainCompanyId) {

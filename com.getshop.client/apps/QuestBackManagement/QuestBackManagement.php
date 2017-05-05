@@ -23,6 +23,10 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
             $this->includefile($filename);
         echo "</div>";
     }
+    
+    public function searchForUsers() {
+        $this->includefile("userTestSearchResult");
+    }
 
     public function render() {
         unset($_SESSION['ns_cc678bcb_0e87_4c6c_aaad_8ec24ecdf9df_current_testid']);
@@ -150,11 +154,11 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
     }
     
     public function assignTestToUsers() {
-        foreach($_POST['data']['testIds'] as $testId) {
-            foreach ($_POST['data']['usersIds'] as $userId) {
-                $this->getApi()->getQuestBackManager()->assignUserToTest($testId, $userId);
-            }
+        $userids = isset($_SESSION['ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534/selectedUsers']) ? $_SESSION['ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534/selectedUsers'] : array();
+        if (isset($_POST['data']['testIds'])) {
+            $this->getApi()->getQuestBackManager()->assignTestsToUsers($_POST['data']['testIds'], $userids);
         }
+        $_SESSION['ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534/selectedUsers'] = array();
     }
 
     public function groupUsers($userIds) {
@@ -222,4 +226,37 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
         return $retAllResults;
     }
 
+    public function toggleCheckBox() {
+        $userid = $_POST['data']['userid'];
+        $checked = $_POST['data']['checked'] == "true";
+        
+        if (!isset($_SESSION['ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534/selectedUsers'])) {
+            $_SESSION['ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534/selectedUsers'] = array();
+        }
+        
+        if ($checked) {
+            $_SESSION['ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534/selectedUsers'][] = $userid;
+        } else {
+            $index = array_search($userid, $_SESSION['ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534/selectedUsers']);
+            if($index !== FALSE){
+                unset($_SESSION['ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534/selectedUsers'][$index]);
+            }
+        }
+        
+        $this->includefile("personlist");
+        die();
+    }
+    
+    public function groupByCompany($users) {
+        $retValues = [];
+        if (is_array($users)) {
+            foreach ($users as $user) {
+                foreach ($user->company as $company) {
+                    $retValues[$company][] = $user;
+                }
+            }
+        }
+
+        return $retValues;
+    }
 }

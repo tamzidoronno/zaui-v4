@@ -328,7 +328,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                 return; 
                             }
 
-                            logPrint("\t Need to add code to offsett: " + offset + " (" + device.name + ")");
+                            logPrint("\t Need to add code to offsett: " + offset + " (" + device.name + ")" +  " - added to lock : " + code.addedToLock + ",code refreshed: " + code.codeRefreshed + ", in use: " + code.inUse() + ", need to be removed: " + code.needToBeRemoved + ", slot: " + code.slot);
                             setCode(offset, code.fetchCodeToAddToLock(), true);
                             try {
                                 GetShopHotelLockCodeResult result = getSetCodeResult(offset);
@@ -630,7 +630,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         GetShopDevice dev = devices.get(lockId);
         if(dev == null) {
             BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
-            System.out.println("Lock device :" + lockId + " does not exists, room: ( " + item.bookingItemName);
+            logPrint("Lock device :" + lockId + " does not exists, room: ( " + item.bookingItemName);
         } else {
             dev.removeCode(code);
             saveObject(dev);

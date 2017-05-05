@@ -130,4 +130,7 @@ public interface IQuestBackManager {
     
     @Administrator
     public boolean isQuestBackSent(String userId, String testId, String reference);
+    
+    @Administrator
+    public void assignTestsToUsers(List<String> testIds, List<String> userids);
 }

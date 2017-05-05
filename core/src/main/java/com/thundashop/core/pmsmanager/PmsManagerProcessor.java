@@ -125,9 +125,9 @@ public class PmsManagerProcessor {
         try {
             PmsBooking booking = manager.getBookingFromRoom(room.pmsBookingRoomId);
             if(deleted) {
-                manager.logEntry("Removing code from lock code (" + room.code + ")", booking.id , room.pmsBookingRoomId);
+                manager.logEntry("Removing code from lock code (" + room.code + ")", booking.id , room.bookingItemId);
             } else {
-                manager.logEntry("Getting code from lock.", booking.id , room.pmsBookingRoomId);
+                manager.logEntry("Getting code from lock.", booking.id , room.bookingItemId);
             }
         }catch(Exception e) {
             e.printStackTrace();

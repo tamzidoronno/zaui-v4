@@ -9,6 +9,7 @@ import java.util.Random;
 public class GetShopLockCode implements Serializable {
     public String code;
     public Boolean used = false;
+    public Date lastUsed = null;
     public Date codeRefreshed = null;
     public Date addedToLock = null;
     public Date needToBeRemoved = null;
@@ -74,6 +75,7 @@ public class GetShopLockCode implements Serializable {
 
     public String fetchCode() {
         used = true;
+        lastUsed = new Date();
         return code;
     }
 

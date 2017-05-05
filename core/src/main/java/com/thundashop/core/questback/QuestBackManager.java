@@ -405,16 +405,19 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
 
     @Override
     public void assignUserToTest(String testId, String userId) {
+        QuestTest test = assignUserToTestInternal(testId, userId);
+        sendMail(userId, test);
+    }
+
+    private QuestTest assignUserToTestInternal(String testId, String userId) throws ErrorException {
         QuestTest test = getTest(testId);
         if (test == null)
             testDeleted();
-        
         if (!test.userIds.contains(userId)) {
             test.userIds.add(userId);
             saveObject(test);
         }
-
-        sendMail(userId, test);
+        return test;
     }
 
     private void sendMail(String userId, QuestTest test) {
@@ -434,7 +437,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
     private String manipulateText(String message, User user, QuestTest test) {
         message = message.replaceAll("(\r\n|\n)", "<br />");
         message = message.replace("{User.Name}", user.fullName);
-        message = message.replace("{Test.Name}", test.name);
+        message = message.replace("{Test.Name}", test != null ? test.name : "");
         message = message.replace("{User.Email}", user.emailAddress);
         
         return message;
@@ -785,5 +788,21 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         int avg = summary / allResults.size();
         
         return avg;
+    }
+
+    @Override
+    public void assignTestsToUsers(List<String> testIds, List<String> userids) {
+        if (testIds == null || testIds.isEmpty())
+            return;
+        
+        for (String testId : testIds) {
+            for (String userId : userids) {
+                assignUserToTestInternal(testId, userId);
+            }
+        }
+        
+        for (String userId : userids) {
+            sendMail(userId, null);
+        }
     }
 }

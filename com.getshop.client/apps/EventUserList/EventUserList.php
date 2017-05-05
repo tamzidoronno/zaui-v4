@@ -159,7 +159,7 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         }
         
         $excel[] = array();
-        $excel[] = ["VAT", "Reference", "Company Information", "Company email", "Candiate name", "Candidate email", "Comment", "Group", "Status"];
+        $excel[] = ["VAT", "Reference", "Company Information", "Company Invoice Address", "Company email", "Company invoice email", "Candiate name", "Candidate email", "Comment", "Group", "Status"];
         
         foreach ($usersFiltered as $user) {
             $invoiceGroupId = @$event->groupInvoiceStatus->{$user->id};
@@ -207,7 +207,7 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         $excel[] = $this->getEventInformation($event, $groupName);
         
         $excel[] = array();
-        $excel[] = ["VAT", "Reference", "Company Information", "Company email", "Candiate name", "Candidate email", "Comment", "Group", "Status", "Price"];
+        $excel[] = ["VAT", "Reference", "Company Information", "Company Invoice Address", "Company email", "Company invoice email", "Candiate name", "Candidate email", "Comment", "Group", "Status", "Price"];
         
         foreach ($usersFiltered as $user) {
             $invoiceGroupId= @$event->groupInvoiceStatus->{$user->id};
@@ -267,6 +267,8 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         $row[] = $user->companyObject ? $user->companyObject->vatNumber : "-";
         $row[] = $user->companyObject ? $user->companyObject->reference : "-";
         $row[] = $user->companyObject ? $user->companyObject->name."\n".$user->companyObject->address->address."\n".$user->companyObject->address->postCode." - ".$user->companyObject->address->city : "-";
+        $row[] = $user->companyObject && $user->companyObject->invoiceAddress ? $user->companyObject->name."\n".$user->companyObject->invoiceAddress->address."\n".$user->companyObject->invoiceAddress->postCode." - ".$user->companyObject->invoiceAddress->city : "-";
+        $row[] = $user->companyObject ? $user->companyObject->email : "-";
         $row[] = $user->companyObject ? $user->companyObject->invoiceEmail : "-";
         $row[] = $user->fullName;
         $row[] = $user->emailAddress;

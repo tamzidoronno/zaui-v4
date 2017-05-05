@@ -10,12 +10,32 @@ class EventTypesBrowserSmall extends \ns_83df5ae3_ee55_47cf_b289_f88ca201be6e\En
         return "EventBrowserSmall";
     }
 
+    public function printLine($type) {
+        echo "<a href='/?page=$type->pageId'><div class='eventtype'>$type->name</div></a>";
+    }
+    
     public function render() {
         if (!$this->getBookingEgineName()) {
             $this->printNotConnectedWarning();
         } else {
             $this->includefile("eventbrowser");
         }
+    }
+    
+    /**
+     * 
+     * @param \core_bookingengine_data_BookingItemType[]
+     */
+    public function groupThem($types) {
+        $grouped = array();
+        foreach ($types as $type) {
+            if (!isset($grouped[$type->eventItemGroup])) {
+                $grouped[$type->eventItemGroup] = array();
+            }
+            $grouped[$type->eventItemGroup][] = $type;
+        }
+        
+        return $grouped;
     }
 }
 ?>

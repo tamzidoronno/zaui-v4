@@ -32,40 +32,40 @@ public class PmsManagerProcessor {
 
     public void doProcessing() {
         clearCachedObject();
-        try { runAutoPayWithCard(); }catch(Exception e) { e.printStackTrace(); }
+        try { runAutoPayWithCard(); }catch(Exception e) { manager.logPrintException(e); }
         clearCachedObject();
-        try { autoMarkBookingsAsPaid(); }catch(Exception e) { e.printStackTrace(); }
+        try { autoMarkBookingsAsPaid(); }catch(Exception e) {manager.logPrintException(e); }
         clearCachedObject(); 
         
-        try { processAutoAssigning(); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(-4, 0, false); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(0, 4, false); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(4, 12, false); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(12, 12 * 2, false); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(24, 24 * 2, false); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(48, 24 * 3, false); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(0, 12, true); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(12, 12 * 2, true); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(24, 24 * 2, true); }catch(Exception e) { e.printStackTrace(); }
-        try { processStarting(48, 24 * 3, true); }catch(Exception e) { e.printStackTrace(); }
-        try { processEndings(0, 24 * 1); }catch(Exception e) { e.printStackTrace(); }
-        try { processEndings(24, 24 * 2); }catch(Exception e) { e.printStackTrace(); }
-        try { processEndings(48, 24 * 3); }catch(Exception e) { e.printStackTrace(); }
-        try { processAutoDeletion(); }catch(Exception e) { e.printStackTrace(); }
-        try { processLockSystem(); }catch(Exception e) { e.printStackTrace(); }
-        try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { e.printStackTrace(); }
-        try { checkForDeadCodes(); }catch(Exception e) { e.printStackTrace(); }
+        try { processAutoAssigning(); }catch(Exception e) { manager.logPrintException(e); }
+        try { processStarting(-4, 0, false); }catch(Exception e) { manager.logPrintException(e); }
+        try { processStarting(0, 4, false); }catch(Exception e) { manager.logPrintException(e); }
+        try { processStarting(4, 12, false); }catch(Exception e) { manager.logPrintException(e); }
+        try { processStarting(12, 12 * 2, false); }catch(Exception e) { manager.logPrintException(e);  }
+        try { processStarting(24, 24 * 2, false); }catch(Exception e) { manager.logPrintException(e); }
+        try { processStarting(48, 24 * 3, false); }catch(Exception e) { manager.logPrintException(e); }
+        try { processStarting(0, 12, true); }catch(Exception e) { manager.logPrintException(e);  }
+        try { processStarting(12, 12 * 2, true); }catch(Exception e) { manager.logPrintException(e);  }
+        try { processStarting(24, 24 * 2, true); }catch(Exception e) { manager.logPrintException(e);  }
+        try { processStarting(48, 24 * 3, true); }catch(Exception e) { manager.logPrintException(e); }
+        try { processEndings(0, 24 * 1); }catch(Exception e) { manager.logPrintException(e);  }
+        try { processEndings(24, 24 * 2); }catch(Exception e) { manager.logPrintException(e); }
+        try { processEndings(48, 24 * 3); }catch(Exception e) { manager.logPrintException(e); }
+        try { processAutoDeletion(); }catch(Exception e) { manager.logPrintException(e); }
+        try { processLockSystem(); }catch(Exception e) {manager.logPrintException(e); }
+        try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { manager.logPrintException(e); }
+        try { checkForDeadCodes(); }catch(Exception e) { manager.logPrintException(e); }
     }
     
     public void hourlyProcessor() {
-        try { processAutoExtend(); }catch(Exception e) { e.printStackTrace(); }
-        try { processIntervalCleaning(false); }catch(Exception e) { e.printStackTrace(); }
-        try { processIntervalCleaning(true); }catch(Exception e) { e.printStackTrace(); }
-        try { createPeriodeInvoices(); }catch(Exception e) { e.printStackTrace(); }
-        try { makeSureCleaningsAreOkey(); }catch(Exception e) { e.printStackTrace(); }
-        try { checkForIncosistentBookings(); }catch(Exception e) { e.printStackTrace(); }
-        try { checkForRoomToClose(); }catch(Exception e) {}
-        try { updateInvoices(); }catch(Exception e) {}
+        try { processAutoExtend(); }catch(Exception e) { manager.logPrintException(e); }
+        try { processIntervalCleaning(false); }catch(Exception e) { manager.logPrintException(e); }
+        try { processIntervalCleaning(true); }catch(Exception e) { manager.logPrintException(e); }
+        try { createPeriodeInvoices(); }catch(Exception e) { manager.logPrintException(e); }
+        try { makeSureCleaningsAreOkey(); }catch(Exception e) { manager.logPrintException(e); }
+        try { checkForIncosistentBookings(); }catch(Exception e) { manager.logPrintException(e); }
+        try { checkForRoomToClose(); }catch(Exception e) {manager.logPrintException(e); }
+        try { updateInvoices(); }catch(Exception e) {manager.logPrintException(e); }
     }
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
@@ -813,6 +813,7 @@ public class PmsManagerProcessor {
         if(deleted) {
             manager.getShopLockManager.removeCodeOnLock(item.bookingItemAlias, room);
         } else {
+            room.code = "";
             room.code = manager.getShopLockManager.getCodeForLock(item.bookingItemAlias);
             room.addedToArx = true;
             PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);

@@ -819,7 +819,7 @@ public class PmsManagerProcessor {
             PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
             manager.saveBooking(booking);
         }
-        
+        manager.getShopLockManager.checkAndUpdateSubLocks();
         return true;
     }
 

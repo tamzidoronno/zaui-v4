@@ -126,4 +126,8 @@ public class GetShopLockCode implements Serializable {
     public void unsetForceRemove() {
         forceRemove = false;
     }
+
+    public void setInUse(boolean inUse) {
+        this.used = inUse;
+    }
 }

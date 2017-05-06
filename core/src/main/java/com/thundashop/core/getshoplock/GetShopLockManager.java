@@ -285,6 +285,51 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
     }
 
+    public void checkAndUpdateSubLocks() {
+        for(GetShopDevice deviceToUpdate : devices.values()) {
+            if(deviceToUpdate.masterLocks != null && deviceToUpdate.masterLocks.isEmpty()) {
+                continue;
+            }
+            
+            List<String> codesAdded = new ArrayList();
+            for(String masterLockId : deviceToUpdate.masterLocks) {
+                GetShopDevice masterLock = getDevice(masterLockId);
+                for(GetShopLockCode code : masterLock.codes.values()) {
+                    if(code.inUse()) {
+                        String curCode = code.fetchCodeToAddToLock();
+                        codesAdded.add(curCode);
+                        
+                        if(!deviceToUpdate.hasCode(curCode)) {
+                            //Add the code to the first available slot
+                            //and signal the processor to update the lock.
+                            for(int i = 6; i < deviceToUpdate.maxNumberOfCodes; i++) {
+                                GetShopLockCode deviceCode = deviceToUpdate.codes.get(i);
+                                if(!deviceCode.inUse()) {
+                                    deviceCode.code = curCode;
+                                    deviceCode.addedToLock = null;
+                                    deviceCode.setInUse(true);
+                                    saveLock(deviceToUpdate);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            for(int i = 5; i < deviceToUpdate.maxNumberOfCodes; i++) {
+                GetShopLockCode deviceCode = deviceToUpdate.codes.get(i);
+                if(deviceCode.inUse()) {
+                    String code = deviceCode.fetchCodeToAddToLock();
+                    if(!codesAdded.contains(code)) {
+                        deviceCode.refreshCode();
+                        saveLock(deviceToUpdate);
+                    }
+                }
+            }
+        }
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;
@@ -688,6 +733,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             return;
         }
         finalizeLocks();
+        checkAndUpdateSubLocks();
         checkDoorsWithOpeningHours();
         for(GetShopDevice dev : devices.values()) {
             if(dev.needSaving) {

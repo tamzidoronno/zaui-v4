@@ -162,4 +162,13 @@ public class GetShopDevice extends DataCommon {
         
         return false;
     }
+
+    public boolean hasCode(String curCode) {
+        for(GetShopLockCode code : codes.values()) {
+            if(code.fetchCodeToAddToLock().equals(curCode)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

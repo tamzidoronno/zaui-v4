@@ -32,8 +32,16 @@ if(!$room->bookingItemId) {
     $userId = @array_shift(array_values($res));
 
     $lastCleanedUser = $this->getApi()->getUserManager()->getUserById($userId);
-    $lastCleaned = date("d.m.Y H:i", strtotime($addition->lastCleaned)) . " by " . $lastCleanedUser->fullName . ", <span class='undocleaning' style='color:blue; cursor:pointer;'> undo</span>";
+    $lastCleaned = date("d.m.Y H:i", strtotime($addition->lastCleaned)) . " by " . $lastCleanedUser->fullName;
+    $lastCleaned .= ", <span class='undocleaning' style='color:blue; cursor:pointer;'> undo</span>";
+    $lastCleaned .= "<i class='fa fa-line-chart' title='Cleaning history for room' style='float:right; cursor:pointer;' onclick='$(\".cleaninghistory\").toggle();'></i>";
     $lastAccess = date("d.m.Y H:i", strtotime($addition->lastUsed));
+    $cleaningHistory = "";
+    krsort($addition->cleaningDates);
+    foreach($addition->cleaningDates as $cleaningDate) {
+        $cleaningHistory .= $cleaningDate . "<br>";
+    }
+    $lastCleaned .= "<br><div class='cleaninghistory' style='display:none;'>" . $cleaningHistory . "</div>";
 }
 
 if($this->getApi()->getPmsInvoiceManager()->isRoomPaidFor($this->getSelectedName(), $room->pmsBookingRoomId)) {

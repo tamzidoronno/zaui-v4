@@ -14,6 +14,7 @@ public class GetShopLockCode implements Serializable {
     public Date addedToLock = null;
     public Date needToBeRemoved = null;
     public Integer slot = 0;
+    private boolean forceRemove = false;
     
     public Integer getSlot() {
         return slot;
@@ -107,5 +108,9 @@ public class GetShopLockCode implements Serializable {
 
     public boolean inUse() {
         return used;
+    }
+
+    public void forceRemove() {
+        forceRemove = true;
     }
 }

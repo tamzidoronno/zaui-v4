@@ -25,6 +25,9 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsLockServer;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.TimeRepeater;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
@@ -36,6 +39,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -250,6 +254,51 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     @Override
     public GetShopDevice getDevice(String deviceId) {
         return devices.get(deviceId);
+    }
+
+    private void checkDoorsWithOpeningHours() {
+        System.out.println("Check opening hours on doors");
+        for(GetShopDevice dev : devices.values()) {
+            if(dev.openingHoursData != null) {
+                TimeRepeater data = new TimeRepeater();
+                if(data.isInTimeRange(dev.openingHoursData, new Date())) {
+                    if(dev.lockState.equals("unkown") || dev.lockState.equals("closed")) {
+                        System.out.println("Opening device:" + dev.id);
+                        autoOpenLock(dev);
+                        dev.lockState = "open";
+                        saveLock(dev);
+                    }
+                } else {
+                    if(dev.lockState.equals("unkown") || dev.lockState.equals("open")) {
+                        System.out.println("Closing device:" + dev.id);
+                        dev.lockState = "closed";
+                        autoCloseLock(dev);
+                        saveLock(dev);
+                    }                    
+                }
+            }
+        }
+    }
+
+    private void autoOpenLock(GetShopDevice dev) {
+        PmsLockServer server = getLockServerForDevice(dev);
+        if(server.isGetShopLockBox()) {
+            openLock(dev.id, "forceOpenOn");
+        }
+    }
+
+    private void autoCloseLock(GetShopDevice dev) {
+        PmsLockServer server = getLockServerForDevice(dev);
+        if(server.isGetShopLockBox()) {
+            openLock(dev.id, "forceOpenOff");
+        }
+        if(server.isGetShopHotelLock()) {
+            for(GetShopLockCode code : dev.codes.values()) {
+                if(code.inUse()) {
+                    code.forceRemove();
+                }
+            }
+        }
     }
 
     class GetshopLockCodeManagemnt extends Thread {
@@ -596,7 +645,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     public void openLock(String lockId, String action) {
         GetShopDevice dev = devices.get(lockId);
         PmsLockServer lockServer = getLockServerForDevice(dev);
-        if(lockServer != null && lockServer.locktype.equals("getshoplockbox")) {
+        if(lockServer != null && lockServer.isGetShopLockBox()) {
             openGetShopLockBox(lockId, action);
         } else {
             String hostname = getHostname(dev.serverSource);
@@ -639,6 +688,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
 
     @Override
     public void checkIfAllIsOk() {
+        checkDoorsWithOpeningHours();
         if(stopUpdatesOnLock) {
             logPrint("Lock updates stopped");
         }
@@ -657,10 +707,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             
             if(dev.isLock()) {
                 checkForMasterCodeUpdates(dev);
-            }
-            
-            if(dev.warnAboutCodeNotSet()) {
-//                messageManager.sendErrorNotification("Failed to update getshop hotel locks, this have not been able to update locks for 6 hours. this might be critical.", null);
             }
         }
         

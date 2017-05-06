@@ -35,6 +35,7 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
                     $code->addedToLock = $this->convertToJavaDate(time());
                 }
                 $code->needToBeRemoved = ($_POST['data']['needToBeRemoved_'.$key] == "true");
+                $code->forceRemove = ($_POST['data']['forceRemove_'.$key] == "true");
                 if($_POST['data']['code_'.$key] != $code->code) {
                     $code->code = $_POST['data']['code_'.$key];
                     $code->addedToLock = (boolean)false;
@@ -57,6 +58,7 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
             if($lock->id != $id) {
                 continue;
             }
+            echo "Lock state: " . $lock->lockState . "<br>";
             echo '<div gstype="form" method="updateLockData">';
             echo "<input type='hidden' gsname='lockid' value='".$id."'>";
             echo "<input type='hidden' gsname='source' value='".$serverSource."'>";
@@ -67,6 +69,7 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
             echo "<td>In use</td>";
             echo "<td>Added</td>";
             echo "<td>Remove</td>";
+            echo "<td>Force remove</td>";
             echo "</tr>";
             
             foreach($lock->codes as $key => $code) {
@@ -83,6 +86,10 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
                 echo "<td align='center'>";
                 $needToBeRemoved = $code->needToBeRemoved ? "CHECKED" : "";
                 echo "<input type='checkbox' gsname='needToBeRemoved_$key' $needToBeRemoved>";
+                echo "</td>";
+                echo "<td align='center'>";
+                $forceRemove = $code->forceRemove ? "CHECKED" : "";
+                echo "<input type='checkbox' gsname='forceRemove_$key' $forceRemove>";
                 echo "</td>";
                 echo "</tr>";
             }

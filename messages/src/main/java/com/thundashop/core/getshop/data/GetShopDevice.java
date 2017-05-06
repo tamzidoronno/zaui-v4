@@ -26,9 +26,10 @@ public class GetShopDevice extends DataCommon {
     public HashMap<String, Object> instances;
     public Date batteryLastUpdated;
     public String serverSource = "";
-    TimeRepeaterData openingHoursData = null;
+    public TimeRepeaterData openingHoursData = null;
     public List<String> masterLocks = new ArrayList();
     public String openingType = "";
+    public String lockState = "unkown"; //unkown, locked, open.
     
     public void setDevice(ZWaveDevice device) {
         zwaveid = device.id;

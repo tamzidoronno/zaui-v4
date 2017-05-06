@@ -364,7 +364,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         }
                         boolean added = false;
                         for(int i = 0; i < 10; i++) {
-                            if(codesAdded >= 2) {
+                            if(codesAdded >= 2 && !device.needForceRemove()) {
                                 int minutesTried = getMinutesTriedSettingCodes(device);
                                 if(minutesTried > 5) {
                                     Calendar future = Calendar.getInstance();
@@ -385,6 +385,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                 if(result != null && result.hasCode != null && result.hasCode.value != null && result.hasCode.value.equals(true)) {
                                     logPrint("\t\t Code alread set... should not be on offset: " + offset + " (" + device.name + ")");
                                 } else {
+                                    if(code.needForceRemove()) {
+                                        code.addedToLock = null;
+                                        code.unsetForceRemove();
+                                        device.needSaving = true;
+                                        break;
+                                    }
                                     logPrint("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")");
                                     for(int j = 0; j < 24; j++) {
                                         setCode(offset, code.fetchCodeToAddToLock(), false);
@@ -688,7 +694,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
 
     @Override
     public void checkIfAllIsOk() {
-        checkDoorsWithOpeningHours();
         if(stopUpdatesOnLock) {
             logPrint("Lock updates stopped");
         }
@@ -699,6 +704,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             return;
         }
         finalizeLocks();
+        checkDoorsWithOpeningHours();
         for(GetShopDevice dev : devices.values()) {
             if(dev.needSaving) {
                 dev.needSaving = false;
@@ -730,15 +736,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
         }
         
-        //If forced priotiry.
-        for(GetShopDevice dev : devices.values()) {
-            if(dev.needPriority) {
-                dev.needPriority = false;
-                saveLock(dev);
-                toSet = dev;
-            }
-        }
-        
         if(toSet != null) {
             toSet.beingUpdated = true;
             toSet.lastTriedUpdate = new Date();
@@ -749,8 +746,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock);
             mgr.start();
         }
-        return;
-        
     }
     
     private boolean isUpdatingSource(String serverSource) {

@@ -51,6 +51,11 @@ public class GetShopLockCode implements Serializable {
         if(needToBeRemoved != null) {
             return true;
         }
+        
+        if(forceRemove) {
+            return true;
+        }
+        
         return false;
     }
 
@@ -110,7 +115,15 @@ public class GetShopLockCode implements Serializable {
         return used;
     }
 
+    public boolean needForceRemove() {
+        return forceRemove;
+    }
+    
     public void forceRemove() {
         forceRemove = true;
+    }
+
+    public void unsetForceRemove() {
+        forceRemove = false;
     }
 }

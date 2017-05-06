@@ -80,6 +80,11 @@ public class GetShopDevice extends DataCommon {
                 return false;
             }
         }
+        
+        if(isLocked() && !needForceRemove()) {
+            return false;
+        }
+        
         for(GetShopLockCode code : codes.values()) {
             if(code.needUpdate()) {
                 return true;
@@ -138,5 +143,23 @@ public class GetShopDevice extends DataCommon {
         }
         
         return domain.equals(source);
+    }
+
+    public boolean isLocked() {
+        return lockState != null && lockState.equals("locked");
+    }
+
+    public boolean isOpen() {
+        return lockState != null && lockState.equals("open");
+    }
+
+    public boolean needForceRemove() {
+        for(GetShopLockCode code : codes.values()) {
+            if(code.needForceRemove()) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

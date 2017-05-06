@@ -369,7 +369,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
         @Override
         public void run() {
-            if(stopUpdatesOnLock) { device.beingUpdated = false; return; }
             if(hasConnectivity()) {
                 if(device.oldBatteryStatus()) {
                     try {
@@ -385,7 +384,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 offsets = Lists.reverse(offsets);
                 
                 for(Integer offset : offsets) {
-                    if(stopUpdatesOnLock) { device.beingUpdated = false; return; }
+                    if(stopUpdatesOnLock) { continue; }
                     GetShopLockCode code = device.codes.get(offset);
                     if(code.needUpdate()) {
                         if(code.needToBeRemoved()) {
@@ -393,6 +392,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         }
                         boolean added = false;
                         for(int i = 0; i < 10; i++) {
+                            if(stopUpdatesOnLock) { continue; }
                             if(codesAdded >= 2 && !device.needForceRemove()) {
                                 int minutesTried = getMinutesTriedSettingCodes(device);
                                 if(minutesTried > 5) {

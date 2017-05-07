@@ -15,6 +15,27 @@ $resend = "Code not active yet";
 $renew = "Code not active yet";
 $lastAccess = "Room not assigned yet.";
 
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->startDate = $room->date->start;
+$filter->endDate = $room->date->start;
+$filter->filterType = "checkout";
+
+$selectedCheckoutRoom = null;
+$checkoutbookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+foreach($checkoutbookings as $checkoutbooking) {
+    foreach($checkoutbooking->rooms as $checkoutroom) {
+        if($checkoutroom->bookingItemId == $room->bookingItemId) {
+            $selectedCheckoutRoom = $checkoutroom;
+        }
+    }
+}
+
+$checkouttime = strtotime($selectedCheckoutRoom->date->end);
+
+if($selectedCheckoutRoom && $checkouttime > time()) {
+    $code = "<b>Not even possible yet, existing guest checks out " . date("H:i", $checkouttime) . " this day.</b>";
+}
+
 if(!$room->bookingItemId) {
     $cleaningState = "No room assigned yet.";
     $lastCleaned = "No room assigned yet.";
@@ -52,7 +73,7 @@ if(strtotime($room->date->start) < time() && strtotime($room->date->end) > time(
     $withinTime = "<i class='fa fa-check'></i>";
 }
 if($booking->forceGrantAccess) {
-    $forcedAccess = "<i class='fa fa-check'></i>";
+    $paidFor = "<i class='fa fa-check'></i> (forced) ";
 }
 
 if($room->blocked) {
@@ -87,8 +108,6 @@ if($room->addedToArx) {
         <?php echo $withinTime; ?> is active by date range.<br>
         <?php echo $paidFor; ?> room is paid for.<br>
         <?php echo $isClean; ?> room is clean.<br>
-        <?php echo $forcedAccess; ?> has forced access.<br>
-        <?php echo $blockedAccess; ?> has been blocked.<br>
         </td>
     </tr>
     <tr>

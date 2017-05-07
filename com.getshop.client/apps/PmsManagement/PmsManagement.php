@@ -1683,14 +1683,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function checkOutGuest() {
-        $booking = $this->getSelectedBooking();
-        foreach($booking->rooms as $r) {
-            if($r->pmsBookingRoomId == $_POST['data']['roomid']) {
-                $r->checkedout = true;
-            }
-        }
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
-        $this->selectedBooking = null;
+        $this->getApi()->getPmsManager()->checkOutRoom($this->getSelectedName(), $_POST['data']['roomid']);
         $this->showBookingInformation();
     }
 

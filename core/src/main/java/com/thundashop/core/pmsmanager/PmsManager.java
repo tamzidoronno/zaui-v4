@@ -881,9 +881,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             oldStart.setTime(room.date.start.getTime());
             oldEnd.setTime(room.date.end.getTime());        
             changeDatesOnRoom(room, start, end);
+            
             String logText = "New date set from " + convertToStandardTime(oldStart) + " - " + convertToStandardTime(oldEnd) + " to, " + convertToStandardTime(start) + " - " + convertToStandardTime(end);
             logEntry(logText, bookingId, room.bookingItemId, roomId);
-            doNotification("date_changed", booking, room);
+            if(!booking.isSameDay(end, oldEnd) || !booking.isSameDay(start, oldStart)) {
+                doNotification("date_changed", booking, room);
+            }
             return room;
         } catch (BookingEngineException ex) {
 //            ex.printStackTrace();
@@ -1782,6 +1785,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             bookingEngine.deleteBooking(remove.id);
             wubookManager.setAvailabilityChanged();
         }
+        
+        changeCheckoutTimeForGuestOnRoom(itemId);
     }
     
     @Override
@@ -5811,6 +5816,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public boolean hasSentErrorNotificationForWubookId(String wubookId) {
         return failedWubooks.containsKey(wubookId);
+    }
+
+    @Override
+    public void checkOutRoom(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                room.checkedout = true;
+                if(room.date.end.after(new Date())) {
+                    changeDates(room.pmsBookingRoomId, booking.id, room.date.start, new Date());
+                }
+            }
+        }
+        saveBooking(booking);
+    }
+
+    private void changeCheckoutTimeForGuestOnRoom(String itemId) {
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = "checkout";
+        filter.startDate = new Date();
+        filter.endDate = new Date();
+        
+        List<PmsRoomSimple> simplerooms = getSimpleRooms(filter);
+        for(PmsRoomSimple simple : simplerooms) {
+            if(simple.bookingItemId.equals(itemId)) {
+                checkOutRoom(simple.pmsRoomId);
+            }
+        }
     }
 
 }

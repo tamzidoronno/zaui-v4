@@ -210,16 +210,8 @@ public class StorePool {
             object.sessionId = sessionId; 
         }
 
-        long start = System.currentTimeMillis();
         Object result = ExecuteMethod(object, types, executeArgs);
-
-        long end = System.currentTimeMillis();
-        long diff = end - start;
-        if (diff > 40) {
-            StoreHandler handler = getStoreHandler(object.sessionId);
-            String storeIdToUse = handler != null ? handler.getStoreId() : null;
-            GetShopLogHandler.logPrintStatic("" + diff + " : " + object.interfaceName + " method: " + object.method, storeIdToUse);
-        }
+        
         result = (result == null) ? new ArrayList() : result;
 
         if (!object.messageId.equals("")) {

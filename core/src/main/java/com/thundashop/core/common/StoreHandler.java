@@ -57,7 +57,16 @@ public class StoreHandler {
     }
         
     public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        return executeMethod(inObject, types, argumentValues);
+        long start = System.currentTimeMillis();
+        Object rest = executeMethod(inObject, types, argumentValues);
+        long end = System.currentTimeMillis();
+        
+        long diff = end - start;
+        if (diff > 40) {
+            GetShopLogHandler.logPrintStatic("" + diff + " : " + inObject.interfaceName + " method: " + inObject.method, storeId);
+        }
+        
+        return rest;
     }
     
     public Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {

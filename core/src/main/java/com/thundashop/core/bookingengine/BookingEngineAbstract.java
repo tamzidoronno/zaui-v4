@@ -813,9 +813,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
  
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
-        if (itemType.equals("aee14a7f-dc19-475c-91ee-5d3310475887")) {
-            System.out.println("Found one");
-        }
         BookingTimeLineFlatten timeline = getTimelines(itemType, start, end);
         int higest = 9999;
         List<BookingTimeLine> timeLines = timeline.getTimelines();

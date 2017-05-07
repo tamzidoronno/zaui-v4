@@ -65,7 +65,6 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             $scope.room.code = res;
             $scope.room.addedToArx = true;
             $scope.waitingForCode = false;
-            alert('test');
             $scope.$apply();
         });
     },

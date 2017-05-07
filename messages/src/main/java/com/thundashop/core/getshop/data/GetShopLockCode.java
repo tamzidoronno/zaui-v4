@@ -9,10 +9,12 @@ import java.util.Random;
 public class GetShopLockCode implements Serializable {
     public String code;
     public Boolean used = false;
+    public Date lastUsed = null;
     public Date codeRefreshed = null;
     public Date addedToLock = null;
     public Date needToBeRemoved = null;
     public Integer slot = 0;
+    private boolean forceRemove = false;
     
     public Integer getSlot() {
         return slot;
@@ -49,6 +51,11 @@ public class GetShopLockCode implements Serializable {
         if(needToBeRemoved != null) {
             return true;
         }
+        
+        if(forceRemove) {
+            return true;
+        }
+        
         return false;
     }
 
@@ -74,6 +81,7 @@ public class GetShopLockCode implements Serializable {
 
     public String fetchCode() {
         used = true;
+        lastUsed = new Date();
         return code;
     }
 
@@ -105,5 +113,21 @@ public class GetShopLockCode implements Serializable {
 
     public boolean inUse() {
         return used;
+    }
+
+    public boolean needForceRemove() {
+        return forceRemove;
+    }
+    
+    public void forceRemove() {
+        forceRemove = true;
+    }
+
+    public void unsetForceRemove() {
+        forceRemove = false;
+    }
+
+    public void setInUse(boolean inUse) {
+        this.used = inUse;
     }
 }

@@ -190,4 +190,13 @@ public class TimeRepeater {
         res.add(toAdd);
         return res;
     }
+
+    public boolean isInTimeRange(TimeRepeaterData openingHoursData, Date date) {
+        LinkedList<TimeRepeaterDateRange> ranges = generateRange(openingHoursData);
+        for(TimeRepeaterDateRange range : ranges) {
+            if(range.isBetweenTime(date)) 
+                return true;
+        }
+        return false;
+    }
 }

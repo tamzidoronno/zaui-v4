@@ -26,9 +26,10 @@ public class GetShopDevice extends DataCommon {
     public HashMap<String, Object> instances;
     public Date batteryLastUpdated;
     public String serverSource = "";
-    TimeRepeaterData openingHoursData = null;
+    public TimeRepeaterData openingHoursData = null;
     public List<String> masterLocks = new ArrayList();
     public String openingType = "";
+    public String lockState = "unkown"; //unkown, locked, open.
     
     public void setDevice(ZWaveDevice device) {
         zwaveid = device.id;
@@ -79,6 +80,11 @@ public class GetShopDevice extends DataCommon {
                 return false;
             }
         }
+        
+        if(isLocked() && !needForceRemove()) {
+            return false;
+        }
+        
         for(GetShopLockCode code : codes.values()) {
             if(code.needUpdate()) {
                 return true;
@@ -137,5 +143,32 @@ public class GetShopDevice extends DataCommon {
         }
         
         return domain.equals(source);
+    }
+
+    public boolean isLocked() {
+        return lockState != null && lockState.equals("locked");
+    }
+
+    public boolean isOpen() {
+        return lockState != null && lockState.equals("open");
+    }
+
+    public boolean needForceRemove() {
+        for(GetShopLockCode code : codes.values()) {
+            if(code.needForceRemove()) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public boolean hasCode(String curCode) {
+        for(GetShopLockCode code : codes.values()) {
+            if(code.fetchCodeToAddToLock().equals(curCode)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

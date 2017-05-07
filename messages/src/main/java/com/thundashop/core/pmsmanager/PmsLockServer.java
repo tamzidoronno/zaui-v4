@@ -15,4 +15,12 @@ public class PmsLockServer implements Serializable {
     public Integer codeSize = 4;
     public boolean keepDoorOpenWhenCodeIsPressed = false;
     public String closeAllDoorsAfterTime = "22:00";
+
+    public boolean isGetShopLockBox() {
+        return locktype != null && locktype.equals("getshoplockbox");
+    }
+
+    public boolean isGetShopHotelLock() {
+        return locktype != null && locktype.equals("getshophotellock");
+    }
 }

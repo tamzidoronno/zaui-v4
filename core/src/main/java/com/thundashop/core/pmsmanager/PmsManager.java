@@ -1214,8 +1214,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             
             String recipientEmail = user.emailAddress;
+            boolean specificEmail = false;
             if(emailToSendTo != null) {
                 recipientEmail = emailToSendTo;
+                specificEmail = true;
                 emailToSendTo = null;
             }
             
@@ -1229,6 +1231,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             messageManager.sendMailWithAttachments(recipientEmail, user.fullName, title, message, fromEmail, fromName, attachments);
 
+            if(booking.registrationData.resultAdded.containsKey("company_email")) {
+                String companyEmail = booking.registrationData.resultAdded.get("company_email");
+                if(companyEmail != null && companyEmail.contains("@") && !specificEmail && !companyEmail.equals(recipientEmail)) {
+                    messageManager.sendMailWithAttachments(companyEmail, user.fullName, title, message, fromEmail, fromName, attachments);
+                }
+            }
+            
             if (configuration.copyEmailsToOwnerOfStore) {
                 String copyadress = storeManager.getMyStore().configuration.emailAdress;
                 messageManager.sendMail(copyadress, user.fullName, title, message, fromEmail, fromName);
@@ -3671,8 +3680,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 newuser = createUser(booking);
                 booking.userId = newuser.id;
             }
-        } else {
-            booking.registrationData.resultAdded = new LinkedHashMap();
         }
         
         PmsUserDiscount disc = pmsInvoiceManager.getDiscountsForUser(booking.userId);

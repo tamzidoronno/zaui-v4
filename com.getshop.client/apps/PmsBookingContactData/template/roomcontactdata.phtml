@@ -56,6 +56,19 @@ if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
             }
         }
     }
+    
+    $companyEmail = "";
+    if(isset($booking->registrationData->resultAdded->{'company_email'})) {
+        $companyEmail = $booking->registrationData->resultAdded->{'company_email'};
+    }
+    
+    echo "<div style='clear:both;'></div>";
+    echo "<label class='col-25'>";
+    echo $this->__w("Send confirmation to an alternate email address") .":<br>";
+    echo "<input type='text' gsname='company_email' value='".$companyEmail."'>";
+    echo "</label>";
+    echo "<div style='clear:both;'></div><br>";
+    
     echo "<span class='complete_button'>$completeText</span>";
 } else {
     echo "<h2 class='paymentheaders'>".$this->__w("Contact information") . "</h2>";

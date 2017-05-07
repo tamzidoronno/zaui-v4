@@ -120,8 +120,28 @@ $config = $this->getConfigurationToUse();
             </div>         
             <?php
             }
-            echo "Created : " . date("d.m.Y H:i", strtotime($booking->rowCreatedDate));
-            ?>            
+            $keyarrays = array();
+            foreach($booking->registrationData->resultAdded as $key => $val) {
+                $keyarrays[$key] = $val;
+            }
+            echo "Created : " . date("d.m.Y H:i", strtotime($booking->rowCreatedDate)) . "<bR>";
+            ksort($keyarrays);
+            echo "<span onclick='$(\".allregisteredfields\").toggle()' style='cursor:pointer;color:blue;'>Show all registered fields</span>";
+            echo "<div class='allregisteredfields' style='display:none;'>";
+            echo "<table cellspacing='0' cellpadding='0' width='100%'>";
+            
+            echo "<tr>";
+            echo "<tH>Key</th><th>Value</th>";
+            echo "</tR>";
+                
+            foreach($keyarrays as $key => $val) {
+                echo "<tr>";
+                echo "<td>" . $key . "</td><td>" . $val . "</td>";
+                echo "</tr>";
+            }
+            echo "</table>";
+            echo "</div>";
+            ?>
         </td>
         <td valign="top">
             <span gstype='form' method="addComment">

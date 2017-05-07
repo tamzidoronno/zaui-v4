@@ -206,7 +206,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 $this->validation[] = "Someone booked your room before you where able to complete the booking process, please try again with a different room.";
                 $this->unknownError = "Someone booked your room before you where able to complete the booking process, please try again with a different room.";
             }
-        }
+        } 
         if($loaded) {
            echo "<div style='font-size:30px;text-align:center;'><i class='fa fa-spin fa-spinner'></i></div>"; 
         } else {
@@ -299,7 +299,6 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             $i++;
         }
         $originalForm->contactsList = $newList;
-        
         $selected->registrationData = $originalForm;
         
         $config = $this->getConfigurationToUse();

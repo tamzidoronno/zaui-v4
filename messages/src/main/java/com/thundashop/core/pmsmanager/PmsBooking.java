@@ -244,7 +244,7 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
-    private boolean isSameDay(Date date1, Date date2) {
+    public boolean isSameDay(Date date1, Date date2) {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
         return fmt.format(date1).equals(fmt.format(date2));
     }

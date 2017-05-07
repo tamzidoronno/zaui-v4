@@ -35,7 +35,7 @@ if($selectedCheckoutRoom) {
 }
 
 if($selectedCheckoutRoom && $checkouttime > time()) {
-    $code = "<b>Not even possible yet, existing guest checks out " . date("H:i", $checkouttime) . " this day.</b>";
+    $code = "<b>Earliest time to give out code is " . date("H:i", $checkouttime) . ", because someone already occupy this room.</b>";
 }
 
 if(date("dmy", time()) != date("dmy", strtotime($room->date->start))) {

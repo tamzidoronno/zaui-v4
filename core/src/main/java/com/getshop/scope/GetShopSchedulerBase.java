@@ -66,7 +66,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
     }
     
     protected GetShopApi getApi() throws Exception {
-        if (!this.loggedOn) {
+        if (!this.loggedOn || this.api == null) {
             this.api = new GetShopApi(25554, "localhost", sessionId, webAddress);
             User user = this.api.getUserManager().logOn(username, password);
             this.loggedOn = true;

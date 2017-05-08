@@ -238,7 +238,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     
     
     public void saveRouteDirect(Route inRoute) {
-        saveObject(inRoute);
+        saveObjectInternal(inRoute);
         routes.put(inRoute.id, inRoute);
     }
     
@@ -775,7 +775,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public void deleteRoute(String routeId) {
-        Route route = getRouteById(routeId);
+        String routeIdModified = routeId.replaceAll("\n", "\r");
+        Route route = getRouteById(routeIdModified);
         
         if (route != null) {
             deleteObject(route);
@@ -783,7 +784,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         for (ExportedData exportData : exports.values()) {
-            if (exportData.routeId != null && exportData.routeId.equals(routeId)) {
+            if (exportData.routeId != null && exportData.routeId.equals(route.id)) {
                 deleteObject(exportData);
             }
         }
@@ -798,10 +799,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         if (route != null) {
             route.userIds.stream()
-                .forEach(userId -> sendRouteRemovedMessage(routeId, userId));
+                .forEach(userId -> sendRouteRemovedMessage(route.id, userId));
         }
         
-        exports.values().removeIf(o -> o.routeId != null && o.routeId.equals(routeId));
+        exports.values().removeIf(o -> o.routeId != null && o.routeId.equals(route.id));
     }
     
     private void deleteDestination(String destId) {

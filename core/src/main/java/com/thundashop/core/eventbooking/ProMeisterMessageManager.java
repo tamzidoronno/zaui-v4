@@ -32,6 +32,10 @@ public class ProMeisterMessageManager  {
         return messageManager.sendMail(emailAddress, fullName, subject, content, email, from);
     }
     
+    public String sendMailWithAttachmentIgnoreFutureCheck(Event event, String emailAddress, String fullName, String subject, String content, String email, String from, HashMap<String, String> map) {
+        return messageManager.sendMailWithAttachments(emailAddress, fullName, subject, content, email, from, map);
+    }
+    
     public String sendMailWithAttachment(Event event, String emailAddress, String fullName, String subject, String content, String email, String from, HashMap<String, String> map) {
         if (!event.isInFuture()) {
             return "";

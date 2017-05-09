@@ -6,6 +6,10 @@ class InvoiceControl extends \MarketingApplication implements \Application {
         
     }
 
+    public function searchOrders() {
+//        echo "TEST";
+    }
+    
     public function getName() {
         return "InvoiceControl";
     }
@@ -20,7 +24,15 @@ class InvoiceControl extends \MarketingApplication implements \Application {
     }
     
     public function getGroupedOrders() {
-        $orders = $this->getApi()->getOrderManager()->getAllUnpaidInvoices();
+        if(isset($_POST['data']['keyword']) && $_POST['data']['keyword']) {
+            $filterOptions =  new \core_common_FilterOptions();
+            $filterOptions->searchWord = $_POST['data']['keyword'];
+            $res = $this->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);
+            $orders = $res->datas;
+        } else {
+            $orders = $this->getApi()->getOrderManager()->getAllUnpaidInvoices();
+        }
+        
         $groupedOrders = new \stdClass();
         
         foreach ($orders as $order) {

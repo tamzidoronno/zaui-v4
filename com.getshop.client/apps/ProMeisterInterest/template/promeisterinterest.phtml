@@ -4,7 +4,8 @@
 $types = $this->getApi()->getEventBookingManager()->getBookingItemTypes($this->getBookingEngineName());
 
 foreach ($types as $type) {
-    echo "<div class='selectInterestEmail' gsclick='sendInterestMessage' typeid='$type->id'>$type->name</div>";
+    echo "<div class='selectInterestEmail' gsclick='selectEventType' typeid='$type->id'>$type->name</div>";
 }
+
 
 ?>

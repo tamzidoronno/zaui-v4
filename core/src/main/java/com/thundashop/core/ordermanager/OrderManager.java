@@ -540,7 +540,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void checkForOrdersToCapture() throws ErrorException {
         dibsManager.checkForOrdersToCapture();
         epayManager.checkForOrdersToCapture();
-        bamboraManager.checkForOrdersToCapture();
+//        bamboraManager.checkForOrdersToCapture();
     }
     
     @Override

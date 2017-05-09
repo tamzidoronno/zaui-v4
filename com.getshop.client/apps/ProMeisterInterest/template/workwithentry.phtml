@@ -1,0 +1,54 @@
+<div style='padding: 20px;'>
+    <div class='shop_button' gsclick='cancelShowHistory'><? echo $this->__f("Cancel"); ?></div>
+    
+    <div style='border: solid 1px #DDD; margin-top: 20px; margin-bottom: 20px; padding: 20px;'>
+        1. Select the users you want to add to an event.
+        <br/>2. Go to the bottom and create the event.
+        <br/> <i class='fa fa-info-circle'></i> The users will then be silently added to the event and then removed from the interest list.
+    </div>
+    <?
+    /* @var $this ns_de7403c4_6b8e_4fb5_8d8a_d9fdc14ce76d\ProMeisterInterest */
+    $interests = $this->getApi()->getEventBookingManager()->getInterests($this->getBookingEngineName());
+
+    if (!is_array($interests)) {
+        $interests = array();
+    }
+
+    $groupedArray = $this->getGrouped($interests);
+
+    $eventTypeId = $this->getCurrentTypeId();
+    $interestLocations = $groupedArray[$eventTypeId];
+
+    echo "<div>";
+        $eventType = $this->getApi()->getBookingEngine()->getBookingItemType($this->getBookingEngineName(), $eventTypeId);
+
+        foreach ($interestLocations as $locationId => $interests) {
+            echo "<div class='grouped'>";
+                $location = $this->getApi()->getEventBookingManager()->getLocation($this->getBookingEngineName(), $locationId);
+                echo "<b>".$location->name." </b><br/>(Persons: ".count($interests).")<br/>";
+                foreach ($interests as $interest) {
+                    $user = $this->getUserById($interest->userId);
+                    $selectedUserArray = $this->getSelectedUsers();
+                    $checked = isset($selectedUserArray[$user->id]) && $selectedUserArray[$user->id] == $location->id ? "checked='true'" : "";
+                    echo "<div> <input location='$location->id' type='checkbox' class='toggleSelectedUserId' $checked value='$user->id' /> ".$user->fullName."</div>";
+                }
+            echo "</div>";
+
+        }
+    echo "</div>";
+
+    ?>
+    <div>
+        <br/>
+        <b>Users that will automatically be added to this event:</b>
+        <div class='usersselected'>
+            <? 
+            $this->includefile("selectedUsers");
+            ?>
+        </div>
+        <br/><br/>
+        <?
+        $this->wrapApp("f4c3fce7-123c-4dcc-b9ce-dfea2ac6b755", "createEvent");
+        ?>
+    </div>
+</div>

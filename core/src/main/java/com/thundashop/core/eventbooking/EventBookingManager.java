@@ -58,6 +58,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public HashMap<String, InvoiceGroup> groupInvoicing = new HashMap();
     public HashMap<String, ManuallyAddedEventParticipant> manualEvents = new HashMap();
     public HashMap<String, ForcedParcipated> forcedParticipated = new HashMap();
+    public HashMap<String, EventIntrest> eventInterests = new HashMap();
     
     @Autowired
     public EventLoggerHandler eventLoggerHandler;
@@ -99,6 +100,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             if (data instanceof ForcedParcipated) {
                 ForcedParcipated forced = (ForcedParcipated)data;
                 forcedParticipated.put(forced.userId, forced);
+            }
+            
+            if (data instanceof EventIntrest) {
+                EventIntrest eventInterest = (EventIntrest)data;
+                eventInterests.put(eventInterest.id, eventInterest);
             }
             
             if (data instanceof Location) {
@@ -153,12 +159,14 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
     
     @Override
-    public void createEvent(Event event) {
+    public Event createEvent(Event event) {
         BookingItem item = bookingEngine.saveBookingItem(event.bookingItem);
         event.bookingItemId = item.id;
         saveObject(event);
         events.put(event.id, event);
         log("EVENT_CREATED", event, null);
+        event = finalize(event);
+        return event;
     }
 
     @Override
@@ -2325,5 +2333,29 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             saveObject(forced);
             forcedParticipated.put(forced.userId, forced);
         }
+    }
+
+    @Override
+    public void registerEventIntrest(EventIntrest interest) {
+        interest.userId = getSession().currentUser.id;
+        saveObject(interest);
+        eventInterests.put(interest.id, interest);
+    }
+
+    @Override
+    public List<EventIntrest> getInterests() {
+        return new ArrayList(eventInterests.values());
+    }
+
+    @Override
+    public void removeInterest(String bookingItemTypeId, String userId) {
+        List<EventIntrest> res = eventInterests.values().stream()
+                .filter(o -> o.eventTypeId.equals(bookingItemTypeId) && o.userId.equals(userId))
+                .collect(Collectors.toList());
+        
+        res.stream().forEach(o -> {
+            eventInterests.remove(o.id);
+            deleteObject(o);
+        });
     }
 }

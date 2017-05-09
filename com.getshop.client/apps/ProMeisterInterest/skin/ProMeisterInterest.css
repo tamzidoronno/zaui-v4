@@ -1,7 +1,11 @@
 .ProMeisterInterest .selectInterestEmail {
-    padding: 20px;
+    padding: 10px;
     border-bottom: solid 1px #DDD;
     cursor: pointer;
+}
+
+.ProMeisterInterest .selectInterestEmail:nth-child(odd) {
+    background-color: #FAFAFA;
 }
 
 .ProMeisterInterest .selectInterestEmail:hover {
@@ -11,4 +15,51 @@
 
 .ProMeisterInterest .selectInterestEmail:last-child {
     border-bottom: solid 0px;
+}
+
+.ProMeisterInterest .buttonarea {
+    text-align: right;
+    padding: 20px;
+}
+
+.ProMeisterInterest .content {
+    padding: 20px;
+}
+
+.ProMeisterInterest .content .checkboxes {
+    font-size: 0px;
+}
+
+.ProMeisterInterest .content .checkboxes .col {
+    font-size: 15px;
+    display: inline-block;
+    vertical-align: top;
+    width: 33.333%
+}
+
+.ProMeisterInterest .titleHeader {
+    font-size: 20px;
+    line-height: 30px;
+    background-color: #EEE;
+    padding: 20px;
+}
+.ProMeisterInterest .grouped {
+    width: 33.33%;
+    display: inline-block;
+    vertical-align: top;
+    border: solid 1px #DDD;
+    box-sizing: border-box;
+    padding: 10px;
+}
+.ProMeisterInterest .selectTypeToWorkWith {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.ProMeisterInterest .selectTypeToWorkWith:nth-child(odd) {
+    background-color: #EFEFEF;
+}
+.ProMeisterInterest {
+    border: solid 1px #DDD;
+    
 }

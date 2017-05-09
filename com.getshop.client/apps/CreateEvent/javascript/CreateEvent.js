@@ -72,8 +72,16 @@ app.CreateEvent = {
             freetexteventhelder : document.find('.freetexteventhelder').val(),
             extra : $('.CreateEvent .extraComment').val()
         }
-     
-        thundashop.Ajax.simplePost(this, "createEvent", data);
+        
+        var event = thundashop.Ajax.createEvent(null, "createEvent", this,  data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            if (res) {
+                thundashop.common.goToPage(res);
+            }
+        })
+        
     }
 }
 

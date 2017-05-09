@@ -1,0 +1,19 @@
+<div class='shop_button' gsclick='cancelShowHistory'><? echo $this->__f("Cancel"); ?></div>
+<?
+/* @var $this ns_de7403c4_6b8e_4fb5_8d8a_d9fdc14ce76d\ProMeisterInterest */
+$interests = $this->getApi()->getEventBookingManager()->getInterests($this->getBookingEngineName());
+
+if (!is_array($interests)) {
+    $interests = array();
+}
+
+echo "<div style='padding: 5px; margin-top: 20px; margin-bottom: 20px; font-weight: bold;'> Please select event you want more information about.</div>";
+$groupedArray = $this->getGrouped($interests);
+
+foreach ($groupedArray as $eventTypeId => $interestLocations) {
+    echo "<div gsclick='selectTypeToWorkWith' class='selectTypeToWorkWith' typeid='$eventTypeId'>";
+        $eventType = $this->getApi()->getBookingEngine()->getBookingItemType($this->getBookingEngineName(), $eventTypeId);
+        echo $eventType->name;
+    echo "</div>";
+}
+?>

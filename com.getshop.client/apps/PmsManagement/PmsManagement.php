@@ -1013,9 +1013,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->prefix = $_POST['data']['prefix'];
         $user->emailAddress = $_POST['data']['emailAddress'];
         $user->cellPhone = $_POST['data']['cellPhone'];
-        if(isset($_POST['data']['accountingId'])) {
-            $user->accountingId = $_POST['data']['accountingId'];
-        }
         if(!$user->address) {
             $user->address = new \core_usermanager_data_Address();
         }
@@ -1924,9 +1921,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         return $app;
     }
+    
     public function getChannels() {
         return $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName())->channelConfiguration;
     }
+    
     public function addRepeatingDates() {
         $repeat = new \ns_46b52a59_de5d_4878_aef6_13b71af2fc75\PmsBookingSummary();
         $data = $repeat->createRepeatingDateObject();

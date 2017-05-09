@@ -330,6 +330,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
     }
 
+    public List<GetShopDevice> getAllLocksCached(String serverSource) {
+        doUpdateLockList = false;
+        return getAllLocks(serverSource);
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;

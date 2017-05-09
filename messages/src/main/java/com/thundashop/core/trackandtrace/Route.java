@@ -145,7 +145,7 @@ public class Route extends DataCommon {
             }
             
             
-            return 0;
+            return o1.id.compareTo(o2.id);
         };
     }
 

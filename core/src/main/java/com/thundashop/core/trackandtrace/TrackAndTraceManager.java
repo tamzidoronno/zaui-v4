@@ -230,6 +230,18 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         return inDestination;
     }
 
+    public Destination saveDestinationDirect(Destination inDestination) {
+        saveObject(inDestination);
+        destinations.put(inDestination.id, inDestination);
+        return inDestination;
+    }
+    
+    
+    public void saveRouteDirect(Route inRoute) {
+        saveObjectInternal(inRoute);
+        routes.put(inRoute.id, inRoute);
+    }
+    
     @Override
     public void saveRoute(Route inRoute) {
         if (inRoute.startInfo.started && inRoute.startInfo.startedByUserId.isEmpty()) {
@@ -337,6 +349,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         saveObjectInternal(task);
         tasks.put(task.id, task);
     }
+    
+    public void  saveTaskGeneralDirect(Task task) {
+        saveObject(task);
+        tasks.put(task.id, task);
+    }
 
     void saveLoadStatus(DataLoadStatus loadStatus) {
         saveObjectInternal(loadStatus);
@@ -439,6 +456,28 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         });
         
         return dats;
+    }
+    
+    @Override
+    public List<AcculogixExport> getExportedData(Date start, Date end) {
+        List<AcculogixExport> datas = new ArrayList();
+        
+        exports.values().stream()
+                .filter(exp -> exp.createdBetween(start, end))
+                .forEach(exp -> datas.addAll(exp.exportedData));
+        
+        Collections.sort(datas, (o1, o2) -> {
+            if (o1.TNTUID < o2.TNTUID) {
+                return 1;
+            }
+            if (o1.TNTUID > o2.TNTUID) {
+                return -1;
+            }
+
+            return 0;
+        });
+        
+        return datas;
     }
     
     @Override
@@ -636,15 +675,47 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         webSocketServer.sendMessage(route);
     }
     
+    private void createExport(Route route) {
+        if (route == null)
+            return;
+        
+        finalize(route);
+        
+        AcculogixDataExporter exporter = new AcculogixDataExporter(route, exceptions, getStoreDefaultAddress(), imageManager, getStartNumber().exportCounter, false, this);
+        List<AcculogixExport> exportedData = exporter.getExport();
+        
+        if (!exportedData.isEmpty()) {
+            ExportedData exported = new ExportedData();
+            exported.routeId = route.id;
+            exported.exportSequence = getExports(route.id).size() + 1;
+            exported.exportedData = new ArrayList(exportedData);
+            saveObject(exported);    
+            exports.put(exported.id, exported);
+            
+            exportCounter.exportCounter += exportedData.size();
+            saveObject(exportCounter);
+            
+            sortExportedData();
+        }
+    }
+    
     private void saveObjectInternal(DataCommon data) {
-        if (data instanceof Route)
+        if (data instanceof Route) {
             ((Route)data).dirty = true;
+            createExport(((Route)data));
+        }
         
-        if (data instanceof Destination)
+        if (data instanceof Destination) {
             ((Destination)data).dirty = true;
+            Route route = getRouteByDestination(((Destination)data));
+            createExport(route);
+        }
         
-        if (data instanceof Task)
+        if (data instanceof Task) {
             ((Task)data).dirty = true;
+            Route route = getRouteByTask(((Task)data));
+            createExport(route);
+        }
         
         saveObject(data);
     }
@@ -704,7 +775,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public void deleteRoute(String routeId) {
-        Route route = getRouteById(routeId);
+        String routeIdModified = routeId.replaceAll("\n", "\r");
+        Route route = getRouteById(routeIdModified);
         
         if (route != null) {
             deleteObject(route);
@@ -712,7 +784,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         for (ExportedData exportData : exports.values()) {
-            if (exportData.routeId != null && exportData.routeId.equals(routeId)) {
+            if (exportData.routeId != null && exportData.routeId.equals(route.id)) {
                 deleteObject(exportData);
             }
         }
@@ -727,10 +799,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         if (route != null) {
             route.userIds.stream()
-                .forEach(userId -> sendRouteRemovedMessage(routeId, userId));
+                .forEach(userId -> sendRouteRemovedMessage(route.id, userId));
         }
         
-        exports.values().removeIf(o -> o.routeId != null && o.routeId.equals(routeId));
+        exports.values().removeIf(o -> o.routeId != null && o.routeId.equals(route.id));
     }
     
     private void deleteDestination(String destId) {
@@ -1105,6 +1177,29 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         destination.startInfo.lat = lat;  
         
         saveObjectInternal(destination);
+    }
+
+    private Route getRouteByDestination(Destination destination) {
+        return routes.values().stream()
+                .filter(route -> route.destinationIds.contains(destination.id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private Route getRouteByTask(Task task) {
+        Destination dest = getDestinationByTask(task);
+        if (dest != null) {
+            return getRouteByDestination(dest);
+        }
+        
+        return null;
+    }
+
+    private Destination getDestinationByTask(Task task) {
+        return destinations.values().stream()
+                .filter(dest -> dest.taskIds.contains(task.id))
+                .findFirst()
+                .orElse(null);
     }
 
 }

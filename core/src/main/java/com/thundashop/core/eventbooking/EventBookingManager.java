@@ -823,14 +823,14 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         map.put(name, base64);
         
         if (user.emailAddress != null && !user.emailAddress.isEmpty()) {
-            String messageId = messageManager.sendMailWithAttachment(event, user.emailAddress, user.fullName, subject, content, email, "", map);
+            String messageId = messageManager.sendMailWithAttachmentIgnoreFutureCheck(event, user.emailAddress, user.fullName, subject, content, email, "", map);
             if (userIdInvoiceMessageId != null) {
                 userIdMessageId.put(user.id, messageId);
             }
         }
         
         if (!dontSendToCompany && user.companyObject != null && user.companyObject.invoiceEmail != null && !user.companyObject.invoiceEmail.isEmpty() && !user.companyObject.invoiceEmail.equals(user.emailAddress)) {
-            String messageId = messageManager.sendMailWithAttachment(event, user.companyObject.invoiceEmail, user.fullName, subject, content, email, "", map);
+            String messageId = messageManager.sendMailWithAttachmentIgnoreFutureCheck(event, user.companyObject.invoiceEmail, user.fullName, subject, content, email, "", map);
             if (userIdInvoiceMessageId != null) {
                 userIdInvoiceMessageId.put(user.id, messageId);
             }

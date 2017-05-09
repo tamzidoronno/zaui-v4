@@ -81,6 +81,7 @@ public class AcculogixDataImporter {
         addDeliveryTasksToDestinations();
         addPickupTasksToDestinations();
         makeLogEntry();
+        saveRoutes();
     }
 
     private void saveCompanies() {
@@ -130,9 +131,10 @@ public class AcculogixDataImporter {
             for (Destination dest : rows) {
                 if (!route.destinationIds.contains(dest.id)) {
                     route.destinationIds.add(dest.id);
-                    trackAndTraceManager.saveRoute(route);
                 }
             }
+            
+            trackAndTraceManager.saveRouteDirect(route);
         }
     }
     
@@ -156,7 +158,7 @@ public class AcculogixDataImporter {
         destination.pickupInstruction = args[22] + args[53];
         destination.deliveryInstruction = args[21];
 
-        trackAndTraceManager.saveDestination(destination);
+        trackAndTraceManager.saveDestinationDirect(destination);
         destinations.put(destination.id, destination);
         return destination;
     }
@@ -198,7 +200,7 @@ public class AcculogixDataImporter {
                 destination.unStart();
             }
             
-            trackAndTraceManager.saveTaskGeneral(task);
+            trackAndTraceManager.saveTaskGeneralDirect(task);
             tasks.put(task.id, task);
             
             trackAndTraceManager.saveObject(destination);
@@ -280,7 +282,7 @@ public class AcculogixDataImporter {
                 destination.unStart();
             }
             
-            trackAndTraceManager.saveTaskGeneral(task);
+            trackAndTraceManager.saveTaskGeneralDirect(task);
             tasks.put(task.id, task);
             trackAndTraceManager.saveObject(destination);
         }
@@ -307,5 +309,10 @@ public class AcculogixDataImporter {
 
     public List<Route> getRoutes() {
         return new ArrayList(routes.values());
+    }
+
+    private void saveRoutes() {
+        routes.values().stream()
+                .forEach(route -> trackAndTraceManager.saveRoute(route));
     }
 }

@@ -83,11 +83,15 @@ public abstract class GetShopSchedulerBase implements Runnable {
         this.scheduler.start();
     }
     
+    private synchronized void runConnection() throws Exception {
+        execute();
+        closeConnection();
+    }
+    
     @Override
     public void run() {
         try {
-            execute();
-            closeConnection();
+            runConnection();
         } catch (Exception ex) {
             GetShopLogHandler.logPrintStatic("Problem with scheduled task....", null);
             ex.printStackTrace();

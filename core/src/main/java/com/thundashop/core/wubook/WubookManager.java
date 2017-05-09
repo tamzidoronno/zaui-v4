@@ -1144,7 +1144,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         availabilityLastUpdated = new Date();
 
-        logText("Availability is being updated: " + numberOfDays + " days ahead.");
         if(!frameworkConfig.productionMode) { return ""; }
         
         if(!connectToApi()) {
@@ -1202,14 +1201,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(todayString);
         params.addElement(tosend);
 
-        Vector result = (Vector) client.execute("update_rooms_values", params);
-
-        if ((Integer)result.get(0) != 0) {
-            logPrint("Failed to update availability, send mail about it.");
-            logPrint("0:" + result.get(0));
-            logPrint("1:" + result.get(1));
-            return (String) result.get(1);
-        }
+        WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread(client, this, params);
+        updateThread.start();
         availabilityHasBeenChanged = null;
 
         return "";    
@@ -1224,7 +1217,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return updateAvailabilityInternal(300);
     }
 
-    private void logText(String string) {
+    public void logText(String string) {
         log.logEntries.put(System.currentTimeMillis(), string);
         saveObject(log);
     }

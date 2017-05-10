@@ -1,3 +1,17 @@
+
+<?php
+$val = "";
+if(isset($_POST['data']['keyword'])) {
+    $val = $_POST['data']['keyword'];
+}
+
+?>
+
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+<div style="text-align:right;" method="searchOrders" gstype="form">
+    <input type="text gsniceinput1" gstype='submitenter'  placeholder="Keyword" gsname='keyword' value='<?php echo $val; ?>'><input type="button" value="Search" gstype="submit">
+</div>
 <?
 /* @var $this \ns_b3654609_a195_464f_84c4_e083702c0bf2\InvoiceControl */
 $groupedOrders = $this->getGroupedOrders();
@@ -5,9 +19,11 @@ $groupedOrders = $this->getGroupedOrders();
 $totalDue = 0;
 $total = 0;
     
-echo "<table width='100%'>";
+echo "<table width='100%' id='invoicetable'>";
+echo "<thead>";
 echo "<tr>";
 echo "<th align='left'></th>";
+echo "<th align='left'>Accounting id</th>";
 echo "<th align='left'>Owner</th>";
 echo "<th align='left'>Orderid</th>";
 echo "<th align='left'>Order date</th>";
@@ -16,6 +32,7 @@ echo "<th align='left'>Total</th>";
 echo "<th align='left'>Payment date</th>";
 echo "<th align='left'></th>";
 echo "</tr>";
+echo "</thead>";
 
 $orderList=array();
 foreach ($groupedOrders as $userId => $orders) {
@@ -49,6 +66,7 @@ foreach ($groupedOrders as $userId => $orders) {
     }
 }
 
+echo "<tbody>";
 foreach ($orderList as $order) {
     $user = $this->getApi()->getUserManager()->getUserById($order->userId);
 
@@ -89,11 +107,12 @@ foreach ($orderList as $order) {
     
     echo "<tr gstype='form' method='markpaid' $style>";
     $download = "<a style='cursor:pointer;' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'><i class='fa fa-file-pdf-o'></i></a>";
-    echo "<td>" . $download . "</td>";
+    echo "<td  style='text-align:center;'>" . $download . "</td>";
+    echo "<td  style='text-align:center;'>" . $user->accountingId . "</td>";
     echo "<td title='$title'>" . $user->fullName . "</td>";
     echo "<td>" . $order->incrementOrderId . "</td>";
-    echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
-    echo "<td>" . date("d.m.Y", $fourTeenDaysInFuture) . "</td>";
+    echo "<td data-order='".strtotime($order->rowCreatedDate)."'>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
+    echo "<td data-order='".$fourTeenDaysInFuture."'>" . date("d.m.Y", $fourTeenDaysInFuture) . "</td>";
     echo "<td>" . $ordersum . "</td>";
     echo "<td>";
     echo "<input type='hidden' value='".$order->id."' gsname='orderid'>";
@@ -101,6 +120,7 @@ foreach ($orderList as $order) {
     echo "<td><input type='submit' gstype='submit' value='Mark as paid'</td>";
     echo "</tr>";
 }
+echo "</tbody>";
 echo "</table>";
 
 ?>
@@ -112,4 +132,13 @@ echo "</table>";
 
 <script>
     $(".paymentdateselection").datetimepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('#invoicetable').DataTable({
+        bFilter: false,
+        "lengthMenu": [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]],
+        "pageLength" : -1
+    });
 </script>
+
+<style>
+    table.dataTable tbody th, table.dataTable tbody td { padding: 0px 0px; }
+    </style>

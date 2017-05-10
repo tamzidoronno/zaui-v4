@@ -31,6 +31,7 @@ import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GrafanaFeederImpl;
 import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.Session;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshoplock.GetShopLockManager;
@@ -153,6 +154,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     BookingComRateManagerManager bookingComRateManagerManager;
+    
+    @Autowired
+    Database dataBase;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -928,6 +932,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(getConfiguration().createVirtualOrders) {
             pmsInvoiceManager.createVirtualOrder(booking.id);
         }
+        
+        PmsBooking oldBooking = (PmsBooking) database.getObject(credentials, booking.id);
+        diffPricesFromBooking(booking, oldBooking);
+        
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);
     }
@@ -4342,8 +4350,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         log.userId = userId;
         logentries.add(log);
-        saveObject(log);
-        
+        saveObject(log); 
+       
         
         if(log.tag != null && log.tag.equals("mobileapp")) {
             List<String> emailsToNotify = configuration.emailsToNotify.get("applogentry");
@@ -5843,6 +5851,42 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(simple.bookingItemId.equals(itemId)) {
                 checkOutRoom(simple.pmsRoomId);
             }
+        }
+    }
+
+    private void diffPricesFromBooking(PmsBooking booking, PmsBooking oldBooking) {
+        try {
+            String logText = "";
+            if(booking.priceType == PmsBooking.PriceType.daily) {
+                for(PmsBookingRooms room : booking.rooms) {
+                    PmsBookingRooms oldRoom = oldBooking.getRoom(room.pmsBookingRoomId);
+                    for(String day : room.priceMatrix.keySet()) {
+                        Double roomDayPrice = room.priceMatrix.get(day);
+                        Double oldRoomDayPrice = oldRoom.priceMatrix.get(day);
+                        if(oldRoomDayPrice == null) {
+                            oldRoomDayPrice = 0.0;
+                        }
+                        if(roomDayPrice == null) {
+                            roomDayPrice = 0.0;
+                        }
+                        
+                        double diff = roomDayPrice - oldRoomDayPrice;
+                        if(diff != 0.0) {
+                            String guest = "";
+                            if(!room.guests.isEmpty()) {
+                                guest = room.guests.get(0).name;
+                            }
+                            logText += "Price changed from " + oldRoomDayPrice  + " to " + roomDayPrice + ", at day: " + day + " for guest: " + guest +"<bR>";
+                        }
+                    }
+                    if(!logText.isEmpty()) {
+                        logEntry(logText, booking.id, room.bookingItemId);
+                    }
+                }
+            }
+            
+        }catch(Exception e) {
+            logPrintException(e);
         }
     }
 

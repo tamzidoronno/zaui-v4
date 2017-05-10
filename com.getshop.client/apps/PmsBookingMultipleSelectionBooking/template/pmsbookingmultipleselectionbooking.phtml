@@ -11,12 +11,12 @@ if(!$nextPage) {
             <ul class="tab">
                 <li><a href="javascript:void(0)" class="tablinks" area='Hotel' id="defaultOpen"><? echo $this->__w("Hotel"); ?></a></li>
                 <li><a href="javascript:void(0)" class="tablinks" area='Golfpark'><? echo $this->__w("Golfpark"); ?></a></li>
-                <li><a href="javascript:void(0)" class="tablinks" area='Artcenter'><? echo $this->__w("Kunstsenter"); ?></a></li>
+                <li><a href="javascript:void(0)" class="tablinks" area='Artcenter'><? echo $this->__w("Artcenter"); ?></a></li>
             </ul>
     </div>
     <div class="tabcontent" id="Hotel">
-        <input class="start_date_input dateinput fa" gsname="date" placeholder="Check in  &#xf133;"/>
-        <input class="end_date_input dateinput fa" gsname="date2" placeholder="Check out  &#xf133;"/>
+        <span class="tabcontentCheckin"><input class="start_date_input dateinput fa" gsname="date" placeholder="<? echo $this->__w("Check in"); ?>"/><i class="fa fa-calendar-o start_cal"></i></span>
+        <span class="tabcontentCheckin"><input class="end_date_input dateinput fa" gsname="date2" placeholder="<? echo $this->__w("Check out"); ?>"/><i class="fa fa-calendar-o end_cal"></i></span>
     </div>
     <div class="tabcontent" id="Golfpark">
         <p>Kommer senere...</p>
@@ -70,4 +70,6 @@ if(!$nextPage) {
          }
     });
     $('#defaultOpen').click();
+    $('.start_cal').on('click', function() { $('.start_date_input').focus(); });
+    $('.end_cal').on('click', function() { $('.end_date_input').focus(); });
 </script>

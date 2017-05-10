@@ -50,7 +50,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private HashMap<String, WubookAvailabilityRestrictions> restrictions = new HashMap();
     private Date availabilityHasBeenChanged = null;
     private Date availabilityLastUpdated = null;
-    List<WubookAvailabilityField> lastAvailabilityUpdated = new ArrayList();
+    SavedLastAvailibilityUpdate lastAvailability = new SavedLastAvailibilityUpdate();
+    
     private WubookLog log = new WubookLog();
 
     @Autowired
@@ -79,6 +80,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             if(dataCommon instanceof WubookLog) {
                 log = (WubookLog) dataCommon;
+            }
+            if(dataCommon instanceof SavedLastAvailibilityUpdate) {
+                lastAvailability = (SavedLastAvailibilityUpdate) dataCommon;
             }
         }
         
@@ -1284,7 +1288,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 found = true;
             }
         }
-        lastAvailabilityUpdated = fieldsUpdated;
+        lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
+        saveObject(lastAvailability);
         
         if(found) {
             Gson gson = new Gson();
@@ -1354,7 +1359,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private boolean hasChanged(WubookAvailabilityField field) {
-        for(WubookAvailabilityField oldField : lastAvailabilityUpdated) {
+        for(WubookAvailabilityField oldField : lastAvailability.lastAvailabilityUpdated) {
             if(field.roomId.equals(oldField.roomId) && oldField.dateAsString.equals(field.dateAsString)) {
                 return !field.availability.equals(oldField.availability);
             }

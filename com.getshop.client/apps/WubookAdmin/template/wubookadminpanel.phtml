@@ -76,6 +76,17 @@
 $logentries = (array)$this->getApi()->getWubookManager()->getLogEntries($this->getSelectedName());
 ksort($logentries);
 foreach($logentries as $time => $text) {
+    echo "<div class='ellipsis' title='$text'>";
     echo date("d.m.Y H:i", $time / 1000) . " : " . $text . "<bR>";
+    echo "</div>";
 }
 ?>
+
+<style>
+.ellipsis {
+   width:800px;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+</style>

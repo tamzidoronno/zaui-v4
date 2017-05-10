@@ -2585,6 +2585,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter = new \core_pmsmanager_PmsOrderStatsFilter();
         $filter->priceType = "extaxes";
         $filter->savedPaymentMethod = "allmethods";
+        $filter->displayType = "dayslept";
         
         if(isset($_SESSION['orderstatsfilterset']) && $_SESSION['orderstatsfilterset']) {
             $savedFilters = $this->getApi()->getPmsInvoiceManager()->getAllStatisticsFilters($this->getSelectedName());

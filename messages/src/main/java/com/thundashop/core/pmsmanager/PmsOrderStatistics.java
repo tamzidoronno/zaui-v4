@@ -45,6 +45,8 @@ public class PmsOrderStatistics implements Serializable  {
         HashMap<Long, Double> orderInc = new HashMap();
 
         PmsOrderStatisticsEntry entry = new PmsOrderStatisticsEntry();
+        double total = 0.0;
+        int orderscount = 0;
         for(Order order : ordersToUse) {
             if(filter.displayType == null || filter.displayType.equals("dayregistered")) {
                 if(!order.createdOnDay(cal.getTime())) {
@@ -54,6 +56,7 @@ public class PmsOrderStatistics implements Serializable  {
                 if (order.cart == null)
                     continue;
                 
+                orderscount++;
                 for(CartItem item : order.cart.getItems()) {
                     Double inc = priceInc.get(item.getProduct().id);
                     Double ex = priceEx.get(item.getProduct().id);
@@ -66,6 +69,8 @@ public class PmsOrderStatistics implements Serializable  {
                     }
                     
                     calculate(item, orderEx, order, orderInc, inc, ex, priceInc, priceEx);
+                    System.out.println(orderscount + " : " + item.getProduct().priceExTaxes  + " " + item.getCount() + " : " + total);
+                    total += (item.getProduct().priceExTaxes  * item.getCount());
                     addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().priceExTaxes * item.getCount()), entry.priceExOrders);
                     addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().price * item.getCount()), entry.priceIncOrders);
                 }

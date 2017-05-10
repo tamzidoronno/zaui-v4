@@ -69,7 +69,7 @@ if(isset($filter->methods)) {
     echo "<tr><td>Shifting with hours</td><td>" . $filter->shiftHours . "</td></tr>";
     echo "<tr><td>Saved with payment options</td><td>" . $filter->savedPaymentMethod . "</td></tr>";
     echo "<tr><td>Taxes</td><td>" . $priceTypePrintable . "</td></tr>";
-    echo "<tr><td>Price type</td><td>" . $filter->priceType . "</td></tr>";
+    echo "<tr><td>Display type</td><td>" . $filter->displayType . "</td></tr>";
     echo "<tr><td>Delete this filter</td><td><i class='fa fa-trash-o' gstype='clicksubmit' method='deleteOrderStatsFilter' gsvalue='".$filter->id."' gsname='id'></i></td></tr>";
     echo "</table>";
 }

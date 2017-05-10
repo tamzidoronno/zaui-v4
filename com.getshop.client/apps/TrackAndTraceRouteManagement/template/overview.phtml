@@ -19,9 +19,12 @@ if ($routes) {
             $completed = " ( $completedInfo will be deleted in $hours hours ) ";
         }
         echo "<div class='routeview'> "
-        . "<div gsclick='changeToRouteView' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-edit'></i></div> "
-        . "<div gsclick='deleteRoute' gs_confirm='are you sure you want to delete the route?' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-trash'></i></div> "
-                . " ".$route->name." $completed</div>";
+        . "<div gsclick='changeToRouteView' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-edit'></i></div> ";
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            echo  "<div gsclick='deleteRoute' gs_confirm='are you sure you want to delete the route?' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-trash'></i></div> "
+                . " ";
+        }
+        echo $route->name." $completed</div>";
     }
     echo "</div>";
     echo "<br/>";

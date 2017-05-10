@@ -146,7 +146,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
     
     private Route getRouteById(String routeId) {
-        Route retRoute = routes.get(routeId);
+        String routeIdModified = routeId.replaceAll("\n", "\r");
+        Route retRoute = routes.get(routeIdModified);
         
         finalize(retRoute);
         return retRoute;
@@ -616,8 +617,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 pooledDestinations.put(dest.id, dest);
                 saveObjectInternal(route);
                 
-                // Touching the destination to mark it dirty (because it needs to be in order to be exported)
-                saveObjectInternal(destinations.get(destinationId));
+                
+                Route virtualRoute = createVirtualRouteBasedOnRouteId(dest);
+                virtualRoute.dirty = true;
+                virtualRoute.destinationIds.add(destinationId);
+                createExport(virtualRoute);                
             }
         }
         

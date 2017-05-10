@@ -1,6 +1,5 @@
 body {font-family: "Exo", "open-sans";color:#555;}
 .selectcolors { display:none; }
-.PmsBooking .pmsfront1{font-size:13px;}
 .gs_page_width {max-width: 1100px;margin: 0 auto;}
 
 .gsarea[area="header"] {position: relative;z-index: 2;top:0px;width: 100%;background:#fff;text-align: center;}
@@ -12,6 +11,7 @@ body {font-family: "Exo", "open-sans";color:#555;}
 
 .gsarea[area="footer"] {background: #f5f5f5;box-shadow: 0px 0px 3px #bbb;color:#555;min-height: 150px;}
 
+.PmsBooking .pmsfront1{font-size:13px;}
 .shop_button,
 .PmsPricing .pmsbutton,
 .PmsManagement .pmsbutton,
@@ -47,7 +47,14 @@ body {font-family: "Exo", "open-sans";color:#555;}
 .ProductLists .slidelist .product .title {font-size: 25px;}
 .ProductLists .slidelist .product .image {display: inline-block;padding: 20px;}
 .ProductLists .slidelist .product .image img {width: 430px;display: inline-block;vertical-align: top;border-radius: 15px;}
-.ProductLists .slidelist .product .descriptionarea {display: inline-block;width: 500px; border: solid 1px #F1F1F1;vertical-align: top;padding: 20px;margin-top: 20px;}
+.ProductLists .slidelist .product .descriptionarea {
+    display: inline-block;
+    width: 500px;
+    border: solid 1px #F1F1F1;
+    vertical-align: top;
+    padding: 20px;
+    margin-top: 20px;
+}
 
 /*ColorTheme of the site*/
 .PmsBooking .pmsfront .fa-calendar,
@@ -73,7 +80,8 @@ body {font-family: "Exo", "open-sans";color:#555;}
 
 .PmsManagement .bookinginfo select,
 .PmsManagement .bookinginfo input{font-size:14px;border:1px solid #bdbdbd;background-color:#fff;}
-.PmsManagement .pmsbutton[gstype="submitToInfoBox"], .PmsManagement .pmsbutton.closeadduser{line-height:15px;height:15px;font-size: 14px;max-width: 90px;box-sizing: initial !important;}
+.PmsManagement .pmsbutton[gstype="submitToInfoBox"],
+.PmsManagement .pmsbutton.closeadduser{line-height:15px;height:15px;font-size: 14px;max-width: 90px;box-sizing: initial !important;}
 .PmsManagement .pmsbutton.showlog{background-color: #146da6 !important;color:#fff !important;}
 .PmsManagement .tabs .tab{border-color:#fff;margin-right:5px;border-radius: 0;background-color:#146da6;color:#fff;font-weight:700;letter-spacing:1.5px;}
 .PmsManagement .tabs .tab.selected{border-color:#146da6;color:#146da6;}
@@ -87,3 +95,4 @@ body {font-family: "Exo", "open-sans";color:#555;}
 .PmsConfiguration #createproductinput{position:relative;top:-1px;padding:5px;}
 .PmsConfiguration .configentry select[gsname="locktype"]{width:172px;}
 .PmsConfiguration .configentry select[gsname="bookingProfile"]{width:125px;}
+/*-------------------*/

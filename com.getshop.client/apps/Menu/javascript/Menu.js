@@ -20,8 +20,8 @@ getshop.MenuEditor = {
         $(document).on('mouseenter', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.showSubEntries);
         $(document).on('mouseleave', ".Menu .menuentries.horizontal .entry", getshop.MenuEditor.hideSubEntries);
         $(document).on('click', ".Menu .save", getshop.MenuEditor.saveMenuEditor);
-        $(document).on('click', ".Menu .mobilenavigatemenu", getshop.MenuEditor.showMenu);
-        $(document).on('click', ".Menu .cancel", getshop.MenuEditor.closeMenuEditor);
+        $(document).on('touchend mousedown', ".Menu .mobilenavigatemenu", getshop.MenuEditor.showMenu);
+        $(document).on('touchend mousedown', ".Menu .cancel", getshop.MenuEditor.closeMenuEditor);
         $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
         $(document).on('change', ".menu_item_language", getshop.MenuEditor.itemLanguageChanged);
         $(document).on('click', ".gs_scrollitem", getshop.MenuEditor.scrollToAnchor);
@@ -208,16 +208,19 @@ getshop.MenuEditor = {
     hideSubEntries : function() {
         $(this).children('.entries').hide();
     },
-    showMenu : function() {
+    showMenu : function(e) {
+        
         var menuentries = $(this).closest('.Menu').find(".menuentries");
         if($(menuentries).is(':visible')) {
             $(menuentries).slideUp();
         } else {
             $(menuentries).slideDown();
         }
+        e.stopPropagation();
     },
-    closeMenuEditor : function() {
+    closeMenuEditor : function(e) {
         thundashop.common.hideInformationBox();
+        e.stopPropagation();
     },
     userLevelChanged: function() {
         var val = $(this).val();

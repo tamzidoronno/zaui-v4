@@ -1,65 +1,20 @@
-body {
-    font-size: 16px;
-    font-family: 'Open Sans', sans-serif;
-    color: #222;
-}
-
-.gsarea[area="header"] {
-    height: 123px;
-    background-color: #FFF;
-}
-
-.gsarea[area="header"] .Menu .entries .entries {
-    background-color: #FFF;
-    width: 300px;
-    text-align: left;
-    z-index: 3;
-}
+body {font-size: 16px;font-family: 'Open Sans', sans-serif;color: #222;}
 .gsfloatingheader { display:none !important; }
-.gsarea[area="header"] .Menu {
-    top: 40px;
-    text-align: right;
-}
+.gs_page_width {max-width: 1160px;margin: 0 auto;}
 
-.gsarea[area="header"] .Menu .entry a div {
-    color: #333;
-    display: inline-block;
-    line-height: 40px;
-    padding-left: 20px;
-    padding-right: 20px;
-}
+.gsarea[area="header"] {height: 123px;background-color: #FFF;}
+.gsarea[area="header"] .Menu .entries .entries {background-color: #FFF;width: 300px;text-align: left;z-index: 3;}
+.gsarea[area="header"] .Menu {top: 40px;text-align: right;}
+.gsarea[area="header"] .Menu .entry a div {color: #333;display: inline-block;line-height: 40px;padding-left: 20px;padding-right: 20px;}
+.gsarea[area="header"] .Menu .entry:last-of-type a {border-right: solid 0px;}
 
-.gsarea[area="header"] .Menu .entry:last-of-type a {
-    border-right: solid 0px;
-}
 
-.gs_page_width {
-    max-width: 1160px;
-    margin: 0 auto;
-}
+.gsarea[area="body"] {}
+[pageid="e30dbf6f-83ec-4c37-9e01-943438cf8fa3"] .gsarea[area="body"] {padding-top: 0px;}
 
-.gsarea[area="body"] {
-    
-}
+.gsarea[area="footer"] {margin-top: 50px;background-color: #aea299;height: 250px;padding-top: 50px;color: #FFF;font-size: 20px;}
 
-[pageid="e30dbf6f-83ec-4c37-9e01-943438cf8fa3"] .gsarea[area="body"] {
-    padding-top: 0px;
-}
-
-.gsarea[area="footer"] {
-    margin-top: 50px;
-    
-    background-color: #aea299;
-    height: 250px;
-    padding-top: 50px;
-    color: #FFF;
-    font-size: 20px;
-}
-
-.gsbody_inner[pageId="6a41bd20-5cc4-454c-8725-2da32d8c186f"] .gsarea[area="footer"] {
-    margin-top: 0px;
-}
-
+.gsbody_inner[pageId="6a41bd20-5cc4-454c-8725-2da32d8c186f"] .gsarea[area="footer"] {margin-top: 0px;}
 .shop_button {
     background: none;
     background-color: #cd1719;
@@ -113,8 +68,8 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#258dc8', endColorstr='#258dc8',GradientType=0 ); /* IE6-9 */
 
 }
-.PmsBookingCalendar .calendar .calendar_header { position: relative; text-align: center; border: solid 1px #bbb; font-size: 16px; padding: 5px; background-color:#000; color:#fff; }
-.PmsBookingCalendar .calendar .day.selected { background-color:#000; color:#fff; }
+.PmsBookingCalendar .calendar .calendar_header { position: relative; text-align: center; border: solid 1px #bbb; font-size: 16px; padding: 5px; background-color:#cb3845; color:#fff; }
+.PmsBookingCalendar .calendar .day.selected { background-color:#cb3845; color:#fff; }
 
 .gsucell[cellid="a09e56cf-1fc4-49ad-98e9-c5582863de3e"] {
     width: 70% !important;
@@ -142,5 +97,36 @@ body {
 }
 
 .frontbox {
+    
+}
+@media only all and (max-width: 800px){
+    .gsarea[area="header"]{box-shadow:0 1px 6px #bbb;position:fixed;width:100%;height:40px;z-index:3;top:0;padding-top:10px;}
+    .gsarea[area="header"] .displayimagecontainer{position:absolute;top:-35px;left:10px;max-width:280px;min-width:200px;width:150% !important;}
+    .gsarea[area="header"] .mobilenavigatemenu{position:absolute;right:-50%;top:-70px;visibility:hidden;}
+    .gsarea[area="header"] .mobilenavigatemenu .fa:before{font-size:2em;color:#555;visibility:visible;}
+    .gsarea[area="header"] .menuentries.horizontal{
+        width: 90%;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px #bbb;
+        left:60%;
+        text-align: left;
+        top:-30px;
+    }
+    .gsarea[area="header"] .menuentries .entry{border-bottom:1px solid #f1f1f1;}
+    .gsarea[area="header"] .menuentries .entry:last-child{border-bottom:0;}
+    .gsarea[area="body"]{margin:10% 0 0 0;padding:0 4% 0 4%;}
+    .gsarea[area="footer"]{height:auto;min-height:250px;}
+    .gs_language_selection{position:absolute;top:0;left:40%;width:22%;display:none;}
+    
+    .gsrotating[cellid='607ffeed-9acc-4882-a816-14f1aa383a83']{height:0 !important;min-height:0 !important;}
+    .shop_button{padding:0;}
+    
+    /*CELL CHANGE*/
+    .gscell_262.gsuicell {
+        text-align: center;
+    }
+    .gscell_206.gsucell {
+        display:none;
+    }
     
 }

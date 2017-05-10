@@ -5856,10 +5856,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void diffPricesFromBooking(PmsBooking booking, PmsBooking oldBooking) {
         try {
-            String logText = "";
             if(booking.priceType == PmsBooking.PriceType.daily) {
                 for(PmsBookingRooms room : booking.rooms) {
                     PmsBookingRooms oldRoom = oldBooking.getRoom(room.pmsBookingRoomId);
+                    String logText = "";
                     for(String day : room.priceMatrix.keySet()) {
                         Double roomDayPrice = room.priceMatrix.get(day);
                         Double oldRoomDayPrice = oldRoom.priceMatrix.get(day);

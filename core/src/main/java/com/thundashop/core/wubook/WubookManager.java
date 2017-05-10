@@ -26,6 +26,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -48,6 +50,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private HashMap<String, WubookAvailabilityRestrictions> restrictions = new HashMap();
     private Date availabilityHasBeenChanged = null;
     private Date availabilityLastUpdated = null;
+    SavedLastAvailibilityUpdate lastAvailability = new SavedLastAvailibilityUpdate();
+    
     private WubookLog log = new WubookLog();
 
     @Autowired
@@ -77,6 +81,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(dataCommon instanceof WubookLog) {
                 log = (WubookLog) dataCommon;
             }
+            if(dataCommon instanceof SavedLastAvailibilityUpdate) {
+                lastAvailability = (SavedLastAvailibilityUpdate) dataCommon;
+            }
         }
         
         createScheduler("wubookprocessor", "* * * * *", WuBookManagerProcessor.class);
@@ -85,6 +92,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Override
     public String updateAvailability() throws Exception {
+        if(storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")) {
+            return sparseUpdateAvailabilityInternal();
+        }
         return updateAvailabilityInternal(730);
     }
     
@@ -630,7 +640,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(newbooking == null) {
                 sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
             } else {
-                
                 isUpdate = true;
             }
         } else if(booking.delete) {
@@ -1019,9 +1028,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return "";
     }
 
-    private List<String> getAllResCodesForPmsBooking(PmsBooking pmsbook) {
-        List<String> result = pmsbook.wubookModifiedResId;
-        result.add(pmsbook.wubookreservationid);
+    private List<Integer> getAllResCodesForPmsBooking(PmsBooking pmsbook) {
+        List<Integer> result = new ArrayList();
+        if(pmsbook.wubookreservationid != null && !pmsbook.wubookreservationid.isEmpty()) {
+            result.add(new Integer(pmsbook.wubookreservationid));
+        }
+        for(String modified : pmsbook.wubookModifiedResId) {
+            if(modified != null && !modified.isEmpty()) {
+                result.add(new Integer(modified));
+            }
+        }
         return result;
     }
 
@@ -1103,25 +1119,19 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private PmsBooking findCorrelatedBooking(WubookBooking booking) throws Exception {
         PmsBooking newbooking = null;
         List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
+        List<Integer> allCodesInNewBooking = getAllResCodesForPmsBooking(booking);
 
         for(PmsBooking pmsbook : allbookings) {
-            List<String> resIdInPmsBooking = getAllResCodesForPmsBooking(pmsbook);
-            if(pmsbook.wubookreservationid != null) {
-                if(pmsbook.wubookreservationid.trim().equals(booking.reservationCode.trim())) {
-                    return pmsbook;
-                }
-                for(Integer oldCode : booking.modifiedReservation) {
-                    for(String pmsWubookResId : resIdInPmsBooking) {
-                        if(pmsWubookResId.equals(oldCode+"")) {
-                            pmsManager.logEntry("Modified by channel manager", pmsbook.id, null);
-                            for(PmsBookingRooms room : pmsbook.getActiveRooms()) {
-                                pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
-                            }
-                            newbooking = pmsManager.getBooking(pmsbook.id);
-                            newbooking.wubookModifiedResId.add(booking.reservationCode);
-                            return newbooking;
-                        }
+            List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);
+            for(Integer resCode : allCodesOnOldBooking) {
+                if(allCodesInNewBooking.contains(resCode)) {
+                    pmsManager.logEntry("Modified by channel manager", pmsbook.id, null);
+                    for(PmsBookingRooms room : pmsbook.getActiveRooms()) {
+                        pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
                     }
+                    newbooking = pmsManager.getBooking(pmsbook.id);
+                    newbooking.wubookModifiedResId.add(booking.reservationCode);
+                    return newbooking;
                 }
             }
         }
@@ -1129,7 +1139,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     public void setAvailabilityChanged() {
-        logText("Wubook availability needs to be updated");
         if(availabilityHasBeenChanged == null) {
             availabilityHasBeenChanged = new Date();
         }
@@ -1201,9 +1210,99 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(todayString);
         params.addElement(tosend);
 
-        WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread(client, this, params);
+        WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_rooms_values", client, this, params);
         updateThread.start();
         availabilityHasBeenChanged = null;
+
+        return "";    
+    }
+
+    private String sparseUpdateAvailabilityInternal() throws Exception {
+
+        if(!frameworkConfig.productionMode) { return ""; }
+        
+        if(!connectToApi()) {
+            return "Faield to connect to api"; 
+        }
+        Vector<Hashtable> tosend = new Vector();
+        int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
+        List<WubookAvailabilityField> fieldsUpdated = new ArrayList();
+        for (WubookRoomData rdata : wubookdata.values()) {
+            if(!rdata.addedToWuBook) {
+                continue;
+            }
+            
+
+            Calendar startcal = Calendar.getInstance();
+            Calendar endCal = Calendar.getInstance();
+            startcal.set(Calendar.HOUR_OF_DAY, 16);
+            for (int i = 0; i < 720; i++) {
+                Date start = startcal.getTime();
+                endCal.setTime(startcal.getTime());
+                endCal.add(Calendar.HOUR_OF_DAY, 16);
+                Date end = startcal.getTime();
+                int count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
+                if(count > 0) {
+                    count -= toRemove;
+                }
+                if(isRestricted(rdata.bookingEngineTypeId, start, end)) {
+                    count = 0;
+                }
+                
+                if(i > 305) {
+                    count = 0;
+                }
+                
+                WubookAvailabilityField field = new WubookAvailabilityField();
+                field.roomId = rdata.wubookroomid;
+                field.availability = count;
+                field.date = start;
+                field.dateAsString = convertToDayString(start);
+                fieldsUpdated.add(field);
+                startcal.add(Calendar.DAY_OF_YEAR, 1);
+            }
+        }
+
+        boolean found = false;
+        for (WubookRoomData rdata : wubookdata.values()) {
+            if(!rdata.addedToWuBook) {
+                continue;
+            }
+            Vector days = new Vector();
+            for(WubookAvailabilityField field : fieldsUpdated) {
+                if(!field.roomId.equals(rdata.wubookroomid)) {
+                    continue;
+                }
+                if(hasChanged(field)) {
+                    Hashtable result = new Hashtable();
+                    result.put("avail", field.availability);
+                    result.put("date", field.dateAsString);
+                    days.add(result);
+                }
+            }
+            if(!days.isEmpty()) {
+                Hashtable roomToUpdate = new Hashtable();
+                roomToUpdate.put("id", rdata.wubookroomid);
+                roomToUpdate.put("days", days);
+                tosend.add(roomToUpdate);
+                found = true;
+            }
+        }
+        lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
+        saveObject(lastAvailability);
+        
+        if(found) {
+            Gson gson = new Gson();
+            String toPrintToLog = gson.toJson(tosend);
+            logText(toPrintToLog);
+            Vector params = new Vector();
+            params.addElement(token);
+            params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+            params.addElement(tosend);
+
+            WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_sparse_rooms_values", client, this, params);
+            updateThread.start();
+        }
 
         return "";    
     }
@@ -1214,6 +1313,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return "";
         }
         
+        if(storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")) {
+            return sparseUpdateAvailabilityInternal();
+        }
         return updateAvailabilityInternal(300);
     }
 
@@ -1250,6 +1352,28 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             messageManager.sendErrorNotification("Error for wubookreservation: " + wubookId + " : "  + message, null);
             pmsManager.markSentErrorMessageForWubookId(wubookId);
         }
+    }
+
+    private List<Integer> getAllResCodesForPmsBooking(WubookBooking booking) {
+        List<Integer> result = new ArrayList();
+        result.add(new Integer(booking.reservationCode));
+        result.addAll(booking.modifiedReservation);
+        return result;
+    }
+
+    private boolean hasChanged(WubookAvailabilityField field) {
+        for(WubookAvailabilityField oldField : lastAvailability.lastAvailabilityUpdated) {
+            if(field.roomId.equals(oldField.roomId) && oldField.dateAsString.equals(field.dateAsString)) {
+                return !field.availability.equals(oldField.availability);
+            }
+        }
+        return true;
+    }
+
+    private String convertToDayString(Date date) {
+        String pattern = "dd/MM/yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        return format.format(date);
     }
 
 }

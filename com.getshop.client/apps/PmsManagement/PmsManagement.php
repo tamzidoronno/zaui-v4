@@ -28,6 +28,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getWubookManager()->markNoShow($this->getSelectedName(), $_POST['data']['wubookid']);
     }
     
+    public function sendSms() {
+        $guestId = $_POST['data']['guestid'];
+        $message = $_POST['data']['message'];
+        $this->getApi()->getPmsManager()->sendSmsToGuest($this->getSelectedName(), $guestId, $message);
+        $this->showBookingInformation();
+    }
+    
     public function removeOrderFromBooking() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         if(!@$order->closed) {

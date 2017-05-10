@@ -117,6 +117,9 @@ public interface IPmsManager {
     @Administrator
     public void deleteDeliveryLogEntry(String id);
     
+    @Administrator
+    public void sendSmsToGuest(String guestId, String message);
+    
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
     @Editor

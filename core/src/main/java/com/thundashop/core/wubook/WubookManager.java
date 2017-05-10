@@ -1313,6 +1313,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return "";
         }
         
+        if(storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")) {
+            return sparseUpdateAvailabilityInternal();
+        }
         return updateAvailabilityInternal(300);
     }
 

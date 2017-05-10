@@ -27,7 +27,7 @@ public class ViewSmsHistory {
         this.year = year;
     }
     
-    public void view(Database database, String storeName) {
+    public void view(Database database, String storeName, String orgNr) {
         List<DataCommon> datas = null;
         
         Date start = getDate(year, month,1);
@@ -51,7 +51,7 @@ public class ViewSmsHistory {
             }
         }
         
-        System.out.println("Norge: " + String.format("%10s", norge)  + " Utlandet: " + String.format("%10s", utlandet) + " (" + storeName + ")");
+        System.out.println("Norge: " + String.format("%10s", norge)  + " Utlandet: " + String.format("%10s", utlandet) + " (" + storeName + ")" + " (orgnr: " + orgNr + ")");
     }
     
     public static void main(String[] args) {
@@ -67,16 +67,16 @@ public class ViewSmsHistory {
         System.out.println("Start: " + start + " to " + end);
         
         ViewSmsHistory hist = new ViewSmsHistory(month, year);
-        hist.view(database, "wh");
-        hist.view(database, "pronorge");
-        hist.view(database, "prosweden");
-        hist.view(database, "renahotell");
-        hist.view(database, "kongsvinger");
-        hist.view(database, "akershave");
-        hist.view(database, "bolgenemoi");
-        hist.view(database, "Fasthotel - lofoten");
-        hist.view(database, "Fasthotel - svolvær");
-        hist.view(database, "Fasthotel - havna");
+        hist.view(database, "wh", "");
+        hist.view(database, "pronorge", "");
+        hist.view(database, "prosweden", "");
+        hist.view(database, "renahotell", "");
+        hist.view(database, "kongsvinger", "");
+        hist.view(database, "akershave", "");
+        hist.view(database, "bolgenemoi", "");
+        hist.view(database, "Fasthotel - lofoten", "916 563 035 ");
+        hist.view(database, "Fasthotel - svolvær", "917 533 555");
+        hist.view(database, "Fasthotel - havna", "818 772 092");
         
         System.exit(0);
     }

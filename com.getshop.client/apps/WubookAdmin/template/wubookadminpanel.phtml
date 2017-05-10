@@ -74,11 +74,16 @@
 <h3>Log</h3>
 <?php
 $logentries = (array)$this->getApi()->getWubookManager()->getLogEntries($this->getSelectedName());
-ksort($logentries);
+krsort($logentries);
+$i = 0;
 foreach($logentries as $time => $text) {
     echo "<div class='ellipsis' title='$text'>";
     echo date("d.m.Y H:i", $time / 1000) . " : " . $text . "<bR>";
     echo "</div>";
+    if($i > 100) { 
+        break;
+    }
+    $i++;
 }
 ?>
 

@@ -391,4 +391,6 @@ public interface IPageManager {
     public void deleteComment(String commentId);
     
     public List<PageComment> getComments(String pageId);
+    
+    public boolean accessDenied(String pageId);
 }

@@ -453,7 +453,6 @@ class Factory extends FactoryBase {
 
         $pageId = isset($_POST['data']['getShopPageId']) ? $_POST['data']['getShopPageId'] : $navigation->currentPageId;
 
-
         $javaPage = $this->pageManager->getPage($pageId);
 
         if ($javaPage == null) {
@@ -466,6 +465,12 @@ class Factory extends FactoryBase {
             exit(0);
         }
 
+        if ($this->pageManager->accessDenied($javaPage->id)) {
+            $pageId = "accessdenied";
+            $javaPage = $this->pageManager->getPage($pageId);
+        }
+        
+        
         $this->page = new Page($javaPage, $this);
         $this->getApplicationPool()->initForPage($this->pageManager, $this->page);
 

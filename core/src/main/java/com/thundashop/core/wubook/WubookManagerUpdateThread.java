@@ -12,22 +12,24 @@ public class WubookManagerUpdateThread extends Thread {
     private final Vector params;
     private final WubookManager mgr;
     private final XmlRpcClient client;
+    private final String action;
 
-    WubookManagerUpdateThread(XmlRpcClient client, WubookManager mgr, Vector params) {
+    WubookManagerUpdateThread(String action, XmlRpcClient client, WubookManager mgr, Vector params) {
         this.client = client;
         this.mgr = mgr;
         this.params = params;
+        this.action = action;
     }
     
     @Override
     public void run() {
         Vector result;
         try {
-            result = (Vector) client.execute("update_rooms_values", params);
+            result = (Vector) client.execute(action, params);
             if ((Integer)result.get(0) != 0) {
                 mgr.logText("Failed to update availability " + "(" + result.get(0) + ")" + result.get(1));
             } else {
-                mgr.logText("Availability is being updated.");
+                mgr.logText("Availability successfully updated.");
             }
         } catch (XmlRpcException ex) {
             mgr.logText("XMLException caught: " + ex.code);

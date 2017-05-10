@@ -724,7 +724,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         for (PageCell cell : page.getCellsFlatList()) {
             ApplicationInstance instace = instancePool.getApplicationInstance(cell.appId);
             if (instace != null && instace.appSettingsId != null && instace.appSettingsId.equals("access_denied")) {
-                logPrint("Removing: " + cell.appId);
                 cell.appId = null;
             }
         }
@@ -923,5 +922,30 @@ public class PageManager extends ManagerBase implements IPageManager {
         return comments.values().stream()
                 .filter(comment -> comment.pageId.equals(pageId))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean accessDenied(String pageId) {
+        Page page = getPage(pageId);
+        int removed = 0;
+        if (page != null) {
+            LinkedList<PageCell> bodyArea = page.layout.getCellsInBodyFlatList();
+                    ;
+            for (PageCell cell : bodyArea) {
+                ApplicationInstance instace = instancePool.getApplicationInstance(cell.appId);
+                if (instace != null && instace.appSettingsId != null && instace.appSettingsId.equals("access_denied")) {
+                    removed++;
+                }
+            }
+            
+            long cellsWithApps = bodyArea.stream().filter(b -> b.appId != null && !b.appId.isEmpty()).count();
+            
+            if (removed == cellsWithApps && removed != 0) {
+                return true;
+            }
+        }
+        
+        
+        return false;
     }
 }

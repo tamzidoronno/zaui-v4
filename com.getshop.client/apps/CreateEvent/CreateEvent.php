@@ -55,8 +55,12 @@ class CreateEvent extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
         if ($event->id) {
             $this->getApi()->getEventBookingManager()->saveEvent($this->getBookingEgineName(), $event);
         } else {
-            $this->getApi()->getEventBookingManager()->createEvent($this->getBookingEgineName(), $event);
+            $event = $this->getApi()->getEventBookingManager()->createEvent($this->getBookingEgineName(), $event);
+            $this->addUsersToEventIfNeeded($event);
+            echo $event->bookingItem->pageId;
         }
+        
+        die();
     }
     
     public function markAsReady() {
@@ -82,5 +86,26 @@ class CreateEvent extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon i
     public function toggleHide() {
         $this->getApi()->getEventBookingManager()->toggleHide($this->getBookingEgineName(), $_POST['data']['eventid']);
     }
+
+    /**
+     * 
+     * @param \core_eventbooking_Event $event
+     * @return type
+     */
+    public function addUsersToEventIfNeeded($event) {
+        if (!isset($_SESSION['ns_de7403c4_6b8e_4fb5_8d8a_d9fdc14ce76d/selectedUsers'])) {
+            return;
+        }
+        
+        $usersArray = $_SESSION['ns_de7403c4_6b8e_4fb5_8d8a_d9fdc14ce76d/selectedUsers'];
+        foreach ($usersArray as $userId => $location) {
+            $this->getApi()->getEventBookingManager()->addUserToEvent($this->getBookingEgineName(), $event->id, $userId, true, "web_interests");
+            $this->getApi()->getEventBookingManager()->removeInterest($this->getBookingEgineName(), $event->bookingItemType->id , $userId);
+        }
+        
+        unset($_SESSION['ns_de7403c4_6b8e_4fb5_8d8a_d9fdc14ce76d/selectedUsers']);
+        unset($_SESSION['ns_de7403c4_6b8e_4fb5_8d8a_d9fdc14ce76d/adminaction']);
+    }
+
 }
 ?>

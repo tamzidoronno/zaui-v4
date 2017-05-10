@@ -428,6 +428,9 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         
         for (Entry entry : entries) {
+            if (entry == null || entry.id == null)
+                continue;
+            
             if (entry.id.equals(id)) {
                 return entry;
             }

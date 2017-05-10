@@ -26,7 +26,7 @@ import java.util.List;
 public interface IEventBookingManager {
     @Editor
     @Writing
-    public void createEvent(Event event);
+    public Event createEvent(Event event);
     
     @Editor
     @Writing
@@ -266,4 +266,13 @@ public interface IEventBookingManager {
     
     @Administrator
     public void setForcedMandatoryAccess(String userId, List<String> bookingItemIds);
+    
+    @Customer
+    public void registerEventIntrest(EventIntrest interest);
+    
+    @Administrator
+    public List<EventIntrest> getInterests();
+    
+    @Administrator
+    public void removeInterest(String bookingItemTypeId, String userId);
 }

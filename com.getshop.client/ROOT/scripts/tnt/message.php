@@ -11,7 +11,7 @@
  * /scripts/tnt/message.php?username={username}&password={password}&type=destination&routeid={routeid}&companyid={companyId}&stopseq={stopseq}&message={message}
  * 
  * type=status
- * /scripts/tnt/message.php?username=export&password=export&id={drivermessage.id}&type=status
+ * /scripts/tnt/message.php?username=export&password=export&messageid={drivermessage.id}&type=status
  *  - isRead ( Set to true when user has pressed "Got it"
  *  - userid = driverId
  */
@@ -44,7 +44,7 @@ function validateDestination($stopseq, $route) {
     /* @var $route core_trackandtrace_Route */
     $found = false;
     foreach ($route->destinations as $dest) {
-        if ($dest->seq == $stopseq && $dest->company->id == $_GET['companyid']) {
+        if ($dest->seq == $stopseq && in_array($_GET['companyid'], $dest->companyIds)) {
             $found = $dest;
         }
     }

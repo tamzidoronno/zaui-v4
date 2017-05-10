@@ -30,10 +30,16 @@ foreach($checkoutbookings as $checkoutbooking) {
     }
 }
 
-$checkouttime = strtotime($selectedCheckoutRoom->date->end);
+if($selectedCheckoutRoom) {
+    $checkouttime = strtotime($selectedCheckoutRoom->date->end);
+}
 
 if($selectedCheckoutRoom && $checkouttime > time()) {
-    $code = "<b>Not even possible yet, existing guest checks out " . date("H:i", $checkouttime) . " this day.</b>";
+    $code = "<b>Earliest time to give out code is " . date("H:i", $checkouttime) . ", because someone already occupy this room.</b>";
+}
+
+if(date("dmy", time()) != date("dmy", strtotime($room->date->start))) {
+    $code = "<b>Not checking in today.</b>";
 }
 
 if(!$room->bookingItemId) {

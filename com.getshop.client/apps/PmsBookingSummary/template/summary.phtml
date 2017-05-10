@@ -269,7 +269,9 @@ function printAddons($room, $config, $object) {
         $text =  str_replace("{price}", $addon->price, $text);
         echo "<div class='itemrow addonitemrow' roomid='".$room->pmsBookingRoomId."' addontype='$type'>";
         if(!isset($types[$type])) {
-            echo "<div class='addAddonOnRoom'><i class='fa fa-square-o'></i> " . $text . "</div>";
+            echo "<div class='addAddonOnRoom'><i class='fa fa-square-o'></i> " . $text;
+            echo "<span class='price'>".$object->__w("not included")."</span>";
+            echo "</div>";
         } else {
             $count = $types[$type];
             echo "<div><i class='fa fa-check-square-o removeAddonOnRoom'></i> <span class='bookedaction' itemtypeid='".$room->pmsBookingRoomId."'></span>";

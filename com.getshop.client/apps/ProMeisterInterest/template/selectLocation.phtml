@@ -1,0 +1,37 @@
+<?
+/* @var $this ns_de7403c4_6b8e_4fb5_8d8a_d9fdc14ce76d\ProMeisterInterest */
+?>
+
+<div class="titleHeader">
+    <? echo $this->__f("Thank you for choosing") . ": " . $this->getApi()->getBookingEngine()->getBookingItemType($this->getBookingEngineName(), $_SESSION['ns_de7403c4_6b8e_4fb5_8d8a_d9fdc14ce76d/eventType'])->name; ?>
+    <br/><? echo $this->__f("Please select your preferred places for this course and click next."); ?>
+</div>
+<?
+$locations = $this->getApi()->getEventBookingManager()->getAllLocations($this->getBookingEngineName());
+$chunkSize = ceil(count($locations) / 3);
+$arrayChunks = array_chunk($locations, $chunkSize);
+
+?>
+<div class="content" gstype="form" method="setLocations">
+    <div class="checkboxes">
+        
+        <?
+        foreach ($arrayChunks as $locations) {
+            echo "<div class='col'>";
+            foreach ($locations as $loc) {
+                if (!$loc->name)
+                    continue;
+                ?>
+                <br/><input type="checkbox" gsname="location_<? echo $loc->id; ?>"/><? echo $loc->name; ?>
+                <?
+
+            }
+            echo "</div>";
+        }
+        ?>
+        
+    </div>
+    <div class="buttonarea">
+        <div class='shop_button' gsclick="cancelStep2"><? echo $this->__f("Cancel"); ?></div> <div class='shop_button' gstype="submit"><? echo $this->__f("Next"); ?></div>
+    </div>
+</div>

@@ -87,6 +87,9 @@ public interface ITrackAndTraceManager {
     public List<AcculogixExport> getExport(String routeId, boolean currentState);
     
     @Customer
+    public List<AcculogixExport> getExportedData(Date start, Date end);
+    
+    @Customer
     public List<AcculogixExport> getAllExportedDataForRoute(String routeId);
     
     @Editor

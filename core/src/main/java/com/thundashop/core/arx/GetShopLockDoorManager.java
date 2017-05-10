@@ -82,8 +82,7 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
        Date endDate = new Date();
        endDate.setTime(end);
        HashMap<String, List<AccessLog>> toReturn = new HashMap();
-       
-       for(GetShopDevice dev : getShopLockManager.getAllLocks(null)) {
+       for(GetShopDevice dev : getShopLockManager.getAllLocksCached(null)) {
            List<AccessLog> result = new ArrayList();
            for(Date accessEntry : dev.accessLog) {
                if(accessEntry.after(startDate) && accessEntry.before(endDate)) {

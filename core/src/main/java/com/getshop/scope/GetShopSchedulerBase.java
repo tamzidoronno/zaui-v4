@@ -10,6 +10,7 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.usermanager.data.User;
 import it.sauronsoftware.cron4j.Scheduler;
+import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,6 +85,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
     }
     
     private synchronized void runConnection() throws Exception {
+        sleepRandomTime();
         execute();
         closeConnection();
     }
@@ -121,5 +123,14 @@ public abstract class GetShopSchedulerBase implements Runnable {
                 Logger.getLogger(GetShopSchedulerBase.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    private void sleepRandomTime() {
+        Random r = new Random();
+        int Low = 0;
+        int High = 5000;
+        int Result = r.nextInt(High-Low) + Low;
+        
+        try { Thread.sleep(Result); } catch (Exception ex) {}
     }
 }

@@ -1288,8 +1288,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 found = true;
             }
         }
-        lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
-        saveObject(lastAvailability);
         
         if(found) {
             Gson gson = new Gson();
@@ -1299,9 +1297,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             params.addElement(token);
             params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
             params.addElement(tosend);
-
-            WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_sparse_rooms_values", client, this, params);
-            updateThread.start();
+            
+            Vector result = (Vector) client.execute("update_sparse_rooms_values", params);
+            if ((Integer)result.get(0) != 0) {
+                logText("Failed to update availability " + "(" + result.get(0) + ")" + result.get(1));
+            } else {
+                lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
+                saveObject(lastAvailability);
+                logText("Availability successfully updated.");
+            }
+            
         }
 
         return "";    

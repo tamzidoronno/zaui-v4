@@ -724,7 +724,6 @@ public class PageManager extends ManagerBase implements IPageManager {
         for (PageCell cell : page.getCellsFlatList()) {
             ApplicationInstance instace = instancePool.getApplicationInstance(cell.appId);
             if (instace != null && instace.appSettingsId != null && instace.appSettingsId.equals("access_denied")) {
-                logPrint("Removing: " + cell.appId);
                 cell.appId = null;
             }
         }

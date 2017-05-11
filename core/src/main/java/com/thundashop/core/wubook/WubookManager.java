@@ -322,6 +322,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(wubooking.status == 5) {
                     if(wubooking.wasModified > 0) {
                         //This is a modified reservation. its not a new booking.
+                        //This happends if the booking has been modified since last time we checked for new bookings.
+                        PmsBooking correlatedBooking = findCorrelatedBooking(wubooking);
+                        correlatedBooking.wubookModifiedResId.add(wubooking.reservationCode);
+                        pmsManager.saveBooking(correlatedBooking);
                         continue;
                     }
                 }
@@ -1379,6 +1383,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         String pattern = "dd/MM/yyyy";
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         return format.format(date);
+    }
+
+    private void sortList(List<WubookBooking> list) {
+        Collections.sort(list, new Comparator<WubookBooking>(){
+            public int compare(WubookBooking o1, WubookBooking o2){
+                return o1.reservationCode.compareTo(o2.reservationCode);
+            }
+       });
     }
 
 }

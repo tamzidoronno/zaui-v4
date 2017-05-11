@@ -23,7 +23,10 @@ public class WuBookHourlyProcessor extends GetShopSchedulerBase {
         if(!getApi().getStoreManager().isProductMode()) {
             return;
         }
-
+        try {
+            Thread.sleep(20000);
+        }catch(Exception e) {
+        }
         String storeId = getApi().getStoreManager().getStoreId();
         try { getApi().getWubookManager().addNewBookingsPastDays(getMultiLevelName(), 2); }catch(Exception e) { GetShopLogHandler.logStack(e, storeId); }
         try { getApi().getWubookManager().updateAvailability(getMultiLevelName()); }catch(Exception e) { GetShopLogHandler.logStack(e, storeId); }

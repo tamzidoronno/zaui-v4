@@ -32,9 +32,32 @@ foreach ($compGrouped as $compId => $allUsers) {
             }
         }
         ?>
-
     </table>
-<?
+    <?
     echo "</div>";
+}
+
+if(isset($foundUsers)){  
+?>
+
+<table id="usermanagementTable" width='100%'>
+    <?
+    foreach ($foundUsers as $user) {
+        if (!$user->company){
+            if($user->fullName || $user->emailAddress || $user->cellPhone){
+                $checked = "";
+                if (isset($_SESSION['ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534/selectedUsers'])) {
+                    $index = array_search($user->id, $_SESSION['ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534/selectedUsers']);
+                    if($index !== FALSE){
+                        $checked = "checked='true'";
+                    }
+                }
+            }
+            echo "<tr'><td width='25'><input type='checkbox' $checked class='user_to_send' value='$user->id'></td><td>$user->fullName</td><td>$user->emailAddress</td><td>$user->cellPhone</td></tr>";
+        }
+    }
+    ?>
+</table>
+<?
 }
 ?>

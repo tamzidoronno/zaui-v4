@@ -324,8 +324,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                         //This is a modified reservation. its not a new booking.
                         //This happends if the booking has been modified since last time we checked for new bookings.
                         PmsBooking correlatedBooking = findCorrelatedBooking(wubooking);
-                        correlatedBooking.wubookModifiedResId.add(wubooking.reservationCode);
-                        pmsManager.saveBooking(correlatedBooking);
+                        if(correlatedBooking != null) {
+                            correlatedBooking.wubookModifiedResId.add(wubooking.reservationCode);
+                            pmsManager.saveBooking(correlatedBooking);
+                        } else {
+                            sendErrorForReservation(wubooking.reservationCode, "Where not able to find correlated booking for modified booking while fetching new bookings.");
+                        }
                         continue;
                     }
                 }

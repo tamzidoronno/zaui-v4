@@ -28,6 +28,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getWubookManager()->markNoShow($this->getSelectedName(), $_POST['data']['wubookid']);
     }
     
+    public function sendSms() {
+        $guestId = $_POST['data']['guestid'];
+        $message = $_POST['data']['message'];
+        $this->getApi()->getPmsManager()->sendSmsToGuest($this->getSelectedName(), $guestId, $message);
+        $this->showBookingInformation();
+    }
+    
     public function removeOrderFromBooking() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         if(!@$order->closed) {
@@ -2578,6 +2585,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter = new \core_pmsmanager_PmsOrderStatsFilter();
         $filter->priceType = "extaxes";
         $filter->savedPaymentMethod = "allmethods";
+        $filter->displayType = "dayslept";
         
         if(isset($_SESSION['orderstatsfilterset']) && $_SESSION['orderstatsfilterset']) {
             $savedFilters = $this->getApi()->getPmsInvoiceManager()->getAllStatisticsFilters($this->getSelectedName());

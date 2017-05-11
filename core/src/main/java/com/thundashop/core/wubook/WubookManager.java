@@ -322,6 +322,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(wubooking.status == 5) {
                     if(wubooking.wasModified > 0) {
                         //This is a modified reservation. its not a new booking.
+                        //This happends if the booking has been modified since last time we checked for new bookings.
+                        PmsBooking correlatedBooking = findCorrelatedBooking(wubooking);
+                        if(correlatedBooking != null) {
+                            correlatedBooking.wubookModifiedResId.add(wubooking.reservationCode);
+                            pmsManager.saveBooking(correlatedBooking);
+                        } else {
+                            sendErrorForReservation(wubooking.reservationCode, "Where not able to find correlated booking for modified booking while fetching new bookings.");
+                        }
                         continue;
                     }
                 }
@@ -1288,8 +1296,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 found = true;
             }
         }
-        lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
-        saveObject(lastAvailability);
         
         if(found) {
             Gson gson = new Gson();
@@ -1299,9 +1305,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             params.addElement(token);
             params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
             params.addElement(tosend);
-
-            WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_sparse_rooms_values", client, this, params);
-            updateThread.start();
+            
+            Vector result = (Vector) client.execute("update_sparse_rooms_values", params);
+            if ((Integer)result.get(0) != 0) {
+                logText("Failed to update availability " + "(" + result.get(0) + ")" + result.get(1));
+            } else {
+                lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
+                saveObject(lastAvailability);
+                logText("Availability successfully updated.");
+            }
+            
         }
 
         return "";    
@@ -1374,6 +1387,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         String pattern = "dd/MM/yyyy";
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         return format.format(date);
+    }
+
+    private void sortList(List<WubookBooking> list) {
+        Collections.sort(list, new Comparator<WubookBooking>(){
+            public int compare(WubookBooking o1, WubookBooking o2){
+                return o1.reservationCode.compareTo(o2.reservationCode);
+            }
+       });
     }
 
 }

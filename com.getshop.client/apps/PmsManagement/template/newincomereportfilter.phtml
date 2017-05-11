@@ -25,6 +25,7 @@ $pricetypes['extaxes'] = "Prices ex taxes";
             <select gsname='paymentmethod' style='width:100%; box-sizing: border-box;'>
                 <option value="allmethods">All payment methods</option>
                 <option value="transferredtoaccounting">Everything transferred to accounting</option>
+                <option value="allorders">All orders</option>
                 <? 
                 $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
                 foreach ($paymentMethods as $key => $method) {

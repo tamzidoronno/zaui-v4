@@ -5890,4 +5890,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
+    @Override
+    public void sendSmsToGuest(String guestId, String message) {
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+                for(PmsGuests guest : room.guests) {
+                    if(guest.guestId.equals(guestId)) {
+                        messageManager.sendSms("sveve", guest.phone, message, guest.prefix, configuration.smsName);
+                        logEntry("SMS SENT: " + message + "<bR> +" + guest.prefix + " " + guest.phone, booking.id, room.bookingItemId);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
 }

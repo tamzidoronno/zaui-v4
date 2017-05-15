@@ -726,20 +726,17 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     @Override
     public void checkIfAllIsOk() {
         if(stopUpdatesOnLock) {
-//            logPrint("Lock updates stopped");
+            logPrint("Lock updates stopped");
         }
         if(!frameworkConfig.productionMode) {
-//            return;
+            return;
         }
         if(!pmsManager.getConfigurationSecure().isGetShopHotelLock()) {
-//            return;
+            return;
         }
         finalizeLocks();
         checkAndUpdateSubLocks();
         checkDoorsWithOpeningHours();
-        if(true) {
-            return;
-        }
         for(GetShopDevice dev : devices.values()) {
             if(dev.needSaving) {
                 dev.needSaving = false;

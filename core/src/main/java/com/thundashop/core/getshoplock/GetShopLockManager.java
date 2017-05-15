@@ -751,12 +751,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         List<BookingItem> items = bookingEngine.getBookingItems();
         GetShopDevice toSet = null;
         for(GetShopDevice dev : devices.values()) {
-            if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null) {
+            if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null && !dev.isSubLock()) {
                 continue;
             }
                     
             if(isUpdatingSource(dev.serverSource)) {
-                return;
+                continue;
             }
 
             //Always prioritise the one that has least codes set.

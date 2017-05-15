@@ -1,6 +1,9 @@
 
 <?php
 $val = "";
+if(isset($_SESSION['searchwordused'])) {
+    $val = $_SESSION['searchwordused'];
+}
 if(isset($_POST['data']['keyword'])) {
     $val = $_POST['data']['keyword'];
 }
@@ -28,7 +31,8 @@ echo "<th align='left'>Owner</th>";
 echo "<th align='left'>Orderid</th>";
 echo "<th align='left'>Order date</th>";
 echo "<th align='left'>Due date</th>";
-echo "<th align='left'>Total</th>";
+echo "<th align='left'>Total inc taxes</th>";
+echo "<th align='left'>Total ex taxes</th>";
 echo "<th align='left'>Payment date</th>";
 echo "<th align='left'></th>";
 echo "</tr>";
@@ -72,6 +76,7 @@ foreach ($orderList as $order) {
 
     /* @var $order core_ordermanager_data_Order */
     $ordersum = $this->getApi()->getOrderManager()->getTotalAmount($order);
+    $ordersumEx = round($this->getApi()->getOrderManager()->getTotalAmountExTaxes($order), 2);
     $dueDays = 14;
     if(isset($order->dueDays)) {
         $dueDays = $order->dueDays;
@@ -98,6 +103,10 @@ foreach ($orderList as $order) {
         $style = "style='color:red; font-weight:bold;'";
     }
     
+    if($order->status == 7) {
+        $style = "style='color:green; font-weight:bold;'";
+    }
+    
     $title = $user->fullName . "<br>";
     $title .= $user->emailAddress . "<br>";
     $title .= $user->emailAddressToInvoice . "<br>";
@@ -114,10 +123,20 @@ foreach ($orderList as $order) {
     echo "<td data-order='".strtotime($order->rowCreatedDate)."'>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
     echo "<td data-order='".$fourTeenDaysInFuture."'>" . date("d.m.Y", $fourTeenDaysInFuture) . "</td>";
     echo "<td>" . $ordersum . "</td>";
+    echo "<td>" . $ordersumEx . "</td>";
     echo "<td>";
     echo "<input type='hidden' value='".$order->id."' gsname='orderid'>";
-    echo "<input type='text' class='paymentdateselection' value='$curDate' style='width:120px; text-align:center;' gsname='paymentdate'></td>";
-    echo "<td><input type='submit' gstype='submit' value='Mark as paid'</td>";
+    if($order->status != 7) {
+        echo "<input type='text' class='paymentdateselection' value='$curDate' style='width:120px; text-align:center;' gsname='paymentdate'>";
+    } else {
+        echo date("d.m.Y H:i", strtotime($order->paymentDate));
+    }
+    echo "</td>";
+    echo "<td>";
+    if($order->status != 7) {
+        echo "<input type='submit' gstype='submit' value='Mark as paid'>";
+    }
+    echo "</td>";
     echo "</tr>";
 }
 echo "</tbody>";

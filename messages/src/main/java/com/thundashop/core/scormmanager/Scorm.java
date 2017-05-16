@@ -7,6 +7,7 @@ package com.thundashop.core.scormmanager;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -21,6 +22,7 @@ public class Scorm extends DataCommon {
     public boolean completed = false;
     public boolean passed;
     public boolean failed;
+    public Date passedDate = null;
     
     @Transient
     public String scormName = "";
@@ -30,4 +32,5 @@ public class Scorm extends DataCommon {
     
     @Transient
     public List<String> groupedScormPackageIds = new ArrayList();
+    
 }

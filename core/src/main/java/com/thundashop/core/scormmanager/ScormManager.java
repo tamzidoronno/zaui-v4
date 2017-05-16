@@ -13,6 +13,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Component;
 public class ScormManager extends ManagerBase implements IScormManager {
     private HashMap<String, Scorm> scorms = new HashMap();
     private HashMap<String, ScormPackage> packages = new HashMap();
+    private HashMap<String, ScormCertificateContent> certificateContents = new HashMap();
     
     @Autowired
     private UserManager userManager;
@@ -42,6 +44,11 @@ public class ScormManager extends ManagerBase implements IScormManager {
             if (data instanceof Scorm) {
                 Scorm scorm = (Scorm)data;
                 scorms.put(scorm.id, scorm);
+            }
+            
+            if (data instanceof ScormCertificateContent) {
+                ScormCertificateContent content = (ScormCertificateContent)data;
+                certificateContents.put(content.id, content);
             }
         }
         
@@ -140,6 +147,10 @@ public class ScormManager extends ManagerBase implements IScormManager {
         scorm.passed = result.isPassed();
         scorm.failed = result.isFailed();
         
+        if (scorm.passed && scorm.passedDate == null) {
+            scorm.passedDate = new Date();
+        }
+        
         try {
             scorm.score = Integer.parseInt(result.score);
         } catch (NumberFormatException ex) {
@@ -174,6 +185,22 @@ public class ScormManager extends ManagerBase implements IScormManager {
                 .orElse(null);
         
         return res != null;
+    }
+
+    @Override
+    public void saveScormCertificateContent(ScormCertificateContent content) {
+        ScormCertificateContent oldd = getScormCertificateContent(content.scormId);
+        if (oldd != null) {
+            content.id = oldd.id;
+        }
+        
+        saveObject(content);
+        certificateContents.put(content.id, content);
+    }
+
+    @Override
+    public ScormCertificateContent getScormCertificateContent(String id) {
+        return certificateContents.values().stream().filter(o -> o.scormId.equals(id)).findFirst().orElse(null);
     }
     
 }

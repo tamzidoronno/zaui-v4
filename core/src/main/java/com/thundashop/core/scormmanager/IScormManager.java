@@ -36,4 +36,9 @@ public interface IScormManager {
     
     @Customer
     public Scorm getScormForCurrentUser(String scormId, String userId);
+    
+    @Administrator
+    public void saveScormCertificateContent(ScormCertificateContent content);
+    
+    public ScormCertificateContent getScormCertificateContent(String id);
 }

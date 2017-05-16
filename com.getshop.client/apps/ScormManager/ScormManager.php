@@ -41,6 +41,14 @@ class ScormManager extends \MarketingApplication implements \Application {
             }
             
             $splittedString = explode("_", $key);
+            if($splittedString[0] == "content") {
+                continue;
+            }
+            
+            if (count($splittedString) < 2) {
+                continue;
+            }
+            
             $scormId = $splittedString[1];
             $groupId = $splittedString[0];
             $dataObject[$scormId][] = $groupId;
@@ -70,6 +78,23 @@ class ScormManager extends \MarketingApplication implements \Application {
             
             $package->activatedGroups = @$dataObject[$package->id];
             $this->getApi()->getScormManager()->saveSetup($package);
+        }
+        
+        foreach ($_POST['data'] as $key => $value) {
+            if ($value == "false" ) {
+                continue;
+            }
+            
+            $splittedString = explode("_", $key);
+            if($splittedString[0] !== "content") {
+                continue;
+            }
+            
+            $id = $splittedString[1];
+            $dbObject = new \core_scormmanager_ScormCertificateContent();
+            $dbObject->scormId = $id;
+            $dbObject->content = $value;
+            $this->getApi()->getScormManager()->saveScormCertificateContent($dbObject);
         }
     }
     
@@ -107,7 +132,16 @@ class ScormManager extends \MarketingApplication implements \Application {
         
         return false;
     }
-
+    
+    public function getScormContentForCertificate($id) {
+        $dbObj = $this->getApi()->getScormManager()->getScormCertificateContent($id);
+        if ($dbObj) {
+            return $dbObj->content;
+        } else {
+            return "";
+        }
+    }
+    
     public function isGroupedScormPackage($packages, $scormId) {
         foreach ($packages as $package) {
             if ($package->groupedScormPackages) {

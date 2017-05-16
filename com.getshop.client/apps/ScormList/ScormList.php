@@ -19,7 +19,8 @@ class ScormList extends \MarketingApplication implements \Application {
             return;
         
         $isGroupedScormPackage = $scorm->groupedScormPackage;
-    
+        $diplomaLink = "/scripts/promeister/downloadOnlineDiplom.php?packageId=".$scorm->scormId."&userid=".$scorm->userId;
+        
         $link = "http://moodle.getshop.com/mod/scorm/getshopplayer.php?userid=".\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id."&scormid=".$scorm->scormId;
         if ($isGroupedScormPackage) {
             $ids = implode(",", $scorm->groupedScormPackageIds);
@@ -43,7 +44,12 @@ class ScormList extends \MarketingApplication implements \Application {
             <div>
                 <? if (!$subgroup) { ?>
                 <a style="color:blue;" target="_blank" href="<? echo $link; ?>"><? echo $this->__f("Go to test"); ?></a>
-                <? } ?>
+                    
+                <? 
+                    if ($scorm->passed && !$isGroupedScormPackage) {
+                        echo " <a href='$diplomaLink' target='_blank' class='gs_ignorenavigate'><i class='fa fa-download'></i></a>";
+                    }
+                } ?>
             
             </div>
         </div>

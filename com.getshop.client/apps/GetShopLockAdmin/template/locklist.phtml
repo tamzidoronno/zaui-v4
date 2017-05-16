@@ -14,7 +14,7 @@ foreach($lockServers as $name => $server) {
     echo "<h1>" . $name;
     $locks = $this->getApi()->getGetShopLockManager()->getAllLocks($this->getSelectedName(), $name);
     ?>
-    <span type='button' gstype='clicksubmit' method='deleteLocks' gsname='serverSource' gsvalue='<?php echo $name; ?>' class='shop_button' style="float: right;">Delete all devices</span>
+<!--    <span type='button' gstype='clicksubmit' method='deleteLocks' gsname='serverSource' gsvalue='<?php echo $name; ?>' class='shop_button' style="float: right;">Delete all devices</span>-->
     <span type='button' gstype='clicksubmit' method='removeUnusedLocks' gsname='serverSource' gsvalue='<?php echo $name; ?>' class='shop_button' style="float: right;">Remove all unused locks</span>
     <?php
     echo "</h1>";

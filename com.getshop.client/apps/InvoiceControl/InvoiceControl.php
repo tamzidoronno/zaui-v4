@@ -15,6 +15,19 @@ class InvoiceControl extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+    
+        if(!isset($_POST['data']['keyword']) && isset($_SESSION['searchwordused'])) {
+            $_POST['data']['keyword'] = $_SESSION['searchwordused'];
+            unset($_SESSION['unpaidonly']);
+        }
+        
+        if(isset($_POST['data']['keyword']) && $_POST['data']['keyword']) {
+            $_SESSION['searchwordused'] = $_POST['data']['keyword'];
+        }
+        if(isset($_POST['data']['unpaidonly'])) {
+            $_SESSION['unpaidonly'] = $_POST['data']['unpaidonly'] == "true";
+        }
+        
         $this->includefile("invoice");
     }
 
@@ -24,12 +37,7 @@ class InvoiceControl extends \MarketingApplication implements \Application {
     }
     
     public function getGroupedOrders() {
-        if(!isset($_POST['data']['keyword']) && isset($_SESSION['searchwordused'])) {
-            $_POST['data']['keyword'] = $_SESSION['searchwordused'];
-        }
-        
         if(isset($_POST['data']['keyword']) && $_POST['data']['keyword']) {
-            $_SESSION['searchwordused'] = $_POST['data']['keyword'];
             $filterOptions =  new \core_common_FilterOptions();
             $filterOptions->searchWord = $_POST['data']['keyword'];
             $res = $this->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);
@@ -41,6 +49,11 @@ class InvoiceControl extends \MarketingApplication implements \Application {
         $groupedOrders = new \stdClass();
         
         foreach ($orders as $order) {
+            if(isset($_SESSION['unpaidonly']) && $_SESSION['unpaidonly']) {
+                if($order->status == 7) {
+                    continue;
+                }
+            }
             if (!isset($groupedOrders->{$order->userId})) {
                 $groupedOrders->{$order->userId} = array();
             }

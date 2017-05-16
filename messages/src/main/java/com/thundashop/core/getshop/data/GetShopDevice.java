@@ -171,4 +171,11 @@ public class GetShopDevice extends DataCommon {
         }
         return false;
     }
+
+    public boolean isSubLock() {
+        if(masterLocks == null) {
+            return false;
+        }
+        return !masterLocks.isEmpty();
+    }
 }

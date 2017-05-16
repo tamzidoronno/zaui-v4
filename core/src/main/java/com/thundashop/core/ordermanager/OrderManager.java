@@ -1327,25 +1327,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
 
         //Order has started, its too late.
-        Calendar yesterday = Calendar.getInstance();
-        yesterday.add(Calendar.DAY_OF_YEAR, (daysToTryAfterOrderHasStarted * -1));
-        for(CartItem item : order.cart.getItems()) {
-            if(item.startDate != null && new Date().after(item.startDate)) {
-                if(yesterday.getTime().after(order.rowCreatedDate)) {
-                    Store store = storeManager.getMyStore();
-                    try {
-                        if(!order.warnedNotAbleToPay) {
-                            if(store.configuration.accountingEmailAdress != null && !store.configuration.accountingEmailAdress.isEmpty()) {
-                                String message = "Order "  + order.incrementOrderId + " where not able to capture after tried : " + daysToTryAfterOrderHasStarted + " days";
-                                messageManager.sendMail(store.configuration.accountingEmailAdress, store.configuration.accountingEmailAdress, "Failed to capture on card", message, store.configuration.accountingEmailAdress, store.configuration.accountingEmailAdress);
+        if(!order.id.equals("71e5aa87-0489-476b-b5f8-d4315a22fe6f")) {
+
+            Calendar yesterday = Calendar.getInstance();
+            yesterday.add(Calendar.DAY_OF_YEAR, (daysToTryAfterOrderHasStarted * -1));
+            for(CartItem item : order.cart.getItems()) {
+                if(item.startDate != null && new Date().after(item.startDate)) {
+                    if(yesterday.getTime().after(order.rowCreatedDate)) {
+                        Store store = storeManager.getMyStore();
+                        try {
+                            if(!order.warnedNotAbleToPay) {
+                                if(store.configuration.accountingEmailAdress != null && !store.configuration.accountingEmailAdress.isEmpty()) {
+                                    String message = "Order "  + order.incrementOrderId + " where not able to capture after tried : " + daysToTryAfterOrderHasStarted + " days";
+                                    messageManager.sendMail(store.configuration.accountingEmailAdress, store.configuration.accountingEmailAdress, "Failed to capture on card", message, store.configuration.accountingEmailAdress, store.configuration.accountingEmailAdress);
+                                }
+                                order.warnedNotAbleToPay = true;
+                                saveOrder(order);
                             }
-                            order.warnedNotAbleToPay = true;
-                            saveOrder(order);
+                        }catch(Exception e) {
+                            logPrintException(e);
                         }
-                    }catch(Exception e) {
-                        logPrintException(e);
+                        return false;
                     }
-                    return false;
                 }
             }
         }

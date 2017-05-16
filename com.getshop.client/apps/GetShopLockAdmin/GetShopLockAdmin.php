@@ -329,10 +329,11 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
     public function addExternalLock() {
         $newLock = new \core_getshop_data_GetShopDevice();
         $newLock->name = $_POST['data']['name'];
-        $newLock->type = "getshop_lock";
+        $newLock->type = $_POST['data']['locktype'];
         $newLock->zwaveid = $_POST['data']['deviceid'];
         $newLock->serverSource = $_POST['data']['servertype'];
         $this->getApi()->getGetShopLockManager()->saveLock($this->getSelectedName(), $newLock);
+        $this->getApi()->getGetShopLockManager()->finalizeLocks($this->getSelectedName());
     }
 
 }

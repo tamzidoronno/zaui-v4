@@ -24,7 +24,12 @@ class InvoiceControl extends \MarketingApplication implements \Application {
     }
     
     public function getGroupedOrders() {
+        if(!isset($_POST['data']['keyword']) && isset($_SESSION['searchwordused'])) {
+            $_POST['data']['keyword'] = $_SESSION['searchwordused'];
+        }
+        
         if(isset($_POST['data']['keyword']) && $_POST['data']['keyword']) {
+            $_SESSION['searchwordused'] = $_POST['data']['keyword'];
             $filterOptions =  new \core_common_FilterOptions();
             $filterOptions->searchWord = $_POST['data']['keyword'];
             $res = $this->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);

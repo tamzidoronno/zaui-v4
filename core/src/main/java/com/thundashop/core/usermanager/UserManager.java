@@ -121,6 +121,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         addGetShopAdmins();
         degradeGetSuperShopAdmins();
+//        doubleCheckUniqueCustomerIds();
     }
 
     private void addGetShopAdmins() throws ErrorException {
@@ -1911,6 +1912,24 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         user.isCompanyMainContact = !user.isCompanyMainContact;
         saveUser(user);
+    }
+
+    private void doubleCheckUniqueCustomerIds() {
+        List<String> found = new ArrayList();
+        for(User usr : getAllUsers()) {
+            if(found.contains(usr.id)) {
+                continue;
+            }
+            if(usr.customerId != null) {
+                for(User usr2 : getAllUsers()) {
+                    if(usr2.customerId != null && usr2.customerId.equals(usr.customerId) && !usr2.id.equals(usr.id)) {
+                        System.out.println(usr.customerId + "\t " + usr.rowCreatedDate + "\t" + usr2.rowCreatedDate + "\t" + usr.fullName + "\t" + usr2.fullName);
+                        found.add(usr2.id);
+                        found.add(usr.id);
+                    }
+                }
+            }
+        }
     }
 
 }

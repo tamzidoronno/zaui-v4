@@ -192,7 +192,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         saveObject(lock);
         devices.put(lock.id, lock);
     }
-
+    
     private PmsLockServer getLockServerForDevice(GetShopDevice dev) {
         for(String serverName : pmsManager.getConfigurationSecure().lockServerConfigs.keySet()) {
             if(serverName.equals(dev.serverSource)) {
@@ -362,10 +362,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             
             try {
                 String addr = "http://"+hostname+":8083/" + URLEncoder.encode("ZWaveAPI/Run/devices["+device.zwaveid+"].UserCode.Set("+offset+","+code+","+doUpdate+")", "UTF-8");
-                String addr2 = "http://"+hostname+":8083/" + URLEncoder.encode("ZWave.zway/Run/devices["+device.zwaveid+"].UserCode.Get("+offset+")", "UTF-8");
-                
                 GetshopLockCom.httpLoginRequest(addr,username,password);
-//                GetshopLockCom.httpLoginRequest(addr2,username,password);
             } catch (Exception ex) {
                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -398,7 +395,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         boolean added = false;
                         for(int i = 0; i < 10; i++) {
                             if(stopUpdatesOnLock) { continue; }
-                            if(codesAdded >= 2 && !device.needForceRemove()) {
+                            if(codesAdded >= 2 && !device.needForceRemove() && !device.isSubLock()) {
                                 int minutesTried = getMinutesTriedSettingCodes(device);
                                 if(minutesTried > 5) {
                                     Calendar future = Calendar.getInstance();
@@ -425,7 +422,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                         device.needSaving = true;
                                         break;
                                     }
-                                    logPrint("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")");
+                                    logPrint("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")" + ", id: " + device.zwaveid);
                                     for(int j = 0; j < 24; j++) {
                                         setCode(offset, code.fetchCodeToAddToLock(), false);
                                         waitForEmptyQueue();
@@ -754,12 +751,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         List<BookingItem> items = bookingEngine.getBookingItems();
         GetShopDevice toSet = null;
         for(GetShopDevice dev : devices.values()) {
-            if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null) {
+            if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null && !dev.isSubLock()) {
                 continue;
             }
                     
             if(isUpdatingSource(dev.serverSource)) {
-                return;
+                continue;
             }
 
             //Always prioritise the one that has least codes set.
@@ -869,7 +866,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         
     }
 
-    private void finalizeLocks() {
+    public void finalizeLocks() {
         for(GetShopDevice dev : devices.values()) {
             if(dev.isLock()) {
                 boolean needSave = false;

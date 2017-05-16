@@ -1597,6 +1597,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             
             if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
                 order = orderManager.getOrder(filter.addToOrderId);
+                if(order.closed) {
+                    order = null;
+                }
             }
             
             if(order != null && !order.closed) {
@@ -1604,6 +1607,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             } else {
                 if(order == null) {
                     order = orderManager.createOrder(user.address);
+                    
+                    Double newAmount = orderManager.getTotalAmount(order);
+                    
+                    if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty() && newAmount < 0.0) {
+                        order.parentOrder = filter.addToOrderId;
+                        orderManager.saveOrder(order);
+                    }
                 }
             }
         }

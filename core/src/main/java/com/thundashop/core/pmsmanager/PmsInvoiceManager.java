@@ -739,7 +739,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrder(orderId);
             if(order.closed) {
-                continue;
+                if(order.isExpedia()) {
+                    order.closed = false;
+                    order.status = Order.Status.WAITING_FOR_PAYMENT;
+                } else {
+                    continue;
+                }
             }
             order.cart.clear();
             orderManager.saveOrder(order);
@@ -1620,8 +1625,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         order.userId = booking.userId;
         
-        if(filter.userId != null && !filter.userId.isEmpty()) {
-            order.userId = filter.userId;
+        if(filter.userId != null && !filter.userId.isEmpty()) { 
+           order.userId = filter.userId;
         }
         
         autoSendInvoice(order, booking.id);

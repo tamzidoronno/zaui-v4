@@ -67,6 +67,7 @@ class ScormManager extends \MarketingApplication implements \Application {
             $package->id = $ipackage->id;
             $package->activatedGroups = @$dataObject[$ipackage->id];
             $package->name = $this->getScormName($package->id, $inPackages);
+            $package->isRequired = $_POST['data']['required_'.$ipackage->id] === "true";
             $this->getApi()->getScormManager()->saveSetup($package);
         }
         
@@ -76,6 +77,7 @@ class ScormManager extends \MarketingApplication implements \Application {
                 continue;
             }
             
+            $package->isRequired = $_POST['data']['required_'.$package->id] === "true";
             $package->activatedGroups = @$dataObject[$package->id];
             $this->getApi()->getScormManager()->saveSetup($package);
         }
@@ -131,6 +133,16 @@ class ScormManager extends \MarketingApplication implements \Application {
         }
         
         return false;
+    }
+    
+public function getPackage($packages, $scormId) {
+        foreach ($packages as $package) {
+            if ($package->id == $scormId) {
+                return $package;
+            }
+        }
+        
+        return null;
     }
     
     public function getScormContentForCertificate($id) {

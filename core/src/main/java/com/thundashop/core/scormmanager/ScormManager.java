@@ -202,5 +202,15 @@ public class ScormManager extends ManagerBase implements IScormManager {
     public ScormCertificateContent getScormCertificateContent(String id) {
         return certificateContents.values().stream().filter(o -> o.scormId.equals(id)).findFirst().orElse(null);
     }
+
+    @Override
+    public List<ScormPackage> getMandatoryPackages(String userId) {
+        List<ScormPackage> mandatory = packages.values()
+                .stream()
+                .filter(pack -> pack.isRequired)
+                .collect(Collectors.toList());
+        
+        return mandatory;
+    }
     
 }

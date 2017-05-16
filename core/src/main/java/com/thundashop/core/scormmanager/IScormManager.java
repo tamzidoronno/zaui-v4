@@ -41,4 +41,6 @@ public interface IScormManager {
     public void saveScormCertificateContent(ScormCertificateContent content);
     
     public ScormCertificateContent getScormCertificateContent(String id);
+    
+    public List<ScormPackage> getMandatoryPackages(String userId);
 }

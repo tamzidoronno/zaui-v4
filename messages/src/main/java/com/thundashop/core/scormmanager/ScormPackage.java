@@ -18,6 +18,8 @@ public class ScormPackage extends DataCommon {
     public List<String> activatedGroups = new ArrayList();
 
     public List<String> groupedScormPackages = new ArrayList();
+
+    public boolean isRequired = false;
     
     boolean isGroupActive(String groupId) {
         return activatedGroups.contains(groupId);

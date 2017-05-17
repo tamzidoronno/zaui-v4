@@ -41,6 +41,14 @@ class ScormManager extends \MarketingApplication implements \Application {
             }
             
             $splittedString = explode("_", $key);
+            if($splittedString[0] == "content") {
+                continue;
+            }
+            
+            if (count($splittedString) < 2) {
+                continue;
+            }
+            
             $scormId = $splittedString[1];
             $groupId = $splittedString[0];
             $dataObject[$scormId][] = $groupId;
@@ -59,6 +67,7 @@ class ScormManager extends \MarketingApplication implements \Application {
             $package->id = $ipackage->id;
             $package->activatedGroups = @$dataObject[$ipackage->id];
             $package->name = $this->getScormName($package->id, $inPackages);
+            $package->isRequired = $_POST['data']['required_'.$ipackage->id] === "true";
             $this->getApi()->getScormManager()->saveSetup($package);
         }
         
@@ -68,9 +77,29 @@ class ScormManager extends \MarketingApplication implements \Application {
                 continue;
             }
             
+            $package->isRequired = $_POST['data']['required_'.$package->id] === "true";
             $package->activatedGroups = @$dataObject[$package->id];
             $this->getApi()->getScormManager()->saveSetup($package);
         }
+        
+        foreach ($_POST['data'] as $key => $value) {
+            if ($value == "false" ) {
+                continue;
+            }
+            
+            $splittedString = explode("_", $key);
+            if($splittedString[0] !== "content") {
+                continue;
+            }
+            
+            $id = $splittedString[1];
+            $dbObject = new \core_scormmanager_ScormCertificateContent();
+            $dbObject->scormId = $id;
+            $dbObject->content = $value;
+            $this->getApi()->getScormManager()->saveScormCertificateContent($dbObject);
+        }
+        
+        $this->getApi()->getScormManager()->syncMoodle();
     }
     
     public function deletePackage() {
@@ -107,7 +136,26 @@ class ScormManager extends \MarketingApplication implements \Application {
         
         return false;
     }
-
+    
+public function getPackage($packages, $scormId) {
+        foreach ($packages as $package) {
+            if ($package->id == $scormId) {
+                return $package;
+            }
+        }
+        
+        return null;
+    }
+    
+    public function getScormContentForCertificate($id) {
+        $dbObj = $this->getApi()->getScormManager()->getScormCertificateContent($id);
+        if ($dbObj) {
+            return $dbObj->content;
+        } else {
+            return "";
+        }
+    }
+    
     public function isGroupedScormPackage($packages, $scormId) {
         foreach ($packages as $package) {
             if ($package->groupedScormPackages) {

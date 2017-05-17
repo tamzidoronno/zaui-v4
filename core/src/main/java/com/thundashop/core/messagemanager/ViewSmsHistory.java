@@ -58,7 +58,8 @@ public class ViewSmsHistory {
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         Database database = context.getBean(Database.class);
         
-        int month = 4;
+        // 1 = januar
+        int month = 5;
         int year = 2017;
         
         Date start = getDate(year, month,1);
@@ -67,6 +68,7 @@ public class ViewSmsHistory {
         System.out.println("Start: " + start + " to " + end);
         
         ViewSmsHistory hist = new ViewSmsHistory(month, year);
+        
         hist.view(database, "wh", "");
         hist.view(database, "pronorge", "");
         hist.view(database, "prosweden", "");
@@ -77,6 +79,7 @@ public class ViewSmsHistory {
         hist.view(database, "Fasthotel - lofoten", "916 563 035 ");
         hist.view(database, "Fasthotel - svolvær", "917 533 555");
         hist.view(database, "Fasthotel - havna", "818 772 092");
+        hist.view(database, "Jernbaneplassen", "");
         
         System.exit(0);
     }
@@ -128,6 +131,10 @@ public class ViewSmsHistory {
         
         if (storeName.equals("bolgenemoi")) {
             return "178330ad-4b1d-4b08-a63d-cca9672ac329";
+        }
+        
+        if (storeName.equals("Jernbaneplassen")) {
+            return "c6778306-0e3c-48c9-aa5a-3325460d0d1d";
         }
         
         throw new NullPointerException("Not a known store");

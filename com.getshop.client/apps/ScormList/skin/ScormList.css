@@ -14,10 +14,16 @@
     line-height: 30px;
 }
 
-.ScormList .scormrow div:nth-child(1) { width: 350px; }
+.ScormList .fa-plus { cursor: pointer; }
+
+
+.ScormList .groupedinformation { display: none; }
+.ScormList .scormrow div:nth-child(1) { width: 322px; }
 .ScormList .scormrow.subgroup div:nth-child(1) { width: 331px; }
 .ScormList .scormrow div:nth-child(2) { width: 100px; }
 .ScormList .scormrow div:nth-child(3) { width: 150px; }
+
+.gsbody_inner[pageid="262bebb6-5fe2-4a32-a154-4cadb9319e16"] .ScormList .scormrow div:nth-child(1) { width: 650px; }
 
 .ScormList .scormrow.subgroup { padding-left: 30px; }
 .ScormList .groupedInformation { padding-left: 30px; color: red; border-left: solid 1px #DDD; border-right: solid 1px #DDD; }

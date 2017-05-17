@@ -6,16 +6,26 @@
 package com.thundashop.core.scormmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,7 +63,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
         }
         
         if (scorms.size() > 0) {
-            createScheduler("checkScormResults", "0 * * * *", FetchScormResult.class);
+            createScheduler("checkScormResults", "* * * * *", FetchScormResult.class);
         }
     }
     
@@ -62,7 +72,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
     public void saveSetup(ScormPackage scormPackage) {
         saveObject(scormPackage);
         packages.put(scormPackage.id, scormPackage);
-        createScheduler("checkScormResults", "0 * * * *", FetchScormResult.class);
+        createScheduler("checkScormResults", "* * * * *", FetchScormResult.class);
     }
     
     @Override
@@ -109,6 +119,9 @@ public class ScormManager extends ManagerBase implements IScormManager {
             userManager.checkUserAccess(user);
         }
         
+        if (user == null)
+            return null;
+        
         Scorm scorm= getScorm(user.id, scormId);
         finalizeScorm(scorm);
         return scorm;
@@ -127,7 +140,12 @@ public class ScormManager extends ManagerBase implements IScormManager {
     }
 
     private void finalizeScorm(Scorm scorm) {
-        ScormPackage scormPackage = packages.get(scorm.scormId);
+        ScormPackage scormPackage = getPackage(scorm.scormId);
+        
+        if (scormPackage == null) {
+            scormPackage = createScormPackageFromMoodle(scorm.scormId);
+        }
+        
         if (scormPackage != null) {
             scorm.scormName = scormPackage.name;
             scorm.groupedScormPackage = !scormPackage.groupedScormPackages.isEmpty();
@@ -143,6 +161,9 @@ public class ScormManager extends ManagerBase implements IScormManager {
     @Override
     public void updateResult(ScormResult result) {
         Scorm scorm = getScorm(result.username, result.scormid);
+        
+        ScormPackage scormPackage = getPackage(scorm.scormId);
+        
         scorm.completed = result.isCompleted();
         scorm.passed = result.isPassed();
         scorm.failed = result.isFailed();
@@ -158,6 +179,8 @@ public class ScormManager extends ManagerBase implements IScormManager {
         }
         
         saveObject(scorm);
+        
+        updateGroupedScormPackages(scorm, result.username);
     }
 
     @Override
@@ -211,6 +234,91 @@ public class ScormManager extends ManagerBase implements IScormManager {
                 .collect(Collectors.toList());
         
         return mandatory;
+    }
+    
+    private ArrayList<MoodlePackage> getMoodlePackages() {
+        try {
+            String url = "http://moodle.getshop.com/mod/scorm/scormlist.php";
+            String out = new Scanner(new URL(url).openStream(), "UTF-8").useDelimiter("\\A").next();
+            
+            Type listType = new TypeToken<ArrayList<MoodlePackage>>(){}.getType();
+            
+            
+            Gson gson = new Gson();
+            ArrayList<MoodlePackage> packages = gson.fromJson(out, listType);
+            return packages;
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ScormManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ScormManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return new ArrayList();
+    }
+
+    private ScormPackage createScormPackageFromMoodle(String packageId) {
+        
+        ArrayList<MoodlePackage> packages = getMoodlePackages(); 
+        MoodlePackage moodlePackage = packages.stream().filter(o -> o.id.equals(packageId)).findFirst().orElse(null);
+
+        if (moodlePackage != null) {
+            ScormPackage scormPackage = new ScormPackage();
+            scormPackage.id = moodlePackage.id;
+            scormPackage.name = moodlePackage.name;
+            saveObject(scormPackage);
+            return scormPackage;
+        }
+
+        return null;
+    }
+
+    @Override
+    public void syncMoodle() {
+        ArrayList<MoodlePackage> moodlePackages = getMoodlePackages();
+        moodlePackages.stream().forEach(moodlePackage -> {
+            ScormPackage scormPackage = getPackage(moodlePackage.id);
+            if (scormPackage == null) {
+                scormPackage = createScormPackageFromMoodle(moodlePackage.id);
+            }
+            
+            if (scormPackage != null) {
+                scormPackage.name = moodlePackage.name;
+                saveObject(scormPackage);
+            }
+        });
+    }
+
+    private void updateGroupedScormPackages(Scorm scorm, String userId) {
+        List<ScormPackage> dbs = packages.values().stream()
+                .filter(p -> p.groupedScormPackages.contains(scorm.scormId))
+                .collect(Collectors.toList());
+        
+        for (ScormPackage pck : dbs) {
+            boolean allPassed = true;
+            for (String scormId : pck.groupedScormPackages) {
+                Scorm userscorm = getScormForCurrentUser(scormId, userId);
+                if (userscorm == null) {
+                    continue;
+                }
+                if (!userscorm.passed) {
+                    allPassed = false;
+                }
+            }
+            
+            if (allPassed) {
+                if (pck.id.equals("dcbf82e6-fe15-40da-9620-e968b219a0ae") && userId.equals("9db5a5f2-2e40-4346-a0ea-2b0d320da98a")) {
+                    System.out.println("TEST");
+                }
+                Scorm userscorm = getScormForCurrentUser(pck.id, userId);
+                if (userscorm == null)
+                    continue;
+                
+                userscorm.passed = true;
+                saveObject(userscorm);
+
+                scorms.put(userscorm.id, userscorm);
+            }
+        }
     }
     
 }

@@ -98,6 +98,8 @@ class ScormManager extends \MarketingApplication implements \Application {
             $dbObject->content = $value;
             $this->getApi()->getScormManager()->saveScormCertificateContent($dbObject);
         }
+        
+        $this->getApi()->getScormManager()->syncMoodle();
     }
     
     public function deletePackage() {

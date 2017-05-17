@@ -34,11 +34,7 @@ class ScormList extends \MarketingApplication implements \Application {
             <div><? echo $scorm->groupedScormPackage ? "" : $scorm->score; ?></div>
             <div>
                 <? 
-                if ($scorm->groupedScormPackage) {
-                    echo "";
-                } else {
-                    echo $scorm->passed ? $this->__f("Yes") : $this->__f("No"); 
-                }
+                echo $scorm->passed ? $this->__f("Yes") : $this->__f("No"); 
                 ?>
             </div>
             <div>
@@ -46,7 +42,7 @@ class ScormList extends \MarketingApplication implements \Application {
                 <a style="color:blue;" target="_blank" href="<? echo $link; ?>"><? echo $this->__f("Go to test"); ?></a>
                     
                 <? 
-                    if ($scorm->passed && !$isGroupedScormPackage) {
+                    if ($scorm->passed) {
                         echo " <a href='$diplomaLink' target='_blank' class='gs_ignorenavigate'><i class='fa fa-download'></i></a>";
                     }
                 } ?>

@@ -21,7 +21,7 @@ if (!$scorms)
 <?
 foreach ($scorms as $scorm) {
     $this->printRow($scorm);
-
+    
     if ($scorm->groupedScormPackage) {
         foreach ($scorm->groupedScormPackageIds as $id) {
             $iScorm = $this->getApi()->getScormManager()->getScormForCurrentUser($id, $this->getUserId());

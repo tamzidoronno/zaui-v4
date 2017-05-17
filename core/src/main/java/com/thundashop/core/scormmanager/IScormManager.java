@@ -43,4 +43,7 @@ public interface IScormManager {
     public ScormCertificateContent getScormCertificateContent(String id);
     
     public List<ScormPackage> getMandatoryPackages(String userId);
+    
+    @Administrator
+    public void syncMoodle();
 }

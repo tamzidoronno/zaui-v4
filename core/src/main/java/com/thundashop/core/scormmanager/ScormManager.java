@@ -306,9 +306,6 @@ public class ScormManager extends ManagerBase implements IScormManager {
             }
             
             if (allPassed) {
-                if (pck.id.equals("dcbf82e6-fe15-40da-9620-e968b219a0ae") && userId.equals("9db5a5f2-2e40-4346-a0ea-2b0d320da98a")) {
-                    System.out.println("TEST");
-                }
                 Scorm userscorm = getScormForCurrentUser(pck.id, userId);
                 if (userscorm == null)
                     continue;

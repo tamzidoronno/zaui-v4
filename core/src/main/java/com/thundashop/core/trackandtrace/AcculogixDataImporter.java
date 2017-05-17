@@ -102,6 +102,7 @@ public class AcculogixDataImporter {
                 continue;
             }
             
+            id = cleanupIdProblems(id);
             Route route = new Route();
             route.id = id;
             route.name = route.id;
@@ -314,5 +315,12 @@ public class AcculogixDataImporter {
     private void saveRoutes() {
         routes.values().stream()
                 .forEach(route -> trackAndTraceManager.saveRoute(route));
+    }
+
+    private String cleanupIdProblems(String id) {
+        id = id.replaceAll("\r", "");
+        id = id.replaceAll("\n", "");
+        id = id.replaceAll("\t", "");
+        return id;
     }
 }

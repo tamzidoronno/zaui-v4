@@ -24,31 +24,31 @@ $user = $factory->getApi()->getUserManager()->getUserById($_GET['userid']);
         box-sizing: border-box; 
         font-size: 20px; 
         background-size: 1050px 1485px; 
-        background-color: #f8f528;
+        background-image: url("/displayImage.php?id=babf491e-8d4e-4875-adb2-51ee1197de11&width=1160");
         position: relative;
     }
     
    .title1 { 
-        padding-top: 350px; 
+        padding-top: 550px; 
         font-size: 20px; 
-        font-size: 60px; 
+        font-size: 40px; 
         text-align: center;
-        font-style: italic;
-        font-family: 'Helvetica';
     }
     .username {
         text-align: center;
-        font-size: 50px;
-        border-bottom: solid 10px #000;
-        margin-left: 50px;
-        padding-top: 80px;
-        font-style: italic;
-        padding-bottom: 20px;
-        font-family: 'Helvetica';
+        font-size: 35px; 
+        padding-bottom: 0px;
+        text-transform: uppercase;
+        padding-top: 50px;
+    }
+    .companyname {
+        text-align: center;
+        font-size: 35px; 
+        text-transform: uppercase;
     }
     .extrainfo {
-        margin-left: 40px;
         padding-top: 50px;
+        text-align: center;
     }
     .scormPackageName {
         text-align: center;
@@ -57,7 +57,8 @@ $user = $factory->getApi()->getUserManager()->getUserById($_GET['userid']);
         padding-bottom: 50px;
     }
     .certifcateconent {
-        margin-left: 40px;
+        padding-top: 20px;
+        text-align: center;
     }
     
     .footer {
@@ -83,15 +84,14 @@ $user = $factory->getApi()->getUserManager()->getUserById($_GET['userid']);
 <body >
     
         <div class="page">
-            <div class='butterfly'><img src='butterfly.png'/></div>
-            <div class="title1">Kursintyg</div>    
+            <div class="title1">Kursintyg <?  echo $package->name; ?></div>    
             <div class='username'>
                 <? echo $user->fullName; ?>
             </div>
-            <div class='extrainfo'>Har genomgått utbildning i:</div>
-            <div class='scormPackageName'>
-                <?  echo $package->name; ?>
+            <div class='companyname'>
+                <? echo $user->companyObject ? $user->companyObject->name : ""; ?>
             </div>
+            <div class='extrainfo'>Har genomgått utbildning i:</div>
             <div class='certifcateconent'>
                 <? 
                 echo nl2br($scormCertificateContent->content);

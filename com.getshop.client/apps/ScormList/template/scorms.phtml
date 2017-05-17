@@ -13,21 +13,26 @@ if (!$scorms)
 ?>
 <div class="scormrow">
     <div><? echo $this->__f("Name"); ?></div>
-    <div><? echo $this->__f("Score"); ?></div>
+    <div></div>
     <div>Godkänd</div>
     <div><? echo $this->__f("Link"); ?></div>
 </div>
 
 <?
 foreach ($scorms as $scorm) {
-    $this->printRow($scorm);
-    
-    if ($scorm->groupedScormPackage) {
-        foreach ($scorm->groupedScormPackageIds as $id) {
-            $iScorm = $this->getApi()->getScormManager()->getScormForCurrentUser($id, $this->getUserId());
-            $this->printRow($iScorm, true);
+    echo "<div class='outerrow'>";
+        $this->printRow($scorm);
+
+        if ($scorm->groupedScormPackage) {
+            echo "<div class='groupedinformation'>";
+            echo "<div class='groupedInformation'>".$this->__w("This course consist of multiple parts, make sure to complete all of them")."</div>";
+            foreach ($scorm->groupedScormPackageIds as $id) {
+                $iScorm = $this->getApi()->getScormManager()->getScormForCurrentUser($id, $this->getUserId());
+                $this->printRow($iScorm, true);
+            }
+            echo "</div>";
         }
-    }
     
+    echo "</div>";
 }
 ?>

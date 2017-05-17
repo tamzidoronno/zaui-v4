@@ -30,8 +30,16 @@ class ScormList extends \MarketingApplication implements \Application {
         $subgroupclass = $subgroup ? "subgroup" : "";
         ?>
         <div class="scormrow <? echo $subgroupclass; ?>">
-            <div><? echo $scorm->scormName; ?></div>
-            <div><? echo $scorm->groupedScormPackage ? "" : $scorm->score; ?></div>
+            <div>
+                <? 
+                
+                if ($isGroupedScormPackage) {
+                    echo "<i class='fa fa-plus'></i> ";
+                }
+                echo $scorm->scormName; 
+                ?>
+            </div>
+            <div></div>
             <div>
                 <? 
                 echo $scorm->passed ? $this->__f("Yes") : $this->__f("No"); 
@@ -51,9 +59,6 @@ class ScormList extends \MarketingApplication implements \Application {
         </div>
         <?
         
-        if ($isGroupedScormPackage) {
-            echo "<div class='groupedInformation'>".$this->__w("This course consist of multiple parts, make sure to complete all of them")."</div>";
-        }
     }
 
     public function isCompanySelected() {

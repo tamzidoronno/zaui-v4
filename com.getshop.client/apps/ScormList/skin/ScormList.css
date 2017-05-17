@@ -14,9 +14,10 @@
     line-height: 30px;
 }
 
+.ScormList .fa-plus { cursor: pointer; }
 
 
-
+.ScormList .groupedinformation { display: none; }
 .ScormList .scormrow div:nth-child(1) { width: 322px; }
 .ScormList .scormrow.subgroup div:nth-child(1) { width: 331px; }
 .ScormList .scormrow div:nth-child(2) { width: 100px; }

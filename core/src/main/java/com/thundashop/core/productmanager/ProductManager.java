@@ -52,7 +52,10 @@ public class ProductManager extends AProductManager implements IProductManager {
         product.original_price = product.price;
 
         saveObject(product);
-        products.put(product.id, product);
+        
+        if (product.deleted == null) {
+            products.put(product.id, product);
+        }
 
         return finalize(product);
     }

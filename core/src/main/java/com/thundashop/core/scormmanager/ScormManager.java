@@ -228,8 +228,11 @@ public class ScormManager extends ManagerBase implements IScormManager {
 
     @Override
     public List<ScormPackage> getMandatoryPackages(String userId) {
+        User user = userManager.getUserById(userId);
+        
         List<ScormPackage> mandatory = packages.values()
                 .stream()
+                .filter(scormPackage -> user != null && user.companyObject != null && scormPackage.isGroupActive(user.companyObject.groupId))
                 .filter(pack -> pack.isRequired)
                 .collect(Collectors.toList());
         

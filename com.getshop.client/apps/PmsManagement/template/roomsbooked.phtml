@@ -493,6 +493,18 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                     <?php
                                 } else {
                                     ?>
+                                    <span style='color:blue;cursor:pointer;' onclick='$(this).parent().find(".setperiodeprice").toggle();'>Set a price for a period</span><br>
+                                    <div style='padding: 10px; border: solid 1px #bbb; margin-bottom: 10px; display:none;' class='setperiodeprice'>
+                                        Price type<br>
+                                        <select gsname='periodePriceType'>
+                                            <option value='start_of_stay'>Monthly price from start of stay</option>
+                                            <option value='start_of_month'>Monthly price with start of month</option>
+                                            <option value='whole_stay'>Fixed price for whole stay</option>
+                                        </select>
+                                        Amount<br>
+                                        <input type='text' gsname='periodePrice'><input type='button' value='Change prices'  gstype='submitToInfoBox' gsvalue='setPeriodePrice'>
+                                    </div>
+                                    
                                     <table cellspacing='0' cellpadding='0' class='roompricematrixtable'>
                                     <tr><th>Day</th><th>price</th></tr>
                                     <?php if(sizeof($matrix) > 1) { ?>
@@ -506,7 +518,8 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                     ?> 
                                     </table>
                                 <?php } ?>
-                                <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change</span>
+                                    <br>
+                                <span class='pmsbutton tiny' gstype='submitToInfoBox'>Update prices</span>
                             </span>
                         </span>
                     </span>

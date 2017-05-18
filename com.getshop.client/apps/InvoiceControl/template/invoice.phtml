@@ -7,12 +7,16 @@ if(isset($_SESSION['searchwordused'])) {
 if(isset($_POST['data']['keyword'])) {
     $val = $_POST['data']['keyword'];
 }
-
+$unpaid = "";
+if(isset($_SESSION['unpaidonly']) && $_SESSION['unpaidonly']) {
+    $unpaid = "CHECKED";
+}
 ?>
 
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
 <div style="text-align:right;" method="searchOrders" gstype="form">
+    <input type="checkbox" <?php echo $unpaid; ?> gsname='unpaidonly'> Display unpaid only<br>
     <input type="text gsniceinput1" gstype='submitenter'  placeholder="Keyword" gsname='keyword' value='<?php echo $val; ?>'><input type="button" value="Search" gstype="submit">
 </div>
 <?
@@ -113,7 +117,9 @@ foreach ($orderList as $order) {
     $title .= "+" . $user->prefix . " " . $user->cellPhone . "<br>";
     
     $curDate = date("d.m.Y H:i");
-    
+    if(isset($order->creditOrderId) && sizeof($order->creditOrderId) > 0) {
+        $style = "style='color:orange;'";
+    }
     echo "<tr gstype='form' method='markpaid' $style>";
     $download = "<a style='cursor:pointer;' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'><i class='fa fa-file-pdf-o'></i></a>";
     echo "<td  style='text-align:center;'>" . $download . "</td>";
@@ -138,6 +144,40 @@ foreach ($orderList as $order) {
     }
     echo "</td>";
     echo "</tr>";
+    
+    if(isset($order->creditOrderId) && sizeof($order->creditOrderId) > 0) {
+        foreach($order->creditOrderId as $creditOrderId) {
+            $order = $this->getApi()->getOrderManager()->getOrder($creditOrderId);
+            $ordersum = $this->getApi()->getOrderManager()->getTotalAmount($order);
+            $ordersumEx = round($this->getApi()->getOrderManager()->getTotalAmountExTaxes($order), 2);
+             echo "<tr gstype='form' method='markpaid' $style>";
+            $download = "<a style='cursor:pointer;' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'><i class='fa fa-file-pdf-o'></i></a>";
+            echo "<td  style='text-align:center;'>" . $download . "</td>";
+            echo "<td  style='text-align:center;'></td>";
+            echo "<td></td>";
+            echo "<td>" . $order->incrementOrderId . "</td>";
+            echo "<td data-order='".strtotime($order->rowCreatedDate)."'>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
+            echo "<td data-order='".$fourTeenDaysInFuture."'>" . date("d.m.Y", $fourTeenDaysInFuture) . "</td>";
+            echo "<td>" . $ordersum . "</td>";
+            echo "<td>" . $ordersumEx . "</td>";
+            echo "<td>";
+            echo "<input type='hidden' value='".$order->id."' gsname='orderid'>";
+            if($order->status != 7) {
+                echo "<input type='text' class='paymentdateselection' value='$curDate' style='width:120px; text-align:center;' gsname='paymentdate'>";
+            } else {
+                echo date("d.m.Y H:i", strtotime($order->paymentDate));
+            }
+            echo "</td>";
+            echo "<td>";
+            if($order->status != 7) {
+                echo "<input type='submit' gstype='submit' value='Mark as paid'>";
+            }
+            echo "</td>";
+            echo "</tr>";
+            
+        }
+    }
+
 }
 echo "</tbody>";
 echo "</table>";

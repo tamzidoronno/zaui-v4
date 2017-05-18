@@ -2,6 +2,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
     
     var getApiWrapper = function(state) {
         this.$state = state;
+        this.lastShownError = 0;
         
         
         this.setConnectionDetails = function(identifier) {
@@ -12,6 +13,38 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
 
             this.api.setMessageCountChangedEvent(function() {
                 $rootScope.$broadcast("messageCountChanged", "");
+            });
+            
+            this.api.setGlobalErrorHandler(function(error) {
+                if (error.errorCode == 1000010) {
+                    var now = new Date().getTime();
+                    var diff = now - this.lastShownError;
+                    if (diff < 1000) {
+                        return;
+                    }
+                    
+                    this.lastShownError = new Date().getTime();
+                    alert("Did not find the company you specified, please check your details.");
+                    me.$state.transitionTo('base.login');
+                    $('.loginbutton').find('.login-shower').remove();
+                    this.lastShownError = now;
+                } else if (error.errorCode == 13) {
+                    var now = new Date().getTime();
+                    var diff = now - this.lastShownError;
+                    if (diff < 1000) {
+                        return;
+                    }
+                    
+                    
+                    this.lastShownError = new Date().getTime();
+                    alert("Wrong username or password, please try again.");
+                    
+                    me.$state.transitionTo('base.login');
+                    $('.loginbutton').find('.login-shower').remove();
+                    this.lastShownError = now;
+                } else {
+                    alert(errorTextMatrix[error.errorCode]);
+                }
             });
             
             var me = this;
@@ -62,19 +95,11 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             var me = this;
             
             $getShopApi.UserManager.logOn(username, password).done(function(user) {
-                if (user.errorCode) {
-                    if (fromLogin) {
-                        alert("Wrong username or password, please try again.");
-                    }
-                    me.$state.transitionTo('base.login');
-                    $('.loginbutton').find('.login-shower').remove();
-                } else {
-                    $getShopApi.sendUnsentMessages();
-                    localStorage.setItem("loggedInUserId", JSON.stringify(user));
-                    
-                    if (fromLogin) {
-                        me.loadDataAndGoToHome(me);
-                    }
+                $getShopApi.sendUnsentMessages();
+                localStorage.setItem("loggedInUserId", JSON.stringify(user));
+
+                if (fromLogin) {
+                    me.loadDataAndGoToHome(me);
                 }
             });
         },

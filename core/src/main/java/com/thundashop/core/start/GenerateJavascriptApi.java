@@ -142,7 +142,13 @@ public class GenerateJavascriptApi {
     }
     
     private String createErrorArray() throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get("/source/getshop/3.0.0/com.getshop.client/language/en/errors.csv"));
+        File fileToUse = new File("/source/getshop/3.0.0/com.getshop.client/language/en/errors.csv");
+        String pathToUse = "/source/getshop/3.0.0/com.getshop.client/language/en/errors.csv";
+        
+        if (!fileToUse.exists()) {
+            pathToUse = "/var/lib/jenkins/jobs/GetShop/workspace/com.getshop.client/language/en/errors.csv";
+        }
+        List<String> lines = Files.readAllLines(Paths.get(pathToUse));
         String ret = "errorTextMatrix = {\n";
         for (String line : lines) {
             if (!line.contains("\",\"")) {

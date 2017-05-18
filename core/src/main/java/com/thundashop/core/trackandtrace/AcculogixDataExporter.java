@@ -99,7 +99,7 @@ public class AcculogixDataExporter {
         if (dest.startInfo.started) {
             exp.StatusDateTimeCompleted = formatDate(dest.startInfo.startedTimeStamp);
             exp.Latitude = dest.startInfo.lat;
-            exp.Longitude =dest.startInfo.lon;
+            exp.Longitude = dest.startInfo.lon;
         }
         
         if (dest.startInfo.completed) {
@@ -108,6 +108,11 @@ public class AcculogixDataExporter {
             exp.Longitude = dest.startInfo.completedLon;
         }
 
+        // Set correct timestamp when status is "Route Assigned".
+        if (dest.movedFromPool != null) {
+            exp.StatusDateTimeCompleted = formatDate(new Date());
+        }
+        
         boolean anySignatures = dest.signatures != null && !dest.signatures.isEmpty();
         exp.SignatureObtained = anySignatures ? "Yes" : "No";
         

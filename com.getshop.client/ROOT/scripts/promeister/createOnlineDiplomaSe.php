@@ -91,7 +91,6 @@ $user = $factory->getApi()->getUserManager()->getUserById($_GET['userid']);
             <div class='companyname'>
                 <? echo $user->companyObject ? $user->companyObject->name : ""; ?>
             </div>
-            <div class='extrainfo'>Har genomgått utbildning i:</div>
             <div class='certifcateconent'>
                 <? 
                 echo nl2br($scormCertificateContent->content);

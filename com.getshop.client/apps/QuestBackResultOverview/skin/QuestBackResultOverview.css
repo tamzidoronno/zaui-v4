@@ -1,24 +1,39 @@
-.QuestBackResultOverview .question {
-    border: solid 1px #DDD;
-    margin-bottom: 20px;
-}
+.QuestBackResultOverview .question {border: solid 1px #DDD;margin-bottom: 20px;}
+.QuestBackResultOverview .question .title {background-color: #EEE;text-align: center;padding: 10px;border-bottom: 1px solid #ddd;}
+.QuestBackResultOverview .answerfield{width: 95%;padding-left:5px;}
+.QuestBackResultOverview .answerfield:first-letter{text-transform: capitalize;}
 
-.QuestBackResultOverview .question .title {
-    background-color: #EEE;
-    text-align: center;
-    padding: 10px;
-}
+.QuestBackResultOverview .question .subanswer,
+.QuestBackResultOverview .question .archivefield{padding: 10px;border-bottom: solid 1px #EEE;overflow: hidden;}
+.QuestBackResultOverview .question .subanswer.withReply{cursor: pointer;}
+.QuestBackResultOverview .question .subanswer:last-child,.QuestBackResultOverview .question .archivefield:last-child {border-bottom: solid 0px #EEE;}
 
-.QuestBackResultOverview .question .subanswer {
-    padding: 10px;
-    border-bottom: solid 1px #EEE;
-}
 
-.QuestBackResultOverview .question .subanswer:last-child {
-    border-bottom: solid 0px #EEE;
+.QuestBackResultOverview .question .replyArchiveArea {max-height: 700px;overflow-y: scroll;}
+.QuestBackResultOverview .question .replyArchive .fa-plus{display: inline;position: relative;float:right;right: 9px;top: 2px;color: #3e3e3e;cursor: pointer;}
+.QuestBackResultOverview .question .archivefield{display: none;}
+.QuestBackResultOverview .question .archivefield b{text-transform: capitalize;}
+.QuestBackResultOverview .result_user_info {text-align: right;color: #888;margin-right:5px;}
+.QuestBackResultOverview .replyfield {display: none;margin-top:20px;background-color: #139ff7;}
+.QuestBackResultOverview .replyfield textarea {width: 97.9%;padding: 1%;border-radius: 0 0 4px 4px;resize: vertical;top: 10px;position: relative;}
+.QuestBackResultOverview .replyfield textarea:focus {outline: none !important;}
+.QuestBackResultOverview .replyfield.onlyArchiveButton{background-color: rgba(0,0,0,0);}
+.QuestBackResultOverview .answerActive{background-color: #eee;cursor: default !important;padding:15px !important;}
+.QuestBackResultOverview .question .subanswer .fa-minus{position: absolute;right:20px;display:none;color: #3e3e3e;cursor:pointer;z-index: 2;}
+.QuestBackResultOverview .replyfield .subanswerInfo {color: #fff;font-size: 14px;letter-spacing: 1px;top: 10px;position: relative;padding-left: 10px;}
+.QuestBackResultOverview .replyfield .shop_button {
+    background-color: rgba(0,0,0,0);
+    float: right;
+    width:70px;
+    top: 5px;
+    padding: 2px 10px 2px 10px;
+    position: relative;
+    border-left: 1px solid #fff;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
 }
-
-.QuestBackResultOverview .result_user_info {
-    text-align: right;
-    color: #888;
+.QuestBackResultOverview .replyfield .shop_button.archivebutton{
+    background-color: #139ff7;
 }

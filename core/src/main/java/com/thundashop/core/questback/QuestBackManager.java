@@ -627,7 +627,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             
             for (UserQuestionAnswer ans : testResult.answers) {
                 List<ResultUserAnswer> addAnswers = ans.answers.stream()
-                        .map(ians -> new ResultUserAnswer(ians, user))
+                        .map(ians -> new ResultUserAnswer(ians, user, ans))
                         .collect(Collectors.toList());
                 res.addAnswers(ans.questionId, addAnswers);
             }
@@ -681,7 +681,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             for (UserQuestionAnswer ans : testResult.answers) {
                 
                 List<ResultUserAnswer> addAnswers = ans.answers.stream()
-                        .map(ians -> new ResultUserAnswer(ians, null))
+                        .map(ians -> new ResultUserAnswer(ians, null, ans))
                         .collect(Collectors.toList());
                 
                 res.addAnswers(ans.questionId, addAnswers);
@@ -804,5 +804,18 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         for (String userId : userids) {
             sendMail(userId, null);
         }
+    }
+
+    @Override
+    public void saveQuestBackAnswerResponse(String answerId, String answer) {
+        for(UserTestResult res : results) {
+            for(UserQuestionAnswer questanswer : res.answers) {
+                if(questanswer.answerId.equals(answerId)) {
+                    questanswer.reply = answer;
+                    saveObject(res);
+                }
+            }
+        }
+        
     }
 }

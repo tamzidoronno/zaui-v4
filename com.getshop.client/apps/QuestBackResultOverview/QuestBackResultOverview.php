@@ -45,6 +45,35 @@ class QuestBackResultOverview extends \MarketingApplication implements \Applicat
         $percent = $count / count($values) * 100;
         return number_format((float)$percent, 2, '.', '')."%";
     }
+    public function getEmail() {
+        $config = $this->getContactConfig();
+        if(isset($config) && $config['emailAddress']) {
+            return $config['emailAddress'];
+        }
 
+        
+        if(isset($this->getFactory()->getStoreConfiguration()->emailAdress)) {
+            return $this->getFactory()->getStoreConfiguration()->emailAdress;
+        }
+        return "";
+    }
+    public function sendReply(){
+        $this->config = $this->getFactory()->getStoreConfiguration();
+        
+        $to = $_POST['data']['email'];
+        $title = "Takk for tilbakemelding / Thank you for your feedback";
+        $content = $_POST['data']['message'];
+        $from = $this->getFactory()->getStoreConfiguration()->emailAdress;
+        $answerId = $_POST['data']['answerId'];
+        
+        $this->getApi()->getMessageManager()->sendMail($to, "", $title, $content, $from, "");
+        
+        $this->getApi()->getQuestBackManager()->saveQuestBackAnswerResponse($answerId, $content);
+    }
+    public function archiveReply(){
+        $answerId = $_POST['data']['answerId'];
+        $content = "Archive";
+        $this->getApi()->getQuestBackManager()->saveQuestBackAnswerResponse($answerId, $content);
+    }
 }
 ?>

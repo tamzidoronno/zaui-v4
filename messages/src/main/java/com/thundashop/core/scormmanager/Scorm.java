@@ -7,6 +7,7 @@ package com.thundashop.core.scormmanager;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
@@ -32,5 +33,8 @@ public class Scorm extends DataCommon {
     
     @Transient
     public List<String> groupedScormPackageIds = new ArrayList();
-    
+
+    public boolean isPartOfOtherGroupScormPackages(Collection<ScormPackage> packages) {
+        return packages.stream().filter(o -> o.groupedScormPackages.contains(scormId)).count() > 0;
+    }    
 }

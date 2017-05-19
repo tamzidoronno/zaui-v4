@@ -60,7 +60,7 @@ foreach ($scorms as $scorm) {
         echo "<div class='textarea'>Content: <br/><textarea gsname='content_".$scorm->id."'>".$this->getScormContentForCertificate($scorm->id)."</textarea>";
             $scormPackage = $this->getPackage($packages, $scorm->id);
             $checkedIt = $scormPackage->isRequired ? "checked='checked'" : "";
-            echo "<input $checkedIt type='checkbox' gsname='required_$scorm->id'/> Required?";
+            echo "<input $checkedIt type='checkbox' gsname='required_$scorm->id'/> Mandatory?";
         echo "</div>";
         
         echo "</div>";

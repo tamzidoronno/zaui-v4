@@ -203,6 +203,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
 
     private boolean alreadyCompletedOrStartedTest(ScormPackage scormPackage, String userId) {
         Scorm res = scorms.values().stream()
+                .filter(o -> !o.isPartOfOtherGroupScormPackages(packages.values()))
                 .filter(o -> o.scormId.equals(scormPackage.id) && o.userId.equals(userId))
                 .findFirst()
                 .orElse(null);
@@ -228,8 +229,11 @@ public class ScormManager extends ManagerBase implements IScormManager {
 
     @Override
     public List<ScormPackage> getMandatoryPackages(String userId) {
+        User user = userManager.getUserById(userId);
+        
         List<ScormPackage> mandatory = packages.values()
                 .stream()
+                .filter(scormPackage -> user != null && user.companyObject != null && scormPackage.isGroupActive(user.companyObject.groupId))
                 .filter(pack -> pack.isRequired)
                 .collect(Collectors.toList());
         

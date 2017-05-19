@@ -223,6 +223,29 @@ adata = {
         
     },
     
+    cleanupFaultyRoutes: function() {
+        for (var i in this.routes) {
+            if (i === "errorCode") {
+                this.routes = [];
+                break;
+            }
+        }
+        
+        for (var i in this.exceptions) {
+            if (i === "errorCode") {
+                this.exceptions = [];
+                break;
+            }
+        }
+        
+        for (var i in this.driverMessages) {
+            if (i === "errorCode") {
+                this.driverMessages = [];
+                break;
+            }
+        }
+    },
+    
     loadFromLocalStorage: function($state) {
         if (localStorage.getItem("currentVersion") !== "1.0.15") {
             return;
@@ -237,6 +260,7 @@ adata = {
                 tx.executeSql('SELECT score as value FROM DataTable WHERE name = ?', ['aDataRoutes'], function(tx, rs) {
                     if (rs.rows && rs.rows.item) {
                         me.routes = JSON.parse(rs.rows.item(0).value);
+                        
                         $state.go($state.current, {}, {reload: true});
                     }
                 }, function(tx, error) {
@@ -276,6 +300,8 @@ adata = {
                 this.driverMessages = JSON.parse(localStorage.getItem("aDriverMessages"));
             }
         }
+        
+        this.cleanupFaultyRoutes();
     }
 };
     

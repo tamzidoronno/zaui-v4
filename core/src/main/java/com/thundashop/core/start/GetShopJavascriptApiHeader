@@ -24,6 +24,7 @@ GetShopApiWebSocket.prototype = {
     shouldConnect: true,
     sessionId: false,
     unsentMessageLoaded: false,
+    globalErrorHandler: false,
     messageCountChangedEvent: null,
     listeners: [],
     
@@ -50,6 +51,10 @@ GetShopApiWebSocket.prototype = {
         this.createManagers();
     },
 
+    setGlobalErrorHandler: function(globalErrorHandler) {
+        this.globalErrorHandler = globalErrorHandler;
+    },
+    
     guid: function() {
         function s4() {
           return Math.floor((1 + Math.random()) * 0x10000)
@@ -73,6 +78,7 @@ GetShopApiWebSocket.prototype = {
     handleMessage: function(msg) {
         var data = msg.data;
         var jsonObject = JSON.parse(data);
+        
         var corrolatingMessage = this.getMessage(jsonObject.messageId);
         
         if (typeof(corrolatingMessage) === "undefined") {
@@ -80,7 +86,12 @@ GetShopApiWebSocket.prototype = {
             return;
         }
 
-        corrolatingMessage.resolveWith({ 'messageId': jsonObject.messageId }, [jsonObject.object]);
+        if (this.globalErrorHandler && jsonObject && jsonObject.object && jsonObject.object.errorCode) {
+            this.globalErrorHandler(jsonObject.object);
+        } else {
+            corrolatingMessage.resolveWith({ 'messageId': jsonObject.messageId }, [jsonObject.object]);
+        }
+        
         if (this.sentMessages.length === 0 && this.transferCompleted) {
             this.transferCompleted();
         }
@@ -279,7 +290,11 @@ GetShopApiWebSocket.prototype = {
                 this.messagesToSendJson.splice(i, 1);
             }
         }
-    
+        
+        if (this.persistMessages) {
+            localStorage.setItem("gs_api_messagetopush", JSON.stringify(this.messagesToSendJson));
+            this.fireMessageCountChanged();
+        }
         
         for (var i=0;i<this.sentMessages.length; i++) {
             if (this.sentMessages[i].messageId === id) {

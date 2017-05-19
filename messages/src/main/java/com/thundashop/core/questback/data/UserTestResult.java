@@ -9,6 +9,7 @@ import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
 
 /**

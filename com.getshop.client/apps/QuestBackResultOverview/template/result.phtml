@@ -25,21 +25,70 @@ foreach ($results->answers as $questionId => $values) {
 
         echo "<div class='answer'>";
             if ($type == "3") {
+                krsort($values);
                 foreach ($values as $value) {
-                    if ($value->answer) {
-                        echo "<div class='subanswer'>";
-                        echo nl2br(htmlspecialchars($value->answer));
+                    if ($value->answer && !$value->reply) {
+                        echo "<div class='subanswer withReply' ><div class='subanswerArea'>";
+                        $trimAnswer = trim($value->answer);
+                        echo "<i class='fa fa-minus'></i><div class='answerfield'>". nl2br(htmlspecialchars($trimAnswer))."</div>";
                         
                         if ($value->userId) {
                             $user = $this->getApi()->getUserManager()->getUserById($value->userId);
-                            echo "<div class='result_user_info'>";
-                            echo $user->fullName. " / ".$user->prefix." ".$user->cellPhone." / ".$user->emailAddress;
-                            echo "</div>";
+                            if($user->emailAddress){
+                                echo "<div class='result_user_info'>";
+                                echo "<span style='text-transform:capitalize'>".$user->fullName. "</span> / ".$user->prefix." ".$user->cellPhone." / ". $user->emailAddress;                            
+                                echo "</div>";
+                                echo "<div class='replyfield'>";
+                                echo "<span class='subanswerInfo'><span style='text-transform:capitalize'>".$user->fullName. "</span> / ".$user->prefix." ".$user->cellPhone." / ".$user->emailAddress ."</span>";
+                                echo "<div class='shop_button replybutton' gsname='replybutton'>". $this->__w('Archive')."</div>";
+                                echo "<input class='subanswerEmail' type='hidden' value='".$user->emailAddress ."'/>";
+                                echo "<input class='subanswerId' type='hidden' value='".$value->answerId ."'/>";
+                                echo "<textarea gsname='message' value='' placeholder='". $this->__w('Message') ."'></textarea>";
+                                echo "</div>";   
+                            } else{
+                                echo "<div class='result_user_info'>";
+                                if($user->cellPhone){
+                                    echo "<span style='text-transform:capitalize'>".$user->fullName. "</span> / ".$user->prefix." ".$user->cellPhone;
+                                }else{
+                                    echo "<span style='text-transform:capitalize'>".$user->fullName. "</span>";
+                                }
+                                echo "</div>"; 
+                                echo "<div class='replyfield onlyArchiveButton'>";
+                                echo "<input class='subanswerId' type='hidden' value='".$value->answerId ."'/>";
+                                echo "<div class='shop_button archivebutton' gsname='replybutton'>". $this->__w('Archive')."</div>";
+                                echo "</div>"; 
+                            } 
+                        }else{ 
+                            echo "<div class='replyfield onlyArchiveButton'>";
+                            echo "<input class='subanswerId' type='hidden' value='".$value->answerId ."'/>";
+                            echo "<div class='shop_button archivebutton' gsname='replybutton'>". $this->__w('Archive')."</div>";
+                            echo "</div>"; 
                         }
-                        
-                        echo "</div>";
+                        echo "</div></div>";
                     }
                 }
+                echo "<div class='replyArchive' style='border-top:1px solid #ddd;'>";
+                echo "<div class='title'>".$this->__w('Archive'). " for '". $question->name . "'<i class='fa fa-plus'></i></div>";
+                echo "<div class='replyArchiveArea'>";
+                ksort($values);
+                foreach ($values as $value){
+                    if($value->reply){
+                        if ($value->userId) {
+                            echo "<div class='archivefield'>";
+                            $user = $this->getApi()->getUserManager()->getUserById($value->userId);
+                            echo "<b>".$user->fullName .":</b> <span class='answerfield'>". trim($value->answer). "</span><br>";
+                            if($value->reply == "Archive"){
+                                echo "<b> Only archived, no reply on mail</b>";
+                            }else{
+                                echo "<b>".$this->__w('Reply').":</b> ". $value->reply ."<br>";
+                            }
+                            echo "<div class='result_user_info'>";
+                            echo "<span style='text-transform:capitalize'>".$user->fullName. "</span> / ".$user->prefix." ".$user->cellPhone." / ". $user->emailAddress;                            
+                            echo "</div></div>";
+                        }
+                    }
+                }
+                echo "</div></div>";
             } else {
                 foreach ($answerPossibilites as $option) {
                     echo "<div class='subanswer'>";

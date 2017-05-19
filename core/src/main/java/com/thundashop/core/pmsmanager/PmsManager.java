@@ -5905,4 +5905,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
+    public void forceRemoveFromBooking(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        List<PmsBookingRooms> newRoomList = new ArrayList();
+        for(PmsBookingRooms room : booking.rooms) {
+            if(!room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                newRoomList.add(room);
+            }
+        }
+        booking.rooms = newRoomList;
+        saveBooking(booking);
+    }
+
 }

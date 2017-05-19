@@ -10,6 +10,7 @@ $factory = IocContainer::getFactorySingelton();
 <html>
     <head>
         <link rel="stylesheet" href="mecafleet.css"/>
+        <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", target-densitydpi="device-dpi" />
     </head>
     <body>
         <div class="gs_header">

@@ -959,7 +959,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
     }
 
-    private List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws XmlRpcException, IOException {
+    public List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws XmlRpcException, IOException {
          Vector params = new Vector();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);

@@ -650,7 +650,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             } else {
                 pmsManager.logEntry("Modified by channel manager", newbooking.id, null);
                 for(PmsBookingRooms room : newbooking.getActiveRooms()) {
-                    pmsManager.removeFromBooking(newbooking.id, room.pmsBookingRoomId);
+                    pmsManager.forceRemoveFromBooking(room.pmsBookingRoomId);
                 }
                 isUpdate = true;
             }

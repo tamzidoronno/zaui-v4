@@ -648,6 +648,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(newbooking == null) {
                 sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
             } else {
+                pmsManager.logEntry("Modified by channel manager", newbooking.id, null);
+                for(PmsBookingRooms room : newbooking.getActiveRooms()) {
+                    pmsManager.removeFromBooking(newbooking.id, room.pmsBookingRoomId);
+                }
                 isUpdate = true;
             }
         } else if(booking.delete) {
@@ -1133,10 +1137,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);
             for(Integer resCode : allCodesOnOldBooking) {
                 if(allCodesInNewBooking.contains(resCode)) {
-                    pmsManager.logEntry("Modified by channel manager", pmsbook.id, null);
-                    for(PmsBookingRooms room : pmsbook.getActiveRooms()) {
-                        pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
-                    }
                     newbooking = pmsManager.getBooking(pmsbook.id);
                     newbooking.wubookModifiedResId.add(booking.reservationCode);
                     return newbooking;

@@ -70,6 +70,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         for (DataCommon common : data.data) {
             if (common instanceof Route) {
                 Route route = (Route)common;
+                
+                route.id = route.id.replaceAll("\r", "");
+                route.id = route.id.replaceAll("\n", "");
+                route.id = route.id.replaceAll("\t", "");
+
                 routes.put(route.id, route);
             }
             
@@ -1205,5 +1210,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 .findFirst()
                 .orElse(null);
     }
+
+    
 
 }

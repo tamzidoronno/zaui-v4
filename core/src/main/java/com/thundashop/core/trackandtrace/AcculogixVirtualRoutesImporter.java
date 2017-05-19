@@ -31,7 +31,7 @@ public class AcculogixVirtualRoutesImporter {
             if (line.contains("RD$ID"))
                 continue;
             
-            String[] values = line.split("\t", -1);
+            String[] values = line.replaceAll("\r", "").split("\t", -1);
             datas.add(values);
         }
     }

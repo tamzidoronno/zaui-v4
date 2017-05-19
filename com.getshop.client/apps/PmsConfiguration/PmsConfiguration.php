@@ -476,6 +476,10 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $prods = $this->getApi()->getProductManager()->getAllProductsIncDeleted();
         $counter = -100000;
         foreach($prods as $prod) {
+            if (!isset($_POST['data']['addonconfig_' . $prod->id . "_name"])) {
+                continue;
+            }
+            
             $conf = new \core_pmsmanager_PmsBookingAddonItem();
             $found = false;
             foreach($notifications->addonConfiguration as $tmpaddon) {
@@ -501,6 +505,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
             $prod->name = $_POST['data']['addonconfig_' . $prod->id . "_name"];
             $prod->taxgroup = $_POST['data']['addonconfig_' . $prod->id . "_taxgroup"];
             $prod->price = $_POST['data']['addonconfig_' . $prod->id . "_price"];
+            $prod->description = $_POST['data']['addonconfig_' . $prod->id . "_description"];
             $this->getApi()->getProductManager()->saveProduct($prod);
             $counter++;
         }

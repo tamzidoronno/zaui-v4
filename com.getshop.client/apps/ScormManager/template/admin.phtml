@@ -37,6 +37,10 @@ foreach ($packages as $package) {
             $checked = $this->isActivated($packages, $group->id, $package->id) ? "checked='true'" : "";
             echo "<input $checked type='checkbox' gsname='$combinedId'/> ".$group->groupName."<br/>";
         }
+        echo "<div class='textarea'>Content: <br/><textarea gsname='content_".$package->id."'>".$this->getScormContentForCertificate($package->id)."</textarea>";
+            $checkedIt = $package->isRequired ? "checked='checked'" : "";
+            echo "<input $checkedIt type='checkbox' gsname='required_$package->id'/> Mandatory?";
+        echo "</div>";
         echo "</div>";
     echo "</div>";
 }
@@ -53,6 +57,12 @@ foreach ($scorms as $scorm) {
             $checked = $this->isActivated($packages, $group->id, $scorm->id) ? "checked='true'" : "";
             echo "<input $checked type='checkbox' gsname='$combinedId'/> ".$group->groupName."<br/>";
         }
+        echo "<div class='textarea'>Content: <br/><textarea gsname='content_".$scorm->id."'>".$this->getScormContentForCertificate($scorm->id)."</textarea>";
+            $scormPackage = $this->getPackage($packages, $scorm->id);
+            $checkedIt = $scormPackage->isRequired ? "checked='checked'" : "";
+            echo "<input $checkedIt type='checkbox' gsname='required_$scorm->id'/> Mandatory?";
+        echo "</div>";
+        
         echo "</div>";
     echo "</div>";
 }

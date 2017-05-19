@@ -1,6 +1,5 @@
 package com.thundashop.core.start;
 
-
 import com.google.gson.Gson;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
@@ -10,7 +9,7 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StorePool;
 import com.thundashop.core.databasemanager.DatabaseUpdater;
-import com.thundashop.core.socket.WebInterface2;    
+import com.thundashop.core.socket.WebInterface2;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
@@ -27,51 +26,52 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class Runner {
     public static String OVERALLPASSWORD = UUID.randomUUID().toString();
-    
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws InterruptedException, Exception {  
+    public static void main(String[] args) throws InterruptedException, Exception {
         java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
         java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
-        
+
         setUnirestMapper();
 
         ApplicationContext context = new ClassPathXmlApplicationContext("All.xml");
         setDeveloperMode(context);
-        
+
         invokeApiGenerator();
-        
-        PrintWriter out = new PrintWriter("../secret.txt") ;
-        out.write(OVERALLPASSWORD+"\n");
+
+        PrintWriter out = new PrintWriter("../secret.txt");
+        out.write(OVERALLPASSWORD + "\n");
         out.close();
 
         if (GetShopLogHandler.isDeveloper) {
             DatabaseUpdater updater = context.getBean(DatabaseUpdater.class);
-            updater.check(context);
-
-            context = new ClassPathXmlApplicationContext("All.xml");
+            boolean updated = updater.check(context);
+            if (updated) {
+                context = new ClassPathXmlApplicationContext("All.xml");
+            }
         }
-        
+
         AppContext.appContext = context;
         Logger log = context.getBean(Logger.class);
-        
+
         StorePool storePool = new StorePool();
         AppContext.storePool = storePool;
         int port = 25554;
-        if(args.length > 0) {
+        if (args.length > 0) {
             AppContext.devMode = false;
-            if(args[0].equals("dev")) {
+            if (args[0].equals("dev")) {
                 AppContext.devMode = true;
             }
         }
-        
-        if(args.length > 1) {
+
+        if (args.length > 1) {
             port = Integer.parseInt(args[1]);
         }
 
         new WebInterface2(log, storePool, port); //Version 2.        
-        
+
         context.getBean(WebSocketServerImpl.class).start();
         startJettyServer();
     }
@@ -82,15 +82,15 @@ public class Runner {
     }
 
     private static void startJettyServer() throws InterruptedException, Exception {
-      
+
         Server server = new Server(8080);
- 
+
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setWelcomeFiles(new String[]{ "index.html" });
+        resource_handler.setWelcomeFiles(new String[]{"index.html"});
         resource_handler.setResourceBase("html");
         server.setHandler(resource_handler);
- 
+
         server.start();
         server.join();
 
@@ -103,8 +103,7 @@ public class Runner {
                 Method method = cls.getMethod("main", String[].class);
                 String[] params = null; // init params accordingly
                 method.invoke(null, (Object) params);
-                
-                
+
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -114,7 +113,7 @@ public class Runner {
     public static void setUnirestMapper() {
         Unirest.setObjectMapper(new ObjectMapper() {
             Gson gson = new Gson();
-            
+
             public <T> T readValue(String value, Class<T> valueType) {
                 return gson.fromJson(value, valueType);
             }

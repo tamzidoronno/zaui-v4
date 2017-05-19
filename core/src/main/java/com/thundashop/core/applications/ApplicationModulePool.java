@@ -103,7 +103,7 @@ class ApplicationModulePool {
         mecaFleetModule.id = "mecafleet";
         mecaFleetModule.moduleName = "MECA Fleet module";
         mecaFleetModule.faIcon = "fa-gears";
-        mecaFleetModule.allowedStoreIds.add("e04228ad-8088-4245-8802-33e588b9ba79");
+        mecaFleetModule.allowedStoreIds = new ArrayList();
         mecaFleetModule.description = "Special apps for meca fleet system.";
         modules.put(mecaFleetModule.id, mecaFleetModule);
         

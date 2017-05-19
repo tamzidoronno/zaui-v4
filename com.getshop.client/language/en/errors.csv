@@ -89,7 +89,7 @@
 "89","The old password does not match."
 "90","The page you tried to create already is created"
 "91","Please check your email account for more information."
-"92","Multiple theme applications has been added, please contact support";
+"92","Multiple theme applications has been added, please contact support"
 "93","You have added application that requires payment."
 "94","The web address is already taken"
 "95","The store configuration can not be null"
@@ -109,15 +109,15 @@
 "1005","Can not move menu entry to itself."
 "1006","Invalid order id."
 "1007","Can not move a menu entry into one of it children."
-"1008","Invalid auto expand option, has to be 0 or 1.",
-"1009","Home page cannot be deleted",
-"1010","Could not find the image to attach the product to",
-"1011","Product does not exists",
-"1012","The entry you are trying to update does not exists",
-"1013","Product can have only one main image",
-"1014","Product must have one main image",
-"1015","Could not find the application.",
-"1016","Unable to calculate price for product.",
+"1008","Invalid auto expand option has to be 0 or 1."
+"1009","Home page cannot be deleted"
+"1010","Could not find the image to attach the product to"
+"1011","Product does not exists"
+"1012","The entry you are trying to update does not exists"
+"1013","Product can have only one main image"
+"1014","Product must have one main image"
+"1015","Could not find the application."
+"1016","Unable to calculate price for product."
 "1017","Unable to find product attribute value."
 "1018","Failed searching youtube."
 "1019","The email can not be empty, and you need atleast one user"
@@ -135,26 +135,26 @@
 "1031","Tried to retreive a singelton application that is not singleton."
 "1032","Not enough rooms available"
 "1033","Klarte ikke å genere PDF."
-"1034","New orderstatus invalid, order is already marked as paid.";
-"1035","Can not add user to event, the event does not exists";
-"1036","Cant delete location, its in use in some events";
-"1037","User can not be created, already exists one with same cellphone";
-"1038","The time periode is already closed, cannot reclose it";
-"1039","Can not save order, its within a closed periode";
+"1034","New orderstatus invalid, order is already marked as paid."
+"1035","Can not add user to event, the event does not exists"
+"1036","Cant delete location, its in use in some events"
+"1037","User can not be created, already exists one with same cellphone"
+"1038","The time periode is already closed, cannot reclose it"
+"1039","Can not save order, its within a closed periode"
 
-"1000001","The name attribute is invalid",
-"1000002","The entry you are trying to fecth does not exists.",
-"1000003","Could not find list to sort on.",
-"1000004","The item you are trying to delete does not exists",
+"1000001","The name attribute is invalid"
+"1000002","The entry you are trying to fecth does not exists."
+"1000003","Could not find list to sort on."
+"1000004","The item you are trying to delete does not exists"
 "1000005","The item you are trying to reorder does not exists."
-"1000006","The logo you are trying to remove does not exists.",
-"1000007","The entry you are trying to update does not exists",
-"1000008","The list which held this entry does not exists.",
-"1000009","Invalid start or end date",
-"1000010","Store handler not found",
-"1000011","Could not find the list to decouple",
-"1000012","Invalid application list.",
-"1000013","Page list is invalid.",
+"1000006","The logo you are trying to remove does not exists."
+"1000007","The entry you are trying to update does not exists"
+"1000008","The list which held this entry does not exists."
+"1000009","Invalid start or end date"
+"1000010","Store handler not found"
+"1000011","Could not find the list to decouple"
+"1000012","Invalid application list."
+"1000013","Page list is invalid."
 "1000014","This list does not exists"
 "1000015","Booking does not exists"
 "1000016","Can not add a destination to a route that should not have it."

@@ -115,8 +115,12 @@ if($amount != 0) {
             } else {
                 foreach($result as $order) {
                     if(!$order->closed || $amount < 0) {
+                        $existingOrder = $this->getApi()->getOrderManager()->getTotalAmount($order);
+                        if($amount < 0 && $existingOrder < 0) {
+                            continue;
+                        }
                         $text = "Add to order " . $order->incrementOrderId;
-                        if($amount < 0) {
+                        if($amount < 0 && $existingOrder > 0) {
                             $text = "Create credit based on " . $order->incrementOrderId;
                         }
                         echo "<option value='" . $order->id . "'>$text</option>";
@@ -124,12 +128,10 @@ if($amount != 0) {
                 }
             }
             $createOrderText = "Create a new order";
-            if($amount < 0) {
-                $createOrderText = "Create a new credit note";
+            if($amount > 0) {
+                echo "<option value=''>$createOrderText</option>";
+                echo "<option value='createafterstay'>Create order after booking has been completed</option>";
             }
-            
-            echo "<option value=''>$createOrderText</option>";
-            echo "<option value='createafterstay'>Create order after booking has been completed</option>";
             echo "</select> ";
             echo " <input type='button' value='Execute' gstype='submitToInfoBox'><br>";
             if($this->supportNewDaily()) {

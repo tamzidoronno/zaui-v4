@@ -133,10 +133,33 @@ public class GenerateJavascriptApi {
 
         javascriptFile += "\n";
         javascriptFile += createManagers;
+        
+        javascriptFile += createErrorArray();
 
         
         Files.write(Paths.get(storeFileIn), javascriptFile.getBytes());
         GetShopLogHandler.logPrintStatic("file stored in : " + storeFileIn, null);
+    }
+    
+    private String createErrorArray() throws IOException {
+        File fileToUse = new File("/source/getshop/3.0.0/com.getshop.client/language/en/errors.csv");
+        String pathToUse = "/source/getshop/3.0.0/com.getshop.client/language/en/errors.csv";
+        
+        if (!fileToUse.exists()) {
+            pathToUse = "/var/lib/jenkins/jobs/GetShop/workspace/com.getshop.client/language/en/errors.csv";
+        }
+        List<String> lines = Files.readAllLines(Paths.get(pathToUse));
+        String ret = "errorTextMatrix = {\n";
+        for (String line : lines) {
+            if (!line.contains("\",\"")) {
+                continue;
+            }
+            ret += line.replaceAll("\",\"", "\":\"")+",\n";
+        }
+        ret += "}";
+        
+        
+        return "\n"+ret+"\n";
     }
 
     public static void main(String[] args) throws ClassNotFoundException, IOException, URISyntaxException {

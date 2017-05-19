@@ -122,6 +122,9 @@ public interface IQuestBackManager {
     @Administrator
     public void sendQuestBack(String testId, String userId, String reference, Event event);
     
+    @Administrator
+    public void saveQuestBackAnswerResponse(String answerId, String answer);
+    
     @Editor
     public List<QuestBackOption> getOptionsByPageId(String pageId);
     

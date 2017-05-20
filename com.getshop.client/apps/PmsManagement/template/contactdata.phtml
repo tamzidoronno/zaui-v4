@@ -46,7 +46,7 @@ $config = $this->getConfigurationToUse();
                 echo "</span><br>"; 
             }
             if($booking->nonrefundable) {
-                echo "This booking is non refundable.<br>";
+                echo "This booking is non refundable, <span style='color:blue; cursor:pointer;' gstype='forceClicksubmitToInfoBox' method='toggleNonRefundable' gsname='id' gsvalue='".$booking->id."'>undo<span><br>";
             }
             $isselect = false;
             

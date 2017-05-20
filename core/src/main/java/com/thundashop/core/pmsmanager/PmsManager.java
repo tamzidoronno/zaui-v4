@@ -3154,7 +3154,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return errors;
     }
-            
 
     private void makeSureMinuteAndHourAreTheSame(PmsBookingRooms oldRoom, PmsBookingRooms room) {
         //Make sure end and start is the same hour.

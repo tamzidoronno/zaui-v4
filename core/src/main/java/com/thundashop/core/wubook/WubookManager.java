@@ -109,6 +109,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private boolean connectToApi() throws Exception {
         
         if(!isWubookActive()) { return false; }
+        if(client != null) { return true; }
         client = new XmlRpcClient("https://wubook.net/xrws/");
 
         Vector<String> params = new Vector<String>();
@@ -959,7 +960,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
     }
 
-    public List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws XmlRpcException, IOException {
+    @Override
+    public List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws Exception {
+        if(!connectToApi()) {
+            return new ArrayList();
+        }
+        
          Vector params = new Vector();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);

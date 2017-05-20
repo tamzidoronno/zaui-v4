@@ -77,6 +77,6 @@ public interface IWubookManager {
     public void deleteRestriction(String id);
     
     @Administrator
-    public List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws XmlRpcException, IOException;
+    public List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws Exception;
     
 }

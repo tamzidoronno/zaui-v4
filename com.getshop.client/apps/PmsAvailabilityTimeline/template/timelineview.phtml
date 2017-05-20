@@ -222,8 +222,9 @@ if($compact) {
             }
             if($value->name == "closed" || stristr($value->name, "closed: ") || stristr($value->name, "closed by: ")) {
                 $free = "closedroom";
-                if($name)
+                if(!$printed) {
                     $name = $this->createDeleteBookingIcon($id);
+                }
             }
             
             $type = $free;

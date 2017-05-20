@@ -1,0 +1,53 @@
+.BjaroyTwoRowView .shellview{
+    box-sizing: border-box;
+    margin-bottom:50px;
+    position: relative;
+    min-height: 1200px;
+    max-width: 940px;
+    width:100%;
+    z-index: 1;
+}
+.BjaroyTwoRowView .shellbox{
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:cover;
+    border-radius: 50%;
+    margin:2% 0 2% 0;
+    cursor:pointer;
+    width: 33.33%;
+    height:300px;
+    float:left;
+}
+.BjaroyTwoRowView #shellbox1{background-image: url("/displayImage.php?id=253ed0fd-9012-498e-a773-f36a9f31d866");}
+.BjaroyTwoRowView #shellbox2{background-image: url("/displayImage.php?id=1ca26e3d-3dc1-4efd-970e-0e21b3b4e364");}
+.BjaroyTwoRowView #shellbox3{background-image: url("/displayImage.php?id=60fca5e5-ca8e-4d72-bfed-bd7ca3b14f37");}
+.BjaroyTwoRowView #shellbox4{background-image: url("/displayImage.php?id=1158a179-60a1-42a1-ac81-0a0af76c032a");}
+.BjaroyTwoRowView #shellbox5{background-image: url("/displayImage.php?id=3c29a22e-6a6f-4320-942f-a276fcfd91a8");}
+.BjaroyTwoRowView #shellbox6{background-image: url("/displayImage.php?id=fdd98420-d5da-4ddc-bd8c-38f5e54cb0f0");}
+.BjaroyTwoRowView #shellbox7{background-image: url("/displayImage.php?id=64cd8b46-9ef9-485f-b1d8-ca306ca3735f");}
+.BjaroyTwoRowView #shellbox8{background-image: url("/displayImage.php?id=3674fb92-96b8-4149-8b8f-3e90af28ec8a");}
+.BjaroyTwoRowView #shellbox9{background-image: url("/displayImage.php?id=9fbbae26-b68e-4108-a08b-cd9d3ecda5e6");}
+
+.BjaroyTwoRowView #shellbox1:hover{background-image: url("/displayImage.php?id=7f3712fa-ad5b-4073-87b9-7932bc641d29");}
+.BjaroyTwoRowView #shellbox2:hover{background-image: url("/displayImage.php?id=198920f3-7391-4ae5-a20b-dc05b9010ed4");}
+.BjaroyTwoRowView #shellbox3:hover{background-image: url("/displayImage.php?id=a12a1b5b-8b86-4682-bc24-ccdafbce19b0");}
+.BjaroyTwoRowView #shellbox4:hover{background-image: url("/displayImage.php?id=db371676-303e-47b4-967d-a0d707da54a0");}
+.BjaroyTwoRowView #shellbox5:hover{background-image: url("/displayImage.php?id=2f33371c-584b-4482-bc38-004519146db1");}
+.BjaroyTwoRowView #shellbox6:hover{background-image: url("/displayImage.php?id=939b36e5-7cb0-4600-9ab0-63565f3884e5");}
+.BjaroyTwoRowView #shellbox7:hover{background-image: url("/displayImage.php?id=b555e272-51c7-432e-92c6-e0ecf4efff02");}
+.BjaroyTwoRowView #shellbox8:hover{}
+.BjaroyTwoRowView #shellbox9:hover{background-image: url("/displayImage.php?id=5f316245-0911-42a9-bbd0-3c7dc7da2ef7");}
+
+@media only all and (max-width:800px){
+    .BjaroyTwoRowView .shellview{min-height: 830px;}
+    .BjaroyTwoRowView .shellbox{
+        background-repeat:no-repeat;
+        background-position:center;
+        background-size:cover;
+        cursor:pointer;
+        height:160px;
+        float:left;
+        width:50%;
+    }
+    .BjaroyTwoRowView #shellbox8{display:none;}
+}

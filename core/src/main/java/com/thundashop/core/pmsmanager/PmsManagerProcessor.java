@@ -1037,7 +1037,7 @@ public class PmsManagerProcessor {
                         }
                     }
                     if(!found) {
-                        manager.logPrint("Dead code found for device: " + lock.name + " - " + lock.zwaveid);
+                        manager.logPrint("Dead code found for device: " + lock.name + " - " + lock.zwaveid + " - " + code.fetchCodeToAddToLock() + " slot: " + code.slot);
                         code.refreshCode();
                         lockNeedUpdate = true;
                     }

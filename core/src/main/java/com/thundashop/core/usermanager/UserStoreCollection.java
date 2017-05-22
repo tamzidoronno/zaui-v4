@@ -449,6 +449,9 @@ public class UserStoreCollection {
             if (comp != null && comp.name.toLowerCase().contains(searchCriteria.toLowerCase())) {
                 return true;
             }
+            if (comp != null && comp.reference != null && comp.reference.contains(searchCriteria.toLowerCase())) {
+                return true;
+            }
         }
         
         return false;

@@ -251,7 +251,7 @@ public class GenerateApi {
     public void generate() throws ClassNotFoundException, IOException, Exception {
         GetShopLogHandler.logPrintStatic("Starting generate api", null);
         generatePHPApi();
-//        generateJavaApi();
+        generateJavaApi();
 //        generatePythonApi();
 //        buildDocumentation();
         if (!GetShopLogHandler.isDeveloper) {

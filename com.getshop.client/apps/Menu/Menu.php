@@ -42,6 +42,7 @@ class Menu extends \SystemApplication implements \Application {
                 $toSave[] = $data;    
             }
             
+            
         }
         
         foreach ($toSave as $save) {
@@ -96,6 +97,7 @@ class Menu extends \SystemApplication implements \Application {
             $entryItem->disabledLangues = $item->disabledLangues;
             $entryItem->openInSeperatedTab = $item->openInSeperatedTab;
             $entryItem->hidden = $item->hidden;
+            $entryItem->roleIds = $item->roleIds;
             $retItems[] = $entryItem;
         }
 
@@ -130,7 +132,9 @@ class Menu extends \SystemApplication implements \Application {
         if (isset($item['icon'])) {
             $entry->fontAwsomeIcon = $item['icon'];
         }
-
+        
+        @$entry->roleIds = $item['roleIds'];
+        print_r($item);
         
         $entry->subentries = array();
         if(isset($item['items'])) {
@@ -219,6 +223,10 @@ class Menu extends \SystemApplication implements \Application {
                 continue;
             }
             
+            if ($this->isDisabledDueToRoleAccess($entry)) {
+                continue;
+            }
+            
             if ($entry->hidden) {
                 continue;
             }
@@ -241,6 +249,10 @@ class Menu extends \SystemApplication implements \Application {
             }
             
             if ($entry->hidden) {
+                continue;
+            }
+            
+            if ($this->isDisabledDueToRoleAccess($entry)) {
                 continue;
             }
             
@@ -321,6 +333,26 @@ class Menu extends \SystemApplication implements \Application {
         return $this->menues;
     }
 
+    public function isDisabledDueToRoleAccess($entry) {
+        if (!count($entry->roleIds)) {
+            return false;
+        }
+        
+        $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+        
+        if (!count($user->userRoleIds)) {
+            return true;
+        }
+       
+        foreach ($user->userRoleIds as $id) {
+            if (in_array($id, $entry->roleIds)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
 }
 
 class EntryItem {
@@ -337,6 +369,7 @@ class EntryItem {
     public $disabledLangues;
     public $openInSeperatedTab;
     public $hidden = false;
+    public $roleIds = array();
 }
 
 class EntryList {

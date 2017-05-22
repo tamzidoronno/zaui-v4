@@ -15,6 +15,7 @@ import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.GroupInformation;
 
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.usermanager.data.UserRole;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -459,4 +460,12 @@ public interface IUserManager {
     
     @Editor
     public void mergeUsers(List<String> userIds, HashMap<String,String> properties);
+    
+    public List<UserRole> getUserRoles();
+    
+    @Administrator
+    public void saveUserRole(UserRole role);
+    
+    @Administrator
+    public void deleteUserRole(String roleId);
 }

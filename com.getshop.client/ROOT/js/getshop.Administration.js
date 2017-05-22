@@ -40,5 +40,12 @@ thundashop.Administration = {
             "password" : password
         });
         thundashop.Ajax.post(event);
+    },
+    unlockOrder: function(password, orderid) {
+        var event = thundashop.Ajax.createEvent('','unlockOrder',$(this),{
+            "password" : password,
+            "orderid" : orderid
+        });
+        thundashop.Ajax.post(event);
     }
 }

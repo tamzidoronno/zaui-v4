@@ -22,6 +22,7 @@ import com.thundashop.core.usermanager.data.LoginHistory;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
+import com.thundashop.core.usermanager.data.UserRole;
 import com.thundashop.core.utils.BrRegEngine;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
@@ -63,6 +64,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     private LoginHistory loginHistory = new LoginHistory();
     
+    private Map<String, UserRole> roles = new HashMap();
+    
     @Autowired
     private PageManager pageManager;
     
@@ -100,6 +103,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             UserStoreCollection userStoreCollection = getUserStoreCollection(dataCommon.storeId);
             if (dataCommon instanceof User) {
                 userStoreCollection.addUserDirect((User) dataCommon);
+            }
+            if (dataCommon instanceof UserRole) {
+                UserRole role = (UserRole)dataCommon;
+                roles.put(role.id, role);
             }
             if (dataCommon instanceof Company) {
                 Company comp = (Company) dataCommon;
@@ -1929,6 +1936,25 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    public List<UserRole> getUserRoles() {
+        return new ArrayList(roles.values());
+    }
+
+    @Override
+    public void saveUserRole(UserRole role) {
+        saveObject(role);
+        roles.put(role.id, role);
+    }
+
+    @Override
+    public void deleteUserRole(String roleId) {
+        UserRole role = roles.remove(roleId);
+        if (role != null) {
+            deleteObject(role);
         }
     }
 

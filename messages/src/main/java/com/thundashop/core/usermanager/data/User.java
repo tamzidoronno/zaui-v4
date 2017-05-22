@@ -35,6 +35,9 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean suspended = false;
     public boolean visibleOnlyInMainCompany = false;
     public boolean primaryCompanyUser = false;
+    
+    public List<String> userRoleIds = new ArrayList();
+    
     /**
      * If user is connected to multiple companies 
      * but it still has a main company, this would be the id of

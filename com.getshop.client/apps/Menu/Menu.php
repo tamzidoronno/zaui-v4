@@ -134,7 +134,6 @@ class Menu extends \SystemApplication implements \Application {
         }
         
         @$entry->roleIds = $item['roleIds'];
-        print_r($item);
         
         $entry->subentries = array();
         if(isset($item['items'])) {

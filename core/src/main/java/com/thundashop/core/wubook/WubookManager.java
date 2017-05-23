@@ -391,7 +391,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(!connectToApi()) {
             return "failed to connect to api";
         }
-        if(!frameworkConfig.productionMode) { return ""; }
         Hashtable table = new Hashtable();
         
         String pattern = "dd/MM/yyyy";
@@ -445,6 +444,57 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Vector result = (Vector) client.execute("update_plan_prices", params);
         if((Integer)result.get(0) != 0) {
             return "Failed to update price, " + result.get(1);
+        }
+        
+        updateMinStay();
+        
+        return "";
+    }
+
+    public String updateMinStay() throws Exception {
+        if(!connectToApi()) {
+            return "failed to connect to api";
+        }
+        Hashtable table = new Hashtable();
+        
+        String pattern = "dd/MM/yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        String dfrom = format.format(new Date());
+        
+        PmsPricing prices = pmsManager.getPrices(new Date(), new Date());
+        boolean found = false;
+        for (WubookRoomData rdata : wubookdata.values()) {
+            if(!rdata.addedToWuBook) {
+                continue;
+            }
+
+            HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
+            Double minstay = pricesForType.get("minstay");
+            if(minstay == null || minstay == 1.0) {
+                continue;
+            }
+            
+            Vector list = new Vector();
+            for(int i = 0;i < (365*2); i++) {
+                Hashtable dayEntry = new Hashtable();
+                dayEntry.put("min_stay", minstay);
+                list.add(dayEntry);
+                found = true;
+            }
+            table.put(rdata.wubookroomid + "", list);
+        }
+        if(found) {
+            Vector params = new Vector();
+            params.addElement(token);
+            params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+            params.addElement(0);
+            params.addElement(dfrom);
+            params.addElement(table);
+
+            Vector result = (Vector) client.execute("rplan_update_rplan_values", params);
+            if((Integer)result.get(0) != 0) {
+                return "Failed to update daily min stay, " + result.get(1);
+            }
         }
         return "";
     }
@@ -648,6 +698,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(newbooking == null) {
                 sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
             } else {
+                pmsManager.logEntry("Modified by channel manager", newbooking.id, null);
+                for(PmsBookingRooms room : newbooking.getActiveRooms()) {
+                    pmsManager.forceRemoveFromBooking(room.pmsBookingRoomId);
+                }
                 isUpdate = true;
             }
         } else if(booking.delete) {
@@ -955,7 +1009,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
     }
 
-    private List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws XmlRpcException, IOException {
+    @Override
+    public List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws Exception {
+        if(!connectToApi()) {
+            return new ArrayList();
+        }
+        
          Vector params = new Vector();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
@@ -1133,10 +1192,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);
             for(Integer resCode : allCodesOnOldBooking) {
                 if(allCodesInNewBooking.contains(resCode)) {
-                    pmsManager.logEntry("Modified by channel manager", pmsbook.id, null);
-                    for(PmsBookingRooms room : pmsbook.getActiveRooms()) {
-                        pmsManager.removeFromBooking(pmsbook.id, room.pmsBookingRoomId);
-                    }
                     newbooking = pmsManager.getBooking(pmsbook.id);
                     newbooking.wubookModifiedResId.add(booking.reservationCode);
                     return newbooking;

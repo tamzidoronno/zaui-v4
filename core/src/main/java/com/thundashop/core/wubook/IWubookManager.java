@@ -8,8 +8,10 @@ package com.thundashop.core.wubook;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.xmlrpc.XmlRpcException;
 
 
 /**
@@ -45,6 +47,8 @@ public interface IWubookManager {
     @Administrator
     public String updatePrices() throws Exception;
     @Administrator
+    public String updateMinStay() throws Exception;
+    @Administrator
     public String markCCInvalid(String rcode) throws Exception;
     @Administrator
     public List<String> insertAllRooms() throws Exception;
@@ -74,6 +78,7 @@ public interface IWubookManager {
     @Administrator
     public void deleteRestriction(String id);
     
-    
+    @Administrator
+    public List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws Exception;
     
 }

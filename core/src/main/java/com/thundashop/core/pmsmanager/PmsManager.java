@@ -3154,7 +3154,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return errors;
     }
-            
 
     private void makeSureMinuteAndHourAreTheSame(PmsBookingRooms oldRoom, PmsBookingRooms room) {
         //Make sure end and start is the same hour.
@@ -5903,6 +5902,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    public void forceRemoveFromBooking(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        List<PmsBookingRooms> newRoomList = new ArrayList();
+        PmsBookingRooms toRemoveRoom = booking.getRoom(pmsBookingRoomId);
+        for(PmsBookingRooms room : booking.rooms) {
+            if(!room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+                newRoomList.add(room);
+            }
+        }
+        if(toRemoveRoom.bookingId != null && !toRemoveRoom.bookingId.isEmpty()) {
+            bookingEngine.deleteBooking(toRemoveRoom.bookingId);
+        }
+        booking.rooms = newRoomList;
+        saveBooking(booking);
     }
 
 }

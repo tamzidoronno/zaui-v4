@@ -468,4 +468,7 @@ public interface IUserManager {
     
     @Administrator
     public void deleteUserRole(String roleId);
+    
+    @Administrator
+    public void undoSuspension(String userId, String suspensionId);
 }

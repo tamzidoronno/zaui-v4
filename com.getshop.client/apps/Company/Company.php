@@ -163,6 +163,8 @@ class Company extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imp
         return $retApps;
     }
 
-    
+    public function undoSuspension() {
+        $this->getApi()->getUserManager()->undoSuspension($_POST['value'], $_POST['value2']);
+    }
 }
 ?>

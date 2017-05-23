@@ -11,6 +11,7 @@ import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.Company;
+import com.thundashop.core.usermanager.data.UserCompanyHistory;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -77,8 +78,12 @@ public class UserStoreCollection {
             user.companyObject = userManager.getCompany(user.company.get(0));
         }
         
-        if (user.suspended && userManager.shouldDisconnectedCompanyWhenUserSuspended()) {
+        if (user.suspended && userManager.shouldDisconnectedCompanyWhenUserSuspended() && user.company != null && !user.company.isEmpty()) {
+            UserCompanyHistory history = new UserCompanyHistory();
+            history.companyIds = new ArrayList(user.company);
+            user.companyHistory.add(history);
             user.company = new ArrayList();
+            userManager.saveUserSecure(user);
         }
         
         setUserSessionCompany(user);
@@ -488,6 +493,13 @@ public class UserStoreCollection {
 
     boolean doesUserExists(String userId) {
         return users.containsKey(userId);
+    }
+
+    void undoSuspension(String userId, String suspensionId) {
+        User user = getUser(userId);
+        if (user != null) {
+            user.undoSuspention(suspensionId);
+        }
     }
 
 }

@@ -20,7 +20,7 @@ if (!$this->selectedUser && $_POST['value']) {
         </div>
         <div class="description"></div>
     </div>
-    <div class="textfield gss_setting">
+    <div class="textfield gss_setting gss_company_user_primary">
         <span class="title">Is this user the company owner?</span>
         <div class="gss_onoff" gs_model="companysearch" gs_model_attr="primaryCompanyUser" mainCompanyUserToggle="true" userid="<? echo $this->selectedUser->id; ?>" >
             <?
@@ -44,4 +44,6 @@ if (!$this->selectedUser && $_POST['value']) {
             
         <div class='gss_company_user_search_result'></div>
     </div>
+    
+    
 </div>

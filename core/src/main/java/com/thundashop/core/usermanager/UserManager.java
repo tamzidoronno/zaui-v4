@@ -1958,4 +1958,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
 
+    @Override
+    public void undoSuspension(String userId, String suspensionId) {
+        getUserStoreCollection(storeId).undoSuspension(userId, suspensionId);
+    }
+
 }

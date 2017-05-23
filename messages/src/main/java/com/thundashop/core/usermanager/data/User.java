@@ -55,6 +55,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     @Administrator
     public String internalPassword;
+    
+    public List<UserCompanyHistory> companyHistory = new ArrayList();
  
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);
@@ -184,6 +186,15 @@ public class User extends DataCommon implements Comparable<User> {
         
         
         return companyObject.invoiceEmail;
+    }
+
+    public void undoSuspention(String suspensionId) {
+        UserCompanyHistory res = companyHistory.stream().filter(o -> o.id.equals(suspensionId)).findFirst().orElse(null);
+        if (res != null) {
+            companyHistory.remove(res);
+            suspended = false;
+            company = res.companyIds;
+        }
     }
 
  

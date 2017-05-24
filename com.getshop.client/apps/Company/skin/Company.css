@@ -58,3 +58,14 @@
     position: relative;
     cursor: pointer;
 }
+
+#backsidesettings .suspensionRowHistory {
+    position: relative;
+    padding-left: 60px;
+    border-bottom: solid 1px #DDD;
+}
+#backsidesettings .undoSuspension {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}

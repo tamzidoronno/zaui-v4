@@ -100,6 +100,7 @@ public class Runner {
         try {
             if (java.lang.System.getProperty("gs_apigenerator") != null) {
                 Class cls = Class.forName(java.lang.System.getProperty("gs_apigenerator"));
+                System.out.println(cls);
                 Method method = cls.getMethod("main", String[].class);
                 String[] params = null; // init params accordingly
                 method.invoke(null, (Object) params);

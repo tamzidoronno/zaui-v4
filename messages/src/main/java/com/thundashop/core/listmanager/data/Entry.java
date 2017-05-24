@@ -40,6 +40,7 @@ public class Entry extends TranslationHandler implements Serializable {
     public String emailToSendConfirmationTo = "";
     public HashMap<String, String> metaData = new HashMap();
     public int badges = 0;
+    public List<String> roleIds = new ArrayList();
     
     //Appended when fetching the list.
     public List<Entry> subentries;

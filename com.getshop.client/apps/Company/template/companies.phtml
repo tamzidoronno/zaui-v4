@@ -21,5 +21,24 @@ foreach ($userCompanies as $company) {
     echo "<div class='gss_companyrow'>$remove $main ".$company->name." $reference </div>$setMainUser</div> ";
 }
 
+if ($this->selectedUser->companyHistory) {
+    echo "<div style='margin-top: 20px;'><b> Suspended history: </b></div>";
+}
+foreach ($this->selectedUser->companyHistory as $companyHistory) {
+    echo "<div class='suspensionRowHistory'>";
+    echo "Account suspended: ".$companyHistory->suspendedDate;
+    echo "<br/> Companie(s) removed from user: ";
+    $i = 0;
+    foreach ($companyHistory->companyIds as $compId) {
+        $comp = $this->getApi()->getUserManager()->getCompany($compId);
+        echo $comp->name;
+        $i++;
+        if ($i < count($companyHistory->companyIds)) {
+            echo ",";
+        }
+    }
+    $undo = "<i gss_confirmation='Undo removal of companies' gss_method='undoSuspension' gss_fragment='companies' gss_view='gss_view_of_companies_user_has' gss_value='$userid' gss_value_2='$companyHistory->id' class='fa fa-undo gs_shop_small_icon undoSuspension' title='Undo removal of companies'></i>";
+    echo $undo;
+    echo "</div>";
+}
 ?>
-

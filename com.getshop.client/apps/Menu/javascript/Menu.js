@@ -22,6 +22,7 @@ getshop.MenuEditor = {
         $(document).on('click', ".Menu .save", getshop.MenuEditor.saveMenuEditor);
         $(document).on('click', ".Menu .mobilenavigatemenu", getshop.MenuEditor.showMenu);
         $(document).on('click', ".Menu .cancel", getshop.MenuEditor.closeMenuEditor);
+        $(document).on('change', ".Menu .userrolescheckboxes", getshop.MenuEditor.roleChanged);
         $(document).on('change', ".Menu #userlevel", getshop.MenuEditor.userLevelChanged);
         $(document).on('change', ".menu_item_language", getshop.MenuEditor.itemLanguageChanged);
         $(document).on('click', ".gs_scrollitem", getshop.MenuEditor.scrollToAnchor);
@@ -29,6 +30,19 @@ getshop.MenuEditor = {
         $(document).on('mouseenter', ".Menu .dots .dot", getshop.MenuEditor.showIndicator);
         $(document).on('mouseleave', ".Menu .dots .dot", getshop.MenuEditor.hideIndicator);
     },
+    
+    roleChanged: function() {
+        var id = $(this).attr('id').split('_')[1];
+        if ($(this).is(':checked')) {
+            getshop.MenuEditor.activeItem.roleIds.push(id);
+        } else {
+            var index = getshop.MenuEditor.activeItem.roleIds.indexOf(id);    // <-- Not supported in <IE9
+            if (index !== -1) {
+                getshop.MenuEditor.activeItem.roleIds.splice(index, 1);
+            }
+        }
+    },
+    
     openInSeperatedTab: function() {
         getshop.MenuEditor.activeItem.openInSeperatedTab = $(this).is(':checked');
     },
@@ -410,6 +424,12 @@ getshop.MenuEditor = {
                 $('#userlevel').val("editor");
             } else if (userLevel === 90) {
                 $('#userlevel').val("admin");
+            }
+            
+            $('.titleinformation .userrolescheckboxes').removeAttr('checked');
+            for (var i in getshop.MenuEditor.activeItem.roleIds) {
+                var roleId = getshop.MenuEditor.activeItem.roleIds[i];
+                $('#role_'+roleId).attr('checked', 'true');
             }
             
             $('.menu_item_language').each(function() {

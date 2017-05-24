@@ -1,0 +1,27 @@
+<?
+/* @var $this \ns_a6d68820_a8e3_4eac_b2b6_b05043c28d78\Company */
+?>
+<div style='margin-top: 20px;'>
+    <table>
+        
+    <?
+    $ids = $this->getIds();
+
+    if ($ids) {
+        $result = $this->getApi()->getEventBookingManager()->getCompaniesWhereNoCanditasHasCompletedTests("booking", $ids);
+        if (!$result) {
+            $result = array();
+        }
+        foreach ($result as $comapnyId) {
+            $company = $this->getApi()->getUserManager()->getCompany($comapnyId);
+            echo "<tr>";
+            echo "<td>".$company->name."</td>";
+            echo "<td>".$company->reference."</td>";
+            echo "<td>".$company->invoiceEmail."</td>";
+            echo "</tr>";
+        }
+    }
+
+    ?>
+    </table>
+</div>

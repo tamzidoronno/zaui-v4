@@ -998,7 +998,18 @@ if($notificationSettings->requirePayments) {
                 </span>
                 Code size (on the code sent to the user)
             </div>
-            
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
+                    if($notificationSettings->useNewQueueCheck) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='useNewQueueCheck' <? echo $checked; ?>>
+                </span>
+                Use new check for empty z-wave queue
+            </div>
         <br><br>
         <h2>Messaging settings</h2>
         <br><br>

@@ -1267,6 +1267,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
         PmsBooking booking = pmsManager.getBooking(bookingId);
+        if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
+            if(filter.addToOrderId.equals("createafterstay")) {
+                booking.createOrderAfterStay = true;
+                booking.paymentType = filter.paymentType;
+                return "";
+            }
+        }
+        
         if(booking != null && supportsDailyPmsInvoiceing(booking.id)) {
             if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
                 Order order = orderManager.getOrder(filter.addToOrderId);

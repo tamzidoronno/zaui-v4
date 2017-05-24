@@ -403,7 +403,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         boolean added = false;
                         for(int i = 0; i < 10; i++) {
                             if(stopUpdatesOnLock) { continue; }
-                            if(codesAdded >= 2 && !device.needForceRemove() && !device.isSubLock()) {
+                            int codesToAdd = 2;
+                            if(useNewQueueCheck) {
+                                codesToAdd = 10;
+                            }
+                            
+                            if(codesAdded >= codesToAdd && !device.needForceRemove() && !device.isSubLock()) {
                                 int minutesTried = getMinutesTriedSettingCodes(device);
                                 if(minutesTried > 5) {
                                     Calendar future = Calendar.getInstance();
@@ -460,7 +465,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
-                        try { Thread.sleep(10000); }catch(Exception e) {}
+                        if(!useNewQueueCheck) {
+                            try { Thread.sleep(10000); }catch(Exception e) {}
+                        }
                     }
                 }
             }

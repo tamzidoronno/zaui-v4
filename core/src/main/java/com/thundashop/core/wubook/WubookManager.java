@@ -92,10 +92,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Override
     public String updateAvailability() throws Exception {
-        if(storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")) {
-            return sparseUpdateAvailabilityInternal();
-        }
-        return updateAvailabilityInternal(730);
+        return updateAvailabilityInternal(720);
     }
     
     private boolean isWubookActive() {
@@ -1223,6 +1220,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         Vector<Hashtable> tosend = new Vector();
         int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
+        List<WubookAvailabilityField> fieldsUpdated = new ArrayList();
         
         for (WubookRoomData rdata : wubookdata.values()) {
             if(!rdata.addedToWuBook) {
@@ -1258,6 +1256,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 result.put("no_ota", 0);
                 days.add(result);
                 startcal.add(Calendar.DAY_OF_YEAR, 1);
+                
+                WubookAvailabilityField field = new WubookAvailabilityField();
+                field.roomId = rdata.wubookroomid;
+                field.availability = count;
+                field.date = start;
+                field.dateAsString = convertToDayString(start);
+                fieldsUpdated.add(field);
+                
             }
             roomToUpdate.put("days", days);
             tosend.add(roomToUpdate);
@@ -1276,7 +1282,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_rooms_values", client, this, params);
         updateThread.start();
         availabilityHasBeenChanged = null;
-
+        lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
+        
         return "";    
     }
 
@@ -1381,10 +1388,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return "";
         }
         
-        if(storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b")) {
-            return sparseUpdateAvailabilityInternal();
-        }
-        return updateAvailabilityInternal(300);
+        return sparseUpdateAvailabilityInternal();
     }
 
     public void logText(String string) {

@@ -9,6 +9,7 @@ app.OrderExport = {
         $(document).on('click', '.viewstatsforfile', app.OrderExport.viewstatsforfile);
         $(document).on('click', '.openorderexportconfig', app.OrderExport.viewConfig);
         $(document).on('click', '.gss_transferSingleOrders', app.OrderExport.transferSingleOrders);
+        $(document).on('click', '.loadincomedistribution', app.OrderExport.loadincomedistribution);
     },
     transferSingleOrders : function() {
        var form = $(this).closest('form');

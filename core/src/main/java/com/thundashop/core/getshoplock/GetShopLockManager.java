@@ -541,8 +541,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 if(line.length() > 8 && lineElements[5].trim().equals("1.0")) {
                     continue;
                 } else {
-                    System.out.println(lineElements[5]);
-                    System.out.println(line);
                     return false;
                 }
             }

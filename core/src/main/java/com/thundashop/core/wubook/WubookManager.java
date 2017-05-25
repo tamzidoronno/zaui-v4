@@ -1212,7 +1212,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         availabilityLastUpdated = new Date();
-
+        
         if(!frameworkConfig.productionMode) { return ""; }
         
         if(!connectToApi()) {
@@ -1230,16 +1230,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Hashtable roomToUpdate = new Hashtable();
             roomToUpdate.put("id", rdata.wubookroomid);
 
-            Calendar startcal = Calendar.getInstance();
-            Calendar endCal = Calendar.getInstance();
-            startcal.set(Calendar.HOUR_OF_DAY, 16);
+            Calendar startcal = getCalendar(true);
+            Calendar endCal = getCalendar(false);
+            
             Vector days = new Vector();
             for (int i = 0; i < numberOfDays; i++) {
                 Date start = startcal.getTime();
-                endCal.setTime(startcal.getTime());
-                endCal.add(Calendar.HOUR_OF_DAY, 16);
-                Date end = startcal.getTime();
-                int count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
+                endCal.add(Calendar.DAY_OF_YEAR, 1);
+                Date end = endCal.getTime();
+                int count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end);
                 if(count > 0) {
                     count -= toRemove;
                 }
@@ -1303,15 +1302,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             
 
-            Calendar startcal = Calendar.getInstance();
-            Calendar endCal = Calendar.getInstance();
-            startcal.set(Calendar.HOUR_OF_DAY, 16);
+            Calendar startcal = getCalendar(true);
+            Calendar endCal = getCalendar(false);
             for (int i = 0; i < 720; i++) {
                 Date start = startcal.getTime();
-                endCal.setTime(startcal.getTime());
-                endCal.add(Calendar.HOUR_OF_DAY, 16);
-                Date end = startcal.getTime();
-                int count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, endCal.getTime());
+                endCal.add(Calendar.DAY_OF_YEAR, 1);
+                Date end = endCal.getTime();
+                int count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end);
                 if(count > 0) {
                     count -= toRemove;
                 }
@@ -1454,6 +1451,28 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 return o1.reservationCode.compareTo(o2.reservationCode);
             }
        });
+    }
+
+    private Calendar getCalendar(boolean start) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 11);
+        
+        String time = pmsManager.getConfigurationSecure().defaultEnd;
+        if(start) {
+            time = pmsManager.getConfigurationSecure().defaultStart;
+        }
+        if(time != null && time.contains(":")) {
+            String[] times = time.split(":");
+            try {
+                cal.set(Calendar.HOUR_OF_DAY, new Integer(times[0]));
+                cal.set(Calendar.MINUTE, new Integer(times[1]));
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+            }catch(Exception e) {
+                logPrintException(e);
+            }
+        }
+        return cal;
     }
 
 }

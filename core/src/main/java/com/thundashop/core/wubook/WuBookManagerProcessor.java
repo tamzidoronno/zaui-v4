@@ -17,8 +17,8 @@ public class WuBookManagerProcessor extends GetShopSchedulerBase {
             return;
         }
 
-        getApi().getWubookManager().updateShortAvailability(getMultiLevelName());
         getApi().getWubookManager().fetchNewBookings(getMultiLevelName());
+        getApi().getWubookManager().updateShortAvailability(getMultiLevelName());
     }
     
 }

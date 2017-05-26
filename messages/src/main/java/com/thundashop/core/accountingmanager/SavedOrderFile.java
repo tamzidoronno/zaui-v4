@@ -2,6 +2,7 @@ package com.thundashop.core.accountingmanager;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,18 @@ public class SavedOrderFile extends DataCommon {
     public String configId = "";
     public String transferId;
     public ArrayList ordersNow = new ArrayList();
+    Date lastFinalized;
+    
+    public boolean needFinalize() {
+        if(lastFinalized == null) {
+            return true;
+        }
+        Calendar cal = Calendar.getInstance();
+        int dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
+        cal.setTime(lastFinalized);
+        int dayOfYear2 = cal.get(Calendar.DAY_OF_YEAR);
+        return dayOfYear2 != dayOfYear;
+    }
     
     @Transient
     public Integer numberOfOrdersNow = 0;

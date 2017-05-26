@@ -259,8 +259,10 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         
         for(SavedOrderFile saved : result) {
             try {
-                if(finalizeFile(saved)) {
-                    saveObject(saved);
+                if(saved.needFinalize()) {
+                    if(finalizeFile(saved)) {
+                        saveObject(saved);
+                    }
                 }
             }catch(Exception e) {
                 e.printStackTrace();
@@ -932,6 +934,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         saved.sumAmountIncOrderLines = 0.0;
         saved.onlyPositiveLinesEx = 0.0;
         saved.onlyPositiveLinesInc = 0.0;
+        saved.lastFinalized = new Date();
         boolean needSaving = false;
         saved.tamperedOrders.clear();
         for(String orderId : saved.orders) {
@@ -965,8 +968,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                 saved.tamperedOrders.add(order.id);
                 needSaving = true;
             }
-            total = orderManager.getTotalAmount(order);
-            totalEx = orderManager.getTotalAmountExTaxes(order);
+
             if(total < 0) { total *= -1; }
             if(totalEx < 0) { totalEx *= -1; }
             saved.sumAmountIncOrderLines += total;

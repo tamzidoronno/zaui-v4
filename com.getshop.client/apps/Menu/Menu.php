@@ -333,17 +333,17 @@ class Menu extends \SystemApplication implements \Application {
     }
 
     public function isDisabledDueToRoleAccess($entry) {
-        if (!count($entry->roleIds)) {
+        if (@!count($entry->roleIds)) {
             return false;
         }
         
         $user = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
         
-        if (!count($user->userRoleIds)) {
+        if (@!count($user->userRoleIds)) {
             return true;
         }
        
-        foreach ($user->userRoleIds as $id) {
+        foreach (@$user->userRoleIds as $id) {
             if (in_array($id, $entry->roleIds)) {
                 return false;
             }

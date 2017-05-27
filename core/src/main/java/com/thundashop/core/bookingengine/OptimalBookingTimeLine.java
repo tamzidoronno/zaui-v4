@@ -7,6 +7,7 @@ package com.thundashop.core.bookingengine;
 
 import com.thundashop.core.bookingengine.data.Booking;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +22,8 @@ public class OptimalBookingTimeLine {
 
     long getDistanceBetweenBookings(Booking booking) {
         long shortestDistance = Long.MAX_VALUE;
+        
+        Collections.sort(bookings, Booking.sortByStartDate());
         
         for (Booking ibooking : bookings) {
             long startTimeBookingInLine = ibooking.startDate.getTime();

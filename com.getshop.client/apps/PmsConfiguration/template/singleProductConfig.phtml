@@ -7,6 +7,7 @@ if(!$selectedAddonConfig) {
     $selectedAddonConfig = new core_pmsmanager_PmsBookingAddonItem();
 }
 $includedIn = (array)$selectedAddonConfig->includedInBookingItemTypes;
+$product = $this->getApi()->getProductManager()->getProduct($selectedAddonConfig->productId);
 ?>
 <div gstype="form" method="saveProductConfig">
     <input type='hidden' gsname='productId' gsvalue='<?php echo $_POST['data']['id']; ?>'>
@@ -24,6 +25,11 @@ $includedIn = (array)$selectedAddonConfig->includedInBookingItemTypes;
             <td width="50%">Is per guest</td>
             <?php $CHECKED = ($selectedAddonConfig->dependsOnGuestCount) ? "CHECKED" : ""; ?>
             <td width="50%"><input type="checkbox" gsname="dependsOnGuestCount" style='width:100%;' <?php echo $CHECKED; ?>></td>
+        </tr>
+        <tr>
+            <td width="50%">Non recurring product</td>
+            <?php $CHECKED = ($product->isNotRecurring) ? "CHECKED" : ""; ?>
+            <td width="50%"><input type="checkbox" gsname="isNotRecurring" style='width:100%;' <?php echo $CHECKED; ?>></td>
         </tr>
         <tr>
             <td width="50%">Non refundable addon (used as cancelations etc)</td>

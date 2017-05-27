@@ -412,6 +412,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return totalDays < 15;
     }
 
+    private boolean isNotRecurring(CartItem item) {
+        return item.getProduct().isNotRecurring;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -2491,7 +2495,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(item.startDate == null || item.endDate == null) {
                 continue;
             }
-            if(sameMonth(item.startDate, item.endDate) || isShortSpan(item.startDate, item.endDate)) {
+            if(sameMonth(item.startDate, item.endDate) || isNotRecurring(item)) {
                 continue;
             }
             toRemove.add(item);

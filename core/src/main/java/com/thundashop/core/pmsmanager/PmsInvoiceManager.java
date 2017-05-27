@@ -404,6 +404,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return price;
     }
 
+    private boolean isShortSpan(Date startDate, Date endDate) {
+        if(startDate == null || endDate == null) {
+            return false;
+        }
+        int totalDays = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
+        return totalDays < 15;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -1134,7 +1142,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || room.invoicedTo.after(endDate))) {
             return;
         }
-        if(endDate.after(filter.endInvoiceAt) && filter.increaseUnits > 0) {
+        if(endDate.after(filter.endInvoiceAt) && filter.increaseUnits > 0 && !pmsManager.getConfigurationSecure().splitOrderIntoMonths) {
             return;
         }
         if(room.invoicedTo == null && startDate.after(endDate)) {
@@ -1388,6 +1396,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     
     private void addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
+        if(booking.id.equals("97ecb531-db7e-417c-99cc-5e4c5f02d16c")) {
+            System.out.println("Found");
+        }
         List<CartItem> items = new ArrayList();
         boolean generateChanges = pmsManager.getConfigurationSecure().autoGenerateChangeOrders;
         if(generateChanges) {
@@ -2480,7 +2491,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(item.startDate == null || item.endDate == null) {
                 continue;
             }
-            if(sameMonth(item.startDate, item.endDate)) {
+            if(sameMonth(item.startDate, item.endDate) || isShortSpan(item.startDate, item.endDate)) {
                 continue;
             }
             toRemove.add(item);

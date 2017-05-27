@@ -24,14 +24,22 @@ echo "</b>";
 echo "<table cellspacing='0' cellpadding='0' width='100%'>";
 echo "<tr>";
 echo "<th width='10'></th>";
-echo "<th width='10'>".$this->__w("Room")."</th>";
+if($config->bookingProfile == "subscription") {
+    echo "<th width='10'>".$this->__w("Type")."</th>";
+} else {
+    echo "<th width='10'>".$this->__w("Room")."</th>";
+}
 echo "<th width='200'>".$this->__w("Time periode")."</th>";
 if($rules->includeGuestData) {
     echo "<th>".$this->__w("Guest name")."</th>";
     echo "<th>".$this->__w("Guest phone")."</th>";
     echo "<th>".$this->__w("Guest email")."</th>";
 }
-echo "<th width='100'>Room type</th>";
+if($config->bookingProfile == "subscription") {
+    echo "<th width='100'>Subscription</th>";
+} else {    
+    echo "<th width='100'>Room type</th>";
+}
 if($config->requirePayments) {
     echo "<th width='100'>".$this->__w("Price")."</th>";
     echo "<th width='100'>".$this->__w("Invoiced to")."</th>";
@@ -59,7 +67,9 @@ foreach($bookings as $booking) {
         if($this->isEditorMode() || $this->isAdminMode()) {
             echo "<i class='fa fa-trash-o deleteroom'></i> ";
         }
-        echo "<i class='fa fa-edit editroom' style='cursor:pointer;'></i>";
+        if($config->bookingProfile != "subscription") {
+            echo "<i class='fa fa-edit editroom' style='cursor:pointer;'></i>";
+        }
         echo "</td>";
         echo "<td>";
         if(isset($items[$room->bookingItemId])) {

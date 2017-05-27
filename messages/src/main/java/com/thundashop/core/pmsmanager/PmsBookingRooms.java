@@ -32,6 +32,7 @@ public class PmsBookingRooms implements Serializable {
     public Integer numberOfGuests = 1;
     public double count = 1;
     public Double price = 0.0;
+    Double priceWithoutDiscount = 0.0;
     public LinkedHashMap<String, Double> priceMatrix = new LinkedHashMap();
     public double taxes = 8;
     public String bookingId;

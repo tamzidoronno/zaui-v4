@@ -383,6 +383,27 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         savedIncomeFilters.remove(id);
     }
 
+    private Double calculateLongTermDiscount(PmsBooking booking, Double price, PmsBookingRooms room) {
+        PmsPricing plan = pmsManager.getPriceObject(booking.pmsPricingCode);
+        int percentages = 0;
+        int daysUsed = 0;
+        if(room != null) {
+            for(Integer days : plan.longTermDeal.keySet()) {
+                if(days <= room.getNumberOfNights() && daysUsed < days) {
+                    percentages = plan.longTermDeal.get(days);
+                    System.out.println("Percentages : " + percentages + " days: " + days);
+                }
+            }
+        }
+        
+        if(percentages > 0) {
+            double factor = (100 - percentages)/(double)100;
+            price *= factor;
+        }
+        
+        return price;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -726,10 +747,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private Double calculateDiscounts(PmsBooking booking, Double price, String bookingEngineTypeId, int count, PmsBookingRooms room, Date start, Date end) {
-        if(room != null) {
+        if(room != null) { 
             price = addDerivedPrices(booking, room, price);
         }
         price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId);
+        price = calculateLongTermDiscount(booking, price, room);
         price = getUserPrice(bookingEngineTypeId, price, count);
         
         return price;

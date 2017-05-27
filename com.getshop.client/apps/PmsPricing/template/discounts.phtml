@@ -5,6 +5,7 @@ $coupons = (array)$this->getApi()->getCartManager()->getCoupons();
 $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 $channelConfig = $notificationSettings->channelConfiguration;
 
+$prices = $this->getPrices();
 if(sizeof($coupons) == 0) {
     echo "<b>No coupon codes added yet.</b>";
 }
@@ -95,4 +96,30 @@ if(isset($this->addCouponError) && $this->addCouponError) {
     <span class='pmsbutton' gstype='submit'>Add discount coupon</span>
     <div style='font-size: 12px;'>* Times: specify the number of times you want the code to be active for</div>
     <div style='font-size: 12px;'>* Amount: the amount to discount, if percentage enter the percentage as a number</div>
+</div>
+<br>
+<br>
+<h1>Long term deals</h1>
+<div style="savelongtermdeals" gstype="form" method="savelongtermdeal">
+    <table>
+        <tr>
+            <th>Min days</th>
+            <th>discount(%)</th>
+        </tr>
+        <?php
+        $keys = array_keys((array)$prices->longTermDeal);
+        $values = array_values((array)$prices->longTermDeal);
+        for($i = 0; $i < 3; $i++) {
+            $days = "";
+            $discount = "";
+            if(isset($keys[$i])) { $days = $keys[$i]; }
+            if(isset($values[$i])) { $discount = $values[$i]; }
+            echo "<tr>";
+            echo "<td align='center'><input type='txt' style='width:40px;' gsname='minday_$i' value='$days'></td>";
+            echo "<td align='center'><input type='txt' style='width:40px;' gsname='discount_$i' value='$discount'></td>";
+            echo "</tr>";
+        }
+        ?>
+    </table>
+    <span class="pmsbutton" gstype="submit">Save long term stay deal</span>
 </div>

@@ -23,4 +23,5 @@ public class PmsPricing extends DataCommon {
     public Double price_sat;
     public Double price_sun;
     public HashMap<String, Double> productPrices = new HashMap();
+    public HashMap<Integer, Integer> longTermDeal = new HashMap();
 }

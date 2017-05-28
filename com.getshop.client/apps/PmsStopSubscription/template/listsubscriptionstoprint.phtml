@@ -11,7 +11,7 @@ echo "<table width='100%'>";
 foreach($subscriptions as $sub) {
     $date = $this->getApi()->getPmsManager()->getEarliestEndDate($this->getSelectedName(), $sub->pmsRoomId);
     echo "<tr>";
-    echo "<td class='roomname'>" . $sub->room . "</td><td>" . $sub->roomType . ")" . "</td>";
+    echo "<td class='roomname'>" . $sub->room . "</td><td>" . $sub->roomType . "</td>";
     if($sub->requestedEndDate) {
         echo "<td>Sagt opp: " . date("d.m.Y", strtotime($sub->requestedEndDate)) . "</td>";
     } else {

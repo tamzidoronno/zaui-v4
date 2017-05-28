@@ -4812,9 +4812,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsRoomSimple> getMyRooms() {
         PmsBookingSimpleFilter filter = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
-        if(getSession().currentUser == null) {
-            System.out.println("jaja?");
-        }
         String userId = getSession().currentUser.id;
         List<PmsRoomSimple> result = new ArrayList();
         for(PmsBooking booking : bookings.values()) {
@@ -5942,6 +5939,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return cal.getTime();
+    }
+
+    @Override
+    public void freezeSubscription(String pmsBookingRoomId, Date freezeUntil) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        System.out.println("Want to freeze between: " + room.invoicedTo + " - " +  freezeUntil);
+        cartManager.clear();
+        Product freezeProduct = productManager.getProduct("freezeSubscription");
+        if(freezeProduct == null) {
+            freezeProduct = new Product();
+            freezeProduct.id = "freezeSubscription";
+            freezeProduct.name = "Freeze subscription";
+            freezeProduct.price = 0.0;
+            productManager.saveProduct(freezeProduct);
+        }
+        CartItem item = cartManager.addProductItem(freezeProduct.id, 1);
+        item.startDate = room.invoicedTo;
+        item.endDate = freezeUntil;
+        item.getProduct().externalReferenceId = room.pmsBookingRoomId;
+        Order order = orderManager.createOrderForUser(booking.userId);
+        booking.orderIds.add(order.id);
+        pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
+        saveBooking(booking);
     }
 
 }

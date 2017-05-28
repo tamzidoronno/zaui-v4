@@ -12,6 +12,7 @@ import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -650,69 +651,73 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<PmsBooking> all = pmsManager.getAllBookings(null);
         List<String> result = new ArrayList();
         for(PmsBooking booking : all) {
-            for(PmsBookingRooms room : booking.getActiveRooms()) {
-                if(room.isEndedDaysAgo(60)) {
-                    continue;
-                }
-                Date invoicedTo = null;
-                Long incordertouse = null;
-                if(room.invoicedTo != null) {
-                    for(String orderId : booking.orderIds) {
-                        if(!orderManager.orderExists(orderId)) {
-                            continue;
-                        }
-                        Order order = orderManager.getOrder(orderId);
-                        if(order.isCreditNote) {
-                            continue;
-                        }
-                        if(order.creditOrderId.size() > 0) {
-                            continue;
-                        }
-                        if(order.cart == null) {
-                            continue;
-                        }
-                        for(CartItem item : order.cart.getItems()) {
-                            if(!item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
-                                continue;
-                            }
-                            if(item.endDate == null) {
-                                continue;
-                            }
-                            Date orderDateTo = item.endDate;
-                            if(invoicedTo == null || invoicedTo.before(orderDateTo)) {
-                                invoicedTo = orderDateTo;
-                                incordertouse = order.incrementOrderId;
-                            }
-                        }
-                    }
-                    if(invoicedTo == null) {
+            validateInvoiceToDateForBooking(booking, result);
+        }
+        return result;
+    }
+
+    public void validateInvoiceToDateForBooking(PmsBooking booking, List<String> result) throws ErrorException {
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            if(room.isEndedDaysAgo(60)) {
+                continue;
+            }
+            Date invoicedTo = null;
+            Long incordertouse = null;
+            if(room.invoicedTo != null) {
+                for(String orderId : booking.orderIds) {
+                    if(!orderManager.orderExists(orderId)) {
                         continue;
                     }
-
-                    if(pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(invoicedTo);
-                        cal.add(Calendar.DAY_OF_YEAR, 1);
-                        invoicedTo = cal.getTime();
+                    Order order = orderManager.getOrder(orderId);
+                    if(order.isCreditNote) {
+                        continue;
                     }
-                    if(!room.isSameDay(room.invoicedTo, invoicedTo)) {
-                        String item = "";
-                       if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
-                            item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+                    if(order.creditOrderId.size() > 0) {
+                        continue;
+                    }
+                    if(order.cart == null) {
+                        continue;
+                    }
+                    for(CartItem item : order.cart.getItems()) {
+                        if(!item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                            continue;
                         }
-                        String userName = userManager.getUserById(booking.userId).fullName;
-
-                       if(room.invoicedTo.after(invoicedTo)) {
-                            String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
-                            result.add(msg);
-                            room.invoicedTo = invoicedTo;
-                            pmsManager.saveBooking(booking);
+                        if(item.endDate == null) {
+                            continue;
                         }
+                        Date orderDateTo = item.endDate;
+                        if(invoicedTo == null || invoicedTo.before(orderDateTo)) {
+                            invoicedTo = orderDateTo;
+                            incordertouse = order.incrementOrderId;
+                        }
+                    }
+                }
+                if(invoicedTo == null) {
+                    continue;
+                }
+                
+                if(pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(invoicedTo);
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                    invoicedTo = cal.getTime();
+                }
+                if(!room.isSameDay(room.invoicedTo, invoicedTo)) {
+                    String item = "";
+                    if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+                        item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+                    }
+                    String userName = userManager.getUserById(booking.userId).fullName;
+                    
+                    if(room.invoicedTo.after(invoicedTo)) {
+                        String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
+                        result.add(msg);
+                        room.invoicedTo = invoicedTo;
+                        pmsManager.saveBooking(booking);
                     }
                 }
             }
         }
-        return result;
     }
 
     private Double addDerivedPrices(PmsBooking booking, PmsBookingRooms room, Double price) {

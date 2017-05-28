@@ -319,7 +319,7 @@ public interface IPmsManager {
     @Administrator
     public void markRoomDirty(String itemId) throws Exception;
 
-    
+    public void freezeSubscription(String pmsBookingRoomId, Date freezeUntil);
     public void addAddonsToBooking(Integer type, String roomId, boolean remove);
     public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
     

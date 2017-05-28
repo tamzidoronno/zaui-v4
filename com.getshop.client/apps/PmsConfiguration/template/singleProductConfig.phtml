@@ -49,6 +49,9 @@ $product = $this->getApi()->getProductManager()->getProduct($selectedAddonConfig
         echo "<input type='checkbox' gsname='includefortype_".$type->id."' $checked>" . $type->name . "<br>";
     }
     ?>
+    <br>
+    Text to identify for addons in channel manager, semicolon for multiple search entries example: (Breakfast;Meal breakfast)<br>
+    <input type='text' gsname='channelManagerAddonText' value='<?php echo $selectedAddonConfig->channelManagerAddonText; ?>'><br><br>
     
     <input gstype="submit" type="button" value='Save'>
 </div>

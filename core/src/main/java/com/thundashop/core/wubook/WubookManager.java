@@ -1500,19 +1500,21 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         String[] toCheckFor = item.channelManagerAddonText.split(";");
         
         Hashtable addons = (Hashtable) table.get("ancillary");
-        Vector addonsList = (Vector) addons.get("addons");
         int addoncount = 0;
-        if(addonsList != null) {
-            Iterator roomIterator = addonsList.iterator();
-            while (roomIterator.hasNext()) {
-                Hashtable addon = (Hashtable) roomIterator.next();
-                String name = (String) addon.get("name");
-                String type = (String) addon.get("type");
-                for(String check : toCheckFor) {
-                    if(type != null && (type.toLowerCase().contains(check))) {
-                        addoncount = (int) addon.get("persons");
-                    } else if(name != null && (name.toLowerCase().contains(check))) {
-                        addoncount = (int) addon.get("persons");
+        if(addons != null) {
+            Vector addonsList = (Vector) addons.get("addons");
+            if(addonsList != null) {
+                Iterator roomIterator = addonsList.iterator();
+                while (roomIterator.hasNext()) {
+                    Hashtable addon = (Hashtable) roomIterator.next();
+                    String name = (String) addon.get("name");
+                    String type = (String) addon.get("type");
+                    for(String check : toCheckFor) {
+                        if(type != null && (type.toLowerCase().contains(check))) {
+                            addoncount = (int) addon.get("persons");
+                        } else if(name != null && (name.toLowerCase().contains(check))) {
+                            addoncount = (int) addon.get("persons");
+                        }
                     }
                 }
             }

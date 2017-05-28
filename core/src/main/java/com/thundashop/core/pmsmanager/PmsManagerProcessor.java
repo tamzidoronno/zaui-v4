@@ -687,13 +687,17 @@ public class PmsManagerProcessor {
                     }
                     
                     double total = manager.orderManager.getTotalAmount(order);
-                    if(total <= 0.0) {
+                    if(total <= 0.0 && !order.hasFreezeItem()) {
                         continue;
                     }
-                    if(order.status != Order.Status.PAYMENT_COMPLETED) {
+                    if(order.status != Order.Status.PAYMENT_COMPLETED || order.hasFreezeItem()) {
                         for(CartItem item : order.cart.getItems()) {
                             if(!firstDate && item.startDate != null && item.startDate.after(new Date())) {
                                 //Only set payedfor=false when order is started.
+                                continue;
+                            }
+                            if(!firstDate && item.endDate != null && item.endDate.before(new Date())) {
+                                //Only set payedfor=false when order has not been ended.
                                 continue;
                             }
                             firstDate = false;

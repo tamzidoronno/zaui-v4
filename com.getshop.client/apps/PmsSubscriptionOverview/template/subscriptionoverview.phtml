@@ -31,6 +31,9 @@ foreach($overview as $room) {
     if(!$room->price) {
         continue;
     }
+    if(round($room->orderValue) == 0) {
+        continue;
+    }
     $type = $room->paymentType;
     $paid = $room->paid ? "Yes" : "No";
     $totalCardsSaved += $room->cardsSaved;

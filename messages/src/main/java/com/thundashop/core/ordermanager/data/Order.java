@@ -337,6 +337,15 @@ public class Order extends DataCommon implements Comparable<Order> {
         return this.paymentDate.equals(paymentDate);
     }
 
+    public boolean hasFreezeItem() {
+        for(CartItem item : cart.getItems()) {
+            if(item != null && item.getProduct() != null && item.getProduct().id != null && item.getProduct().id.equals("freezeSubscription")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;

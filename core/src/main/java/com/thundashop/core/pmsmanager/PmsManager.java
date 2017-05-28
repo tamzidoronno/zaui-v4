@@ -5961,6 +5961,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         item.getProduct().externalReferenceId = room.pmsBookingRoomId;
         Order order = orderManager.createOrderForUser(booking.userId);
         booking.orderIds.add(order.id);
+        order.status = Order.Status.PAYMENT_COMPLETED;
         pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
         saveBooking(booking);
     }

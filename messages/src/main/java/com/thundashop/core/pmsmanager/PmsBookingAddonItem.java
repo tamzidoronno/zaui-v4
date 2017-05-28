@@ -26,8 +26,8 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     
     public String addonId = UUID.randomUUID().toString();
     public Date date;
-    public double price;
-    public double priceExTaxes;
+    public Double price;
+    public Double priceExTaxes;
     public String productId;
     public Integer addonType;
     public String addonSubType = "";

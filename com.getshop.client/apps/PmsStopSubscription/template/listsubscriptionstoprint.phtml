@@ -9,6 +9,7 @@ if(!$subscriptions) {
 }
 echo "<table width='100%'>";
 foreach($subscriptions as $sub) {
+    $date = $this->getApi()->getPmsManager()->getEarliestEndDate($this->getSelectedName(), $sub->pmsRoomId);
     echo "<tr>";
     echo "<td class='roomname'>" . $sub->room . "</td><td>" . $sub->roomType . ")" . "</td>";
     if($sub->requestedEndDate) {
@@ -20,8 +21,6 @@ foreach($subscriptions as $sub) {
 }
 echo "</table>";
 
-
-$date = date('Y-m-01', strtotime("+2 month"));
 $futureTime = strtotime($date);
 $days = (int)(($futureTime - time())/86400)+1;
 

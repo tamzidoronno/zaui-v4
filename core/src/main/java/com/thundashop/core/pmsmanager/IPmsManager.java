@@ -122,6 +122,8 @@ public interface IPmsManager {
     
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
+    public Date getEarliestEndDate(String pmsBookingRoomId);
+    
     @Editor
     public void logEntry(String logText, String bookingId, String itemId);
     

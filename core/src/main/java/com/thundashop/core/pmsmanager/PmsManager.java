@@ -5924,4 +5924,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
+    @Override
+    public Date getEarliestEndDate(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(room.invoicedTo);
+        if(room.bookingItemTypeId != null) {
+            BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            if(type.minStay > 0) {
+                Calendar minStayCal = Calendar.getInstance();
+                minStayCal.setTime(room.date.start);
+                minStayCal.add(Calendar.MONTH, type.minStay);
+                if(minStayCal.getTime().after(cal.getTime())) {
+                    return minStayCal.getTime();
+                }
+            }
+        }
+        return cal.getTime();
+    }
+
 }

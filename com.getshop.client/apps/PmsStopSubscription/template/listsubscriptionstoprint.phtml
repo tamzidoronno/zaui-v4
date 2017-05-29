@@ -2,14 +2,16 @@
 /* @var $this ns_17c0563b_a3b6_4519_b7d1_0880005b11e3\PmsStopSubscription */
 
 $subscriptions = (array)$this->getApi()->getPmsManager()->getMyRooms($this->getSelectedName());
+$storeId = $this->getApi()->getStoreManager()->getStoreId();
 if(!$subscriptions) {
     echo "Du leier ingenting.";
     return;
 }
 echo "<table width='100%'>";
 foreach($subscriptions as $sub) {
+    $date = $this->getApi()->getPmsManager()->getEarliestEndDate($this->getSelectedName(), $sub->pmsRoomId);
     echo "<tr>";
-    echo "<td class='roomname'>" . $sub->room . "</td><td>" . $sub->roomType . ")" . "</td>";
+    echo "<td class='roomname'>" . $sub->room . "</td><td>" . $sub->roomType . "</td>";
     if($sub->requestedEndDate) {
         echo "<td>Sagt opp: " . date("d.m.Y", strtotime($sub->requestedEndDate)) . "</td>";
     } else {
@@ -19,8 +21,6 @@ foreach($subscriptions as $sub) {
 }
 echo "</table>";
 
-
-$date = date('Y-m-01', strtotime("+2 month"));
 $futureTime = strtotime($date);
 $days = (int)(($futureTime - time())/86400)+1;
 
@@ -28,7 +28,13 @@ $days = (int)(($futureTime - time())/86400)+1;
 <br>
 <br>
 <div class='completestopform' gstype='form' method='stopsubscription'>
-    Dato for når du flytter ut<br>
+    <?php if($storeId == "cd94ea1c-01a1-49aa-8a24-836a87a67d3b") {
+        echo "Siste dag med trening er";
+    } else {
+        echo "Dato for når du flytter ut";
+    }
+    ?>
+    <br>
     <input type='text' gsname='id' class='pmsroomidtostop' style='display:none;'>
     <input type='text' class='dateforleaving' gsname='enddate' placeholder='Dato for når du flytter ut'>
     <span class='pmsbutton stopdatecalbutton' gstype='submit'>Si opp <span class='stopsubscriptionbuttontext'></span></span>

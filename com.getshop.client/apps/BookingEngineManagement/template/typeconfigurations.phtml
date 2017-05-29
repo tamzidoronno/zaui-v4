@@ -38,6 +38,22 @@ $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById
         </td>
     </tr>
     <tr>
+        <td width="50%">Description</td>
+        <td width="50%"><textarea type="text" gsname="description" style='width:100%;'><? echo $item->description; ?></textarea></td>
+    </tr>
+    <?php if($config->bookingProfile == "subscription") {
+        ?>
+        <tr>
+            <td width="50%"><? echo $this->__w("Minimum number of months"); ?></td>
+            <td width="50%">
+                <input type="number" style='width: 50px;' gsname="minStay" value="<? echo $item->minStay; ?>">
+            </td>
+        </tr>
+        <?php
+    } else {
+        ?>
+    
+    <tr>
         <td width="50%"><? echo $this->__w("Is visible for booking"); ?></td>
         <td width="50%">
             <select gsname="visibleForBooking">
@@ -66,10 +82,6 @@ $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById
         </td>
     </tr>    
     <tr>
-        <td width="50%">Description</td>
-        <td width="50%"><textarea type="text" gsname="description" style='width:100%;'><? echo $item->description; ?></textarea></td>
-    </tr>
-    <tr>
         <td colspan='2'><b>Beds</b></td>
     </tr>
     <tr>
@@ -97,6 +109,9 @@ $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById
         </td>
     </tr>
     
+        <?php
+    }
+    ?>
     
     </table>
     <input gstype="submit" type="button" value='Save'>

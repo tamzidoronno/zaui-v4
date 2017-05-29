@@ -12,6 +12,7 @@ import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -383,6 +384,39 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         savedIncomeFilters.remove(id);
     }
 
+    private Double calculateLongTermDiscount(PmsBooking booking, Double price, PmsBookingRooms room) {
+        PmsPricing plan = pmsManager.getPriceObject(booking.pmsPricingCode);
+        int percentages = 0;
+        int daysUsed = 0;
+        if(room != null) {
+            for(Integer days : plan.longTermDeal.keySet()) {
+                if(days <= room.getNumberOfNights() && daysUsed < days) {
+                    percentages = plan.longTermDeal.get(days);
+                    System.out.println("Percentages : " + percentages + " days: " + days);
+                }
+            }
+        }
+        
+        if(percentages > 0) {
+            double factor = (100 - percentages)/(double)100;
+            price *= factor;
+        }
+        
+        return price;
+    }
+
+    private boolean isShortSpan(Date startDate, Date endDate) {
+        if(startDate == null || endDate == null) {
+            return false;
+        }
+        int totalDays = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
+        return totalDays < 15;
+    }
+
+    private boolean isNotRecurring(CartItem item) {
+        return item.getProduct().isNotRecurring;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -617,69 +651,73 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<PmsBooking> all = pmsManager.getAllBookings(null);
         List<String> result = new ArrayList();
         for(PmsBooking booking : all) {
-            for(PmsBookingRooms room : booking.getActiveRooms()) {
-                if(room.isEndedDaysAgo(60)) {
-                    continue;
-                }
-                Date invoicedTo = null;
-                Long incordertouse = null;
-                if(room.invoicedTo != null) {
-                    for(String orderId : booking.orderIds) {
-                        if(!orderManager.orderExists(orderId)) {
-                            continue;
-                        }
-                        Order order = orderManager.getOrder(orderId);
-                        if(order.isCreditNote) {
-                            continue;
-                        }
-                        if(order.creditOrderId.size() > 0) {
-                            continue;
-                        }
-                        if(order.cart == null) {
-                            continue;
-                        }
-                        for(CartItem item : order.cart.getItems()) {
-                            if(!item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
-                                continue;
-                            }
-                            if(item.endDate == null) {
-                                continue;
-                            }
-                            Date orderDateTo = item.endDate;
-                            if(invoicedTo == null || invoicedTo.before(orderDateTo)) {
-                                invoicedTo = orderDateTo;
-                                incordertouse = order.incrementOrderId;
-                            }
-                        }
-                    }
-                    if(invoicedTo == null) {
+            validateInvoiceToDateForBooking(booking, result);
+        }
+        return result;
+    }
+
+    public void validateInvoiceToDateForBooking(PmsBooking booking, List<String> result) throws ErrorException {
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            if(room.isEndedDaysAgo(60)) {
+                continue;
+            }
+            Date invoicedTo = null;
+            Long incordertouse = null;
+            if(room.invoicedTo != null) {
+                for(String orderId : booking.orderIds) {
+                    if(!orderManager.orderExists(orderId)) {
                         continue;
                     }
-
-                    if(pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(invoicedTo);
-                        cal.add(Calendar.DAY_OF_YEAR, 1);
-                        invoicedTo = cal.getTime();
+                    Order order = orderManager.getOrder(orderId);
+                    if(order.isCreditNote) {
+                        continue;
                     }
-                    if(!room.isSameDay(room.invoicedTo, invoicedTo)) {
-                        String item = "";
-                       if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
-                            item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+                    if(order.creditOrderId.size() > 0) {
+                        continue;
+                    }
+                    if(order.cart == null) {
+                        continue;
+                    }
+                    for(CartItem item : order.cart.getItems()) {
+                        if(!item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                            continue;
                         }
-                        String userName = userManager.getUserById(booking.userId).fullName;
-
-                       if(room.invoicedTo.after(invoicedTo)) {
-                            String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
-                            result.add(msg);
-                            room.invoicedTo = invoicedTo;
-                            pmsManager.saveBooking(booking);
+                        if(item.endDate == null) {
+                            continue;
                         }
+                        Date orderDateTo = item.endDate;
+                        if(invoicedTo == null || invoicedTo.before(orderDateTo)) {
+                            invoicedTo = orderDateTo;
+                            incordertouse = order.incrementOrderId;
+                        }
+                    }
+                }
+                if(invoicedTo == null) {
+                    continue;
+                }
+                
+                if(pmsManager.getConfigurationSecure().substractOneDayOnOrder) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(invoicedTo);
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                    invoicedTo = cal.getTime();
+                }
+                if(!room.isSameDay(room.invoicedTo, invoicedTo)) {
+                    String item = "";
+                    if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
+                        item = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
+                    }
+                    String userName = userManager.getUserById(booking.userId).fullName;
+                    
+                    if(room.invoicedTo.after(invoicedTo)) {
+                        String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
+                        result.add(msg);
+                        room.invoicedTo = invoicedTo;
+                        pmsManager.saveBooking(booking);
                     }
                 }
             }
         }
-        return result;
     }
 
     private Double addDerivedPrices(PmsBooking booking, PmsBookingRooms room, Double price) {
@@ -726,10 +764,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private Double calculateDiscounts(PmsBooking booking, Double price, String bookingEngineTypeId, int count, PmsBookingRooms room, Date start, Date end) {
-        if(room != null) {
+        if(room != null) { 
             price = addDerivedPrices(booking, room, price);
         }
         price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId);
+        price = calculateLongTermDiscount(booking, price, room);
         price = getUserPrice(bookingEngineTypeId, price, count);
         
         return price;
@@ -1112,7 +1151,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || room.invoicedTo.after(endDate))) {
             return;
         }
-        if(endDate.after(filter.endInvoiceAt) && filter.increaseUnits > 0) {
+        if(endDate.after(filter.endInvoiceAt) && filter.increaseUnits > 0 && !pmsManager.getConfigurationSecure().splitOrderIntoMonths) {
             return;
         }
         if(room.invoicedTo == null && startDate.after(endDate)) {
@@ -1366,6 +1405,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     
     private void addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
+        if(booking.id.equals("97ecb531-db7e-417c-99cc-5e4c5f02d16c")) {
+            System.out.println("Found");
+        }
         List<CartItem> items = new ArrayList();
         boolean generateChanges = pmsManager.getConfigurationSecure().autoGenerateChangeOrders;
         if(generateChanges) {
@@ -2458,7 +2500,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(item.startDate == null || item.endDate == null) {
                 continue;
             }
-            if(sameMonth(item.startDate, item.endDate)) {
+            if(sameMonth(item.startDate, item.endDate) || isNotRecurring(item)) {
                 continue;
             }
             toRemove.add(item);

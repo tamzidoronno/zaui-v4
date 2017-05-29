@@ -6,4 +6,5 @@ import com.thundashop.core.common.DataCommon;
 public class Room extends DataCommon {
     public BookingItemType type;
     public Double price = 0.0;
+    public Double priceWithoutDiscount;
 }

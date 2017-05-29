@@ -311,6 +311,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             setPriceOnRoom(room, true, booking);
             
             roomToAdd.price = room.price;
+            roomToAdd.priceWithoutDiscount = room.priceWithoutDiscount;
             result.add(roomToAdd);
         }
 
@@ -1052,6 +1053,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         prices.channelDiscount = newPrices.channelDiscount;
         prices.derivedPrices = newPrices.derivedPrices;
         prices.productPrices = newPrices.productPrices;
+        prices.longTermDeal = newPrices.longTermDeal;
+        
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
             for (String date : priceMap.keySet()) {
@@ -3641,6 +3644,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void setPriceOnRoom(PmsBookingRooms room, boolean avgPrice, PmsBooking booking) {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
+        room.priceWithoutDiscount = new Double(room.price); 
         if(getConfigurationSecure().usePriceMatrixOnOrder) {
             room.price = pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
             if(room.price.isNaN() || room.price.isInfinite()) {
@@ -4808,9 +4812,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsRoomSimple> getMyRooms() {
         PmsBookingSimpleFilter filter = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
-        if(getSession().currentUser == null) {
-            System.out.println("jaja?");
-        }
         String userId = getSession().currentUser.id;
         List<PmsRoomSimple> result = new ArrayList();
         for(PmsBooking booking : bookings.values()) {
@@ -5181,6 +5182,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void addDefaultAddons(PmsBooking booking) {
+        if(booking.channel != null && !booking.channel.isEmpty()) {
+            return;
+        }
         HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             for(PmsBookingAddonItem item : addons.values()) {
@@ -5917,6 +5921,51 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             bookingEngine.deleteBooking(toRemoveRoom.bookingId);
         }
         booking.rooms = newRoomList;
+        saveBooking(booking);
+    }
+
+    @Override
+    public Date getEarliestEndDate(String pmsBookingRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(room.invoicedTo);
+        if(room.bookingItemTypeId != null) {
+            BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            if(type.minStay > 0) {
+                Calendar minStayCal = Calendar.getInstance();
+                minStayCal.setTime(room.date.start);
+                minStayCal.add(Calendar.MONTH, type.minStay);
+                if(minStayCal.getTime().after(cal.getTime())) {
+                    return minStayCal.getTime();
+                }
+            }
+        }
+        return cal.getTime();
+    }
+
+    @Override
+    public void freezeSubscription(String pmsBookingRoomId, Date freezeUntil) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        System.out.println("Want to freeze between: " + room.invoicedTo + " - " +  freezeUntil);
+        cartManager.clear();
+        Product freezeProduct = productManager.getProduct("freezeSubscription");
+        if(freezeProduct == null) {
+            freezeProduct = new Product();
+            freezeProduct.id = "freezeSubscription";
+            freezeProduct.name = "Freeze subscription";
+            freezeProduct.price = 0.0;
+            productManager.saveProduct(freezeProduct);
+        }
+        CartItem item = cartManager.addProductItem(freezeProduct.id, 1);
+        item.startDate = room.invoicedTo;
+        item.endDate = freezeUntil;
+        item.getProduct().externalReferenceId = room.pmsBookingRoomId;
+        Order order = orderManager.createOrderForUser(booking.userId);
+        booking.orderIds.add(order.id);
+        order.status = Order.Status.PAYMENT_COMPLETED;
+        pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
         saveBooking(booking);
     }
 

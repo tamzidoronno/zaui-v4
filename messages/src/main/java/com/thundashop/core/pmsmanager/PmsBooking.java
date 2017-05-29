@@ -47,6 +47,7 @@ public class PmsBooking extends DataCommon {
     public Integer periodesToCreateOrderOn;
     public String discountType = "";
     public String couponCode = "";
+    public String pmsPricingCode = "";
     public String wubookchannelid = "";
     public String wubookchannelreservationcode = "";
     public String wubookreservationid = "";

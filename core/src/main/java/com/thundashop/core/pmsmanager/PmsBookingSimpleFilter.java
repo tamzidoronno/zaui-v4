@@ -121,6 +121,7 @@ public class PmsBookingSimpleFilter {
         simple.price = room.price;
         simple.checkedIn = false;
         simple.checkedOut = false;
+        simple.invoicedTo = room.invoicedTo;
         simple.regDate = booking.rowCreatedDate;
         simple.keyIsReturned = room.keyIsReturned;
         simple.wubookreservationid = booking.wubookreservationid;

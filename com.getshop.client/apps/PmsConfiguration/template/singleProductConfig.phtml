@@ -7,6 +7,7 @@ if(!$selectedAddonConfig) {
     $selectedAddonConfig = new core_pmsmanager_PmsBookingAddonItem();
 }
 $includedIn = (array)$selectedAddonConfig->includedInBookingItemTypes;
+$product = $this->getApi()->getProductManager()->getProduct($selectedAddonConfig->productId);
 ?>
 <div gstype="form" method="saveProductConfig">
     <input type='hidden' gsname='productId' gsvalue='<?php echo $_POST['data']['id']; ?>'>
@@ -26,6 +27,11 @@ $includedIn = (array)$selectedAddonConfig->includedInBookingItemTypes;
             <td width="50%"><input type="checkbox" gsname="dependsOnGuestCount" style='width:100%;' <?php echo $CHECKED; ?>></td>
         </tr>
         <tr>
+            <td width="50%">Non recurring product</td>
+            <?php $CHECKED = ($product->isNotRecurring) ? "CHECKED" : ""; ?>
+            <td width="50%"><input type="checkbox" gsname="isNotRecurring" style='width:100%;' <?php echo $CHECKED; ?>></td>
+        </tr>
+        <tr>
             <td width="50%">Non refundable addon (used as cancelations etc)</td>
             <?php $CHECKED = ($selectedAddonConfig->noRefundable) ? "CHECKED" : ""; ?>
             <td width="50%"><input type="checkbox" gsname="noRefundable" style='width:100%;' <?php echo $CHECKED; ?>></td>
@@ -43,6 +49,9 @@ $includedIn = (array)$selectedAddonConfig->includedInBookingItemTypes;
         echo "<input type='checkbox' gsname='includefortype_".$type->id."' $checked>" . $type->name . "<br>";
     }
     ?>
+    <br>
+    Text to identify for addons in channel manager, semicolon for multiple search entries example: (Breakfast;Meal breakfast)<br>
+    <input type='text' gsname='channelManagerAddonText' value='<?php echo $selectedAddonConfig->channelManagerAddonText; ?>'><br><br>
     
     <input gstype="submit" type="button" value='Save'>
 </div>

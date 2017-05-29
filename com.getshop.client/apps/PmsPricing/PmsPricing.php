@@ -62,6 +62,18 @@ class PmsPricing extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->createNewPricePlan($this->getSelectedName(), $_POST['data']['newplan']);
     }
     
+    public function savelongtermdeal() {
+        $pricePlan = $this->getPrices();
+        $newArray = array();
+        for($i = 0; $i < 3; $i++) {
+            if($_POST['data']['minday_'. $i]) {
+                 $newArray[$_POST['data']['minday_'. $i]] = $_POST['data']['discount_'. $i];
+            }
+        }
+        $pricePlan->longTermDeal = $newArray;
+        $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $pricePlan->code, $pricePlan);
+    }
+    
     public function render() {
         if(!$this->getSelectedName()) {
             echo "PLease specify a booking engine first";

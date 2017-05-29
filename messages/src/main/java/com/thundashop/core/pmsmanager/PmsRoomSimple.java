@@ -34,6 +34,7 @@ public class PmsRoomSimple implements Serializable {
     public boolean testReservation = false;
     public Integer numberOfRoomsInBooking = 0;
     public Date regDate;
+    public Date invoicedTo;
     public String bookingTypeId;
     public String wubookchannelid;
     List<String> orderIds;

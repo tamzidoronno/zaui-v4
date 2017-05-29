@@ -267,6 +267,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             room.guestName = getGuestName(roomNumber, table);
             room.roomId = roomId;
             room.breakfasts = checkForBreakfast(roomtable, table, guest);
+            try {
+                ArrayList<PmsBookingAddonItem> addons = new ArrayList(pmsManager.getConfigurationSecure().addonConfiguration.values());
+                for(PmsBookingAddonItem addon : addons) {
+                    addAddonsToRoom(room, table, addon, guest);
+                }
+            }catch(Exception e) {
+                messageManager.sendErrorNotification("Stack failure in new code change for wubook", e);
+            }
             booking.rooms.add(room);
             
             if(pmsManager.getConfigurationSecure().usePricesFromChannelManager) {
@@ -780,6 +788,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 pmsManager.addAddonsToBookingWithCount(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false, r.breakfasts);
             }
             i++;
+            try {
+                for(String productId : r.addonsToAdd.keySet()) {
+                    pmsManager.addProductToRoom(productId, room.pmsBookingRoomId, r.addonsToAdd.get(productId));
+                }
+            }catch(Exception e) {
+                messageManager.sendErrorNotification("Stack failure in new code change for wubook (when adding)", e);
+            }
         }
         pmsInvoiceManager.clearOrdersOnBooking(newbooking);
         newbooking = pmsManager.doCompleteBooking(newbooking);
@@ -1148,7 +1163,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Gson gson = new Gson();
             String text = gson.toJson(table);
             text = text.toLowerCase();
-            return (text.contains("non refundable") || text.contains("non-refundable"));
+            return (text.contains("non refundable") || 
+                    text.contains("non-refundable")) || 
+                    text.contains("ikke refunderbar");
+            
         }catch(Exception e) {
         }
         return false;
@@ -1473,6 +1491,48 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         return cal;
+    }
+
+    private void addAddonsToRoom(WubookBookedRoom room, Hashtable table, PmsBookingAddonItem item, int guests) {
+        if(item.channelManagerAddonText== null || item.channelManagerAddonText.isEmpty()) {
+            return;
+        }
+        String[] toCheckFor = item.channelManagerAddonText.split(";");
+        
+        Hashtable addons = (Hashtable) table.get("ancillary");
+        int addoncount = 0;
+        if(addons != null) {
+            Vector addonsList = (Vector) addons.get("addons");
+            if(addonsList != null) {
+                Iterator roomIterator = addonsList.iterator();
+                while (roomIterator.hasNext()) {
+                    Hashtable addon = (Hashtable) roomIterator.next();
+                    String name = (String) addon.get("name");
+                    String type = (String) addon.get("type");
+                    for(String check : toCheckFor) {
+                        if(type != null && (type.toLowerCase().contains(check))) {
+                            addoncount = (int) addon.get("persons");
+                        } else if(name != null && (name.toLowerCase().contains(check))) {
+                            addoncount = (int) addon.get("persons");
+                        }
+                    }
+                }
+            }
+        }
+        
+        if(addoncount == 0) {
+            Gson gson = new Gson();
+            String toCheckIn = gson.toJson(table);
+            for(String check : toCheckFor) {
+                if(toCheckIn.toLowerCase().contains(check.toLowerCase())) {
+                    addoncount = guests;
+                }
+            }
+        }
+        
+        if(addoncount > 0) {
+            room.addonsToAdd.put(item.productId, addoncount);
+        }
     }
 
 }

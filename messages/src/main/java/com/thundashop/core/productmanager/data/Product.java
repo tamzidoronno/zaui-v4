@@ -121,6 +121,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String additionalMetaData = "";
     /* This we need i case we need to track down more data later on (used for bookings) */
     public String externalReferenceId = "";
+    public boolean isNotRecurring = false;
     
     @Transient
     public double priceExTaxes;

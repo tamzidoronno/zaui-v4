@@ -1,0 +1,57 @@
+<?php
+/* @var $this \ns_83f7da63_84d2_4b24_b53a_276bf0fbb910\PmsFreezeSubscription */
+
+$subscriptions = (array)$this->getApi()->getPmsManager()->getMyRooms($this->getSelectedName());
+$storeId = $this->getApi()->getStoreManager()->getStoreId();
+
+if(!$subscriptions) {
+    echo "Du har ingenting du kan fryse.";
+    return;
+}
+echo "<table width='100%'>";
+foreach($subscriptions as $sub) {
+    $frozenItem = "";
+    foreach($sub->orderIds as $orderId) {
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        foreach($order->cart->items as $item) {
+            if($item->product->id == "freezeSubscription") {
+                $frozenItem = $item;
+            }
+        }
+    }
+
+    
+    $date = $this->getApi()->getPmsManager()->getEarliestEndDate($this->getSelectedName(), $sub->pmsRoomId);
+    echo "<tr gstype='form' method='freezeSubscription'>";
+    echo "<td class='roomname'>" . $sub->room . "</td><td>" . $sub->roomType . "</td>";
+    if($frozenItem) {
+        echo "<td>Fryst i perioden<br>" . date("d.m.Y", strtotime($frozenItem->startDate)) . " - " . date("d.m.Y", strtotime($frozenItem->endDate)) . "</td>";
+    } else {
+        echo "<td>";
+        echo "<input type='hidden' gsname='id' gsvalue='".$sub->pmsRoomId."'>";
+        $startDate = strtotime($sub->invoicedTo);
+        echo "<select gsname='freezeSubscription'>";
+        $month =  date("m.Y", $startDate);
+        $monthTwo =  date("m.Y", strtotime("+1 month", $startDate));
+        echo "<option value='$month'>$month</option>";
+        echo "<option value='$monthTwo'>$month + $monthTwo</option>";
+
+        echo "</select>";
+        echo "</td>";
+        echo "<td><span class='pmsbutton stopdatecalbutton' pmsRoomId='".$sub->pmsRoomId."' gstype='submit'>Frys</span></td>";
+    }
+    echo "</tr>";
+}
+echo "</table>";
+
+$futureTime = strtotime($date);
+$days = (int)(($futureTime - time())/86400)+1;
+
+?>
+
+<script>
+    $('.dateforleaving').datepicker( {
+        dateFormat: "dd.mm.yy",
+        minDate: "<?php echo $days; ?>d", changeMonth: true, changeYear: true, showButtonPanel: true
+    });
+</script>

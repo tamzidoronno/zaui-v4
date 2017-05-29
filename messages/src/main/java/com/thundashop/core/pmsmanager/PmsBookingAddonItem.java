@@ -26,8 +26,8 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     
     public String addonId = UUID.randomUUID().toString();
     public Date date;
-    public double price;
-    public double priceExTaxes;
+    public Double price;
+    public Double priceExTaxes;
     public String productId;
     public Integer addonType;
     public String addonSubType = "";
@@ -39,6 +39,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public boolean isAvailableForCleaner = false;
     public boolean dependsOnGuestCount = false;
     public boolean isIncludedInRoomPrice = false;
+    public String channelManagerAddonText = "";
     List<String> includedInBookingItemTypes = new ArrayList();
     public String addedBy;
     public List<PmsBookingAddonItemValidDateRange> validDates = new ArrayList();

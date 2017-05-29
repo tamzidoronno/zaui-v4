@@ -1,0 +1,87 @@
+body {
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    color: #222;
+}
+
+
+.gs_page_width {
+    width: 1266px;
+    margin: 0 auto;
+}
+
+.gsarea[area="header"] {
+    margin-bottom: 50px;
+}
+
+.gsarea[area="header"] .Menu {
+    text-align: right;
+    padding-top: 20px;
+}
+
+.gsarea[area="header"] .Menu .entry {
+    font-size: 16px;
+    padding-left: 20px; 
+    padding-right: 20px;
+    border-right: solid 1px #DDD;
+    line-height: 30px;
+}
+
+.gsarea[area="header"] .Menu .entries .entries .entry {
+    white-space: nowrap;
+    border-bottom: solid 1px #DDD;
+    line-height: 35px;
+    background-color: #FFF;
+}
+
+.gsarea[area="header"] .Menu .entries .entries .entry:hover {
+    background-color: #EEE;
+}
+.gsarea[area="header"] .Menu .entries .entries {
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    text-align: left;
+}
+
+
+.gsarea[area="header"] .Menu .entry:last-child {
+    border-right: solid 0px #DDD;
+}
+
+
+.shop_button:hover {
+    background: none;
+    background: #05a4c6;
+}
+
+.shop_button {
+    
+    border-radius: 0px;
+    color: #FFF;
+    padding-left: 20px;
+    padding-right: 20px;
+    
+    background: none;
+
+    background-color: #01b2d5;
+}
+
+.gsarea[area="footer"] {
+    background-color: #444;
+    color: #FFF;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    margin-top: 50px;
+}
+
+.gsbody_inner[pageId="3f4e950d-80ab-4cb4-b9bb-e34bafc6001a"] .gsarea[area="footer"] {
+    margin-top: 0px;
+}
+
+.gsbody_inner[pageId="3f4e950d-80ab-4cb4-b9bb-e34bafc6001a"]  .gsarea[area="header"] {
+    margin-bottom: 0px;
+}
+
+.PmsBookingCalendar .calendar .calendar_header { position: relative; text-align: center; border: solid 1px #bbb; font-size: 16px; padding: 5px; background-color:#01b2d5; color:#fff; }
+.PmsBookingCalendar .calendar .day.selected { background-color:#01b2d5; color:#fff; }
+.PmsBookingContactData .complete_button,
+.PmsBookingProductList .continue_button { background-color:#01b2d5; }

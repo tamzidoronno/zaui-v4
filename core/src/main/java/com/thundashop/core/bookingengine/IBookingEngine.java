@@ -78,6 +78,9 @@ public interface IBookingEngine {
     public void changeDatesOnBooking(String bookingId, Date start, Date end);
     
     @Administrator
+    public void changeSourceOnBooking(String bookingId, String source);
+    
+    @Administrator
     public void changeBookingItemOnBooking(String booking, String item);
     
     public RegistrationRules getDefaultRegistrationRules();

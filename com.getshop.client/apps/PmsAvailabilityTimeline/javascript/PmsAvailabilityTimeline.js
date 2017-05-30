@@ -29,6 +29,9 @@ app.PmsAvailabilityTimeline = {
                 app.PmsAvailabilityTimeline.mouseDownData[this.name] = this.value;
             });
         });
+        $('[gsarg]').each(function() {
+            app.PmsAvailabilityTimeline.mouseDownData[$(this).attr("gsarg")]= $(this).val();
+        });
         
         var event = thundashop.Ajax.createEvent('', 'completeAction',$(this), app.PmsAvailabilityTimeline.mouseDownData);
         thundashop.Ajax.post(event);
@@ -38,7 +41,7 @@ app.PmsAvailabilityTimeline = {
         return false;
     },
     showShortOptionsForEntry : function(e) {
-        if($(e.target).hasClass('shortinformationboxrow')) {
+        if(!$(e.target).hasClass('valueentry')) {
             return;
         }
         var bid = $(this).closest('.valueentry').attr('bid');
@@ -51,6 +54,7 @@ app.PmsAvailabilityTimeline = {
         var data = {
             "type" : $(this).attr('type'),
             "time" : $(this).attr('time'),
+            "itemid" : $(this).attr('itemid'),
             "classes" : classes,
             "bid" : bid
         };

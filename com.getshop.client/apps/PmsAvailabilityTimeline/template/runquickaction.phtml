@@ -4,9 +4,11 @@ $bid  = $_POST['data']['bid'];
 $room = "";
 if($bid) {
     $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedName(), $bid);
-    foreach($booking->rooms as $tmpRoom) {
-        if($tmpRoom->bookingId == $bid) {
-            $room = $tmpRoom;
+    if($booking) {
+        foreach($booking->rooms as $tmpRoom) {
+            if($tmpRoom->bookingId == $bid) {
+                $room = $tmpRoom;
+            }
         }
     }
 }
@@ -16,10 +18,22 @@ if($action == "closeroom") {
     $start = date("d.m.Y", $_POST['data']['time']/1000);
     $end = date("d.m.Y", strtotime("+1day", strtotime($start)));
     echo "Close room in periode:<br>";
-    echo "<input type='text' value='$start' style='width:150px;'><br>";
-    echo "<input type='text' value='$end' style='width:150px;'><br>";
+    echo "<input type='text' gsarg='start' value='$start' style='width:150px;'><br>";
+    echo "<input type='text' gsarg='end' value='$end' style='width:150px;'><br>";
     echo "Comment:<br>";
-    echo "<textarea style='width:150px;'></textarea>";
+    echo "<textarea style='width:150px;' gsarg='comment'></textarea><br>";
+    echo "<input type='button' class='completeaction' finalaction='$action' value='Close room' style='width:100%;'>";
+} else if($action == "editclose") {
+    $start = date("d.m.Y", $_POST['data']['time']/1000);
+    $end = date("d.m.Y", strtotime("+1day", strtotime($start)));
+    $benginebooking = $this->getApi()->getBookingEngine()->getBooking($this->getSelectedName(), $bid);
+    $text = $benginebooking->source;
+    echo "Edit close:<br>";
+    echo "<input type='text' gsarg='start' value='".date("d.m.Y", strtotime($benginebooking->startDate))."' style='width:150px;'><br>";
+    echo "<input type='text' gsarg='end' value='".date("d.m.Y", strtotime($benginebooking->endDate))."' style='width:150px;'><br>";
+    echo "Comment:<br>";
+    echo "<textarea style='width:150px;' gsarg='comment'>$text</textarea><br>";
+    echo "<input type='button' class='completeaction' finalaction='$action' value='Edit close' style='width:100%;'>";    
 } else if($action == "moveroom") {
     $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
     $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedName());
@@ -51,7 +65,7 @@ if($action == "closeroom") {
                 $avialbilitytype .= "color:green;";
             }
             
-            echo "<td style='$avialbilitytype' class='completeaction' newroomid='".$item->id."' finalaction='changeRoom'>" . $item->bookingItemName . "</span></td>";
+            echo "<td style='$avialbilitytype' class='completeaction' newroomid='".$item->id."' finalaction='$action'>" . $item->bookingItemName . "</span></td>";
             $j++;
             if($j % 5 == 0) {
                 echo "</tr><tr>";
@@ -60,6 +74,17 @@ if($action == "closeroom") {
         echo "</tr>";
         echo "</table>";
     }
+} else if($action == "deletereservation") {
+    echo "<input type='button' class='completeaction' value='Confirm deletion' finalaction='$action'>";
+} else if($action == "unclose") {
+    echo "<input type='button' class='completeaction' value='Confirm unclose' finalaction='$action'>";
+} else if($action == "changedates") {
+    $start = date("d.m.Y H:i", strtotime($room->date->start));
+    $end = date("d.m.Y H:i", strtotime($room->date->end));
+    echo "Close room in periode:<br>";
+    echo "<input type='text' gsarg='start' value='$start' style='width:150px;'><br>";
+    echo "<input type='text' gsarg='end' value='$end' style='width:150px;'><br>";
+    echo "<input type='button' class='completeaction' value='Change date' finalaction='$action'>";
 } else {
     echo "Action not defined yet: " . $action;
 }

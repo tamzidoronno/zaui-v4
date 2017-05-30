@@ -279,4 +279,9 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public void changeBookingItemType(String itemId, String newTypeId) {
         bookingEngineAbstract.changeBookingItemType(itemId, newTypeId);
     }
+
+    @Override
+    public void changeSourceOnBooking(String bookingId, String source) {
+        bookingEngineAbstract.changeSourceOnBooking(bookingId, source);
+    }
 }

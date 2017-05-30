@@ -271,6 +271,12 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $this->getApi()->getPmsManager()->saveAdditionalTypeInformation($this->getSelectedName(), $additional);
         
         $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $item);
+        
+        if($item->productId && isset($_POST['data']['name'])) {
+            $product = $this->getApi()->getProductManager()->getProduct($item->productId);
+            $product->name = $_POST['data']['name'];
+            $this->getApi()->getProductManager()->saveProduct($product);
+        } 
     }
     
     public function getSelectedName() {

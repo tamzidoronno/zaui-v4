@@ -7,6 +7,7 @@ package com.thundashop.core.wubook;
 
 import com.getshop.scope.GetShopSchedulerBase;
 import com.thundashop.core.common.GetShopLogHandler;
+import java.util.Random;
 
 /**
  *
@@ -24,7 +25,11 @@ public class WuBookHourlyProcessor extends GetShopSchedulerBase {
             return;
         }
         try {
-            Thread.sleep(20000);
+            Random rn = new Random();
+            int min = 0;
+            int max = 50000;
+            int res = rn.nextInt(max - min + 1) + min;
+            Thread.sleep(res);
         }catch(Exception e) {
         }
         String storeId = getApi().getStoreManager().getStoreId();

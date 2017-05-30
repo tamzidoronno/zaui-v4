@@ -6,6 +6,7 @@
 .PmsAvailabilityTimeline .valueentry_item { width: 50px; font-size: 10px; height: 12px; position:absolute; border-bottom: solid 1px #efefef; left:0px; background-color:#fff; display:inline-block; margin-top: 1px; }
 .PmsAvailabilityTimeline .valueentry_placeholder { border: solid 0px; width: 60px; font-size: 10px; line-height: 10px; float:left; left:0px; background-color:#fff; display:inline-block; margin-top: 1px; }
 .PmsAvailabilityTimeline .full.loadBookingList { text-align: center; }
+.PmsAvailabilityTimeline .shortinformationbox { color:#000; }
 .PmsAvailabilityTimeline .valueentry {
     border-left: solid 1px #bbb;
     border-top: solid 1px #bbb;

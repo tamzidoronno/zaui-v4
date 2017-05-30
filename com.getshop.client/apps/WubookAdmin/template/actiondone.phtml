@@ -20,6 +20,8 @@ if($action == "testConnection") {
     } else {
         echo "Unable to connect to the api, make sure the username and password set in booking admin configuration are correct.";
     }
+} else if($action == "runSparseUpdate") {
+    $this->getApi()->getWubookManager()->updateShortAvailability($this->getSelectedName());
 } else if($action == "updateMinStay") {
     $this->getApi()->getWubookManager()->updateMinStay($this->getSelectedName());
     echo "done";

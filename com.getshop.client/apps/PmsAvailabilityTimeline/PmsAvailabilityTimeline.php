@@ -3,8 +3,26 @@ namespace ns_176ea989_c7bb_4cef_a4bd_0c8421567e0b;
 
 class PmsAvailabilityTimeline extends \WebshopApplication implements \Application {
     public $roomWhereNotClosed = false;
+    public $additionalList;
+    
     public function getDescription() {
         
+    }
+    
+    public function completeAction() {
+        $action = $_POST['data']['action'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedName(), $_POST['data']['bid']);
+        $roomId = "";
+        $room = "";
+        foreach($booking->rooms as $troom) {
+            if($troom->bookingId == $_POST['data']['bid']) {
+                $room = $troom;
+            }
+        }
+        if($action == "moveroom") {
+            $itemId = $_POST['data']['newroomid'];
+            $this->getApi()->getPmsManager()->setBookingItem($this->getSelectedName(), $room->pmsBookingRoomId, $booking->id, $itemId, true);
+        }
     }
 
     public function getName() {
@@ -247,6 +265,23 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         }
     }
     
+    /**
+     * 
+     * @return \core_pmsmanager_PmsAdditionalItemInformation[]
+     */
+    public function getAdditionalInfoList() {
+        if($this->additionalList) {
+            return $this->additionalList;
+        }
+        $additional = $this->getApi()->getPmsManager()->getAllAdditionalInformationOnRooms($this->getSelectedName());
+        foreach($additional as $add) {
+            $additional[$add->itemId] = $add;
+        }
+        $this->additionalList = $additional;
+        return $additional;
+
+    }
+    
     public function isVirtuallyAssigned($itemId, $value) {
         foreach ($value->virtuallyAssigned as $key => $assignedItemId) {
             if ($assignedItemId == $itemId) {
@@ -258,8 +293,7 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     }
     
     public function prepareAction() {
-        echo "Preparing action:<br>";
-        echo json_encode($_POST['data']);
+        $this->includefile("runquickaction");
     }
     
     public function getData() {

@@ -68,6 +68,14 @@ body {
     background-color: #01b2d5;
 }
 
+
+.shop_button.red {
+    background-color: #c11212;
+}
+.shop_button.red:hover {
+    background-color: #d93535;
+}
+
 .frontbox .gsuicell.gsinner.gsdepth_2.gscount_0 {
     background-color: #000;
     color: #FFF;

@@ -1,0 +1,24 @@
+<?
+/* @var $this ns_bb707ed9_80ab_4afe_a2aa_6790e63a2b8e\EventBookingConfirmRequest */
+
+$request = $this->getApi()->getEventBookingManager()->getEventRequest("booking", $_SESSION['EventBookingConfirmRequest_requestId']);
+if (!$request) {
+    echo $this->__f("Request has already been processed.");
+    return;
+}
+$event = $this->getApi()->getEventBookingManager()->getEvent("booking", $request->eventId);
+$user = $this->getApi()->getUserManager()->getUserById($request->userId);
+
+//echo "<pre>";
+//print_r($event);
+//echo "</pre>";
+?>
+
+<b><? echo $this->__f("Candidate"); echo "</b>: ".$user->fullName; ?>
+<br/><b>Utbildning:</b> <? echo $event->bookingItemType->name; ?>
+<br/><b>Datum:</b> <? echo ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatMainStartDates($event); ?>
+
+<br/>
+<br/>
+<div class="shop_button" gsclick="acceptRequest"> <? echo $this->__f("Accept"); ?></div>
+<div class="shop_button red" gsclick="rejectRequest"> <? echo $this->__f("Reject"); ?></div>

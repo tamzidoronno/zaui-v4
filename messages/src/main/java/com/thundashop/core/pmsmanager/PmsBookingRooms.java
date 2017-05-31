@@ -24,6 +24,7 @@ import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
 
 public class PmsBookingRooms implements Serializable {
+
     public String bookingItemTypeId = "";
     public String bookingItemId = "";
     public String pmsBookingRoomId = UUID.randomUUID().toString();
@@ -705,6 +706,12 @@ public class PmsBookingRooms implements Serializable {
         return false;
     }
 
+    static String convertOffsetToString(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return getOffsetKey(cal, PmsBooking.PriceType.daily);
+    }
+    
     void checkAddons() {
         for(PmsBookingAddonItem item : addons) {
             if (item.count == null) {

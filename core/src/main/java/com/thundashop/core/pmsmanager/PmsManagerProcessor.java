@@ -61,7 +61,6 @@ public class PmsManagerProcessor {
         try { processAutoExtend(); }catch(Exception e) { manager.logPrintException(e); }
         try { processIntervalCleaning(false); }catch(Exception e) { manager.logPrintException(e); }
         try { processIntervalCleaning(true); }catch(Exception e) { manager.logPrintException(e); }
-        try { createPeriodeInvoices(); }catch(Exception e) { manager.logPrintException(e); }
         try { makeSureCleaningsAreOkey(); }catch(Exception e) { manager.logPrintException(e); }
         try { checkForIncosistentBookings(); }catch(Exception e) { manager.logPrintException(e); }
         try { checkForRoomToClose(); }catch(Exception e) {manager.logPrintException(e); }
@@ -322,34 +321,7 @@ public class PmsManagerProcessor {
         }
     }
 
-    private void createPeriodeInvoices() {
-        if(!manager.getConfigurationSecure().autoCreateInvoices) { 
-            return;
-        }
-        
-        if (manager.lastOrderProcessed != null && isSameDay(manager.lastOrderProcessed, new Date())) {
-            return;
-        }
-        
-        NewOrderFilter filter = new NewOrderFilter();
-        filter.prepaymentDaysAhead = manager.getConfigurationSecure().prepaymentDaysAhead;
-        filter.increaseUnits = manager.getConfigurationSecure().increaseUnits;
-        filter.autoGeneration = true;
-        
-        if (!manager.getConfigurationSecure().prepayment) {
-            filter.prepayment = false;
-            filter.endInvoiceAt = beginningOfMonth(0);
-            manager.createOrder(null, filter);
-
-            filter.onlyEnded = true;
-            filter.endInvoiceAt = new Date();
-            manager.createOrder(null, filter);
-        } else {
-            filter.prepayment = true;
-            filter.endInvoiceAt = beginningOfMonth(1);
-            manager.createOrder(null, filter);
-        }
-    }
+    
 
     private boolean isSameDay(Date date1, Date date2) {
         Calendar calendar1 = Calendar.getInstance();

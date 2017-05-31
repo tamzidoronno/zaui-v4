@@ -91,9 +91,6 @@ foreach($types as $id => $type) {
 $checked = "";
 $incDeleted = "";
 $incVirtual = "";
-if($this->isGroupedByBooking()) {
-    $checked = "CHECKED";
-}
 if($this->isIncludeDeleted()) {
     $incDeleted = "CHECKED";
 }

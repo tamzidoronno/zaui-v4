@@ -5,6 +5,14 @@ if(stristr($classes, "available")) {
     ?>
     <div class="shortinformationboxrow" action="closeroom">Close room</div>
     <?php
+} else if(stristr($classes, "virtually_added")) {
+    ?>
+    <div class="shortinformationboxrow loadbookingfromquickmenu">Open booking</div>
+    <div class="shortinformationboxrow" action="closeroom">Close room</div>
+    <div class="shortinformationboxrow" action="moveroom">Move</div>
+    <div class="shortinformationboxrow" action="deletereservation">Delete</div>
+    <div class="shortinformationboxrow" action="changedates">Change dates</div>
+    <?php
 } else if(stristr($classes, "closedroom")) {
     ?>
     <div class="shortinformationboxrow" action="editclose">Edit closing</div>

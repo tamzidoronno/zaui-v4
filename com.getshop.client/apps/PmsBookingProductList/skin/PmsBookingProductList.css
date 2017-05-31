@@ -17,7 +17,7 @@
 .PmsBookingProductList .imgcontainer { background-color:#000; position: absolute; left: 0px; top: 0px; display:inline-block; height: 100px; }
 .PmsBookingProductList .selectedtext { position:absolute; right: 10px; }
 .PmsBookingProductList .outofstocktext {position:absolute; right: 10px; top: 10px; }
-.PmsBookingProductList .roomdesc { font-size: 14px; font-weight: normal; margin-top: 10px; }
+.PmsBookingProductList .roomdesc { font-size: 14px; font-weight: normal; margin-top: 10px; width: 80%;}
 .PmsBookingProductList .productentry:hover .configurebookingproduct { display:block; }
 .PmsBookingProductList .configurebookingproduct { display:none; }
 
@@ -33,7 +33,7 @@
         display:inline-block;
     }
     .PmsBookingProductList .productentry .roomtypeselectioncount i { font-size: 30px; padding: 10px !important; display:inline-block; }
-   .PmsBookingProductList .roomdesc { margin-top: 10px; line-height: 16px; }
+    .PmsBookingProductList .roomdesc { margin-top: 10px; line-height: 16px; width:50%;margin-left: 70px;}
     .PmsBookingProductList .productentry .name {
         font-size: 14px;
         font-weight: bold;

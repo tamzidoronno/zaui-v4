@@ -267,6 +267,13 @@ class PmsEventCalendar extends \WebshopApplication implements \Application {
         $categories = explode(";", $categoryitems);
         return $categories;
     }
-
+    public function getFilteredCategory(){
+        if(isset($_POST['data']['searchWord'])){
+            $searchword = $_POST['data']['searchWord'];
+            return $searchword;
+        }else{
+            return;
+        }
+    }
 }
 ?>

@@ -11,4 +11,5 @@ public class WubookBookedRoom implements Serializable {
     String guestName = "";
     public HashMap<Date, Double> priceMatrix = new HashMap();
     int breakfasts;
+    HashMap<String, Integer> addonsToAdd = new HashMap();
 }

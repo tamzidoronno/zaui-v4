@@ -125,7 +125,10 @@ if($booking->orderIds) {
     foreach($result as $order) {
         $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
         $totalEx = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
-        $createByManager = $order->createByManager;
+        $createByManager = "";
+        if(isset($order->createByManager)) {
+            $createByManager = $order->createByManager;
+        }
         $totalAmount += $total;
         $totalAmountEx += $totalEx;
         

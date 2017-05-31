@@ -146,6 +146,20 @@ $menuLists = $this->getMenuLists();
                                         </td>
                                     </tr>
                                 </table>
+                                
+                                <?
+                                $roles = $this->getApi()->getUserManager()->getUserRoles();
+                                if (count($roles)) {
+                                    echo "<hr/>";
+                                    foreach ($roles as $role) {
+                                ?>
+                                    <div>
+                                        <input type="checkbox" class='userrolescheckboxes' id="role_<? echo $role->id; ?>" /><? echo $role->name; ?>
+                                    </div>
+                                <?
+                                    }
+                                }
+                                ?>
                             </div>
                             <div class="disabled"></div>
                         </div>

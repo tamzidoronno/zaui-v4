@@ -35,6 +35,9 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean suspended = false;
     public boolean visibleOnlyInMainCompany = false;
     public boolean primaryCompanyUser = false;
+    
+    public List<String> userRoleIds = new ArrayList();
+    
     /**
      * If user is connected to multiple companies 
      * but it still has a main company, this would be the id of
@@ -52,6 +55,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     @Administrator
     public String internalPassword;
+    
+    public List<UserCompanyHistory> companyHistory = new ArrayList();
  
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);
@@ -181,6 +186,15 @@ public class User extends DataCommon implements Comparable<User> {
         
         
         return companyObject.invoiceEmail;
+    }
+
+    public void undoSuspention(String suspensionId) {
+        UserCompanyHistory res = companyHistory.stream().filter(o -> o.id.equals(suspensionId)).findFirst().orElse(null);
+        if (res != null) {
+            companyHistory.remove(res);
+            suspended = false;
+            company = res.companyIds;
+        }
     }
 
  

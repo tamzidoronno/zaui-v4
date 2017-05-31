@@ -275,4 +275,7 @@ public interface IEventBookingManager {
     
     @Administrator
     public void removeInterest(String bookingItemTypeId, String userId);
+    
+    @Administrator
+    public List<String> getCompaniesWhereNoCanditasHasCompletedTests(List<String> testIds);
 }

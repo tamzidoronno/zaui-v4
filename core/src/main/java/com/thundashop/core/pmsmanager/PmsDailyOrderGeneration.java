@@ -436,6 +436,9 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                         
                         for(PmsBookingAddonItem addonAlreadyBilled : alreadyAdded) {
                             PmsBookingAddonItem toCheck = addonAlreadyBilled;
+                            if(toCheck == null || toCheck.price == null) {
+                                continue;
+                            }
                             PmsBookingAddonItem addonOnRoom = null;
                             if(addonsToAdd.containsKey(addonAlreadyBilled.addonId)) {
                                 addonOnRoom = addonsToAdd.get(addonAlreadyBilled.addonId);
@@ -468,6 +471,9 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     }
 
     private void removeFromAddon(PmsBookingAddonItem addonOnRoom, PmsBookingAddonItem addonAlreadyBilled) {
+        if(addonAlreadyBilled == null || addonAlreadyBilled.count == null || addonAlreadyBilled.price == null) {
+            return;
+        }
         double totalBilled = addonAlreadyBilled.count * addonAlreadyBilled.price;
         double totalOnRoom = addonOnRoom.count * addonOnRoom.price;
         double newPrice = (totalOnRoom - totalBilled) / addonOnRoom.count;

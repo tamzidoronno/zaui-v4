@@ -40,6 +40,7 @@ class InvoiceControl extends \MarketingApplication implements \Application {
         if(isset($_POST['data']['keyword']) && $_POST['data']['keyword']) {
             $filterOptions =  new \core_common_FilterOptions();
             $filterOptions->searchWord = $_POST['data']['keyword'];
+            $filterOptions->extra->{'paymenttype'} = "70ace3f0-3981-11e3-aa6e-0800200c9a66";
             $res = $this->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);
             $orders = $res->datas;
         } else {

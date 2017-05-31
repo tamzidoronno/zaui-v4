@@ -627,7 +627,7 @@ public class PmsManagerProcessor {
                 continue;
             }
             if(!allBookingIds.contains(test.id)) {
-                manager.messageManager.sendErrorNotification(test.id + " this is missing on the bookingengine, the booking engine and the pms manager is out of sync: " + test.startDate + " - " + test.endDate + ", created: " + test.rowCreatedDate, null);
+                manager.messageManager.sendErrorNotification(test.id + "where found in the booking engine but not in the pms manager, the booking engine and the pms manager is out of sync: " + test.startDate + " - " + test.endDate + ", created: " + test.rowCreatedDate, null);
                 manager.bookingEngine.deleteBooking(test.id);
             }
         }
@@ -687,13 +687,17 @@ public class PmsManagerProcessor {
                     }
                     
                     double total = manager.orderManager.getTotalAmount(order);
-                    if(total <= 0.0) {
+                    if(total <= 0.0 && !order.hasFreezeItem()) {
                         continue;
                     }
-                    if(order.status != Order.Status.PAYMENT_COMPLETED) {
+                    if(order.status != Order.Status.PAYMENT_COMPLETED || order.hasFreezeItem()) {
                         for(CartItem item : order.cart.getItems()) {
                             if(!firstDate && item.startDate != null && item.startDate.after(new Date())) {
                                 //Only set payedfor=false when order is started.
+                                continue;
+                            }
+                            if(!firstDate && item.endDate != null && item.endDate.before(new Date())) {
+                                //Only set payedfor=false when order has not been ended.
                                 continue;
                             }
                             firstDate = false;
@@ -1037,7 +1041,7 @@ public class PmsManagerProcessor {
                         }
                     }
                     if(!found) {
-                        manager.logPrint("Dead code found for device: " + lock.name + " - " + lock.zwaveid);
+                        manager.logPrint("Dead code found for device: " + lock.name + " - " + lock.zwaveid + " - " + code.fetchCodeToAddToLock() + " slot: " + code.slot);
                         code.refreshCode();
                         lockNeedUpdate = true;
                     }

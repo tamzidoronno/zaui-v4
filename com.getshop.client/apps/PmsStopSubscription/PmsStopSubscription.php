@@ -21,8 +21,9 @@ class PmsStopSubscription extends \WebshopApplication implements \Application {
     public function stopsubscription() {
         $end = strtotime($_POST['data']['enddate']);
         $id = $_POST['data']['id'];
-        $date = date('Y-m-01', strtotime("+2 month"));
-        $futureTime = strtotime($date)-86400;
+        
+        $earliest = $this->getApi()->getPmsManager()->getEarliestEndDate($this->getSelectedName(), $id);
+        $futureTime = strtotime($earliest);
         if($futureTime > $end) {
             $this->failedStop = "Kan ikke fortsette, minum avslutningsdato er: " . date("d.m.Y", $futureTime+86400);
         } else {

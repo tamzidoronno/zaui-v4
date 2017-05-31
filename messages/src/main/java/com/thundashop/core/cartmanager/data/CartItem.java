@@ -138,6 +138,13 @@ public class CartItem implements Serializable {
             product.price *= -1;
             product.priceExTaxes *= -1;
         }
+        if(itemsAdded != null) {
+            for(PmsBookingAddonItem toCheck : itemsAdded) {
+                if(toCheck != null && toCheck.price != null && (toCheck.price.isInfinite() || toCheck.price.isNaN())) {
+                    toCheck.price = 0.0;
+                }
+            }
+        }
     }
 
     public Date getStartingDate() {

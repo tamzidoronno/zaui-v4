@@ -344,14 +344,22 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         private String password = "";
         private List<BookingItem> items;
         private boolean stopUpdatesOnLock;
+        private final boolean useNewQueueCheck;
 
-        public GetshopLockCodeManagemnt(GetShopDevice device, String username, String password, String hostname, List<BookingItem> items, boolean stopUpdatesOnLock) {
+        public GetshopLockCodeManagemnt(GetShopDevice device, 
+                String username, 
+                String password, 
+                String hostname, 
+                List<BookingItem> items, 
+                boolean stopUpdatesOnLock,
+                boolean useNewQueueCheck) {
             this.device = device;
             this.hostname = hostname;
             this.password = password;
             this.username = username;
             this.items = items;
             this.stopUpdatesOnLock = stopUpdatesOnLock;
+            this.useNewQueueCheck = useNewQueueCheck;
         }
         
         public void setCode(Integer offset, String code, boolean remove) {
@@ -395,7 +403,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         boolean added = false;
                         for(int i = 0; i < 10; i++) {
                             if(stopUpdatesOnLock) { continue; }
-                            if(codesAdded >= 2 && !device.needForceRemove() && !device.isSubLock()) {
+                            int codesToAdd = 2;
+                            if(useNewQueueCheck) {
+                                codesToAdd = 10;
+                            }
+                            
+                            if(codesAdded >= codesToAdd && !device.needForceRemove() && !device.isSubLock()) {
                                 int minutesTried = getMinutesTriedSettingCodes(device);
                                 if(minutesTried > 5) {
                                     Calendar future = Calendar.getInstance();
@@ -452,7 +465,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
-                        try { Thread.sleep(10000); }catch(Exception e) {}
+                        if(!useNewQueueCheck) {
+                            try { Thread.sleep(10000); }catch(Exception e) {}
+                        }
                     }
                 }
             }
@@ -512,6 +527,26 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             waitForEmptyQueue();
         }
 
+        
+        public boolean isDoneProcessingQueue(String queue) {
+            Gson gson = new Gson();
+            List<Object> toParse = new ArrayList();
+            toParse = gson.fromJson(queue, toParse.getClass());
+            for(Object a : toParse) {
+                String line = a.toString();
+                if(line.contains("0.20000000298023224")) {
+                    continue;
+                }
+                String[] lineElements = line.split(",");
+                if(line.length() > 8 && lineElements[5].trim().equals("1.0")) {
+                    continue;
+                } else {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
         private void waitForEmptyQueue() {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.SECOND, 360);
@@ -520,6 +555,10 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 try {
                     String address = "http://"+hostname+":8083/" + postfix;
                     String res = GetshopLockCom.httpLoginRequest(address,username,password);
+                    if(useNewQueueCheck && isDoneProcessingQueue(res)) {
+                        break;
+                    }
+                    
                     if(res.equals("[]")) {
                         break;
                     }
@@ -700,7 +739,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
         }
     }
-    
     public void openLock(String lockId) {
         openLock(lockId, "");
     }
@@ -774,8 +812,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             String user = getUsername(toSet.serverSource);
             String pass = getPassword(toSet.serverSource);
             String host = getHostname(toSet.serverSource);
+            boolean useNewQueueCheck = pmsManager.getConfigurationSecure().useNewQueueCheck;
 
-            GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock);
+            GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock, useNewQueueCheck);
             mgr.start();
         }
     }

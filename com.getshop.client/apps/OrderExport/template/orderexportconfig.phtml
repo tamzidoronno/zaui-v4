@@ -207,13 +207,14 @@ foreach($configs as $config) {
     echo "<span class='integrationselection $selected' type='".$config->id."'><i class='fa fa-trash-o deletetransferconfig' configid='".$config->id."'></i> " .  $availableTypes[$config->transferType]  . " (" . $config->subType . ")". "</span>";
 }
 
-echo "<span class='integrationselection incomedistribution' type='incomedistribution'>Income distribution</span>";
+echo "<span class='integrationselection incomedistribution loadincomedistribution' type='incomedistribution'>Income distribution</span>";
 echo "<br><br><div style='clear:both;'></div><hr>";
 ?>
 <div class='configfield' type='incomedistribution' style='display:none;'>
 <?php 
 
 echo "<select class='viewstatsforfile'>";
+echo "<option value=''>Select a view</option>";
 echo "<option value=''>All orders</option>";
 foreach($files as $file) {
     echo "<option value='". $file->id."'>" . $file->subtype . " - " . date("d.m.Y" , strtotime($file->startDate)) . " - " .  date("d.m.Y" , strtotime($file->endDate))  . "</option>";
@@ -222,7 +223,6 @@ echo "</select>";
 echo "<br>";
 echo "<br>";
 echo "<div class='orderdistrstats'>";
-$this->printStatistics();
 echo "</div>";
 ?>
 </div>    

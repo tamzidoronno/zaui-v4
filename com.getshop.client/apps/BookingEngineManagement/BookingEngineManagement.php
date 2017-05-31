@@ -252,13 +252,14 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     
     public function saveItemType() {
         $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $_POST['data']['typeid']);
-        $item->addon = $_POST['data']['addon'];
-        $item->productId = $_POST['data']['productId'];
-        $item->visibleForBooking = $_POST['data']['visibleForBooking'];
-        $item->size = $_POST['data']['size'];
-        $item->name = $_POST['data']['name'];
-        $item->description = $_POST['data']['description'];
-        $item->capacity = $_POST['data']['capacity'];
+        if(isset($_POST['data']['addon'])) { $item->addon = $_POST['data']['addon']; }
+        if(isset($_POST['data']['productId'])) { $item->productId = $_POST['data']['productId']; }
+        if(isset($_POST['data']['visibleForBooking'])) { $item->visibleForBooking = $_POST['data']['visibleForBooking']; }
+        if(isset($_POST['data']['size'])) { $item->size = $_POST['data']['size']; }
+        if(isset($_POST['data']['name'])) { $item->name = $_POST['data']['name']; }
+        if(isset($_POST['data']['description'])) { $item->description = $_POST['data']['description']; }
+        if(isset($_POST['data']['capacity'])) { $item->capacity = $_POST['data']['capacity']; }
+        if(isset($_POST['data']['minStay'])) { $item->minStay = $_POST['data']['minStay']; }
         
         $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $_POST['data']['typeid']);
         foreach($_POST['data'] as $key => $val) {
@@ -270,6 +271,12 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $this->getApi()->getPmsManager()->saveAdditionalTypeInformation($this->getSelectedName(), $additional);
         
         $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $item);
+        
+        if($item->productId && isset($_POST['data']['name'])) {
+            $product = $this->getApi()->getProductManager()->getProduct($item->productId);
+            $product->name = $_POST['data']['name'];
+            $this->getApi()->getProductManager()->saveProduct($product);
+        } 
     }
     
     public function getSelectedName() {

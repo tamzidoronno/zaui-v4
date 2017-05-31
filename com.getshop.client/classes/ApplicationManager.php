@@ -1036,6 +1036,10 @@ class ApplicationManager extends FactoryBase {
         ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::refresh();
     }
     
+    public function unlockOrder() {
+        $this->getApi()->getOrderManager()->unlockOrder($_POST['data']['orderid'], $_POST['data']['password']);
+    }
+    
     public function upgradeToGetShopAdmin() {
         $this->getApi()->getUserManager()->upgradeUserToGetShopAdmin($_POST['data']['password']);
         ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::refresh();

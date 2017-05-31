@@ -15,6 +15,9 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.scormmanager.Scorm;
+import com.thundashop.core.scormmanager.ScormManager;
+import com.thundashop.core.scormmanager.ScormPackage;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
@@ -83,6 +86,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Autowired
     public UtilManager utilManager;
+    
+    @Autowired
+    public ScormManager scormManager;
     
     @Override
     public void dataFromDatabase(DataRetreived datas) {
@@ -2283,17 +2289,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             return true;
         }
 
-        events.values().stream().forEach(ev -> shortFinalize(ev));
- 
         List<Event> eventsOfType = events.values().stream()
-                .filter(b -> b.bookingItemType != null && b.bookingItemType.id.equals(eventTypeId))
+                .filter(b -> b.bookingItem != null && b.bookingItem.bookingItemTypeId.equals(eventTypeId))
                 .collect(Collectors.toList());
         
         for (Event event : eventsOfType) {
-            if (!event.bookingItemType.id.equals(eventTypeId)) {
-                continue;
-            }
-            
             if (isUserSignedUpForEvent(event.id, user.id) && hasUserParticipated(event, user.id) ) {
                 return true;
             }
@@ -2357,5 +2357,76 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             eventInterests.remove(o.id);
             deleteObject(o);
         });
+    }
+
+    @Override
+    public List<String> getCompaniesWhereNoCanditasHasCompletedTests(List<String> testIds) {
+        List<BookingItemType> bookingItemTypes = bookingEngine.getBookingItemTypes().stream()
+                .filter(b -> testIds.contains(b.id))
+                .collect(Collectors.toList());
+        
+        List<ScormPackage> scormPackages = scormManager.getAllPackages().stream()
+                .filter(b -> testIds.contains(b.id))
+                .collect(Collectors.toList());
+        
+        List<Company> companies = userManager.getAllCompanies();
+        
+        List<String> retCompanies = new ArrayList();
+        
+        for (Company company : companies) {
+            List<User> users = userManager.getUsersByCompanyId(company.id);
+            
+            boolean hasCompletedTests = hasAnyUserCompletedAllTests(bookingItemTypes, users);
+            boolean hasCompletedScorms = hasAnyUserCompletedAllScorms(scormPackages, users);
+            
+            if (!hasCompletedScorms || !hasCompletedTests) {
+                retCompanies.add(company.id);
+            }
+        }
+        
+        return retCompanies;
+    }
+
+    private boolean hasAnyUserCompletedAllTests(List<BookingItemType> bookingItemTypes, List<User> users) {
+        List<BookingItemType> typesToTest = new ArrayList(bookingItemTypes);
+        
+        for (BookingItemType type : bookingItemTypes) {
+            boolean found = false;
+            for (User user: users) {
+                
+                boolean hasCompleted = hasCompletedMandatoryEvent(type.id, user.id);
+                if (hasCompleted) {
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (found) {
+                typesToTest.remove(type);
+            }
+        }
+        
+        return typesToTest.isEmpty();
+    }
+
+    private boolean hasAnyUserCompletedAllScorms(List<ScormPackage> scormPackages, List<User> users) {
+        List<ScormPackage> scormPackagesToTest = new ArrayList(scormPackages);
+        
+        for (ScormPackage spackage : scormPackages) {
+            boolean found = false;
+            for (User user: users) {
+                boolean hasCompleted = scormManager.getScormForCurrentUser(spackage.id, user.id).passed;
+                if (hasCompleted) {
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (found) {
+                scormPackagesToTest.remove(spackage);
+            }
+        }
+        
+        return scormPackagesToTest.isEmpty();
     }
 }

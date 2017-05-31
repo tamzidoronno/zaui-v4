@@ -20,6 +20,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function toggleNonRefundable() {
+        $_POST['data']['bookingid'] = $_POST['data']['clicksubmit'];
+        $booking = $this->getSelectedBooking();
+        $booking->nonrefundable = !$booking->nonrefundable;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
+    }
+    
     public function getUserSettingsOrder() {
         return 1;
     }
@@ -2689,31 +2698,32 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
             $this->paymentLinkSent = false;
             $orderId = $this->getManager()->createOrder($this->getSelectedName(), $bookingId, $filter);
+            if($orderId) {
+                $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                if(!isset($appendToOrder) || !$appendToOrder) {
+                    $order->avoidAutoSending = true;
+                }
+                $this->getApi()->getOrderManager()->saveOrder($order);
 
-            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-            if(!isset($appendToOrder) || !$appendToOrder) {
-                $order->avoidAutoSending = true;
+
+                $this->getManager()->processor($this->getSelectedName());
+
+                if($_POST['data']['paymenttype'] != "70ace3f0-3981-11e3-aa6e-0800200c9a66" && 
+                        (isset($_POST['data']['sendpaymentlink']) && $_POST['data']['sendpaymentlink'] === "true") &&
+                        !$savedcard) {
+                    $email = $_POST['data']['paymentlinkemail'];
+                    $phone = $_POST['data']['paymentlinkphone'];
+                    $prefix = $_POST['data']['paymentlinkprefix'];
+                    $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);
+                    $this->paymentLinkSent = true;
+                }
+
+                $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                if($_POST['data']['paymenttype'] == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
+                    $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
+                }
+                $this->getApi()->getOrderManager()->saveOrder($order);
             }
-            $this->getApi()->getOrderManager()->saveOrder($order);
-
-
-            $this->getManager()->processor($this->getSelectedName());
-
-            if($_POST['data']['paymenttype'] != "70ace3f0-3981-11e3-aa6e-0800200c9a66" && 
-                    (isset($_POST['data']['sendpaymentlink']) && $_POST['data']['sendpaymentlink'] === "true") &&
-                    !$savedcard) {
-                $email = $_POST['data']['paymentlinkemail'];
-                $phone = $_POST['data']['paymentlinkphone'];
-                $prefix = $_POST['data']['paymentlinkprefix'];
-                $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);
-                $this->paymentLinkSent = true;
-            }
-
-            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-            if($_POST['data']['paymenttype'] == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
-                $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
-            }
-            $this->getApi()->getOrderManager()->saveOrder($order);
 
             if(isset($savedcard) && $savedcard) {
                 if($this->getApi()->getOrderManager()->payWithCard($order->id, $savedcard->id)) {
@@ -3134,7 +3144,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $searchtypes['afterstayorder'] = "Order created after stay";
             $searchtypes['unsettled'] = "Bookings with unsettled amounts";
         }
-        if($config->bookingProfile == "storage") {
+        if($config->bookingProfile == "storage" || $config->bookingProfile == "subscription") {
             $searchtypes['requestedending'] = "Requested to be ended";
         }
         return $searchtypes;

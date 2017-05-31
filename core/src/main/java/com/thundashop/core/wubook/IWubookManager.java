@@ -47,6 +47,8 @@ public interface IWubookManager {
     @Administrator
     public String updatePrices() throws Exception;
     @Administrator
+    public String updateMinStay() throws Exception;
+    @Administrator
     public String markCCInvalid(String rcode) throws Exception;
     @Administrator
     public List<String> insertAllRooms() throws Exception;
@@ -77,6 +79,6 @@ public interface IWubookManager {
     public void deleteRestriction(String id);
     
     @Administrator
-    public List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws XmlRpcException, IOException;
+    public List<WubookBooking> fetchBookings(Integer daysBack, boolean registrations) throws Exception;
     
 }

@@ -40,6 +40,10 @@ public class InvoiceGenerator {
         if (details.isTypeTwo() && showAttachments) {
             new InvoiceAttachmentTypeTwoPages(document, order, details);
         }
+        if (details.isTypeOne() && showAttachments) {
+            InvoiceAttachmentTypeOne attachment = new InvoiceAttachmentTypeOne(order.cart.getItems(), details, document);
+            attachment.createInvoice();
+        }
 
         String fileName = "/tmp/" + order.id + ".pdf";
         document.save(fileName);

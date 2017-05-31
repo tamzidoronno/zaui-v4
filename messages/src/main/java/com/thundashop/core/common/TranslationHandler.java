@@ -199,7 +199,7 @@ public class TranslationHandler implements Serializable {
         return false;
     }
 
-    void updateTranslationOnAll(String language, Object result) {
+    public void updateTranslationOnAll(String language, Object result) {
         try {
             Set<TranslationHandler> allHandlers = getAllTranslationHandlers(result);
             for(TranslationHandler handle : allHandlers) {

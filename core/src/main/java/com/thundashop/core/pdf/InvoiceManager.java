@@ -81,6 +81,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             details.dueDays = Integer.parseInt(settings.getSetting("duedays"));
             details.vatNumber = settings.getSetting("vatNumber");
             details.webAddress = settings.getSetting("webAddress");
+            details.useLanguage = settings.getSetting("language");
             String kidSize = settings.getSetting("kidSize");
             if(kidSize != null && !kidSize.isEmpty()) {
                 details.kidSize = new Integer(kidSize);

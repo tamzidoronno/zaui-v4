@@ -39,11 +39,11 @@ $dateType = $this->getConfigurationSetting("date_type");
         <td width="50%">Max Characters in Textarea</td>
         <?php
             $maxChar = $this->getConfigurationSetting('maxCharTextArea'); 
-            if(!$maxChar || $maxChar == "" || $maxChar == 0){
-                $maxChar = 160;
+            if(!$maxChar || $maxChar == "" || $maxChar <= 0){
+                $maxChar = "";
             }
             ?>
-        <td width="50%"><input type="number" gsname="maxCharTextArea" style='width:100%;' value="<? echo $maxChar; ?>"></td>
+        <td width="50%"><input type="number" gsname="maxCharTextArea" placeholder="Default" style='width:100%;' value="<? echo $maxChar; ?>"></td>
     </tr>
     <tr>
         <td width="50%">Set organisation as default</td>

@@ -1401,10 +1401,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if($this->selectedBooking) {
             return $this->selectedBooking;
         }
-        $bookingid = $_POST['data']['bookingid'];
-        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingid);
-        $this->selectedBooking = $booking;
-        return $booking;
+        
+        if (isset($_POST['data']['bookingid'])) {
+            $bookingid = $_POST['data']['bookingid'];
+            $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingid);
+            $this->selectedBooking = $booking;
+            return $booking;
+        }
+        
+        return null;
     }
     
     public function getName() {
@@ -3237,6 +3242,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function supportNewDaily() {
         $booking = $this->getSelectedBooking();
+        if ($booking == null)
+            return false;
+        
         return $this->getApi()->getPmsInvoiceManager()->supportsDailyPmsInvoiceing($this->getSelectedName(), $booking->id);
     }
 

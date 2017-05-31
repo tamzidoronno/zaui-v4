@@ -78,6 +78,7 @@ class Company extends \ns_27716a58_0749_4601_a1bc_051a43a16d14\GSTableCommon imp
         $company->address->postCode = $_POST['postCode'];
         $company->address->city = $_POST['city'];
         $company->group = $_POST['groupId'];
+        $company->needConfirmation = $_POST['needConfirmation'] === "true";
         
         $company->invoiceAddress->address = $_POST['invoice_address'];
         $company->invoiceAddress->postCode = $_POST['invoice_postCode'];

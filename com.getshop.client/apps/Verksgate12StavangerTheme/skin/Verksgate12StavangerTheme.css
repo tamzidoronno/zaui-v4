@@ -4,6 +4,10 @@ body {
     color: #222;
 }
 
+.gsarea[area="header"] {
+    background-color: #f5f5f5;
+    color: #FFF;
+}
 
 .gs_page_width {
     width: 1266px;

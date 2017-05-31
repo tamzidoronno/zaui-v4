@@ -747,6 +747,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         boolean needSaving = false;
         for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            room.checkAddons();
             if(room.price.isNaN() || room.price.isInfinite()) {
                 room.price = 0.0;
             }

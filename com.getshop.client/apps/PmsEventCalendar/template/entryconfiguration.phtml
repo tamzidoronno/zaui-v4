@@ -12,13 +12,6 @@ $_SESSION['pmseventid'] = $_GET['eventid'];
  
 $event = $this->getApi()->getPmsEventManager()->getEntry($this->getSelectedName(), $_GET['eventid'], $day);
 
-//$imgDisplayer = $this->getImageDisplayer($event->id);
-//$fileid = $imgDisplayer->getImageId();
-//if($fileid && !$event->imageId) {
-//    $event->imageId = $fileid;
-//    $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
-//}
-
 $starttime = $event->dateRanges[0]->start;
 if(!$event->starttime) {
     $event->starttime = date("H:i", strtotime($starttime));

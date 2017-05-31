@@ -120,7 +120,10 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             }
                 
             echo "<label class='col-".$value->width. " " . $lastone . " type_".$value->type."'>";
-            
+            $maxChar = $this->getConfigurationSetting("maxCharTextArea");
+            if(!$maxChar || $maxChar == "" || $maxChar == 0){
+                $maxChar = 160;
+            }
             if (stristr($value->name, "prefix")) {
                 $this->printTitle($value->title, $value->required, $value->type);
                 $this->printPhoneCodes($value, $valueSet);
@@ -140,7 +143,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 $this->printTitle($value->title, $value->required, $value->type);
             } else if($value->type == "textarea") {
                 $this->printTitle($value->title, $value->required, $value->type);
-                echo "<textarea gsname='".$value->name."'>".$valueSet."</textarea>";
+                echo "<textarea maxlength='".$maxChar."' gsname='".$value->name."'>".$valueSet."</textarea>";
             } else {
                 echo "Type not set yet: " . " (" . $value->type . ")";
             }

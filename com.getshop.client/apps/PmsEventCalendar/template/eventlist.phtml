@@ -1,75 +1,91 @@
 <?php
 /* @var $this ns_27e174dc_b08c_4bf7_8179_9ea8379c91da\PmsEventCalendar */
 $cats = $this->getCategories();
+$entries = $this->getEventList();
+$searchword = $this->getFilteredCategory();
+
 $datelist = array();
 $indexrange = array();
-
 
 $this->__w("Oct");
 $this->__w("Dec");
 
-$entries = $this->getEventList();
-//print_r($entries);
+if(count($cats)> 1){
+    echo "<div class='eventCategory'>";
+    echo "<i class='fa fa-circle-o-notch closeCategoryfiter'> Alt</i>";
+    foreach($cats as $category){
+        if($category == $searchword){
+            echo "<div class='eventcategorySort active' category='".$category."'>".$category."</div>";
+        }else{
+            echo "<div class='eventcategorySort' category='".$category."'>".$category."</div>";
+        }
+    }
+    echo "</div>";
+}
+//echo "<pre>";
+//print_r($searchword);
+//echo "</pre><br>";
 echo "<table>";
 $i = 0;
 foreach($entries as $eventEntry) {
-    $time = strtotime($eventEntry->date);
-    
-    if(!$eventEntry->starttime) {
-        $eventEntry->starttime = date("H:i", strtotime($eventEntry->date));
-    }
-    $title = $eventEntry->title;
-    $starttime = $eventEntry->starttime;
-    $shortDesc = $eventEntry->shortdesc;
-    $day = date("Y-m-d", $time);
-    
-    if(isset($_GET['list']) && $_GET['list'] == "tiny") {
-        echo "<tr>";
-        echo "<td valign='top' width='50'><div>".date("d.", $time). "<br>" . $this->__w(date("M", $time)) ."</div></td>";
-        echo "<td valign='top' class='listtext'>";
-        echo $title . "<br>";
-        echo $starttime;
-        echo "</td>";
-        echo "</tr>";
-    } else {
-        echo "<tr>";
-        if(!$this->getFactory()->isMobile()) {
-            echo "<td valign='top' class='datecol' width='90'><div>".date("d.", $time). " " . $this->__w(date("M", $time)) ."</div><div>".$starttime."</div></td>";
+    if($eventEntry->category == $searchword || $searchword == ""){
+        $time = strtotime($eventEntry->date);
+        if(!$eventEntry->starttime) {
+            $eventEntry->starttime = date("H:i", strtotime($eventEntry->date));
         }
-        echo "<td valign='top' class='listtext'>";
-        $shortId = explode("-", $eventEntry->eventId);
-        $edit = "";
-        if($this->isEditorMode()) {
-            $edit = "<i class='fa fa-trash-o deleteevent' eventid='".$eventEntry->eventId."' ></i> ";
-            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->eventId."'><i class='fa fa-pencil-square' title='Endre alle eventer i denne serien'></i></a> ";
-            $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->eventId."&time=$time'><i class='fa fa-edit' title='Endre dette enkelteventet'></i></a> ";
-        }
-        echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=".$time."'>" . $title;
-        echo " <span style='font-size: 12px;'>les mer</span></a></h2>";
-        
-        if($this->getFactory()->isMobile()) {
-            echo "<div style='font-size: 12px;'>".date("d.", $time). " " . $this->__w(date("M", $time)) ." ".$starttime."</div>";
-        }
-        
+        $title = $eventEntry->title;
+        $starttime = $eventEntry->starttime;
+        $shortDesc = $eventEntry->shortdesc;
+        $day = date("Y-m-d", $time);
 
-        echo "<div style='margin-top: 5px; margin-bottom: 5px;'>";
-        echo  $eventEntry->place;
-        echo "</div>";
-        if(isset($cats[$eventEntry->category])) {
-//            echo "<div><span class='cat'>" . $cats[$eventEntry->category] . "</span></div>";
+        if(isset($_GET['list']) && $_GET['list'] == "tiny") {
+            echo "<tr>";
+            echo "<td valign='top' width='50'><div>".date("d.", $time). "<br>" . $this->__w(date("M", $time)) ."</div></td>";
+            echo "<td valign='top' class='listtext'>";
+            echo $title . "<br>";
+            echo $starttime;
+            echo "</td>";
+            echo "</tr>";
+        } else {
+            echo "<tr>";
+            if(!$this->getFactory()->isMobile()) {
+                echo "<td valign='top' class='datecol' width='90'><div>".date("d.", $time). " " . $this->__w(date("M", $time)) ."</div><div>".$starttime."</div></td>";
+            }
+            echo "<td valign='top' class='listtext'>";
+            $shortId = explode("-", $eventEntry->eventId);
+            $edit = "";
+            if($this->isEditorMode()) {
+                $edit = "<i class='fa fa-trash-o deleteevent' eventid='".$eventEntry->eventId."' ></i> ";
+                $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->eventId."'><i class='fa fa-pencil-square' title='Endre alle eventer i denne serien'></i></a> ";
+                $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->eventId."&time=$time'><i class='fa fa-edit' title='Endre dette enkelteventet'></i></a> ";
+            }
+            echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=".$time."'>" . $title;
+            echo " <span style='font-size: 12px;'>les mer</span></a></h2>";
+
+            if($this->getFactory()->isMobile()) {
+                echo "<div style='font-size: 12px;'>".date("d.", $time). " " . $this->__w(date("M", $time)) ." ".$starttime."</div>";
+            }
+
+            echo "<div style='margin-top: 5px; margin-bottom: 5px;'>";
+            echo  $eventEntry->place;
+            echo "</div>";
+            
+            echo nl2br(trim($shortDesc)) . "<br>";
+            if(isset($eventEntry->category)) {
+                echo "<span class='cat'>" . $eventEntry->category . "</span>";
+            }
+            echo "<span class='arrangedby'>&nbsp;Arrangør: " . $eventEntry->arrangedBy . "</span>";
+            echo "<br><br>";
+            echo "</td>";
+            echo "<tr>";
         }
-        echo nl2br(trim($shortDesc)) . "<br>";
-        echo "<span class='arrangedby'>Arrangør: " . $eventEntry->arrangedBy . "</span>";
-        echo "<br><br>";
-        echo "</td>";
-        echo "<tr>";
-    }
-    $i++;
-    if($i > 500) {
-        break;
-    }
-    if(isset($_GET['list']) && $_GET['list'] == "tiny" && $i == 3) {
-        break;
+        $i++;
+        if($i > 500) {
+            break;
+        }
+        if(isset($_GET['list']) && $_GET['list'] == "tiny" && $i == 3) {
+            break;
+        }
     }
 }
 echo "</table>";

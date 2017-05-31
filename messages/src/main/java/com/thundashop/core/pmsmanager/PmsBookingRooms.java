@@ -704,4 +704,16 @@ public class PmsBookingRooms implements Serializable {
         }
         return false;
     }
+
+    void checkAddons() {
+        for(PmsBookingAddonItem item : addons) {
+            if (item.count == null) {
+                item.count = 0;
+            }
+            
+            if (item.price == null || item.price.isNaN() || item.price.isInfinite()) {
+                item.price = 0D;
+            }
+        }
+    }
 }

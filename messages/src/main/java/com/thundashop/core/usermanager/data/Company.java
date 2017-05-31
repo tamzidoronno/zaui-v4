@@ -37,6 +37,8 @@ public class Company extends DataCommon implements Comparable<Company> {
     public List<Company> subCompanies = new ArrayList();
     
     public String companyLeaderUserId = "";
+    
+    public boolean needConfirmation = false;
 
     @Override
     public int compareTo(Company o) {

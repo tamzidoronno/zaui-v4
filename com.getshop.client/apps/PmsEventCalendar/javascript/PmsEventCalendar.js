@@ -11,10 +11,32 @@ app.PmsEventCalendar = {
         $(document).on('change', '.PmsEventCalendar #file', app.PmsEventCalendar.imagePreview);
         $(document).on('change', '.PmsEventCalendar #logo', app.PmsEventCalendar.logoPreview);
         $(document).on('click', '.PmsEventCalendar .deleteevent', app.PmsEventCalendar.deleteevent);
+        $(document).on('click', '.PmsEventCalendar .eventcategorySort', app.PmsEventCalendar.sortCategory);
+        $(document).on('click', '.PmsEventCalendar .closeCategoryfiter', app.PmsEventCalendar.closeCategory);
+    },
+    closeCategory: function(){
+        $(this).css('background-color','#b5dbe5')
+        var event = thundashop.Ajax.createEvent(null, "getFilteredCategory", this,{
+            searchWord : ""
+        });
+        thundashop.Ajax.post(event);
+    },
+    sortCategory : function(){
+//        $('.closeCategoryfiter').css('background-color','#fff').css('color','#555');
+        var categorybutton = $(this);
+        var searchword = categorybutton.attr('category');
+        if($(this).hasClass('active')){
+            searchword = "";
+        }
+        var data = {
+            searchWord : searchword
+        };
+        var event = thundashop.Ajax.createEvent(null, "getFilteredCategory", this, data);
+        
+        thundashop.Ajax.post(event);
     },
     
     imagePreview : function(){
-        
         $('#message').empty();
         var file = this.files[0];
         var imagefile = file.type;

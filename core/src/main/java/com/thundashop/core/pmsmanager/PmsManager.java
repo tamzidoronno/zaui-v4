@@ -878,6 +878,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(start.after(end)) {
             return null;
         }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        if(cal.get(Calendar.YEAR) < 2016) {
+            return null;
+        }
+        
         PmsBooking booking = getBooking(bookingId);
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
@@ -4913,7 +4919,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!room.isStartingToday() && room.isStarted() && (!room.isEnded() || room.isEndingToday())
                 && (start.before(now) && end.after(now))) {
             //This is extending a stay, we need to remove cleaning and mark it as cleaned.
-            room.forceUpdateLocks = true;
+            if(!getConfiguration().isGetShopHotelLock()) {
+                room.forceUpdateLocks = true;
+            }
         }
         if(room.bookingId != null && !room.bookingId.isEmpty()) {
             bookingEngine.changeDatesOnBooking(room.bookingId, start, end);

@@ -24,6 +24,7 @@ public class AccountingDetails {
     public String type = "type1";
     public String iban = "";
     public String swift = "";
+    public String useLanguage = "";
 
     public boolean isTypeOne() {
         if (type == null || type.isEmpty() || type.equals("type1"))

@@ -111,6 +111,8 @@ if(sizeof($addons) > 0) {
  */
 function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasArx, $config, $object, $products) {
     $bookingId = $booking->id;
+    $deletedcount = 0;
+
     ?>
 <div class='additionalroominfobox'>
     <div style='text-align: right' class='additionalroominfobox_header'>

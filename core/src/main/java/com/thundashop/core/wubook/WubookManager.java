@@ -92,7 +92,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Override
     public String updateAvailability() throws Exception {
-        return updateAvailabilityInternal(720);
+        return updateAvailabilityInternal(370);
     }
     
     private boolean isWubookActive() {
@@ -705,7 +705,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             } else {
                 pmsManager.logEntry("Modified by channel manager", newbooking.id, null);
                 for(PmsBookingRooms room : newbooking.getActiveRooms()) {
-                    pmsManager.forceRemoveFromBooking(room.pmsBookingRoomId);
+                    pmsManager.removeFromBooking(newbooking.id, room.pmsBookingRoomId);
                 }
                 isUpdate = true;
             }
@@ -1322,7 +1322,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             Calendar startcal = getCalendar(true);
             Calendar endCal = getCalendar(false);
-            for (int i = 0; i < 720; i++) {
+            for (int i = 0; i < 310; i++) {
                 Date start = startcal.getTime();
                 endCal.add(Calendar.DAY_OF_YEAR, 1);
                 Date end = endCal.getTime();
@@ -1402,7 +1402,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(availabilityHasBeenChanged == null) {
             return "";
         }
-        
+
         return sparseUpdateAvailabilityInternal();
     }
 

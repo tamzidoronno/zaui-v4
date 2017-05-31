@@ -1091,4 +1091,10 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         return ret != null;
     }
+
+    void changeSourceOnBooking(String bookingId, String source) {
+        Booking booking = getBooking(bookingId);
+        booking.source = source;
+        saveObject(config);
+    }
 }

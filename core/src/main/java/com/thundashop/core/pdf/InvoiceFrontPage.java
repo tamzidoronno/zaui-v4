@@ -8,6 +8,7 @@ package com.thundashop.core.pdf;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
+import com.thundashop.core.common.TranslationHandler;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.usermanager.data.Address;
@@ -27,7 +28,6 @@ import org.joda.time.DateTime;
  * @author ktonder
  */
 public class InvoiceFrontPage {
-    
     private final Order order;
     private int cornerSize = 7;
     private PDPageContentStream contentStream;
@@ -35,11 +35,46 @@ public class InvoiceFrontPage {
     private final boolean useAttachment;
     private final PDDocument document;
     
+    private String toAccountHeading = "Innbetalt til konto";
+    private String subAmountText = "Øre";
+    private String toAccountText = "Til konto";
+    private String valutaText = "Kroner";
+    private String kidText = "Kundeidentifikasjon (KID)";
+    private String paidByText = "Betalt av";
+    private String paymentInformationText = "Betalingsinformasjon";
+    private String recieptText = "Kvittering";
+    private String accountNumberHeading = "Betalerens kontonummer";
+    private String payToText = "Betalt til";
+    private String amountText = "Beløp";
+    private String paymentDeadlineOne = "Betalings-";
+    private String paymentDeadlineTwo = "frist";
+    private String invoiceDateText = "Fakturadato:";
+    private String invoiceNumberText = "Fakturanr:";
+    private String vatNumberText = "Org.nr.:";
+    private String paymentDateText = "Faktura dato:";
+    private String dueDateText = "Forfallsdato:";
+    private String orderDateText = "Bestillingsdato";
+    private String orderNumberText = "Ordrenr";
+    private String paidStatusText = "BETALT";
+    private String descriptionText = "BESKRIVELSE";
+    private String priceText = "PRIS";
+    private String countText = "ANTALL";
+    private String taxesText = "MVA";
+    private String summaryText = "OPPSUMMERING";
+    private String netAmountText = "Netto beløp";
+    private String paidText = "Betalt";
+    private String toPayText = "Å Betale";
+    private String currencyText = " kr";
+    private String invoiceText = "Faktura";
+    
     public InvoiceFrontPage(Order order, AccountingDetails details, boolean useAttachment, PDDocument document) {
         this.order = order;
         this.details = details;
         this.useAttachment = useAttachment;
         this.document = document;
+        if(details.useLanguage != null && !details.useLanguage.isEmpty()) {
+            changeToLanguage(details.useLanguage);
+        }
     }
     
     private void addInvoiceNote() throws IOException {
@@ -82,7 +117,7 @@ public class InvoiceFrontPage {
         addInvoiceNote();
         
         drawLines();
-        writeText("OPPSUMMERING", 443, 420, true, 8);
+        writeText(summaryText, 443, 420, true, 8);
         if(order.cart.getItems().size() <= 19) {
             addDescriptions();
         } else {
@@ -162,7 +197,7 @@ public class InvoiceFrontPage {
     }
 
     private void addTexts() throws IOException {
-        String INVOICEORRECEIPT = order.status == Order.Status.PAYMENT_COMPLETED ? "KVITTERING" : "FAKTURA";
+        String INVOICEORRECEIPT = order.status == Order.Status.PAYMENT_COMPLETED ? recieptText : invoiceText;
         contentStream.setNonStrokingColor(new Color(0, 0, 0));
         
         
@@ -170,19 +205,19 @@ public class InvoiceFrontPage {
         
         if (order.status != Order.Status.PAYMENT_COMPLETED) {
             writeText(details.accountNumber, 40, 303, false, 12);
-            writeText("Innbetalt til konto", 40, 320, true, 8);
-            writeText("Øre", 310, 68, true, 8);
-            writeText("Til konto", 400, 68, true, 8);
-            writeText("Kroner", 230, 68, true, 8);
-            writeText("Kundeidentifikasjon (KID)", 28, 68, true, 8);
-            writeText("Betalt av", 40, 180, true, 8);
-            writeText("Betalingsinformasjon", 40, 280, true, 8);
-            writeText("Kvittering", 40, 333, false, 12);
-            writeText("Betalerens kontonummer", 360, 328, true, 8);
-            writeText("Betalings-", 450, 280, true, 8);
-            writeText("frist", 450, 270, true, 8);
-            writeText("Betalt til", 310, 180, true, 8);
-            writeText("Beløp", 230, 328, true, 8);
+            writeText(toAccountHeading, 40, 320, true, 8);
+            writeText(subAmountText, 310, 68, true, 8);
+            writeText(toAccountText, 400, 68, true, 8);
+            writeText(valutaText, 230, 68, true, 8);
+            writeText(kidText, 28, 68, true, 8);
+            writeText(paidByText, 40, 180, true, 8);
+            writeText(paymentInformationText, 40, 280, true, 8);
+            writeText(recieptText, 40, 333, false, 12);
+            writeText(accountNumberHeading, 360, 328, true, 8);
+            writeText(paymentDeadlineOne, 450, 280, true, 8);
+            writeText(paymentDeadlineTwo, 450, 270, true, 8);
+            writeText(payToText, 310, 180, true, 8);
+            writeText(amountText, 230, 328, true, 8);
         }
     }
     
@@ -267,8 +302,8 @@ public class InvoiceFrontPage {
         fontSize = 11;
         left = 40;
         if (order.status != Order.Status.PAYMENT_COMPLETED) {
-            writeText("Fakturadato: " + order.getDateCreated().replace("/", "."), left, topLine, false, fontSize);
-            writeText("Fakturanr: " + order.incrementOrderId, left, topLine-lineHeight, false, fontSize);
+            writeText(invoiceDateText + " " + order.getDateCreated().replace("/", "."), left, topLine, false, fontSize);
+            writeText(invoiceNumberText + " " + order.incrementOrderId, left, topLine-lineHeight, false, fontSize);
         }
 
         // Top company information
@@ -277,7 +312,7 @@ public class InvoiceFrontPage {
         fontSize = 11;
         left = 345;
         writeText(details.companyName, left, topLine, true, fontSize);
-        writeText("Org.nr.: " + details.vatNumber, left, topLine-lineHeight, false, fontSize);
+        writeText(vatNumberText + " " + details.vatNumber, left, topLine-lineHeight, false, fontSize);
         writeText(details.address, left, topLine-lineHeight*2, false, fontSize);
         writeText(details.postCode + " " + details.city, left, topLine-lineHeight*3, false, fontSize);
         
@@ -286,18 +321,18 @@ public class InvoiceFrontPage {
         writeText(details.webAddress, left+120, 725, false, 8);
         
         if (order.status != Order.Status.PAYMENT_COMPLETED) {
-            writeText("Faktura dato: " + order.getDateCreated().split(" ")[0].replace("/", "."), left, 710, false, 8);
-            writeText("Faktura nr: " + order.incrementOrderId, left+120, 710, false, 8);
-            writeText("Forfallsdato: " + getDueDate(), left, 698, false, 8);
-            writeText("Til konto: " + details.accountNumber, left+120, 698, false, 8);
+            writeText(paymentDateText + " " + order.getDateCreated().split(" ")[0].replace("/", "."), left, 710, false, 8);
+            writeText(invoiceNumberText + " " + order.incrementOrderId, left+120, 710, false, 8);
+            writeText(dueDateText + " " + getDueDate(), left, 698, false, 8);
+            writeText(toAccountText + ": " + details.accountNumber, left+120, 698, false, 8);
             if(details.iban != null && !details.iban.isEmpty()) {
                 writeText("IBAN: " + details.iban, left, 686, false, 8);
                 writeText("BIC/SWIFT: " + details.swift, left+120, 686, false, 8);
             }
                 
         } else {
-            writeText("Bestillingsdato: " + order.getDateCreated().split(" ")[0].replace("/", "."), left, 710, false, 8);
-            writeText("Ordrenr: " + order.incrementOrderId, left+120, 710, false, 8);
+            writeText(orderDateText + ": " + order.getDateCreated().split(" ")[0].replace("/", "."), left, 710, false, 8);
+            writeText(orderNumberText + ": " + order.incrementOrderId, left+120, 710, false, 8);
         }
         
         // Betal til
@@ -320,7 +355,7 @@ public class InvoiceFrontPage {
     
     private String getDueDate() {
         if (order.status == Order.Status.PAYMENT_COMPLETED) {
-            return "BETALT";
+            return paidStatusText;
         }
         
         Calendar c = Calendar.getInstance();
@@ -377,11 +412,11 @@ public class InvoiceFrontPage {
         if(!useAttachment) {
             contentStream.setNonStrokingColor(new Color(0, 0, 0));
             contentStream.drawLine(40, 640, 560, 640);
-            writeText("BESKRIVELSE", 45, 645, true, 8);
-            writeText("PRIS", 335, 645, true, 8);
-            writeText("ANTALL", 385, 645, true, 8);
-            writeText("MVA", 475, 645, true, 8);
-            writeText("OPPSUMMERING", 443, 420, true, 8);
+            writeText(descriptionText, 45, 645, true, 8);
+            writeText(priceText, 335, 645, true, 8);
+            writeText(countText, 385, 645, true, 8);
+            writeText(taxesText, 475, 645, true, 8);
+            writeText(summaryText, 443, 420, true, 8);
         }
         
         
@@ -432,7 +467,7 @@ public class InvoiceFrontPage {
     }
     
     private String getCurrency() {
-        String currency = " kr";
+        String currency = currencyText;
         if(details.currency != null && !details.currency.isEmpty()) {
             currency = details.currency;
         }
@@ -440,23 +475,23 @@ public class InvoiceFrontPage {
     }
     
     private void addSummary() throws IOException {
-        writeText("Netto beløp", 443, 405, false, 9);
+        writeText(netAmountText, 443, 405, false, 9);
         writeText(String.format("%.2f", getNetto()) + getCurrency(), (int) 560, 405, false, 9, true);
         
         int i = 0;
         
         for (CartTax cartTax : order.cart.getCartTaxes()) {
             i++;
-            writeText("Mva " + cartTax.taxGroup.taxRate + "%", 443, 404-(i*11), false, 9);
+            writeText(taxesText + " " + cartTax.taxGroup.taxRate + "%", 443, 404-(i*11), false, 9);
             String sum = String.format("%.2f", cartTax.sum) + getCurrency();
             writeText(sum, (int) 560, 404-(i*11), false, 9, true);
         }
         
         i++;
         if (order.status == Order.Status.PAYMENT_COMPLETED) {
-            writeText("Betalt", 443, 404-(i*11), false, 9);
+            writeText(paidText, 443, 404-(i*11), false, 9);
         } else {
-            writeText("Å Betale", 443, 404-(i*11), false, 9);
+            writeText(toPayText, 443, 404-(i*11), false, 9);
         }
         
         double total = order.cart.getShippingCost() + order.cart.getTotal(true);
@@ -500,6 +535,44 @@ public class InvoiceFrontPage {
         }
         
         return lineText;
+    }
+
+    private void changeToLanguage(String language) {
+        toAccountHeading = "Pay to account";
+        subAmountText = "Øre";
+        toAccountText = "To account";
+        valutaText = "NOK";
+        kidText = "Customer identification (KID)";
+        paidByText = "Paid by";
+        paymentInformationText = "Payment information";
+        recieptText = "Reciept";
+        accountNumberHeading = "Paid by account";
+        payToText = "Paid to";
+        amountText = "Amount";
+        paymentDeadlineOne = "Payment-";
+        paymentDeadlineTwo = "deadline";
+        invoiceDateText = "Invoice date:";
+        invoiceNumberText = "Invoice number:";
+        vatNumberText = "Vatnumber.:";
+        paymentDateText = "Invoice date:";
+        dueDateText = "Due date:";
+        orderDateText = "Order date";
+        orderNumberText = "Order number";
+        paidStatusText = "PAID";
+        descriptionText = "DESCRIPTION";
+        priceText = "PRICE";
+        countText = "COUNT";
+        taxesText = "MVA";
+        summaryText = "SUMMARY";
+        netAmountText = "Net amount";
+        paidText = "Paid";
+        toPayText = "To pay";
+        currencyText = " NOK";
+        invoiceText = "Invoice";
+        
+        
+        order.updateTranslationOnAll(language, order);
+
     }
 
     

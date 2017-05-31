@@ -3,8 +3,50 @@ namespace ns_176ea989_c7bb_4cef_a4bd_0c8421567e0b;
 
 class PmsAvailabilityTimeline extends \WebshopApplication implements \Application {
     public $roomWhereNotClosed = false;
+    public $additionalList;
+    
     public function getDescription() {
         
+    }
+    
+    public function completeAction() {
+        $action = $_POST['data']['finalaction'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedName(), $_POST['data']['bid']);
+        $roomId = "";
+        $room = "";
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+            if($booking) {
+            foreach($booking->rooms as $troom) {
+                if($troom->bookingId == $_POST['data']['bid']) {
+                    $room = $troom;
+                }
+            }
+        }
+        if($action == "moveroom") {
+            $itemId = $_POST['data']['newroomid'];
+            $this->getApi()->getPmsManager()->setBookingItem($this->getSelectedName(), $room->pmsBookingRoomId, $booking->id, $itemId, true);
+        } else if($action == "unclose") {
+            $this->getApi()->getBookingEngine()->deleteBooking($this->getSelectedName(), $_POST['data']['bid']);
+        } else if($action == "deletereservation") {
+            $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedName(), $booking->id, $room->pmsBookingRoomId);
+        } else if($action == "editclose") {
+            $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . $config->defaultStart));
+            $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . $config->defaultEnd));
+            $this->getApi()->getBookingEngine()->changeDatesOnBooking($this->getSelectedName(), $_POST['data']['bid'], $start, $end);
+            $this->getApi()->getBookingEngine()->changeSourceOnBooking($this->getSelectedName(), $_POST['data']['bid'], $_POST['data']['comment']);
+        } else if($action == "closeroom") {
+            $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . $config->defaultStart));
+            $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . $config->defaultEnd));
+            $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+            $comment = "closed by: " . $user->fullName . ", ";
+            $comment .= $_POST['data']['comment'];
+            $item = $_POST['data']['itemid'];
+            $closed = $this->getApi()->getPmsManager()->closeItem($this->getSelectedName(), $item, $start, $end, $comment);
+        } else if($action == "changedates") {
+            $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+            $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+            $this->getApi()->getPmsManager()->changeDates($this->getSelectedName(), $room->pmsBookingRoomId, $booking->id, $start, $end);
+        }
     }
 
     public function getName() {
@@ -247,6 +289,23 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         }
     }
     
+    /**
+     * 
+     * @return \core_pmsmanager_PmsAdditionalItemInformation[]
+     */
+    public function getAdditionalInfoList() {
+        if($this->additionalList) {
+            return $this->additionalList;
+        }
+        $additional = $this->getApi()->getPmsManager()->getAllAdditionalInformationOnRooms($this->getSelectedName());
+        foreach($additional as $add) {
+            $additional[$add->itemId] = $add;
+        }
+        $this->additionalList = $additional;
+        return $additional;
+
+    }
+    
     public function isVirtuallyAssigned($itemId, $value) {
         foreach ($value->virtuallyAssigned as $key => $assignedItemId) {
             if ($assignedItemId == $itemId) {
@@ -258,8 +317,7 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
     }
     
     public function prepareAction() {
-        echo "Preparing action:<br>";
-        echo json_encode($_POST['data']);
+        $this->includefile("runquickaction");
     }
     
     public function getData() {

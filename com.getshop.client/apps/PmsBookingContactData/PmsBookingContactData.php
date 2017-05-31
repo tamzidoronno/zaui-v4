@@ -121,8 +121,8 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                 
             echo "<label class='col-".$value->width. " " . $lastone . " type_".$value->type."'>";
             $maxChar = $this->getConfigurationSetting("maxCharTextArea");
-            if(!$maxChar || $maxChar == "" || $maxChar == 0){
-                $maxChar = 160;
+            if(!$maxChar || $maxChar == "" || $maxChar <= 0){
+                $maxChar = -1;
             }
             if (stristr($value->name, "prefix")) {
                 $this->printTitle($value->title, $value->required, $value->type);

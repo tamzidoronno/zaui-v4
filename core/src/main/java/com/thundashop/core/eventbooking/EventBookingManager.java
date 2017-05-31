@@ -2499,7 +2499,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
 
     private String formatRequestEmail(String text, Event event, User requestedUser, String requestId) {
-        String addr = "http://" + getStoreDefaultAddress() + "/?page=confirmeventrequest&requestId="+requestId;
+        String addr = "http://www.promeisteracademy.se/?page=confirmeventrequest&requestId="+requestId;
         text = text.replace("{Requested.Link}", addr);
         text = text.replace("{RequestedUser.FullName}", requestedUser.fullName);
         return text;

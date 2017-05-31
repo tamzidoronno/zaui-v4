@@ -623,7 +623,9 @@ public class PmsBookingRooms implements Serializable {
             if(item.isIncludedInRoomPrice) {
                 continue;
             }
-            totalCost += (item.price * item.count);
+            if (item.price != null && item.count != null) {
+                totalCost += (item.price * item.count);
+            }
         }
         
         if(priceType.equals(PriceType.daily)) {

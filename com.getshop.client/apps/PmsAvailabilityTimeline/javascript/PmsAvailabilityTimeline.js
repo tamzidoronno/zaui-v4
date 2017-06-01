@@ -9,14 +9,28 @@ app.PmsAvailabilityTimeline = {
         $(document).on('mouseout', '.PmsAvailabilityTimeline .valueentry', app.PmsAvailabilityTimeline.mouseOut);
         $(document).on('click', '.PmsAvailabilityTimeline .closeRoomOptionsButton', app.PmsAvailabilityTimeline.closeRoomOptionsButton);
         $(document).on('change', '.PmsAvailabilityTimeline .changetypeonbookingselector', app.PmsAvailabilityTimeline.ifNeedMoveTypes);
-        $(document).on('drag dragstart dragend dragover dragenter dragleave drop', '.PmsAvailabilityTimeline .full', app.PmsAvailabilityTimeline.dragBoxPrevent);
+        $(document).on('dragover dragenter dragleave drop', '.PmsAvailabilityTimeline .full', app.PmsAvailabilityTimeline.dragBoxPrevent);
         $(document).on('dragover dragenter', '.PmsAvailabilityTimeline .full', app.PmsAvailabilityTimeline.dragBoxEnter);
         $(document).on('dragleave dragend drop', '.PmsAvailabilityTimeline .full', app.PmsAvailabilityTimeline.dragBoxLeave);
         $(document).on('drop', '.PmsAvailabilityTimeline .full', app.PmsAvailabilityTimeline.dragBoxDrop);
         $(document).on('click', '.PmsAvailabilityTimeline .valueentry', app.PmsAvailabilityTimeline.showShortOptionsForEntry);
         $(document).on('click', '.PmsAvailabilityTimeline .shortinformationboxrow', app.PmsAvailabilityTimeline.hideShortOptionsForEntry);
+        $(document).on('click', '.PmsAvailabilityTimeline .shortinformationboxFooter', app.PmsAvailabilityTimeline.hideShortOptionsForEntry);
+        $(document).on('click', '.PmsAvailabilityTimeline #toggleRoomoverview', app.PmsAvailabilityTimeline.toggleRoomoverview);
         $(document).on('click', '.PmsAvailabilityTimeline .completeaction', app.PmsAvailabilityTimeline.completeQuickAction);
+//        $(document).ready(function(){
+//            
+//        });
         $(document).keyup(app.PmsAvailabilityTimeline.hideShortOptionsForEntry);
+    },
+    toggleRoomoverview : function(){
+        $('.roomoverview').slideToggle();
+        $("#toggleRoomoverview").toggleClass('flip');
+        if($('#toggleRoomoverview').hasClass('flip')){
+            localStorage.setItem('PmsRoomoverviewState','hidden');
+        }else{
+            localStorage.setItem('PmsRoomoverviewState','visible');
+        }
     },
     completeQuickAction : function(e) {
         if(e.stopPropagation) e.stopPropagation();
@@ -53,6 +67,7 @@ app.PmsAvailabilityTimeline = {
         var classes = $(this).attr('class');
         var data = {
             "type" : $(this).attr('type'),
+            "bookingid" : $(this).attr('bid'),
             "time" : $(this).attr('time'),
             "itemid" : $(this).attr('itemid'),
             "classes" : classes,
@@ -82,14 +97,14 @@ app.PmsAvailabilityTimeline = {
             app.PmsAvailabilityTimeline.mouseDownData['action'] = action;
             var event = thundashop.Ajax.createEvent('','prepareAction', outbox, app.PmsAvailabilityTimeline.mouseDownData);
             thundashop.Ajax.postWithCallBack(event, function(res) {
-                $('.shortinformationbox').html(res);
+                $('.shortinformationbox_inner').html(res);
             });
         } else {
             app.PmsAvailabilityTimeline.ignoreMouseOver = false;
             setTimeout(function() {
                 $('.shortinformationbox').remove();
                 $('.ui-tooltip').remove();
-            }, "500");
+            }, "0");
         }
     },
     ifNeedMoveTypes : function() {
@@ -198,7 +213,8 @@ app.PmsAvailabilityTimeline = {
         thundashop.common.showInformationBoxNew(event, "Active rooms");
     },
     
-    mouseOver : function() {
+    mouseOver : function(e) {
+        e.preventDefault();
         $('.ui-tooltip').remove();
         if(app.PmsAvailabilityTimeline.ignoreMouseOver) {
             return;

@@ -1,4 +1,4 @@
-.PmsAvailabilityTimeline .timelineresult { margin-top: 30px; }
+.PmsAvailabilityTimeline .timelineresult {}
 .PmsAvailabilityTimeline .full { background-color:#7e0505; color: white; cursor: pointer;}
 .PmsAvailabilityTimeline .warnmovepeople { position:absolute; background-color:#fff; padding: 10px; width: 340px; margin-top: 20px; display:none; border: solid 1px; }
 .PmsAvailabilityTimeline .available { background-color:green; color: white; }
@@ -6,7 +6,12 @@
 .PmsAvailabilityTimeline .valueentry_item { width: 50px; font-size: 10px; height: 12px; position:absolute; border-bottom: solid 1px #efefef; left:0px; background-color:#fff; display:inline-block; margin-top: 1px; }
 .PmsAvailabilityTimeline .valueentry_placeholder { border: solid 0px; width: 60px; font-size: 10px; line-height: 10px; float:left; left:0px; background-color:#fff; display:inline-block; margin-top: 1px; }
 .PmsAvailabilityTimeline .full.loadBookingList { text-align: center; }
-.PmsAvailabilityTimeline .shortinformationbox { color:#000; }
+.PmsAvailabilityTimeline .shortinformationbox { color:#000;}
+.PmsAvailabilityTimeline .shortinformationbox_left{}
+.PmsAvailabilityTimeline .shortinformationbox_right{text-align: center;}
+.PmsAvailabilityTimeline .shortinformationboxHeader{border-top:1px solid #ddd;border-bottom:1px solid #ddd;margin:7% 10px 3% 10px;cursor:pointer;padding:2px;}
+.PmsAvailabilityTimeline .shortinformationboxFooter{background-color:#7e0505;color:#fff;text-align: center;font-weight: bold;padding:3px;}
+.PmsAvailabilityTimeline .shortinformationboxFooter:hover{background-color:#650303;cursor: pointer;}
 .PmsAvailabilityTimeline .valueentry {
     border-left: solid 1px #bbb;
     border-top: solid 1px #bbb;
@@ -20,7 +25,14 @@
     box-sizing: border-box;
 }
 .PmsAvailabilityTimeline .fixedscroll{ position:absolute;background-color:#fff;left:0;}
-.PmsAvailabilityTimeline .timelineoverviewouter { width: 100%;  max-height: 800px;overflow: auto; box-sizing: border-box; position:relative; }
+.PmsAvailabilityTimeline .timelineoverviewouter {width: 100%; overflow-x: auto; box-sizing: border-box; position:relative;}
+.PmsAvailabilityTimeline .timelineoverviewouter.roomoverview{}
+.PmsAvailabilityTimeline .timelineoverviewouter,.PmsAvailabilityTimeline .timelineoverview{
+    transform:rotateX(180deg);
+    -ms-transform:rotateX(180deg); /* IE 9 */
+    -webkit-transform:rotateX(180deg);
+}
+.PmsAvailabilityTimeline .timelineoverview{}
 .PmsAvailabilityTimeline .dateheadingrow { background-color:#fff; height: 20px; padding-top: 30px; }
 .PmsAvailabilityTimeline .topspacingitemoverview { height: 50px; clear:both;}
 .PmsAvailabilityTimeline .full_second { background-color: #e5731f; cursor: pointer;}
@@ -30,8 +42,7 @@
 .PmsAvailabilityTimeline .detailedview .valueentry_item
 { height: 24px !important; font-size: 14px; line-height: 24px; }
 .PmsAvailabilityTimeline .detailedview .valueentry_item,
-.PmsAvailabilityTimeline .detailedview .valueentry_placeholder
-{ width: 150px; }
+.PmsAvailabilityTimeline .detailedview .valueentry_placeholder{ width: 150px; }
 .PmsAvailabilityTimeline .isClean { color: green; }
 .PmsAvailabilityTimeline .needcleaning { background-color: #efefef;}
 .PmsAvailabilityTimeline .room_desc {   width: 150px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;display:block; font-size: 10px; }
@@ -40,3 +51,5 @@
 .PmsAvailabilityTimeline .is-dragover {background-color: #2b537d !important;}
 .PmsAvailabilityTimeline .is-success i{font-size:10px;position:relative;top:3px;padding-right:2px;float:right;}
 .PmsAvailabilityTimeline .is-uploading i{font-size:10px;position:relative;top:3px;padding-right:2px;float:right;}
+.PmsAvailabilityTimeline #toggleRoomoverview{padding:1px;background-color:#ddd;text-align: center;margin-bottom: 50px;cursor: pointer;}
+.PmsAvailabilityTimeline .flip{transform: rotate(-180deg)}

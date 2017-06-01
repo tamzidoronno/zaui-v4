@@ -13,7 +13,7 @@ if($bid) {
     }
 }
 /* @var $this ns_176ea989_c7bb_4cef_a4bd_0c8421567e0b\PmsAvailabilityTimeline */
-echo "<div style='padding: 10px;'>";
+echo "<div class='draggableShortbox' style='padding: 10px;'>";
 if($action == "closeroom") {
     $start = date("d.m.Y", $_POST['data']['time']/1000);
     $end = date("d.m.Y", strtotime("+1day", strtotime($start)));
@@ -89,3 +89,4 @@ if($action == "closeroom") {
     echo "Action not defined yet: " . $action;
 }
 echo "</div>";
+?>

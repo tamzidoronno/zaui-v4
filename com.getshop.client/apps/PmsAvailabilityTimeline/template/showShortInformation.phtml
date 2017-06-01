@@ -1,36 +1,55 @@
 <span class='shortinformationbox' style="background-color:#fff; border: solid 2px; position:absolute; z-index:15;margin-top:30px; margin-left: 5px;">
-<?php
-$classes = $_POST['data']['classes'];
-if(stristr($classes, "available")) {
-    ?>
-    <div class="shortinformationboxrow" action="closeroom">Close room</div>
-    <?php
-} else if(stristr($classes, "virtually_added")) {
-    ?>
-    <div class="shortinformationboxrow loadbookingfromquickmenu">Open booking</div>
-    <div class="shortinformationboxrow" action="closeroom">Close room</div>
-    <div class="shortinformationboxrow" action="moveroom">Move</div>
-    <div class="shortinformationboxrow" action="deletereservation">Delete</div>
-    <div class="shortinformationboxrow" action="changedates">Change dates</div>
-    <?php
-} else if(stristr($classes, "closedroom")) {
-    ?>
-    <div class="shortinformationboxrow" action="editclose">Edit closing</div>
-    <div class="shortinformationboxrow" action="unclose">Delete</div>
-    <?php
-} else {
-?>
-    <div class="shortinformationboxrow loadbookingfromquickmenu">Open booking</div>
-    <div class="shortinformationboxrow" action="moveroom">Move</div>
-    <div class="shortinformationboxrow" action="deletereservation">Delete</div>
-    <div class="shortinformationboxrow" action="changedates">Change dates</div>
-<? } ?>
+        <div class="shortinformationboxHeader"></div>
+        
+            
+        <div class='shortinformationbox_inner'>
+            <?php
+            $classes = $_POST['data']['classes'];
+            if(stristr($classes, "available")) {
+                ?>
+                <div class="shortinformationboxrow" action="closeroom">Close room</div>
+                <?php
+            } else if(stristr($classes, "virtually_added")) {
+                ?>
+                <div class="shortinformationboxrow loadbookingfromquickmenu">Open booking</div>
+                <div class="shortinformationboxrow" action="closeroom">Close room</div>
+                <div class="shortinformationboxrow" action="moveroom">Move</div>
+                <div class="shortinformationboxrow" action="deletereservation">Delete</div>
+                <div class="shortinformationboxrow" action="changedates">Change dates</div>
+                <?php
+            } else if(stristr($classes, "closedroom")) {
+                ?>
+                <div class="shortinformationboxrow" action="editclose">Edit closing</div>
+                <div class="shortinformationboxrow" action="unclose">Delete</div>
+                <?php
+            } else {
+            ?>
+                <div class="shortinformationboxrow loadbookingfromquickmenu">Open booking</div>
+                <div class="shortinformationboxrow" action="moveroom">Move</div>
+                <div class="shortinformationboxrow" action="deletereservation">Delete</div>
+                <div class="shortinformationboxrow" action="changedates">Change dates</div>
+            <? } ?>
+        </div>
+        <? 
+        $classes = $_POST['data']['classes'];
+        if(stristr($classes, "available") || stristr($classes, "closedroom")){
+                
+        }else{
+            echo "<div style='padding:10px;'>";
+            /*@var $this \ns_176ea989_c7bb_4cef_a4bd_0c8421567e0b\PmsAvailabilityTimeline*/
+            $infoContent = $this->loadHover();
+            echo $infoContent;
+        }
+        echo "</div>";
+        ?>
+        <div class="shortinformationboxFooter"><i class="fa fa-times"></i> Close</div>
+    </div>
 </span>
-
+    
 <style>
 .shortinformationboxrow { 
     border-bottom: solid 1px;
-    padding: 5px;
+    padding: 5px 5px 5px 10px;
     text-align: left;
     cursor:pointer;
 }
@@ -38,3 +57,6 @@ if(stristr($classes, "available")) {
     background-color: #efefef;
 }
 </style>
+<script>
+    $('.shortinformationbox').draggable();
+</script>

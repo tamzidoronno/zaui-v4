@@ -37,18 +37,7 @@ if($compact) {
 <div gstype="form" method="showTimeLine">
     <input type='checkbox' gsname='compactmode' <?php echo $compactChecked; ?>> Compact view<br>
     <input type="text" gsname='start' value='<? echo $start; ?>'>
-    <input type="text" gsname='end' value='<? echo $end; ?>'>
-    <select gsname='interval'>
-        <?php 
-        foreach($interval as $minutes => $name) {
-            $selected = "";
-            if($selectedInterval == $minutes) {
-                $selected = "SELECTED";
-            }
-            echo "<option value='$minutes' $selected>$name</option>";
-        }
-        ?>
-    </select>  
+    <input type="text" gsname='end' value='<? echo $end; ?>'> 
     <?php
     
     $filters = $this->getApi()->getPmsManager()->getAllPmsFilters($this->getSelectedName());
@@ -72,7 +61,7 @@ if($compact) {
 
     ?>
     <input gstype="submit" type="button" value="<? echo $this->__w("Show"); ?>">
-    <input type='button' class='closeRoomOptionsButton' value="Close a room" style='float:right;'>
+    <input type='button' class='closeRoomOptionsButton ' value="Close a room" style='float:right;'>
 </div>
 <br>
 <input type='hidden' value='<?php echo $this->getConfigurationSetting("pmsmanagerinstanceid"); ?>' id='bookinginstanceid'>
@@ -142,6 +131,7 @@ if($compact) {
     echo "</table>";
     echo "</div>";
     echo "</div>";
+    echo "<div id='toggleRoomoverview'><i class='fa fa-fw fa-angle-double-up'></i></div>";
     echo "<bR><bR>";
 
     $printHeader = true;
@@ -150,7 +140,7 @@ if($compact) {
         $detailed = "detailedview";
     }
     echo "<div class='timelineoverviewouter $detailed'>";
-    echo "<div class='timelineoverview'>";
+    echo "<div class='timelineoverview'style='min-height:700px;'>";
     echo "<div class='topspacingitemoverview'></div>";
     foreach($result->itemTimeLines as $itemId => $days) {
         $lastid = "";
@@ -271,4 +261,12 @@ if($compact) {
             var left = $(this).scrollLeft();
             $('.fixedscroll').css('left',left+"px");
         });
+        var state = localStorage.getItem('PmsRoomoverviewState');
+            if(state === "hidden"){
+                $('.roomoverview').hide();
+                $('#toggleRoomoverview').addClass('flip');
+            }else{
+                $('.roomoverview').show();
+                $('#toggleRoomoverview').removeClass('flip');
+            }
 </script>

@@ -279,7 +279,9 @@ getshop.Settings = {
         $('#backsidesettings').fadeOut(300, function () {
             $('#gsbody').fadeIn(300);
             var event = thundashop.Ajax.createEvent(null, "unsetShowingSettings", null, {});
-            thundashop.Ajax.post(event);
+            thundashop.Ajax.postWithCallBack(event, function() {
+                
+            });
         });
         
     },

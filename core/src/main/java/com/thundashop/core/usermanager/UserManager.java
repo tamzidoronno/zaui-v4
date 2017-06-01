@@ -1364,6 +1364,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveUserSecure(user);
         }
     }
+    
+    public List<User> getUsersByCompanyIdSecure(String companyId) {
+        return getUsersThatHasCompany(companyId);
+    }
 
     @Override
     public List<User> getUsersByCompanyId(String companyId) {

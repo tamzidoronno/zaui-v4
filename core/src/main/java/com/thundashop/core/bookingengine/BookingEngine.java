@@ -147,6 +147,10 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public List<Booking> getConfirmationList(String bookingItemTypeId) {
         return deepClone(bookingEngineAbstract.getConfirmationList(bookingItemTypeId));
     }
+    
+    public void confirmBooking(String bookingItemTypeId) {
+        bookingEngineAbstract.confirmBooking(bookingItemTypeId);
+    }
 
     public BookingTimeLineFlatten getTimelines(String id, Date startDate, Date endDate) {
         return deepClone(bookingEngineAbstract.getTimelines(id, startDate, endDate));

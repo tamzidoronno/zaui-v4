@@ -62,6 +62,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     public HashMap<String, ManuallyAddedEventParticipant> manualEvents = new HashMap();
     public HashMap<String, ForcedParcipated> forcedParticipated = new HashMap();
     public HashMap<String, EventIntrest> eventInterests = new HashMap();
+    public HashMap<String, EventRequest> requests = new HashMap();
     
     @Autowired
     public EventLoggerHandler eventLoggerHandler;
@@ -106,6 +107,11 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
             if (data instanceof ForcedParcipated) {
                 ForcedParcipated forced = (ForcedParcipated)data;
                 forcedParticipated.put(forced.userId, forced);
+            }
+            
+            if (data instanceof EventRequest) {
+                EventRequest request = (EventRequest)data;
+                requests.put(request.id, request);
             }
             
             if (data instanceof EventIntrest) {
@@ -505,6 +511,26 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }   
 
     private void signupUserToEvent(Event event, User user, boolean silent, String source) {
+        boolean needConfirmation = false;
+        
+        if (user != null && user.companyObject != null && user.companyObject.needConfirmation && !getSession().currentUser.isCompanyOwner) {
+            List<User> companyOwners = getCompanyOwners(user.companyObject);
+            if (!companyOwners.isEmpty()) {
+                needConfirmation = true;
+            }
+        }
+        
+        String bookingId = signupUserToEventInternal(event, user, silent, source, needConfirmation);
+        
+        if (user != null && user.companyObject != null && user.companyObject.needConfirmation && needConfirmation) {
+            List<User> companyOwners = getCompanyOwners(user.companyObject);
+            if (!companyOwners.isEmpty()) {
+                addAndSendConfirmationRequest(event, user, source, companyOwners, bookingId);        
+            }
+        }
+    }
+    
+    private String signupUserToEventInternal(Event event, User user, boolean silent, String source, boolean needConfirmation) {
         Booking booking = createBooking(event, user);
         booking.source = source;
         
@@ -513,14 +539,19 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         booking.doneByImpersonator = userManager.getImpersonatedOriginalUserId();
+        booking.needConfirmation = needConfirmation;
         
         List<Booking> bookings = new ArrayList();
         bookings.add(booking);
         bookingEngine.addBookings(bookings);
-        if (!silent) {
+        
+        if (!silent && !needConfirmation) {
             sendUserAddedToEventNotifications(user, event);
         }
+        
         log("USER_ADDED", event, user);
+        
+        return booking.id;
     }   
 
     private Booking createBooking(Event event, User user) {
@@ -2429,4 +2460,80 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         return scormPackagesToTest.isEmpty();
     }
+
+    private List<User> getCompanyOwners(Company companyObject) {
+        if (companyObject == null)
+            return new ArrayList();
+        
+        return userManager.getUsersByCompanyIdSecure(companyObject.id)
+                .stream()
+                .filter(o -> o.isCompanyOwner)
+                .collect(Collectors.toList());
+    }
+
+    private void addAndSendConfirmationRequest(Event event, User user, String source, List<User> companyOwners, String bookingId) {
+        EventRequest request = new EventRequest();
+        request.eventId = event.id;
+        request.userId = user.id;
+        request.source = source;
+        request.bookingId = bookingId;
+        
+        saveObject(request);
+        requests.put(request.id, request);
+        
+        Application settingsApp = getSettingsApplication();
+        String email = storePool.getStore(storeId).configuration.emailAdress;
+        
+        for (User companyOwner : companyOwners) {
+            String emailAddress = companyOwner.emailAddress;
+            String content = settingsApp.getSetting("requestConfirmationMail");
+            String subject = settingsApp.getSetting("requestConfirmationSubject");
+            
+            content = formatRequestEmail(content, event, user, request.id);
+            
+            if (!content.isEmpty() && !subject.isEmpty()) {
+                content = formatText(content, companyOwner, event);
+                messageManager.sendMail(event, emailAddress, user.fullName, subject, content, email, "");
+           }
+        }
+    }
+
+    private String formatRequestEmail(String text, Event event, User requestedUser, String requestId) {
+        String addr = "http://www.promeisteracademy.se/?page=confirmeventrequest&requestId="+requestId;
+        text = text.replace("{Requested.Link}", addr);
+        text = text.replace("{RequestedUser.FullName}", requestedUser.fullName);
+        return text;
+    }
+
+    @Override
+    public EventRequest getEventRequest(String id) {
+        return requests.get(id);
+    }
+
+    @Override
+    public void handleEventRequest(String id, boolean accepted) {
+        EventRequest request = requests.remove(id);
+        
+        if (request == null)
+            return;
+        
+        if (accepted) {
+            bookingEngine.confirmBooking(request.bookingId);
+        } else {
+            removeUserFromEvent(request.eventId, request.userId, true);
+        }
+        
+        deleteObject(request);
+    }
+
+    @Override
+    public boolean isWaitingForConfirmation(String eventId, String userId) {
+        return requests.values()
+                .stream()
+                .filter(o -> o.eventId.equals(eventId) && o.userId.equals(userId))
+                .count()  > 0;
+    }
+    
+    
+
 }

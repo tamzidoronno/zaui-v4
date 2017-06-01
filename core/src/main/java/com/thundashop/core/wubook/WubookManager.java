@@ -1151,7 +1151,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             
             if(restriction.types.contains(bookingEngineTypeId)) {
-                System.out.println("Is restricted in time: " + start + " - " +end);
                 return true;
             }
         }

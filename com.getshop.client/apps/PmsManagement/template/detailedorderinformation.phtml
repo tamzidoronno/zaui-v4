@@ -20,10 +20,10 @@ $booking = $this->getSelectedBooking();
                 if($room->pmsBookingRoomId == $extid) {
                     $heading = "";
                     if($room->bookingItemId) {
-                        $heading .= "<span style='float:left;'>" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . "</span>";
+                        $heading .= "<span style='float:left;'>" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . " </span>";
                     }
                     if(sizeof($room->guests) > 0) {
-                        $heading .= "<span style='float:left;'>" . $room->guests[0]->name . "</span>";
+                        $heading .= "<span style='float:left; margin-left: 10px;'>" . $room->guests[0]->name . " </span>";
                         $heading .= " ";
                     }
                     

@@ -208,7 +208,9 @@ public class PmsBookingSimpleFilter {
     private boolean inFilter(PmsBookingRooms room, PmsBookingFilter filter, PmsBooking booking) {
         if (filter.searchWord != null && !filter.searchWord.isEmpty()) {
             User user = manager.userManager.getUserById(booking.userId);
-            if (user != null && user.fullName != null && user.fullName.toLowerCase().contains(filter.searchWord.toLowerCase())) {
+            if(booking.id != null && booking.id.equals(filter.searchWord)) {
+                return true;
+            } else if (user != null && user.fullName != null && user.fullName.toLowerCase().contains(filter.searchWord.toLowerCase())) {
                 return true;
             } else if (room.containsSearchWord(filter.searchWord)) {
                 return true;

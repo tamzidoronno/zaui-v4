@@ -1067,7 +1067,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     
     public void correctFaultyPriceMatrix(PmsBookingRooms room, PmsBooking booking) {
-        messageManager.sendErrorNotification("Faulty price matrix detected, booking id: " + booking.id, new Exception());
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, booking.priceType, booking);
         if(booking.priceType == PmsBooking.PriceType.daily) {
             for(String key : priceMatrix.keySet()) {
@@ -1335,7 +1334,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             booking.orderIds.add(order.id);
             List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
             booking.orderIds = uniqueList;
-
             pmsManager.saveBooking(booking);
             return order.id;
         }
@@ -2583,8 +2581,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             filter.avoidOrderCreation = true;
             filter.endInvoiceAt = booking.getEndDate();
             
+            if(filter.endInvoiceAt != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(filter.endInvoiceAt);
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                filter.endInvoiceAt = cal.getTime();
+            }
+            
             createOrder(bookingId, filter);
-            updateCart();
+            if(booking != null && !supportsDailyPmsInvoiceing(booking.id)) {
+                updateCart();
+            }
             Order order = createOrderFromCart(booking, null, true);
             
             double newDiff = diff + orderManager.getTotalAmount(order);

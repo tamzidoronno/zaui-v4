@@ -48,6 +48,10 @@ $booking = $this->getSelectedBooking();
             }
             echo "</div>";
         }
+        echo "<b>Note to order:</b><br>";
+        echo "<textarea class='invoicenotetextarea' style='width:100%; height: 50px; box-sizing:border-box;'>".@$order->invoiceNote."</textarea>";
+        echo "<input type='button' style='float:right;' value='Update invoice note' class='updateinvoicenotebutton' orderid='".$order->id."'>";
+        
         ?>
     </td>
 </tr>

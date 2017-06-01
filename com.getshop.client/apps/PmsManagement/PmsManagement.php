@@ -20,6 +20,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function updateInvoiceNoteOnOrder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->invoiceNote = $_POST['data']['note'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
     public function toggleNonRefundable() {
         $_POST['data']['bookingid'] = $_POST['data']['clicksubmit'];
         $booking = $this->getSelectedBooking();

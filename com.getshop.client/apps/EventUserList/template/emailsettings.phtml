@@ -364,6 +364,19 @@
         </div>
     </div>
 
+<center><h2><? echo $this->__f("Event request email"); ?></h2></center>
+<div class="textfield gss_setting"  id="">
+        <span class="title"><?php echo $this->__f("Subject"); ?></span>
+        <input type='textfield' gs_model='emailmodel' gs_model_attr='requestConfirmationSubject' value="<? echo $this->getConfigurationSetting("requestConfirmationSubject"); ?>"/>
+        <div class="description"></div>
+    </div>
+
+    <div class="textfield gss_setting"  >
+        <span class="title"><?php echo $this->__f("Mailcontent"); ?></span>
+        <textarea gs_model='emailmodel' gs_model_attr='requestConfirmationMail' style='position: initial; width: 945px; height: 300px;'><? echo $this->getConfigurationSetting("requestConfirmationMail"); ?></textarea>
+        <div class="description"></div>
+    </div>
+
 <center><h2><? echo $this->__f("Automatic event reminder emails / sms"); ?></h2></center>
 
     <div class="textfield gss_setting"  id="">

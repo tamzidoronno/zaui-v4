@@ -111,6 +111,9 @@ class EventUserList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         $this->setConfigurationSetting("signup_mailcontent_waitinglist", $_POST['signup_mailcontent_waitinglist']);
         $this->setConfigurationSetting("signup_sms_content_waitinglist", $_POST['signup_sms_content_waitinglist']);
         
+        $this->setConfigurationSetting("requestConfirmationSubject", $_POST['requestConfirmationSubject']);
+        $this->setConfigurationSetting("requestConfirmationMail", $_POST['requestConfirmationMail']);
+        
         $this->getApi()->getEventBookingManager()->startScheduler("booking", $_POST['crontab']);
     }
 

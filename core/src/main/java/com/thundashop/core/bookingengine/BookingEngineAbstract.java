@@ -365,6 +365,12 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .collect(Collectors.toList());
         
     }
+    
+    public void confirmBooking(String bookingId) {
+        Booking booking = getBooking(bookingId);
+        booking.needConfirmation = false;
+        saveObject(booking);
+    }
 
     private void checkIfCanAddBookings(List<Booking> bookings) {
         List<Booking> checkedBookings = new ArrayList(); 

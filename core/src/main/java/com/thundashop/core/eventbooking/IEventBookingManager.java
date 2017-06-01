@@ -278,4 +278,11 @@ public interface IEventBookingManager {
     
     @Administrator
     public List<String> getCompaniesWhereNoCanditasHasCompletedTests(List<String> testIds);
+    
+    public EventRequest getEventRequest(String id);
+    
+    public void handleEventRequest(String id, boolean accepted);
+    
+    @Administrator
+    public boolean isWaitingForConfirmation(String eventId, String userId);
 }

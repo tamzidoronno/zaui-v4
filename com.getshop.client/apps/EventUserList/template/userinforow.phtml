@@ -49,6 +49,14 @@ $specialInfo = $this->getUserAdditionalInformation($user);
         </div>
         <?
     }
+    
+    if ($isAdministrator && $this->getApi()->getEventBookingManager()->isWaitingForConfirmation("booking", $event->id, $user->id)) {
+        ?>
+        <div class="gs_shop_small_icon showspecialinfo">
+            <i class='fa fa-clock-o' title="Waiting for company owner to confirm booking"></i>
+        </div>
+        <?
+    }
 
     $group = $this->getApi()->getUserManager()->getGroup(@$user->companyObject->groupId);
 

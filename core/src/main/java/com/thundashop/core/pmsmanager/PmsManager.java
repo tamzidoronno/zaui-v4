@@ -5414,6 +5414,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for (PmsBooking book : bookings.values()) {
             for (PmsBookingRooms room :  book.rooms) {
+                if(!room.isActiveInPeriode(new Date(), new Date())) {
+                    continue;
+                }
                 if (room.priceMatrix != null && !room.priceMatrix.isEmpty()) {
                     ids.add(room.pmsBookingRoomId);
                 }

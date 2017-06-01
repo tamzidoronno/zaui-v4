@@ -45,7 +45,7 @@ if (app) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                scope.$apply(attrs["ngMobileClick"]);
+                scope.$evalAsync(attrs["ngMobileClick"]);
             });
         }
     }])
@@ -55,7 +55,7 @@ if (app) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                scope.$apply(attrs["ngMobileClickEnd"]);
+                scope.$evalAsync(attrs["ngMobileClickEnd"]);
             });
         }
     }])
@@ -66,7 +66,7 @@ if (app) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                scope.$apply(attrs["ngMobileClick"]);
+                scope.$evalAsync(attrs["ngMobileClick"]);
             });
         }
     }])
@@ -76,7 +76,7 @@ if (app) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                scope.$apply(attrs["ngMobileClickEnd"]);
+                scope.$evalAsync(attrs["ngMobileClickEnd"]);
             });
         }
     }])

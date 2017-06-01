@@ -25,7 +25,7 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
             $api.getApi().TrackAndTraceManager.moveDesitinationToPool(datarepository.selectedRouteForPoolController.id, destination.id).done(function(route) {
                 datarepository.updateRoute(route[0]);
                 datarepository.selectedRouteForPoolController = route[0];
-                $scope.$apply();
+                $scope.$evalAsync();
             });
             
         }
@@ -42,7 +42,7 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
             $api.getApi().TrackAndTraceManager.moveDestinationFromPoolToRoute(id, datarepository.selectedRouteForPoolController.id).done(function(route) {
                 datarepository.updateRoute(route[0]);
                 datarepository.selectedRouteForPoolController = route[0];
-                $scope.$apply();
+                $scope.$evalAsync();
             });
         }
             
@@ -51,7 +51,7 @@ controllers.PoolController = function($scope, $api, $rootScope, datarepository, 
     $scope.fetchPooledDestination = function() {
         $api.getApi().TrackAndTraceManager.getPooledDestiontionsByUsersDepotId().done(function(res) {
             $scope.pooledDestinations = res;
-            $scope.$apply();
+            $scope.$evalAsync();
         });
     }
     

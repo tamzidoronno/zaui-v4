@@ -92,14 +92,14 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
             navigator.geolocation.getCurrentPosition(function(position) {
                 $routeToUse.startInfo.lon = position.coords.longitude;
                 $routeToUse.startInfo.lat = position.coords.latitude;  
-                $scope.$apply();
+                $scope.$evalAsync();
                
                 $api.getApi().TrackAndTraceManager.markRouteAsStarted($routeToUse.id, new Date(), $routeToUse.startInfo.lon, $routeToUse.startInfo.lat);
                 datarepository.save();
             }, function(failare, b, c) {
                 $routeToUse.startInfo.started = true;
                 $routeToUse.startInfo.startedTimeStamp = new Date();
-                $scope.$apply();
+                $scope.$evalAsync();
                
                 $api.getApi().TrackAndTraceManager.markRouteAsStarted($routeToUse.id, new Date(), 0, 0);
                 datarepository.save();

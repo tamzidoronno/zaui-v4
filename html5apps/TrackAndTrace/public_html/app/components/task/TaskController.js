@@ -413,7 +413,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     
     $scope.$on('refreshRoute', function(msg, route) {
         $scope.setPickupType();
-        $scope.$apply();
+        $scope.$evalAsync();
     });
     
 }

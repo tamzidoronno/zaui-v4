@@ -215,20 +215,18 @@ public class StoreHandler {
             Object result = executeMethod.invoke(manager, argObjects);
             result = manager.preProcessMessage(result, executeMethod);
             
-            if(inObject.interfaceName != null && inObject.interfaceName.toLowerCase().contains("pmsmanager")) {
-                List<String> roomsWithPriceMatrixAfter = pmsManager.getListOfAllRoomsThatHasPriceMatrix();
-                roomsWithPriceMatrixBefore.removeAll(roomsWithPriceMatrixAfter);
+            List<String> roomsWithPriceMatrixAfter = pmsManager.getListOfAllRoomsThatHasPriceMatrix();
+            roomsWithPriceMatrixBefore.removeAll(roomsWithPriceMatrixAfter);
 
-                if (!roomsWithPriceMatrixBefore.isEmpty()) {
-                    System.out.println("===================================================================================");
-                    System.out.println("Missing pricematrix after: " + executeMethod);
-                    System.out.println("Rooms: " + roomsWithPriceMatrixBefore);
-                    for(String roomId : roomsWithPriceMatrixBefore) {
-                        PmsBooking booking = pmsManager.getBookingFromRoom(roomId);
-                        System.out.println(booking.rowCreatedDate);
-                    }
-                    System.out.println("===================================================================================");
+            if (!roomsWithPriceMatrixBefore.isEmpty()) {
+                System.out.println("===================================================================================");
+                System.out.println("Missing pricematrix after: " + executeMethod);
+                System.out.println("Rooms: " + roomsWithPriceMatrixBefore);
+                for(String roomId : roomsWithPriceMatrixBefore) {
+                    PmsBooking booking = pmsManager.getBookingFromRoom(roomId);
+                    System.out.println(booking.rowCreatedDate);
                 }
+                System.out.println("===================================================================================");
             }
             
             TranslationHandler handle = new TranslationHandler();

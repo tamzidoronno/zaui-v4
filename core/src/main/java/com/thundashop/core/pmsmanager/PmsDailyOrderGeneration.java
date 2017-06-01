@@ -381,6 +381,9 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         CartItem item = new CartItem();
         Product product = productManager.getProductUnfinalized(productId);
         if(product == null) {
+            product = productManager.getDeletedProduct(productId);
+        }
+        if(product == null) {
             logPrint("Product: " + productId + " does not exists anymore");
             return null;
         }

@@ -2581,8 +2581,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             filter.avoidOrderCreation = true;
             filter.endInvoiceAt = booking.getEndDate();
             
+            if(filter.endInvoiceAt != null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(filter.endInvoiceAt);
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                filter.endInvoiceAt = cal.getTime();
+            }
+            
             createOrder(bookingId, filter);
-            updateCart();
+            if(booking != null && !supportsDailyPmsInvoiceing(booking.id)) {
+                updateCart();
+            }
             Order order = createOrderFromCart(booking, null, true);
             
             double newDiff = diff + orderManager.getTotalAmount(order);

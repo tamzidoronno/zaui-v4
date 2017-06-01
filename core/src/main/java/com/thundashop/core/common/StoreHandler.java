@@ -85,11 +85,7 @@ public class StoreHandler {
             Annotation userLevel = authenticateUserLevel(executeMethod, aClass, getShopInterfaceClass, inObject);
             Object result;
             
-            if (storeId != null && storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
-                result = invokeMethodUtsiktenDebug(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
-            } else {
-                result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
-            }
+            result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
             
             clearSessionObject();
             

@@ -9,6 +9,8 @@ import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,7 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
     BookingEngine bookingEngine;
     
     private List<Door> doorList = new ArrayList();
+    private Date lastClosed;
     
     @Override
     public List<Door> getAllDoors() throws Exception {
@@ -114,7 +117,27 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
     }
     
     public void closeAllForTheDay() throws Exception {
+        if(isClosedToday()) {
+            return;
+        }
         getDoorManager().closeAllForTheDay();
+        lastClosed = new Date();
+    }
+
+    private boolean isClosedToday() {
+        if(lastClosed == null) {
+            return false;
+        }
+        
+        Calendar now = Calendar.getInstance();
+        Calendar closed = Calendar.getInstance();
+        closed.setTime(lastClosed);
+        
+        if(now.get(Calendar.DAY_OF_YEAR) == closed.get(Calendar.DAY_OF_YEAR)) {
+            return true;
+        }
+        
+        return false;
     }
     
     private IDoorManager getDoorManager() {

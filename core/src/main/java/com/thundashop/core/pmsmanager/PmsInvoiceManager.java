@@ -1067,6 +1067,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     
     public void correctFaultyPriceMatrix(PmsBookingRooms room, PmsBooking booking) {
+        logPrint("############ FAULTY PRICE MATRIX CREATED ######################");
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, booking.priceType, booking);
         if(booking.priceType == PmsBooking.PriceType.daily) {
             for(String key : priceMatrix.keySet()) {

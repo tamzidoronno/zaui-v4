@@ -1849,15 +1849,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void markRoomAsDirty(String bookingItemId) {
-        PmsAdditionalItemInformation additional = getAdditionalInfo(bookingItemId);
-        additional.markDirty();
-        saveAdditionalInfo(additional);
-
-        BookingItem item = bookingEngine.getBookingItem(additional.itemId);
-        if (item != null) {
-            String logText = "Marked room as dirty, item in use";
-            logEntry(logText, null, additional.itemId);
-        }
+        undoLastCleaning(bookingItemId);
     }
 
     @Override

@@ -91,7 +91,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
     
     @Override
-    public String updateAvailability() throws Exception {
+    public boolean updateAvailability() throws Exception {
         return updateAvailabilityInternal(370);
     }
     
@@ -1221,19 +1221,19 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
     }
 
-    private String updateAvailabilityInternal(int numberOfDays) throws Exception {
+    private boolean updateAvailabilityInternal(int numberOfDays) throws Exception {
         if(availabilityLastUpdated != null && numberOfDays < 700) {
             long diff = System.currentTimeMillis() - availabilityLastUpdated.getTime();
-            if(diff < (10*60*1000)) {
-                return "";
+            if(diff < (120*60*1000)) {
+                return false;
             }
         }
         availabilityLastUpdated = new Date();
         
-        if(!frameworkConfig.productionMode) { return ""; }
+        if(!frameworkConfig.productionMode) { return false; }
         
         if(!connectToApi()) {
-            return "Faield to connect to api"; 
+            return false; 
         }
         Vector<Hashtable> tosend = new Vector();
         int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
@@ -1294,13 +1294,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         params.addElement(todayString);
         params.addElement(tosend);
-
+        logText("Doing update of " + numberOfDays + " days");
         WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_rooms_values", client, this, params);
         updateThread.start();
         availabilityHasBeenChanged = null;
         lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
         
-        return "";    
+        return true;    
     }
 
     private String sparseUpdateAvailabilityInternal() throws Exception {
@@ -1398,6 +1398,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public String updateShortAvailability() throws Exception {
+        if(updateAvailability()) {
+            return "";
+        }
         if(availabilityHasBeenChanged == null) {
             return "";
         }

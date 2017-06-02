@@ -81,7 +81,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             }
         }
         
-        createScheduler("pmsmailstats", "1 23 * * *", RateManagerInvetoryUpdater.class);
+        createScheduler("ratemanagerpushinv", "1 23 * * *", RateManagerInvetoryUpdater.class);
 
     }
     

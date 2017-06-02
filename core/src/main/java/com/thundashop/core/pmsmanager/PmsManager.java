@@ -1643,6 +1643,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 room.delete();
             }
         }
+
+        for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            if(booking.channel != null && booking.channel.contains("wubook_")) {
+                messageManager.sendErrorNotification("A booking from wubook has been deleted; " + booking.id, null);
+                wubookManager.forceUpdateOnAvailability(room);
+            }
+        }
         
         logEntry("Deleted booking", bookingId, null);
         saveBooking(booking);

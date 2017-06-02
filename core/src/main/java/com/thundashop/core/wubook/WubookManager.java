@@ -1537,4 +1537,35 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
     }
 
+    public void forceUpdateOnAvailability(PmsBookingRooms room) {
+        Integer rid = -1;
+        for(WubookRoomData rdata : wubookdata.values()) {
+            if(rdata.bookingEngineTypeId.equals(room.bookingItemTypeId)) {
+                rid = rdata.wubookroomid;
+            }
+        }
+        
+        if(rid == null || rid == -1) {
+            return;
+        }
+        Calendar start = Calendar.getInstance();
+        start.setTime(room.date.start);
+        while(true) {
+            String roomDateString = convertToDayString(start.getTime());
+            
+            for(WubookAvailabilityField field : lastAvailability.lastAvailabilityUpdated) {
+                if(field.roomId.equals(rid) && field.dateAsString.equals(roomDateString)) {
+                    System.out.println("Update availability for room: " + field.dateAsString + " for room : " + rid);
+                    field.availability = -1;
+                }
+            }
+
+            
+            start.add(Calendar.DAY_OF_YEAR, 1);
+            if(start.getTime().after(room.date.end)) {
+                break;
+            }
+        }
+    }
+
 }

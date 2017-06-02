@@ -1555,8 +1555,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             
             for(WubookAvailabilityField field : lastAvailability.lastAvailabilityUpdated) {
                 if(field.roomId.equals(rid) && field.dateAsString.equals(roomDateString)) {
-                    System.out.println("Update availability for room: " + field.dateAsString + " for room : " + rid);
+                    logPrint("Update availability for room: " + field.dateAsString + " for room : " + rid);
                     field.availability = -1;
+                    setAvailabilityChanged();
                 }
             }
 

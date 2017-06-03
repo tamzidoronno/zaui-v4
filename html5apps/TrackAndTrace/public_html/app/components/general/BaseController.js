@@ -35,7 +35,7 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
             datarepository.save();
             
             $scope.messages = datarepository.driverMessages;
-            $scope.$apply();
+            $scope.$evalAsync();
             $rootScope.$apply();
         }
     });
@@ -45,7 +45,7 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
             datarepository.removeRoute(data.routeId);
             $state.transitionTo('base.home', {}, {reload: true});
             
-            $scope.$apply();
+            $scope.$evalAsync();
             $rootScope.$apply();
         }
     });
@@ -56,9 +56,7 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
     
     $scope.$on('messageCountChanged', function() {
         $scope.counter = $api.getApi().getUnsentMessageCount();
-        if ($scope.$root != null && $scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-            $scope.$apply();
-        }
+        $scope.$evalAsync();
     });
   
     $scope.ackMessage = function(message) {

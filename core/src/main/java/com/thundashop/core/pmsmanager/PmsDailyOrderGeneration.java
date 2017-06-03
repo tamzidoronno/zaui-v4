@@ -414,8 +414,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         
     }
 
-    private HashMap<String, List<PmsBookingAddonItem>> getAddonsForRoom(PmsBookingRooms room) {
-        
+    private HashMap<String, List<PmsBookingAddonItem>> getUnpaidAddonsForRoom(PmsBookingRooms room) {
         HashMap<String, PmsBookingAddonItem> addonsToAdd = new HashMap();
         for(PmsBookingAddonItem item : room.addons) {
             if(!dateIsFiltered(item.date)) {
@@ -425,7 +424,10 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         
         if(room.deleted && !currentBooking.nonrefundable) { 
-            addonsToAdd = new HashMap();
+            for(PmsBookingAddonItem item : addonsToAdd.values()) {
+                item.price = 0.0;
+            }
+            
             //Include non refundable addons.
             for(PmsBookingAddonItem item : room.addons) {
                 if(!dateIsFiltered(item.date)) {

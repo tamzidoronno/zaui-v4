@@ -417,6 +417,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return item.getProduct().isNotRecurring;
     }
 
+    @Override
+    public Order removeDuplicateOrderLines(Order order) {
+        PmsOrderCleaner cleaner = new PmsOrderCleaner(order);
+        return cleaner.cleanOrder();
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 

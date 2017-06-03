@@ -1118,7 +1118,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for(String orderId : booking.orderIds) {
                 Order order = orderManager.getOrder(orderId);
                 Date orderEnd = order.getEndDateByItems();
-                if(orderEnd != null && filter.endInvoiceAt == null || filter.endInvoiceAt.before(orderEnd)) {
+                if(orderEnd != null && (filter.endInvoiceAt == null || filter.endInvoiceAt.before(orderEnd))) {
                     filter.endInvoiceAt = orderEnd;
                 }
             }
@@ -5909,6 +5909,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(booking.priceType == PmsBooking.PriceType.daily) {
                 for(PmsBookingRooms room : booking.rooms) {
                     PmsBookingRooms oldRoom = oldBooking.getRoom(room.pmsBookingRoomId);
+                    if(oldRoom == null) {
+                        return;
+                    }
                     String logText = "";
                     for(String day : room.priceMatrix.keySet()) {
                         Double roomDayPrice = room.priceMatrix.get(day);

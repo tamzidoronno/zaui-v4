@@ -281,4 +281,20 @@ public class CartItem implements Serializable {
     public void refreshCartItemId() {
         cartItemId = UUID.randomUUID().toString();
     }
+
+    public double getTotalAmount() {
+        return count * getProduct().price;
+    }
+
+    public Double getPriceMatrixAmount() {
+        if(priceMatrix == null) {
+            return 0.0;
+        }
+        
+        Double check = 0.0;
+        for(Double toAdd : priceMatrix.values()) {
+            check += toAdd;
+        }
+        return check;
+    }
 }

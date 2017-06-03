@@ -679,11 +679,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         toRemove.add(dev);
                     }
                 }
-                for(GetShopDevice torev : toRemove) {
-//                    devices.remove(torev.id);
-//                    deleteObject(torev);
-                }
-
             } catch (Exception ex) {
                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
             }

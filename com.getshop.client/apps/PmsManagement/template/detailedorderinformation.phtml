@@ -3,6 +3,7 @@
 /* @var $order core_ordermanager_data_Order */
 $order = $this->orderToDisplay;
 $booking = $this->getSelectedBooking();
+//$order = $this->getApi()->getPmsInvoiceManager()->removeDuplicateOrderLines($this->getSelectedName(), $order);
 ?>
 <tr>
     <td colspan='70' style='padding: 5px; background-color:#fff; font-size:12px;' fororder='<?php echo $order->id; ?>'>

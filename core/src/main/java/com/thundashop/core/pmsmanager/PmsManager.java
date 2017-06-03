@@ -1645,15 +1645,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         boolean deletedByChannel = false;
+        boolean askedToDoUpdate = false;
         for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             if(booking.channel != null && booking.channel.contains("wubook_")) {
-                wubookManager.forceUpdateOnAvailability(room);
+                askedToDoUpdate = wubookManager.forceUpdateOnAvailability(room);
                 deletedByChannel = true;
             }
         }
         
         if(deletedByChannel) {
-            messageManager.sendErrorNotification("A booking from wubook has been deleted; " + booking.id, null);
+            if(!askedToDoUpdate) {
+                messageManager.sendErrorNotification("A booking from wubook has been deleted; " + booking.id, null);
+            }
         }
         
         logEntry("Deleted booking", bookingId, null);

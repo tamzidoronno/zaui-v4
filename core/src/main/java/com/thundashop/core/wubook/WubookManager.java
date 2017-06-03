@@ -1537,7 +1537,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
     }
 
-    public void forceUpdateOnAvailability(PmsBookingRooms room) {
+    public boolean forceUpdateOnAvailability(PmsBookingRooms room) {
         Integer rid = -1;
         for(WubookRoomData rdata : wubookdata.values()) {
             if(rdata.bookingEngineTypeId.equals(room.bookingItemTypeId)) {
@@ -1545,8 +1545,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         
+        boolean forceUpdateDone = false;
         if(rid == null || rid == -1) {
-            return;
+            logPrint("Rid not found for room type: " + room.bookingItemTypeId);
+            return forceUpdateDone;
         }
         Calendar start = Calendar.getInstance();
         start.setTime(room.date.start);
@@ -1558,6 +1560,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     logPrint("Update availability for room: " + field.dateAsString + " for room : " + rid);
                     field.availability = -1;
                     setAvailabilityChanged();
+                    forceUpdateDone = true;
                 }
             }
 
@@ -1567,6 +1570,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 break;
             }
         }
+        
+        return forceUpdateDone;
     }
 
 }

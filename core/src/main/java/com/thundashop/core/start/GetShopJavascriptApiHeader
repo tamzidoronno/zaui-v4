@@ -108,6 +108,9 @@ GetShopApiWebSocket.prototype = {
     },
 
     handleIncomingMessage: function(msg) {
+        if ( typeof msg === "object")
+            return;
+        
         var dataObject = JSON.parse(msg);
         for (var i in this.listeners) {
             var listener = this.listeners[i];
@@ -228,12 +231,17 @@ GetShopApiWebSocket.prototype = {
         
         this.sentMessages.push(deferred);
         
+        var loginMessage = this.getLoginMessage();
+        
         var sendFunc = function(messageJson, me) {
             if (me.socket.readyState !== 1) {
                 setTimeout(function() {
                     sendFunc(messageJson, me);
                 }, 50);
             } else {
+                if (loginMessage) {
+                    me.socket.send(loginMessage);
+                }
                 me.socket.send(messageJson);
                 var messageObject = JSON.parse(messageJson);
             }
@@ -244,6 +252,24 @@ GetShopApiWebSocket.prototype = {
         this.sendUnsentMessages();
         
         return deferred;
+    },
+    
+    getLoginMessage: function() {
+        if (localStorage.getItem("username") && localStorage.getItem("password")) {
+            var data = {
+                args : {
+                    username : JSON.stringify(localStorage.getItem("username")),
+                    password : JSON.stringify(localStorage.getItem("password")),
+                },
+                method: 'logOn',
+                interfaceName: 'core.usermanager.IUserManager',
+            };
+            
+            data.messageId = this.makeid();
+            return JSON.stringify(data);
+        }
+        
+        return false;
     },
     
     sendUnsentMessages: function() {

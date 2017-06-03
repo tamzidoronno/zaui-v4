@@ -1025,16 +1025,20 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void markAsCompleted(String routeId, double lat, double lon) {
+    public void markAsCompletedWithTimeStamp(String routeId, double lat, double lon, Date date) {
         Route route = getRouteById(routeId);
         if (route != null) {
             route.completedInfo.completed = true;
             route.completedInfo.completedByUserId = getSession().currentUser.id;
-            route.completedInfo.completedTimeStamp = new Date();
+            route.completedInfo.completedTimeStamp = date;
             route.completedInfo.completedLat = lat;
             route.completedInfo.completedLon = lon;
             saveObjectInternal(route);
         }
+    }
+    @Override
+    public void markAsCompleted(String routeId, double lat, double lon) {
+        markAsCompletedWithTimeStamp(routeId, lat, lon, new Date());
     }
 
     @Override

@@ -205,17 +205,19 @@ public class StoreHandler {
             ManagerSubBase manager = getManager(aClass, getShopInterfaceClass, inObject);
             scopedStoreId = manager.getStoreId();
             
+            List<String> roomsWithPriceMatrixBefore = new ArrayList();
             GetShopSessionScope sessionScope = AppContext.appContext.getBean(GetShopSessionScope.class);
             PmsManager pmsManager = sessionScope.getNamedSessionBean("default", PmsManager.class);
-            List<String> roomsWithPriceMatrixBefore = pmsManager.getListOfAllRoomsThatHasPriceMatrix();
+            if(inObject.interfaceName != null && inObject.interfaceName.toLowerCase().contains("pmsmanager")) {
+                roomsWithPriceMatrixBefore = pmsManager.getListOfAllRoomsThatHasPriceMatrix();
+            }
 
             Object result = executeMethod.invoke(manager, argObjects);
             result = manager.preProcessMessage(result, executeMethod);
             
             List<String> roomsWithPriceMatrixAfter = pmsManager.getListOfAllRoomsThatHasPriceMatrix();
-            
             roomsWithPriceMatrixBefore.removeAll(roomsWithPriceMatrixAfter);
-            
+
             if (!roomsWithPriceMatrixBefore.isEmpty()) {
                 System.out.println("===================================================================================");
                 System.out.println("Missing pricematrix after: " + executeMethod);

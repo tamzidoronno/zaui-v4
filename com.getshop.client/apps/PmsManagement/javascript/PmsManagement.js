@@ -2,6 +2,7 @@ app.PmsManagement = {
     init: function () {
         $(document).on('change', '.PmsManagement .attachedProduct', app.PmsManagement.attachProduct);
         $(document).on('click', '.PmsManagement .moreinformationaboutbooking', app.PmsManagement.showMoreInformation);
+        $(document).on('click', '.PmsManagement .updateinvoicenotebutton', app.PmsManagement.updateInvoiceNote);
         $(document).on('click', '.PmsManagement .viewmode', app.PmsManagement.toggleEditMode);
         $(document).on('click', '.PmsManagement td.pricecol', app.PmsManagement.showNotPaidInfo);
         $(document).on('click', '.PmsManagement .statisticsrow', app.PmsManagement.loadStatisticsOverview);
@@ -96,8 +97,33 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .createnewfilter', app.PmsManagement.createNewIncomeReportFilter);
         $(document).on('click','.PmsManagement .checkboxforbookedroom', app.PmsManagement.updateCheckedRoomUnsettledAmount);
         $(document).on('click','.PmsManagement .checkallbookedrooms', app.PmsManagement.updateCheckedRoomUnsettledAmount);
+        $(document).on('click','.PmsManagement .editaddonpricematrix', app.PmsManagement.editAddonPriceMatrix);
         $(document).on('keyup','.PmsManagement .changeorderdates', app.PmsManagement.changeOrderPeriode);
     },
+    
+    updateInvoiceNote : function() {
+        var event = thundashop.Ajax.createEvent('','updateInvoiceNoteOnOrder',$(this), {
+            "orderid" : $(this).attr('orderid'),
+            "note" : $(this).closest('td').find('.invoicenotetextarea').val()
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            thundashop.common.Alert("Success", "Note updated on order");
+        })
+    },
+    
+    editAddonPriceMatrix : function() {
+        var event = thundashop.Ajax.createEvent('','editAddonAndPriceMatrixOnCartItem', $(this), {
+            "itemid" : $(this).closest('.cartitemselectionrow').find('[gsname="itemid"]').val()
+        });
+        
+        var loadArea = $(this).parent().find('.loadEditAddonAndPriceMatrix');
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            loadArea.html(res);
+            loadArea.show();
+        });
+    },
+    
     changeOrderPeriode : function(e) {
         var field = null;
         if(e.input) {

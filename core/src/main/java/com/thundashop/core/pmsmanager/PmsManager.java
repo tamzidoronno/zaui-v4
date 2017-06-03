@@ -157,6 +157,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     Database dataBase;
+    private Date virtualOrdersCreated;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -248,10 +249,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void createAllVirtualOrders() {
+        
+        if(virtualOrdersCreated != null) {
+            return;
+        }
+        
         for (PmsBooking booking : bookings.values()) {
                 orderManager.deleteVirtualOrders(booking.id);
                 pmsInvoiceManager.createVirtualOrder(booking.id);
         }
+        
+        virtualOrdersCreated = new Date();
     }
     
     @Override
@@ -526,7 +534,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             for (PmsBooking booking : bookings.values()) {
                 User user = userManager.getUserById(booking.userId);
-                if (user != null && user.fullName != null && user.fullName.toLowerCase().contains(filter.searchWord.toLowerCase())) {
+                if(booking.id != null && booking.id.equals(filter.searchWord)) {
+                    result.add(booking);
+                } else if (user != null && user.fullName != null && user.fullName.toLowerCase().contains(filter.searchWord.toLowerCase())) {
                     result.add(booking);
                     continue;
                 } else if (booking.containsSearchWord(filter.searchWord)) {
@@ -1633,6 +1643,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 room.delete();
             }
         }
+
+        boolean deletedByChannel = false;
+        for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            if(booking.channel != null && booking.channel.contains("wubook_")) {
+                wubookManager.forceUpdateOnAvailability(room);
+                deletedByChannel = true;
+            }
+        }
+        
+        if(deletedByChannel) {
+            messageManager.sendErrorNotification("A booking from wubook has been deleted; " + booking.id, null);
+        }
         
         logEntry("Deleted booking", bookingId, null);
         saveBooking(booking);
@@ -1839,7 +1861,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void markRoomAsDirty(String bookingItemId) {
-        PmsAdditionalItemInformation additional = getAdditionalInfo(bookingItemId);
+       PmsAdditionalItemInformation additional = getAdditionalInfo(bookingItemId);
         additional.markDirty();
         saveAdditionalInfo(additional);
 
@@ -5414,6 +5436,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for (PmsBooking book : bookings.values()) {
             for (PmsBookingRooms room :  book.rooms) {
+                if(!room.isActiveInPeriode(new Date(), new Date())) {
+                    continue;
+                }
                 if (room.priceMatrix != null && !room.priceMatrix.isEmpty()) {
                     ids.add(room.pmsBookingRoomId);
                 }
@@ -5543,6 +5568,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void bookingUpdated(String bookingId, String type, String roomId) {
+        virtualOrdersCreated = null;
         try {
             PmsBooking booking = getBookingUnsecure(bookingId);
             if(type.equals("created")) {

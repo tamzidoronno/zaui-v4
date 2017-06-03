@@ -50,6 +50,8 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     @Autowired
     CartManager cartManager;
     
+    List<String> daysInPriceMatrix = new ArrayList();
+    
     private void addCartItem(CartItem cartItem) {
         if(cartItem != null) {
             generatedCartItems.add(cartItem);
@@ -61,6 +63,20 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     }
     
     public String createCart(String bookingId, NewOrderFilter filter) {
+        if(filter.itemsToCreate != null && !filter.itemsToCreate.isEmpty()) {
+            List<CartItem> itemsToRemove = new ArrayList();
+            for(CartItem item : cartManager.getCart().getItems()) {
+                if(!filter.itemsToCreate.contains(item.getCartItemId())) {
+                    itemsToRemove.add(item);
+                }
+            }
+            for(CartItem item : itemsToRemove) {
+                cartManager.removeCartItem(item.getCartItemId());
+            }
+            return "";
+        }
+ 
+        
         clearGenerateCart();
         
         currentBooking = pmsManager.getBooking(bookingId);
@@ -136,7 +152,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                                 price *= -1;
                             }
                             
-                            System.out.println("\t\t\t" + price);
                             if(currentMatrix.containsKey(offset)) {
                                 price = currentMatrix.get(offset) - price;
                             } else {
@@ -180,7 +195,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         int count = 0;
         Double total = 0.0;
         HashMap<String, Double> priceMatrixToSave = new HashMap();
-        
         for(Date dayToIterate : dailyPrices.keySet()) {
             Double priceOne = null;
             Double priceTwo = null;
@@ -188,13 +202,15 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             if(!dateIsFiltered(dayToIterate)) {
                 continue;
             }
-            
+            daysInPriceMatrix.add(PmsBookingRooms.convertOffsetToString(dayToIterate));
             
             if(lastDay != null && dailyPrices.containsKey(lastDay)) { priceOne = dailyPrices.get(lastDay).price; }
             if(dailyPrices.containsKey(dayToIterate)) { priceTwo = dailyPrices.get(dayToIterate).price; }
             
             if(isNegated(priceOne,priceTwo)) {
-                addCartItem(createCartItemForRoom(count, total, room, startDate, nextDay, null));
+                CartItem item = createCartItemForRoom(count, total, room, startDate, nextDay, null);
+                addCartItem(item);
+                addPriceMatrix(item, priceMatrix);
                 count = 0;
                 total = 0.0;
                 startDate = null;
@@ -202,7 +218,9 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             }
             
             if(nextDay != null && !room.isSameDay(nextDay, dayToIterate)) {
-                addCartItem(createCartItemForRoom(count, total, room, startDate, nextDay, null));
+                CartItem item = createCartItemForRoom(count, total, room, startDate, nextDay, null);
+                addCartItem(item);
+                addPriceMatrix(item, priceMatrix);
                 startDate = null;
                 nextDay = null;
                 count = 0;
@@ -222,10 +240,8 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         if(count > 0 && total != 0.0) {
             CartItem item = createCartItemForRoom(count, total, room,startDate, nextDay, null);
-            if(item != null) {
-                item.priceMatrix = priceMatrix;
-                addCartItem(item);
-            }
+            addPriceMatrix(item, priceMatrix);
+            addCartItem(item);
         }
     }
     
@@ -288,6 +304,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     
     
     private CartItem createCartItemForRoom(int count, Double total, PmsBookingRooms room, Date start, Date end, String productId) {
+        boolean isAddon = (productId != null);
         String guestName = "";
         if(!room.guests.isEmpty() && room.guests.get(0).name != null) {
             guestName = room.guests.get(0).name;
@@ -322,6 +339,9 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         item.getProduct().externalReferenceId = room.pmsBookingRoomId;
         item.getProduct().metaData = guestName;
         item.getProduct().additionalMetaData = roomName;
+        if(isAddon) {
+            item.groupedById = room.pmsBookingRoomId;
+        }
         if(useTypeName) {
             item.getProduct().name = type.name;
         }
@@ -360,6 +380,9 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     private CartItem createCartItem(String productId, int count, Double total) {
         CartItem item = new CartItem();
         Product product = productManager.getProductUnfinalized(productId);
+        if(product == null) {
+            product = productManager.getDeletedProduct(productId);
+        }
         if(product == null) {
             logPrint("Product: " + productId + " does not exists anymore");
             return null;
@@ -442,9 +465,14 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                             PmsBookingAddonItem addonOnRoom = null;
                             if(addonsToAdd.containsKey(addonAlreadyBilled.addonId)) {
                                 addonOnRoom = addonsToAdd.get(addonAlreadyBilled.addonId);
+                                if(order.isCreditNote) {
+                                    addonAlreadyBilled.count *= -1;
+                                }
                                 removeFromAddon(addonOnRoom, addonAlreadyBilled);
                             } else {
-                                toCheck.price *= -1;
+                                if(order.isCreditNote) {
+                                    toCheck.count *= -1;
+                                }
                                 addonsToAdd.put(toCheck.addonId, toCheck);
                             }
                         }
@@ -511,6 +539,19 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             cal.set(Calendar.SECOND, 00);
             currentFilter.startInvoiceAt = cal.getTime();
         }
+    }
+
+    private void addPriceMatrix(CartItem item, HashMap<String, Double> priceMatrix) {
+        HashMap<String, Double> newPriceMatrix = new HashMap();
+        for(String offset : priceMatrix.keySet()) {
+            if(daysInPriceMatrix.contains(offset)) {
+                newPriceMatrix.put(offset, priceMatrix.get(offset));
+            }
+        }
+        if(item != null) {
+            item.priceMatrix = newPriceMatrix;
+        }
+        daysInPriceMatrix.clear();
     }
 
 

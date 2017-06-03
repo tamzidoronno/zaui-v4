@@ -20,6 +20,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function updateInvoiceNoteOnOrder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->invoiceNote = $_POST['data']['note'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
     public function toggleNonRefundable() {
         $_POST['data']['bookingid'] = $_POST['data']['clicksubmit'];
         $booking = $this->getSelectedBooking();
@@ -3086,8 +3092,31 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function loadCartItems() {
         $this->includefile("ordergenerationcartitems");
     }
+    
+    public function editAddonAndPriceMatrixOnCartItem() {
+        $this->includefile("editcartitemmatrix");
+    }
+    
+    public function saveItemOnOrder() {
+        foreach($this->getApi()->getCartManager()->getCart()->items as $item) {
+            if($item->cartItemId == $_POST['data']['itemid']) {
+                $item->priceMatrix = $_POST['data']['matrixdata'];
+                foreach($item->itemsAdded as $addonItem) {
+                    if(isset($_POST['data']['addondata'][$addonItem->addonId]['price'])) {
+                        $addonItem->price = $_POST['data']['addondata'][$addonItem->addonId]['price'];
+                    }
+                }
+                $this->getApi()->getCartManager()->updateCartItem($item);
+            }
+        }
+    }
 
     public function printSingleCartItem($item, $lastSelectedId) {
+        
+        $disabled = "";
+        if(sizeof($item->priceMatrix) > 0 || $item->itemsAdded) {
+            $disabled = "DISABLED";
+        }
         echo "<div selectionroomrow='".$lastSelectedId."' class='cartitemselectionrow'>";
         echo "<input type='checkbox' class='itemselection'>";
         echo "<input type='hidden' gsname='itemid' value='".$item->cartItemId."'>";
@@ -3107,7 +3136,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "<input type='txt' gsname='end' value='$end' style='width:120px;'> ";
         echo "<input type='txt' gsname='count' style='width: 25px;text-align:center;' value='". $item->count . "' style='width:120px;' class='cartcount'> ";
         echo "<input type='txt' gsname='name' value='". $item->product->name . "' style='width:550px;' class='itemname'> ";
-        echo "<input type='txt' gsname='price' style='width: 60px;' class='cartprice' value='". $item->product->price . "' style='width:120px;'>";
+        echo "<span class='loadEditAddonAndPriceMatrix'></span>";
+        echo "<input type='txt' gsname='price' style='width: 60px;' class='cartprice' value='". $item->product->price . "' style='width:120px;' $disabled>";
+        if($disabled) {
+            echo "<i class='fa fa-edit editaddonpricematrix'></i>";
+        }
         echo "</div>";
     }
 

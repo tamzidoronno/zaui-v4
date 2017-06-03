@@ -20,10 +20,10 @@ $booking = $this->getSelectedBooking();
                 if($room->pmsBookingRoomId == $extid) {
                     $heading = "";
                     if($room->bookingItemId) {
-                        $heading .= "<span style='float:left;'>" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . "</span>";
+                        $heading .= "<span style='float:left;'>" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . " </span>";
                     }
                     if(sizeof($room->guests) > 0) {
-                        $heading .= "<span style='float:left;'>" . $room->guests[0]->name . "</span>";
+                        $heading .= "<span style='float:left; margin-left: 10px;'>" . $room->guests[0]->name . " </span>";
                         $heading .= " ";
                     }
                     
@@ -48,6 +48,10 @@ $booking = $this->getSelectedBooking();
             }
             echo "</div>";
         }
+        echo "<b>Note to order:</b><br>";
+        echo "<textarea class='invoicenotetextarea' style='width:100%; height: 50px; box-sizing:border-box;'>".@$order->invoiceNote."</textarea>";
+        echo "<input type='button' style='float:right;' value='Update invoice note' class='updateinvoicenotebutton' orderid='".$order->id."'>";
+        
         ?>
     </td>
 </tr>

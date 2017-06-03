@@ -37,18 +37,7 @@ if($compact) {
 <div gstype="form" method="showTimeLine">
     <input type='checkbox' gsname='compactmode' <?php echo $compactChecked; ?>> Compact view<br>
     <input type="text" gsname='start' value='<? echo $start; ?>'>
-    <input type="text" gsname='end' value='<? echo $end; ?>'>
-    <select gsname='interval'>
-        <?php 
-        foreach($interval as $minutes => $name) {
-            $selected = "";
-            if($selectedInterval == $minutes) {
-                $selected = "SELECTED";
-            }
-            echo "<option value='$minutes' $selected>$name</option>";
-        }
-        ?>
-    </select>  
+    <input type="text" gsname='end' value='<? echo $end; ?>'> 
     <?php
     
     $filters = $this->getApi()->getPmsManager()->getAllPmsFilters($this->getSelectedName());
@@ -72,7 +61,7 @@ if($compact) {
 
     ?>
     <input gstype="submit" type="button" value="<? echo $this->__w("Show"); ?>">
-    <input type='button' class='closeRoomOptionsButton' value="Close a room" style='float:right;'>
+    <input type='button' class='closeRoomOptionsButton ' value="Close a room" style='float:right;'>
 </div>
 <br>
 <input type='hidden' value='<?php echo $this->getConfigurationSetting("pmsmanagerinstanceid"); ?>' id='bookinginstanceid'>
@@ -142,6 +131,7 @@ if($compact) {
     echo "</table>";
     echo "</div>";
     echo "</div>";
+    echo "<div id='toggleRoomoverview'><i class='fa fa-fw fa-angle-double-up'></i></div>";
     echo "<bR><bR>";
 
     $printHeader = true;
@@ -150,7 +140,7 @@ if($compact) {
         $detailed = "detailedview";
     }
     echo "<div class='timelineoverviewouter $detailed'>";
-    echo "<div class='timelineoverview'>";
+    echo "<div class='timelineoverview'style='min-height:700px;padding-bottom:100px;'>";
     echo "<div class='topspacingitemoverview'></div>";
     foreach($result->itemTimeLines as $itemId => $days) {
         $lastid = "";
@@ -257,8 +247,46 @@ if($compact) {
     $('.PmsAvailabilityTimeline .dateheadingrow').css('position','absolute');
     $('.PmsAvailabilityTimeline .dateheadingrow').css('top','0px');
     $('.PmsAvailabilityTimeline .dateheadingrow').css('z-index','1');
-    $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
-    $('input[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('input[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+               var date = moment(dateText, "DD.MM.YYYY");
+               var month = (moment(date).get('month')+1);
+               if(month < 10) {
+                   month = "0" + month;
+               }
+               var currentEnd = $('input[gsname="end"]').val();
+               var endMoment = moment(currentEnd, "DD.MM.YYYY");
+
+               var diff = endMoment.diff(date, "minutes");
+               if(diff < 0 || currentEnd == 0) {
+                   var day = moment(date).get('date')+7;
+                   if(day < 10) {
+                       day = "0" + day;
+                   }
+                   $('input[gsname="end"]').val(day + "." + month + "." + moment(date).get('year'));
+               }
+             }
+         });
+    $('input[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+    onSelect: function(dateText){
+        var date = moment(dateText, "DD.MM.YYYY");
+           var month = (moment(date).get('month')+1);
+           if(month < 10) {
+               month = "0" + month;
+           }
+           var currentStart = $('input[gsname="start"]').val();
+           var startMoment = moment(currentStart, "DD.MM.YYYY");
+
+           var diff = startMoment.diff(date, "minutes");
+           if(diff > 0 ||currentStart == 0) {
+               var day = moment(date).get('date')-7;
+               if(day < 10) {
+                   day = "0" + day;
+               }
+               $('input[gsname="start"]').val(day + "." + month + "." + moment(date).get('year'));
+           }
+         }
+    });
     <?php if(!$printTypeOverview) { ?>
         $('select[gsname="viewtype"]').val('items');
     <?php } ?>
@@ -271,4 +299,12 @@ if($compact) {
             var left = $(this).scrollLeft();
             $('.fixedscroll').css('left',left+"px");
         });
+        var state = localStorage.getItem('PmsRoomoverviewState');
+        if(state === "hidden"){
+            $('.roomoverview').hide();
+            $('#toggleRoomoverview').addClass('flip');
+        }else{
+            $('.roomoverview').show();
+            $('#toggleRoomoverview').removeClass('flip');
+        }
 </script>

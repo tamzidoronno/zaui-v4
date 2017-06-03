@@ -41,9 +41,9 @@ controllers.RouteCompleteController = function($scope, datarepository, $rootScop
         $state.transitionTo("base.home", {});
 
         navigator.geolocation.getCurrentPosition(function(position) {
-            $api.getApi().TrackAndTraceManager.markAsCompleted(routeId, position.coords.latitude, position.coords.longitude);
+            $api.getApi().TrackAndTraceManager.markAsCompletedWithTimeStamp(routeId, position.coords.latitude, position.coords.longitude, new Date());
         }, function(failare, b, c) {
-            $api.getApi().TrackAndTraceManager.markAsCompleted(routeId, 0, 0);
+            $api.getApi().TrackAndTraceManager.markAsCompletedWithTimeStamp(routeId, 0, 0, new Date());
         }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
     }
     

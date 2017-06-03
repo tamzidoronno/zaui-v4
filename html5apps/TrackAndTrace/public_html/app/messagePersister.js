@@ -127,7 +127,7 @@ messagePersister = {
                     me.messages.push(toAdd);
                 }
                 
-                if ($api) {
+                if ($api && $api.getApi()) {
                     $api.getApi().sendUnsentMessages();
                 }
             },

@@ -109,7 +109,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             generateDailyPriceItems(priceMatrix, room);
             
             //Addon prices.
-            HashMap<String, List<PmsBookingAddonItem>> items = getAddonsForRoom(room);
+            HashMap<String, List<PmsBookingAddonItem>> items = getUnpaidAddonsForRoom(room);
             for(String productId : items.keySet()) {
                 generateAddonsCostForProduct(items.get(productId), room, true);
                 generateAddonsCostForProduct(items.get(productId), room, false);
@@ -414,8 +414,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         
     }
 
-    private HashMap<String, List<PmsBookingAddonItem>> getAddonsForRoom(PmsBookingRooms room) {
-        
+    private HashMap<String, List<PmsBookingAddonItem>> getUnpaidAddonsForRoom(PmsBookingRooms room) {
         HashMap<String, PmsBookingAddonItem> addonsToAdd = new HashMap();
         for(PmsBookingAddonItem item : room.addons) {
             if(!dateIsFiltered(item.date)) {
@@ -425,7 +424,10 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         
         if(room.deleted && !currentBooking.nonrefundable) { 
-            addonsToAdd = new HashMap();
+            for(PmsBookingAddonItem item : addonsToAdd.values()) {
+                item.price = 0.0;
+            }
+            
             //Include non refundable addons.
             for(PmsBookingAddonItem item : room.addons) {
                 if(!dateIsFiltered(item.date)) {
@@ -462,6 +464,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                             if(toCheck == null || toCheck.price == null) {
                                 continue;
                             }
+                            
                             PmsBookingAddonItem addonOnRoom = null;
                             if(addonsToAdd.containsKey(addonAlreadyBilled.addonId)) {
                                 addonOnRoom = addonsToAdd.get(addonAlreadyBilled.addonId);

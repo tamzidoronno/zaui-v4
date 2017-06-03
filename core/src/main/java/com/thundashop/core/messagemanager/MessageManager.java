@@ -209,7 +209,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         String text = "";
         text += "<br/><b>Message:</b> <br/>";
         text += inText.replace("\n", "<br/>");
-        text += "Store id: " + storeId;
+        text += "<br><br>Store id: " + storeId;
         text += "<br/>Date: " + new Date();
         text += "<br/>Store email: " + getStoreEmailAddress();
         text += "<br/>Store name: " + getStoreName();

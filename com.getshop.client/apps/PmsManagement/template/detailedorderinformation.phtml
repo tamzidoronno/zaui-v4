@@ -46,6 +46,14 @@ $booking = $this->getSelectedBooking();
                 echo "" . round($item->product->price);
                 echo "</span><br>";
             }
+//            echo "<pre>";
+//            foreach($items as $item) {
+//                echo $item->product->externalReferenceId . "<br>";
+//                print_r($item->priceMatrix);
+//                print_r($item->itemsAdded);
+//                echo "<hr>";
+//            }
+//            echo "</pre>";
             echo "</div>";
         }
         echo "<b>Note to order:</b><br>";
@@ -54,4 +62,5 @@ $booking = $this->getSelectedBooking();
         
         ?>
     </td>
+
 </tr>

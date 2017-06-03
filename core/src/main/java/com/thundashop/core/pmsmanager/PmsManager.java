@@ -1114,6 +1114,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     filter.endInvoiceAt = room.date.end;
                 }
             }
+            
+            for(String orderId : booking.orderIds) {
+                Order order = orderManager.getOrder(orderId);
+                Date orderEnd = order.getEndDateByItems();
+                if(orderEnd != null && filter.endInvoiceAt == null || filter.endInvoiceAt.before(orderEnd)) {
+                    filter.endInvoiceAt = orderEnd;
+                }
+            }
+            
         }
         
         return pmsInvoiceManager.createOrder(bookingId, filter);
@@ -1645,15 +1654,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         boolean deletedByChannel = false;
+        boolean askedToDoUpdate = false;
         for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             if(booking.channel != null && booking.channel.contains("wubook_")) {
-                wubookManager.forceUpdateOnAvailability(room);
+                askedToDoUpdate = wubookManager.forceUpdateOnAvailability(room);
                 deletedByChannel = true;
             }
         }
         
         if(deletedByChannel) {
-            messageManager.sendErrorNotification("A booking from wubook has been deleted; " + booking.id, null);
+            if(!askedToDoUpdate) {
+                messageManager.sendErrorNotification("A booking from wubook has been deleted; " + booking.id, null);
+            }
         }
         
         logEntry("Deleted booking", bookingId, null);

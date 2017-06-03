@@ -27,6 +27,7 @@ import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.printmanager.ReceiptGenerator;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.printmanager.PrintManager;
@@ -186,11 +187,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     saveObject(order);
                 }
                 
-                if (order.incrementOrderId == 100034) {
-                    order.status = Order.Status.WAITING_FOR_PAYMENT;
-                    saveObject(order);
-                }
-                
                 if (order.cart == null) {
                     continue;
                 }
@@ -200,6 +196,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if (order.isVirtual) {
                     continue;
                 }
+                doubleCheckPriceMatrixAndItemsAdded(order);
                 orders.put(order.id, order);
             }
         }
@@ -587,6 +584,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     return order;
                 }
             } else if (user.isAdministrator() || user.isEditor()) {
+                doubleCheckPriceMatrixAndItemsAdded(order);
                 return order;
             } else if (order.userId.equals(user.id)) {
                 return order;
@@ -1924,6 +1922,36 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return null;
+    }
+
+    private void doubleCheckPriceMatrixAndItemsAdded(Order order) {
+        Double total = 0.0;
+        boolean found = false;
+        for(CartItem item : order.cart.getItems()) {
+            if(item.itemsAdded != null && !item.itemsAdded.isEmpty()) {
+               for(PmsBookingAddonItem pmsitem : item.itemsAdded) {
+                   total += (pmsitem.count * pmsitem.price);
+                   found = true;
+               }
+            }
+            if(item.priceMatrix != null && !item.priceMatrix.isEmpty()) {
+                for(Double val : item.priceMatrix.values()) {
+                    total += val;
+                    found = true;
+                }
+            }
+        }
+        
+        Double orderTotal = getTotalAmount(order);
+        long ordertotalcheck = Math.round(orderTotal);
+        long ordercheck = Math.round(total);
+        if(order.isCreditNote) {
+           ordercheck *= -1;
+        }
+        if(found && ordercheck != ordertotalcheck) {
+            System.out.println("Order is incorrect: " + order.incrementOrderId + " total: " + orderTotal + " found: " + total);
+        }
+        
     }
 
 

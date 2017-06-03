@@ -2757,7 +2757,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function createOrderPreview($booking, $config) {
-        $endDate = time();
+        $endDate = $this->getEndDateForBooking();
         foreach($booking->rooms as $room) {
             if($endDate < strtotime($room->date->end)) {
                 $endDate = strtotime($room->date->end);
@@ -2793,12 +2793,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function createOrderPreviewUnsettledAmount($booking, $config) {
-        $endDate = time();
-        foreach($booking->rooms as $room) {
-            if($endDate < strtotime($room->date->end)) {
-                $endDate = strtotime($room->date->end);
-            }
-        }
+        $endDate = $this->getEndDateForSpecifiedBooking($booking);
         
         $filter = new \core_pmsmanager_NewOrderFilter();
         $filter->onlyEnded = false;
@@ -3282,14 +3277,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function getEndDateForBooking() {
-        $end = null;
         $booking = $this->getSelectedBooking();
-        foreach($booking->rooms as $room) {
-            if($end == null || $end < strtotime($room->date->end)) {
-                $end = strtotime($room->date->end);
-            }
-        }
-        return $end;
+        return $this->getEndDateForSpecifiedBooking($booking);
     }
 
     public function loadUnsettledAmount() {
@@ -3328,6 +3317,17 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $start = strtotime($room->date->start);
             }
         }
+        
+        
+        foreach($booking->orderIds as $orderId) {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            foreach($order->cart->items as $item) {
+                if($start == null || $start > strtotime($item->startDate)) {
+                    $start = strtotime($item->startDate);
+                }
+            }
+        }
+        
         return $start;
     }
 
@@ -3436,6 +3436,30 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function showDeletedRooms() {
         return false;
+    }
+
+    public function getEndDateForSpecifiedBooking($booking) {
+        $end = null;
+        foreach($booking->rooms as $room) {
+            if($end == null || $end < strtotime($room->date->end)) {
+                $end = strtotime($room->date->end);
+            }
+        }
+        
+        foreach($booking->orderIds as $orderId) {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            foreach($order->cart->items as $item) {
+                if($end == null || $end < strtotime($item->endDate)) {
+                    $end = strtotime($item->endDate);
+                }
+            }
+        }
+        
+        if(!$end) {
+            $end = time();
+        }
+        
+        return $end;
     }
 
 }

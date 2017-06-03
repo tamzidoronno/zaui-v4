@@ -109,7 +109,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             generateDailyPriceItems(priceMatrix, room);
             
             //Addon prices.
-            HashMap<String, List<PmsBookingAddonItem>> items = getAddonsForRoom(room);
+            HashMap<String, List<PmsBookingAddonItem>> items = getUnpaidAddonsForRoom(room);
             for(String productId : items.keySet()) {
                 generateAddonsCostForProduct(items.get(productId), room, true);
                 generateAddonsCostForProduct(items.get(productId), room, false);
@@ -464,6 +464,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                             if(toCheck == null || toCheck.price == null) {
                                 continue;
                             }
+                            
                             PmsBookingAddonItem addonOnRoom = null;
                             if(addonsToAdd.containsKey(addonAlreadyBilled.addonId)) {
                                 addonOnRoom = addonsToAdd.get(addonAlreadyBilled.addonId);

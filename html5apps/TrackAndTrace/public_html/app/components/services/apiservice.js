@@ -27,7 +27,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     alert("Did not find the company you specified, please check your details.");
                     me.$state.transitionTo('base.login');
                     $('.loginbutton').find('.login-shower').remove();
-                    this.lastShownError = now;
+                    this.lastShownError = new Date().getTime();
                 } else if (error.errorCode == 13) {
                     var now = new Date().getTime();
                     var diff = now - this.lastShownError;
@@ -41,7 +41,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     
                     me.$state.transitionTo('base.login');
                     $('.loginbutton').find('.login-shower').remove();
-                    this.lastShownError = now;
+                    this.lastShownError = new Date().getTime();
                 } else {
                     alert(errorTextMatrix[error.errorCode]);
                 }
@@ -95,7 +95,9 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             var me = this;
             
             $getShopApi.UserManager.logOn(username, password).done(function(user) {
-                $getShopApi.sendUnsentMessages();
+                if($getShopApi) {
+                    $getShopApi.sendUnsentMessages();
+                }
                 localStorage.setItem("loggedInUserId", JSON.stringify(user));
 
                 if (fromLogin) {

@@ -29,7 +29,7 @@ angular.module('TrackAndTrace')
         window.scroll(0,0);
     });
     
-    if ( localStorage.getItem("loggedInUserId") == null || localStorage.getItem("loggedInUserId") === "") {
+    if ( localStorage.getItem("username") == null || localStorage.getItem("password") === "") {
         $location.path( "/login" );
     } else if ($location.$$path === "") {
         $location.path( "/home" );
@@ -75,7 +75,6 @@ if (app) {
             elem.bind("click", function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-
                 scope.$evalAsync(attrs["ngMobileClickEnd"]);
             });
         }

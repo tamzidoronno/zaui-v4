@@ -952,7 +952,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         PmsBooking oldBooking = (PmsBooking) database.getObject(credentials, booking.id);
-        diffPricesFromBooking(booking, oldBooking);
+        if (oldBooking != null) {
+            diffPricesFromBooking(booking, oldBooking);
+        }
         
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);

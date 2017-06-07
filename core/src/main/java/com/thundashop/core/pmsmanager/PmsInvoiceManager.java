@@ -720,6 +720,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         result.add(msg);
                         room.invoicedTo = invoicedTo;
                         pmsManager.saveBooking(booking);
+                        messageManager.sendErrorNotification(msg, null);
                     }
                 }
             }

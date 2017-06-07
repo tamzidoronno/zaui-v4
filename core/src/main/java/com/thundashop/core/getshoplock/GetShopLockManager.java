@@ -597,7 +597,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
         }
         createScheduler("pmsprocessor", "* * * * *", CheckAllOkGetShopLocks.class);
-        createScheduler("pmsprocessor_lock", "30 23,04 * * *", UpdateLockList.class);
+//        createScheduler("pmsprocessor_lock", "30 23,04 * * *", UpdateLockList.class);
     }
     
     public String getUsername(String serverSource) {

@@ -74,6 +74,15 @@ public class PmsBookingSimpleFilter {
                     return 1;
                 }
             });
+        } else if (sorting.equals("invoicedto") || sorting.equals("invoicedto_desc")) {
+            Collections.sort(result, new Comparator<PmsRoomSimple>() {
+                public int compare(PmsRoomSimple o1, PmsRoomSimple o2) {
+                    if(o1.invoicedTo == null || o2.invoicedTo == null) {
+                        return -1;
+                    }
+                    return o1.invoicedTo.compareTo(o2.invoicedTo);
+                }
+            });
         } else if (sorting.equals("room") || sorting.equals("room_desc")) {
             Collections.sort(result, new Comparator<PmsRoomSimple>() {
                 public int compare(PmsRoomSimple o1, PmsRoomSimple o2) {

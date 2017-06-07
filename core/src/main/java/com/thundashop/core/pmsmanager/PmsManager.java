@@ -6033,7 +6033,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public void checkAndReportPriceMatrix(PmsBooking booking, String message) {
         try {
-            if(!storeId.equals("e625c003-9754-4d66-8bab-d1452f4d5562")) {
+            if(!storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
                 return;
             }
             

@@ -84,6 +84,7 @@ public class PmsManagerProcessor {
             if(booking.isEnded()) {
                 continue;
             }
+            manager.checkAndReportPriceMatrix(booking, "In the processor");
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 int start = hoursAheadCheck;

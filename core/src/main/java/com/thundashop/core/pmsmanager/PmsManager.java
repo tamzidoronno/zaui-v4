@@ -6044,8 +6044,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             
             for(PmsBookingRooms room : booking.rooms) {
-                if(room.priceMatrix == null || room.priceMatrix.isEmpty()) {
-                    messageManager.sendErrorNotification("price jump detected, " + message + " booking id: " + booking.id, new Exception());
+                if(room.price   Matrix == null || room.priceMatrix.isEmpty()) {
+                    logPrint("price jump detected, " + message + " booking id: " + booking.id);
+                    logPrintException(new Exception());
                 }
             }
         }catch(Exception e) {

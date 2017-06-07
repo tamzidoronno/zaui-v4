@@ -684,6 +684,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return null;
         }
         checkSecurity(booking);
+        
+        pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
 
         booking.calculateTotalCost();
         Double totalOrder = 0.0;

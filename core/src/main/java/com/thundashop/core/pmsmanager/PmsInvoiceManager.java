@@ -715,7 +715,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                     String userName = userManager.getUserById(booking.userId).fullName;
                     
-                    if(room.invoicedTo.after(invoicedTo)) {
+                    if(room.invoicedTo != null && !isSameDay(room.invoicedTo, invoicedTo)) {
                         String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
                         result.add(msg);
                         room.invoicedTo = invoicedTo;

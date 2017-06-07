@@ -85,10 +85,11 @@ public class PmsManagerProcessor {
                 continue;
             }
             boolean save = false;
+            
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 int start = hoursAheadCheck;
                 int end = maxAheadCheck;
-                if(started) {
+                if(started) { 
                     start = end * -1;
                     end = end * -1;
                 }
@@ -116,6 +117,7 @@ public class PmsManagerProcessor {
             if (save) {
                 manager.saveBooking(booking);
             }
+
         }
     }
 

@@ -891,11 +891,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(start.after(end)) {
             return null;
         }
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(start);
-        if(cal.get(Calendar.YEAR) < 2016) {
-            return null;
-        }
         
         PmsBooking booking = getBooking(bookingId);
         try {
@@ -4349,7 +4344,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             if(room.bookingItemId == null || !room.bookingItemId.equals(item.id)) {
                                 continue;
                             }
-
+                            notify("room_dooropenedfirsttime", booking, "sms", room);
+                            notify("room_dooropenedfirsttime", booking, "email", room);
                             room.checkedin = true;
                             saveBooking(booking);
                         }
@@ -4366,6 +4362,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
                 if(room.code != null && room.code.equals(card) && !room.checkedin) {
+                    notify("room_dooropenedfirsttime", booking, "sms", room);
+                    notify("room_dooropenedfirsttime", booking, "email", room);
                     room.checkedin = true;
                     saveBooking(booking);
                 }
@@ -5100,7 +5098,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     if(toBeAdded) {
                         if(view.paidFor && !pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
-                            continue;
+                            if(!booking.forceGrantAccess) {
+                                continue;
+                            }
                         }
                         PmsBookingAddonViewItem toAdd = new PmsBookingAddonViewItem();
                         toAdd.count = item.count;

@@ -2537,6 +2537,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     toAdd.startDate = startOnMonth;
                     toAdd.endDate = endInMonth;
                     toAdd.setCount(1);
+                    toAdd.refreshCartItemId();
                     
                     newItems.add(toAdd);
                     

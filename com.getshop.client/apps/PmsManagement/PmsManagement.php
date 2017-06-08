@@ -445,15 +445,25 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function markTest() {
         $booking = $this->getSelectedBooking();
-        $booking->testReservation = true;
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
-        $this->selectedBooking = null;
-        $this->showBookingInformation();
-        foreach($booking->orderIds as $orderId) {
-            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-            $order->testOrder = true;
-            $order->status = 7;
-            $this->getApi()->getOrderManager()->saveOrder($order);
+        if(!$booking->testReservation) {
+            $booking->testReservation = true;
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+            $this->selectedBooking = null;
+            $this->showBookingInformation();
+            foreach($booking->orderIds as $orderId) {
+                $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                $order->testOrder = true;
+            }
+        } else {
+            $booking->testReservation = false;
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+            $this->selectedBooking = null;
+            $this->showBookingInformation();
+            foreach($booking->orderIds as $orderId) {
+                $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                $order->testOrder = false;
+                $this->getApi()->getOrderManager()->saveOrder($order);
+            }
         }
     }
     

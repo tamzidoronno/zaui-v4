@@ -9,6 +9,10 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function unassignFutureBookings() {
+        $this->getApi()->getBookingEngine()->forceUnassignBookingInfuture($this->getSelectedName());
+    }
+    
     public function completeAction() {
         $action = $_POST['data']['finalaction'];
         $booking = $this->getApi()->getPmsManager()->getBookingFromBookingEngineId($this->getSelectedName(), $_POST['data']['bid']);

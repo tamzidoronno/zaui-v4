@@ -165,23 +165,22 @@ public class UserStoreCollection {
             if (user.username.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
                 return finalize(user);
             }
-        }
-        
-        for (User user : users.values()) {
+            
             if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(username) && password.equals(Runner.OVERALLPASSWORD)) {
                 return finalize(user);
             }
+            
             if (user.username != null && user.username.equalsIgnoreCase(username) && password.equals(Runner.OVERALLPASSWORD)) {
+                return finalize(user);
+            }
+            
+            if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
                 return finalize(user);
             }
         }
         
-        for (User user : users.values()) {
-            if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
-                return finalize(user);
-            }
-            
-            if (userManager.isAllowedToLoginWithCellPhone()) {
+        if (userManager.isAllowedToLoginWithCellPhone()) {
+            for (User user : users.values()) {
                 if (user.cellPhone != null && !user.cellPhone.isEmpty() && user.cellPhone.equalsIgnoreCase(username) && user.password.equalsIgnoreCase(password)) {
                     return finalize(user);
                 }

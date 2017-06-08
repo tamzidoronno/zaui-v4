@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -29,17 +30,23 @@ public class BookingItemAssignerOptimal {
     private boolean dryRun = false;
     private boolean throwException = true;
     private HashMap<Booking, BookingItem> assigned = new HashMap();
+    private List<String> toUseNewFunctionallity = new ArrayList();
+    private final String storeId;
 
-    public BookingItemAssignerOptimal(BookingItemType type, List<Booking> bookings, List<BookingItem> items, Boolean throwException) {
+    public BookingItemAssignerOptimal(BookingItemType type, List<Booking> bookings, List<BookingItem> items, Boolean throwException, String storeId) {
         this.type = type;
         this.bookings = bookings;
         this.items = items;
+        this.storeId = storeId;
         
         removeBookingsThatHasNullDates();
         
         if (throwException != null) {
             this.throwException = throwException;
         }
+        
+        toUseNewFunctionallity.add("e625c003-9754-4d66-8bab-d1452f4d5562");
+        toUseNewFunctionallity.add("178330ad-4b1d-4b08-a63d-cca9672ac329");
     }
 
     /**
@@ -88,7 +95,12 @@ public class BookingItemAssignerOptimal {
         Collections.sort(assignedBookings, Booking.sortByStartDate());
         
         List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
-        addUnassignedBookingsToLine(bookingLines, unassignedBookings);
+        
+        if (toUseNewFunctionallity.contains(storeId)) {
+            addUnassignedBookingsToLineNew2(bookingLines, unassignedBookings);
+        } else {
+            addUnassignedBookingsToLine(bookingLines, unassignedBookings);
+        }
         
         setItemIdsToLines(bookingLines);
         
@@ -304,7 +316,9 @@ public class BookingItemAssignerOptimal {
 //        int i = 1;
 //        for (OptimalBookingTimeLine bookings : bookingLines) {
 //            GetShopLogHandler.logPrintStatic("Line " + i, null);
+//            Collections.sort(bookings.bookings, Booking.sortByStartDate());
 //            for (Booking booking : bookings.bookings) {
+//                
 //                GetShopLogHandler.logPrintStatic("Booking id: " + booking.id + ",created : " + booking.rowCreatedDate + " - Times: " + booking.getHumanReadableDates() + " type: " + booking.bookingItemTypeId + " Item id: " + booking.bookingItemId, null);
 //            }
 //            i++;
@@ -449,6 +463,82 @@ public class BookingItemAssignerOptimal {
         return bookingLines;
     }
 
+//    private void addUnassignedBookingsToLineNew(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
+//        
+//        sortByLongestDistance(unassignedBookings);
+//
+//        List<Booking> leftOvers = new ArrayList();
+//        
+//        while(!unassignedBookings.isEmpty()) {
+//            Booking booking = unassignedBookings.remove(0);
+//            long closestDistance = Long.MAX_VALUE;
+//            OptimalBookingTimeLine timeLineToUse = null;
+//
+//            for (OptimalBookingTimeLine timeLine : bookingLines) {
+//                long closestDistanceInBooking = timeLine.getDistanceBetweenBookings(booking);
+//                if (closestDistanceInBooking < closestDistance && !overlappingBooking(booking, timeLine.bookings)) {
+//                    closestDistance = closestDistanceInBooking;
+//                    timeLineToUse = timeLine;
+//                }
+//            }
+//
+//            if (timeLineToUse != null) {
+//                timeLineToUse.bookings.add(booking);
+//            } else {
+//                leftOvers.add(booking);
+//            }
+//        }
+//
+//        List<OptimalBookingTimeLine> rest = makeLinesOfAssignedBookings(leftOvers);
+//        bookingLines.addAll(rest);
+//    }
+    
+    private void addUnassignedBookingsToLineNew2(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
+        
+        Collections.sort(unassignedBookings, Booking.sortByStartDate());
+
+        List<Booking> bookingsToScratchTrough = new ArrayList(unassignedBookings);
+        
+        while(!bookingsToScratchTrough.isEmpty()) {
+            boolean foundABuddy = false;
+            
+            for (OptimalBookingTimeLine timeLine : bookingLines) {
+                List<Booking> timeLineBookings = new ArrayList(timeLine.bookings);
+                for (Booking timeLineBooking : timeLineBookings) {
+                    
+                    /**
+                     * Using the buddy system we try to sqeeze the 
+                     * bookings together as close to eachother as possible.
+                     * 
+                     * If the buddy is not usable for timeline, we add it back to the 
+                     * array for another timeline to take it. 
+                     * If its left alone in the end it will be created a new timeline until all 
+                     * is done.
+                     */
+                    Booking nextBuddy = getNextBuddy(timeLineBooking, bookingsToScratchTrough, timeLine);
+                    if (nextBuddy != null) {
+                        bookingsToScratchTrough.remove(nextBuddy);
+                        timeLine.bookings.add(nextBuddy);
+                        foundABuddy = true;
+                    }
+
+                    
+                    Booking prevBuddy = getPrevBuddy(timeLineBooking, bookingsToScratchTrough, timeLine);
+                    if (prevBuddy != null) {
+                        bookingsToScratchTrough.remove(prevBuddy);
+                        timeLine.bookings.add(prevBuddy);
+                        foundABuddy = true;
+                    }
+                }
+            }
+            
+            if (!bookingsToScratchTrough.isEmpty() && !foundABuddy) {
+                List<OptimalBookingTimeLine> newLine = makeLinesOfAssignedBookings(bookingsToScratchTrough.subList(0, 1));
+                bookingLines.addAll(newLine);
+            }   
+        }
+    }
+    
     private void addUnassignedBookingsToLine(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
         
         
@@ -519,6 +609,7 @@ public class BookingItemAssignerOptimal {
             if (line.bookingItemId.isEmpty()) {
                 BookingItemTimeline itemToUse = getNextAvailableItem(line, bookingLines, itemIdsUsed);
                 if (itemToUse == null && throwException) {
+                    printBookingLines(bookingLines);
                     throw new BookingEngineException("Not enough space for this booking");
                 } else {
                     if (itemToUse != null) {
@@ -573,5 +664,38 @@ public class BookingItemAssignerOptimal {
         }
         
         return null;
+    }
+
+    private void sortByLongestDistance(List<Booking> unassignedBookings) {
+        Collections.sort(unassignedBookings, (Booking o1, Booking o2) -> {
+            Long stayLength1 = o1.getStayLength();
+            Long stayLength2 = o2.getStayLength();
+            
+            return stayLength2.compareTo(stayLength1);
+        });
+    }
+
+    private Booking getNextBuddy(Booking timeLineBooking, List<Booking> bookingsToScratchTrough, OptimalBookingTimeLine timeLine) {
+        return (Booking) bookingsToScratchTrough.stream()
+                .filter(o -> o.startDate.after(timeLineBooking.endDate) || o.startDate.equals(timeLineBooking.endDate))
+                .filter(booking -> timeLine.canAddBooking(booking))
+                .sorted(Booking.sortByStartDate())
+                .findFirst()
+                .orElse(null);
+                
+    }
+
+    private Booking getPrevBuddy(Booking timeLineBooking, List<Booking> bookingsToScratchTrough, OptimalBookingTimeLine timeLine) {
+        List<Booking> retVals = bookingsToScratchTrough.stream()
+                .filter(o -> o.endDate.before(timeLineBooking.startDate) || o.endDate.equals(timeLineBooking.startDate))
+                .filter(booking -> timeLine.canAddBooking(booking))
+                .collect(Collectors.toList());
+        
+        Collections.sort(retVals, Booking.sortByStartDate());
+        
+        if (retVals.isEmpty())
+            return null;
+        
+        return retVals.get((retVals.size()) - 1 );
     }
 }

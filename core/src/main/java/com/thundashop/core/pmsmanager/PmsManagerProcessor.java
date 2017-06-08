@@ -711,7 +711,7 @@ public class PmsManagerProcessor {
             if(booking.payedFor != payedfor || forceSend) {
                 booking.payedFor = payedfor;
                 if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
-                    if((payedfor == true || forceSend) && booking.orderIds.size() == 1) {
+                    if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay)) {
                         manager.doNotification("booking_completed", booking.id);
                         booking.notificationsSent.add("booking_completed");
                         needSaving = true;

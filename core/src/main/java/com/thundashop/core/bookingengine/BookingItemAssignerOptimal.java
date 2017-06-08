@@ -548,7 +548,7 @@ public class BookingItemAssignerOptimal {
         if (throwException) {
             for (String itemId : groupedBookings.keySet()) {
                 BookingItem item2 = getBookingItem(itemId);
-                if (item2.bookingSize < groupedBookings.get(itemId).size()) {
+                if (item2 == null || item2.bookingSize < groupedBookings.get(itemId).size()) {
                     printBookingLines(groupedBookings.get(itemId));
                     throw new BookingEngineException("Not enough space for this booking");
                 }

@@ -202,7 +202,10 @@ if(!$user->fullName) {
 <div class='contactdata'>
     <span style='float:right; cursor:pointer;'>
         <?php if($booking->testReservation) { ?>
-        This is in test mode
+        <span gstype='form' method="markTest">
+            <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+            <span gstype='submitToInfoBox' style='font-size: 10px;'>(This is in test mode, unmark)</span>
+        </span>
         <?php } else { ?>
         <span gstype='form' method="markTest">
             <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>

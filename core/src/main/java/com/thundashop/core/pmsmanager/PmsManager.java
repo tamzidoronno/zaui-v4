@@ -4344,7 +4344,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             if(room.bookingItemId == null || !room.bookingItemId.equals(item.id)) {
                                 continue;
                             }
-
+                            notify("room_dooropenedfirsttime", booking, "sms", room);
+                            notify("room_dooropenedfirsttime", booking, "email", room);
                             room.checkedin = true;
                             saveBooking(booking);
                         }
@@ -4361,6 +4362,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
                 if(room.code != null && room.code.equals(card) && !room.checkedin) {
+                    notify("room_dooropenedfirsttime", booking, "sms", room);
+                    notify("room_dooropenedfirsttime", booking, "email", room);
                     room.checkedin = true;
                     saveBooking(booking);
                 }

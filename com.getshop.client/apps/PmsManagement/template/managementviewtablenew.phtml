@@ -34,6 +34,7 @@ switch($config->bookingProfile) {
 }
 $headers['price'] = "Price";
 $headers['state'] = "State";
+$headers['invoicedto'] = "Invoiced to";
 
 if(!isset($filter->sorting)) {
     $filter->sorting = "regdate";
@@ -125,6 +126,9 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
     
     <?php
     $tableArray = array();
+    if(!$rooms) {
+        $rooms = array();
+    }
     foreach($rooms as $room) {
         $booking = $this->getBooking($room->bookingId);
         $comments = "";
@@ -207,6 +211,11 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         }
         $row['state'] = $room->progressState;
         $row['stateadditional'] = "";
+        if($room->invoicedTo) {
+            $row['invoicedto'] = date("d.m.Y", strtotime($room->invoicedTo));
+        } else {
+            $row['invoicedto'] = "";
+        }
         if(sizeof($room->orderIds) == 0 && $config->requirePayments) {
             $row['stateadditional'] = "<span style='font-weight:bold; color:red;' title='No orders has been created for this booking yet'><i class='fa fa-warning'></i> orders</span>";
         }

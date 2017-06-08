@@ -684,6 +684,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return null;
         }
         checkSecurity(booking);
+        
+        pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
 
         booking.calculateTotalCost();
         Double totalOrder = 0.0;
@@ -921,6 +923,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }
+        
+        checkAndReportPriceMatrix(booking, "saving invalid price matrix");
         
         if(getConfigurationSecure().usePriceMatrixOnOrder) {
             try {
@@ -4037,6 +4041,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void massUpdatePrices(PmsPricing price, String bookingId) throws Exception {
         PmsBooking booking = getBooking(bookingId);
+        checkAndReportPriceMatrix(booking, "When massupdating prices");
         for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             for(String day : room.priceMatrix.keySet()) {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -5189,6 +5194,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void updateRoomPriceFromAddons(PmsBookingRooms room, PmsBooking booking) {
         setAddonPricesOnRoom(room, booking);
         
+        checkAndReportPriceMatrix(booking, "update room prices from addon 1");
         for(PmsBookingAddonItem item : room.addons) {
             if(isPackage(item)) {
                 Double roomPrice = getRoomPriceFromPackage(item);
@@ -5198,6 +5204,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        checkAndReportPriceMatrix(booking, "update room prices from addon 2");
     }
     
     private void setAddonPricesOnRoom(PmsBookingRooms room, PmsBooking booking) {
@@ -5907,6 +5914,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void diffPricesFromBooking(PmsBooking booking, PmsBooking oldBooking) {
+        checkAndReportPriceMatrix(booking, "Old and (new) booking diff prices 1");
+        checkAndReportPriceMatrix(oldBooking, "(Old) and new booking diff prices 1");
         try {
             if(booking.priceType == PmsBooking.PriceType.daily) {
                 for(PmsBookingRooms room : booking.rooms) {
@@ -5943,6 +5952,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }catch(Exception e) {
             logPrintException(e);
         }
+        checkAndReportPriceMatrix(booking, "Old and (new) booking diff prices 1");
+        checkAndReportPriceMatrix(oldBooking, "(Old) and new booking diff prices 1");
+
     }
 
     @Override
@@ -6019,6 +6031,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         order.status = Order.Status.PAYMENT_COMPLETED;
         pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
         saveBooking(booking);
+    }
+
+    public void checkAndReportPriceMatrix(PmsBooking booking, String message) {
+        try {
+            if(!storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
+                return;
+            }
+            
+            if(booking.isRegisteredToday()) {
+                return;
+            }
+            
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.priceMatrix == null || room.priceMatrix.isEmpty()) {
+                    logPrint("price jump detected, " + message + " booking id: " + booking.id);
+                    logPrintException(new Exception());
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
     }
 
 }

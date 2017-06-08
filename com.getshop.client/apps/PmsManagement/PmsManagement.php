@@ -20,6 +20,20 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function connectItemsToRoom() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        
+        foreach($order->cart->items as $item) {
+            if(!$item->product->externalReferenceId) {
+                $item->product->externalReferenceId = $_POST['data']['roomid'];
+            }
+        }
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        
+        $this->orderToDisplay = $order;
+        $this->includefile("detailedorderinformation");
+    }
+    
     public function updateInvoiceNoteOnOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $order->invoiceNote = $_POST['data']['note'];

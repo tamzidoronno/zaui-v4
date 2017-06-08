@@ -98,9 +98,24 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .checkboxforbookedroom', app.PmsManagement.updateCheckedRoomUnsettledAmount);
         $(document).on('click','.PmsManagement .checkallbookedrooms', app.PmsManagement.updateCheckedRoomUnsettledAmount);
         $(document).on('click','.PmsManagement .editaddonpricematrix', app.PmsManagement.editAddonPriceMatrix);
+        $(document).on('click','.PmsManagement .connectItemOnsOrderToRoom', app.PmsManagement.connectItemOnsOrderToRoom);
         $(document).on('keyup','.PmsManagement .changeorderdates', app.PmsManagement.changeOrderPeriode);
     },
-    
+    connectItemOnsOrderToRoom : function () {
+        var tr = $(this).closest('tr');
+        var orderid = $(this).attr('orderid');
+        var roomid = $(this).attr('roomid');
+        
+        var event = thundashop.Ajax.createEvent('','connectItemsToRoom',$(this), {
+            "orderid" : orderid,
+            "roomid" : roomid,
+            "bookingid" : $('#openedbookingid').val()
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $("[fororder='"+orderid+"']").remove();
+            tr.after(res);
+        });
+    },
     updateInvoiceNote : function() {
         var event = thundashop.Ajax.createEvent('','updateInvoiceNoteOnOrder',$(this), {
             "orderid" : $(this).attr('orderid'),

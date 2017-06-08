@@ -893,7 +893,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
-        if(cal.get(Calendar.YEAR) < 2016) {
+        if(cal.get(Calendar.YEAR) < 1975) {
             return null;
         }
         

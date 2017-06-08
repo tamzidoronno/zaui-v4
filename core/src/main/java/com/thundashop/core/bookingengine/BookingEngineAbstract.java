@@ -606,7 +606,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             throw new BookingEngineException("Can not change to a bookingItem that does not exists");
         }
         
-        checkIfCanGetOptimalLines(booking, itemId);
+        checkIfCanGetOptimalLines(booking, itemId, bookingItem);
         
         Booking newBooking = deepClone(booking);
         newBooking.bookingItemId = itemId;
@@ -622,17 +622,26 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         saveObject(booking);
     }
 
-    private void checkIfCanGetOptimalLines(Booking booking, String itemId)  {
+    private void checkIfCanGetOptimalLines(Booking booking, String itemId, BookingItem bookingItem)  {
         /* -------------- */
         String oldId = booking.bookingItemId;
+        String oldBookingItemTypeId = booking.bookingItemTypeId;
+        
         booking.bookingItemId = itemId;
+        
+        if (bookingItem != null) {
+            booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+        }
+        
         try {
             getTimeLinesForItemWithOptimal(booking.startDate, booking.endDate);
         } catch (BookingEngineException ex) {
             booking.bookingItemId = oldId;
+            booking.bookingItemTypeId = oldBookingItemTypeId;
             throw ex;
         }
         booking.bookingItemId = itemId;
+        booking.bookingItemTypeId = oldBookingItemTypeId;
         /* -------------- */
     }
     

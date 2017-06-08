@@ -245,6 +245,11 @@ app.PmsAvailabilityTimeline = {
         thundashop.common.showInformationBoxNew(event, 'Settings');
     },
     
+    unassignFutureBookings : function() {
+        var event = thundashop.Ajax.createEvent('','unassignFutureBookings',$(this), {});
+        thundashop.Ajax.post(event);
+    },
+    
     loadBooking : function(e) {
         $('.ui-tooltip').remove();
         var data = {
@@ -273,6 +278,13 @@ app.PmsAvailabilityTimeline = {
                     iconsize: "30",
                     title: __f("Show settings"),
                     click: app.PmsAvailabilityTimeline.showSettings
+                },
+                {
+                    icontype: "awesome",
+                    icon: "fa-magic",
+                    iconsize: "30",
+                    title: __f("Unassign all future bookings"),
+                    click: app.PmsAvailabilityTimeline.unassignFutureBookings
                 }
             ]
         };

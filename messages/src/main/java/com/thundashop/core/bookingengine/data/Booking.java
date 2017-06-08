@@ -116,4 +116,11 @@ public class Booking extends DataCommon implements Comparable<Booking> {
             }
         };
     }
+
+    public long getStayLength() {
+        if (startDate == null || endDate == null)
+            return 0;
+        
+        return endDate.getTime() - startDate.getTime();
+    }
 }

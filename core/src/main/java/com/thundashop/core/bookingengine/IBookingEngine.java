@@ -117,4 +117,7 @@ public interface IBookingEngine {
     
     @Administrator
     public List<BookingTimeLine> getTimelinesDirect(Date start, Date end, String itemTypeId);
+    
+    @Administrator
+    public void forceUnassignBookingInfuture();
 }

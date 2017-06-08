@@ -20,6 +20,32 @@ public class OptimalBookingTimeLine {
     public List<Booking> bookings = new ArrayList();
     public String bookingItemId = "";
 
+    long getLongestDistanceBetweenBookings(Booking booking) {
+        long retVal = 0;
+        
+        for (Booking ibooking : bookings) {
+            long startTimeBookingInLine = ibooking.startDate.getTime();
+            long endTimeBookingInLine = ibooking.startDate.getTime();
+            
+            long timeBetweenNext = booking.startDate.getTime() - endTimeBookingInLine;
+            long timeBetweenPrev = startTimeBookingInLine - booking.endDate.getTime();
+            
+            if (timeBetweenNext > retVal) {
+                retVal = timeBetweenNext;
+            }
+            
+            if (timeBetweenPrev > retVal) {
+                retVal = retVal;
+            }
+            
+            if (ibooking.interCepts(booking.startDate, booking.endDate)) {
+                return 0;
+            }
+        }
+        
+        return retVal;
+    }
+    
     long getDistanceBetweenBookings(Booking booking) {
         long shortestDistance = Long.MAX_VALUE;
         
@@ -44,8 +70,22 @@ public class OptimalBookingTimeLine {
                 shortestDistance = 0;
             }
             
+            if (ibooking.interCepts(booking.startDate, booking.endDate)) {
+                return Long.MAX_VALUE;
+            }
+            
         }
         
         return shortestDistance;
+    }
+
+    public boolean canAddBooking(Booking booking) {
+        for (Booking ibooking : bookings) {
+            if (ibooking.interCepts(booking.startDate, booking.endDate)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

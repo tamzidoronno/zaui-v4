@@ -288,4 +288,9 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public void changeSourceOnBooking(String bookingId, String source) {
         bookingEngineAbstract.changeSourceOnBooking(bookingId, source);
     }
+
+    @Override
+    public void forceUnassignBookingInfuture() {
+        bookingEngineAbstract.forceUnassignBookingInfuture();
+    }
 }

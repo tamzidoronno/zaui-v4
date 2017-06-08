@@ -5100,7 +5100,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     if(toBeAdded) {
                         if(view.paidFor && !pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
-                            continue;
+                            if(!booking.forceGrantAccess) {
+                                continue;
+                            }
                         }
                         PmsBookingAddonViewItem toAdd = new PmsBookingAddonViewItem();
                         toAdd.count = item.count;

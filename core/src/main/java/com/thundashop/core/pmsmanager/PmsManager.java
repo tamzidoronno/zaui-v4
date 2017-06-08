@@ -891,11 +891,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(start.after(end)) {
             return null;
         }
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(start);
-        if(cal.get(Calendar.YEAR) < 1975) {
-            return null;
-        }
         
         PmsBooking booking = getBooking(bookingId);
         try {

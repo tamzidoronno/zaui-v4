@@ -929,10 +929,10 @@ public class PmsManagerProcessor {
                    continue; 
                 }
                 if(order.payment != null && order.payment.paymentType != null && 
-                        order.payment.paymentType.contains("invoice")) {
+                        (!order.payment.paymentType.toLowerCase().contains("dibs") &&
+                        !order.payment.paymentType.toLowerCase().contains("epay"))) {
                     continue;
                 }
-                
                 
                 String key = "autosendmissingpayment_" + book.id;
                 if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {

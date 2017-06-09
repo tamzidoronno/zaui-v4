@@ -505,11 +505,19 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         if(addonAlreadyBilled == null || addonAlreadyBilled.count == null || addonAlreadyBilled.price == null) {
             return;
         }
-        double totalBilled = addonAlreadyBilled.count * addonAlreadyBilled.price;
-        double totalOnRoom = addonOnRoom.count * addonOnRoom.price;
-        double newPrice = (totalOnRoom - totalBilled) / addonOnRoom.count;
-        addonOnRoom.price = newPrice;
+        if(addonOnRoom == null || addonOnRoom.count == null || addonOnRoom.price == null) {
+            return;
+        }
         
+        if(addonOnRoom.count >= addonAlreadyBilled.count && addonAlreadyBilled.price.equals(addonOnRoom.price)) {
+            addonOnRoom.count -= addonAlreadyBilled.count;
+        } else {
+            double totalBilled = addonAlreadyBilled.count * addonAlreadyBilled.price;
+            double totalOnRoom = addonOnRoom.count * addonOnRoom.price;
+            double newPrice = (totalOnRoom - totalBilled) / addonOnRoom.count;
+            addonOnRoom.price = newPrice;
+        
+        }
     }
 
     private boolean dateIsFiltered(Date dayToIterate) {

@@ -3132,6 +3132,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 foreach($item->itemsAdded as $addonItem) {
                     if(isset($_POST['data']['addondata'][$addonItem->addonId]['price'])) {
                         $addonItem->price = $_POST['data']['addondata'][$addonItem->addonId]['price'];
+                        $addonItem->count = $_POST['data']['addondata'][$addonItem->addonId]['count'];
                     }
                 }
                 $this->getApi()->getCartManager()->updateCartItem($item);
@@ -3162,7 +3163,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         echo "<input type='txt' gsname='start' value='".$start . "' style='width:120px;'> ";
         echo "<input type='txt' gsname='end' value='$end' style='width:120px;'> ";
-        echo "<input type='txt' gsname='count' style='width: 25px;text-align:center;' value='". $item->count . "' style='width:120px;' class='cartcount'> ";
+        echo "<input type='txt' gsname='count' style='width: 25px;text-align:center;' value='". $item->count . "' style='width:120px;' class='cartcount' $disabled> ";
         echo "<input type='txt' gsname='name' value='". $item->product->name . "' style='width:500px;' class='itemname'> ";
         echo "<span class='loadEditAddonAndPriceMatrix'></span>";
         echo "<input type='txt' gsname='price' style='width: 60px;' class='cartprice' value='". $item->product->price . "' style='width:120px;' $disabled>";

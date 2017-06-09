@@ -389,6 +389,9 @@ app.PmsManagement = {
     },
     calculcateCartCost : function(e) {
         var target = $(e.target);
+        app.PmsManagement.calculateCartCostFromTarget(target);
+    },
+    calculateCartCostFromTarget : function(target) {
         var row = target.closest('.cartitemselectionrow');
         if(!target.hasClass('itemselection')) {
             row.find('.itemselection').attr('checked','checked');
@@ -403,7 +406,6 @@ app.PmsManagement = {
         });
         $('.PmsManagement .totalprice').html(total);
     },
-    
     deleteConferenceDay: function() {
         $(this).closest('.dayform').remove();
     },

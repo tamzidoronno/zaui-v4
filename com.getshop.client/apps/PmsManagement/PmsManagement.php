@@ -690,9 +690,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $heading[] = "Phone";
         $heading[] = "Vat number";
         
+        $accountingId = $user->accountingId;
+        if(!$accountingId) {
+            $accountingId = $user->customerId;
+        }
+        
         foreach($users as $id) {
             $line = array();
             $user = $this->getApi()->getUserManager()->getUserById($id);
+            $line[] = $accountingId;
             $line[] = $user->fullName;
             $line[] = $user->address->address;
             $line[] = $user->address->postCode;

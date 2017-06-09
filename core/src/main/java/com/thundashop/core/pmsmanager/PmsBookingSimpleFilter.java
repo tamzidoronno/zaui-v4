@@ -115,8 +115,6 @@ public class PmsBookingSimpleFilter {
 
     
     public PmsRoomSimple convertRoom(PmsBookingRooms room, PmsBooking booking) {
-        PmsConfiguration config = manager.getConfigurationSecure();
-        
         PmsRoomSimple simple = new PmsRoomSimple();
         simple.start = room.date.start.getTime();
         simple.end = room.date.end.getTime();
@@ -148,13 +146,13 @@ public class PmsBookingSimpleFilter {
         simple.requestedEndDate = room.requestedEndDate;
         simple.userId = booking.userId;
         
-        if(manager.getConfiguration().hasLockSystem()) {
+        if(manager.getConfigurationSecure().hasLockSystem()) {
             simple.code = room.code;
         }
         simple.pmsRoomId = room.pmsBookingRoomId;
         simple.bookingId = booking.id;
         simple.nonrefundable = booking.nonrefundable;
-        User user = manager.userManager.getUserById(booking.userId);
+        User user = manager.userManager.getUserByIdUnfinalized(booking.userId);
         if(user != null) {
             simple.owner = user.fullName;
             simple.ownersEmail = user.emailAddress;
@@ -167,7 +165,7 @@ public class PmsBookingSimpleFilter {
             simple.roomType = manager.bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
         }
         
-        simple.paidFor = pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
+        simple.paidFor = pmsInvoiceManager.isRoomPaidForWithBooking(room.pmsBookingRoomId, booking);
         if(room.isDeleted() || booking.isDeleted) {
             simple.progressState = "deleted";
         } else if(room.isStarted() && !room.isEnded()) {
@@ -175,7 +173,7 @@ public class PmsBookingSimpleFilter {
                 simple.progressState = "waitingforlock";
             } else {
                 simple.progressState = "active";
-            }
+            } 
         } else if(room.isEnded()) {
             simple.progressState = "ended";
         } else if(booking.confirmed) {

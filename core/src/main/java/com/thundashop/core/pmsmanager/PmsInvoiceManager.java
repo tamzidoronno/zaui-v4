@@ -422,6 +422,35 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         PmsOrderCleaner cleaner = new PmsOrderCleaner(order);
         return cleaner.cleanOrder();
     }
+ 
+    public boolean isRoomPaidForWithBooking(String pmsRoomId, PmsBooking booking) {
+        if(booking == null) {
+            return false;
+        }
+        if(booking.payedFor) {
+            return true;
+        }
+        
+        boolean payedfor = true;
+        boolean hasOrders = false;
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrderSecure(orderId);
+            if(!hasRoomItems(pmsRoomId, order)) {
+                continue;
+            }
+            hasOrders = true;
+            if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                continue;
+            }
+            payedfor = false;
+        }
+        
+        if(!hasOrders && pmsManager.getConfigurationSecure().markBookingsWithNoOrderAsUnpaid) {
+            payedfor = false;
+        }
+        
+        return payedfor;
+    }
 
     class BookingOrderSummary {
         Integer count = 0;
@@ -488,32 +517,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     @Override
     public boolean isRoomPaidFor(String pmsRoomId) {
         PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
-        if(booking == null) {
-            return false;
-        }
-        if(booking.payedFor) {
-            return true;
-        }
-        
-        boolean payedfor = true;
-        boolean hasOrders = false;
-        for(String orderId : booking.orderIds) {
-            Order order = orderManager.getOrderSecure(orderId);
-            if(!hasRoomItems(pmsRoomId, order)) {
-                continue;
-            }
-            hasOrders = true;
-            if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                continue;
-            }
-            payedfor = false;
-        }
-        
-        if(!hasOrders && pmsManager.getConfigurationSecure().markBookingsWithNoOrderAsUnpaid) {
-            payedfor = false;
-        }
-        
-        return payedfor;
+        return isRoomPaidForWithBooking(pmsRoomId, booking);
     }
     
     private boolean hasRoomItems(String pmsRoomId, Order order) {

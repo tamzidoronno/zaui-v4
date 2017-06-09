@@ -12,7 +12,9 @@ class NetsPaymentTerminal extends \PaymentApplication implements \Application {
     }
     
     public function simplePayment() {
-        header('Location: ' . "/?page=payment_success");
+        echo "<script>";
+        echo "thundashop.common.goToPageLink('?page=payment_success');";
+        echo "</script>";
     }
 
     public function getName() {

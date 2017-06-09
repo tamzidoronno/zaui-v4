@@ -3600,7 +3600,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             toReturn.validDates = addonConfig.validDates;
             toReturn.dependsOnGuestCount = addonConfig.dependsOnGuestCount;
             toReturn.noRefundable = addonConfig.noRefundable;
-            if(addonConfig.price > 0) {
+            if(addonConfig.price != null && addonConfig.price > 0) {
                 toReturn.price = addonConfig.price;
                 toReturn.priceExTaxes = addonConfig.priceExTaxes;
             }

@@ -681,6 +681,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         $heading = array();
+        $heading[] = "Userid";
         $heading[] = "Name";
         $heading[] = "Address";
         $heading[] = "Postcode";
@@ -691,14 +692,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $heading[] = "Phone";
         $heading[] = "Vat number";
         
-        $accountingId = $user->accountingId;
-        if(!$accountingId) {
-            $accountingId = $user->customerId;
-        }
+        $result[] = $heading;
         
         foreach($users as $id) {
             $line = array();
             $user = $this->getApi()->getUserManager()->getUserById($id);
+            $accountingId = $user->accountingId;
+            if(!$accountingId) {
+                $accountingId = $user->customerId;
+            }
             $line[] = $accountingId;
             $line[] = $user->fullName;
             $line[] = $user->address->address;

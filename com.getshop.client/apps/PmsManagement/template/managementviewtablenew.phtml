@@ -130,10 +130,9 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         $rooms = array();
     }
     foreach($rooms as $room) {
-        $booking = $this->getBooking($room->bookingId);
         $comments = "";
-        if(isset($booking->comments)) {
-            foreach($booking->comments as $time => $val) {
+        if(isset($room->bookingComments)) {
+            foreach($room->bookingComments as $time => $val) {
                 $comments .= $val->comment . "<br>";
             }
         }
@@ -207,7 +206,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             $row['price'] = round($room->price) . "<div style='color:#aaa' title='Total cost for this room'>(" . round($room->totalCost) . ")</div>";
         }
         if(isset($filter->filterType) && $filter->filterType == "unsettled") {
-            $row['price'] = $booking->totalUnsettledAmount;
+            $row['price'] = $room->totalUnsettledAmount;
         }
         $row['state'] = $room->progressState;
         $row['stateadditional'] = "";

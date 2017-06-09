@@ -142,6 +142,8 @@ public class PmsBookingSimpleFilter {
         simple.numberOfRoomsInBooking = booking.getActiveRooms().size();
         simple.createOrderAfterStay = booking.createOrderAfterStay;
         simple.cleaningComment = room.cleaningComment;
+        simple.bookingComments = booking.comments;
+        simple.totalUnsettledAmount = booking.totalUnsettledAmount;
         simple.totalCost = room.totalCost;
         simple.requestedEndDate = room.requestedEndDate;
         simple.userId = booking.userId;

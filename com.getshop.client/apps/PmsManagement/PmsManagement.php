@@ -15,6 +15,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public $fastAddedCode = null;
     private $fetchedBookings = array();
     public $showBookersData = false;
+    public $config;
     
     public function loadBookingOrdersRoom() {
         $this->includefile("ordersforroom");
@@ -368,7 +369,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function addAddonsToRoom() {
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         $roomId = $_POST['data']['roomid'];
         foreach($config->addonConfiguration as $addonItem) {
             if($addonItem->productId == $_POST['data']['clicksubmit']) {
@@ -875,7 +876,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function globalInvoiceCreation() {
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         $filter = new \core_pmsmanager_NewOrderFilter();
         $filter->onlyEnded = false;
         $filter->prepayment = $config->prepayment;
@@ -1689,7 +1690,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return $filter;
         }
 
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->state = 0;
@@ -1986,7 +1987,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function getChannels() {
-        return $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName())->channelConfiguration;
+        return $this->getConfig()->channelConfiguration;
     }
     
     public function addRepeatingDates() {
@@ -2234,7 +2235,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function hasBreakfastAddon() {
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         foreach($config->addonConfiguration as $addon) {
             if($addon->addonType == 1) {
                 return true;
@@ -2591,7 +2592,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     
     public function includeManagementViewResult() {
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         $filter = $this->getSelectedFilter();
         if($filter->filterType == "stats") {
             $this->includefile("statistics");
@@ -3190,7 +3191,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function getSearchTypes() {
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         $searchtypes = array();
         $searchtypes['registered'] = "Registered";
         $searchtypes['active'] = "Active";
@@ -3490,6 +3491,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         return $end;
+    }
+
+    public function getConfig() {
+        if(isset($this->config) && $this->config) {
+            return $this->config;
+        }
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $this->config = $config;
+        return $this->config;
     }
 
 }

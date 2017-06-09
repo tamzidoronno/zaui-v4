@@ -606,6 +606,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             throw new BookingEngineException("Can not change to a bookingItem that does not exists");
         }
         
+        checkIfCanGetOptimalLines(booking, itemId, bookingItem);
+        
         Booking newBooking = deepClone(booking);
         newBooking.bookingItemId = itemId;
         if (bookingItem != null)
@@ -619,22 +621,55 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         saveObject(booking);
     }
+
+    private void checkIfCanGetOptimalLines(Booking booking, String itemId, BookingItem bookingItem)  {
+        /* -------------- */
+        String oldId = booking.bookingItemId;
+        String oldBookingItemTypeId = booking.bookingItemTypeId;
+        
+        booking.bookingItemId = itemId;
+        
+        if (bookingItem != null) {
+            booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+        }
+        
+        try {
+            getTimeLinesForItemWithOptimal(booking.startDate, booking.endDate);
+        } catch (BookingEngineException ex) {
+            booking.bookingItemId = oldId;
+            booking.bookingItemTypeId = oldBookingItemTypeId;
+            throw ex;
+        }
+        booking.bookingItemId = itemId;
+        booking.bookingItemTypeId = oldBookingItemTypeId;
+        /* -------------- */
+    }
     
     public void forceUnassignBookingInfuture() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        cal.set(Calendar.HOUR, 0);
-        cal.add(Calendar.DAY_OF_MONTH, 1);
         
-        Date toCompareDate = cal.getTime();
+        
         bookings.values().stream()
-                .filter(b -> b.startDate.after(toCompareDate))
+                .filter(b -> b.startsTomorrowOrLater())
                 .forEach(b -> {
-                    b.bookingItemId = "";
-                    saveObject(b);
+                    if (b.bookingItemId != null && !b.bookingItemId.isEmpty()) {
+                        b.prevAssignedBookingItemId = b.bookingItemId;
+                        b.bookingItemId = "";
+                        saveObject(b);    
+                    }
+                });
+        
+        bookings.values().stream()
+                .filter(b -> b.prevAssignedBookingItemId != null && !b.prevAssignedBookingItemId.isEmpty())
+                .filter(b -> b.bookingItemId == null || b.bookingItemId.isEmpty())
+                .forEach(booking -> {
+                    String bookingId = booking.id;
+                    String itemId = booking.prevAssignedBookingItemId;
+                    try {
+                        changeBookingItemOnBooking(bookingId, itemId);
+                        System.out.println("Success : " + bookingId + " , " + items.get(itemId).bookingItemName);
+                    } catch (Exception ex) {
+                        System.out.println("Was not able to cleanup : " + bookingId + " , " + items.get(itemId).bookingItemName);
+                    }
                 });
     }
     
@@ -985,6 +1020,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             List<BookingItem> bookingItems = getBookingItemsByType(type.id);
             List<Booking> toCheck = bookings.values()
                     .stream()
+                    .filter(o -> o.startsTomorrowOrLater())
                     .filter(o -> o.bookingItemTypeId != null && o.bookingItemTypeId.equals(type.id))
                     .collect(Collectors.toList());
             

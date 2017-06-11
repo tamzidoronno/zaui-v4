@@ -705,6 +705,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             saveObject(exportCounter);
             
             sortExportedData();
+            markAsClean(route);
         }
     }
     
@@ -712,12 +713,14 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         if (data instanceof Route) {
             ((Route)data).dirty = true;
             createExport(((Route)data));
+            ((Route)data).dirty = false;
         }
         
         if (data instanceof Destination) {
             ((Destination)data).dirty = true;
             Route route = getRouteByDestination(((Destination)data));
             createExport(route);
+            ((Destination)data).dirty = false;
         }
         
         if (data instanceof Task) {
@@ -1213,6 +1216,25 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 .filter(dest -> dest.taskIds.contains(task.id))
                 .findFirst()
                 .orElse(null);
+    }
+
+    private void markAsClean(Route route) {
+        route.dirty = false;
+        saveObject(route);
+        for (String destId : route.destinationIds) {
+            Destination dest = destinations.get(destId);
+            if (dest != null) {
+                dest.dirty = false;
+                saveObject(dest);
+                for (String taskId : dest.taskIds) {
+                    Task task = tasks.get(taskId);
+                    if (task != null) {
+                        task.dirty = false;
+                        saveObject(task);
+                    }
+                }
+            }
+        }
     }
 
     

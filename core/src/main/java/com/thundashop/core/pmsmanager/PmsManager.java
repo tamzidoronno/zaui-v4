@@ -3094,7 +3094,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                     }
                     
-                    if(!hasBeenWarned) {
+                    if(!hasBeenWarned && (booking.channel != null && !booking.channel.isEmpty())) {
                         messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text, null);
                     }
                 }

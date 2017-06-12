@@ -584,7 +584,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     return order;
                 }
             } else if (user.isAdministrator() || user.isEditor()) {
-                doubleCheckPriceMatrixAndItemsAdded(order);
+//                doubleCheckPriceMatrixAndItemsAdded(order);
                 return order;
             } else if (order.userId.equals(user.id)) {
                 return order;

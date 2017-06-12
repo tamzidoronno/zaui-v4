@@ -415,6 +415,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Calendar calStart = Calendar.getInstance();
             
             HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
+            Double defaultPrice = pricesForType.get("default");
             Double price = pricesForType.get("default");
             
             for(int i = 0;i < (365*2); i++) {
@@ -433,6 +434,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
                 if(price != null) {
                     list.add(price.intValue());
+                } else if(defaultPrice != null) {
+                    list.add(defaultPrice);
                 }
                 calStart.add(Calendar.DAY_OF_YEAR, 1);
             }

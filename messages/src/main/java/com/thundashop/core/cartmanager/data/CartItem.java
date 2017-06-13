@@ -140,7 +140,17 @@ public class CartItem implements Serializable {
         }
         if(itemsAdded != null) {
             for(PmsBookingAddonItem toCheck : itemsAdded) {
+                
                 if(toCheck != null && toCheck.price != null && (toCheck.price.isInfinite() || toCheck.price.isNaN())) {
+                    toCheck.price = 0.0;
+                }
+                
+                if(toCheck != null && toCheck.price != null && toCheck.price.equals(Double.NEGATIVE_INFINITY)) {
+                    System.err.println("Found a negative infinite ?");
+                    toCheck.price = 0.0;
+                }
+                
+                if(toCheck != null && toCheck.price != null && toCheck.price.equals(Double.POSITIVE_INFINITY)) {
                     toCheck.price = 0.0;
                 }
             }

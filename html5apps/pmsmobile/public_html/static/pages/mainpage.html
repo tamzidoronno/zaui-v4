@@ -1,7 +1,7 @@
 <div class='additionalinfo row'>
     {{ address }}
 </div>
-<div class='row'>
+<div class='row' ng-show="!hideEngineSelection">
     <select ng-model="dataSelected" ng-options="item.id as item.name for item in multilevelnames" ng-change="updateMultilevelName(dataSelected)" class='form-control'></select>
 </div>
 <div class='row'>

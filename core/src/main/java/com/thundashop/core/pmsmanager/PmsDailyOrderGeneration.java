@@ -514,7 +514,13 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         } else {
             double totalBilled = addonAlreadyBilled.count * addonAlreadyBilled.price;
             double totalOnRoom = addonOnRoom.count * addonOnRoom.price;
-            double newPrice = (totalOnRoom - totalBilled) / addonOnRoom.count;
+            
+            double newPrice = 0;
+            
+            if (addonOnRoom.count != null && !addonOnRoom.count.equals(0)) {
+                newPrice = (totalOnRoom - totalBilled) / addonOnRoom.count;
+            }
+            
             addonOnRoom.price = newPrice;
         
         }

@@ -6054,4 +6054,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
+    @Override
+    public boolean isActive() {
+        Calendar test = Calendar.getInstance();
+        test.add(Calendar.MONTH, -1);
+        Date check = test.getTime();
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.rowCreatedDate.after(check)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

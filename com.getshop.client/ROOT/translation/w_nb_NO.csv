@@ -66,7 +66,6 @@ Budget;-;Budsjett
 Building your store;-;Lag din webbutikk
 Button;-;Knapp
 By using sisow as your payment provider, you will simply offer your customers to pay with iDeal/Visa and lots more. More information can be found at https://www.sisow.nl;-;Sisow er en nederlands betalingsmetode, bruk denne om du ønsker å tilby kundene dine iDeal
-Campaign code;-;Kampanjekode
 Can not create account, it already exists.;-;Kan ikke opprette konto, denne kontoen er alerede registrert.
 Cancel event;-;Kanseler event
 Cancel order;-;Kanselert ordre
@@ -234,6 +233,7 @@ Hide this cell on a cell phone;-;Gjem denne cellen på mobiltelefonen
 How can I help you today ?;-;Hva kan jeg hjelpe deg med?
 I agree to the terms and conditions;-;Jeg godtar bruksvilkårene
 I am sorry, but all fields are required before sending a message.;-;Beklager, men alle felt må fylles ut før du sender en melding.
+I have a campaign code;-;Jeg har en kampanjekode
 If you enable this, the parallex effect will be enabled. The background will scroll faster then the cell on top;-;Hvis du aktiverer dette vil du aktivere paralaxx effekter, bakgrunnen vil da scrolle raskere enn cellen over.
 Image;-;Bilde
 Image text;-;Bildetekst
@@ -293,6 +293,7 @@ Menu;-;Meny
 Merchant ID is found in braintree account.;-;Merchant ID er noe du finner på kontoen din hos braintree.
 Message;-;Melding
 Message from a customer;-;Melding fra en kunde
+Minimum number of months;-;Minimum antall måneder
 Mo;-;Ma
 Mon;-;Man
 Monday;-;Mandag
@@ -336,7 +337,7 @@ No;-;Nei
 No available spots left for this event;-;Ingen tilgjengelige plasser på dette kurset
 No code added yet;-;Ingen kode er lagt til enda
 No data available yet.;-;Ingen data tilgjengelig enda.
-No discount;-;Ingen rabatt
+No discount;-;Ingen avtale
 No events available;-;Ingen eventer tilgjenglig.
 No files added.;-;Ingen filer er lagt til.
 No header uploaded for mobile landscape mode yet, please upload one.;-;Ingen header har blitt lastet opp for landskaps modus på mobil enda, vennligst last opp et.
@@ -457,6 +458,7 @@ Repeats daily;-;Repeter daglig
 Repeats every {periode} week;-;Repeter hver {periode} uke
 Repeats montly same date in month;-;Repeteres månedlig på fast dato i måneden
 Repeats montly same day in week;-;Repeters daglig på fast dag i uken
+Reply;-;Svar
 Reserve room now;-;Reserver rom nå
 Reserve your room now;-;Reserver ditt rom nå
 Reserve your storage room now;-;Reserver din bod nå

@@ -132,6 +132,8 @@ public interface IPmsManager {
     
     public List<PmsRoomSimple> getMyRooms();
     
+    public boolean isActive();
+    
     @Editor
     public PmsBooking getBookingWithOrderId(String orderId);
     

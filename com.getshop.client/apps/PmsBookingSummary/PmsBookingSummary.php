@@ -255,7 +255,7 @@ class PmsBookingSummary extends \WebshopApplication implements \Application {
         echo "<div class='discountheader'>";
         echo "<span class='discountbutton selected' type='none'>".$this->__w("No discount")."</span>";
         if($hasCoupons) {
-            echo "<span class='discountbutton' type='coupon'>".$this->__w("Campaign code")."</span>";
+            echo "<span class='discountbutton' type='coupon'>".$this->__w("I have a campaign code")."</span>";
         }
         if(sizeof($channels)) {
             echo "<span class='discountbutton' type='partnership'>".$this->__w("Registered partner")."</span>";

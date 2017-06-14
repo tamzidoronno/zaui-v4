@@ -47,7 +47,7 @@ if(sizeof($coupons) == 0) {
         echo "</td>";
         echo "<td style='position:relative;'>";
         echo "<span class='addaddonsinludepanel'></span>";
-        echo "<i class='fa fa-edit loadaddonstoinclude' style='cursor:pointer;'></i> ";
+        echo "<i class='fa fa-edit loadaddonstoinclude' style='cursor:pointer;'  data-couponid='".$coupon->id."'></i> ";
         echo "</td>";
         echo "<td align='right'>";
         echo "<select class='changechanneloncoupon' couponid='".$coupon->id."'>";

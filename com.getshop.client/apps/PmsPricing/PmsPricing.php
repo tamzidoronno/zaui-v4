@@ -14,20 +14,55 @@ class PmsPricing extends \WebshopApplication implements \Application {
         return $this->getConfigurationSetting("engine_name");
     }
     
+    public function saveAddonsToDiscount() {
+        $couponId = $_POST['data']['couponid'];
+        $coupon = $this->getApi()->getCartManager()->getCouponById($couponId);
+        
+        $res = array();
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "_toinclude") && $val == "true") {
+                $productId = str_replace("_toinclude", "", $key);
+                $includedInRoomPrice = $_POST['data'][$productId.'_includedinroomprice'];
+                $toAdd = new \core_cartmanager_data_AddonsInclude();
+                $toAdd->productId = $productId;
+                $toAdd->includeInRoomPrice = ($includedInRoomPrice == "true");
+                $res[] = $toAdd;
+            }
+        }
+
+        $coupon->addonsToInclude = $res;
+        $this->getApi()->getCartManager()->addCoupon($coupon);
+    }
+    
     public function loadCouponAddonIncludePanel() {
         $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelectedName());
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['id']);
+        echo "<div gstype='form' method='saveAddonsToDiscount'>";
+        echo "<input type='hidden' value='".$_POST['data']['id']."' gsname='couponid'>";
         echo "<div style='height: 350px; overflow:auto;'>";
         foreach($addons as $addon) {
             if(!$addon->name) {
                 continue;
             }
-            echo "<input type='checkbox' title='Include'> ";
-            echo "<input type='checkbox' title='Include in room price'> ";
+            
+            $included = "";
+            $inroomprice = "";
+            foreach($coupon->addonsToInclude as $addonav) {
+                if($addonav->productId == $addon->productId) {
+                    $included = "CHECKED";
+                }
+                if($addonav->productId == $addon->productId && $addonav->includeInRoomPrice) {
+                    $inroomprice = "CHECKED";
+                }
+            }
+            
+            echo "<input type='checkbox' title='Include' gsname='".$addon->productId . "_toinclude' $included> ";
+            echo "<input type='checkbox' title='Include in room price'  gsname='".$addon->productId . "_includedinroomprice' $inroomprice> ";
             echo $addon->name  . "<span style='float:right;'>" . $addon->price . "</span> ". "<br>";
         }
         echo "</div>";
-        
-        echo "<span class='pmsbutton' style='width:100%; margin-top: 10px; box-sizing:border-box;'>Save settings</span>";
+        echo "<span class='pmsbutton' gstype='submit' style='width:100%; margin-top: 10px; box-sizing:border-box; text-align:center;'>Save settings</span>";
+        echo "</div>";
     }
     
     public function saveAddonPriceOnPricePlan() {
@@ -89,7 +124,6 @@ class PmsPricing extends \WebshopApplication implements \Application {
             $pricingObject->dailyPrices = $prices;
         }
 
-//        $pricingObject->defaultPriceType = $_POST['data']['pricetype'];
         $pricingObject->pricesExTaxes = $_POST['data']['prices_ex_taxes'] == "true";
         $pricingObject->privatePeopleDoNotPayTaxes = $_POST['data']['privatePeopleDoNotPayTaxes'] == "true";
         $pricingObject->derivedPrices = $_POST['data']['derivedPrices'];

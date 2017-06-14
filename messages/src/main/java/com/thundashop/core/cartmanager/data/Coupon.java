@@ -14,11 +14,6 @@ import java.util.List;
  * @author ktonder
  */
 public class Coupon extends DataCommon {
-    class AddonsInclude {
-        String productId = "";
-        boolean includeInRoomPrice = false;
-    }
-    
     public String code;
     public CouponType type;
     public int amount;

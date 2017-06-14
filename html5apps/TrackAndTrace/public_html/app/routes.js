@@ -43,6 +43,10 @@ angular.module('TrackAndTrace')
     $stateProvider.state('base.home', {
         url: '/home',
         
+        params: { 
+            action : { refreshData : false } 
+        },
+        
         views: {
             main: {
                 templateUrl : 'components/home/home.html',
@@ -91,6 +95,10 @@ angular.module('TrackAndTrace')
         views: {
             main: {
                 templateUrl : 'components/destination/departing.html',
+                controller : controllers.DepartingController
+            },
+            footer: {
+                templateUrl : 'components/destination/footer.html',
                 controller : controllers.DepartingController
             }
         }

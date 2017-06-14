@@ -9,6 +9,7 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.RouteCompleteController = function($scope, datarepository, $rootScope, $stateParams, $state, $api) {
     $scope.route = datarepository.getRouteById($stateParams.routeId);
+    $scope.password = "";
     
     $scope.setOverviewVariables = function() {
         $scope.uncompletedStops = 0;
@@ -32,18 +33,34 @@ controllers.RouteCompleteController = function($scope, datarepository, $rootScop
     }
     
     $scope.markCompleted = function() {
+        if (!$scope.password) {
+            alert("Please enter your password");
+            return;
+        }
+        
         var routeId = $stateParams.routeId;
         var $routeToUse = datarepository.getRouteById(routeId);        
-        $routeToUse.completedInfo.completed = true;
-
-        datarepository.save();
-        
-        $state.transitionTo("base.home", {});
 
         navigator.geolocation.getCurrentPosition(function(position) {
-            $api.getApi().TrackAndTraceManager.markAsCompletedWithTimeStamp(routeId, position.coords.latitude, position.coords.longitude, new Date());
+            $api.getApi().TrackAndTraceManager.markAsCompletedWithTimeStampAndPassword(routeId, position.coords.latitude, position.coords.longitude, new Date(), $scope.password).done(function(res) {
+                if (res) {
+                    $routeToUse.completedInfo.completed = true;
+                    datarepository.save();
+                    $state.transitionTo("base.home", {});
+                } else {
+                    alert("Please check your password");
+                }
+            });
         }, function(failare, b, c) {
-            $api.getApi().TrackAndTraceManager.markAsCompletedWithTimeStamp(routeId, 0, 0, new Date());
+            $api.getApi().TrackAndTraceManager.markAsCompletedWithTimeStampAndPassword(routeId, 0, 0, new Date(), $scope.password).done(function(res) {
+                if (res) {
+                    $routeToUse.completedInfo.completed = true;
+                    datarepository.save();
+                    $state.transitionTo("base.home", {});
+                } else {
+                    alert("Please check your password");
+                }
+            });
         }, {maximumAge:60000, timeout:60000, enableHighAccuracy:true});
     }
     

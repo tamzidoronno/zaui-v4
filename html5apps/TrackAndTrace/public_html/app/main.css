@@ -179,3 +179,12 @@ a {
     text-align: center;
     padding: 20px;
 }
+
+.warningbox {
+    background-color: red;
+    color: #FFF;
+    text-align: center;
+    padding: 4px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

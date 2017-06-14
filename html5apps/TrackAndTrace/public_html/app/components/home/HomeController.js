@@ -6,7 +6,7 @@
 
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
-controllers.HomeController = function($scope, $api, $rootScope, datarepository, $state) {
+controllers.HomeController = function($scope, $api, $rootScope, datarepository, $state, $stateParams) {
     $scope.name = "";
     $scope.datarepository = datarepository;
     $scope.routes = [];
@@ -75,7 +75,7 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
         $('.refreshicon').addClass('fa-spin');
         var completed = function() {
             $('.refreshicon').removeClass('fa-spin'); 
-            $state.go($state.current, {}, {reload: true});
+            $state.go($state.current, { 'action': { frefreshData : false }}, {reload: true});
         }
         datarepository.loadAllData($api, $scope, completed);
     }
@@ -108,4 +108,9 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     }
     
     $scope.init($api);
+    
+    if ($stateParams.action.refreshData) {
+        $scope.refresh();
+        
+    }
 };

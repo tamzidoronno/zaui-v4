@@ -29,11 +29,32 @@ $route = $this->getRoute();
     
     <div class="routebox destinations">
         <h2>Destinations</h2>
+        <div style="border: solid 1px #DDD; padding: 5px; margin-bottom: 20px;">
+            <i class="fa fa-cogs"></i> = Destination currently in service
+            <br/><i class="fa fa-check-circle"></i> = Destination completed
+            <br/><i class="fa fa-arrow-down"></i> = Can be moved to Pool
+        </div>
         <?
         foreach ($route->destinations as $destionation) {
             ?>
             <div class='destinationrow'>
-                <div class='gs_shop_small_icon' gsclick='moveToPool' destionationid='<? echo $destionation->id; ?>'><i class='fa fa-arrow-down'></i></div>
+                <?
+                
+                if ($destionation->startInfo->completed) {
+                    ?>
+                    <div class='gs_shop_small_icon'><i class="fa fa-check-circle"></i></div>
+                    <?
+                } elseif ($destionation->startInfo->started) {
+                    ?>
+                    <div class='gs_shop_small_icon'><i class="fa fa-cogs"></i></div>
+                    <?
+                } else {
+                ?>
+                    <div class='gs_shop_small_icon' gsclick='moveToPool' destionationid='<? echo $destionation->id; ?>'><i class='fa fa-arrow-down'></i></div>
+                <?
+                }
+                ?>
+                
                 <div class='gs_shop_small_icon' gsclick='showEditDestionation' destionationid='<? echo $destionation->id; ?>'><i class='fa fa-edit'></i></div>
                 <? echo $destionation->company->name; ?>
                 </div>

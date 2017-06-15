@@ -83,6 +83,11 @@ public class ArxDoorManager implements IDoorManager {
             GetShopLogHandler.logPrintStatic("Executing:" + address, null);
             return "";
         }
+        
+        if(arxHost.contains(":5003")) {
+            address = address.replace("5002", "5003");
+        }
+        
         return connection.httpLoginRequest(address, username, password, content);
     }
     

@@ -69,14 +69,6 @@ body {font-family: "Exo", "open-sans";color:#555;}
 }
 .BookingEngineManagement .addGroupOptions input,
 .PmsManagement .pmsinput{padding:3px;}
-.PmsManagement .actions{background-color:#1b75af;}
-.PmsManagement .actions:hover{background-color:#3c93cc;}
-.PmsManagement th{background-color:#146da6;border-color:#bbb;color:#fff;}
-.PmsManagement td{border-color:#ccc;}
-.PmsManagement td:nth-child(1){border-left-color:#ccc;}
-.PmsManagement .highlight td{background:#fff !important;}
-.PmsManagement .roomsbookedactions{background-color:#efefef;box-shadow: 0px 1px 3px #000;}
-.PmsManagement .roomsbookedactions .fa{color:#555;text-shadow: 0px 1px 1px #000;}
 
 .PmsManagement .bookinginfo select,
 .PmsManagement .bookinginfo input{font-size:14px;border:1px solid #bdbdbd;background-color:#fff;}

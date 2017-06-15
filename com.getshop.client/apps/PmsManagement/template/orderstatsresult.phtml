@@ -13,6 +13,8 @@ if($filter->name) {
 } else {
     echo "Filter selected: default<br>";
 }
+echo "<div class='rotate180deg'> ";
+echo "<div class='rotate180deg2'> ";
 echo "<table cellspacing='0' cellpadding='0'>";
 
 foreach($resultMatrix as $index => $row) {
@@ -72,6 +74,7 @@ if(isset($filter->methods)) {
     echo "<tr><td>Display type</td><td>" . $filter->displayType . "</td></tr>";
     echo "<tr><td>Delete this filter</td><td><i class='fa fa-trash-o' gstype='clicksubmit' method='deleteOrderStatsFilter' gsvalue='".$filter->id."' gsname='id'></i></td></tr>";
     echo "</table>";
+    echo "</div>";
 }
 
 ?>

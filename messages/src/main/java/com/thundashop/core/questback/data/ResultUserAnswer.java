@@ -6,6 +6,7 @@
 package com.thundashop.core.questback.data;
 
 import com.thundashop.core.usermanager.data.User;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -18,12 +19,14 @@ public class ResultUserAnswer {
         this.answer = answer;
         this.answerId = ans.answerId;
         this.reply = ans.reply;
+        this.answerDate = ans.answerDate;
         
         if (user != null)
             this.userId = user.id;
     }
     
     public String answer;
+    public Date answerDate = null;
     public String userId;
     public String reply = "";
     public String answerId = "";

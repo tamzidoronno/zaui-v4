@@ -5,116 +5,127 @@ $filter = $this->getSelectedFilter();
 $config = $this->getConfig();
 $channels = $this->getChannelMatrix();
 
-
 $searchtypes = $this->getSearchTypes();
 ?>
-
-
-
-<div class='booking_options' gstype='form' method='setFilter' style='position:relative;'>
-    <span style="float:left;">
-        <input type='text' gsname='start' class="start pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->startDate)); ?>">
-        <input type='text' gsname='end' class="end pmsinput" style="width: 100px;" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>">
-
-        <select class="pmsinput filterType" gsname='filterType'>
-            <?php
-            foreach($searchtypes as $idx => $type) {
-                $selected = "";
-                if($filter->filterType == $idx) {
-                    $selected = "SELECTED";
-                }
-                echo "<option value='$idx' $selected>$type</option>";
-            }
-            ?>
-        </select>
-        
-        <?php  
-        $address = $_SERVER['SERVER_NAME'];
-        $username = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->emailAddress;
-        $channels = (array)$channels;
-       if(sizeof($channels) > 0) { ?>
-            <select class="pmsinput filterType" gsname='channel'>
+<div class='managementview_booking_options' gstype='form' method='setFilter'>
+    <div class="managementviewbanner">
+        <!--Left side-->
+        <span>
+            <input type='text' gsname='start' class="start managementviewdateinput" value="<? echo date("d.m.Y", strtotime($filter->startDate)); ?>">
+            <input type='text' gsname='end' class="end managementviewdateinput" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>">
+            <select class="managementviewdropdowninput filterType" gsname='filterType'>
                 <?php
-                echo "<option value=''>All channels</option>";
-                foreach($channels as $idx => $channel) {
+                foreach($searchtypes as $idx => $type) {
                     $selected = "";
-                    if($filter->channel == $idx) {
+                    if($filter->filterType == $idx) {
                         $selected = "SELECTED";
                     }
-                    echo "<option value='$idx' $selected>$channel</option>";
+                    echo "<option value='$idx' $selected>$type</option>";
                 }
                 ?>
             </select>
-        <? } ?>
-        <span gstype="submit" class="pmsbutton setFilter">Show</span>
-        <span  style=' padding-left: 10px; top: 15px;display:inline-block;position:absolute;cursor:pointer;'>
-            <i class='fa fa-trash-o' gstype="clicksubmit" method='emptyfilter' gsname="id" gsvalue="somevalue" title='Empty filter'></i>
-            <i class='fa fa-refresh' gstype="clicksubmit" method='runProcessor' gsname="id" gsvalue="somevalue" title='Manually run processor'></i>
-            <i class='fa fa-mobile-phone' style='font-size: 16px;' onclick='window.open("http://getshop.express#/login?address=<?php echo $address; ?>&username=<?php echo $username; ?>&password=")'></i>
+            <?php  
+            $address = $_SERVER['SERVER_NAME'];
+            $username = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->emailAddress;
+            $channels = (array)$channels;
+            if(sizeof($channels) > 0) { ?>
+                <select class="managementviewdropdowninput filterType" gsname='channel'>
+                    <?php
+                    echo "<option value=''>All channels</option>";
+                    foreach($channels as $idx => $channel) {
+                        $selected = "";
+                        if($filter->channel == $idx) {
+                            $selected = "SELECTED";
+                        }
+                        echo "<option value='$idx' $selected>$channel</option>";
+                    }
+                    ?>
+                </select>
+            <? } ?>
+            <span style="color: #fff;margin: 0 15px 0 15px;"> OR </span>
+            <span class="managementviewsearchcontainer">
+                <span style="padding-left:10px;"><i class="fa fa-search"></i></span>
+                <input class="managementviewinput" type="search" gsname='searchWord' placeholder="Search..." gstype="submitenter" value="<? echo @$filter->searchWord; ?>">
+            </span>
+            <span gstype="submit" class="manegementviewbutton addGroupOptions fa fa-refresh"> UPDATE</span>
+            <span class='manegementviewbutton fa fa-undo' gstype="clicksubmit" method='emptyfilter' gsname="id" gsvalue="somevalue" title='Empty filter'> RESET</i></span>
         </span>
-    </span>
-   
-    <input type="txt" gsname='searchWord' placeholder="Search" gstype="submitenter" class="pmsinput searchword" value="<? echo @$filter->searchWord; ?>">
-    <span gstype="submit" class="pmsbutton addGroupOptions">Search</span>
-    <div style="text-align:left; font-size: 12px; margin-top: 3px;">
-        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="checkin" gsname="type">Checking in</span> - 
-        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="checkout" gsname="type">Checking out</span> - 
-        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="active" gsname="type">Active today</span> - 
-        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="stats" gsname="type">Coverage</span> - 
-        <span style="color:blue; cursor:pointer;" gstype="clicksubmit" method='setQuickFilter' gsvalue="orderstats" gsname="type">Income report</span> - 
-        <span style="color:blue; cursor:pointer;" onclick="$('.morefilteroptions').slideDown();">more filters</span>
-        <?php
-            $this->includefile("morefilteroptions");
-        ?>
-        
+        <!--Right side-->
+        <div style="float: right;">
+            <i class="fa fa-mobile-phone" title="Go to mobileview" onclick='window.open("http://getshop.express#/login?address=<?php echo $address; ?>&username=<?php echo $username; ?>&password=")'></i>
+        </div>
     </div>
-   <br>
-<?php
-echo "<div style='text-align:left;' class='roomfilter'>";
-$types = $this->getTypes();
+        <div class="managementviewquickfilter">
+        <div style="text-align:left; font-size: 12px;">
+            <span class="manegementviewfilterquickopt" gstype="clicksubmit" method='setQuickFilter' gsvalue="checkin" gsname="type">Checking in</span> 
+            <span class="manegementviewfilterquickopt" gstype="clicksubmit" method='setQuickFilter' gsvalue="checkout" gsname="type">Checking out</span> 
+            <span class="manegementviewfilterquickopt" gstype="clicksubmit" method='setQuickFilter' gsvalue="active" gsname="type">Active today</span> 
+            <span class="manegementviewfilterquickopt" gstype="clicksubmit" method='setQuickFilter' gsvalue="stats" gsname="type">Coverage</span> 
+            <span class="manegementviewfilterquickopt" gstype="clicksubmit" method='setQuickFilter' gsvalue="orderstats" gsname="type">Income report</span> 
+            <span class="manegementviewfilterquickopt" onclick="$('.morefilteroptions').slideDown();"><i class="fa fa-plus"></i> More filters</span>
+            <i class="managementviewoptions fa fa-caret-down"> Options</i>
+            <?php
+                $this->includefile("morefilteroptions");
+            ?>
+        </div>
+    </div>
+    <div class='managementviewfilter'>
+        <div class="managementviewfilterRightbanner">
+            
+            <i class='fa fa-play' gstype="clicksubmit" method='runProcessor' gsname="id" gsvalue="somevalue" title='Manually run processor'></i>
+        </div>
+        <?php
+        $types = $this->getTypes();
 
-if($config->fastCheckIn) {
-    $this->includefile("fastcheckin");
-}
-if(!isset($filter->typeFilter)) {
-    $filter->typeFilter = array();
-}
-foreach($types as $id => $type) {
-    echo "<span class='typefilter'>";
-    $checked = "";
-    if(in_array($id, $filter->typeFilter)) {
-        $checked = "CHECKED";
-    }
-    echo "<input type='checkbox' method='addTypeFilter' gsname='filter_$id' $checked>";
-    echo $type->name . "</span>";
-}
-$checked = "";
-$incDeleted = "";
-$incVirtual = "";
-if($this->isIncludeDeleted()) {
-    $incDeleted = "CHECKED";
-}
-if($this->isVirtual()) {
-    $incVirtual = "CHECKED";
-}
-echo "<input type='checkbox' gstype='clicksubmitforce' method='groupByBooking' gsname='id' gsvalue='' $checked> Group by booking ";
-echo "<input type='checkbox' gstype='clicksubmitforce' method='includeDeleted' gsname='incdelete' $incDeleted class='clicksubmitcheckbox'> Include deleted";
-echo "<input type='checkbox' gsname='include_virtual_filter' method='includeDeleted' gsname='incvirtual' $incVirtual class='clicksubmitcheckbox'> Include virtual orders";
-echo "</div>";
-echo "<br>";
-echo "</div>";
-$this->includeManagementViewResult();
- ?>
+        if(!isset($filter->typeFilter)) {
+            $filter->typeFilter = array();
+        }
+        echo "<div class='roomfilternew'>";
+        echo "<div style='text-align:center;border-bottom:2px solid #555;margin-bottom:10px;font-weight:bold;'>Filter</div>";
+        foreach($types as $id => $type) {
+            echo "<span class='typefilter'>";
+            $checked = "";
+            if(in_array($id, $filter->typeFilter)) {
+                $checked = "CHECKED";
+            }
+            echo "<input type='checkbox' method='addTypeFilter' gsname='filter_$id' $checked>";
+            echo $type->name . "</span>";
+        }
+        $checked = "";
+        $incDeleted = "";
+        $incVirtual = "";
+        if($this->isIncludeDeleted()) {
+            $incDeleted = "CHECKED";
+        }
+        if($this->isVirtual()) {
+            $incVirtual = "CHECKED";
+        }
+        echo "<input type='checkbox' gstype='clicksubmitforce' method='groupByBooking' gsname='id' gsvalue='' $checked>Group by booking<br>";
+        echo "<input type='checkbox' gstype='clicksubmitforce' method='includeDeleted' gsname='incdelete' $incDeleted class='clicksubmitcheckbox'>Include deleted<br>";
+        echo "<input type='checkbox' gsname='include_virtual_filter' method='includeDeleted' gsname='incvirtual' $incVirtual class='clicksubmitcheckbox'>Include virtual orders<br>";
+        echo "</div>";
+        if($config->fastCheckIn) {
+            $this->includefile("fastcheckin");
+        }
+        echo "</div>";
+        $this->includeManagementViewResult();
+        ?>
+    </div>
+    <div style="padding: 5px;border-radius: 0 0 4px 4px; background-color:#2885c0;"></div>
+</div>
+<br>
+<br>
+<br>
 
 <script>
-    $('.start.pmsinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+    $('.start.managementviewdateinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
     onSelect: function(dateText) {
         var date = moment(dateText, "DD.MM.YYYY");
         var month = (moment(date).get('month')+1);
         if(month < 10) {
             month = "0" + month;
         }
-        var currentEnd = $('.end.pmsinput').val();
+        var currentEnd = $('.end.managementviewdateinput').val();
         var endMoment = moment(currentEnd, "DD.MM.YYYY");
         
         var diff = endMoment.diff(date, "minutes");
@@ -123,18 +134,18 @@ $this->includeManagementViewResult();
             if(day < 10) {
                 day = "0" + day;
             }
-            $('.end.pmsinput').val(day + "." + month + "." + moment(date).get('year'));
+            $('.end.managementviewdateinput').val(day + "." + month + "." + moment(date).get('year'));
         }
       }
     });
-    $('.end.pmsinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+    $('.end.managementviewdateinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
             var date = moment(dateText, "DD.MM.YYYY");
             var month = (moment(date).get('month')+1);
             if(month < 10) {
                 month = "0" + month;
             }
-            var currentEnd = $('.start.pmsinput').val();
+            var currentEnd = $('.start.managementviewdateinput').val();
             var endMoment = moment(currentEnd, "DD.MM.YYYY");
 
             var diff = endMoment.diff(date, "minutes");
@@ -143,7 +154,7 @@ $this->includeManagementViewResult();
                 if(day < 10) {
                     day = "0" + day;
                 }
-                $('.start.pmsinput').val(day + "." + month + "." + moment(date).get('year'));
+                $('.start.managementviewdateinput').val(day + "." + month + "." + moment(date).get('year'));
             }
         }
     });

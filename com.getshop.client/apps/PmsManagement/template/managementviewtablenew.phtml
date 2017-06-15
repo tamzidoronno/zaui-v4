@@ -79,7 +79,7 @@ foreach($registrationRules->data as $key => $data) {
         $allFieldsToPrint[$key] = $data->title;
     }
 }
-echo "<span class='toggleColumnFilter'>Column filter</span>";
+echo "<span style='background-color: #eef9ff;display: inherit;'><span class='toggleColumnFilter'>Column filter</span></span>";
 echo "<div gstype='form' method='saveSelectedFields' class='columnfilter'>";
 $selected = $this->getSelectedFields($allFieldsToPrint);
 foreach($allFieldsToPrint as $key => $val) {
@@ -126,10 +126,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
     
     <?php
     $tableArray = array();
-    if(!$rooms) {
-        $rooms = array();
-    }
-    foreach($rooms as $room) {
+    foreach((array)$rooms as $room) {
         $comments = "";
         if(isset($room->bookingComments)) {
             foreach($room->bookingComments as $time => $val) {

@@ -6,6 +6,7 @@
 package com.thundashop.core.questback.data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
@@ -23,6 +24,7 @@ public class UserQuestionAnswer implements Serializable {
     public String text = "";
     public List<String> answers;
     public String reply = "";
+    public Date answerDate = null;
     public String answerId = UUID.randomUUID().toString();
     
     @Transient

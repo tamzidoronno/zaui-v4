@@ -3088,8 +3088,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     function delete_col(&$array, $key) {
-        return array_walk($array, function (&$v) use ($key) {
-            unset($v[$key]);
+        return array_walk($array, function (&$v, $array) use ($key) {
+            if(sizeof($v) > 2) {
+                unset($v[$key]);
+            }
         });
     }
     

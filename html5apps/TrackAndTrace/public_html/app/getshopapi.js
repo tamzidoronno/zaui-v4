@@ -1768,6 +1768,17 @@ GetShopApiWebSocket.BookingEngine.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'forceUnassignBookingInfuture' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'forceUnassignBookingInfuture',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.bookingengine.IBookingEngine',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getAllAvailbleItems' : function(multilevelname, start,end, gs_silent) {
         var data = {
             args : {
@@ -8232,6 +8243,18 @@ GetShopApiWebSocket.PmsInvoiceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'removeDuplicateOrderLines' : function(multilevelname, order, gs_silent) {
+        var data = {
+            args : {
+                order : JSON.stringify(order),
+            },
+            method: 'removeDuplicateOrderLines',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsInvoiceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'removeOrderLinesOnOrdersForBooking' : function(multilevelname, id,roomIds, gs_silent) {
         var data = {
             args : {
@@ -9431,6 +9454,17 @@ GetShopApiWebSocket.PmsManager.prototype = {
             args : {
             },
             method: 'initBookingRules',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'isActive' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'isActive',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsManager',
         };
@@ -13339,6 +13373,21 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'markAsCompletedWithTimeStampAndPassword' : function(routeId,lat,lon,date,password, gs_silent) {
+        var data = {
+            args : {
+                routeId : JSON.stringify(routeId),
+                lat : JSON.stringify(lat),
+                lon : JSON.stringify(lon),
+                date : JSON.stringify(date),
+                password : JSON.stringify(password),
+            },
+            method: 'markAsCompletedWithTimeStampAndPassword',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'markAsDeliverd' : function(taskId, gs_silent) {
         var data = {
             args : {
@@ -15254,6 +15303,7 @@ errorTextMatrix = {
 "1037":"User can not be created, already exists one with same cellphone",
 "1038":"The time periode is already closed, cannot reclose it",
 "1039":"Can not save order, its within a closed periode",
+"1040":"Destination can not be pooled, it has been marked as arrived or serviced.",
 "1000001":"The name attribute is invalid",
 "1000002":"The entry you are trying to fecth does not exists.",
 "1000003":"Could not find list to sort on.",

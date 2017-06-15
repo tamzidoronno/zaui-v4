@@ -1930,6 +1930,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for(CartItem item : order.cart.getItems()) {
             if(item.itemsAdded != null && !item.itemsAdded.isEmpty()) {
                for(PmsBookingAddonItem pmsitem : item.itemsAdded) {
+                   if (pmsitem == null ) {
+                       continue;
+                   }
+                   
+                   if (pmsitem.count == null) {
+                       pmsitem.count = 0;
+                   }
+                   
+                   if (pmsitem.price == null) {
+                       pmsitem.price = 0D;
+                   }
+                   
                    total += (pmsitem.count * pmsitem.price);
                    found = true;
                }

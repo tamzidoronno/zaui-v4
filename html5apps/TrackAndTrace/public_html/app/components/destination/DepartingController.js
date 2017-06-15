@@ -25,6 +25,13 @@ controllers.DepartingController = function($scope, datarepository, $stateParams,
         });
         
         $scope.bankData = $scope.signaturePad.toDataURL("image/png");
+        
+        if ($scope.destination && $scope.destination.signatureImage) {
+            $scope.signaturePad.fromDataURL($scope.destination.signatureImage);
+            if ($scope.destination.signatures && $scope.destination.signatures.length > 0) {
+                $scope.typedName = $scope.destination.signatures[($scope.destination.signatures.length - 1)].typedName;
+            }
+        }
     }
     
     $scope.initSignaturePad();
@@ -32,6 +39,13 @@ controllers.DepartingController = function($scope, datarepository, $stateParams,
     $scope.clearSignature = function() {
         $scope.startedSignature = false;
         this.signaturePad.clear();
+    }
+    
+    $scope.doTheBack = function() {
+        $state.go('base.destination', {
+            destinationId:$scope.destination.id,
+            routeId:  $scope.route.id
+        });
     }
     
     $scope.saveSignature = function() {

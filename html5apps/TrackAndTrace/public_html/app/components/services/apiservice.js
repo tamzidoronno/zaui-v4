@@ -43,6 +43,9 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     $('.loginbutton').find('.login-shower').remove();
                     this.lastShownError = new Date().getTime();
                 } else {
+                    if (error != null && error.errorCode  != null && error.errorCode == 26 && !localStorage.getItem('username')) {
+                        return;
+                    }
                     alert(errorTextMatrix[error.errorCode]);
                 }
             });
@@ -107,7 +110,12 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         },
                 
         this.loadDataAndGoToHome = function($api) {
-            $state.transitionTo('base.home');
+            $state.transitionTo('base.home', 
+             {
+                'action' : {
+                    refreshData : true
+                }
+            });
         },
         
         this.getLoggedOnUser = function() {

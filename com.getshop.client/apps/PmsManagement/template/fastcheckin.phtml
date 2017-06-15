@@ -5,7 +5,7 @@ $today = date("d.m.Y", (time()));
 $tomorrow = date("d.m.Y", time()+86400);
 $nowTime = date("H:i", time()-(180));
 if($this->fastAddedCode) {
-    echo "<h1>Room has been added, code for room is: " . $this->fastAddedCode . "</h1>";
+    echo "<h2 style='color:#000;'>Room has been added, code for room is: " . $this->fastAddedCode . "</h2>";
 }
 ?>
 <div gstype="form" method="fastCheckIn" class='fastcheckinform'>

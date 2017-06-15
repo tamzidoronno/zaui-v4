@@ -99,8 +99,18 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .checkallbookedrooms', app.PmsManagement.updateCheckedRoomUnsettledAmount);
         $(document).on('click','.PmsManagement .editaddonpricematrix', app.PmsManagement.editAddonPriceMatrix);
         $(document).on('keyup','.PmsManagement .changeorderdates', app.PmsManagement.changeOrderPeriode);
+        $(document).on('click','.PmsManagement .managementviewoptions', app.PmsManagement.toggleManagementviewfilter);
     },
-    
+    toggleManagementviewfilter : function(){
+        if($('.managementviewfilter').css('display') === 'none'){
+            $('.managementviewfilter').slideDown();
+            $('.managementviewfilter').css('display','inline-block');
+        }
+        else{
+            $('.managementviewfilter').slideUp()();
+            $('.managementviewfilter').css('display','none');
+        }
+    },
     updateInvoiceNote : function() {
         var event = thundashop.Ajax.createEvent('','updateInvoiceNoteOnOrder',$(this), {
             "orderid" : $(this).attr('orderid'),

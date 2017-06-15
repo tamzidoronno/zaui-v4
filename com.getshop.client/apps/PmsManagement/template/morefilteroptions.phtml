@@ -3,9 +3,9 @@
 $savedFilter = $this->getApi()->getPmsManager()->getAllPmsFilters($this->getSelectedName());
 ?>
 
-<div class='morefilteroptions' style='width: 500px; border: solid 1px; position:absolute; background-color:#fff; padding: 10px; display:none;'>
+<div class='morefilteroptions' style='width: 500px; border: solid 1px; position:absolute; background-color:#fff; padding: 10px; display:none;z-index: 1;'>
     <?php
-    foreach($savedFilter as $saved) {
+    foreach((array)$savedFilter as $saved) {
         if($saved->filterName == "coverage") {
             continue;
         }

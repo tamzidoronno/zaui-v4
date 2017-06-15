@@ -18,9 +18,6 @@ app.PmsAvailabilityTimeline = {
         $(document).on('click', '.PmsAvailabilityTimeline .shortinformationboxFooter', app.PmsAvailabilityTimeline.hideShortOptionsForEntry);
         $(document).on('click', '.PmsAvailabilityTimeline #toggleRoomoverview', app.PmsAvailabilityTimeline.toggleRoomoverview);
         $(document).on('click', '.PmsAvailabilityTimeline .completeaction', app.PmsAvailabilityTimeline.completeQuickAction);
-//        $(document).ready(function(){
-//            
-//        });
         $(document).keyup(app.PmsAvailabilityTimeline.hideShortOptionsForEntry);
     },
     toggleRoomoverview : function(){

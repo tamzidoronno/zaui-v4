@@ -27,7 +27,7 @@ $filters = $this->getApi()->getPmsInvoiceManager()->getAllStatisticsFilters($thi
 
     <span class="pmsbutton" gstype='clicksubmit' method='setneworderstatsfilter' gsname='filtertype' gsvalue=''>Default filter</span>
     <?php
-    foreach($filters as $filter) {
+    foreach((array)$filters as $filter) {
         if(!$filter->name) {
             continue;
         }
@@ -39,10 +39,10 @@ $filters = $this->getApi()->getPmsInvoiceManager()->getAllStatisticsFilters($thi
 
 
 <div class='orderstatsres'>
-    <script>
-        app.PmsManagement.loadorderstatistics();
-    </script>
-    <center style='font-size: 50px;'>
-        <i class='fa fa-spin fa-spinner'></i>
-    </center>
+        <script>
+            app.PmsManagement.loadorderstatistics();
+        </script>
+        <center style='font-size: 50px;'>
+            <i class='fa fa-spin fa-spinner'></i>
+        </center>
 </div>

@@ -495,7 +495,7 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     public double calculatePriceForCouponWithoutSubstract(String couponCode, double price) {
-        Coupon coupon = getCoupon(couponCode);
+        Coupon coupon = getCoupon(couponCode); 
         Double newPrice = price;
         if(coupon != null) {
             if(coupon.timesLeft > 0) {

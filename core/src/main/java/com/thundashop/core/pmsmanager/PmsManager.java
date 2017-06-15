@@ -4903,9 +4903,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for(PmsBookingAddonItem item : result) {
             if(cartManager.couponIsValid(booking.couponCode, item.date, item.date, item.productId)) {
-                item.price = cartManager.calculatePriceForCouponWithoutSubstract(booking.couponCode, item.price);
+                Coupon coupon = cartManager.getCoupon(booking.couponCode);
+                if(coupon.addonsToInclude == null || coupon.addonsToInclude.isEmpty()) {
+                    item.price = cartManager.calculatePriceForCouponWithoutSubstract(booking.couponCode, item.price);
+                }
             }
-            
         }
         
         return result;
@@ -6091,15 +6093,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return;
         }
         
-        List<PmsBookingAddonItem> toRemove = new ArrayList();
-        for(PmsBookingAddonItem remove : room.addons) {
-            if(remove.productId.equals(productId)) {
-                toRemove.add(remove);
-            }
-        }
-        room.addons.removeAll(toRemove);
-        
         for(AddonsInclude inc : coupon.addonsToInclude) {
+            List<PmsBookingAddonItem> toRemove = new ArrayList();
+            for(PmsBookingAddonItem remove : room.addons) {
+                if(remove.productId.equals(inc.productId)) {
+                    toRemove.add(remove);
+                }
+            }
+            room.addons.removeAll(toRemove);
+            
             List<PmsBookingAddonItem> items = createAddonToAddFromProductId(inc.productId, room);
             for(PmsBookingAddonItem item : items) {
                 item.isIncludedInRoomPrice = inc.includeInRoomPrice;
@@ -6126,7 +6128,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     while(true) {
                         res.add(createAddonToAdd(item, cal.getTime()));
                         cal.add(Calendar.DAY_OF_YEAR, 1);
-                        if(cal.getTime().after(room.date.end)) {
+                        if(cal.getTime().after(room.date.end) || room.isSameDay(cal.getTime(), room.date.end)) {
                             break;
                         }
                     }

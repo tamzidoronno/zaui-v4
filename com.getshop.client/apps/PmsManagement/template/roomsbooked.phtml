@@ -539,6 +539,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
 </span>
 <div class="roomsbookedAddToBookingline">
 <span gstype="form" method='addRoomToBooking'>
+    <span style="font-size: 13px;color: #555;font-weight: bold;">Add room</span>
     <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
     <input type='text' class='newroomstartdate' style=' width: 80px;' value='<?php echo date("d.m.Y", strtotime($start)); ?>' gsname='start'>
     <input type='text' class='newroomstarttime' style='width: 40px;text-align: center;' value='<?php echo date("H:i", strtotime($start)); ?>' gsname='starttime'> - 

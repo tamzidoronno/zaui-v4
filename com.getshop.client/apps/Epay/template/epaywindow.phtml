@@ -2,11 +2,13 @@
     $merchid = $this->getConfigurationSetting("merchantid");
     $secret = $this->getConfigurationSetting("md5secret");
     $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
+    
     $order = $this->getOrder();
     $orderId = $order->incrementOrderId;
     $amount = $this->getApi()->getOrderManager()->getTotalAmount($order)*100;
     $amount = round($amount);
-
+    $hasssl = $this->getConfigurationSetting("hasssl");
+    
     $settings = $this->getFactory()->getSettings();
     $language = $this->getFactory()->getSelectedTranslation();
     $store = $this->getFactory()->getStore();
@@ -19,8 +21,15 @@
         $key .= "-debug";
     }
     
-    $callBack = 'http://'.$_SERVER['HTTP_HOST']. "/scripts/merchantcallback.php?key=".$key . "&gsordnr=".$orderId;
-    $redirect_url = "http://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
+    
+    $protocol = "http";
+
+    if($hasssl == "true") {
+       $protocol = "https"; 
+    }
+    
+    $callBack = $protocol.'://'.$_SERVER['HTTP_HOST']. "/scripts/merchantcallback.php?key=".$key . "&gsordnr=".$orderId;
+    $redirect_url = $protocol."://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
     $callBack = str_replace(".3.0.local.", ".", $callBack);
      
      $params = array('merchantnumber' => "$merchid",

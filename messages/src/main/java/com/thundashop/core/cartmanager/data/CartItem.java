@@ -140,7 +140,17 @@ public class CartItem implements Serializable {
         }
         if(itemsAdded != null) {
             for(PmsBookingAddonItem toCheck : itemsAdded) {
+                
                 if(toCheck != null && toCheck.price != null && (toCheck.price.isInfinite() || toCheck.price.isNaN())) {
+                    toCheck.price = 0.0;
+                }
+                
+                if(toCheck != null && toCheck.price != null && toCheck.price.equals(Double.NEGATIVE_INFINITY)) {
+                    System.err.println("Found a negative infinite ?");
+                    toCheck.price = 0.0;
+                }
+                
+                if(toCheck != null && toCheck.price != null && toCheck.price.equals(Double.POSITIVE_INFINITY)) {
                     toCheck.price = 0.0;
                 }
             }
@@ -280,5 +290,21 @@ public class CartItem implements Serializable {
 
     public void refreshCartItemId() {
         cartItemId = UUID.randomUUID().toString();
+    }
+
+    public double getTotalAmount() {
+        return count * getProduct().price;
+    }
+
+    public Double getPriceMatrixAmount() {
+        if(priceMatrix == null) {
+            return 0.0;
+        }
+        
+        Double check = 0.0;
+        for(Double toAdd : priceMatrix.values()) {
+            check += toAdd;
+        }
+        return check;
     }
 }

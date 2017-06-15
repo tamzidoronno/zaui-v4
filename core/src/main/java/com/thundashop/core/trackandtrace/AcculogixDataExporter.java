@@ -143,10 +143,18 @@ public class AcculogixDataExporter {
         }
         
         if (task instanceof DeliveryTask && task.completed) {
+            exp.TaskStatus = "DeliveryTaskComplete";
+        }
+        
+        if (task instanceof DeliveryTask && task.completed && dest.startInfo.completed) {
             exp.TaskStatus = "D1";
         }
         
         if (task instanceof PickupTask && task.completed) {
+            exp.TaskStatus = "PickupTaskComplete";
+        }
+        
+        if (task instanceof PickupTask && task.completed && dest.startInfo.completed) {
             exp.TaskStatus = "RT";
         }
         

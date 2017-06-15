@@ -1,0 +1,27 @@
+.ProMeisterMekonomenDatabase .candidaterow {
+    border: solid 1px #DDD;
+    margin-top: 30px;
+}
+
+.ProMeisterMekonomenDatabase .candidaterow .userinfo {
+    padding: 20px;
+}
+
+.ProMeisterMekonomenDatabase .candidaterow .eventsummary {
+    background-color: #EEE;
+}
+
+.ProMeisterMekonomenDatabase .candidaterow .eventsummary .eventrow div {
+    display: inline-block;
+}
+.ProMeisterMekonomenDatabase .candidaterow .eventsummary .eventrow {
+    padding: 5px;
+}
+
+.ProMeisterMekonomenDatabase .candidaterow .eventsummary .eventrow:nth-child(odd) {
+    background-color: #FFF;    
+}
+
+.ProMeisterMekonomenDatabase .candidaterow .eventsummary .eventrow div:nth-child(1) { width: 500px; }
+.ProMeisterMekonomenDatabase .candidaterow .eventsummary .eventrow div:nth-child(2) { width: 200px; }
+.ProMeisterMekonomenDatabase .candidaterow .eventsummary .eventrow div:nth-child(3) { width: 200px; }

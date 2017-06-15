@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -297,6 +298,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
                 .filter(p -> p.groupedScormPackages.contains(scorm.scormId))
                 .collect(Collectors.toList());
         
+        List<Scorm> passedTests = new ArrayList();
         for (ScormPackage pck : dbs) {
             boolean allPassed = true;
             for (String scormId : pck.groupedScormPackages) {
@@ -306,6 +308,8 @@ public class ScormManager extends ManagerBase implements IScormManager {
                 }
                 if (!userscorm.passed) {
                     allPassed = false;
+                } else {
+                    passedTests.add(userscorm);
                 }
             }
             
@@ -315,11 +319,33 @@ public class ScormManager extends ManagerBase implements IScormManager {
                     continue;
                 
                 userscorm.passed = true;
+                
+                if (userscorm.passedDate == null) {
+                    userscorm.passedDate = getLastPassedDate(passedTests);
+                }
+                
                 saveObject(userscorm);
 
                 scorms.put(userscorm.id, userscorm);
             }
         }
+    }
+
+    private Date getLastPassedDate(List<Scorm> passedTests) {
+        Date latest = null;
+        
+        for (Scorm scorm : passedTests) {
+            if (latest == null) {
+                latest = scorm.passedDate;
+                continue;
+            }
+            
+            if (scorm.passedDate.after(latest)) {
+                latest = scorm.passedDate;
+            }
+        }
+        
+        return latest;
     }
     
 }

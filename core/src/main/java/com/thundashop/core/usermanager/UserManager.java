@@ -584,6 +584,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return user;
     }
 
+    public User getUserByIdUnfinalized(String id) {
+        UserStoreCollection storeCollection = getUserStoreCollection(storeId);
+        return storeCollection.getUser(id);
+    }
+    
     public boolean doesUserExsist(String userId) {
         return getUserStoreCollection(storeId).doesUserExists(userId);
     }

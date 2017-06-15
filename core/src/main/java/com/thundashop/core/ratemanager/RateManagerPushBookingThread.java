@@ -29,7 +29,6 @@ public class RateManagerPushBookingThread extends Thread {
     
     public void run() {
         try {
-        long start = System.currentTimeMillis();
             String encoding = "UTF-8";
 
             URL urlObj = new URL(url);
@@ -56,8 +55,6 @@ public class RateManagerPushBookingThread extends Thread {
                 while((responseLine = responseStream.readLine()) != null) {
                     responseBuffer.append(responseLine);
                 }
-                long end = System.currentTimeMillis();
-                System.out.println("Time: " + (end-start));
             }catch(IOException ex) {
                 BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
 

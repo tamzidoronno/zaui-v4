@@ -341,6 +341,9 @@ public class CartManager extends ManagerBase implements ICartManager {
             couponCode = "";
         }
         for(String key : coupons.keySet()) {
+            if(key == null) {
+                continue;
+            }
             if(couponCode.toLowerCase().equals(key.toLowerCase())) {
                 return coupons.get(key);
             }
@@ -433,6 +436,9 @@ public class CartManager extends ManagerBase implements ICartManager {
     public List<String> getPartnershipCoupons() {
         List<String> res = new ArrayList();
         for(Coupon cup : coupons.values()) {
+            if(cup == null || cup.code == null) {
+                continue;
+            }
             if(cup.code.contains("partnership:")) {
                 res.add(cup.code.replace("partnership:", ""));
             }
@@ -443,6 +449,9 @@ public class CartManager extends ManagerBase implements ICartManager {
     @Override
     public boolean hasCoupons() {
         for(Coupon cup : coupons.values()) {
+            if(cup == null || cup.code == null) {
+                continue;
+            }
             if(!cup.code.contains("partnership:")) {
                 return true;
             }
@@ -486,7 +495,7 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     public double calculatePriceForCouponWithoutSubstract(String couponCode, double price) {
-        Coupon coupon = getCoupon(couponCode);
+        Coupon coupon = getCoupon(couponCode); 
         Double newPrice = price;
         if(coupon != null) {
             if(coupon.timesLeft > 0) {

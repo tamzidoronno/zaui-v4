@@ -4,6 +4,7 @@ package com.thundashop.core.pmsmanager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class PmsRoomSimple implements Serializable {
@@ -44,6 +45,8 @@ public class PmsRoomSimple implements Serializable {
     public double totalCost;
     public String userId;
     public boolean nonrefundable = false;
+    public HashMap<Long, PmsBookingComment> bookingComments = new HashMap(); 
+    double totalUnsettledAmount;
     
     boolean earlycheckin = false;
     boolean latecheckout = false;

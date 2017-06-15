@@ -531,18 +531,22 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         public boolean isDoneProcessingQueue(String queue) {
             Gson gson = new Gson();
             List<Object> toParse = new ArrayList();
-            toParse = gson.fromJson(queue, toParse.getClass());
-            for(Object a : toParse) {
-                String line = a.toString();
-                if(line.contains("0.20000000298023224")) {
-                    continue;
+            try {
+                toParse = gson.fromJson(queue, toParse.getClass());
+                for(Object a : toParse) {
+                    String line = a.toString();
+                    if(line.contains("0.20000000298023224")) {
+                        continue;
+                    }
+                    String[] lineElements = line.split(",");
+                    if(line.length() > 8 && lineElements[5].trim().equals("1.0")) {
+                        continue;
+                    } else {
+                        return false;
+                    }
                 }
-                String[] lineElements = line.split(",");
-                if(line.length() > 8 && lineElements[5].trim().equals("1.0")) {
-                    continue;
-                } else {
-                    return false;
-                }
+            }catch(Exception e) {
+                logPrint("failed to parse queue: " + queue);
             }
             return true;
         }
@@ -597,7 +601,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
         }
         createScheduler("pmsprocessor", "* * * * *", CheckAllOkGetShopLocks.class);
-        createScheduler("pmsprocessor_lock", "30 23,04 * * *", UpdateLockList.class);
+//        createScheduler("pmsprocessor_lock", "30 23,04 * * *", UpdateLockList.class);
     }
     
     public String getUsername(String serverSource) {
@@ -679,11 +683,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                         toRemove.add(dev);
                     }
                 }
-                for(GetShopDevice torev : toRemove) {
-//                    devices.remove(torev.id);
-//                    deleteObject(torev);
-                }
-
             } catch (Exception ex) {
                 Logger.getLogger(GetShopLockManager.class.getName()).log(Level.SEVERE, null, ex);
             }

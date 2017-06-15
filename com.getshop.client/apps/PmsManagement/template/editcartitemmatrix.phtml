@@ -16,7 +16,7 @@ foreach($cart->items as $item) {
             foreach($item->itemsAdded as $addonItem) {
                 echo "<div class='addonstoedit' addonid='".$addonItem->addonId."'>";
                 echo date("d.m.Y", strtotime($addonItem->date)) . " ";
-                echo "<input type='txt' value='" . $addonItem->count . "' style='width:50px;' class='addoncountinput' disabled>";
+                echo "<input type='txt' value='" . $addonItem->count . "' style='width:50px;' class='addonscountinput addoncountinput'>";
                 echo "<input type='txt' value='" . $addonItem->price . "' style='width:50px;' class='extrapriceinput addonprice'>";
                 echo "</div>";
             }
@@ -56,16 +56,20 @@ echo "</div>";
         area.hide();
     });
     
-    $('.extrapriceinput').keyup(function() {
+    $('.extrapriceinput,.addonscountinput').keyup(function() {
         var area = $(this).closest('.loadEditAddonAndPriceMatrix');
        var count = 0;
        var amount = 0;
+       var addonscount = 0;
        area.find('.extrapriceinput').each(function() {
            amount += parseFloat($(this).val());
            count++;
        });
+       area.find('.addonscountinput').each(function() {
+           addonscount += parseInt($(this).val());
+       });
        var avg = Math.round(amount / count);
-       console.log(count);
        $(this).closest('.cartitemselectionrow').find('.cartprice').val(avg);
-       
+       $(this).closest('.cartitemselectionrow').find('.cartcount').val(addonscount);
+       app.PmsManagement.calculateCartCostFromTarget($(this));
     });

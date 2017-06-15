@@ -15,9 +15,24 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public $fastAddedCode = null;
     private $fetchedBookings = array();
     public $showBookersData = false;
+    public $config;
     
     public function loadBookingOrdersRoom() {
         $this->includefile("ordersforroom");
+    }
+    
+    public function connectItemsToRoom() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        
+        foreach($order->cart->items as $item) {
+            if(!$item->product->externalReferenceId) {
+                $item->product->externalReferenceId = $_POST['data']['roomid'];
+            }
+        }
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        
+        $this->orderToDisplay = $order;
+        $this->includefile("detailedorderinformation");
     }
     
     public function updateInvoiceNoteOnOrder() {
@@ -354,7 +369,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function addAddonsToRoom() {
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         $roomId = $_POST['data']['roomid'];
         foreach($config->addonConfiguration as $addonItem) {
             if($addonItem->productId == $_POST['data']['clicksubmit']) {
@@ -431,15 +446,25 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function markTest() {
         $booking = $this->getSelectedBooking();
-        $booking->testReservation = true;
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
-        $this->selectedBooking = null;
-        $this->showBookingInformation();
-        foreach($booking->orderIds as $orderId) {
-            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-            $order->testOrder = true;
-            $order->status = 7;
-            $this->getApi()->getOrderManager()->saveOrder($order);
+        if(!$booking->testReservation) {
+            $booking->testReservation = true;
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+            $this->selectedBooking = null;
+            $this->showBookingInformation();
+            foreach($booking->orderIds as $orderId) {
+                $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                $order->testOrder = true;
+            }
+        } else {
+            $booking->testReservation = false;
+            $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+            $this->selectedBooking = null;
+            $this->showBookingInformation();
+            foreach($booking->orderIds as $orderId) {
+                $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                $order->testOrder = false;
+                $this->getApi()->getOrderManager()->saveOrder($order);
+            }
         }
     }
     
@@ -656,6 +681,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         $heading = array();
+        $heading[] = "Userid";
         $heading[] = "Name";
         $heading[] = "Address";
         $heading[] = "Postcode";
@@ -666,9 +692,16 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $heading[] = "Phone";
         $heading[] = "Vat number";
         
+        $result[] = $heading;
+        
         foreach($users as $id) {
             $line = array();
             $user = $this->getApi()->getUserManager()->getUserById($id);
+            $accountingId = $user->accountingId;
+            if(!$accountingId) {
+                $accountingId = $user->customerId;
+            }
+            $line[] = $accountingId;
             $line[] = $user->fullName;
             $line[] = $user->address->address;
             $line[] = $user->address->postCode;
@@ -845,7 +878,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function globalInvoiceCreation() {
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         $filter = new \core_pmsmanager_NewOrderFilter();
         $filter->onlyEnded = false;
         $filter->prepayment = $config->prepayment;
@@ -1659,7 +1692,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             return $filter;
         }
 
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->state = 0;
@@ -1956,7 +1989,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function getChannels() {
-        return $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName())->channelConfiguration;
+        return $this->getConfig()->channelConfiguration;
     }
     
     public function addRepeatingDates() {
@@ -2204,7 +2237,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function hasBreakfastAddon() {
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         foreach($config->addonConfiguration as $addon) {
             if($addon->addonType == 1) {
                 return true;
@@ -2561,7 +2594,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     
     public function includeManagementViewResult() {
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         $filter = $this->getSelectedFilter();
         if($filter->filterType == "stats") {
             $this->includefile("statistics");
@@ -2757,7 +2790,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function createOrderPreview($booking, $config) {
-        $endDate = time();
+        $endDate = $this->getEndDateForBooking();
         foreach($booking->rooms as $room) {
             if($endDate < strtotime($room->date->end)) {
                 $endDate = strtotime($room->date->end);
@@ -2793,12 +2826,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function createOrderPreviewUnsettledAmount($booking, $config) {
-        $endDate = time();
-        foreach($booking->rooms as $room) {
-            if($endDate < strtotime($room->date->end)) {
-                $endDate = strtotime($room->date->end);
-            }
-        }
+        $endDate = $this->getEndDateForSpecifiedBooking($booking);
         
         $filter = new \core_pmsmanager_NewOrderFilter();
         $filter->onlyEnded = false;
@@ -3104,6 +3132,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 foreach($item->itemsAdded as $addonItem) {
                     if(isset($_POST['data']['addondata'][$addonItem->addonId]['price'])) {
                         $addonItem->price = $_POST['data']['addondata'][$addonItem->addonId]['price'];
+                        $addonItem->count = $_POST['data']['addondata'][$addonItem->addonId]['count'];
                     }
                 }
                 $this->getApi()->getCartManager()->updateCartItem($item);
@@ -3134,12 +3163,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         echo "<input type='txt' gsname='start' value='".$start . "' style='width:120px;'> ";
         echo "<input type='txt' gsname='end' value='$end' style='width:120px;'> ";
-        echo "<input type='txt' gsname='count' style='width: 25px;text-align:center;' value='". $item->count . "' style='width:120px;' class='cartcount'> ";
-        echo "<input type='txt' gsname='name' value='". $item->product->name . "' style='width:550px;' class='itemname'> ";
+        echo "<input type='txt' gsname='count' style='width: 25px;text-align:center;' value='". $item->count . "' style='width:120px;' class='cartcount' $disabled> ";
+        echo "<input type='txt' gsname='name' value='". $item->product->name . "' style='width:500px;' class='itemname'> ";
         echo "<span class='loadEditAddonAndPriceMatrix'></span>";
         echo "<input type='txt' gsname='price' style='width: 60px;' class='cartprice' value='". $item->product->price . "' style='width:120px;' $disabled>";
         if($disabled) {
-            echo "<i class='fa fa-edit editaddonpricematrix'></i>";
+            echo " <i class='fa fa-edit editaddonpricematrix'></i>";
         }
         echo "</div>";
     }
@@ -3165,7 +3194,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function getSearchTypes() {
-        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $config = $this->getConfig();
         $searchtypes = array();
         $searchtypes['registered'] = "Registered";
         $searchtypes['active'] = "Active";
@@ -3282,14 +3311,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
 
     public function getEndDateForBooking() {
-        $end = null;
         $booking = $this->getSelectedBooking();
-        foreach($booking->rooms as $room) {
-            if($end == null || $end < strtotime($room->date->end)) {
-                $end = strtotime($room->date->end);
-            }
-        }
-        return $end;
+        return $this->getEndDateForSpecifiedBooking($booking);
     }
 
     public function loadUnsettledAmount() {
@@ -3328,6 +3351,17 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $start = strtotime($room->date->start);
             }
         }
+        
+        
+        foreach($booking->orderIds as $orderId) {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            foreach($order->cart->items as $item) {
+                if($start == null || $start > strtotime($item->startDate)) {
+                    $start = strtotime($item->startDate);
+                }
+            }
+        }
+        
         return $start;
     }
 
@@ -3436,6 +3470,39 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
     public function showDeletedRooms() {
         return false;
+    }
+
+    public function getEndDateForSpecifiedBooking($booking) {
+        $end = null;
+        foreach($booking->rooms as $room) {
+            if($end == null || $end < strtotime($room->date->end)) {
+                $end = strtotime($room->date->end);
+            }
+        }
+        
+        foreach($booking->orderIds as $orderId) {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            foreach($order->cart->items as $item) {
+                if($end == null || $end < strtotime($item->endDate)) {
+                    $end = strtotime($item->endDate);
+                }
+            }
+        }
+        
+        if(!$end) {
+            $end = time();
+        }
+        
+        return $end;
+    }
+
+    public function getConfig() {
+        if(isset($this->config) && $this->config) {
+            return $this->config;
+        }
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $this->config = $config;
+        return $this->config;
     }
 
 }

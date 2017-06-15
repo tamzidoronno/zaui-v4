@@ -415,6 +415,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Calendar calStart = Calendar.getInstance();
             
             HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
+            Double defaultPrice = pricesForType.get("default");
             Double price = pricesForType.get("default");
             
             for(int i = 0;i < (365*2); i++) {
@@ -433,10 +434,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
                 if(price != null) {
                     list.add(price.intValue());
+                } else if(defaultPrice != null) {
+                    list.add(defaultPrice);
                 }
                 calStart.add(Calendar.DAY_OF_YEAR, 1);
             }
-            table.put(rdata.wubookroomid + "", list);
+            if(!list.isEmpty()) {
+                table.put(rdata.wubookroomid + "", list);
+            }
         }
         
         Vector params = new Vector();
@@ -448,6 +453,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
         Vector result = (Vector) client.execute("update_plan_prices", params);
         if((Integer)result.get(0) != 0) {
+            logText("Where not able to update prices:" + result.get(1));
             return "Failed to update price, " + result.get(1);
         }
         
@@ -1535,6 +1541,43 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(addoncount > 0) {
             room.addonsToAdd.put(item.productId, addoncount);
         }
+    }
+
+    public boolean forceUpdateOnAvailability(PmsBookingRooms room) {
+        Integer rid = -1;
+        for(WubookRoomData rdata : wubookdata.values()) {
+            if(rdata.bookingEngineTypeId.equals(room.bookingItemTypeId)) {
+                rid = rdata.wubookroomid;
+            }
+        }
+        
+        boolean forceUpdateDone = false;
+        if(rid == null || rid == -1) {
+            logPrint("Rid not found for room type: " + room.bookingItemTypeId);
+            return forceUpdateDone;
+        }
+        Calendar start = Calendar.getInstance();
+        start.setTime(room.date.start);
+        while(true) {
+            String roomDateString = convertToDayString(start.getTime());
+            
+            for(WubookAvailabilityField field : lastAvailability.lastAvailabilityUpdated) {
+                if(field.roomId.equals(rid) && field.dateAsString.equals(roomDateString)) {
+                    logPrint("Update availability for room: " + field.dateAsString + " for room : " + rid);
+                    field.availability = -1;
+                    setAvailabilityChanged();
+                    forceUpdateDone = true;
+                }
+            }
+
+            
+            start.add(Calendar.DAY_OF_YEAR, 1);
+            if(start.getTime().after(room.date.end)) {
+                break;
+            }
+        }
+        
+        return forceUpdateDone;
     }
 
 }

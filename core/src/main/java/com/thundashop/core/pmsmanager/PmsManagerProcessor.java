@@ -85,10 +85,11 @@ public class PmsManagerProcessor {
                 continue;
             }
             boolean save = false;
+            
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 int start = hoursAheadCheck;
                 int end = maxAheadCheck;
-                if(started) {
+                if(started) { 
                     start = end * -1;
                     end = end * -1;
                 }
@@ -116,6 +117,7 @@ public class PmsManagerProcessor {
             if (save) {
                 manager.saveBooking(booking);
             }
+
         }
     }
 
@@ -709,7 +711,7 @@ public class PmsManagerProcessor {
             if(booking.payedFor != payedfor || forceSend) {
                 booking.payedFor = payedfor;
                 if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
-                    if((payedfor == true || forceSend) && booking.orderIds.size() == 1) {
+                    if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay)) {
                         manager.doNotification("booking_completed", booking.id);
                         booking.notificationsSent.add("booking_completed");
                         needSaving = true;
@@ -927,10 +929,10 @@ public class PmsManagerProcessor {
                    continue; 
                 }
                 if(order.payment != null && order.payment.paymentType != null && 
-                        order.payment.paymentType.contains("invoice")) {
+                        (!order.payment.paymentType.toLowerCase().contains("dibs") &&
+                        !order.payment.paymentType.toLowerCase().contains("epay"))) {
                     continue;
                 }
-                
                 
                 String key = "autosendmissingpayment_" + book.id;
                 if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {

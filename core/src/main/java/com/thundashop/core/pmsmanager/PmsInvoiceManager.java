@@ -392,7 +392,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             for(Integer days : plan.longTermDeal.keySet()) {
                 if(days <= room.getNumberOfNights() && daysUsed < days) {
                     percentages = plan.longTermDeal.get(days);
-                    System.out.println("Percentages : " + percentages + " days: " + days);
                 }
             }
         }
@@ -415,6 +414,41 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private boolean isNotRecurring(CartItem item) {
         return item.getProduct().isNotRecurring;
+    }
+
+    @Override
+    public Order removeDuplicateOrderLines(Order order) {
+        PmsOrderCleaner cleaner = new PmsOrderCleaner(order);
+        return cleaner.cleanOrder();
+    }
+ 
+    public boolean isRoomPaidForWithBooking(String pmsRoomId, PmsBooking booking) {
+        if(booking == null) {
+            return false;
+        }
+        if(booking.payedFor) {
+            return true;
+        }
+        
+        boolean payedfor = true;
+        boolean hasOrders = false;
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrderSecure(orderId);
+            if(!hasRoomItems(pmsRoomId, order)) {
+                continue;
+            }
+            hasOrders = true;
+            if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                continue;
+            }
+            payedfor = false;
+        }
+        
+        if(!hasOrders && pmsManager.getConfigurationSecure().markBookingsWithNoOrderAsUnpaid) {
+            payedfor = false;
+        }
+        
+        return payedfor;
     }
 
     class BookingOrderSummary {
@@ -482,32 +516,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     @Override
     public boolean isRoomPaidFor(String pmsRoomId) {
         PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
-        if(booking == null) {
-            return false;
-        }
-        if(booking.payedFor) {
-            return true;
-        }
-        
-        boolean payedfor = true;
-        boolean hasOrders = false;
-        for(String orderId : booking.orderIds) {
-            Order order = orderManager.getOrderSecure(orderId);
-            if(!hasRoomItems(pmsRoomId, order)) {
-                continue;
-            }
-            hasOrders = true;
-            if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                continue;
-            }
-            payedfor = false;
-        }
-        
-        if(!hasOrders && pmsManager.getConfigurationSecure().markBookingsWithNoOrderAsUnpaid) {
-            payedfor = false;
-        }
-        
-        return payedfor;
+        return isRoomPaidForWithBooking(pmsRoomId, booking);
     }
     
     private boolean hasRoomItems(String pmsRoomId, Order order) {
@@ -709,11 +718,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                     String userName = userManager.getUserById(booking.userId).fullName;
                     
-                    if(room.invoicedTo.after(invoicedTo)) {
+                    if(room.invoicedTo != null && !isSameDay(room.invoicedTo, invoicedTo)) {
                         String msg = item + " marked as invoiced to: " + new SimpleDateFormat("dd.MM.yyyy").format(room.invoicedTo) + ", but only invoiced to " + new SimpleDateFormat("dd.MM.yyyy").format(invoicedTo)  + " (" + incordertouse + ")" + ", user:" + userName;
                         result.add(msg);
                         room.invoicedTo = invoicedTo;
                         pmsManager.saveBooking(booking);
+                        messageManager.sendErrorNotification(msg, null);
                     }
                 }
             }
@@ -1077,6 +1087,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {
+        pmsManager.checkAndReportPriceMatrix(booking, "when updating price matrix");
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, priceType, booking);
         double total = 0.0;
         int count = 0;
@@ -2529,6 +2540,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     toAdd.startDate = startOnMonth;
                     toAdd.endDate = endInMonth;
                     toAdd.setCount(1);
+                    toAdd.refreshCartItemId();
                     
                     newItems.add(toAdd);
                     

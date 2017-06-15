@@ -96,6 +96,17 @@ controllers.AddPickupTaskController = function($scope, datarepository, $statePar
                 className: "com.thundashop.core.trackandtrace.PickupTask",
                 rowCreatedDate: new Date(),
             }
+        } else {
+            var keyedNumber = numbers;
+            if (pickupTask.orders != null && pickupTask.orders) {
+                for (var i in pickupTask.orders) {
+                    var checkOrder = pickupTask.orders[i];
+                    if (checkOrder.referenceNumber.trim() === keyedNumber.trim()) {
+                        alert("The reference you are trying to add already exists, please go to tasks to change it");
+                        return;
+                    }
+                }
+            }
         }
         
         pickupTask.orders.push(pickupOrder);

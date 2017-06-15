@@ -75,18 +75,46 @@ getshop.mainpageController = function($scope, $state) {
     loadNames.done(function(data) {
         var names = [];
         var current = getMultilevelName();
+        var isActive = {};
+        var resolved = 0;
+        var toResolve = data.length;
+        var found = false;
         for(var key in data) {
-            if(!current) {
-                current = data[key];
-                localStorage.setItem("multilevelname", current);
-            }
-            names.push({"id": data[key], "name" : data[key]});
+            var nameToSet = data[key];
+            var isActive = getshopclient.PmsManager.isActive(nameToSet);
+            $.when(isActive, nameToSet).done(function(res, name) {
+                if(res) {
+                    names.push({"id": name, "name" : name});
+                    if(name === current) {
+                        found = true;
+                    }
+                    $scope.multilevelnames = names;
+                    $scope.$apply();
+                }
+                resolved++;
+                
+                if(toResolve == resolved) {
+                    if(names.length == 1) {
+                        $scope.hideEngineSelection = true;
+                        $scope.dataSelected = names[0].id;
+                        localStorage.setItem("multilevelname", $scope.dataSelected);
+                        $scope.multilevelnames = names;
+                        $scope.$apply();
+                    }
+                    if(found) {
+                        $scope.dataSelected = current;
+                        localStorage.setItem("multilevelname", $scope.dataSelected);
+                        $scope.$apply();
+                    } else {
+                        $scope.dataSelected = names[0].id;
+                        localStorage.setItem("multilevelname", names[0].id);
+                        $scope.$apply();
+                    }
+                    $scope.LoadConfig();
+                }
+            });
         }
-        $scope.multilevelnames = names;
-        $scope.dataSelected = current;
-        $scope.$apply();
         
-        $scope.LoadConfig();
     });
     $scope.updateMultilevelName = function(name) {
         localStorage.setItem("multilevelname", name);

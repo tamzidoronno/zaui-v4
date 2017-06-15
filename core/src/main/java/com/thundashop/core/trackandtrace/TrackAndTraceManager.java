@@ -608,6 +608,20 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     @Override
     public List<Route> moveDesitinationToPool(String routeId, String destinationId) {
         Route route = getRouteById(routeId);
+        
+        Destination destination = destinations.get(destinationId);
+        if (destination == null) {
+            finalize(route);
+            List<Route> retRoutes = new ArrayList();
+            retRoutes.add(route);
+            return retRoutes;
+        }
+        
+        if (destination.startInfo.started) {
+            throw new ErrorException(1040);
+        }
+        
+        
         if (route != null) {
             boolean removed = route.removeDestination(destinationId);
             if (removed) {
@@ -705,6 +719,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             saveObject(exportCounter);
             
             sortExportedData();
+            markAsClean(route);
         }
     }
     
@@ -712,12 +727,14 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         if (data instanceof Route) {
             ((Route)data).dirty = true;
             createExport(((Route)data));
+            ((Route)data).dirty = false;
         }
         
         if (data instanceof Destination) {
             ((Destination)data).dirty = true;
             Route route = getRouteByDestination(((Destination)data));
             createExport(route);
+            ((Destination)data).dirty = false;
         }
         
         if (data instanceof Task) {
@@ -1025,16 +1042,34 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     }
 
     @Override
-    public void markAsCompleted(String routeId, double lat, double lon) {
+    public void markAsCompletedWithTimeStamp(String routeId, double lat, double lon, Date date) {
         Route route = getRouteById(routeId);
         if (route != null) {
             route.completedInfo.completed = true;
             route.completedInfo.completedByUserId = getSession().currentUser.id;
-            route.completedInfo.completedTimeStamp = new Date();
+            route.completedInfo.completedTimeStamp = date;
             route.completedInfo.completedLat = lat;
             route.completedInfo.completedLon = lon;
             saveObjectInternal(route);
         }
+    }
+    
+    @Override
+    public boolean markAsCompletedWithTimeStampAndPassword(String routeId, double lat, double lon, Date date, String password) {
+        if (userManager.checkUserNameAndPassword(getSession().currentUser.username, password) != null
+            || userManager.checkUserNameAndPassword(getSession().currentUser.emailAddress, password) != null
+            || userManager.checkUserNameAndPassword(getSession().currentUser.cellPhone, password) != null
+            ) {
+            markAsCompletedWithTimeStamp(routeId, lat, lon, date);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    @Override
+    public void markAsCompleted(String routeId, double lat, double lon) {
+        markAsCompletedWithTimeStamp(routeId, lat, lon, new Date());
     }
 
     @Override
@@ -1210,6 +1245,27 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 .findFirst()
                 .orElse(null);
     }
+
+    private void markAsClean(Route route) {
+        route.dirty = false;
+        saveObject(route);
+        for (String destId : route.destinationIds) {
+            Destination dest = destinations.get(destId);
+            if (dest != null) {
+                dest.dirty = false;
+                saveObject(dest);
+                for (String taskId : dest.taskIds) {
+                    Task task = tasks.get(taskId);
+                    if (task != null) {
+                        task.dirty = false;
+                        saveObject(task);
+                    }
+                }
+            }
+        }
+    }
+
+    
 
     
 

@@ -144,6 +144,12 @@ public interface ITrackAndTraceManager {
     @Customer
     public void markAsCompleted(String routeId, double lat, double lon);
     
+    @Customer
+    public void markAsCompletedWithTimeStamp(String routeId, double lat, double lon, Date date);
+    
+    @Customer
+    public boolean markAsCompletedWithTimeStampAndPassword(String routeId, double lat, double lon, Date date, String password);
+    
     @Administrator
     public void checkRemovalOfRoutes();
     

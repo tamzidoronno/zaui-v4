@@ -62,6 +62,15 @@ class Menu extends \SystemApplication implements \Application {
             $this->includefile("menu");
         }
     }
+    
+    public function saveSettings() {
+        if ($_POST['data']['setting_isscrollmenu'] === "true") { 
+            $this->setConfigurationSetting("isscrollmenu", true);
+        } else {
+            $this->setConfigurationSetting("isscrollmenu", false);
+        }
+        
+    }
 
     public function renderSetup() {
         $this->includeFile("setup");

@@ -207,14 +207,14 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 
     public void sendErrorNotification(String inText, Exception ex) {
         String text = "";
-        text += "Store id: " + storeId;
+        text += "<br/><b>Message:</b> <br/>";
+        text += inText.replace("\n", "<br/>");
+        text += "<br><br>Store id: " + storeId;
         text += "<br/>Date: " + new Date();
         text += "<br/>Store email: " + getStoreEmailAddress();
         text += "<br/>Store name: " + getStoreName();
         text += "<br/>Store default address: " + getStoreDefaultAddress();
         text += "<br/>";
-        text += "<br/><b>Message:</b> <br/>";
-        text += inText.replace("\n", "<br/>");
         
         
         if (ex != null) {

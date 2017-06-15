@@ -109,7 +109,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             generateDailyPriceItems(priceMatrix, room);
             
             //Addon prices.
-            HashMap<String, List<PmsBookingAddonItem>> items = getAddonsForRoom(room);
+            HashMap<String, List<PmsBookingAddonItem>> items = getUnpaidAddonsForRoom(room);
             for(String productId : items.keySet()) {
                 generateAddonsCostForProduct(items.get(productId), room, true);
                 generateAddonsCostForProduct(items.get(productId), room, false);
@@ -414,8 +414,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         
     }
 
-    private HashMap<String, List<PmsBookingAddonItem>> getAddonsForRoom(PmsBookingRooms room) {
-        
+    private HashMap<String, List<PmsBookingAddonItem>> getUnpaidAddonsForRoom(PmsBookingRooms room) {
         HashMap<String, PmsBookingAddonItem> addonsToAdd = new HashMap();
         for(PmsBookingAddonItem item : room.addons) {
             if(!dateIsFiltered(item.date)) {
@@ -425,7 +424,10 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         
         if(room.deleted && !currentBooking.nonrefundable) { 
-            addonsToAdd = new HashMap();
+            for(PmsBookingAddonItem item : addonsToAdd.values()) {
+                item.price = 0.0;
+            }
+            
             //Include non refundable addons.
             for(PmsBookingAddonItem item : room.addons) {
                 if(!dateIsFiltered(item.date)) {
@@ -462,6 +464,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                             if(toCheck == null || toCheck.price == null) {
                                 continue;
                             }
+                            
                             PmsBookingAddonItem addonOnRoom = null;
                             if(addonsToAdd.containsKey(addonAlreadyBilled.addonId)) {
                                 addonOnRoom = addonsToAdd.get(addonAlreadyBilled.addonId);
@@ -502,11 +505,25 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         if(addonAlreadyBilled == null || addonAlreadyBilled.count == null || addonAlreadyBilled.price == null) {
             return;
         }
-        double totalBilled = addonAlreadyBilled.count * addonAlreadyBilled.price;
-        double totalOnRoom = addonOnRoom.count * addonOnRoom.price;
-        double newPrice = (totalOnRoom - totalBilled) / addonOnRoom.count;
-        addonOnRoom.price = newPrice;
+        if(addonOnRoom == null || addonOnRoom.count == null || addonOnRoom.price == null) {
+            return;
+        }
         
+        if(addonOnRoom.count >= addonAlreadyBilled.count && addonAlreadyBilled.price.equals(addonOnRoom.price)) {
+            addonOnRoom.count -= addonAlreadyBilled.count;
+        } else {
+            double totalBilled = addonAlreadyBilled.count * addonAlreadyBilled.price;
+            double totalOnRoom = addonOnRoom.count * addonOnRoom.price;
+            
+            double newPrice = 0;
+            
+            if (addonOnRoom.count != null && !addonOnRoom.count.equals(0)) {
+                newPrice = (totalOnRoom - totalBilled) / addonOnRoom.count;
+            }
+            
+            addonOnRoom.price = newPrice;
+        
+        }
     }
 
     private boolean dateIsFiltered(Date dayToIterate) {

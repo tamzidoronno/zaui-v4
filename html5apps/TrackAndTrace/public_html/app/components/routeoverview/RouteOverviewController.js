@@ -52,7 +52,7 @@ controllers.RouteOverviewController = function($scope, datarepository, $rootScop
             
             $scope.destination.startInfo.lon = position.coords.longitude;
             $scope.destination.startInfo.lat = position.coords.latitude;  
-            $scope.$apply();
+            $scope.$evalAsync();
 
             $api.getApi().TrackAndTraceManager.markAsArrived($scope.destination.id, new Date(), position.coords.longitude, position.coords.latitude);
             

@@ -34,6 +34,7 @@ switch($config->bookingProfile) {
 }
 $headers['price'] = "Price";
 $headers['state'] = "State";
+$headers['invoicedto'] = "Invoiced to";
 
 if(!isset($filter->sorting)) {
     $filter->sorting = "regdate";
@@ -126,10 +127,9 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
     <?php
     $tableArray = array();
     foreach((array)$rooms as $room) {
-        $booking = $this->getBooking($room->bookingId);
         $comments = "";
-        if(isset($booking->comments)) {
-            foreach($booking->comments as $time => $val) {
+        if(isset($room->bookingComments)) {
+            foreach($room->bookingComments as $time => $val) {
                 $comments .= $val->comment . "<br>";
             }
         }
@@ -203,10 +203,15 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             $row['price'] = round($room->price) . "<div style='color:#aaa' title='Total cost for this room'>(" . round($room->totalCost) . ")</div>";
         }
         if(isset($filter->filterType) && $filter->filterType == "unsettled") {
-            $row['price'] = $booking->totalUnsettledAmount;
+            $row['price'] = $room->totalUnsettledAmount;
         }
         $row['state'] = $room->progressState;
         $row['stateadditional'] = "";
+        if($room->invoicedTo) {
+            $row['invoicedto'] = date("d.m.Y", strtotime($room->invoicedTo));
+        } else {
+            $row['invoicedto'] = "";
+        }
         if(sizeof($room->orderIds) == 0 && $config->requirePayments) {
             $row['stateadditional'] = "<span style='font-weight:bold; color:red;' title='No orders has been created for this booking yet'><i class='fa fa-warning'></i> orders</span>";
         }

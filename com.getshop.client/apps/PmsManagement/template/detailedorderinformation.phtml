@@ -3,6 +3,7 @@
 /* @var $order core_ordermanager_data_Order */
 $order = $this->orderToDisplay;
 $booking = $this->getSelectedBooking();
+//$order = $this->getApi()->getPmsInvoiceManager()->removeDuplicateOrderLines($this->getSelectedName(), $order);
 ?>
 <tr>
     <td colspan='70' style='padding: 5px; background-color:#fff; font-size:12px;' fororder='<?php echo $order->id; ?>'>
@@ -17,8 +18,8 @@ $booking = $this->getSelectedBooking();
         }
         foreach($toprint as $extid => $items) {
             foreach($booking->rooms as $room) {
+                $heading = "";
                 if($room->pmsBookingRoomId == $extid) {
-                    $heading = "";
                     if($room->bookingItemId) {
                         $heading .= "<span style='float:left;'>" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . " </span>";
                     }
@@ -32,12 +33,23 @@ $booking = $this->getSelectedBooking();
                     $heading .= "<div style='clear:both;'></div>";
                 }
             }
+            if(!$heading) {
+                $heading = "Not connected to any room connect to: ";
+                foreach($booking->rooms as $room) {
+                    $heading .= "<a class='connectItemOnsOrderToRoom' roomid='".$room->pmsBookingRoomId."' orderid='".$order->id."'>" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . " </a>";
+                }
+            }
+            
             echo "<div style='border: solid 1px #bbb; text-align:center; font-weight:bold; padding: 5px;'>" . $heading . "</div>";
             echo "<div style='border: solid 1px #bbb;border-top: 0px; padding: 10px; margin-bottom: 10px;'>";
             foreach($items as $item) {
                 /* @var $item core_cartmanager_data_CartItem */
-                echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->startDate)) . " - </span> ";
-                echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->endDate)) . "</span> ";
+                if(isset($item->startDate) && $item->startDate) {
+                    echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->startDate)) . " - </span> ";
+                }
+                if(isset($item->endDate) && $item->endDate) {
+                    echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->endDate)) . "</span> ";
+                }
                 echo "<span style='display:inline-block; width: 300px;'>" . $item->product->name . "</span>" ;
                 echo "<span style='display:inline-block; width: 50px;'>" . @$item->product->additionalMetaData . "</span> " ;
                 echo "<span style='display:inline-block; width: 200px;'>" .@$item->product->metaData . "</span> " ;
@@ -46,6 +58,14 @@ $booking = $this->getSelectedBooking();
                 echo "" . round($item->product->price);
                 echo "</span><br>";
             }
+//            echo "<pre>";
+//            foreach($items as $item) {
+//                echo $item->product->externalReferenceId . "<br>";
+//                print_r($item->priceMatrix);
+//                print_r($item->itemsAdded);
+//                echo "<hr>";
+//            }
+//            echo "</pre>";
             echo "</div>";
         }
         echo "<b>Note to order:</b><br>";
@@ -54,4 +74,5 @@ $booking = $this->getSelectedBooking();
         
         ?>
     </td>
+
 </tr>

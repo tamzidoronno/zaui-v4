@@ -347,11 +347,16 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                 }
                 getShopPullService.markMessageAsReceived(msg.id, storeId);
             }
+            if (sentPollFailed) {
+                messageManager.sendMail("post@getshop.com", "post@getshop.com", "Pullserver", "Back online again", "post@getshop.com", "post@getshop.com");
+            }
             sentPollFailed = false;
         } catch (Exception ex) {
-            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed to fetch from pull server", "Is pull server down: " + ex.getMessage(), "post@getshop.com", "post@getshop.com");
-            sentPollFailed = true;
-            logPrintException(ex);
+            if (!sentPollFailed) {
+                messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed to fetch from pull server", "Is pull server down: " + ex.getMessage(), "post@getshop.com", "post@getshop.com");
+                sentPollFailed = true;
+                logPrintException(ex);
+            }
         }
     }
 

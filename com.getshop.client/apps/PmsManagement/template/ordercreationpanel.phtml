@@ -9,6 +9,25 @@ foreach($cart->items as $item) {
     $toprint[] = $item->product->externalReferenceId;
 }
 
+echo "<div style='margin-top: 30px; border-bottom: solid 1px; padding-bottom: 10px;'><b>Step 1/2 - What to add to the order</b>";
+$products = $this->getApi()->getProductManager()->getAllProductsLight();
+?>
+
+    <span style="clear:both; float:right;" gstype='form' method='addProductToCart'>
+        <input type='hidden' gsname='bookingid' value='<?php echo $booking->id; ?>'>
+        <span style='text-align:left;'>
+            <select gsname='productid' id="selectproducttoadd">
+                <?php
+                foreach($products as $product) {
+                    echo "<option value='".$product->id."'>" . $product->name . "</option>";
+                }
+                ?>
+            </select>
+        </span>
+        <input type='button' value='Add product' class='addproducttocart'>
+    </span>
+<?php
+echo "</div>";
 echo "<br>";
 echo "<span class='roomselectionbtn selectall'>All rooms</span>";
 foreach($booking->rooms as $room) {
@@ -30,11 +49,11 @@ foreach($booking->rooms as $room) {
 echo "<br>";
 
 
-$this->includeFile("newordercreationpanelinpreview");
-echo "<br><br>";
 echo "<div class='ordercreationpreview'>";
 $this->loadCartItems();
 echo "</div>";
+echo "<div style='border-bottom: solid 1px;margin-top: 30px; padding-bottom: 10px;'><b>Step 2/2 - Customer details</b></div>";
+$this->includeFile("newordercreationpanelinpreview");
 ?>
 
 <style>

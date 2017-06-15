@@ -968,8 +968,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking == null) {
             return "Booking does not exists";
         }
+        Date now = new Date();
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
+            if(now.before(room.date.start) || room.isSameDay(room.date.start, now)) {
+                split = false;
+            }
             return setBookingItemAndDate(roomId, itemId, split, room.date.start, room.date.end);
         }catch(Exception e) {
             return e.getMessage();

@@ -251,8 +251,8 @@ public class PmsManagerProcessor {
                         }
                     }
                 }
-                
-                if (room.isStarted() && !room.isEnded()) {
+                 
+               if (room.isStarted() && !room.isEnded()) {
                     boolean payedfor = manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
                     boolean grantEven = manager.getConfigurationSecure().grantAccessEvenWhenNotPaid;
                     if(!payedfor && (grantEven && booking.isBookedAfterOpeningHours()) || booking.forceGrantAccess) {

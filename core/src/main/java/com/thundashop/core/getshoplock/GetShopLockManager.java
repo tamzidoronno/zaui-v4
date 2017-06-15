@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.thundashop.core.getshoplock;
 
 import com.getshop.scope.GetShopSession;
@@ -189,6 +184,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
 
     @Override
     public void saveLock(GetShopDevice lock) {
+        if(lock.isLock()) {
+            finalizeLock(lock);
+        }
         saveObject(lock);
         devices.put(lock.id, lock);
     }
@@ -333,6 +331,21 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     public List<GetShopDevice> getAllLocksCached(String serverSource) {
         doUpdateLockList = false;
         return getAllLocks(serverSource);
+    }
+
+    private void finalizeLock(GetShopDevice dev) {
+        boolean needSave = false;
+        for(int i = 1; i <= dev.maxNumberOfCodes; i++) {
+            if(!dev.codes.containsKey(i)) {
+                GetShopLockCode code = new GetShopLockCode();
+                code.refreshCode();
+                dev.codes.put(i, code);
+                needSave = true;
+            }
+        }
+        if(needSave) {
+            saveObject(dev);
+        }
     }
 
     class GetshopLockCodeManagemnt extends Thread {
@@ -907,18 +920,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     public void finalizeLocks() {
         for(GetShopDevice dev : devices.values()) {
             if(dev.isLock()) {
-                boolean needSave = false;
-                for(int i = 1; i <= dev.maxNumberOfCodes; i++) {
-                    if(!dev.codes.containsKey(i)) {
-                        GetShopLockCode code = new GetShopLockCode();
-                        code.refreshCode();
-                        dev.codes.put(i, code);
-                        needSave = true;
-                    }
-                }
-                if(needSave) {
-                    saveObject(dev);
-                }
+                finalizeLock(dev);
             }
         }
     }

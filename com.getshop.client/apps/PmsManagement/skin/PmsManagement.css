@@ -4,8 +4,17 @@
 .PmsManagement .secondary_text { color:#aaa; font-size: 12px; margin-top: 2px; }
 .PmsManagement .bookinginfo h2 { border-bottom: solid 1px #efefef; padding-bottom: 5px; }
 .PmsManagement .errorlist { font-size: 16px; color: red; padding-left: 20px; }
-.PmsManagement .roomsbookedactions { top: 10px; background-color:#e1f2fb; position: relative; padding: 10px; box-sizing: border-box; width: 100%; display:block; }
+.PmsManagement .roomsbookedactions { margin: 10px 0 10px 0; background-color:#e1f2fb; position: relative; padding: 10px; box-sizing: border-box; width: 100%; display:block; }
 .PmsManagement .roomsbookedactions .fa { position: absolute; left: 14px; top: -12px; color:#CAE8EA; }
+.PmsManagement .pmsbutton2{
+    background-color: #146da6;
+    padding: 7px 7px 5px 7px;
+    display: inline-block;
+    border-radius: 2px;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 5px;
+}
 .PmsManagement .showorderbutton { color: blue; cursor:pointer; }
 .PmsManagement .bookinginfo a { color: blue; }
 .PmsManagement .guestrow input { width: 20%; float:left; }
@@ -341,6 +350,25 @@
 .PmsManagement .managementviewinput::-moz-placeholder {color: #2885c0;}
 .PmsManagement .managementviewinput:-ms-input-placeholder {color: #2885c0;}
 /*End of search*/
-@media only all and (max-width: 880px){
-    
+
+.PmsManagement .roomsbookedAddToBookingline{
+    display: inline-block;
+    box-sizing:border-box;
+    text-align: center;
+    background-color: #aed5eb;
+    width: 100%;
+    padding:2px;
+}
+.PmsManagement .roomsbookedAddToBookingline input,
+.PmsManagement .roomsbookedAddToBookingline select{
+    padding:6px 5px 5px 5px;
+    height: 19px;
+    border:none;
+    background-color:#fff;
+    color:#555;
+    margin:0 2px 0 2px;
+}
+.PmsManagement .roomsbookedAddToBookingline select{
+    height:30px;
+    padding-top:5px;
 }

@@ -21,6 +21,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLine;
 import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.AddonsInclude;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.Administrator;
@@ -360,6 +361,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             pmsInvoiceManager.updateAddonsByDates(room);
             pmsInvoiceManager.updatePriceMatrix(booking, room, Integer.SIZE);
+            addDiscountAddons(room, booking);
 
             room.count = totalDays;
             setPriceOnRoom(room, true, booking);
@@ -6065,6 +6067,73 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return false;
+    }
+
+    private void addDiscountAddons(PmsBookingRooms room, PmsBooking booking) {
+        if(booking.couponCode == null || booking.couponCode.isEmpty()) {
+            return;
+        }
+        
+        Coupon coupon = cartManager.getCoupon(booking.couponCode);
+        if(coupon == null) {
+            return;
+        }
+        String typeId = room.bookingItemTypeId;
+        String productId = null;
+        if(typeId != null) {
+            BookingItemType type = bookingEngine.getBookingItemType(typeId);
+            if(type != null) {
+                productId = type.productId;
+            }
+        }
+        
+        if(!cartManager.couponIsValid(booking.couponCode, room.date.start, room.date.end, productId)) {
+            return;
+        }
+        
+        List<PmsBookingAddonItem> toRemove = new ArrayList();
+        for(PmsBookingAddonItem remove : room.addons) {
+            if(remove.productId.equals(productId)) {
+                toRemove.add(remove);
+            }
+        }
+        room.addons.removeAll(toRemove);
+        
+        for(AddonsInclude inc : coupon.addonsToInclude) {
+            List<PmsBookingAddonItem> items = createAddonToAddFromProductId(inc.productId, room);
+            for(PmsBookingAddonItem item : items) {
+                item.isIncludedInRoomPrice = inc.includeInRoomPrice;
+            }
+            room.addons.addAll(items);
+        }
+    }
+
+    private List<PmsBookingAddonItem> createAddonToAddFromProductId(String productId, PmsBookingRooms room) {
+        List<PmsBookingAddonItem> res = new ArrayList();
+        PmsConfiguration config = getConfigurationSecure();
+        Date toSet = room.date.start;
+        
+        for(PmsBookingAddonItem item : config.addonConfiguration.values()) {
+            if(item.productId.equals(productId)) {
+                if(item.isSingle) {
+                    if(item.atEndOfStay) {
+                        toSet = room.date.end;
+                    }
+                    res.add(createAddonToAdd(item, toSet));
+                } else {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(room.date.start);
+                    while(true) {
+                        res.add(createAddonToAdd(item, cal.getTime()));
+                        cal.add(Calendar.DAY_OF_YEAR, 1);
+                        if(cal.getTime().after(room.date.end)) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return res;
     }
 
 }

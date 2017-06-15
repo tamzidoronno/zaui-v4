@@ -14,6 +14,7 @@ import org.mongodb.morphia.annotations.Transient;
 
 public class PmsBookingAddonItem extends TranslationHandler implements Serializable {
 
+
     public static class AddonTypes {
         public static Integer BREAKFAST = 1;
         public static Integer PARKING = 2;
@@ -43,6 +44,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     List<String> includedInBookingItemTypes = new ArrayList();
     public String addedBy;
     public List<PmsBookingAddonItemValidDateRange> validDates = new ArrayList();
+    public boolean atEndOfStay;
     
     Map<String, String> variations = new HashMap();
     String description;

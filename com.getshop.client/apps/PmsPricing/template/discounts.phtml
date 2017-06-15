@@ -20,6 +20,7 @@ if(sizeof($coupons) == 0) {
         <th align='left'>Type</th>
         <th align='left'>Description</th>
         <th align='left' width='80'>Restriction</th>
+        <th align='left' width='10'></th>
         <th align='left' width='80'>Addons</th>
         <th align='right'>Channel</th>
     </tR>
@@ -27,6 +28,12 @@ if(sizeof($coupons) == 0) {
     foreach($coupons as $coupon) {
         if($coupon->priceCode != $this->getSelectedPricePlan()) {
             continue;
+        }
+        
+        $text = "";
+        foreach($coupon->addonsToInclude as $toInclude) {
+            $product = $this->getApi()->getProductManager()->getProduct($toInclude->productId);
+            $text .= $product->name . ", ";
         }
         echo "<tr>";
         echo "<td><i class='fa fa-trash-o' gstype='clicksubmit' method='removeCoupon' gsvalue='".$coupon->id."' gsname='id' style='cursor:pointer;'</i> </td>";
@@ -47,8 +54,9 @@ if(sizeof($coupons) == 0) {
         echo "</td>";
         echo "<td style='position:relative;'>";
         echo "<span class='addaddonsinludepanel'></span>";
-        echo "<i class='fa fa-edit loadaddonstoinclude' style='cursor:pointer;'  data-couponid='".$coupon->id."'></i> ";
+        echo "<i class='fa fa-edit loadaddonstoinclude' style='cursor:pointer;'  data-couponid='".$coupon->id."' style='float:left;'></i>";
         echo "</td>";
+        echo "<td><span style='width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;' title='$text'>$text</span></td>";
         echo "<td align='right'>";
         echo "<select class='changechanneloncoupon' couponid='".$coupon->id."'>";
         echo "<option value=''>Connect to channel</option>";

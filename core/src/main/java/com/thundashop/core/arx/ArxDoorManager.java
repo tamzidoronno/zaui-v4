@@ -84,8 +84,8 @@ public class ArxDoorManager implements IDoorManager {
             return "";
         }
         
-        if(arxHost.contains(":5003")) {
-            address = address.replace("5002", "5003");
+        if(arxHost.contains(":")) {
+            address = address.replace(":5002", "");
         }
         
         return connection.httpLoginRequest(address, username, password, content);

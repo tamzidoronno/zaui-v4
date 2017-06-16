@@ -95,7 +95,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->markRoomAsCleaned($this->getSelectedName(), $room->bookingItemId);
         $this->includefile("additionalinformationforroom");
     }
-    
+        public function markRoomCleanedwithoutlog() {
+        $room = $this->getSelectedPmsRoom();
+        $this->getApi()->getPmsManager()->markRoomAsCleanedWithoutLogging($this->getSelectedName(), $room->bookingItemId);
+        $this->includefile("additionalinformationforroom");
+    }
     public function forceBlockAccess() {
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
         foreach($booking->rooms as $room) {

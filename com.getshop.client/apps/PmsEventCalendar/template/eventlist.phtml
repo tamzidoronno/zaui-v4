@@ -71,9 +71,12 @@ foreach($entries as $eventEntry) {
             echo "</div>";
             
             echo nl2br(trim($shortDesc)) . "<br>";
-            if(isset($eventEntry->category)) {
-                echo "<span class='cat'>" . $eventEntry->category . "</span>";
+            if(count($cats)> 1){
+                if(isset($eventEntry->category)){
+                    echo "<span class='cat'>" . $eventEntry->category . "</span>";
+                }
             }
+            
             echo "<span class='arrangedby'>&nbsp;Arrangør: " . $eventEntry->arrangedBy . "</span>";
             echo "<br><br>";
             echo "</td>";

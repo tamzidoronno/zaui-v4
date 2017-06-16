@@ -220,9 +220,6 @@ public class PmsManagerProcessor {
                     if(room.blocked) {
                         continue;
                     }
-                } else {
-                    room.forceUpdateLocks = false;
-                    manager.saveBooking(booking);
                 }
 
                 if (room.guests.isEmpty() || room.guests.get(0).name == null) {
@@ -254,8 +251,8 @@ public class PmsManagerProcessor {
                         }
                     }
                 }
-                
-                if (room.isStarted() && !room.isEnded()) {
+                 
+               if (room.isStarted() && !room.isEnded()) {
                     boolean payedfor = manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
                     boolean grantEven = manager.getConfigurationSecure().grantAccessEvenWhenNotPaid;
                     if(!payedfor && (grantEven && booking.isBookedAfterOpeningHours()) || booking.forceGrantAccess) {
@@ -266,6 +263,7 @@ public class PmsManagerProcessor {
                             room.addedToArx = true;
                             manager.markRoomAsDirty(room.bookingItemId);
                             save = true;
+                            room.forceUpdateLocks = false;
                             if(notifyRoomAddedToArx(room.cardformat)) {
                                 manager.doNotification("room_added_to_arx", booking, room);
                             }

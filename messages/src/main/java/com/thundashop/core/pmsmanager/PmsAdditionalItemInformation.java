@@ -51,6 +51,11 @@ public class PmsAdditionalItemInformation extends DataCommon {
         cleanedByUser.put(cleaned.getTime(), userId);
     }
     
+    public void markCleanedWithoutLogging() {
+        lastCleaned = new Date();
+        isClean = true;
+    }
+    
     public void markDirty() {
         lastUsed = new Date();
     }

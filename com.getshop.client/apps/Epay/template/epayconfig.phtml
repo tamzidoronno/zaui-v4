@@ -58,6 +58,18 @@ $apipassword = $this->getConfigurationSetting("apipassword");
         </div>
         
         <div class="textfield gss_setting"  id="testmode">
+               <span class="title"><?php echo $this->__f("Supports ssl callbacks?"); ?></span>
+               <div class="gss_onoff" gs_model="epaymodel" gs_model_attr="hasssl">
+                   <?
+                   $class = $this->getConfigurationSetting("hasssl") == "true" ? "fa-toggle-on" : "fa-toggle-off";
+                   ?>
+                   <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+               </div>
+               <div class="description">
+                   <?php echo $this->__w("Can the end user be redirected to a ssl enabled page?"); ?>
+               </div>
+        </div>
+        <div class="textfield gss_setting"  id="testmode">
                <span class="title"><?php echo $this->__f("Test mode"); ?></span>
                <div class="gss_onoff" gs_model="epaymodel" gs_model_attr="testmode">
                    <?

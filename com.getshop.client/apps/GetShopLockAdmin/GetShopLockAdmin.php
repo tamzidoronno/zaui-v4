@@ -44,6 +44,7 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
             }
             $lock->needPriority = true;
             $lock->codes = $newarray;
+            $lock->maxNumberOfCodes = $_POST['data']['maxnumber'];
 
             $this->getApi()->getGetShopLockManager()->saveLock($this->getSelectedName(), $lock);
         }
@@ -94,6 +95,7 @@ class GetShopLockAdmin extends \WebshopApplication implements \Application {
                 echo "</tr>";
             }
             echo "</table>";
+            echo "<br>Max number of codes: <input type='number' gsname='maxnumber' style='width: 30px;' value='".$lock->maxNumberOfCodes."'>";
             echo "<br><br>";
             echo "<br><b>WARNING: This has to be handled with, care.. if you are unsure what you are doing, please contact GetShop support team.</b>";
             echo "<br><br>";

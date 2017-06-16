@@ -968,8 +968,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking == null) {
             return "Booking does not exists";
         }
+        Date now = new Date();
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
+            if(now.before(room.date.start) || room.isSameDay(room.date.start, now)) {
+                split = false;
+            }
             return setBookingItemAndDate(roomId, itemId, split, room.date.start, room.date.end);
         }catch(Exception e) {
             return e.getMessage();
@@ -1846,33 +1850,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public void markRoomAsCleaned(String itemId) {
-        if(getConfiguration().whenCleaningEndStayForGuestCheckinOut) {
-            endStay(itemId);
-        }
-        
+        markRoomCleanInternal(itemId, true);
+    }
+    
+    @Override
+    public void markRoomAsCleanedWithoutLogging(String itemId) {
         PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
-        Date start = new Date();
-        Calendar end = Calendar.getInstance();
-        end.setTime(start);
-        boolean bookingStartingToday = bookingEngine.hasBookingsStartingBetweenTime(start, end.getTime(), itemId);
-        boolean itemInUse = bookingEngine.itemInUseBetweenTime(start, end.getTime(), itemId);
-
-        if (bookingStartingToday || !itemInUse) {
-            //Only mark room cleaned if a new booking is 
-            forceMarkRoomAsCleaned(itemId);
-        } else {
-            additional.addCleaningDate();
-        }
+        additional.markCleanedWithoutLogging();
         saveAdditionalInfo(additional);
-
-        String logText = "Marked room as cleaned, item in use: ";
-        if (itemInUse) {
-            logText += " in use";
-        } else {
-            logText += " not in use";
-        }
-        logEntry(logText, null, additional.itemId);
-        processor();
     }
 
     void markRoomAsDirty(String bookingItemId) {
@@ -6136,6 +6121,36 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return res;
+    }
+
+    private void markRoomCleanInternal(String itemId, boolean logCleaning) {
+        if(getConfiguration().whenCleaningEndStayForGuestCheckinOut) {
+            endStay(itemId);
+        }
+        
+        PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
+        Date start = new Date();
+        Calendar end = Calendar.getInstance();
+        end.setTime(start);
+        boolean bookingStartingToday = bookingEngine.hasBookingsStartingBetweenTime(start, end.getTime(), itemId);
+        boolean itemInUse = bookingEngine.itemInUseBetweenTime(start, end.getTime(), itemId);
+
+        if (bookingStartingToday || !itemInUse) {
+            //Only mark room cleaned if a new booking is 
+            forceMarkRoomAsCleaned(itemId);
+        } else {
+            additional.addCleaningDate();
+        }
+        saveAdditionalInfo(additional);
+
+        String logText = "Marked room as cleaned, item in use: ";
+        if (itemInUse) {
+            logText += " in use";
+        } else {
+            logText += " not in use";
+        }
+        logEntry(logText, null, additional.itemId);
+        processor();
     }
 
 }

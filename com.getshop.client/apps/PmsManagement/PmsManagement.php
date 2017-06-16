@@ -3050,11 +3050,51 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $row[] = round($val, 2);
             
             $sortedMatrix[] = $row;
+        } 
+        
+        $tmpHeader = $sortedMatrix['header'];
+        $finalHeader = array();
+        foreach($tmpHeader as $idx => $val) {
+            $finalHeader[] = $val;
         }
+        $sortedMatrix['header'] = $finalHeader;
+        $columsToRemove = array();
+        $colLength = sizeof($sortedMatrix[0]);
+        for($i = 1; $i < $colLength; $i++) {
+            $total = 0;
+            foreach($sortedMatrix as $day => $row) {
+                if($day == "header") {
+                    continue;
+                }
+                if(@is_numeric($row[$i]) && sizeof($row) == $colLength) {
+                    $total += $row[$i];
+                    if($i == 0) {
+                        echo "dd: " . $row[$i] . "<bR>";
+                    }
+                }
+            }
+            if($total == 0) {
+                $columsToRemove[] = $i;
+            }
+        }
+        
+        $columsToRemove = array_reverse($columsToRemove);
+        foreach($columsToRemove as $col) {
+            $this->delete_col($sortedMatrix, $col);
+        }
+        
         
         return $sortedMatrix;
     }
 
+    function delete_col(&$array, $key) {
+        return array_walk($array, function (&$v, $array) use ($key) {
+            if(sizeof($v) > 2) {
+                unset($v[$key]);
+            }
+        });
+    }
+    
     public function setPaymentMethodFilter() {
         $this->setIncomeFilter($_POST['data']['type']);
     }

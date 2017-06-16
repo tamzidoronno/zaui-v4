@@ -25,6 +25,9 @@ public interface IPmsManager {
     public void markRoomAsCleaned(String itemId);
     
     @Administrator
+    public void markRoomAsCleanedWithoutLogging(String itemId);
+            
+    @Administrator
     public void undoLastCleaning(String itemId);
     
     @Administrator

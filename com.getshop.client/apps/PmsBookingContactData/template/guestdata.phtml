@@ -7,7 +7,6 @@ $booking = $this->getCurrentBooking();
 $items = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName()));
 $prices = $this->getApi()->getPmsManager()->getPrices($this->getSelectedName(), $booking->sessionStartDate, $booking->sessionEndDate);
 $derivedPrices = $prices->derivedPrices;
-
 $j = 1;
 foreach($booking->rooms as $room) {
     $guest = new core_pmsmanager_PmsGuests();
@@ -47,6 +46,9 @@ foreach($booking->rooms as $room) {
             $extraText = "";
             if($count > 0) {
                 $extraText = "(+" . $count . "NOK)";
+            }
+            if($booking->couponCode) {
+                $extraText = "";
             }
             echo "<option value='$i' $selected>$i $extraText</option>";
         }

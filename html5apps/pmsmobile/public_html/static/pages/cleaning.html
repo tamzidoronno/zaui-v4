@@ -68,23 +68,41 @@
     </div>
 </div>
 
-    <div class='col-md-12'>
-        <br><bR><span style='font-size: 16px;'> <b>Explantions:</b></span><br><br>
-        <div class='roombox clean' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-check" ></i>&nbsp;&nbsp;&nbsp;Rooms is clean</div>
-        <div class='roombox inuse' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-ban"></i>&nbsp;&nbsp;&nbsp;Rooms is in use by long therm stay</div>
-        <div class='roombox notclean' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-warning"></i>&nbsp;&nbsp;&nbsp;Rooms is not clean</div>
-        <div class='roombox needInterval' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-refresh"></i>&nbsp;&nbsp;&nbsp;Rooms need interval cleaning</div>
+<div class='col-md-6'>
+    <br><bR><span style='font-size: 16px;'> <b>Explantions:</b></span><br><br>
+    <div class='roombox clean' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-check" ></i>&nbsp;&nbsp;&nbsp;Rooms is clean</div>
+    <div class='roombox inuse' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-ban"></i>&nbsp;&nbsp;&nbsp;Rooms is in use by long therm stay</div>
+    <div class='roombox notclean' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-warning"></i>&nbsp;&nbsp;&nbsp;Rooms is not clean</div>
+    <div class='roombox needInterval' style='text-align: left; display:block; width: 300px; padding: 5px;'><i class="fa fa-refresh"></i>&nbsp;&nbsp;&nbsp;Rooms need interval cleaning</div>
+    
+    <div class='row' style='padding: 10px;'>
+        <i class="fa fa-clock-o"></i>  Early check in, priority room.<br>
+        <i class="fa fa-home"></i> Late check out, can leave later<br>
+        <i class="fa fa-user-plus"></i> Additional bed request<br>
+        <i class="fa fa-bed"></i> Addition bed for children requested<br>
     </div>
+
+</div>
+<div class='col-md-6'>
+    <br><bR><span style='font-size: 16px;'> <b>Future view:</b></span><br><br>
+    <div>
+        <span class="col-xs-6">Date</span>
+        <span class="col-xs-2">Checkout</span>
+        <span class="col-xs-2">Interval</span>
+        <span class="col-xs-2">Total</span>
+     </div>
+    
+    <div ng-repeat="stat in cleaningstats">
+        <span class="col-xs-6">{{stat.date}}</span>
+        <span class="col-xs-2">{{stat.checkoutCleaningCount}}</span>
+        <span class="col-xs-2">{{stat.intervalCleaningCount}}</span>
+        <span class="col-xs-2">{{stat.intervalCleaningCount + stat.checkoutCleaningCount}}</span>
+    </div>
+    
+</div>
 
 
 <div class='row'><br></div>
-
-<div class='row' style='padding: 10px;'>
-    <i class="fa fa-clock-o"></i>  Early check in, priority room.<br>
-    <i class="fa fa-home"></i> Late check out, can leave later<br>
-    <i class="fa fa-user-plus"></i> Additional bed request<br>
-    <i class="fa fa-bed"></i> Addition bed for children requested<br>
-</div>
 
 <div class='additionalinfobottom row'>
     <div style='text-align:center; font-size: 20px; padding: 10px; color:#fff;'>

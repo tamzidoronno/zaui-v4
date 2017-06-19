@@ -8,6 +8,16 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
     $scope.reportPanel = false;
     $scope.defaultEnd = 12;
     
+    $scope.loadFutureCleanings = function() {
+        var start = new Date();
+        var end = new Date();
+        end.setDate(end.getDate()+7);
+        var loading = getshopclient.PmsManager.getSimpleCleaningOverview(getMultilevelName(), start,end);
+        loading.done(function(res) {
+            $scope.cleaningstats = res;
+        });
+    };
+    
     $scope.loadList = function(wtf) {
         $scope.guestList = $scope.checkInGuests;
     }
@@ -71,7 +81,6 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
     $scope.loadRooms = function() {
         var additional = getshopclient.PmsManager.getAllRoomsNeedCleaningToday(getMultilevelName());
         additional.done(function(addinfo) {
-            console.log(addinfo);
             var loadrooms = getshopclient.BookingEngine.getBookingItems(getMultilevelName());
             loadrooms.done(function(rooms) {
                 var allRoomsToPrint = [];
@@ -170,5 +179,6 @@ getshop.cleaningController = function ($scope, $state, $stateParams) {
     });
     
     $scope.loadBookingItems();
+    $scope.loadFutureCleanings();
     
 };

@@ -49,6 +49,9 @@ public interface IPmsManager {
     public List<CleaningStatistics> getCleaningStatistics(Date start, Date end);
     
     @Administrator
+    public List<SimpleCleaningOverview> getSimpleCleaningOverview(Date start, Date end);
+    
+    @Administrator
     public String generateNewCodeForRoom(String roomId);
     
     @Administrator

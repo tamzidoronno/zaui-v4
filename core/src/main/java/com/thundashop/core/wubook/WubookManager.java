@@ -95,7 +95,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return updateAvailabilityInternal(370);
     }
     
-    private boolean isWubookActive() {
+    private boolean isWubookActive() { 
         if(pmsManager.getConfigurationSecure().wubookusername == null || pmsManager.getConfigurationSecure().wubookusername.isEmpty()) {
             return false;
         }

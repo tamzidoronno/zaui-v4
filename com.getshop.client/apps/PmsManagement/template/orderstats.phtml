@@ -25,7 +25,7 @@ $filters = $this->getApi()->getPmsInvoiceManager()->getAllStatisticsFilters($thi
 
 <div class='statsorderfilter'>
 
-    <span class="pmsbutton" gstype='clicksubmit' method='setneworderstatsfilter' gsname='filtertype' gsvalue=''>Default filter</span>
+    <span class="pmsbutton3" gstype='clicksubmit' method='setneworderstatsfilter' gsname='filtertype' gsvalue=''>Default filter</span>
     <?php
     foreach((array)$filters as $filter) {
         if(!$filter->name) {
@@ -35,7 +35,7 @@ $filters = $this->getApi()->getPmsInvoiceManager()->getAllStatisticsFilters($thi
     }
     ?>
 
-<span class="pmsbutton createnewfilter">Create a filter</span>
+<span class="pmsbutton3 createnewfilter">Create a filter</span>
 
 
 <div class='orderstatsres'>

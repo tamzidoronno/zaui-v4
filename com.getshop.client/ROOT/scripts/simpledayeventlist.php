@@ -9,12 +9,12 @@ $j = 0;
 echo "<table class='bizplay_simpledayeventlist'>";
 
     foreach($lists as $list) {
-            if($j < ($_GET['page'] * 11)) {
+            if($j < (@$_GET['page'] * 11)) {
                 $j++;
                 continue;
             }
             $time = strtotime($list->date);
-            $halfhour = time()+(60*30);
+            $halfhour = time()-(60*30);
 
             if($time < $halfhour) {
                 continue;

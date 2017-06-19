@@ -51,7 +51,8 @@ if(!$room->bookingItemId) {
         $cleaningState = "Room is clean.";
         $isClean = "<i class='fa fa-check'></i>";
     } else {
-        $cleaningState = "Rooms is dirty, <span class='markroomclean' style='color:blue; cursor:pointer;'> mark as clean</span>";
+        $cleaningState = "Rooms is dirty, mark as clean <span class='markroomclean' style='color:blue; cursor:pointer;'>with logging</span> or ";
+        $cleaningState.="<span class='markroomcleanwithoutlog' style='color:blue; cursor:pointer;'>without logging</span>";
     }
     $res = (array)$addition->cleanedByUser;
     ksort($res);
@@ -157,6 +158,12 @@ if($room->addedToArx) {
 <script>
 $('.markroomclean').on('click', function() {
     var event = thundashop.Ajax.createEvent('','markRoomCleaned', $(this), { "roomid" : $(this).closest('table').attr('roomid')});
+    thundashop.Ajax.postWithCallBack(event, function(res) {
+        $('.additionalroominfobox_inner').html(res);
+    });
+});
+$('.markroomcleanwithoutlog').on('click', function() {
+    var event = thundashop.Ajax.createEvent('','markRoomCleanedwithoutlog', $(this), { "roomid" : $(this).closest('table').attr('roomid')});
     thundashop.Ajax.postWithCallBack(event, function(res) {
         $('.additionalroominfobox_inner').html(res);
     });

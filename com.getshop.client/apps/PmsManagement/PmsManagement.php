@@ -651,6 +651,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         } else {
             $this->fastAddedCode = "Unavailable";
         }
+        $this->runProcessor();
     }
     
     public function massUpdatePrices() {

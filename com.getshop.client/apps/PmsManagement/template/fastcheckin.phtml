@@ -4,9 +4,6 @@ $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelected
 $today = date("d.m.Y", (time()));
 $tomorrow = date("d.m.Y", time()+86400);
 $nowTime = date("H:i", time()-(180));
-if($this->fastAddedCode) {
-    echo "<h2 style='color:#000;'>Room has been added, code for room is: " . $this->fastAddedCode . "</h2>";
-}
 ?>
 <div gstype="form" method="fastCheckIn" class='fastcheckinform'>
     <div style="width: 100%;box-sizing: border-box;padding: 10px;">

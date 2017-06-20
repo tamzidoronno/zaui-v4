@@ -44,7 +44,14 @@ class WubookAdmin extends \WebshopApplication implements \Application {
     public function updateRoomData() {
         $curData = $this->getApi()->getWubookManager()->getWubookRoomData($this->getSelectedName());
         foreach($_POST['data'] as $id => $val) {
-            $curData->{$id}->wubookroomid = $val;
+            if(stristr($val, ";")) {
+                $splitted = explode(";", $val);
+                $curData->{$id}->wubookroomid = $splitted[0];
+                $curData->{$id}->virtualWubookRoomIds = $val;
+            } else {
+                $curData->{$id}->virtualWubookRoomIds = "";
+                $curData->{$id}->wubookroomid = $val;
+            }
         }
         $this->getApi()->getWubookManager()->saveWubookRoomData($this->getSelectedName(), $curData);
     }

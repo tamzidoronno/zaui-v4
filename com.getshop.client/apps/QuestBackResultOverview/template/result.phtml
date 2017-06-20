@@ -25,10 +25,15 @@ foreach ($results->answers as $questionId => $values) {
 
         echo "<div class='answer'>";
             if ($type == "3") {
-                krsort($values);
+                usort($values, function($a, $b) {
+                    return $a->answerDate < $b->answerDate;
+                });
                 foreach ($values as $value) {
                     if ($value->answer && !$value->reply) {
                         echo "<div class='subanswer withReply' ><div class='subanswerArea'>";
+                        if(isset($value->answerDate)){
+                            echo "<div style='padding-left:5px;color:#888;'>".$value->answerDate."</div>";
+                        }
                         $trimAnswer = trim($value->answer);
                         echo "<i class='fa fa-minus'></i><div class='answerfield'>". nl2br(htmlspecialchars($trimAnswer))."</div>";
                         

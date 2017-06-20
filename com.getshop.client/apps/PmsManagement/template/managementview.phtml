@@ -13,7 +13,7 @@ $searchtypes = $this->getSearchTypes();
         <span>
             <input type='text' gsname='start' class="start managementviewdateinput" value="<? echo date("d.m.Y", strtotime($filter->startDate)); ?>">
             <input type='text' gsname='end' class="end managementviewdateinput" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>">
-            <select class="managementviewdropdowninput filterType" gsname='filterType'>
+            <select class="managementviewdropdowninput filterType" gsname='filterType'">
                 <?php
                 foreach($searchtypes as $idx => $type) {
                     $selected = "";
@@ -113,7 +113,6 @@ $searchtypes = $this->getSearchTypes();
         $this->includeManagementViewResult();
         ?>
     </div>
-    <div style="padding: 5px;border-radius: 0 0 4px 4px; background-color:#2885c0;"></div>
 </div>
 <br>
 <br>

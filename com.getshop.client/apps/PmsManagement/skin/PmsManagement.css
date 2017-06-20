@@ -7,24 +7,6 @@
 .PmsManagement .errorlist { font-size: 16px; color: red; padding-left: 20px; }
 .PmsManagement .roomsbookedactions { margin: 10px 0 10px 0; background-color:#e1f2fb; position: relative; padding: 10px; box-sizing: border-box; width: 100%; display:block; }
 .PmsManagement .roomsbookedactions .fa { position: absolute; left: 14px; top: -12px; color:#CAE8EA; }
-.PmsManagement .pmsbutton2{
-    background-color: #146da6;
-    padding:8px 6px 8px 6px;
-    display: inline-block;
-    border-radius: 2px;
-    color: #fff;
-    cursor: pointer;
-    margin-left: 5px;
-}
-.PmsManagement .pmsbutton3{
-    color: #fff;
-    position: relative;
-    top: 5px;
-    background-color: #2885c0;
-    padding: 5px;
-    margin: 5px;
-    cursor: pointer;
-}
 .PmsManagement .showorderbutton { color: blue; cursor:pointer; }
 .PmsManagement .bookinginfo a { color: blue; }
 .PmsManagement .guestrow input { width: 20%; float:left; }
@@ -87,9 +69,6 @@
 	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica,
 	sans-serif;
 	color: #fff;
-/*	border-right: 1px solid #C1DAD7;
-	border-bottom: 1px solid #C1DAD7;
-	border-top: 1px solid #C1DAD7;*/
 	letter-spacing: 2px;
 	text-transform: uppercase;
 	text-align: center;
@@ -107,11 +86,12 @@
 }
 #informationbox.PmsManagement  th{text-align: left;background-color:#aed5eb;color: #555;border-right: 1px solid rgba(40,133,192,0.15);}
 #informationbox.PmsManagement  td{border-bottom:1px solid ;border-right: 1px solid;border-color: rgba(40,133,192,0.27);}
+#informationbox.PmsManagement td:nth-child(1) {border-left: 1px solid rgba(40,133,192,0.27);}
+#informationbox.PmsManagement td:last-child{border-right: 1px solid rgba(40,133,192,0.27);}
+#informationbox.PmsManagement .contactConfigTable td{border:0;background-color:#fff;}
 .PmsManagement table tr:nth-child(even) td {background-color: #fff;}
 .PmsManagement table tr:nth-child(odd) td {background-color: #eef9ff;}
-.PmsManagement td:nth-child(1) {border-left: 1px solid #2885c0;}
 .PmsManagement tr:nth-child(2) {background: #F5FAFA;color: #B4AA9D;}
-.PmsManagement td:last-child{border-right: 1px solid #2885c0;}
 
 .PmsManagement .pmsinput {
     font-size: 17px;
@@ -132,6 +112,24 @@
     padding: 6px 20px;
     text-decoration: none;
     text-shadow: 0px 1px 0px #2f6627;
+}
+.PmsManagement .pmsbutton2{
+    background-color: #146da6;
+    padding:8px 6px 8px 6px;
+    display: inline-block;
+    border-radius: 2px;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 5px;
+}
+.PmsManagement .pmsbutton3{
+    color: #fff;
+    position: relative;
+    top: 5px;
+    background-color: #2885c0;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
 }
 
 .PmsManagement .booking_options { text-align: right; }
@@ -225,9 +223,24 @@
 .PmsManagement .dayform { border-top: solid 1px #DDD; border-bottom: solid 1px #DDD; margin-bottom: 20px; padding-top: 10px; padding-bottom: 10px; }
 .PmsManagement .contactdatadropdown{max-width:330px;}
 
-
-.PmsManagement .managementview_booking_options{font-size: 14px;font-family: 'Arial', sans-serif;cursor: default;background-color: #d1efff;}
-.PmsManagement .managementviewbanner{display:inline-block;position: relative;box-sizing: border-box;width:100%;padding:5px;background-color:#2885c0;border-radius: 4px 4px 0 0;}
+/*New design*/
+.PmsManagement .managementview_booking_options{
+    font-size: 14px;
+    font-family: 'Arial', sans-serif;
+    cursor: default;
+    background-color: #d1efff;
+    border:1px solid #2885c0;
+    border-radius: 4px;
+    border-bottom-width: 10px;
+}
+.PmsManagement .managementviewbanner{
+    display:inline-block;
+    position: relative;
+    box-sizing: border-box;
+    width:100%;
+    padding:5px;
+    background-color:#2885c0;
+}
 .PmsManagement .managementviewdateinput{border:0;padding:7px;height: 16px;margin-right: 2px;width: 70px;}
 .PmsManagement .managementviewdropdowninput{padding: 6px;border: 0;background-color: #fff;color: #000;height: 30px;}
 .PmsManagement .manegementviewbutton{
@@ -280,6 +293,7 @@
     box-sizing: border-box;
     position: relative;
     width: 100%;
+    background-color: #fff;
 }
 .PmsManagement .roomfilternew{
     position: relative;

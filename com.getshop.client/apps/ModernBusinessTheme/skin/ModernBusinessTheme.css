@@ -1,0 +1,143 @@
+html {
+    font-family: 'Roboto', sans-serif;
+    background-color:#fff;
+    background-image: none;
+
+}
+
+hr{
+    border: 0;
+    height: 1px;
+    background: #777;
+    background-image: -webkit-linear-gradient(left, #ccc, #777, #ccc);
+    background-image:    -moz-linear-gradient(left, #ccc, #777, #ccc);
+    background-image:     -ms-linear-gradient(left, #ccc, #777, #ccc);
+    background-image:      -o-linear-gradient(left, #ccc, #777, #ccc);
+}
+
+.gs_site_main_buttons_view {
+    z-index:3;
+}
+
+.gsarea[area="body"] {
+    margin-top: 60px;
+}
+
+.gs_page_width {
+    width: 1200px;
+    margin: 0 auto;
+}
+.ContentManager {
+    color: #222;
+    font-size: 16px;
+}
+
+.gsarea[area="header"] {
+    background-color: #222;
+    border-bottom: solid 1px #333;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    background-color: 0;
+    height: 50px !important;
+    z-index: 2;
+}
+.gsarea[area="header"] .Menu {
+    margin-top: 0px;
+    text-align: right;
+}
+.gsarea[area="header"] .Menu .entry {
+    margin-left: 20px;
+    margin-right: 20px;   
+}
+
+.gsarea[area="header"] .Menu .entry.active {
+    border-bottom: solid 3px #8f8fcb !important;
+}
+.gsarea[area="header"] .Menu .entry a {
+    color: #9d9d9d;
+    font-size: 16px;
+    line-height: 60px;
+}
+
+.gsarea[area="header"] .Menu .entry a:hover {
+    color: #ccc;
+}
+.gscell_6.gsucell {
+    background: #222;
+}
+
+.Contact {
+    background-color: rgba(000,000,000,0.1);
+    padding: 20px;
+    margin: 20px;
+     border-radius: 10px;
+    border: dotted 0px #333;
+    color: #222;
+}
+
+.gsbody_inner[gspagetype="product"] .gsarea[area="body"] .ContentManager {
+    color: #000;
+}
+.gsbody_inner[gspagetype="product"] .gsarea[area="body"] {
+    margin-bottom: 20px;
+    border-solid 1px #333;
+}
+
+.gstabcontent {
+    padding: 0px;
+}
+.gsbody_inner[gspagetype="product"] .gsarea[area="body"] .gs_page_width {
+    background-color: #FFF;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+}
+
+.productbox {
+    background-color: #FFF;
+    margin-bottom: 20px;
+}
+
+.shop_button {
+    border: solid 1px #ccc;
+    background-color:#ccc;
+    border-radius: 5px;
+}
+
+.products.row_view .webshop_button_area {
+    right: 10px;
+}
+
+.ProductLists .products.grid_view .productbox { 
+    height: 415px;
+     border: dashed 1px #ddd;
+     margin-right:5px;
+     margin-left:5px;
+} 
+
+.CartManager .checkout_area {
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 20px;
+    border-radius: 10px;
+    color: #222;
+    background-color: rgba(000,000,000,0.1);
+    margin-top: 15px;
+    /*position: relative;*/
+}
+
+.CartManager .checkout_area .checkout {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    color: #333;
+    top: 0px;
+    width: 100px;
+    color: #222;
+    text-align: center;
+}
+.CartManager .checkout_area i {
+    padding-right: 10px;
+    font-size: 25px;
+}

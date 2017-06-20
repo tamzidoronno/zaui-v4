@@ -1,0 +1,165 @@
+body {
+    background: #808080;
+    
+}
+html {
+    font-family: ubuntu;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+    background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+    background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+    background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+}
+
+.gsarea[area="header"] .gsinner.gsdepth_0 {
+    background: #fff; /* Old browsers */
+    
+}
+
+.gs_page_width {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.gsinner.gsdepth_0 {
+    background-color: #FFF;
+    padding-left: 30px;
+    padding-right: 30px;
+    box-sizing: border-box;
+}
+
+.gsare[area=""] {
+    
+}
+
+.gsdepth_0.gsrow  {
+   /*background-color: rgba(255,255,255,0.1);*/
+}
+
+.gsarea[area="header"] {
+    background-color: #808080;
+}
+
+.gsarea[area="header"] .Menu {
+  text-align: center;
+  background-color:#ddd;
+  border-radius: 10px;
+}
+
+
+.gsarea[area="header"] .Menu .entry a:hover div {
+    color: #FF8C00;
+}
+.gsarea[area="header"] .Menu .entry .entries {
+    background-color: #fafafa;
+    top: 40px;
+    border-left: solid 1px #c9c9c9;
+    border-bottom: solid 1px #c9c9c9;
+    border-right: solid 1px #c9c9c9;
+    margin-left: -1px;
+    
+}
+
+.gsarea[area="header"] .Menu .entry .entries .entry div {
+    border-right: solid 0px;
+}
+
+.gsarea[area="header"] .Menu .entry:last-child a div { border-right: solid 0px; }
+
+.gsarea[area="header"] .Menu .entry a div {
+    font-size: 16px;
+    line-height: 25px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-right: solid 1px #555; 
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.gsarea[area="footer"] .gsinner.gsdepth_0 {
+    padding-top: 20px;
+}
+
+.gsarea[area="footer"] {
+    background-color: #808080;
+}
+.gsarea[area="footer"] .gsinner {
+    background-color: #DDD;  
+}
+
+.gsarea[area="header"] {
+    color: #000;
+}
+
+.CartManager .checkout_area {
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 20px;
+}
+
+.CartManager .checkout_area .checkout {
+    position: absolute;
+    right: 0px;
+    bottom: 1px;
+    color: #333;
+    top: 1px;
+    width: 100px;
+    border-left: solid 2px #555;
+    color: #FFF;
+    text-align: center;
+}
+.CartManager .checkout_area i {
+    padding-right: 10px;
+    font-size: 25px;
+}
+
+.gsarea[area="body"] .gs_margin_right {
+    padding-right: 20px;
+}
+.gsarea[area="body"] .gs_margin_left {
+    padding-left: 20px;
+}
+
+.gstabrow .gstabheader {
+    border-bottom: solid 1px #DDD;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+.gstabrow .gsinner.gsdepth_0 {
+    box-sizing: border-box;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border: solid 1px #DDD;
+}
+
+.gstabbtn {
+    border: solid 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+}
+
+.products.grid_view .productbox .image {
+    border: solid 1px #DDD;
+    background-color: #FFF;
+}
+
+.products.grid_view .productbox .webshop_button_area {
+    background: linear-gradient(to bottom, #f1f1f1, #f9f9f9)
+}
+.products.grid_view .productbox {
+    background-color: #F9f9f9;
+}
+
+.products.row_view .productbox {
+    border-bottom: solid 1px #DDD;
+}
+
+.gsarea[area="body"] .gsrow .gsinner.gsdepth_0 {
+    padding-top: 30px;
+}
+

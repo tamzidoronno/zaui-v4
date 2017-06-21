@@ -109,7 +109,7 @@ app.PmsManagement = {
     toggleManagementviewfilter : function(){
         if($('.managementviewfilter').css('display') === 'none'){
             $('.managementviewfilter').slideDown();
-            $('.managementviewfilter').css('display','inline-flex');
+            $('.managementviewfilter').css('display','inline-block');
         }
         else{
             $('.managementviewfilter').slideUp()();

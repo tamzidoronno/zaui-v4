@@ -68,7 +68,7 @@ $searchtypes = $this->getSearchTypes();
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "orderstats"){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="orderstats" gsname="type">Income report</span> 
             <span class="manegementviewfilterquickopt" onclick="$('.morefilteroptions').slideDown();">More filters</span>
             <span class='manegementviewfilterquickopt toggleColumnFilter'>Column filter</span>
-            <i class='fa fa-lemon-o' gstype="clicksubmit" method='runProcessor' gsname="id" gsvalue="somevalue" title='Manually run processor'></i>
+            <i class='fa fa-cube' style="cursor:pointer;" gstype="clicksubmit" method='runProcessor' gsname="id" gsvalue="somevalue" title='Manually run processor'></i>
             <i class="managementviewoptions fa fa-caret-down"> Options</i>
             <?php
                 $this->includefile("morefilteroptions");

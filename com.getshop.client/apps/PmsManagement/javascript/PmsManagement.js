@@ -101,11 +101,15 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .connectItemOnsOrderToRoom', app.PmsManagement.connectItemOnsOrderToRoom);
         $(document).on('keyup','.PmsManagement .changeorderdates', app.PmsManagement.changeOrderPeriode);
         $(document).on('click','.PmsManagement .managementviewoptions', app.PmsManagement.toggleManagementviewfilter);
+        $(document).on('change','.PmsManagement .managementviewdropdowninput', app.PmsManagement.submitDropdownvalueOnChange);
+    },
+    submitDropdownvalueOnChange : function(){
+        $('.manegementviewbutton.addGroupOptions').click();
     },
     toggleManagementviewfilter : function(){
         if($('.managementviewfilter').css('display') === 'none'){
             $('.managementviewfilter').slideDown();
-            $('.managementviewfilter').css('display','inline-flex');
+            $('.managementviewfilter').css('display','inline-block');
         }
         else{
             $('.managementviewfilter').slideUp()();

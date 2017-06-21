@@ -13,7 +13,7 @@ $searchtypes = $this->getSearchTypes();
         <span>
             <input type='text' gsname='start' class="start managementviewdateinput" value="<? echo date("d.m.Y", strtotime($filter->startDate)); ?>">
             <input type='text' gsname='end' class="end managementviewdateinput" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>">
-            <select class="managementviewdropdowninput filterType" gsname='filterType'>
+            <select class="managementviewdropdowninput filterType" gsname='filterType'">
                 <?php
                 foreach($searchtypes as $idx => $type) {
                     $selected = "";
@@ -68,7 +68,7 @@ $searchtypes = $this->getSearchTypes();
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "orderstats"){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="orderstats" gsname="type">Income report</span> 
             <span class="manegementviewfilterquickopt" onclick="$('.morefilteroptions').slideDown();">More filters</span>
             <span class='manegementviewfilterquickopt toggleColumnFilter'>Column filter</span>
-            <i class='fa fa-lemon-o' gstype="clicksubmit" method='runProcessor' gsname="id" gsvalue="somevalue" title='Manually run processor'></i>
+            <i class='fa fa-cube' style="cursor:pointer;" gstype="clicksubmit" method='runProcessor' gsname="id" gsvalue="somevalue" title='Manually run processor'></i>
             <i class="managementviewoptions fa fa-caret-down"> Options</i>
             <?php
                 $this->includefile("morefilteroptions");
@@ -113,7 +113,6 @@ $searchtypes = $this->getSearchTypes();
         $this->includeManagementViewResult();
         ?>
     </div>
-    <div style="padding: 5px;border-radius: 0 0 4px 4px; background-color:#2885c0;"></div>
 </div>
 <br>
 <br>

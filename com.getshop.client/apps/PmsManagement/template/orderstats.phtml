@@ -31,7 +31,7 @@ $filters = $this->getApi()->getPmsInvoiceManager()->getAllStatisticsFilters($thi
         if(!$filter->name) {
             continue;
         }
-        echo "<span class='pmsbutton' gstype='clicksubmit' method='setneworderstatsfilter' gsname='filtertype' gsvalue='".$filter->name."'>" . $filter->name . "</span> ";
+        echo "<span class='pmsbutton3' gstype='clicksubmit' method='setneworderstatsfilter' gsname='filtertype' gsvalue='".$filter->name."'>" . $filter->name . "</span> ";
     }
     ?>
 

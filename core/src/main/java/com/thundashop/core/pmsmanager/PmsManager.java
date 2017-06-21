@@ -4585,9 +4585,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             messageManager.sendErrorNotification("Booking completed.", null);
         }
         if(booking.getActiveRooms().isEmpty()) {
-            if(!getConfigurationSecure().deleteAllWhenAdded) {
-                messageManager.sendErrorNotification("When booking is completed it returns null, no active rooms connected: " + rawBooking, null);
-            }
             return null;
         }
         notifyAdmin("booking_completed_" + booking.language, booking);
@@ -4631,7 +4628,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             messageManager.sendErrorNotification("This should never happen and need to be investigated : Unknown booking exception occured for booking id: " + booking.id + ", raw: " + rawBooking, e);
             e.printStackTrace();
         }
-        messageManager.sendErrorNotification("When booking is completed it returns null, that should never happen as well, booking: " + rawBooking, null);
         return null; 
     }
 

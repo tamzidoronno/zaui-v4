@@ -204,7 +204,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
 
-    private void saveOrderInternal(Order order) throws ErrorException {
+    public void saveOrderInternal(Order order) throws ErrorException {
         if (order.isVirtual) {
             return;
         }

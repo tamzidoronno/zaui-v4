@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
  * should<br>
  * be pretty straight forward to use.
  */
-@Component
+@Component 
 @GetShopSession
 public class ProductManager extends AProductManager implements IProductManager {
     @Autowired

@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class EventBookingConfirmRequest extends UpdateScriptBase implements UpdateScript {
-
+ 
     @Override
     public Date getAddedDate() {
         return getDate("31/05-2017");

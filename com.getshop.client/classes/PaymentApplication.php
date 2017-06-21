@@ -30,7 +30,6 @@ class PaymentApplication extends ApplicationBase {
     }
     
     public function initPaymentMethod() {
-        $this->order->status = 2;
         $this->order->payment->paymentType = get_class($this);
         $this->order->payment->paymentFee = $this->getPaymentFee();
         $this->getApi()->getOrderManager()->saveOrder($this->order);

@@ -14,4 +14,4 @@ public class AppContext {
     public static ApplicationContext appContext;
     public static StorePool storePool;
     public static boolean devMode;
-}
+} 

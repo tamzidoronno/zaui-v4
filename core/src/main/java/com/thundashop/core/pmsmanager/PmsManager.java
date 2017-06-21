@@ -4896,7 +4896,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return result;
-    }
+    } 
     
     private List<PmsBookingAddonItem> createAddonForTimePeriode(Integer type, Date start, Date end, Integer priceType) {
         List<PmsBookingAddonItem> result = new ArrayList();
@@ -6151,6 +6151,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         logEntry(logText, null, additional.itemId);
         processor();
+    }
+
+    @Override
+    public List<SimpleCleaningOverview> getSimpleCleaningOverview(Date start, Date end) {
+        Calendar test = Calendar.getInstance();
+        List<SimpleCleaningOverview> result = new ArrayList<SimpleCleaningOverview>();
+        while(true) {
+            PmsBookingFilter filter = new PmsBookingFilter();
+            filter.startDate = test.getTime();
+            
+            List<PmsBookingRooms> checkout = getRoomsNeedingCheckoutCleaning(test.getTime());
+            List<PmsBookingRooms> interval = getRoomsNeedingIntervalCleaning(test.getTime());
+            
+            SimpleCleaningOverview simple = new SimpleCleaningOverview();
+            simple.date = test.getTime();
+            simple.checkoutCleaningCount = checkout.size();
+            simple.intervalCleaningCount = interval.size();
+            
+            result.add(simple);
+            
+            test.add(Calendar.DAY_OF_YEAR, 1);
+            if(test.getTime().after(end)) {
+                break;
+            }
+        }
+        
+        return result;
     }
 
 }

@@ -49,7 +49,7 @@
     echo "<tr>";
     echo "<th align='left'>Added</th>";
     echo "<th align='left'>Type</th>";
-    echo "<th align='right'>Room id (wubook)</th>";
+    echo "<th align='right'>Room id (wubook), virtual rooms is separated with ;</th>";
     echo "</tr>";
     
     foreach($data as $id => $rdata) {
@@ -61,7 +61,11 @@
         echo "<td align='left'>";
         echo $items[$rdata->bookingEngineTypeId]->name;
         echo "</td>";
-        echo "<td align='right'><input type='txt' value='".$rdata->wubookroomid."' gsname='".$id."'></td>";
+        if($rdata->virtualWubookRoomIds) {
+            echo "<td align='right'><input type='txt' value='".$rdata->virtualWubookRoomIds."' gsname='".$id."'></td>";
+        } else {
+            echo "<td align='right'><input type='txt' value='".$rdata->wubookroomid."' gsname='".$id."'></td>";
+        }
         echo "</td>";
         echo "</tr>";
     }

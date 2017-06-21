@@ -6,6 +6,8 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +46,15 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
                 doors.add(door);
             }
         }
+        
+        Collections.sort(doors, new Comparator<Door>(){
+            public int compare(Door o1, Door o2){
+                if(o1.name == null || o2.name == null) {
+                    return -1;
+                }
+                return o1.name.compareTo(o2.name);
+            }
+       });
         
         return doors;
     }

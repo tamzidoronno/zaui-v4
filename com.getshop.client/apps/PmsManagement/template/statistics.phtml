@@ -45,6 +45,7 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
                 <?php echo $this->__w("Date"); ?></th>
             <th><?php echo $this->__w("Spare<br>rooms"); ?></th>
             <th><?php echo $this->__w("Rented<br>out"); ?></th>
+            <th><?php echo $this->__w("Guests"); ?></th>
             <th><?php echo $this->__w("Avg.<br>price"); ?></th>
             <th><?php echo $this->__w("Total"); ?></th>
             <th><?php echo $this->__w("Budget"); ?></th>
@@ -56,6 +57,11 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
 //            print_r($entry);
             $included = $entry->roomsIncluded;
             $included = json_encode($included);
+            
+            $guests = 0;
+            foreach($entry->guests as $roomId => $gcount) {
+                $guests += $gcount;
+            }
             if ($entry->date) {
                 $day = $this->getDayText($entry->date, $filter->timeInterval);
             } else {
@@ -73,6 +79,7 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
                 }
             }
             echo "</td>";
+            echo "<td>$guests</td>";
             echo "<td>"; if($entry->avgPrice >= 0) { echo round($entry->avgPrice); } echo "</td>";
             if ($entry->date) {
                 echo "<td>"; if($entry->totalPrice >= 0) { echo $entry->totalPrice; } echo "</td>";

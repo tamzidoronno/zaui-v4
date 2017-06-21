@@ -95,7 +95,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return updateAvailabilityInternal(370);
     }
     
-    private boolean isWubookActive() {
+    private boolean isWubookActive() { 
         if(pmsManager.getConfigurationSecure().wubookusername == null || pmsManager.getConfigurationSecure().wubookusername.isEmpty()) {
             return false;
         }
@@ -771,6 +771,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             room.date.end = setCorrectTime(booking.depDate, false);
             room.numberOfGuests = r.guest;
             room.bookingItemTypeId = getTypeFromWubookRoomId(r.roomId);
+            if(room.bookingItemTypeId == null) {
+                logText("Failed to find room for booking: " + booking.reservationCode);
+                sendErrorForReservation(booking.reservationCode, "Failed to find room for reservation");
+            }
             pricestoset.put(room.pmsBookingRoomId, r.priceMatrix);
             PmsGuests guest = new PmsGuests();
             guest.email = booking.email;
@@ -848,6 +852,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         for(WubookRoomData rdata : wubookdata.values()) {
             if(rdata.wubookroomid == roomId) {
                 return rdata.bookingEngineTypeId;
+            }
+            if(rdata.virtualWubookRoomIds != null && !rdata.virtualWubookRoomIds.isEmpty()) {
+                String[] splitted = rdata.virtualWubookRoomIds.split(";");
+                for(String tmp : splitted) {
+                    Integer tmpRoomId = new Integer(tmp);
+                    if(tmpRoomId == roomId) {
+                        return rdata.bookingEngineTypeId;
+                    }
+                }
             }
         }
         return null;

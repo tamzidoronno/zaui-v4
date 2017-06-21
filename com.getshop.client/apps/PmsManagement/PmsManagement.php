@@ -643,14 +643,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $room,
                 $this->convertToJavaDate($starttime), 
                 $this->convertToJavaDate($endtime));
-        $booking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
-        if($booking) {
-            foreach($booking->rooms as $room) {
-                $this->fastAddedCode = $room->code;
-            }
-        } else {
-            $this->fastAddedCode = "Unavailable";
-        }
+        $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
+        
+        $this->runProcessor();
     }
     
     public function massUpdatePrices() {

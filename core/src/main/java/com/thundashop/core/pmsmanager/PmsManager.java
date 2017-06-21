@@ -4586,7 +4586,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         if(booking.getActiveRooms().isEmpty()) {
             if(!getConfigurationSecure().deleteAllWhenAdded) {
-                messageManager.sendErrorNotification("When booking is completed it returns null, that should never happen as well, booking: " + rawBooking, null);
+                messageManager.sendErrorNotification("When booking is completed it returns null, no active rooms connected: " + rawBooking, null);
             }
             return null;
         }

@@ -34,7 +34,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     UserManager userManager;
     
     @Override
-    public List<PmsMobileReport> getReport(Date start, Date end, String compareTo) {
+    public List<PmsMobileReport> getReport(Date start, Date end, String compareTo, boolean excludeClosedRooms) {
         
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
@@ -58,6 +58,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
             savedFilter.endDate = filter.endDate;
             filter = savedFilter;
         }
+        filter.removeClosedRooms = excludeClosedRooms;
         
         PmsBookingFilter filterCompare = new PmsBookingFilter();
         filterCompare.startDate = new Date(start.getTime());
@@ -180,7 +181,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         total.totalNumberOfRooms = totalEntry.totalRooms;
         total.numberOfRooms = totalEntry.roomsRentedOut;
         total.avgCoverage = new Double(totalEntry.coverage);
-        total.numberOfDays = stats.entries.size()-2;
+        total.numberOfDays = stats.entries.size()-1;
         total.typeName = totalText;
         
         total.totalRented = totalEntry.totalPrice;

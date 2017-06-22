@@ -36,7 +36,7 @@ public class PmsManagerProcessor {
         clearCachedObject();
         try { autoMarkBookingsAsPaid(); }catch(Exception e) {manager.logPrintException(e); }
         clearCachedObject(); 
-        
+        try { pingServers(); } catch(Exception e) {}
         try { processAutoAssigning(); }catch(Exception e) { manager.logPrintException(e); }
         try { processStarting(-4, 0, false); }catch(Exception e) { manager.logPrintException(e); }
         try { processStarting(0, 4, false); }catch(Exception e) { manager.logPrintException(e); }
@@ -1042,5 +1042,28 @@ public class PmsManagerProcessor {
             }
         }
         return result;
+    }
+
+    private void pingServers() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, -10);
+        Date tenMinAgo = cal.getTime();
+        
+        PmsConfiguration config = manager.getConfigurationSecure();
+        for(PmsLockServer server : config.lockServerConfigs.values()) {
+            PingServerThread pthread = new PingServerThread(server);
+            pthread.start();
+            if(server.lastPing.after(tenMinAgo)) {
+                if(!server.beenWarned) {
+                    server.beenWarned = true;
+                    manager.messageManager.sendErrorNotification("Lost connection with server: " + server.arxHostname, null);
+                    manager.saveConfiguration(config);
+                }
+            } else if(server.beenWarned) {
+                    server.beenWarned = false;
+                    manager.messageManager.sendErrorNotification("Connection to server : " + server.arxHostname + " reestablished.", null);
+                    manager.saveConfiguration(config);
+            }
+        }
     }
 }

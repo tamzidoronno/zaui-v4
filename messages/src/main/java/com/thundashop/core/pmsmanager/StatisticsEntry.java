@@ -13,6 +13,7 @@ public class StatisticsEntry {
     public Integer spearRooms = 0;
     public Integer totalRooms = 0;
     public Integer coverage = 0;
+    public Integer coverageOriginal = 0;
     public Integer roomsNotIncluded = 0;
     public Double bugdet = 0.0;
     public HashMap<Integer, Integer> addonsCount = new HashMap();
@@ -27,6 +28,7 @@ public class StatisticsEntry {
     public List<String> roomsIncluded = new ArrayList();
     boolean isTotal = false;
     public Integer squareMetres = 0;
+    public Integer totalRoomsOriginal;
     
     public void finalize() {
         avgPrice = totalPrice / roomsRentedOut;
@@ -36,6 +38,9 @@ public class StatisticsEntry {
         double result = (double)roomsRentedOut / (double)totalRooms;
         result *= 100;
         coverage = (int)result;
+        result = (double)roomsRentedOut / (double)totalRoomsOriginal;
+        result *= 100;
+        coverageOriginal = (int)result;
     }
 
     void append(StatisticsEntry entry) {

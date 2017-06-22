@@ -21,12 +21,17 @@
             </select>
         </label>
     </div>
-
     <div class='col-xs-12 col-md-3'>
         <br>
         <span class="btn btn-success form-control" ng-click="reloadOverview()" ng-show="!showLoading">Show</span>
         <span class="btn btn-success form-control" ng-show="showLoading"><i class='fa fa-spin fa-spinner'></i></span>
         <br><br>
+    </div>
+    <div class='col-xs-12'>
+        <label>
+            <input type="checkbox" ng-model="excludeClosedRooms"> 
+            Exclude closed rooms
+        </label>
     </div>
 <div ng-repeat="report in pmsreportlist" class='caretakerrow row'>
     <div class="col-xs-12">

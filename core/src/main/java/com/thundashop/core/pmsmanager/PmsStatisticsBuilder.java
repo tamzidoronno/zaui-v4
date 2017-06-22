@@ -1,6 +1,7 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -24,6 +25,7 @@ class PmsStatisticsBuilder {
     private final BookingEngine bookingEngine;
     private HashMap<String, Integer> cachedSquareMetersForType = new HashMap();
     HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
+    private List<Booking> allBookingsInEngine;
 
     PmsStatisticsBuilder(List<PmsBooking> bookingsInFilter, 
             boolean pricesExTax, 
@@ -54,7 +56,7 @@ class PmsStatisticsBuilder {
         return 0;
     }
     
-    PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms, PmsInvoiceManager invoiceManager) {
+    PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms, PmsInvoiceManager invoiceManager, List<Booking> allBookings) {
         PmsStatistics statics = new PmsStatistics();
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
@@ -62,7 +64,12 @@ class PmsStatisticsBuilder {
         while(true) {
             StatisticsEntry entry = buildStatsEntry(cal);
             entry.date = cal.getTime();
-            entry.totalRooms = totalRooms;
+            entry.totalRoomsOriginal = totalRooms;
+            if(filter.removeClosedRooms) {
+                entry.totalRooms = totalRooms - getClosedRoomsForDay(entry.date, allBookings);
+            } else {
+                entry.totalRooms = totalRooms;
+            }
             entry.bugdet = 0.0;
             int month = cal.get(Calendar.MONTH);
             month++;
@@ -315,6 +322,21 @@ class PmsStatisticsBuilder {
         result = (int)(meters / count);
         cachedSquareMetersForType.put(bookingItemTypeId, result);
         return result;
+    }
+
+    private Integer getClosedRoomsForDay(Date date, List<Booking> allBookingsInEngine) {
+        int count = 0;
+        for(Booking booking : allBookingsInEngine) {
+            if(!booking.source.toLowerCase().contains("closed")) {
+                continue;
+            }
+            if(booking.startDate.before(date) && booking.endDate.after(date)) {
+                System.out.println(booking.source + " : " + date + " : " + booking.startDate + " - " + booking.endDate);
+                count++;
+            }
+        }
+        
+        return count;
     }
     
 }

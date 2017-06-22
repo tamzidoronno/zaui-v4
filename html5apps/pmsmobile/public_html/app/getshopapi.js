@@ -10228,12 +10228,13 @@ GetShopApiWebSocket.PmsReportManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'getReport' : function(multilevelname, start,end,compareTo, gs_silent) {
+    'getReport' : function(multilevelname, start,end,compareTo,excludeClosedRooms, gs_silent) {
         var data = {
             args : {
                 start : JSON.stringify(start),
                 end : JSON.stringify(end),
                 compareTo : JSON.stringify(compareTo),
+                excludeClosedRooms : JSON.stringify(excludeClosedRooms),
             },
             method: 'getReport',
             multiLevelName: multilevelname,
@@ -14729,6 +14730,56 @@ GetShopApiWebSocket.UUIDSecurityManager.prototype = {
     },
 
 }
+GetShopApiWebSocket.VippsManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.VippsManager.prototype = {
+    'cancelOrder' : function(orderId, gs_silent) {
+        var data = {
+            args : {
+                orderId : JSON.stringify(orderId),
+            },
+            method: 'cancelOrder',
+            interfaceName: 'core.vippsmanager.IVippsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'checkForOrdersToCapture' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'checkForOrdersToCapture',
+            interfaceName: 'core.vippsmanager.IVippsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'checkIfOrderHasBeenCompleted' : function(incOrderId, gs_silent) {
+        var data = {
+            args : {
+                incOrderId : JSON.stringify(incOrderId),
+            },
+            method: 'checkIfOrderHasBeenCompleted',
+            interfaceName: 'core.vippsmanager.IVippsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'startMobileRequest' : function(phoneNumber,orderId, gs_silent) {
+        var data = {
+            args : {
+                phoneNumber : JSON.stringify(phoneNumber),
+                orderId : JSON.stringify(orderId),
+            },
+            method: 'startMobileRequest',
+            interfaceName: 'core.vippsmanager.IVippsManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
 GetShopApiWebSocket.WebManager = function(communication) {
     this.communication = communication;
 }
@@ -15180,6 +15231,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.ImageManager = new GetShopApiWebSocket.ImageManager(this);
     this.UtilManager = new GetShopApiWebSocket.UtilManager(this);
     this.UUIDSecurityManager = new GetShopApiWebSocket.UUIDSecurityManager(this);
+    this.VippsManager = new GetShopApiWebSocket.VippsManager(this);
     this.WebManager = new GetShopApiWebSocket.WebManager(this);
     this.WubookManager = new GetShopApiWebSocket.WubookManager(this);
     this.YouTubeManager = new GetShopApiWebSocket.YouTubeManager(this);

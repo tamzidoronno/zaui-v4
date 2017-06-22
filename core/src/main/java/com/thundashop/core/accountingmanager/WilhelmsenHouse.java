@@ -361,7 +361,8 @@ public class WilhelmsenHouse implements AccountingInterface {
         lineText = lineText.replace("Dobbeltrom", "");
         lineText = lineText.replace("Kjøkken", "kj. ");
         lineText = lineText.replace("kjøkken", "kj. ");
-        lineText = lineText.replace("Standard rom med minikjøkken", "Stdrom med minikj.");
+        lineText = lineText.replace("Standard", "Std");
+        lineText = lineText.replace("standard", "std");
         lineText = lineText.trim();
     
         if(order.invoiceNote != null && !order.invoiceNote.isEmpty()) {

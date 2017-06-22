@@ -1051,8 +1051,12 @@ public class PmsManagerProcessor {
         
         PmsConfiguration config = manager.getConfigurationSecure();
         for(PmsLockServer server : config.lockServerConfigs.values()) {
-            PingServerThread pthread = new PingServerThread(server);
-            pthread.start();
+            if(server.isGetShopHotelLock() || server.isGetShopLockBox()) {
+                PingServerThread pthread = new PingServerThread(server);
+                pthread.start();
+            } else {
+                server.lastPing = new Date();
+            }
             if(tenMinAgo.after(server.lastPing)) {
                 if(!server.beenWarned) {
                     server.beenWarned = true;

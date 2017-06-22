@@ -194,9 +194,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsConfiguration) {
                 checkConvertLockConfigs((PmsConfiguration) dataCommon);
                 PmsConfiguration toAdd = (PmsConfiguration) dataCommon;
-                for(PmsLockServer server : toAdd.lockServerConfigs.values()) {
-                    server.lastPing = new Date();
-                }
                 toCheck.setTime(toAdd.rowCreatedDate);
                 if(toCheck.get(Calendar.YEAR) == 2017 && toCheck.get(Calendar.DAY_OF_YEAR) == 8) {
                     System.out.println("delete this configuration, failure to add today: " + toAdd.rowCreatedDate + "(" + getName() + ")");

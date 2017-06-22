@@ -1053,7 +1053,7 @@ public class PmsManagerProcessor {
         for(PmsLockServer server : config.lockServerConfigs.values()) {
             PingServerThread pthread = new PingServerThread(server);
             pthread.start();
-            if(server.lastPing.after(tenMinAgo)) {
+            if(tenMinAgo.after(server.lastPing)) {
                 if(!server.beenWarned) {
                     server.beenWarned = true;
                     manager.messageManager.sendErrorNotification("Lost connection with server: " + server.arxHostname, null);

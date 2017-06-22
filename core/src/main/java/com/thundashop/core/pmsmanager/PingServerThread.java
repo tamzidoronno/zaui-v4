@@ -18,7 +18,13 @@ public class PingServerThread extends Thread {
     @Override
     public void run() {
         try {
-            InetAddress inet = InetAddress.getByName(server.arxHostname);
+            String host = server.arxHostname;
+            if(host.contains(":")) {
+                host = host.substring(0,host.indexOf(":"));
+            }
+            host = host.replace("http://", "");
+            host = host.replace("https://", "");
+            InetAddress inet = InetAddress.getByName(host);
             if(inet.isReachable(5000)) {
                 this.server.lastPing = new Date();
             }

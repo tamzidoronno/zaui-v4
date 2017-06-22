@@ -299,8 +299,8 @@ public class WilhelmsenHouse implements AccountingInterface {
                 ordrehode += "14;"; //Betalingsbetingelse
                 ordrehode += "20;"; //Betalingsmåte ( 10 = avtalegiro )
             }
-            ordrehode += order.incrementOrderId + ";";
             ordrehode += ";"; // avgiftskode ( tom = bruk fra kunde )
+            ordrehode += order.incrementOrderId + ";";
             result.add(ordrehode +"\r\n");
 
             for (CartItem item : order.cart.getItems()) {

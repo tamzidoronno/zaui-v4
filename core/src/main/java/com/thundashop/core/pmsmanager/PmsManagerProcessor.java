@@ -1057,6 +1057,9 @@ public class PmsManagerProcessor {
             } else {
                 server.lastPing = new Date();
             }
+            if(manager.recentlyStarter()) {
+                continue;
+            }
             if(tenMinAgo.after(server.lastPing)) {
                 if(!server.beenWarned) {
                     server.beenWarned = true;

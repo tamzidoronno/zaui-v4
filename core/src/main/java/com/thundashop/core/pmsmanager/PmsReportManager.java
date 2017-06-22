@@ -92,8 +92,12 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         PmsStatistics compare = pmsManager.getStatistics(filterCompare);
         PmsMobileReport res = buildTotal(stats, "All", compare.getTotal());
         res.squareMeters = calculateSquareMetres(null);
-        res.squareMetresPrice = Math.round(res.totalRented / res.squareMeters);
-        res.squareMetresPriceDaily = Math.round(res.totalRentedDaily / res.squareMeters);
+        res.squareMetresPrice = (res.totalRented / res.squareMeters) / res.numberOfDays;
+        res.squareMetresPrice *= 365;
+        res.squareMetresPrice /= res.avgCoverage;
+        res.squareMetresPrice = Math.round(res.squareMetresPrice * 100);
+        res.squareMetresPriceDaily = Math.round(res.squareMetresPrice / 12);
+        
         result.add(res);
         
         List<BookingItemType> types = bookingEngine.getBookingItemTypes();
@@ -107,8 +111,11 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
             compare = pmsManager.getStatistics(filterCompare);
             res = buildTotal(stats, type.name, compare.getTotal());
             res.squareMeters = calculateSquareMetres(type);
-            res.squareMetresPrice = Math.round(res.totalRented / res.squareMeters);
-            res.squareMetresPriceDaily = Math.round(res.totalRentedDaily / res.squareMeters);
+            res.squareMetresPrice = (res.totalRented / res.squareMeters) / res.numberOfDays;
+            res.squareMetresPrice *= 365;
+            res.squareMetresPrice /= res.avgCoverage;
+            res.squareMetresPrice = Math.round(res.squareMetresPrice * 100);
+            res.squareMetresPriceDaily = Math.round(res.squareMetresPrice / 12);
             result.add(res);
         }
         
@@ -148,8 +155,8 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
                 squareMeters = 0;
             }
             if(squareMeters > 0) {
-                coverage.sqaurePrice = (double) Math.round(coverage.avgPrice / squareMeters);
-                coverage.squarePricePeriode = (double) Math.round((double)coverage.sqaurePrice * (double)stats.entries.size()-1);
+                coverage.sqaurePrice = (double) Math.round(coverage.avgPrice / squareMeters)*365;
+                coverage.squarePricePeriode = (double) Math.round(coverage.sqaurePrice/12);
             }
             if(coverage.squarePricePeriode == null || coverage.squarePricePeriode < 0) {
                 coverage.squarePricePeriode = 0.0;
@@ -173,7 +180,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         total.totalNumberOfRooms = totalEntry.totalRooms;
         total.numberOfRooms = totalEntry.roomsRentedOut;
         total.avgCoverage = new Double(totalEntry.coverage);
-        total.numberOfDays = stats.entries.size()-1;
+        total.numberOfDays = stats.entries.size()-2;
         total.typeName = totalText;
         
         total.totalRented = totalEntry.totalPrice;

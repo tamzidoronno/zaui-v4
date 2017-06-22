@@ -86,7 +86,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             " \"orderId\": \""+order.incrementOrderId+"\",\n" +
             " \"refOrderId\": \""+order.incrementOrderId+"\",\n" +
             " \"amount\": "+orderManager.getTotalAmount(order)*100+",\n" +
-            " \"transactionText\": \""+order.id+"\"\n" +
+            " \"transactionText\": \"\"\n" +
             " }\n" +
             "}");
             writer.close();
@@ -144,7 +144,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
     @Override
     public boolean checkIfOrderHasBeenCompleted(Integer incOrderId) {
         checkForOrdersToCapture();
-        return false;
+        return orderManager.getOrderByincrementOrderId(incOrderId).status == Order.Status.PAYMENT_COMPLETED;
     }
     
     @Override
@@ -235,7 +235,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             " \"merchantSerialNumber\": \""+vippsApp.getSetting("merchantid")+"\"\n" +
             " },\n" +
             " \"transaction\": {\n" +
-            " \"transactionText\": \""+order.id+"\"\n" +
+            " \"transactionText\": \"\"\n" +
             " }\n" +
             "}");
             writer.close();
@@ -265,7 +265,6 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         processBuilder.redirectErrorStream(true);
         Process process = processBuilder.start();
         StringBuilder processOutput = new StringBuilder();
-        System.out.println("Executing: " + processBuilder.command());
 
         try (BufferedReader processOutputReader = new BufferedReader(
                 new InputStreamReader(process.getInputStream()));)

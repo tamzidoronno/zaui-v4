@@ -58,6 +58,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                c,Actor.cVatNo,10,40,0,,,,,,,,,S,	'Kunde avgiftskode hvis tom = mva pliktig
                c,Actor.CPmtTrm,11,40,0,,,,,,,,,S,	'Kunde Betalingsbetingelse
                c,Actor.CPmtMt,12,40,0,,,,,,,,,S,	'Kunde Betalingsmåte
+               c,Actor.DocSmt,12,40,0,,,,,,,,,S,	'Kunde sendemåte 3 hvis epost på kunden
            */
 
            if(user.fullName == null) {
@@ -123,6 +124,11 @@ public class WilhelmsenHouse implements AccountingInterface {
            }
            result += "30;"; //Betaling per 30 dag.
            result += "10;"; //Autogiro.
+           if(user.emailAddress != null && user.emailAddress.contains("@")) {
+               result += "3;";
+           } else {
+               result += "0;";
+           }
 
            lines.add(result + "\r\n");
         }
@@ -293,6 +299,7 @@ public class WilhelmsenHouse implements AccountingInterface {
                 ordrehode += "14;"; //Betalingsbetingelse
                 ordrehode += "20;"; //Betalingsmåte ( 10 = avtalegiro )
             }
+            ordrehode += order.incrementOrderId + ";";
             ordrehode += ";"; // avgiftskode ( tom = bruk fra kunde )
             result.add(ordrehode +"\r\n");
 

@@ -159,6 +159,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     Database dataBase;
     private Date virtualOrdersCreated;
+    private Date startedDate;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -6183,6 +6184,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return result;
+    }
+
+    boolean recentlyStarter() {
+        if(startedDate == null) {
+            startedDate = new Date();
+            return true;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, -4);
+        if(cal.getTime().before(startedDate)) {
+            return false;
+        }
+        return true;
     }
 
 }

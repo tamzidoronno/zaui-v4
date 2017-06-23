@@ -20,16 +20,16 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class EventBookingConfirmRequest extends UpdateScriptBase implements UpdateScript {
- 
+public class GiftCard extends UpdateScriptBase implements UpdateScript {
+
     @Override
     public Date getAddedDate() {
-        return getDate("31/05-2017");
+        return getDate("21/06-2017");
     }
     
     @Override
     public String getId() {
-        return "693515a6-ea37-47c3-a005-3dc9cc4a509f";
+        return "be114759-481d-4330-850f-330142262db1";
     }
 
     @SuppressWarnings("empty-statement")
@@ -49,7 +49,7 @@ public class EventBookingConfirmRequest extends UpdateScriptBase implements Upda
     }
     
     public static void main(String[] args) {
-        new EventBookingConfirmRequest().runSingle();
+        new GiftCard().runSingle();
     }
     
     @Override
@@ -66,16 +66,16 @@ public class EventBookingConfirmRequest extends UpdateScriptBase implements Upda
         credentials.password = "ADFASDF";
         credentials.storeid = "all";
 
-        Application EventBookingConfirmRequest = createSettings("EventBookingConfirmRequest",
-        "bb707ed9-80ab-4afe-a2aa-6790e63a2b8e",
+        Application GiftCard = createSettings("GiftCard",
+        "8650475d-ebc6-4dfb-86c3-eba4a8aba979",
         allowed2,
         " ",
-        Application.Type.Marketing, true);
-        EventBookingConfirmRequest.isPublic = true;
-        EventBookingConfirmRequest.isFrontend = true;
-        EventBookingConfirmRequest.moduleId = "eventbooking";
-        EventBookingConfirmRequest.defaultActivate = false;
-        EventBookingConfirmRequest.storeId = "all";
-        database.save(EventBookingConfirmRequest, credentials);
+        Application.Type.Payment, true);
+        GiftCard.isPublic = true;
+        GiftCard.isFrontend = true;
+        GiftCard.moduleId = "WebShop";
+        GiftCard.defaultActivate = false;
+        GiftCard.storeId = "all";
+        database.save(GiftCard, credentials);
     }
 }

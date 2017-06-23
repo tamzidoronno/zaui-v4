@@ -348,6 +348,14 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
     }
 
+    private List<String> getServerSoures() {
+        HashMap<String, String> servers = new HashMap();
+        for(GetShopDevice dev : devices.values()) {
+            servers.put(dev.serverSource, "2");
+        }
+        return new ArrayList(servers.keySet());
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;
@@ -775,59 +783,62 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
 
     @Override
     public void checkIfAllIsOk() {
-        if(stopUpdatesOnLock) {
-            logPrint("Lock updates stopped");
-        }
-        if(!frameworkConfig.productionMode) {
-            return;
-        }
-        if(!pmsManager.getConfigurationSecure().isGetShopHotelLock()) {
-            return;
-        }
-        finalizeLocks();
-        checkAndUpdateSubLocks();
-        checkDoorsWithOpeningHours();
-        for(GetShopDevice dev : devices.values()) {
-            if(dev.needSaving) {
-                dev.needSaving = false;
-                saveObject(dev);
+        List<String> sources = getServerSoures();
+        for(int h = 0; h < sources.size();h++) {
+            if(stopUpdatesOnLock) {
+                logPrint("Lock updates stopped");
             }
-            
-            if(dev.isLock()) {
-                checkForMasterCodeUpdates(dev);
+            if(!frameworkConfig.productionMode) {
+                return;
             }
-        }
-        
-        List<BookingItem> items = bookingEngine.getBookingItems();
-        GetShopDevice toSet = null;
-        for(GetShopDevice dev : devices.values()) {
-            if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null && !dev.isSubLock()) {
-                continue;
+            if(!pmsManager.getConfigurationSecure().isGetShopHotelLock()) {
+                return;
             }
-                    
-            if(isUpdatingSource(dev.serverSource)) {
-                continue;
-            }
+            finalizeLocks();
+            checkAndUpdateSubLocks();
+            checkDoorsWithOpeningHours();
+            for(GetShopDevice dev : devices.values()) {
+                if(dev.needSaving) {
+                    dev.needSaving = false;
+                    saveObject(dev);
+                }
 
-            //Always prioritise the one that has least codes set.
-            
-            if(dev.isLock() && !dev.beingUpdated && dev.needUpdate()) {
-                if(toSet == null || (dev.numberOfCodesNeedsUpdate() > toSet.numberOfCodesNeedsUpdate())) {
-                    toSet = dev;
+                if(dev.isLock()) {
+                    checkForMasterCodeUpdates(dev);
                 }
             }
-        }
-        
-        if(toSet != null) {
-            toSet.beingUpdated = true;
-            toSet.lastTriedUpdate = new Date();
-            String user = getUsername(toSet.serverSource);
-            String pass = getPassword(toSet.serverSource);
-            String host = getHostname(toSet.serverSource);
-            boolean useNewQueueCheck = pmsManager.getConfigurationSecure().useNewQueueCheck;
 
-            GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock, useNewQueueCheck);
-            mgr.start();
+            List<BookingItem> items = bookingEngine.getBookingItems();
+            GetShopDevice toSet = null;
+            for(GetShopDevice dev : devices.values()) {
+                if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null && !dev.isSubLock()) {
+                    continue;
+                }
+
+                if(isUpdatingSource(dev.serverSource)) {
+                    continue;
+                }
+
+                //Always prioritise the one that has least codes set.
+
+                if(dev.isLock() && !dev.beingUpdated && dev.needUpdate()) {
+                    if(toSet == null || (dev.numberOfCodesNeedsUpdate() > toSet.numberOfCodesNeedsUpdate())) {
+                        toSet = dev;
+                    }
+                }
+            }
+
+            if(toSet != null) {
+                toSet.beingUpdated = true;
+                toSet.lastTriedUpdate = new Date();
+                String user = getUsername(toSet.serverSource);
+                String pass = getPassword(toSet.serverSource);
+                String host = getHostname(toSet.serverSource);
+                boolean useNewQueueCheck = pmsManager.getConfigurationSecure().useNewQueueCheck;
+
+                GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock, useNewQueueCheck);
+                mgr.start();
+            }
         }
     }
     

@@ -38,6 +38,7 @@ public class PmsBookingFilter extends DataCommon {
     public String timeInterval;
     public boolean includeCleaningInformation = false;
     public boolean includeVirtual = false;
+    public boolean removeClosedRooms = false;
     public List<String> typeFilter = new ArrayList();
     public List<String> itemFilter = new ArrayList();
     public String filterName = "";

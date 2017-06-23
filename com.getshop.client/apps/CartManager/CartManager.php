@@ -22,7 +22,29 @@ class CartManager extends \SystemApplication implements \Application {
     public function postProcess() {
         
     }
+    
+    public function cancelVippsOrder() {
+        $this->getApi()->getVippsManager()->cancelOrder($_POST['data']['orderid']);
+    }
+    
+    public function checkIfOrderHasBeenCompleted() {
+        $this->getApi()->getVippsManager()->checkForOrdersToCapture();
+        $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderId($_POST['data']['orderid']);
+        if($order->status == 7) {
+            echo "yes";
+        } else {
+            echo "no";
+        }
+    }
+    
+    public function startVippsPayment() {
+        $orderId = $_POST['data']['orderid'];
+        $phone = $_POST['data']['phonenumber'];
         
+        $res = $this->getApi()->getVippsManager()->startMobileRequest($phone, $orderId);
+        echo $res;
+    }
+    
     public function preProcess() {
         if (isset($_GET['cartCustomerId'])) {
             $_SESSION['cartCustomerId'] = $_GET['cartCustomerId'];

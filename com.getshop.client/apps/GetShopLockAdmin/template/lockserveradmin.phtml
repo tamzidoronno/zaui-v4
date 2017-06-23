@@ -56,6 +56,11 @@ $locktype['getshoplockbox'] = "GetShop Lock Box";
                 <td><input type='text' gsname='arxCardFormatsAvailable' style='width:100px;' value='<?php echo $server->arxCardFormatsAvailable; ?>'> </td>
                 <td><input type='text' gsname='codeSize' style='width:50px;' value='<?php echo $server->codeSize; ?>'> </td>
                 <td><input type="button" value="Save" gstype='submit'></td>
+                <td>
+                    <?php
+                    echo date("d.m.Y H:i", strtotime($server->lastPing));
+                    ?>
+                </td>
             </tr>
     <?php
     }

@@ -1,0 +1,28 @@
+<?php
+$amount = $this->getApi()->getOrderManager()->getTotalAmount($this->getOrder());
+?>
+<div style='display:none;text-align:center; margin-top: 40px; margin-bottom: 40px;' class='vippswaiting'>
+    You should recieve a payment message in your vipps application.<br>
+    Please open the vipps application and accept the payment.<br>
+    <i class='fa fa-spin fa-spinner'></i> waiting for payment to be completed.<br>
+    <br><br>
+    <input type='button' value='Cancel order' class='cancelvippsorder' orderid='<?php echo $this->getOrder()->id; ?>'>
+</div>
+<div style='display:none;text-align:center; margin-top: 40px; margin-bottom: 40px;' class='vippsuccess'>
+    Success.<br>
+    You have successfully paid with vipps.
+</div>
+<div gstype="form" style='text-align:center; margin-top: 40px; margin-bottom: 40px;' method='startVippsPayment' class='vippspayment'>
+    <div class='vippserror' style="display:none;"><i class='fa fa-warning'></i>An unknown error occured.<br> Please try again later, or choose a different payment method.</div>
+    <div style='text-align:center;'><h1>Amount to pay: <?php echo round($amount, 2); ?></h1></div>
+    Enter your phone number:<br>
+    <input type='hidden' gsname='orderid' value='<?php echo $this->getOrder()->id; ?>'>
+    <input type="txt" gsname="phonenumber" value='91504800'>
+    <input type="button" class='startvippspayment' value='Pay'>
+</div>
+
+<?php 
+if($this->getOrder()->status == 9) {
+    echo "<script>app.Vipps.waitForCompletion(". $this->getOrder()->incrementOrderId . ");</script>";
+}
+?>

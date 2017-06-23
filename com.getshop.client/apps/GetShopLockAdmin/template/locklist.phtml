@@ -45,7 +45,11 @@ foreach($lockServers as $name => $server) {
                 if($battery < 20) {
                     $warn = "style='color:red; font-weight:bold;'";
                 }
-                echo ", <span $warn>battery : $battery%</span>, last updated : " . date("d.m H:i", strtotime($lock->batteryLastUpdated));
+                echo ", <span $warn>battery : $battery%</span>, last battery check : " . date("d.m H:i", strtotime($lock->batteryLastUpdated));
+                if($lock->beingUpdated) {
+                    echo "<b>updating now</b>";
+                }
+                echo ", last updated: " . $lock->lastTriedUpdate;
             }
             echo "</td>";
             echo '<td lock="'.$lock->id.'" class="loadlocklist" source="'.$name.'">';

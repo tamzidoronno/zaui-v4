@@ -3535,6 +3535,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $end;
     }
 
+    /**
+     * @return \core_pmsmanager_PmsConfiguration
+     */
     public function getConfig() {
         if(isset($this->config) && $this->config) {
             return $this->config;

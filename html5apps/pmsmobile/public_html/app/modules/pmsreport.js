@@ -1,8 +1,11 @@
 if(typeof(getshop) === "undefined") { var getshop = {}; }
 getshop.pmsreportController = function($scope, $state) {
     $scope.loadOverviews = function() {
-        
-        var loading = getshopclient.PmsReportManager.getReport(getMultilevelName(), $scope.start, $scope.end, $scope.comparePeriode);
+        var exclude = false;
+        if($scope.excludeClosedRooms) {
+            exclude = true;
+        }
+        var loading = getshopclient.PmsReportManager.getReport(getMultilevelName(), $scope.start, $scope.end, $scope.comparePeriode, exclude);
         $scope.showLoading = true;
         loading.done(function(res) {
             $scope.pmsreportlist = res;

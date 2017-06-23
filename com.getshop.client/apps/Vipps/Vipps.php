@@ -17,9 +17,27 @@ class Vipps extends \PaymentApplication implements \Application {
         $namespace = __NAMESPACE__;
         $this->addPaymentMethod("Vipps / Faktura", "");
     }
+        /**
+     * Should display you configuration page.
+     */
+    public function renderConfig() {
+        $this->includefile("vippsconfig");
+    }
     
     public function render() {
         
+    }
+    
+    
+    public function simplePayment() {
+        $this->includefile("vippspaymentwindow");
+    }
+
+    public function saveSettings() {
+        $this->setConfigurationSetting("userid", $_POST['userid']);
+        $this->setConfigurationSetting("auth_secret", $_POST['auth_secret']);
+        $this->setConfigurationSetting("xrequestid", $_POST['xrequestid']);
+        $this->setConfigurationSetting("merchantid", $_POST['merchantid']);
     }
 }
 ?>

@@ -15,7 +15,7 @@ import java.util.List;
 public interface IPmsReportManager {
     
     @Administrator
-    public List<PmsMobileReport> getReport(Date start, Date end, String compareTo);
+    public List<PmsMobileReport> getReport(Date start, Date end, String compareTo, boolean excludeClosedRooms);
     
     @Administrator
     public List<PmsMobileRoomCoverage> getRoomCoverage(Date start, Date end);

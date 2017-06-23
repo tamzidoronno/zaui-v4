@@ -1,0 +1,60 @@
+<?
+/* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
+
+$userid = $this->getConfigurationSetting("userid");
+$auth_secret = $this->getConfigurationSetting("auth_secret");
+$xrequestid = $this->getConfigurationSetting("xrequestid");
+$merchantid = $this->getConfigurationSetting("merchantid");
+?>
+
+<div class='gss_settings_header'>
+    <i class='fa fa-cc-visa'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <?php echo $this->getName(); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?php echo $this->getDescription(); ?>
+            ?>	
+        </div>
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="merchantid">
+            <span class="title"><?php echo $this->__f("Merhcant id"); ?></span>
+            <input type="textfield" gs_model='vippsmodel' gs_model_attr='merchantid' value="<? echo $merchantid; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The userid to authenticate to vipps."); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="userid">
+            <span class="title"><?php echo $this->__f("User id"); ?></span>
+            <input type="textfield" gs_model='vippsmodel' gs_model_attr='userid' value="<? echo $userid; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The userid to authenticate to vipps."); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="auth_secret">
+            <span class="title"><?php echo $this->__f("Auth secret"); ?></span>
+            <input type="textfield" gs_model='vippsmodel' gs_model_attr='auth_secret' value="<? echo $auth_secret; ?>">
+            <div class="description">
+                <?php  echo $this->__f("An auth secret provided by vipps."); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="xrequestid">
+            <span class="title"><?php echo $this->__f("X-request-id"); ?></span>
+            <input type="textfield" gs_model='vippsmodel' gs_model_attr='xrequestid' value="<? echo $xrequestid; ?>">
+            <div class="description">
+                <?php  echo $this->__f("Request id to use."); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="vippsmodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
+    </div>
+</div>

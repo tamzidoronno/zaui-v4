@@ -159,6 +159,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     Database dataBase;
     private Date virtualOrdersCreated;
+    private Date startedDate;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -1497,7 +1498,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             totalRooms = filter.itemFilter.size();
         }
         
-        PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager);
+        PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager, bookingEngine.getAllBookings());
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
         result.setView(filter);
         result.buildTotal();
@@ -4576,6 +4577,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsBooking doCompleteBooking(PmsBooking booking) {
+        String rawBooking = "";
+        if(booking != null) {
+            Gson gson = new Gson();
+            rawBooking = gson.toJson(booking);
+        }
         if(getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {
             messageManager.sendErrorNotification("Booking completed.", null);
         }
@@ -4620,7 +4626,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return booking;
             }
         } catch (Exception e) {
-            messageManager.sendErrorNotification("This should never happen and need to be investigated : Unknown booking exception occured for booking id: " + booking.id, e);
+            messageManager.sendErrorNotification("This should never happen and need to be investigated : Unknown booking exception occured for booking id: " + booking.id + ", raw: " + rawBooking, e);
             e.printStackTrace();
         }
         return null; 
@@ -6178,6 +6184,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return result;
+    }
+
+    boolean recentlyStarter() {
+        if(startedDate == null) {
+            startedDate = new Date();
+            return true;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, -4);
+        if(cal.getTime().before(startedDate)) {
+            return false;
+        }
+        return true;
     }
 
 }

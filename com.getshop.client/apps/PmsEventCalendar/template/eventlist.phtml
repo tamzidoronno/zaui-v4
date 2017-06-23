@@ -11,16 +11,18 @@ $this->__w("Oct");
 $this->__w("Dec");
 
 if(count($cats)> 1){
-    echo "<div class='eventCategory'>";
-    echo "<i class='fa fa-circle-o-notch closeCategoryfiter'> Alt</i>";
-    foreach($cats as $category){
-        if($category == $searchword){
-            echo "<div class='eventcategorySort active' category='".$category."'>".$category."</div>";
-        }else{
-            echo "<div class='eventcategorySort' category='".$category."'>".$category."</div>";
+    if(!isset($_GET['list']) || $_GET['list'] != "tiny"){
+        echo "<div class='eventCategory'>";
+        echo "<i class='fa fa-circle-o-notch closeCategoryfiter'> Alt</i>";
+        foreach($cats as $category){
+            if($category == $searchword){
+                echo "<div class='eventcategorySort active' category='".$category."'>".$category."</div>";
+            }else{
+                echo "<div class='eventcategorySort' category='".$category."'>".$category."</div>";
+            }
         }
+        echo "</div>";
     }
-    echo "</div>";
 }
 //echo "<pre>";
 //print_r($searchword);

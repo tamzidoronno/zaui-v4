@@ -7,7 +7,7 @@ $i = 0;
 $j = 0;
 
 echo "<table class='bizplay_simpledayeventlist'>";
-
+    echo "<div style='font-size:44px;text-align:center;'> HVA SKJER? </div>";
     foreach($lists as $list) {
             if($j < (@$_GET['page'] * 11)) {
                 $j++;

@@ -47,7 +47,7 @@ if($event->arrangedBy) {
 }
 echo $event->location . "</div><br>";
 
-echo nl2br($event->shortdesc) . "<br><br>";
+echo "<span style='font-size:16px;'>".nl2br($event->shortdesc)."</span><br><br>";
 
 $imgDisplayer = $this->getImageDisplayer($event->id);
 $fileid = $imgDisplayer->getImageId();
@@ -56,7 +56,7 @@ if($fileid && !$event->imageId) {
     $this->getApi()->getPmsEventManager()->saveEntry($this->getSelectedName(), $event, $day);
 }
 
-echo nl2br($event->description);
+echo "<span style='font-size:16px;'>".nl2br($event->description)."</span>";
 echo "<div style='clear:both;'></div>";
 
 if($event->imageId) {

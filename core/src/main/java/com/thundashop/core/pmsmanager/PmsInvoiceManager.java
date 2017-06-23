@@ -793,7 +793,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrder(orderId);
             if(order.closed) {
-                if(order.isExpedia()) {
+                if(order.isExpedia() && order.isRecent()) {
                     order.closed = false;
                     order.status = Order.Status.WAITING_FOR_PAYMENT;
                 } else {

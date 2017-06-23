@@ -346,6 +346,15 @@ public class Order extends DataCommon implements Comparable<Order> {
         return false;
     }
 
+    public boolean isRecent() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, -5);
+        if(rowCreatedDate == null) {
+            return true;
+        }
+        return rowCreatedDate.after(cal.getTime());
+    }
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;

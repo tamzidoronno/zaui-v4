@@ -15,7 +15,11 @@ foreach($entries as $eventEntry) {
     $title = $eventEntry->title;
     $day = date("d.m", $time);
     $weekday = $this->__w(date("l", $time));
-    
+    $halfhour = time()-(60*30);
+
+    if($time < $halfhour) {
+        continue;
+    }
     if(isset($eventEntry->imageid) && $eventEntry->imageid) {
         $imgSrc = "/displayImage.php?id=".$eventEntry->imageid . "&width=300";
     }

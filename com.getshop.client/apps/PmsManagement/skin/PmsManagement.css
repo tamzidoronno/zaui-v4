@@ -292,6 +292,11 @@
     width: 100%;
     background-color: #fff;
 }
+.PmsManagement .managementviewfilterdisabled{
+    color:#bbb;
+    cursor:default;
+    /*display:none;*/
+}
 .PmsManagement .roomfilternew{
     position: relative;
     display: inline-block;

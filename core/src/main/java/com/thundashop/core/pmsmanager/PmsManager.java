@@ -5187,6 +5187,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         room.addons.add(addon);
         saveBooking(booking);
+        
+        logEntry("Added addon: " + product.name, booking.id, room.bookingItemId, room.pmsBookingRoomId);
     }
 
     private void updateRoomPriceFromAddons(PmsBookingRooms room, PmsBooking booking) {

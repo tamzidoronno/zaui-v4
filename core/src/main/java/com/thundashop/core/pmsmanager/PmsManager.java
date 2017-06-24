@@ -922,7 +922,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             throw new ErrorException(1000015);
         }
         
-        checkAndReportPriceMatrix(booking, "saving invalid price matrix");
+        checkAndReportPriceMatrix(booking, "saving invalid price matrix 1");
         
         if(getConfigurationSecure().usePriceMatrixOnOrder) {
             try {
@@ -936,7 +936,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 e.printStackTrace();
             }
         }
-        
+        checkAndReportPriceMatrix(booking, "saving invalid price matrix 2");
         bookings.put(booking.id, booking);
         try {
             verifyPhoneOnBooking(booking);
@@ -949,14 +949,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
             }
         }
+        checkAndReportPriceMatrix(booking, "saving invalid price matrix 3");
         if(getConfiguration().createVirtualOrders) {
             pmsInvoiceManager.createVirtualOrder(booking.id);
         }
+        checkAndReportPriceMatrix(booking, "saving invalid price matrix 4");
         
         PmsBooking oldBooking = (PmsBooking) database.getObject(credentials, booking.id);
         if (oldBooking != null) {
             diffPricesFromBooking(booking, oldBooking);
         }
+        checkAndReportPriceMatrix(booking, "saving invalid price matrix 5");
         
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);

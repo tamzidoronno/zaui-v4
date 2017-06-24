@@ -193,9 +193,13 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
     }
     
     $scope.payOnRoom = function(room) {
-        var ids = $scope.getIds();
-        $api.getApi().ResturantManager.payOnRoom(room, ids).done(function() {
-            $scope.markCompleted(ids, null, room);
+        var inIds = $scope.getIds();
+        $api.getApi().ResturantManager.payOnRoom(room, inIds).done(function(res) {
+            if (res != null && typeof(res.errorCode) !== "undefined") {
+                alert("An error accurd while adding items to the room, please try again");
+                return;
+            }
+            $scope.markCompleted(inIds, null, room);
         });
     }
     

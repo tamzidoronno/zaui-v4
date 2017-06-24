@@ -35,6 +35,7 @@ public class GetShopSessionScope implements Scope {
 
     public <T> T getNamedSessionBean(String multiLevelName, Class className) {
         long threadId = Thread.currentThread().getId();
+        threadSessionBeanNames.put(threadId, multiLevelName);
         String storeId = threadStoreIds.get(threadId);
         String name = className.getSimpleName();
         name = Character.toLowerCase(name.charAt(0)) + name.substring(1);

@@ -423,7 +423,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             addonsToAdd.put(item.addonId, item);
         }
         
-        if(room.deleted && !currentBooking.nonrefundable) { 
+        if(room.deleted && !currentBooking.nonrefundable && !room.deletedByChannelManagerForModification) { 
             for(PmsBookingAddonItem item : addonsToAdd.values()) {
                 item.price = 0.0;
             }

@@ -4333,8 +4333,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             if(room.bookingItemId == null || !room.bookingItemId.equals(item.id)) {
                                 continue;
                             }
-                            notify("room_dooropenedfirsttime", booking, "sms", room);
-                            notify("room_dooropenedfirsttime", booking, "email", room);
+                            doNotification("room_dooropenedfirsttime", booking, room);
                             room.checkedin = true;
                             saveBooking(booking);
                         }

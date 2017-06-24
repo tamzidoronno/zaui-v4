@@ -21,7 +21,7 @@ foreach($config->lockServerConfigs as $id => $server) {
         <span>
             <input type='text' gsname='start' class="start managementviewdateinput" value="<? echo date("d.m.Y", strtotime($filter->startDate)); ?>">
             <input type='text' gsname='end' class="end managementviewdateinput" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>">
-            <select class="managementviewdropdowninput filterType" gsname='filterType'">
+            <select class="managementviewdropdowninput filterType" gsname='filterType'>
                 <?php
                 foreach($searchtypes as $idx => $type) {
                     $selected = "";
@@ -67,15 +67,15 @@ foreach($config->lockServerConfigs as $id => $server) {
         $selectedFilter = $this->getSelectedFilter();
 
     ?>
-        <div class="managementviewquickfilter">
+    <div class="managementviewquickfilter">
         <div style="text-align:left; font-size: 12px;">
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "checkin"){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="checkin" gsname="type">Checking in</span> 
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "checkout"){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="checkout" gsname="type">Checking out</span> 
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "active"){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="active" gsname="type">Active today</span> 
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "stats"){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="stats" gsname="type">Coverage</span> 
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "orderstats"){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="orderstats" gsname="type">Income report</span> 
-            <span class="manegementviewfilterquickopt" onclick="$('.morefilteroptions').slideDown();">More filters</span>
-            <span class='manegementviewfilterquickopt toggleColumnFilter'>Column filter</span>
+            <span class="manegementviewfilterquickopt" onclick="$('.morefilteroptions').slideToggle();">More filters</span>
+            <span class='manegementviewfilterquickopt toggleColumnFilter <?php if($selectedFilter->filterType == "stats" ||$selectedFilter->filterType == "orderstats" ||$selectedFilter->filterType == "summary"||$selectedFilter->filterType == "invoicecustomers"||$selectedFilter->filterType == "unbilled"){echo "managementviewfilterdisabled";}?>'>Column filter</span>
             <i class='fa fa-cube' style="cursor:pointer;" gstype="clicksubmit" method='runProcessor' gsname="id" gsvalue="somevalue" title='Manually run processor'></i>
             <i class="managementviewoptions fa fa-caret-down"> Options</i>
             <?php

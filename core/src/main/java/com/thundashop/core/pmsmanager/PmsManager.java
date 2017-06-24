@@ -205,7 +205,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         configuration = toAdd;
                     } else {
                         if(configuration.rowCreatedDate != null) { deleteObject(dataCommon); }
-                        System.out.println(getName() + " : " +dataCommon.rowCreatedDate);
                     }
                 }
             }
@@ -6200,9 +6199,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE, -4);
         if(cal.getTime().before(startedDate)) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
 }

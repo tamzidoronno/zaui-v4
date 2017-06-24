@@ -688,7 +688,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         checkSecurity(booking);
         
         pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
-
         booking.calculateTotalCost();
         Double totalOrder = 0.0;
         for(String orderId : booking.orderIds) {
@@ -3843,7 +3842,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.pmsBookingRoomId.equals(roomId)) {
                 phoneToSend = phoneNumber;
                 prefixToSend = prefix;
-                doNotification("room_resendcode", booking, room);
+                doNotification("room_added_to_arx", booking, room);
             }
         }
     }
@@ -4352,8 +4351,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
                 if(room.code != null && room.code.equals(card) && !room.checkedin) {
-                    notify("room_dooropenedfirsttime", booking, "sms", room);
-                    notify("room_dooropenedfirsttime", booking, "email", room);
+                    doNotification("room_dooropenedfirsttime", booking, room);
                     room.checkedin = true;
                     saveBooking(booking);
                 }

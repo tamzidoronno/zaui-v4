@@ -90,6 +90,7 @@ if($room->blocked) {
 if($room->addedToArx) {
     $code = $room->code;
     $resend = "<span class='resendcode' style='color:blue; cursor:pointer;'>Resend</span>";
+    $resendcheckin = "<span class='resendcheckin' style='color:blue; cursor:pointer;'>Resend</span>";
     $renew = "<span class='renewcode' style='color:blue; cursor:pointer;'>Renew</span>";
 }
 ?>
@@ -128,7 +129,7 @@ if($room->addedToArx) {
                 ?>
                 <input type='text' toSend='prefix' value='<?php echo $prefix; ?>'>
                 <input type='text' toSend='phone' value='<?php echo $phone; ?>'>
-                <input type='button' value='Resend' class='doresend'>
+                <input type='button' value='Resend' class='doresend' method='resendCode'>
             </div>
         </td>
     </tr>
@@ -205,10 +206,16 @@ $('.unblockaccess').on('click', function() {
     });
 });
 $('.resendcode').on('click', function() {
+    $('.resendcode').hide();
     $('.resendcodepanel').show();
 });
+$('.resendcheckin').on('click', function() {
+    $('.resendcheckin').hide();
+    $('.resendcheckinpanel').show();
+});
 $('.doresend').on('click', function() {
-    var event = thundashop.Ajax.createEvent('','resendCode', $(this), { 
+    var method = $(this).attr('method');
+    var event = thundashop.Ajax.createEvent('',method, $(this), { 
         "roomid" : $(this).closest('table').attr('roomid'),
         "prefix" : $('[toSend="prefix"]').val(),
         "phone" : $('[toSend="phone"]').val()

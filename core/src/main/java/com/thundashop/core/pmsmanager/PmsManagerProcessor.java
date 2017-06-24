@@ -284,7 +284,7 @@ public class PmsManagerProcessor {
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;
-                        manager.doNotification("room_remobved_from_arx", booking, room);
+                        manager.doNotification("room_removed_from_arx", booking, room);
                     }
                 }
             }

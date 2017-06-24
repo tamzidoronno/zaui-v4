@@ -168,6 +168,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
+                checkAndReportPriceMatrix(booking, "when loading");
                 bookings.put(booking.id, booking);
             }
             if (dataCommon instanceof ConferenceData) {
@@ -5166,7 +5167,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy) {
-        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+       PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
        
         Product product = item.getProduct();

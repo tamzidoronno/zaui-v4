@@ -1087,8 +1087,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {
-        pmsManager.checkAndReportPriceMatrix(booking, "when updating price matrix");
+        pmsManager.checkAndReportPriceMatrix(booking, "when updating pricsudo n stablee matrix");
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, priceType, booking);
+        if(priceMatrix == null || priceMatrix.isEmpty()) {
+            logPrint("Empty price matrix detected, we can't continue updating price matrix when the price matrix returned is empty.");
+            return room.price;
+        }
         double total = 0.0;
         int count = 0;
         if(priceType == PmsBooking.PriceType.daily) {

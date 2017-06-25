@@ -1,22 +1,63 @@
 <div class='additionalinfo row'>
     <a ui-sref="mainpage"><i class='fa fa-arrow-left' style='color:#fff; float:left;'></i></a>
     Caretaker program</div>
-<div class='row'>
-<br>
-    <div class='col-md-12'><span style='font-size: 16px;'><b>Things to do</b></span></div>
-<br><br>
-<div ng-repeat="caretaker in careTakerList" class='caretakerrow row'>
-    <div class='row col-md-3'>{{caretaker.rowCreatedDate}}</div>
-    <div class='row col-md-3'>{{caretaker.description}}</div>
-    <div class='row col-md-3 col-xs-5'>{{caretaker.productName}}</div>
-    <div class='row col-md-2 col-xs-5'>{{caretaker.roomName}}</div>
-    <div class='row col-md-1 col-xs-2'><span class='btn btn-success' ng-click="completeTask(caretaker)"><i class='fa fa-check'></i></div>
+<div class='row' style='padding-top: 20px;'>
+    <div class="col-xs-12">
+        <span class="changebtn btn btn-success" ng-click="changeView('overview')" view='overview'>Overview</span>
+        <span class="changebtn btn btn-info" ng-click="changeView('unassigned')" view='unassigned'>Unassigned tasks</span>
+        <span class="changebtn btn btn-info" ng-click="changeView('assigned')" view='assigned'>Assigned tasks</span>
+        <span class="changebtn btn btn-info" ng-click="changeView('completed')" view='completed'>Completed tasks</span>
+    </div>
+    <div style='clear:both;'></div>
+<div ng-show="view === 'overview'">
+    <br>
+    <div class='col-md-12' style='margin-bottom: 20px;'><span style='font-size: 16px;'><b>Overview</b></span><br>
+        <label>
+            <input type="checkbox" ng-model='defectsonly' ng-click="reloadOverview()"> Show only rooms with defects
+        </label>
+        </div>
+    <br><br>
+    <div class="row" style="font-weight:bold;">
+        <span class="col-xs-3">Name</span>
+        <span class="col-xs-3" style="text-align:center;">Assigned</span>
+        <span class="col-xs-3" style="text-align:center;">Unassigned</span>
+        <span class="col-xs-3" style="text-align:center;">Total</span>
+    </div>
+    <div ng-repeat="roomview in overView" class="row" style="margin-top: 10px; padding-top: 10px; border-top: solid 1px #bbb;">
+        <span class="col-xs-3">{{roomview.roomName}}</span>
+        <span class="col-xs-3" style="text-align:center;">{{roomview.assigned}}</span>
+        <span class="col-xs-3" style="text-align:center;">{{roomview.unassigned}}</span>
+        <span class="col-xs-3" style="text-align:center;">{{roomview.completed}} / {{roomview.total}}</span>
+    </div>
 </div>
 
-<div class='row' ng-show="careTakerList.size() === 0">
-    <div class='col-md-12'>There is nothing to do</div>
+<div ng-show="listViewLoaded" style="position:relative;">
     <br>
     <br>
+    <div class="assignmentbox">
+        <b>Assign task to:</b><br>
+        <select class='col-xs-9 form-control' ng-model="assignToUser">
+            <option value=''>Assign to me</option>
+            <option ng-repeat="caretaker in caretakerlist" value='{{caretaker.id}}'>{{caretaker.fullName}}</option>
+        </select>
+        <span class='col-xs-3 btn btn-success form-control' ng-click="assignTask();">Assign</span>
+    </div>
+    <br>
+    <div ng-repeat="room in overviewList" class="row" style="padding-top: 10px; border-top: solid 1px #bbb; margin-top: 10px;">
+        <span class='col-xs-12'>
+            <b>{{room.name}}</b>
+            <div ng-repeat="job in room.jobs" class="row" style="padding-left: 20px; padding-top: 5px;">
+                <span class='col-xs-12'>
+                    <span style='float:right;color:#bbb;' class='hidden-xs hidden-sm' ng-show="job.dateCompleted">Completed by {{job.assignedToName}} at {{job.dateCompleted}}.</span>
+                    <span style='float:right;color:#bbb;' class='hidden-xs hidden-sm' ng-show="!job.dateCompleted && job.assignedToName">
+                        Assigned to {{job.assignedToName}} at {{job.dateAssigned}}<span class='btn btn-success' ng-click="completeJob(job.id)" style='margin-left: 20px;'><i class='fa fa-check'></i></span>
+                    </span>
+                    <span class='btn btn-success' style='float:right;' ng-click="displayAssignmentBox($event, job.id)" ng-show="!job.assignedToName && !job.dateCompleted"><i class='fa fa-share' ></i></span>
+                    {{job.description}}
+                </span>
+            </div>
+        </span>
+    </div>
 </div>
 <div class='row'><br><br></div>
 
@@ -25,3 +66,9 @@
         <a ui-sref="mainpage"><i class='fa fa-home' style='color:#fff;'></i></a>
     </div>
 </div>
+
+<style>
+.assignmentbox {
+    position:absolute; right: 70px; width: 200px; border: solid 1px #bbb; padding: 10px;z-index: 2; background-color:#fff;display:none;
+}
+</style>

@@ -15,7 +15,12 @@ class GetShopThemeNew extends \ThemeApplication implements \Application {
     }
     
     public function getThemeClasses() {
-         return ["frontbox"];
+         return ["frontbox", "productdescriptionrow"];
+    }
+
+    
+    public function addScripts() {
+        echo "<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>";
     }
 
 }

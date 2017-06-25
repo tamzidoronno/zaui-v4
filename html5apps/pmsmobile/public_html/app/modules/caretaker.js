@@ -12,7 +12,7 @@ getshop.careTakerController = function ($scope, $state, $stateParams) {
         $('.changebtn[view="'+view+'"]').addClass('btn-success');
         $scope.view = view;
         $scope.listViewLoaded = false;
-        if(view !== "overview") {
+        if(view !== "overview" && view !== "addtask") {
             $scope.loadListView(view);
         }
     },
@@ -35,6 +35,19 @@ getshop.careTakerController = function ($scope, $state, $stateParams) {
         var top = target.offset().top-box.height();
         box.css('top', top + "px");
         box.toggle();
+    },
+    $scope.reportToCareTaker = function() {
+        var job = {};
+        job['description'] = $scope.caretakermsg;
+        job['roomId'] = $scope.selectedRoom.id;
+        
+        var saving = getshopclient.PmsManager.saveCareTakerJob(getMultilevelName(), job);
+        saving.done(function() {
+            $scope.selectedRoom = "";
+            $scope.reportPanel = false;
+            $scope.caretakermsg = "";
+            $scope.$apply();
+        });
     },
     $scope.completeJob = function(jobId) {
         var done = getshopclient.CareTakerManager.completeTask(getMultilevelName(), jobId);
@@ -79,6 +92,13 @@ getshop.careTakerController = function ($scope, $state, $stateParams) {
             $scope.$apply();
         });
     },
+    $scope.loadBookingItems = function() {
+        var loading = getshopclient.BookingEngine.getBookingItems(getMultilevelName());
+        loading.done(function(res){
+            $scope.items = res;
+        });
+    }
+            
     $scope.loadCareTakerTasks = function() {
         var loading = getshopclient.PmsManager.getCareTakerJobs(getMultilevelName());
         loading.done(function(res) {
@@ -92,7 +112,7 @@ getshop.careTakerController = function ($scope, $state, $stateParams) {
             $scope.$apply();
         });
     };
-            
+    $scope.loadBookingItems();      
     $scope.loadCareTakerTasks();
     $scope.loadRoomList();
 };

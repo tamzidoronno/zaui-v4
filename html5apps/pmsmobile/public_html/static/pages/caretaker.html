@@ -7,8 +7,17 @@
         <span class="changebtn btn btn-info" ng-click="changeView('unassigned')" view='unassigned'>Unassigned tasks</span>
         <span class="changebtn btn btn-info" ng-click="changeView('assigned')" view='assigned'>Assigned tasks</span>
         <span class="changebtn btn btn-info" ng-click="changeView('completed')" view='completed'>Completed tasks</span>
+        <span class="changebtn btn btn-info" ng-click="changeView('addtask')" view='addtask'>Add task</span>
     </div>
     <div style='clear:both;'></div>
+<div ng-show="view === 'addtask'">
+    <div style='clear:both;'></div>
+    <div class='col-xs-12' style='padding-top: 10px; padding-bottom: 10px;'>
+        <select class='form-control' ng-model="selectedRoom" ng-options="item as item.bookingItemName for item in items"></select>
+        <textarea ng-model="caretakermsg" class='form-control'></textarea>
+        <span class='btn btn-success form-control' ng-click="reportToCareTaker()">Add task</span>
+    </div>
+</div>
 <div ng-show="view === 'overview'">
     <br>
     <div class='col-md-12' style='margin-bottom: 20px;'><span style='font-size: 16px;'><b>Overview</b></span><br>

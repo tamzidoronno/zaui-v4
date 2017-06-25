@@ -152,7 +152,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     GetShop getShop;
-    
+
     @Autowired
     BookingComRateManagerManager bookingComRateManagerManager;
     
@@ -6199,6 +6199,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return true;
         }
         return false;
+    }
+
+    public PmsRoomSimple checkPinCode(String bookingId, String pmsRoomId, String pincode) {
+        PmsBooking booking = getBooking(bookingId);
+        if (booking == null)
+            return null;
+        
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.pmsBookingRoomId.equals(pmsRoomId) && room.code.equals(pincode)) {
+                PmsBookingSimpleFilter filter = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
+                return filter.convertRoom(room, booking);
+            }
+        }
+        
+        return null;
     }
 
 }

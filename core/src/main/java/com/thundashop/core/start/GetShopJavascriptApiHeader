@@ -101,7 +101,7 @@ GetShopApiWebSocket.prototype = {
             this.firstUnsentMessages = false;
         }
         
-        if (typeof('messagePersister') !== "undefined" && messagePersister) {
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
             messagePersister.markAsSent(corrolatingMessage);
             this.fireMessageCountChanged();
         }
@@ -146,7 +146,7 @@ GetShopApiWebSocket.prototype = {
     },
     
     getUnsentMessageCount: function() {
-        if (typeof('messagePersister') !== "undefined" && messagePersister) {
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
             return messagePersister.getUnsetMessageCount();
         }
         
@@ -217,7 +217,7 @@ GetShopApiWebSocket.prototype = {
         var deferred = $.Deferred();
         message.messageId = this.makeid();
         
-        if (typeof('messagePersister') !== "undefined" && messagePersister) {
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
             messagePersister.persist(message);
             this.fireMessageCountChanged();
         }
@@ -283,7 +283,7 @@ GetShopApiWebSocket.prototype = {
             }
         }
         
-        if (typeof('messagePersister') !== "undefined" && messagePersister) {
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
             var allUnsetMessages = messagePersister.getAllUnsentMessages();
             
             for (var k in allUnsetMessages) {

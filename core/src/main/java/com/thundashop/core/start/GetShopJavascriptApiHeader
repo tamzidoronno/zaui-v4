@@ -283,7 +283,7 @@ GetShopApiWebSocket.prototype = {
             }
         }
         
-         if (typeof(messagePersister) !== "undefined" && messagePersister) {
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
             var allUnsetMessages = messagePersister.getAllUnsentMessages();
             
             for (var k in allUnsetMessages) {

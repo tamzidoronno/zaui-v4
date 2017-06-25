@@ -69,4 +69,7 @@ interface IResturantManager {
     
     @Editor
     public void payOnRoom(PmsRoomSimple room, List<ResturantCartItem> cartItemsIds);
+    
+    @Editor
+    public PmsRoomSimple checkPinCode(String pincode, String bookingId, String pmsRoomId);
 }

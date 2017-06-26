@@ -2019,9 +2019,17 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
     
     @Override
-    public List<EventStatistic> getStatistic(Date startDate, Date stopDate, List<String> groupIds, List<String> eventTypeIds) {
-        if (stopDate == null || stopDate.before(startDate) || stopDate.equals(startDate))
+    public List<EventStatistic> getStatistic(Date startDate, Date oldStopDate, List<String> groupIds, List<String> eventTypeIds) {
+        if (oldStopDate == null || oldStopDate.before(startDate) || oldStopDate.equals(startDate))
             return new ArrayList();
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(oldStopDate);
+        cal.set(Calendar.HOUR, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        
+        Date stopDate = cal.getTime();
         
         List<Event> events = getAllEvents().stream()
                 .filter(event -> isWithinDates(event, startDate, stopDate))
@@ -2035,7 +2043,6 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         List<EventStatistic> stats = new ArrayList();
         
-        Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         
@@ -2078,6 +2085,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        cal.set(Calendar.HOUR, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
         return cal.getTime();
     }
 

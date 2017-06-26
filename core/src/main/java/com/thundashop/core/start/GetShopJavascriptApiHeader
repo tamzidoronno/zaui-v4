@@ -12,7 +12,7 @@ var GetShopApiWebSocket = function(address, port, identifier, persistMessages) {
     if (typeof(identifier) === "undefined" || !identifier) {
         this.identifier = this.address;
     } else {
-        this.identifier = identifier;
+        this.identifier = identifier; 
     }
 };
 
@@ -273,7 +273,7 @@ GetShopApiWebSocket.prototype = {
     },
     
     sendUnsentMessages: function() {
-        var sendFunc = function(messageJson, me) {
+        var sendFunc = function(messageJson, me) { 
             if (me.socket.readyState !== 1) {
                 setTimeout(function() {
                     sendFunc(messageJson, me);

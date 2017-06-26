@@ -7,9 +7,12 @@ import org.mongodb.morphia.annotations.Transient;
 public class PmsCareTaker extends DataCommon {
     public String description;
     public Date dateCompleted;
+    public Date dateAssigned;
     public String inventoryProductId;
     //Bookingengine itemid.
     public String roomId;
+    public String assignedTo = "";
+    public String assignedToName = "";
     
     @Transient
     public String roomName;

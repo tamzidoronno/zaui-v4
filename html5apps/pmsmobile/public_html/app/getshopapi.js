@@ -12,7 +12,7 @@ var GetShopApiWebSocket = function(address, port, identifier, persistMessages) {
     if (typeof(identifier) === "undefined" || !identifier) {
         this.identifier = this.address;
     } else {
-        this.identifier = identifier;
+        this.identifier = identifier; 
     }
 };
 
@@ -273,7 +273,7 @@ GetShopApiWebSocket.prototype = {
     },
     
     sendUnsentMessages: function() {
-        var sendFunc = function(messageJson, me) {
+        var sendFunc = function(messageJson, me) { 
             if (me.socket.readyState !== 1) {
                 setTimeout(function() {
                     sendFunc(messageJson, me);
@@ -283,7 +283,7 @@ GetShopApiWebSocket.prototype = {
             }
         }
         
-        if (typeof(messagePersister) !== "undefined" && messagePersister) {
+         if (typeof(messagePersister) !== "undefined" && messagePersister) {
             var allUnsetMessages = messagePersister.getAllUnsentMessages();
             
             for (var k in allUnsetMessages) {
@@ -8039,6 +8039,72 @@ GetShopApiWebSocket.PmsEventManager.prototype = {
     },
 
 }
+GetShopApiWebSocket.CareTakerManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.CareTakerManager.prototype = {
+    'assignTask' : function(multilevelname, taskId,userId, gs_silent) {
+        var data = {
+            args : {
+                taskId : JSON.stringify(taskId),
+                userId : JSON.stringify(userId),
+            },
+            method: 'assignTask',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.ICareTakerManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'completeTask' : function(multilevelname, taskId, gs_silent) {
+        var data = {
+            args : {
+                taskId : JSON.stringify(taskId),
+            },
+            method: 'completeTask',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.ICareTakerManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getCareTakerList' : function(multilevelname, filter, gs_silent) {
+        var data = {
+            args : {
+                filter : JSON.stringify(filter),
+            },
+            method: 'getCareTakerList',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.ICareTakerManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getCaretakers' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getCaretakers',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.ICareTakerManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getRoomOverview' : function(multilevelname, defectsOnly, gs_silent) {
+        var data = {
+            args : {
+                defectsOnly : JSON.stringify(defectsOnly),
+            },
+            method: 'getRoomOverview',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.ICareTakerManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
 GetShopApiWebSocket.PmsInvoiceManager = function(communication) {
     this.communication = communication;
 }
@@ -15207,6 +15273,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.LasGruppenPDFGenerator = new GetShopApiWebSocket.LasGruppenPDFGenerator(this);
     this.PkkControlManager = new GetShopApiWebSocket.PkkControlManager(this);
     this.PmsEventManager = new GetShopApiWebSocket.PmsEventManager(this);
+    this.CareTakerManager = new GetShopApiWebSocket.CareTakerManager(this);
     this.PmsInvoiceManager = new GetShopApiWebSocket.PmsInvoiceManager(this);
     this.PmsManager = new GetShopApiWebSocket.PmsManager(this);
     this.PmsManagerProcessor = new GetShopApiWebSocket.PmsManagerProcessor(this);

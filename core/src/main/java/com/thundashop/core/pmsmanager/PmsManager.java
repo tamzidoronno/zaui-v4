@@ -161,6 +161,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Date virtualOrdersCreated;
     private Date startedDate;
     
+    public HashMap<String, PmsCareTaker> getCareTakerTasks() {
+        return careTaker;
+    }
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         Calendar toCheck = Calendar.getInstance();
@@ -1011,6 +1015,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
+                logEntry("Same day checking move", booking.id, itemId, room.pmsBookingRoomId);
                 bookingEngine.changeBookingItemAndDateOnBooking(room.bookingId, itemId, start, end);
                 resetBookingItem(room, itemId, booking);
             } else {
@@ -1040,10 +1045,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                     }
                 }
-
-
-
-                
             } else {
                 logText = "Unassigned room from " + from;
             }

@@ -21,6 +21,7 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.sendregning.SendRegningManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
@@ -48,6 +49,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private HashMap<String, PmsOrderStatsFilter> savedIncomeFilters = new HashMap();
     private PmsPaymentLinksConfiguration paymentLinkConfig = new PmsPaymentLinksConfiguration();
     
+    @Autowired
+    SendRegningManager sendRegningManager;
 
     private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
         double res = 0.0;
@@ -702,6 +705,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                 }
                 if(invoicedTo == null) {
+                    room.invoicedTo = null;
                     continue;
                 }
                 
@@ -1311,12 +1315,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         order.sentToCustomer = true;
         order.closed = true;
         orderManager.saveObject(order);
-        pmsManager.setOrderIdToSend(orderId);
-        pmsManager.setEmailToSendTo(email);
-        if(order.status == Order.Status.PAYMENT_COMPLETED) {
-            pmsManager.doNotification("sendreciept", bookingId);
+        
+        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("sendregning")) {
+            sendRegningManager.sendOrder(orderId);
         } else {
-            pmsManager.doNotification("sendinvoice", bookingId);
+            pmsManager.setOrderIdToSend(orderId);
+            pmsManager.setEmailToSendTo(email);
+            if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                pmsManager.doNotification("sendreciept", bookingId);
+            } else {
+                pmsManager.doNotification("sendinvoice", bookingId);
+            }
         }
     }
 

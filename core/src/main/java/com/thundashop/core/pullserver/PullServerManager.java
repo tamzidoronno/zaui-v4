@@ -39,7 +39,7 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
         for (DataCommon dataRetrieved : data.data) {
             if (dataRetrieved instanceof PullMessage) {
                 PullMessage pullMessage = (PullMessage)dataRetrieved;
-                if (!pullMessage.delivered || pullMessage.id.equals("1b6a52c4-76c3-4ab0-bc24-e3d1057ad426")) {
+                if (!pullMessage.delivered) {
                     pullMessages.add(pullMessage);
                 }
             }

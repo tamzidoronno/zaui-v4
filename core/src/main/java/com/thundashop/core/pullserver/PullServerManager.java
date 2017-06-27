@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
         for (DataCommon dataRetrieved : data.data) {
             if (dataRetrieved instanceof PullMessage) {
                 PullMessage pullMessage = (PullMessage)dataRetrieved;
-                if (!pullMessage.delivered) {
+                if (!pullMessage.delivered || pullMessage.id.equals("1b6a52c4-76c3-4ab0-bc24-e3d1057ad426")) {
                     pullMessages.add(pullMessage);
                 }
             }
@@ -50,7 +51,7 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
     }
     
     @Override
-    public void savePullMessage(PullMessage pullMessage) {    
+    public void savePullMessage(PullMessage pullMessage) {
         pullMessage.sequence = getCounter();
         saveObject(pullMessage);
         pullMessages.add(pullMessage);
@@ -98,29 +99,45 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
 
     @Override
     public void triggerCheckForPullMessage() {
-        try { 
-            List<String> storeIds = pullMessages.stream()
-                    .filter(o -> !o.isInvalidatedDueToTime())
-                    .map(o -> o.belongsToStore)
-                    .collect(Collectors.toList());
+//        PullMessage testMsg = new PullMessage();
+//        testMsg.belongsToStore = "13442b34-31e5-424c-bb23-a396b7aeb8ca";
+//        testMsg.body = "TEST";
+//        testMsg.rowCreatedDate = new Date();
+//        testMsg.id = UUID.randomUUID().toString();
+//        
+//        pullMessages.add(testMsg);
+        
+        List<String> storeIds = pullMessages.stream()
+                .filter(o -> !o.isInvalidatedDueToTime())
+                .map(o -> o.belongsToStore)
+                .collect(Collectors.toList());
 
-            String address = "https://www.getshop.com/";
+        storeIds = new ArrayList<String>(new HashSet<String>(storeIds));
 
-            if (!frameworkConfig.productionMode) {
-                address = "http://getshopnew.3.0.local.getshop.com/";
-            }
+        for (String iStoreId : storeIds) {
 
-            address += "scripts/triggercheckordertocollect.php?storeid=";
+            Runnable runThread = new Runnable() {
+                @Override
+                public void run() {
+                    String address = "https://www.getshop.com/";
 
-            for (String iStoreId : storeIds) {
-                address += iStoreId;
-                openAddress(address);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+                    if (!frameworkConfig.productionMode) {
+                        address = "http://getshopnew.3.0.local.getshop.com/";
+                    }
+
+                    address += "scripts/triggercheckordertocollect.php?storeid=";
+                    address += iStoreId;
+                    try { 
+                        openAddress(address);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            };
+
+            new Thread(runThread).start();
+
         }
-        
-        
     }
 
     

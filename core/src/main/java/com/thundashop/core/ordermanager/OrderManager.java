@@ -548,13 +548,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return result;
     }
     
+    
+    @Override
+    public void startCheckForOrdersToCapture(String internalPassword) throws ErrorException {
+        CheckOrderCollector check = new CheckOrderCollector();
+        createProcessor(check);
+    }
+    
     @Override
     public void checkForOrdersToCapture(String internalPassword) throws ErrorException {
         if (internalPassword == null || !internalPassword.equals("asfasdfuj2843ljsdflansfkjn432k5lqjnwlfkjnsdfklajhsdf2")) {
             return;
         }
         
-        logPrint("Checking for orders to collect..");
+        logPrint("Checking for orders to collect.. " + getSession().currentUser.fullName);
         dibsManager.checkForOrdersToCapture();
         epayManager.checkForOrdersToCapture();
 //        bamboraManager.checkForOrdersToCapture();

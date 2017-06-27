@@ -647,7 +647,7 @@ public class GetShop extends ManagerBase implements IGetShop {
                 JsonObject2 obj = new JsonObject2();
                 obj.addr = webaddress;
                 obj.interfaceName = "core.ordermanager.IOrderManager";
-                obj.method = "checkForOrdersToCapture";
+                obj.method = "startCheckForOrdersToCapture";
                 obj.args = new HashMap();
                 obj.args.put("internalPassword", "asfasdfuj2843ljsdflansfkjn432k5lqjnwlfkjnsdfklajhsdf2");
                 obj.sessionId = sessionId;

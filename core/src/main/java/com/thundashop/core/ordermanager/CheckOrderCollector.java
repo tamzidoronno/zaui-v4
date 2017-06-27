@@ -19,14 +19,11 @@ public class CheckOrderCollector extends GetShopSchedulerBase {
         super(webAddress, username, password, scheduler, multiLevelName);
     }
 
+    public CheckOrderCollector() {
+    }
+    
     @Override
     public void execute() throws Exception {
-        Random r = new Random();
-        int Low = 0;
-        int High = 45000;
-        int Result = r.nextInt(High-Low) + Low;
-        Thread.sleep(Result);
-        
         getApi().getOrderManager().checkForOrdersToCapture("asfasdfuj2843ljsdflansfkjn432k5lqjnwlfkjnsdfklajhsdf2");
     }
 }

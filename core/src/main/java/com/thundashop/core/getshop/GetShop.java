@@ -2,6 +2,7 @@ package com.thundashop.core.getshop;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSessionScope;
+import com.google.gson.Gson;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -12,7 +13,9 @@ import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.StoreHandler;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -69,6 +72,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     
     @Autowired
     private MailFactory mailFactory;
+    
     
     @Override
     public List<GetshopStore> getStores(String code) {
@@ -599,5 +603,64 @@ public class GetShop extends ManagerBase implements IGetShop {
         } catch (IOException e) {
             return false;
         }
+    }
+    
+    @Override
+    public void triggerPullRequest(String storeId) {
+        Store store = storePool.getStore(storeId);
+        if (store == null ){
+            return;
+        }
+        
+        if (AppContext.storePool == null) {
+            return;
+        }
+        
+        Runnable thread = new Runnable() {
+            @Override
+            public void run() {
+                String sessionId = UUID.randomUUID().toString();
+                initializeStore(sessionId);
+                startProcessor(sessionId);
+            }
+
+            private void initializeStore(String sessionId) {
+                String webaddress = store.getDefaultWebAddress();
+                JsonObject2 obj = new JsonObject2();
+                obj.addr = webaddress;
+                obj.interfaceName = "core.storemanager.IStoreManager";
+                obj.method = "initializeStore";
+                obj.args = new HashMap();
+                obj.args.put("webAddress", webaddress);
+                obj.args.put("sessionId", sessionId);
+                obj.sessionId = sessionId;
+
+                Gson gson = new Gson();
+                String msg = gson.toJson(obj);
+                JsonObject2 inObject = new JsonObject2();
+                inObject.interfaceName = "";
+                AppContext.storePool.ExecuteMethod(msg, webaddress, sessionId);
+            }
+            
+            private void startProcessor(String sessionId) throws ErrorException {
+                String webaddress = store.getDefaultWebAddress();
+                JsonObject2 obj = new JsonObject2();
+                obj.addr = webaddress;
+                obj.interfaceName = "core.ordermanager.IOrderManager";
+                obj.method = "checkForOrdersToCapture";
+                obj.args = new HashMap();
+                obj.args.put("internalPassword", "asfasdfuj2843ljsdflansfkjn432k5lqjnwlfkjnsdfklajhsdf2");
+                obj.sessionId = sessionId;
+
+                Gson gson = new Gson();
+                String msg = gson.toJson(obj);
+                JsonObject2 inObject = new JsonObject2();
+                inObject.interfaceName = "";
+                AppContext.storePool.ExecuteMethod(msg, webaddress, sessionId);
+            }
+        };
+                
+        new Thread(thread).start();      
+        
     }
 }

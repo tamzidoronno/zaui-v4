@@ -21,5 +21,6 @@ interface IPullServerManager {
     public List<PullMessage> getPullMessages(String keyId, String storeId);
     
     public void markMessageAsReceived(String messageId, String storeId);
-    
+ 
+    public void triggerCheckForPullMessage();
 }

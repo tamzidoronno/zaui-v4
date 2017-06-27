@@ -1,5 +1,6 @@
 package com.thundashop.core.ordermanager;
 
+import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
@@ -14,6 +15,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.epay.EpayManager;
+import com.thundashop.core.getshop.GetShopPullService;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -112,6 +114,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private GetShopApplicationPool getShopApplicationPool; 
+    
+    @Autowired
+    private GetShopPullService getShopPullService; 
+
    
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
@@ -200,10 +206,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 orders.put(order.id, order);
             }
         }
-        createScheduler("ordercollector", "* * * * *", CheckOrderCollector.class);
+    }
+
+    @Override
+    public void initialize() throws SecurityException {
+        super.initialize(); //To change body of generated methods, choose Tools | Templates.
+        
+        if (storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
+            createScheduler("ordercollector", "0,10,20,30,40,50 * * * *", CheckOrderCollector.class);
+        } else {
+            stopScheduler("ordercollector");
+        }
     }
     
-
     public void saveOrderInternal(Order order) throws ErrorException {
         if (order.isVirtual) {
             return;
@@ -534,10 +549,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     @Override
-    public void checkForOrdersToCapture() throws ErrorException {
+    public void checkForOrdersToCapture(String internalPassword) throws ErrorException {
+        if (internalPassword == null || !internalPassword.equals("asfasdfuj2843ljsdflansfkjn432k5lqjnwlfkjnsdfklajhsdf2")) {
+            return;
+        }
+        
+        logPrint("Checking for orders to collect..");
         dibsManager.checkForOrdersToCapture();
         epayManager.checkForOrdersToCapture();
 //        bamboraManager.checkForOrdersToCapture();
+
+        emptyPullServerQueue();
     }
     
     @Override
@@ -1964,6 +1986,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             System.out.println("Order is incorrect: " + order.incrementOrderId + " total: " + orderTotal + " found: " + total);
         }
         
+    }
+
+    private void emptyPullServerQueue() {
+        try {
+            List<PullMessage> msgs = getShopPullService.getMessages("getshop_all_message_for_store_to_receive", storeId);
+            for (PullMessage msg : msgs) {
+                getShopPullService.markMessageAsReceived(msg.id, storeId);
+            }
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 

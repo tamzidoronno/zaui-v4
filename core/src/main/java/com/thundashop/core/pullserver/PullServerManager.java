@@ -2,12 +2,20 @@ package com.thundashop.core.pullserver;
 
 
 import com.getshop.scope.GetShopSession;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.ordermanager.CheckOrderCollector;
 import com.thundashop.core.pullserver.data.PullMessage;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +43,10 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
                 }
             }
         }
+        
+        if (storeId.equals("2a831774-e72e-43e3-ac4c-d8700a402e52")) {
+            createScheduler("trigger", "* * * * *", CheckForPullMessages.class);
+        }
     }
     
     @Override
@@ -43,6 +55,7 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
         saveObject(pullMessage);
         pullMessages.add(pullMessage);
         incrementSequence();
+        triggerCheckForPullMessage();
     }
 
     private int getCounter() {
@@ -64,7 +77,8 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
     public List<PullMessage> getPullMessages(String keyId, String storeId) {
         return pullMessages.stream()
                 .filter(o -> o.belongsToStore.equals(storeId))
-                .filter(o -> o.keyId.equals(keyId))
+                .filter(o -> !o.isInvalidatedDueToTime())
+                .filter(o -> o.keyId.equals(keyId) || keyId.equals("getshop_all_message_for_store_to_receive"))
                 .collect(Collectors.toList());
     }
 
@@ -81,6 +95,53 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
             saveObject(pullMessage);
         }
     }
+
+    @Override
+    public void triggerCheckForPullMessage() {
+        try { 
+            List<String> storeIds = pullMessages.stream()
+                    .filter(o -> !o.isInvalidatedDueToTime())
+                    .map(o -> o.belongsToStore)
+                    .collect(Collectors.toList());
+
+            String address = "https://www.getshop.com/";
+
+            if (!frameworkConfig.productionMode) {
+                address = "http://getshopnew.3.0.local.getshop.com/";
+            }
+
+            address += "scripts/triggercheckordertocollect.php?storeid=";
+
+            for (String iStoreId : storeIds) {
+                address += iStoreId;
+                openAddress(address);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        
+    }
+
     
+    
+    public String openAddress(String url) throws Exception {
+        URL website = new URL(url);
+        URLConnection connection = website.openConnection();
+        BufferedReader in = new BufferedReader(
+                                new InputStreamReader(
+                                    connection.getInputStream()));
+
+        StringBuilder response = new StringBuilder();
+        String inputLine;
+
+        while ((inputLine = in.readLine()) != null) 
+            response.append(inputLine);
+
+        in.close();
+
+        return response.toString();
+    }
+
     
 }

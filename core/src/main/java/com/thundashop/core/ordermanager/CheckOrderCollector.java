@@ -27,6 +27,6 @@ public class CheckOrderCollector extends GetShopSchedulerBase {
         int Result = r.nextInt(High-Low) + Low;
         Thread.sleep(Result);
         
-        getApi().getOrderManager().checkForOrdersToCapture();
+        getApi().getOrderManager().checkForOrdersToCapture("asfasdfuj2843ljsdflansfkjn432k5lqjnwlfkjnsdfklajhsdf2");
     }
 }

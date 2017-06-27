@@ -213,7 +213,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         super.initialize(); //To change body of generated methods, choose Tools | Templates.
         
         if (storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
-            createScheduler("ordercollector", "0,10,20,30,40,50 * * * *", CheckOrderCollector.class);
+            createScheduler("ordercollector", "*/10 * * * *", CheckOrderCollector.class);
         } else {
             stopScheduler("ordercollector");
         }

@@ -139,6 +139,7 @@ public class WilhelmsenHouse implements AccountingInterface {
     @Override
     public List<String> createOrderFile(List<Order> orders, String type) {
         if(type != null && type.equals("invoice")) {
+            orders = removeExpediaPrepaid(orders);
             return createInvoiceFile(orders);
         } else {
             return createCreditCardFile(orders);
@@ -262,14 +263,7 @@ public class WilhelmsenHouse implements AccountingInterface {
         List<String> result = new ArrayList();
         for(Order order : orders) {
             
-            if (order.payment != null && order.payment.paymentType.equals("ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\\ExpediaPayment")) {
-                if(order.getEndDateByItems() != null && order.getEndDateByItems().after(new Date())) {
-                    continue;
-                }
-            }
-            
             User user = userManager.getUserById(order.userId);
-            
             
             Date startedDate = order.getStartDateByItems();
             
@@ -398,6 +392,20 @@ public class WilhelmsenHouse implements AccountingInterface {
         }
         
         return fullName.replaceAll(";", "");
+    }
+
+    private List<Order> removeExpediaPrepaid(List<Order> orders) {
+        List<Order> toRemove = new ArrayList();
+        for(Order order : orders) {
+            
+            if (order.payment != null && order.payment.paymentType.equals("ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\\ExpediaPayment")) {
+                if(order.getEndDateByItems() != null && order.getEndDateByItems().after(new Date())) {
+                    toRemove.add(order);
+                }
+            }
+        }
+        orders.removeAll(toRemove);
+        return orders;
     }
 
     

@@ -3621,7 +3621,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Double price = 0.0;
             Integer count = 0;
             for(PmsBookingAddonItem tmp : addons) {
-                double tmpPrice = tmp.price;
+                if (tmp == null) {
+                    continue;
+                }
+                double tmpPrice = tmp.price == null ? 0L : tmp.price;
                 if(prices.productPrices.containsKey(item.productId)) {
                     tmpPrice = prices.productPrices.get(item.productId);
                 }

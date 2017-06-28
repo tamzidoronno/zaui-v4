@@ -60,6 +60,7 @@ public class StoreHandler {
         long start = System.currentTimeMillis();
         GetShopTimer.start();
         Object rest = executeMethod(inObject, types, argumentValues);
+        GetShopTimer.timeEntry("Finished", "StoreHandler");
         String timing = GetShopTimer.getPrintedTiming();
         GetShopTimer.destroy();
         long end = System.currentTimeMillis();

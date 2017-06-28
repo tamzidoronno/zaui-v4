@@ -58,12 +58,19 @@ public class StoreHandler {
         
     public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
         long start = System.currentTimeMillis();
+        GetShopTimer.start();
         Object rest = executeMethod(inObject, types, argumentValues);
+        String timing = GetShopTimer.getPrintedTiming();
+        GetShopTimer.destroy();
         long end = System.currentTimeMillis();
         
         long diff = end - start;
         if (diff > 40) {
             GetShopLogHandler.logPrintStatic("" + diff + " : " + inObject.interfaceName + " method: " + inObject.method, storeId);
+            
+            if (!timing.isEmpty() && diff > 3000) {
+                System.out.println(timing);
+            }
         }
         
         return rest;

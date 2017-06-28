@@ -46,7 +46,7 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
         }
         
         if (storeId.equals("2a831774-e72e-43e3-ac4c-d8700a402e52")) {
-            createScheduler("trigger", "* * * * *", CheckForPullMessages.class);
+            createScheduler("trigger", "*/5 * * * *", CheckForPullMessages.class);
         }
     }
     

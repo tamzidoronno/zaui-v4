@@ -3621,7 +3621,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Double price = 0.0;
             Integer count = 0;
             for(PmsBookingAddonItem tmp : addons) {
-                double tmpPrice = tmp.price;
+                if (tmp == null) {
+                    continue;
+                }
+                double tmpPrice = tmp.price == null ? 0L : tmp.price;
                 if(prices.productPrices.containsKey(item.productId)) {
                     tmpPrice = prices.productPrices.get(item.productId);
                 }
@@ -4581,6 +4584,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(booking != null) {
             Gson gson = new Gson();
             rawBooking = gson.toJson(booking);
+            gsTiming("Created booking from json object");
         }
         if(getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {
             messageManager.sendErrorNotification("Booking completed.", null);
@@ -4589,6 +4593,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return null;
         }
         notifyAdmin("booking_completed_" + booking.language, booking);
+        gsTiming("Notified admins");
         if (!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);
         }
@@ -4596,22 +4601,28 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             checkForMissingEndDate(booking);
 
+            gsTiming("Checked for missing end dates");
             Integer result = 0;
             booking.isDeleted = false;
 
             List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
             Coupon coupon = getCouponCode(booking);
+            gsTiming("Got cupons");
             if(coupon != null) {
                 cartManager.subtractTimesLeft(coupon.code);
+                gsTiming("Subsctracted coupons");
             }
             createUserForBooking(booking);
+            gsTiming("Created user for booking");
             if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
                 booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
                 pmsInvoiceManager.createPrePaymentOrder(booking);
+                gsTiming("Created payment for order");
             }
             
             result = completeBooking(bookingsToAdd, booking);
-
+            gsTiming("Completed booking");
+            
             if (result == 0) {
                 if (!configuration.payAfterBookingCompleted) {
                     if (bookingIsOK(booking)) {
@@ -4620,9 +4631,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         } else {
                             doNotification("booking_confirmed", booking, null);
                         }
+                        gsTiming("Notified booking confirmed");
                     }
                 }
                 bookingUpdated(booking.id, "created", null);
+                gsTiming("Booking confirmed");
                 return booking;
             }
         } catch (Exception e) {

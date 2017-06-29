@@ -70,7 +70,7 @@ public class StoreHandler {
             GetShopLogHandler.logPrintStatic("" + diff + " : " + inObject.interfaceName + " method: " + inObject.method, storeId);
             
             if (!timing.isEmpty() && diff > 3000) {
-                System.out.println(timing);
+                GetShopLogHandler.logPrintStatic(timing, storeId);
             }
         }
         

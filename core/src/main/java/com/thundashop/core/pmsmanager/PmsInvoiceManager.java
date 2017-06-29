@@ -655,6 +655,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts, userManager.getAllUsersMap());
         stats.createStatistics(ordersToUse, filter);
+        
+//        stats.removeEmptyProducts();
+        
         return stats;
     }
 
@@ -2209,7 +2212,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.invoicedFrom != null && room.invoicedFrom.before(room.date.start) && !room.isSameDay(room.invoicedFrom, room.date.start)) {
             Date invoiceStart = room.invoicedFrom;
             Date invoiceEnd = room.date.start;
-            if(room.date.start.after(room.invoicedTo)) {
+            if(room.invoicedTo != null && room.date.start.after(room.invoicedTo)) {
                 invoiceStart = room.invoicedFrom;
                 invoiceEnd = room.invoicedTo;
             }

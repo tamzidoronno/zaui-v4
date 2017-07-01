@@ -582,6 +582,10 @@ class CartManager extends \SystemApplication implements \Application {
             echo "<center><br/><br/><br/>";
             echo "<h1>Fant ikke denne bestillingen, ta kontakt med oss.</h1>";
             echo "<br/><br/><br/><br/></center>";
+        } else if ($order->bookingHasBeenDeleted) {
+            echo "<center><br/><br/><br/>";
+            echo "<h1>The booking has been deleted, it has expired.</h1>";
+            echo "<br/><br/><br/><br/></center>";
         } else if ($order->payment && ($order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment")) {
             echo "<script>thundashop.common.goToPage('payment_success');</script>";
         } else if ($order->status == 7) {

@@ -24,6 +24,8 @@ public interface IPmsManager {
     @Administrator
     public void markRoomAsCleaned(String itemId);
     
+    public void warnFailedBooking();
+    
     @Administrator
     public void markRoomAsCleanedWithoutLogging(String itemId);
             

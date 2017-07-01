@@ -203,6 +203,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         booking.channel_reservation_code = (String) table.get("channel_reservation_code");
         booking.status = new Integer(table.get("status") + "");
         booking.isExpediaCollect = checkExpediaCollect(table);
+        booking.isBookingComVirtual = checkBcomVirtualCard(table);
         booking.isNonRefundable = checkNonRefundable(table);
         Vector modifications = (Vector) table.get("modified_reservations");
         if(modifications != null) {
@@ -791,6 +792,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(booking.isExpediaCollect) {
             newbooking.paymentType = "92bd796f-758e-4e03-bece-7d2dbfa40d7a";
         }
+        if(booking.isBookingComVirtual) {
+            newbooking.paymentType = "d79569c6-ff6a-4ab5-8820-add42ae71170";
+        }
         pmsManager.setBooking(newbooking);
         int i = 0;
         for(PmsBookingRooms room : newbooking.getActiveRooms()) {
@@ -975,6 +979,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         List<PmsBooking> booking = pmsManager.getAllBookings(filter);
         for(PmsBooking book : booking) {
             if(book.payedFor) {
+                continue;
+            }
+            if(book.forceGrantAccess) {
                 continue;
             }
             boolean arrived = false;
@@ -1593,6 +1600,23 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         return forceUpdateDone;
+    }
+
+    private boolean checkBcomVirtualCard(Hashtable table) {
+        try {
+            if(!table.get("id_channel").equals(2)) {
+                return false;
+            }
+            Gson test = new Gson();
+            String toCheck = test.toJson(table);
+            if(toCheck.toLowerCase().contains("virtuelt kredittkort")) {
+                return true;
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
+        return false;
     }
 
 }

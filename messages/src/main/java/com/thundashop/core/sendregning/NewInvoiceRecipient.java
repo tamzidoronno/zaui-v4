@@ -6,5 +6,6 @@ public class NewInvoiceRecipient {
     public String name;
     public String email;
     public String organisationNumber;
-    public NewInvoiceAddress address;
+    public NewInvoiceRecipientContact contact;
+    public NewInvoiceRecipientAdress address;
 }

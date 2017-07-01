@@ -2906,7 +2906,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter = $this->getOrderStatsFilter();
         $result = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedName(), $filter);
         $_SESSION['currentOrderStatsResult'] = serialize($result);
-
         
         $products = $this->getApi()->getProductManager()->getAllProductsLight();
         $products = $this->indexList($products);
@@ -3050,38 +3049,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             
             $sortedMatrix[] = $row;
         } 
-        
-        $tmpHeader = $sortedMatrix['header'];
-        $finalHeader = array();
-        foreach($tmpHeader as $idx => $val) {
-            $finalHeader[] = $val;
-        }
-        $sortedMatrix['header'] = $finalHeader;
-        $columsToRemove = array();
-        $colLength = sizeof($sortedMatrix[0]);
-        for($i = 1; $i < $colLength; $i++) {
-            $total = 0;
-            foreach($sortedMatrix as $day => $row) {
-                if($day == "header") {
-                    continue;
-                }
-                if(@is_numeric($row[$i]) && sizeof($row) == $colLength) {
-                    $total += $row[$i];
-                    if($i == 0) {
-                        echo "dd: " . $row[$i] . "<bR>";
-                    }
-                }
-            }
-            if($total == 0) {
-                $columsToRemove[] = $i;
-            }
-        }
-        
-        $columsToRemove = array_reverse($columsToRemove);
-        foreach($columsToRemove as $col) {
-            $this->delete_col($sortedMatrix, $col);
-        }
-        
         
         return $sortedMatrix;
     }

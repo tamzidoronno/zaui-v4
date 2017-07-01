@@ -4580,6 +4580,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsBooking doCompleteBooking(PmsBooking booking) {
+        
         String rawBooking = "";
         if(booking != null) {
             Gson gson = new Gson();

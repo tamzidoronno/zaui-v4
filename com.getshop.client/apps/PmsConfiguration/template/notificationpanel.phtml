@@ -190,8 +190,10 @@ if($notificationSettings->requirePayments) {
                 echo $notificationSettings->emails->{$index};
             }
             echo "</textarea>";
+            $checkedSendRegardless = $config->sendMessagesRegardlessOfPayments ? "CHECKED" : "";
             echo "</div>";
         }
+        echo "<input type='checkbox' gsname='sendMessagesRegardlessOfPayments' $checkedSendRegardless> Send all regardless of payment is completed";
         ?>
     </div>
 

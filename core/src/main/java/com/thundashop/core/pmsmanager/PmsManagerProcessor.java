@@ -78,8 +78,12 @@ public class PmsManagerProcessor {
         if(manager.getConfigurationSecure().ignoreTimeIntervalsOnNotification && !started) {
             hoursAheadCheck = -12;
         }
-        
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
+        List<PmsBooking> bookings = null;
+        if(manager.getConfigurationSecure().sendMessagesRegardlessOfPayments) {
+            bookings = getAllConfirmedNotDeleted(true);
+        } else {
+            bookings = getAllConfirmedNotDeleted(false);
+        }
         for (PmsBooking booking : bookings) {
             if(booking.isEnded()) {
                 continue;
@@ -147,7 +151,12 @@ public class PmsManagerProcessor {
     }
 
     private void processEndings(int hoursAhead, int maxAhead) {
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
+        List<PmsBooking> bookings = null;
+        if(manager.getConfigurationSecure().sendMessagesRegardlessOfPayments) {
+            bookings = getAllConfirmedNotDeleted(true);
+        } else {
+            bookings = getAllConfirmedNotDeleted(false);
+        }
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {

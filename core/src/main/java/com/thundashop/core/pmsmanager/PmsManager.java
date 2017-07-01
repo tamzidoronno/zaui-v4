@@ -3047,12 +3047,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<Booking> bookingsToAdd = new ArrayList();
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             Booking bookingToAdd = createBooking(room);
+            gsTiming("createbooking");
             if(getConfigurationSecure().hasNoEndDate && room.date.end == null) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(room.date.start);
                 cal.add(Calendar.YEAR, 100);
                 room.date.end = cal.getTime();
             }
+            
+            gsTiming("got configuration");
             if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
                 if(getConfigurationSecure().supportRemoveWhenFull) {
                     room.canBeAdded = false;
@@ -3074,6 +3077,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
                 logEntry(text, booking.id, null);
+                gsTiming("logged entry");
+            
                 if(!getConfigurationSecure().supportRemoveWhenFull) {
                     boolean hasBeenWarned = false;
                     if(booking.wubookreservationid != null && !booking.wubookreservationid.isEmpty()) {
@@ -3088,11 +3093,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text, null);
                     }
                 }
+                gsTiming("removed when full maybe");
+            
             }
             
             if(!room.isDeleted() && room.canBeAdded) {
                 bookingsToAdd.add(bookingToAdd);
             }
+            gsTiming("added booking");
+            
         }
         return bookingsToAdd;
     }
@@ -4607,6 +4616,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.isDeleted = false;
 
             List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
+            gsTiming("Getting cupons");
             Coupon coupon = getCouponCode(booking);
             gsTiming("Got cupons");
             if(coupon != null) {

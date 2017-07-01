@@ -81,8 +81,13 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             }
         }
         
-//        createScheduler("ratemanagerpushinv", "1 21 * * *", RateManagerInvetoryUpdater.class);
 
+    }
+
+    @Override
+    public void initialize() throws SecurityException {
+        super.initialize();
+        stopScheduler("ratemanagerpushinv");
     }
     
     @Override

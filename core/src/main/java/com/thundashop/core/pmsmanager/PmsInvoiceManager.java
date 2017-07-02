@@ -1349,7 +1349,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     filter.pmsRoomId = order.attachedToRoom;
                 }
             }
-            
             pmsDailyOrderGeneration.createCart(bookingId, filter);
         } else {
             return createOrderOld(bookingId, filter);

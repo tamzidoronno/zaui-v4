@@ -257,9 +257,20 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         int count = 0;
         Double total = 0.0;
         String productId = "";
+        Gson gson = new Gson();
+        
+        System.out.println("1. -----------");
+        for(PmsBookingRooms r : currentBooking.rooms) {
+            for(PmsBookingAddonItem addonitem : r.addons) {
+                System.out.println(addonitem.price);
+            }
+        }
+        
         
         List<PmsBookingAddonItem> itemsAdded = new ArrayList();
         for(PmsBookingAddonItem item : items) {
+            String json = gson.toJson(item);
+            item = gson.fromJson(json, PmsBookingAddonItem.class);
             if(positiveValues && item.price < 0.0) {
                 continue;
             }
@@ -281,6 +292,12 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             total += item.price * item.count;
             itemsAdded.add(item);
         }
+        System.out.println("2. -----------");
+        for(PmsBookingRooms r : currentBooking.rooms) {
+            for(PmsBookingAddonItem addonitem : r.addons) {
+                System.out.println(addonitem.price);
+            }
+        }
         
         if(itemsAdded.isEmpty()) {
             return;
@@ -299,6 +316,14 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             item.itemsAdded = itemsAdded;
             addCartItem(item);
         }
+        
+        System.out.println("3. -----------");
+        for(PmsBookingRooms r : currentBooking.rooms) {
+            for(PmsBookingAddonItem addonitem : r.addons) {
+                System.out.println(addonitem.price);
+            }
+        }
+        
     }
 
     
@@ -416,10 +441,14 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
 
     private HashMap<String, List<PmsBookingAddonItem>> getUnpaidAddonsForRoom(PmsBookingRooms room) {
         HashMap<String, PmsBookingAddonItem> addonsToAdd = new HashMap();
+        Gson gson = new Gson();
         for(PmsBookingAddonItem item : room.addons) {
             if(!dateIsFiltered(item.date)) {
                 continue;
             }
+            String json = gson.toJson(item);
+            item = gson.fromJson(json, PmsBookingAddonItem.class);
+            
             addonsToAdd.put(item.addonId, item);
         }
         
@@ -442,8 +471,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         
         
         Type type = new TypeToken<HashMap<String, PmsBookingAddonItem>>(){}.getType();
-        
-        Gson gson = new Gson();
+      
         String copy = gson.toJson(addonsToAdd);
         addonsToAdd = gson.fromJson(copy, type);
       

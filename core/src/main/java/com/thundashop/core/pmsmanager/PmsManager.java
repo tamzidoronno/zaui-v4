@@ -1684,9 +1684,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     
     private void hardDeleteBooking(PmsBooking booking, String source) {
-        System.out.println("Deleting, source: " + source);
+        logPrint("Deleting, source: " + source);
         bookings.remove(booking.id);
         booking.deletedBySource = source;
+        
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            order.bookingHasBeenDeleted = true;
+            orderManager.saveOrder(order);
+        }
+        
         if(booking.sessionId == null || booking.sessionId.isEmpty()) {
             String text = "Booking which should not be deleted where tried deleted: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
             text += "<br>";
@@ -4589,6 +4596,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsBooking doCompleteBooking(PmsBooking booking) {
+        Calendar nowCal = Calendar.getInstance();
+        nowCal.add(Calendar.HOUR_OF_DAY, -1);
+        if (!booking.rowCreatedDate.after(nowCal.getTime())) {
+            //Do not support bookings that is over 1 our old. they have been deleted.
+            logPrint("COMPLETECURRENTBOOKING : Booking has been outdated, started at : " + booking.rowCreatedDate + " - " + booking.id);
+            return null;
+        }
         
         String rawBooking = "";
         if(booking != null) {
@@ -4600,6 +4614,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             messageManager.sendErrorNotification("Booking completed.", null);
         }
         if(booking.getActiveRooms().isEmpty()) {
+            logPrint("COMPLETECURRENTBOOKING : No rooms active on booking." + booking.id);
             return null;
         }
         notifyAdmin("booking_completed_" + booking.language, booking);
@@ -4608,11 +4623,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             bookingEngine.setConfirmationRequired(true);
         }
         
+        Integer result = 0;
         try {
             checkForMissingEndDate(booking);
 
             gsTiming("Checked for missing end dates");
-            Integer result = 0;
             booking.isDeleted = false;
 
             List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
@@ -4653,6 +4668,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             messageManager.sendErrorNotification("This should never happen and need to be investigated : Unknown booking exception occured for booking id: " + booking.id + ", raw: " + rawBooking, e);
             e.printStackTrace();
         }
+        logPrint("COMPLETECURRENTBOOKING : Result is : " + result);
         return null; 
     }
 
@@ -6239,6 +6255,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return null;
+    }
+
+    @Override
+    public void warnFailedBooking() {
+        messageManager.sendErrorNotification("Someone booked error message shown to enduser.", null);
     }
 
 }

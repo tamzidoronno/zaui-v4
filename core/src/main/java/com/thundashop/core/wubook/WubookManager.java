@@ -679,6 +679,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
 
         customerNotes = customerNotes.replace("--", "");
+        customerNotes = customerNotes.replace("** DO NOT CHARGE CREDIT CARD **", "");
+        customerNotes = customerNotes.replace("<br>", "");
+        customerNotes = customerNotes.replace("You have a booker that prefers communication by phone", "");
+        customerNotes = customerNotes.replace("You have a booker that prefers communication by email", "");
         customerNotes = customerNotes.replace("--- No-CC reservation (no credit card needed, none provided) ---", "");
         customerNotes = customerNotes.replace("Upper-storey room request: this booker requests upper-storey room(s) - based on availability", "");
         customerNotes = customerNotes.replace("You have a booker that would prefer a quiet room. (based on availability)", "");

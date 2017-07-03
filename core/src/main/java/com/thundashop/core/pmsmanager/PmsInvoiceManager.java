@@ -747,7 +747,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(priceObject.derivedPrices != null && priceObject.derivedPrices.containsKey(room.bookingItemTypeId)) {
             HashMap<Integer, Double> derivedPriced = priceObject.derivedPrices.get(room.bookingItemTypeId);
             for(int i = 2;i <= room.numberOfGuests;i++) {
-                if(derivedPriced.containsKey(i)) {
+                if(derivedPriced != null && derivedPriced.containsKey(i)) {
                     toAdd += derivedPriced.get(i);
                 }
             }

@@ -445,8 +445,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 continue;
             }
             payedfor = false;
-        }
-        
+        } 
+       
         if(!hasOrders && pmsManager.getConfigurationSecure().markBookingsWithNoOrderAsUnpaid) {
             payedfor = false;
         }
@@ -1362,6 +1362,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
             booking.orderIds = uniqueList;
             pmsManager.saveBooking(booking);
+            
+            messageManager.sendErrorNotification("New order created: " + order.incrementOrderId, null);
+            
             return order.id;
         }
         return "";

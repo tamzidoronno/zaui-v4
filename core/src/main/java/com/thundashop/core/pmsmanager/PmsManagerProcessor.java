@@ -695,7 +695,7 @@ public class PmsManagerProcessor {
                     }
                 }
 
-                if(booking.forceGrantAccess != forceAccess) {
+                if(!booking.forceGrantAccess && forceAccess) {
                     booking.forceGrantAccess = forceAccess;
                     needSaving = true;
                 }

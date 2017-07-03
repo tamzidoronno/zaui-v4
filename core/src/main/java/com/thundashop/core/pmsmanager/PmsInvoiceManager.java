@@ -1363,7 +1363,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             booking.orderIds = uniqueList;
             pmsManager.saveBooking(booking);
             
-            messageManager.sendErrorNotification("New order created: " + order.incrementOrderId, null);
+//            messageManager.sendErrorNotification("New order created: " + order.incrementOrderId, null);
             
             return order.id;
         }

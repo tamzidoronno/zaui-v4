@@ -4596,14 +4596,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsBooking doCompleteBooking(PmsBooking booking) {
-        Calendar nowCal = Calendar.getInstance();
-        nowCal.add(Calendar.HOUR_OF_DAY, -1);
-        if (!booking.rowCreatedDate.after(nowCal.getTime())) {
-            //Do not support bookings that is over 1 our old. they have been deleted.
-            logPrint("COMPLETECURRENTBOOKING : Booking has been outdated, started at : " + booking.rowCreatedDate + " - " + booking.id);
-            return null;
-        }
-        
         String rawBooking = "";
         if(booking != null) {
             Gson gson = new Gson();

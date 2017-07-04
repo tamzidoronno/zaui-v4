@@ -285,4 +285,6 @@ public interface IEventBookingManager {
     
     @Administrator
     public boolean isWaitingForConfirmation(String eventId, String userId);
+    
+    public List<Event> getEventsForPdf();
 }

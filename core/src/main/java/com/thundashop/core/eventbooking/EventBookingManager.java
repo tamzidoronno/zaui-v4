@@ -194,6 +194,25 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         return filterByTimeFilter(retEvents);
     }
+    
+    @Override
+    public List<Event> getEventsForPdf() {
+        if (getSession() == null || getSession().currentUser == null || getSession().currentUser.type < 100) {
+            return getEvents();
+        }
+        
+        
+        List<Event> retEvents = new ArrayList(events.values());
+        
+        retEvents = retEvents.stream()
+                .filter(o -> !o.isHidden)
+                .collect(Collectors.toList());
+        
+        sortEventsByDate(retEvents);
+        retEvents = cloneAndFinalize(retEvents);
+        
+        return filterByTimeFilter(retEvents);
+    }
 
     private void sortEventsByDate(List<Event> retEvents) {
         Collections.sort(retEvents, (Event o1, Event o2) -> o1.days.get(0).startDate.compareTo(o2.days.get(0).startDate));

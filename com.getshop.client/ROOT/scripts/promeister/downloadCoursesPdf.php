@@ -10,7 +10,7 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
 function getEvents($factory) {
-    $events = $factory->getApi()->getEventBookingManager()->getEvents("booking");
+    $events = $factory->getApi()->getEventBookingManager()->getEventsForPdf("booking");
     if (!count($events)) {
         return array();
     }
@@ -51,92 +51,95 @@ function makeEnd() {
     echo "</div>";
         echo "<div class='footer'>";
 
-        echo "www.promeisteracademy.se";
+//        echo "www.promeisteracademy.se";
         echo "</div>";
     echo "</div>";
 }
 
 $events = getEvents($factory);
 ?>
-<style>
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-    }
-    .col {
-        display: inline-block;
-        vertical-align: top; 
-    }
-    .row {
-        padding: 1px;
-        padding: 4px;
-    }
-    .col1 { width: 300px; }
-    .col2 { width: 260px; }
-    .col3 { width: 227px; }
-    .col4 { width: 100px; text-align: center;}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .col {
+            display: inline-block;
+            vertical-align: top; 
+        }
+        .row {
+            padding: 1px;
+            padding: 4px;
+        }
+        .col1 { width: 300px; }
+        .col2 { width: 260px; }
+        .col3 { width: 227px; }
+        .col4 { width: 100px; text-align: center;}
 
-    .page {
-        width: 1049px; 
-        height: 1520px; 
-        box-sizing: border-box; 
-        font-size: 14px;
-        padding-right: 50px;
-        padding-left: 50px;
-    }
-    
-    .row:last-child {
-        border-bottom: solid 0px;
-    }
+        .page {
+            width: 1049px; 
+            height: 1520px; 
+            box-sizing: border-box; 
+            font-size: 14px;
+            padding-right: 50px;
+            padding-left: 50px;
+        }
 
-    .row:nth-child(odd) {
-        background-color: #F8F8F8;
-    }
+        .row:last-child {
+            border-bottom: solid 0px;
+        }
+
+        .row:nth-child(odd) {
+            background-color: #F8F8F8;
+        }
 
 
-    .pageheader {
-        background-color: #000;
-        height: 80px;
-        padding: 20px;
-        margin-left: 20px;
-        margin-right: 20px;
-    }
+        .pageheader {
+            background-color: #000;
+            height: 80px;
+            padding: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
 
-    .bodycontent {
-        padding-top: 40px;
-        height: 1304px;
-        box-sizing: border-box;
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-    
-    h1 {
-        text-align: center;
-        border-bottom: solid 1px #EEE;
-        margin-top: 30px;
-    }
+        .bodycontent {
+            padding-top: 40px;
+            height: 1304px;
+            box-sizing: border-box;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
 
-    .footer{ 
-        height: 100px; 
-        text-align: center;
-        color: #888;
-        font-style: italic;
-    }
+        h1 {
+            text-align: center;
+            border-bottom: solid 1px #EEE;
+            margin-top: 30px;
+        }
 
-    .order_mask,
-    .mask,
-    .gsucell,
-    .DayEventLister {
-        display: none;
-    }
-    
-    .gsucell[cellid="6825509f-48ef-4617-9463-929876490891"],
-    .gsucell[cellid="ce9004f2-4a5d-4657-9b64-e1243e18f031"] {
-        display: block;
-    }
-    
-</style>
+        .footer{ 
+            height: 100px; 
+            text-align: center;
+            color: #888;
+            font-style: italic;
+        }
+
+        .order_mask,
+        .mask,
+        .gsucell,
+        .DayEventLister {
+            display: none;
+        }
+
+        .gsucell[cellid="6825509f-48ef-4617-9463-929876490891"],
+        .gsucell[cellid="ce9004f2-4a5d-4657-9b64-e1243e18f031"] {
+            display: block;
+        }
+
+    </style>
+</head>
 <?
-$numberOfRowsEachPage = 33;
+$numberOfRowsEachPage = 25;
 $i = 0;
 $webaddress = $_SERVER['SERVER_NAME'];
 $url = "http:///scripts/promeister/downloadCoursesPdf.php";

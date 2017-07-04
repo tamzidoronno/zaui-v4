@@ -1511,10 +1511,50 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function exportBookingStats() {
+        $filter = $this->getSelectedFilter();
         $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->getSelectedFilter());
         $arr = (array)$stats->entries;
-        array_unshift($arr, array_keys((array)$arr[0]));
-        echo json_encode($arr);
+        
+        $matrix = array();
+        
+        $heading = array();
+        $heading[] = "Dato";
+        $heading[] = "Spear rooms";
+        $heading[] = "Rented rooms";
+        $heading[] = "Guests";
+        $heading[] = "Avg.Price";
+        $heading[] = "Total";
+        $heading[] = "Budget";
+        $heading[] = "Coverage";
+        $matrix[] = $heading;
+        
+        foreach($arr as $entry) {
+            $row = array();
+            if ($entry->date) {
+                $row[] = $this->getDayText($entry->date, $filter->timeInterval);
+            } else {
+                $row[] = "Sum";
+            }
+            
+            $row[] = $entry->spearRooms;
+            $row[] = $entry->roomsRentedOut;
+            
+            $guests = 0;
+            foreach($entry->guests as $roomId => $gcount) {
+                $guests += $gcount;
+            }
+            $row[] = $guests;
+            $row[] = $entry->avgPrice;
+            $row[] = $entry->totalPrice;
+            $row[] = $entry->bugdet;
+            $row[] = $entry->coverage;
+            $matrix[] = $row;
+        }
+//        echo "<pre>";
+//        print_r($matrix);
+//        echo "</pre>";
+        
+        echo json_encode($matrix);
     }
     
     public function exportSaleStats() {

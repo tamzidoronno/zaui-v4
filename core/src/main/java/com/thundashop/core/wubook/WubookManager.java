@@ -818,7 +818,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         pmsInvoiceManager.clearOrdersOnBooking(newbooking);
         newbooking = pmsManager.doCompleteBooking(newbooking);
         if(newbooking == null) {
-            messageManager.sendErrorNotification("Failed to add new booking in wubook.", null);
+            messageManager.sendErrorNotification("Failed to add new booking in wubook: " + booking.reservationCode, null);
         }
         boolean doNormalPricing = true;
         if(newbooking.channel != null && newbooking.channel.equals("wubook_1")) {

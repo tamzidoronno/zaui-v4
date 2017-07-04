@@ -72,6 +72,7 @@ public class Order extends DataCommon implements Comparable<Order> {
      * of other orders.
      */
     public List<String> createdBasedOnOrderIds = new ArrayList();
+    public boolean bookingHasBeenDeleted;
     
     public Order jsonClone() {
         Gson gson = new Gson();

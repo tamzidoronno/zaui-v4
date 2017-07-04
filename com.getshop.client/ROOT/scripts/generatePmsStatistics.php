@@ -174,6 +174,7 @@ if(!isset($_GET['generatingePdf'])) {
     $addr = $addr."?generatingePdf=true&sessid=".  session_id()."&storeid=$storeId";
     $pdf = $api->getGetShop()->getBase64EncodedPDFWebPage($addr);
     
+    $emailsSentTo = array();
 header('Pragma: public');  // required
 header('Expires: 0');  // no cache
 header("Content-type:application/pdf");
@@ -191,6 +192,10 @@ header("Content-Disposition:attachment;filename=".$_GET['incrementalOrderId'].".
         $app = $factory->getFactory()->getApplicationPool()->createAppInstance($instance);
         $emails = $config->emailsToNotify->{'report'};
         foreach($emails as $email) {
+            if(in_array($email, $emailsSentTo)) {
+                continue;
+            }
+            $emailsSentTo[] = $email;
             $api->getMessageManager()->sendMailWithAttachments($email, $email, $emailtitle, "Attached you will find the statistics for this periode.", "post@wh.no", "post@wh.no", $attachment);
         }
     }

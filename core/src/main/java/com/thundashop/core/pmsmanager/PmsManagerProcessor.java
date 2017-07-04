@@ -78,8 +78,12 @@ public class PmsManagerProcessor {
         if(manager.getConfigurationSecure().ignoreTimeIntervalsOnNotification && !started) {
             hoursAheadCheck = -12;
         }
-        
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
+        List<PmsBooking> bookings = null;
+        if(manager.getConfigurationSecure().sendMessagesRegardlessOfPayments) {
+            bookings = getAllConfirmedNotDeleted(true);
+        } else {
+            bookings = getAllConfirmedNotDeleted(false);
+        }
         for (PmsBooking booking : bookings) {
             if(booking.isEnded()) {
                 continue;
@@ -147,7 +151,12 @@ public class PmsManagerProcessor {
     }
 
     private void processEndings(int hoursAhead, int maxAhead) {
-        List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
+        List<PmsBooking> bookings = null;
+        if(manager.getConfigurationSecure().sendMessagesRegardlessOfPayments) {
+            bookings = getAllConfirmedNotDeleted(true);
+        } else {
+            bookings = getAllConfirmedNotDeleted(false);
+        }
         for (PmsBooking booking : bookings) {
             boolean save = false;
             for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -637,6 +646,7 @@ public class PmsManagerProcessor {
             boolean needSaving = false;
             boolean payedfor = true; 
             boolean firstDate = true;
+            boolean forceAccess = false;
             if(config.requirePayments) {
                 boolean needCapture = false;
                 for(String orderId : booking.orderIds) {
@@ -647,6 +657,12 @@ public class PmsManagerProcessor {
                     if(order.payment != null && order.payment.paymentType != null && 
                             order.payment.paymentType.toLowerCase().contains("invoice")) {
                         manager.pmsInvoiceManager.autoSendInvoice(order, booking.id);
+                        continue;
+                    }
+                    if(order.payment != null && order.payment.paymentType != null && 
+                            order.payment.paymentType.toLowerCase().contains("bookingcomcollectpayments")) {
+                        forceAccess = true;
+                        payedfor = false;
                         continue;
                     }
                     if(order.payment != null && order.payment.paymentType != null && 
@@ -662,6 +678,7 @@ public class PmsManagerProcessor {
                     if(total <= 0.0 && !order.hasFreezeItem()) {
                         continue;
                     }
+                    forceAccess = false;
                     if(order.status != Order.Status.PAYMENT_COMPLETED || order.hasFreezeItem()) {
                         for(CartItem item : order.cart.getItems()) {
                             if(!firstDate && item.startDate != null && item.startDate.after(new Date())) {
@@ -678,6 +695,11 @@ public class PmsManagerProcessor {
                     }
                 }
 
+                if(!booking.forceGrantAccess && forceAccess) {
+                    booking.forceGrantAccess = forceAccess;
+                    needSaving = true;
+                }
+                
                 if(booking.needCapture != needCapture) {
                     booking.needCapture = needCapture;
                     needSaving = true;
@@ -703,6 +725,9 @@ public class PmsManagerProcessor {
             }
             boolean forceSend = (booking.channel != null && !booking.channel.isEmpty()) && booking.isRegisteredToday();
             if(!manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
+                forceSend = true;
+            }
+            if(booking.forceGrantAccess) {
                 forceSend = true;
             }
             
@@ -916,6 +941,10 @@ public class PmsManagerProcessor {
                 if(!book.isOld(30)) {
                     continue;
                 }
+            }
+            
+            if(book.forceGrantAccess) {
+                continue;
             }
             
             for(String orderId : book.orderIds) {

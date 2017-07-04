@@ -34,10 +34,10 @@ $booking = $this->getSelectedBooking();
                 }
             }
             if(!$heading) {
-                $heading = "Not connected to any room connect to: ";
-                foreach($booking->rooms as $room) {
-                    $heading .= "<a class='connectItemOnsOrderToRoom' roomid='".$room->pmsBookingRoomId."' orderid='".$order->id."'>" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . " </a>";
-                }
+//                $heading = "Not connected to any room connect to: ";
+//                foreach($booking->rooms as $room) {
+//                    $heading .= "<a class='connectItemOnsOrderToRoom' roomid='".$room->pmsBookingRoomId."' orderid='".$order->id."'>" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . " </a>";
+//                }
             }
             
             echo "<div style='border: solid 1px #bbb; text-align:center; font-weight:bold; padding: 5px;'>" . $heading . "</div>";

@@ -1,20 +1,13 @@
 <?php
-header('Content-Type: application/pdf');
-header('Content-Disposition: inline; filename="courses.pdf"');
 
-chdir("../../");
-include '../loader.php';
-$factory = IocContainer::getFactorySingelton();
+ob_start();
+include('downloadCoursesPdf.php');
+$content = ob_get_contents();
+ob_end_clean();
 
-$id = session_id();
-session_write_close();
+//echo $content;
 
 header('Content-Type: application/pdf');
-
-$webaddress = $_SERVER['SERVER_NAME'];
-$url = "http://$webaddress/scripts/promeister/downloadCoursesPdf.php";
-
-$base64 = $factory->getApi()->getGetShop()->getBase64EncodedPDFWebPage($url);
+$base64 = $factory->getApi()->getGetShop()->getBase64EncodedPDFWebPageFromHtml($content);
 echo base64_decode($base64);
-
 ?>

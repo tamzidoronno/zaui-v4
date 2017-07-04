@@ -38,6 +38,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -559,6 +560,26 @@ public class GetShop extends ManagerBase implements IGetShop {
         return smsResponses.get(msgId);
     }
 
+    @Override
+    public String getBase64EncodedPDFWebPageFromHtml(String html) {
+        String fileName = "/tmp/"+UUID.randomUUID().toString() + ".html";
+        
+        try{
+            PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+            writer.print(html);
+            writer.close();
+        } catch (IOException e) {
+           return "Something went wrong";
+        }
+        
+        String content = getBase64EncodedPDFWebPage(fileName);
+        
+        File file = new File(fileName);
+//        file.delete();
+        
+        return content;
+    }
+    
     @Override
     public String getBase64EncodedPDFWebPage(String urlToPage) {
         urlToPage = urlToPage.replaceAll("&amp;", "&");

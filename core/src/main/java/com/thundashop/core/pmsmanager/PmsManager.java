@@ -1674,7 +1674,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         if(deletedByChannel) {
             if(!askedToDoUpdate) {
-                messageManager.sendErrorNotification("A booking from wubook has been deleted; " + booking.id, null);
+                logPrint("A booking from wubook has been deleted; " + booking.id);
             }
         }
         

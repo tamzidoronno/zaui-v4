@@ -1095,10 +1095,12 @@ public class PmsManagerProcessor {
                     manager.messageManager.sendErrorNotification("Lost connection with server: " + server.arxHostname, null);
                     manager.saveConfiguration(config);
                 }
-            } else if(server.beenWarned) {
+            } else {
+                if(server.beenWarned) {
                     server.beenWarned = false;
                     manager.messageManager.sendErrorNotification("Connection to server : " + server.arxHostname + " reestablished.", null);
                     manager.saveConfiguration(config);
+                }
             }
         }
     }

@@ -682,6 +682,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         customerNotes = customerNotes.replace("** DO NOT CHARGE CREDIT CARD **", "");
         customerNotes = customerNotes.replace("<br>", "");
         customerNotes = customerNotes.replace("You have a booker that prefers communication by phone", "");
+        customerNotes = customerNotes.replace("I am travelling for business and I may be using a business credit card.", "");
+        customerNotes = customerNotes.replace("This guest would like the rooms in this booking to be close together if possible.", "");
+        customerNotes = customerNotes.replace("You have a booker that would like free parking. (based on availability)", "");
         customerNotes = customerNotes.replace("You have a booker that prefers communication by email", "");
         customerNotes = customerNotes.replace("--- No-CC reservation (no credit card needed, none provided) ---", "");
         customerNotes = customerNotes.replace("Upper-storey room request: this booker requests upper-storey room(s) - based on availability", "");
@@ -818,7 +821,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         pmsInvoiceManager.clearOrdersOnBooking(newbooking);
         newbooking = pmsManager.doCompleteBooking(newbooking);
         if(newbooking == null) {
-            messageManager.sendErrorNotification("Failed to add new booking in wubook.", null);
+            messageManager.sendErrorNotification("Failed to add new booking in wubook: " + booking.reservationCode, null);
         }
         boolean doNormalPricing = true;
         if(newbooking.channel != null && newbooking.channel.equals("wubook_1")) {
@@ -1245,6 +1248,20 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
             }
         }
+        
+        Integer lowest = null;
+        if(newbooking == null) {
+            for(Integer id : booking.modifiedReservation) {
+                if(lowest == null || lowest > id) {
+                    lowest = id;
+                }
+            }
+            if(lowest != null) {
+                addBooking(lowest + "");
+                newbooking = findCorrelatedBooking(booking);
+            }
+        }
+        
         return newbooking;
     }
 

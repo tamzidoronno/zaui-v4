@@ -181,7 +181,6 @@ public class MekonomenDatabase {
     private void addEvents(MekonomenUser user) {
         participants.stream().filter(p -> p.username.trim().toLowerCase().equals(user.username.trim().toLowerCase()))
                 .forEach(participant -> {
-                    System.out.println("Found event");
                     MekonomenEvent event = getEvent(participant.nodeId);
                     user.add(event, participant);
                 });

@@ -19,6 +19,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -56,7 +60,7 @@ public class MekonomenDatabase {
     
     public static void main(String[] args) {
         MekonomenDatabase db = MekonomenDatabase.getDatabase();
-        List<MekonomenUser> users = db.searchForUser("Joakim Larsson");
+        List<MekonomenUser> users = db.searchForUser("Bo Svensson");
         
         for (MekonomenUser user : users) {
             System.out.println(user.firstName + " " + user.sureName);
@@ -171,11 +175,17 @@ public class MekonomenDatabase {
 
     public List<MekonomenUser> searchForUser(String name) {
         List<MekonomenUser> foundUsers = users.stream().filter(o -> o.getFullName().toLowerCase().contains(name.toLowerCase()))
+                .filter(distinctByKey(p -> p.username.trim().toLowerCase()))
                 .collect(Collectors.toList());
         
         foundUsers.stream().forEach(o -> addEvents(o));
         
         return foundUsers;
+    }
+    
+    public <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object,Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
     
     private void addEvents(MekonomenUser user) {

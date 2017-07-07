@@ -39,6 +39,10 @@ public class MekonomenUser {
     }
     
     public void add(MekonomenEvent event, MekonomenEventParticipant participant) {
+        if (events.contains(participant)) {
+            return;
+        }
+        
         participant.event = event;
         events.add(participant);
     }

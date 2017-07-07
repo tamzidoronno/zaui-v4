@@ -1075,8 +1075,8 @@ public class PmsManagerProcessor {
 
     private void pingServers() {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, -10);
-        Date tenMinAgo = cal.getTime();
+        cal.add(Calendar.MINUTE, -60);
+        Date anHourAgo = cal.getTime();
         
         PmsConfiguration config = manager.getConfigurationSecure();
         for(PmsLockServer server : config.lockServerConfigs.values()) {
@@ -1089,7 +1089,7 @@ public class PmsManagerProcessor {
             if(manager.recentlyStarter()) {
                 continue;
             }
-            if(tenMinAgo.after(server.lastPing)) {
+            if(anHourAgo.after(server.lastPing)) {
                 if(!server.beenWarned) {
                     server.beenWarned = true;
                     manager.messageManager.sendErrorNotification("Lost connection with server: " + server.arxHostname, null);

@@ -82,4 +82,10 @@ public interface IGetShop {
     
     @GetShopNotSynchronized
     public String getBase64EncodedPDFWebPage(String urlToPage);
+    
+    @GetShopNotSynchronized
+    public String getBase64EncodedPDFWebPageFromHtml(String html);
+    
+    @GetShopNotSynchronized
+    public void triggerPullRequest(String storeId);
 }

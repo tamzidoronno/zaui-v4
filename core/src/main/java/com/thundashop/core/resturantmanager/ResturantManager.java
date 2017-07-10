@@ -403,7 +403,7 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
             pmsManager.addCartItemToRoom(cartItem, room.pmsRoomId, ResturantManager.class.getSimpleName());
         }
     }
-
+    
     private PmsManager getPmsManager() throws NullPointerException {
         Application paymentApp = storeApplicationPool.getApplication("f86e7042-f511-4b9b-bf0d-5545525f42de");
         if (paymentApp == null)
@@ -533,4 +533,11 @@ public class ResturantManager extends ManagerBase implements IResturantManager {
         saveObject(pt);
         return pt;
     }
+
+    @Override
+    public PmsRoomSimple checkPinCode(String pincode, String bookingId, String pmsRoomId) {
+        return getPmsManager().checkPinCode(bookingId, pmsRoomId, pincode);
+    }
+    
+    
 }

@@ -1511,10 +1511,50 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function exportBookingStats() {
+        $filter = $this->getSelectedFilter();
         $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->getSelectedFilter());
         $arr = (array)$stats->entries;
-        array_unshift($arr, array_keys((array)$arr[0]));
-        echo json_encode($arr);
+        
+        $matrix = array();
+        
+        $heading = array();
+        $heading[] = "Dato";
+        $heading[] = "Spear rooms";
+        $heading[] = "Rented rooms";
+        $heading[] = "Guests";
+        $heading[] = "Avg.Price";
+        $heading[] = "Total";
+        $heading[] = "Budget";
+        $heading[] = "Coverage";
+        $matrix[] = $heading;
+        
+        foreach($arr as $entry) {
+            $row = array();
+            if ($entry->date) {
+                $row[] = $this->getDayText($entry->date, $filter->timeInterval);
+            } else {
+                $row[] = "Sum";
+            }
+            
+            $row[] = $entry->spearRooms;
+            $row[] = $entry->roomsRentedOut;
+            
+            $guests = 0;
+            foreach($entry->guests as $roomId => $gcount) {
+                $guests += $gcount;
+            }
+            $row[] = $guests;
+            $row[] = $entry->avgPrice;
+            $row[] = $entry->totalPrice;
+            $row[] = $entry->bugdet;
+            $row[] = $entry->coverage;
+            $matrix[] = $row;
+        }
+//        echo "<pre>";
+//        print_r($matrix);
+//        echo "</pre>";
+        
+        echo json_encode($matrix);
     }
     
     public function exportSaleStats() {
@@ -2906,7 +2946,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter = $this->getOrderStatsFilter();
         $result = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedName(), $filter);
         $_SESSION['currentOrderStatsResult'] = serialize($result);
-
         
         $products = $this->getApi()->getProductManager()->getAllProductsLight();
         $products = $this->indexList($products);
@@ -3050,38 +3089,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             
             $sortedMatrix[] = $row;
         } 
-        
-        $tmpHeader = $sortedMatrix['header'];
-        $finalHeader = array();
-        foreach($tmpHeader as $idx => $val) {
-            $finalHeader[] = $val;
-        }
-        $sortedMatrix['header'] = $finalHeader;
-        $columsToRemove = array();
-        $colLength = sizeof($sortedMatrix[0]);
-        for($i = 1; $i < $colLength; $i++) {
-            $total = 0;
-            foreach($sortedMatrix as $day => $row) {
-                if($day == "header") {
-                    continue;
-                }
-                if(@is_numeric($row[$i]) && sizeof($row) == $colLength) {
-                    $total += $row[$i];
-                    if($i == 0) {
-                        echo "dd: " . $row[$i] . "<bR>";
-                    }
-                }
-            }
-            if($total == 0) {
-                $columsToRemove[] = $i;
-            }
-        }
-        
-        $columsToRemove = array_reverse($columsToRemove);
-        foreach($columsToRemove as $col) {
-            $this->delete_col($sortedMatrix, $col);
-        }
-        
         
         return $sortedMatrix;
     }

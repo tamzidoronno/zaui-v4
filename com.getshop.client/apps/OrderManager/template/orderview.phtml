@@ -123,10 +123,6 @@ $cart = $order->cart;
                 echo "<input type='button' class='gsspaywithcard' value='Pay with saved card' orderId='".$order->id."'>";
                 echo "</div>";
             }
-            
-            if($order->status < 7) {
-                echo " - <a class='gsspayorder' style='color:blue; cursor:pointer;' orderid='".$order->id."'>pay order with payment link</a>";
-            }
             ?>
             
             <div class="gss_orderview_available_payments">

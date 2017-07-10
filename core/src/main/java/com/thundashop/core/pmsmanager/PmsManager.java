@@ -152,7 +152,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     GetShop getShop;
-    
+
     @Autowired
     BookingComRateManagerManager bookingComRateManagerManager;
     
@@ -160,6 +160,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     Database dataBase;
     private Date virtualOrdersCreated;
     private Date startedDate;
+    
+    public HashMap<String, PmsCareTaker> getCareTakerTasks() {
+        return careTaker;
+    }
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -205,7 +209,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         configuration = toAdd;
                     } else {
                         if(configuration.rowCreatedDate != null) { deleteObject(dataCommon); }
-                        System.out.println(getName() + " : " +dataCommon.rowCreatedDate);
                     }
                 }
             }
@@ -689,7 +692,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         checkSecurity(booking);
         
         pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
-
         booking.calculateTotalCost();
         Double totalOrder = 0.0;
         for(String orderId : booking.orderIds) {
@@ -922,7 +924,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             throw new ErrorException(1000015);
         }
         
-        checkAndReportPriceMatrix(booking, "saving invalid price matrix");
+        checkAndReportPriceMatrix(booking, "saving invalid price matrix 1");
         
         if(getConfigurationSecure().usePriceMatrixOnOrder) {
             try {
@@ -936,7 +938,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 e.printStackTrace();
             }
         }
-        
+        checkAndReportPriceMatrix(booking, "saving invalid price matrix 2");
         bookings.put(booking.id, booking);
         try {
             verifyPhoneOnBooking(booking);
@@ -949,14 +951,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
             }
         }
+        checkAndReportPriceMatrix(booking, "saving invalid price matrix 3");
         if(getConfiguration().createVirtualOrders) {
             pmsInvoiceManager.createVirtualOrder(booking.id);
         }
+        checkAndReportPriceMatrix(booking, "saving invalid price matrix 4");
         
         PmsBooking oldBooking = (PmsBooking) database.getObject(credentials, booking.id);
         if (oldBooking != null) {
             diffPricesFromBooking(booking, oldBooking);
         }
+        checkAndReportPriceMatrix(booking, "saving invalid price matrix 5");
         
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);
@@ -1010,6 +1015,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             checkIfRoomShouldBeUnmarkedDirty(room, booking.id);
             if(room.bookingId != null && !room.bookingId.isEmpty() && !room.deleted && !booking.isDeleted) {
+                logEntry("Same day checking move", booking.id, itemId, room.pmsBookingRoomId);
                 bookingEngine.changeBookingItemAndDateOnBooking(room.bookingId, itemId, start, end);
                 resetBookingItem(room, itemId, booking);
             } else {
@@ -1039,10 +1045,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                     }
                 }
-
-
-
-                
             } else {
                 logText = "Unassigned room from " + from;
             }
@@ -1672,7 +1674,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         if(deletedByChannel) {
             if(!askedToDoUpdate) {
-                messageManager.sendErrorNotification("A booking from wubook has been deleted; " + booking.id, null);
+                logPrint("A booking from wubook has been deleted; " + booking.id);
             }
         }
         
@@ -1682,9 +1684,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     
     private void hardDeleteBooking(PmsBooking booking, String source) {
-        System.out.println("Deleting, source: " + source);
+        logPrint("Deleting, source: " + source);
         bookings.remove(booking.id);
         booking.deletedBySource = source;
+        
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            order.bookingHasBeenDeleted = true;
+            orderManager.saveOrder(order);
+        }
+        
         if(booking.sessionId == null || booking.sessionId.isEmpty()) {
             String text = "Booking which should not be deleted where tried deleted: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
             text += "<br>";
@@ -3045,12 +3054,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<Booking> bookingsToAdd = new ArrayList();
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             Booking bookingToAdd = createBooking(room);
+            gsTiming("createbooking");
             if(getConfigurationSecure().hasNoEndDate && room.date.end == null) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(room.date.start);
                 cal.add(Calendar.YEAR, 100);
                 room.date.end = cal.getTime();
             }
+            
+            gsTiming("got configuration");
             if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
                 if(getConfigurationSecure().supportRemoveWhenFull) {
                     room.canBeAdded = false;
@@ -3072,6 +3084,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
                 logEntry(text, booking.id, null);
+                gsTiming("logged entry");
+            
                 if(!getConfigurationSecure().supportRemoveWhenFull) {
                     boolean hasBeenWarned = false;
                     if(booking.wubookreservationid != null && !booking.wubookreservationid.isEmpty()) {
@@ -3086,11 +3100,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text, null);
                     }
                 }
+                gsTiming("removed when full maybe");
+            
             }
             
             if(!room.isDeleted() && room.canBeAdded) {
                 bookingsToAdd.add(bookingToAdd);
             }
+            gsTiming("added booking");
+            
         }
         return bookingsToAdd;
     }
@@ -3619,7 +3637,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Double price = 0.0;
             Integer count = 0;
             for(PmsBookingAddonItem tmp : addons) {
-                double tmpPrice = tmp.price;
+                if (tmp == null) {
+                    continue;
+                }
+                double tmpPrice = tmp.price == null ? 0L : tmp.price;
                 if(prices.productPrices.containsKey(item.productId)) {
                     tmpPrice = prices.productPrices.get(item.productId);
                 }
@@ -3841,7 +3862,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.pmsBookingRoomId.equals(roomId)) {
                 phoneToSend = phoneNumber;
                 prefixToSend = prefix;
-                doNotification("room_resendcode", booking, room);
+                doNotification("room_added_to_arx", booking, room);
             }
         }
     }
@@ -4332,8 +4353,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             if(room.bookingItemId == null || !room.bookingItemId.equals(item.id)) {
                                 continue;
                             }
-                            notify("room_dooropenedfirsttime", booking, "sms", room);
-                            notify("room_dooropenedfirsttime", booking, "email", room);
+                            doNotification("room_dooropenedfirsttime", booking, room);
                             room.checkedin = true;
                             saveBooking(booking);
                         }
@@ -4350,8 +4370,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
                 if(room.code != null && room.code.equals(card) && !room.checkedin) {
-                    notify("room_dooropenedfirsttime", booking, "sms", room);
-                    notify("room_dooropenedfirsttime", booking, "email", room);
+                    doNotification("room_dooropenedfirsttime", booking, room);
                     room.checkedin = true;
                     saveBooking(booking);
                 }
@@ -4581,37 +4600,47 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(booking != null) {
             Gson gson = new Gson();
             rawBooking = gson.toJson(booking);
+            gsTiming("Created booking from json object");
         }
         if(getConfigurationSecure().notifyGetShopAboutCriticalTransactions) {
             messageManager.sendErrorNotification("Booking completed.", null);
         }
         if(booking.getActiveRooms().isEmpty()) {
+            logPrint("COMPLETECURRENTBOOKING : No rooms active on booking." + booking.id);
             return null;
         }
         notifyAdmin("booking_completed_" + booking.language, booking);
+        gsTiming("Notified admins");
         if (!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);
         }
         
+        Integer result = 0;
         try {
             checkForMissingEndDate(booking);
 
-            Integer result = 0;
+            gsTiming("Checked for missing end dates");
             booking.isDeleted = false;
 
             List<Booking> bookingsToAdd = buildRoomsToAddToEngineList(booking);
+            gsTiming("Getting cupons");
             Coupon coupon = getCouponCode(booking);
+            gsTiming("Got cupons");
             if(coupon != null) {
                 cartManager.subtractTimesLeft(coupon.code);
+                gsTiming("Subsctracted coupons");
             }
             createUserForBooking(booking);
+            gsTiming("Created user for booking");
             if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
                 booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
                 pmsInvoiceManager.createPrePaymentOrder(booking);
+                gsTiming("Created payment for order");
             }
             
             result = completeBooking(bookingsToAdd, booking);
-
+            gsTiming("Completed booking");
+            
             if (result == 0) {
                 if (!configuration.payAfterBookingCompleted) {
                     if (bookingIsOK(booking)) {
@@ -4620,15 +4649,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         } else {
                             doNotification("booking_confirmed", booking, null);
                         }
+                        gsTiming("Notified booking confirmed");
                     }
                 }
                 bookingUpdated(booking.id, "created", null);
+                gsTiming("Booking confirmed");
                 return booking;
             }
         } catch (Exception e) {
             messageManager.sendErrorNotification("This should never happen and need to be investigated : Unknown booking exception occured for booking id: " + booking.id + ", raw: " + rawBooking, e);
             e.printStackTrace();
         }
+        logPrint("COMPLETECURRENTBOOKING : Result is : " + result);
         return null; 
     }
 
@@ -5163,7 +5195,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy) {
-        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+       PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
        
         Product product = item.getProduct();
@@ -5184,6 +5216,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         room.addons.add(addon);
         saveBooking(booking);
+        
+        logEntry("Added addon: " + product.name, booking.id, room.bookingItemId, room.pmsBookingRoomId);
     }
 
     private void updateRoomPriceFromAddons(PmsBookingRooms room, PmsBooking booking) {
@@ -6195,9 +6229,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE, -4);
         if(cal.getTime().before(startedDate)) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    public PmsRoomSimple checkPinCode(String bookingId, String pmsRoomId, String pincode) {
+        PmsBooking booking = getBooking(bookingId);
+        if (booking == null)
+            return null;
+        
+        for (PmsBookingRooms room : booking.rooms) {
+            if (room.pmsBookingRoomId.equals(pmsRoomId) && room.code.equals(pincode)) {
+                PmsBookingSimpleFilter filter = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
+                return filter.convertRoom(room, booking);
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
+    public void warnFailedBooking() {
+        messageManager.sendErrorNotification("Someone booked error message shown to enduser.", null);
     }
 
 }

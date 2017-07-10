@@ -475,6 +475,7 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $notifications->extraCleaningCost = $this->buildExtraCleaningCost();
         $notifications->defaultMessage->{$this->getFactory()->getCurrentLanguage()} = $_POST['data']['defaultmessage'];
         $notifications->markDirtyEvenWhenCodeNotPressed = ($_POST['data']['markDirtyEvenWhenCodeNotPressed'] == "true");
+        $notifications->sendMessagesRegardlessOfPayments = ($_POST['data']['sendMessagesRegardlessOfPayments'] == "true");
         
         //Save addonsfromproduct
         $prods = $this->getApi()->getProductManager()->getAllProductsIncDeleted();

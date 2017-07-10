@@ -34,7 +34,19 @@ public class GetShopSessionScope implements Scope {
     private Map<String, Object> namedSessionObjects = Collections.synchronizedMap(new HashMap<String, Object>());
 
     public <T> T getNamedSessionBean(String multiLevelName, Class className) {
+        if (multiLevelName == null || multiLevelName.isEmpty()) {
+            throw new RuntimeException("Come on!! name your multilevel beans properly!!!");
+        }
+        
         long threadId = Thread.currentThread().getId();
+        
+        String oldMultiLevelName = threadSessionBeanNames.get(threadId);
+        
+        if (oldMultiLevelName != null && !oldMultiLevelName.isEmpty() && !oldMultiLevelName.equals(multiLevelName)) {
+            throw new RuntimeException("Its not allowed to use multiple multilevel names within one request. If you have a solution for this, please provide it :D");
+        }
+        
+        threadSessionBeanNames.put(threadId, multiLevelName);
         String storeId = threadStoreIds.get(threadId);
         String name = className.getSimpleName();
         name = Character.toLowerCase(name.charAt(0)) + name.substring(1);

@@ -72,6 +72,7 @@ public class Order extends DataCommon implements Comparable<Order> {
      * of other orders.
      */
     public List<String> createdBasedOnOrderIds = new ArrayList();
+    public boolean bookingHasBeenDeleted;
     
     public Order jsonClone() {
         Gson gson = new Gson();
@@ -344,6 +345,15 @@ public class Order extends DataCommon implements Comparable<Order> {
             }
         }
         return false;
+    }
+
+    public boolean isRecent() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, -5);
+        if(rowCreatedDate == null) {
+            return true;
+        }
+        return rowCreatedDate.after(cal.getTime());
     }
 
     public static class Status  {

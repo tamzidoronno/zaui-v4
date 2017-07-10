@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import org.springframework.stereotype.Component;
 
 /**
@@ -72,6 +73,10 @@ public class WebManager extends ManagerBase implements IWebManager {
     }
 
     public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth, String basic, boolean base64EncodeAuth, String htmlType)  throws Exception {
+        return htmlPostBasicAuth(url, data, jsonPost, encoding, auth, basic, base64EncodeAuth, htmlType, new HashMap());
+    }
+    
+    public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth, String basic, boolean base64EncodeAuth, String htmlType, HashMap<String, String> headerData)  throws Exception {
         if(encoding == null || encoding.isEmpty()) {
             encoding = "UTF-8";
         }
@@ -88,6 +93,10 @@ public class WebManager extends ManagerBase implements IWebManager {
                 encoded = Base64.encodeBase64String(auth.getBytes());
             }
             connection.setRequestProperty("Authorization",basic+ " " + encoded);
+        }
+        
+        for(String key : headerData.keySet()) {
+            connection.setRequestProperty(key, headerData.get(key));
         }
         
         if(jsonPost) {

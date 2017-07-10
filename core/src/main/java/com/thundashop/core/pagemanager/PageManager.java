@@ -138,6 +138,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         createDefaultPages();
         Page page = pages.get(id);
 
+        gsTiming("After page default page added");
         if (page == null && userManager.getLoggedOnUser() != null && userManager.getLoggedOnUser().isAdministrator()) {
             page = createPage(id);
         }
@@ -147,7 +148,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
         
         page = finalizePage(page);
-
+        gsTiming("After finalize function");
         return page;
     }
 

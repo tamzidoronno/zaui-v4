@@ -1,6 +1,7 @@
 
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.common.Editor;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +20,8 @@ public class PmsRoomSimple implements Serializable {
     public long start;
     public long end;
     public Integer numberOfGuests;
+    
+    @Editor
     public String code = "";
     public String room ="";
     public String roomType = "";

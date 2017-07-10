@@ -194,6 +194,25 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         return filterByTimeFilter(retEvents);
     }
+    
+    @Override
+    public List<Event> getEventsForPdf() {
+        if (getSession() == null || getSession().currentUser == null || getSession().currentUser.type < 100) {
+            return getEvents();
+        }
+        
+        
+        List<Event> retEvents = new ArrayList(events.values());
+        
+        retEvents = retEvents.stream()
+                .filter(o -> !o.isHidden)
+                .collect(Collectors.toList());
+        
+        sortEventsByDate(retEvents);
+        retEvents = cloneAndFinalize(retEvents);
+        
+        return filterByTimeFilter(retEvents);
+    }
 
     private void sortEventsByDate(List<Event> retEvents) {
         Collections.sort(retEvents, (Event o1, Event o2) -> o1.days.get(0).startDate.compareTo(o2.days.get(0).startDate));
@@ -2019,9 +2038,17 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
     }
     
     @Override
-    public List<EventStatistic> getStatistic(Date startDate, Date stopDate, List<String> groupIds, List<String> eventTypeIds) {
-        if (stopDate == null || stopDate.before(startDate) || stopDate.equals(startDate))
+    public List<EventStatistic> getStatistic(Date startDate, Date oldStopDate, List<String> groupIds, List<String> eventTypeIds) {
+        if (oldStopDate == null || oldStopDate.before(startDate) || oldStopDate.equals(startDate))
             return new ArrayList();
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(oldStopDate);
+        cal.set(Calendar.HOUR, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        
+        Date stopDate = cal.getTime();
         
         List<Event> events = getAllEvents().stream()
                 .filter(event -> isWithinDates(event, startDate, stopDate))
@@ -2035,7 +2062,6 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         List<EventStatistic> stats = new ArrayList();
         
-        Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         
@@ -2078,6 +2104,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        cal.set(Calendar.HOUR, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
         return cal.getTime();
     }
 

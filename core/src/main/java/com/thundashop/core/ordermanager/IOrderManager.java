@@ -111,9 +111,9 @@ public interface IOrderManager {
      */
     @Administrator
     public Order getOrderByReference(String referenceId) throws ErrorException;
-    
+
     @Administrator
-    public void checkForOrdersToCapture() throws ErrorException;
+    public void checkForOrdersToCapture(String internalPassword) throws ErrorException;
     
     @Administrator
     public void checkForOrdersToAutoPay(int daysToTryAfterOrderHasStarted) throws ErrorException;
@@ -288,4 +288,6 @@ public interface IOrderManager {
     
     @Administrator
     public void sendRecieptWithText(String orderId, String email, String subject, String text);
+    
+    public void startCheckForOrdersToCapture(String internalPassword) throws ErrorException;
 }

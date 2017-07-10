@@ -280,7 +280,7 @@ if($booking->orderIds) {
                     echo "<a href='/?page=cart&payorder=" . $order->id."'>pay</a> - <span style='cursor:pointer; color:blue' class='sendpaymentlink' orderid='".$order->id."' bookingid='".$booking->id."'>Send payment link</span>";
                 }
             }
-            if(stristr($order->payment->paymentType, "invoice")) {
+            if(stristr($order->payment->paymentType, "invoice") || stristr($order->payment->paymentType, "sendregning")) {
                 echo "<span style='cursor:pointer; color:blue' class='sendinvoice' orderid='".$order->id."' bookingid='".$booking->id."'>Send invoice</span>";
                 echo " - <a href='/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."' target='_fdasf'><span style='cursor:pointer; color:blue' orderid='".$order->id."' bookingid='".$booking->id."'>download</span></a>";
             }
@@ -291,13 +291,13 @@ if($booking->orderIds) {
                 if(stristr($order->payment->paymentType, "dibs") || stristr($order->payment->paymentType, "\\epay")) {
                     echo "<a href='/?page=cart&payorder=" . $order->id."'>pay</a> - <span style='cursor:pointer; color:blue' class='sendpaymentlink' orderid='".$order->id."' bookingid='".$booking->id."'>Send payment link</span>";
                 }
-                if(stristr($order->payment->paymentType, "invoice")) {
+                if(stristr($order->payment->paymentType, "invoice") || stristr($order->payment->paymentType, "sendregning")) {
                     echo "<span style='cursor:pointer; color:blue' class='sendinvoice' orderid='".$order->id."' bookingid='".$booking->id."'>Send invoice</span>";
                     echo " - <a href='/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."' target='_fdasf'><span style='cursor:pointer; color:blue' orderid='".$order->id."' bookingid='".$booking->id."'>download</span></a>";
                 }
             } else {
                 echo "<a href='/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."' target='_fdasf'><span style='cursor:pointer; color:blue' orderid='".$order->id."' bookingid='".$booking->id."'>download</span></a> - ";
-                if(stristr($order->payment->paymentType, "invoice")) {
+                if(stristr($order->payment->paymentType, "invoice") || stristr($order->payment->paymentType, "sendregning")) {
                     echo "<span style='cursor:pointer; color:blue' class='sendinvoice' orderid='".$order->id."' bookingid='".$booking->id."'>Send invoice</span>";
                 } else {
                     echo "<span style='cursor:pointer; color:blue' class='sendreciept' orderid='".$order->id."' bookingid='".$booking->id."'>Send reciept</span>";

@@ -71,6 +71,7 @@ public class PmsBookingRooms implements Serializable {
     public Date requestedEndDate = null;
     public Date undeletedDate;
     public boolean forceUpdateLocks = false;
+    public boolean deletedByChannelManagerForModification = false;
     
     /**
      * Finalized entries

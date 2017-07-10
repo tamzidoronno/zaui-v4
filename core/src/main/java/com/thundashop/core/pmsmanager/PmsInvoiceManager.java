@@ -21,6 +21,7 @@ import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.sendregning.SendRegningManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
@@ -48,6 +49,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private HashMap<String, PmsOrderStatsFilter> savedIncomeFilters = new HashMap();
     private PmsPaymentLinksConfiguration paymentLinkConfig = new PmsPaymentLinksConfiguration();
     
+    @Autowired
+    SendRegningManager sendRegningManager;
 
     private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
         double res = 0.0;
@@ -442,8 +445,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 continue;
             }
             payedfor = false;
-        }
-        
+        } 
+       
         if(!hasOrders && pmsManager.getConfigurationSecure().markBookingsWithNoOrderAsUnpaid) {
             payedfor = false;
         }
@@ -652,6 +655,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts, userManager.getAllUsersMap());
         stats.createStatistics(ordersToUse, filter);
+        
+//        stats.removeEmptyProducts();
+        
         return stats;
     }
 
@@ -702,6 +708,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                 }
                 if(invoicedTo == null) {
+                    room.invoicedTo = null;
                     continue;
                 }
                 
@@ -723,7 +730,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         result.add(msg);
                         room.invoicedTo = invoicedTo;
                         pmsManager.saveBooking(booking);
-                        messageManager.sendErrorNotification(msg, null);
+//                        messageManager.sendErrorNotification(msg, null);
                     }
                 }
             }
@@ -740,7 +747,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(priceObject.derivedPrices != null && priceObject.derivedPrices.containsKey(room.bookingItemTypeId)) {
             HashMap<Integer, Double> derivedPriced = priceObject.derivedPrices.get(room.bookingItemTypeId);
             for(int i = 2;i <= room.numberOfGuests;i++) {
-                if(derivedPriced.containsKey(i)) {
+                if(derivedPriced != null && derivedPriced.containsKey(i)) {
                     toAdd += derivedPriced.get(i);
                 }
             }
@@ -793,7 +800,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrder(orderId);
             if(order.closed) {
-                if(order.isExpedia()) {
+                if(order.isExpedia() && order.isRecent()) {
                     order.closed = false;
                     order.status = Order.Status.WAITING_FOR_PAYMENT;
                 } else {
@@ -1087,8 +1094,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     public double updatePriceMatrix(PmsBooking booking, PmsBookingRooms room, Integer priceType) {
-        pmsManager.checkAndReportPriceMatrix(booking, "when updating price matrix");
+        pmsManager.checkAndReportPriceMatrix(booking, "when updating pricsudo n stablee matrix");
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, priceType, booking);
+        if(priceMatrix == null || priceMatrix.isEmpty()) {
+            logPrint("Empty price matrix detected, we can't continue updating price matrix when the price matrix returned is empty.");
+            return room.price;
+        }
         double total = 0.0;
         int count = 0;
         if(priceType == PmsBooking.PriceType.daily) {
@@ -1307,12 +1318,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         order.sentToCustomer = true;
         order.closed = true;
         orderManager.saveObject(order);
-        pmsManager.setOrderIdToSend(orderId);
-        pmsManager.setEmailToSendTo(email);
-        if(order.status == Order.Status.PAYMENT_COMPLETED) {
-            pmsManager.doNotification("sendreciept", bookingId);
+        
+        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("sendregning")) {
+            sendRegningManager.sendOrder(orderId);
         } else {
-            pmsManager.doNotification("sendinvoice", bookingId);
+            pmsManager.setOrderIdToSend(orderId);
+            pmsManager.setEmailToSendTo(email);
+            if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                pmsManager.doNotification("sendreciept", bookingId);
+            } else {
+                pmsManager.doNotification("sendinvoice", bookingId);
+            }
         }
     }
 
@@ -1333,7 +1349,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     filter.pmsRoomId = order.attachedToRoom;
                 }
             }
-            
             pmsDailyOrderGeneration.createCart(bookingId, filter);
         } else {
             return createOrderOld(bookingId, filter);
@@ -1347,6 +1362,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
             booking.orderIds = uniqueList;
             pmsManager.saveBooking(booking);
+            
+//            messageManager.sendErrorNotification("New order created: " + order.incrementOrderId, null);
+            
             return order.id;
         }
         return "";
@@ -2196,7 +2214,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.invoicedFrom != null && room.invoicedFrom.before(room.date.start) && !room.isSameDay(room.invoicedFrom, room.date.start)) {
             Date invoiceStart = room.invoicedFrom;
             Date invoiceEnd = room.date.start;
-            if(room.date.start.after(room.invoicedTo)) {
+            if(room.invoicedTo != null && room.date.start.after(room.invoicedTo)) {
                 invoiceStart = room.invoicedFrom;
                 invoiceEnd = room.invoicedTo;
             }

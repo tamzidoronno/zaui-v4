@@ -69,7 +69,6 @@ public class PmsOrderStatistics implements Serializable  {
                     }
                     
                     calculate(item, orderEx, order, orderInc, inc, ex, priceInc, priceEx);
-                    System.out.println(orderscount + " : " + item.getProduct().priceExTaxes  + " " + item.getCount() + " : " + total);
                     total += (item.getProduct().priceExTaxes  * item.getCount());
                     addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().priceExTaxes * item.getCount()), entry.priceExOrders);
                     addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().price * item.getCount()), entry.priceIncOrders);
@@ -228,6 +227,10 @@ public class PmsOrderStatistics implements Serializable  {
         current += price;
         
         toAdd.get(productId).put(orderId, current);
+    }
+
+    void removeEmptyProducts() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

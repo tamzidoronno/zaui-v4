@@ -6,6 +6,8 @@
 package com.thundashop.core.pullserver.data;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 
 /**
@@ -20,4 +22,13 @@ public class PullMessage extends DataCommon {
     public String belongsToStore = "";
     public boolean delivered = false;
     public int sequence = 0;
+    
+    public boolean isInvalidatedDueToTime() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_YEAR, -7);
+        Date sevenDaysAgo = cal.getTime();
+        
+        return rowCreatedDate.before(sevenDaysAgo);
+    }
 }

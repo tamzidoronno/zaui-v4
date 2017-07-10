@@ -57,6 +57,8 @@ public class User extends DataCommon implements Comparable<User> {
     public String internalPassword;
     
     public List<UserCompanyHistory> companyHistory = new ArrayList();
+    
+    public boolean createInSendRegning = false;
  
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);

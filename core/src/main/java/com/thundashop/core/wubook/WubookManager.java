@@ -483,7 +483,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
             Double minstay = pricesForType.get("minstay");
             if(minstay == null || minstay == 1.0) {
-                continue;
+                // Ignoreing Akers Have as they want to set back the 1 day minstay setting
+                if (!storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841")) {
+                    continue;
+                }
             }
             
             Vector list = new Vector();

@@ -492,6 +492,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Vector list = new Vector();
             for(int i = 0;i < (365*2); i++) {
                 Hashtable dayEntry = new Hashtable();
+                if(minstay == null) {
+                    minstay  = 1.0;
+                }
                 dayEntry.put("min_stay", minstay);
                 list.add(dayEntry);
                 found = true;
@@ -508,6 +511,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             Vector result = (Vector) client.execute("rplan_update_rplan_values", params);
             if((Integer)result.get(0) != 0) {
+                logPrint("Failed to update daily min stay, " + result.get(1));
                 return "Failed to update daily min stay, " + result.get(1);
             }
         }

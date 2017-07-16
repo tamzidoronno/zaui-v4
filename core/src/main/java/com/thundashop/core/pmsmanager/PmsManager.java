@@ -6254,4 +6254,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         messageManager.sendErrorNotification("Someone booked error message shown to enduser.", null);
     }
 
+    @Override
+    public void detachOrderFromBooking(String bookingId, String orderId) {
+        PmsBooking booking = getBooking(bookingId);
+        
+        if (booking == null)
+            return;
+        
+        booking.orderIds.remove(orderId);
+        saveBooking(booking);
+    }
+
 }

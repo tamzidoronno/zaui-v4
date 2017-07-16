@@ -408,4 +408,7 @@ public interface IPmsManager {
      */
     @Administrator
     public Map<Long, List<ConferenceData>> getGroupedConferenceData();
+    
+    @Administrator
+    public void detachOrderFromBooking(String bookingId, String orderId);
 }

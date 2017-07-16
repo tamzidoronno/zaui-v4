@@ -2892,6 +2892,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->selectedOrders = $result;
         return $result;
     }
+    
+    public function detachOrderFromBooking() {
+        $booking = $this->getSelectedBooking();
+        $this->getApi()->getPmsManager()->detachOrderFromBooking($this->getSelectedName(), $booking->id, $_POST['data']['orderid']);
+    }
 
     /**
      * 

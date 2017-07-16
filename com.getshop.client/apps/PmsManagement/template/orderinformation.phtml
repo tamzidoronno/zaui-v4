@@ -326,6 +326,9 @@ if($booking->orderIds) {
         echo "<tr>";
         echo "<td>";
         echo "Credit order, sometimes its nessesary to credit an order. This is when the order is incorrect and you need to create a new one.";
+        if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->showHiddenFields) {
+            echo "<div><i class='fa fa-magic' title='Force detach order from from booking.' bookingid='$booking->id' gsclick='detachOrderFromBooking' orderid='".$order->id."'></i> <span class='edituseronorderview edituserview'></span></div>";
+        }
         echo "</td>";
         echo "<td>";
             if(@$order->closed && !@$order->isCreditNote && sizeof(@$order->creditOrderId) == 0) {

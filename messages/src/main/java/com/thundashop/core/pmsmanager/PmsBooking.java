@@ -290,6 +290,14 @@ public class PmsBooking extends DataCommon {
         return result;
     }
 
+    public List<PmsBookingRooms> getAllRooms() {
+        List<PmsBookingRooms> result = new ArrayList();
+        for(PmsBookingRooms room : rooms) {
+            result.add(room);
+        }
+        return result;
+    }
+
     public void addRoom(PmsBookingRooms room) {
         if(!rooms.contains(room)) {
             rooms.add(room);

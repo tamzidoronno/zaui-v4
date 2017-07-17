@@ -2220,7 +2220,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             creditRoomForPeriode(invoiceStart, invoiceEnd, booking, room);
         }
-        if(room.invoicedTo != null && room.invoicedTo.after(room.date.end) && !room.isSameDay(room.invoicedTo, room.date.end)) {
+        if(room.invoicedTo != null && room.invoicedFrom != null && room.invoicedTo.after(room.date.end) && !room.isSameDay(room.invoicedTo, room.date.end)) {
             Date invoiceStart = room.date.end;
             Date invoiceEnd = room.invoicedTo;
             if(room.date.end.before(room.invoicedFrom)) {

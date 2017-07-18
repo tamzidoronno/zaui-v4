@@ -3097,7 +3097,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     
                     if(!hasBeenWarned && (booking.channel != null && !booking.channel.isEmpty())) {
-                        messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text, null);
+                        messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text + "<br><bR><br>booking dump:<br>" + dumpBooking(booking), null);
+                        warnStoreAboutOverBooking(booking);
                     }
                 }
                 gsTiming("removed when full maybe");
@@ -3510,21 +3511,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
-    public void dumpBooking(PmsBooking booking) {
-        if(checkDate(booking)) {
-            if((!booking.payedFor && booking.deleted != null) && (booking.sessionId == null || booking.sessionId.isEmpty())) {
-                booking.dump();
-                for(PmsBookingRooms room : booking.getActiveRooms()) {
-                    BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                    logPrint("\t" + type.name + " - " + room.date.start + " frem til : " + room.date.end);
-                }
-            } 
-            User user = userManager.getUserById(booking.userId);
-            if(user != null) {
-                logPrint(user.fullName); 
+    public String dumpBooking(PmsBooking booking) {
+        String res = "";
+        if((!booking.payedFor && booking.deleted != null) && (booking.sessionId == null || booking.sessionId.isEmpty())) {
+            res += booking.dump();
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                res += "   " + type.name + " - " + room.date.start + " frem til : " + room.date.end + "<br>";
             }
-            logPrint("-------");
         }
+        User user = userManager.getUserById(booking.userId);
+        if(user != null) {
+            res += "Full name: " + user.fullName + "<br>";
+        }
+        
+        return res;
     }
 
     HashMap<String, PmsBooking> getBookingMap() {
@@ -6263,6 +6264,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         booking.orderIds.remove(orderId);
         saveBooking(booking);
+    }
+
+    private void warnStoreAboutOverBooking(PmsBooking booking) {
+        String email = getStoreEmailAddress();
+        String content = "Possible overbooking happened:<br>";
+        content += dumpBooking(booking);
+        messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
     }
 
 }

@@ -273,10 +273,12 @@ public class PmsBooking extends DataCommon {
         }
     }
     
-    void dump() {
+    public String dump() {
+        String res = "";
         for(String key : registrationData.resultAdded.keySet()) {
-            GetShopLogHandler.logPrintStatic(key + " : " + registrationData.resultAdded.get(key), null);
+            res += key + " : " + registrationData.resultAdded.get(key) + "<bR>";
         }
+        return res;
     }
 
     public List<PmsBookingRooms> getActiveRooms() {

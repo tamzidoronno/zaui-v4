@@ -2629,7 +2629,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             newDiff = Math.round(newDiff);
             if(newDiff != 0.0) {
                 System.out.println("Failed when creating virtual order : " + bookingId + " - " + newDiff);
-                pmsManager.dumpBooking(booking);
+                System.out.println(pmsManager.dumpBooking(booking));
             }
         }
         

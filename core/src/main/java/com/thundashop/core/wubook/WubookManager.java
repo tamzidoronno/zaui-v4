@@ -429,15 +429,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 dateString += "-";
                 if(month < 10) { dateString += "0" + month; } else { dateString += month; }
                 dateString += "-" + year; 
-                
+                Double priceToAdd = null;
                 if(pricesForType.containsKey(dateString)) {
-                    price = pricesForType.get(dateString);
+                    priceToAdd = pricesForType.get(dateString);
                 }
-                if(price != null) {
-                    list.add(price.intValue());
-                } else if(defaultPrice != null) {
-                    list.add(defaultPrice);
+                if(priceToAdd == null || priceToAdd == 0.0 && defaultPrice != null) {
+                    priceToAdd = defaultPrice;
                 }
+                list.add(priceToAdd);
                 calStart.add(Calendar.DAY_OF_YEAR, 1);
             }
             if(!list.isEmpty()) {
@@ -511,7 +510,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             Vector result = (Vector) client.execute("rplan_update_rplan_values", params);
             if((Integer)result.get(0) != 0) {
-                logPrint("Failed to update daily min stay, " + result.get(1));
+                logText("Failed to update daily min stay, " + result.get(1));
                 return "Failed to update daily min stay, " + result.get(1);
             }
         }

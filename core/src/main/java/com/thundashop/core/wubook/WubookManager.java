@@ -433,7 +433,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(pricesForType.containsKey(dateString)) {
                     priceToAdd = pricesForType.get(dateString);
                 }
-                if(priceToAdd == null || priceToAdd == 0.0 && defaultPrice != null) {
+                if((priceToAdd == null || priceToAdd == 0.0) && defaultPrice != null) {
                     priceToAdd = defaultPrice;
                 }
                 list.add(priceToAdd);

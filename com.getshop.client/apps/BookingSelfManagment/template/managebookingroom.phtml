@@ -1,0 +1,37 @@
+<?
+/* @var $this ns_7e7ab1f5_2c73_4da6_8b23_4407fc4bfbd6\BookingSelfManagment */
+
+$bookingId = $this->getSecretId();
+$booking = $this->getApi()->getPmsSelfManagement()->getBookingById($this->getSelectedName(), $bookingId);
+$room = $this->getSelectedRoom();
+$addons = $this->getApi()->getPmsSelfManagement()->getAddonsWithDiscountForBooking($this->getSelectedName(), $bookingId, $room->pmsBookingRoomId);
+$days = $this->getDaysForBooking($room, false, true);
+
+?>
+<div class='manageroom'>
+    <?
+    $array = array();
+    if (count($addons) && count($days)) {
+    ?>
+
+        <?
+        foreach ($addons as $addon) {
+            echo "<div class='addon' productId='$addon->productId' addonId='".$addon->addonId."'>";
+                echo "<div class='addontext'>".$this->__f("Please select the days you wish to have ")." ".$this->getAddonName($addon)."</div>";
+                foreach ($days as $date) {
+                    $addonOn = $this->isAddonOn($addon, $date, $room);
+                    ?>
+                    <div class='dayline'>
+                        <div class='toggleswitch' date='<? echo $date->format('d/m-Y'); ?>'> <? echo $this->__f("Off"); ?> <i class="fa <? echo $addonOn ? 'fa-toggle-on' : 'fa-toggle-off' ?>"></i> <? echo $this->__f("On"); ?> </div>
+                        <div class='text'><? echo $date->format('d/m-Y'); ?></div>
+                    </div>
+                    <?
+                }
+            echo "</div>";
+        }
+    }
+    ?>
+
+</div>
+<div class="shop_button saveAndReturnFromRoom" ><? echo $this->__w("Save and return");?></div>
+    

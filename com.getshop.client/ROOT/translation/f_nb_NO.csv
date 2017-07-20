@@ -74,6 +74,7 @@ Almost done! all you need to do now is to upload your images. Hover the mouse ov
 Almost there! Click on the plus to add your first menu entry for this menu;-;Neste der! Trykk på pluss for å legge til ditt første meny entry
 Already created instances of this app;-;Allerede opprettet instaneser for denne applikasjonen.
 Amount;-;Beløp
+An auth secret provided by vipps.;-;En autorasjonskode fra Vipps
 Anonymous user;-;Anonym bruker
 Answering your customers questions, means more sale. By adding this excellent chat application, you can answer on request at any time from you mobile devices or your stationary computer.;-;Å svare dine kunder betyr mer salg. Ved å legge til denne chat applikasjonen kan du gjøre nettopp det.
 Api id;-;Api id
@@ -88,6 +89,7 @@ Are you sure you want to delete this logo?;-;Er du sikker på at du vil slette d
 Are you sure you want to delete this product?;-;Er du sikker på at du ønsker å slette dette produktet?
 Are you sure you want to remove the candidate from this event?;-;Er du sikker på at du ønsker å fjerne kandidater fra dette eventet?
 Attendees;-;Påmeldte
+Auth secret;-;Auturasjonskode
 Available applications;-;Tilgjengelige applikasjoner
 Back;-;Tilbake
 Back to email;-;Tilbake til epost
@@ -132,6 +134,7 @@ Category list;-;Kategori liste
 CellPhone;-;Mobilnr
 Cellphone;-;Mobilnr
 Cells;-;Celler
+Change;-;Endre
 Change colors;-;Endre farger
 Change image;-;Endre bilde
 Change movie;-;Endre film
@@ -173,6 +176,7 @@ Contact name;-;Kontaktens navn
 Content;-;Innhold
 Content Management;-;Applikasjoner for innhold
 Cookie warning;-;Cookie advarsel
+Could not find booking. Please contact the hotel for more information;-;Fant ikke bookingen, kontakt hotellet for mer informasjon
 Coupon name;-;Kupong navn
 Create a new product;-;Opprett et nytt produkt
 Create categories and add a list of products to the category, attach images to the categories, and name them as you want.;-;Opprett kategorier og legg til en liste av produkter for kategorien, legg til bilder til dine kategorier og navgi de med hva du vil.
@@ -187,6 +191,7 @@ Create shop;-;Opprett butikk
 Create this application and get started, you will automatically be shown the editors view for this application to start adding your text.;-;Opprett denne applikasjonen og kom i gang, du vil automask bli vist editor valgene for å legge til tekst.
 Create this application and start showing events on given dates.;-;Opprett denne applikasjonen og begynn å vis eventer på gitte datoer.
 Created when;-;Opprettet når
+Credit note, contact hotel for refund of money;-;Kredittnota, ta kontakt med hotellet for refusjon.
 Credits for picture;-;Credits for bildet
 Css attribute;-;Css atributter
 Current available cupons;-;Dine tilgjengelige kuponger
@@ -244,6 +249,7 @@ Email / username;-;Epost / Brukernavn
 Email address.;-;Epostaddresse
 Email of the customer;-;Epost adresse for kunden
 Email subject;-;Tittel på epost
+Email used when logging on to sendregning.;-;Epost brukt for å logge inn på sendregning.no
 Emails;-;Eposter
 Empty page;-;Tom side
 Enable test mode for sisow;-;Aktiver test modus for Sisow
@@ -266,6 +272,7 @@ Expiration date;-;Utløpsdato
 Expiry date xx/xx;-;Utløpsdato xx/xx
 Extended description;-;Utvidet beskrivelse
 Extended location;-;Utvidet sted.
+Extras;-;Ekstra
 Fee for using this payment method;-;Avgifter brukt av denne betalings metoden
 Fill out the form below to create a new user.;-;Fyll ut skjemaet under for å opprette en ny bruker
 Filter by company number;-;Flitrer på firma nummer
@@ -409,6 +416,7 @@ No users where found for this time range.;-;Ingen brukere ble funnet for denne t
 Normal button;-;Normal knapp
 North east corner latitude;-;Nord øst hjørne latitude
 North east corner longitude;-;Nord øskt hjørne longitude
+Not available yet;-;Ikke tilgjengelig enda.
 Not possible;-;Ikke mulig
 Not satisfied with the text "hardcoded" on your page?<br>Add this application and tune the text yourself.;-;Ikke fornøyd med tekst som er "kodet" inn på din side?<br>Legg til denne applikasjonen og endre teksten selv.
 Nothing to configure here, please activate some apps that has settings for emails.;-;Her er det ingenting å konfigurere, vennligst aktiver en app som har instllinger for epost.
@@ -425,6 +433,7 @@ Order email;-;Bestillings epost
 Order lines;-;Ordre linjer
 Order not found;-;Ordre ble ikke funnet
 Order number;-;Ordre nummer
+Order status;-;Ordre status
 Order subject;-;Emne på eposten
 OrderId;-;Orderid
 OrderManager;-;Ordrebehandling
@@ -607,6 +616,7 @@ The Coupon name can not be blank.;-;Kupong navnet kan ikke være blankt.
 The Merchant-ID is provided by Dibs, please contact us for more information.;-;Merchant-ID'en får du fra Dibs, vennligst kontakt oss for mer informasjon.
 The address is already taken or invalid.;-;Denne adressen er allerede tatt eller feil.
 The api id from Clickatell;-;Api id'en fra clicatell
+The booking was not found;-;Fant ikke bookingen
 The cell phone number to the owner of this account.;-;Mobiltelefonnr til den som eier denne kontoen
 The description;-;Beskrivelsen
 The discount can not be 0 or the amount of times coupons can be used can not be 0;-;Avslaget kan ikke være 0, heller kan ikke antall ganger denne kupongen skal være gyldig være 0
@@ -736,9 +746,11 @@ You have not created any lists yet, you need to create one first. Click the butt
 You have not created any products yet!;-;Du har ikke oppretet noen produkter enda!
 You have not created any products, thats why you can not see them here.;-;Du har ikke opprettet noen produkter enda, derfor er det ingen her.
 You have not yet created any web shops, create one and they will be listed here.;-;Du har ikke enda opprettet en web shop, opprett en og den vil bli listet her.
+You need to prepay for you stay, check that the information above is correct and then hit the Pay button below on the orders below.;-;Du må forhåndsbetale for ditt opphold, trykk på betal under for å betale.
 You need to select atleast one user to send your email to.;-;Du må velge minst en bruker når du skal sende eposten.
 You need to wait until all uploads has completed before you can do more modifications.;-;Du må vente til alt er lastet opp før du kan fortsette å endre på ting.
 YouTube movie search;-;Youtube film søk
+Your;-;Dine
 Your current account balance;-;Din nåverende balanse på kontoen
 Your email can not be empty;-;Epost kan ikke være blank
 Your image list;-;Dine bildelister

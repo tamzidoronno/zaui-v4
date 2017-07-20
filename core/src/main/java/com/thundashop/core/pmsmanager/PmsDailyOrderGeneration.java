@@ -140,7 +140,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         List<String> uniqueList = new ArrayList<String>(new HashSet<String>( currentBooking.orderIds ));
         
         for(String orderId : uniqueList) {
-            Order order = orderManager.getOrder(orderId);
+            Order order = orderManager.getOrderSecure(orderId);
             for(CartItem item : order.cart.getItems()) {
                 if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
                     HashMap<String, Double> orderMatrix = item.priceMatrix;
@@ -456,7 +456,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
       
         List<String> uniqueList = new ArrayList<String>(new HashSet<String>( currentBooking.orderIds ));
         for(String orderId : uniqueList) {
-            Order order = orderManager.getOrder(orderId);
+            Order order = orderManager.getOrderSecure(orderId);
             for(CartItem item : order.cart.getItems()) {
                 if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
                     if(item.itemsAdded != null) {

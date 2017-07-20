@@ -224,6 +224,7 @@ Guest information;-;Gjesteinformasjon
 Guest information for room;-;Gjesteinformasjon for rom
 Guest name;-;Gjestens navn
 Guest phone;-;Gjestens tlf
+Guests;-;Gjester
 Height;-;Høyde
 Height (px);-;Høyde (px)
 Height (px) mobile;-;Høyde (px) mobil
@@ -474,6 +475,7 @@ Sa;-;Lø
 Sat;-;Lør
 Saturday;-;Lørdag
 Save;-;Lagre
+Save and return;-;Lagre og gå tilbake.
 Save changes;-;Lagre endringer
 Save settings;-;Lagre instillinger
 Save the cards instead of extracting the amount?;-;Lagre kortet insteden for å trekke beløpet.

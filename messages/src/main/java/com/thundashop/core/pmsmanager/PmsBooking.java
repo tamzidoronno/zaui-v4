@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.GetShopLogHandler;
 import java.text.SimpleDateFormat;
@@ -13,6 +14,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
+import javax.xml.ws.soap.Addressing;
 
 public class PmsBooking extends DataCommon {
  
@@ -72,6 +75,8 @@ public class PmsBooking extends DataCommon {
     Double unsettled;
     public boolean nonrefundable = false;
     
+    @Administrator
+    public String secretBookingId = "";
     
     public Double getTotalPrice() {
         return totalPrice;

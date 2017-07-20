@@ -359,6 +359,8 @@ public interface IPmsManager {
     public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
     public List<PmsBookingAddonItem> getAddonsWithDiscount(String pmsBookingRoomId);
     
+    public List<PmsBookingAddonItem> getAddonsWithDiscountForBooking(String pmsBookingRoomId);
+    
     public PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception;
     
     public List<PmsAdditionalTypeInformation> getAdditionalTypeInformation() throws Exception;
@@ -411,4 +413,5 @@ public interface IPmsManager {
     
     @Administrator
     public void detachOrderFromBooking(String bookingId, String orderId);
+    
 }

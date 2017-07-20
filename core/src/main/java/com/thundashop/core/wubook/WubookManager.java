@@ -436,6 +436,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if((priceToAdd == null || priceToAdd == 0.0) && defaultPrice != null) {
                     priceToAdd = defaultPrice;
                 }
+                if(priceToAdd == null) {
+                    priceToAdd = 999999.0;
+                }
                 list.add(priceToAdd);
                 calStart.add(Calendar.DAY_OF_YEAR, 1);
             }

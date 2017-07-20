@@ -37,7 +37,6 @@ public interface IBookingEngine {
     @Administrator
     public boolean  deleteBooking(String id);
     
-    @Administrator
     public BookingItemType getBookingItemType(String id);
     
     @Administrator
@@ -49,7 +48,6 @@ public interface IBookingEngine {
     @Administrator
     public BookingItem saveBookingItem(BookingItem item);
     
-    @Administrator
     public BookingItem getBookingItem(String id);
     
     public List<BookingItem> getBookingItems();

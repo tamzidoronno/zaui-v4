@@ -1,0 +1,132 @@
+.Publications .publicationShell{
+    width:100%;
+    min-width: 410px;
+    box-sizing:border-box;
+    background-color:#efefef;
+    padding:10px;
+    margin:auto;
+    font-size:16px;
+}
+
+.Publications .publicationShell table{
+    border-collapse: collapse;
+    width: 100%;
+    box-sizing: border-box;
+}
+.Publications .publicationShell td{
+    padding: 5px 10px 5px 5px;
+    cursor: default;
+    user-select:none;
+}
+.Publications .trConnected{
+    background-color:#f6925f;
+    color:#fff;
+    font-weight: bold;
+}
+.Publications .publicationInput{
+    padding:5px 0 5px 0;
+    width: 100%;
+}
+.Publications .publicationShell h2{
+    border-bottom: 1px solid #d7d8da;
+    color:#f6925f;
+    padding:10px;
+    cursor: default;
+    user-select:none;
+}
+
+.Publications .publicationShelltableNames{
+    width:25%;
+    text-align: center;
+}
+.Publications .publicationShellSubmit{
+    position:relative;
+    padding:7px 0 7px 0;
+    width:100%;
+    background-color:#f6925f;
+    color:#fff;
+    font-weight: bold;
+    text-align: center;
+    float:right;
+    cursor: pointer;
+    user-select:none;
+}
+.Publications .publicationShellSubmit:hover{
+    background-color:#f38045;
+}
+.Publications .publicationFeed{
+    padding:10px;
+    background-color:#efefef;
+    min-width:390px;
+}
+.Publications .publicationFeedHeader{
+    background-color:#efefef;
+    margin:0;
+    padding:10px;
+    user-select:none;
+    cursor:default;
+}
+.Publications .publicationFeedTable{
+    width:100%;
+    border-bottom:2px solid #28b4af;
+}
+.Publications .publicationlistShell{
+    padding:10px;
+    background-color:#efefef;
+    border-bottom: 1px solid #d7d8da;
+}
+.Publications .publicationlistShell:last-child{
+    border-width: 0;
+}
+.Publications .publicationlistShell a{
+    color:#28b4af;
+}
+.Publications .publicationlistYearPicker{
+    float:right;
+    padding:5px 5px 5px 5%;
+    
+    cursor: pointer;
+    font-size:20px;
+    color:#555;
+    font-weight: bold;
+    
+}
+.Publications .publicationlistYearPicker.active{
+    color:#28b4af;
+}
+.Publications .publicationStartLetter{
+    text-transform: uppercase;
+    color:#28b4af;
+}
+.Publications .publicationListFooter{
+    position: absolute;
+    right:10px;
+    font-size:12px;
+    color: #999;
+}
+.Publications .publicationlistShell .gs_button.delete{
+    display:none;
+    position: absolute;
+    right:10px;
+    border-radius: 0;
+    box-shadow: 0px 0px 2px #333;
+    
+}
+.Publications .publicationlistShell:hover .delete{
+    display:inline-block;
+}
+
+.Publications .SimpleFileUpload .filelist{
+    background-color:#efefef;
+    padding: 0;
+    float:none;
+}
+.Publications .SimpleFileUpload .noFilesAdded{display:none;}
+.Publications .SimpleFileUpload .progressBarsTd{padding: 0 !important;}
+.Publications .SimpleFileUpload .progressbar .meter{background: rgba(246, 146, 95, 0.5);}
+.Publications .SimpleFileUpload .filelist a{color: #f6925f;}
+@media only all and (max-width:800px){
+    .Publications .publicationlistShell .gs_button.delete{
+        width:auto !Important;
+    }
+}

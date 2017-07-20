@@ -1,0 +1,133 @@
+.BookingSelfManagment .roomtype {
+    
+    
+}
+
+.BookingSelfManagment .roomtype .headertopinfo {
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.BookingSelfManagment .roomtype .header {
+    font-size: 20px;
+    padding: 10px;
+    text-align: center;   
+    background-color: #EFEFEF;
+}
+
+.BookingSelfManagment .roomtype .room .addon {
+    padding-top: 0px;
+    padding-bottom: 5px;
+    margin-right: 100px;
+    margin-left: 10px;
+}
+
+.BookingSelfManagment .roomtype .room .addon:nth-child(odd) {
+    background-color: #EFEFEF;
+}
+.BookingSelfManagment .roomtype .room .addon div {
+    display: inline-block;
+    margin-top: 5px;
+    padding-left: 10px;
+    width: calc(100% - 200px);
+    
+}
+
+.BookingSelfManagment .roomtype .room .addon.warning {
+    color: red;
+    font-weight: bold;
+}
+
+.BookingSelfManagment .roomtype .room .addon.warning .fa-warning {
+    display: inline-block !important;
+    margin-right: 10px;
+}
+
+.BookingSelfManagment .roomtype .room .addon div:nth-child(1) { width: calc(100% - 120px); }
+.BookingSelfManagment .roomtype .room .addon div:nth-child(2) { width: 100px; }
+
+.BookingSelfManagment .roomtype .room {
+    padding: 10px;
+    
+    position: relative;
+    margin-top: 10px;
+}
+
+.BookingSelfManagment .roomtype .room .changestay {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    bottom: 10px;
+    text-align: center;
+}
+
+.BookingSelfManagment .roomtype .room:nth-child(even) {
+    background-color: #FAFAFA;
+}
+.BookingSelfManagment .roomtype .room:nth-child(odd) {
+    background-color: #EFEFEF;
+}
+
+.BookingSelfManagment .orders {
+    border: solid 1px #DDD;
+    padding-top: 20px;
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+.BookingSelfManagment .orders .orderheader,
+.BookingSelfManagment .orders .infoheader {
+    font-size: 18px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.BookingSelfManagment .orders .orderheader {
+    font-weight: bold;
+}
+.BookingSelfManagment .orders .orderline {
+    border-top: solid 1px #DDD;
+    padding-left: 20px;
+    margin-top: 20px;
+    padding-top: 20px;
+    
+}
+.BookingSelfManagment .orders .orderline div {
+    display: inline-block;
+    
+}
+
+.BookingSelfManagment .manageroom .addontext {
+    padding:10px;
+    font-size: 20px;
+}
+.BookingSelfManagment .manageroom {
+    border: solid 1px #DDD;
+}
+.BookingSelfManagment .manageroom .dayline {
+    font-size: 18px;
+    padding-left: 20px;
+    padding-right: 20px;
+    line-height: 40px !important;
+    cursor: pointer;
+}
+
+.BookingSelfManagment .manageroom .dayline i {
+    font-size: 20px;
+}
+
+.BookingSelfManagment .manageroom .dayline:last-of-type {
+    border-bottom: solid 0px;
+}
+
+.BookingSelfManagment .orders .orderline .ordernumber { width: calc(100% - 260px); }
+.BookingSelfManagment .orders .orderline .orderprice { width: 100px; }
+.BookingSelfManagment .orders .orderline .paymentstatus { width: 120px; text-align: center;}
+
+.BookingSelfManagment .manageroom .dayline { border-bottom: solid 1px #DDD; line-height: 30px;}
+
+.BookingSelfManagment .manageroom .dayline .text,
+.BookingSelfManagment .manageroom .dayline .toggleswitch { display: inline-block; }
+
+
+.BookingSelfManagment .manageroom .dayline .text { width: calc(100% - 120px); }
+.BookingSelfManagment .manageroom .dayline .toggleswitch { width: 100px; }

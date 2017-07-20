@@ -1,5 +1,9 @@
 <div class="uploadform" listid="<? echo $this->getFileListId(); ?>">
-    <div class="progressBars"></div>
-    <input type="file" id="file_upload_selector" multiple></input>
+    <table style="width: 100%;">
+        <tr>
+            <td><input type="file" id="file_upload_selector" multiple></input><label for="file_upload_selector">Choose Files</label></td>
+            <td class="progressBarsTd"<><div class="progressBars"></div></td>
+        </tr>
+    </table>
 </div>
     

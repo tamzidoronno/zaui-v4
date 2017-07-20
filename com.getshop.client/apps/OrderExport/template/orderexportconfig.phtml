@@ -124,6 +124,10 @@ foreach($files as $file) {
     if($file->transferred) {
         $transferred = "yes";
     }
+    $isToday = false;
+    if(date("dmy", strtotime($file->rowCreatedDate)) == date("dmy", time())) {
+        $isToday = true;
+    }
     
     $totals['amountEx'] += $file->amountEx;
     $totals['amountInc'] += $file->amountInc;
@@ -135,7 +139,7 @@ foreach($files as $file) {
     $moreOrders = (sizeof($file->orders) - $file->numberOfOrdersNow);
     
     $warning = "";
-    if($tampered != 0 || $moreOrders != 0) {
+    if($tampered != 0 || $moreOrders != 0 && !$isToday) {
         $warning = "style='color:red; font-weight:bold;'";
     }
     

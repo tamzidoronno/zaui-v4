@@ -1,0 +1,95 @@
+<?
+/* @var $this ns_7e7ab1f5_2c73_4da6_8b23_4407fc4bfbd6\BookingSelfManagment */
+
+$bookingId = $this->getSecretId();
+$booking = $this->getApi()->getPmsSelfManagement()->getBookingById($this->getSelectedName(), $bookingId);
+
+if (!$booking) {
+    echo $this->__f("Could not find booking. Please contact the hotel for more information");
+}
+
+$roomTypes = $this->groupRooms($booking->rooms);
+echo "<div class='roomtype'>";
+    foreach ($roomTypes as $bookingItemTypeId => $rooms) {
+        $bookingItemType = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $bookingItemTypeId);
+        echo "<div class='headertopinfo'>".$this->__f("Your")." ".$bookingItemType->name." ".$this->__f("room(s)").": </div>";
+        foreach ($rooms as $room) {
+            ?>
+
+            <div class="room">
+                <?
+                /* @var $room core_pmsmanager_PmsBookingRooms */
+                $roomAssinged = $room->booking->bookingItemId;
+                $roomNumber =  $roomAssinged ? $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $roomAssinged)->bookingItemName : $this->__f("Not available yet");
+                ?>
+                <div><? echo $this->__w("Room").": ".$roomNumber; ?> </div>
+                <div><? echo $this->__w("Dates").": ".  \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatDate($room->booking->startDate). " - ".\ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatDate($room->booking->endDate); ?> </div>
+                    
+                <?
+                foreach ($room->guests as $guest) {
+                    ?>
+                    <div class="guestName"><? echo $this->__f("Name").": "; ?><? echo $guest->name; ?></div>
+                    <?
+                    
+                }
+                
+                $addons = $this->getApi()->getPmsSelfManagement()->getAddonsWithDiscountForBooking($this->getSelectedName(),$bookingId, $room->pmsBookingRoomId);
+                
+                if (count($addons)) {
+                    echo "<b>".$this->__f("Extras").":</b><br/>";
+                    foreach ($addons as $addon) {
+                        $addonName = $this->getAddonName($addon);
+                        $addonCount = $this->getAddonCount($room->addons, $addon);
+                        $warningClass = !$addonCount[0] ? "warning" : "";
+                        echo "<div class='addon $warningClass' >";
+                            echo "<div class='addoncount'><i class='fa fa-warning' style='display: none;'></i>".$addonCount[0] . " x " .$addonName."</div>";
+                            echo "<div class='price'>";
+                                echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($addonCount[1]);
+                            echo "</div>";
+                        echo "</div>";
+                    }
+                }
+                
+                ?>
+                <div class="gs_shop_small_icon changestay" gsclick="setRoom" roomId="<? echo $room->pmsBookingRoomId; ?>"><? echo $this->__f("Change"); ?><br/><br/><i class="fa fa-arrow-right"></i></div>
+            </div>
+    <?
+    }
+echo "</div>";
+}
+?>
+
+<div class="orders">
+    <div class="orderheader"><? echo $this->__f("Order status"); ?></div>
+    <div class="infoheader">
+        <? echo $this->__f("You need to prepay for you stay, check that the information above is correct and then hit the Pay button below on the orders below."); ?>
+    </div>
+    <?
+    $orders = $this->getOrdersFromBooking($booking, $bookingId);
+    foreach ($orders as $order) {
+        
+        $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+        $paid = $order->status == 7;
+        
+        ?>
+        <div class="orderline">
+            <div class="ordernumber"><? echo $order->incrementOrderId;?></div>
+            <div class="orderprice"><? echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($total); ?></div>
+            <div class="paymentstatus"> 
+                <?
+                if ($paid) {
+                    echo $this->__f("Paid");
+                } elseif ($total < 0) {
+                    echo $this->__f("Credit note, contact hotel for refund of money");
+                } else {
+                ?>
+                    <a href='/?page=cart&payorder=<? echo $order->id;?>'><div class="shop_button"><? echo $this->__f("Pay");?></div></a>
+                <?
+                }
+                ?>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+</div>

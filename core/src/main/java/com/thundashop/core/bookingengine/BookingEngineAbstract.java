@@ -139,6 +139,8 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     }
     
     public void changeBookingItemType(String itemId, String newTypeId) {
+        unassignAllFutureBookings();
+        
         BookingItem item = items.get(itemId);
         if (item == null)
             throw new BookingEngineException("Bookingitem you are trying to change does not exists");
@@ -148,7 +150,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             throw new BookingEngineException("BookingitemType you are trying to change does not exists");
         }
         
-        List<Booking> assignedBookings = assignAllBookingsThatHasType(item.bookingItemTypeId);
+        assignAllBookingsThatHasType(item.bookingItemTypeId);
         
         List<Booking> bookingsWithType = bookings.values().stream()
                 .filter(booking -> booking.bookingItemTypeId.equals(item.bookingItemTypeId))
@@ -164,7 +166,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         item.bookingItemTypeId = newTypeId;
         saveObject(item);
                 
-        unassignBookings(assignedBookings);
+        unassignAllFutureBookings();
     }
     
     public BookingItem saveBookingItem(BookingItem item) {
@@ -645,18 +647,20 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         /* -------------- */
     }
     
-    public void forceUnassignBookingInfuture() {
-        
-        
+    public void unassignAllFutureBookings() {
         bookings.values().stream()
-                .filter(b -> b.startsTomorrowOrLater())
-                .forEach(b -> {
-                    if (b.bookingItemId != null && !b.bookingItemId.isEmpty()) {
-                        b.prevAssignedBookingItemId = b.bookingItemId;
-                        b.bookingItemId = "";
-                        saveObject(b);    
-                    }
-                });
+            .filter(b -> b.startsTomorrowOrLater())
+            .forEach(b -> {
+                if (b.bookingItemId != null && !b.bookingItemId.isEmpty()) {
+                    b.prevAssignedBookingItemId = b.bookingItemId;
+                    b.bookingItemId = "";
+                    saveObject(b);    
+                }
+            });        
+    }
+    
+    public void forceUnassignBookingInfuture() {
+        unassignAllFutureBookings();
         
         bookings.values().stream()
                 .filter(b -> b.prevAssignedBookingItemId != null && !b.prevAssignedBookingItemId.isEmpty())
@@ -1032,13 +1036,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         if (getSession() == null)
             return true;
         
-        if (getSession() != null && 
-                getSession().currentUser != null &&
-                getSession().currentUser.emailAddress != null &&
-                getSession().currentUser.emailAddress.equals("ken-rudi@bjorback.no")) {
-            return false;
-        }
-        
         if (getSession() != null && getSession().get("ignoreBookingErrors") != null && getSession().get("ignoreBookingErrors").equals("true")) {
             return false;
         }
@@ -1143,14 +1140,16 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         
         for (Booking booking : unassignedBookings) {
             List<BookingItem> canUseItems = getAvailbleItemsWithBookingConsidered(booking.bookingItemTypeId, booking.startDate, booking.endDate, booking.id);
-            changeBookingItemOnBooking(booking.id, canUseItems.get(0).id);
+            
+            if (!canUseItems.isEmpty()) {
+                changeBookingItemOnBooking(booking.id, canUseItems.get(0).id);
+            } else {
+                System.out.println("Was not able to assign booking: " + booking.id + " when changing type");
+            }
+            
         }
         
         return unassignedBookings;
-    }
-
-    private void unassignBookings(List<Booking> assignedBookings) {
-        assignedBookings.stream().forEach(booking -> changeBookingItemOnBooking(booking.id, ""));
     }
 
     boolean itemInUseBetweenTime(Date start, Date end, String itemId) {

@@ -104,7 +104,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<CartItem> lostRooms = new ArrayList();
 
         for(String orderId : booking.orderIds) {
-            Order order = orderManager.getOrder(orderId);
+            Order order = orderManager.getOrderSecure(orderId);
             for(CartItem item : order.cart.getItems()) {
                 if(item.removedAfterDeleted) {
                     continue;
@@ -195,7 +195,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 Order order = null;
                 order = getUnpaidOrder(booking);
                 if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
-                    order = orderManager.getOrder(filter.addToOrderId);
+                    order = orderManager.getOrderSecure(filter.addToOrderId);
                     if(order.closed) {
                         order = null;
                     }
@@ -232,7 +232,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                             message += "Name: " + user.fullName + ", " + user.emailAddress + ", " + "(" + user.prefix + ") " + user.cellPhone + "<br>";
                             message += "Other orders connected to booking:<br>";
                             for(String orderId : booking.orderIds) {
-                                Order otherOrder = orderManager.getOrder(orderId);
+                                Order otherOrder = orderManager.getOrderSecure(orderId);
                                 message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(otherOrder) + ")<br>";
                             }
                         }catch(Exception e) {
@@ -246,7 +246,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                     Double amount = orderManager.getTotalAmount(order);
                     if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty() && amount < 0) {
-                        Order baseOrder = orderManager.getOrder(filter.addToOrderId);
+                        Order baseOrder = orderManager.getOrderSecure(filter.addToOrderId);
                         baseOrder.creditOrderId.add(order.id);
                         order.payment = baseOrder.payment;
                         orderManager.saveOrder(order);
@@ -307,7 +307,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         for(String orderId : booking.orderIds) {
-            Order order = orderManager.getOrder(orderId);
+            Order order = orderManager.getOrderSecure(orderId);
             if(order.createByManager == null || !order.createByManager.equals("PmsDailyOrderGeneration")) {
                 return false;
             }
@@ -323,7 +323,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             message += "Name: " + user.fullName + ", " + user.emailAddress + ", " + "(" + user.prefix + ") " + user.cellPhone + "<br>";
             message += "Other orders connected to booking:<br>";
             for(String orderId : booking.orderIds) {
-                Order otherOrder = orderManager.getOrder(orderId);
+                Order otherOrder = orderManager.getOrderSecure(orderId);
                 message += otherOrder.incrementOrderId + " (" + orderManager.getTotalAmount(otherOrder) + ")<br>";
             }
         }catch(Exception e) {
@@ -462,7 +462,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public void markOrderAsPaid(String bookingId, String orderId) {
-        Order order = orderManager.getOrder(orderId);
+        Order order = orderManager.getOrderSecure(orderId);
         order.status = Order.Status.PAYMENT_COMPLETED;
         order.payment.transactionLog.put(System.currentTimeMillis(), "Mark as paid for by pms");
         orderManager.saveOrder(order);
@@ -545,7 +545,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         cartManager.clear();
         List<CartItem> allItemsToMove = new ArrayList();
         for(String orderId : booking.orderIds) {
-            Order order = orderManager.getOrder(orderId);
+            Order order = orderManager.getOrderSecure(orderId);
             if(order.closed) {
                 continue;
             }
@@ -683,7 +683,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     if(!orderManager.orderExists(orderId)) {
                         continue;
                     }
-                    Order order = orderManager.getOrder(orderId);
+                    Order order = orderManager.getOrderSecure(orderId);
                     if(order.isCreditNote) {
                         continue;
                     }
@@ -798,7 +798,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             booking.nonrefundable = false;
         }
         for(String orderId : booking.orderIds) {
-            Order order = orderManager.getOrder(orderId);
+            Order order = orderManager.getOrderSecure(orderId);
             if(order.closed) {
                 if(order.isExpedia() && order.isRecent()) {
                     order.closed = false;
@@ -873,7 +873,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<Order> result = new ArrayList();
         PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
         for(String orderId : booking.orderIds) {
-            result.add(orderManager.getOrder(orderId));
+            result.add(orderManager.getOrderSecure(orderId));
         }
         return result;
     }
@@ -1229,7 +1229,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public void creditOrder(String bookingId, String orderId) {
-        Order currentOrder = orderManager.getOrder(orderId);
+        Order currentOrder = orderManager.getOrderSecure(orderId);
         Order creditedOrder = orderManager.creditOrder(orderId);
         PmsBooking booking = pmsManager.getBooking(bookingId);
         
@@ -1263,7 +1263,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(orderId.equals("createafterstay")) {
             return;
         }
-        Order currentOrder = orderManager.getOrder(orderId);
+        Order currentOrder = orderManager.getOrderSecure(orderId);
         if(currentOrder.closed) {
             return;
         }
@@ -1314,7 +1314,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public void sendRecieptOrInvoice(String orderId, String email, String bookingId) {
-        Order order = orderManager.getOrder(orderId);
+        Order order = orderManager.getOrderSecure(orderId);
         order.sentToCustomer = true;
         order.closed = true;
         orderManager.saveObject(order);
@@ -1344,7 +1344,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(booking != null && supportsDailyPmsInvoiceing(booking.id)) {
             if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
-                Order order = orderManager.getOrder(filter.addToOrderId);
+                Order order = orderManager.getOrderSecure(filter.addToOrderId);
                 if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {
                     filter.pmsRoomId = order.attachedToRoom;
                 }
@@ -1677,7 +1677,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         } else {
             if(!filter.createNewOrder) {
                 for(String tmpOrderId : booking.orderIds) {
-                    Order tmpOrder = orderManager.getOrder(tmpOrderId);
+                    Order tmpOrder = orderManager.getOrderSecure(tmpOrderId);
                     if(!tmpOrder.closed) {
                         order = tmpOrder;
                         break;
@@ -1686,7 +1686,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             
             if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
-                order = orderManager.getOrder(filter.addToOrderId);
+                order = orderManager.getOrderSecure(filter.addToOrderId);
                 if(order.closed) {
                     order = null;
                 }
@@ -1696,7 +1696,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 order.cart.addCartItems(cartManager.getCart().getItems());
             } else {
                 if(order == null) {
-                    order = orderManager.createOrder(user.address);
+                    if (!cartManager.getCart().getItems().isEmpty()) {
+                        order = orderManager.createOrder(user.address);
+                    }
+                    
                     
                     Double newAmount = orderManager.getTotalAmount(order);
                     
@@ -1739,7 +1742,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             notifyAboutCreditedOrders(order, total, booking);
             
             if(filter.addToOrderId != null && !filter.addToOrderId.isEmpty()) {
-                Order baseOrder = orderManager.getOrder(filter.addToOrderId);
+                Order baseOrder = orderManager.getOrderSecure(filter.addToOrderId);
                 baseOrder.creditOrderId.add(order.id);
                 order.payment = baseOrder.payment;
             }
@@ -2184,7 +2187,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private HashMap<String, List<CartItem>> getAllRoomsFromExistingOrder(List<String> orderIds) {
         HashMap<String, List<CartItem>> res = new HashMap();
         for(String orderId : orderIds) {
-            Order order = orderManager.getOrder(orderId);
+            Order order = orderManager.getOrderSecure(orderId);
             for(CartItem item : order.cart.getItems()) {
                 if(item.getProduct() != null) {
                     if(item.getProduct().externalReferenceId != null) {
@@ -2220,7 +2223,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             creditRoomForPeriode(invoiceStart, invoiceEnd, booking, room);
         }
-        if(room.invoicedTo != null && room.invoicedTo.after(room.date.end) && !room.isSameDay(room.invoicedTo, room.date.end)) {
+        if(room.invoicedTo != null && room.invoicedFrom != null && room.invoicedTo.after(room.date.end) && !room.isSameDay(room.invoicedTo, room.date.end)) {
             Date invoiceStart = room.date.end;
             Date invoiceEnd = room.invoicedTo;
             if(room.date.end.before(room.invoicedFrom)) {
@@ -2286,7 +2289,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private Order getUnpaidOrder(PmsBooking booking) {
         for(String key : booking.orderIds) {
-            Order ord = orderManager.getOrder(key);
+            Order ord = orderManager.getOrderSecure(key);
             if(ord.closed) {
                 continue;
             }
@@ -2396,7 +2399,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<CartItem> items = new ArrayList();
         PmsBooking booking = pmsManager.getBookingUnsecure(id);
         for(String orderId : booking.orderIds) {
-            Order order = orderManager.getOrder(orderId);
+            Order order = orderManager.getOrderSecure(orderId);
             for(CartItem item : order.cart.getItems()) {
                 Product product = item.getProduct();
                 if(product != null && product.externalReferenceId != null && product.externalReferenceId.equals(pmsBookingRoomId)) {
@@ -2629,7 +2632,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             newDiff = Math.round(newDiff);
             if(newDiff != 0.0) {
                 System.out.println("Failed when creating virtual order : " + bookingId + " - " + newDiff);
-                pmsManager.dumpBooking(booking);
+                System.out.println(pmsManager.dumpBooking(booking));
             }
         }
         

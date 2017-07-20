@@ -71,7 +71,8 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     @Override
     public void deleteEntry(String entryId, String day) {
         PmsBookingEventEntry entry = getEntry(entryId, day);
-        entries.remove(entryId);
+        entry.isDeleted = true;
+//        entries.remove(entryId);
         deleteObject(entry);
     }
 
@@ -83,7 +84,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         entry.title = result.registrationData.resultAdded.get("title");
         entry.shortdesc = result.registrationData.resultAdded.get("shortdesc");
         entry.bookingId = id;
-        setRooms(entry, result);
+        setRooms(entry, result, false);
         entries.put(entry.id, entry);
         saveEntry(entry, "");
         return entry;
@@ -95,7 +96,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
             createEvent(entryId);
         }
         
-        PmsBookingEventEntry entry = finalize(entries.get(entryId));
+        PmsBookingEventEntry entry = finalize(entries.get(entryId), false);
         if(day != null && !day.isEmpty()) {
             entry = entry.getDay(day);
             entry.id = entryId;
@@ -112,20 +113,30 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         for(PmsBookingEventEntry entry : entries.values()) {
             if(entry.id.startsWith(shortId)) {
                 entry = getEntry(entry.id, day);
-                finalize(entry);
+                finalize(entry, false);
                 return entry;
             }
         }
         return null;
     }
 
-    private void setRooms(PmsBookingEventEntry entry, PmsBooking result) {
+    private void setRooms(PmsBookingEventEntry entry, PmsBooking result, boolean includeDeteled) {
         entry.dateRanges.clear();
         entry.roomNames.clear();
-        for(PmsBookingRooms room : result.getActiveRooms()) {
+        List<PmsBookingRooms> rooms = result.getActiveRooms();
+        if(includeDeteled) {
+            rooms = result.getAllRooms();
+        }
+        
+        for(PmsBookingRooms room : rooms) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
             if(type != null && type.addon > 0) {
                 continue;
+            }
+            if(room.isDeleted()) {
+                entry.isDeleted = true;
+            } else {
+                entry.isDeleted = false;
             }
             entry.location = type.name;
             entry.dateRanges.add(room.date);
@@ -138,9 +149,9 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         }
     }
 
-    private PmsBookingEventEntry finalize(PmsBookingEventEntry get) {
+    private PmsBookingEventEntry finalize(PmsBookingEventEntry get, boolean includeDeleted) {
         PmsBooking booking = pmsManager.getBookingUnsecure(get.id);
-        setRooms(get, booking);
+        setRooms(get, booking, includeDeleted);
         get.arrangedBy = userManager.getUserById(booking.userId).fullName;
         get.finalizeSubEntries();
         return get;
@@ -202,7 +213,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
                 if(entry.isDeleted && !includeDeleted) {
                     continue;
                 }
-                finalize(entry);
+                finalize(entry, includeDeleted);
             }
             return result;
         }
@@ -216,9 +227,9 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     private List<PmsEventListEntry> getEventListInternal(boolean includeDeleted) {
         List<PmsBookingEventEntry> eventlist = null;
         if(includeDeleted) {
-            eventlist = getEventEntries(null);
-        } else {
             eventlist = getEventEntriesWithDeleted(null);
+        } else {
+            eventlist = getEventEntries(null);
         }
         List<PmsEventListEntry> result = new ArrayList();
         Calendar cal = Calendar.getInstance();
@@ -233,6 +244,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
                 if(!range.start.after(todayDate)) {
                     continue;
                 }
+                                
                 cal.setTime(range.start);
                 String day = getDayString(cal);
                 

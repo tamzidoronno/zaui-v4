@@ -9,6 +9,7 @@ ErrorDocument 404 /
 
 RewriteRule ^/?generatePDF.php$ - [L]
 RewriteRule ^/?filedownload.php$ - [L]
+RewriteRule ^/?google4e4740f3422c219b.html$ - [L]
 RewriteRule ^(.*).html$ index.php?rewrite=$1 [L,NE]
 
 RewriteRule ^(documentation)($|/) - [L]

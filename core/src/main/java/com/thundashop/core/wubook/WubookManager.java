@@ -429,15 +429,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 dateString += "-";
                 if(month < 10) { dateString += "0" + month; } else { dateString += month; }
                 dateString += "-" + year; 
-                
+                Double priceToAdd = null;
                 if(pricesForType.containsKey(dateString)) {
-                    price = pricesForType.get(dateString);
+                    priceToAdd = pricesForType.get(dateString);
                 }
-                if(price != null) {
-                    list.add(price.intValue());
-                } else if(defaultPrice != null) {
-                    list.add(defaultPrice);
+                if((priceToAdd == null || priceToAdd == 0.0) && defaultPrice != null) {
+                    priceToAdd = defaultPrice;
                 }
+                list.add(priceToAdd);
                 calStart.add(Calendar.DAY_OF_YEAR, 1);
             }
             if(!list.isEmpty()) {
@@ -483,12 +482,18 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
             Double minstay = pricesForType.get("minstay");
             if(minstay == null || minstay == 1.0) {
-                continue;
+                // Ignoreing Akers Have as they want to set back the 1 day minstay setting
+                if (!storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841")) {
+                    continue;
+                }
             }
             
             Vector list = new Vector();
             for(int i = 0;i < (365*2); i++) {
                 Hashtable dayEntry = new Hashtable();
+                if(minstay == null) {
+                    minstay  = 1.0;
+                }
                 dayEntry.put("min_stay", minstay);
                 list.add(dayEntry);
                 found = true;
@@ -505,6 +510,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             Vector result = (Vector) client.execute("rplan_update_rplan_values", params);
             if((Integer)result.get(0) != 0) {
+                logText("Failed to update daily min stay, " + result.get(1));
                 return "Failed to update daily min stay, " + result.get(1);
             }
         }

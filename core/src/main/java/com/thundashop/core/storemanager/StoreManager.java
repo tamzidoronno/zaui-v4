@@ -64,6 +64,8 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     public GetShopSessionScope getShopScope;
     
     private HashMap<String, KeyData> keyDataStore = new HashMap();
+    
+    public String currentSecretId;
 
     @PostConstruct
     public void init() {

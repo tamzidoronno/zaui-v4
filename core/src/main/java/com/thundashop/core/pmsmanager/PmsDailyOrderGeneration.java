@@ -110,8 +110,8 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             
             //Addon prices.
             HashMap<String, List<PmsBookingAddonItem>> items = getUnpaidAddonsForRoom(room);
-            for(String productId : items.keySet()) {
-                generateAddonsCostForProduct(items.get(productId), room, true);
+            for(String productId : items.keySet()) { 
+               generateAddonsCostForProduct(items.get(productId), room, true);
                 generateAddonsCostForProduct(items.get(productId), room, false);
             }
         }
@@ -431,7 +431,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             addonsToAdd.put(item.addonId, item);
         }
         
-        if(room.deleted && !currentBooking.nonrefundable && !room.deletedByChannelManagerForModification) { 
+        if(room.deleted && (!currentBooking.nonrefundable || room.deletedByChannelManagerForModification)) { 
             for(PmsBookingAddonItem item : addonsToAdd.values()) {
                 item.price = 0.0;
             }
@@ -448,7 +448,9 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             }
         }
         
-        
+        if(room.pmsBookingRoomId.equals("75009239-1681-4ae7-b2ab-9faeb9b05438")) {
+            System.out.println("TEST");
+        }
         Type type = new TypeToken<HashMap<String, PmsBookingAddonItem>>(){}.getType();
       
         String copy = gson.toJson(addonsToAdd);
@@ -461,10 +463,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                 if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
                     if(item.itemsAdded != null) {
                         copy = gson.toJson(item.itemsAdded);
-                        
-                        if(item.getProduct().externalReferenceId.equals("930a102d-8afc-4dfb-ab4c-1d3aa7f6455a")) {
-                            System.out.println("check this one");
-                        }
                         
                         type = new TypeToken<List<PmsBookingAddonItem>>(){}.getType();
                         List<PmsBookingAddonItem> alreadyAdded = gson.fromJson(copy, type);

@@ -57,8 +57,8 @@ foreach($entries as $eventEntry) {
             $shortId = explode("-", $eventEntry->eventId);
             $edit = "";
             if($this->isEditorMode()) {
-                $edit = "<i class='fa fa-trash-o deleteevent' eventid='".$eventEntry->eventId."' ></i> ";
-                $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->eventId."'><i class='fa fa-pencil-square' title='Endre alle eventer i denne serien'></i></a> ";
+//                $edit = "<i class='fa fa-trash-o deleteevent' eventid='".$eventEntry->eventId."' ></i> ";
+                $edit = "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->eventId."'><i class='fa fa-pencil-square' title='Endre alle eventer i denne serien'></i></a> ";
                 $edit .= "<a href='?page=".$this->getPage()->javapage->id."&eventid=".$eventEntry->eventId."&time=$time'><i class='fa fa-edit' title='Endre dette enkelteventet'></i></a> ";
             }
             echo "<h2>" . $edit . "<a href='?page=".$this->getPage()->javapage->id."&readevent=".$shortId[0]."&time=".$time."'>" . $title;

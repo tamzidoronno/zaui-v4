@@ -227,7 +227,7 @@ public class PmsBookingSimpleFilter {
 
             if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                 BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
-                if (item.bookingItemName.contains(filter.searchWord)) {
+                if (item != null && item.bookingItemName != null && item.bookingItemName.contains(filter.searchWord)) {
                     return true;
                 }
             }

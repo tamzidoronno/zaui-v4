@@ -316,7 +316,7 @@ if($booking->orderIds) {
         echo "</td>";
         echo "<td style='position:relative; text-align:center;'>";
         echo "<i class='fa fa-edit' onclick='$(this).closest(\"td\").find(\".otherOrderOptions\").toggle()'></i>";
-        if(!@$order->closed && $createByManager == "PmsDailyOrderGeneration") {
+        if(!@$order->closed) {
             echo " <i class='fa fa-trash-o removeOrderFromBooking' style='cursor:pointer;' title='Remove this order' orderid='".$order->id."'></i>"; 
         }
 

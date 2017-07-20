@@ -1,0 +1,174 @@
+<?php
+/* @var $this ns_da9f257b_fc83_4cb1_9422_3ee2d7d2bf20\Publications*/
+
+$selectedYear = $this->getFilteredYear();
+$publications = (array)$this->getAllEntries();
+$uniqueYears = array();
+$uniqueLetters = array();
+$specialLetters = array();
+$previousLetter = "";
+$previousSpecialLetter = "";
+$this->__w("Oct");
+$this->__w("Dec");
+
+
+sort($uniqueLetters, SORT_STRING | SORT_FLAG_CASE);
+usort($publications, function($a, $b) {
+    return $a->authors > $b->authors;
+});
+
+if (is_array($publications)) {
+    foreach ($publications as $pub) {
+        $pubtime = strtotime($pub->date);
+        $uniqueYears[] = date("Y", $pubtime);
+    }
+    $uniqueYears = array_unique($uniqueYears);
+}
+?>
+<div class='publicationFeed'>
+    <table class='publicationFeedTable'>
+        <tr>
+            <td><h2 class='publicationFeedHeader'>Publications</h2></td>
+            <td>
+            <?php
+                foreach ($uniqueYears as $year){
+                    if($selectedYear == $year){
+                        echo "<span class='publicationlistYearPicker active' value='".$year."'>".$year."</span>";
+                    }else{
+                        echo "<span class='publicationlistYearPicker' value='".$year."'>".$year."</span>";
+                    }
+                }
+                if(sizeof($publications) == 0) {
+                    echo $this->__w("No publications added.");
+                }
+            ?>
+            </td>
+        </tr>
+    </table>
+    <?php
+    foreach ($publications as $publication){
+        $id = $publication->id;
+        $authors = $publication->authors;
+        $articleName = $publication->articleName;
+        $articleLink = $publication->articleLink;
+        $publisher = $publication->publisher;
+        $ISSN = $publication->ISSN;
+        $PMID = $publication->PMID;
+        $files = $publication->fileIds;
+        $time = strtotime($publication->date);
+        $uniqueLetters  = $authors[0];
+        $specialLetters = substr($authors,0,2);
+        
+        if(date("Y", $time) == $selectedYear && $specialLetters != "Å"){
+            echo "<div class='publicationlistShell' id='".$id."'>";
+            if ($this->hasWriteAccess()) {
+                echo "<div class='gs_button small delete'>".$this->__w("Delete")."</div>";
+            }
+            if ($uniqueLetters !== $previousLetter) {
+                if ($previousLetter !== ''){
+                    echo '<br>';
+                }                        
+                if (ctype_alnum($uniqueLetters)){
+                    echo "<span class='publicationStartLetter'>".$uniqueLetters."</span><br><br>";
+                    $previousLetter = $uniqueLetters;
+                }else{
+                    if($specialLetters !== $previousSpecialLetter){
+                        if($previousSpecialLetter !== ''){
+                            echo '<br>';
+                        }
+                        echo "<span class='publicationStartLetter'>".$specialLetters."</span><br><br>";
+                        $previousSpecialLetter = $specialLetters;
+                    }
+                }
+            }
+            if(isset($authors)&& $authors != ""){
+                echo "<div>".$authors."</div>";
+            }
+            if(isset($articleName)&& $articleName != ""){
+                if(isset($articleLink) && $articleLink !=""){
+                    echo "<div><a href='".$articleLink."' target='_blank'>".$articleName."</a></div>";
+                } 
+            }
+            if(isset($files)){
+                foreach($files as $file){
+                    $oldfile = $this->getApi()->getFileManager()->getFile($file);
+                    echo "<div style='cursor:pointer;'><a onclick=\"window.open('loadFile.php?fileid=".$file."')\">".$oldfile->name."</a></div>"; 
+                }
+            }            
+            if(isset($publisher)&& $publisher != ""){
+                echo "<div>".$publisher."</div>";
+            }
+            if(isset($ISSN)&& $ISSN != ""){
+                echo "<div>ISSN: ".$ISSN."</div>";
+            }
+            if(isset($PMID) && $PMID != ""){
+                echo "<div>PMID: <a href='https://www.ncbi.nlm.nih.gov/pubmed/?term=".$PMID."' target='_blank'>".$PMID."</a></div>";
+            }
+            echo "<div class='publicationListFooter'>".date("d. M", $time)."</div>";
+            echo "<br>";
+            echo "</div>";
+        }
+    }
+    foreach($publications as $publication){
+        $id = $publication->id;
+        $authors = $publication->authors;
+        $articleName = $publication->articleName;
+        $articleLink = $publication->articleLink;
+        $publisher = $publication->publisher;
+        $ISSN = $publication->ISSN;
+        $PMID = $publication->PMID;
+        $files = $publication->fileIds;
+        $time = strtotime($publication->date);
+        $specialLetters = substr($authors,0,2);
+        if(date("Y", $time) == $selectedYear && $specialLetters == "Å"){
+            echo "<div class='publicationlistShell' id='".$id."'>";
+            if ($this->hasWriteAccess()) {
+                echo "<div class='gs_button small delete'>".$this->__w("Delete")."</div>";
+            }
+            if($specialLetters !== $previousSpecialLetter){
+                if($previousSpecialLetter !== ''){
+                    echo '<br>';
+                }
+                echo "<span class='publicationStartLetter'>".$specialLetters."</span><br><br>";
+                $previousSpecialLetter = $specialLetters;
+            }
+            if(isset($authors)&& $authors != ""){
+                echo "<div>".$authors."</div>";
+            }
+            if(isset($articleName)&& $articleName != ""){
+                if(isset($articleLink) && $articleLink !=""){
+                    echo "<div><a href='".$articleLink."' target='_blank'>".$articleName."</a></div>";
+                } 
+            }
+            if(isset($files)){
+                foreach($files as $file){
+                    $oldfile = $this->getApi()->getFileManager()->getFile($file);
+                    echo "<div style='cursor:pointer;'><a onclick=\"window.open('loadFile.php?fileid=".$file."')\">".$oldfile->name."</a></div>"; 
+                }
+            }            
+            if(isset($publisher)&& $publisher != ""){
+                echo "<div>".$publisher."</div>";
+            }
+            if(isset($ISSN)&& $ISSN != ""){
+                echo "<div>ISSN: ".$ISSN."</div>";
+            }
+            if(isset($PMID) && $PMID != ""){
+                echo "<div>PMID: <a href='https://www.ncbi.nlm.nih.gov/pubmed/?term=".$PMID."' target='_blank'>".$PMID."</a></div>";
+            }
+            echo "<div class='publicationListFooter'>".date("d. M", $time)."</div>";
+            echo "<br>";
+            echo "</div>";
+        }
+    }
+    ?> 
+</div>
+<script>
+    $('.publicationlistYearPicker').on('click', function(){
+        var year = $(this).html();
+        var data = {
+            year : year
+        };
+        var event = thundashop.Ajax.createEvent(null, "getFilteredYear", this, data);
+        thundashop.Ajax.post(event);
+    });
+</script>

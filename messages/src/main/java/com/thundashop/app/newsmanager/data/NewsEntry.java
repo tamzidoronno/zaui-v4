@@ -5,7 +5,9 @@
 package com.thundashop.app.newsmanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -23,6 +25,13 @@ public class NewsEntry extends DataCommon {
     public String pageId = "";
     public String newsListId = "";
     public String pageLayout = "1";
+    public String authors = "";
+    public String articleName = "";
+    public String articleLink = "";
+    public String publisher = "";
+    public String ISSN = "";
+    public String PMID = "";
+    public List<String> fileIds = new ArrayList();
     
     @Transient
     public String usersName = "";

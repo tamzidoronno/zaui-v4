@@ -1923,7 +1923,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function includeAddRoomOptions($items, $start, $end, $defaultType) {
         $types = $this->getTypes();
         ?>
-            <select style='width: 250px;' gsname='item' class='addroomselectiontype'>
+            <select style='width: 200px;' gsname='item' class='addroomselectiontype'>
                 <?php 
                 foreach($types as $type) {
                     /* @var $item core_bookingengine_data_BookingItem */

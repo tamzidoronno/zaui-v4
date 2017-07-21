@@ -454,6 +454,20 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return payedfor;
     }
 
+    private void verifyOrderCreationIsCorrect(PmsBooking booking, Order order) {
+        Double total = booking.getTotalPrice();
+        
+        Double totalOnOrders = 0.0;
+        for(String orderId : booking.orderIds) {
+            Order tmp = orderManager.getOrder(orderId);
+            totalOnOrders += orderManager.getTotalAmount(tmp);
+        }
+        double diff = totalOnOrders - total;
+        if(diff > 1 || diff < -1) {
+            messageManager.sendErrorNotification("When creating an order, a diff where created that was not supposed to be ("+diff+"), this happened to order: " + order.incrementOrderId, null);
+        }
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -1362,6 +1376,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
             booking.orderIds = uniqueList;
             pmsManager.saveBooking(booking);
+            
+            try {
+                if((filter.itemsToCreate == null || filter.itemsToCreate.isEmpty()) && 
+                    (filter.pmsRoomIds == null || filter.pmsRoomIds.isEmpty())) {
+                      verifyOrderCreationIsCorrect(booking, order);
+                }
+            }catch(Exception e) {
+                logPrintException(e);
+            }
             
 //            messageManager.sendErrorNotification("New order created: " + order.incrementOrderId, null);
             

@@ -1815,7 +1815,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 }
             }
             if(isset($_POST['data']['clicksubmit']) && $_POST['data']['clicksubmit'] == "setPeriodePrice") {
-                $this->updatePriceMatrixWithPeriodePrices($room);
+                if($_POST['data']['roomid'] == $room->pmsBookingRoomId) {
+                    $this->updatePriceMatrixWithPeriodePrices($room);
+                }
             }
         }
         

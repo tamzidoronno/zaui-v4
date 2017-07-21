@@ -13,6 +13,7 @@ public class StatisticsEntry {
     public Integer spearRooms = 0;
     public Integer totalRooms = 0;
     public Integer coverage = 0;
+    public Integer guestCount = 0;
     public Integer coverageOriginal = 0;
     public Integer roomsNotIncluded = 0;
     public Double bugdet = 0.0;

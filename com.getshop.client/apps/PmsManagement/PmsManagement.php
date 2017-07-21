@@ -1538,12 +1538,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             
             $row[] = $entry->spearRooms;
             $row[] = $entry->roomsRentedOut;
-            
-            $guests = 0;
-            foreach($entry->guests as $roomId => $gcount) {
-                $guests += $gcount;
-            }
-            $row[] = $guests;
+            $row[] = $entry->guestCount;
             $row[] = $entry->avgPrice;
             $row[] = $entry->totalPrice;
             $row[] = $entry->bugdet;

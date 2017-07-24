@@ -5098,27 +5098,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBookingAddonViewItem> getItemsForView(String viewId, Date date) {
-        Calendar startCal = Calendar.getInstance();
-        Calendar endCal = Calendar.getInstance();
         
         PmsMobileView view = getConfiguration().mobileViews.get(viewId);
-        
+        Calendar startCal = Calendar.getInstance();
         startCal.setTime(date);
-        endCal.setTime(date);
-        
         startCal.add(Calendar.DAY_OF_YEAR, view.daysDisplacement);
-        endCal.add(Calendar.DAY_OF_YEAR, view.daysDisplacement);
-        
-        startCal.set(Calendar.HOUR_OF_DAY, 0);
-        startCal.set(Calendar.MINUTE, 0);
-        startCal.set(Calendar.SECOND, 0);
-        
-        endCal.set(Calendar.HOUR_OF_DAY, 23);
-        endCal.set(Calendar.MINUTE, 59);
-        endCal.set(Calendar.SECOND, 59);
-        
         Date startDate = startCal.getTime();
-        Date endDate = endCal.getTime();
         
         List<PmsBookingAddonViewItem> items = new ArrayList();
         
@@ -5128,7 +5113,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if(!view.products.contains(item.productId)) {
                         continue;
                     }
-                    boolean toBeAdded = item.date.after(startDate) && item.date.before(endDate);
+                    boolean toBeAdded = pmsInvoiceManager.isSameDay(item.date, startDate);
                     if(view.viewType == PmsMobileView.PmsMobileViewType.ALLACTIVE) {
                         if(room.isActiveOnDay(date)) {
                             toBeAdded = true;

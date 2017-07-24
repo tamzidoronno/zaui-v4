@@ -413,7 +413,7 @@ class PmsCleaning extends \WebshopApplication implements \Application {
             if($found) {
                 continue;
             }
-            if(!$room->isClean && !$room->inUse) {
+            if(!$room->isClean && (!$room->inUse || $room->inUseByCleaning || $room->closed)) {
                 echo "<tr>";
                 echo "<td>".$items[$room->itemId]->bookingItemName."</td>";
                 echo "<td><span class='roomNotReady' method=\"markCleaned\" itemid=\"".$room->itemId."\">Mark room as ready</span></td>";

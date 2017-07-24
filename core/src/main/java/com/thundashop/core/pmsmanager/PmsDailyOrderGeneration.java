@@ -165,7 +165,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         
         //Include addons which is included in room price.
-        if(!room.deleted) {
+        if(!room.deleted || currentBooking.nonrefundable) {
             Calendar cal = Calendar.getInstance();
             for(PmsBookingAddonItem item : room.addons) {
                 if(item.isIncludedInRoomPrice) {

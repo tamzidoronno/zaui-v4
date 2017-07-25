@@ -2,7 +2,7 @@ if(typeof(getshop) === "undefined") { var getshop = {}; }
 getshop.guestInfoController = function($scope, $state, $stateParams) {
     var bookingid = $stateParams.bookingid;
     var roomid = $stateParams.roomid;
-    $scope.doPayOrder = false;
+    $scope.sendToInvoiceButton = false;
     $scope.displaySendPaymentLink = false;
     $scope.unsettledAmount = 0;
     
@@ -20,7 +20,19 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         });
     }
     
+    $scope.makePayment = function(order) {
+        $scope.hideAll();
+        $scope.showMakePayment = true;
+        $scope.payOrder = order;
+        var loading = getshopclient.StoreApplicationPool.getActivatedPaymentApplications();
+        loading.done(function(res) {
+            $scope.pmethods = res;
+            $scope.$apply();
+        });
+    }
+    
     $scope.showSendPaymentLink = function(order) {
+        $scope.hideAll();
         $scope.displaySendPaymentLink = true;
         $scope.selectedOrder = order;
     }
@@ -226,9 +238,33 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
             }
             getshopclient.PmsManager.saveBooking(getMultilevelName(), $scope.booking);
         }
-    }
-    
-    $scope.doPayOrder = function(order) {
+    },
+    $scope.markOrderAsPaid = function() {
+        var changed = getshopclient.OrderManager.changeOrderType($scope.payOrder.id, $scope.selectedPaymentApp);
+        changed.done(function(res) {
+            var getorder = getshopclient.OrderManager.getOrder($scope.payOrder.id);
+            getorder.done(function(res) {
+                res.invoiceNote = $scope.noteOnInvoice;
+                res.status = 7;
+                var saved = getshopclient.OrderManager.saveOrder(res);
+                saved.done(function() {
+                    alert('Action completed');
+                    $scope.loadGuest();
+                    $scope.hideAll();
+                    $scope.$apply();
+                });
+            });
+        });
+    },
+    $scope.hideAll = function() {
+        $scope.displaySendPaymentLink = false;
+        $scope.showMakePayment = false;
+        $scope.sendRecieptProcess  = false;
+        $scope.payOrderProcess = false;
+    },
+            
+    $scope.sendToInvoiceButton = function(order) {
+        $scope.hideAll();
         if($scope.payOrderProcess) {
             $scope.payOrderProcess = false;
             return;
@@ -236,7 +272,7 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         $scope.sendRecieptProcess = false;
         $scope.payOrder = order;
         $scope.payOrderProcess = true;
-    }
+    },
     
     $scope.addAddon = function() {
         var type = $scope.selectedAddon.type;
@@ -287,11 +323,11 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
                 for(var k in test) {
                     var addon = test[k];
                     simpleAddonsList[addon.addonId] = {};
-                    simpleAddonsList[addon.addonId].name = prodMap[addon.productId].name;
-                    simpleAddonsList[addon.addonId].type = addon.addonType;
-                    simpleAddonsList[addon.addonId].productId = addon.productId;
-                    
-                    console.log(addon);
+                    if(prodMap[addon.productId]) {
+                        simpleAddonsList[addon.addonId].name = prodMap[addon.productId].name;
+                        simpleAddonsList[addon.addonId].type = addon.addonType;
+                        simpleAddonsList[addon.addonId].productId = addon.productId;
+                    }
                 }
                 console.log(simpleAddonsList);
                 $scope.addonsList = simpleAddonsList;
@@ -332,21 +368,32 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
                     $scope.room = room;
                     $scope.isStarted = room.date.start.getTime() < new Date().getTime();
                     $scope.selectedroom = room.bookingItemId;
-                    var loadItems = getshopclient.BookingEngine.getAllAvailbleItems(getMultilevelName(), new Date(), room.date.end);
-                    loadItems.done(function(items) {
-                        var newres = {};
-                        for(var k in items) {
-                            newres[items[k].id] = items[k];
+                    var loadTypes = getshopclient.BookingEngine.getBookingItemTypes(getMultilevelName());
+                    loadTypes.done(function(alltypes) {
+                        var typesIndexed = {};
+                        for(var k in alltypes) {
+                            var type = alltypes[k];
+                            typesIndexed[type.id] = type.name;
                         }
-                        var loadItems2 = getshopclient.BookingEngine.getBookingItems(getMultilevelName());
-                        loadItems2.done(function(allitems) {
-                            for(var key in allitems) {
-                                if(!newres[allitems[key].id] && allitems[key].id != $scope.selectedroom) {
-                                    allitems[key].bookingItemName += " (not available)";
-                                }
+                        
+                        var loadItems = getshopclient.BookingEngine.getAllAvailbleItems(getMultilevelName(), new Date(), room.date.end);
+                        loadItems.done(function(items) {
+                            var newres = {};
+                            for(var k in items) {
+                                newres[items[k].id] = items[k];
                             }
-                            $scope.items = allitems;
-                            $scope.$apply();
+                            var loadItems2 = getshopclient.BookingEngine.getBookingItems(getMultilevelName());
+                            loadItems2.done(function(allitems) {
+                                console.log(allitems);
+                                for(var key in allitems) {
+                                    if(!newres[allitems[key].id] && allitems[key].id != $scope.selectedroom) {
+                                        allitems[key].bookingItemName += " (not available)";
+                                    }
+                                    allitems[key].bookingItemName += " | " + typesIndexed[allitems[key].bookingItemTypeId];
+                                }
+                                $scope.items = allitems;
+                                $scope.$apply();
+                            });
                         });
                     });
 

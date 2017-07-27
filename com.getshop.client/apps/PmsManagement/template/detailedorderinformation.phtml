@@ -6,7 +6,8 @@ $booking = $this->getSelectedBooking();
 //$order = $this->getApi()->getPmsInvoiceManager()->removeDuplicateOrderLines($this->getSelectedName(), $order);
 ?>
 <tr>
-    <td colspan='70' style='padding: 5px; background-color:#fff; font-size:12px;' fororder='<?php echo $order->id; ?>'>
+    <td colspan='70' style='padding: 5px; background-color:#0E0E19; color:#fff; font-size:12px;' fororder='<?php echo $order->id; ?>'>
+        <span class='editcartitempanel'></span>
         <?php
         
         $toprint = array();
@@ -28,21 +29,15 @@ $booking = $this->getSelectedBooking();
                         $heading .= " ";
                     }
                     
-                    $heading .= "<span style='display:inline-block; width: 145px; float:right;'>" .date("d.m.Y H:i", strtotime($room->date->end)) . "</span> ";
-                    $heading .= "<span style='display:inline-block; width: 145px; float:right;'>" .date("d.m.Y H:i", strtotime($room->date->start)) . " - </span> ";
+                    $heading .= "<span style='display:inline-block; width: 245px; float:right; text-align:right;'>" .date("d.m.Y H:i", strtotime($room->date->end)) . " - ". date("d.m.Y H:i", strtotime($room->date->start)) ."</span> ";
                     $heading .= "<div style='clear:both;'></div>";
                 }
             }
-            if(!$heading) {
-//                $heading = "Not connected to any room connect to: ";
-//                foreach($booking->rooms as $room) {
-//                    $heading .= "<a class='connectItemOnsOrderToRoom' roomid='".$room->pmsBookingRoomId."' orderid='".$order->id."'>" . $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedName(), $room->bookingItemId)->bookingItemName . " </a>";
-//                }
-            }
-            
             echo "<div style='border: solid 1px #bbb; text-align:center; font-weight:bold; padding: 5px;'>" . $heading . "</div>";
             echo "<div style='border: solid 1px #bbb;border-top: 0px; padding: 10px; margin-bottom: 10px;'>";
             foreach($items as $item) {
+                echo "<div style='margin-top:2px; clear:both;'></div>";
+                echo "<i class='fa fa-trash-o deleteitemrowfromorder' title='Delete this row' style='cursor:pointer;' cartitemid='".$item->cartItemId."' orderid='".$order->id."'></i> ";
                 /* @var $item core_cartmanager_data_CartItem */
                 if(isset($item->startDate) && $item->startDate) {
                     echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->startDate)) . " - </span> ";
@@ -56,21 +51,24 @@ $booking = $this->getSelectedBooking();
                 echo "<span style='float:right;'>";
                 echo "<span style='display:inline-block; width: 10px; text-align:right'>" . $item->count . "</span>" . " x ";
                 echo "" . round($item->product->price);
+                if(!@$order->closed) {
+                    echo ' <i class="fa fa-edit loadeditcartitemonorder" cartitemid="'.$item->cartItemId.'" orderid="'.$order->id.'"></i>';
+                }
                 echo "</span><br>";
             }
-//            echo "<pre>";
-//            foreach($items as $item) {
-//                echo $item->product->externalReferenceId . "<br>";
-//                print_r($item->priceMatrix);
-//                print_r($item->itemsAdded);
-//                echo "<hr>";
-//            }
-//            echo "</pre>";
             echo "</div>";
         }
-        echo "<b>Note to order:</b><br>";
+        echo "<b>Note on order, <span style='color:#A8A8F3; cursor:pointer;' onclick='$(\".updateordernoteinfo\").toggle();$(\".ordernotedisplaytext\").toggle();'>Update order note</span>:</b><br>";
+        echo "<div class='ordernotedisplaytext' style='padding-top: 5px;'>";
+        echo nl2br(@$order->invoiceNote);
+        if(!@$order->invoiceNote) {
+            echo "No note added to order."; 
+        }
+        echo "</div>";
+        echo "<span style='display:none;' class='updateordernoteinfo'>";
         echo "<textarea class='invoicenotetextarea' style='width:100%; height: 50px; box-sizing:border-box;'>".@$order->invoiceNote."</textarea>";
         echo "<input type='button' style='float:right;' value='Update invoice note' class='updateinvoicenotebutton' orderid='".$order->id."'>";
+        echo "</span>";
         
         ?>
     </td>

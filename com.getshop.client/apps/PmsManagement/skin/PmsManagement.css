@@ -56,6 +56,10 @@
     display:none;
 }
 .PmsManagement .highlight td { background-color:#deff9f !important; }
+.PmsManagement .highlight td .orderforrromview td { background-color: transparent !important; }
+.PmsManagement td .orderforrromview { background-color:#0E0E19 !important; }
+.PmsManagement td .fa-close { color:#fff !important; }
+
 .PmsManagement .viewmode:hover { color: green; cursor: pointer; }
 .PmsManagement .guestoverviewtable  td .roompostfix { font-size: 12px; position:relative; }
 .PmsManagement .actions:hover {

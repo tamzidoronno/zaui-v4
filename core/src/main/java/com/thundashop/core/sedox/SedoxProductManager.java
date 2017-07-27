@@ -85,7 +85,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     public SedoxCMDEncrypter sedoxCMDEncrypter;
 
     @Autowired
-    public SedoxMagentoIntegration sedoxMagentoIntegration;
+    public SedoxMagentoIntegrationRest sedoxMagentoIntegration;
 
     @Autowired
     public WebSocketServerImpl webSocketServer;
@@ -610,7 +610,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
             return;
         }
 
-        SedoxMagentoIntegration.MagentoUser magentoUser = sedoxMagentoIntegration.getUserInformation(magentoId);
+        SedoxMagentoIntegrationRest.MagentoUser magentoUser = sedoxMagentoIntegration.getUserInformation(magentoId);
         if (magentoUser != null) {
             user.fullName = magentoUser.name;
             user.emailAddress = magentoUser.emailAddress;
@@ -620,9 +620,9 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
     }
 
-    public synchronized void updateOrders(List<SedoxMagentoIntegration.Order> orders) throws ErrorException {
+    public synchronized void updateOrders(List<SedoxMagentoIntegrationRest.Order> orders) throws ErrorException {
 
-        for (SedoxMagentoIntegration.Order order : orders) {
+        for (SedoxMagentoIntegrationRest.Order order : orders) {
             SedoxCreditOrder sedoxCreditOrder = getSedoxCreditOrderById(order.orderId);
             if (sedoxCreditOrder != null) {
                 continue;
@@ -993,7 +993,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
 
         String loggedUserId = sedoxMagentoIntegration.login(emailAddress, password);
-
+      
         if (loggedUserId != null) {
             User user = userManager.forceLogon(loggedUserId);
 
@@ -1517,7 +1517,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
     }
 
-    private void addCreditToMaster(SedoxUser sedoxUser, SedoxCreditOrder sedoxCreditOrder, SedoxMagentoIntegration.Order order) throws ErrorException {
+    private void addCreditToMaster(SedoxUser sedoxUser, SedoxCreditOrder sedoxCreditOrder, SedoxMagentoIntegrationRest.Order order) throws ErrorException {
         if (sedoxUser.masterUserId != null && !sedoxUser.masterUserId.equals("") && sedoxCreditOrder.amount > 0) {
             double creditToAdd = sedoxCreditOrder.amount / 10 * sedoxUser.slaveIncome;
             if (creditToAdd > 0) {
@@ -1691,7 +1691,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
     }
 
     private void updateOrders() throws ErrorException {
-        List<SedoxMagentoIntegration.Order> orders = sedoxMagentoIntegration.getOrders();
+        List<SedoxMagentoIntegrationRest.Order> orders = sedoxMagentoIntegration.getOrders();
         updateOrders(orders);
     }
 
@@ -1959,8 +1959,8 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
 
     @Override
     public void updateEvcCreditAccounts() throws ErrorException {
-        List<SedoxMagentoIntegration.Order> orders = sedoxMagentoIntegration.getEvcOrders();
-        for (SedoxMagentoIntegration.Order order : orders) {
+        List<SedoxMagentoIntegrationRest.Order> orders = sedoxMagentoIntegration.getEvcOrders();
+        for (SedoxMagentoIntegrationRest.Order order : orders) {
             SedoxEvcCreditOrder evcOrder = getEvcCreditOrderById(order.orderId);
             
             if (evcOrder != null) {
@@ -1981,7 +1981,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
     }
 
-    private void notifyEvcError(String message, SedoxMagentoIntegration.Order order, boolean silent) throws ErrorException {
+    private void notifyEvcError(String message, SedoxMagentoIntegrationRest.Order order, boolean silent) throws ErrorException {
         FailedEvcOrder failedOrder = new FailedEvcOrder();
         failedOrder.message = message;
         failedOrder.magentoOrderId = order.orderId;
@@ -1995,11 +1995,11 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         saveObject(failedOrder);
     }
     
-    private void notifyEvcError(String message, SedoxMagentoIntegration.Order order) throws ErrorException {
+    private void notifyEvcError(String message, SedoxMagentoIntegrationRest.Order order) throws ErrorException {
         notifyEvcError(message, order, false);
     }
 
-    private void addEvcCredit(SedoxUser user, SedoxMagentoIntegration.Order order) throws ErrorException {
+    private void addEvcCredit(SedoxUser user, SedoxMagentoIntegrationRest.Order order) throws ErrorException {
         String evcId = user.evcId != null && !user.evcId.isEmpty() ? user.evcId : order.evccustomerid;
         
         boolean exists = evcApi.isPersonalAccount(evcId);
@@ -2032,7 +2032,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         saveObject(user);
     }
 
-    private boolean hasAlreadyFailed(SedoxMagentoIntegration.Order order) {
+    private boolean hasAlreadyFailed(SedoxMagentoIntegrationRest.Order order) {
         for (FailedEvcOrder failed : failedEvcOrders) {
             if (failed.magentoOrderId == order.orderId) {
                 return true;

@@ -21,6 +21,72 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function loadEditCartItemOnOrder() {
+        $this->includefile("editcartitemonexistingorder");
+    }
+    
+    public function deleteItemFromCart() {
+        $items = array();
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        foreach($order->cart->items as $item) {
+            if($item->cartItemId == $_POST['data']['cartitemid']) {
+                continue;
+            }
+            $items[] = $item;
+        }
+        $order->cart->items = $items;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
+    public function updateCartItemRow() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        foreach($order->cart->items as $item) {
+            if($item->cartItemId != $_POST['data']['cartitemid']) {
+                continue;
+            }
+            
+            $total = 0;
+            $count = 0;
+            //Update price matrix.
+            foreach($_POST['data'] as $key => $val) {
+                if(stristr($key, "matrixprice_")) {
+                    $day = str_replace("matrixprice_", "", $key);
+                    $item->priceMatrix->{$day} = $val;
+                    $total += $val;
+                    $count++;
+                }
+            }
+            
+            //Update addon prices.
+            foreach($_POST['data'] as $key => $val) {
+                if(stristr($key, "itemcount_")) {
+                    $addonId = str_replace("itemcount_", "", $key);
+                    $count += $val;
+                    $itemprice = $_POST['data']['itemprice_'.$addonId];
+                    $total += ($itemprice * $val);
+                    
+                    foreach($item->itemsAdded as $addonItem) {
+                        if($addonItem->addonId == $addonId) {
+                            $addonItem->count = $val;
+                            $addonItem->price = $itemprice;
+                        }
+                    }
+                }
+            }
+            
+            if($count > 0) {
+                $item->product->price = $total / $count;
+                $item->count = $count;
+            }
+            
+            $item->product->additionalMetaData = $_POST['data']['roomnumber'];
+            $item->product->metaData = $_POST['data']['roomname'];
+            $item->product->name = $_POST['data']['productname'];
+        }
+        
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
     public function connectItemsToRoom() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         

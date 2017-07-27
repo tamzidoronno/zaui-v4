@@ -3622,5 +3622,27 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $this->config;
     }
 
+    public function sortConfig($addonConfigs, $products) {
+        $sortArray = array();
+        foreach($addonConfigs as $addonToPrint) {
+            /* @var $addonToPrint core_pmsmanager_PmsBookingAddonItem */
+            if(!isset($products[$addonToPrint->productId])) {
+                continue;
+            }
+            $name = $products[$addonToPrint->productId]->name;
+            $sortArray[$addonToPrint->addonId] = $name;
+        }
+        asort($sortArray);
+        $result = array();
+        foreach($sortArray as $addonId => $name) {
+            foreach($addonConfigs as $item) {
+                if($item->addonId == $addonId) {
+                    $result[] = $item;
+                }
+            }
+        }
+        
+        return $result;
+    }
 }
 ?>

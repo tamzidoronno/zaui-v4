@@ -21,6 +21,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function addAdvancedAddons() {
+        echo "Advanced addons adding";
+        echo "<pre>";
+        print_r($_POST['data']);
+        echo "</pre>";
+        $this->showBookingInformation();
+    }
+    
     public function loadEditCartItemOnOrder() {
         $this->includefile("editcartitemonexistingorder");
     }

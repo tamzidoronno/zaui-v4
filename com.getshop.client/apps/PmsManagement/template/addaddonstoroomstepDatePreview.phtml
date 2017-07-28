@@ -16,12 +16,18 @@ if(!$selectedRoom) {
 $start = strtotime($selectedRoom->date->start);
 $end = strtotime($selectedRoom->date->end);
 $dates = $this->getDatesToAdd($start, $end, $selectedRoom);
+echo "<div style='font-weight:bold;'>";
+echo "<span style='width:105px;display:inline-block;padding-left:20px;'>Date</span>";
+echo "<span style='width:55px;display:inline-block;'>Count</span>";
+echo "<span style='width:50px;display:inline-block;'>Price</span>";
+echo "</div>";
+
 foreach($dates as $date => $obj) {
     echo "<div>";
-    echo "<input type='checkbox' checked class='toggleifshouldbeadded'>";
+    echo "<input type='checkbox' checked class='toggleifshouldbeadded' gsname='rowdate_$date'>";
     echo "<input type='txt' value='".date("d.m.Y", $date)."' style='width:100px;'>";
-    echo "<input type='txt' value='".$obj->count."' style='width:50px;'>";
-    echo "<input type='txt' value='".$obj->price."' style='width:50px;'>";
+    echo "<input type='txt' value='".$obj->count."' style='width:40px;' gsname='count_$date'>";
+    echo "<input type='txt' value='".$obj->price."' style='width:50px;' gsname='price_$date'>";
     echo "</div>";
 }
 ?>

@@ -116,7 +116,7 @@ app.PmsManagement = {
         });
     },
     loadAddonsList : function() {
-        var panel = $("<span class='addaddonpanel-outer'><div style='text-align:right; padding: 5px; background-color:#efefef;'><i class='fa fa-times' onclick=\"$('.addaddonpanel-outer').hide();\" style='cursor:pointer;'></i></div><span class='addaddonpanel' gstype='form' method='addAddonsToRoom' style='display:block;'><i class='fa fa-spin fa-spinner'></i></span></span>");
+        var panel = $("<span class='addaddonpanel-outer'><div style='text-align:right; padding: 5px; background-color:#efefef;'><span style='float:left;' class='addonpaneltitle'>Add addon</span><i class='fa fa-times' onclick=\"$('.addaddonpanel-outer').hide();\" style='cursor:pointer;'></i></div><span class='addaddonpanel' gstype='form' method='addAddonsToRoom' style='display:block;'><i class='fa fa-spin fa-spinner'></i></span></span>");
         $('.addaddonpanel-outer').remove();
         $(this).closest('td').append(panel);
 

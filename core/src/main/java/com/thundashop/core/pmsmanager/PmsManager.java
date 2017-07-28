@@ -6319,4 +6319,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
     }
 
+    @Override
+    public LinkedList<TimeRepeaterDateRange> generateRepeatDateRanges(TimeRepeaterData data) {
+        TimeRepeater generator = new TimeRepeater();
+        return generator.generateRange(data);
+    }
+
 }

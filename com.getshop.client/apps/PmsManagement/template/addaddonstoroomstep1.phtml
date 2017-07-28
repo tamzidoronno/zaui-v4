@@ -1,0 +1,28 @@
+<?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$booking = $this->getSelectedBooking();
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$products = $this->getAllProducts();
+
+echo "<input type='hidden' gsname='bookingid' value='".$booking->id."'>";
+echo "<input type='hidden' gsname='roomid' value='".$_POST['data']['roomId']."'>";
+echo "<table cellspacing='0' cellpadding='0'>";
+echo "<tr><th>Addon</th><th>Advanced</th><th>Add</th></tr>";
+$addonconfigs = $this->sortConfig($config->addonConfiguration, $products);
+foreach($addonconfigs as $addonToPrint) {
+    /* @var $addonToPrint core_pmsmanager_PmsBookingAddonItem */
+    if(!$addonToPrint->isActive && !$addonToPrint->isAvailableForBooking && !$addonToPrint->isAvailableForCleaner) {
+        continue;
+    }
+    if(!isset($products[$addonToPrint->productId])) {
+        continue;
+    }
+    echo "<tr>";
+    echo "<td>" . $products[$addonToPrint->productId]->name . "</td>";
+    echo "<td><span style='color:blue; cursor:pointer;' class='startAddonToRoom' addonid='".$addonToPrint->addonId."'>" . $this->__w("Advanced add") . "</span></td>";
+    echo "<td><span class='addaddonsoption' gsvalue='".$addonToPrint->productId."' gsname='addonProduct' gstype='submitToInfoBox'>" . $this->__w("Add") . "</span><br></td>";
+    echo "</tr>";
+}
+echo "</table>";
+
+?>

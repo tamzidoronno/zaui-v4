@@ -10,6 +10,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -413,5 +414,7 @@ public interface IPmsManager {
     
     @Administrator
     public void detachOrderFromBooking(String bookingId, String orderId);
+    
+    public LinkedList<TimeRepeaterDateRange> generateRepeatDateRanges(TimeRepeaterData data);
     
 }

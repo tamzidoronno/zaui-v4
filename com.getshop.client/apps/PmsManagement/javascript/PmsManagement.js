@@ -104,6 +104,42 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .managementviewoptions', app.PmsManagement.toggleManagementviewfilter);
         $(document).on('click','.PmsManagement .updatecartitemrowbutton', app.PmsManagement.updateCartItemRow);
         $(document).on('click','.PmsManagement .deleteitemrowfromorder', app.PmsManagement.deleteItemFromCart);
+        $(document).on('click','.PmsManagement .startAddonToRoom', app.PmsManagement.startAddonToRoom);
+        $(document).on('click','.PmsManagement .loadAddonsList', app.PmsManagement.loadAddonsList);
+    },
+    loadAddonsToBeAddedList : function() {
+        var panel = $('.PmsManagement .addaddonsstep2');
+        var args = thundashop.framework.createGsArgs(panel);
+        var event = thundashop.Ajax.createEvent('','loadAddonsToBeAddedPreview',panel, args);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.addonpreview').html(res);
+        });
+    },
+    loadAddonsList : function() {
+        var panel = $("<span class='addaddonpanel-outer'><div style='text-align:right; padding: 5px; background-color:#efefef;'><i class='fa fa-times' onclick=\"$('.addaddonpanel-outer').hide();\" style='cursor:pointer;'></i></div><span class='addaddonpanel' gstype='form' method='addAddonsToRoom' style='display:block;'><i class='fa fa-spin fa-spinner'></i></span></span>");
+        $('.addaddonpanel-outer').remove();
+        $(this).closest('td').append(panel);
+
+        var data = {
+            "roomId" : $(this).closest('tr').attr("roomid"),
+            "bookingid" : $('#openedbookingid').val()
+        }
+        var event = thundashop.Ajax.createEvent('','loadAddonList', $(this), data);
+        panel.show();
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            panel.find('.addaddonpanel').html(res);
+        });
+    },
+    startAddonToRoom : function() {
+        var data = {
+            "addonId" : $(this).attr('addonid'),
+            "roomId" : $(this).closest('tr[roomid]').attr("roomid"),
+            "bookingid" : $('#openedbookingid').val()
+        }
+        var event = thundashop.Ajax.createEvent('','startAddonToRoom', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.addaddonpanel').html(res);
+        });
     },
     deleteItemFromCart : function() {
         var confirmed = confirm("Are you sure you want to delete this row?");

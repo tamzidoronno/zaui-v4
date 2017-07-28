@@ -1,6 +1,7 @@
 
 package com.thundashop.core.pmsmanager;
 
+import com.ibm.icu.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,15 +58,30 @@ public class TimeRepeater {
 
     private LinkedList<TimeRepeaterDateRange> generateWeeklyRepeats(TimeRepeaterData data) {
         LinkedList list = new LinkedList();
-        list.add(data.firstEvent);
+        if(!data.avoidFirstEvent) {
+            list.add(data.firstEvent);
+        }
         Date start = data.firstEvent.start;
         DateTime startTime = new DateTime(start);
+        
         DateTime endTime = new DateTime(data.firstEvent.end);
         DateTime startIterator = startTime.withDayOfWeek(DateTimeConstants.MONDAY);
         Date startingAt = data.firstEvent.start;
+        
+        if(data.avoidFirstEvent) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(startingAt);
+            cal.add(Calendar.MINUTE, -1);
+            startingAt = cal.getTime();
+            cal.setTime(start);
+            cal.add(Calendar.MINUTE, -1);
+            start = cal.getTime();
+        }
+        
         while(true) {
             startIterator = startIterator.plusWeeks(data.repeatEachTime);
             if(startIterator.toDate().after(data.endingAt) && !isSameDay(endTime.toDate(), data.endingAt)) {
+                System.out.println("Breaking at : " + startIterator + " - " + data.endingAt);
                 break;
             }
             TimeRepeaterDateRange range = null;
@@ -143,6 +159,7 @@ public class TimeRepeater {
             
             startTime = startTime.plusWeeks(data.repeatEachTime);
             endTime = endTime.plusWeeks(data.repeatEachTime);
+            
         }
         return list;
     }

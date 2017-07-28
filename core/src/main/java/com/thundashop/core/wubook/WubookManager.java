@@ -675,6 +675,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(channel.toLowerCase().contains("breakfast included") || channel.toLowerCase().contains("frokost inkludert")) {
                     return guests;
                 }
+                if(channel.toLowerCase().contains("breakfast is included") || channel.toLowerCase().contains("frokost er inkludert")) {
+                    return guests;
+                }
             }
         }
         

@@ -1,0 +1,82 @@
+<?php
+ /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$addonItem = null;
+foreach($config->addonConfiguration as $id => $item) {
+    if($item->addonId == $_POST['data']['addonId']) {
+        $addonItem = $item;
+    }
+}
+$addonProduct = $this->getApi()->getProductManager()->getProduct($addonItem->productId);
+$perGuest = "";
+$selectedType = "";
+if($addonItem->dependsOnGuestCount || $addonItem->addonType == 1) {
+    $perGuest = "CHECKED";
+}
+if(!$addonItem->isSingle || $addonItem->addonType == 1) {
+    $selectedType = "alldays";
+}
+if($addonItem->atEndOfStay) {
+    $selectedType = "endofstay";
+}
+
+$addPeriodeTypes = array();
+$addPeriodeTypes['single'] = "Single entry";
+$addPeriodeTypes['startofstay'] = "Start of stay";
+$addPeriodeTypes['endofstay'] = "End of stay";
+$addPeriodeTypes['repeat_weekly'] = "Weekly entries";
+$addPeriodeTypes['repeat_monthly'] = "Monthly entries";
+$addPeriodeTypes['alldays'] = "All days";
+
+?>
+<b><?php echo $addonProduct->name; ?></b>
+<div class='addaddonsstep2'>
+    <input type='hidden' gsname='bookingid' value='<?php echo $this->getSelectedBooking()->id; ?>'>
+    <input type='hidden' gsname='roomid' value='<?php echo $_POST['data']['roomId']; ?>'>
+    <input type='hidden' gsname='addonId' value='<?php echo $_POST['data']['addonId']; ?>'>
+    <select style='width:100%' class='typeofaddon' gsname='periode_selection'>
+        <?php
+        foreach($addPeriodeTypes as $id => $type) {
+            $selected = ($id == $selectedType) ? "SELECTED" : "";
+            echo "<option value='$id' $selected>$type</option>";
+        }
+        ?>
+    </select>
+    <input type='checkbox' gsname='isperguest' <?php echo $perGuest; ?>> Is per guest
+    <hr>
+    <div class='optionpanel' type='repeat_weekly'>
+        <input type='checkbox' class='weekdayselection' gsname='repeat_mon'> Monday<br>
+        <input type='checkbox' class='weekdayselection' gsname='repeat_tue'> Tuesday<br>
+        <input type='checkbox' class='weekdayselection' gsname='repeat_wed'> Wednesday<br>
+        <input type='checkbox' class='weekdayselection' gsname='repeat_thu'> Thursday<br>
+        <input type='checkbox' class='weekdayselection' gsname='repeat_fri'> Friday<br>
+        <input type='checkbox' class='weekdayselection' gsname='repeat_sat'> Saturday<br>
+        <input type='checkbox' class='weekdayselection' gsname='repeat_sun'> Sunday<br>
+        <hr>
+    </div>
+</div>
+<div></div>
+<b>To be added</b><br>
+<div class='addonpreview'>
+</div>
+<br>
+<input type='button' value='Add addon' style='width:100%'>
+
+<style>
+    .optionpanel { display: none; }
+</style>
+
+<script>
+    $('.PmsManagement .typeofaddon').on('change', function() {
+        var type = $(this).val();
+        $('.PmsManagement .optionpanel').hide();
+        $('.PmsManagement .optionpanel[type="'+type+'"]').show();
+        app.PmsManagement.loadAddonsToBeAddedList();
+    });
+    
+    $('.weekdayselection').on('click', app.PmsManagement.loadAddonsToBeAddedList);
+    $('input[gsname="isperguest"]').on('click', app.PmsManagement.loadAddonsToBeAddedList);
+    $('input[gsname="dayofmonth"]').on('keyup', app.PmsManagement.loadAddonsToBeAddedList);
+    app.PmsManagement.loadAddonsToBeAddedList();
+</script>
+   

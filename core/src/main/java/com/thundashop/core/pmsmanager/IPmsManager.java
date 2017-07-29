@@ -325,6 +325,9 @@ public interface IPmsManager {
     public void addProductToRoom(String productId, String pmsRoomId, Integer count);
     
     @Administrator
+    public void addAddonToRoom(String productId, String pmsRoomId, Integer count, Date date, Double price);
+    
+    @Administrator
     public List<PmsBookingAddonItem> getAddonsForRoom(String roomId);
     
     @Administrator

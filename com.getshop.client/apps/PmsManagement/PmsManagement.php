@@ -22,10 +22,28 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function addAdvancedAddons() {
-        echo "Advanced addons adding";
-        echo "<pre>";
-        print_r($_POST['data']);
-        echo "</pre>";
+        $addonId = $_POST['data']['addonId'];
+        $pmsRoomId = $_POST['data']['roomid'];
+        
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $addonToUse = null;
+        foreach($config->addonConfiguration as $addonConf) {
+            if($addonConf->addonId == $addonId) {
+                $addonToUse = $addonConf;
+                break;
+            }
+        }
+        
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "rowindex_") && $val == "true") {
+                $index = str_replace("rowindex_", "", $key);
+                $count = $_POST['data']['count_'.$index];
+                $price = $_POST['data']['price_'.$index];
+                $date = $this->convertToJavaDate(strtotime($_POST['data']['date_'.$index]));
+                $this->getApi()->getPmsManager()->addAddonToRoom($this->getSelectedName(), $addonToUse->productId, $pmsRoomId, $count, $date, $price);
+            }
+        }
+        
         $this->showBookingInformation();
     }
     

@@ -6325,4 +6325,39 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return generator.generateRange(data);
     }
 
+    @Override
+    public void addAddonToRoom(String productId, String pmsRoomId, Integer count, Date date, Double price) {
+        
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        
+        PmsBookingAddonItem toAdd = null;
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.productId.equals(productId) && pmsInvoiceManager.isSameDay(item.date, date)) {
+                toAdd = item;
+                break;
+            }
+        }
+        
+        if(toAdd == null) {
+            PmsBookingAddonItem original = getAddonFromProductId(productId);
+            toAdd = createAddonToAdd(original, date);
+            room.addons.add(toAdd);
+        }
+        
+        toAdd.count = count;
+        toAdd.price = price;
+        
+        saveBooking(booking);
+    }
+
+    private PmsBookingAddonItem getAddonFromProductId(String productId) {
+        for(PmsBookingAddonItem item : getConfigurationSecure().addonConfiguration.values()) {
+            if(item.productId.equals(productId)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
 }

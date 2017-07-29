@@ -1129,6 +1129,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(filter.endInvoiceAt == null || filter.endInvoiceAt.before(room.date.end)) {
                     filter.endInvoiceAt = room.date.end;
                 }
+                for(PmsBookingAddonItem item : room.addons) {
+                    if(filter.endInvoiceAt == null || filter.endInvoiceAt.before(item.date)) {
+                        filter.endInvoiceAt = item.date;
+                    }
+                }
             }
             
             for(String orderId : booking.orderIds) {

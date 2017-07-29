@@ -1179,6 +1179,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
         repicientList.clear();
+        try {
+            feedGrafanaNotificationDone(key);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
         
         key = key + "_" + booking.language;
         String message = notify(key, booking, "sms", room);
@@ -4097,6 +4102,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         emailToSendTo = email;
     }
 
+    private void feedGrafanaNotificationDone(String key) {
+        HashMap<String, Object> toAdd = new HashMap();
+        toAdd.put("key", key);
+        grafanaManager.addPoint("pmsmanager", "notificationsent", toAdd);
+    }
+
     private void feedGrafana(PmsBooking booking) {
         HashMap<String, Object> toAdd = new HashMap();
         int guests = 0;
@@ -6359,5 +6370,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return null;
     }
+
+    
 
 }

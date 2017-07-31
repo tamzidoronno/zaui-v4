@@ -203,7 +203,8 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         if(recipientNumber == 0) {
             pushMessage(url, gson.toJson(recipient), "POST");
         } else {
-//            pushMessage(url, gson.toJson(recipient), "PUT");
+            url += recipientNumber;
+            pushMessage(url, gson.toJson(recipient), "PUT");
         }
         return findRecipient(user.customerId);
     }

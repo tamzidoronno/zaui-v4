@@ -1334,7 +1334,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         orderManager.saveObject(order);
         
         if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("sendregning")) {
-            sendRegningManager.sendOrder(orderId);
+            sendRegningManager.sendOrder(orderId, email);
         } else {
             pmsManager.setOrderIdToSend(orderId);
             pmsManager.setEmailToSendTo(email);

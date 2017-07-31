@@ -13,6 +13,7 @@ public class NewInvoice {
     String deliveryDate;
     NewInvoiceAddress deliveryAddress;
     NewInvoiceRecipient recipient;
+    NewInvoiceShipment shipment = new NewInvoiceShipment();
     List<NewInvoiceItem> items;
     
 }

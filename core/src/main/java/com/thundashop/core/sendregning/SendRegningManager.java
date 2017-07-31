@@ -43,28 +43,41 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
     String root = "https://www.sendregning.no/";
     
     @Override
-    public String sendOrder(String orderId) {
-        if(createInvoiceAtSendRegning(orderId)) {
-            return "";
+    public String sendOrder(String orderId, String email) {
+        Order order = orderManager.getOrderSecure(orderId);
+        if(order.sendRegningId > 0) {
+            System.out.println("Do not send this invoice, resend it");
+            resendInvoice(order.sendRegningId, email);
+            return "Resending";
         } else {
-            return "failed to push to sendregning server.";
+            if(createInvoiceAtSendRegning(orderId, email) != null) {
+                return "";
+            } else {
+                return "failed to push to sendregning server.";
+            }
         }
     }
 
-    private boolean createInvoiceAtSendRegning(String orderId) {
+    private String createInvoiceAtSendRegning(String orderId, String email) {
         Order order = orderManager.getOrderSecure(orderId);
         User user = userManager.getUserById(order.userId);
-        createUpdateRecipient(user);
+        Integer sendRegningCustomerNumber = createUpdateRecipient(user);
         String url = root+"invoices/";
-        NewInvoice inv = createInvoice(orderId);
+        NewInvoice inv = createInvoice(orderId, email);
+        inv.recipient.number = sendRegningCustomerNumber;
         Gson gson = new Gson();
         String data = gson.toJson(inv);
         
-        return pushMessage(url, data, "POST");
-        
+        pushMessage(url, data, "POST");
+        HashMap<String, String> latestResponseHeader = webManager.getLatestResponseHeader();
+        String location = latestResponseHeader.get("Location");
+        String number = location.replace("https://www.sendregning.no/invoices/", "");
+        number = number.replace(",", "");
+        order.sendRegningId = new Integer(number);
+        return order.sendRegningId + "";
     }
 
-    private NewInvoice createInvoice(String orderId) {
+    private NewInvoice createInvoice(String orderId, String email) {
         Order order = orderManager.getOrderSecure(orderId);
         User user = userManager.getUserById(order.userId);
         
@@ -79,7 +92,10 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         inv.ourReference = order.incrementOrderId + "";
         inv.yourReference = "";
         inv.dueDate = formatDate(createDueDate(order));
-        inv.recipient = createRecipient(user);
+        inv.recipient = createInvoiceRecipient(user);
+        NewInvoiceShipmentEmail e = new NewInvoiceShipmentEmail();
+        e.address = email;
+        inv.shipment.email.add(e);
         return inv;
     }
 
@@ -115,16 +131,22 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
             item.number = cartItem.getCount();
             item.quantity = (double)cartItem.getCount();
             item.productCode = cartItem.getProduct().accountingSystemId;
-            item.taxRate = cartItem.getProduct().taxgroup;
+            item.taxRate = getTaxRate(cartItem);
             item.unitPrice = cartItem.getProduct().price;
             items.add(item);
         }
         return items;
     }
 
-    private NewInvoiceRecipient createRecipient(User user) {
+    private NewInvoiceRecipient createInvoiceRecipient(User user) {
         NewInvoiceRecipient recipient = new NewInvoiceRecipient();
-        recipient.address = createRecipientAddressOnOrder(user);
+        recipient.number = user.customerId;
+        return recipient;
+    }
+    
+    private NewRecipient createRecipient(User user) {
+        NewRecipient recipient = new NewRecipient();
+        recipient.contact.address = createRecipientAddressOnOrder(user);
         recipient.customerNumber = user.customerId + "";
         recipient.email = user.emailAddress;
         recipient.name = user.fullName;
@@ -148,12 +170,12 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
     }    
 
     
-    private boolean pushMessage(String url, String data, String type) {
-        System.out.println("Pushing: ");
+    private String pushMessage(String url, String data, String type) {
+        System.out.println("Pushing to : " + url + " type:" + type);
         System.out.println(data);
         Application sendRegningApp = storeApplicationPool.getApplication("e8cc6f68-d194-4820-adab-6052377b678d");
         if (sendRegningApp == null) {
-            return false;
+            return null;
         }
 
         String usernamepassword = sendRegningApp.getSetting("email") + ":" + sendRegningApp.getSetting("password");
@@ -165,21 +187,52 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         try {
             String res = webManager.htmlPostBasicAuth(url, data, true, "UTF-8", usernamepassword, "Basic", true, type);
             System.out.println(res);
+            return res;
         }catch(Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
-        return false;        
     }
 
-    private void createUpdateRecipient(User user) {
+    private Integer createUpdateRecipient(User user) {
+        Integer recipientNumber = findRecipient(user.customerId);
         String url = root + "recipients/";
-        NewInvoiceRecipient recipient = createRecipient(user);
+        NewRecipient recipient = createRecipient(user);
+        recipient.number = recipientNumber;
         Gson gson = new Gson();
-        if(!user.createInSendRegning) {
+        if(recipientNumber == 0) {
             pushMessage(url, gson.toJson(recipient), "POST");
         } else {
-            pushMessage(url, gson.toJson(recipient), "PUT");
+//            pushMessage(url, gson.toJson(recipient), "PUT");
         }
+        return findRecipient(user.customerId);
+    }
+
+    private Integer findRecipient(Integer customerId) {
+        String url = root + "recipients/?customerNumber=" + customerId;
+        String res = pushMessage(url, "", "GET");
+        if(res == null) {
+            return 0;
+        }
+        Gson gson = new Gson();
+        NewRecipient recipient = gson.fromJson(res, NewRecipient.class);
+        return recipient.number;
+    }
+
+    private Integer getTaxRate(CartItem cartItem) {
+        System.out.println(cartItem.getProduct().taxGroupObject.taxRate);
+        return cartItem.getProduct().taxGroupObject.taxRate.intValue();
+    }
+
+    private void resendInvoice(Integer sendRegningId, String email) {
+        String url = root + "/invoices/"+sendRegningId+"/send";
+        
+        NewInvoiceShipment reciept = new NewInvoiceShipment();
+        NewInvoiceShipmentEmail mail = new NewInvoiceShipmentEmail();
+        mail.address = email;
+        reciept.email.add(mail);
+        
+        Gson gson = new Gson();
+        pushMessage(url, gson.toJson(reciept), "POST");
     }
 }

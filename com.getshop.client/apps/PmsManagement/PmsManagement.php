@@ -3615,6 +3615,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
             if($end == null || $end < strtotime($room->date->end)) {
                 $end = strtotime($room->date->end);
             }
+            foreach($room->addons as $addon) {
+                if($end == null || $end < strtotime($addon->date)) {
+                    $end = strtotime($addon->date);
+                }
+            }
         }
         
         foreach($booking->orderIds as $orderId) {

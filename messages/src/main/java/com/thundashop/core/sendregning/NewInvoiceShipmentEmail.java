@@ -5,15 +5,11 @@
  */
 package com.thundashop.core.sendregning;
 
-import com.thundashop.core.common.GetShopApi;
-import org.springframework.beans.factory.annotation.Autowired;
-
 /**
  *
  * @author boggi
  */
-@GetShopApi
-public interface ISendRegningManager {
-    @Autowired
-    public String sendOrder(String orderId, String email);
+public class NewInvoiceShipmentEmail {
+    public String address = "";
+    public String htmlContent = "";
 }

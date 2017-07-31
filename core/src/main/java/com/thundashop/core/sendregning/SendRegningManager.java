@@ -41,10 +41,16 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
     StoreApplicationPool storeApplicationPool;
     
     String root = "https://www.sendregning.no/";
+    private String errorMessage = "";
     
     @Override
     public String sendOrder(String orderId, String email) {
         Order order = orderManager.getOrderSecure(orderId);
+        
+        if(!validateOrderToMakeSureItsOkay(order)) {
+            return errorMessage;
+        }
+        
         if(order.sendRegningId > 0) {
             System.out.println("Do not send this invoice, resend it");
             resendInvoice(order.sendRegningId, email);
@@ -186,7 +192,6 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         
         try {
             String res = webManager.htmlPostBasicAuth(url, data, true, "UTF-8", usernamepassword, "Basic", true, type);
-            System.out.println(res);
             return res;
         }catch(Exception e) {
             e.printStackTrace();
@@ -221,7 +226,6 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
     }
 
     private Integer getTaxRate(CartItem cartItem) {
-        System.out.println(cartItem.getProduct().taxGroupObject.taxRate);
         return cartItem.getProduct().taxGroupObject.taxRate.intValue();
     }
 
@@ -235,5 +239,11 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         
         Gson gson = new Gson();
         pushMessage(url, gson.toJson(reciept), "POST");
+    }
+
+    private boolean validateOrderToMakeSureItsOkay(Order order) {
+        //Adress, postcode, city can not be empty
+        //Tax group need to be correct.
+        return true;
     }
 }

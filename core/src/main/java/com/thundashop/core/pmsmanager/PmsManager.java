@@ -1129,6 +1129,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(filter.endInvoiceAt == null || filter.endInvoiceAt.before(room.date.end)) {
                     filter.endInvoiceAt = room.date.end;
                 }
+                for(PmsBookingAddonItem item : room.addons) {
+                    if(filter.endInvoiceAt == null || filter.endInvoiceAt.before(item.date)) {
+                        filter.endInvoiceAt = item.date;
+                    }
+                }
             }
             
             for(String orderId : booking.orderIds) {
@@ -1179,6 +1184,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
         repicientList.clear();
+        try {
+            feedGrafanaNotificationDone(key);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
         
         key = key + "_" + booking.language;
         String message = notify(key, booking, "sms", room);
@@ -4097,6 +4107,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         emailToSendTo = email;
     }
 
+    private void feedGrafanaNotificationDone(String key) {
+        HashMap<String, Object> toAdd = new HashMap();
+        toAdd.put("key", key);
+        grafanaManager.addPoint("pmsmanager", "notificationsent", toAdd);
+    }
+
     private void feedGrafana(PmsBooking booking) {
         HashMap<String, Object> toAdd = new HashMap();
         int guests = 0;
@@ -5098,27 +5114,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBookingAddonViewItem> getItemsForView(String viewId, Date date) {
-        Calendar startCal = Calendar.getInstance();
-        Calendar endCal = Calendar.getInstance();
         
         PmsMobileView view = getConfiguration().mobileViews.get(viewId);
-        
+        Calendar startCal = Calendar.getInstance();
         startCal.setTime(date);
-        endCal.setTime(date);
-        
         startCal.add(Calendar.DAY_OF_YEAR, view.daysDisplacement);
-        endCal.add(Calendar.DAY_OF_YEAR, view.daysDisplacement);
-        
-        startCal.set(Calendar.HOUR_OF_DAY, 0);
-        startCal.set(Calendar.MINUTE, 0);
-        startCal.set(Calendar.SECOND, 0);
-        
-        endCal.set(Calendar.HOUR_OF_DAY, 23);
-        endCal.set(Calendar.MINUTE, 59);
-        endCal.set(Calendar.SECOND, 59);
-        
         Date startDate = startCal.getTime();
-        Date endDate = endCal.getTime();
         
         List<PmsBookingAddonViewItem> items = new ArrayList();
         
@@ -5128,7 +5129,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if(!view.products.contains(item.productId)) {
                         continue;
                     }
-                    boolean toBeAdded = item.date.after(startDate) && item.date.before(endDate);
+                    boolean toBeAdded = pmsInvoiceManager.isSameDay(item.date, startDate);
                     if(view.viewType == PmsMobileView.PmsMobileViewType.ALLACTIVE) {
                         if(room.isActiveOnDay(date)) {
                             toBeAdded = true;
@@ -6333,5 +6334,48 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         content += dumpBooking(booking);
         messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
     }
+
+    @Override
+    public LinkedList<TimeRepeaterDateRange> generateRepeatDateRanges(TimeRepeaterData data) {
+        TimeRepeater generator = new TimeRepeater();
+        return generator.generateRange(data);
+    }
+
+    @Override
+    public void addAddonToRoom(String productId, String pmsRoomId, Integer count, Date date, Double price) {
+        
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        
+        PmsBookingAddonItem toAdd = null;
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.productId.equals(productId) && pmsInvoiceManager.isSameDay(item.date, date)) {
+                toAdd = item;
+                break;
+            }
+        }
+        
+        if(toAdd == null) {
+            PmsBookingAddonItem original = getAddonFromProductId(productId);
+            toAdd = createAddonToAdd(original, date);
+            room.addons.add(toAdd);
+        }
+        
+        toAdd.count = count;
+        toAdd.price = price;
+        
+        saveBooking(booking);
+    }
+
+    private PmsBookingAddonItem getAddonFromProductId(String productId) {
+        for(PmsBookingAddonItem item : getConfigurationSecure().addonConfiguration.values()) {
+            if(item.productId.equals(productId)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    
 
 }

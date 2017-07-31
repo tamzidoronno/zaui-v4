@@ -993,7 +993,7 @@ public class SedoxProductManager extends ManagerBase implements ISedoxProductMan
         }
 
         String loggedUserId = sedoxMagentoIntegration.login(emailAddress, password);
-
+      
         if (loggedUserId != null) {
             User user = userManager.forceLogon(loggedUserId);
 

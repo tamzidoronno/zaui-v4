@@ -30,8 +30,8 @@ public class PmsStatistics implements Serializable {
             
             total.roomsRentedOut += entry.roomsRentedOut;
             total.spearRooms += entry.spearRooms;
-            total.avgPrice += entry.avgPrice;
             total.coverage += entry.coverage;
+            total.guestCount += entry.guestCount;
             sleepoverstats.nighsSlept += entry.roomsRentedOut;
             
             sumarizeGuests(entry);
@@ -40,7 +40,7 @@ public class PmsStatistics implements Serializable {
         
         total.bugdet = budget;
         total.coverage = total.coverage / entries.size();
-        total.avgPrice = total.avgPrice / total.roomsRentedOut;
+        total.avgPrice = total.totalPrice / total.roomsRentedOut;
         
         
         entries.add(total);

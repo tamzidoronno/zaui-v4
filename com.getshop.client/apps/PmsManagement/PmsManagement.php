@@ -21,6 +21,98 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function addAdvancedAddons() {
+        $addonId = $_POST['data']['addonId'];
+        $pmsRoomId = $_POST['data']['roomid'];
+        
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $addonToUse = null;
+        foreach($config->addonConfiguration as $addonConf) {
+            if($addonConf->addonId == $addonId) {
+                $addonToUse = $addonConf;
+                break;
+            }
+        }
+        
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "rowindex_") && $val == "true") {
+                $index = str_replace("rowindex_", "", $key);
+                $count = $_POST['data']['count_'.$index];
+                $price = $_POST['data']['price_'.$index];
+                $date = $this->convertToJavaDate(strtotime($_POST['data']['date_'.$index]));
+                $this->getApi()->getPmsManager()->addAddonToRoom($this->getSelectedName(), $addonToUse->productId, $pmsRoomId, $count, $date, $price);
+            }
+        }
+        
+        $this->showBookingInformation();
+    }
+    
+    public function loadEditCartItemOnOrder() {
+        $this->includefile("editcartitemonexistingorder");
+    }
+    
+    public function deleteItemFromCart() {
+        $items = array();
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        foreach($order->cart->items as $item) {
+            if($item->cartItemId == $_POST['data']['cartitemid']) {
+                continue;
+            }
+            $items[] = $item;
+        }
+        $order->cart->items = $items;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
+    public function updateCartItemRow() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        foreach($order->cart->items as $item) {
+            if($item->cartItemId != $_POST['data']['cartitemid']) {
+                continue;
+            }
+            
+            $total = 0;
+            $count = 0;
+            //Update price matrix.
+            foreach($_POST['data'] as $key => $val) {
+                if(stristr($key, "matrixprice_")) {
+                    $day = str_replace("matrixprice_", "", $key);
+                    $item->priceMatrix->{$day} = $val;
+                    $total += $val;
+                    $count++;
+                }
+            }
+            
+            //Update addon prices.
+            foreach($_POST['data'] as $key => $val) {
+                if(stristr($key, "itemcount_")) {
+                    $addonId = str_replace("itemcount_", "", $key);
+                    $count += $val;
+                    $itemprice = $_POST['data']['itemprice_'.$addonId];
+                    $total += ($itemprice * $val);
+                    
+                    foreach($item->itemsAdded as $addonItem) {
+                        if($addonItem->addonId == $addonId) {
+                            $addonItem->count = $val;
+                            $addonItem->price = $itemprice;
+                        }
+                    }
+                }
+            }
+            
+            if($count > 0) {
+                $item->product->price = $total / $count;
+                $item->count = $count;
+            }
+            
+            $item->product->additionalMetaData = $_POST['data']['roomnumber'];
+            $item->product->metaData = $_POST['data']['roomname'];
+            $item->product->name = $_POST['data']['productname'];
+        }
+        
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
     public function connectItemsToRoom() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         
@@ -228,6 +320,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $this->getApi()->getPmsManager()->saveConferenceData($this->getSelectedName(), $conferenceData);
     }
+    
     public function sendBookingInformationRadioButton(){
         $bookingid = $_POST['data']['bookingid'];
         $radio = $_POST['data']['radiobutton'];
@@ -1538,22 +1631,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
             
             $row[] = $entry->spearRooms;
             $row[] = $entry->roomsRentedOut;
-            
-            $guests = 0;
-            foreach($entry->guests as $roomId => $gcount) {
-                $guests += $gcount;
-            }
-            $row[] = $guests;
+            $row[] = $entry->guestCount;
             $row[] = $entry->avgPrice;
             $row[] = $entry->totalPrice;
             $row[] = $entry->bugdet;
             $row[] = $entry->coverage;
             $matrix[] = $row;
         }
-//        echo "<pre>";
-//        print_r($matrix);
-//        echo "</pre>";
-        
         echo json_encode($matrix);
     }
     
@@ -1820,7 +1904,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 }
             }
             if(isset($_POST['data']['clicksubmit']) && $_POST['data']['clicksubmit'] == "setPeriodePrice") {
-                $this->updatePriceMatrixWithPeriodePrices($room);
+                if($_POST['data']['roomid'] == $room->pmsBookingRoomId) {
+                    $this->updatePriceMatrixWithPeriodePrices($room);
+                }
             }
         }
         
@@ -3557,6 +3643,128 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
         $this->config = $config;
         return $this->config;
+    }
+    
+    public function startAddonToRoom() {
+        $this->includefile("addaddonstoroomstep2");
+    }
+    
+    public function loadAddonList() {
+        $this->includefile("addaddonstoroomstep1");
+    }
+    public function loadAddonsToBeAddedPreview() {
+        $this->includefile("addaddonstoroomstepDatePreview");
+    }
+    
+
+    public function sortConfig($addonConfigs, $products) {
+        $sortArray = array();
+        foreach($addonConfigs as $addonToPrint) {
+            /* @var $addonToPrint core_pmsmanager_PmsBookingAddonItem */
+            if(!isset($products[$addonToPrint->productId])) {
+                continue;
+            }
+            $name = $products[$addonToPrint->productId]->name;
+            $sortArray[$addonToPrint->addonId] = $name;
+        }
+        asort($sortArray);
+        $result = array();
+        foreach($sortArray as $addonId => $name) {
+            foreach($addonConfigs as $item) {
+                if($item->addonId == $addonId) {
+                    $result[] = $item;
+                }
+            }
+        }
+        
+        return $result;
+    }
+
+    public function loadAddonToAddToRoomPreview() {
+        $list = "";
+    }
+
+    public function getDatesToAdd($start, $end, $room) {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $addonItem = null;
+        foreach($config->addonConfiguration as $id => $item) {
+            if($item->addonId == $_POST['data']['addonId']) {
+                $addonItem = $item;
+            }
+        }
+        
+        $dates = array();
+        $result = array();
+        
+        if($_POST['data']['periode_selection'] == "startofstay") {
+            $dates[] = $start;
+        }
+        if($_POST['data']['periode_selection'] == "endofstay") {
+            $dates[] = $end;
+        }
+        if($_POST['data']['periode_selection'] == "single") {
+            $dates[] = time();
+        }
+        if($_POST['data']['periode_selection'] == "repeat_weekly") {
+            $data = new \stdClass();
+            $data->firstEvent = new \stdClass();
+            $data->firstEvent->start = $this->convertToJavaDate($start+60);
+            $data->firstEvent->end = $this->convertToJavaDate($start+60);
+            $data->repeatPeride = 1;
+            $data->endingAt = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59", $end)));
+            
+            $data->repeatMonday = $_POST['data']['repeat_mon'] == "true";
+            $data->repeatTuesday = $_POST['data']['repeat_tue'] == "true";
+            $data->repeatWednesday = $_POST['data']['repeat_wed'] == "true";
+            $data->repeatThursday = $_POST['data']['repeat_thu'] == "true";
+            $data->repeatFriday = $_POST['data']['repeat_fri'] == "true";
+            $data->repeatSaturday = $_POST['data']['repeat_sat'] == "true";
+            $data->repeatSunday = $_POST['data']['repeat_sun'] == "true";
+            $data->repeatEachTime = 1;
+            $data->avoidFirstEvent = true;
+            
+            $res = $this->getApi()->getPmsManager()->generateRepeatDateRanges($this->getSelectedName(), $data);
+            foreach($res as $r) {
+                $dates[] = strtotime($r->start);
+            }
+        }
+        if($_POST['data']['periode_selection'] == "repeat_monthly") {
+            $data = new \stdClass();
+            $data->firstEvent = new \stdClass();
+            $data->firstEvent->start = $this->convertToJavaDate($start);
+            $data->firstEvent->end = $this->convertToJavaDate($start);
+            $data->repeatPeride = 2;
+            $data->endingAt = $this->convertToJavaDate($end);
+            
+            $res = $this->getApi()->getPmsManager()->generateRepeatDateRanges($this->getSelectedName(), $data);
+            foreach($res as $r) {
+                $dates[] = strtotime($r->start);
+            }
+            
+        }
+        if($_POST['data']['periode_selection'] == "alldays") {
+            $toAdd = $start;
+            while(true) {
+                $dates[] = $toAdd;
+                $toAdd = strtotime('+1 day', $toAdd);
+                if($toAdd > $end) {
+                    break;
+                }
+            }
+        }
+        
+        
+        foreach($dates as $date) {
+            $object = new \stdClass();
+            $object->count = $addonItem->count;
+            if($_POST['data']['isperguest'] == "true") {
+                $object->count = $room->numberOfGuests;
+            }
+            $object->price = $addonItem->price;
+            $result[$date] = $object;
+        }
+        
+        return $result;
     }
 
 }

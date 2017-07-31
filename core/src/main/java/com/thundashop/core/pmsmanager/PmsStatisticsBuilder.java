@@ -255,7 +255,8 @@ class PmsStatisticsBuilder {
         }
         totalGuests += room.numberOfGuests;
         entry.guests.put(countryCode, totalGuests);
-        
+        entry.guestCount += room.numberOfGuests;
+
         if(booking.isConference) {
             int confGuests = 0;
             if(entry.guestsConference.containsKey(countryCode)) {

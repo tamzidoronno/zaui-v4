@@ -165,7 +165,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         }
         
         //Include addons which is included in room price.
-        if(!room.deleted) {
+        if(!room.deleted || currentBooking.nonrefundable) {
             Calendar cal = Calendar.getInstance();
             for(PmsBookingAddonItem item : room.addons) {
                 if(item.isIncludedInRoomPrice) {
@@ -448,9 +448,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             }
         }
         
-        if(room.pmsBookingRoomId.equals("75009239-1681-4ae7-b2ab-9faeb9b05438")) {
-            System.out.println("TEST");
-        }
         Type type = new TypeToken<HashMap<String, PmsBookingAddonItem>>(){}.getType();
       
         String copy = gson.toJson(addonsToAdd);
@@ -499,8 +496,8 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             items.add(item);
             result.put(item.productId, items);
         }
-        
-        
+
+
         return result;
     }
 
@@ -511,24 +508,24 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         if(addonOnRoom == null || addonOnRoom.count == null || addonOnRoom.price == null) {
             return;
         }
-        
         if(addonOnRoom.count >= addonAlreadyBilled.count && addonAlreadyBilled.price.equals(addonOnRoom.price)) {
-            addonOnRoom.count -= addonAlreadyBilled.count;
+            if(addonOnRoom.price > 0.0) {
+                addonOnRoom.count -= addonAlreadyBilled.count;
+            } else {
+                addonOnRoom.count += addonAlreadyBilled.count;
+            }
         } else if(addonOnRoom.count != null && addonOnRoom.count.equals(0)) {
-            addonOnRoom.count = 1;
+            addonOnRoom.count = addonAlreadyBilled.count;
             addonOnRoom.price = addonAlreadyBilled.price * -1;
         } else {
             double totalBilled = addonAlreadyBilled.count * addonAlreadyBilled.price;
             double totalOnRoom = addonOnRoom.count * addonOnRoom.price;
-            
             double newPrice = 0;
-            
             if (addonOnRoom.count != null && !addonOnRoom.count.equals(0)) {
                 newPrice = (totalOnRoom - totalBilled) / addonOnRoom.count;
             }
             
             addonOnRoom.price = newPrice;
-        
         }
     }
 

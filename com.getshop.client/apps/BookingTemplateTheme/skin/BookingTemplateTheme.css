@@ -67,13 +67,15 @@ body {font-family: "Exo", "open-sans";color:#555;}
     background-color:#2d2d2d;/*Fallback*/
     background-color:rgba(45,45,45,1)
 }
+/*-------------------*/
+
 .BookingEngineManagement .addGroupOptions input,
 .PmsManagement .pmsinput{padding:3px;}
 
 .PmsManagement .bookinginfo select,
 .PmsManagement .bookinginfo input{font-size:14px;border:1px solid #bdbdbd;background-color:#fff;}
 .PmsManagement .pmsbutton[gstype="submitToInfoBox"],
-.PmsManagement .pmsbutton.closeadduser{line-height:15px;height:15px;font-size: 14px;max-width: 90px;box-sizing: initial !important;}
+.PmsManagement .pmsbutton.closeadduser{line-height:15px;height:15px;font-size: 14px;max-width: 100px;box-sizing: initial !important;}
 .PmsManagement .pmsbutton.showlog{background-color: #146da6 !important;color:#fff !important;}
 .PmsManagement .tabs .tab{border-color:#fff;margin-right:5px;border-radius: 0;background-color:#146da6;color:#fff;font-weight:700;letter-spacing:1.5px;}
 .PmsManagement .tabs .tab.selected{border-color:#146da6;color:#146da6;}
@@ -87,4 +89,3 @@ body {font-family: "Exo", "open-sans";color:#555;}
 .PmsConfiguration #createproductinput{position:relative;top:-1px;padding:5px;}
 .PmsConfiguration .configentry select[gsname="locktype"]{width:172px;}
 .PmsConfiguration .configentry select[gsname="bookingProfile"]{width:125px;}
-/*-------------------*/

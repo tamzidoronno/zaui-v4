@@ -263,7 +263,6 @@
     float: right;
     font-size: 27px;
     border-left: 1px solid #fff;
-    margin-left: 15px;
     padding-left: 15px;
     padding-right: 20px;
     cursor: pointer;
@@ -374,3 +373,10 @@
 }
 .PmsManagement .changeintervalrow,
 .PmsManagement .statsorderfilter{margin-top:5px;}
+
+@media only all and (max-width:1150px){
+    
+}
+@media only all and (max-width:800px){
+    
+}

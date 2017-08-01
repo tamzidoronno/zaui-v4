@@ -172,7 +172,7 @@ app.PmsManagement = {
             $('.managementviewfilter').css('display','inline-block');
         }
         else{
-            $('.managementviewfilter').slideUp()();
+            $('.managementviewfilter').slideUp();
             $('.managementviewfilter').css('display','none');
         }
     },

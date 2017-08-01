@@ -1327,14 +1327,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     @Override
-    public void sendRecieptOrInvoice(String orderId, String email, String bookingId) {
+    public String sendRecieptOrInvoice(String orderId, String email, String bookingId) {
         Order order = orderManager.getOrderSecure(orderId);
-        order.sentToCustomer = true;
-        order.closed = true;
         orderManager.saveObject(order);
-        
+        String res = "";
         if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("sendregning")) {
-            sendRegningManager.sendOrder(orderId, email);
+            res = sendRegningManager.sendOrder(orderId, email);
         } else {
             pmsManager.setOrderIdToSend(orderId);
             pmsManager.setEmailToSendTo(email);
@@ -1344,6 +1342,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 pmsManager.doNotification("sendinvoice", bookingId);
             }
         }
+        
+        if(res.isEmpty()) {
+            order.closed = true;
+            order.sentToCustomer = true;
+            order.sentToCustomerDate = new Date();
+            order.sentToEmail = email;
+            orderManager.saveOrder(order);
+        }
+        return res;
     }
 
     public String createOrder(String bookingId, NewOrderFilter filter) {

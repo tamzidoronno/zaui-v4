@@ -521,8 +521,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(filter != null && filter.searchWord != null) {
             filter.searchWord = filter.searchWord.trim();
         }
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        cal.set(java.util.Calendar.YEAR, 2016);
         
         if (!initFinalized) {
             finalizeList(new ArrayList(bookings.values()));
@@ -1254,6 +1252,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 prefix = prefixToSend;
                 phoneToSend = null;
             }
+            if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+                Order order = orderManager.getOrderSecure(orderIdToSend);
+                if(order != null) {
+                    order.sentToPhone = phone;
+                    order.sentToPhonePrefix = prefix;
+                }
+            }
+            
             if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
                 messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
             } else {
@@ -1291,6 +1297,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 Order order = orderManager.getOrderSecure(orderIdToSend);
                 if(order != null) {
                     order.recieptEmail = recipientEmail;
+                    order.sentToCustomerDate = new Date();
+                    order.sentToEmail = recipientEmail;
                     orderManager.saveOrder(order);
                 }
             }
@@ -1333,6 +1341,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         Order order = orderManager.getOrderSecure(orderIdToSend);
                         if(order != null) {
                             order.recieptEmail = email;
+                            
+                            order.sentToCustomerDate = new Date();
+                            order.sentToEmail = email;
                             orderManager.saveOrder(order);
                         }
                     }

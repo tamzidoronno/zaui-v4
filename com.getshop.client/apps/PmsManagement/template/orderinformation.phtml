@@ -304,7 +304,14 @@ if($booking->orderIds) {
                 }
             }
         }
-        
+        $title = "";
+        if(isset($order->sentToEmail) && $order->sentToEmail) {
+            $title .= " email: " . $order->sentToEmail;
+        }
+        if(isset($order->sentToPhone) && $order->sentToPhone) {
+            $title .= " phone: (" . $order->sentToPhonePrefix . ") " . $order->sentToPhone;
+        }
+        if($title) { echo "<br><div title='$title'><i class='fa fa-share'></i>" . date("d.m.Y H:i", strtotime($order->sentToCustomerDate)) . "</div>"; }
         echo "</td>";
         echo "<td align='center'>";
 

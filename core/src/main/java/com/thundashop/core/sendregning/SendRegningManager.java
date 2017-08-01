@@ -52,9 +52,8 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         }
         
         if(order.sendRegningId > 0) {
-            System.out.println("Do not send this invoice, resend it");
             resendInvoice(order.sendRegningId, email);
-            return "Resending";
+            return "";
         } else {
             if(createInvoiceAtSendRegning(orderId, email) != null) {
                 return "";
@@ -242,8 +241,32 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
     }
 
     private boolean validateOrderToMakeSureItsOkay(Order order) {
-        //Adress, postcode, city can not be empty
-        //Tax group need to be correct.
+        User user = userManager.getUserById(order.userId);
+        if(user.address == null) {
+            errorMessage += "Adress object can not be empty";
+            return false;
+        }
+        if(user.address.address == null || user.address.address.trim().isEmpty()) {
+            errorMessage += "Adress field can not be empty";
+            return false;
+        }
+        if(user.address.city == null || user.address.city.trim().isEmpty()) {
+            errorMessage += "City field can not be empty";
+            return false;
+        }
+        if(user.address.postCode == null || user.address.postCode.trim().isEmpty()) {
+            errorMessage += "Postal code can not be empty";
+            return false;
+        }
+        
+        for(CartItem item : order.cart.getItems()) {
+            int rate = getTaxRate(item);
+            if(rate != 0 && rate != 10 && rate != 15 && rate != 25) {
+                errorMessage += "Tax rate is not set correctly for product: " + item.getProduct().name;
+                return false;
+            }
+        }
+        
         return true;
     }
 }

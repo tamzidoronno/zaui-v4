@@ -53,8 +53,6 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
         </tr>
         <?
         foreach ($stats->entries as $entry) {
-//            echo "<pre>";
-//            print_r($entry);
             $included = $entry->roomsIncluded;
             $included = json_encode($included);
             

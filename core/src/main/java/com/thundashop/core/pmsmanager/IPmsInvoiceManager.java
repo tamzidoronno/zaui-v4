@@ -25,7 +25,7 @@ public interface IPmsInvoiceManager {
     public void clearOrder(String bookingId, String orderId);
 
     @Administrator
-    public void sendRecieptOrInvoice(String orderId, String email, String bookingId);
+    public String sendRecieptOrInvoice(String orderId, String email, String bookingId);
     
     @Administrator
     public String createOrder(String bookingId, NewOrderFilter filter);
@@ -83,7 +83,6 @@ public interface IPmsInvoiceManager {
     public boolean isRoomPaidFor(String pmsRoomId);
     
     public List<PmsSubscriptionOverview> getSubscriptionOverview(Date start, Date end); 
-    
     
    public String createRegisterCardOrder(String item);
 }

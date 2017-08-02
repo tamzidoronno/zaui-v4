@@ -103,6 +103,10 @@ class Contact extends \WebshopApplication implements \Application {
             $this->setConfigurationSetting("contactNameField", $_POST['data']['nameTitle']);
         }
         
+        if(isset($_POST['data']['phoneTitle'])){
+            $this->setConfigurationSetting("phoneTitle", $_POST['data']['phoneTitle']);
+        }
+        
         if (isset($_POST['data']['emailTitle'])) {
             $this->setConfigurationSetting("emailTitle", $_POST['data']['emailTitle']);
         }
@@ -142,7 +146,7 @@ class Contact extends \WebshopApplication implements \Application {
     public function getFields() {
         $fields = [];
         $fields['name'] = $this->getNameTitle();
-        $fields['phone'] = $this->__w("Phone");
+        $fields['phone'] = $this->getPhoneTitle();
         $fields['email'] = $this->getEmailTitle();
         
         $config = $this->getContactConfig();
@@ -206,6 +210,14 @@ class Contact extends \WebshopApplication implements \Application {
             return $this->__w("My name is:");
         }
         
+        return $name;
+    }
+    public function getPhoneTitle(){
+        $name = $this->getConfigurationSetting("phoneTitle");
+        
+        if(!$name){
+            return $this->__w("Phone");
+        }
         return $name;
     }
     

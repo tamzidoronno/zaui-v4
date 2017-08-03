@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -39,6 +40,10 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
     @Autowired
     StoreApplicationPool storeApplicationPool;
     
+    @Autowired
+    private FrameworkConfig frameworkConfig;
+    
+    
     String root = "https://www.sendregning.no/";
     private String errorMessage = "";
     
@@ -50,6 +55,9 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
             return errorMessage;
         }
         
+        if(!frameworkConfig.productionMode) {
+            order.sendRegningId = 0;
+        }
         if(order.sendRegningId > 0) {
             resendInvoice(order.sendRegningId, email);
             return "";
@@ -134,7 +142,7 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         int i = 1;
         for(CartItem cartItem : order.cart.getItems()) {
             NewInvoiceItem item = new NewInvoiceItem();
-            item.description = cartItem.getProduct().name;
+            item.description = convertToIso(cartItem.getProduct().name);
             item.number = i;
             item.quantity = (double)cartItem.getCount();
             item.productCode = cartItem.getProduct().accountingSystemId;
@@ -189,11 +197,16 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         String usernamepassword = sendRegningApp.getSetting("email") + ":" + sendRegningApp.getSetting("password");
         String originatorid = sendRegningApp.getSetting("originatorid");
         
+        if(!frameworkConfig.productionMode) {
+            usernamepassword = "pal@getshop.com:1122T3st";
+            originatorid = "79732";
+        }
+        
         HashMap<String, String> headerData = new HashMap();
         headerData.put("Originator-Id", originatorid);
         
         try {
-            String res = webManager.htmlPostBasicAuth(url, data, true, "UTF-8", usernamepassword, "Basic", true, type);
+            String res = webManager.htmlPostBasicAuth(url, data, true, "ISO-8859-1", usernamepassword, "Basic", true, type);
             return res;
         }catch(Exception e) {
             e.printStackTrace();
@@ -275,5 +288,9 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         }
         
         return true;
+    }
+
+    private String convertToIso(String text) {
+        return text;
     }
 }

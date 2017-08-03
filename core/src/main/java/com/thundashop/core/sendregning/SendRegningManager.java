@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -142,7 +143,7 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         int i = 1;
         for(CartItem cartItem : order.cart.getItems()) {
             NewInvoiceItem item = new NewInvoiceItem();
-            item.description = convertToIso(cartItem.getProduct().name);
+            item.description = convertToIso(cartItem, order);
             item.number = i;
             item.quantity = (double)cartItem.getCount();
             item.productCode = cartItem.getProduct().accountingSystemId;
@@ -290,7 +291,38 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         return true;
     }
 
-    private String convertToIso(String text) {
-        return text;
+    private String convertToIso(CartItem item, Order order) {
+        
+        String lineText = "";
+        String startDate = "";
+        if(item.startDate != null) {
+            DateTime start = new DateTime(item.startDate);
+            startDate = start.toString("dd.MM.yy");
+        }
+
+        String endDate = "";
+        if(item.endDate != null) {
+            DateTime end = new DateTime(item.endDate);
+            endDate = end.toString("dd.MM.yy");
+        }
+        
+        String startEnd = "";
+        if(startDate != null && endDate != null && !endDate.isEmpty() && !startDate.isEmpty()) {
+            startEnd = " (" + startDate + " - " + endDate + ")";
+        }
+        
+        if(!item.getProduct().additionalMetaData.isEmpty()) {
+            lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + startEnd;
+        } else {
+            String mdata = item.getProduct().metaData;
+            if(mdata != null && mdata.startsWith("114")) {
+                mdata = "";
+            } else {
+                mdata = ", " + mdata;
+            }
+            lineText = item.getProduct().name + mdata + startEnd;
+        }
+                
+        return lineText;
     }
 }

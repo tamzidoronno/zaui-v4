@@ -130,15 +130,17 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
 
     private List<NewInvoiceItem> createItemsList(Order order) {
         List<NewInvoiceItem> items = new ArrayList();
+        int i = 0;
         for(CartItem cartItem : order.cart.getItems()) {
             NewInvoiceItem item = new NewInvoiceItem();
             item.description = cartItem.getProduct().name;
-            item.number = cartItem.getCount();
+            item.number = i;
             item.quantity = (double)cartItem.getCount();
             item.productCode = cartItem.getProduct().accountingSystemId;
             item.taxRate = getTaxRate(cartItem);
             item.unitPrice = cartItem.getProduct().price;
             items.add(item);
+            i++;
         }
         return items;
     }

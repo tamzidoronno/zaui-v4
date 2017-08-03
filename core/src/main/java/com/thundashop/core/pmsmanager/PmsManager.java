@@ -521,8 +521,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(filter != null && filter.searchWord != null) {
             filter.searchWord = filter.searchWord.trim();
         }
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        cal.set(java.util.Calendar.YEAR, 2016);
         
         if (!initFinalized) {
             finalizeList(new ArrayList(bookings.values()));
@@ -1254,6 +1252,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 prefix = prefixToSend;
                 phoneToSend = null;
             }
+            if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+                Order order = orderManager.getOrderSecure(orderIdToSend);
+                if(order != null) {
+                    order.sentToPhone = phone;
+                    order.sentToPhonePrefix = prefix;
+                }
+            }
+            
             if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
                 messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
             } else {
@@ -1291,6 +1297,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 Order order = orderManager.getOrderSecure(orderIdToSend);
                 if(order != null) {
                     order.recieptEmail = recipientEmail;
+                    order.sentToCustomerDate = new Date();
+                    order.sentToEmail = recipientEmail;
                     orderManager.saveOrder(order);
                 }
             }
@@ -1333,6 +1341,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         Order order = orderManager.getOrderSecure(orderIdToSend);
                         if(order != null) {
                             order.recieptEmail = email;
+                            
+                            order.sentToCustomerDate = new Date();
+                            order.sentToEmail = email;
                             orderManager.saveOrder(order);
                         }
                     }
@@ -3114,7 +3125,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     
                     if(!hasBeenWarned && (booking.channel != null && !booking.channel.isEmpty())) {
                         messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text + "<br><bR><br>booking dump:<br>" + dumpBooking(booking), null);
-                        warnStoreAboutOverBooking(booking);
+                        warnStoreAboutOverBooking(booking, text);
                     }
                 }
                 gsTiming("removed when full maybe");
@@ -6328,10 +6339,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
     
-    private void warnStoreAboutOverBooking(PmsBooking booking) {
+    private void warnStoreAboutOverBooking(PmsBooking booking, String text) {
         String email = getStoreEmailAddress();
-        String content = "Possible overbooking happened:<br>";
-        content += dumpBooking(booking);
+        String content = "Possible overbooking happened:<br>" + text;
         messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
     }
 

@@ -37,7 +37,9 @@ $booking = $this->getSelectedBooking();
             echo "<div style='border: solid 1px #bbb;border-top: 0px; padding: 10px; margin-bottom: 10px;'>";
             foreach($items as $item) {
                 echo "<div style='margin-top:2px; clear:both;'></div>";
-                echo "<i class='fa fa-trash-o deleteitemrowfromorder' title='Delete this row' style='cursor:pointer;' cartitemid='".$item->cartItemId."' orderid='".$order->id."'></i> ";
+                if(!@$order->closed) {
+                    echo "<i class='fa fa-trash-o deleteitemrowfromorder' title='Delete this row' style='cursor:pointer;' cartitemid='".$item->cartItemId."' orderid='".$order->id."'></i> ";
+                }
                 /* @var $item core_cartmanager_data_CartItem */
                 if(isset($item->startDate) && $item->startDate) {
                     echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->startDate)) . " - </span> ";

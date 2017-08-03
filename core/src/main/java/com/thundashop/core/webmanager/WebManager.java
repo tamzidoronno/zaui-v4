@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,7 +31,7 @@ import org.springframework.stereotype.Component;
 public class WebManager extends ManagerBase implements IWebManager {
     
     private final String USER_AGENT = "Mozilla/5.0";
-    
+    private HashMap<String, String> latestResponseHeader = new HashMap();
     
     
     @Override
@@ -121,6 +123,19 @@ public class WebManager extends ManagerBase implements IWebManager {
             while((responseLine = responseStream.readLine()) != null) {
                 responseBuffer.append(responseLine);
             }
+            latestResponseHeader = new HashMap();
+            try {
+                for (Map.Entry<String, List<String>> entries : connection.getHeaderFields().entrySet()) {    
+                    String values = "";
+                    for (String value : entries.getValue()) {
+                        values += value + ",";
+                    }
+                    latestResponseHeader.put(entries.getKey(), values);
+                }
+            }catch(Exception e) {
+                logPrintException(e);
+            }
+            
             return responseBuffer.toString();
         }catch(IOException ex) {
             BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
@@ -137,4 +152,9 @@ public class WebManager extends ManagerBase implements IWebManager {
             throw ex;
         }    
     }
+    
+    public HashMap<String, String> getLatestResponseHeader() {
+        return latestResponseHeader;
+    }
+    
 }

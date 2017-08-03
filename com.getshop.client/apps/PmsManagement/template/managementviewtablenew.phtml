@@ -126,6 +126,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
     
     <?php
     $tableArray = array();
+    $totalGuests = 0;
     foreach((array)$rooms as $room) {
         $comments = "";
         if(isset($room->bookingComments)) {
@@ -178,6 +179,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
                 if($guest->phone) { $row['visitor'] .= "<span style='float:right;' class='secondary_text'>+" . $guest->prefix . $guest->phone . "</span>"; }
                 $row['visitor'] .= "<br>";
             }
+            $totalGuests += $room->numberOfGuests;
             $row['visitor'] .= "<div style='clear:both;'></div><span style='float:right;' class='secondary_text'>" .$room->numberOfGuests  . " guests";
             if($room->checkedIn) {
                 $row['visitor'] .= " <i class='fa fa-smile-o' title='Guest has checked in'></i>";
@@ -260,4 +262,11 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         echo "</tr>";
     }
     ?>
+    <tr>
+        <td colspan='1000' style='text-align:center;'>
+            <br>
+            Antall rader: <?php echo sizeof($tableArray); ?>, antall gjester: <?php echo $totalGuests; ?>
+            <br>
+            <br>
+        </td>
 </table>

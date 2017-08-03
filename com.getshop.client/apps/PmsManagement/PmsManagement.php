@@ -701,10 +701,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $email = $_POST['data']['email'];
         $bookingId = $_POST['data']['bookingid'];
         $orderid = $_POST['data']['orderid'];
-        $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderid, $email, $bookingId);
+        $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderid, $email, $bookingId);
 
         echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
-        echo "<i class='fa fa-info'></i> Invoice / reciept has been sent.";
+        if(!$res) {
+            echo "<i class='fa fa-info'></i> Invoice / reciept has been sent.";
+        } else {
+            echo "<i class='fa fa-info'></i> Invoice / reciept where <b>NOT</b> sent due to the following:" . $res;
+        }
         echo "</div>";
         echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
 
@@ -3339,7 +3343,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $searchtypes['checkin'] = "Checking in";
         $searchtypes['checkout'] = "Checking out";
         $searchtypes['inhouse'] = "Inhouse";
-        $searchtypes['deleted'] = "Deleted";
         $searchtypes['stats'] = "Coverage";
         $searchtypes['summary'] = "Summary";
         if($config->requirePayments) {
@@ -3614,6 +3617,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach($booking->rooms as $room) {
             if($end == null || $end < strtotime($room->date->end)) {
                 $end = strtotime($room->date->end);
+            }
+            foreach($room->addons as $addon) {
+                if($end == null || $end < strtotime($addon->date)) {
+                    $end = strtotime($addon->date);
+                }
             }
         }
         

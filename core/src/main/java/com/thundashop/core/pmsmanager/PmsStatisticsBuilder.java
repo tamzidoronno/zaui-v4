@@ -119,8 +119,6 @@ class PmsStatisticsBuilder {
                             addUniqueGuests(entry, room, booking);
                             roomsAddedForGuests.add(room.pmsBookingRoomId);
                         }
-                    } else {
-                        System.out.println("Room not active on day: " + cal.getTime() + " - " + room.date.start + " - " + room.date.end);
                     }
                 }
                  for(PmsBookingRooms room : booking.getActiveRooms()) {

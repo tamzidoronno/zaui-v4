@@ -2,7 +2,6 @@ package com.thundashop.core.sendregning;
 
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
-import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -98,9 +97,11 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         inv.yourReference = "";
         inv.dueDate = formatDate(createDueDate(order));
         inv.recipient = createInvoiceRecipient(user);
-        NewInvoiceShipmentEmail e = new NewInvoiceShipmentEmail();
-        e.address = email;
-        inv.shipment.email.add(e);
+        if(email != null && email.contains("@")) {
+            NewInvoiceShipmentEmail e = new NewInvoiceShipmentEmail();
+            e.address = email;
+            inv.shipment.email.add(e);
+        }
         return inv;
     }
 
@@ -130,7 +131,7 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
 
     private List<NewInvoiceItem> createItemsList(Order order) {
         List<NewInvoiceItem> items = new ArrayList();
-        int i = 0;
+        int i = 1;
         for(CartItem cartItem : order.cart.getItems()) {
             NewInvoiceItem item = new NewInvoiceItem();
             item.description = cartItem.getProduct().name;
@@ -234,9 +235,13 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         String url = root + "/invoices/"+sendRegningId+"/send";
         
         NewInvoiceShipment reciept = new NewInvoiceShipment();
-        NewInvoiceShipmentEmail mail = new NewInvoiceShipmentEmail();
-        mail.address = email;
-        reciept.email.add(mail);
+        if(email != null && email.contains("@")) {
+            NewInvoiceShipmentEmail mail = new NewInvoiceShipmentEmail();
+            mail.address = email;
+            reciept.email.add(mail);
+        } else {
+            reciept.email = null;
+        }
         
         Gson gson = new Gson();
         pushMessage(url, gson.toJson(reciept), "POST");

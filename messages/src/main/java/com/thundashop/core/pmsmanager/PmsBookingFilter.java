@@ -26,6 +26,7 @@ public class PmsBookingFilter extends DataCommon {
     
     
     public String filterType;
+    public String filterSubType;
     public String searchWord;
     public Boolean needToBeConfirmed = false;
     public Boolean includeDeleted = false;

@@ -8,6 +8,8 @@ import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import com.thundashop.core.pmseventmanager.PmsEventFilter;
+import com.thundashop.core.usermanager.data.User;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -130,6 +132,12 @@ public interface IPmsManager {
     public void sendSmsToGuest(String guestId, String message);
     
     public List<PmsBooking> getAllBookings(PmsBookingFilter state);
+    
+    @Administrator
+    public Integer getNumberOfCustomers(PmsBookingFilter state);
+    
+    @Administrator
+    public List<PmsCustomerRow> getAllUsers(PmsBookingFilter filter);
     
     public Date getEarliestEndDate(String pmsBookingRoomId);
     

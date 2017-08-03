@@ -1574,6 +1574,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function setQuickFilter() {
+        if(stristr($_POST['data']['type'], "subtype_")) {
+            $filter = $this->getSelectedFilter();
+            $filter->filterSubType = str_replace("subtype_", "", $_POST['data']['type']);
+            $this->setCurrentFilter($filter);
+            return;
+        }
         $this->emptyfilter();
         if(stristr($_POST['data']['type'], "defined_")) {
             $filterName = str_replace("defined_","", $_POST['data']['type']);
@@ -1585,7 +1591,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->filterType = $_POST['data']['type'];
             $filter->startDate = $this->convertToJavaDate(time());
             $filter->endDate = $this->convertToJavaDate(time());
-
             if($filter->filterType == "stats" || $filter->filterType == "orderstats") {
                 $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime($filter->startDate))));
                 $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime($filter->endDate))));
@@ -1756,11 +1761,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function setFilter() {
+        $current = $this->getSelectedFilter();
+        
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 00:00"));
         $filter->endDate = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " 23:59"));
         $filter->filterType = $_POST['data']['filterType'];
         $filter->state = 0;
+        $filter->filterSubType = $current->filterSubType;
         $filter->includeVirtual = $_POST['data']['include_virtual_filter'] == "true";
         $filter->searchWord = $_POST['data']['searchWord'];
         if(isset($_POST['data']['channel'])) {
@@ -2725,7 +2733,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function includeManagementViewResult() {
         $config = $this->getConfig();
         $filter = $this->getSelectedFilter();
-        if($filter->filterType == "stats") {
+        if($filter->filterSubType == "customerlist") {
+            $this->includefile("customertable");
+        } else if($filter->filterType == "stats") {
             $this->includefile("statistics");
         } else if($filter->filterType == "summary") {
             if($config->bookingProfile == "conferense") {
@@ -2894,9 +2904,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 }
 
                 $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-                if($_POST['data']['paymenttype'] == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
-                    $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
-                }
+                $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
                 $this->getApi()->getOrderManager()->saveOrder($order);
             }
 
@@ -3347,9 +3355,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $searchtypes['summary'] = "Summary";
         if($config->requirePayments) {
             $searchtypes['orderstats'] = "Order statistics";
-            $searchtypes['invoicecustomers'] = "Invoice customers";
-            $searchtypes['unbilled'] = "Unbilled cust.";
-            $searchtypes['unpaid'] = "Unpaid";
+//            $searchtypes['unbilled'] = "Unbilled cust.";
             $searchtypes['afterstayorder'] = "Order created after stay";
             $searchtypes['unsettled'] = "Bookings with unsettled amounts";
         }
@@ -3748,7 +3754,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             foreach($res as $r) {
                 $dates[] = strtotime($r->start);
             }
-            
         }
         if($_POST['data']['periode_selection'] == "alldays") {
             $toAdd = $start;

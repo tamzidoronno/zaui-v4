@@ -6,12 +6,25 @@ $next = $this->getText("next_page");
 if(!$next) {
     $next = "?page=summary_". $this->getSelectedName();
 }
+
+$time = date('H');
+$startTime = "00"; 
+$endTime = "05";
+
 if($this->getText("displaytopcontinue") == "true") {
+    if($time > $startTime && $time < $endTime){
+        ?>
+        <div class='continue_button_outer'>
+            <div class='continue_button nightWarning' title="<? echo "Klokken er ".date('H:i')." Om du skal sjekke inn i natt må du sørge for å booke fra i går til i dag!";?> " next_page="<? echo $next; ?>"><? echo "<i class='fa fa-exclamation-triangle'></i> ".$this->__w("Continue")." <i class='fa fa-exclamation-triangle'></i>"; ?></div>
+        </div>
+    <?
+    }else{
     ?>
-    <div class='continue_button_outer'>
-        <div class='continue_button' next_page="<? echo $next; ?>"><? echo $this->__w("Continue"); ?></div>
-    </div>
-    <?php
+        <div class='continue_button_outer'>
+            <div class='continue_button' next_page="<? echo $next; ?>"><? echo $this->__w("Continue"); ?></div>
+        </div>
+    <?
+    }
 }
 $numberSelected = 0;
 foreach($rooms as $room) {
@@ -29,11 +42,20 @@ foreach($rooms as $room) {
 }
 
 $this->includefile("productlist1");
+if($time > $startTime && $time < $endTime){
+    ?>
+    <div class='continue_button_outer'>
+        <div class='continue_button nightWarning' title="<? echo "Klokken er ".date('H:i')."  Om du skal sjekke inn i natt må du sørge for å booke fra i går til i dag!";?> " next_page="<? echo $next; ?>"><? echo "<i class='fa fa-exclamation-triangle'></i> ".$this->__w("Continue")." <i class='fa fa-exclamation-triangle'></i>"; ?></div>
+    </div>
+<?
+}else{
 ?>
-<div class='continue_button_outer'>
-    <div class='continue_button' next_page="<? echo $next; ?>"><? echo $this->__w("Continue"); ?></div>
-</div>
-<?php
+    <div class='continue_button_outer'>
+        <div class='continue_button' next_page="<? echo $next; ?>"><? echo $this->__w("Continue"); ?></div>
+    </div>
+<?
+}
+
 if($numberSelected == 0) {
     echo "<script>";
     echo "$('.continue_button').addClass('disabled');";

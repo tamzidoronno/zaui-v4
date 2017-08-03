@@ -234,6 +234,9 @@ function loadPaymentTypeAreas() {
     }
     $('.paymenttypeinfoarea').hide();
     $('.paymenttypeinfoarea[type="'+val+'"]').show();
+    if(val === "SendRegning") {
+        $('.paymenttypeinfoarea[type="InvoicePayment"]').show();
+    }
     $('[gsname="sendpaymentlink"]').attr('checked', $('[gsname="sendpaymentlink"]').is(':visible'));
 }
 loadPaymentTypeAreas();

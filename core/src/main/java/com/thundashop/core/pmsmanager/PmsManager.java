@@ -3125,7 +3125,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     
                     if(!hasBeenWarned && (booking.channel != null && !booking.channel.isEmpty())) {
                         messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text + "<br><bR><br>booking dump:<br>" + dumpBooking(booking), null);
-                        warnStoreAboutOverBooking(booking);
+                        warnStoreAboutOverBooking(booking, text);
                     }
                 }
                 gsTiming("removed when full maybe");
@@ -6339,10 +6339,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
     
-    private void warnStoreAboutOverBooking(PmsBooking booking) {
+    private void warnStoreAboutOverBooking(PmsBooking booking, String text) {
         String email = getStoreEmailAddress();
-        String content = "Possible overbooking happened:<br>";
-        content += dumpBooking(booking);
+        String content = "Possible overbooking happened:<br>" + text;
         messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
     }
 

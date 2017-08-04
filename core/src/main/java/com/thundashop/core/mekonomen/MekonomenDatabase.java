@@ -155,7 +155,9 @@ public class MekonomenDatabase {
             participant.endDate = getDateValue(myrow, 4);
             participant.status = getStringValue(myrow, 5);
             
-            participants.add(participant);
+            if (participant.isCompleted()) {
+                participants.add(participant);
+            }
         }
     }
 

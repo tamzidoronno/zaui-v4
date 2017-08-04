@@ -1577,6 +1577,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if(stristr($_POST['data']['type'], "subtype_")) {
             $filter = $this->getSelectedFilter();
             $filter->filterSubType = str_replace("subtype_", "", $_POST['data']['type']);
+            if(isset($_POST['data']['userid'])) {
+                $filter->userId = $_POST['data']['userid'];
+            } else {
+                $filter->userId = "";
+            }
             $this->setCurrentFilter($filter);
             return;
         }
@@ -2734,7 +2739,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $config = $this->getConfig();
         $filter = $this->getSelectedFilter();
         if($filter->filterSubType == "customerlist") {
-            $this->includefile("customertable");
+            $this->includefile("accountstable");
+        } else if($filter->filterSubType == "accountoverview") {
+            $this->includefile("accountoverview");
         } else if($filter->filterType == "stats") {
             $this->includefile("statistics");
         } else if($filter->filterType == "summary") {

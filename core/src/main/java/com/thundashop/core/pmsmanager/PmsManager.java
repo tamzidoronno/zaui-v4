@@ -6434,6 +6434,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             PmsCustomerRow row = new PmsCustomerRow();
             User user = userManager.getUserById(userId);
             row.customerId = user.customerId;
+            row.userId = user.id;
             row.name = user.fullName;
             row.numberOfBookings = 0;
             if(bookingCount.containsKey(user.id)) {

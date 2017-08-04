@@ -1,0 +1,180 @@
+<?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$filter = $this->getSelectedFilter();
+$user = $this->getApi()->getUserManager()->getUserById($filter->userId);
+
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->userId = $user->id;
+$filter->sorting = "regdate";
+$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+$orders = $this->getApi()->getOrderManager()->getAllOrdersForUser($user->id);
+ 
+
+$states = array();
+$states['0'] = "All";
+$states['1'] = "Created";
+$states['2'] = "Waiting for payment";
+$states['3'] = "Payment failed";
+$states['4'] = "Completed";
+$states['5'] = "Canceled";
+$states['6'] = "Sent";
+$states['7'] = "Payment completed";
+$states['8'] = "Collection failed";
+$states['9'] = "Need collecting";
+$states['10'] = "Send to invoice";
+ ?>
+<div class='userdashboard'>
+    <div><span class='pmsbutton' gstype="clicksubmit" method="setQuickFilter" gsvalue="subtype_customerlist" gsname="type">Back to customerlist</span>
+    <span class='pmsbutton refreshbutton' userid='<?php echo $user->id; ?>'>refresh</span></div>
+    <div>
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel'>
+                <div class='dashboard_panel_header'><i class='fa fa-user'></i> Account information
+                   <span class='pmsbutton dashboardpmsbutton'>Save</span>
+                </div>
+                    <div class='dashboard_panel_body'>
+
+                        <table width='100%' cellspacing='0' cellpadding='0'>
+                            <?php if($user->companyObject) { ?>
+                                <tr>
+                                    <td width='50%'>Vat id</td>
+                                    <td><input class='gsniceinput1' value='<?php echo $user->companyObject->vatNumber; ?>'></td>
+                                </tr>
+                            <?php } ?>
+                            <tr>
+                                <td width='50%'>Name</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->fullName; ?>'></td>
+                            </tr>
+                            <tr>
+                                <td width='50%'>Street address</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->address->address; ?>'></td>
+                            </tr>
+                            <tr>
+                                <td width='50%'>Postal code</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->address->postCode; ?>'></td>
+                            </tr>
+                            <tr>
+                                <td width='50%'>City</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->address->city; ?>'></td>
+                            </tr>
+                            <tr>
+                                <td width='50%'>Email address</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->emailAddress; ?>'></td>
+                            </tr>
+                            <tr>
+                                <td width='50%'>Invoice email adress</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->emailAddressToInvoice; ?>'></td>
+                            </tr>
+                        </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel'>
+                <div class='dashboard_panel_header'><i class='fa fa-calendar'></i> Bookings
+                    <span class='pmsbutton dashboardpmsbutton'>Create a new booking</span>
+                </div>
+                <div class='dashboard_panel_body'>
+                    <table width='100%' cellspacing='0' cellpadding='0'>
+                        <tr>
+                            <th>Reg</th>
+                            <th>Guest</th>
+                            <th>Rooms</th>
+                            <th>Amount</th>
+                        </tr>
+                    <?php
+                    foreach($bookings as $booking) {
+                        $namesarray = array();
+                        foreach($booking->rooms as $room) {
+                            foreach($room->guests as $guest) {
+                                if($guest->name) {
+                                    $namesarray[] = $guest->name;
+                                }
+                            }
+                        }
+                        echo "<tr>";
+                        echo "<td>" . date("d.m.Y", strtotime($booking->rowCreatedDate)) . "</td>";
+                        echo "<td>" . join(",", $namesarray) . "</td>";
+                        echo "<td>" . sizeof($booking->rooms) . "</td>";
+                        echo "<td>" . round($booking->totalPrice) . "</td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel'>
+                <div class='dashboard_panel_header'><i class='fa fa-user-times'></i> Subaccounts
+                    <span class='pmsbutton dashboardpmsbutton'>Create subaccount</span>
+                </div>
+                <div class='dashboard_panel_body'>
+                    <?php echo "No subaccounts created yet."; ?>
+                </div>
+            </div>
+        </div>
+        
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel'>
+                <div class='dashboard_panel_header'><i class='fa fa-money'></i> Orders</div>
+                    <div class='dashboard_panel_body'>
+                       <table width='100%' cellpadding='0' cellspacing='0'>
+                            <tr>
+                                <th>Orderid</th>
+                                <th>Amount</th>
+                                <th>State</th>
+                            </tr>
+                        <?php
+                        foreach($orders as $order) {
+                            echo "<tr>";
+                            echo "<td>" . $order->incrementOrderId . "</td>";
+                            echo "<td>" . $this->getApi()->getOrderManager()->getTotalAmount($order) . "</td>";
+                            echo "<td>" . $states[$order->status] . "</td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                        </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel'>
+                <div class='dashboard_panel_header'><i class='fa fa-beer'></i> Discounts</div>
+                <?php echo $user->fullName; ?>
+            </div>
+        </div>
+        
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel'>
+                <div class='dashboard_panel_header'><i class='fa fa-lock'></i> Password / login</div>
+                <?php echo $user->fullName; ?>
+            </div>
+        </div>
+    </div>
+    <div style='clear:both;'></div>
+</div>
+
+<style>
+    .dashboard_panel {  height: 300px; padding: 10px; background-color:#fff; padding: 10px; border-radius: 5px; border: solid 1px #bbb; }
+    .dashboard_panel_outer { width: 50%; padding: 10px; float: left;margin-top: 20px; box-sizing: border-box; position:relative; }
+    .dashboard_panel_header { border-bottom: solid 1px #bbb; padding-bottom: 10px; margin-bottom: 10px;position:relative; }
+    .userdashboard input { width:100%; box-sizing: border-box; }
+    .PmsManagement .dashboard_panel td { border-right: 0px; padding: 6px; }
+    .PmsManagement .dashboard_panel th { text-align:left; }
+    .PmsManagement .dashboard_panel_body { height: 250px; overflow: auto; }
+    .PmsManagement .dashboardpmsbutton { padding: 0px; padding-left: 5px; padding-right: 5px; border-radius: 0px; position:absolute; right: 0px; top: -6px; padding-top: 3px; padding-bottom: 3px;}
+</style>
+
+<script>
+    $('.refreshbutton').click(function() {
+        var event = thundashop.Ajax.createEvent('','setQuickFilter',$(this),{
+            "type" : "subtype_accountoverview",
+            "userid" : $(this).attr('userid')
+        });
+        thundashop.Ajax.post(event);
+    });
+</script>

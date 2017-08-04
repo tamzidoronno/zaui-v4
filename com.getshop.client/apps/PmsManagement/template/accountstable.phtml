@@ -15,13 +15,10 @@
     <?php
     $users = $this->getApi()->getPmsManager()->getAllUsers($this->getSelectedName(), $this->getSelectedFilter());
     $methods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-//    echo "<pre>";
-//    print_r($methods);
-//    echo "</pre>";
     
     foreach($users as $user) {
         $name = $user->name ? $user->name : "Unkown name";
-        echo "<tr>";
+        echo "<tr class='customertablerow' userid='".$user->userId."'>";
         echo "<td align='center'>" . $user->customerId . "</td>";
         echo "<td>$name</td>";
         echo "<td align='center'>" . $user->customerType . "</td>";
@@ -52,3 +49,18 @@
     echo "<tr><td colspan='200'><br><center>Row count : " . sizeof($users)  . "<br><br></center></td></tr>";
     ?>
 </table>
+
+<style>
+    .customertablerow { cursor:pointer; }
+    .customertablerow:hover td { color: green; }
+</style>
+
+<script>
+    $('.customertablerow').click(function() {
+        var event = thundashop.Ajax.createEvent('','setQuickFilter',$(this),{
+            "type" : "subtype_accountoverview",
+            "userid" : $(this).attr('userid')
+        });
+        thundashop.Ajax.post(event);
+    });
+</script>

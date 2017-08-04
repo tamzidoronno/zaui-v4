@@ -13,6 +13,7 @@ import java.util.Date;
  */
 public class PmsCustomerRow {
     public String name;
+    public String userId;
     public Integer customerId;
     public String customerType;
     public Integer numberOfBookings;

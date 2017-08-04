@@ -6443,6 +6443,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             row.numberOfOrders = orderManager.getAllOrdersForUser(user.id).size();
             row.latestBooking = bookingLatest.get(user.id);
             row.customerType = "UKNOWN";
+            if(user.isCompanyMainContact) {
+                row.customerType = "Company";
+            } else if(!user.company.isEmpty()) {
+                row.customerType = "Subuser";
+            } else {
+                row.customerType = "Private";
+            }
             
             PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(userId);
             row.invoiceAfterStay = discount.supportInvoiceAfter;

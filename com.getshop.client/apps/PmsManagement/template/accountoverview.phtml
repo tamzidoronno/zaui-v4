@@ -7,8 +7,17 @@ $filter = new core_pmsmanager_PmsBookingFilter();
 $filter->userId = $user->id;
 $filter->sorting = "regdate";
 $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+$new = array();
+foreach($bookings as $book) {
+    $new[strtotime($book->rowCreatedDate)] = $book;
+}
+krsort($new);
+$bookings = $new;
+
 $orders = $this->getApi()->getOrderManager()->getAllOrdersForUser($user->id);
- 
+$rooms = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$discounts = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedName(), $user->id);
+$paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
 
 $states = array();
 $states['0'] = "All";
@@ -38,7 +47,7 @@ $states['10'] = "Send to invoice";
                             <?php if($user->companyObject) { ?>
                                 <tr>
                                     <td width='50%'>Vat id</td>
-                                    <td><input class='gsniceinput1' value='<?php echo $user->companyObject->vatNumber; ?>'></td>
+                                    <td><input class='gsniceinput1' value='<?php echo $user->companyObject->vatNumber; ?>' disabled></td>
                                 </tr>
                             <?php } ?>
                             <tr>
@@ -93,11 +102,11 @@ $states['10'] = "Send to invoice";
                                 }
                             }
                         }
-                        echo "<tr>";
+                        echo "<tr class='moreinformationaboutbooking' bookingid='".$booking->id."'>";
                         echo "<td>" . date("d.m.Y", strtotime($booking->rowCreatedDate)) . "</td>";
                         echo "<td>" . join(",", $namesarray) . "</td>";
-                        echo "<td>" . sizeof($booking->rooms) . "</td>";
-                        echo "<td>" . round($booking->totalPrice) . "</td>";
+                        echo "<td align='center'>" . sizeof($booking->rooms) . "</td>";
+                        echo "<td align='center'>" . round($booking->totalPrice) . "</td>";
                         echo "</tr>";
                     }
                     ?>
@@ -125,14 +134,14 @@ $states['10'] = "Send to invoice";
                             <tr>
                                 <th>Orderid</th>
                                 <th>Amount</th>
-                                <th>State</th>
+                                <th></th>
                             </tr>
                         <?php
                         foreach($orders as $order) {
                             echo "<tr>";
-                            echo "<td>" . $order->incrementOrderId . "</td>";
+                            echo "<td><i class='fa fa-file-pdf-o' style='cursor:pointer;' onclick=\"window.open('/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."','_fdsaf');\"></i> " . $order->incrementOrderId . "</td>";
                             echo "<td>" . $this->getApi()->getOrderManager()->getTotalAmount($order) . "</td>";
-                            echo "<td>" . $states[$order->status] . "</td>";
+                            echo "<td align='right'>" . $states[$order->status] . "</td>";
                             echo "</tr>";
                         }
                         ?>
@@ -143,15 +152,85 @@ $states['10'] = "Send to invoice";
         
         <div class='dashboard_panel_outer'>
             <div class='dashboard_panel'>
-                <div class='dashboard_panel_header'><i class='fa fa-beer'></i> Discounts</div>
-                <?php echo $user->fullName; ?>
+                <div class='dashboard_panel_header'><i class='fa fa-trophy'></i> Discounts and payment preferences
+                    <span class='pmsbutton dashboardpmsbutton'>Save</span>
+                </div>
+                <div class='dashboard_panel_body'>
+                    <table width='100%' cellspacing='0' cellpadding='0'>
+                        <tr>
+                            <td><b>Create order after stay</b><br>
+                            When a booking is completed the order will be created after the stay has been completed.</td>
+                            <td align='center'><input type='checkbox' class='gsniceinput1' value='<?php echo $user->companyObject->vatNumber; ?>'></td>
+                        </tr>
+                        <tr>
+                            <td><b>Preferred payment type</b><br>
+                                What payment method should be default when booking?<br>
+                            <td align='center'>
+                                <select class='gsniceselect1'>
+                                <?php
+                                    echo "<option value='' $selected></option>";
+                                    foreach($paymentApps as $id => $type) {
+                                        $selected = "";
+                                        $instance = $this->getFactory()->getApplicationPool()->createInstace($type);
+                                        if($type->id == $user->preferredPaymentType) {
+                                            $selected = "SELECTED";
+                                        }
+                                        if(method_exists($instance, "getName")) {
+                                            echo "<option value='".$type->id."' $selected>".$instance->getName()."</option>";
+                                        }
+                                    }
+                                ?>                                    
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Discount type</b><br>
+                                Percentage or fixed price discount?<br>
+                            <td align='center'>
+                                <select class='gsniceselect1'>
+                                    <option value='percentage'>Percentage</option>
+                                    <option value='percentage'>Fixed price</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <?php
+                        foreach($rooms as $room) {
+                            $amount = "";
+                            if(isset($discounts->discounts->{$room->id})) {
+                                $amount = $discounts->discounts->{$room->id};
+                            }
+                            echo "<tr>";
+                            echo "<td>" . $room->name . "</td>";
+                            echo "<td align='center'><input type='txt' style='width:50px;' value='$amount'></td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </table>
+                </div>
             </div>
         </div>
         
         <div class='dashboard_panel_outer'>
             <div class='dashboard_panel'>
-                <div class='dashboard_panel_header'><i class='fa fa-lock'></i> Password / login</div>
-                <?php echo $user->fullName; ?>
+                <div class='dashboard_panel_header'><i class='fa fa-lock'></i> Password / login
+                    <span class='pmsbutton dashboardpmsbutton'>Save</span>
+                </div>
+                <div class='dashboard_panel_body'>
+                    <table width='100%' cellspacing='0' cellpadding='0'>
+                        <tr>
+                            <td width='50%'><b>Password</b>
+                            <td align='center'><input type='text' class='gsniceinput1'></td>
+                        </tr>
+                        <tr>
+                            <td width='50%'><b>Repeat password</b>
+                            <td align='center'><input type='text' class='gsniceinput1'></td>
+                        </tr>
+                        <tr>
+                            <td width='50%'><b>Login reference</b>
+                            <td align='center'><input type='text' class='gsniceinput1' value='<?php echo $user->referenceKey; ?>'></td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -162,11 +241,14 @@ $states['10'] = "Send to invoice";
     .dashboard_panel {  height: 300px; padding: 10px; background-color:#fff; padding: 10px; border-radius: 5px; border: solid 1px #bbb; }
     .dashboard_panel_outer { width: 50%; padding: 10px; float: left;margin-top: 20px; box-sizing: border-box; position:relative; }
     .dashboard_panel_header { border-bottom: solid 1px #bbb; padding-bottom: 10px; margin-bottom: 10px;position:relative; }
-    .userdashboard input { width:100%; box-sizing: border-box; }
+    .userdashboard input,.userdashboard select { width:100%; box-sizing: border-box; }
     .PmsManagement .dashboard_panel td { border-right: 0px; padding: 6px; }
     .PmsManagement .dashboard_panel th { text-align:left; }
     .PmsManagement .dashboard_panel_body { height: 250px; overflow: auto; }
     .PmsManagement .dashboardpmsbutton { padding: 0px; padding-left: 5px; padding-right: 5px; border-radius: 0px; position:absolute; right: 0px; top: -6px; padding-top: 3px; padding-bottom: 3px;}
+    .moreinformationaboutbooking { cursor:pointer; }
+    .moreinformationaboutbooking:hover td { color: green; }
+    .PmsManagement .gsniceselect1 { height: inherit; }
 </style>
 
 <script>

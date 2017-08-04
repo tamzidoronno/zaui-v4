@@ -2,10 +2,10 @@ package com.thundashop.core.sendregning;
 
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
-import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,31 +41,56 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
     @Autowired
     StoreApplicationPool storeApplicationPool;
     
+    @Autowired
+    private FrameworkConfig frameworkConfig;
+    
+    
     String root = "https://www.sendregning.no/";
+    private String errorMessage = "";
     
     @Override
-    public String sendOrder(String orderId) {
-        if(createInvoiceAtSendRegning(orderId)) {
+    public String sendOrder(String orderId, String email) {
+        Order order = orderManager.getOrderSecure(orderId);
+        
+        if(!validateOrderToMakeSureItsOkay(order)) {
+            return errorMessage;
+        }
+        
+        if(!frameworkConfig.productionMode) {
+            order.sendRegningId = 0;
+        }
+        if(order.sendRegningId > 0) {
+            resendInvoice(order.sendRegningId, email);
             return "";
         } else {
-            return "failed to push to sendregning server.";
+            if(createInvoiceAtSendRegning(orderId, email) != null) {
+                return "";
+            } else {
+                return "failed to push to sendregning server.";
+            }
         }
     }
 
-    private boolean createInvoiceAtSendRegning(String orderId) {
+    private String createInvoiceAtSendRegning(String orderId, String email) {
         Order order = orderManager.getOrderSecure(orderId);
         User user = userManager.getUserById(order.userId);
-        createUpdateRecipient(user);
+        Integer sendRegningCustomerNumber = createUpdateRecipient(user);
         String url = root+"invoices/";
-        NewInvoice inv = createInvoice(orderId);
+        NewInvoice inv = createInvoice(orderId, email);
+        inv.recipient.number = sendRegningCustomerNumber;
         Gson gson = new Gson();
         String data = gson.toJson(inv);
         
-        return pushMessage(url, data, "POST");
-        
+        pushMessage(url, data, "POST");
+        HashMap<String, String> latestResponseHeader = webManager.getLatestResponseHeader();
+        String location = latestResponseHeader.get("Location");
+        String number = location.replace("https://www.sendregning.no/invoices/", "");
+        number = number.replace(",", "");
+        order.sendRegningId = new Integer(number);
+        return order.sendRegningId + "";
     }
 
-    private NewInvoice createInvoice(String orderId) {
+    private NewInvoice createInvoice(String orderId, String email) {
         Order order = orderManager.getOrderSecure(orderId);
         User user = userManager.getUserById(order.userId);
         
@@ -79,7 +105,12 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         inv.ourReference = order.incrementOrderId + "";
         inv.yourReference = "";
         inv.dueDate = formatDate(createDueDate(order));
-        inv.recipient = createRecipient(user);
+        inv.recipient = createInvoiceRecipient(user);
+        if(email != null && email.contains("@")) {
+            NewInvoiceShipmentEmail e = new NewInvoiceShipmentEmail();
+            e.address = email;
+            inv.shipment.email.add(e);
+        }
         return inv;
     }
 
@@ -109,22 +140,30 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
 
     private List<NewInvoiceItem> createItemsList(Order order) {
         List<NewInvoiceItem> items = new ArrayList();
+        int i = 1;
         for(CartItem cartItem : order.cart.getItems()) {
             NewInvoiceItem item = new NewInvoiceItem();
-            item.description = cartItem.getProduct().name;
-            item.number = cartItem.getCount();
+            item.description = convertToIso(cartItem, order);
+            item.number = i;
             item.quantity = (double)cartItem.getCount();
             item.productCode = cartItem.getProduct().accountingSystemId;
-            item.taxRate = cartItem.getProduct().taxgroup;
+            item.taxRate = getTaxRate(cartItem);
             item.unitPrice = cartItem.getProduct().price;
             items.add(item);
+            i++;
         }
         return items;
     }
 
-    private NewInvoiceRecipient createRecipient(User user) {
+    private NewInvoiceRecipient createInvoiceRecipient(User user) {
         NewInvoiceRecipient recipient = new NewInvoiceRecipient();
-        recipient.address = createRecipientAddressOnOrder(user);
+        recipient.number = user.customerId;
+        return recipient;
+    }
+    
+    private NewRecipient createRecipient(User user) {
+        NewRecipient recipient = new NewRecipient();
+        recipient.contact.address = createRecipientAddressOnOrder(user);
         recipient.customerNumber = user.customerId + "";
         recipient.email = user.emailAddress;
         recipient.name = user.fullName;
@@ -148,38 +187,142 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
     }    
 
     
-    private boolean pushMessage(String url, String data, String type) {
-        System.out.println("Pushing: ");
+    private String pushMessage(String url, String data, String type) {
+        System.out.println("Pushing to : " + url + " type:" + type);
         System.out.println(data);
         Application sendRegningApp = storeApplicationPool.getApplication("e8cc6f68-d194-4820-adab-6052377b678d");
         if (sendRegningApp == null) {
-            return false;
+            return null;
         }
 
         String usernamepassword = sendRegningApp.getSetting("email") + ":" + sendRegningApp.getSetting("password");
         String originatorid = sendRegningApp.getSetting("originatorid");
         
+        if(!frameworkConfig.productionMode) {
+            usernamepassword = "pal@getshop.com:1122T3st";
+            originatorid = "79732";
+        }
+        
         HashMap<String, String> headerData = new HashMap();
         headerData.put("Originator-Id", originatorid);
         
         try {
-            String res = webManager.htmlPostBasicAuth(url, data, true, "UTF-8", usernamepassword, "Basic", true, type);
-            System.out.println(res);
+            String res = webManager.htmlPostBasicAuth(url, data, true, "ISO-8859-1", usernamepassword, "Basic", true, type);
+            return res;
         }catch(Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
-        return false;        
     }
 
-    private void createUpdateRecipient(User user) {
+    private Integer createUpdateRecipient(User user) {
+        Integer recipientNumber = findRecipient(user.customerId);
         String url = root + "recipients/";
-        NewInvoiceRecipient recipient = createRecipient(user);
+        NewRecipient recipient = createRecipient(user);
+        recipient.number = recipientNumber;
         Gson gson = new Gson();
-        if(!user.createInSendRegning) {
+        if(recipientNumber == 0) {
             pushMessage(url, gson.toJson(recipient), "POST");
         } else {
+            url += recipientNumber;
             pushMessage(url, gson.toJson(recipient), "PUT");
         }
+        return findRecipient(user.customerId);
+    }
+
+    private Integer findRecipient(Integer customerId) {
+        String url = root + "recipients/?customerNumber=" + customerId;
+        String res = pushMessage(url, "", "GET");
+        if(res == null) {
+            return 0;
+        }
+        Gson gson = new Gson();
+        NewRecipient recipient = gson.fromJson(res, NewRecipient.class);
+        return recipient.number;
+    }
+
+    private Integer getTaxRate(CartItem cartItem) {
+        return cartItem.getProduct().taxGroupObject.taxRate.intValue();
+    }
+
+    private void resendInvoice(Integer sendRegningId, String email) {
+        String url = root + "/invoices/"+sendRegningId+"/send";
+        
+        NewInvoiceShipment reciept = new NewInvoiceShipment();
+        if(email != null && email.contains("@")) {
+            NewInvoiceShipmentEmail mail = new NewInvoiceShipmentEmail();
+            mail.address = email;
+            reciept.email.add(mail);
+        } else {
+            reciept.email = null;
+        }
+        
+        Gson gson = new Gson();
+        pushMessage(url, gson.toJson(reciept), "POST");
+    }
+
+    private boolean validateOrderToMakeSureItsOkay(Order order) {
+        User user = userManager.getUserById(order.userId);
+        if(user.address == null) {
+            errorMessage += "Adress object can not be empty";
+            return false;
+        }
+        if(user.address.address == null || user.address.address.trim().isEmpty()) {
+            errorMessage += "Adress field can not be empty";
+            return false;
+        }
+        if(user.address.city == null || user.address.city.trim().isEmpty()) {
+            errorMessage += "City field can not be empty";
+            return false;
+        }
+        if(user.address.postCode == null || user.address.postCode.trim().isEmpty()) {
+            errorMessage += "Postal code can not be empty";
+            return false;
+        }
+        
+        for(CartItem item : order.cart.getItems()) {
+            int rate = getTaxRate(item);
+            if(rate != 0 && rate != 10 && rate != 15 && rate != 25) {
+                errorMessage += "Tax rate is not set correctly for product: " + item.getProduct().name;
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    private String convertToIso(CartItem item, Order order) {
+        
+        String lineText = "";
+        String startDate = "";
+        if(item.startDate != null) {
+            DateTime start = new DateTime(item.startDate);
+            startDate = start.toString("dd.MM.yy");
+        }
+
+        String endDate = "";
+        if(item.endDate != null) {
+            DateTime end = new DateTime(item.endDate);
+            endDate = end.toString("dd.MM.yy");
+        }
+        
+        String startEnd = "";
+        if(startDate != null && endDate != null && !endDate.isEmpty() && !startDate.isEmpty()) {
+            startEnd = " (" + startDate + " - " + endDate + ")";
+        }
+        
+        if(!item.getProduct().additionalMetaData.isEmpty()) {
+            lineText = item.getProduct().name + " " + item.getProduct().additionalMetaData + startEnd;
+        } else {
+            String mdata = item.getProduct().metaData;
+            if(mdata != null && mdata.startsWith("114")) {
+                mdata = "";
+            } else {
+                mdata = ", " + mdata;
+            }
+            lineText = item.getProduct().name + mdata + startEnd;
+        }
+                
+        return lineText;
     }
 }

@@ -454,6 +454,20 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return payedfor;
     }
 
+    private void verifyOrderCreationIsCorrect(PmsBooking booking, Order order) {
+        Double total = booking.getTotalPrice();
+        
+        Double totalOnOrders = 0.0;
+        for(String orderId : booking.orderIds) {
+            Order tmp = orderManager.getOrder(orderId);
+            totalOnOrders += orderManager.getTotalAmount(tmp);
+        }
+        double diff = totalOnOrders - total;
+        if(diff > 1 || diff < -1) {
+            messageManager.sendErrorNotification("When creating an order, a diff where created that was not supposed to be ("+diff+"), this happened to order: " + order.incrementOrderId, null);
+        }
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -1171,7 +1185,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Date startDate = room.getInvoiceStartDate();
         Date endDate = room.getInvoiceEndDate(filter, booking);
         
-        if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || room.invoicedTo.after(endDate))) {
+        if(room.invoicedTo != null && (room.isSameDay(room.invoicedTo, endDate) || (room.invoicedTo.after(endDate)) || room.isSameDay(room.invoicedTo, endDate))) {
             return;
         }
         if(endDate.after(filter.endInvoiceAt) && filter.increaseUnits > 0 && !pmsManager.getConfigurationSecure().splitOrderIntoMonths) {
@@ -1313,14 +1327,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     @Override
-    public void sendRecieptOrInvoice(String orderId, String email, String bookingId) {
+    public String sendRecieptOrInvoice(String orderId, String email, String bookingId) {
         Order order = orderManager.getOrderSecure(orderId);
-        order.sentToCustomer = true;
-        order.closed = true;
         orderManager.saveObject(order);
-        
+        String res = "";
         if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("sendregning")) {
-            sendRegningManager.sendOrder(orderId);
+            res = sendRegningManager.sendOrder(orderId, email);
         } else {
             pmsManager.setOrderIdToSend(orderId);
             pmsManager.setEmailToSendTo(email);
@@ -1330,6 +1342,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 pmsManager.doNotification("sendinvoice", bookingId);
             }
         }
+        
+        if(res.isEmpty()) {
+            order.closed = true;
+            order.sentToCustomer = true;
+            order.sentToCustomerDate = new Date();
+            order.sentToEmail = email;
+            orderManager.saveOrder(order);
+        }
+        return res;
     }
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
@@ -1362,6 +1383,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
             booking.orderIds = uniqueList;
             pmsManager.saveBooking(booking);
+            
+            try {
+                if((filter.itemsToCreate == null || filter.itemsToCreate.isEmpty()) && 
+                    (filter.pmsRoomIds == null || filter.pmsRoomIds.isEmpty())) {
+                      verifyOrderCreationIsCorrect(booking, order);
+                }
+            }catch(Exception e) {
+                logPrintException(e);
+            }
             
 //            messageManager.sendErrorNotification("New order created: " + order.incrementOrderId, null);
             
@@ -1434,9 +1464,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     
     private void addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
-        if(booking.id.equals("97ecb531-db7e-417c-99cc-5e4c5f02d16c")) {
-            System.out.println("Found");
-        }
         List<CartItem> items = new ArrayList();
         boolean generateChanges = pmsManager.getConfigurationSecure().autoGenerateChangeOrders;
         if(generateChanges) {

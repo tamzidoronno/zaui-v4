@@ -248,20 +248,8 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 }
                 if($hasAddons) {
                     ?>
-                    <i class='fa fa-plus-circle' title='Add addons' onclick='$(this).closest("td").find(".addaddonpanel").toggle()' style='cursor:pointer;'></i>
+                    <i class='fa fa-plus-circle loadAddonsList' title='Add addons' onclick='$(this).closest("td").find(".addaddonpanel").toggle()' style='cursor:pointer;'></i>
                     <?php
-
-                    echo "<span class='addaddonpanel' gstype='form' method='addAddonsToRoom'>";
-                    echo "<input type='hidden' gsname='bookingid' value='".$booking->id."'>";
-                    echo "<input type='hidden' gsname='roomid' value='".$room->pmsBookingRoomId."'>";
-                    foreach($config->addonConfiguration as $addonToPrint) {
-                        /* @var $addonToPrint core_pmsmanager_PmsBookingAddonItem */
-                        if(!$addonToPrint->isActive && !$addonToPrint->isAvailableForBooking && !$addonToPrint->isAvailableForCleaner) {
-                            continue;
-                        }
-                        echo "<span class='addaddonsoption' gsvalue='".$addonToPrint->productId."' gsname='addonProduct' gstype='submitToInfoBox'>" . $object->__w("Add") . " "  . strtolower($products[$addonToPrint->productId]->name) . "</span><br>";
-                    }
-                    echo "</span>";
                 }
                 $typesAdded = array();
                 $total = 0;

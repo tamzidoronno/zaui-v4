@@ -117,7 +117,11 @@ public class PmsSelfManagement extends GetShopSessionBeanNamed implements IPmsSe
                 .orElse(null);
         
         pmsAddon.date = day.date;
-        pmsAddon.count = room.guests.size();
+        if(pmsAddon.dependsOnGuestCount) {
+            pmsAddon.count = room.numberOfGuests;
+        } else {
+            pmsAddon.count = 1;
+        }
         pmsManager.addAddonToRoom(addon.roomId, pmsAddon);
     }
 

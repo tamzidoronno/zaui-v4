@@ -436,6 +436,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if((priceToAdd == null || priceToAdd == 0.0) && defaultPrice != null) {
                     priceToAdd = defaultPrice;
                 }
+                if(priceToAdd == null) {
+                    priceToAdd = 999999.0;
+                }
                 list.add(priceToAdd);
                 calStart.add(Calendar.DAY_OF_YEAR, 1);
             }
@@ -670,6 +673,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             String channel = (String) addons.get("channel_rate_name");
             if(channel != null) {
                 if(channel.toLowerCase().contains("breakfast included") || channel.toLowerCase().contains("frokost inkludert")) {
+                    return guests;
+                }
+                if(channel.toLowerCase().contains("breakfast is included") || channel.toLowerCase().contains("frokost er inkludert")) {
                     return guests;
                 }
             }
@@ -1000,7 +1006,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 continue;
             }
             boolean arrived = false;
-            for(PmsBookingRooms room : book.getActiveRooms()) {
+            for(PmsBookingRooms room : book.getAllRooms()) {
                 if(room.checkedin) {
                     arrived = true;
                 }

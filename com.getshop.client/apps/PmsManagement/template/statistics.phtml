@@ -53,15 +53,10 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
         </tr>
         <?
         foreach ($stats->entries as $entry) {
-//            echo "<pre>";
-//            print_r($entry);
             $included = $entry->roomsIncluded;
             $included = json_encode($included);
             
-            $guests = 0;
-            foreach($entry->guests as $roomId => $gcount) {
-                $guests += $gcount;
-            }
+            $guests = $entry->guestCount;
             if ($entry->date) {
                 $day = $this->getDayText($entry->date, $filter->timeInterval);
             } else {

@@ -6,6 +6,10 @@ app.PmsBookingProductList = {
         $(document).on('click', '.PmsBookingProductList .productentry .roomtypeselectioncount i', app.PmsBookingProductList.updateProductCount);
         $(document).on('keyup', '.PmsBookingProductList .productcount', app.PmsBookingProductList.updateProductCount);
         $(document).on('change', '.PmsBookingProductList .roomcountselection', app.PmsBookingProductList.selectRoomCount);
+        $(document).on('click', '.PmsBookingProductList continue_button.nightWarning', app.PmsBookingProductList.nightWarningPrompt);
+    },
+    nightWarningPrompt : function(){
+        
     },
     updateProductCount : function() {
         if(app.PmsBookingProductList.setRoomCountTimeout) {
@@ -57,13 +61,31 @@ app.PmsBookingProductList = {
             });
         }, 100);
     },
-    
+    addZero : function(i){
+        if(i < 10){
+            i = "0" + i;
+        }
+        return i;
+    },
     continueToPage : function() {
         if($(this).hasClass('disabled')) {
             return;
         }
-        var attr = $(this).attr('next_page');
-        thundashop.common.goToPageLink(attr);
+        if($(this).hasClass('nightWarning')){
+         
+            var date = new Date();
+            var hour = ("0" + date.getHours()).slice(-2);
+            var minutes = ("0" + date.getMinutes()).slice(-2);
+            var confirmed = confirm('Klokken er '+hour+":"+minutes+' Om du skal sjekke inn i natt må du sørge for å booke fra i går til i dag! Trykk ok for å fortsette bookingen.');
+            if(confirmed === true){
+                var attr = $(this).attr('next_page');
+                thundashop.common.goToPageLink(attr);
+            }
+        }else{
+            var attr = $(this).attr('next_page');
+            thundashop.common.goToPageLink(attr);
+        }
+        
     },
     selectRoom : function() {
         var data = {

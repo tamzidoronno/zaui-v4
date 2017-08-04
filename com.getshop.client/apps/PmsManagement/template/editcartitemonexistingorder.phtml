@@ -1,0 +1,43 @@
+<?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+foreach($order->cart->items as $item) {
+    if($item->cartItemId == $_POST['data']['cartitemid']) {
+        echo "<table cellspacing='0' cellpadding='0' gstype='form' cartitemid='".$item->cartItemId."' orderid='".$order->id."'>";
+        echo "<tr>";
+        echo "<th></th>";
+        echo "<th></th>";
+        echo "</tr>";
+        if(sizeof($item->priceMatrix) > 0) {
+            foreach($item->priceMatrix as $day => $value) {
+                echo "<tr>";
+                echo "<td>$day</td>";
+                echo "<td><input type='txt' style='width:156px;' value='$value' gsname='matrixprice_$day'></input></td>";
+                echo "</tr>";
+            }
+        }
+        if(sizeof($item->itemsAdded) > 0) {
+            foreach($item->itemsAdded as $itemAdded) {
+                echo "<tr>";
+                echo "<td>" . date("d.m.Y H:i", strtotime($itemAdded->date)) . "</td>";
+                echo "<td><input type='txt' style='width:40px;' gsname='itemcount_".$itemAdded->addonId."' value='" . $itemAdded->count . "'>";
+                echo "<input style='width:110px;' type='txt' gsname='itemprice_".$itemAdded->addonId."' value='" . $itemAdded->price . "'></td>";
+                echo "</tr>";
+            }
+        }
+        echo "<tr>";
+        echo "<td colspan='2'><div style='height:10px;'></div></td>";
+        echo "</tr>";
+        
+        echo "<tr><td>Product name</td><td><input type='txt' style='width:156px;' gsname='productname' value='".$item->product->name."'></input></td></tr>";
+        echo "<tr><td>Room number</td><td><input type='txt' style='width:156px;' gsname='roomnumber' value='".$item->product->additionalMetaData."'></input></td></tr>";
+        echo "<tr><td>Name</td><td><input type='txt' style='width:156px;' gsname='roomname' value='".$item->product->metaData."'></input></td></tr>";
+        echo "<tr>";
+        echo "<td></td>";
+        echo "<td><input type='button' value='Update row' style='width:163px' class='updatecartitemrowbutton'></input></td>";
+        echo "</tr>";
+        echo "</table>";
+    }
+}
+
+?>

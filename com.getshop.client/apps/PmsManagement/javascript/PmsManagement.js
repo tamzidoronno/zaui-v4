@@ -51,6 +51,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .removeOrderFromBooking', app.PmsManagement.removeOrderFromBooking);
         $(document).on('click','.PmsManagement .marknoshowwubook', app.PmsManagement.marknoshowwubook);
         $(document).on('click','.PmsManagement .displayordersforroom', app.PmsManagement.displayOrdersForRoom);
+        $(document).on('click','.PmsManagement .loadeditcartitemonorder', app.PmsManagement.loadEditCartItemOnOrder);
 
         $(document).on('click','.PmsManagement .togglerepeatbox', app.PmsManagement.closeRepeatBox);
         $(document).on('click','.PmsManagement .change_cleaning_interval', app.PmsManagement.changeCleaingInterval);
@@ -101,10 +102,69 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .connectItemOnsOrderToRoom', app.PmsManagement.connectItemOnsOrderToRoom);
         $(document).on('keyup','.PmsManagement .changeorderdates', app.PmsManagement.changeOrderPeriode);
         $(document).on('click','.PmsManagement .managementviewoptions', app.PmsManagement.toggleManagementviewfilter);
-        $(document).on('change','.PmsManagement .managementviewdropdowninput', app.PmsManagement.submitDropdownvalueOnChange);
+        $(document).on('click','.PmsManagement .updatecartitemrowbutton', app.PmsManagement.updateCartItemRow);
+        $(document).on('click','.PmsManagement .deleteitemrowfromorder', app.PmsManagement.deleteItemFromCart);
+        $(document).on('click','.PmsManagement .startAddonToRoom', app.PmsManagement.startAddonToRoom);
+        $(document).on('click','.PmsManagement .loadAddonsList', app.PmsManagement.loadAddonsList);
     },
-    submitDropdownvalueOnChange : function(){
-        $('.manegementviewbutton.addGroupOptions').click();
+    loadAddonsToBeAddedList : function() {
+        var panel = $('.PmsManagement .addaddonsstep2');
+        var args = thundashop.framework.createGsArgs(panel);
+        var event = thundashop.Ajax.createEvent('','loadAddonsToBeAddedPreview',panel, args);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.addonpreview').html(res);
+        });
+    },
+    loadAddonsList : function() {
+        var panel = $("<span class='addaddonpanel-outer'><div style='text-align:right; padding: 5px; background-color:#efefef;'><span style='float:left;' class='addonpaneltitle'>Add addon</span><i class='fa fa-times' onclick=\"$('.addaddonpanel-outer').hide();\" style='cursor:pointer;'></i></div><span class='addaddonpanel' gstype='form' method='addAddonsToRoom' style='display:block;'><i class='fa fa-spin fa-spinner'></i></span></span>");
+        $('.addaddonpanel-outer').remove();
+        $(this).closest('td').append(panel);
+
+        var data = {
+            "roomId" : $(this).closest('tr').attr("roomid"),
+            "bookingid" : $('#openedbookingid').val()
+        }
+        var event = thundashop.Ajax.createEvent('','loadAddonList', $(this), data);
+        panel.show();
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            panel.find('.addaddonpanel').html(res);
+        });
+    },
+    startAddonToRoom : function() {
+        var data = {
+            "addonId" : $(this).attr('addonid'),
+            "roomId" : $(this).closest('tr[roomid]').attr("roomid"),
+            "bookingid" : $('#openedbookingid').val()
+        }
+        var event = thundashop.Ajax.createEvent('','startAddonToRoom', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.addaddonpanel').html(res);
+        });
+    },
+    deleteItemFromCart : function() {
+        var confirmed = confirm("Are you sure you want to delete this row?");
+        if(!confirmed) {
+            return;
+        }
+        var args = {};
+        args['cartitemid'] = $(this).attr('cartitemid');
+        args['orderid'] = $(this).attr('orderid');
+        var event = thundashop.Ajax.createEvent('','deleteItemFromCart', $(this), args);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.PmsManagement.loadOrderInformationByOrder(args['orderid']);
+        });
+    },
+    
+    updateCartItemRow : function() {
+        var form = $(this).closest('[gstype="form"]');
+        var args = thundashop.framework.createGsArgs(form);
+        args['cartitemid'] = form.attr('cartitemid');
+        args['orderid'] = form.attr('orderid');
+        var event = thundashop.Ajax.createEvent('','updateCartItemRow', form, args);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.PmsManagement.loadOrderInformationByOrder(args['orderid']);
+            $('.editcartitempanel').hide();
+        });
     },
     toggleManagementviewfilter : function(){
         if($('.managementviewfilter').css('display') === 'none'){
@@ -112,11 +172,25 @@ app.PmsManagement = {
             $('.managementviewfilter').css('display','inline-block');
         }
         else{
-            $('.managementviewfilter').slideUp()();
+            $('.managementviewfilter').slideUp();
             $('.managementviewfilter').css('display','none');
         }
     },
-
+    loadEditCartItemOnOrder : function() {
+        var data = {
+            "orderid" : $(this).attr('orderid'),
+            "cartitemid" : $(this).attr('cartitemid')
+        };
+        var event = thundashop.Ajax.createEvent('','loadEditCartItemOnOrder', $(this),data);
+        var panel = $('.editcartitempanel');
+        var button = $(this);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            panel.html(res);
+            panel.css('position','absolute');
+            panel.css('top', button.position().top+10);
+            panel.css('left', button.position().left - (panel.width()+10));
+        });
+    },
     connectItemOnsOrderToRoom : function () {
         var tr = $(this).closest('tr');
         var orderid = $(this).attr('orderid');
@@ -133,12 +207,13 @@ app.PmsManagement = {
         });
     },
     updateInvoiceNote : function() {
+        var orderid = $(this).attr('orderid');
         var event = thundashop.Ajax.createEvent('','updateInvoiceNoteOnOrder',$(this), {
-            "orderid" : $(this).attr('orderid'),
+            "orderid" : orderid,
             "note" : $(this).closest('td').find('.invoicenotetextarea').val()
         });
         thundashop.Ajax.postWithCallBack(event, function() {
-            thundashop.common.Alert("Success", "Note updated on order");
+            app.PmsManagement.loadOrderInformationByOrder(orderid);
         })
     },
     
@@ -223,13 +298,17 @@ app.PmsManagement = {
         thundashop.common.showInformationBoxNew(event, 'New income report filter');
     },
     loadOrderInformation : function() {
-        var tr = $(this).closest('tr');
         var orderid = $(this).attr('orderid');
         if($("[fororder='"+orderid+"']").length > 0) {
             $("[fororder='"+orderid+"']").remove();
             return;
         }
-        var event = thundashop.Ajax.createEvent('','loadOrderInformation', $(this), {
+
+        app.PmsManagement.loadOrderInformationByOrder(orderid);
+    },
+    loadOrderInformationByOrder : function(orderid) {
+        var tr = $('tr[orderid="'+orderid+'"]');
+        var event = thundashop.Ajax.createEvent('','loadOrderInformation', tr, {
             "orderid" : orderid,
            "bookingid" : $('#openedbookingid').val()
         });

@@ -15,5 +15,5 @@ import org.springframework.beans.factory.annotation.Autowired;
 @GetShopApi
 public interface ISendRegningManager {
     @Autowired
-    public String sendOrder(String orderId);
+    public String sendOrder(String orderId, String email);
 }

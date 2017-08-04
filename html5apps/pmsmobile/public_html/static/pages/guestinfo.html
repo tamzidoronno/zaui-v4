@@ -18,8 +18,9 @@
     </div>
     <div class='col-xs-5 col-lg-6' style='text-align:right;'>
         <span class='btn btn-success' div ng-show='order.status === 7' ng-click="doSendReciept(order)">Send reciept</span>
-        <span class='btn btn-success' ng-show='order.status !== 7' ng-click="showSendPaymentLink(order)">Send payment link</span>
-        <span class='btn btn-success' ng-show='order.status !== 7' ng-click="doPayOrder(order)">Make payment</span>
+        <span class='btn btn-success' ng-show='order.status !== 7' ng-click="showSendPaymentLink(order)">Send link</span>
+        <span class='btn btn-success' ng-show='order.status !== 7' ng-click="sendToInvoiceButton(order)">Send to invoice</span>
+        <span class='btn btn-success' ng-show='order.status !== 7' ng-click="makePayment(order)">Make payment</span>
     </div>
 </div>
 
@@ -107,7 +108,38 @@
             <span class='btn btn-success' ng-click="markOrderAsInvoice();">Send order to invoice</span>
         </div>
     </div>
+</div>
+<div ng-show='showMakePayment'>
+    <div class='additionalinfo row'>Pay order {{payOrder.incrementOrderId}}</div>
+    <div class='row'>
+        <div class='col-xs-12'>
+           <br>
+            <b>1. Select a payment method</b>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col-xs-12'>
+            <select class="form-control" ng-model="selectedPaymentApp">
+                <option ng-repeat="method in pmethods" value="{{method.id}}">{{method.appName}}</option>
+            </select>
+        <br><br>
+        </div>
+    </div>
     
+    <div class='row'>
+        <div class='col-xs-12'>Note on order</div>
+    </div>
+    <div class='row'>
+        <div class='col-xs-12'><textarea style='width:100%; height: 100px;' ng-model="noteOnInvoice"></textarea></div>
+    </div>
+    <div class='row'>
+        <div class='col-xs-8'>
+        </div>
+        <div class='col-xs-4' style='text-align:right;'>
+            <br>
+            <span class='btn btn-success' ng-click="markOrderAsPaid();">Mark as paid</span>
+        </div>
+    </div>
 </div>
 <div class='row'><br></div>
 
@@ -156,7 +188,7 @@
     <div class='col-xs-8 othercontactdata'><select class="form-control" ng-model='selectedroom'  ng-options="item.id as item.bookingItemName for item in items"></select></div>
 </div>
 <div class='row'>
-    <div class='col-xs-4 contactdata'></div>
+    <div class='col-xs-4 contactdata'>Type: {{room.type.name}}</div>
     <div class='col-xs-8 othercontactdata'><span class="btn btn-success form-control" ng-click="changeRoom(selectedroom)">Change room</span></div>
 </div>
 <div class='row'><br></div>

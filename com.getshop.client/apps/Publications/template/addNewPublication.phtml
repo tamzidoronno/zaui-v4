@@ -1,0 +1,48 @@
+<?php
+    /* @var $this ns_da9f257b_fc83_4cb1_9422_3ee2d7d2bf20\Publications */
+?>
+<div class='publicationShell'>
+    <h2>Add publication</h2>
+    <div style="border-bottom:1px solid #d7d8da;padding-bottom: 5px;">
+        <table>
+            <tr>
+                <td class='publicationShelltableNames'>Authors</td>
+                <td><input class='publicationInput gsautosave'type="txt" name="authors" id="authors" value="<? echo $this->getAutoSaved('authors')?>"></td>
+            </tr>
+            <tr class='trConnected'>
+                 <td class='publicationShelltableNames'>Article Name</td>
+                 <td><input class='publicationInput gsautosave'type="txt" name="articleName" id="articleName" value="<? echo $this->getAutoSaved('articleName')?>"></td>
+             </tr>
+             <tr class='trConnected'>
+                 <td class='publicationShelltableNames'>Article Link</td>
+                 <td><input class='publicationInput gsautosave'type="txt" name="articleLink" id="articleLink" value="<? echo $this->getAutoSaved('articleLink')?>"></td>
+             </tr> 
+            <tr>
+                <td class='publicationShelltableNames'>Publisher</td>
+                <td><input class='publicationInput gsautosave'type="txt" name="publisher" id="publisher" value="<? echo $this->getAutoSaved('publisher')?>"></td>
+            </tr>
+            <tr>
+                <td class='publicationShelltableNames'>ISSN</td>
+                <td><input class='publicationInput gsautosave'type="txt" name="ISSN" id="ISSN" value="<? echo $this->getAutoSaved('ISSN')?>"></td>
+            </tr>
+            <tr>
+                <td class='publicationShelltableNames'>PMID</td>
+                <td><input class='publicationInput gsautosave'type="txt" name="PMID" id="PMID" value="<? echo $this->getAutoSaved('PMID')?>"></td>
+            </tr>
+            <tr>
+                <td class='publicationShelltableNames' style="position: relative;top: -10px;">Upload File</td>
+                <td>
+                    <?
+                    $this->wrapApp("994d7fed-d0cf-4a78-a5ff-4aad16b9bcab", "uploaded_file_publication");
+                    ?>
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td></td>
+                <td style="width:25%;"><div class='publicationShellSubmit'>Add</div></td>
+            </tr>
+        </table>
+    </div>
+</div>

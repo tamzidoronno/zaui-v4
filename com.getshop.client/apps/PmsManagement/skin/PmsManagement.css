@@ -19,7 +19,8 @@
 .PmsManagement .changepaymenttypeform { position:absolute; background-color:#fff; border: solid 1px; font-size: 12px; padding: 5px; border-radius: 3; z-index: 2; display:none; }
 .PmsManagement .markpaidform { position:absolute; background-color:#fff; border: solid 1px; font-size: 12px; padding: 5px; border-radius: 3; z-index: 2; display:none; }
 .PmsManagement .changepaymenttypeform span:hover { cursor:pointer; color: blue; }
-.PmsManagement .cleaningpanel,.PmsManagement .addaddonpanel { border: solid 1px; position:absolute; padding: 10px; background-color: #fff;z-index: 10;display:none; }
+.PmsManagement .cleaningpanel,.PmsManagement .addaddonpanel-outer { border: solid 1px #bbb; position:absolute; background-color: #fff;z-index: 10;display:none; }
+.PmsManagement .cleaningpanel,.PmsManagement .addaddonpanel {  padding: 10px; }
 .PmsManagement .orderstatsres { margin-top: 15px;}
 .PmsManagement .rotate180deg{-ms-transform: rotate(180deg);-webkit-transform: rotate(180deg);transform: rotate(180deg);overflow-x: scroll;direction: rtl;}
 .PmsManagement .rotate180deg2{-ms-transform: rotate(180deg);-webkit-transform: rotate(180deg);transform: rotate(180deg);direction: ltr;}
@@ -56,6 +57,10 @@
     display:none;
 }
 .PmsManagement .highlight td { background-color:#deff9f !important; }
+.PmsManagement .highlight td .orderforrromview td { background-color: transparent !important; }
+.PmsManagement td .orderforrromview { background-color:#0E0E19 !important; }
+.PmsManagement td .fa-close { color:#fff !important; }
+
 .PmsManagement .viewmode:hover { color: green; cursor: pointer; }
 .PmsManagement .guestoverviewtable  td .roompostfix { font-size: 12px; position:relative; }
 .PmsManagement .actions:hover {
@@ -258,7 +263,6 @@
     float: right;
     font-size: 27px;
     border-left: 1px solid #fff;
-    margin-left: 15px;
     padding-left: 15px;
     padding-right: 20px;
     cursor: pointer;
@@ -369,3 +373,10 @@
 }
 .PmsManagement .changeintervalrow,
 .PmsManagement .statsorderfilter{margin-top:5px;}
+
+@media only all and (max-width:1150px){
+    
+}
+@media only all and (max-width:800px){
+    
+}

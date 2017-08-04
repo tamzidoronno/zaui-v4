@@ -66,9 +66,12 @@ $cart = $order->cart;
             }  
             
             if($this->getApi()->getStoreManager()->getStoreId() != "123865ea-3232-4b3b-9136-7df23cf896c6") {
-                ?>
-                <input type="button" value="Credit order" class="creditinvoice" style="float:right;" orderid="<? echo $order->id; ?>" style='margin-right:10px;'>
-        <? } 
+                if($order->createByManager != "PmsDailyOrderGeneration") {
+                    ?>
+                    <input type="button" value="Credit order" class="creditinvoice" style="float:right;" orderid="<? echo $order->id; ?>" style='margin-right:10px;'>
+                    <?php
+                }
+            } 
          }
             ?>
         </div>

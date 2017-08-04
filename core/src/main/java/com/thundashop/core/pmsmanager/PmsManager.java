@@ -521,8 +521,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(filter != null && filter.searchWord != null) {
             filter.searchWord = filter.searchWord.trim();
         }
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        cal.set(java.util.Calendar.YEAR, 2016);
         
         if (!initFinalized) {
             finalizeList(new ArrayList(bookings.values()));
@@ -1129,6 +1127,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if(filter.endInvoiceAt == null || filter.endInvoiceAt.before(room.date.end)) {
                     filter.endInvoiceAt = room.date.end;
                 }
+                for(PmsBookingAddonItem item : room.addons) {
+                    if(filter.endInvoiceAt == null || filter.endInvoiceAt.before(item.date)) {
+                        filter.endInvoiceAt = item.date;
+                    }
+                }
             }
             
             for(String orderId : booking.orderIds) {
@@ -1179,6 +1182,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
         repicientList.clear();
+        try {
+            feedGrafanaNotificationDone(key);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
         
         key = key + "_" + booking.language;
         String message = notify(key, booking, "sms", room);
@@ -1244,6 +1252,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 prefix = prefixToSend;
                 phoneToSend = null;
             }
+            if(key.startsWith("booking_sendpaymentlink") || key.startsWith("booking_paymentmissing")) {
+                Order order = orderManager.getOrderSecure(orderIdToSend);
+                if(order != null) {
+                    order.sentToPhone = phone;
+                    order.sentToPhonePrefix = prefix;
+                }
+            }
+            
             if(prefix != null && (prefix.equals("47") || prefix.equals("+47"))) {
                 messageManager.sendSms("sveve", phone, message, prefix, configuration.smsName);
             } else {
@@ -1281,6 +1297,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 Order order = orderManager.getOrderSecure(orderIdToSend);
                 if(order != null) {
                     order.recieptEmail = recipientEmail;
+                    order.sentToCustomerDate = new Date();
+                    order.sentToEmail = recipientEmail;
                     orderManager.saveOrder(order);
                 }
             }
@@ -1323,6 +1341,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         Order order = orderManager.getOrderSecure(orderIdToSend);
                         if(order != null) {
                             order.recieptEmail = email;
+                            
+                            order.sentToCustomerDate = new Date();
+                            order.sentToEmail = email;
                             orderManager.saveOrder(order);
                         }
                     }
@@ -3104,7 +3125,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     
                     if(!hasBeenWarned && (booking.channel != null && !booking.channel.isEmpty())) {
                         messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text + "<br><bR><br>booking dump:<br>" + dumpBooking(booking), null);
-                        warnStoreAboutOverBooking(booking);
+                        warnStoreAboutOverBooking(booking, text);
                     }
                 }
                 gsTiming("removed when full maybe");
@@ -4095,6 +4116,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     void setEmailToSendTo(String email) {
         emailToSendTo = email;
+    }
+
+    private void feedGrafanaNotificationDone(String key) {
+        HashMap<String, Object> toAdd = new HashMap();
+        toAdd.put("key", key);
+        grafanaManager.addPoint("pmsmanager", "notificationsent", toAdd);
     }
 
     private void feedGrafana(PmsBooking booking) {
@@ -5098,27 +5125,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBookingAddonViewItem> getItemsForView(String viewId, Date date) {
-        Calendar startCal = Calendar.getInstance();
-        Calendar endCal = Calendar.getInstance();
         
         PmsMobileView view = getConfiguration().mobileViews.get(viewId);
-        
+        Calendar startCal = Calendar.getInstance();
         startCal.setTime(date);
-        endCal.setTime(date);
-        
         startCal.add(Calendar.DAY_OF_YEAR, view.daysDisplacement);
-        endCal.add(Calendar.DAY_OF_YEAR, view.daysDisplacement);
-        
-        startCal.set(Calendar.HOUR_OF_DAY, 0);
-        startCal.set(Calendar.MINUTE, 0);
-        startCal.set(Calendar.SECOND, 0);
-        
-        endCal.set(Calendar.HOUR_OF_DAY, 23);
-        endCal.set(Calendar.MINUTE, 59);
-        endCal.set(Calendar.SECOND, 59);
-        
         Date startDate = startCal.getTime();
-        Date endDate = endCal.getTime();
         
         List<PmsBookingAddonViewItem> items = new ArrayList();
         
@@ -5128,7 +5140,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     if(!view.products.contains(item.productId)) {
                         continue;
                     }
-                    boolean toBeAdded = item.date.after(startDate) && item.date.before(endDate);
+                    boolean toBeAdded = pmsInvoiceManager.isSameDay(item.date, startDate);
                     if(view.viewType == PmsMobileView.PmsMobileViewType.ALLACTIVE) {
                         if(room.isActiveOnDay(date)) {
                             toBeAdded = true;
@@ -6327,11 +6339,53 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
     
-    private void warnStoreAboutOverBooking(PmsBooking booking) {
+    private void warnStoreAboutOverBooking(PmsBooking booking, String text) {
         String email = getStoreEmailAddress();
-        String content = "Possible overbooking happened:<br>";
-        content += dumpBooking(booking);
+        String content = "Possible overbooking happened:<br>" + text;
         messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
     }
+
+    @Override
+    public LinkedList<TimeRepeaterDateRange> generateRepeatDateRanges(TimeRepeaterData data) {
+        TimeRepeater generator = new TimeRepeater();
+        return generator.generateRange(data);
+    }
+
+    @Override
+    public void addAddonToRoom(String productId, String pmsRoomId, Integer count, Date date, Double price) {
+        
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        
+        PmsBookingAddonItem toAdd = null;
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.productId.equals(productId) && pmsInvoiceManager.isSameDay(item.date, date)) {
+                toAdd = item;
+                break;
+            }
+        }
+        
+        if(toAdd == null) {
+            PmsBookingAddonItem original = getAddonFromProductId(productId);
+            toAdd = createAddonToAdd(original, date);
+            room.addons.add(toAdd);
+        }
+        
+        toAdd.count = count;
+        toAdd.price = price;
+        
+        saveBooking(booking);
+    }
+
+    private PmsBookingAddonItem getAddonFromProductId(String productId) {
+        for(PmsBookingAddonItem item : getConfigurationSecure().addonConfiguration.values()) {
+            if(item.productId.equals(productId)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    
 
 }

@@ -33,8 +33,13 @@ $states['9'] = "Need collecting";
 $states['10'] = "Send to invoice";
  ?>
 <div class='userdashboard'>
-    <div><span class='pmsbutton' gstype="clicksubmit" method="setQuickFilter" gsvalue="subtype_customerlist" gsname="type">Back to customerlist</span>
-    <span class='pmsbutton refreshbutton' userid='<?php echo $user->id; ?>'>refresh</span></div>
+    <div style='padding-left: 20px;padding-top: 20px;padding-right: 20px;'>
+        <span class='pmsbutton' gstype="clicksubmit" method="setQuickFilter" gsvalue="subtype_customerlist" gsname="type">Back to customerlist</span>
+        <span class='pmsbutton refreshbutton' userid='<?php echo $user->id; ?>'>refresh</span>
+        <?php if(isset($_SESSION['latestBookingLoadedOnPms'])) { ?>
+            <span style='float:right;' class="moreinformationaboutbooking pmsbutton" bookingid='<?php echo $_SESSION['latestBookingLoadedOnPms']; ?>'>Open last opened booking</span>
+        <?php } ?>
+    </div>
     <div>
         <div class='dashboard_panel_outer'>
             <div class='dashboard_panel' gstype='form' method='saveAccountInformation'>

@@ -1100,7 +1100,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         $_POST['data']['bookingid'] = $booking->id;
-        $_SESSION['latestBookingLoadedOnPms'] = $booking->id;
                     
         if(isset($_POST['data']['bookingid'])) {
             $this->showBookingInformation();

@@ -24,7 +24,9 @@ if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferred
     $disabled = "DISABLED";
 }
 $paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-
+if($user->type > 0) {
+    $disabled = "DISABLED";
+}
 ?>
 <div class="edituserbox" gstype='form' method='saveUser'>
     <input type='hidden' value='<? echo $type; ?>' class='changeusertype'>
@@ -52,6 +54,13 @@ $paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPa
                 ?>
                 </select><br>
                 <span style='cursor:pointer; color:blue;' class='createanewuserfromeditbox' bookingid='<?php echo $booking->id; ?>' orderid='<?php echo $orderId; ?>'>create a new user</span>
+                
+                <?php
+                if($user->type > 0) {
+                    echo "<br><br><span style='color:red; font-weight:bold;'>Editors and administrators are not allowed to be updated from this view.</span>";
+                }
+                ?>
+                
             </td>
         </tr>
         <tr><td><i class='fa fa-question' title='This is the name of the booker, if a company this is the company name. If its a private person its the name of the person.'></i> Name</td><td><input type="txt" gsname="fullName" value="<?php echo $user->fullName; ?>" <?php echo $disabled; ?>></td><tr>
@@ -64,7 +73,7 @@ $paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPa
         <tr><td>Birthdate</td><td><input type="txt" gsname="birthDay" value="<?php echo $user->birthDay; ?>" <?php echo $disabled; ?>></td><tr>
         <tr><td>Relationship</td><td><input type="txt" gsname="relationship" value="<?php echo $user->relationship; ?>" <?php echo $disabled; ?>></td><tr>
         <tr><td>Payment type</td><td>
-                <select gsname='preferredpaymenttype'>
+                <select gsname='preferredpaymenttype' <?php echo $disabled; ?>>
                     <?php
                     echo "<option value='' $selected>Default</option>";
                     foreach($paymentApps as $id => $type) {

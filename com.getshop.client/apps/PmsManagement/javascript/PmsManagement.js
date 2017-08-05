@@ -106,6 +106,16 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .deleteitemrowfromorder', app.PmsManagement.deleteItemFromCart);
         $(document).on('click','.PmsManagement .startAddonToRoom', app.PmsManagement.startAddonToRoom);
         $(document).on('click','.PmsManagement .loadAddonsList', app.PmsManagement.loadAddonsList);
+        $(document).on('click','.PmsManagement .createnewbookingbutton', app.PmsManagement.createNewBooking);
+    },
+    createNewBooking : function() {
+        var event = thundashop.Ajax.createEvent('','createNewBooking',$(this), {
+            "userid" : $(this).attr('userid')
+        });
+        thundashop.common.showInformationBoxNew(event, "");
+    },
+    saveSuccess : function() {
+        thundashop.common.Alert('Success','Account information successfully updated');
     },
     loadAddonsToBeAddedList : function() {
         var panel = $('.PmsManagement .addaddonsstep2');

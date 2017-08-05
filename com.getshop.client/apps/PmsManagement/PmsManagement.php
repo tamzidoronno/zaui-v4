@@ -21,6 +21,33 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function createNewBooking() {
+        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
+        $booking->userId = $_POST['data']['userid'];
+        $booking->sessionId = "";
+        $booking->confirmed = true;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $_POST['data']['bookingid'] = $booking->id;
+        $this->showBookingInformation();
+    }
+    
+    public function saveAccountInformation() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        $user->fullName = $_POST['data']['name'];
+        $user->address->address = $_POST['data']['adress'];
+        $user->address->city = $_POST['data']['city'];
+        $user->address->postCode = $_POST['data']['postcode'];
+        $user->emailAddress = $_POST['data']['email'];
+        $user->emailAddressToInvoice = $_POST['data']['invoiceemail'];
+        $this->getApi()->getUserManager()->saveUser($user);
+        
+        if($user->companyObject) {
+            $user->companyObject->name = $_POST['data']['name'];
+            $this->getApi()->getUserManager()->saveCompany($user->companyObject);
+        }
+        
+    }
+    
     public function addAdvancedAddons() {
         $addonId = $_POST['data']['addonId'];
         $pmsRoomId = $_POST['data']['roomid'];
@@ -1035,6 +1062,34 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("bookinginformation");
     }
     
+    public function updatePasswordSettings() {
+        if($_POST['data']['password']) {
+            $this->getApi()->getUserManager()->updatePasswordSecure($_POST['data']['userid'], $_POST['data']['password']);
+        }
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        $user->referenceKey = $_POST['data']['reference'];
+        $this->getApi()->getUserManager()->saveUser($user);
+        
+    }
+    
+    public function saveDiscountPreferences() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        $user->preferredPaymentType = $_POST['data']['preferredPaymentType'];
+        $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedName(), $user->id);
+        $discount->supportInvoiceAfter = $_POST['data']['createAfterStay'] == "true";
+        $discount->discountType = 0;
+        if($_POST['data']['discounttype'] == "fixedprice") {
+            $discount->discountType = 1;
+        }
+        foreach($_POST['data'] as $index => $val) {
+            if(stristr($index, "discount_")) {
+                $room = str_replace("discount_", "", $index);
+                $discount->discounts->{$room} = $val;
+            }
+        }
+        $this->getApi()->getPmsInvoiceManager()->saveDiscounts($this->getSelectedName(), $discount);
+    }
+    
     public function showBookingOnBookingEngineId() {
         $bid = $_POST['data']['bid'];
         
@@ -1045,6 +1100,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         $_POST['data']['bookingid'] = $booking->id;
+        $_SESSION['latestBookingLoadedOnPms'] = $booking->id;
                     
         if(isset($_POST['data']['bookingid'])) {
             $this->showBookingInformation();

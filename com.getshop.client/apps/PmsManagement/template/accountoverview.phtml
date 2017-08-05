@@ -37,12 +37,12 @@ $states['10'] = "Send to invoice";
     <span class='pmsbutton refreshbutton' userid='<?php echo $user->id; ?>'>refresh</span></div>
     <div>
         <div class='dashboard_panel_outer'>
-            <div class='dashboard_panel'>
+            <div class='dashboard_panel' gstype='form' method='saveAccountInformation'>
+                <input type='hidden' gsname='userid' value='<?php echo $user->id; ?>'>
                 <div class='dashboard_panel_header'><i class='fa fa-user'></i> Account information
-                   <span class='pmsbutton dashboardpmsbutton'>Save</span>
+                   <span class='pmsbutton dashboardpmsbutton' gstype='submit' gs_callback='app.PmsManagement.saveSuccess'>Save</span>
                 </div>
                     <div class='dashboard_panel_body'>
-
                         <table width='100%' cellspacing='0' cellpadding='0'>
                             <?php if($user->companyObject) { ?>
                                 <tr>
@@ -52,27 +52,27 @@ $states['10'] = "Send to invoice";
                             <?php } ?>
                             <tr>
                                 <td width='50%'>Name</td>
-                                <td><input class='gsniceinput1' value='<?php echo $user->fullName; ?>'></td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->fullName; ?>' gsname='name'></td>
                             </tr>
                             <tr>
                                 <td width='50%'>Street address</td>
-                                <td><input class='gsniceinput1' value='<?php echo $user->address->address; ?>'></td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->address->address; ?>' gsname='adress'></td>
                             </tr>
                             <tr>
                                 <td width='50%'>Postal code</td>
-                                <td><input class='gsniceinput1' value='<?php echo $user->address->postCode; ?>'></td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->address->postCode; ?>' gsname='postcode'></td>
                             </tr>
                             <tr>
                                 <td width='50%'>City</td>
-                                <td><input class='gsniceinput1' value='<?php echo $user->address->city; ?>'></td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->address->city; ?>' gsname='city'></td>
                             </tr>
                             <tr>
                                 <td width='50%'>Email address</td>
-                                <td><input class='gsniceinput1' value='<?php echo $user->emailAddress; ?>'></td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->emailAddress; ?>' gsname='email'></td>
                             </tr>
                             <tr>
                                 <td width='50%'>Invoice email adress</td>
-                                <td><input class='gsniceinput1' value='<?php echo $user->emailAddressToInvoice; ?>'></td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->emailAddressToInvoice; ?>' gsname='invoiceemail'></td>
                             </tr>
                         </table>
                 </div>
@@ -82,7 +82,7 @@ $states['10'] = "Send to invoice";
         <div class='dashboard_panel_outer'>
             <div class='dashboard_panel'>
                 <div class='dashboard_panel_header'><i class='fa fa-calendar'></i> Bookings
-                    <span class='pmsbutton dashboardpmsbutton'>Create a new booking</span>
+                    <span class='pmsbutton dashboardpmsbutton createnewbookingbutton' userid='<?php echo $user->id;?>'>Create a new booking</span>
                 </div>
                 <div class='dashboard_panel_body'>
                     <table width='100%' cellspacing='0' cellpadding='0'>
@@ -91,6 +91,7 @@ $states['10'] = "Send to invoice";
                             <th>Guest</th>
                             <th>Rooms</th>
                             <th>Amount</th>
+                            <th>Orders</th>
                         </tr>
                     <?php
                     foreach($bookings as $booking) {
@@ -101,12 +102,21 @@ $states['10'] = "Send to invoice";
                                     $namesarray[] = $guest->name;
                                 }
                             }
+                            $totalOrderAmount = 0;
+                            foreach($booking->orderIds as $orderId) {
+                                $totalOrderAmount += $this->getApi()->getOrderManager()->getTotalForOrderById($orderId);
+                            }
                         }
                         echo "<tr class='moreinformationaboutbooking' bookingid='".$booking->id."'>";
                         echo "<td>" . date("d.m.Y", strtotime($booking->rowCreatedDate)) . "</td>";
                         echo "<td>" . join(",", $namesarray) . "</td>";
                         echo "<td align='center'>" . sizeof($booking->rooms) . "</td>";
                         echo "<td align='center'>" . round($booking->totalPrice) . "</td>";
+                        $mismatch = "";
+                        if(round($booking->totalPrice) != round($totalOrderAmount)) {
+                            $mismatch = "style='color:red;font-weight:bold;'";
+                        }
+                        echo "<td align='center' $mismatch>$totalOrderAmount</td>";
                         echo "</tr>";
                     }
                     ?>
@@ -118,10 +128,10 @@ $states['10'] = "Send to invoice";
         <div class='dashboard_panel_outer'>
             <div class='dashboard_panel'>
                 <div class='dashboard_panel_header'><i class='fa fa-user-times'></i> Subaccounts
-                    <span class='pmsbutton dashboardpmsbutton'>Create subaccount</span>
+                    <span class='pmsbutton dashboardpmsbutton'>Create subaccount (N/A)</span>
                 </div>
                 <div class='dashboard_panel_body'>
-                    <?php echo "No subaccounts created yet."; ?>
+                    <?php echo "Subaccount support is not yet available."; ?>
                 </div>
             </div>
         </div>
@@ -138,11 +148,24 @@ $states['10'] = "Send to invoice";
                             </tr>
                         <?php
                         foreach($orders as $order) {
+                            if($order->isCreditNote) {
+                                continue;
+                            }
                             echo "<tr>";
                             echo "<td><i class='fa fa-file-pdf-o' style='cursor:pointer;' onclick=\"window.open('/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."','_fdsaf');\"></i> " . $order->incrementOrderId . "</td>";
                             echo "<td>" . $this->getApi()->getOrderManager()->getTotalAmount($order) . "</td>";
                             echo "<td align='right'>" . $states[$order->status] . "</td>";
                             echo "</tr>";
+                            if(isset($order->creditOrderId)) {
+                                foreach($order->creditOrderId as $creditOrderId) {
+                                    $order = $this->getApi()->getOrderManager()->getOrder($creditOrderId);
+                                    echo "<tr>";
+                                    echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-file-pdf-o' style='cursor:pointer;' onclick=\"window.open('/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."','_fdsaf');\"></i> " . $order->incrementOrderId . " (credit)</td>";
+                                    echo "<td>" . $this->getApi()->getOrderManager()->getTotalAmount($order) . "</td>";
+                                    echo "<td align='right'>" . $states[$order->status] . "</td>";
+                                    echo "</tr>";
+                                }
+                            }
                         }
                         ?>
                         </table>
@@ -151,24 +174,29 @@ $states['10'] = "Send to invoice";
         </div>
         
         <div class='dashboard_panel_outer'>
-            <div class='dashboard_panel'>
+            <div class='dashboard_panel' gstype='form' method='saveDiscountPreferences'>
+                <input type='hidden' gsname='userid' value='<?php echo $user->id; ?>'>
                 <div class='dashboard_panel_header'><i class='fa fa-trophy'></i> Discounts and payment preferences
-                    <span class='pmsbutton dashboardpmsbutton'>Save</span>
+                    <span class='pmsbutton dashboardpmsbutton' gstype='submit' gs_callback='app.PmsManagement.saveSuccess'>Save</span>
                 </div>
                 <div class='dashboard_panel_body'>
                     <table width='100%' cellspacing='0' cellpadding='0'>
                         <tr>
+                            <?php
+                            $afterStayChecked = $discounts->supportInvoiceAfter ? "CHECKED" : "";
+                            ?>
+                            
                             <td><b>Create order after stay</b><br>
                             When a booking is completed the order will be created after the stay has been completed.</td>
-                            <td align='center'><input type='checkbox' class='gsniceinput1' value='<?php echo $user->companyObject->vatNumber; ?>'></td>
+                            <td align='center'><input type='checkbox' class='gsniceinput1' gsname='createAfterStay' <?php echo $afterStayChecked; ?>></td>
                         </tr>
                         <tr>
                             <td><b>Preferred payment type</b><br>
                                 What payment method should be default when booking?<br>
                             <td align='center'>
-                                <select class='gsniceselect1'>
+                                <select class='gsniceselect1' gsname='preferredPaymentType'>
                                 <?php
-                                    echo "<option value='' $selected></option>";
+                                    echo "<option value=''>Default</option>";
                                     foreach($paymentApps as $id => $type) {
                                         $selected = "";
                                         $instance = $this->getFactory()->getApplicationPool()->createInstace($type);
@@ -187,9 +215,9 @@ $states['10'] = "Send to invoice";
                             <td><b>Discount type</b><br>
                                 Percentage or fixed price discount?<br>
                             <td align='center'>
-                                <select class='gsniceselect1'>
+                                <select class='gsniceselect1' gsname='discounttype'>
                                     <option value='percentage'>Percentage</option>
-                                    <option value='percentage'>Fixed price</option>
+                                    <option value='fixedprice' <?php if($discounts->discountType == 1) { echo "SELECTED"; } ?>>Fixed price</option>
                                 </select>
                             </td>
                         </tr>
@@ -201,7 +229,7 @@ $states['10'] = "Send to invoice";
                             }
                             echo "<tr>";
                             echo "<td>" . $room->name . "</td>";
-                            echo "<td align='center'><input type='txt' style='width:50px;' value='$amount'></td>";
+                            echo "<td align='center'><input type='txt' style='width:50px;' value='$amount' gsname='discount_".$room->id."'></td>";
                             echo "</tr>";
                         }
                         ?>
@@ -210,24 +238,21 @@ $states['10'] = "Send to invoice";
             </div>
         </div>
         
-        <div class='dashboard_panel_outer'>
+        <div class='dashboard_panel_outer' gstype='form' method='updatePasswordSettings'>
+            <input type='hidden' gsname='userid' value='<?php echo $user->id; ?>'>
             <div class='dashboard_panel'>
                 <div class='dashboard_panel_header'><i class='fa fa-lock'></i> Password / login
-                    <span class='pmsbutton dashboardpmsbutton'>Save</span>
+                    <span class='pmsbutton dashboardpmsbutton' gstype='submit' gs_callback='app.PmsManagement.saveSuccess'>Save</span>
                 </div>
                 <div class='dashboard_panel_body'>
                     <table width='100%' cellspacing='0' cellpadding='0'>
                         <tr>
                             <td width='50%'><b>Password</b>
-                            <td align='center'><input type='text' class='gsniceinput1'></td>
-                        </tr>
-                        <tr>
-                            <td width='50%'><b>Repeat password</b>
-                            <td align='center'><input type='text' class='gsniceinput1'></td>
+                            <td align='center'><input type='text' class='gsniceinput1' gsname='password'></td>
                         </tr>
                         <tr>
                             <td width='50%'><b>Login reference</b>
-                            <td align='center'><input type='text' class='gsniceinput1' value='<?php echo $user->referenceKey; ?>'></td>
+                            <td align='center'><input type='text' class='gsniceinput1' value='<?php echo $user->referenceKey; ?>' gsname='reference'></td>
                         </tr>
                     </table>
                 </div>

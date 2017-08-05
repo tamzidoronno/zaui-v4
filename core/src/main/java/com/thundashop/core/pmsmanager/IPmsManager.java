@@ -27,7 +27,7 @@ public interface IPmsManager {
     @Administrator
     public void markRoomAsCleaned(String itemId);
     
-    public void warnFailedBooking();
+    public void warnFailedBooking(PmsBooking booking);
     
     @Administrator
     public void markRoomAsCleanedWithoutLogging(String itemId);

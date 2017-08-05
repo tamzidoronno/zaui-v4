@@ -9,13 +9,10 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshop.data.GetShopLockCode;
-import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import org.joda.time.DateTime;
 
@@ -54,7 +51,6 @@ public class PmsManagerProcessor {
         try { processAutoDeletion(); }catch(Exception e) { manager.logPrintException(e); }
         try { processLockSystem(); }catch(Exception e) {manager.logPrintException(e); }
         try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { manager.logPrintException(e); }
-        try { checkForDeadCodes(); }catch(Exception e) { manager.logPrintException(e); }
     }
     
     public void hourlyProcessor() {
@@ -65,6 +61,7 @@ public class PmsManagerProcessor {
         try { checkForIncosistentBookings(); }catch(Exception e) { manager.logPrintException(e); }
         try { checkForRoomToClose(); }catch(Exception e) {manager.logPrintException(e); }
         try { updateInvoices(); }catch(Exception e) {manager.logPrintException(e); }
+        try { checkForDeadCodes(); }catch(Exception e) { manager.logPrintException(e); }
     }
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {

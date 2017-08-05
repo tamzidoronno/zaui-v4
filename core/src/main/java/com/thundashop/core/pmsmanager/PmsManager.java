@@ -6287,8 +6287,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void warnFailedBooking() {
-        messageManager.sendErrorNotification("Someone booked error message shown to enduser.", null);
+    public void warnFailedBooking(PmsBooking booking) {
+        Gson gson = new Gson();
+        String rawBooking = gson.toJson(booking);
+        messageManager.sendErrorNotification("Someone booked error message shown to enduser, booking raw:" + rawBooking, null);
     }
 
     @Override

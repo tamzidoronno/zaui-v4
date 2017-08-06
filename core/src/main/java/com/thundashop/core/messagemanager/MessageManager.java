@@ -6,6 +6,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.chatmanager.SubscribedToAirgram;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GrafanaFeederImpl;
 import com.thundashop.core.common.GrafanaManager;
@@ -33,9 +34,12 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static java.util.stream.Collectors.toMap;
+import static java.lang.Math.min;
 
 /**
  */
@@ -273,6 +277,11 @@ public class MessageManager extends ManagerBase implements IMessageManager {
             return "";
         }
         
+        String mainSmsNumber = getStoreSettingsApplicationKey("mainsmsnumber");
+        if (mainSmsNumber != null && !mainSmsNumber.isEmpty()) {
+            from = mainSmsNumber;
+        }
+        
         User user = userManager.getUserByCellphone(to);
         if (user != null && user.smsDisabled) {
             return "";
@@ -370,6 +379,76 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         });
         
         return result;
+    }
+
+    @Override
+    public List<SmsMessage> getSmsMessagesSentTo(String prefix, String phoneNumber, Date fromDate, Date toDate) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", SmsMessage.class.getCanonicalName());
+        query.put("to", phoneNumber);
+        query.put("prefix", prefix);
+        
+        if (fromDate != null && toDate != null) {
+            query.put("rowCreatedDate", BasicDBObjectBuilder.start("$gte", fromDate).add("$lte", toDate).get());
+        }
+
+        List<DataCommon> datas = database.query(MessageManager.class.getSimpleName(), storeId+"_log", query);
+        ArrayList result = new ArrayList(datas);
+        
+        Collections.sort(result, new Comparator<DataCommon>(){
+             public int compare(DataCommon o1, DataCommon o2){
+                 return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+             }
+        });
+        
+        return result;
+    }
+
+    @Override
+    public void saveIncomingMessage(SmsMessage smsMessage, String code) {
+        
+        if (!code.equals("asodifj2oi4alksfdlan234kjnaksfdnj2jk41hk34l1h1")) {
+            throw new ErrorException(26);
+        }
+        
+        smsMessage.outGoing = false;
+        smsMessage.rowCreatedDate = new Date();
+        
+        database.save(MessageManager.class.getSimpleName(), "col_"+storeId+"_log", smsMessage);
+    }
+
+    @Override
+    public SmsMessagePage getIncomingMessages(int pageNumber) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", SmsMessage.class.getCanonicalName());
+        query.put("outGoing", false);
+        
+        List<DataCommon> datas = database.query(MessageManager.class.getSimpleName(), storeId+"_log", query);
+        ArrayList result = new ArrayList(datas);
+        
+        Collections.sort(result, new Comparator<DataCommon>(){
+             public int compare(DataCommon o1, DataCommon o2){
+                 return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+             }
+        });
+        
+        Map<Integer, List<SmsMessage>> mappedResult = partition(result, 50);
+        
+        SmsMessagePage page = new SmsMessagePage();
+        page.maxPages = mappedResult.size();
+        page.pageNumber = pageNumber;
+        page.pageSize = 50;
+        page.messages = mappedResult.get(pageNumber);
+        
+        return page;
+    }
+    
+    private Map<Integer, List<SmsMessage>> partition(List<SmsMessage> list, int pageSize) {
+        return IntStream.iterate(0, i -> i + pageSize)
+              .limit((list.size() + pageSize - 1) / pageSize)
+              .boxed()
+              .collect(toMap(i -> i / pageSize,
+                             i -> list.subList(i, min(i + pageSize, list.size()))));
     }
 
 }

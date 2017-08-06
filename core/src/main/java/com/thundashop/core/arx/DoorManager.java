@@ -4,6 +4,9 @@ package com.thundashop.core.arx;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.getshop.data.GetShopDevice;
+import com.thundashop.core.getshop.data.GetShopLockCode;
+import com.thundashop.core.getshop.data.GetShopLockMasterCodes;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.storemanager.StoreManager;
@@ -154,6 +157,42 @@ public class DoorManager extends GetShopSessionBeanNamed implements IDoorManager
 
     List<Door> getDoorList() {
         return doorList;
+    }
+    
+    public GetShopLockCode getNextAvailableCode(String deviceId) throws Exception {
+        
+        GetShopDevice device = getShopLockManager.getDevice(deviceId);
+        if (device != null) {
+            return device.getNextAvailableCode();
+        }
+
+        return null;
+    }
+    
+    public void claimUsage(String deviceId, GetShopLockCode code, String source) {
+        getShopLockManager.claimUsage(deviceId, code, source);
+    }
+
+    public Door getDoorByDeviceId(String deviceId) throws Exception {
+        return getAllDoors().stream()
+                .filter(door -> door.externalId != null && door.externalId.equals(deviceId))
+                .findFirst()
+                .orElse(null);
+        
+    }
+
+    public void removeCode(String deviceId, Integer slot) {
+        getShopLockManager.removeCodeOnLockBySlotId(deviceId, slot);
+    }
+
+    @Override
+    public GetShopLockMasterCodes getMasterCodes() {
+        return getDoorManager().getMasterCodes();
+    }
+
+    @Override
+    public void saveMasterCodes(GetShopLockMasterCodes masterCodes) {
+        getDoorManager().saveMasterCodes(masterCodes);
     }
 
 }

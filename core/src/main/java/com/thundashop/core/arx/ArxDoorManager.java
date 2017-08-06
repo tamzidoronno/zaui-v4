@@ -14,6 +14,8 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerSubBase;
+import com.thundashop.core.getshop.data.GetShopLockCode;
+import com.thundashop.core.getshop.data.GetShopLockMasterCodes;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
@@ -689,6 +691,16 @@ String toPost = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
         for(Door door : doors) {
             doorAction(door.externalId, "forceOpenOff");
         }
+    }
+
+    @Override
+    public GetShopLockMasterCodes getMasterCodes() {
+        return null;
+    }
+
+    @Override
+    public void saveMasterCodes(GetShopLockMasterCodes masterCodes) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

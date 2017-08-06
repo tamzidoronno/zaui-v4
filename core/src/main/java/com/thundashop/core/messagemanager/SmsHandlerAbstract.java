@@ -16,6 +16,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import java.io.UnsupportedEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -246,6 +247,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
         smsMessage.message = message;
         smsMessage.status = "not_delivered";
         smsMessage.smsHander = getName();
+        smsMessage.rowCreatedDate = new Date();
         
         database.save(MessageManager.class.getSimpleName(), getColName(), smsMessage);
         this.smsMessage = smsMessage;

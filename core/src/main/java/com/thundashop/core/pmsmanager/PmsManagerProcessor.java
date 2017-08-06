@@ -1024,7 +1024,7 @@ public class PmsManagerProcessor {
             }
             boolean lockNeedUpdate = false;
             for(GetShopLockCode code : lock.codes.values()) {
-                if(code.inUse()) {
+                if(code.inUse() && code.usedBySource.isEmpty()) {
                     boolean found = false;
                     String codeToCheck = code.fetchCode();
                     for(PmsBooking booking : bookings) {

@@ -20,4 +20,8 @@ public class MekonomenEventParticipant {
     public String status = "";
     
     public MekonomenEvent event = null;
+
+    public boolean isCompleted() {
+        return status.trim().equals("Completed");
+    }
 }

@@ -356,6 +356,22 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         return new ArrayList(servers.keySet());
     }
 
+    public void claimUsage(String deviceId, GetShopLockCode code, String source) {
+        GetShopDevice device = devices.get(deviceId);
+        if (device != null) {
+            device.markInUse(code.slot, source);
+            saveObject(device);    
+        }
+    }
+
+    public void removeCodeOnLockBySlotId(String deviceId, Integer slot) {
+        GetShopDevice device = devices.get(deviceId);
+        if (device != null) {
+            device.removeCodeBySlotId(slot);
+            saveObject(device);
+        }
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;

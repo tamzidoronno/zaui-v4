@@ -178,4 +178,34 @@ public class GetShopDevice extends DataCommon {
         }
         return !masterLocks.isEmpty();
     }
+
+    public GetShopLockCode getNextAvailableCode() {
+        finalizeCodes();
+        return codes.values().stream()
+                .filter(code -> code.canUseForGuests())
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void markInUse(Integer slot, String source) {
+        finalizeCodes();
+        GetShopLockCode code = codes.get(slot);
+        if (code != null) {
+            code.setInUse(true);
+            code.usedBySource = source;
+        }
+    }
+
+    private void finalizeCodes() {
+        for (Integer slot : codes.keySet()) {
+            codes.get(slot).slot = slot;
+        }
+    }
+
+    public void removeCodeBySlotId(Integer slot) {
+        GetShopLockCode code = codes.get(slot);
+        if (code != null) {
+            code.needToBeRemoved = new Date();
+        }
+    }
 }

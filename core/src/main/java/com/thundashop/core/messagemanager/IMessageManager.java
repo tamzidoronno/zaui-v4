@@ -64,9 +64,16 @@ public interface IMessageManager  {
     @Administrator
     public List<SmsMessage> getAllSmsMessages(Date start, Date end);
     
+    @Administrator
+    List<SmsMessage> getSmsMessagesSentTo(String prefix, String phoneNumber, Date fromDate, Date toDate);
+    
     public void sendMessageToStoreOwner(String message, String subject);
     
     @Administrator
     public List<MailMessage> getMailSent(Date from, Date to, String toEmailAddress);
     
+    public void saveIncomingMessage(SmsMessage message, String code);
+    
+    @Administrator
+    public SmsMessagePage getIncomingMessages(int pageNumber);
 }

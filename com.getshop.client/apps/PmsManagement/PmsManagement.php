@@ -21,6 +21,36 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function searchExistingCustomer() {
+        $name = $_POST['data']['name'];
+        $users = $this->getApi()->getUserManager()->findUsers($name);
+        if(sizeof($users) > 0) {
+            echo "<div style='margin-top: 20px; border-bottom: solid 1px; padding-bottom: 10px; margin-bottom: 10px;text-align:center;'>An existing user exist</div>";
+            foreach($users as $user) {
+                echo "<div class='existinguserselection' userid='".$user->id."' style='font-size:12px;'>";
+                echo "<i class='fa fa-arrow-right' style='float:right; color:#bbb;'></i>";
+                if($user->companyObject) {
+                    echo "<b>" . $user->companyObject->vatNumber . "</b><bR>";
+                }
+                echo $user->fullName . "<bR>";
+                echo $user->address->address . "<br>";
+                echo $user->address->postCode . " " . $user->address->city . "<br>";
+                echo $user->emailAddress;
+                echo "</div>";
+            }
+        }
+    }
+    
+    public function createNewUserOnBooking() {
+        $orgid = $_POST['data']['orgId'];
+        $name = $_POST['data']['name'];
+        $bookingId = $_POST['data']['bookingid'];
+        
+        $this->getApi()->getPmsManager()->createNewUserOnBooking($this->getSelectedName(),$bookingId, $name, $orgid);
+        
+        $this->renderEditUserView();
+    }
+    
     public function createNewBooking() {
         $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
         $booking->userId = $_POST['data']['userid'];

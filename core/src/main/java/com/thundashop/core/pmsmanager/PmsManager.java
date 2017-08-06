@@ -6464,6 +6464,49 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
+    @Override
+    public void createNewUserOnBooking(String bookingId, String name, String orgId) {
+        User newuser = null;
+        PmsBooking booking = getBooking(bookingId);
+        if(orgId != null && !orgId.trim().isEmpty()) {
+            List<Company> companies = userManager.getCompaniesByVatNumber(orgId);
+            if(companies != null) {
+                for(Company comp : companies) {
+                    List<User> existingUsers = userManager.getUsersThatHasCompany(comp.id);
+                    if(!existingUsers.isEmpty()) {
+                        newuser = existingUsers.get(0);
+                        for(User tmp : existingUsers) {
+                            if(tmp.isCompanyMainContact) {
+                                newuser = tmp;
+                                break;
+                            }
+                        }
+                    }
+                    if(newuser != null) {
+                        break;
+                    }
+                }
+            }
+        }
+        if(newuser == null) {
+            newuser = new User();
+            if(orgId != null && !orgId.trim().isEmpty()) {
+                Company company = new Company();
+                company.vatNumber = orgId;
+                company.name = name;
+                company = userManager.saveCompany(company);
+                newuser.company.add(company.id);
+            }
+            newuser.fullName = name;
+            newuser.isCompanyMainContact = true;
+            userManager.saveUserSecure(newuser);
+            userManager.getUserById(newuser.id);
+        }
+        
+        booking.userId = newuser.id;
+        saveBooking(booking);
+    }
+
     
 
 }

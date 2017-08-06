@@ -139,6 +139,9 @@ public interface IPmsManager {
     @Administrator
     public List<PmsCustomerRow> getAllUsers(PmsBookingFilter filter);
     
+    @Administrator
+    public void createNewUserOnBooking(String bookingId, String name, String orgId);
+    
     public Date getEarliestEndDate(String pmsBookingRoomId);
     
     @Editor

@@ -82,6 +82,14 @@ $states['fi_FI'] = "Finish";
         </div>
     </div>
     
+    <div class="textfield gss_setting"  id="mainsmsnumber">
+        <span class="title"><?php echo $this->__f("Number to send SMS from"); ?></span>
+        <input type="textfield" gs_model='storesettings' gs_model_attr='mainsmsnumber' value="<? echo $this->getSmsNumber(); ?>">
+        <div class="description">
+            <?php echo $this->__("If this number is set the system will send text messages"); ?>
+        </div>
+    </div>
+    
     <div class="textfield gss_setting"  id="defaultprefix">
         <span class="title"><?php echo $this->__f("Default phone prefix"); ?></span>
         <input type="textfield" gs_model='storesettings' gs_model_attr='defaultPrefix' value="<? echo $this->getDefaultPrefix(); ?>">

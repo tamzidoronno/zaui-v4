@@ -4,6 +4,7 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.getshop.data.GetShopDevice;
+import com.thundashop.core.getshop.data.GetShopLockMasterCodes;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -139,5 +140,18 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
     public void closeAllForTheDay() throws Exception {
     }
 
-    
+    @Override
+    public GetShopLockMasterCodes getMasterCodes() {
+        return getShopLockManager.getMasterCodes();
+    }
+
+    @Override
+    public void saveMasterCodes(GetShopLockMasterCodes masterCodes) {
+        for (Integer slot : masterCodes.codes.keySet()) {
+            String code = masterCodes.codes.get(slot);
+            if (code != null && !code.isEmpty()) {
+                getShopLockManager.setMasterCode(slot, code);
+            }
+        }
+    }
 }

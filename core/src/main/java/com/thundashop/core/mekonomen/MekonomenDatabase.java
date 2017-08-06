@@ -200,6 +200,5 @@ public class MekonomenDatabase {
     
     private MekonomenEvent getEvent(String nodeId) {
         return events.get(nodeId);
-        
     }
 }

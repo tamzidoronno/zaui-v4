@@ -1,10 +1,12 @@
 package com.thundashop.core.getshop.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.Editor;
 import java.util.HashMap;
 import java.util.Random;
 
 public class GetShopLockMasterCodes extends DataCommon {
+    @Editor
     public HashMap<Integer, String> codes = new HashMap();
 
     public boolean checkIfEmtpy() {

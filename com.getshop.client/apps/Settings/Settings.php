@@ -68,6 +68,10 @@ class Settings extends \SystemApplication implements \Application {
         return "";
     }
     
+    public function getSmsNumber() {
+        return $this->getConfigurationSetting("mainsmsnumber");
+    }
+    
     public function isDisableMobileMode() {
         if (isset($this->getFactory()->getStoreConfiguration()->disableMobileMode)) {
             return $this->getFactory()->getStoreConfiguration()->disableMobileMode;
@@ -133,6 +137,7 @@ class Settings extends \SystemApplication implements \Application {
         $this->setConfigurationSetting("seo",  $_POST['seo']);
         $this->setConfigurationSetting("cookiewarning",  $_POST['cookiewarning']);
         $this->setConfigurationSetting("automaticPhoneValidationActivated",  $_POST['automaticPhoneValidationActivated']);
+        $this->setConfigurationSetting("mainsmsnumber",  $_POST['mainsmsnumber']);
         
         $this->getApi()->getStoreManager()->setStoreIdentifier($_POST['identifier']);
     }

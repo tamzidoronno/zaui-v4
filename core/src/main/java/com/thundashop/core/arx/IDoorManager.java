@@ -10,6 +10,8 @@ import com.thundashop.core.arx.Door;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import com.thundashop.core.getshop.data.GetShopLockCode;
+import com.thundashop.core.getshop.data.GetShopLockMasterCodes;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,4 +50,10 @@ interface IDoorManager {
     public void closeAllForTheDay() throws Exception;
     @Administrator
     public HashMap<String, List<AccessLog>> generateDoorLogForAllDoorsFromResult(String resultFromArx) throws Exception;
+    
+    @Administrator
+    public GetShopLockMasterCodes getMasterCodes();
+    
+    @Administrator
+    public void saveMasterCodes(GetShopLockMasterCodes masterCodes);
 }

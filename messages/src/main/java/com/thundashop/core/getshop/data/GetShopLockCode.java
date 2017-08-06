@@ -15,6 +15,7 @@ public class GetShopLockCode implements Serializable {
     public Date needToBeRemoved = null;
     public Integer slot = 0;
     private boolean forceRemove = false;
+    public String usedBySource = "";
     
     public Integer getSlot() {
         return slot;
@@ -79,6 +80,14 @@ public class GetShopLockCode implements Serializable {
         return false;
     }
 
+    public boolean canUseForGuests() {
+        if (isMasterCode()) {
+            return false;
+        }
+        
+        return canUse();
+    }
+    
     public String fetchCode() {
         used = true;
         lastUsed = new Date();
@@ -129,5 +138,10 @@ public class GetShopLockCode implements Serializable {
 
     public void setInUse(boolean inUse) {
         this.used = inUse;
+    }
+
+    // This is not good enough, need to implement proper mastercode handling.
+    private boolean isMasterCode() {
+        return slot < 5;
     }
 }

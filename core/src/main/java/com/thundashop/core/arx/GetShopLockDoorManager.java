@@ -44,6 +44,7 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
                 Door door = new Door();
                 door.externalId = lock.id;
                 door.name = name;
+                door.serverSource = lock.serverSource;
                 doors.add(door);
             }
         }

@@ -1,5 +1,6 @@
 package com.thundashop.core.apacmanager;
 
+import com.thundashop.core.arx.Door;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
@@ -33,4 +34,7 @@ public interface IApacManager {
     
     @Administrator
     public void sendSms(String accessId, String message);
+    
+    @Administrator
+    public List<Door> getAllDoors() throws Exception;
 }

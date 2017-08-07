@@ -218,79 +218,29 @@ if(!$user->fullName) {
 
     
     <div style='padding-left: 10px;'>
-        <span class='roomprefix'>User</span>
-        <span class='roompostfix' style='width: 227px;
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;' >
-            <?php
-            if(!$user->cellPhone) {
-                $user->prefix = "";
-                $user->cellPhone = "no phone set";
-            }
-            if(!$user->emailAddress) {
-                $user->emailAddress = "no email set";
-            }
-            ?>
-            <span style="font-size:12px">
-                <i class='fa fa-edit loadedituser'></i> <? echo $user->fullName; ?>, <? echo $user->emailAddress . ", phone +" . $user->prefix . $user->cellPhone; ?>
-                <span id='edituserview' class='edituserview'></span>
-            </span>
-        </span>
-        <div style='clear:both;'></div>
-        <?php $booking->bookedByUserId;  if($booking->bookedByUserId) { ?>
-            <span class='roomprefix'>Booked by</span>
-            <span class='roompostfix' style='width: 227px;
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;'>
-                <?php
-                $booker = $this->getApi()->getUserManager()->getUserById($booking->bookedByUserId);
-                echo $booker->fullName;
-                ?>
-            </span>
-            <div style='clear:both;'></div>
-        <?php } ?>
-        <? if($user->company && sizeof($user->company) > 0) { ?>
-            <span class='roomprefix'>Company</span>
-            <span class='roompostfix'>
-            <? 
-            foreach($user->company as $companyId) {
-                $company = $this->getApi()->getUserManager()->getCompany($companyId);
-                echo "<span style='font-size:12px'>";
-                ?><a onclick='$(".PmsManagement .editcompanybox").fadeIn(function() {$(".editcompanybox select").chosen(); });'><?php
-                echo $company->name;
-                ?></a> <?php
-                echo "Email: ";
-                if($company->email) {
-                     $company->email;
-                } else {
-                    echo "No email";
-                }
-                echo ", phone: ";
-                if($company->phone) {
-                    echo "+" . $company->prefix . $company->phone;
-                } else {
-                    echo "Missing phone";
-                }
-                echo "</span>";
-            }
-            ?></span>
-            <div style='clear:both;'></div>
-        <? } else {
-            ?>
-            <span class='roomprefix'>Company</span>
-            <span class='roompostfix' style="font-size: 12px;">
-                <span onclick='$(".PmsManagement .editcompanybox").fadeIn(function() {$(".editcompanybox select").chosen(); });'>No company connected to this user</span>
-            </span>
-            <div style='clear:both;'></div>
-            <?php
-        } 
-        $this->includefile("companydata");
+        <?php
+            $booker = $this->getApi()->getUserManager()->getUserById($booking->bookedByUserId);
         ?>
-        <div style='clear:both;'></div>
+        <?php
+        if(!$user->cellPhone) {
+            $user->prefix = "";
+            $user->cellPhone = "no phone set";
+        }
+        if(!$user->emailAddress) {
+            $user->emailAddress = "no email set";
+        }
+        ?>
+        <span>
+            <i class='fa fa-info-circle loadAccountInformation' userid='<?php echo $user->id; ?>' title='Open user overview' style='cursor:pointer;'></i>
+            <span title='<? echo $user->emailAddress . ", phone +" . $user->prefix . $user->cellPhone; ?>'>
+                Booked for <span style='color:blue;cursor:pointer;' class='customertablerow loadedituser'><? echo $user->fullName; ?></span>
+            </span>
+                , <span class='createanewuserfromeditbox' style='cursor:pointer; color:blue;'>change</span>
+        </span>
+        <span style='color:#bbb;'> by <?php echo strtolower(@$booker->fullName); ?></span>
+        <span id='edituserview' class='edituserview'>
+
+        </span>
     </div>
 </div>
 <?php

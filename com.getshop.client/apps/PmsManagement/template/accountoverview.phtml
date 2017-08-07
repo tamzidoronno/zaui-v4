@@ -1,0 +1,296 @@
+<?php
+/* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
+$filter = $this->getSelectedFilter();
+if(!$filter->userId) {
+    echo "Failed to load.";
+    return;
+}
+$user = $this->getApi()->getUserManager()->getUserById($filter->userId);
+
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->userId = $user->id;
+$filter->sorting = "regdate";
+$bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
+$new = array();
+foreach($bookings as $book) {
+    $new[strtotime($book->rowCreatedDate)] = $book;
+}
+krsort($new);
+$bookings = $new;
+
+$orders = $this->getApi()->getOrderManager()->getAllOrdersForUser($user->id);
+$rooms = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+$discounts = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedName(), $user->id);
+$paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+
+$states = array();
+$states['0'] = "All";
+$states['1'] = "Created";
+$states['2'] = "Waiting for payment";
+$states['3'] = "Payment failed";
+$states['4'] = "Completed";
+$states['5'] = "Canceled";
+$states['6'] = "Sent";
+$states['7'] = "Payment completed";
+$states['8'] = "Collection failed";
+$states['9'] = "Need collecting";
+$states['10'] = "Send to invoice";
+ ?>
+<div class='userdashboard'>
+    <div style='padding-left: 20px;padding-top: 20px;padding-right: 20px;'>
+        <span class='pmsbutton' gstype="clicksubmit" method="setQuickFilter" gsvalue="subtype_customerlist" gsname="type">Back to customerlist</span>
+        <span class='pmsbutton refreshbutton' userid='<?php echo $user->id; ?>'>refresh</span>
+        <?php if(isset($_SESSION['latestBookingLoadedOnPms'])) { ?>
+            <span style='float:right;' class="moreinformationaboutbooking pmsbutton" bookingid='<?php echo $_SESSION['latestBookingLoadedOnPms']; ?>'>Open last opened booking</span>
+        <?php } ?>
+    </div>
+    <div>
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel' gstype='form' method='saveAccountInformation'>
+                <input type='hidden' gsname='userid' value='<?php echo $user->id; ?>'>
+                <div class='dashboard_panel_header'><i class='fa fa-user'></i> Account information
+                   <span class='pmsbutton dashboardpmsbutton' gstype='submit' gs_callback='app.PmsManagement.saveSuccess'>Save</span>
+                </div>
+                    <div class='dashboard_panel_body'>
+                        <table width='100%' cellspacing='0' cellpadding='0'>
+                            <?php if($user->companyObject) { ?>
+                                <tr>
+                                    <td width='50%'>Vat id</td>
+                                    <td><input class='gsniceinput1' value='<?php echo $user->companyObject->vatNumber; ?>' disabled></td>
+                                </tr>
+                            <?php } ?>
+                            <tr>
+                                <td width='50%'>Name</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->fullName; ?>' gsname='name'></td>
+                            </tr>
+                            <tr>
+                                <td width='50%'>Street address</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->address->address; ?>' gsname='adress'></td>
+                            </tr>
+                            <tr>
+                                <td width='50%'>Postal code</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->address->postCode; ?>' gsname='postcode'></td>
+                            </tr>
+                            <tr>
+                                <td width='50%'>City</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->address->city; ?>' gsname='city'></td>
+                            </tr>
+                            <tr>
+                                <td width='50%'>Email address</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->emailAddress; ?>' gsname='email'></td>
+                            </tr>
+                            <tr>
+                                <td width='50%'>Invoice email adress</td>
+                                <td><input class='gsniceinput1' value='<?php echo $user->emailAddressToInvoice; ?>' gsname='invoiceemail'></td>
+                            </tr>
+                        </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel'>
+                <div class='dashboard_panel_header'><i class='fa fa-calendar'></i> Bookings
+                    <span class='pmsbutton dashboardpmsbutton createnewbookingbutton' userid='<?php echo $user->id;?>'>Create a new booking</span>
+                </div>
+                <div class='dashboard_panel_body'>
+                    <table width='100%' cellspacing='0' cellpadding='0'>
+                        <tr>
+                            <th>Reg</th>
+                            <th>Guest</th>
+                            <th>Rooms</th>
+                            <th>Amount</th>
+                            <th>Orders</th>
+                        </tr>
+                    <?php
+                    foreach($bookings as $booking) {
+                        $namesarray = array();
+                        foreach($booking->rooms as $room) {
+                            foreach($room->guests as $guest) {
+                                if($guest->name) {
+                                    $namesarray[] = $guest->name;
+                                }
+                            }
+                            $totalOrderAmount = 0;
+                            foreach($booking->orderIds as $orderId) {
+                                $totalOrderAmount += $this->getApi()->getOrderManager()->getTotalForOrderById($orderId);
+                            }
+                        }
+                        echo "<tr class='moreinformationaboutbooking' bookingid='".$booking->id."'>";
+                        echo "<td>" . date("d.m.Y", strtotime($booking->rowCreatedDate)) . "</td>";
+                        echo "<td>" . join(",", $namesarray) . "</td>";
+                        echo "<td align='center'>" . sizeof($booking->rooms) . "</td>";
+                        echo "<td align='center'>" . round($booking->totalPrice) . "</td>";
+                        $mismatch = "";
+                        if(round($booking->totalPrice) != round($totalOrderAmount)) {
+                            $mismatch = "style='color:red;font-weight:bold;'";
+                        }
+                        echo "<td align='center' $mismatch>$totalOrderAmount</td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel'>
+                <div class='dashboard_panel_header'><i class='fa fa-user-times'></i> Subaccounts
+                    <span class='pmsbutton dashboardpmsbutton'>Create subaccount (N/A)</span>
+                </div>
+                <div class='dashboard_panel_body'>
+                    <?php echo "Subaccount support is not yet available."; ?>
+                </div>
+            </div>
+        </div>
+        
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel'>
+                <div class='dashboard_panel_header'><i class='fa fa-money'></i> Orders</div>
+                    <div class='dashboard_panel_body'>
+                       <table width='100%' cellpadding='0' cellspacing='0'>
+                            <tr>
+                                <th>Orderid</th>
+                                <th>Amount</th>
+                                <th></th>
+                            </tr>
+                        <?php
+                        foreach($orders as $order) {
+                            if($order->isCreditNote) {
+                                continue;
+                            }
+                            echo "<tr>";
+                            echo "<td><i class='fa fa-file-pdf-o' style='cursor:pointer;' onclick=\"window.open('/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."','_fdsaf');\"></i> " . $order->incrementOrderId . "</td>";
+                            echo "<td>" . $this->getApi()->getOrderManager()->getTotalAmount($order) . "</td>";
+                            echo "<td align='right'>" . $states[$order->status] . "</td>";
+                            echo "</tr>";
+                            if(isset($order->creditOrderId)) {
+                                foreach($order->creditOrderId as $creditOrderId) {
+                                    $order = $this->getApi()->getOrderManager()->getOrder($creditOrderId);
+                                    echo "<tr>";
+                                    echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-file-pdf-o' style='cursor:pointer;' onclick=\"window.open('/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."','_fdsaf');\"></i> " . $order->incrementOrderId . " (credit)</td>";
+                                    echo "<td>" . $this->getApi()->getOrderManager()->getTotalAmount($order) . "</td>";
+                                    echo "<td align='right'>" . $states[$order->status] . "</td>";
+                                    echo "</tr>";
+                                }
+                            }
+                        }
+                        ?>
+                        </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel' gstype='form' method='saveDiscountPreferences'>
+                <input type='hidden' gsname='userid' value='<?php echo $user->id; ?>'>
+                <div class='dashboard_panel_header'><i class='fa fa-trophy'></i> Discounts and payment preferences
+                    <span class='pmsbutton dashboardpmsbutton' gstype='submit' gs_callback='app.PmsManagement.saveSuccess'>Save</span>
+                </div>
+                <div class='dashboard_panel_body'>
+                    <table width='100%' cellspacing='0' cellpadding='0'>
+                        <tr>
+                            <?php
+                            $afterStayChecked = $discounts->supportInvoiceAfter ? "CHECKED" : "";
+                            ?>
+                            
+                            <td><b>Create order after stay</b><br>
+                            When a booking is completed the order will be created after the stay has been completed.</td>
+                            <td align='center'><input type='checkbox' class='gsniceinput1' gsname='createAfterStay' <?php echo $afterStayChecked; ?>></td>
+                        </tr>
+                        <tr>
+                            <td><b>Preferred payment type</b><br>
+                                What payment method should be default when booking?<br>
+                            <td align='center'>
+                                <select class='gsniceselect1' gsname='preferredPaymentType'>
+                                <?php
+                                    echo "<option value=''>Default</option>";
+                                    foreach($paymentApps as $id => $type) {
+                                        $selected = "";
+                                        $instance = $this->getFactory()->getApplicationPool()->createInstace($type);
+                                        if($type->id == $user->preferredPaymentType) {
+                                            $selected = "SELECTED";
+                                        }
+                                        if(method_exists($instance, "getName")) {
+                                            echo "<option value='".$type->id."' $selected>".$instance->getName()."</option>";
+                                        }
+                                    }
+                                ?>                                    
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Discount type</b><br>
+                                Percentage or fixed price discount?<br>
+                            <td align='center'>
+                                <select class='gsniceselect1' gsname='discounttype'>
+                                    <option value='percentage'>Percentage</option>
+                                    <option value='fixedprice' <?php if($discounts->discountType == 1) { echo "SELECTED"; } ?>>Fixed price</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <?php
+                        foreach($rooms as $room) {
+                            $amount = "";
+                            if(isset($discounts->discounts->{$room->id})) {
+                                $amount = $discounts->discounts->{$room->id};
+                            }
+                            echo "<tr>";
+                            echo "<td>" . $room->name . "</td>";
+                            echo "<td align='center'><input type='txt' style='width:50px;' value='$amount' gsname='discount_".$room->id."'></td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class='dashboard_panel_outer' gstype='form' method='updatePasswordSettings'>
+            <input type='hidden' gsname='userid' value='<?php echo $user->id; ?>'>
+            <div class='dashboard_panel'>
+                <div class='dashboard_panel_header'><i class='fa fa-lock'></i> Password / login
+                    <span class='pmsbutton dashboardpmsbutton' gstype='submit' gs_callback='app.PmsManagement.saveSuccess'>Save</span>
+                </div>
+                <div class='dashboard_panel_body'>
+                    <table width='100%' cellspacing='0' cellpadding='0'>
+                        <tr>
+                            <td width='50%'><b>Password</b>
+                            <td align='center'><input type='text' class='gsniceinput1' gsname='password'></td>
+                        </tr>
+                        <tr>
+                            <td width='50%'><b>Login reference</b>
+                            <td align='center'><input type='text' class='gsniceinput1' value='<?php echo $user->referenceKey; ?>' gsname='reference'></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style='clear:both;'></div>
+</div>
+
+<style>
+    .dashboard_panel {  height: 300px; padding: 10px; background-color:#fff; padding: 10px; border-radius: 5px; border: solid 1px #bbb; }
+    .dashboard_panel_outer { width: 50%; padding: 10px; float: left;margin-top: 20px; box-sizing: border-box; position:relative; }
+    .dashboard_panel_header { border-bottom: solid 1px #bbb; padding-bottom: 10px; margin-bottom: 10px;position:relative; }
+    .userdashboard input,.userdashboard select { width:100%; box-sizing: border-box; }
+    .PmsManagement .dashboard_panel td { border-right: 0px; padding: 6px; }
+    .PmsManagement .dashboard_panel th { text-align:left; }
+    .PmsManagement .dashboard_panel_body { height: 250px; overflow: auto; }
+    .PmsManagement .dashboardpmsbutton { padding: 0px; padding-left: 5px; padding-right: 5px; border-radius: 0px; position:absolute; right: 0px; top: -6px; padding-top: 3px; padding-bottom: 3px;}
+    .moreinformationaboutbooking { cursor:pointer; }
+    .moreinformationaboutbooking:hover td { color: green; }
+    .PmsManagement .gsniceselect1 { height: inherit; }
+</style>
+
+<script>
+    $('.refreshbutton').click(function() {
+        var event = thundashop.Ajax.createEvent('','setQuickFilter',$(this),{
+            "type" : "subtype_accountoverview",
+            "userid" : $(this).attr('userid')
+        });
+        thundashop.Ajax.post(event);
+    });
+</script>

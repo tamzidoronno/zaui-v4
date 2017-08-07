@@ -21,6 +21,63 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function searchExistingCustomer() {
+        $name = $_POST['data']['name'];
+        $users = $this->getApi()->getUserManager()->findUsers($name);
+        if(sizeof($users) > 0) {
+            echo "<div style='margin-top: 20px; border-bottom: solid 1px; padding-bottom: 10px; margin-bottom: 10px;text-align:center;'>An existing user exist</div>";
+            foreach($users as $user) {
+                echo "<div class='existinguserselection' userid='".$user->id."' style='font-size:12px;'>";
+                echo "<i class='fa fa-arrow-right' style='float:right; color:#bbb;'></i>";
+                if($user->companyObject) {
+                    echo "<b>" . $user->companyObject->vatNumber . "</b><bR>";
+                }
+                echo $user->fullName . "<bR>";
+                echo $user->address->address . "<br>";
+                echo $user->address->postCode . " " . $user->address->city . "<br>";
+                echo $user->emailAddress;
+                echo "</div>";
+            }
+        }
+    }
+    
+    public function createNewUserOnBooking() {
+        $orgid = $_POST['data']['orgId'];
+        $name = $_POST['data']['name'];
+        $bookingId = $_POST['data']['bookingid'];
+        
+        $this->getApi()->getPmsManager()->createNewUserOnBooking($this->getSelectedName(),$bookingId, $name, $orgid);
+        
+        $this->renderEditUserView();
+    }
+    
+    public function createNewBooking() {
+        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
+        $booking->userId = $_POST['data']['userid'];
+        $booking->sessionId = "";
+        $booking->confirmed = true;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $_POST['data']['bookingid'] = $booking->id;
+        $this->showBookingInformation();
+    }
+    
+    public function saveAccountInformation() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        $user->fullName = $_POST['data']['name'];
+        $user->address->address = $_POST['data']['adress'];
+        $user->address->city = $_POST['data']['city'];
+        $user->address->postCode = $_POST['data']['postcode'];
+        $user->emailAddress = $_POST['data']['email'];
+        $user->emailAddressToInvoice = $_POST['data']['invoiceemail'];
+        $this->getApi()->getUserManager()->saveUser($user);
+        
+        if($user->companyObject) {
+            $user->companyObject->name = $_POST['data']['name'];
+            $this->getApi()->getUserManager()->saveCompany($user->companyObject);
+        }
+        
+    }
+    
     public function addAdvancedAddons() {
         $addonId = $_POST['data']['addonId'];
         $pmsRoomId = $_POST['data']['roomid'];
@@ -1035,6 +1092,34 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("bookinginformation");
     }
     
+    public function updatePasswordSettings() {
+        if($_POST['data']['password']) {
+            $this->getApi()->getUserManager()->updatePasswordSecure($_POST['data']['userid'], $_POST['data']['password']);
+        }
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        $user->referenceKey = $_POST['data']['reference'];
+        $this->getApi()->getUserManager()->saveUser($user);
+        
+    }
+    
+    public function saveDiscountPreferences() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        $user->preferredPaymentType = $_POST['data']['preferredPaymentType'];
+        $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedName(), $user->id);
+        $discount->supportInvoiceAfter = $_POST['data']['createAfterStay'] == "true";
+        $discount->discountType = 0;
+        if($_POST['data']['discounttype'] == "fixedprice") {
+            $discount->discountType = 1;
+        }
+        foreach($_POST['data'] as $index => $val) {
+            if(stristr($index, "discount_")) {
+                $room = str_replace("discount_", "", $index);
+                $discount->discounts->{$room} = $val;
+            }
+        }
+        $this->getApi()->getPmsInvoiceManager()->saveDiscounts($this->getSelectedName(), $discount);
+    }
+    
     public function showBookingOnBookingEngineId() {
         $bid = $_POST['data']['bid'];
         
@@ -1574,6 +1659,17 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function setQuickFilter() {
+        if(stristr($_POST['data']['type'], "subtype_")) {
+            $filter = $this->getSelectedFilter();
+            $filter->filterSubType = str_replace("subtype_", "", $_POST['data']['type']);
+            if(isset($_POST['data']['userid'])) {
+                $filter->userId = $_POST['data']['userid'];
+            } else {
+                $filter->userId = "";
+            }
+            $this->setCurrentFilter($filter);
+            return;
+        }
         $this->emptyfilter();
         if(stristr($_POST['data']['type'], "defined_")) {
             $filterName = str_replace("defined_","", $_POST['data']['type']);
@@ -1585,7 +1681,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->filterType = $_POST['data']['type'];
             $filter->startDate = $this->convertToJavaDate(time());
             $filter->endDate = $this->convertToJavaDate(time());
-
             if($filter->filterType == "stats" || $filter->filterType == "orderstats") {
                 $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime($filter->startDate))));
                 $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime($filter->endDate))));
@@ -1756,11 +1851,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function setFilter() {
+        $current = $this->getSelectedFilter();
+        
         $filter = new \core_pmsmanager_PmsBookingFilter();
         $filter->startDate = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 00:00"));
         $filter->endDate = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " 23:59"));
         $filter->filterType = $_POST['data']['filterType'];
         $filter->state = 0;
+        $filter->filterSubType = $current->filterSubType;
         $filter->includeVirtual = $_POST['data']['include_virtual_filter'] == "true";
         $filter->searchWord = $_POST['data']['searchWord'];
         if(isset($_POST['data']['channel'])) {
@@ -2725,7 +2823,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function includeManagementViewResult() {
         $config = $this->getConfig();
         $filter = $this->getSelectedFilter();
-        if($filter->filterType == "stats") {
+        if($filter->filterSubType == "customerlist") {
+            $this->includefile("accountstable");
+        } else if($filter->filterSubType == "accountoverview") {
+            $this->includefile("accountoverview");
+        } else if($filter->filterType == "stats") {
             $this->includefile("statistics");
         } else if($filter->filterType == "summary") {
             if($config->bookingProfile == "conferense") {
@@ -2894,9 +2996,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 }
 
                 $order = $this->getApi()->getOrderManager()->getOrder($orderId);
-                if($_POST['data']['paymenttype'] == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
-                    $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
-                }
+                $order->invoiceNote = $_POST['data']['invoicenoteinfo'];
                 $this->getApi()->getOrderManager()->saveOrder($order);
             }
 
@@ -3347,9 +3447,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $searchtypes['summary'] = "Summary";
         if($config->requirePayments) {
             $searchtypes['orderstats'] = "Order statistics";
-            $searchtypes['invoicecustomers'] = "Invoice customers";
-            $searchtypes['unbilled'] = "Unbilled cust.";
-            $searchtypes['unpaid'] = "Unpaid";
+//            $searchtypes['unbilled'] = "Unbilled cust.";
             $searchtypes['afterstayorder'] = "Order created after stay";
             $searchtypes['unsettled'] = "Bookings with unsettled amounts";
         }
@@ -3748,7 +3846,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             foreach($res as $r) {
                 $dates[] = strtotime($r->start);
             }
-            
         }
         if($_POST['data']['periode_selection'] == "alldays") {
             $toAdd = $start;

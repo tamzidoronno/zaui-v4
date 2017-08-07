@@ -13,7 +13,6 @@ if(isset($_POST['data']['orderid'])) {
     }
 }
 $user = $this->getApi()->getUserManager()->getUserById($userId);
-$allUsers = $this->getApi()->getUserManager()->getAllUsers();
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 
 if(!$user->address) {
@@ -24,83 +23,151 @@ if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferred
     $disabled = "DISABLED";
 }
 $paymentApps = (array)$this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
-
+if($user->type > 10) {
+    $disabled = "DISABLED";
+}
 ?>
 <div class="edituserbox" gstype='form' method='saveUser'>
-    <input type='hidden' value='<? echo $type; ?>' class='changeusertype'>
-    <input type='hidden' value='<? echo $orderId; ?>' gsname='orderid'>
-    <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
-    <input type='hidden' value='<? echo $user->id; ?>' gsname='userid'>
-    <table cellspacing='0' cellpadding='0'>
-        <tr><th colspan="2">Userdata</th></tr>
-        <tr>
-            <td>Change user</td>
-            <td>
-                <select class='changeuseronbooking' bookingid='<?php echo $booking->id; ?>' orderid='<?php echo $orderId; ?>'>
-                <?php
-                foreach($allUsers as $user2) {
-                    $selected = "";
-                    if($user2->id == $user->id) {
-                        $selected = "SELECTED";
+    <div class='newuserbox_inner' style='display:none; background-color:#fff; padding: 10px; border:solid 1px #bbb;'>
+        <i class='fa fa-close' style='float:right;cursor:pointer;' onclick='$(".edituserview").hide();'></i>
+        <div style='border-bottom: solid 1px; padding-bottom: 10px; margin-bottom: 10px; text-align:center;'>Please select one of the following</div>
+        <div class='newuserbutton' type='newprivateperson'>Private person <i class='fa fa-arrow-right' style='float:right; color:#bbb;'></i></div>
+        <div class='newuserbutton' type='newcompany'>Company <i class='fa fa-arrow-right' style='float:right; color:#bbb;'></i></div>
+        <div class='addusernextstep' style='margin-top: 20px; border-top: solid 1px; padding-top: 20px; display:none;'>
+            <div style='margin-bottom: 10px;'>Name of the customer:</div>
+            <input type='txt' placeholder='Name' style='width:100%;' class='selectionfield newprivateperson newcompany nameinput'>
+            <input type='txt' placeholder='Orgid' style='width:100%; margin-top:5px;' class='selectionfield newcompany orgidinput'>
+            <span class='pmsbutton createnewcustomerbutton' style='margin-top: 10px; width:100%; box-sizing: border-box; text-align:center;'>Create new customer</span>
+            <div class='brregres'></div>
+            <div class='existingcustomerselection'></div>
+        </div>
+    </div>
+    <div class='edituserbox_inner'>
+        <input type='hidden' value='<? echo $type; ?>' class='changeusertype'>
+        <input type='hidden' value='<? echo $orderId; ?>' gsname='orderid'>
+        <input type='hidden' value='<? echo $booking->id; ?>' gsname='bookingid'>
+        <input type='hidden' value='<? echo $user->id; ?>' gsname='userid'>
+        <table cellspacing='0' cellpadding='0'>
+            <tr><th colspan="2">Userdata</th></tr>
+            <tr>
+                <td>Account</td>
+                <td>
+                    <?php
+                    if($user->type > 10) {
+                        echo "<br><br><span style='color:red; font-weight:bold;'>Editors and administrators are not allowed to be updated from this view.</span>";
                     }
-                    $email = "";
-                    if($user2->emailAddress) {
-                        $email = " (" . $user2->emailAddress . ")";
+                    ?>
+
+                </td>
+            </tr>
+            <?php if($user->companyObject) { ?>
+                <tr><td>Orgid</td><td><input type="txt" gsname="fullName" value="<?php echo $user->companyObject->vatNumber; ?>" DISABLED></td><tr>
+            <?php } ?>
+            <tr><td><i class='fa fa-question' title='This is the name of the booker, if a company this is the company name. If its a private person its the name of the person.'></i> Name</td><td><input type="txt" gsname="fullName" value="<?php echo $user->fullName; ?>" <?php echo $disabled; ?>></td><tr>
+            <tr><td>Prefix</td><td><input type="txt" gsname="prefix" value="<?php echo $user->prefix; ?>" <?php echo $disabled; ?>></td><tr>
+            <tr><td>Phone</td><td><input type="txt" gsname="cellPhone" value="<?php echo $user->cellPhone; ?>" <?php echo $disabled; ?>></td><tr>
+            <tr><td>Email</td><td><input type="txt" gsname="emailAddress" value="<?php echo $user->emailAddress; ?>" <?php echo $disabled; ?>></td><tr>
+            <tr><td>Address</td><td><input type="txt" gsname="address.address" value="<?php echo $user->address->address; ?>" <?php echo $disabled; ?>></td><tr>
+            <tr><td>Postcode</td><td><input type="txt" gsname="address.postCode" value="<?php echo $user->address->postCode; ?>" <?php echo $disabled; ?>></td><tr>
+            <tr><td>City</td><td><input type="txt" gsname="address.city" value="<?php echo $user->address->city; ?>" <?php echo $disabled; ?>></td><tr>
+            <tr><td>Birthdate</td><td><input type="txt" gsname="birthDay" value="<?php echo $user->birthDay; ?>" <?php echo $disabled; ?>></td><tr>
+            <tr><td>Relationship</td><td><input type="txt" gsname="relationship" value="<?php echo $user->relationship; ?>" <?php echo $disabled; ?>></td><tr>
+            <tr><td>Payment type</td><td>
+                    <select gsname='preferredpaymenttype' <?php echo $disabled; ?>>
+                        <?php
+                        echo "<option value='' $selected>Default</option>";
+                        foreach($paymentApps as $id => $type) {
+                            $selected = "";
+                            $instance = $this->getFactory()->getApplicationPool()->createInstace($type);
+                            if($type->id == $user->preferredPaymentType) {
+                                $selected = "SELECTED";
+                            }
+                            if(method_exists($instance, "getName")) {
+                                echo "<option value='".$type->id."' $selected>".$instance->getName()."</option>";
+                            }
+                        }
+                        ?>
+                    </select>
+
+                </td><tr>
+                <?php 
+                    if($this->hasAccountingTransfer()) {
+                        ?>
+                        <?php $accId = $user->customerId; 
+                        if($user->accountingId) {
+                            $accId = $user->accountingId;
+                        }
+                        if($accId == -1 || $accId == "-1") {
+                            $accId = "";
+                        }
+                        ?>
+                        <tr><td>Accounting id</td><td><input type="txt" gsname="accountingId" value="<?php echo $accId; ?>" disabled></td><tr>
+                        <?php
                     }
-                    echo "<option value='" . $user2->id . "' " . $selected.'>'.$user2->fullName . $email . "</option>";
-                }
                 ?>
-                </select><br>
-                <span style='cursor:pointer; color:blue;' class='createanewuserfromeditbox' bookingid='<?php echo $booking->id; ?>' orderid='<?php echo $orderId; ?>'>create a new user</span>
-            </td>
-        </tr>
-        <tr><td><i class='fa fa-question' title='This is the name of the booker, if a company this is the company name. If its a private person its the name of the person.'></i> Name</td><td><input type="txt" gsname="fullName" value="<?php echo $user->fullName; ?>" <?php echo $disabled; ?>></td><tr>
-        <tr><td>Prefix</td><td><input type="txt" gsname="prefix" value="<?php echo $user->prefix; ?>" <?php echo $disabled; ?>></td><tr>
-        <tr><td>Phone</td><td><input type="txt" gsname="cellPhone" value="<?php echo $user->cellPhone; ?>" <?php echo $disabled; ?>></td><tr>
-        <tr><td>Email</td><td><input type="txt" gsname="emailAddress" value="<?php echo $user->emailAddress; ?>" <?php echo $disabled; ?>></td><tr>
-        <tr><td>Address</td><td><input type="txt" gsname="address.address" value="<?php echo $user->address->address; ?>" <?php echo $disabled; ?>></td><tr>
-        <tr><td>Postcode</td><td><input type="txt" gsname="address.postCode" value="<?php echo $user->address->postCode; ?>" <?php echo $disabled; ?>></td><tr>
-        <tr><td>City</td><td><input type="txt" gsname="address.city" value="<?php echo $user->address->city; ?>" <?php echo $disabled; ?>></td><tr>
-        <tr><td>Birthdate</td><td><input type="txt" gsname="birthDay" value="<?php echo $user->birthDay; ?>" <?php echo $disabled; ?>></td><tr>
-        <tr><td>Relationship</td><td><input type="txt" gsname="relationship" value="<?php echo $user->relationship; ?>" <?php echo $disabled; ?>></td><tr>
-        <tr><td>Payment type</td><td>
-                <select gsname='preferredpaymenttype'>
-                    <?php
-                    echo "<option value='' $selected>Default</option>";
-                    foreach($paymentApps as $id => $type) {
-                        $selected = "";
-                        $instance = $this->getFactory()->getApplicationPool()->createInstace($type);
-                        if($type->id == $user->preferredPaymentType) {
-                            $selected = "SELECTED";
-                        }
-                        if(method_exists($instance, "getName")) {
-                            echo "<option value='".$type->id."' $selected>".$instance->getName()."</option>";
-                        }
-                    }
-                    ?>
-                </select>
-                
-            </td><tr>
-            <?php 
-                if($this->hasAccountingTransfer()) {
-                    ?>
-                    <?php $accId = $user->customerId; 
-                    if($user->accountingId) {
-                        $accId = $user->accountingId;
-                    }
-                    if($accId == -1 || $accId == "-1") {
-                        $accId = "";
-                    }
-                    ?>
-                    <tr><td>Accounting id</td><td><input type="txt" gsname="accountingId" value="<?php echo $accId; ?>" disabled></td><tr>
-                    <?php
-                }
+            <?php
+            if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferredToAccounting) {
+                echo "<tr><td colspan='2'>This user has been transferred to accounting, and can not be updated anymore.</td></tr>";
+            }
             ?>
-        <?php
-        if($user->isTransferredToAccountSystem && $config->denyUpdateUserWhenTransferredToAccounting) {
-            echo "<tr><td colspan='2'>This user has been transferred to accounting, and can not be updated anymore.</td></tr>";
-        }
-        ?>
-        <tr><td style='font-size: 12px; line-height: 12px; color:blue; cursor:pointer;' class='setNewPasswordOnUser'>New<br>password</td><td><span class='pmsbutton closeadduser' style='background-color:red;'>Close</span> <span class='pmsbutton' gstype='submitToInfoBox'>Save changes</span></td><tr>
-    </table>
+            <tr><td style='font-size: 12px; line-height: 12px; color:blue; cursor:pointer;' class='setNewPasswordOnUser'>New<br>password</td><td><span class='pmsbutton closeadduser' style='background-color:red;'>Close</span> <span class='pmsbutton' gstype='submitToInfoBox'>Save changes</span></td><tr>
+        </table>
+    </div>
 </div>
+
+
+<style>
+    .PmsManagement .newuserbutton { border-bottom: solid 1px #bbb; cursor:pointer; padding: 5px; }
+    .PmsManagement .newuserbutton.selectedtype { font-weight:bold; }
+    .PmsManagement .newuserbutton:hover .fa { color:#000 !important; }
+    .PmsManagement .newuserbutton.selectedtype .fa { color:#000 !important; }
+    .PmsManagement .existinguserselection { border-bottom: solid 1px #bbb; padding: 10px;cursor:pointer; }
+    .PmsManagement .existinguserselection:hover .fa { color:#000 !important; }
+    .PmsManagement .brregresultentry { border-bottom: solid 1px #bbb; padding: 10px;cursor:pointer; }
+</style>
+
+<script>
+    $('.PmsManagement .newuserbutton').on('click', function() {
+        $('.PmsManagement .newuserbutton').removeClass('selectedtype');
+        $(this).addClass('selectedtype');
+        var type = $(this).attr('type');
+        $('.addusernextstep').show();
+        $('.selectionfield').hide();
+        $('.'+type).show();
+        $('.nameinput').focus();
+    });
+    
+    $('.selectionfield.nameinput').on('keyup', function() {
+        var field = $(this).val();
+        if(field.length <= 3) {
+            return;
+        }
+        var input = $(this);
+        if(typeof(searchExistingTimeout) !== "undefined") {
+            clearTimeout(searchExistingTimeout);
+        }
+        var searchExistingTimeout = setTimeout(function() {
+            var event = thundashop.Ajax.createEvent('','searchExistingCustomer',input, {
+                "name" : field
+            });
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                $('.existingcustomerselection').html(res);
+            });
+            
+            if($('.newuserbutton.selectedtype').attr('type') === "newcompany") {
+                $.ajax({
+                   "url" : "https://hotell.difi.no/api/json/brreg/enhetsregisteret?query=" + field,
+                   "success" : function(data) {
+                       console.log(data.entries);
+                       $('.brregres').html('');
+                       for(var key in data.entries) {
+                           var object = data.entries[key];
+                           $('.brregres').append($('<div class="brregresultentry" orgid="' + object.orgnr + '"navn="' + object.navn + '">' + object.navn + "<bR>" + object.orgnr + "</div>"));
+                       }
+                   }
+               });
+           }
+            
+        }, 500);
+    });
+</script>

@@ -41,6 +41,7 @@ import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pmseventmanager.PmsEventFilter;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.ratemanager.BookingComRateManagerManager;
@@ -3573,6 +3574,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             foundRoom = false;
             booking = getBooking(roomId);
         }
+        if(booking == null) {
+            logPrint("Failed to find a booking while adding addons: " + roomId);
+        }
         checkSecurity(booking);
         PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
 
@@ -5300,6 +5304,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             for(PmsBookingAddonItem item : addons.values()) {
                 if(room.bookingItemTypeId != null) {
                     if(item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
+                        if(!bookings.containsKey(booking.id)) {
+                            logPrint("Booking does not exists in the booking object.. that should not happen");
+                        }
                         addAddonsToBooking(item.addonType, room.pmsBookingRoomId, false);
                     }
                 }
@@ -6280,8 +6287,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void warnFailedBooking() {
-        messageManager.sendErrorNotification("Someone booked error message shown to enduser.", null);
+    public void warnFailedBooking(PmsBooking booking) {
+        Gson gson = new Gson();
+        String rawBooking = gson.toJson(booking);
+        messageManager.sendErrorNotification("Someone booked error message shown to enduser, booking raw:" + rawBooking, null);
     }
 
     @Override
@@ -6384,6 +6393,118 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return null;
+    }
+
+    @Override
+    public Integer getNumberOfCustomers(PmsBookingFilter state) {
+        List<PmsBooking> toCheck = getAllBookings(state);
+        HashMap<String, Integer> count = new HashMap();
+        for(PmsBooking book : toCheck) {
+            count.put(book.userId, 1);
+        }
+        return count.keySet().size();
+    }
+
+    @Override
+    public List<PmsCustomerRow> getAllUsers(PmsBookingFilter filter) {
+        
+        List<PmsBooking> toCheck = getAllBookings(filter);
+        HashMap<String, Integer> count = new HashMap();
+        for(PmsBooking book : toCheck) {
+            count.put(book.userId, 1);
+        }
+        
+        HashMap<String, Integer> bookingCount = new HashMap();
+        HashMap<String, Date> bookingLatest = new HashMap();
+        for(PmsBooking book : bookings.values()) {
+            if(bookingCount.containsKey(book.userId)) {
+                bookingCount.put(book.userId, bookingCount.get(book.userId)+1);
+            } else {
+                bookingCount.put(book.userId, 1);
+            }
+            if(bookingLatest.containsKey(book.userId)) {
+                if(book.rowCreatedDate.after(bookingLatest.get(book.userId))) {
+                    bookingLatest.put(book.userId, book.rowCreatedDate);
+                }
+            } else {
+                bookingLatest.put(book.userId, book.rowCreatedDate);
+            }
+        }
+        
+        List<PmsCustomerRow> result = new ArrayList();
+        for(String userId : count.keySet()) {
+            PmsCustomerRow row = new PmsCustomerRow();
+            User user = userManager.getUserById(userId);
+            row.customerId = user.customerId;
+            row.userId = user.id;
+            row.name = user.fullName;
+            row.numberOfBookings = 0;
+            if(bookingCount.containsKey(user.id)) {
+                row.numberOfBookings = bookingCount.get(user.id);
+            }
+            row.numberOfOrders = orderManager.getAllOrdersForUser(user.id).size();
+            row.latestBooking = bookingLatest.get(user.id);
+            row.customerType = "UKNOWN";
+            if(user.isCompanyMainContact) {
+                row.customerType = "Company";
+            } else if(!user.company.isEmpty()) {
+                row.customerType = "Subuser";
+            } else {
+                row.customerType = "Private";
+            }
+            
+            PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(userId);
+            row.invoiceAfterStay = discount.supportInvoiceAfter;
+            row.preferredPaymentType = user.preferredPaymentType;
+            row.hasDiscount = discount.discounts.keySet().size() > 0;
+            
+            result.add(row);
+        }
+        
+        return result;
+    }
+
+    @Override
+    public void createNewUserOnBooking(String bookingId, String name, String orgId) {
+        User newuser = null;
+        PmsBooking booking = getBooking(bookingId);
+        if(orgId != null && !orgId.trim().isEmpty()) {
+            List<Company> companies = userManager.getCompaniesByVatNumber(orgId);
+            if(companies != null) {
+                for(Company comp : companies) {
+                    List<User> existingUsers = userManager.getUsersThatHasCompany(comp.id);
+                    if(!existingUsers.isEmpty()) {
+                        newuser = existingUsers.get(0);
+                        for(User tmp : existingUsers) {
+                            if(tmp.isCompanyMainContact) {
+                                newuser = tmp;
+                                break;
+                            }
+                        }
+                    }
+                    if(newuser != null) {
+                        break;
+                    }
+                }
+            }
+        }
+        if(newuser == null) {
+            newuser = new User();
+            if(orgId != null && !orgId.trim().isEmpty()) {
+                Company company = new Company();
+                company.vatNumber = orgId;
+                company.name = name;
+                company = userManager.saveCompany(company);
+                newuser.company.add(company.id);
+            }
+            newuser.fullName = name;
+            newuser.isCompanyMainContact = true;
+            userManager.saveUserSecure(newuser);
+            userManager.getUserById(newuser.id);
+        }
+        
+        booking.userId = newuser.id;
+        saveBooking(booking);
     }
 
     

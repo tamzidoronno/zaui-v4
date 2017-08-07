@@ -11,7 +11,7 @@ controllers.HomeController = function($scope, $api, $rootScope, $state, $statePa
     $scope.loadingList = true;
     
     $scope.init = function($api) {
-        $scope.name = $api.getLoggedOnUser().fullName; 
+        $scope.name = $api != null && $api.getLoggedOnUser() != null && $api.getLoggedOnUser().fullName; 
         $api.getApi().ApacManager.getAccessList(datarepository.domainname).done(function(result) {
             $scope.accessList = result;
             $scope.loadingList = false;

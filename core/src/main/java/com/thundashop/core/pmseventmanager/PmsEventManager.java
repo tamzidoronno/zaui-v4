@@ -208,12 +208,12 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         removeDeadEvents();
         List<PmsBookingEventEntry> result = new ArrayList();
         if(filter == null) {
-            result = new ArrayList(entries.values());
-            for(PmsBookingEventEntry entry : result) {
+            for(PmsBookingEventEntry entry : entries.values()) {
+                finalize(entry, includeDeleted);
                 if(entry.isDeleted && !includeDeleted) {
                     continue;
                 }
-                finalize(entry, includeDeleted);
+                result.add(entry);
             }
             return result;
         }

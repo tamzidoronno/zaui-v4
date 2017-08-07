@@ -1073,6 +1073,17 @@ GetShopApiWebSocket.ApacManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getAllDoors' : function(multilevelname, gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getAllDoors',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.apacmanager.IApacManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getApacAccess' : function(multilevelname, accessId, gs_silent) {
         var data = {
             args : {

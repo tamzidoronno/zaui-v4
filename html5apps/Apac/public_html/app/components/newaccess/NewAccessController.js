@@ -13,9 +13,10 @@ controllers.NewAccessController = function($scope, $api, $rootScope, $state, $st
     $scope.guestPhoneNumber = "";
     $scope.doorId = "";
     $scope.guestInfo = "";
+    $scope.guestPhonePrefix = localStorage.getItem("guestPhonePrefix");
     
     $scope.init = function($api) {
-        $scope.name = $api.getApi().DoorManager.getAllDoors(datarepository.domainname).done(function(doors) {
+        $scope.name = $api.getApi().ApacManager.getAllDoors(datarepository.domainname).done(function(doors) {
             $scope.doors = doors;
             $scope.$evalAsync();
         })
@@ -32,9 +33,10 @@ controllers.NewAccessController = function($scope, $api, $rootScope, $state, $st
             deviceId : $scope.doorId,
             name : $scope.guestName,
             phoneNumber : $scope.guestPhoneNumber,
-            prefix : "47"
+            prefix : $scope.guestPhonePrefix
         };
         
+        localStorage.setItem("guestPhonePrefix", $scope.guestPhonePrefix);
         var apacManager = $api.getApi().ApacManager;
         
         apacManager.grantAccess(datarepository.domainname, grantAccess).done(function(res) {

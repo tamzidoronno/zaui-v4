@@ -142,6 +142,6 @@ public class GetShopLockCode implements Serializable {
 
     // This is not good enough, need to implement proper mastercode handling.
     private boolean isMasterCode() {
-        return slot < 5;
+        return slot < 6;
     }
 }

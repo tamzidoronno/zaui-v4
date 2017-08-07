@@ -124,7 +124,7 @@ public class ApacManager extends GetShopSessionBeanNamed implements IApacManager
     public List<Door> getAllDoors() throws Exception {
         HashMap<String, PmsLockServer> lockServers = pmsManager.getConfiguration().lockServerConfigs;
         List<Door> doors = doorManager.getAllDoors();
-        doors.removeIf(door -> !lockServers.containsKey(door.serverSource));
+        doors.removeIf(door -> !lockServers.containsKey(door.serverSource) && !door.serverSource.isEmpty());
         return doors;
     }
 }

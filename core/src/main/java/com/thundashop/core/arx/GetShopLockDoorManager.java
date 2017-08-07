@@ -154,5 +154,7 @@ public class GetShopLockDoorManager extends ManagerBase implements IDoorManager 
                 getShopLockManager.setMasterCode(slot, code);
             }
         }
+        
+        
     }
 }

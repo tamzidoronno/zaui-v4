@@ -895,12 +895,16 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             logPrint("Only slot 0 to 5 is reserved for mastercodes");
             return;
         }
+        
         for(GetShopDevice dev : devices.values()) {
             if(dev.isLock()) {
                 GetShopLockCode toUpdate = dev.codes.get(slot);
                 toUpdate.setCode(code);
             }
         }
+        
+        masterCodes.codes.put(slot, code);
+        saveObject(masterCodes);
     }
 
     @Override

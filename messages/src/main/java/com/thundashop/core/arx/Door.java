@@ -9,4 +9,5 @@ public class Door extends DataCommon {
     public String state = "";
     public Boolean forcedOpen = false;
     public Boolean forcedClose = false;
+    public String serverSource = "";
 }

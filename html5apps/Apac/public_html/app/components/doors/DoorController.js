@@ -43,7 +43,7 @@ controllers.DoorController = function($scope, $api, $rootScope, $state, $statePa
     }
     
     $scope.init = function() {
-        $api.getApi().DoorManager.getAllDoors(datarepository.domainname).done($scope.doorsLoaded);
+        $api.getApi().ApacManager.getAllDoors(datarepository.domainname).done($scope.doorsLoaded);
         $scope.loadLogs();
     };
     

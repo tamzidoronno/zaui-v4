@@ -15,6 +15,8 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.GetShopLockCode;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.pmsmanager.PmsLockServer;
+import com.thundashop.core.pmsmanager.PmsManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +37,9 @@ public class ApacManager extends GetShopSessionBeanNamed implements IApacManager
     
     @Autowired
     public MessageManager messageManager;
+    
+    @Autowired
+    public PmsManager pmsManager;
 
     public HashMap<String, ApacAccess> accesslist = new HashMap();
 
@@ -113,5 +118,13 @@ public class ApacManager extends GetShopSessionBeanNamed implements IApacManager
         if (access != null) {
             messageManager.sendSms("nexmo", access.phoneNumber, message, access.prefix);
         }
+    }
+
+    @Override
+    public List<Door> getAllDoors() throws Exception {
+        HashMap<String, PmsLockServer> lockServers = pmsManager.getConfiguration().lockServerConfigs;
+        List<Door> doors = doorManager.getAllDoors();
+        doors.removeIf(door -> !lockServers.containsKey(door.serverSource) && !door.serverSource.isEmpty());
+        return doors;
     }
 }

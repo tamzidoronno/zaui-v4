@@ -167,7 +167,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         $this->validatePostedForm();
         $loaded = false;
         if(!sizeof($this->validation) > 0) {
-            $this->getCurrentBooking();
+            $bookingToSend = $this->getCurrentBooking();
             $this->currentBooking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
             if($this->currentBooking) {
                 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
@@ -210,7 +210,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             } else {
                 $this->validation[] = "Someone booked your room before you where able to complete the booking process, please try again with a different room.";
                 $this->unknownError = "Someone booked your room before you where able to complete the booking process, please try again with a different room.";
-                $this->getApi()->getPmsManager()->warnFailedBooking($this->getSelectedName(), $this->currentBooking);
+                $this->getApi()->getPmsManager()->warnFailedBooking($this->getSelectedName(), $bookingToSend);
             }
         } 
         if($loaded) {

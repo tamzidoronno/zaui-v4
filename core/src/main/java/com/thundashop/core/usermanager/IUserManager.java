@@ -13,6 +13,7 @@ import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.GroupInformation;
+import com.thundashop.core.usermanager.data.SimpleUser;
 
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserRole;
@@ -341,6 +342,9 @@ public interface IUserManager {
      */
     @Editor
     public List<User> getAllUsersWithCommentToApp(String appId) throws ErrorException;
+    
+    @Editor
+    public List<SimpleUser> getAllUsersSimple();
     
     /**
      * Switch the context of what user you are logged in as.

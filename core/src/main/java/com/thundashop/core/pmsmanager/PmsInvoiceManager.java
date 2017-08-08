@@ -670,8 +670,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts, userManager.getAllUsersMap());
         stats.createStatistics(ordersToUse, filter);
         
-//        stats.removeEmptyProducts();
-        
         return stats;
     }
 

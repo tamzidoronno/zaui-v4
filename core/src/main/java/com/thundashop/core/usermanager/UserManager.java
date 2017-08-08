@@ -19,6 +19,7 @@ import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.LoginHistory;
+import com.thundashop.core.usermanager.data.SimpleUser;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
@@ -1970,6 +1971,19 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public void undoSuspension(String userId, String suspensionId) {
         getUserStoreCollection(storeId).undoSuspension(userId, suspensionId);
+    }
+
+    @Override
+    public List<SimpleUser> getAllUsersSimple() {
+        List<SimpleUser> result = new ArrayList();
+        for(User user : getAllUsers()) {
+            SimpleUser simple = new SimpleUser();
+            simple.email = user.emailAddress;
+            simple.fullname = user.fullName;
+            simple.id = user.id;
+            result.add(simple);
+        }
+        return result;
     }
 
 }

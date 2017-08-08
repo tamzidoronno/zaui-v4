@@ -97,7 +97,7 @@ public class PmsOrderStatistics implements Serializable  {
                     Double inc = priceInc.get(item.getProduct().id);
                     Double ex = priceEx.get(item.getProduct().id);
                     
-                    if(roomProducts != null && !roomProducts.contains(item.getProduct().id)) {
+                    if(roomProducts != null && !roomProducts.contains(item.getProduct().id) && !item.getProduct().id.equals("815d31ef-716d-4906-aae1-bddb028b55f4")) {
                         secondsInDay = -1;
                     }
                     
@@ -125,7 +125,6 @@ public class PmsOrderStatistics implements Serializable  {
                             createUse = tmpCal.getTime();
                         }
                         if(item.startsOnDate(cal.getTime(), createUse)) {
-//                            System.out.println(order.incrementOrderId+";addon;"+item.getProduct().name + ";" + item.getProduct().priceExTaxes * item.getCount() + ";" + cal.getTime() + ";" + users.get(order.userId).fullName);
                             totalCalc += (item.getProduct().price * item.getCount());
                             inc += (item.getProduct().price * item.getCount());
                             ex += (item.getProduct().priceExTaxes * item.getCount());
@@ -135,6 +134,7 @@ public class PmsOrderStatistics implements Serializable  {
                             addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().price * item.getCount()), entry.priceIncOrders);
                         }
                     } else {
+                        System.out.println(item.getProduct().id+ ";" + order.incrementOrderId+";addon;"+item.getProduct().name + ";" + item.getProduct().priceExTaxes * item.getCount() + ";" + cal.getTime() + ";" + users.get(order.userId).fullName);
                         totalCalc += item.getPriceIncForMinutes() * secondsInDay;
                         inc += item.getPriceIncForMinutes() * secondsInDay;
                         ex += item.getPriceExForMinutes() * secondsInDay;
@@ -225,12 +225,7 @@ public class PmsOrderStatistics implements Serializable  {
         }
         
         current += price;
-        
         toAdd.get(productId).put(orderId, current);
     }
 
-    void removeEmptyProducts() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
 }

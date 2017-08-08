@@ -21,6 +21,41 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function loadExistingUserList() {
+        $userlist = $this->getApi()->getUserManager()->getAllUsersSimple();
+        echo "<div style='padding-top: 20px;'></div>";
+        echo "<select class='selectuserlist' style='width:100%;'>";
+        echo "<option value=''>Change customer</option>";
+        foreach($userlist as $user) {
+            if(!$user->fullname) {
+                continue;
+            }
+            echo "<option value='".$user->id."'>" . $user->fullname . " (" . $user->email . ")</option>";
+        }
+        echo "</select>";
+        ?>
+        <script>
+        $('.selectuserlist').chosen();
+        $('.selectuserlist').on('change', function() {
+            var id = $(this).val();
+            var event = thundashop.Ajax.createEvent('','changeUserOnBooking', $(this), {
+                "userid" : id,
+                "bookingid" : $('#openedbookingid').val()
+            });
+            thundashop.common.showInformationBoxNew(event);
+        });
+        </script>
+        <?php
+    }
+    
+    public function changeUserOnBooking() {
+        $booking = $this->getSelectedBooking();
+        $booking->userId = $_POST['data']['userid'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
+    }
+    
     public function searchExistingCustomer() {
         $name = $_POST['data']['name'];
         $users = $this->getApi()->getUserManager()->findUsers($name);
@@ -3144,13 +3179,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $products = $this->getApi()->getProductManager()->getAllProductsLight();
         $products = $this->indexList($products);
-
         $resultMatrix = array();
         $priceType = $filter->priceType;
         $total = 0;
         $productIds = array();
+//        foreach($products as $prod) {
+//            echo $prod->name . " - " . $prod->id. "<br>";
+//        }
         foreach($result->entries as $entry) {
-            $prices = $entry->priceInc;
+            $prices = $entry->priceExOrders;
             if($priceType == "extaxes") {
                 $prices = $entry->priceEx;
             }
@@ -3163,9 +3200,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $total += $val;
             }
         }
+        
+        foreach($productIds as $prodId => $val) {
+            if($val == 0) {
+                unset($productIds[$prodId]);
+            }
+        }
 
-        
-        
         $row = array();
         if($includeDownload) {
             $row[] = "<i class='fa fa-file-excel-o' style='cursor:pointer;' gs_downloadexcelreport='downloadOrderStatsMatrixToExcel' title='Download to excel' gs_filename='bookingdataexport' ></i> Day";

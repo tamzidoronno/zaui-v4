@@ -590,7 +590,7 @@ class CartManager extends \SystemApplication implements \Application {
             echo "<script>thundashop.common.goToPage('payment_success');</script>";
         } else if ($order->status == 7) {
             echo "<center><br/><br/><br/>";
-            echo "<h1>Betalingen er allerede gjennomført for denne bestillingen.</h1>";
+            echo "<h1>Betalingen er allerede gjennomført for denne bestillingen (ordrenr: " . $order->incrementOrderId . ")</h1>";
             echo "<br/><br/><br/><br/></center>";
         } else {
             $cartManager = new \ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();

@@ -93,7 +93,7 @@ public class MekonomenDatabase {
             user.managerLogin = getStringValue(myrow, 4);
             user.username = getStringValue(myrow, 5);
             user.email = getStringValue(myrow, 6);
-            
+
             users.add(user);
         }
                      
@@ -124,11 +124,16 @@ public class MekonomenDatabase {
             if (myrow == null || myrow.getCell(0) == null || i == 1)
                 continue;
             
+            String category = getStringValue(myrow, 2);
             
+            if (category != null && category.toLowerCase().equals("")) {
+                continue;
+            }
             
             MekonomenEvent event = new MekonomenEvent();
             event.eventName = getStringValue(myrow, 1);
             event.nodeId = getStringValue(myrow, 0).trim().toLowerCase();
+            event.category = category;
             
             events.put(event.nodeId, event);
         }
@@ -155,7 +160,8 @@ public class MekonomenDatabase {
             participant.endDate = getDateValue(myrow, 4);
             participant.status = getStringValue(myrow, 5);
             
-            if (participant.isCompleted()) {
+            
+            if (participant.isCompleted() && events.containsKey(participant.nodeId)) {
                 participants.add(participant);
             }
         }
@@ -194,6 +200,7 @@ public class MekonomenDatabase {
         participants.stream().filter(p -> p.username.trim().toLowerCase().equals(user.username.trim().toLowerCase()))
                 .forEach(participant -> {
                     MekonomenEvent event = getEvent(participant.nodeId);
+                    participant.category = event.category;
                     user.add(event, participant);
                 });
     }

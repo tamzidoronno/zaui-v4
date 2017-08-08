@@ -27,7 +27,9 @@ foreach ($res as $rest) {
     <div class='eventsummary'>Event(s): 
         <?
         foreach ($rest->events as $event) {
-            echo "<div class='eventrow'><div>".$event->event->eventName."</div><div>".$event->startDate."</div><div>".$event->endDate."</div></div>";
+            if (strtolower($event->category) == "utbildning") {
+                echo "<div class='eventrow'><div>".$event->event->eventName."</div><div>".$event->startDate."</div><div>".$event->endDate."</div></div>";
+            }
         }
         ?>
     </div>

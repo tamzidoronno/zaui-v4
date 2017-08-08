@@ -16,5 +16,6 @@ public class MekonomenEvent {
     public String eventName;
     public List<MekonomenEventParticipant> participants = new ArrayList();
     public String nodeId;
+    public String category;    
     
 }

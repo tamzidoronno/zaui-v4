@@ -9,5 +9,8 @@ class mekonomen_MekonomenEvent {
 	/** @var String */
 	public $nodeId;
 
+	/** @var String */
+	public $category;
+
 }
 ?>

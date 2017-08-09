@@ -11,11 +11,31 @@ class ProMeisterMekonomenDatabase extends \WebshopApplication implements \Applic
     }
 
     public function render() {
+        if ($_SESSION['connectToUser']) {
+            $this->includefile("connectToUser");
+            return; 
+        }
+        
         $this->includefile("search");
     }
     
     public function searchForUsers() {
         // helperfunction for serach, can not be removed.
     }
+    
+    public function showConnectToUser() {
+        $_SESSION['connectToUser'] = $_POST['data']['mekonomenusername'];
+    }
+    
+    public function cancel() {
+        unset($_SESSION['connectToUser']);
+    }
+    
+    public function connectToUser() {
+        $this->getApi()->getMekonomenManager()->addUserId($_POST['data']['userid'], $_SESSION['connectToUser']);
+        $this->cancel();
+    }
+    
+    
 }
 ?>

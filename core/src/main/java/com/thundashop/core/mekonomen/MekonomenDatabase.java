@@ -208,4 +208,15 @@ public class MekonomenDatabase {
     private MekonomenEvent getEvent(String nodeId) {
         return events.get(nodeId);
     }
+
+    public MekonomenUser getUserByUserName(String mekonomenUserId) {
+        MekonomenUser retUser = users.stream()
+                .filter(user -> user.username.equals(mekonomenUserId))
+                .findFirst()
+                .orElse(null);
+        
+        addEvents(retUser);
+        
+        return retUser;
+    }
 }

@@ -86,7 +86,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
         }
         
         userManager.checkUserAccess(user);
-        
+        gsTiming("After checked access");
         
         List<Scorm> retList = new ArrayList();
         
@@ -96,14 +96,20 @@ public class ScormManager extends ManagerBase implements IScormManager {
         }
         
         
-        
+        gsTiming("Starting checking of packages");
         for (ScormPackage scormPackage : packages.values()) {
             if (scormPackage.isGroupActive(user.companyObject.groupId) || alreadyCompletedOrStartedTest(scormPackage, userId)) {
+                gsTiming("Before getting scorm package.");
                 Scorm scorm = getScorm(user.id, scormPackage.id);
+                gsTiming("Before finalize.");
                 finalizeScorm(scorm);
+                gsTiming("After finalize.");
                 retList.add(scorm);
+                
             }
         }
+        
+        gsTiming("Checking completed.");
         
         
         return retList;   
@@ -160,28 +166,32 @@ public class ScormManager extends ManagerBase implements IScormManager {
     }
 
     @Override
-    public void updateResult(ScormResult result) {
-        Scorm scorm = getScorm(result.username, result.scormid);
-        
-        ScormPackage scormPackage = getPackage(scorm.scormId);
-        
-        scorm.completed = result.isCompleted();
-        scorm.passed = result.isPassed();
-        scorm.failed = result.isFailed();
-        
-        if (scorm.passed && scorm.passedDate == null) {
-            scorm.passedDate = new Date();
+    public void updateResult(List<ScormResult> results) {
+        for (ScormResult result : results) {
+            Scorm scorm = getScorm(result.username, result.scormid);
+
+            if (scorm.completed == result.isCompleted() && scorm.passed == result.isPassed() && result.isFailed() == scorm.failed) {
+                continue;
+            }
+            
+            scorm.completed = result.isCompleted();
+            scorm.passed = result.isPassed();
+            scorm.failed = result.isFailed();
+
+            if (scorm.passed && scorm.passedDate == null) {
+                scorm.passedDate = new Date();
+            }
+
+            try {
+                scorm.score = Integer.parseInt(result.score);
+            } catch (NumberFormatException ex) {
+                scorm.score = 0;
+            }
+
+            saveObject(scorm);
+
+            updateGroupedScormPackages(scorm, result.username);
         }
-        
-        try {
-            scorm.score = Integer.parseInt(result.score);
-        } catch (NumberFormatException ex) {
-            scorm.score = 0;
-        }
-        
-        saveObject(scorm);
-        
-        updateGroupedScormPackages(scorm, result.username);
     }
 
     @Override
@@ -204,8 +214,8 @@ public class ScormManager extends ManagerBase implements IScormManager {
 
     private boolean alreadyCompletedOrStartedTest(ScormPackage scormPackage, String userId) {
         Scorm res = scorms.values().stream()
-                .filter(o -> !o.isPartOfOtherGroupScormPackages(packages.values()))
                 .filter(o -> o.scormId.equals(scormPackage.id) && o.userId.equals(userId))
+                .filter(o -> !o.isPartOfOtherGroupScormPackages(packages.values()))
                 .findFirst()
                 .orElse(null);
         

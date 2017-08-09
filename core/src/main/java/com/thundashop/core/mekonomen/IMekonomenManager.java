@@ -18,4 +18,9 @@ import java.util.List;
 public interface IMekonomenManager {
     @Administrator
     public List<MekonomenUser> searchForUser(String name);
+    
+    @Administrator
+    public void addUserId(String userId, String mekonomenUserName);
+    
+    public MekonomenUser getMekonomenUser(String userId);
 }

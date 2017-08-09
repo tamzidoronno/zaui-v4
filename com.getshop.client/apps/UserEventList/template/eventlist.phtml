@@ -4,7 +4,22 @@
 $userId = $this->getUserId();
 $events = $this->getEventsToPrint();
 
-if (!count($events)) {
+$mekonomenUser = false;
+if ($this->isOldMode()) {
+    $mekonomenUser = $this->getApi()->getMekonomenManager()->getMekonomenUser($this->getUserId());    
+}
+
+if ($mekonomenUser) {     
+    foreach ($mekonomenUser->events as $event) {
+        if (strtolower($event->category) == "utbildning") {
+            echo "<div class='downloadrow'><div>".$event->event->eventName."</div>";
+                echo "<div>".$this->__w("Date").": ". ns_d5444395_4535_4854_9dc1_81b769f5a0c3\Event::formatOnlyStartDates2($event)."</div>";
+            echo "</div>";
+        }
+    }
+    
+}
+if (!count($events) && !$mekonomenUser) {
     echo $this->__w("No events available");
 }
 

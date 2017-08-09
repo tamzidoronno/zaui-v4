@@ -7,32 +7,35 @@ if ($this->isCompanySelected()) {
 }
 
 $scorms = $this->getApi()->getScormManager()->getMyScorm($this->getUserId());
-if (!$scorms)
-    return;
+$menokomenUser = $this->getApi()->getMekonomenManager()->getMekonomenUser($this->getUserId());
 
+if ($scorms) {
 ?>
-<div class="scormrow">
-    <div><? echo $this->__f("Name"); ?></div>
-    <div></div>
-    <div>Godkänd</div>
-    <div><? echo $this->__f("Link"); ?></div>
-</div>
+    <div class="scormrow">
+        <div><? echo $this->__f("Name"); ?></div>
+        <div></div>
+        <div>Godkänd</div>
+        <div><? echo $this->__f("Link"); ?></div>
+    </div>
 
-<?
-foreach ($scorms as $scorm) {
-    echo "<div class='outerrow'>";
-        $this->printRow($scorm);
+    <?
+    foreach ($scorms as $scorm) {
+        echo "<div class='outerrow'>";
+            $this->printRow($scorm);
 
-        if ($scorm->groupedScormPackage) {
-            echo "<div class='groupedinformation'>";
-            echo "<div class='groupedInformation'>".$this->__w("This course consist of multiple parts, make sure to complete all of them")."</div>";
-            foreach ($scorm->groupedScormPackageIds as $id) {
-                $iScorm = $this->getApi()->getScormManager()->getScormForCurrentUser($id, $this->getUserId());
-                $this->printRow($iScorm, true);
+            if ($scorm->groupedScormPackage) {
+                echo "<div class='groupedinformation'>";
+                echo "<div class='groupedInformation'>".$this->__w("This course consist of multiple parts, make sure to complete all of them")."</div>";
+                foreach ($scorm->groupedScormPackageIds as $id) {
+                    $iScorm = $this->getApi()->getScormManager()->getScormForCurrentUser($id, $this->getUserId());
+                    $this->printRow($iScorm, true);
+                }
+                echo "</div>";
             }
-            echo "</div>";
-        }
-    
-    echo "</div>";
+
+        echo "</div>";
+    }
 }
+
+
 ?>

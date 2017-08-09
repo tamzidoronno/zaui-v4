@@ -23,6 +23,7 @@ foreach ($res as $rest) {
         <div>Managerlogin: <? echo $rest->managerLogin; ?></div>
         <div>Befattning: <? echo $rest->befattning; ?></div>
         <div>Username: <? echo $rest->username; ?></div>
+        <div class="shop_button" gsclick='showConnectToUser' mekonomenusername='<? echo $rest->username; ?>'><i class="fa fa-chain"></i> Connect to a user</div>
     </div>
     <div class='eventsummary'>Event(s): 
         <?

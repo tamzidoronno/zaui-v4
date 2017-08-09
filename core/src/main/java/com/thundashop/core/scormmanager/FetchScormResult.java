@@ -33,10 +33,7 @@ public class FetchScormResult extends GetShopSchedulerBase {
         Type listType = new TypeToken<ArrayList<ScormResult>>(){}.getType();
         Gson gson = new Gson();
         List<ScormResult> resultList = gson.fromJson(result, listType);
-        
-        for (ScormResult iresult : resultList) {
-            getApi().getScormManager().updateResult(iresult);
-        }
+        getApi().getScormManager().updateResult(resultList);
     }
     
     private String getText(String url) throws Exception {

@@ -193,14 +193,10 @@ if($booking->orderIds) {
         if($order->status == 7) {
             echo "<i class='fa fa-check'></i> Paid<br><span style='color:#bbb;' title='Payment date'>".date("d.m.Y", strtotime($order->paymentDate))."</span><br>";
         } else {
-            if($total > 0) {
-                if($show) {
-                    echo "<input type='button' value='Mark paid' class='markpaidbutton'>";
-                } else {
-                    echo "<i class='fa fa-close'></i> Not paid";
-                }
+            if($show) {
+                echo "<input type='button' value='Mark paid' class='markpaidbutton'>";
             } else {
-                echo "Credit note";
+                echo "<i class='fa fa-close'></i> Not paid";
             }
         }
         echo "</td>";

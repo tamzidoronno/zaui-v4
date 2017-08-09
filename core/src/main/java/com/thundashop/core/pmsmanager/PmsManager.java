@@ -5175,7 +5175,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         if(bookingItem != null) {
                             toAdd.roomName = bookingItem.bookingItemName;
                         }
-                        toAdd.owner = userManager.getUserById(booking.userId).fullName;
+                        User user = userManager.getUserById(booking.userId);
+                        if(user != null) {
+                            toAdd.owner = user.fullName;
+                        }
                         items.add(toAdd);
                     }
                 }

@@ -52,16 +52,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     
     List<String> daysInPriceMatrix = new ArrayList();
     
-    private void addCartItem(CartItem cartItem) {
-        if(cartItem != null) {
-            generatedCartItems.add(cartItem);
-        }
-    }
-    
-    private void clearGenerateCart() {
-        generatedCartItems.clear();
-    }
-    
+    /* This is where it all begins */
     public String createCart(String bookingId, NewOrderFilter filter) {
         if(filter.itemsToCreate != null && !filter.itemsToCreate.isEmpty()) {
             List<CartItem> itemsToRemove = new ArrayList();
@@ -72,8 +63,8 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             }
             for(CartItem item : itemsToRemove) {
                 cartManager.removeCartItem(item.getCartItemId());
-            }
-            return "";
+            } 
+           return "";
         }
  
         
@@ -89,31 +80,29 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         updateCart();
         return "";
     }
+    
+    private void addCartItem(CartItem cartItem) {
+        if(cartItem != null) {
+            generatedCartItems.add(cartItem);
+        }
+    }
+    
+    private void clearGenerateCart() {
+        generatedCartItems.clear();
+    }
+    
 
     private void calculateRoomPrices() {
         for(PmsBookingRooms room : currentBooking.getAllRoomsIncInactive()) {
-            if(currentFilter.pmsRoomId != null && !currentFilter.pmsRoomId.isEmpty()) {
-                if(!currentFilter.pmsRoomId.equals(room.pmsBookingRoomId)) {
-                    continue;
-                }
-            }
-            
-            if(currentFilter.pmsRoomIds != null && !currentFilter.pmsRoomIds.isEmpty()) {
-                if(!currentFilter.pmsRoomIds.contains(room.pmsBookingRoomId)) {
-                    continue;
-                }
-            }
-            
-            //Sleepover prices.
-            HashMap<String, Double> priceMatrix = generatePriceMatrix(room);
-            generateDailyPriceItems(priceMatrix, room);
-            
-            //Addon prices.
-            HashMap<String, List<PmsBookingAddonItem>> items = getUnpaidAddonsForRoom(room);
-            for(String productId : items.keySet()) { 
-               generateAddonsCostForProduct(items.get(productId), room, true);
-                generateAddonsCostForProduct(items.get(productId), room, false);
-            }
+            calculatePricesOnRoom(room);
+        }
+        
+        List<String> roomIds = getRoomsCompletedRemovedFromBooking();
+        for(String roomRemoved : roomIds) {
+            System.out.println("Room has been removed:" + roomRemoved);
+            PmsBookingRooms room = new PmsBookingRooms();
+            room.pmsBookingRoomId = roomRemoved;
+            calculatePricesOnRoom(room);
         }
     }
 
@@ -143,6 +132,10 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             Order order = orderManager.getOrderSecure(orderId);
             for(CartItem item : order.cart.getItems()) {
                 if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                    if(room.bookingItemTypeId == null || room.bookingItemTypeId.isEmpty()) {
+                        room.bookingItemTypeId = getRoomTypeFromItem(item);
+                    }
+                    
                     HashMap<String, Double> orderMatrix = item.priceMatrix;
                     if(orderMatrix != null) {
                         for(String offset : orderMatrix.keySet()) {
@@ -319,9 +312,17 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             roomName = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
         }
         
+        if(guestName.isEmpty()) {
+            guestName = tryFindFromOrder(room, "guest");
+        }
+        
+        if(roomName.isEmpty()) {
+            roomName = tryFindFromOrder(room, "room");
+        }
+        
         BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
         boolean useTypeName = false;
-        if(productId == null || productId.isEmpty()) {
+        if((productId == null || productId.isEmpty()) && type != null) {
             productId = type.productId;
             useTypeName = true;
         }
@@ -580,6 +581,81 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         PmsBookingAddonItem empty = gson.fromJson(copy, PmsBookingAddonItem.class);
         empty.count = 0;
         addonsToAdd.put(toCheck.addonId, empty);
+    }
+
+    private void calculatePricesOnRoom(PmsBookingRooms room) {
+        if(currentFilter.pmsRoomId != null && !currentFilter.pmsRoomId.isEmpty()) {
+            if(!currentFilter.pmsRoomId.equals(room.pmsBookingRoomId)) {
+                    return;
+                }
+            }
+            
+            if(currentFilter.pmsRoomIds != null && !currentFilter.pmsRoomIds.isEmpty()) {
+                if(!currentFilter.pmsRoomIds.contains(room.pmsBookingRoomId)) {
+                    return;
+                }
+            }
+            
+            //Sleepover prices.
+            HashMap<String, Double> priceMatrix = generatePriceMatrix(room);
+            generateDailyPriceItems(priceMatrix, room);
+            
+            //Addon prices.
+            HashMap<String, List<PmsBookingAddonItem>> items = getUnpaidAddonsForRoom(room);
+            for(String productId : items.keySet()) { 
+               generateAddonsCostForProduct(items.get(productId), room, true);
+                generateAddonsCostForProduct(items.get(productId), room, false);
+            }    
+        }
+
+    private List<String> getRoomsCompletedRemovedFromBooking() {
+        List<String> result = new ArrayList();
+        HashMap<String, Integer> roomIdsFoundOnOrders = new HashMap();
+        List<String> roomIdsFoundOnBooking = new ArrayList();
+        for(String orderId : currentBooking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            for(CartItem item : order.cart.getItems()) {
+                roomIdsFoundOnOrders.put(item.getProduct().externalReferenceId, 1);
+            }
+        }
+        
+        for(PmsBookingRooms room : currentBooking.rooms) {
+            roomIdsFoundOnBooking.add(room.pmsBookingRoomId);
+        }
+        
+        for(String roomIdFromOrder : roomIdsFoundOnOrders.keySet()) {
+            if(!roomIdsFoundOnBooking.contains(roomIdFromOrder)) {
+                result.add(roomIdFromOrder);
+            }
+        }
+        return result;
+    }
+
+    private String getRoomTypeFromItem(CartItem item) {
+        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        for(BookingItemType type : types) {
+            if(type.productId.equals(item.getProduct().id)) {
+                return type.id;
+            }
+        }
+        return null;
+    }
+
+    private String tryFindFromOrder(PmsBookingRooms room, String type) {
+        for(String orderId : currentBooking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            for(CartItem item : order.cart.getItems()) {
+                if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                    if(type.equals("guest") && item.getProduct().metaData != null && !item.getProduct().metaData.isEmpty()) {
+                        return item.getProduct().metaData;
+                    }
+                    if(type.equals("room") && item.getProduct().additionalMetaData != null && !item.getProduct().additionalMetaData.isEmpty()) {
+                        return item.getProduct().additionalMetaData;
+                    }
+                }
+            }
+        }
+        return "";
     }
 
 

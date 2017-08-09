@@ -18,6 +18,7 @@ public class MekonomenEventParticipant {
     public Date startDate = null;
     public Date endDate = null;
     public String status = "";
+    public String category = "";
     
     public MekonomenEvent event = null;
 

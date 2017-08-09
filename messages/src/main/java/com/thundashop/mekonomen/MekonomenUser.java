@@ -20,7 +20,8 @@ public class MekonomenUser {
     public String managerLogin;
     public String username;
     public String email;
-
+    public String category;
+    
     public List<MekonomenEventParticipant> events = new ArrayList();
     
     @Override

@@ -21,6 +21,9 @@ class mekonomen_MekonomenUser {
 	/** @var String */
 	public $email;
 
+	/** @var String */
+	public $category;
+
 	/** @var mekonomen_MekonomenEventParticipant[] */
 	public $events;
 

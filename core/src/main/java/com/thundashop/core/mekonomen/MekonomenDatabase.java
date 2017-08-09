@@ -93,7 +93,7 @@ public class MekonomenDatabase {
             user.managerLogin = getStringValue(myrow, 4);
             user.username = getStringValue(myrow, 5);
             user.email = getStringValue(myrow, 6);
-            
+
             users.add(user);
         }
                      
@@ -133,7 +133,7 @@ public class MekonomenDatabase {
             MekonomenEvent event = new MekonomenEvent();
             event.eventName = getStringValue(myrow, 1);
             event.nodeId = getStringValue(myrow, 0).trim().toLowerCase();
-            
+            event.category = category;
             
             events.put(event.nodeId, event);
         }
@@ -200,6 +200,7 @@ public class MekonomenDatabase {
         participants.stream().filter(p -> p.username.trim().toLowerCase().equals(user.username.trim().toLowerCase()))
                 .forEach(participant -> {
                     MekonomenEvent event = getEvent(participant.nodeId);
+                    participant.category = event.category;
                     user.add(event, participant);
                 });
     }

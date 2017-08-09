@@ -15,6 +15,9 @@ class mekonomen_MekonomenEventParticipant {
 	/** @var String */
 	public $status;
 
+	/** @var String */
+	public $category;
+
 	/** @var com.thundashop.mekonomen.MekonomenEvent */
 	public $event;
 

@@ -158,6 +158,11 @@ public class AcculogixDataImporter {
         destination.onDemandInstructions = args[23];
         destination.pickupInstruction = args[22] + args[53];
         destination.deliveryInstruction = args[21];
+        if (args.length > 68) {
+            destination.signatureRequired = !args[68].contains("N");
+        }
+        
+        System.out.println(destination.signatureRequired);
 
         trackAndTraceManager.saveDestinationDirect(destination);
         destinations.put(destination.id, destination);

@@ -29,9 +29,9 @@ angular.module('TrackAndTrace')
         window.scroll(0,0);
     });
     
-   // if ( localStorage.getItem("username") == null || localStorage.getItem("password") === "") {
-   //     $location.path( "/login" );
-    if ($location.$$path === "") {
+    if ( localStorage.getItem("username") == null || localStorage.getItem("password") === "") {
+        $location.path( "/login" );
+    } else if ($location.$$path === "") {
         $location.path( "/home" );
     }
  })

@@ -8,5 +8,7 @@
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.BaseController = function($scope, $rootScope, $state, $api) {
-   
+     $scope.goToStart = function() {
+        $state.transitionTo('base.home');
+    }
 };

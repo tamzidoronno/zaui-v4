@@ -162,6 +162,9 @@ public class MekonomenDatabase {
             
             
             if (participant.isCompleted() && events.containsKey(participant.nodeId)) {
+                if (participant.username.equals("be") && (participant.nodeId.trim().equals("2248") || participant.nodeId.trim().equals("2249") || participant.nodeId.trim().equals("2237") || participant.nodeId.trim().equals("2424"))) {
+                    System.out.println(i);
+                }
                 participants.add(participant);
             }
         }

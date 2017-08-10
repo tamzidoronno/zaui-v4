@@ -16,6 +16,10 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         return $this->mode === "old";
     }
     
+    public function getCurrentUser() {
+        return $this->user;
+    }
+    
     public function render() {
         $this->mode = "upcoming";
         $this->includefile("eventlist");
@@ -113,6 +117,16 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         }
         
         return $events;
+    }
+    
+    public function removeConnectionToOldDatabase() {
+        $this->getApi()->getMekonomenManager()->removeConnectionToDatabase($_POST['userid']);
+        $this->user = $this->getApi()->getUserManager()->getUserById($_POST['userid']);
+    }
+    
+    public function renderUserSettings($user) {
+        $this->user = $user;
+        $this->includefile("usersetting");
     }
 
     public function getUserId() {

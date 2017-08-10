@@ -60,4 +60,14 @@ public class MekonomenManager extends ManagerBase implements IMekonomenManager {
         
         return null;
     }
+
+    @Override
+    public void removeConnectionToDatabase(String userId) {
+        User user = userManager.getUserById(userId);
+        userManager.checkUserAccess(user);
+        
+        if (user != null) {
+            userManager.addMetaData(userId, "mekonomenOldUsername", null);
+        }
+    }
 }

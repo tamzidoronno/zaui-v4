@@ -23,4 +23,7 @@ public interface IMekonomenManager {
     public void addUserId(String userId, String mekonomenUserName);
     
     public MekonomenUser getMekonomenUser(String userId);
+    
+    @Administrator
+    public void removeConnectionToDatabase(String userId);
 }

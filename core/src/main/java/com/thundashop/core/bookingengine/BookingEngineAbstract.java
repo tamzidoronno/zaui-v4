@@ -339,6 +339,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         checkIfCanAddBookings(bookings);
         checkIfAssigningPossible(bookings);
         checkIfAvailableBookingItemsOnlyEmptyBookings(bookings);
+        if (storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382")) {
+            checkIfItemIsReallyAvailable(bookings);
+        }
     }
 
     private void validateBookings(List<Booking> bookings) {
@@ -1166,5 +1169,19 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         Booking booking = getBooking(bookingId);
         booking.source = source;
         saveObject(config);
+    }
+
+    private void checkIfItemIsReallyAvailable(List<Booking> bookings) {
+        for (Booking booking : bookings) {
+            if (booking.bookingItemId == null || booking.bookingItemId.isEmpty()) {
+                continue;
+            }
+            
+            BookingItem item = items.get(booking.bookingItemId);
+            List<BookingItem> availableItems = getAvailbleItemsWithBookingConsidered(booking.bookingItemTypeId, booking.startDate, booking.endDate, booking.id);
+            if (!availableItems.contains(item)) {
+                throw new BookingEngineException("The room you tried to use is not available. Please use another one.");
+            }
+        }
     }
 }

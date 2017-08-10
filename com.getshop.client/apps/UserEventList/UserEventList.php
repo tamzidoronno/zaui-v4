@@ -22,7 +22,9 @@ class UserEventList extends \ns_d5444395_4535_4854_9dc1_81b769f5a0c3\EventCommon
         
         $this->mode = "old";
         $oldEvents = $this->getEventsToPrint();
-        if (count($oldEvents)) {
+        $mekonomenUser = $this->getApi()->getMekonomenManager()->getMekonomenUser($this->getUserId());    
+        
+        if (count($oldEvents) || $mekonomenUser) {
             echo "<div class='oldEvents'>";
             echo $this->wrapContentManager("oldTextRef", "Old Events");
             $this->includefile("eventlist");

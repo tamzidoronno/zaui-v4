@@ -386,6 +386,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             if (user != null) {
                 userManager.checkUserAccess(user);
                 route.userIds.add(userId);
+                route.addLogEntryForDriver(userId, getSession().currentUser.id, new Date(), true);
                 route.makeSureUserIdsNotDuplicated();
                 saveObjectInternal(route);
                 
@@ -1077,6 +1078,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         Route route = getRouteById(routeId);
         if (route != null) {
             route.userIds.remove(userId);
+            route.addLogEntryForDriver(userId, getSession().currentUser.id, new Date(), false);
             saveObjectInternal(route);
             
             finalize(route);

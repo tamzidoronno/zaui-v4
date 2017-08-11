@@ -683,6 +683,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 Destination dest = getDestination(pooledDest.destionationId);
                 dest.movedFromPool = new Date();
                 route.destinationIds.add(dest.id);
+                route.completedInfo.completedTimeStamp = null;
                 saveObjectInternal(route);
                 notifyRoute(route);
                 finalize(route);

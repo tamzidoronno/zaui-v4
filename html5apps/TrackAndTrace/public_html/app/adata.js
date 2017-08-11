@@ -223,6 +223,13 @@ adata = {
         
     },
     
+    clear: function() {
+        this.routes = [];
+        this.exceptions = [];
+        this.driverMessages = [];
+        this.save();
+    },
+    
     cleanupFaultyRoutes: function() {
         for (var i in this.routes) {
             if (i === "errorCode") {

@@ -42,6 +42,7 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmseventmanager.PmsEventFilter;
+import com.thundashop.core.pmseventmanager.PmsEventManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.ratemanager.BookingComRateManagerManager;
@@ -151,6 +152,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     GrafanaManager grafanaManager;
+    
+    @Autowired
+    PmsEventManager pmsEventManager;
     
     @Autowired
     GetShop getShop;
@@ -3869,6 +3873,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         orderManager.deleteAllOrders();
         userManager.deleteAllUsers();
+        pmsEventManager.deleteAllEvents();
     }
 
     private void checkForMissingEndDate(PmsBooking booking) {

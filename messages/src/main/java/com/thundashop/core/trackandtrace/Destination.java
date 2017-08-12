@@ -59,6 +59,8 @@ public class Destination extends DataCommon {
     public boolean dirty = false;
     public Date movedFromPool;
     public boolean signatureRequired = true;
+    public boolean extraInstractionsRead = false;
+    public Date extraInstractionsReadDate = null;
     
    
     public Destination() {

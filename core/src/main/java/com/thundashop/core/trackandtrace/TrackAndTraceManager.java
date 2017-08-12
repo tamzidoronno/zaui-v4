@@ -893,6 +893,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         dest.extraInstructions = message;
+        dest.extraInstractionsRead = false;
+        dest.extraInstractionsReadDate = null;
         saveObject(dest);
         
         Route route = getRouteById(routeId);
@@ -900,7 +902,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         if (route == null) {
             return "Route not found";
         }
-        
         
         finalize(route);
         notifyRoute(route);
@@ -1268,8 +1269,15 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
     }
 
-    
-
+    @Override
+    public void markInstructionAsRead(String destinationId, Date date) {
+        Destination destination = destinations.get(destinationId);
+        if (destination != null) {
+            destination.extraInstractionsRead = true;
+            destination.extraInstractionsReadDate = new Date();
+            saveObjectInternal(destination);
+        }
+    }
     
 
 }

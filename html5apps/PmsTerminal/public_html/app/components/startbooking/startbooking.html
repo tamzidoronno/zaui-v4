@@ -1,0 +1,49 @@
+<div style="margin:auto;max-width:600px;">
+    <div style="clear:both;">
+        <b style="font-size: 24px;">Number of rooms</b>
+        <span style="float:right">
+            <span class="gsbtn" ng-mobile-click="decrementRooms();"><i class="fa fa-minus-circle"></i></span>
+            <input type="text" style="font-size: 22px; width:40px;padding: 5px; text-align: center; border-radius: 3px;"
+                   ng-model="roomcount" disabled>
+            <span class="gsbtn" ng-mobile-click="incrementRooms()"><i class="fa fa-plus-circle"></i></span>
+        </span>
+    </div>
+    <div style="clear:both;padding-top: 15px;">
+        <b style="font-size: 24px;">Number of nights</b>
+        <span style="float:right">
+            <span class="gsbtn" ng-mobile-click="decrementNights();"><i class="fa fa-minus-circle"></i></span>
+            <input type="text" style="font-size: 22px; width:40px;padding: 5px; text-align: center; border-radius: 3px;"
+                   ng-model="nightcount" disabled>
+            <span class="gsbtn" ng-mobile-click="incrementNights()"><i class="fa fa-plus-circle"></i></span>
+        </span>
+    </div>
+    <div style="clear:both;padding-top: 15px;">
+        <b style="font-size: 24px;">Discount code</b>
+        <span style="float:right">
+            <input type="text" style="font-size: 22px; width:120px;padding: 5px; text-align: center; border-radius: 3px;"
+                   ng-model="discountcode">
+        </span>
+    </div>
+    
+    <div ng-repeat="i in getRoomCount() track by $index" style="clear:both;padding-top: 10px;">
+        <b style="font-size: 20px;">Number of guest for room {{$index+1}}</b>
+        <span style="float:right">
+            <span class="gsbtn" ng-mobile-click="decrementGuests($index);"><i class="fa fa-minus-circle"></i></span>
+            <input type="text" style="font-size: 22px; width:40px;padding: 5px; text-align: center; border-radius: 3px;"
+                   ng-model="guestcount[$index]" disabled>
+            <span class="gsbtn" ng-mobile-click="incrementGuests($index)"><i class="fa fa-plus-circle"></i></span>
+        </span>
+    </div>
+    
+    <div style="clear:both;padding-top: 15px;">
+        <span class="gsbtn">Not booking for today?</span>
+        <span style="float:right">
+            <span class="gsbtn" style="width:100px; text-align:center;" ng-mobile-click="startBooking()">Continue</span>
+        </span>
+    </div>
+    
+    <div ng-show="errorOccured" style="color:red; padding-top: 10px;">
+        * Number of rooms, number of nights and number of guests has to be filled in before continue.
+    </div>
+    
+</div>

@@ -10616,6 +10616,31 @@ GetShopApiWebSocket.PmsPaymentTerminal.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'startBooking' : function(multilevelname, data, gs_silent) {
+        var data = {
+            args : {
+                data : JSON.stringify(data),
+            },
+            method: 'startBooking',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsPaymentTerminal',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'updateBooking' : function(multilevelname, booking,user, gs_silent) {
+        var data = {
+            args : {
+                booking : JSON.stringify(booking),
+                user : JSON.stringify(user),
+            },
+            method: 'updateBooking',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsPaymentTerminal',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
 }
 GetShopApiWebSocket.PmsReportManager = function(communication) {
     this.communication = communication;

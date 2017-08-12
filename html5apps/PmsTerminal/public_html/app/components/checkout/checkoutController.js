@@ -63,6 +63,10 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
         });
     };
     
+    $scope.editBooking = function() {
+        $state.transitionTo('base.editbooking');
+    };
+    
     $scope.removeAddonFromRoom = function(addon, room) {
         console.log(room.pmsBookingRoomId);
         $api.getApi().PmsPaymentTerminal.removeProductFromRoom($api.getDomainName(), addon.productId, room.pmsBookingRoomId);

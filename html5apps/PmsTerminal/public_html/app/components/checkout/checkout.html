@@ -15,7 +15,7 @@
         <div class='summarybox'>
             <div class='summaryboxheading'>
                 <b><i class='fa fa-info-circle'></i> Booking summary</b>
-                <span class='gsbtnsmall' style='float:right;'><i class='fa fa-edit'></i> Edit</span>
+                <span class='gsbtnsmall' style='float:right;' ng-mobile-click="editBooking();"><i class='fa fa-edit'></i> Edit</span>
             </div>
             <div class='row'>
                 <span class='col1'>Name</span>
@@ -43,7 +43,7 @@
     <div>
         <div class='summarybox'>
             <b><i class='fa fa-bed'></i> {{numberOfRoomsBooked}} Room(s) booked</b>
-            <span class='gsbtnsmall' style='float:right;'><i class='fa fa-edit'></i> Edit</span>
+            <span class='gsbtnsmall' style='float:right;' ng-mobile-click="editBooking();"><i class='fa fa-edit'></i> Edit</span>
             <div ng-repeat="room in booking.rooms">
                 <div class='roominformation'>
                     <div>

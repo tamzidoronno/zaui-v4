@@ -21,6 +21,42 @@ angular.module('TrackAndTrace')
             }
         }
     });
+    $stateProvider.state('base.startbooking', {
+        url: '/startbooking',
+
+        params: {
+            action : { refreshData : false } 
+        },
+
+        views: {
+            main: {
+                templateUrl : 'components/startbooking/startbooking.html',
+                controller : controllers.StartBookingController
+            },
+            footer: {
+                templateUrl : 'components/home/footer.html',
+                controller : controllers.BaseController
+            }
+        }
+    });
+    $stateProvider.state('base.editbooking', {
+        url: '/editbooking',
+
+        params: {
+            action : { refreshData : false } 
+        },
+
+        views: {
+            main: {
+                templateUrl : 'components/editbooking/editbooking.html',
+                controller : controllers.EditBookingController
+            },
+            footer: {
+                templateUrl : 'components/home/footer.html',
+                controller : controllers.BaseController
+            }
+        }
+    });
     $stateProvider.state('base.checkout', {
         url: '/checkout',
 

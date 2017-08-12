@@ -1,0 +1,173 @@
+<div style="margin:auto; width: 800px; text-align: left;padding-top: 50px;">
+    <div ng-repeat="room in booking.rooms" style=" background-color:#8EBEE8; margin-bottom: 20px; border-radius: 3px;">
+        <div style="height: 42px; background-color:#5EA1DC; padding: 5px; color:#fff;border-top-left-radius: 3px;border-top-right-radius: 3px;">
+            <b style="font-size: 28px;padding-left: 10px;">Guest information</b>
+            <span style="float:right;">
+                <span class="gsbtn"><i class="fa fa-arrow-left"></i></span>
+                <span style="background-color:#fff; padding: 8px; border-radius:3px; color:#000;">{{getRoomType(room.bookingItemTypeId)}}</span>
+                <span class="gsbtn"><i class="fa fa-arrow-right"></i></span>
+            </span>
+        </div>
+        <div style="clear:both;"></div>
+        <div style="padding: 10px;">
+            <table width="100%">
+                <tr>
+                    <td valign='top'>
+                        <span style='text-align:left; display:inline-block;'>
+                            Guests<br>
+                            <span class="gsbtn" ng-mobile-click="decrementGuestCount(room)"><i class='fa fa-minus'></i></span>
+                            <input type='txt' style="font-size: 22px; width:40px;padding: 5px; text-align: center; border: solid 1px #bbb; border-radius: 3px;" value='{{room.numberOfGuests}}' ng-model="room.numberOfGuests" disabled>
+                            <span class="gsbtn" ng-mobile-click="incrementGuestCount(room)"><i class='fa fa-plus'></i></span>
+                        </span>
+                    </td>
+                    <td>
+                        <span style='text-align:left; display:inline-block;float:right;'>
+                            <span class='guestcol'>Name</span>
+                            <span class='guestcol'>Email</span>
+                            <span class='guestcol guestcolprefix'>Phone</span>
+                            <span class='guestcol'></span>
+                            <div ng-repeat="i in numberOfGuests(room) track by $index">
+                                <span class='guestcol'>
+                                    <input type='txt' class='definedinput' value='{{room.numberOfGuests}}' ng-model="room.guests[$index].name">
+                                </span>
+                                <span class='guestcol'>
+                                    <input type='email' class='definedinput' value='{{room.numberOfGuests}}' ng-model="room.guests[$index].email">
+                                </span>
+                                <span class='guestcol guestcolprefix'>
+                                    <input type='txt' class='definedinput' value='{{room.numberOfGuests}}' ng-model="room.guests[$index].prefix">
+                                </span>
+                                <span class='guestcol'>
+                                    <input type='tel' class='definedinput' value='{{room.numberOfGuests}}' ng-model="room.guests[$index].phone">
+                                </span>
+                            </div>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <div style="height: 42px; background-color:#5EA1DC; padding: 5px; color:#fff;border-bottom-left-radius: 3px;border-bottom-right-radius: 3px;">
+            <span style="float:right;font-size: 28px;padding-left:10px;">NOK {{room.totalCost}}</span>
+        </div>
+    </div>
+    
+    
+    <div style="background-color:#fff;">
+        <div style="height: 42px; background-color:#5EA1DC; padding: 5px; color:#fff;border-top-left-radius: 3px;border-top-right-radius: 3px;">
+            <b style="font-size: 28px;padding-left: 10px;">Bookers contact data</b>
+        </div>
+        <div style="clear:both;"></div>
+        <div style="padding: 10px;">
+            <span class="gsbtn profileselectionbtn" ng-mobile-click="showPrivatePersonInformation()" ng-class="privateSelected"><i class='fa fa-user'></i> Private person</span>
+            <span class="gsbtn profileselectionbtn" ng-mobile-click="showCompanyInformation()" ng-class="companySelected"><i class='fa fa-building'></i> Company</span>
+            <div style='padding-top:20px;'>
+            </div>
+            
+            <div ng-show="profileselected=='private'">
+                <div class='row'>
+                    <label style='width: 230px; display:inline-block;'>
+                        Name<br>
+                        <input class='definedinput' type="txt" ng-model="user.fullName">
+                    </label>
+                    <label style='width: 230px; display:inline-block;'>
+                        Email<br>
+                        <input class='definedinput' type="txt" ng-model="user.emailAddress">
+                    </label>
+                    <label style='width: 50px; display:inline-block;'>
+                        Prefix<br>
+                        <input class='definedinput' type="txt" ng-model="user.prefix">
+                    </label>
+                    <label style='width: 230px; display:inline-block;'>
+                        Phone<br>
+                        <input class='definedinput' type="txt" ng-model="user.cellPhone">
+                    </label>
+                </div>
+                
+                <div class='row'>
+                    <label style='width: 185px; display:inline-block;'>
+                        Adress<br>
+                        <input class='definedinput' type="txt" ng-model="user.address.address">
+                    </label>
+                    <label style='width: 185px; display:inline-block;'>
+                        Postcode<br>
+                        <input class='definedinput' type="txt" ng-model="user.address.postCode">
+                    </label>
+                    <label style='width: 185px; display:inline-block;'>
+                        City<br>
+                        <input class='definedinput' type="txt" ng-model="user.address.city">
+                    </label>
+                    <label style='width: 185px; display:inline-block;'>
+                        Country<br>
+                        <input class='definedinput' type="txt" ng-model="user.address.countryCode">
+                    </label>
+                </div>
+            </div>
+            
+            <div ng-show="profileselected=='company'">
+                <div class='row'>
+                    <label style='width: 230px; display:inline-block;'>
+                        Company name<br>
+                        <input class='definedinput' type="txt" ng-model="user.fullName">
+                    </label>
+                    <label style='width: 230px; display:inline-block;'>
+                        Vat number<br>
+                        <input class='definedinput' type="txt" ng-model="company.vatNumber">
+                    </label>
+                    <label style='width: 50px; display:inline-block;'>
+                        Prefix<br>
+                        <input class='definedinput' type="txt" ng-model="user.prefix">
+                    </label>
+                    <label style='width: 230px; display:inline-block;'>
+                        Phone<br>
+                        <input class='definedinput' type="txt" ng-model="user.cellPhone">
+                    </label>
+                </div>
+                <div class='row'>
+                    <label style='width: 230px; display:inline-block;'>
+                        Contact person<br>
+                        <input class='definedinput' type="txt" ng-model="company.contactPerson">
+                    </label>
+                    <label style='width: 230px; display:inline-block;'>
+                        Company email<br>
+                        <input class='definedinput' type="txt" ng-model="user.emailAddress">
+                    </label>
+                </div>
+                
+                <div class='row'>
+                    <label style='width: 185px; display:inline-block;'>
+                        Adress<br>
+                        <input class='definedinput' type="txt" ng-model="user.address.address">
+                    </label>
+                    <label style='width: 185px; display:inline-block;'>
+                        Postcode<br>
+                        <input class='definedinput' type="txt" ng-model="user.address.postCode">
+                    </label>
+                    <label style='width: 185px; display:inline-block;'>
+                        City<br>
+                        <input class='definedinput' type="txt" ng-model="user.address.city">
+                    </label>
+                    <label style='width: 185px; display:inline-block;'>
+                        Country<br>
+                        <input class='definedinput' type="txt" ng-model="user.address.countryCode">
+                    </label>
+                </div>
+            </div>
+            
+            <br><br><br><br>
+        </div>
+    </div>
+    <bR>
+    <div style="text-align: right;">
+        <span class="gsbtn" ng-mobile-click='continueToCheckout()'>Continue to checkout</span>
+    </div>
+    
+</div>
+
+<style>
+    .row { padding-bottom: 10px; }
+    .definedinput { font-size: 22px; width:100%;padding: 5px; border: solid 1px #bbb; border-radius: 3px; }
+    .profileselectionbtn { background-color:#bbb; border-color:#fff; }
+    .profileSelected { font-weight: bold; background-color:green; }
+    .guestcol { width: 180px; display:inline-block; }
+    .guestcolprefix { width: 50px; }
+</style>

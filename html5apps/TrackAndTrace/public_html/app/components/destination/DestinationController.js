@@ -10,7 +10,7 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 controllers.DestinationController = function($scope, datarepository, $stateParams, $api, $state) {
     $scope.route = datarepository.getRouteById($stateParams.routeId);
     $scope.destination = datarepository.getDestinationById($stateParams.destinationId);
-    
+
     if (!$scope.destination) {
         $state.transitionTo("base.home");
         return;
@@ -19,6 +19,13 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
     $scope.doTheBack = function() {
         $state.transitionTo('base.routeoverview', { routeId : $stateParams.routeId });
     };
+    
+    $scope.instructionRead = function() {
+        $scope.destination.extraInstractionsRead = true;
+        $scope.destination.extraInstractionsReadDate = new Date();
+        datarepository.save();
+        $api.getApi().TrackAndTraceManager.markInstructionAsRead($scope.destination.id, new Date()); 
+    }
     
     $scope.destinationState = function(state) {
         if ($scope.destination.startInfo.started) {

@@ -1,0 +1,33 @@
+<?
+/* @var $this \ns_b794bba8_d25c_49a7_96c9_0aea81a408ee\ProMeisterMekonomenDatabase */
+?>
+
+<div gstype="form" method="searchForUsers"> 
+    Search for a user:
+    <br/><input class="gsniceinput1"  gsname="searchvalue"/>    
+    <br/><br/><div class="shop_button" gstype="submit">Search</div>
+</div>
+<br/>
+<div class="shop_button" gsclick="cancel"><? echo $this->__f("Cancel"); ?></div>
+
+
+<?
+$users = false;
+if (isset($_POST['data']['searchvalue']) && $_POST['data']['searchvalue']) {
+    $users = $this->getApi()->getUserManager()->findUsers($_POST['data']['searchvalue']);
+}
+
+if ($users) {
+    echo "<br/><br/><b>Click on the user that you wish to connect to </b><br/><br/>";
+} else {
+    echo "<br/><br/><b>Please enter a valid value in the textfield above</b><br/><br/>";
+    return;
+}
+foreach ($users as $user) {
+    echo "<div style='border: solid 1px #DDD; cursor: pointer;' gsclick='connectToUser' userid='$user->id'>";
+    echo $user->fullName." - ".$user->emailAddress." ".$user->cellPhone;
+    echo "</div>";
+}
+
+?>
+    

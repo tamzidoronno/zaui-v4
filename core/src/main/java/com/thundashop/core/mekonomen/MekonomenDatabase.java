@@ -162,6 +162,9 @@ public class MekonomenDatabase {
             
             
             if (participant.isCompleted() && events.containsKey(participant.nodeId)) {
+                if (participant.username.equals("be") && (participant.nodeId.trim().equals("2248") || participant.nodeId.trim().equals("2249") || participant.nodeId.trim().equals("2237") || participant.nodeId.trim().equals("2424"))) {
+                    System.out.println(i);
+                }
                 participants.add(participant);
             }
         }
@@ -207,5 +210,16 @@ public class MekonomenDatabase {
     
     private MekonomenEvent getEvent(String nodeId) {
         return events.get(nodeId);
+    }
+
+    public MekonomenUser getUserByUserName(String mekonomenUserId) {
+        MekonomenUser retUser = users.stream()
+                .filter(user -> user.username.equals(mekonomenUserId))
+                .findFirst()
+                .orElse(null);
+        
+        addEvents(retUser);
+        
+        return retUser;
     }
 }

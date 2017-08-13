@@ -561,7 +561,8 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
 
     @Override
-    public String getBase64EncodedPDFWebPageFromHtml(String html) {
+    public String getBase64EncodedPDFWebPageFromHtml(String incontent) {
+        String html = new String(Base64.decodeBase64(incontent));
         String fileName = "/tmp/"+UUID.randomUUID().toString() + ".html";
         
         try{

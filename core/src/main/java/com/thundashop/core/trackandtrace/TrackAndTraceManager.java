@@ -386,6 +386,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             if (user != null) {
                 userManager.checkUserAccess(user);
                 route.userIds.add(userId);
+                route.addLogEntryForDriver(userId, getSession().currentUser.id, new Date(), true);
                 route.makeSureUserIdsNotDuplicated();
                 saveObjectInternal(route);
                 
@@ -682,6 +683,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 Destination dest = getDestination(pooledDest.destionationId);
                 dest.movedFromPool = new Date();
                 route.destinationIds.add(dest.id);
+                route.completedInfo.completedTimeStamp = null;
                 saveObjectInternal(route);
                 notifyRoute(route);
                 finalize(route);
@@ -891,6 +893,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         dest.extraInstructions = message;
+        dest.extraInstractionsRead = false;
+        dest.extraInstractionsReadDate = null;
         saveObject(dest);
         
         Route route = getRouteById(routeId);
@@ -898,7 +902,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         if (route == null) {
             return "Route not found";
         }
-        
         
         finalize(route);
         notifyRoute(route);
@@ -1077,6 +1080,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         Route route = getRouteById(routeId);
         if (route != null) {
             route.userIds.remove(userId);
+            route.addLogEntryForDriver(userId, getSession().currentUser.id, new Date(), false);
             saveObjectInternal(route);
             
             finalize(route);
@@ -1265,8 +1269,15 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
     }
 
-    
-
+    @Override
+    public void markInstructionAsRead(String destinationId, Date date) {
+        Destination destination = destinations.get(destinationId);
+        if (destination != null) {
+            destination.extraInstractionsRead = true;
+            destination.extraInstractionsReadDate = new Date();
+            saveObjectInternal(destination);
+        }
+    }
     
 
 }

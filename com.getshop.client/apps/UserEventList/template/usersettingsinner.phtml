@@ -1,0 +1,16 @@
+<input type='hidden' gs_model='usereventlistmodel' gs_model_attr='userid' value='<?php echo $this->getCurrentUser()->id; ?>'>
+
+<?
+$mekonomenUser = $this->getApi()->getMekonomenManager()->getMekonomenUser($this->getCurrentUser()->id);    
+if ($mekonomenUser) {
+?>
+<div class="gss_button_area">
+    <div class="gss_button" gss_method="removeConnectionToOldDatabase" gss_model="usereventlistmodel" gss_view="gss_view_usereventlist" gss_fragment="usersetting"><i class="fa fa-trash"></i>Remove connection to old database</div>
+</div>
+<?
+} else {
+?>
+    No old database connection found
+<?
+}
+?>

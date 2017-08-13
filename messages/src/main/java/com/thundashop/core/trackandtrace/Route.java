@@ -38,6 +38,8 @@ public class Route extends DataCommon {
     
     public List<String> destinationIds = new ArrayList();
     
+    public List<DriverRouteLog> driverLogs = new ArrayList();
+    
     public List<String> userIds = new ArrayList();
     
     public String deliveryTime = "";
@@ -111,7 +113,7 @@ public class Route extends DataCommon {
         
         Calendar cal = Calendar.getInstance();
         cal.setTime(completedInfo.completedTimeStamp);
-        cal.add(Calendar.DAY_OF_WEEK, 2);
+        cal.add(Calendar.DAY_OF_WEEK, 5);
         Date dateToPass = cal.getTime();
         
         Date now = new Date();
@@ -147,6 +149,33 @@ public class Route extends DataCommon {
             
             return o1.id.compareTo(o2.id);
         };
+    }
+
+    public boolean serviceDateToDayOrInPast() {
+        Date today = new Date();
+        
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(today);
+        cal2.setTime(deliveryServiceDate);
+        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                          cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+        if (sameDay)
+            return true;
+        
+        if (today.after(deliveryServiceDate))
+            return true;
+        
+        return false;
+    }
+
+    void addLogEntryForDriver(String userId, String addedByUserId, Date date, boolean added) {
+        DriverRouteLog log = new DriverRouteLog();
+        log.added = added;
+        log.addedByUserId = addedByUserId;
+        log.userId = userId;
+        log.date = date;
+        driverLogs.add(log);
     }
 
 

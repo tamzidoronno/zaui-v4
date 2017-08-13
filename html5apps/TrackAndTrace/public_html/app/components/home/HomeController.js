@@ -83,6 +83,17 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     $scope.startRoute = function($routeToUse) {
         var confirmed = confirm("Are you sure you want to start this route?");
         
+        var inputDate = new Date($routeToUse.deliveryServiceDate);
+        var todaysDate = new Date();
+        
+        var sameDay = inputDate.setHours(0,0,0,0) == todaysDate.setHours(0,0,0,0);
+        var later = todaysDate.getTime() > inputDate.getTime();
+        
+        if (!sameDay && !later) {
+            alert("This route is not scheduled for today");
+            return;
+        }
+        
         if (confirmed) {
             $routeToUse.startInfo.started = true;
             $routeToUse.startInfo.startedTimeStamp = new Date();
@@ -111,6 +122,5 @@ controllers.HomeController = function($scope, $api, $rootScope, datarepository, 
     
     if ($stateParams.action.refreshData) {
         $scope.refresh();
-        
     }
 };

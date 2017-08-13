@@ -148,6 +148,7 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
         List<BookingItemType> types = bookingEngine.getBookingItemTypes();
         
         PmsBooking booking = pmsManager.startBooking();
+        booking.couponCode = data.discountCode;
         for(Integer i = 0; i < data.numberOfRooms; i++) {
             Integer guestCount = data.guestPerRoom.get(i);
 
@@ -158,6 +159,7 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
                 room.bookingItemTypeId = type.id;
                 room.maxNumberOfGuests = type.size;
                 booking.rooms.add(room);
+                pmsManager.resetPriceForRoom(room.pmsBookingRoomId);
             }
         }
         
@@ -290,10 +292,73 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
             room.date.end = defaultObject.end;
             Calendar cal = Calendar.getInstance();
             cal.setTime(room.date.end);
-            cal.add(Calendar.DAY_OF_YEAR, data.numberOfNights);
+            cal.add(Calendar.DAY_OF_YEAR, (data.numberOfNights-1));
             room.date.end = cal.getTime();
         }
         return room;
+    }
+
+    @Override
+    public HashMap<String, Integer> getRoomTypesThatRoomCanBeChangedTo(String pmsBookingRoomId) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.findRoom(pmsBookingRoomId);
+        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        HashMap<String, Integer> availability = new HashMap();
+        for(BookingItemType type : types) {
+            if(!type.visibleForBooking) {
+                continue;
+            }
+            Integer count = bookingEngine.getNumberOfAvailable(type.id, room.date.start, room.date.end);
+            availability.put(type.id, count);
+        }
+        
+        List<String> remove = new ArrayList();
+        for(PmsBookingRooms tmpRoom : booking.getActiveRooms()) {
+            Integer count = 0;
+            if(availability.get(tmpRoom.bookingItemTypeId) != null) {
+                count = availability.get(tmpRoom.bookingItemTypeId);
+            }
+            count--;
+            availability.put(tmpRoom.bookingItemTypeId, count);
+            if(count <= 0) {
+                remove.add(tmpRoom.bookingItemTypeId);
+            }
+        }
+        
+        for(String removeId : remove) {
+            availability.remove(removeId);
+        }
+        
+        return availability;
+        
+    }
+
+    @Override
+    public PmsBookingRooms changeRoomTypeOnRoom(String pmsBookingRoomId, String newTypeId) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.findRoom(pmsBookingRoomId);
+        if(booking.isCompletedBooking()) {
+            pmsManager.setNewRoomType(pmsBookingRoomId, booking.id, newTypeId);
+        } else {
+            room.bookingItemTypeId = newTypeId;
+            pmsManager.saveBooking(booking);
+        }
+        pmsManager.finalize(booking);
+        room.maxNumberOfGuests = bookingEngine.getBookingItemType(room.bookingItemTypeId).size;
+        return room;
+    }
+
+    @Override
+    public Double changeGuestCountOnRoom(String pmsBookingRoomId, Integer count) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.findRoom(pmsBookingRoomId);
+        room.numberOfGuests = count;
+        pmsManager.resetPriceForRoom(pmsBookingRoomId);
+        pmsManager.finalize(booking);
+        booking = pmsManager.getBookingFromRoom(pmsBookingRoomId);
+        pmsManager.finalize(booking);
+        room = booking.findRoom(pmsBookingRoomId);
+        return room.totalCost;
     }
 
 }

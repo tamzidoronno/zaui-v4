@@ -2,13 +2,18 @@
     <h1>2 / 3 Guest information</h1>
     <div ng-repeat="room in booking.rooms" style=" background-color:#8EBEE8; margin-bottom: 20px; border-radius: 3px;">
         <div style="height: 42px; background-color:#5EA1DC; padding: 5px; color:#fff;border-top-left-radius: 3px;border-top-right-radius: 3px;">
-            <b style="font-size: 28px;padding-left: 10px;">information</b>
+            <b style="font-size: 28px;padding-left: 10px;">Guest information</b>
             <span style="float:right;">
-                <span class="gsbtn"><i class="fa fa-arrow-left"></i></span>
                 <span style="background-color:#fff; padding: 8px; border-radius:3px; color:#000;">{{getRoomType(room.bookingItemTypeId)}}</span>
-                <span class="gsbtn"><i class="fa fa-arrow-right"></i></span>
+                <span class="gsbtn" ng-mobile-click="changeTypeOnRoom(room);"><i class="fa fa-arrow-right"></i></span>
             </span>
         </div>
+        <div ng-show="doChangeRoomType[room.pmsBookingRoomId]">
+            <span class="gsbtn" ng-repeat="type in availableMap" style="margin: 3px;" ng-mobile-click="changeRoomTypeOnRoom(room, type)">
+                {{type.name}}, Guests: {{type.size}}
+            </span>
+        </div>
+        
         <div style="clear:both;"></div>
         <div style="padding: 10px;">
             <table width="100%">
@@ -55,7 +60,7 @@
     
     <div style="background-color:#fff;">
         <div style="height: 42px; background-color:#5EA1DC; padding: 5px; color:#fff;border-top-left-radius: 3px;border-top-right-radius: 3px;">
-            <b style="font-size: 28px;padding-left: 10px;">contact data</b>
+            <b style="font-size: 28px;padding-left: 10px;">Contact data</b>
         </div>
         <div style="clear:both;"></div>
         <div style="padding: 10px;">
@@ -585,10 +590,11 @@
     </div>
     <bR>
     <div style="text-align: right;">
-        <span class="gsbtn" ng-mobile-click='continueToCheckout()'>to checkout</span>
+        <span class="gsbtn" ng-mobile-click='continueToCheckout()'>Continue to checkout</span>
     </div>
     
 </div>
+
 <style>
     .row { padding-bottom: 10px; }
     .definedinput { font-size: 22px; width:100%;padding: 5px; border: solid 1px #bbb; border-radius: 3px; }
@@ -598,4 +604,5 @@
     .guestcolprefix { width: 50px; }
     .chosen-container { vertical-align: middle; }
     .chosen-container-single .chosen-single {line-height: 38px; height: 38px;  }
+    select { background-color:#fff; }
 </style>

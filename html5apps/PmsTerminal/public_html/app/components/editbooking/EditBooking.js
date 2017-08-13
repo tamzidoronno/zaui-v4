@@ -3,6 +3,7 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 controllers.EditBookingController = function($scope, $api, $rootScope, $state, $stateParams, datarepository) {
     
     $scope.types = {};
+    $scope.doChangeRoomType = {};
     
     $scope.init = function($api) {
         if(jQuery.isEmptyObject(datarepository)) {
@@ -12,7 +13,39 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
         $scope.loadBooking();
         $scope.privatePersonSelected = false;
         $scope.companySelected = false;
-        
+    };
+    
+    $scope.changeRoomTypeOnRoom = function(room, type) {
+        var change = $api.getApi().PmsPaymentTerminal.changeRoomTypeOnRoom($api.getDomainName(), room.pmsBookingRoomId, type.id);
+        change.done(function(res) {
+            $scope.doChangeRoomType = {};
+            room.bookingItemTypeId = type.id;
+            room.totalCost = res.totalCost;
+            console.log(res);
+            room.maxNumberOfGuests = res.maxNumberOfGuests;
+            if(room.numberOfGuests > room.maxNumberOfGuests) {
+                room.numberOfGuests = res.numberOfGuests;
+            }
+            $scope.$apply();
+        });
+    };
+    
+    $scope.changeTypeOnRoom = function(room) {
+        var loadAvailableTypes = $api.getApi().PmsPaymentTerminal.getRoomTypesThatRoomCanBeChangedTo($api.getDomainName(), room.pmsBookingRoomId);
+        $scope.availableMap = {};
+        $scope.doChangeRoomType = {};
+        loadAvailableTypes.done(function(res) {
+            for(var k in res) {
+                $scope.availableMap[k] = {
+                    "name": $scope.types[k].name,
+                    "count" : res[k],
+                    "id" : k,
+                    "size" : $scope.types[k].size
+                }
+            }
+            $scope.doChangeRoomType[room.pmsBookingRoomId] = true;
+            $scope.$apply();
+        });
     };
     
     $scope.showPrivatePersonInformation = function() {
@@ -60,6 +93,13 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
         if(room.numberOfGuests < 1) {
             room.numberOfGuests = 1;
         }
+        
+        var loadNewPrice = $api.getApi().PmsPaymentTerminal.changeGuestCountOnRoom($api.getDomainName(), room.pmsBookingRoomId, room.numberOfGuests);
+        loadNewPrice.done(function(res) {
+            console.log(res);
+            room.totalCost = res;
+            $scope.$apply();
+        });
     };
     
     $scope.getRoomType = function(typeId) {
@@ -72,6 +112,12 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
         if(room.numberOfGuests > room.maxNumberOfGuests) {
             room.numberOfGuests = room.maxNumberOfGuests;
         }
+        var loadNewPrice = $api.getApi().PmsPaymentTerminal.changeGuestCountOnRoom($api.getDomainName(), room.pmsBookingRoomId, room.numberOfGuests);
+        loadNewPrice.done(function(res) {
+            console.log(res);
+            room.totalCost = res;
+            $scope.$apply();
+        });
     };
     
     $scope.numberOfGuests= function(room) {

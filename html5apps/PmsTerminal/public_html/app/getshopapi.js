@@ -10579,6 +10579,32 @@ GetShopApiWebSocket.PmsPaymentTerminal.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'changeGuestCountOnRoom' : function(multilevelname, pmsBookingRoomId,count, gs_silent) {
+        var data = {
+            args : {
+                pmsBookingRoomId : JSON.stringify(pmsBookingRoomId),
+                count : JSON.stringify(count),
+            },
+            method: 'changeGuestCountOnRoom',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsPaymentTerminal',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'changeRoomTypeOnRoom' : function(multilevelname, pmsBookingRoomId,newTypeId, gs_silent) {
+        var data = {
+            args : {
+                pmsBookingRoomId : JSON.stringify(pmsBookingRoomId),
+                newTypeId : JSON.stringify(newTypeId),
+            },
+            method: 'changeRoomTypeOnRoom',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsPaymentTerminal',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'findBookings' : function(multilevelname, phoneNumber, gs_silent) {
         var data = {
             args : {
@@ -10609,6 +10635,18 @@ GetShopApiWebSocket.PmsPaymentTerminal.prototype = {
                 bookingId : JSON.stringify(bookingId),
             },
             method: 'getOrderSummary',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsPaymentTerminal',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getRoomTypesThatRoomCanBeChangedTo' : function(multilevelname, pmsBookingRoomId, gs_silent) {
+        var data = {
+            args : {
+                pmsBookingRoomId : JSON.stringify(pmsBookingRoomId),
+            },
+            method: 'getRoomTypesThatRoomCanBeChangedTo',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsPaymentTerminal',
         };
@@ -12218,10 +12256,10 @@ GetShopApiWebSocket.ScormManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'updateResult' : function(inResult, gs_silent) {
+    'updateResult' : function(results, gs_silent) {
         var data = {
             args : {
-                inResult : JSON.stringify(inResult),
+                results : JSON.stringify(results),
             },
             method: 'updateResult',
             interfaceName: 'core.scormmanager.IScormManager',

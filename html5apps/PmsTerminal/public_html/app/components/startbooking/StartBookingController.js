@@ -94,6 +94,7 @@ controllers.StartBookingController = function($scope, $api, $rootScope, $state, 
             startObject.numberOfRooms = $scope.roomcount;
             startObject.numberOfNights = $scope.nightcount;
             startObject.guestPerRoom = {};
+            startObject.discountcode = $scope.discountcode;
             for(var i = 0; i < $scope.roomcount; i++) {
                 startObject.guestPerRoom[i] = $scope.guestcount[i];
             }

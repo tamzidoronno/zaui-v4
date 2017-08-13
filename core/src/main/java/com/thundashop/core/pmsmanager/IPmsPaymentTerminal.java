@@ -38,5 +38,24 @@ public interface IPmsPaymentTerminal {
      */
     public HashMap<Integer, Integer> getMaxNumberOfRooms(PmsStartBooking data);
     
+    /**
+     * Returns a map of types that the booking can be changed to with number of rooms available accioated to it.
+     * @param pmsBookingRoomId
+     * @return 
+     */
+    public HashMap<String, Integer> getRoomTypesThatRoomCanBeChangedTo(String pmsBookingRoomId);
+    
+    @Administrator
+    public PmsBookingRooms changeRoomTypeOnRoom(String pmsBookingRoomId, String newTypeId);
+    
+    /**
+     * Change the number of guests on a room.
+     * @param pmsBookingRoomId
+     * @param count 
+     * @return The new price for the room.
+     */
+    @Administrator
+    public Double changeGuestCountOnRoom(String pmsBookingRoomId, Integer count);
+    
     public boolean updateBooking(PmsBooking booking, User user, Company company);
 }

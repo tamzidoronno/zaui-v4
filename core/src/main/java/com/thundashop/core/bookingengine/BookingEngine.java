@@ -199,7 +199,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      */
     @Override
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
-        return bookingEngineAbstract.getNumberOfAvailable(itemType, start, end);
+        return bookingEngineAbstract.getAvailbleItems(itemType, start, end).size();
     }
 
     /**

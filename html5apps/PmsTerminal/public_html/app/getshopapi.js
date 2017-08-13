@@ -10591,6 +10591,18 @@ GetShopApiWebSocket.PmsPaymentTerminal.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getMaxNumberOfRooms' : function(multilevelname, data, gs_silent) {
+        var data = {
+            args : {
+                data : JSON.stringify(data),
+            },
+            method: 'getMaxNumberOfRooms',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsPaymentTerminal',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getOrderSummary' : function(multilevelname, bookingId, gs_silent) {
         var data = {
             args : {
@@ -10628,11 +10640,12 @@ GetShopApiWebSocket.PmsPaymentTerminal.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'updateBooking' : function(multilevelname, booking,user, gs_silent) {
+    'updateBooking' : function(multilevelname, booking,user,company, gs_silent) {
         var data = {
             args : {
                 booking : JSON.stringify(booking),
                 user : JSON.stringify(user),
+                company : JSON.stringify(company),
             },
             method: 'updateBooking',
             multiLevelName: multilevelname,

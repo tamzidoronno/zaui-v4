@@ -1,15 +1,27 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.StartBookingController = function($scope, $api, $rootScope, $state, $stateParams, datarepository) {
     $scope.roomcount = 0;
     $scope.errorOccured = false;
     $scope.nightcount = 0;
+    $scope.maxNumberOfRooms = 0;
+    
+    $scope.setNightsCount = function(count) {
+        var startObject = {};
+        startObject.numberOfNights = count;
+        var checkRoomCount = $api.getApi().PmsPaymentTerminal.getMaxNumberOfRooms($api.getDomainName(), startObject);
+        $scope.notAvailable = false;
+        checkRoomCount.done(function(res) {
+            if(Object.keys(res).length === 0) {
+                $scope.notAvailable = true;
+            } else {
+                $scope.nightcount = count;
+                $scope.maxNumberOfRooms = Object.keys(res).length;
+                $scope.maxNumberOfGuestPerRoom = res;
+            }
+            $scope.$apply();
+        });
+    };
     
     $scope.init = function($api) {
         $scope.guestcount = {};
@@ -20,6 +32,9 @@ controllers.StartBookingController = function($scope, $api, $rootScope, $state, 
     
     $scope.incrementRooms = function() {
         $scope.roomcount++;
+        if($scope.roomcount > $scope.maxNumberOfRooms) {
+            $scope.roomcount--;
+        }
     };
     
     $scope.decrementRooms = function() {
@@ -39,6 +54,9 @@ controllers.StartBookingController = function($scope, $api, $rootScope, $state, 
     
     $scope.incrementGuests = function(index) {
         $scope.guestcount[index]++;
+        if($scope.maxNumberOfGuestPerRoom[index] < $scope.guestcount[index]) {
+            $scope.guestcount[index]--;
+        }
     };
     
     $scope.decrementNights = function() {

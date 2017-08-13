@@ -12,6 +12,7 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
         $scope.loadBooking();
         $scope.privatePersonSelected = false;
         $scope.companySelected = false;
+        
     };
     
     $scope.showPrivatePersonInformation = function() {
@@ -78,7 +79,15 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
     };
     
     $scope.continueToCheckout = function() {
-        var updateBooking = $api.getApi().PmsPaymentTerminal.updateBooking($api.getDomainName(), $scope.booking, $scope.user);
+        var company = $scope.company;
+        if(!company) {
+            company = null;
+        }
+        var user = $scope.user;
+        if(!user) {
+            user = null;
+        }
+        var updateBooking = $api.getApi().PmsPaymentTerminal.updateBooking($api.getDomainName(), $scope.booking, user, company);
         updateBooking.done(function(success) {
             if(success) {
                 $state.transitionTo('base.checkout');

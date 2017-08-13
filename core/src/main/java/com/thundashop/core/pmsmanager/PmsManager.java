@@ -177,9 +177,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
                 bookings.put(booking.id, booking);
-                if(booking.countryCode != null && !booking.countryCode.isEmpty()) {
-                    System.out.println(booking.countryCode);
-                }
             }
             if (dataCommon instanceof ConferenceData) {
                 ConferenceData conferenceRoomData = (ConferenceData) dataCommon;
@@ -297,6 +294,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public List<Room> getAllRoomTypes(Date start, Date end) {
+        if(numberOfYearsBetween(start, end) > 5) {
+            return new ArrayList();
+        }
         User loggedon = userManager.getLoggedOnUser();
         boolean isAdmin = false;
         if(loggedon != null) {
@@ -328,8 +328,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             PmsBooking booking = new PmsBooking();
             booking.priceType = PmsBooking.PriceType.daily;
-            setPriceOnRoom(room, true, booking);
             
+            setPriceOnRoom(room, true, booking);
             roomToAdd.price = room.price;
             roomToAdd.priceWithoutDiscount = room.priceWithoutDiscount;
             result.add(roomToAdd);
@@ -708,6 +708,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             diff = 0.0;
         }
         booking.unsettled = diff;
+        
+        for(PmsBookingRooms room : booking.rooms) {
+            try {
+                room.maxNumberOfGuests = bookingEngine.getBookingItemType(room.bookingItemTypeId).size;
+            }catch(Exception e) {
+                logPrintException(e);
+            }
+        }
         
         return finalize(booking);
     }
@@ -6549,6 +6557,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.addons.removeAll(toRemove);
         logEntry("Removed addon from room:" + productManager.getProduct(productId).name, booking.id, room.bookingItemId, room.pmsBookingRoomId);
         saveBooking(booking);
+    }
+
+    private int numberOfYearsBetween(Date start, Date end) {
+        if(start == null || end == null) {
+            return 0;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        int startYear = cal.get(Calendar.YEAR);
+        cal.setTime(end);
+        int endYear = cal.get(Calendar.YEAR);
+        
+        return endYear- startYear;
     }
 
     

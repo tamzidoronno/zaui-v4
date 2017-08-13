@@ -10,6 +10,7 @@ import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.util.Calendar; 
 import com.thundashop.core.amesto.AmestoSync; 
 import com.thundashop.core.arx.AccessLog;
@@ -53,6 +54,7 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.wubook.WubookManager;
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -175,6 +177,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsBooking) {
                 PmsBooking booking = (PmsBooking) dataCommon;
                 bookings.put(booking.id, booking);
+                if(booking.countryCode != null && !booking.countryCode.isEmpty()) {
+                    System.out.println(booking.countryCode);
+                }
             }
             if (dataCommon instanceof ConferenceData) {
                 ConferenceData conferenceRoomData = (ConferenceData) dataCommon;
@@ -6324,9 +6329,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsBookingAddonItem> getAddonsWithDiscountForBooking(String pmsBookingRoomId) {
         List<PmsBookingAddonItem> addons = getAddonsWithDiscount(pmsBookingRoomId);
-        return addons.stream()
+        List<PmsBookingAddonItem> res = addons.stream()
                 .filter(add -> add.isActive || add.isAvailableForBooking)
                 .collect(Collectors.toList());
+        
+        Gson gson = new Gson();
+        String copy = gson.toJson(res);
+        
+        Type listType = new TypeToken<List<PmsBookingAddonItem>>() {}.getType();
+        
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        
+        res = gson.fromJson(copy, listType);
+        for(PmsBookingAddonItem item : res) {
+            item.name = productManager.getProduct(item.productId).name;
+            item.addedToRoom = false;
+            for(PmsBookingAddonItem addonOnRoom : room.addons) {
+                if(addonOnRoom.productId.equals(item.productId)) {
+                    item.addedToRoom=true;
+                    break;
+                }
+            }
+        }
+        
+        return res;
     }
 
     public void removeAllUnclosedOrders(String id) {
@@ -6510,6 +6537,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
-    
+    void removeProductFromRoom(String pmsBookingRoomId, String productId) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        List<PmsBookingAddonItem> toRemove = new ArrayList();
+        for(PmsBookingAddonItem item : room.addons) {
+            if(item.productId.equals(productId)) {
+                toRemove.add(item);
+            }
+        }
+        room.addons.removeAll(toRemove);
+        logEntry("Removed addon from room:" + productManager.getProduct(productId).name, booking.id, room.bookingItemId, room.pmsBookingRoomId);
+        saveBooking(booking);
+    }
 
+    
 }

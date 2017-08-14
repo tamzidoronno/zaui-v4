@@ -18,6 +18,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.ManagerSubBase;
+import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.storemanager.StorePool;
@@ -137,7 +138,7 @@ public class Database extends StoreComponent {
     }
 
     private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
-        logSavedMessge(data, credentials.manangerName, collectionPrefix + data.storeId);
+//        logSavedMessge(data, credentials.manangerName, collectionPrefix + data.storeId);
         data.gs_manager = credentials.manangerName;
         DBObject dbObject = morphia.toDBObject(data);
         mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
@@ -432,7 +433,7 @@ public class Database extends StoreComponent {
         if (sandbox) {
             return;
         }
-        
+
         addDataCommonToDatabase(data, credentials);
     }
 

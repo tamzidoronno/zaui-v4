@@ -111,7 +111,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
     public String getMultiLevelName() {
         return multiLevelName;
     }
-
+    
     private void closeConnection() {
         if (this.api != null) {
             try {

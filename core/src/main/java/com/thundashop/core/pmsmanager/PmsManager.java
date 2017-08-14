@@ -3018,7 +3018,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!isOpen(itemType, start, end)) {
             return 0;
         }
-        return bookingEngine.getNumberOfAvailable(itemType, start, end);
+        try {
+            return bookingEngine.getNumberOfAvailable(itemType, start, end);
+        }catch(BookingEngineException e) {
+            return 0;
+        }
     }
 
     private boolean isOpen(String itemType, Date start, Date end) {

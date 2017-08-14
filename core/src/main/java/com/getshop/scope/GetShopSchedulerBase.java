@@ -116,10 +116,11 @@ public abstract class GetShopSchedulerBase implements Runnable {
         if (this.api != null) {
             try {
                 this.loggedOn = false;
-                this.api.getUserManager().logLogout();
+                this.api.getUserManager().logout();
                 this.api.transport.close();
                 this.api = null;
             } catch (Exception ex) {
+                ex.printStackTrace();
                 Logger.getLogger(GetShopSchedulerBase.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

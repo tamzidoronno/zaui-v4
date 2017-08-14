@@ -123,6 +123,9 @@ if($booking->orderIds) {
     echo "<th></th>";
     echo "</tr>";
     foreach($result as $order) {
+        if(!$order) {
+            continue;
+        }
         $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
         $totalEx = $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order);
         $createByManager = "";

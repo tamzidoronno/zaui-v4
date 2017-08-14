@@ -601,11 +601,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return null;
         }
         User user = getSession().currentUser;
+        boolean foundOrder = false;
         for (Order order : getAllOrderIncludedVirtualNonFinalized()) {
             String incOrderId = order.incrementOrderId + "";
             if (!order.id.equals(orderId) && !incOrderId.equals(orderId)) {
                 continue;
             }
+            foundOrder = true;
             finalizeOrder(order);
             String currentSession = getSession().id;
             if (user == null) {
@@ -621,6 +623,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         logPrint("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it.");
+        if(!foundOrder) {
+            logPrint("Order does not exists");
+        } else {
+            logPrint("Order does exists but user: " + getSession().currentUser.fullName + " does not has access to it");
+        }
+        
         return null;
     }
     
@@ -1296,7 +1304,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(!orderNeedAutoPay(order, daysToTryAfterOrderHasStarted)) {
                 continue;
             }
-            logPrint("autopay for order: " + order.incrementOrderId);
+            order.payment.transactionLog.put(System.currentTimeMillis(), "trying autopay for order: " + order.incrementOrderId);
             User user = userManager.getUserById(order.userId);
             for(UserCard card : user.savedCards) {
                 if(card.isExpired()) {
@@ -1345,7 +1353,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(order.status == Order.Status.PAYMENT_FAILED) {
             return false;
         }
-        if(order.status >= Order.Status.PAYMENT_COMPLETED) {
+        if(order.status >= Order.Status.PAYMENT_COMPLETED && order.status != Order.Status.NEEDCOLLECTING) {
             return false;
         }
 

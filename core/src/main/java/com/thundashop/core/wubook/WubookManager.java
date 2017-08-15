@@ -1427,7 +1427,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 Date start = startcal.getTime();
                 endCal.add(Calendar.DAY_OF_YEAR, 1);
                 Date end = endCal.getTime();
-                int count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end);
+                int count = 0;
+                try {
+                    count = bookingEngine.getNumberOfAvailableWeakButFaster(rdata.bookingEngineTypeId, start, end);
+                }catch(BookingEngineException e) {
+                    
+                }
                 int totalForType = bookingEngine.getBookingItemsByType(rdata.bookingEngineTypeId).size();
                 if(count > 0 && totalForType > 2) {
                     count -= toRemove;

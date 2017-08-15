@@ -129,6 +129,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         addGetShopAdmins();
         degradeGetSuperShopAdmins();
+        sessionFactory.cleanSession();
+        saveSessionFactory();
 //        doubleCheckUniqueCustomerIds();
     }
 

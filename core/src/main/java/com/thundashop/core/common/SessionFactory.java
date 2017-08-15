@@ -138,4 +138,8 @@ public class SessionFactory extends DataCommon {
         ThundashopSession session = getSession(sessionId);
         return session.getObject("user");
     }
+
+    public void cleanSession() {
+        sessions.clear();
+    }
 }

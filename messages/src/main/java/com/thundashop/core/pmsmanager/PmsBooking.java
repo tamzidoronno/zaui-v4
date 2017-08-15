@@ -77,6 +77,7 @@ public class PmsBooking extends DataCommon {
     
     @Administrator
     public String secretBookingId = "";
+    public boolean ignoreNoShow = false;
     
     public Double getTotalPrice() {
         return totalPrice;

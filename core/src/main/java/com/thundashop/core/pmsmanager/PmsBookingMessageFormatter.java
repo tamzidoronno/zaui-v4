@@ -242,7 +242,7 @@ class PmsBookingMessageFormatter {
                 }
             }
 
-            if(text.trim().isEmpty() || title.trim().isEmpty()) {
+            if(text == null || text.trim().isEmpty() || title.trim().isEmpty()) {
                 continue;
             }
             bookinginfo += "<tr><td valign='top'>" + title + "</td><td>" + text + "</td></tr>";

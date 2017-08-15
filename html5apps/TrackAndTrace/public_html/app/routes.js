@@ -14,6 +14,17 @@ angular.module('TrackAndTrace')
 //        }
     });
     
+    $stateProvider.state('base.errorhandler', {
+        url: '/errorhandler',
+        
+        views: {
+            main: {
+                templateUrl : 'components/errorhandler/errorprinter.html',
+                controller : controllers.ErrorHandlerController
+            }
+        }
+    });
+    
     $stateProvider.state('base.login', {
         url: '/login',
         

@@ -167,4 +167,7 @@ public interface ITrackAndTraceManager {
     
     @Customer
     public void markDeparting(String destinationId, double latitude, double longitude, Date timeStamp, String signatureImage, String typedSignature);
+    
+    @Customer
+    public void markInstructionAsRead(String destinationId, Date date);
 }

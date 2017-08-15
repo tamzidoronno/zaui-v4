@@ -11,6 +11,7 @@ import com.thundashop.core.usermanager.data.Company;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +110,10 @@ public class AcculogixDataImporter {
             route.originalId = row[49];
             route.userIds.add(row[63]);
             route.depotId = row[2];
+            
+            if (row[63] != null && !row[63].isEmpty()) {
+                route.addLogEntryForDriver(row[63], "import", new Date(), true);
+            }
             
             try {
                 route.deliveryServiceDate = sdf.parse(row[30].split(" ")[1]);

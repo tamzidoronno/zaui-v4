@@ -10,6 +10,8 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.NewOrderFilter;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
@@ -68,6 +70,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Autowired
     MessageManager messageManager;
+    
+    @Autowired
+    OrderManager orderManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -1006,6 +1011,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 continue;
             }
             boolean arrived = false;
+            
             for(PmsBookingRooms room : book.getAllRooms()) {
                 if(room.checkedin) {
                     arrived = true;
@@ -1014,6 +1020,33 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(arrived) {
                 continue;
             }
+            
+
+            if(book.orderIds.isEmpty()) {
+                continue;
+            }
+            
+            try {
+                if(book.ignoreNoShow) {
+                    continue;
+                }
+
+                for(String orderId : book.orderIds) {
+                    Order order = orderManager.getOrder(orderId);
+                    if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                        book.ignoreNoShow = true;
+                        pmsManager.saveBooking(book);
+                    }
+                }
+
+                if(book.ignoreNoShow) {
+                    continue;
+                }
+            }catch(Exception e) {
+                messageManager.sendErrorNotification("Wubook noshow problem", e);
+            }
+            
+            
             if(book.channel != null && book.channel.contains("wubook")) {
                 Long idToMark = new Long(book.wubookreservationid);
                 List<String> ids = book.wubookModifiedResId;

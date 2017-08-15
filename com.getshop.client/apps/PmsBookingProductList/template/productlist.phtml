@@ -27,6 +27,12 @@ if($this->getText("displaytopcontinue") == "true") {
     }
 }
 $numberSelected = 0;
+
+if(sizeof($rooms) == 0) {
+    echo "<b style='font-size: 50px;'>No rooms where found, have you selected a very long time periode?</b>";
+    return;
+}
+
 foreach($rooms as $room) {
      $bookedCount = 0;
     foreach($booking->rooms as $bookedroom) {

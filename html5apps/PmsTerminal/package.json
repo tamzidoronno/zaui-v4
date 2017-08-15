@@ -1,7 +1,9 @@
 {
   "name": "zcp",
   "version": "0.0.1",
-  "dependencies": {},
+  "dependencies": {
+    "bower": "^1.8.0"
+  },
   "devDependencies": {
     "express": "^4.10.1",
     "gulp": "^3.8.9",

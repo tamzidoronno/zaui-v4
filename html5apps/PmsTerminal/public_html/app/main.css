@@ -66,12 +66,6 @@ body {
     font-size:17px;
 }
 
-.textinput:focus,
-.textinput.focus {
-    border: solid 1px #707070;
-    box-shadow: 0 0 5px 1px #969696;
-}
-
 .mainview {
     padding-left: 10px;
     padding-right: 10px;
@@ -210,18 +204,9 @@ a {
     margin-top: 20px;
     margin-bottom: 20px;
 }
-
-input[type="text"] {
-  padding: 10px;
-  border: solid 1px #dcdcdc;
-  transition: box-shadow 0.3s, border 0.3s;
-  width: 100%;
-  box-sizing: border-box;
-}
-input[type="text"]:focus,
-input[type="text"].focus {
-  border: solid 1px #707070;
-  box-shadow: 0 0 5px 1px #969696;
+html {
+     overflow-y: -moz-scrollbars-vertical;
+     overflow-y: scroll;
 }
 
 .styled-select select {
@@ -262,4 +247,26 @@ input[type="text"].focus {
     border:solid 1px rgba(0,0,0,0.2);
     background-color: #c1dcf3;
     padding: 5px;
+}
+
+.gsbtn {
+    border: solid 1px #6393c1;
+    background-color:#6393c1;
+    color:#fff;
+    padding: 10px;
+    border-radius: 3px;
+    display:inline-block;
+    cursor:pointer;
+    
+}
+
+.gsbtnsmall {
+    border: solid 1px #6393c1;
+    background-color:#6393c1;
+    color:#fff;
+    padding: 2px;
+    border-radius: 3px;
+    display:inline-block;
+    cursor:pointer;
+    padding-left: 10px; padding-right: 10px;
 }

@@ -339,9 +339,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         checkIfCanAddBookings(bookings);
         checkIfAssigningPossible(bookings);
         checkIfAvailableBookingItemsOnlyEmptyBookings(bookings);
-        if (storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382")) {
-            checkIfItemIsReallyAvailable(bookings);
-        }
+        checkIfItemIsReallyAvailable(bookings);       
     }
 
     private void validateBookings(List<Booking> bookings) {

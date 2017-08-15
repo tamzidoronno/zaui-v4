@@ -1576,6 +1576,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
        });
     }
 
+    /* TEST */
     private Calendar getCalendar(boolean start) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, 11);

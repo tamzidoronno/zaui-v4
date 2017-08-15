@@ -239,7 +239,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
 
     private void checkDoorsWithOpeningHours() {
-        System.out.println("Check opening hours on doors");
         for(GetShopDevice dev : devices.values()) {
             if(dev.openingHoursData != null) {
                 TimeRepeater data = new TimeRepeater();
@@ -827,7 +826,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             List<BookingItem> items = bookingEngine.getBookingItems();
             GetShopDevice toSet = null;
             for(GetShopDevice dev : devices.values()) {
-                if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null && !dev.isSubLock()) {
+                if(connectedToBookingEngineItem(dev, items) == null ) {
                     continue;
                 }
 

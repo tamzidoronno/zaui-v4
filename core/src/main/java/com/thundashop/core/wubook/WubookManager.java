@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -1333,12 +1334,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Vector<Hashtable> tosend = new Vector();
         int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
         List<WubookAvailabilityField> fieldsUpdated = new ArrayList();
-        
+        gsTiming("Start iterating");
         for (WubookRoomData rdata : wubookdata.values()) {
             if(!rdata.addedToWuBook) {
                 continue;
             }
-            
             Hashtable roomToUpdate = new Hashtable();
             roomToUpdate.put("id", rdata.wubookroomid);
 
@@ -1350,7 +1350,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 Date start = startcal.getTime();
                 endCal.add(Calendar.DAY_OF_YEAR, 1);
                 Date end = endCal.getTime();
-                int count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end);
+                int count = 0;
+                try {
+                    count = bookingEngine.getNumberOfAvailableWeakButFaster(rdata.bookingEngineTypeId, start, end);
+                }catch(BookingEngineException e) {
+                    
+                }
                 int totalForType = bookingEngine.getBookingItemsByType(rdata.bookingEngineTypeId).size();
                 if(count > 0 && totalForType > 2) {
                     count -= toRemove;
@@ -1380,6 +1385,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             roomToUpdate.put("days", days);
             tosend.add(roomToUpdate);
         }
+        gsTiming("done iterating");
 
         String pattern = "dd/MM/yyyy";
         SimpleDateFormat format = new SimpleDateFormat(pattern);
@@ -1392,7 +1398,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(tosend);
         logText("Doing update of " + numberOfDays + " days");
         WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_rooms_values", client, this, params);
-        updateThread.start();
+//        updateThread.start();
         availabilityHasBeenChanged = null;
         lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
         

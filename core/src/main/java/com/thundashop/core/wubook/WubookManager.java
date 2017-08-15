@@ -1398,7 +1398,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(tosend);
         logText("Doing update of " + numberOfDays + " days");
         WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_rooms_values", client, this, params);
-//        updateThread.start();
+        updateThread.start();
         availabilityHasBeenChanged = null;
         lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
         

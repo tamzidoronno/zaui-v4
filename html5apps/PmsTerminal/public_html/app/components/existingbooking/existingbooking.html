@@ -3,7 +3,7 @@
         <div>
             <h1>1. Enter phone number used when booking</h1>
             <span style="width:30%; display: inline-block;">
-                <input type="tel" placeholder="Phone number" ng-model="phonenumber">    
+                <input type="number" class="definedinput" ng-model="phonenumber">    
             </span>
             <span class="gsbtn" ng-click="searchForBooking()"><i class='fa fa-search'></i> Find my booking</span>
         </div>
@@ -19,7 +19,7 @@
                 </div>
                 <span class="gsbtn" ng-click="continueToCheckout(result)" style="margin-top: 10px;">
                     <i class='fa fa-thumbs-o-up'></i> This is my booking, continue to payment.
-                    </span>
+                </span>
             </div>
         </div>
         <div style="padding-top: 50px; display:none;">

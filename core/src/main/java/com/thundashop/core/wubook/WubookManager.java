@@ -74,6 +74,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Autowired
     OrderManager orderManager;
+    private int tokenCount;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -112,6 +113,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private boolean connectToApi() throws Exception {
         
         if(!isWubookActive()) { return false; }
+        
+        if(tokenCount < 30 && token != null && !token.isEmpty()) {
+            tokenCount++;
+            return true;
+        }
+        
         client = new XmlRpcClient("https://wubook.net/xrws/");
 
         Vector<String> params = new Vector<String>();
@@ -122,6 +129,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         Integer response = (Integer) result.get(0);
         token = (String) result.get(1);
+        tokenCount = 0;
         if (response == 0) {
             return true;
         }

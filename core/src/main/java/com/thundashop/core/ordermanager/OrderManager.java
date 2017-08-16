@@ -2014,5 +2014,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+    @Override
+    public List<String> getPaymentMethodsThatHasOrders() {
+        HashMap<String, Integer> maps = new HashMap();
+        for(Order order : orders.values()) {
+           if(order.payment != null && order.payment.paymentType != null) {
+               String paymentId = order.payment.getPaymentTypeId();
+               maps.put(paymentId, 1);
+           }
+        }
+        return new ArrayList(maps.keySet());
+    }
+
 
 }

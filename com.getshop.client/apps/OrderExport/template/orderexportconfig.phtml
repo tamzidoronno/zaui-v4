@@ -55,8 +55,6 @@ $subtypes['booking'] = "Transfer bookings";
 
 $orderFiltertype = array();
 $orderFiltertype["created"] = "Order created";
-$orderFiltertype["started"] = "Order started";
-$orderFiltertype["ended"] = "Order ended";
 $orderFiltertype["paymentdate"] = "Order paid for";
 
 
@@ -213,6 +211,35 @@ foreach($configs as $config) {
 
 echo "<span class='integrationselection incomedistribution loadincomedistribution' type='incomedistribution'>Income distribution</span>";
 echo "<br><br><div style='clear:both;'></div><hr>";
+
+
+$paymentTypesThatHasBeenSupported = array();
+foreach($configs as $config) {
+    foreach($config->paymentTypes as $type) {
+        $paymentTypesThatHasBeenSupported[] = $type->paymentType;
+    }
+}
+
+$inUse = $this->getApi()->getOrderManager()->getPaymentMethodsThatHasOrders();
+foreach($paymentTypesThatHasBeenSupported as $supported) {
+    if (($key = array_search($supported, $inUse)) !== false) {
+        unset($inUse[$key]);
+    }
+}
+
+if(sizeof($inUse) > 0) {
+    echo "<div style='border: solid 1px #bbb;padding: 10px; '>";
+    echo "<i class='fa fa-warning'></i> There are payment methods in use that does not have any export yet.<br>";
+    foreach($inUse as $missing) {
+        foreach($paymentMethods as $met) {
+            if($met->id == $missing) {
+                echo "<span style='border-bottom: solid 1px; padding: 3px; display:inline-block; margin-right: 5px;'>" . $met->appName . "</span>";
+            }
+        };
+    }
+    echo "</div>";
+}
+
 ?>
 <div class='configfield' type='incomedistribution' style='display:none;'>
 <?php 
@@ -319,7 +346,7 @@ foreach($configs as $config) {
         </div>
         <br><br><br>
         <h2>Additional config</h2>
-
+        
         <div class="textfield gss_setting"  id="name">
             <span class="title"><?php echo $this->__f("Users to include"); ?></span>
              <div class="gss_dropdown">

@@ -228,6 +228,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     $comment = "Add a comment to the cleaner";
                     echo "<i class='fa fa-paint-brush' title='Cleaning options' roomid='".$room->pmsBookingRoomId."' onclick='$(this).closest(\"td\").find(\".cleaningpanel\").toggle()' style='cursor:pointer;'></i> ";
                     echo "<span class='cleaningpanel' gstype='form' method='updatecleaningoptions'>";
+                    echo '<div style="padding-top: 3px;padding-bottom: 3px;text-align:right;"><i class="fa fa-times" style="cursor:pointer;" onclick="$(\'.cleaningpanel\').hide();"></i></div>';
                     echo "<input type='hidden' gsname='bookingid' value='".$booking->id."'>";
                     echo "<input type='hidden' gsname='roomid' value='".$room->pmsBookingRoomId."'>";
                     echo "Cleaning interval: <input type='text' gsname='cleaninginterval' value='". $roomCleaningInterval . "' style='width: 20px; float:right;'><br>";

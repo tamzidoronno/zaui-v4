@@ -548,7 +548,7 @@ app.PmsManagement = {
                 total += (price * count);
             }
         });
-        $('.PmsManagement .totalprice').html(total);
+        $('.PmsManagement .totalprice').val(Math.round(total));
     },
     deleteConferenceDay: function() {
         $(this).closest('.dayform').remove();

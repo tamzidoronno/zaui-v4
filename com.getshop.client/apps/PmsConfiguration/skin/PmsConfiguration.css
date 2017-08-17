@@ -16,7 +16,7 @@
   text-shadow: 0px 1px 0px #2f6627;
   margin-top: 5px;
 }
-.PmsConfiguration .productview { position:absolute; display: none; border: solid 1px; padding: 5px; border-radius: 3px; z-index: 3; background-color:#fff; }
+.PmsConfiguration .productview { position:absolute; display: none; overflow-y: auto; overflow-x: hidden; max-height: 250px; padding-right: 20px !important; border: solid 1px; padding: 5px; border-radius: 3px; z-index: 3; background-color:#fff; }
 .PmsConfiguration .editcomment { position:absolute; display:none; padding: 5px; border: solid 1px; background-color:#fff; }
 .PmsConfiguration .pmsbutton.active {
     border-color:darkgreen;

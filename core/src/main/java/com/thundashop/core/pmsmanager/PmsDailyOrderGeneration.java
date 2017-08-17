@@ -99,7 +99,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         
         List<String> roomIds = getRoomsCompletedRemovedFromBooking();
         for(String roomRemoved : roomIds) {
-            System.out.println("Room has been removed:" + roomRemoved);
             PmsBookingRooms room = new PmsBookingRooms();
             room.pmsBookingRoomId = roomRemoved;
             calculatePricesOnRoom(room);
@@ -464,9 +463,11 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                         
                         type = new TypeToken<List<PmsBookingAddonItem>>(){}.getType();
                         List<PmsBookingAddonItem> alreadyAdded = gson.fromJson(copy, type);
-                        
                         for(PmsBookingAddonItem toCheck : alreadyAdded) {
                             if(toCheck == null || toCheck.price == null) {
+                                continue;
+                            }
+                            if(!dateIsFiltered(toCheck.date)) {
                                 continue;
                             }
                             PmsBookingAddonItem addonOnRoom = null;

@@ -313,6 +313,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                             ?>
                         </span>
                         <span class='editmode' gstype='form' method="setNewStartDate">
+                            <i class="fa fa-times" style="float:right; cursor:pointer;" onclick="$('.editmode').hide();"></i>
                             <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                             <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
                             <span style='display:inline-block; width: 80px;'>Start</span> 
@@ -371,6 +372,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                             <span class="editmode" gstype='form' method="setGuests" style="width:350px;">
                                 <input type='hidden' value='<? echo $bookingId; ?>' gsname='bookingid'>
                                 <input type='hidden' value='<? echo $room->pmsBookingRoomId; ?>' gsname='roomid'>
+                                <i class="fa fa-times" style="float:right; cursor:pointer;" onclick="$('.editmode').hide();"></i>
                                 <select gsname='numberofguests'>
                                 <?php
                                 for($i = 1; $i <= 20; $i++) {
@@ -435,7 +437,9 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                     <?php
                                 } else {
                                     ?>
+                                    <i class="fa fa-times" style="float:right; cursor:pointer;" onclick="$('.editmode').hide();"></i>
                                     <span style='color:blue;cursor:pointer;' onclick='$(this).parent().find(".setperiodeprice").toggle();'>Set a price for a period</span><br>
+                                    
                                     <div style='padding: 10px; border: solid 1px #bbb; margin-bottom: 10px; display:none;' class='setperiodeprice'>
                                         Price type<br>
                                         <select gsname='periodePriceType'>

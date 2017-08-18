@@ -160,6 +160,12 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     private void removeDeadEvents() {
         List<PmsBookingEventEntry> toremove = new ArrayList();
         for(PmsBookingEventEntry event : entries.values()) {
+                            
+            if(event.bookingId == null || event.bookingId.trim().isEmpty()) {
+                event.isDeleted = true;
+                continue;
+            }
+
             if(event.isDeleted) {
                 continue;
             }
@@ -209,10 +215,10 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         List<PmsBookingEventEntry> result = new ArrayList();
         if(filter == null) {
             for(PmsBookingEventEntry entry : entries.values()) {
-                finalize(entry, includeDeleted);
                 if(entry.isDeleted && !includeDeleted) {
                     continue;
                 }
+                finalize(entry, includeDeleted);
                 result.add(entry);
             }
             return result;
@@ -244,7 +250,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
                 if(!range.start.after(todayDate)) {
                     continue;
                 }
-                                
+                
                 cal.setTime(range.start);
                 String day = getDayString(cal);
                 

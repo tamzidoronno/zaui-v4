@@ -11,8 +11,8 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
         }
         localStorage.setItem("datarep", JSON.stringify(datarepository));
         $scope.loadBooking();
-        $scope.privatePersonSelected = false;
-        $scope.companySelected = false;
+        $scope.privatePersonSelected = true;
+        $scope.showPrivatePersonInformation();
     };
     
     $scope.changeRoomTypeOnRoom = function(room, type) {
@@ -21,7 +21,6 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
             $scope.doChangeRoomType = {};
             room.bookingItemTypeId = type.id;
             room.totalCost = res.totalCost;
-            console.log(res);
             room.maxNumberOfGuests = res.maxNumberOfGuests;
             if(room.numberOfGuests > room.maxNumberOfGuests) {
                 room.numberOfGuests = res.numberOfGuests;
@@ -71,6 +70,11 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
             var loadbooking = $api.getApi().PmsManager.getBooking($api.getDomainName(), datarepository.bookingid);
             loadbooking.done(function(res) {
                 $scope.booking = res;
+                
+                if(!$scope.booking.countryCode) {
+                    $scope.booking.countryCode = "NO";
+                }
+                
                 $scope.$apply();
                 if($scope.booking.userId) {
                     var loadUser = $api.getApi().UserManager.getUserById($scope.booking.userId);

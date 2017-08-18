@@ -34,7 +34,6 @@ public class PmsBookingEventEntry extends DataCommon {
         entry = entry.copy();
         entry.roomNames = new ArrayList();
         entry.dateRanges = new ArrayList();
-        
         entry.id = "";
         overrideEntries.put(day, entry);
     }

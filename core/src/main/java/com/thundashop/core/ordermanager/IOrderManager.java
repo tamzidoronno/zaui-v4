@@ -78,6 +78,9 @@ public interface IOrderManager {
     @Editor
     public FilteredData getOrdersFiltered(FilterOptions filterOptions);
     
+    @Administrator
+    public List<String> getPaymentMethodsThatHasOrders();
+    
     /**
      * Fetch a single order based on its id.
      * @param orderId

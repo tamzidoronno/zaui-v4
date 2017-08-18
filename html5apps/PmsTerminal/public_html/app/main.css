@@ -270,3 +270,13 @@ html {
     cursor:pointer;
     padding-left: 10px; padding-right: 10px;
 }
+
+.row { padding-bottom: 10px; }
+.definedinput { font-size: 22px; width:100%;padding: 5px; border: solid 1px #bbb; border-radius: 3px; }
+.profileselectionbtn { background-color:#bbb; border-color:#fff; }
+.profileSelected { font-weight: bold; background-color:green; }
+.guestcol { width: 180px; display:inline-block; }
+.guestcolprefix { width: 50px; }
+.chosen-container { vertical-align: middle; }
+.chosen-container-single .chosen-single {line-height: 38px; height: 38px;  }
+select { background-color:#fff; }

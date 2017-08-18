@@ -8,10 +8,6 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.ExistingBookingController = function($scope, $api, $rootScope, $state, $stateParams, datarepository) {
     
-//    $scope.phonenumber = "91183031";
-    $scope.phonenumber = "94168390";
-    
-    
     $scope.init = function($api) {
     }
     

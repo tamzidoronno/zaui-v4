@@ -3019,7 +3019,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return 0;
         }
         try {
-            return bookingEngine.getNumberOfAvailable(itemType, start, end);
+            return bookingEngine.getNumberOfAvailableWeakButFaster(itemType, start, end);
         }catch(BookingEngineException e) {
             return 0;
         }

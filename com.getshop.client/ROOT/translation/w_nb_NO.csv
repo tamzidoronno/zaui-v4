@@ -44,6 +44,7 @@ Are you sure you want to toggle as garageleader?;-;Er du sikker på at du ønske
 Attributes;-;Attributter
 August;-;August
 Availability;-;Tilgjengelighet
+Available;-;Tilgjengelig
 Available positions;-;Ledige plasser
 Available spots;-;Antall kursplasser
 Available when;-;Tilgjengelig når
@@ -90,6 +91,7 @@ Check out;-;Utsjekk
 Checkout;-;Utsjekking
 Children;-;Barn
 Choose;-;Velg
+Choose the day you wish to book for and the time periode to start the booking process;-;Velg ønsket dag og tidspunkt for å starte bookingen
 City;-;By
 Cleaning count;-;Antall vask
 Click here if you need to add more contacts;-;Trykk her hvis du vil legge til flere kontaktpersoner
@@ -298,6 +300,7 @@ Minimum number of months;-;Minimum antall måneder
 Mo;-;Ma
 Mon;-;Man
 Monday;-;Mandag
+Month;-;Måned
 Monthly;-;Månedlig
 More information;-;Mer informasjon
 More information about this event;-;Mer informasjon om dette kurset
@@ -346,6 +349,8 @@ No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen heade
 No items;-;Ingen elementer
 No rooms are available.;-;Ingen rom er tilgjengelig
 No users added yet;-;Ingen brukere lagt til enda
+Not available;-;Ikke tilgjengelig
+Not confirmed;-;Ikke bekreftet
 Not invoiced yet;-;Ikke fakturert enda
 Not participated illegal reason;-;Ikke deltatt, ugyldig grunn.
 Not participated legal reason;-;Ikke deltatt, gyldig grunn.

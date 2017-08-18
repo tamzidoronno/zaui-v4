@@ -886,7 +886,7 @@ app.PmsManagement = {
         thundashop.common.showInformationBoxNew(event);
     },
     loadExcelExportOptions : function() {
-        $('.excelexportoptions').show();
+        $('.excelexportoptions').toggle();
     },
     
     loadedituser : function() {

@@ -137,10 +137,10 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
             </div>
         
         </th>
-            <th>Invoiced until</th>
+            <th class="noShowMobile">Invoiced until</th>
         <?php } ?>
         <?php if($hasArx) { ?>
-            <th>To lock</th>
+            <th class="noShowMobile">To lock</th>
         <?php } 
         if($config->requirePayments) {
             echo "<th>Paid</th>";
@@ -467,7 +467,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     </span>
                 </td>
             <? } ?>
-            <td class="changeInvoiceTo">
+            <td class="changeInvoiceTo noShowMobile">
                 <? 
                 if($room->invoicedTo) {
                     echo date("d.m.Y" , strtotime($room->invoicedFrom)) . "<br>"; 
@@ -478,7 +478,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 ?>
             </td>
             <?php if($hasArx) { ?>
-            <td align='center'>
+            <td class="noShowMobile" align='center'>
                 <? echo ($room->addedToArx) ? "yes" : "no"; ?>
             </td>
             <td align='center'>

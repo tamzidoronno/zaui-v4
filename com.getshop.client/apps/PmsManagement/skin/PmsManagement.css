@@ -374,9 +374,115 @@
 .PmsManagement .changeintervalrow,
 .PmsManagement .statsorderfilter{margin-top:5px;}
 
-@media only all and (max-width:1150px){
+@media only all and (max-width:1280px){
+    .gseditrowbuttons{display:none !important;}
+    .PmsManagement .managementviewinput{
+        height:auto;
+    }
+    .PmsManagement .managementviewdateinput,
+    .PmsManagement .managementviewdropdowninput{
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        margin: 0 0 5px 0;
+        height:auto;
+    }
+    .PmsManagement .managementviewsearchcontainer{padding:5px;width:100%;box-sizing:border-box;margin:3px 0 5px 0;}
+    .PmsManagement .manegementviewbutton{
+        width: 30%;
+        margin: 0;
+        padding: 10px;
+        text-align: center;
+    }
+    .PmsManagement .managementviewbanner .fa-mobile-phone{padding:0 10px 0 10px;margin-top: 3px;}
+    .PmsManagement .managementviewquickfilter{height:auto;padding:10px 0 10px 0;}
+    .PmsManagement .manegementviewfilterquickopt{margin: 0;padding: 4px 4px 10px 4px;}
+    .PmsManagement .managementviewoptions{text-transform: none;letter-spacing: 0; text-shadow: none;}
     
+    .PmsManagement table{text-align: center;}
+    .PmsManagement .tdBookingLine{width:30px;}
+    .PmsManagement th{padding: 6px;letter-spacing: 1px;width:auto;}
+    .PmsManagement td{padding:2px 0 2px 0;font-size:12px;width:auto;}
+    .PmsManagement .secondary_text{display: none;}
+    
+    .PmsManagement .edituserbox {width: 100%;box-sizing: border-box;left: 0px;box-shadow: 0px 0px 10px #000;}
+    .PmsManagement .edituserbox_inner table{width:100%;}
+    
+    /*Following belong to framework.css*/
+    .gsnewinfobox {width: 100%;height: auto;}
+    #informationboxmiddle {width:100% !important;}
+    #informationbox-holder{top:0;width:100%;}
+    #informationbox.PmsManagement td{text-align: left;padding-left:4px;line-height: 1.2}
+    .normalinformationbox{width:100%;}
+ 
 }
 @media only all and (max-width:800px){
+    .PmsManagement .pmsbutton{padding: 2px;border: 0;border-radius: 0;font-size: 13px;}
+    .PmsManagement .managementview_booking_options{overflow-x: auto;}
+    .PmsManagement th{padding:0;letter-spacing: 0;font-size: 10px;max-width: 0px !important;font-size:7px;overflow-x: hidden;}
+    .PmsManagement td{font-size:9px;max-width: 80px;overflow: hidden;min-width: 30px;}
+    .PmsManagement .columnfilter{left:40%;}
+    .PmsManagement .manegementviewfilterquickopt{
+        padding: 10px 4px 10px 4px;
+        display: inline-block;
+        border-radius: 0;
+    }
+    .PmsManagement .managementviewquickfilter{border:0;}
+    .PmsManagement .manegementviewfilterquickopt{margin: 2px;box-shadow: inset 0px 1px 3px rgba(40, 133, 192, 0.5);}
+    .PmsManagement .managementviewActive{background-color: #1a557b;}
+    .PmsManagement .managementviewoptions, .PmsManagement .fa-cube{padding:10px;margin: 2px;box-shadow: inset 0px 1px 3px rgba(40, 133, 192, 0.5);float:none;}
+    
+    .PmsManagement .bookinginfo select{width:50%;font-size: 10px;}
+    .PmsManagement .roomsbookedactionsselection option{font-size:10px;width:100%;box-sizing: border-box;}
+    .PmsManagement .executeroomsbookedaction{font-size:10px;}
+    .PmsManagement .bookinginfo .tab{
+        box-shadow: inset 0px 1px 3px rgba(40, 133, 192, 0.5);
+        border:0;
+        border-radius: 0;
+        padding: 8px;
+        background-color: #fff;
+        margin: 4px;
+    }
+    .PmsManagement .bookinginfo .tab.selected{background-color:#1a557b;color:#fff;}
+    .PmsManagement .guestoverviewtable  td .roompostfix{font-size:9px;}
+    .PmsManagement .bookinginfo .pmsbutton{
+        width: 100%;
+        border: 0;
+        box-sizing: border-box;
+        margin-bottom: 12px;
+        float: none !important;
+        border-radius: 0px;
+        padding: 6px;
+        text-align: center;
+    }
+    .PmsManagement .pmsbutton3{display: block;}
+    .PmsManagement .roomsbookedAddToBookingline input,
+    .PmsManagement .roomsbookedAddToBookingline select,
+    .PmsManagement .roomsbookedAddToBookingline .pmsbutton2{
+        width: 100% !important;
+        box-sizing: border-box;
+        margin: 2px 0 2px 0;
+        text-align: center;
+        padding: 4px;
+        height: auto;
+        box-shadow: inset 0px 0px 6px #1a557b;
+        border-radius: 2px;
+    }
+    .PmsManagement .tabarea.messagearea td{max-width: none !important;}
+    .PmsManagement .userdashboard .pmsbutton{float:none !important;box-sizing: border-box;padding: 5px;margin: 0px 5px 10px 0;background-color: #61b2e6;}
+    .PmsManagement .dashboard_panel_outer{width: 100%;font-size: 12px;}
+    .PmsManagement .statsorderfilter th{padding-top:15px;}
+    .PmsManagement .roompostfix {line-height:15px;}
+    
+    .PmsManagement .guestoverviewtable .editmode{width: 100%;right: -5%;left: auto;}
+    .PmsManagement .guestoverviewtable td,
+    .PmsManagement .guestoverviewtable th{width:auto !important;text-align: center;}
+    .PmsManagement .changeSorting[gsvalue="regdate"] {display: none;}
+    .PmsManagement .noShowMobile{display: none !important;}
+
+    /*Following belong to framework.css*/
+    #informationbox.PmsManagement td{max-width: 40px;padding:0;margin:0;}
+    #infomrationboxclosebutton{width:auto;right: 10px;top: 18px;}
+    
     
 }

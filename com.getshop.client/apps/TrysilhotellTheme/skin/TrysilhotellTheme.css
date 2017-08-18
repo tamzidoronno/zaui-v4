@@ -1,0 +1,33 @@
+.gsmobileheader { display:none; }
+.gs_page_width{max-width:1100px;margin:auto;}
+.gsarea[area="header"]{width:100%;background-color: #f4f3f1;box-shadow: inset 0px 0px 15px rgba(34, 34, 28, 0.2);font-family: "Exo";}
+.gsarea[area="header"] .gs_page_width{
+    height:auto;
+    padding:0;
+    max-width:1100px;
+    background-color:rgba(0,0,0,0);
+}
+.gsarea[area="header"] .Menu{margin-top:50px;text-align:left;}
+.gsarea[area="header"] .Menu .entry{margin-right:40px;}
+.gsarea[area="header"] .Menu .entry .entries{background-color:#fff;width:260px;box-shadow:0px 0px 2px #bbb;}
+.gsarea[area="header"] .Menu .entry a{font-size:15px;color:#555;}
+.gsarea[area="header"] .Menu .menuentries.horizontal .entry .entries{margin-top:10px;}
+.gsarea[area="header"] .Menu .menuentries.horizontal .entry .entries .entry{padding:20px;}
+.gsarea[area="header"] .Menu .entry a div{font-size:15px;color:#555;line-height:0;text-transform:none;font-weight:500;letter-spacing:0px;}/*Midlertidig*/
+
+.gsarea[area="header"] .Menu .entry.active div{opacity:0.7;text-shadow:1px 1px #fff;}
+.gsarea[area="body"]{padding:0;min-height:660px;}
+
+.PmsBookingCalendar .calendar .calendar_header,
+.PmsBookingCalendar .calendar .day.selected,
+.PmsBookingProductList .continue_button,
+.PmsBookingProductList .complete_button,
+.PmsBooking .pmsfront .fa-calendar,
+.PmsBooking .pmsfront .check_available_button{background:#2b4075;}
+.PmsBooking .pmsfront {font-size:13px;}
+
+.PmsBookingSummary .discountbutton{color:#000;}
+.PmsBookingSummary .discountbutton.selected{color: #2b4075;border-width: 2px;font-weight: bold;cursor:default;}
+@media only all and (max-width:800px){
+    .gsarea[area="header"] .gs_page_width {height:auto;padding-bottom:30px;}
+}

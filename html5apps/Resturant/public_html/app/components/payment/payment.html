@@ -1,3 +1,4 @@
+
 <div style='text-align: center;'> Payment </div>
 <div class='summaryview'> 
     <b>Totalt: Kr {{ getTotal() }},-</b>
@@ -5,7 +6,7 @@
 
 <!-- Pay by room -->
 <div class='paymentaction' ng-if='paymentMethodId == "f86e7042-f511-4b9b-bf0d-5545525f42de"'>
-    <div ng-repeat="room in rooms" class="button" ng-click="payOnRoom(room)">
+    <div ng-repeat="room in rooms" class="button" ng-click="askForPincode(room)">
         {{ room.room }}
         <div ng-repeat="guest in room.guest">
             {{ guest.name }}

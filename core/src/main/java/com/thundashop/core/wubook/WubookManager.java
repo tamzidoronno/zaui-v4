@@ -25,6 +25,7 @@ import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -329,6 +330,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(1);
         
         Vector result = executeClient("fetch_new_bookings", params);
+        if(result == null) {
+            return new ArrayList();
+        }
         List<WubookBooking> toReturn = new ArrayList();
         if (!result.get(0).equals(0)) {
             logText("0:" + result.get(0));
@@ -1722,7 +1726,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private Vector executeClient(String apicall, Vector<String> params) throws XmlRpcException, IOException {
         logText("Executing api call: " + apicall);
-        return (Vector) client.execute(apicall, params);
+        try {
+            Vector res = (Vector) client.execute(apicall, params);
+            return res;
+        }catch(ConnectException e) {
+            logPrint("Could not connect to wubook on api call: " + apicall + " message: " + e.getMessage());
+        }
+        return null;
 }
 
 }

@@ -602,9 +602,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         User user = getSession().currentUser;
         boolean foundOrder = false;
+        long foundOrderIncId = -1;
         for (Order order : getAllOrderIncludedVirtualNonFinalized()) {
             String incOrderId = order.incrementOrderId + "";
             if (!order.id.equals(orderId) && !incOrderId.equals(orderId)) {
+                foundOrderIncId = order.incrementOrderId;
                 continue;
             }
             foundOrder = true;
@@ -622,11 +624,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         
-        logPrint("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it.");
+        logPrint("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it, " + foundOrderIncId);
         if(!foundOrder) {
             logPrint("Order does not exists");
         } else {
-            logPrint("Order does exists but user: " + getSession().currentUser.fullName + " does not has access to it");
+            if(getSession().currentUser == null) {
+                logPrint("Order does exists but current user is null");
+            } else {
+                logPrint("Order does exists but user: " + getSession().currentUser.fullName + " does not has access to it");
+            }
         }
         
         return null;

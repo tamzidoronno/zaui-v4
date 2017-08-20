@@ -18,7 +18,8 @@ class TrackAndTraceDataloading extends \MarketingApplication implements \Applica
         }
         if (isset($_FILES['data']['tmp_name'])) {
             $fileContent = file_get_contents($_FILES['data']['tmp_name']);
-            $this->getApi()->getTrackAndTraceManager()->loadData($fileContent, $_FILES['data']['name']);
+            $fileContent = base64_encode($fileContent);
+            $this->getApi()->getTrackAndTraceManager()->loadDataBase64($fileContent, $_FILES['data']['name']);
         }
         $this->includefile("dataloading");
     }

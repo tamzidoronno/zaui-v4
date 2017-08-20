@@ -1513,7 +1513,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             
         }
-
+        availabilityHasBeenChanged = null;
         return "";    
     }
 

@@ -1287,6 +1287,14 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             saveObjectInternal(destination);
         }
     }
+
+    @Override
+    public List<String> getRouteIdsThatHasNotCompleted() {
+        return routes.values().stream()
+                .filter(route -> !route.completedInfo.completed)
+                .map(r -> r.id)
+                .collect(Collectors.toList());
+    }
     
 
 }

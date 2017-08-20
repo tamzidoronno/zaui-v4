@@ -174,5 +174,7 @@ public interface ITrackAndTraceManager {
     @Customer
     public void markInstructionAsRead(String destinationId, Date date);
    
+    @Editor
+    public List<String> getRouteIdsThatHasNotCompleted();
 
 }

@@ -5949,7 +5949,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBookingAddonItem> newAddonList = new ArrayList();
         for(PmsBookingAddonItem item : newAddons) {
             if(!item.isSingle) {
-                System.out.println("Need to check:" + item.productId + " - " + item.date);
                 boolean found = false;
                 for(PmsBookingAddonItem existingAddon : addons) {
                     if(existingAddon.isSame(item)) {

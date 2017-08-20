@@ -22,6 +22,7 @@ import com.thundashop.core.pmsmanager.PmsLockServer;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.TimeRepeater;
 import java.lang.reflect.Type;
+import java.net.ConnectException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -594,7 +595,13 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             while(true) {
                 try {
                     String address = "http://"+hostname+":8083/" + postfix;
-                    String res = GetshopLockCom.httpLoginRequest(address,username,password);
+                    String res = "";
+                    try {
+                        res = GetshopLockCom.httpLoginRequest(address,username,password);
+                    }catch(ConnectException d) {
+                        logPrint("Exception, server does not responde for store: " +storeId + " message: " + d.getMessage());
+                        return;
+                    }
                     if(useNewQueueCheck && isDoneProcessingQueue(res)) {
                         break;
                     }
@@ -604,7 +611,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     }
                     Thread.sleep(2000);
                 }catch(Exception e) {
-                    logPrint("Exception, server does not responde for store: " +storeId + " message: " + e.getMessage());
+                    logPrintException(e);
                     return;
                 }
                 if(cal.getTime().before(new Date())) {

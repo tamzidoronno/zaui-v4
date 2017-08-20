@@ -5329,7 +5329,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         if(!bookings.containsKey(booking.id)) {
                             logPrint("Booking does not exists in the booking object.. that should not happen");
                         }
-                        addAddonsToBooking(item.addonType, room.pmsBookingRoomId, false);
+                        int size =1;
+                        if(item.dependsOnGuestCount) {
+                            size = room.numberOfGuests;
+                        }
+                        addProductToRoom(item.productId, room.pmsBookingRoomId, size);
                     }
                 }
             }

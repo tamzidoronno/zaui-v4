@@ -1347,6 +1347,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private boolean orderNeedAutoPay(Order order, int daysToTryAfterOrderHasStarted) {
+        if(order == null || order.cart == null) {
+            return false;
+        }
         if(order.cart.getTotal(true) <= 0) {
             return false;
         }

@@ -1527,6 +1527,17 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     public void logText(String string) {
         log.logEntries.put(System.currentTimeMillis(), string);
+        long old = System.currentTimeMillis();
+        old = old - (1000*60*24*3);
+        List<Long> toRemove = new ArrayList();
+        for(long key : log.logEntries.keySet()) {
+            if(key < old) {
+                toRemove.add(key);
+            }
+        }
+        for(Long key : toRemove) {
+            log.logEntries.remove(key);
+        }
         saveObject(log);
     }
 

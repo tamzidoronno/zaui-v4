@@ -599,7 +599,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     try {
                         res = GetshopLockCom.httpLoginRequest(address,username,password);
                     }catch(ConnectException d) {
-                        logPrint("Exception, server does not responde for store: " +storeId + " message: " + d.getMessage());
+                        logPrint("Exception, server does not responde for store: " +storeId + " message: " + d.getMessage() + ", address: " + address);
                         return;
                     }
                     if(useNewQueueCheck && isDoneProcessingQueue(res)) {

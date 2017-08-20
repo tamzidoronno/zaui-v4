@@ -532,8 +532,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String postfix = "ZWave.zway/Run/devices["+device.zwaveid+"].SendNoOperation()";
                 postfix = URLEncoder.encode(postfix, "UTF-8");
                 String address = "http://"+hostname+":8083/" + postfix;
-                GetshopLockCom.httpLoginRequest(address,username,password);
-               
+                try {
+                    GetshopLockCom.httpLoginRequest(address,username,password);
+                }catch(ConnectException e) {
+                    logPrint("Failed to connect to address: " + address + " message: " + e.getMessage());
+                    return false;
+                }
                 waitForEmptyQueue();
                  
                 postfix = "ZWave.zway/Run/devices["+device.zwaveid+"]";

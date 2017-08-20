@@ -548,7 +548,7 @@ app.PmsManagement = {
                 total += (price * count);
             }
         });
-        $('.PmsManagement .totalprice').html(total);
+        $('.PmsManagement .totalprice').val(Math.round(total));
     },
     deleteConferenceDay: function() {
         $(this).closest('.dayform').remove();
@@ -886,7 +886,7 @@ app.PmsManagement = {
         thundashop.common.showInformationBoxNew(event);
     },
     loadExcelExportOptions : function() {
-        $('.excelexportoptions').show();
+        $('.excelexportoptions').toggle();
     },
     
     loadedituser : function() {

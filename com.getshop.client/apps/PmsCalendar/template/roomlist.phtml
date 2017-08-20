@@ -41,10 +41,10 @@ if(!$this->isItemPage()) {
             </span>
         <?php
             }
-            echo "<span class='typebutton "; if($type =="day") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='day'>Dag</span>";
-            echo "<span class='typebutton "; if($type =="week") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='week'>Uke</span>";
+            echo "<span class='typebutton "; if($type =="day") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='day'>".$this->__w("Day")."</span>";
+            echo "<span class='typebutton "; if($type =="week") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='week'>".$this->__w("Week")."</span>";
             if($this->isItemPage()) {
-                echo "<span class='typebutton "; if($type =="month") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='month'>Måned</span>";
+                echo "<span class='typebutton "; if($type =="month") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='month'>".$this->__w("Month")."</span>";
             }
         ?>
         </div>
@@ -74,10 +74,10 @@ if(!$this->isItemPage()) {
             </span>
         </div>
         <span style='position:absolute; right:0px; bottom: 30px; display:inline-block; width: 150px; text-align: left;'>
-            <div class='statedesrow'><span class='statedescbox occupied'></span> Opptatt</div>
-            <div class='statedesrow'><span class='statedescbox notconfirmed'></span> Ikke bekreftet</div>
-            <div class='statedesrow'><span class='statedescbox available'></span> Tilgjengelig</div>
-            <div class='statedesrow'><span class='statedescbox not_available'></span> Ikke tilgjenglig</div>
+            <div class='statedesrow'><span class='statedescbox occupied'></span> <?php echo $this->__w("Occupied"); ?></div>
+            <div class='statedesrow'><span class='statedescbox notconfirmed'></span> <?php echo $this->__w("Not confirmed"); ?></div>
+            <div class='statedesrow'><span class='statedescbox available'></span> <?php echo $this->__w("Available"); ?></div>
+            <div class='statedesrow'><span class='statedescbox not_available'></span> <?php echo $this->__w("Not available"); ?></div>
         </span>
     </div>
 </div>

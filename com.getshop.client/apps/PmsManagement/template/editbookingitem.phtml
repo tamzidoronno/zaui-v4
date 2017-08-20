@@ -21,6 +21,7 @@ if(strtotime($now) < time() && strtotime($room->date->end) > time()) {
     $now = $this->convertToJavaDate(time());
 }
 ?>
+<i class="fa fa-times" style="float:right; cursor:pointer;" onclick="$('.editmode').hide();"></i>
 <b>Room selected</b><br>
 <select gsname='itemid'>
     <?php 

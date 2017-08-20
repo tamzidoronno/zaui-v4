@@ -199,6 +199,18 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
      */
     @Override
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
+        return bookingEngineAbstract.getAvailbleItems(itemType, start, end).size();
+    }
+
+    /**
+     * @WARNING do not use this unless you are 100% sure about what you do. This is not secure and might fail.
+     * Use getNumberOfAvailable instead. This will fail if you use it for more than one day at the time due to the shuffling problem.
+     * @param itemType
+     * @param start
+     * @param end
+     * @return 
+     */
+    public Integer getNumberOfAvailableWeakButFaster(String itemType, Date start, Date end) {
         return bookingEngineAbstract.getNumberOfAvailable(itemType, start, end);
     }
 

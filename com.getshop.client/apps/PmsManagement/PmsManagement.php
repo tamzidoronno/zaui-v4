@@ -1483,6 +1483,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->userId = $user->id;
         $filter->endInvoiceAt = $this->convertToJavaDate($end);
         $filter->createNewOrder = true;
+        $filter->totalAmount = $_POST['data']['user']['totalamount'];
         
         $orderId = $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedName(), $_POST['data']['bookingid'], $filter);
         

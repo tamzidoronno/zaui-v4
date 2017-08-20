@@ -5,6 +5,4 @@
  */
 
 
-adata = {
-   domainname : "default"
-};
+adata = {};

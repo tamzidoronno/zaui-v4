@@ -1,7 +1,6 @@
 
 package com.thundashop.core.pmsmanager;
 
-import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -9,7 +8,6 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +15,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date; 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
@@ -82,6 +79,8 @@ public class PmsBookingRooms implements Serializable {
     public BookingItem item;
     @Transient
     public BookingItemType type;
+    @Transient
+    public Integer maxNumberOfGuests = 0;
     
     void clear() {
         pmsBookingRoomId = UUID.randomUUID().toString();

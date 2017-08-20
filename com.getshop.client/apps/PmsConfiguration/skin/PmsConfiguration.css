@@ -16,7 +16,7 @@
   text-shadow: 0px 1px 0px #2f6627;
   margin-top: 5px;
 }
-.PmsConfiguration .productview { position:absolute; display: none; border: solid 1px; padding: 5px; border-radius: 3px; z-index: 3; background-color:#fff; }
+.PmsConfiguration .productview { position:absolute; display: none; overflow-y: auto; overflow-x: hidden; max-height: 250px; padding-right: 20px !important; border: solid 1px; padding: 5px; border-radius: 3px; z-index: 3; background-color:#fff; }
 .PmsConfiguration .editcomment { position:absolute; display:none; padding: 5px; border: solid 1px; background-color:#fff; }
 .PmsConfiguration .pmsbutton.active {
     border-color:darkgreen;
@@ -72,3 +72,27 @@
 .PmsConfiguration .adddatetype.selected { background-color:#fff;   border: solid 1px #bbb; }
 .PmsConfiguration .addMoredatesPanel .datetypepanel { display:none; }
 .PmsConfiguration .addMoredatesPanel .datetypepanel.repeat { display:inherit;}
+
+@media only all and (max-width:800px){
+    .PmsConfiguration .pmsbutton{
+        font-size: 12px;
+        border-radius: 0;
+        border: 0;
+        padding: 2px;
+        text-align: center;
+        margin: 2px 0 2px 0 !important;
+        height: auto;
+        width: 49.4%;
+        float: none !important;
+        box-sizing: border-box;
+    }
+    .PmsConfiguration .pmsbutton.active{
+        background-color:#fff;
+        border:2px solid #44c767;
+        color: #44c767;
+        padding:0;
+    }
+    .PmsConfiguration .paymentlinks textarea,
+    .PmsConfiguration .paymentlinks input {width: 100% !important;float:none !important;}
+    .PmsConfiguration .mobileviews td{}
+}

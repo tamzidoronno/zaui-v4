@@ -634,10 +634,6 @@ class Page {
         if ($anchor) {
             echo "<a id='$anchor' name='$anchor'></a>";
         }
-        
-        if ($this->factory->isMobileIgnoreDisabled() && $gsrowmode == "") {
-            $this->printMobileAdminMenu($depth, $cell);
-        }
 
         if ($this->themeApp == null || $this->themeApp->printArrowsOutSideOnCarousel()) {
             $this->printArrows($parent, $count, $totalcells);

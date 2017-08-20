@@ -6,8 +6,9 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         
         
         this.setConnectionDetails = function(identifier) {
-//            this.api = new GetShopApiWebSocket('trackandtrace.getshop.com', '31332', identifier, false);
-            this.api = new GetShopApiWebSocket('trackandtrace.3.0.local.getshop.com', '31330', identifier, false);
+            this.api = new GetShopApiWebSocket('server4.getshop.com', '31332', identifier, false);
+//            this.api = new GetShopApiWebSocket('trackandtrace.3.0.local.getshop.com', '31330', identifier, false);
+//            this.api = new GetShopApiWebSocket('192.168.100.150', '31330', identifier, false);
 //            this.api = new GetShopApiWebSocket('192.168.10.190', '31330', identifier, true);
 //            this.api = new GetShopApiWebSocket('trackandtrace.3.0.mpal.getshop.com', '31330', identifier, true);
 
@@ -25,7 +26,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     
                     this.lastShownError = new Date().getTime();
                     alert("Did not find the company you specified, please check your details.");
-                    me.$state.transitionTo('base.login');
+                    me.$state.transitionTo('base.home');
                     $('.loginbutton').find('.login-shower').remove();
                     this.lastShownError = new Date().getTime();
                 } else if (error.errorCode == 13) {
@@ -39,7 +40,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     this.lastShownError = new Date().getTime();
                     alert("Wrong username or password, please try again.");
                     
-                    me.$state.transitionTo('base.login');
+                    me.$state.transitionTo('base.home');
                     $('.loginbutton').find('.login-shower').remove();
                     this.lastShownError = new Date().getTime();
                 } else {
@@ -122,6 +123,11 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             return JSON.parse(localStorage.getItem("loggedInUserId"));
         },
         
+        
+        this.getDomainName = function() {
+            return "default";
+        }
+        
         /**
          * 
          * @returns GetShopApiWebSocket
@@ -146,7 +152,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                 }
              
                 $('.loginbutton').find('.login-shower').remove();
-                this.$state.transitionTo('base.login');
+                this.$state.transitionTo('base.home');
                 return;
             }
             

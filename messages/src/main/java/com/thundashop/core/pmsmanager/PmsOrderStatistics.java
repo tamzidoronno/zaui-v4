@@ -134,7 +134,6 @@ public class PmsOrderStatistics implements Serializable  {
                             addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().price * item.getCount()), entry.priceIncOrders);
                         }
                     } else {
-                        System.out.println(item.getProduct().id+ ";" + order.incrementOrderId+";addon;"+item.getProduct().name + ";" + item.getProduct().priceExTaxes * item.getCount() + ";" + cal.getTime() + ";" + users.get(order.userId).fullName);
                         totalCalc += item.getPriceIncForMinutes() * secondsInDay;
                         inc += item.getPriceIncForMinutes() * secondsInDay;
                         ex += item.getPriceExForMinutes() * secondsInDay;

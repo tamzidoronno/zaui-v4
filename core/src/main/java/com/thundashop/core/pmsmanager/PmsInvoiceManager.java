@@ -468,6 +468,28 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
     }
 
+    private void adjustAmountOnOrder(Order order, Double totalAmount) {
+        double now = orderManager.getTotalAmount(order);
+        System.out.println("Need to adjust from :" + now + " to " + totalAmount);
+        double diff = (totalAmount / now);
+
+        for(CartItem item : order.cart.getItems()) {
+            item.getProduct().price *= diff;
+            if(item.itemsAdded != null) {
+                for(PmsBookingAddonItem addonItem : item.itemsAdded) {
+                    addonItem.price *= diff;
+                }
+            }
+            if(item.priceMatrix != null) {
+                for(String date : item.priceMatrix.keySet()) {
+                    Double prices = item.priceMatrix.get(date);
+                    prices *= diff;
+                    item.priceMatrix.put(date, prices);
+                }
+            }
+        }
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -1376,6 +1398,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(!filter.avoidOrderCreation) {
             Order order = createOrderFromCartNew(booking, filter, false);
             order.createByManager = "PmsDailyOrderGeneration";
+            if(filter.totalAmount != null && filter.totalAmount > 0) {
+                adjustAmountOnOrder(order, filter.totalAmount);
+            }
             orderManager.saveOrder(order);
             booking.orderIds.add(order.id);
             List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));

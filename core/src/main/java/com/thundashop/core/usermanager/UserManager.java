@@ -1986,4 +1986,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return result;
     }
 
+    private void dumpSessions() {
+         ConcurrentHashMap<String, ThundashopSession> sessions = sessionFactory.getAllSessions();
+         if(sessions.size() > 100) {
+             for(String sessId : sessions.keySet()) {
+                 ThundashopSession sess = sessions.get(sessId);
+                 String userId = sess.getObject("user");
+                 User user = getUserById(userId);
+                 System.out.println(user.fullName + " : " + sess.getLastActive());
+             }
+         }
+        
+    }
+
 }

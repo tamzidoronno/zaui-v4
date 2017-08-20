@@ -604,7 +604,8 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     }
                     Thread.sleep(2000);
                 }catch(Exception e) {
-                    logPrintException(e);
+                    logPrint("Exception, server does not responde for store: " +storeId + " message: " + e.getMessage());
+                    return;
                 }
                 if(cal.getTime().before(new Date())) {
                     logPrint("z-way: queue did not empty within timeout.");
@@ -844,6 +845,10 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
 
             if(toSet != null) {
+                PmsLockServer server = getLockServerForDevice(toSet);
+                if(server != null && server.doNotResponde()) {
+                    continue;
+                }
                 toSet.beingUpdated = true;
                 toSet.lastTriedUpdate = new Date();
                 String user = getUsername(toSet.serverSource);

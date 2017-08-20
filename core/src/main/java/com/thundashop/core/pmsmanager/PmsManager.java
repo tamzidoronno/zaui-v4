@@ -5321,9 +5321,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void addDefaultAddons(PmsBooking booking) {
-        if(booking.channel != null && !booking.channel.isEmpty()) {
-            return;
-        }
         HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             for(PmsBookingAddonItem item : addons.values()) {

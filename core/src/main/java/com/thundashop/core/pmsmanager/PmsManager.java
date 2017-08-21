@@ -4326,7 +4326,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private boolean verifyPhoneOnBooking(PmsBooking booking) {
         String countryCode = booking.countryCode;
-        if(countryCode == null || countryCode.isEmpty()) {
+        try {
+            HashMap<Integer, String> list = PhoneCountryCodeList.getList();
+            Integer prefix = new Integer(booking.rooms.get(0).guests.get(0).prefix);
+            if(list.containsKey(prefix)) {
+                countryCode = list.get(prefix);
+            }
+        }catch(Exception e) {
             countryCode = "NO";
         }
         

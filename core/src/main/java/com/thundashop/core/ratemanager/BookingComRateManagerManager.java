@@ -237,11 +237,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         }
         List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
         for(PmsBooking booking : allbookings) {
-            long start = System.currentTimeMillis();
             pushBooking(booking, "Commit", false);
-            long toBuild = System.currentTimeMillis() - start;
-            System.out.println("Build time: " + toBuild);
-//            break;
         }
     }
 

@@ -62,6 +62,9 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
     private StoreApplicationPool storeApplicationPool; 
     
     @Autowired
+    private StoreApplicationInstancePool storeApplicationInstancePool; 
+    
+    @Autowired
     private MessageManager messageManager;
     
     private Map<String, QuestBackQuestion> questions = new HashMap();
@@ -817,5 +820,53 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             }
         }
         
+    }
+    
+    /**
+     * Returns a Base64 encoded excellist with all the data
+     * 
+     * @return 
+     */
+    public String exportToExcel() {
+        List<QuestBackQuestion> topQuestions = questions.values().stream()
+                .filter(q -> q.parentId == null || q.parentId.isEmpty())
+                .collect(Collectors.toList());
+        
+        Gson gson = new Gson();
+        
+        for (QuestBackQuestion question : topQuestions) {
+            System.out.println(StringUtils.unescapeHtml3(question.name));
+            List<QuestBackQuestion> subQuestions = questions.values().stream()
+                .filter(q -> q.parentId != null && q.parentId.equals(question.id))
+                .collect(Collectors.toList());
+            
+            for (QuestBackQuestion subQuestion : subQuestions) {
+                System.out.println(";"+StringUtils.unescapeHtml3(subQuestion.name)+";;");
+                Page page = pageManager.getPage(subQuestion.pageId);
+                
+                List<ApplicationInstance> instances = page.getCellsFlatList().stream()
+                        .map(cell -> cell.appId)
+                        .map(appId -> storeApplicationInstancePool.getApplicationInstance(appId))
+                        .filter(appInstance -> appInstance != null && appInstance.appSettingsId != null && appInstance.appSettingsId.equals("07422211-7818-445e-9f16-ad792320cb10"))
+                        .collect(Collectors.toList());
+                
+                if (!instances.isEmpty()) {
+                    String jsonEncodedAnswers = instances.get(0).getSetting("options");
+                    String headingText = instances.get(0).getSetting("headingtext");
+                    if (headingText != null && !headingText.isEmpty()) {
+                        System.out.println(";;;"+StringUtils.unescapeHtml3(headingText)+";");
+                    }
+                    List<QuestBackOption> options = gson.fromJson(jsonEncodedAnswers, new TypeToken<ArrayList<QuestBackOption>>(){}.getType());
+                    if (options != null) {
+                        for (QuestBackOption option : options) {
+                            System.out.println(";;;"+StringUtils.unescapeHtml3(option.text)+";");
+                        }    
+                    }
+                    
+                }
+            }
+        }
+        
+        return "";
     }
 }

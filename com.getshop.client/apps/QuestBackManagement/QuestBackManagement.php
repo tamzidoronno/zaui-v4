@@ -160,6 +160,10 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
         }
         $_SESSION['ns_3ff6088a_43d5_4bd4_a5bf_5c371af42534/selectedUsers'] = array();
     }
+    
+    public function downloadExcel() {
+        $this->getApi()->getQuestBackManager()->exportToExcel();
+    }
 
     public function groupUsers($userIds) {
         $grouped = [];

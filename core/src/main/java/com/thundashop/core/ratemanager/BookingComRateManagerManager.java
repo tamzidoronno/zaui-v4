@@ -147,7 +147,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                     continue;
                 }
                 
-                int numberOfAvailable = bookingEngine.getNumberOfAvailable(tmpType.id, start, endCal.getTime());
+                int numberOfAvailable = bookingEngine.getNumberOfAvailableWeakButFaster(tmpType.id, start, endCal.getTime());
                 BaseInvCountType toAdd = new BaseInvCountType();
 
                 StatusApplicationControlType statusApp = new StatusApplicationControlType();
@@ -237,11 +237,15 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         }
         List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
         for(PmsBooking booking : allbookings) {
-            pushBooking(booking, "Commit");
+            long start = System.currentTimeMillis();
+            pushBooking(booking, "Commit", false);
+            long toBuild = System.currentTimeMillis() - start;
+            System.out.println("Build time: " + toBuild);
+//            break;
         }
     }
 
-    public void pushBooking(PmsBooking booking, String actionType) {
+    public void pushBooking(PmsBooking booking, String actionType, boolean pushInventory) {
         if(config.hotelId == null || config.hotelId.isEmpty()) {
             return;
         }
@@ -273,9 +277,10 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             System.out.println(toPush);
             e.printStackTrace();
         }
-        
-        OTAHotelInvCountNotifRQ res = createInventoryListToPush(booking.getStartDate(), booking.getEndDate(), booking.getTypes());
-        pushInventory(res);
+        if(pushInventory) {
+            OTAHotelInvCountNotifRQ res = createInventoryListToPush(booking.getStartDate(), booking.getEndDate(), booking.getTypes());
+            pushInventory(res);
+        }
     }
     
     private String createReservationXml(PmsBooking booking) throws DatatypeConfigurationException {

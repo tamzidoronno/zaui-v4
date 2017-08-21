@@ -935,6 +935,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Map<String, Integer> counts = new HashMap();
         
         for (Order order : orders.values()) {
+            
+            if (order.cart == null) {
+                continue;
+            }
+            
             for (CartItem item : order.cart.getItems()) {
                 Integer oldCount = counts.get(item.getProduct().id);
                 if (oldCount == null) {

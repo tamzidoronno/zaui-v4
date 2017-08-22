@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Love+Ya+Like+A+Sister');
 body{background-color:#f9f9f9;font-family: 'Source Sans Pro', sans-serif;font-size:15px;}
 .gs_page_width{max-width:1200px;margin:0 auto;}
 .shop_button {
@@ -70,7 +69,8 @@ body{background-color:#f9f9f9;font-family: 'Source Sans Pro', sans-serif;font-si
     .PmsCalendar .pmscalendarmobilemenudiv{display:none;}
     .PmsCalendar .capasity{display:none;}
     .PmsCalendar .singleroomentry{position:relative;top:0 !important;z-index:0;}
-    .PmsCalendar .singleroomentry bottomdesc:first-of-type + div{left: -1px; bottom: -94px !important;}
+    .PmsCalendar .bottomdesc{height:auto;}
+    .PmsCalendar .bottomdescshell{left:-1px;}
     .PmsCalendar .singleroomoverview{padding-top:90px !important;}
     .PmsCalendar .singleroomentry div:first-child{
         background-position:center;

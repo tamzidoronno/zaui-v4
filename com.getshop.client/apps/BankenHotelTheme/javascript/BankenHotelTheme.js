@@ -3,7 +3,7 @@ app.BankenHotelTheme = {
         $(document).on('scroll', app.BankenHotelTheme.fixedHeader)
     },
     fixedHeader: function(){
-        if($(window).scrollTop() > 55){
+        if($(window).scrollTop() > 65){
             $('.gsarea[area="header"').addClass('sticky');
         }
         else{

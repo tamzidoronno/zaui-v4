@@ -1900,7 +1900,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
             String couponCode = booking.couponCode;
             if(booking.discountType.equals("partnership")) {
-                couponCode = "partnership:" + couponCode.substring(0, couponCode.indexOf(":"));
+                if(couponCode.indexOf(":") >= 0) {
+                    couponCode = "partnership:" + couponCode.substring(0, couponCode.indexOf(":"));
+                }
             }
             Coupon coupon = cartManager.getCoupon(couponCode);
             if(coupon != null) {

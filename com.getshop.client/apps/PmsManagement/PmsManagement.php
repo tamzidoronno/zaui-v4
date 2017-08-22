@@ -1080,6 +1080,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if($_POST['data']['type'] == "ended") {
             $filter->onlyEnded = true;
         }
+        if($_POST['data']['chargeCardAfter']) {
+            $filter->chargeCardAfter = $this->convertToJavaDate(strtotime($_POST['data']['chargeCardAfter']));
+        }
         
         $filter->endInvoiceAt = $this->convertToJavaDate(strtotime($_POST['data']['enddate']));
         $this->getApi()->getPmsManager()->createOrder($this->getSelectedName(), null, $filter);

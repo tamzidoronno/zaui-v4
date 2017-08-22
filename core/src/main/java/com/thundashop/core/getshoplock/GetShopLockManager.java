@@ -22,6 +22,7 @@ import com.thundashop.core.pmsmanager.PmsLockServer;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.TimeRepeater;
 import java.lang.reflect.Type;
+import java.net.ConnectException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -531,8 +532,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String postfix = "ZWave.zway/Run/devices["+device.zwaveid+"].SendNoOperation()";
                 postfix = URLEncoder.encode(postfix, "UTF-8");
                 String address = "http://"+hostname+":8083/" + postfix;
-                GetshopLockCom.httpLoginRequest(address,username,password);
-               
+                try {
+                    GetshopLockCom.httpLoginRequest(address,username,password);
+                }catch(ConnectException e) {
+                    logPrint("Failed to connect to address: " + address + " message: " + e.getMessage());
+                    return false;
+                }
                 waitForEmptyQueue();
                  
                 postfix = "ZWave.zway/Run/devices["+device.zwaveid+"]";
@@ -594,7 +599,13 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             while(true) {
                 try {
                     String address = "http://"+hostname+":8083/" + postfix;
-                    String res = GetshopLockCom.httpLoginRequest(address,username,password);
+                    String res = "";
+                    try {
+                        res = GetshopLockCom.httpLoginRequest(address,username,password);
+                    }catch(ConnectException d) {
+                        logPrint("Exception, server does not responde for store: " +storeId + " message: " + d.getMessage() + ", address: " + address);
+                        return;
+                    }
                     if(useNewQueueCheck && isDoneProcessingQueue(res)) {
                         break;
                     }
@@ -605,6 +616,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     Thread.sleep(2000);
                 }catch(Exception e) {
                     logPrintException(e);
+                    return;
                 }
                 if(cal.getTime().before(new Date())) {
                     logPrint("z-way: queue did not empty within timeout.");
@@ -844,6 +856,10 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
 
             if(toSet != null) {
+                PmsLockServer server = getLockServerForDevice(toSet);
+                if(server != null && server.doNotResponde()) {
+                    continue;
+                }
                 toSet.beingUpdated = true;
                 toSet.lastTriedUpdate = new Date();
                 String user = getUsername(toSet.serverSource);

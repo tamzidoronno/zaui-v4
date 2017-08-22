@@ -6,6 +6,30 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
     $scope.numpadnumber = "";
     $scope.paymentMethodId = $stateParams.paymentMethodId;
     $scope.printers = datarepository.getPrinters();
+    $scope.pincode = "";
+    $scope.errorMessage = "";
+    
+    $scope.getStars = function() {
+        var text = "";
+        for (var i in $scope.pincode) {
+            text += "*";
+        }
+        return text;
+    }
+    
+    $scope.checkPinCode = function($event, numbers) {
+        $api.getApi().ResturantManager.checkPinCode(numbers, $stateParams.bookingId, $stateParams.pmsRoomId).done(function(res) {
+            
+            if (!res.length && res instanceof Array) {
+                $scope.errorMessage = "Wrong pincode, please try again";
+                $scope.pincode = "";
+                $scope.$apply();
+            } else {
+                $scope.payOnRoom(res);
+            }
+        });
+    }
+    
     
     $scope.contains = function(a, obj) {
         for (var i = 0; i < a.length; i++) {
@@ -192,14 +216,18 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
         });
     }
     
+    $scope.askForPincode = function(room) {
+        if (datarepository.shouldAskForPincode()) {
+            $state.go('base.askforpincode', { bookingId: room.bookingId, pmsRoomId: room.pmsRoomId, tableId: $stateParams.tableId, paymentMethodId: $stateParams.paymentMethodId });
+        } else {
+            $scope.payOnRoom(room);
+        }
+    }
+    
     $scope.payOnRoom = function(room) {
-        var inIds = $scope.getIds();
-        $api.getApi().ResturantManager.payOnRoom(room, inIds).done(function(res) {
-            if (res != null && typeof(res.errorCode) !== "undefined") {
-                alert("An error accurd while adding items to the room, please try again");
-                return;
-            }
-            $scope.markCompleted(inIds, null, room);
+        var ids = $scope.getIds();
+        $api.getApi().ResturantManager.payOnRoom(room, ids).done(function() {
+            $scope.markCompleted(ids, null, room);
         });
     }
     
@@ -211,9 +239,15 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
     }
     
     $scope.goBack = function() {
+        if ($stateParams.pmsRoomId) {
+            $state.transitionTo('base.paymentwindow', {tableId: $stateParams.tableId, paymentMethodId: $stateParams.paymentMethodId})
+            return;
+        }
         if ($stateParams.tableId) {
             $state.transitionTo('base.checkouttable', { tableId: $stateParams.tableId })
+            return;
         }
+        
     }
     
     $scope.init();

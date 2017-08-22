@@ -81,7 +81,7 @@ public class TimeRepeater {
         while(true) {
             startIterator = startIterator.plusWeeks(data.repeatEachTime);
             if(startIterator.toDate().after(data.endingAt) && !isSameDay(endTime.toDate(), data.endingAt)) {
-                System.out.println("Breaking at : " + startIterator + " - " + data.endingAt);
+//                System.out.println("Breaking at : " + startIterator + " - " + data.endingAt);
                 break;
             }
             TimeRepeaterDateRange range = null;

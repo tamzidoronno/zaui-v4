@@ -4326,7 +4326,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private boolean verifyPhoneOnBooking(PmsBooking booking) {
         String countryCode = booking.countryCode;
-        if(countryCode == null || countryCode.isEmpty()) {
+        try {
+            HashMap<Integer, String> list = PhoneCountryCodeList.getList();
+            Integer prefix = new Integer(booking.rooms.get(0).guests.get(0).prefix);
+            if(list.containsKey(prefix)) {
+                countryCode = list.get(prefix);
+            }
+        }catch(Exception e) {
             countryCode = "NO";
         }
         
@@ -5321,9 +5327,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void addDefaultAddons(PmsBooking booking) {
-        if(booking.channel != null && !booking.channel.isEmpty()) {
-            return;
-        }
         HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             for(PmsBookingAddonItem item : addons.values()) {
@@ -5332,7 +5335,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         if(!bookings.containsKey(booking.id)) {
                             logPrint("Booking does not exists in the booking object.. that should not happen");
                         }
-                        addAddonsToBooking(item.addonType, room.pmsBookingRoomId, false);
+                        int size =1;
+                        if(item.dependsOnGuestCount) {
+                            size = room.numberOfGuests;
+                        }
+                        addProductToRoom(item.productId, room.pmsBookingRoomId, size);
                     }
                 }
             }
@@ -5683,12 +5690,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             PmsBooking booking = getBookingUnsecure(bookingId);
             if(type.equals("created")) {
-                bookingComRateManagerManager.pushBooking(booking, "Commit");
+                bookingComRateManagerManager.pushBooking(booking, "Commit", true);
             } else if(type.equals("room_removed") || 
                     type.equals("room_changed") ||
                     type.equals("date_changed") ||
                     type.equals("booking_undeleted")) {
-                bookingComRateManagerManager.pushBooking(booking, "Modify");
+                bookingComRateManagerManager.pushBooking(booking, "Modify", true);
             }
         }catch(Exception e) {
             e.printStackTrace();
@@ -5949,7 +5956,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBookingAddonItem> newAddonList = new ArrayList();
         for(PmsBookingAddonItem item : newAddons) {
             if(!item.isSingle) {
-                System.out.println("Need to check:" + item.productId + " - " + item.date);
                 boolean found = false;
                 for(PmsBookingAddonItem existingAddon : addons) {
                     if(existingAddon.isSame(item)) {

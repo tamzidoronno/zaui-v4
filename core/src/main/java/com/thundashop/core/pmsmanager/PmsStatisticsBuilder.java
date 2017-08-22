@@ -237,18 +237,28 @@ class PmsStatisticsBuilder {
     }
 
     private void addGuests(StatisticsEntry entry, PmsBookingRooms room, PmsBooking booking) {
+        
+        if(room.pmsBookingRoomId.equals("523bd975-6168-4970-943c-be4ac06d57b4")) {
+            System.out.println("okay?");
+        }
         String countryCode = booking.countryCode;
         if(countryCode == null || countryCode.isEmpty()) {
-            countryCode = "NO";
+            HashMap<Integer, String> list = PhoneCountryCodeList.getList();
+            try {
+                Integer prefix = new Integer(room.guests.get(0).prefix);
+                if(list.containsKey(prefix)) {
+                    countryCode = list.get(prefix);
+                }
+            }catch(Exception e) {
+                countryCode = "NO";
+            }
         }
-
         User user = userManager.getUserById(booking.userId);
         
         if(user == null) {
             user = new User();
 //            return;
         }
-        
         int totalGuests = 0;
         if(entry.guests.containsKey(countryCode)) {
             totalGuests = entry.guests.get(countryCode);
@@ -284,9 +294,17 @@ class PmsStatisticsBuilder {
     private void addUniqueGuests(StatisticsEntry entry, PmsBookingRooms room, PmsBooking booking) {
             String countryCode = booking.countryCode;
             if(countryCode == null || countryCode.isEmpty()) {
-                countryCode = "NO";
+                try {
+                    HashMap<Integer, String> list = PhoneCountryCodeList.getList();
+                    Integer prefix = new Integer(room.guests.get(0).prefix);
+                    if(list.containsKey(prefix)) {
+                        countryCode = list.get(prefix);
+                    }
+                }catch(Exception e) {
+                    countryCode = "NO";
+                }
             }
-            
+
             int regularGuests = 0;
             if(entry.uniqueGuests.containsKey(countryCode)) {
                 regularGuests = entry.uniqueGuests.get(countryCode);

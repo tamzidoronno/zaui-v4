@@ -123,6 +123,21 @@ angular.module('TrackAndTrace')
         }
     });
     
+    $stateProvider.state('base.askforpincode', {
+        url: '/tableoverview_checkout_pincode/:bookingId/:pmsRoomId/:tableId/:paymentMethodId',
+        
+        views: {
+            main: {
+                templateUrl : 'components/payment/enterpincode.html',
+                controller : controllers.PaymentController
+            },
+            footer: {
+                templateUrl : 'components/payment/footer.html',
+                controller : controllers.PaymentController
+            }
+        }
+    });
+    
     $stateProvider.state('base.printInvoice', {
         url: '/tableoverview_checkout_printinvoice/:tableId/:orderId',
         

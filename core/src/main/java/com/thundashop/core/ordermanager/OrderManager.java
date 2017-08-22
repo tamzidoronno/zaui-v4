@@ -602,9 +602,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         User user = getSession().currentUser;
         boolean foundOrder = false;
+        long foundOrderIncId = -1;
         for (Order order : getAllOrderIncludedVirtualNonFinalized()) {
             String incOrderId = order.incrementOrderId + "";
             if (!order.id.equals(orderId) && !incOrderId.equals(orderId)) {
+                foundOrderIncId = order.incrementOrderId;
                 continue;
             }
             foundOrder = true;
@@ -622,11 +624,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         
-        logPrint("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it.");
+        logPrint("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it, " + foundOrderIncId);
         if(!foundOrder) {
             logPrint("Order does not exists");
         } else {
-            logPrint("Order does exists but user: " + getSession().currentUser.fullName + " does not has access to it");
+            if(getSession().currentUser == null) {
+                logPrint("Order does exists but current user is null");
+            } else {
+                logPrint("Order does exists but user: " + getSession().currentUser.fullName + " does not has access to it");
+            }
         }
         
         return null;
@@ -1314,7 +1320,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         
                 if(!frameworkConfig.productionMode) {
                     System.out.println("Tried autopay with card: " + card.savedByVendor + " - " + card.mask);
-                    return;
+                    continue;
                 }
 
                 
@@ -1347,6 +1353,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private boolean orderNeedAutoPay(Order order, int daysToTryAfterOrderHasStarted) {
+        if(order == null || order.cart == null) {
+            return false;
+        }
         if(order.cart.getTotal(true) <= 0) {
             return false;
         }
@@ -1356,7 +1365,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(order.status >= Order.Status.PAYMENT_COMPLETED && order.status != Order.Status.NEEDCOLLECTING) {
             return false;
         }
-
+        if(order.notChargeYet()) {
+           return false; 
+        }
         if(order.triedAutoPay()) {
             return false;
         }
@@ -1368,7 +1379,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             yesterday.add(Calendar.DAY_OF_YEAR, (daysToTryAfterOrderHasStarted * -1));
             for(CartItem item : order.cart.getItems()) {
                 if(item.startDate != null && new Date().after(item.startDate)) {
-                    if(yesterday.getTime().after(order.rowCreatedDate)) {
+                    boolean isAfter = yesterday.getTime().after(order.rowCreatedDate);
+                    if(order.chargeAfterDate != null && order.chargeAfterDate.after(order.rowCreatedDate)) {
+                        yesterday.getTime().after(order.chargeAfterDate);
+                    }
+                    if(isAfter) {
                         Store store = storeManager.getMyStore();
                         try {
                             if(!order.warnedNotAbleToPay) {

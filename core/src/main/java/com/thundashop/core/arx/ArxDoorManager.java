@@ -51,6 +51,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXParseException;
 
 /**
  *
@@ -107,9 +108,14 @@ public class ArxDoorManager implements IDoorManager {
         
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(is);
-        NodeList nodeList = document.getDocumentElement().getChildNodes();
-        List<Door> doors = recursiveFindDoors(nodeList, 0);
+        List<Door> doors = new ArrayList();
+        try {
+            Document document = builder.parse(is);
+            NodeList nodeList = document.getDocumentElement().getChildNodes();
+            doors = recursiveFindDoors(nodeList, 0);
+        }catch(SAXParseException e) {
+            GetShopLogHandler.logPrintStatic("Failed to parse for adress:" + hostName, e.getMessage());
+        }
         
         return doors;
     }

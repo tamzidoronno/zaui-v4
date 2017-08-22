@@ -142,4 +142,9 @@ public class SessionFactory extends DataCommon {
     public void cleanSession() {
         sessions.clear();
     }
+
+    public ConcurrentHashMap<String, ThundashopSession> getAllSessions() {
+        return sessions;
+    }
+
 }

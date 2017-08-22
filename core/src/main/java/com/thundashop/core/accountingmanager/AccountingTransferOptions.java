@@ -35,7 +35,11 @@ class AccountingTransferOptions {
         User user = managers.userManager.getUserById(userId);
         Integer accountingId = user.customerId;
         if(user.accountingId != null && !user.accountingId.trim().isEmpty() && !user.accountingId.equals("0")) {
-            accountingId = new Integer(user.accountingId);
+            try {
+                accountingId = new Integer(user.accountingId);
+            }catch(Exception e) {
+                System.out.println("Number exception problem on user: " + user.fullName);
+            }
         }
         if(accountingId >= idToUse) {
             return accountingId;

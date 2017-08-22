@@ -22,6 +22,11 @@ $product = $this->getApi()->getProductManager()->getProduct($selectedAddonConfig
             <td width="50%"><input type="checkbox" gsname="isIncludedInRoomPrice" style='width:100%;' <?php echo $CHECKED; ?>></td>
         </tr>
         <tr>
+            <td width="50%">Always add this addon when booking</td>
+            <?php $CHECKED = ($selectedAddonConfig->alwaysAddAddon) ? "CHECKED" : ""; ?>
+            <td width="50%"><input type="checkbox" gsname="alwaysAddAddon" style='width:100%;' <?php echo $CHECKED; ?>></td>
+        </tr>
+        <tr>
             <td width="50%">Is per guest</td>
             <?php $CHECKED = ($selectedAddonConfig->dependsOnGuestCount) ? "CHECKED" : ""; ?>
             <td width="50%"><input type="checkbox" gsname="dependsOnGuestCount" style='width:100%;' <?php echo $CHECKED; ?>></td>

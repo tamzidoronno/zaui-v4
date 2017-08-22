@@ -5,8 +5,8 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
         
         
         this.setConnectionDetails = function(identifier) {
-//            this.api = new GetShopApiWebSocket('resturantsystem.getshop.com', '31332', identifier, false);
-            this.api = new GetShopApiWebSocket('utsiktenhotell.3.0.local.getshop.com', '31330', identifier, false);
+            this.api = new GetShopApiWebSocket('resturantsystem.getshop.com', '31332', identifier, false);
+//            this.api = new GetShopApiWebSocket('utsiktenhotell.3.0.local.getshop.com', '31330', identifier, false);
 //            this.api = new GetShopApiWebSocket('192.168.10.190', '31330', identifier, false);
 //            this.api = new GetShopApiWebSocket('resturantsystem.3.0.mpal.getshop.com', '31330', identifier, false);
             
@@ -21,6 +21,41 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                 me.logon(false);
                 $rootScope.$broadcast("connectionEstablished", "");
                 $rootScope.$digest();
+            });
+            
+            this.api.setGlobalErrorHandler(function(error) {
+                if (error.errorCode == 1000010) {
+                    var now = new Date().getTime();
+                    var diff = now - this.lastShownError;
+                    if (diff < 1000) {
+                        return;
+                    }
+                    
+                    this.lastShownError = new Date().getTime();
+                    alert("Did not find the company you specified, please check your details.");
+                    me.$state.transitionTo('base.login');
+                    $('.loginbutton').find('.login-shower').remove();
+                    this.lastShownError = new Date().getTime();
+                } else if (error.errorCode == 13) {
+                    var now = new Date().getTime();
+                    var diff = now - this.lastShownError;
+                    if (diff < 1000) {
+                        return;
+                    }
+                    
+                    
+                    this.lastShownError = new Date().getTime();
+                    alert("Wrong username or password, please try again.");
+                    
+                    me.$state.transitionTo('base.login');
+                    $('.loginbutton').find('.login-shower').remove();
+                    this.lastShownError = new Date().getTime();
+                } else {
+                    if (error != null && error.errorCode  != null && error.errorCode == 26 && !localStorage.getItem('username')) {
+                        return;
+                    }
+                    alert(errorTextMatrix[error.errorCode]);
+                }
             });
             
             var me = this;

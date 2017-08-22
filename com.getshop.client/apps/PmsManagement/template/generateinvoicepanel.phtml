@@ -3,6 +3,19 @@
 $d = new DateTime('first day of this month');
 $d = strtotime("-1 month", $d->getTimestamp());
 $d2 = time();
+$chargeCardDate = time();
+$config = $this->getConfig();
+if($config->chargeOrderAtDayInMonth > 0) {
+    $dayOfMonth = date("d", $chargeCardDate);
+    $testDay = $chargeCardDate;
+    for($i = 0; $i < 40; $i++) {
+        if(date("d", $testDay) == $config->chargeOrderAtDayInMonth) {
+            $chargeCardDate = $testDay;
+        }
+        $testDay += 86400;
+    }
+}
+
 if(isset($_POST['data']['enddate'])) {
     $d2 = strtotime($_POST['data']['enddate']);
 }
@@ -22,7 +35,7 @@ if(sizeof($res) > 0) {
     return;
 }
 ?>
-<div gstype="form" method="globalInvoiceCreation">
+<div gstype="form" method="globalInvoiceCreation" style="padding: 10px;">
     <h2>Global order creation, just specify the end date of the order creation</h2>
     <input type="checkbox" CHECKED gsname="preview"> Create a preview<br>
     <select gsname="type">
@@ -36,7 +49,10 @@ if(sizeof($res) > 0) {
         <option value="not_ended" <?php echo $select; ?>>Not ended</option>
     </select>
     <input type="txt" gsname="enddate" value="<?php echo date("d.m.Y", $d2); ?>">
-    <span class="pmsbutton" gstype="submit">Create orders</span>
+    <span class="pmsbutton" gstype="submit">Create orders</span><br>
+    <div style="padding-top: 10px; padding-bottom: 10px;">
+        Wait to charge cards until: <input type="txt" gsname="chargeCardAfter" value="<?php echo date("d.m.Y", $chargeCardDate); ?>">
+    </div>
 </div>
 
 <?php

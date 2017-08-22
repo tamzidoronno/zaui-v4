@@ -269,9 +269,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                 }
                 lastOrderId = order.id;
-                
+                boolean saveOrder = false;
                 if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
                     order.attachedToRoom = filter.pmsRoomId;
+                    saveOrder = true;
+                }
+                
+                if(filter.chargeCardAfter != null) {
+                    order.chargeAfterDate = filter.chargeCardAfter;
+                    saveOrder = true;
+                }
+                if(saveOrder) {
                     orderManager.saveOrder(order);
                 }
                 

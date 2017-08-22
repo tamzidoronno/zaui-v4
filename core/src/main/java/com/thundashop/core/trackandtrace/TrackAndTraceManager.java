@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.trackandtrace;
 
+import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.thundashop.core.utils.ImageManager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.CheckConsistencyCron;
@@ -23,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -329,6 +332,12 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
     }
 
+    @Override
+    public void loadDataBase64(String base64, String fileName) {
+        String loadedData = new String(Base64.decodeBase64(base64));
+        loadData(loadedData.toString(), fileName);
+    }
+    
     @Override
     public void loadData(String base64, String fileName) {
         if (fileName.contains("drivers")) {
@@ -1277,6 +1286,14 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             destination.extraInstractionsReadDate = new Date();
             saveObjectInternal(destination);
         }
+    }
+
+    @Override
+    public List<String> getRouteIdsThatHasNotCompleted() {
+        return routes.values().stream()
+                .filter(route -> !route.completedInfo.completed)
+                .map(r -> r.id)
+                .collect(Collectors.toList());
     }
     
 

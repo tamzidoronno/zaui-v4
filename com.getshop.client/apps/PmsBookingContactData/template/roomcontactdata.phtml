@@ -16,7 +16,10 @@ foreach($config->data as $key => $value) {
 }
 
 $booking = $this->getCurrentBooking();
-
+if(sizeof($booking->rooms) == 0) {
+    echo "<div style='font-size: 30px;'>No room has been selected, yet.<br>You need to select a room first.</div>";
+    return;
+}
 foreach($config->data as $key => $value) {
     /* @var $value core_bookingengine_data_RegistrationRulesField */
     if(!stristr($key, "company_") && !stristr($key, "user_") && !stristr($key, "field_")) {

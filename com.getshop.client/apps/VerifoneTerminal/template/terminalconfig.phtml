@@ -1,0 +1,81 @@
+<?
+/* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
+
+$ip0 = $this->getConfigurationSetting("ipaddr0");
+$ip1 = $this->getConfigurationSetting("ipaddr1");
+$ip2 = $this->getConfigurationSetting("ipaddr2");
+$ip3 = $this->getConfigurationSetting("ipaddr3");
+$ip4 = $this->getConfigurationSetting("ipaddr4");
+?>
+
+<div class='gss_settings_header'>
+    <i class='fa fa-cc-visa'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <?php echo $this->getName(); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?php echo $this->getDescription(); ?>
+            Configuration for verifone terminal.
+        </div>
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+
+    
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="ipaddr0">
+            <span class="title"><?php echo $this->__f("Ip adress"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='ipaddr0' value="<? echo $ip5; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The ip adress to the terminal 0"); ?>
+            </div>
+        </div>
+    </div>
+    
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="ipaddr1">
+            <span class="title"><?php echo $this->__f("Ip adress"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='ipaddr1' value="<? echo $ip1; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The ip adress to the terminal 1"); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="ipaddr2">
+            <span class="title"><?php echo $this->__f("Ip adress"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='ipaddr2' value="<? echo $ip2; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The ip adress to the terminal 2"); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="ipaddr3">
+            <span class="title"><?php echo $this->__f("Ip adress"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='ipaddr3' value="<? echo $ip3; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The ip adress to the terminal 3"); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="ipaddr4">
+            <span class="title"><?php echo $this->__f("Ip adress"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='ipaddr4' value="<? echo $ip4; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The ip adress to the terminal 4"); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="dibsmodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
+    </div>
+</div>

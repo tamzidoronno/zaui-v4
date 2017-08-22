@@ -777,6 +777,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
     }
     
+    public function processVerifonePayment() {
+          $this->getApi()->getVerifoneManager()->chargeOrder($_POST['data']['orderid'], 0);
+//        echo "TEST";
+    }
+    
     public function runProcessor() {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
         $this->getApi()->getPmsManager()->hourlyProcessor($this->getSelectedName());

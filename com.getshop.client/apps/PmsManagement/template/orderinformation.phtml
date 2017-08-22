@@ -280,9 +280,13 @@ if($booking->orderIds) {
             echo "</div>";
             if($order->status <= 5) {
                 echo "<a href='/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."' target='_fdasf'><span style='cursor:pointer; color:blue' orderid='".$order->id."' bookingid='".$booking->id."'>download</span></a>";
-                if($total > 0 && stristr($order->payment->paymentType, "dibs") || stristr($order->payment->paymentType, "\\epay")) {
+                if($total > 0 && (stristr($order->payment->paymentType, "dibs") || stristr($order->payment->paymentType, "\\epay"))) {
                     echo " - <a href='/?page=cart&payorder=" . $order->id."'>pay</a> - <span style='cursor:pointer; color:blue' class='sendpaymentlink' orderid='".$order->id."' bookingid='".$booking->id."'>Send payment link</span>";
                 }
+            }
+            if(stristr($order->payment->paymentType, "verifone")) {
+                echo " - <span style='color:blue; cursor:pointer;' class='doverifonepayment' orderid='".$order->id."'>pay</span>";
+                echo "<span class='dopayment' style='display:none;'><i class='fa fa-spin fa-spinner'></i> Waiting for payment, cancel payment.</span>";
             }
             if(stristr($order->payment->paymentType, "invoice") || stristr($order->payment->paymentType, "sendregning")) {
                 echo " - <span style='cursor:pointer; color:blue' class='sendinvoice' orderid='".$order->id."' bookingid='".$booking->id."'>Send invoice</span>";

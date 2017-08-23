@@ -55,6 +55,8 @@
 .PmsAvailabilityTimeline .flip{transform: rotate(-180deg)}
 
 @media only all and (max-width:800px){
+    .PmsAvailabilityTimeline .dateheadingrow{}
+    .PmsAvailabilityTimeline .detailedview .timelineoverview{padding-bottom: 410px !important;}
     .PmsAvailabilityTimeline .timelineoverview th:first-child,
     .PmsAvailabilityTimeline .timelineoverview td:first-child,
     .PmsAvailabilityTimeline .detailedview .valueentry_item,
@@ -69,6 +71,7 @@
     
     .PmsAvailabilityTimeline [method="showTimeLine"] input[type="text"],
     .PmsAvailabilityTimeline [method="showTimeLine"] select{width:100%;box-sizing:border-box;margin-bottom: 4px;}
-    PmsAvailabilityTimeline .ui-corner-all{display:none !important;}
+    .PmsAvailabilityTimeline .ui-corner-all{display:none !important;}
+    .PmsAvailabilityTimeline .shortinformationbox{min-width: 200px;max-height:400px;overflow-y: scroll;}
     
 }

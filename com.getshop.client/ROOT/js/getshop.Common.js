@@ -1247,9 +1247,6 @@ thundashop.common.checkWithServerIfLoggedOut = function() {
             type: "GET",
             url: "/scripts/isLoggedIn.php",
             success: function(response) {
-                if(!response) {
-                    return;
-                }
                 if (response === "notinitted")
                     return;
                 
@@ -1259,18 +1256,18 @@ thundashop.common.checkWithServerIfLoggedOut = function() {
                 if (!exists)
                     return;
                 
+                if (isNaN(res)) {
+                    return;
+                }
+                
                 var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
                 
-                if (isNaN(res) && isLoggedIn) {
-                    console.log(res);
-                } else {
-                    if (res > 0 && !isLoggedIn) {
-                        document.location = "/";
-                    }
-                    
-                    if (res < 0 && isLoggedIn) {
-                        thundashop.common.logout();
-                    }
+                if (res > 0 && !isLoggedIn) {
+                    document.location = "/";
+                }
+
+                if (res < 0 && isLoggedIn) {
+                    thundashop.common.logout();
                 }
             }
         });        

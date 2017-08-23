@@ -26,7 +26,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $roomid = $_POST['data']['roomid'];
         $newType = $_POST['data']['newtype'];
         
-        $this->getApi()->getPmsManager()->setNewRoomType($this->getSelectedName(), $roomid, $bookingId, $newType);
+        $res = $this->getApi()->getPmsManager()->setNewRoomType($this->getSelectedName(), $roomid, $bookingId, $newType);
+        echo "<div style='color:red;padding-top:10px; padding-bottom: 10px;'>" . $res . "</div>";
         $this->showBookingInformation();
     }
     

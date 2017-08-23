@@ -1405,6 +1405,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(!filter.avoidOrderCreation) {
             Order order = createOrderFromCartNew(booking, filter, false);
+            if(order == null) {
+                return "";
+            }
             order.createByManager = "PmsDailyOrderGeneration";
             if(filter.totalAmount != null && filter.totalAmount > 0) {
                 adjustAmountOnOrder(order, filter.totalAmount);
@@ -1767,6 +1770,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                 }
             }
+        }
+        
+        if(order == null) {
+            return null;
         }
         
         order.userId = booking.userId;

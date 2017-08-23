@@ -4,6 +4,7 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.socket.WebSocketServerImpl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import no.point.paypoint.PayPoint;
@@ -23,6 +24,9 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager,Pay
     OrderManager orderManager;
     
     private Order orderToPay;
+    
+    @Autowired
+    public WebSocketServerImpl webSocketServer;
     
     @Override
     public void chargeOrder(String orderId, Integer terminalNumber) {
@@ -49,9 +53,9 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager,Pay
         case PayPointEvent.STATUS_EVENT:
             PayPointStatusEvent statusEvent = (PayPointStatusEvent)event;
             if(statusEvent.getStatusType()==PayPointStatusEvent.STATUS_DISPLAY) {
-                printFeedBack("STATUS IS :" + statusEvent.getStatusData());
+                printFeedBack(statusEvent.getStatusData());
             } else if(statusEvent.getStatusType()==PayPointStatusEvent.STATUS_CARD_INFO) {
-                printFeedBack("STATUS IS (carddata) :" + statusEvent.getStatusData());
+                printFeedBack("UNKNOWN STATUS (carddata) :" + statusEvent.getStatusData());
             } else if(statusEvent.getStatusType()==PayPointStatusEvent.STATUS_READY_FOR_TRANS){
                 printFeedBack("Status readyfor trans:" + statusEvent.getStatusData());
                 if(statusEvent.getStatusData().compareTo("1")==0) {
@@ -97,8 +101,12 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager,Pay
     }
 
     private void printFeedBack(String string) {
+        VerifoneFeedback feedBack = new VerifoneFeedback();
+        feedBack.msg = string;
+        webSocketServer.sendMessage(feedBack);
         orderToPay.payment.transactionLog.put(System.currentTimeMillis(), string);
         System.out.println("\t" + string);
+        
     }
 
     private void addToOrder(String resultText) {

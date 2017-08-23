@@ -287,6 +287,7 @@ if($booking->orderIds) {
             if(stristr($order->payment->paymentType, "verifone")) {
                 echo " - <span style='color:blue; cursor:pointer;' class='doverifonepayment' orderid='".$order->id."'>pay</span>";
                 echo "<span class='dopayment' style='display:none;'><i class='fa fa-spin fa-spinner'></i> Waiting for payment, cancel payment.</span>";
+                echo "<div class='verifonefeedbackdata' style='font-size:12px;font-style: italic;padding-top: 10px; padding-bottom: 10px; display:none;'></div>";
             }
             if(stristr($order->payment->paymentType, "invoice") || stristr($order->payment->paymentType, "sendregning")) {
                 echo " - <span style='cursor:pointer; color:blue' class='sendinvoice' orderid='".$order->id."' bookingid='".$booking->id."'>Send invoice</span>";

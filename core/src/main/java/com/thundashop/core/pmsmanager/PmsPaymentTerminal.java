@@ -131,13 +131,11 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
         PmsBooking booking = pmsManager.getBooking(bookingId);
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrder(orderId);
-            if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                continue;
-            }
             PmsOrderSummary summary = new PmsOrderSummary();
             summary.amount = orderManager.getTotalAmount(order);
             summary.incrementOrderId = order.incrementOrderId;
             summary.id = order.id;
+            summary.paid = (order.status == Order.Status.PAYMENT_COMPLETED);
             res.add(summary);
         }
         return res;
@@ -359,6 +357,31 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
         pmsManager.finalize(booking);
         room = booking.findRoom(pmsBookingRoomId);
         return room.totalCost;
+    }
+
+    @Override
+    public String payIndividualRoom(String pmsBookingRoomId) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(pmsBookingRoomId);
+        pmsInvoiceManager.clearOrdersOnBooking(booking);
+        
+        NewOrderFilter filter = new NewOrderFilter();
+        filter.pmsRoomId = pmsBookingRoomId;
+        String orderId = pmsInvoiceManager.createOrder(booking.id, filter);
+        
+        filter.pmsRoomId = null;
+        filter.createNewOrder = true;
+        pmsInvoiceManager.createOrder(booking.id, filter);
+        
+        return orderId;
+    }
+
+    @Override
+    public PmsBooking getBooking(String bookingId) {
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            room.paidFor = pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
+        }
+        return booking;
     }
 
 }

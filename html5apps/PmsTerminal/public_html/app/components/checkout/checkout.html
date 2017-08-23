@@ -4,8 +4,8 @@
             <br>
         Please insert card in card reader below.<br>
         <i class='fa fa-spin fa-spinner'></i> Waiting for payment completions.<br><br>
+        <div id="terminalfeedback" style="font-size:16px;text-align: center;"></div>
         <br>
-        <span class='gsbtn' style='width:100%;box-sizing: border-box;text-align:center;' ng-click="cancelPayment();">Cancel payment</span>
     </div>
 </div>
 
@@ -65,7 +65,8 @@
                     </div>
                 </div>
                 <div class='roomsummary'>
-                    Total for room is NOK {{room.totalCost}} <span style='float:right;'><span class='payroombutton' ng-show='payIndividually' ng-mobile-click="startPaymentProcess()">Pay</span></span>
+                    Total for room is NOK {{room.totalCost}} <span style='float:right;'><span class='payroombutton' ng-show='payIndividually' ng-mobile-click="startIndividualPaymentProcess(room)">Pay</span></span>
+                    <span style='float:right;' ng-show="room.paidFor"><i class="fa fa-check"></i> paid</span>
                 </div>
             </div>
         </div>
@@ -73,11 +74,12 @@
     <div>
         <div class='summarybox' ng-show="!payIndividually">
             <i class='fa fa-credit-card'></i> <b> Order information</b>
-            <div ng-repeat="order in orders" >
-                <span class='gsbtn' style='float:right;' ng-mobile-click='startPaymentProcess()'>Pay <i class='fa fa-arrow-right'></i></span>
+            <div ng-repeat="order in orders" style='padding-top: 5px;'>
+                <span class='gsbtn' style='float:right;' ng-show='!order.paid' ng-mobile-click='startPaymentProcess(order.id)'>Pay <i class='fa fa-arrow-right'></i></span>
+                <span class='gsbtn' style='float:right; background-color:green;' ng-show='order.paid' ng-mobile-click='printReciept()'><i class='fa fa-check'></i> paid, print reciept <i class='fa fa-arrow-right'></i></span>
                 <div class='orderrow'>Total to pay: {{order.amount}} NOK</div>
+                <div style='clear:both;'></div>
             </div>
-            <div style='clear:both;'></div>
             <div style='text-align: right; padding-top: 10px;'>
                 <span class='gsbtn' ng-mobile-click='doPayIndividually()'>Pay for each room individually</span>
             </div>
@@ -86,7 +88,7 @@
             <center>
                 A pay button is now available for each room.<br><br>
                 <div>
-                    <span class='gsbtn' ng-mobile-click='startPaymentProcess()'>Pay for all rooms</span>
+                    <span class='gsbtn' ng-mobile-click='doNotPayIndividually()'>Pay for all rooms</span>
                 </div>
             </center>
         </div>

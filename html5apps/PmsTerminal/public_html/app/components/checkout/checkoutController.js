@@ -18,7 +18,7 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
     $scope.load = function() {
         $scope.loadSummary();
         $scope.loadOrders();
-    }
+    };
     
     $scope.loadOrders = function() {
         var loadingorders = $api.getApi().PmsPaymentTerminal.getOrderSummary($api.getDomainName(), datarepository.bookingid);
@@ -27,8 +27,28 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
         });
     };
     
-    $scope.startPaymentProcess = function() {
-        $('.paymentprocess').fadeIn();
+    $scope.startIndividualPaymentProcess = function(room) {
+        var payOrder = $api.getApi().PmsPaymentTerminal.payIndividualRoom($api.getDomainName(), room.pmsBookingRoomId);
+        payOrder.done(function(orderId) {
+            $scope.startPaymentProcess(orderId);
+        });
+    };
+    
+    $scope.startPaymentProcess = function(orderId) {
+        $api.getApi().listeners = [];
+        $api.getApi().addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", function(test) {
+            if(test.msg === "completed") {
+                $scope.load();
+                $scope.cancelPayment();
+            } else {
+                $('#terminalfeedback').html(test.msg);
+            }
+        }, null);
+
+        var starting = $api.getApi().VerifoneManager.chargeOrder(orderId, 0);
+        starting.done(function() {
+            $('.paymentprocess').fadeIn();
+        });
     };
     
     $scope.cancelPayment = function() {
@@ -37,6 +57,10 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
     
     $scope.doPayIndividually = function() {
        $scope.payIndividually = true;
+    };
+    
+    $scope.doNotPayIndividually = function() {
+       $scope.payIndividually = false;
     };
     
     $scope.loadAdditionalServices = function() {
@@ -68,7 +92,6 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
     };
     
     $scope.removeAddonFromRoom = function(addon, room) {
-        console.log(room.pmsBookingRoomId);
         $api.getApi().PmsPaymentTerminal.removeProductFromRoom($api.getDomainName(), addon.productId, room.pmsBookingRoomId);
         $scope.load();
     };
@@ -89,9 +112,8 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
             }
             $scope.types = typesToLoad;
             var bookingid = datarepository.bookingid;
-            var loadbooking = $api.getApi().PmsManager.getBooking($api.getDomainName(), bookingid);
+            var loadbooking = $api.getApi().PmsPaymentTerminal.getBooking($api.getDomainName(), bookingid);
             loadbooking.done(function(booking) {
-                console.log(booking.rooms);
                 $scope.numberOfRoomsBooked = booking.rooms.length;
                 $scope.booking = booking;
                 $scope.loadUser(booking.userId);

@@ -1999,4 +1999,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
     }
 
+    public void addUserLoggedOnSecure(String userId) {
+        User user = getUserById(userId);
+        if (user != null) {
+            addUserToSession(user);
+        }
+    }
 }

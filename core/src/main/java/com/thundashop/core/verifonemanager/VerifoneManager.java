@@ -17,13 +17,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @GetShopSession
-public class VerifoneManager extends ManagerBase implements IVerifoneManager,PayPointListener, ActionListener {
+public class VerifoneManager extends ManagerBase implements IVerifoneManager {
 
     @Autowired
     OrderManager orderManager;
     
     private Order orderToPay;
-    
+    private VerifoneTerminalListener verifoneListener;
+
     @Override
     public void chargeOrder(String orderId, Integer terminalNumber) {
         if(orderToPay != null) {
@@ -39,11 +40,13 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager,Pay
         Integer amount = total.intValue();
         
         VerifonePaymentApp app = new VerifonePaymentApp();
-        app.openCom("192.168.1.107", this);
+        if (verifoneListener == null) {
+            createListener();
+        }
+        app.openCom("192.168.1.107", verifoneListener);
         app.performTransaction(PayPoint.TRANS_CARD_PURCHASE, amount, amount);
     }
 
-    @Override
     public void getPayPointEvent(PayPointEvent event) {
         switch(event.getEventType()) {
         case PayPointEvent.STATUS_EVENT:
@@ -91,7 +94,6 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager,Pay
         } 
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println("Action performed: " + e);
     }
@@ -122,6 +124,10 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager,Pay
 
     private void saveOrderSomeHow(Order orderToPay) {
         System.out.println("############ NEED TO SAVE THIS ORDER HOWEVER WE HAVE LOST THE ORDERMANAGER #################");
+    }
+
+    private void createListener() {
+        this.verifoneListener = new VerifoneTerminalListener(storeId, null, null, this);
     }
     
 }

@@ -113,6 +113,15 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .existinguserselection', app.PmsManagement.selectExistingCustomer);
         $(document).on('click','.PmsManagement .doverifonepayment', app.PmsManagement.doVerifonePayment);
         $(document).on('click','.PmsManagement .loadRoomTypes', app.PmsManagement.loadRoomTypes);
+        getshop.WebSocketClient.addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", app.PmsManagement.displayVerifoneFeedBack);
+    },
+    displayVerifoneFeedBack : function(res) {
+        if(res.msg === "completed") {
+            app.PmsManagement.reloadtab();
+        } else {
+            $('.verifonefeedbackdata').show();
+            $('.verifonefeedbackdata').html(res.msg);
+        }
     },
     loadRoomTypes : function() {
         var event = thundashop.Ajax.createEvent('','loadBookingTypes', $(this), {

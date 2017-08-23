@@ -6407,6 +6407,40 @@ GetShopApiWebSocket.MekonomenManager = function(communication) {
 }
 
 GetShopApiWebSocket.MekonomenManager.prototype = {
+    'addUserId' : function(userId,mekonomenUserName, gs_silent) {
+        var data = {
+            args : {
+                userId : JSON.stringify(userId),
+                mekonomenUserName : JSON.stringify(mekonomenUserName),
+            },
+            method: 'addUserId',
+            interfaceName: 'core.mekonomen.IMekonomenManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getMekonomenUser' : function(userId, gs_silent) {
+        var data = {
+            args : {
+                userId : JSON.stringify(userId),
+            },
+            method: 'getMekonomenUser',
+            interfaceName: 'core.mekonomen.IMekonomenManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'removeConnectionToDatabase' : function(userId, gs_silent) {
+        var data = {
+            args : {
+                userId : JSON.stringify(userId),
+            },
+            method: 'removeConnectionToDatabase',
+            interfaceName: 'core.mekonomen.IMekonomenManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'searchForUser' : function(name, gs_silent) {
         var data = {
             args : {
@@ -7015,6 +7049,16 @@ GetShopApiWebSocket.OrderManager.prototype = {
                 searchWord : JSON.stringify(searchWord),
             },
             method: 'getPageCount',
+            interfaceName: 'core.ordermanager.IOrderManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getPaymentMethodsThatHasOrders' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getPaymentMethodsThatHasOrders',
             interfaceName: 'core.ordermanager.IOrderManager',
         };
         return this.communication.send(data, gs_silent);
@@ -10617,6 +10661,18 @@ GetShopApiWebSocket.PmsPaymentTerminal.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getBooking' : function(multilevelname, bookingId, gs_silent) {
+        var data = {
+            args : {
+                bookingId : JSON.stringify(bookingId),
+            },
+            method: 'getBooking',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsPaymentTerminal',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getMaxNumberOfRooms' : function(multilevelname, data, gs_silent) {
         var data = {
             args : {
@@ -10647,6 +10703,18 @@ GetShopApiWebSocket.PmsPaymentTerminal.prototype = {
                 pmsBookingRoomId : JSON.stringify(pmsBookingRoomId),
             },
             method: 'getRoomTypesThatRoomCanBeChangedTo',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsmanager.IPmsPaymentTerminal',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'payIndividualRoom' : function(multilevelname, pmsBookingRoomId, gs_silent) {
+        var data = {
+            args : {
+                pmsBookingRoomId : JSON.stringify(pmsBookingRoomId),
+            },
+            method: 'payIndividualRoom',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsmanager.IPmsPaymentTerminal',
         };
@@ -13906,6 +13974,16 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'getRouteIdsThatHasNotCompleted' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getRouteIdsThatHasNotCompleted',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'getRoutesById' : function(routeId, gs_silent) {
         var data = {
             args : {
@@ -13934,6 +14012,18 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 fileName : JSON.stringify(fileName),
             },
             method: 'loadData',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'loadDataBase64' : function(base64,fileName, gs_silent) {
+        var data = {
+            args : {
+                base64 : JSON.stringify(base64),
+                fileName : JSON.stringify(fileName),
+            },
+            method: 'loadDataBase64',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);
@@ -14017,6 +14107,18 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
                 typedSignature : JSON.stringify(typedSignature),
             },
             method: 'markDeparting',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'markInstructionAsRead' : function(destinationId,date, gs_silent) {
+        var data = {
+            args : {
+                destinationId : JSON.stringify(destinationId),
+                date : JSON.stringify(date),
+            },
+            method: 'markInstructionAsRead',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);
@@ -15321,6 +15423,24 @@ GetShopApiWebSocket.UUIDSecurityManager.prototype = {
     },
 
 }
+GetShopApiWebSocket.VerifoneManager = function(communication) {
+    this.communication = communication;
+}
+
+GetShopApiWebSocket.VerifoneManager.prototype = {
+    'chargeOrder' : function(orderId,terminalNumber, gs_silent) {
+        var data = {
+            args : {
+                orderId : JSON.stringify(orderId),
+                terminalNumber : JSON.stringify(terminalNumber),
+            },
+            method: 'chargeOrder',
+            interfaceName: 'core.verifonemanager.IVerifoneManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+}
 GetShopApiWebSocket.VippsManager = function(communication) {
     this.communication = communication;
 }
@@ -15827,6 +15947,7 @@ GetShopApiWebSocket.prototype.createManagers = function() {
     this.ImageManager = new GetShopApiWebSocket.ImageManager(this);
     this.UtilManager = new GetShopApiWebSocket.UtilManager(this);
     this.UUIDSecurityManager = new GetShopApiWebSocket.UUIDSecurityManager(this);
+    this.VerifoneManager = new GetShopApiWebSocket.VerifoneManager(this);
     this.VippsManager = new GetShopApiWebSocket.VippsManager(this);
     this.WebManager = new GetShopApiWebSocket.WebManager(this);
     this.WubookManager = new GetShopApiWebSocket.WubookManager(this);

@@ -1247,6 +1247,9 @@ thundashop.common.checkWithServerIfLoggedOut = function() {
             type: "GET",
             url: "/scripts/isLoggedIn.php",
             success: function(response) {
+                if(!response) {
+                    return;
+                }
                 if (response === "notinitted")
                     return;
                 

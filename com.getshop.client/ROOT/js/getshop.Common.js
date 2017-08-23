@@ -1262,7 +1262,7 @@ thundashop.common.checkWithServerIfLoggedOut = function() {
                 var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
                 
                 if (isNaN(res) && isLoggedIn) {
-                    thundashop.common.logout();
+                    console.log(res);
                 } else {
                     if (res > 0 && !isLoggedIn) {
                         document.location = "/";

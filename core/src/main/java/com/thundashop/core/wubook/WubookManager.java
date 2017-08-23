@@ -1046,7 +1046,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
 
                 for(String orderId : book.orderIds) {
-                    Order order = orderManager.getOrder(orderId);
+                    Order order = orderManager.getOrderSecure(orderId);
                     if(order.status == Order.Status.PAYMENT_COMPLETED) {
                         book.ignoreNoShow = true;
                         pmsManager.saveBooking(book);

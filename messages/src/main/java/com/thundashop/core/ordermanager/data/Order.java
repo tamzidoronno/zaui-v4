@@ -78,6 +78,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String sentToEmail = "";
     public String sentToPhone = "";
     public String sentToPhonePrefix = "";
+    public Date chargeAfterDate = null;
     
     public Order jsonClone() {
         Gson gson = new Gson();
@@ -359,6 +360,16 @@ public class Order extends DataCommon implements Comparable<Order> {
             return true;
         }
         return rowCreatedDate.after(cal.getTime());
+    }
+
+    public boolean notChargeYet() {
+        if(chargeAfterDate == null) {
+            return false;
+        }
+        if(!chargeAfterDate.before(new Date())) {
+            return true;
+        }
+        return false;
     }
 
     public static class Status  {

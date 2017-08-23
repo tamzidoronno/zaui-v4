@@ -82,17 +82,17 @@ $cars = $this->getCarList();
             <?
             if ($agreementStatus === "yellow") {
                 echo '<div class="details">';
-                $text = isset($car->serviceDateRejected) && $car->serviceDateRejected ? "<span style='color: red'>Tidspunktet passet ikke for bileier, foreslå et annet tidspunkt</span>" : "Venter på bekreftelse fra bileier";
+                $text = isset($car->serviceDateRejected) && $car->serviceDateRejected ? "<span style='color: red'>Tidspunktet passet ikke for kjøretøy eller sjåfør, foreslå et annet tidspunkt</span>" : "Venter på bekreftelse fra kjøretøy eller sjåfør";
                 echo "$text. <br/> Foreslått dato: " . date('d/m-Y H:i', strtotime($car->nextServiceAgreed));
                 if (isset($car->newSuggestedDate) && $car->newSuggestedDate) {
-                    echo "<br/> Bileier ønsker dato: " . date('d/m-Y H:i', strtotime($car->newSuggestedDate));
+                    echo "<br/> Sjåfør eller kjøretøy ønsker dato: " . date('d/m-Y H:i', strtotime($car->newSuggestedDate));
                 }
                 echo '</div>';
             }
 
             if ($agreementStatus === "green") {
                 echo '<div class="details">';
-                echo "Bileier har bekreftet servicedato: " . date('d/m-Y H:i', strtotime($car->nextServiceAgreed));
+                echo "Sjåfør eller kjøretøy har bekreftet servicedato: " . date('d/m-Y H:i', strtotime($car->nextServiceAgreed));
                 echo "<br/><span class='shop_button' gsclick='serviceCompleted' carid='$car->id'> Service gjennomført</span>";
                 echo " <span class='shop_button' gsclick='pkkCompleted' carid='$car->id'> PKK Gjennomført</span>";
                 echo " <span class='shop_button' gsclick='serviceAndCompleted' carid='$car->id'> Service og PKK Gjennomført</span>";

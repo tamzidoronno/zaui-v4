@@ -1,9 +1,8 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300');
 
 html{overflow-x:hidden;}
 body{font-family: 'Source Sans Pro', sans-serif;font-size:16px;}
 .gsmobileheader { display:none; }
-.sticky{position:fixed !important;top:-55px !important;}
+.sticky{position:fixed !important;top:-65px !important;}
 .gs_language_selection{border:0;right:10px;}
 .gs_language_selection .gs_lang_code_nb_NO{
     background-image: url(/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images//flag_norwegian.png);

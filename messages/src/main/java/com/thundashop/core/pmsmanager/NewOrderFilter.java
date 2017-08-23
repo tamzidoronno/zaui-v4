@@ -27,4 +27,5 @@ public class NewOrderFilter implements Serializable {
     public List<String> itemsToCreate = new ArrayList();
     public String userId = new String();
     public Double totalAmount = null;
+    public Date chargeCardAfter = null;
 }

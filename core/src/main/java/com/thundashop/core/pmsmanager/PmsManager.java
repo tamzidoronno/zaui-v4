@@ -1639,6 +1639,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        
+        booking.unmarkOverBooking();
+        
         saveObject(booking);
 
         if(booking.getActiveRooms().isEmpty()) {
@@ -1757,7 +1760,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBooking> toRemove = new ArrayList();
         if (!filter.includeDeleted) {
             for (PmsBooking booking : result) {
-                if (booking.isDeleted) {
+                if (booking.isDeleted && !booking.overBooking) {
                     toRemove.add(booking);
                 }
             }
@@ -3113,7 +3116,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             gsTiming("got configuration");
             if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
-                if(getConfigurationSecure().supportRemoveWhenFull) {
+                if(getConfigurationSecure().supportRemoveWhenFull || booking.isWubook()) {
+                    booking.overBooking = true;
                     room.canBeAdded = false;
                     room.delete();
                 }
@@ -3147,7 +3151,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     
                     if(!hasBeenWarned && (booking.channel != null && !booking.channel.isEmpty())) {
                         messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text + "<br><bR><br>booking dump:<br>" + dumpBooking(booking), null);
-                        warnStoreAboutOverBooking(booking, text);
                     }
                 }
                 gsTiming("removed when full maybe");
@@ -3568,17 +3571,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public String dumpBooking(PmsBooking booking) {
         String res = "";
-        if((!booking.payedFor && booking.deleted != null) && (booking.sessionId == null || booking.sessionId.isEmpty())) {
-            res += booking.dump();
-            for(PmsBookingRooms room : booking.getActiveRooms()) {
-                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                res += "   " + type.name + " - " + room.date.start + " frem til : " + room.date.end + "<br>";
+        res += booking.dump();
+        for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+            BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            if(room.deletedByChannelManagerForModification) {
+                continue;
             }
+            res += "   " + type.name + " - " + room.date.start + " frem til : " + room.date.end + "<br>";
         }
+            
         User user = userManager.getUserById(booking.userId);
         if(user != null) {
             res += "Full name: " + user.fullName + "<br>";
         }
+        res += "Channel: " + booking.channel + "<bR>";
+        res += "Channel id: " + booking.wubookChannelReservationId + "<bR>";
+        res += "Wubookid: " + booking.wubookreservationid + "<br>";
         
         return res;
     }
@@ -4326,7 +4334,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private boolean verifyPhoneOnBooking(PmsBooking booking) {
         String countryCode = booking.countryCode;
-        if(countryCode == null || countryCode.isEmpty()) {
+        try {
+            HashMap<Integer, String> list = PhoneCountryCodeList.getList();
+            Integer prefix = new Integer(booking.rooms.get(0).guests.get(0).prefix);
+            if(list.containsKey(prefix)) {
+                countryCode = list.get(prefix);
+            }
+        }catch(Exception e) {
             countryCode = "NO";
         }
         
@@ -4696,7 +4710,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             createUserForBooking(booking);
             gsTiming("Created user for booking");
-            if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay) {
+            if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay && !booking.overBooking) {
                 booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
                 pmsInvoiceManager.createPrePaymentOrder(booking);
                 gsTiming("Created payment for order");
@@ -5684,12 +5698,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             PmsBooking booking = getBookingUnsecure(bookingId);
             if(type.equals("created")) {
-                bookingComRateManagerManager.pushBooking(booking, "Commit");
+                bookingComRateManagerManager.pushBooking(booking, "Commit", true);
             } else if(type.equals("room_removed") || 
                     type.equals("room_changed") ||
                     type.equals("date_changed") ||
                     type.equals("booking_undeleted")) {
-                bookingComRateManagerManager.pushBooking(booking, "Modify");
+                bookingComRateManagerManager.pushBooking(booking, "Modify", true);
             }
         }catch(Exception e) {
             e.printStackTrace();
@@ -6395,12 +6409,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
     
-    private void warnStoreAboutOverBooking(PmsBooking booking, String text) {
-        String email = getStoreEmailAddress();
-        String content = "Possible overbooking happened:<br>" + text;
-        messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
-    }
-
     @Override
     public LinkedList<TimeRepeaterDateRange> generateRepeatDateRanges(TimeRepeaterData data) {
         TimeRepeater generator = new TimeRepeater();

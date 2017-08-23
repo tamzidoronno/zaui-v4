@@ -269,9 +269,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                 }
                 lastOrderId = order.id;
-                
+                boolean saveOrder = false;
                 if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
                     order.attachedToRoom = filter.pmsRoomId;
+                    saveOrder = true;
+                }
+                
+                if(filter.chargeCardAfter != null) {
+                    order.chargeAfterDate = filter.chargeCardAfter;
+                    saveOrder = true;
+                }
+                if(saveOrder) {
                     orderManager.saveOrder(order);
                 }
                 
@@ -1892,7 +1900,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
             String couponCode = booking.couponCode;
             if(booking.discountType.equals("partnership")) {
-                couponCode = "partnership:" + couponCode.substring(0, couponCode.indexOf(":"));
+                if(couponCode.indexOf(":") >= 0) {
+                    couponCode = "partnership:" + couponCode.substring(0, couponCode.indexOf(":"));
+                }
             }
             Coupon coupon = cartManager.getCoupon(couponCode);
             if(coupon != null) {

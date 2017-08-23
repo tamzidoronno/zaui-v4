@@ -72,6 +72,7 @@ public class PmsBooking extends DataCommon {
     boolean isConference = false;
     double bookingAmountDiff;
     double totalUnsettledAmount = 0.0;
+    public boolean overBooking = false;
     Double unsettled;
     public boolean nonrefundable = false;
     
@@ -457,6 +458,22 @@ public class PmsBooking extends DataCommon {
             }
         }
         return false;
+    }
+
+    boolean isWubook() {
+        if(channel != null && channel.contains("wubook")) {
+            return true;
+        }
+        return false;
+    }
+
+    void unmarkOverBooking() {
+        for(PmsBookingRooms room : getAllRoomsIncInactive()) {
+            if(room.isDeleted() && !room.deletedByChannelManagerForModification) {
+                return;
+            }
+        }
+        overBooking = false;
     }
 
     public static class PriceType {

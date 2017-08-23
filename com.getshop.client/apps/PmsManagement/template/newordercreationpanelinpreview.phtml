@@ -32,7 +32,7 @@ $products = $this->getApi()->getProductManager()->getAllProductsLight();
 <div class='createorderpanelinfo'>
     <input type='hidden' value='<?php echo $bookingUser->id; ?>' gsname='userid'>
     <div style="height: 20px;"></div>
-    <span style="border-left: solid 1px #bbb; border-top: solid 1px #bbb; width: 70%; display:inline-block;float:left; box-sizing: border-box;">
+    <span class="createorderpanelinfoLeft" style="">
         <div style='border-bottom: solid 1px #bbb;'>
             <span class='orderUserSelection selectedbooker' booker='<?php echo json_encode($toChangeObject); ?>'>The booker</span>
             <span class='orderUserSelection' show='guestarea'>Guest</span>
@@ -87,19 +87,19 @@ $products = $this->getApi()->getProductManager()->getAllProductsLight();
         </div>
         
         
-        <div style='padding: 10px; border-right: solid 1px #bbb; width: 45%;height: 145px;float:left; display:inline-block;'>
+        <div class="createorderpanelinfoRow1">
             <label style='font-size:12px;'>Name<br><input type='text' gsname='name' style='width:290px;' value='<?php echo $bookingUser->fullName; ?>'></label>
             <label style='font-size:12px;'>Phone<br><input type='text' style='width:70px;' gsname='prefix'   value='<?php echo $bookingUser->prefix; ?>'><input gsname='phone'  type='text' style='width:216px;'  value='<?php echo $bookingUser->cellPhone; ?>'></label>
             <label style='font-size:12px;'>Email<input type='text' gsname='email' style='width:290px;' value='<?php echo $bookingUser->emailAddress; ?>'></label>
         </div>
-        <div style='padding: 10px;width: 45%;heigth: 200px;float:left; display:inline-block;'>
+        <div class="createorderpanelinfoRow2">
             <label style='font-size:12px;'>Address<input gsname='address'  type='text' style='width:290px;' value='<?php echo $bookingUser->address->address; ?>'></label>
             <label style='font-size:12px;'>Postcode + city<br><input gsname='postcode' type='text' style='width:70px;' value='<?php echo $bookingUser->address->postCode; ?>'><input gsname='city' type='text' style='width:216px;' value='<?php echo $bookingUser->address->city; ?>'></label>
             <label style='font-size:12px;'>Country<input gsname='country' type='text' style='width:290px'  value='<?php echo $bookingUser->address->countryname ? $bookingUser->address->countryname : "Norway"; ?>'></label>
         </div>
 
     </span>
-    <span style="border: solid 1px #bbb; width: 30%; display:inline-block;float:left; box-sizing: border-box; padding: 10px; height: 200px;">
+    <span class="createorderpanelinfoRow3">
         <?php
         echo "Payment type:<br>";
         echo "<select class='paymenttypeunsetled' gsname='paymenttype'>";

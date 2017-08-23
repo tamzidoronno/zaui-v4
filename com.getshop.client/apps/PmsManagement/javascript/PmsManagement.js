@@ -111,7 +111,32 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .brregresultentry', app.PmsManagement.brregEntryClick);
         $(document).on('click','.PmsManagement .createnewcustomerbutton', app.PmsManagement.createNewCustomerButton);
         $(document).on('click','.PmsManagement .existinguserselection', app.PmsManagement.selectExistingCustomer);
+        $(document).on('click','.PmsManagement .doverifonepayment', app.PmsManagement.doVerifonePayment);
+        $(document).on('click','.PmsManagement .loadRoomTypes', app.PmsManagement.loadRoomTypes);
     },
+    loadRoomTypes : function() {
+        var event = thundashop.Ajax.createEvent('','loadBookingTypes', $(this), {
+            "bookingid" : $('#openedbookingid').val(),
+            "roomid" : $(this).closest('tr').attr('roomid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.changebookingtypepanel').html(res);
+        });
+    },
+    doVerifonePayment : function() {
+        var event = thundashop.Ajax.createEvent('','processVerifonePayment',$(this), {
+            orderid : $(this).attr('orderid')
+        });
+        
+        var btn = $(this);
+        var showpayment = btn.closest('td').find('.doverifonepayment');
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            btn.hide();
+            showpayment.show();
+        });
+    },
+    
     brregEntryClick : function() {
          $('.nameinput').val($(this).attr('navn'));
          $('.orgidinput').val($(this).attr('orgid'));
@@ -1310,24 +1335,11 @@ app.PmsManagement = {
             });
             thundashop.Ajax.postWithCallBack(event, function(res){
                 td.find('.changebookingitempanel').html(res);
-                var close = $("<i class='fa fa-close' style='float:right;cursor:pointer;'></i>");
-                close.click(function() {
-                    td.find('.changebookingitempanel').fadeOut();
-                    return;
-                });
-                td.find('.changebookingitempanel').prepend(close);
                 td.find('.changebookingitempanel').show();
             });
         } else {
             var row = $(this).closest('.roomattribute');
             var edit = row.find('.editmode');
-            edit.find('.fa-close').remove();
-            var close = $("<i class='fa fa-close' style='float:right;cursor:pointer;'></i>");
-            close.click(function() {
-                edit.fadeOut();
-                return;
-            });
-            edit.prepend(close);
             edit.show();
         }
         

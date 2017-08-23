@@ -1335,24 +1335,11 @@ app.PmsManagement = {
             });
             thundashop.Ajax.postWithCallBack(event, function(res){
                 td.find('.changebookingitempanel').html(res);
-                var close = $("<i class='fa fa-close' style='float:right;cursor:pointer;'></i>");
-                close.click(function() {
-                    td.find('.changebookingitempanel').fadeOut();
-                    return;
-                });
-                td.find('.changebookingitempanel').prepend(close);
                 td.find('.changebookingitempanel').show();
             });
         } else {
             var row = $(this).closest('.roomattribute');
             var edit = row.find('.editmode');
-            edit.find('.fa-close').remove();
-            var close = $("<i class='fa fa-close' style='float:right;cursor:pointer;'></i>");
-            close.click(function() {
-                edit.fadeOut();
-                return;
-            });
-            edit.prepend(close);
             edit.show();
         }
         

@@ -59,7 +59,7 @@
 .PmsManagement .highlight td { background-color:#deff9f !important; }
 .PmsManagement .highlight td .orderforrromview td { background-color: transparent !important; }
 .PmsManagement td .orderforrromview { background-color:#0E0E19 !important; }
-.PmsManagement td .fa-close { color:#fff !important; }
+.PmsManagement td .fa-close { color:#bbb !important; }
 
 .PmsManagement .viewmode:hover { color: green; cursor: pointer; }
 .PmsManagement .guestoverviewtable  td .roompostfix { font-size: 12px; position:relative; }
@@ -255,6 +255,7 @@
     margin-left: 10px;
     cursor: pointer;
 }
+.PmsManagement .managementviewsearchcontainer .fa-search{padding-left:10px;}
 .PmsManagement .manegementviewbutton.fa-refresh{background-color: rgba(0, 0, 0, 0.36);}
 .PmsManagement .manegementviewbutton.fa-refresh:hover{background-color: rgba(0, 0, 0, 0.26);}
 .PmsManagement .manegementviewbutton.fa-undo:hover{background-color: rgba(0, 0, 0, 0.10)}
@@ -373,12 +374,48 @@
 }
 .PmsManagement .changeintervalrow,
 .PmsManagement .statsorderfilter{margin-top:5px;}
+.PmsManagement .ordercreationpanelStepOne{margin-top: 30px; border-bottom: solid 1px; padding-bottom: 10px;}
+.PmsManagement .createorderpanelinfoLeft{
+    border-left: solid 1px #bbb;
+    border-top: solid 1px #bbb;
+    width: 70%;
+    display:inline-block;
+    float:left;
+    box-sizing: border-box;
+}
+.PmsManagement .createorderpanelinfoRow1{
+    padding: 10px;
+    border-right: solid 1px #bbb;
+    width: 45%;
+    height: 145px;
+    float:left; 
+    display:inline-block;
+}
+.PmsManagement .createorderpanelinfoRow2{
+    padding: 10px;
+    width: 45%;
+    height: 200px;
+    float:left;
+    display:inline-block;
+}
+.PmsManagement .createorderpanelinfoRow3{
+    border: solid 1px #bbb;
+    width: 30%;
+    display:inline-block;
+    float:left;
+    box-sizing: border-box;
+    padding: 10px;
+    height: 200px;
+}
 
 @media only all and (max-width:1280px){
     .gseditrowbuttons{display:none !important;}
     .PmsManagement .managementviewinput{
         height:auto;
+        width:98%;
+        background-color:rgba(0,0,0,0);
     }
+    .PmsManagement .managementviewsearchcontainer .fa-search{width:2%;padding:0;}
     .PmsManagement .managementviewdateinput,
     .PmsManagement .managementviewdropdowninput{
         width: 100%;
@@ -389,7 +426,7 @@
     }
     .PmsManagement .managementviewsearchcontainer{padding:5px;width:100%;box-sizing:border-box;margin:3px 0 5px 0;}
     .PmsManagement .manegementviewbutton{
-        width: 30%;
+        width: 32%;
         margin: 0;
         padding: 10px;
         text-align: center;
@@ -400,7 +437,8 @@
     .PmsManagement .managementviewoptions{text-transform: none;letter-spacing: 0; text-shadow: none;}
     
     .PmsManagement table{text-align: center;}
-    .PmsManagement .tdBookingLine{width:30px;}
+    .PmsManagement .tdBookingLine, .PmsManagement .pricecol{width:30px;}
+    .PmsManagement .tdBookingLine1{width: 90px;}
     .PmsManagement th{padding: 6px;letter-spacing: 1px;width:auto;}
     .PmsManagement td{padding:2px 0 2px 0;font-size:12px;width:auto;}
     .PmsManagement .secondary_text{display: none;}
@@ -417,10 +455,12 @@
  
 }
 @media only all and (max-width:800px){
+    .ui-corner-all{display:none !important;}
     .PmsManagement .pmsbutton{padding: 2px;border: 0;border-radius: 0;font-size: 13px;}
     .PmsManagement .managementview_booking_options{overflow-x: auto;}
     .PmsManagement th{padding:0;letter-spacing: 0;font-size: 10px;max-width: 0px !important;font-size:7px;overflow-x: hidden;}
-    .PmsManagement td{font-size:9px;max-width: 80px;overflow: hidden;min-width: 30px;}
+    .PmsManagement td{font-size:9px;max-width: 80px;overflow: hidden;min-width: 30px;height:36px;}
+    .PmsManagement .tdBookingLine1{width: 70px;}
     .PmsManagement .columnfilter{left:40%;}
     .PmsManagement .manegementviewfilterquickopt{
         padding: 10px 4px 10px 4px;
@@ -449,10 +489,10 @@
         width: 100%;
         border: 0;
         box-sizing: border-box;
-        margin-bottom: 12px;
+        margin-bottom: 20px;
         float: none !important;
         border-radius: 0px;
-        padding: 6px;
+        padding: 10px;
         text-align: center;
     }
     .PmsManagement .pmsbutton3{display: block;}
@@ -463,7 +503,7 @@
         box-sizing: border-box;
         margin: 2px 0 2px 0;
         text-align: center;
-        padding: 4px;
+        padding: 6px;
         height: auto;
         box-shadow: inset 0px 0px 6px #1a557b;
         border-radius: 2px;
@@ -474,15 +514,36 @@
     .PmsManagement .statsorderfilter th{padding-top:15px;}
     .PmsManagement .roompostfix {line-height:15px;}
     
-    .PmsManagement .guestoverviewtable .editmode{width: 100%;right: -5%;left: auto;}
+    .PmsManagement .guestoverviewtable .editmode{
+        width: 100% !important;
+        position: fixed;
+        box-sizing: border-box;
+        left: 0;
+        top: 60px;
+    }
     .PmsManagement .guestoverviewtable td,
     .PmsManagement .guestoverviewtable th{width:auto !important;text-align: center;}
     .PmsManagement .changeSorting[gsvalue="regdate"] {display: none;}
     .PmsManagement .noShowMobile{display: none !important;}
+    
+    .PmsManagement .ordercreationpanelStepOne{padding-bottom:25px;}
+    .PmsManagement .additionalroominfobox{left:0 !important;top: 0px !important;width: 100%;}
+    
+    /* */
+    .PmsManagement .createorderpanelinfoLeft{float:none;width: 100%;border: 1px solid #bbb;}
+    .PmsManagement .orderUserSelection {width: 100%;box-sizing: border-box;border:0;}
+
+    .PmsManagement .createorderpanelinfoRow1,
+    .PmsManagement .createorderpanelinfoRow2,
+    .PmsManagement .createorderpanelinfoRow3{width:100%;box-sizing: border-box;float:none;border:0;height:auto;}
+    .PmsManagement .createorderpanelinfoRow1 input,
+    .PmsManagement .createorderpanelinfoRow2 input{width: 100% !important;}
+    .PmsManagement .createorderpanelinfoRow1 input[gsname="prefix"],
+    .PmsManagement .createorderpanelinfoRow2 input[gsname="postcode"]{width:30% !important;}
+    .PmsManagement .createorderpanelinfoRow2 input[gsname="city"],
+    .PmsManagement .createorderpanelinfoRow1 input[gsname="phone"]{width:70% !important;}
 
     /*Following belong to framework.css*/
     #informationbox.PmsManagement td{max-width: 40px;padding:0;margin:0;}
     #infomrationboxclosebutton{width:auto;right: 10px;top: 18px;}
-    
-    
 }

@@ -113,7 +113,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             }
 
             if($header == "actions") {
-                echo "<th class='noShowMobile'width='10' class='changeSorting'>$sort " . $value;
+                echo "<th width='10' class='changeSorting'>$sort " . $value;
                 echo "<div class='excelexportoptions' style='padding: 10px; border: solid 1px; background-color:#d1efff;position:absolute; display:none;color:#000;'>";
                 $this->includefile("excelreportgenerator");
                 echo "</div>";
@@ -242,9 +242,9 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         echo "<tr  class='trBookingLine' bookingid='".$row['bookingid']."'>";
          foreach($selectedFields as $header => $value) {
              if($header == "actions") {
-                echo "<td class='noShowMobile'align='center'>" . $row[$header] . "</td>";
+                echo "<td align='center'>" . $row[$header] . "</td>";
              } else if($header == "periode") {
-                 echo "<td width='110'>" . $row[$header] . "</td>";
+                 echo "<td class='tdBookingLine1'width='110'>" . $row[$header] . "</td>";
              } else if($header == "regdate") {
                  echo "<td class='noShowMobile' width='110'>" . $row[$header] . "</td>";
              } else if($header == "room") {

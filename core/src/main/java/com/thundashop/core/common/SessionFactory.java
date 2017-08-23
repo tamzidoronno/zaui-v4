@@ -130,7 +130,7 @@ public class SessionFactory extends DataCommon {
             return session.getTimeout(user);
         }
         
-        return null;
+        return -1;
     }
     
     public String getOriginalUserId(String sessionId) {

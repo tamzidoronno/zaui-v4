@@ -21,6 +21,28 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function setBookingType() {
+        $bookingId = $_POST['data']['bookingid'];
+        $roomid = $_POST['data']['roomid'];
+        $newType = $_POST['data']['newtype'];
+        
+        $this->getApi()->getPmsManager()->setNewRoomType($this->getSelectedName(), $roomid, $bookingId, $newType);
+        $this->showBookingInformation();
+    }
+    
+    public function loadBookingTypes() {
+        echo "<b>Change room type</b><i class='fa fa-times' style='float:right; cursor:pointer;' onclick='$(\".changebookingtypepanel\").hide()'></i><br>";
+        echo "<input type='hidden' gsname='bookingid' value='".$this->getSelectedBooking()->id."'>";
+        echo "<input type='hidden' gsname='roomid' value='".$_POST['data']['roomid']."'>";
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        echo "<select gsname='newtype'>";
+        foreach($types as $type) {
+            echo "<option value='".$type->id."'>".$type->name."</option>";
+        }
+        echo "</select>";
+        echo "<input type='button' value='Change' gstype='submitToInfoBox'>";
+    }
+    
     public function loadExistingUserList() {
         $userlist = $this->getApi()->getUserManager()->getAllUsersSimple();
         echo "<div style='padding-top: 20px;'></div>";

@@ -886,7 +886,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             filter.prepayment = true;
             filter.endInvoiceAt = end;
             pmsInvoiceManager.clearOrdersOnBooking(newbooking);
-            pmsInvoiceManager.createOrder(newbooking.id, filter);
+            if(!newbooking.overBooking) {
+                pmsInvoiceManager.createOrder(newbooking.id, filter);
+            } else {
+                newbooking.rowCreatedDate = new Date();
+                String text = "An overbooking occured go to your booking admin panel handle it.<br><bR><br>booking dump:<br>" + pmsManager.dumpBooking(newbooking);
+                String email = getStoreEmailAddress();
+                String content = "Possible overbooking happened:<br>" + text;
+                messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
+
+            }
         }
         
         logPrint("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
@@ -1296,10 +1305,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         PmsBooking newbooking = null;
         List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
         List<Integer> allCodesInNewBooking = getAllResCodesForPmsBooking(booking);
+        System.out.println("Searching for ids:");
+        for(Integer test : allCodesInNewBooking) {
+            System.out.println("\t" + test);
+        }
 
         for(PmsBooking pmsbook : allbookings) {
             List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);
+            System.out.println("For booking");
             for(Integer resCode : allCodesOnOldBooking) {
+                System.out.println("\t\t" + resCode);
                 if(allCodesInNewBooking.contains(resCode)) {
                     newbooking = pmsManager.getBooking(pmsbook.id);
                     newbooking.wubookModifiedResId.add(booking.reservationCode);

@@ -112,8 +112,17 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .createnewcustomerbutton', app.PmsManagement.createNewCustomerButton);
         $(document).on('click','.PmsManagement .existinguserselection', app.PmsManagement.selectExistingCustomer);
         $(document).on('click','.PmsManagement .doverifonepayment', app.PmsManagement.doVerifonePayment);
+        $(document).on('click','.PmsManagement .loadRoomTypes', app.PmsManagement.loadRoomTypes);
     },
-    
+    loadRoomTypes : function() {
+        var event = thundashop.Ajax.createEvent('','loadBookingTypes', $(this), {
+            "bookingid" : $('#openedbookingid').val(),
+            "roomid" : $(this).closest('tr').attr('roomid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.changebookingtypepanel').html(res);
+        });
+    },
     doVerifonePayment : function() {
         var event = thundashop.Ajax.createEvent('','processVerifonePayment',$(this), {
             orderid : $(this).attr('orderid')

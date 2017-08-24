@@ -1250,6 +1250,9 @@ thundashop.common.checkWithServerIfLoggedOut = function() {
                 if (response === "notinitted")
                     return;
                 
+                if (response === "" || response == "" || response === null)
+                    return;
+                
                 var res = parseInt(response);
                 
                 var exists = $('input[name="userid_in_body"]').length > 0;

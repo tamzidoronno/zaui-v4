@@ -38,8 +38,10 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
             return;
         }
         
-        System.out.println("Start charging");
         Order order = orderManager.getOrderSecure(orderId);
+        order.payment.paymentType = "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\\VerifoneTerminal";
+        orderManager.saveOrder(order);
+        System.out.println("Start charging: " + order.payment.paymentType);
         this.orderToPay = order;
         Double total = orderManager.getTotalAmount(order)* 100;
         Integer amount = total.intValue();
@@ -133,6 +135,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
 
     private void saveOrderSomeHow(Order orderToPay) {
         System.out.println("############ NEED TO SAVE THIS ORDER HOWEVER WE HAVE LOST THE ORDERMANAGER #################");
+        orderManager.saveOrderInternal(orderToPay);
     }
 
     private void createListener() {

@@ -1570,12 +1570,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public Integer getPingoutTime() {
         if (getSession() == null)
-            return null;
+            return -1;
         
         User user = getSession().currentUser;
         
         if (user == null) {
-            return null;
+            return -1;
         }
         
         return sessionFactory.getTimeout(user, getSession().id);

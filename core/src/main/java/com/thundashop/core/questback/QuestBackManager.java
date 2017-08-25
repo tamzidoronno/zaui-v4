@@ -841,7 +841,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
                 .collect(Collectors.toList());
             
             for (QuestBackQuestion subQuestion : subQuestions) {
-                System.out.println(";"+StringUtils.unescapeHtml3(subQuestion.name)+";;");
+                
                 Page page = pageManager.getPage(subQuestion.pageId);
                 
                 List<ApplicationInstance> instances = page.getCellsFlatList().stream()
@@ -852,14 +852,16 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
                 
                 if (!instances.isEmpty()) {
                     String jsonEncodedAnswers = instances.get(0).getSetting("options");
+                    String type = instances.get(0).getSetting("type");
+                    System.out.println(";"+StringUtils.unescapeHtml3(subQuestion.name)+";"+type+";"+page.id);
                     String headingText = instances.get(0).getSetting("headingtext");
                     if (headingText != null && !headingText.isEmpty()) {
-                        System.out.println(";;;"+StringUtils.unescapeHtml3(headingText)+";");
+                        System.out.println(";;;"+StringUtils.unescapeHtml3(headingText)+";heading");
                     }
                     List<QuestBackOption> options = gson.fromJson(jsonEncodedAnswers, new TypeToken<ArrayList<QuestBackOption>>(){}.getType());
                     if (options != null) {
                         for (QuestBackOption option : options) {
-                            System.out.println(";;;"+StringUtils.unescapeHtml3(option.text)+";");
+                            System.out.println(";;;"+StringUtils.unescapeHtml3(option.text)+";"+option.correctAnswer);
                         }    
                     }
                     

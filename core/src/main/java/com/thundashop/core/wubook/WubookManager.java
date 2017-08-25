@@ -1312,9 +1312,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
         for(PmsBooking pmsbook : allbookings) {
             List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);
-            System.out.println("For booking");
             for(Integer resCode : allCodesOnOldBooking) {
-                System.out.println("\t\t" + resCode);
                 if(allCodesInNewBooking.contains(resCode)) {
                     newbooking = pmsManager.getBooking(pmsbook.id);
                     newbooking.wubookModifiedResId.add(booking.reservationCode);
@@ -1330,7 +1328,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     lowest = id;
                 }
             }
-            if(lowest != null) {
+            if(lowest != null && !booking.reservationCode.equals(lowest+"")) {
                 addBooking(lowest + "");
                 newbooking = findCorrelatedBooking(booking);
             }

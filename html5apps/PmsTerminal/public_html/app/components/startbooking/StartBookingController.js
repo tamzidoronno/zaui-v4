@@ -21,7 +21,7 @@ controllers.StartBookingController = function($scope, $api, $rootScope, $state, 
                 $scope.maxNumberOfRooms = Object.keys(res).length;
                 $scope.maxNumberOfGuestPerRoom = res;
             }
-            $scope.$apply();
+            $scope.$evalAsync();
         });
     };
     
@@ -107,6 +107,8 @@ controllers.StartBookingController = function($scope, $api, $rootScope, $state, 
                 datarepository.bookingid = res.id;
                 $state.transitionTo('base.editbooking');
             });
+        } else {
+            hideWaitingOverLay();
         };
     };
     

@@ -812,6 +812,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     public void checkIfAllIsOk() {
         List<String> sources = getServerSoures();
         for(int h = 0; h < sources.size();h++) {
+            String source = sources.get(h);
+            if(source == null || source.isEmpty()) {
+                source = "default";
+            }
+            
             if(stopUpdatesOnLock) {
                 logPrint("Lock updates stopped");
             }
@@ -838,8 +843,17 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             List<BookingItem> items = bookingEngine.getBookingItems();
             GetShopDevice toSet = null;
             for(GetShopDevice dev : devices.values()) {
-                if(connectedToBookingEngineItem(dev, items) == null && !dev.isSubLock()) {
+                String deviceServerSource = dev.serverSource;
+                if(deviceServerSource == null || deviceServerSource.isEmpty()) {
+                    deviceServerSource = "default";
+                }
+                if(!deviceServerSource.equals(source)) {
                     continue;
+                }
+                if(connectedToBookingEngineItem(dev, items) == null) {
+                    if(!dev.isSubLock()) {
+                        continue;
+                    }
                 }
 
                 if(isUpdatingSource(dev.serverSource)) {
@@ -866,7 +880,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String pass = getPassword(toSet.serverSource);
                 String host = getHostname(toSet.serverSource);
                 boolean useNewQueueCheck = pmsManager.getConfigurationSecure().useNewQueueCheck;
-
+                
                 GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock, useNewQueueCheck);
                 mgr.start();
             }

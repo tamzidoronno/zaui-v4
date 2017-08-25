@@ -75,7 +75,7 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
                     var loadAddon = $api.getApi().PmsManager.getAddonsWithDiscountForBooking($api.getDomainName(), room.pmsBookingRoomId);
                     loadAddon.done(function(res) {
                         $scope.addons[room.pmsBookingRoomId] = res;
-                        $scope.$apply();
+                        $scope.$evalAsync();
                     });
             })(room);
         }
@@ -85,7 +85,7 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
         var loadUser = $api.getApi().UserManager.getUserById(userId);
         loadUser.done(function(res) {
             $scope.user = res;
-            $scope.$apply();
+            $scope.$evalAsync();
         });
     };
     

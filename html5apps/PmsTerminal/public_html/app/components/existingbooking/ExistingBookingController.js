@@ -27,7 +27,7 @@ controllers.ExistingBookingController = function($scope, $api, $rootScope, $stat
             } else {
                 $('.step2found').show();
                 $scope.searchresult = res;
-                $scope.$apply();
+                $scope.$evalAsync();
             }
         });
     }

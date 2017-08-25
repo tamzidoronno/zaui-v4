@@ -20,7 +20,7 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
             $.get("https://api.bring.com/shippingguide/api/postalCode.json?clientUrl=insertYourClientUrlHere&country=no&pnr="+$scope.user.address.postCode, null, function(res) {
                 if(res.valid) {
                     $scope.user.address.city = res.result;
-                    $scope.$apply();
+                    $scope.$evalAsync();
                 }
             });
         }
@@ -36,10 +36,15 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
         if(type !== "prefix") {
             var val = $(event.srcElement).val();
         }
+        
+        if(!$scope.user) {
+            $scope.user = {};
+        }
+        
         if(type === "guest") { $scope.user.fullName = val; }
         if(type === "email") { $scope.user.emailAddress = val; }
         if(type === "prefix") { $scope.user.prefix = $('select[identifier="0_'+room.pmsBookingRoomId+'"]').val(); }
-        if(type === "phone") { $scope.user.cellPhone = val; }
+        if(type === "phone") { $scope.user.cellPhone = parseInt(val); }
     };
     
     $scope.changeRoomTypeOnRoom = function(room, type) {
@@ -54,7 +59,9 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
             if(room.numberOfGuests > room.maxNumberOfGuests) {
                 room.numberOfGuests = res.numberOfGuests;
             }
-            $scope.$apply();
+            if ($scope.$$phase) {
+                $scope.$evalAsync();
+            }
         });
     };
     
@@ -72,7 +79,7 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
                 }
             }
             $scope.doChangeRoomType[room.pmsBookingRoomId] = true;
-            $scope.$apply();
+            $scope.$evalAsync();
         });
     };
     
@@ -105,7 +112,7 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
                     $scope.booking.countryCode = "NO";
                 }
                 
-                $scope.$apply();
+                $scope.$evalAsync();
                 if($scope.booking.userId) {
                     var loadUser = $api.getApi().UserManager.getUserById($scope.booking.userId);
                     loadUser.done(function(res) {
@@ -117,7 +124,7 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
                             $scope.showCompanyInformation();
                         }
                         hideWaitingOverLay();
-                        $scope.$apply();
+                        $scope.$evalAsync();
                     });
                 } else {
                     hideWaitingOverLay();
@@ -135,7 +142,7 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
         var loadNewPrice = $api.getApi().PmsPaymentTerminal.changeGuestCountOnRoom($api.getDomainName(), room.pmsBookingRoomId, room.numberOfGuests);
         loadNewPrice.done(function(res) {
             room.totalCost = res;
-            $scope.$apply();
+            $scope.$evalAsync();
         });
     };
     
@@ -151,9 +158,8 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
         }
         var loadNewPrice = $api.getApi().PmsPaymentTerminal.changeGuestCountOnRoom($api.getDomainName(), room.pmsBookingRoomId, room.numberOfGuests);
         loadNewPrice.done(function(res) {
-            console.log(res);
             room.totalCost = res;
-            $scope.$apply();
+            $scope.$evalAsync();
         });
     };
     

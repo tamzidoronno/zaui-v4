@@ -21,7 +21,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     var now = new Date().getTime();
                     var diff = now - this.lastShownError;
                     if (diff < 1000) {
-                        return; 90670846
+                        return;
                     }
                     
                     this.lastShownError = new Date().getTime();
@@ -71,7 +71,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                 return;
   
             $rootScope.$broadcast("refreshRouteEven1", route);
-            $rootScope.$apply();
+            $rootScope.$evalAsync();
             
         },
                 
@@ -80,7 +80,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                 return;
   
             $rootScope.$broadcast("messageReceived", msg);
-            $rootScope.$apply();
+            $rootScope.$evalAsync();
         },
                 
         this.driverRemoved = function(msg) {
@@ -88,7 +88,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                 return;
   
             $rootScope.$broadcast("driverRemoved", msg);
-            $rootScope.$apply();
+            $rootScope.$evalAsync();
         },
                 
         this.logon = function(fromLogin) {

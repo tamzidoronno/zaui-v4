@@ -16,6 +16,7 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
         $scope.load();
     };
     $scope.load = function() {
+        showWaitingOverLay();
         $scope.loadSummary();
         $scope.loadOrders();
     };
@@ -28,8 +29,10 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
     };
     
     $scope.startIndividualPaymentProcess = function(room) {
+        showWaitingOverLay();
         var payOrder = $api.getApi().PmsPaymentTerminal.payIndividualRoom($api.getDomainName(), room.pmsBookingRoomId);
         payOrder.done(function(orderId) {
+            hideWaitingOverLay();
             $scope.startPaymentProcess(orderId);
         });
     };
@@ -73,7 +76,6 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
                     loadAddon.done(function(res) {
                         $scope.addons[room.pmsBookingRoomId] = res;
                         $scope.$apply();
-                        console.log($scope.addons);
                     });
             })(room);
         }
@@ -118,6 +120,7 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
                 $scope.booking = booking;
                 $scope.loadUser(booking.userId);
                 $scope.loadAdditionalServices();
+                hideWaitingOverLay();
             });
         });
     };

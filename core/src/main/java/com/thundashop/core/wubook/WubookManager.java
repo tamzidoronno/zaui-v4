@@ -838,12 +838,28 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         for(PmsBookingRooms room : newbooking.getActiveRooms()) {
             WubookBookedRoom r = booking.rooms.get(i);
             if(r.breakfasts > 0) {
-                pmsManager.addAddonsToBookingWithCount(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false, r.breakfasts);
+                boolean add = true;
+                for(PmsBookingAddonItem item : pmsManager.getConfigurationSecure().addonConfiguration.values()) {
+                    if(item.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST && item.isIncludedInRoomPrice) {
+                        add = false;
+                    }
+                }
+                if(add) {
+                    pmsManager.addAddonsToBookingWithCount(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false, r.breakfasts);
+                }
             }
             i++;
             try {
                 for(String productId : r.addonsToAdd.keySet()) {
-                    pmsManager.addProductToRoom(productId, room.pmsBookingRoomId, r.addonsToAdd.get(productId));
+                    boolean add = true;
+                    for(PmsBookingAddonItem item : pmsManager.getConfigurationSecure().addonConfiguration.values()) {
+                        if(item.productId != null && item.productId.equals(productId) && item.isIncludedInRoomPrice) {
+                            add = false;
+                        }
+                    }
+                    if(add) {
+                        pmsManager.addProductToRoom(productId, room.pmsBookingRoomId, r.addonsToAdd.get(productId));
+                    }
                 }
             }catch(Exception e) {
                 messageManager.sendErrorNotification("Stack failure in new code change for wubook (when adding)", e);

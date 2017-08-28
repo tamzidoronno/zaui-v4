@@ -4709,6 +4709,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 gsTiming("Subsctracted coupons");
             }
             createUserForBooking(booking);
+            if(userManager.getUserById(booking.userId).suspended) {
+                logPrint("User is suspended." + booking.id);
+                return null;
+            }
             gsTiming("Created user for booking");
             if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay && !booking.overBooking) {
                 booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
@@ -6512,6 +6516,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             row.invoiceAfterStay = discount.supportInvoiceAfter;
             row.preferredPaymentType = user.preferredPaymentType;
             row.hasDiscount = discount.discounts.keySet().size() > 0;
+            row.suspended = user.suspended;
             
             result.add(row);
         }

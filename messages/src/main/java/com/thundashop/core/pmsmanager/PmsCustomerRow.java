@@ -24,6 +24,6 @@ public class PmsCustomerRow {
     public String preferredPaymentType = "";
     public boolean invoiceAfterStay = false;
     public boolean hasDiscount = false;
-    public boolean blocked = false;
+    public boolean suspended = false;
     
 }

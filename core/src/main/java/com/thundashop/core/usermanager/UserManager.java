@@ -1977,6 +1977,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public List<SimpleUser> getAllUsersSimple() {
         List<SimpleUser> result = new ArrayList();
         for(User user : getAllUsers()) {
+            if(user.suspended) {
+                continue;
+            }
             SimpleUser simple = new SimpleUser();
             simple.email = user.emailAddress;
             simple.fullname = user.fullName;

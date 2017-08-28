@@ -72,6 +72,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
     $scope.loadExceptions = function() {
         for (var i in datarepository.exceptions) {
             var ex = datarepository.exceptions[i];
+            console.log($scope.taskType, ex.type) ;
             if (ex.type ===  $scope.taskType) {
                 $scope.exceptions.push(ex);
             }
@@ -247,7 +248,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         var anyCont = false;
         for (var i in $scope.task.orders) {
             var order = $scope.task.orders[i];
-            if ($scope.isPalletOrder(order) || $scope.isCageOrder(order)) {
+            if (!order.exceptionId && ($scope.isPalletOrder(order) || $scope.isCageOrder(order))) {
                 anyCont = true;
             }
         }
@@ -320,6 +321,17 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
             taskId: $scope.task.id, orderId: order.referenceNumber,
             type: 'driverCopies'
         });
+    }
+    
+    $scope.openDeliveryException = function(order) {
+        var params = {
+            destinationId: $stateParams.destinationId,  
+            routeId: $stateParams.routeId, 
+            taskId : $scope.task.id,
+            orderId: order.referenceNumber
+        };
+        
+        $state.transitionTo('base.deliveryexception', params);
     }
     
     $scope.openPickupException = function(order) {
@@ -402,7 +414,7 @@ controllers.TaskController = function($scope, datarepository, $stateParams, $api
         cordova.exec(function(a) { $scope.barcodeReceived(a); }, function(fail) {}, "HoneyWellBarcodeReaderE75", "echo", ["test"])
     }
     
-    if ($state.current.name === "base.taskexceptions" || $state.current.name === "base.pickupexception") {
+    if ($state.current.name === "base.taskexceptions" || $state.current.name === "base.pickupexception" ||  $state.current.name === "base.deliveryexception") {
         $scope.loadExceptions();
     }
     

@@ -9,4 +9,5 @@ public class PmsBookingDateRange implements Serializable {
     public Date end;
     public Date cleaningDate;
     public Date exitCleaningDate;
+    public boolean isDeleted = false;
 }

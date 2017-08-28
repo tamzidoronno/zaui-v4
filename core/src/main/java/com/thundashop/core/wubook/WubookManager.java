@@ -841,6 +841,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 boolean add = true;
                 for(PmsBookingAddonItem item : pmsManager.getConfigurationSecure().addonConfiguration.values()) {
                     if(item.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST && item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
+                        //If this is a default addon, it will be included anyway.
                         add = false;
                     }
                 }
@@ -854,6 +855,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     boolean add = true;
                     for(PmsBookingAddonItem item : pmsManager.getConfigurationSecure().addonConfiguration.values()) {
                         if(item.productId != null && item.productId.equals(productId) && item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
+                            //If this is a default addon, it will be included anyway.
                             add = false;
                         }
                     }

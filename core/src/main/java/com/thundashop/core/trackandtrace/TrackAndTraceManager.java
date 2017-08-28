@@ -857,6 +857,10 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             ((PickupTask)task).setOrderException(orderReferenceNumber, exceptionId);
             saveObjectInternal(task);
         }
+        if (task instanceof DeliveryTask) {
+            ((DeliveryTask)task).setOrderException(orderReferenceNumber, exceptionId);
+            saveObjectInternal(task);
+        }
     }
 
     @Override

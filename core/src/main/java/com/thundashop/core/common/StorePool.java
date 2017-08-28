@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  *
@@ -379,4 +380,11 @@ public class StorePool {
         StoreHandler storeHandler = get(store.id);
         return storeHandler.executeMethodSync(object, types, argumentValues);
    }
+    
+    public void executeGetShopThread(GetShopThread thread) {
+        String sessionId = UUID.randomUUID().toString();
+        storePool.initStoreByStoreId(thread.getStoreId(), sessionId);
+        StoreHandler handler = getStoreHandler(sessionId);
+        handler.executeMethodGetShopThread(thread, sessionId);
+    }
 }

@@ -25,10 +25,14 @@ foreach($resultMatrix as $index => $row) {
     echo "<tr $extra>";
     $rowIndex = 0;
     foreach($row as $cell) {
+        $rowIndexPrint = $rowIndex;
+        if($rowIndex == sizeof($row)-1) {
+            $rowIndexPrint = "total";
+        }
         if($index == "header" && $index != "0") {
-            echo "<th rowindex='$rowIndex'>$cell</th>";
+            echo "<th rowindex='$rowIndexPrint'>$cell</th>";
         } else {
-            echo "<td rowindex='$rowIndex'>$cell</td>";
+            echo "<td rowindex='$rowIndexPrint'>$cell</td>";
         }
         $rowIndex++;
     }

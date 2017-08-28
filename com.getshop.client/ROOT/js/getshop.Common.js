@@ -1250,24 +1250,27 @@ thundashop.common.checkWithServerIfLoggedOut = function() {
                 if (response === "notinitted")
                     return;
                 
+                if (response === "" || response == "" || response === null)
+                    return;
+                
                 var res = parseInt(response);
                 
                 var exists = $('input[name="userid_in_body"]').length > 0;
                 if (!exists)
                     return;
                 
+                if (isNaN(res)) {
+                    return;
+                }
+                
                 var isLoggedIn = $('input[name="userid_in_body"]').val() != "";
                 
-                if (isNaN(res) && isLoggedIn) {
+                if (res > 0 && !isLoggedIn) {
+                    document.location = "/";
+                }
+
+                if (res < 0 && isLoggedIn) {
                     thundashop.common.logout();
-                } else {
-                    if (res > 0 && !isLoggedIn) {
-                        document.location = "/";
-                    }
-                    
-                    if (res < 0 && isLoggedIn) {
-                        thundashop.common.logout();
-                    }
                 }
             }
         });        

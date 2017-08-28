@@ -53,3 +53,22 @@
 .PmsAvailabilityTimeline .is-uploading i{font-size:10px;position:relative;top:3px;padding-right:2px;float:right;}
 .PmsAvailabilityTimeline #toggleRoomoverview{padding:1px;background-color:#ddd;text-align: center;cursor: pointer;}
 .PmsAvailabilityTimeline .flip{transform: rotate(-180deg)}
+
+@media only all and (max-width:800px){
+    .PmsAvailabilityTimeline .timelineoverview th:first-child,
+    .PmsAvailabilityTimeline .timelineoverview td:first-child,
+    .PmsAvailabilityTimeline .detailedview .valueentry_item,
+    .PmsAvailabilityTimeline .detailedview .valueentry_placeholder,
+    .PmsAvailabilityTimeline .room_desc{width: 90px !important;}
+    
+    .PmsAvailabilityTimeline th,
+    .PmsAvailabilityTimeline td,
+    .PmsAvailabilityTimeline .valueentry.date,
+    .PmsAvailabilityTimeline .valueentry{width:50px !important;font-size: 10px;}
+    
+    
+    .PmsAvailabilityTimeline [method="showTimeLine"] input[type="text"],
+    .PmsAvailabilityTimeline [method="showTimeLine"] select{width:100%;box-sizing:border-box;margin-bottom: 4px;}
+    PmsAvailabilityTimeline .ui-corner-all{display:none !important;}
+    
+}

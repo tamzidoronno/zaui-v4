@@ -270,7 +270,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         addUserToSession(user);
         
-        loginHistory.markLogin(user, getSession().id);
+//        loginHistory.markLogin(user, getSession().id);
 //        saveObject(loginHistory);
        
         return user;
@@ -1570,12 +1570,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public Integer getPingoutTime() {
         if (getSession() == null)
-            return null;
+            return -1;
         
         User user = getSession().currentUser;
         
         if (user == null) {
-            return null;
+            return -1;
         }
         
         return sessionFactory.getTimeout(user, getSession().id);
@@ -1986,4 +1986,23 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return result;
     }
 
+    private void dumpSessions() {
+         ConcurrentHashMap<String, ThundashopSession> sessions = sessionFactory.getAllSessions();
+         if(sessions.size() > 100) {
+             for(String sessId : sessions.keySet()) {
+                 ThundashopSession sess = sessions.get(sessId);
+                 String userId = sess.getObject("user");
+                 User user = getUserById(userId);
+                 System.out.println(user.fullName + " : " + sess.getLastActive());
+             }
+         }
+        
+    }
+
+    public void addUserLoggedOnSecure(String userId) {
+        User user = getUserById(userId);
+        if (user != null) {
+            addUserToSession(user);
+        }
+    }
 }

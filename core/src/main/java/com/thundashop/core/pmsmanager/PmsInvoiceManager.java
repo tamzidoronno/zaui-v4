@@ -269,9 +269,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     }
                 }
                 lastOrderId = order.id;
-                
+                boolean saveOrder = false;
                 if(filter.pmsRoomId != null && !filter.pmsRoomId.isEmpty()) {
                     order.attachedToRoom = filter.pmsRoomId;
+                    saveOrder = true;
+                }
+                
+                if(filter.chargeCardAfter != null) {
+                    order.chargeAfterDate = filter.chargeCardAfter;
+                    saveOrder = true;
+                }
+                if(saveOrder) {
                     orderManager.saveOrder(order);
                 }
                 
@@ -465,6 +473,28 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         double diff = totalOnOrders - total;
         if(diff > 1 || diff < -1) {
             messageManager.sendErrorNotification("When creating an order, a diff where created that was not supposed to be ("+diff+"), this happened to order: " + order.incrementOrderId, null);
+        }
+    }
+
+    private void adjustAmountOnOrder(Order order, Double totalAmount) {
+        double now = orderManager.getTotalAmount(order);
+        System.out.println("Need to adjust from :" + now + " to " + totalAmount);
+        double diff = (totalAmount / now);
+
+        for(CartItem item : order.cart.getItems()) {
+            item.getProduct().price *= diff;
+            if(item.itemsAdded != null) {
+                for(PmsBookingAddonItem addonItem : item.itemsAdded) {
+                    addonItem.price *= diff;
+                }
+            }
+            if(item.priceMatrix != null) {
+                for(String date : item.priceMatrix.keySet()) {
+                    Double prices = item.priceMatrix.get(date);
+                    prices *= diff;
+                    item.priceMatrix.put(date, prices);
+                }
+            }
         }
     }
 
@@ -1375,7 +1405,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(!filter.avoidOrderCreation) {
             Order order = createOrderFromCartNew(booking, filter, false);
+            if(order == null) {
+                return "";
+            }
             order.createByManager = "PmsDailyOrderGeneration";
+            if(filter.totalAmount != null && filter.totalAmount > 0) {
+                adjustAmountOnOrder(order, filter.totalAmount);
+            }
             orderManager.saveOrder(order);
             booking.orderIds.add(order.id);
             List<String> uniqueList = new ArrayList<String>(new HashSet<String>( booking.orderIds ));
@@ -1736,6 +1772,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         
+        if(order == null) {
+            return null;
+        }
+        
         order.userId = booking.userId;
         
         if(filter.userId != null && !filter.userId.isEmpty()) { 
@@ -1867,7 +1907,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
             String couponCode = booking.couponCode;
             if(booking.discountType.equals("partnership")) {
-                couponCode = "partnership:" + couponCode.substring(0, couponCode.indexOf(":"));
+                if(couponCode.indexOf(":") >= 0) {
+                    couponCode = "partnership:" + couponCode.substring(0, couponCode.indexOf(":"));
+                }
             }
             Coupon coupon = cartManager.getCoupon(couponCode);
             if(coupon != null) {

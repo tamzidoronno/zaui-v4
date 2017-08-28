@@ -87,6 +87,22 @@ adata = {
         this.save();
     },
     
+    togglePincodeAsking: function() {
+        if (!this.shouldAskForPincode()) {
+            localStorage.setItem("askForPincode", "true");
+        } else {
+            localStorage.setItem("askForPincode", "");
+        }
+    },
+    
+    shouldAskForPincode: function() {
+        if (localStorage.getItem("askForPincode")) {
+            return true;
+        }
+        
+        return false;
+    },
+    
     getPrinters: function() {
         return this.printers;
     },

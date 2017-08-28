@@ -82,7 +82,7 @@ if ($eventHelder) {
         
     }
     .date {
-        padding-top: 60px;
+        padding-top: 80px;
     }
     
     .descriptiontitle {
@@ -122,8 +122,10 @@ if ($eventHelder) {
             <div class="row description">
                 <? echo $event->bookingItemType->description; ?>
             </div>
-            
-            <div class="row date"><? echo $event->location->name; ?> den <? echo date("d. M Y", strtotime($event->mainStartDate)); ?></div>
+            <?
+            setlocale(LC_TIME, 'nb_NO.utf8');
+            ?>
+            <div class="row date"><? echo $event->location->name; ?> den <? echo strftime("%d. %B %G", strtotime($event->mainStartDate)); ?></div>
             
             <div class="row signature">
                 <?

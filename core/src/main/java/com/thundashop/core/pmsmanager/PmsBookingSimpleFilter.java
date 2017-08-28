@@ -29,7 +29,7 @@ public class PmsBookingSimpleFilter {
                 }
             } else {
                 List<PmsBookingRooms> rooms = booking.getActiveRooms();
-                if(filter.includeDeleted) {
+                if(filter.includeDeleted || booking.overBooking) {
                     rooms = booking.getAllRoomsIncInactive();
                 }
                 for(PmsBookingRooms room : rooms) {
@@ -196,6 +196,10 @@ public class PmsBookingSimpleFilter {
         
         if(room.blocked) {
             simple.progressState = "blocked";
+        }
+        
+        if(booking.overBooking) {
+            simple.progressState = "overbooking";
         }
         
         simple.checkedIn = room.checkedin;

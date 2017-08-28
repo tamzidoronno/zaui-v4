@@ -13,5 +13,8 @@ class BankenHotelTheme extends \ThemeApplication implements \Application {
     public function render() {
         
     }
+    public function addScripts() {
+        echo "<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300' rel='stylesheet' type='text/css'>";
+    }
 }
 ?>

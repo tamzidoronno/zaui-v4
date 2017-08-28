@@ -20,7 +20,7 @@
 .PmsCalendar .timeselectionpanel { display: none; position:fixed; border: solid 1px #bbb; background-color:#fff; border-radius: 2px; padding: 3px; font-size: 16px; z-index: 200; }
 .PmsCalendar .dayindicator { position:absolute; left: 0px; top: 0px; border-bottom: solid 1px #efefef; border-right: solid 1px #efefef; padding: 2px; background-color:#bbb; color:#fff; border-bottom-right-radius: 3px; }
 .PmsCalendar .dayorweekdiv{padding-top:70px;}
-.PmsCalendar .dayorweekdivbuttons{padding-top:10px}
+.PmsCalendar .dayorweekdivbuttons{padding-top:10px;}
 
 /* printing the timelines */
 .PmsCalendar .roomrow { box-sizing: border-box; clear:both; margin-bottom: 15px; }
@@ -76,6 +76,7 @@
 
 .PmsCalendar .roomlistmobileouter { padding: 10px; box-sizing: border-box; }
 .PmsCalendar .bottomdesc {position:absolute; width: 100%; bottom: 0px; height: 30%; background-color:rgba(241,241,241,0.9); padding: 10px; box-sizing: border-box; }
+.PmsCalendar .bottomdescshell{border: solid 1px; background-color:#fff; text-align: center; padding-top: 2px; padding-bottom: 2px; position:absolute; bottom: -80px; width:100%;}
 .PmsCalendar .timerow {  height: 60px; padding-left: 60px; position: relative; background-color:#fff; padding-bottom: 2px; }
 .PmsCalendar .timerow .timebox {background-color:rgba(241,241,241,1); line-height: 61px; width: 58px; display:inline-block; position:absolute; left:0px; text-align: center; }
 .PmsCalendar .timerow .halfourbox { width: 100%; display:inline-block; margin-bottom: 1px; box-sizing: border-box; height: 29px; float:left; background-color:rgba(241,241,241,1);}

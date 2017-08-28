@@ -1,0 +1,104 @@
+body {font-family: "Exo", "open-sans";color:#555;}
+.gsmobileheader { display:none; }
+.selectcolors { display:none; }
+.gs_page_width {max-width: 1100px;margin: 0 auto;}
+
+.gsarea[area="header"] {position: relative;z-index: 2;top:0px;width: 100%;background:#fff;text-align: center;}
+.gsarea[area="header"] .Menu .entry .entries {top: 30px;background:rgba(255,255,255,1);}
+.gsarea[area="header"] .Menu .entry.active a div{opacity: 0.7;filter: alpha(opacity=70);}
+.gsarea[area="header"] .Menu .entry .entries div {padding: 0px;width: 200px;text-align: left;}
+.gsarea[area="header"] .Menu .entry div i {display: block;font-size: 30px;}
+.gsarea[area="header"] .Menu .entry  div {font-size: 14px;line-height: 25px;margin: 15px 0 15px 0;padding: 0 20px 0 20px;text-align: center;color:#555;}
+.gsarea[area="header"] .Menu .menuentries, .Menu .menu_simple_menu, .Menu .menuentries .entry{cursor:default;}
+.gsarea[area="header"] .Menu .menuentries.horizontal, .Menu .menu_simple_menu, .Menu .menuentries.horizontal .entry{cursor:default;}
+.gsarea[area="header"] .Menu .menuentries.horizontal .entries .entry .entries{box-shadow:0 0 2px #555;}
+.gsarea[area="header"] .Menu .menuentries.horizontal .entries .entry .entries .entry{border-bottom:1px solid #efefef;}
+
+.gsarea[area="footer"] {background: #f5f5f5;box-shadow: 0px 0px 3px #bbb;color:#555;min-height: 150px;}
+
+.PmsBooking .pmsfront1{font-size:13px;}
+.shop_button,
+.PmsPricing .pmsbutton,
+.PmsManagement .pmsbutton,
+.BookingEngineManagement .pmsbutton,
+.PmsConfiguration .pmsbutton{
+    display:inline-block;
+    color:#fff;
+    background:#44c767;
+    border:1px solid #e6e6e6;
+    border-radius: 2px;
+    line-height:25px;
+    height:25px;
+    font-size:16px;
+    font-family: Arial;
+    text-shadow: 0px 1px 0px rgba(47, 102, 39, 0.5);
+    padding:2px 10px 2px 10px;
+    margin-top:5px;
+}
+.shop_button:hover,
+.PmsPricing .pmsbutton:hover,
+.PmsManagement .pmsbutton:hover,
+.BookingEngineManagement .pmsbutton:hover,
+.PmsConfiguration .pmsbutton:hover{
+    background-color:#43bb63;
+    border-color:0;
+}
+.PmsConfiguration .pmsbutton.active{background-color:#fff;color:#44c767;border-color:#44c767;}
+.PmsPricing .selectedpriceplan{background-color:#fff;color:#44c767;border-color:#44c767;}
+.PmsPricing .selectedpriceplan:hover{background-color:#fff;color:#44c767;border-color:#44c767;}
+
+.ProductLists .slidelist .product {font-size: 16px;}
+.ProductLists .slidelist .product .price {position: absolute;top: 0px;right: 120px;font-size: 26px;font-weight: bold;}
+.ProductLists .slidelist .product .title {font-size: 25px;}
+.ProductLists .slidelist .product .image {display: inline-block;padding: 20px;}
+.ProductLists .slidelist .product .image img {width: 430px;display: inline-block;vertical-align: top;border-radius: 15px;}
+.ProductLists .slidelist .product .descriptionarea {
+    display: inline-block;
+    width: 500px;
+    border: solid 1px #F1F1F1;
+    vertical-align: top;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.BookingEngineManagement .addGroupOptions input,
+.PmsManagement .pmsinput{padding:3px;}
+.PmsManagement .bookinginfo select,
+.PmsManagement .bookinginfo input{font-size:14px;border:1px solid #bdbdbd;background-color:#fff;}
+.PmsManagement .pmsbutton[gstype="submitToInfoBox"],
+.PmsManagement .pmsbutton.closeadduser{line-height:15px;height:15px;font-size: 14px;max-width: 100px;box-sizing: initial !important;}
+.PmsManagement .pmsbutton.showlog{background-color: #146da6 !important;color:#fff !important;}
+.PmsManagement .tabs .tab{border-color:#fff;margin-right:5px;border-radius: 0;background-color:#146da6;color:#fff;font-weight:700;letter-spacing:1.5px;}
+.PmsManagement .tabs .tab.selected{border-color:#146da6;color:#146da6;}
+.PmsManagement .tabarea{border-top-color:#146da6;}
+.PmsManagement .viewmode:hover { color:#146da6;}
+.PmsManagement .selectedbooker{background-color:#146da6;}
+
+.PmsConfiguration .createPmsViewinput {position:relative;top:-2px;padding:5px;margin-right:5px;}
+.PmsConfiguration .paymentlinks input{width:49.2%!important;height:23px !important;}
+.PmsConfiguration .paymentlinks .webadressclass{width:42%!important;height:23px !important;}
+.PmsConfiguration #createproductinput{position:relative;top:-1px;padding:5px;}
+.PmsConfiguration .configentry select[gsname="locktype"]{width:172px;}
+.PmsConfiguration .configentry select[gsname="bookingProfile"]{width:125px;}
+
+.PmsCalendar .dayorweekdiv{padding-top:50px;}
+.PmsCalendar .dayorweekdivbuttons{padding-top:40px;}
+.PmsBookingContactData .choosecompany_label{
+    display:none;
+    opacity:0;
+    z-index:-1;
+}
+
+@media only all and (max-width:800px){
+    .Menu .mobilenavigatemenu{font-size:20px;}
+    .Menu .menuentries.horizontal{background-color:#fff;}
+    .PmsCalendar .singleroomoverview {padding-top: 40px !important;}
+    .PmsCalendar .pmscalendarmobilemenudiv{display:none;}
+    .PmsCalendar .capasity{display:none;}
+    .PmsCalendar .textdescription{padding-top:4px;}
+    .PmsCalendar .bottomdesc{height:33%;}
+    .PmsCalendar .singleroomentry div:first-child{
+        background-position:center;
+        background-size:cover;
+    }
+}

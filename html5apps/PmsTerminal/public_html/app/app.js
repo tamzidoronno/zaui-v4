@@ -29,9 +29,9 @@ angular.module('TrackAndTrace')
         window.scroll(0,0);
     });
     
-   // if ( localStorage.getItem("username") == null || localStorage.getItem("password") === "") {
-   //     $location.path( "/login" );
-    if ($location.$$path === "") {
+    if ( localStorage.getItem("username") == null || localStorage.getItem("password") === "") {
+        $location.path( "/login" );
+    } else if ($location.$$path === "") {
         $location.path( "/home" );
     }
  })
@@ -106,3 +106,29 @@ angular.module('TrackAndTrace').run(function($state, $api) {
         
     });
 });
+
+var timeout = (new Date).getTime();
+
+$(document).on('keyup', function() { timeout = (new Date).getTime(); });
+$(document).on('mouseup', function() { timeout = (new Date).getTime(); });
+
+function idleTimeout() {
+    var diff = ((new Date).getTime() - timeout)/1000;
+    if(diff > 260) {
+        
+    }
+    if(diff > 300) {
+        window.location.href="/pmsterminal/";
+    }
+    setTimeout(idleTimeout, "1000");
+}
+
+function showWaitingOverLay() {
+    $('.waitoverlay').show();
+}
+
+function hideWaitingOverLay() {
+    $('.waitoverlay').hide();
+}
+
+idleTimeout();

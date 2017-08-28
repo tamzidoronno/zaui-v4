@@ -1072,11 +1072,12 @@ public class PmsManagerProcessor {
 
     private void pingServers() {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, -60);
+        cal.add(Calendar.MINUTE, -240);
         Date anHourAgo = cal.getTime();
         
         PmsConfiguration config = manager.getConfigurationSecure();
-        for(PmsLockServer server : config.lockServerConfigs.values()) {
+        for(String name : config.lockServerConfigs.keySet()) {
+            PmsLockServer server = config.lockServerConfigs.get(name);
             if(server.isGetShopHotelLock() || server.isGetShopLockBox()) {
                 PingServerThread pthread = new PingServerThread(server);
                 pthread.start();
@@ -1089,13 +1090,13 @@ public class PmsManagerProcessor {
             if(anHourAgo.after(server.lastPing)) {
                 if(!server.beenWarned) {
                     server.beenWarned = true;
-                    manager.messageManager.sendErrorNotification("Lost connection with server: " + server.arxHostname, null);
+                    manager.messageManager.sendErrorNotification("Lost connection with server: " + server.arxHostname + " lost connection at: " + server.lastPing + ") name: " + name, null);
                     manager.saveConfiguration(config);
                 }
             } else {
                 if(server.beenWarned) {
                     server.beenWarned = false;
-                    manager.messageManager.sendErrorNotification("Connection to server : " + server.arxHostname + " reestablished.", null);
+                    manager.messageManager.sendErrorNotification("Connection to server : " + server.arxHostname + " reestablished, name: " + name + ", where down since: " + server.lastPing, null);
                     manager.saveConfiguration(config);
                 }
             }

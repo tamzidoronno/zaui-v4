@@ -1,0 +1,79 @@
+body{background-color:#f9f9f9;font-family: 'Source Sans Pro', sans-serif;font-size:15px;}
+.gs_page_width{max-width:1200px;margin:0 auto;}
+.shop_button {
+    border-radius: 0px;
+    color: #FFF;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: none;
+    background-color:#00a5ea;
+    font-size:18px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+.shop_button:hover{background: none;background-color:#20b0ec;}
+
+.gsarea[area="header"]{background-color:#272729;padding:0 0 10px 0;}
+.gsarea[area="header"] .Menu {margin-top:30px;text-align:center}
+.gsarea[area="header"] .Menu a {color: #f9f9f9;font-size: 15px;text-shadow: 0px 1px 2px rgba(0,0,0,0.5);}
+.gsarea[area="header"] .Menu .entry{cursor:default;}
+.gsarea[area="header"] .Menu .entry a div{padding:8px 20px 7px 20px;}
+.gsarea[area="header"] .Menu .entry:hover{background-color:#20b0ec;}
+.gsarea[area="header"] .Menu .entry.active{border-bottom:0px solid #f9f9f9;background-color:#00a5ea;box-shadow:inset 0px 2px 3px #272729;}
+.gsarea[area="header"] .Menu .entry .entries{
+    text-align:left;
+    background-color: rgba(39, 39, 41, 0.8);
+    left:0;
+    top:32px;
+    border:solid #272729;
+    border-width:13px 0 0 0px;
+    width:450px;
+}
+.gsarea[area="body"]{padding:40px 0 40px 0;min-height:647px;}
+.gsarea[area="body"] .gs_page_width{background-color:#fff;box-shadow:0px 2px 2px #888;padding:20px;}
+
+.gsarea[area="footer"]{background-color:#272729;color:#f9f9f9;box-shadow: inset 0px 0px 20px #000;padding:50px 0 50px 0;}
+
+
+.PmsCalendar .roomname{font-size:14px;}
+.PmsCalendar .dayentry.selected{color:#f7931d !important;}
+.PmsCalendar .tinycalendar{background-color:#00a5ea;}
+.PmsCalendar .day:hover{background-color:#00a5ea !important;opacity:0.5;}
+.PmsCalendar .dayorweekdiv div:first-child span{z-index:-1;}
+.PmsBookingContactData .complete_button{background-color:#00a5ea;margin-right:0;}
+
+
+@media only all and (max-width:800px){
+
+    .gsarea[area="header"] {padding:10px 0 10px 0;}
+    .gsarea[area="header"] .Menu {margin:0;}
+    .gsarea[area="header"] .Menu a {font-size:14px;}
+    .gsarea[area="header"] .Menu .entries {border-bottom: 5px solid #00a5ea;}
+    .gsarea[area="header"] .Menu .entry .entries{top:0;width:100%;background-color:#1d4659;}
+    .gsarea[area="header"] .Menu .menuentries.horizontal{background-color:#272729;}
+    .gsarea[area="header"] .Menu .mobilenavigatemenu {display:inline-block;}
+    .gsarea[area="header"] .Menu .mobilenavigatemenu .fa{
+        visibility:hidden;
+        z-index:30;
+        font-size:27px;
+        user-select:none;
+        color:#fff;
+        position:absolute;
+        top:-30px;
+        right:-50px;
+    }
+    .gsarea[area="header"] .Menu .mobilenavigatemenu .fa:before{visibility:visible;}
+    .gsarea[area="body"]{min-height:200px;}
+    .gsarea[area="body"] .gs_page_width{padding:10px; margin:0 20px 0 20px;}
+    
+    .PmsCalendar .pmscalendarmobilemenudiv{display:none;}
+    .PmsCalendar .capasity{display:none;}
+    .PmsCalendar .singleroomentry{position:relative;top:0 !important;z-index:0;}
+    .PmsCalendar .bottomdesc{height:auto;}
+    .PmsCalendar .bottomdescshell{left:-1px;}
+    .PmsCalendar .singleroomoverview{padding-top:90px !important;}
+    .PmsCalendar .singleroomentry div:first-child{
+        background-position:center;
+        background-size:cover;
+    }
+}

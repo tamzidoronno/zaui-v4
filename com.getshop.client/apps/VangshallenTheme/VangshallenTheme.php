@@ -13,5 +13,9 @@ class VangshallenTheme extends \ThemeApplication implements \Application {
     public function render() {
         
     }
+    public function addScripts() {
+        echo "<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>";
+        echo "<link href='https://fonts.googleapis.com/css?family=Love+Ya+Like+A+Sister' rel='stylesheet' type='text/css'>";
+    }
 }
 ?>

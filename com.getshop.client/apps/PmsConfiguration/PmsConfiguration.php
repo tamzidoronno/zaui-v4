@@ -137,6 +137,9 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
         $products = $this->getApi()->getProductManager()->getAllProducts();
         echo "<table cellspacing='0' cellpadding='0'>";
         foreach($products as $product) {
+            if(!$product->name) {
+                continue;
+            }
             echo "<tr>";
             echo "<td>" . $product->name . "</td>";
             echo "<td>";

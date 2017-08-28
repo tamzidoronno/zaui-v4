@@ -11,6 +11,7 @@ controllers.SettingsController = function($scope, $rootScope, $api, datareposito
     $scope.datarepository = datarepository;
     
     $scope.standalone = datarepository.isStandAlone();
+    $scope.shouldAskForPincode = datarepository.shouldAskForPincode();
     
     $scope.starteda = false;
     $scope.startedc = false;
@@ -39,6 +40,10 @@ controllers.SettingsController = function($scope, $rootScope, $api, datareposito
         resturantManager.getRooms().done(function(res) { $scope.startedc = false; datarepository.setRooms(res); $scope.$apply(); } )
         storeApplicationPool.getActivatedPaymentApplications().done(function(res) { datarepository.setActivatedPaymentMethods(res); $scope.$apply(); } )
         storePrintManager.getPrinters().done(function(res) { datarepository.setPrinters(res); $scope.$apply(); } )
+    }
+    
+    $scope.togglePincodeAsking = function() {
+        datarepository.togglePincodeAsking();
     }
     
     $scope.goBack = function() {

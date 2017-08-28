@@ -31,5 +31,13 @@ public class Payment implements Serializable {
         }
         return "";
     }
+    
+    public String getPaymentTypeId() {
+        String type = paymentType;
+        type = type.replaceAll("ns_", "");
+        type = type.substring(0, type.indexOf("\\"));
+        type = type.replace("_", "-");
+        return type;
     }
+}
 

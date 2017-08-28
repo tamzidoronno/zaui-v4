@@ -459,7 +459,7 @@ a[href^=tel] { color: inherit; }
 }
 
 #informationboxmiddle {
-    width: 990px;
+    width: 100%;
     margin-top: 20px;
     margin-left: 0px;
     margin-right: 0px;
@@ -2729,3 +2729,14 @@ select.gsniceselect1:active {
 .gserrorfield { display: none; color: red; }
 .gserrorinput { border-color: red !important; }
 .cancelImpersonation { cursor: pointer; }
+
+@media only all and (max-width:800px){
+    .gsbody_inner.gseditormode {
+        margin-left: 0;
+    }
+    .gsbody_inner.gscanchangelayout{
+        border:0;
+        margin-right:0;
+    }
+
+}

@@ -62,6 +62,7 @@ $states['ended'] = "Ended";
 $states['waitingforlock'] = "Cleaning needed";
 $states['test'] = "Test";
 $states['blocked'] = "Blocked";
+$states['overbooking'] = "OVERBOOKING";
 $channels = $this->getChannelMatrix();
 
 $allFieldsToPrint = array();
@@ -113,7 +114,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
 
             if($header == "actions") {
                 echo "<th width='10' class='changeSorting'>$sort " . $value;
-                echo "<div class='excelexportoptions' style='padding: 10px; border: solid 1px; background-color:#fff;position:absolute; display:none;'>";
+                echo "<div class='excelexportoptions' style='padding: 10px; border: solid 1px; background-color:#d1efff;position:absolute; display:none;color:#000;'>";
                 $this->includefile("excelreportgenerator");
                 echo "</div>";
                 echo "</th>";
@@ -238,16 +239,16 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         $tableArray[] = $row;
     }
     foreach($tableArray as $row) {
-        echo "<tr bookingid='".$row['bookingid']."'>";
+        echo "<tr  class='trBookingLine' bookingid='".$row['bookingid']."'>";
          foreach($selectedFields as $header => $value) {
              if($header == "actions") {
                 echo "<td align='center'>" . $row[$header] . "</td>";
              } else if($header == "periode") {
-                 echo "<td width='110'>" . $row[$header] . "</td>";
+                 echo "<td class='tdBookingLine1'width='110'>" . $row[$header] . "</td>";
              } else if($header == "regdate") {
-                 echo "<td width='110'>" . $row[$header] . "</td>";
+                 echo "<td class='noShowMobile' width='110'>" . $row[$header] . "</td>";
              } else if($header == "room") {
-                 echo "<td width='150'>" . $row[$header] . "</td>";
+                 echo "<td class='tdBookingLine' width='150'>" . $row[$header] . "</td>";
              } else if($header == "price") {
                  echo "<td class='pricecol' width='70' align='center'>" . $row[$header] . "</td>";
              } else if($header == "state") {
@@ -256,7 +257,7 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
                  echo $row['stateadditional'];
                  echo "</td>";
              } else {
-                 echo "<td>" . $row[$header] . "</td>";
+                 echo "<td style='text-align:left;'>" . $row[$header] . "</td>";
              }
          }
         echo "</tr>";
@@ -270,3 +271,15 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
             <br>
         </td>
 </table>
+<script>
+    $(window).width(addClickableTr);
+    $(window).resize(addClickableTr);
+    
+    var addClickableTr = function(){
+        if($(window).width() <= '800'){
+            $('.trBookingLine').addClass('moreinformationaboutbooking');
+        }else{
+            $('.trBookingLine').removeClass('moreinformationaboutbooking');
+        }
+    };
+</script>

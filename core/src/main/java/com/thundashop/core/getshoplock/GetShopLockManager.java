@@ -22,6 +22,7 @@ import com.thundashop.core.pmsmanager.PmsLockServer;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.TimeRepeater;
 import java.lang.reflect.Type;
+import java.net.ConnectException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -239,7 +240,6 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
 
     private void checkDoorsWithOpeningHours() {
-        System.out.println("Check opening hours on doors");
         for(GetShopDevice dev : devices.values()) {
             if(dev.openingHoursData != null) {
                 TimeRepeater data = new TimeRepeater();
@@ -458,13 +458,13 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                 return; 
                             }
 
-                            logPrint("\t Need to add code to offsett: " + offset + " (" + device.name + ")" +  " - added to lock : " + code.addedToLock + ",code refreshed: " + code.codeRefreshed + ", in use: " + code.inUse() + ", need to be removed: " + code.needToBeRemoved + ", slot: " + code.slot);
+                            logPrint("\t Need to add code to offsett: " + offset + " (" + device.name + ")" +  " - added to lock : " + code.addedToLock + ",code refreshed: " + code.codeRefreshed + ", in use: " + code.inUse() + ", need to be removed: " + code.needToBeRemoved + ", slot: " + code.slot + "(code: " + code.code + ")");
                             setCode(offset, code.fetchCodeToAddToLock(), true);
                             try {
                                 GetShopHotelLockCodeResult result = getSetCodeResult(offset);
                                 waitForEmptyQueue();
                                 if(result != null && result.hasCode != null && result.hasCode.value != null && result.hasCode.value.equals(true)) {
-                                    logPrint("\t\t Code alread set... should not be on offset: " + offset + " (" + device.name + ")");
+                                    logPrint("\t\t Code alread set... should not be on offset: " + offset + " (" + device.name + ")"  + "(code: " + code.code + ")");
                                 } else {
                                     if(code.needForceRemove()) {
                                         code.addedToLock = null;
@@ -472,7 +472,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                         device.needSaving = true;
                                         break;
                                     }
-                                    logPrint("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")" + ", id: " + device.zwaveid);
+                                    logPrint("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")" + ", id: " + device.zwaveid  + "(code: " + code.code + ")");
                                     for(int j = 0; j < 24; j++) {
                                         setCode(offset, code.fetchCodeToAddToLock(), false);
                                         waitForEmptyQueue();
@@ -480,7 +480,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                         if(res != null && res.hasCode != null && res.hasCode.value != null && res.hasCode.value.equals(true)) {
                                             code.setAddedToLock();
                                             device.needSaving = true;
-                                            logPrint("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")");
+                                            logPrint("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")"  + "(code: " + code.code + ")");
                                             codesAdded++;
                                             added = true;
                                             break;
@@ -532,8 +532,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String postfix = "ZWave.zway/Run/devices["+device.zwaveid+"].SendNoOperation()";
                 postfix = URLEncoder.encode(postfix, "UTF-8");
                 String address = "http://"+hostname+":8083/" + postfix;
-                GetshopLockCom.httpLoginRequest(address,username,password);
-               
+                try {
+                    GetshopLockCom.httpLoginRequest(address,username,password);
+                }catch(ConnectException e) {
+                    logPrint("Failed to connect to address: " + address + " message: " + e.getMessage());
+                    return false;
+                }
                 waitForEmptyQueue();
                  
                 postfix = "ZWave.zway/Run/devices["+device.zwaveid+"]";
@@ -595,7 +599,13 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             while(true) {
                 try {
                     String address = "http://"+hostname+":8083/" + postfix;
-                    String res = GetshopLockCom.httpLoginRequest(address,username,password);
+                    String res = "";
+                    try {
+                        res = GetshopLockCom.httpLoginRequest(address,username,password);
+                    }catch(ConnectException d) {
+                        logPrint("Exception, server does not responde for store: " +storeId + " message: " + d.getMessage() + ", address: " + address);
+                        return;
+                    }
                     if(useNewQueueCheck && isDoneProcessingQueue(res)) {
                         break;
                     }
@@ -606,6 +616,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                     Thread.sleep(2000);
                 }catch(Exception e) {
                     logPrintException(e);
+                    return;
                 }
                 if(cal.getTime().before(new Date())) {
                     logPrint("z-way: queue did not empty within timeout.");
@@ -801,6 +812,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     public void checkIfAllIsOk() {
         List<String> sources = getServerSoures();
         for(int h = 0; h < sources.size();h++) {
+            String source = sources.get(h);
+            if(source == null || source.isEmpty()) {
+                source = "default";
+            }
+            
             if(stopUpdatesOnLock) {
                 logPrint("Lock updates stopped");
             }
@@ -827,8 +843,17 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             List<BookingItem> items = bookingEngine.getBookingItems();
             GetShopDevice toSet = null;
             for(GetShopDevice dev : devices.values()) {
-                if(connectedToBookingEngineItem(dev, bookingEngine.getBookingItems()) == null && !dev.isSubLock()) {
+                String deviceServerSource = dev.serverSource;
+                if(deviceServerSource == null || deviceServerSource.isEmpty()) {
+                    deviceServerSource = "default";
+                }
+                if(!deviceServerSource.equals(source)) {
                     continue;
+                }
+                if(connectedToBookingEngineItem(dev, items) == null) {
+                    if(!dev.isSubLock()) {
+                        continue;
+                    }
                 }
 
                 if(isUpdatingSource(dev.serverSource)) {
@@ -845,13 +870,17 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
 
             if(toSet != null) {
+                PmsLockServer server = getLockServerForDevice(toSet);
+                if(server != null && server.doNotResponde()) {
+                    continue;
+                }
                 toSet.beingUpdated = true;
                 toSet.lastTriedUpdate = new Date();
                 String user = getUsername(toSet.serverSource);
                 String pass = getPassword(toSet.serverSource);
                 String host = getHostname(toSet.serverSource);
                 boolean useNewQueueCheck = pmsManager.getConfigurationSecure().useNewQueueCheck;
-
+                
                 GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock, useNewQueueCheck);
                 mgr.start();
             }

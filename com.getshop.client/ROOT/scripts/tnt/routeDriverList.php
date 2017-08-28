@@ -7,12 +7,18 @@ $factory = IocContainer::getFactorySingelton();
 $factory->getApi()->getUserManager()->logOn($_GET['username'], $_GET['password']);
 $routeId = isset($_GET["routeId"]) ? $_GET["routeId"] : "";
 
-$routes = $factory->getApi()->getTrackAndTraceManager()->getRoutesById($routeId);
-if (!$routes) {
-    echo "Route not found";
-    die();
+
+$ids = $factory->getApi()->getTrackAndTraceManager()->getRouteIdsThatHasNotCompleted();
+$retData = array();
+foreach ($ids as $id) {
+    $routes = $factory->getApi()->getTrackAndTraceManager()->getRoutesById($id);
+    $routeData = new stdClass();
+    $routeData->routeId = $id;
+    $routeData->logs = $routes[0]->driverLogs;
+    $retData[] = $routeData;
 }
 
-echo json_encode($routes[0]->driverLogs);
+echo json_encode($retData);
+    
 
 ?>

@@ -13,9 +13,7 @@ import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
 
 public class PmsBookingAddonItem extends TranslationHandler implements Serializable {
-
-
-    public static class AddonTypes {
+public static class AddonTypes {
         public static Integer BREAKFAST = 1;
         public static Integer PARKING = 2;
         public static Integer LATECHECKOUT = 3;
@@ -41,7 +39,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public boolean dependsOnGuestCount = false;
     public boolean isIncludedInRoomPrice = false;
     public String channelManagerAddonText = "";
-    List<String> includedInBookingItemTypes = new ArrayList();
+    public List<String> includedInBookingItemTypes = new ArrayList();
     public String addedBy;
     public List<PmsBookingAddonItemValidDateRange> validDates = new ArrayList();
     public boolean atEndOfStay;
@@ -55,6 +53,8 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     
     @Transient
     public String name = "";
+    boolean addedToRoom = false;
+
     
     public boolean isValidForPeriode(Date start, Date end, Date regDate) {
         if(validDates == null || validDates.isEmpty()) {

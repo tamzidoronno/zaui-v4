@@ -1,6 +1,7 @@
 ###### framework ######
 Add actionpoint;-;
 Add day;-;
+Advanced add;-;
 Archive;-;
 Artcenter;-;
 Booking value;-;
@@ -27,10 +28,12 @@ Make a reservation;-;
 Need collecting;-;
 No Results!;-;
 No key set yet, please add the API key provided by mailchimp.;-;
+No publications added.;-;
 Note on invoice;-;
 Number of attendees in group;-;
 Other news;-;
 Paid;-;
+Please check your the invoice email address;-;
 Resend confirmation;-;
 Sales count;-;
 Search;-;

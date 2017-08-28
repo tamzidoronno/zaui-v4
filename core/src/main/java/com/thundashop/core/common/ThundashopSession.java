@@ -74,5 +74,9 @@ public class ThundashopSession  implements Serializable {
         long timeLeft = (sessionTimeOutTime - timePassed) / 1000;
         return (int)timeLeft;
     }
+
+    public Date getLastActive() {
+        return lastActive;
+    }
     
 }

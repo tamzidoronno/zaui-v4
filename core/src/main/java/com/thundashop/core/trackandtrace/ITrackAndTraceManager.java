@@ -60,6 +60,9 @@ public interface ITrackAndTraceManager {
     public void loadData(String base64, String fileName);
     
     @Editor
+    public void loadDataBase64(String base64, String fileName);
+    
+    @Editor
     public List<DataLoadStatus> getLoadStatuses();
     
     @Editor
@@ -170,4 +173,8 @@ public interface ITrackAndTraceManager {
     
     @Customer
     public void markInstructionAsRead(String destinationId, Date date);
+   
+    @Editor
+    public List<String> getRouteIdsThatHasNotCompleted();
+
 }

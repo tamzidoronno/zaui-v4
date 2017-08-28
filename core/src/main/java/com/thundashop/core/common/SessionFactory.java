@@ -130,7 +130,7 @@ public class SessionFactory extends DataCommon {
             return session.getTimeout(user);
         }
         
-        return null;
+        return -1;
     }
     
     public String getOriginalUserId(String sessionId) {
@@ -138,4 +138,13 @@ public class SessionFactory extends DataCommon {
         ThundashopSession session = getSession(sessionId);
         return session.getObject("user");
     }
+
+    public void cleanSession() {
+        sessions.clear();
+    }
+
+    public ConcurrentHashMap<String, ThundashopSession> getAllSessions() {
+        return sessions;
+    }
+
 }

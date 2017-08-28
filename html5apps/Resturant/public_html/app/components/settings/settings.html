@@ -10,6 +10,9 @@
     <div style="font-size: 20px; margin-top: 30px;">
         <input type='checkbox' ng-model="standalone" ng-click="toggleStandalone()"/> Is standalone ?
     </div>
+    <div style="font-size: 20px; margin-top: 30px;">
+        <input type='checkbox' ng-model="shouldAskForPincode" ng-click="togglePincodeAsking()"/> Should ask for pincode when adding to room ?
+    </div>
     <br/>
     Active payment methods:
     <div ng-repeat='method in datarepository.paymentMethods '>

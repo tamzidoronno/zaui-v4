@@ -840,7 +840,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(r.breakfasts > 0) {
                 boolean add = true;
                 for(PmsBookingAddonItem item : pmsManager.getConfigurationSecure().addonConfiguration.values()) {
-                    if(item.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST && item.isIncludedInRoomPrice) {
+                    if(item.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST && item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
                         add = false;
                     }
                 }
@@ -853,7 +853,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 for(String productId : r.addonsToAdd.keySet()) {
                     boolean add = true;
                     for(PmsBookingAddonItem item : pmsManager.getConfigurationSecure().addonConfiguration.values()) {
-                        if(item.productId != null && item.productId.equals(productId) && item.isIncludedInRoomPrice) {
+                        if(item.productId != null && item.productId.equals(productId) && item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
                             add = false;
                         }
                     }

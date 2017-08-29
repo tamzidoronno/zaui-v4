@@ -3018,6 +3018,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
+        if(start.after(end)) {
+            return 0;
+        }
         if (!isOpen(itemType, start, end)) {
             return 0;
         }

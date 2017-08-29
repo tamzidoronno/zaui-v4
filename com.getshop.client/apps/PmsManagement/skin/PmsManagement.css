@@ -408,7 +408,7 @@
     height: 200px;
 }
 
-@media only all and (max-width:1280px){
+@media only all and (max-width:800px){
     .gseditrowbuttons{display:none !important;}
     .PmsManagement .managementviewinput{
         height:auto;

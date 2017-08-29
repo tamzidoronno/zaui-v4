@@ -41,6 +41,11 @@ class PmsBooking extends \WebshopApplication implements \Application {
         $booking->sessionStartDate = $range->start;
         $booking->sessionEndDate = $range->end;
         $booking->rooms = array();
+        
+        if(isset($_GET['coupon'])) {
+            $booking->couponCode = $_GET['coupon'];
+        }
+        
         $count = $this->getApi()->getBookingEngine()->getAvailbleItems($this->getSelectedName(), 
                 $room->bookingItemTypeId, 
                 $this->convertToJavaDate(strtotime($range->start)), 

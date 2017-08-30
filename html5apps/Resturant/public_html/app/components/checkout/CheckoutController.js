@@ -28,7 +28,7 @@ controllers.CheckoutController = function($scope, $rootScope, $api, $state, data
             })
             
             $scope.noRoomsFound = $scope.roomsWithProducts.length < 1;
-            $scope.$apply();
+            $scope.$evalAsync();
         })
     }
     

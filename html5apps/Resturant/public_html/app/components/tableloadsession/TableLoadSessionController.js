@@ -9,7 +9,7 @@ controllers.TableLoadSessionController = function($scope, $rootScope, $api, $sta
         var resturantManager = $api.getApi().ResturantManager;
         resturantManager.getAllSessionsForTable($scope.table.id).done(function(res) {
             $scope.sessions = res;
-            $scope.$apply();
+            $scope.$evalAsync();
             console.log(res);
         })
     }

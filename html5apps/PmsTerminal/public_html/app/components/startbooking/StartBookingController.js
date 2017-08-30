@@ -7,11 +7,13 @@ controllers.StartBookingController = function($scope, $api, $rootScope, $state, 
     $scope.maxNumberOfRooms = 0;
     
     $scope.setNightsCount = function(count) {
+        showWaitingOverLay();
         var startObject = {};
         startObject.numberOfNights = count;
         var checkRoomCount = $api.getApi().PmsPaymentTerminal.getMaxNumberOfRooms($api.getDomainName(), startObject);
         $scope.notAvailable = false;
         checkRoomCount.done(function(res) {
+            hideWaitingOverLay();
             if(Object.keys(res).length === 0) {
                 $scope.notAvailable = true;
             } else {
@@ -19,7 +21,7 @@ controllers.StartBookingController = function($scope, $api, $rootScope, $state, 
                 $scope.maxNumberOfRooms = Object.keys(res).length;
                 $scope.maxNumberOfGuestPerRoom = res;
             }
-            $scope.$apply();
+            $scope.$evalAsync();
         });
     };
     
@@ -75,6 +77,7 @@ controllers.StartBookingController = function($scope, $api, $rootScope, $state, 
     
     
     $scope.startBooking = function() {
+        showWaitingOverLay();
         var startObject = {};
         
         $scope.errorOccured = false;
@@ -100,9 +103,12 @@ controllers.StartBookingController = function($scope, $api, $rootScope, $state, 
             }
             var startbooking = $api.getApi().PmsPaymentTerminal.startBooking($api.getDomainName(), startObject);
             startbooking.done(function(res) {
+                hideWaitingOverLay();
                 datarepository.bookingid = res.id;
                 $state.transitionTo('base.editbooking');
             });
+        } else {
+            hideWaitingOverLay();
         };
     };
     

@@ -83,7 +83,8 @@ public class StoreHandler {
         
         scope.setStoreId(storeId, inObject.multiLevelName, getSession(inObject.sessionId));
         Class getShopInterfaceClass = loadClass(inObject.realInterfaceName);
-        setSessionObject(inObject.sessionId, getShopInterfaceClass, inObject);
+        IUserManager userManager = getManager(IUserManager.class, getShopInterfaceClass, inObject);
+        setSessionObject(inObject.sessionId, userManager);
 
         Class aClass = loadClass(inObject.interfaceName);
         Method executeMethod = getMethodToExecute(aClass, inObject.method, types, argumentValues);
@@ -294,8 +295,7 @@ public class StoreHandler {
         }
     }
 
-    private void setSessionObject(String sessionId, Class getShopInterfaceClass, JsonObject2 inObject) {
-        IUserManager userManager = getManager(IUserManager.class, getShopInterfaceClass, inObject);
+    private void setSessionObject(String sessionId, IUserManager userManager) {
 
         Session session = getSession(sessionId);
                 
@@ -611,5 +611,28 @@ public class StoreHandler {
     
     public String getStoreId() {
         return storeId;
+    }
+
+    public synchronized void executeMethodGetShopThread(GetShopThread thread, String sessionId) {
+        initMultiLevels(storeId, getSession(sessionId)); 
+        scope.setStoreId(storeId, thread.getMultiLevelName(), getSession(sessionId));
+        UserManager manager = getManager(UserManager.class, null, null);
+        setSessionObject(sessionId, manager);
+        
+        if (thread.getUserId() != null) {
+            manager.addUserLoggedOnSecure(thread.getUserId());
+            setSessionObject(sessionId, manager);
+        }
+        
+        try {
+            thread.execute();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        if (thread.getUserId() != null) {
+            manager.logout();
+        }
+        clearSessionObject();
     }
 }

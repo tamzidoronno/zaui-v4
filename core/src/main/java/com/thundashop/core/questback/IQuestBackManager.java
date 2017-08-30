@@ -136,4 +136,7 @@ public interface IQuestBackManager {
     
     @Administrator
     public void assignTestsToUsers(List<String> testIds, List<String> userids);
+    
+    @Administrator
+    public String exportToExcel();
 }

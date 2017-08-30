@@ -16,6 +16,38 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         $this->includefile("settings");
     }
     
+    
+    public function initBooking() {
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        /* @var $booking \core_pmsmanager_PmsBooking */
+        $range = new \core_pmsmanager_PmsBookingDateRange();
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+        $start = strtotime(date("d.m.Y", strtotime($_GET['start'])) . " " . $config->defaultStart);
+        $range->start = $this->convertToJavaDate($start);
+        if(isset($_GET['end'])) {
+            $end = strtotime(date("d.m.Y", strtotime($_GET['end'])) . " " . $config->defaultEnd);
+            $range->end = $this->convertToJavaDate($end);
+        }
+        
+        $room = new \core_pmsmanager_PmsBookingRooms();
+        $room->bookingItemTypeId = $_GET['type'];
+        $room->date = $range;
+        
+        $booking->sessionStartDate = $range->start;
+        $booking->sessionEndDate = $range->end;
+        $booking->rooms = array();
+        $count = $this->getApi()->getBookingEngine()->getAvailbleItems($this->getSelectedName(), 
+                $room->bookingItemTypeId, 
+                $this->convertToJavaDate(strtotime($range->start)), 
+                $this->convertToJavaDate(strtotime($range->end)));
+        if($count > 0) {
+            $booking->rooms[] = $room;
+        }
+        
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+    }
+    
+    
     function getDates($year) {
         $dates = array();
         
@@ -173,6 +205,9 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
     public function render() {
         if($this->needToBeCleared()) {
             $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
+        }
+        if(isset($_GET['type'])) {
+            $this->initBooking();
         }
         if(!$this->getSelectedName()) {
             echo "Please specify a booking engine first";

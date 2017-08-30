@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsInvoiceManager {
-    
+
     private boolean avoidChangeInvoicedTo;
     private boolean avoidChangingInvoicedFrom;
     private List<String> roomIdsInCart = null;
@@ -1405,6 +1405,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(!filter.avoidOrderCreation) {
             Order order = createOrderFromCartNew(booking, filter, false);
+            if(order == null) {
+                return "";
+            }
             order.createByManager = "PmsDailyOrderGeneration";
             if(filter.totalAmount != null && filter.totalAmount > 0) {
                 adjustAmountOnOrder(order, filter.totalAmount);
@@ -1769,6 +1772,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         
+        if(order == null) {
+            return null;
+        }
+        
         order.userId = booking.userId;
         
         if(filter.userId != null && !filter.userId.isEmpty()) { 
@@ -1900,7 +1907,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
             String couponCode = booking.couponCode;
             if(booking.discountType.equals("partnership")) {
-                couponCode = "partnership:" + couponCode.substring(0, couponCode.indexOf(":"));
+                if(couponCode.indexOf(":") >= 0) {
+                    couponCode = "partnership:" + couponCode.substring(0, couponCode.indexOf(":"));
+                }
             }
             Coupon coupon = cartManager.getCoupon(couponCode);
             if(coupon != null) {

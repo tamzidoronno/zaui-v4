@@ -1,7 +1,7 @@
 <?php
  /* @var $this ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */
 ?>
-<table cellspacing='0' cellpadding='0' width='100%'>
+<table cellspacing='0' cellpadding='0' width='100%' gstype='form' method='doAccountAction'>
     <tr>
         <th>Id</th>
         <th align='left'>Customer name</th>
@@ -19,7 +19,7 @@
     foreach($users as $user) {
         $name = $user->name ? $user->name : "Unkown name";
         echo "<tr class='customertablerow loadAccountInformation' userid='".$user->userId."'>";
-        echo "<td align='center'>" . $user->customerId . "</td>";
+        echo "<td align='center'><input type='checkbox' gsname='user_".$user->userId."'></input> " . $user->customerId . "</td>";
         echo "<td>$name</td>";
         echo "<td align='center'>" . $user->customerType . "</td>";
         echo "<td align='center'>" . $user->numberOfBookings . "</td>";
@@ -31,6 +31,9 @@
         }
         if($user->hasDiscount) {
             echo " <i class='fa fa-dollar' title='This user has a discount'></i>";
+        }
+        if($user->suspended) {
+            echo " <i class='fa fa-ban' style='color:red;' title='This user has been suspended'></i>";
         }
         echo "</td>";
         echo "<td align='center'>";
@@ -46,9 +49,13 @@
         echo "</td>";
         echo "</tr>";
     }
-    echo "<tr><td colspan='200'><br><center>Row count : " . sizeof($users)  . "<br><br></center></td></tr>";
+    echo "<tr><td colspan='200'><br>"
+    . "<select gsname='action'><option value='disableaccounts'>Suspend account(s)</option></select>"
+            . "<input type='button' value='Go' gstype='submit'></input>"
+            . "<center>Row count : " . sizeof($users)  . "<br><br></center></td></tr>";
     ?>
 </table>
+
 
 <style>
     .customertablerow { cursor:pointer; }

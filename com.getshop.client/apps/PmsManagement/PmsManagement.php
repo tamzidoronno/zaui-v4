@@ -21,6 +21,42 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function doAccountAction() {
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "user_") && $val == "true") {
+                $userId = str_replace("user_", "", $key);
+                $user = $this->getApi()->getUserManager()->getUserById($userId);
+                if($_POST['data']['action'] === "disableaccounts") {
+                    $user->suspended = !$user->suspended;
+                    $this->getApi()->getUserManager()->saveUser($user);
+                }
+            }
+        }
+    }
+    
+    public function setBookingType() {
+        $bookingId = $_POST['data']['bookingid'];
+        $roomid = $_POST['data']['roomid'];
+        $newType = $_POST['data']['newtype'];
+        
+        $res = $this->getApi()->getPmsManager()->setNewRoomType($this->getSelectedName(), $roomid, $bookingId, $newType);
+        echo "<div style='color:red;padding-top:10px; padding-bottom: 10px;'>" . $res . "</div>";
+        $this->showBookingInformation();
+    }
+    
+    public function loadBookingTypes() {
+        echo "<b>Change room type</b><i class='fa fa-times' style='float:right; cursor:pointer;' onclick='$(\".changebookingtypepanel\").hide()'></i><br>";
+        echo "<input type='hidden' gsname='bookingid' value='".$this->getSelectedBooking()->id."'>";
+        echo "<input type='hidden' gsname='roomid' value='".$_POST['data']['roomid']."'>";
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+        echo "<select gsname='newtype'>";
+        foreach($types as $type) {
+            echo "<option value='".$type->id."'>".$type->name."</option>";
+        }
+        echo "</select>";
+        echo "<input type='button' value='Change' gstype='submitToInfoBox'>";
+    }
+    
     public function loadExistingUserList() {
         $userlist = $this->getApi()->getUserManager()->getAllUsersSimple();
         echo "<div style='padding-top: 20px;'></div>";
@@ -775,6 +811,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->getApi()->getWubookManager()->markCCInvalid($this->getSelectedName(), $booking->wubookreservationid);
             $this->getApi()->getPmsManager()->failedChargeCard($this->getSelectedName(), $order->id, $booking->id);
         }
+    }
+    
+    public function processVerifonePayment() {
+          $this->getApi()->getVerifoneManager()->chargeOrder($_POST['data']['orderid'], 0);
+//        echo "TEST";
     }
     
     public function runProcessor() {

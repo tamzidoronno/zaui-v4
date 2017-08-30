@@ -838,12 +838,30 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         for(PmsBookingRooms room : newbooking.getActiveRooms()) {
             WubookBookedRoom r = booking.rooms.get(i);
             if(r.breakfasts > 0) {
-                pmsManager.addAddonsToBookingWithCount(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false, r.breakfasts);
+                boolean add = true;
+                for(PmsBookingAddonItem item : pmsManager.getConfigurationSecure().addonConfiguration.values()) {
+                    if(item.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST && item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
+                        //If this is a default addon, it will be included anyway.
+                        add = false;
+                    }
+                }
+                if(add) {
+                    pmsManager.addAddonsToBookingWithCount(PmsBookingAddonItem.AddonTypes.BREAKFAST, room.pmsBookingRoomId, false, r.breakfasts);
+                }
             }
             i++;
             try {
                 for(String productId : r.addonsToAdd.keySet()) {
-                    pmsManager.addProductToRoom(productId, room.pmsBookingRoomId, r.addonsToAdd.get(productId));
+                    boolean add = true;
+                    for(PmsBookingAddonItem item : pmsManager.getConfigurationSecure().addonConfiguration.values()) {
+                        if(item.productId != null && item.productId.equals(productId) && item.includedInBookingItemTypes.contains(room.bookingItemTypeId)) {
+                            //If this is a default addon, it will be included anyway.
+                            add = false;
+                        }
+                    }
+                    if(add) {
+                        pmsManager.addProductToRoom(productId, room.pmsBookingRoomId, r.addonsToAdd.get(productId));
+                    }
                 }
             }catch(Exception e) {
                 messageManager.sendErrorNotification("Stack failure in new code change for wubook (when adding)", e);
@@ -886,7 +904,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             filter.prepayment = true;
             filter.endInvoiceAt = end;
             pmsInvoiceManager.clearOrdersOnBooking(newbooking);
-            pmsInvoiceManager.createOrder(newbooking.id, filter);
+            if(!newbooking.overBooking) {
+                pmsInvoiceManager.createOrder(newbooking.id, filter);
+            } else {
+                newbooking.rowCreatedDate = new Date();
+                String text = "An overbooking occured go to your booking admin panel handle it.<br><bR><br>booking dump:<br>" + pmsManager.dumpBooking(newbooking);
+                String email = getStoreEmailAddress();
+                String content = "Possible overbooking happened:<br>" + text;
+                messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
+
+            }
         }
         
         logPrint("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
@@ -1046,7 +1073,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
 
                 for(String orderId : book.orderIds) {
-                    Order order = orderManager.getOrder(orderId);
+                    Order order = orderManager.getOrderSecure(orderId);
                     if(order.status == Order.Status.PAYMENT_COMPLETED) {
                         book.ignoreNoShow = true;
                         pmsManager.saveBooking(book);
@@ -1296,6 +1323,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         PmsBooking newbooking = null;
         List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
         List<Integer> allCodesInNewBooking = getAllResCodesForPmsBooking(booking);
+        System.out.println("Searching for ids:");
+        for(Integer test : allCodesInNewBooking) {
+            System.out.println("\t" + test);
+        }
 
         for(PmsBooking pmsbook : allbookings) {
             List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);
@@ -1315,7 +1346,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     lowest = id;
                 }
             }
-            if(lowest != null) {
+            if(lowest != null && !booking.reservationCode.equals(lowest+"")) {
                 addBooking(lowest + "");
                 newbooking = findCorrelatedBooking(booking);
             }

@@ -458,13 +458,13 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                 return; 
                             }
 
-                            logPrint("\t Need to add code to offsett: " + offset + " (" + device.name + ")" +  " - added to lock : " + code.addedToLock + ",code refreshed: " + code.codeRefreshed + ", in use: " + code.inUse() + ", need to be removed: " + code.needToBeRemoved + ", slot: " + code.slot);
+                            logPrint("\t Need to add code to offsett: " + offset + " (" + device.name + ")" +  " - added to lock : " + code.addedToLock + ",code refreshed: " + code.codeRefreshed + ", in use: " + code.inUse() + ", need to be removed: " + code.needToBeRemoved + ", slot: " + code.slot + "(code: " + code.code + ")");
                             setCode(offset, code.fetchCodeToAddToLock(), true);
                             try {
                                 GetShopHotelLockCodeResult result = getSetCodeResult(offset);
                                 waitForEmptyQueue();
                                 if(result != null && result.hasCode != null && result.hasCode.value != null && result.hasCode.value.equals(true)) {
-                                    logPrint("\t\t Code alread set... should not be on offset: " + offset + " (" + device.name + ")");
+                                    logPrint("\t\t Code alread set... should not be on offset: " + offset + " (" + device.name + ")"  + "(code: " + code.code + ")");
                                 } else {
                                     if(code.needForceRemove()) {
                                         code.addedToLock = null;
@@ -472,7 +472,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                         device.needSaving = true;
                                         break;
                                     }
-                                    logPrint("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")" + ", id: " + device.zwaveid);
+                                    logPrint("\t\t We are ready to set code to " +  offset + " attempt: " + i + " (" + device.name + ")" + ", id: " + device.zwaveid  + "(code: " + code.code + ")");
                                     for(int j = 0; j < 24; j++) {
                                         setCode(offset, code.fetchCodeToAddToLock(), false);
                                         waitForEmptyQueue();
@@ -480,7 +480,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                                         if(res != null && res.hasCode != null && res.hasCode.value != null && res.hasCode.value.equals(true)) {
                                             code.setAddedToLock();
                                             device.needSaving = true;
-                                            logPrint("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")");
+                                            logPrint("\t\t Code was successfully set on offset " + offset + "(" + j + " attempt)"+ " (" + device.name + ")"  + "(code: " + code.code + ")");
                                             codesAdded++;
                                             added = true;
                                             break;
@@ -812,6 +812,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     public void checkIfAllIsOk() {
         List<String> sources = getServerSoures();
         for(int h = 0; h < sources.size();h++) {
+            String source = sources.get(h);
+            if(source == null || source.isEmpty()) {
+                source = "default";
+            }
+            
             if(stopUpdatesOnLock) {
                 logPrint("Lock updates stopped");
             }
@@ -838,8 +843,17 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             List<BookingItem> items = bookingEngine.getBookingItems();
             GetShopDevice toSet = null;
             for(GetShopDevice dev : devices.values()) {
-                if(connectedToBookingEngineItem(dev, items) == null && !dev.isSubLock()) {
+                String deviceServerSource = dev.serverSource;
+                if(deviceServerSource == null || deviceServerSource.isEmpty()) {
+                    deviceServerSource = "default";
+                }
+                if(!deviceServerSource.equals(source)) {
                     continue;
+                }
+                if(connectedToBookingEngineItem(dev, items) == null) {
+                    if(!dev.isSubLock()) {
+                        continue;
+                    }
                 }
 
                 if(isUpdatingSource(dev.serverSource)) {
@@ -866,7 +880,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 String pass = getPassword(toSet.serverSource);
                 String host = getHostname(toSet.serverSource);
                 boolean useNewQueueCheck = pmsManager.getConfigurationSecure().useNewQueueCheck;
-
+                
                 GetshopLockCodeManagemnt mgr = new GetshopLockCodeManagemnt(toSet, user, pass, host, items, stopUpdatesOnLock, useNewQueueCheck);
                 mgr.start();
             }

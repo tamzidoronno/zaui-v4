@@ -111,7 +111,41 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .brregresultentry', app.PmsManagement.brregEntryClick);
         $(document).on('click','.PmsManagement .createnewcustomerbutton', app.PmsManagement.createNewCustomerButton);
         $(document).on('click','.PmsManagement .existinguserselection', app.PmsManagement.selectExistingCustomer);
+        $(document).on('click','.PmsManagement .doverifonepayment', app.PmsManagement.doVerifonePayment);
+        $(document).on('click','.PmsManagement .loadRoomTypes', app.PmsManagement.loadRoomTypes);
+        getshop.WebSocketClient.addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", app.PmsManagement.displayVerifoneFeedBack);
     },
+    displayVerifoneFeedBack : function(res) {
+        if(res.msg === "completed") {
+            app.PmsManagement.reloadtab();
+        } else {
+            $('.verifonefeedbackdata').show();
+            $('.verifonefeedbackdata').html(res.msg);
+        }
+    },
+    loadRoomTypes : function() {
+        var event = thundashop.Ajax.createEvent('','loadBookingTypes', $(this), {
+            "bookingid" : $('#openedbookingid').val(),
+            "roomid" : $(this).closest('tr').attr('roomid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.changebookingtypepanel').html(res);
+        });
+    },
+    doVerifonePayment : function() {
+        var event = thundashop.Ajax.createEvent('','processVerifonePayment',$(this), {
+            orderid : $(this).attr('orderid')
+        });
+        
+        var btn = $(this);
+        var showpayment = btn.closest('td').find('.doverifonepayment');
+        
+        thundashop.Ajax.postWithCallBack(event, function() {
+            btn.hide();
+            showpayment.show();
+        });
+    },
+    
     brregEntryClick : function() {
          $('.nameinput').val($(this).attr('navn'));
          $('.orgidinput').val($(this).attr('orgid'));
@@ -139,7 +173,10 @@ app.PmsManagement = {
         app.PmsManagement.doChangeUser(btn,view, userId);
     },
     
-    loadAccountInformation : function() {
+    loadAccountInformation : function(event) {
+        if($(event.target).is(':checkbox')) {
+            return;
+        }
         var event = thundashop.Ajax.createEvent('','setQuickFilter',$(this),{
             "type" : "subtype_accountoverview",
             "userid" : $(this).attr('userid')

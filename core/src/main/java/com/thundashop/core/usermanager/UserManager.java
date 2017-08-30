@@ -1570,12 +1570,12 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public Integer getPingoutTime() {
         if (getSession() == null)
-            return null;
+            return -1;
         
         User user = getSession().currentUser;
         
         if (user == null) {
-            return null;
+            return -1;
         }
         
         return sessionFactory.getTimeout(user, getSession().id);
@@ -1977,6 +1977,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public List<SimpleUser> getAllUsersSimple() {
         List<SimpleUser> result = new ArrayList();
         for(User user : getAllUsers()) {
+            if(user.suspended) {
+                continue;
+            }
             SimpleUser simple = new SimpleUser();
             simple.email = user.emailAddress;
             simple.fullname = user.fullName;
@@ -1999,4 +2002,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
     }
 
+    public void addUserLoggedOnSecure(String userId) {
+        User user = getUserById(userId);
+        if (user != null) {
+            addUserToSession(user);
+        }
+    }
 }

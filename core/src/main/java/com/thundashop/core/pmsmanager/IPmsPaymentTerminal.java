@@ -20,6 +20,12 @@ public interface IPmsPaymentTerminal {
     public List<PaymentTerminalSearchResult> findBookings(String phoneNumber);
     
     @Administrator
+    public PmsBooking getBooking(String bookingId);
+    
+    @Administrator
+    public String payIndividualRoom(String pmsBookingRoomId);
+    
+    @Administrator
     public List<PmsOrderSummary> getOrderSummary(String bookingId);
     
     @Administrator

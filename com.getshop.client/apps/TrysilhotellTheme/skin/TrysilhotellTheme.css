@@ -1,33 +1,105 @@
 .gsmobileheader { display:none; }
-.gs_page_width{max-width:1100px;margin:auto;}
-.gsarea[area="header"]{width:100%;background-color: #f4f3f1;box-shadow: inset 0px 0px 15px rgba(34, 34, 28, 0.2);font-family: "Exo";}
-.gsarea[area="header"] .gs_page_width{
-    height:auto;
-    padding:0;
-    max-width:1100px;
-    background-color:rgba(0,0,0,0);
+body{color:#222;font-family:"Source Sans Pro", sans-serif;}
+a{color:#e09400;}
+.gsarea[area="header"]{width:100%;background-color: #272729;max-height:90px;min-height:76px;border-bottom:3px solid #fff;}
+.gsarea[area="header"] .gs_page_width{height:auto;padding:0;max-width:1160px;background-color:rgba(0,0,0,0);}
+.gsarea[area="header"] .gs_page_width, .gs_page_width{max-width:1160px;margin:auto;}
+.gsarea[area="header"] .Menu{margin-top:45px;text-align:right;}
+.gsarea[area="header"] .Menu .entry{margin-right:20px;height:20px;}
+.gsarea[area="header"] .Menu .entry .entries{
+    width:auto;
+    white-space:nowrap;
+    text-align:left;
+    padding:0 10px;
+    margin:0;
+    background-color:rgba(0,0,0,.8);
+    z-index:3;
+    box-shadow:0 0;
 }
-.gsarea[area="header"] .Menu{margin-top:50px;text-align:left;}
-.gsarea[area="header"] .Menu .entry{margin-right:40px;}
-.gsarea[area="header"] .Menu .entry .entries{background-color:#fff;width:260px;box-shadow:0px 0px 2px #bbb;}
 .gsarea[area="header"] .Menu .entry a{font-size:15px;color:#555;}
-.gsarea[area="header"] .Menu .menuentries.horizontal .entry .entries{margin-top:10px;}
-.gsarea[area="header"] .Menu .menuentries.horizontal .entry .entries .entry{padding:20px;}
-.gsarea[area="header"] .Menu .entry a div{font-size:15px;color:#555;line-height:0;text-transform:none;font-weight:500;letter-spacing:0px;}/*Midlertidig*/
+.gsarea[area="header"] .Menu .entry a div{font-size:15px;color:#555;line-height:0;text-transform:none;font-weight:500;letter-spacing:0px;text-transform:uppercase;line-height:1;color:#fff;}
+.gsarea[area="header"] .Menu .entry.active div{padding:2px 0 2px 2px;border-left:3px solid #fff;}
+.gsarea[area="header"] .Menu .entry.active .entries{opacity:1 !important;}
+.gsarea[area="header"] .Menu .entry.active .entries div{border-left:0 !important;}
 
-.gsarea[area="header"] .Menu .entry.active div{opacity:0.7;text-shadow:1px 1px #fff;}
+.gsarea[area="header"] .Menu .menuentries.horizontal .entry .entries {margin:0;top:18px;}
+.gsarea[area="header"] .Menu .menuentries.horizontal .entry .entries .entry{padding: 10px;border-bottom: 1px solid #efefef;height:auto;width:100%;box-sizing:border-box;}
+.gsarea[area="header"] .Menu .menuentries.horizontal .entry .entries .entry a div{height:auto;}
+.gsarea[area="header"] .Menu .menuentries.horizontal .entry .entries .entry:last-child{border:0;}
+
+
+.shop_button{
+    border-radius:0;
+    border-bottom:1px solid #222;
+    color:#fff;
+    background: #00509d;
+    background: -webkit-gradient(linear,left top,left bottom,from(#0079bc),to(#00509d));
+    background: -moz-linear-gradient(top,#0079bc,#00509d);
+    
+}
+.shop_button:hover{opacity:0.9;}
+
+.gs_language_selection{border:0;right:10px;}
+.gs_language_selection .gs_lang_code_nb_NO{
+    background-image: url(/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images//flag_norwegian.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 35px;
+}
+.gs_language_selection .gs_lang_code_en_en{
+    background-image: url(/showApplicationImages.php?appNamespace=ns_26a517ac_c519_412b_9266_59df49355c82&image=skin/images//flag_english.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 30px;
+}
 .gsarea[area="body"]{padding:0;min-height:660px;}
+.gsarea[area="body"] .gs_page_width {background-color:#fff;padding:10px;}
 
+/*PMS DESIGN*/
+.PmsBooking{position:absolute;top:-570px;right:50px;width:40%;text-transform:uppercase;letter-spacing:1px;z-index:2;}
+.PmsBooking .pmsfront1 {border:0;background-color: rgba(0,0,0,0.75);color:#fff;}
+.PmsBooking .pmsfront .fa-calendar{padding-right:10px;padding-left:4px;}
+.PmsBooking .dates_inner{padding:0;}
+.PmsBooking .pmsfront .dates input{width:70px;}
+.PmsBooking .dates_inner,.PmsBooking .pmsfront .fa-calendar{background-color:rgba(0,0,0,0) !important;} 
+.PmsBooking select option{background-color:#393939;}
+.PmsBooking input ,.PmsBooking select{padding:8px !important;background-color:rgba(255,255,255,0) !important;color:#fff;cursor:pointer;}
 .PmsBookingCalendar .calendar .calendar_header,
 .PmsBookingCalendar .calendar .day.selected,
 .PmsBookingProductList .continue_button,
 .PmsBookingProductList .complete_button,
-.PmsBooking .pmsfront .fa-calendar,
-.PmsBooking .pmsfront .check_available_button{background:#2b4075;}
-.PmsBooking .pmsfront {font-size:13px;}
+.PmsBooking .pmsfront .check_available_button{
+    border:0;
+    background: #00509d;
+    background: -webkit-gradient(linear,left top,left bottom,from(#0079bc),to(#00509d));
+    background: -moz-linear-gradient(top,#0079bc,#00509d);
+}
+.PmsBookingProductList .continue_button.disabled{background:#efefef !important;}
+.PmsBooking .pmsfront .check_available_button:hover{background:#00509d !important;box-shadow:inset 0px 0px 3px #000;}
+.PmsBooking .pmsfront .dates input{padding:10px;}
 
 .PmsBookingSummary .discountbutton{color:#000;}
 .PmsBookingSummary .discountbutton.selected{color: #2b4075;border-width: 2px;font-weight: bold;cursor:default;}
+
 @media only all and (max-width:800px){
     .gsarea[area="header"] .gs_page_width {height:auto;padding-bottom:30px;}
+    .gsarea[area="header"] .Menu{margin-top:0;top:36px;}
+    .gsarea[area="header"] .Menu i{visibility:hidden;color:#fff;font-size:26px;right:-50px;position:absolute;}
+    .gsarea[area="header"] .Menu i:before{visibility:visible;}
+    .gsarea[area="header"] .Menu .menuentries.horizontal{text-align:center;top:43px;}
+    .gsarea[area="header"] .Menu .entry{height:auto;margin:0;padding:10px;}
+    .gsarea[area="header"] .Menu .entry .entries{padding:0;white-space:normal;top:4px !important;background-color: rgba(7, 11, 56, 0.5);}
+    
+    .PmsBooking{position:relative;top: 0;width: 100%;box-sizing: border-box;left: 0;}
+    .PmsBooking .pmsfront1{background-color:#272729;}
+    .PmsBookingMyBookingList td, .PmsBookingMyBookingList th{width:auto;padding:0;font-size:9px;letter-spacing:0;}
+    
+    .gscell_253.gs_page_width{padding:0 !important;}
+    .gscell_62.gsucell{margin:0;}
+    .gscell_246.gsucell {top:0 !important;background-color:#272729;}
+    .gscell_247.gsuicell {margin:0;}
 }

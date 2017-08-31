@@ -1522,6 +1522,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
         convertTextDates(filter);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(filter.startDate);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        filter.startDate = cal.getTime();
+        
+        cal.setTime(filter.endDate);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        filter.endDate = cal.getTime();
+        
+        
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
         PmsPricing prices = getDefaultPriceObject();

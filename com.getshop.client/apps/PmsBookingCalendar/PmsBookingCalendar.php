@@ -30,7 +30,9 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         }
         
         $room = new \core_pmsmanager_PmsBookingRooms();
-        $room->bookingItemTypeId = $_GET['type'];
+        if(isset($_GET['type'])) {
+            $room->bookingItemTypeId = $_GET['type'];
+        }
         $room->date = $range;
         
         $booking->sessionStartDate = $range->start;
@@ -206,7 +208,7 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         if($this->needToBeCleared()) {
             $this->getApi()->getPmsManager()->startBooking($this->getSelectedName());
         }
-        if(isset($_GET['type'])) {
+        if(isset($_GET['start'])) {
             $this->initBooking();
         }
         if(!$this->getSelectedName()) {

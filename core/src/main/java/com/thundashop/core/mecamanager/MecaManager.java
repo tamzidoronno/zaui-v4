@@ -779,4 +779,22 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         String address = getStoreDefaultAddress();
         return "http://"+address+"/scripts/mecafleet/sendkilometers.php?cellphone="+currentCar.cellPhone;
     }
+
+    @Override
+    public void setManuallyControlDate(String carId, Date date) {
+        MecaCar car = getCar(carId);
+        car.newSuggestedDate = null;
+        car.nextControlAgreed = date;
+        car.nextControlAcceptedByCarOwner = true;
+        saveObject(car);
+    }
+
+    @Override
+    public void setManuallyServiceDate(String carId, Date date) {
+        MecaCar car = getCar(carId);
+        car.newSuggestedDate = null;
+        car.nextServiceAgreed = date;
+        car.nextServiceAcceptedByCarOwner = true;
+        saveObject(car);
+    }
 }

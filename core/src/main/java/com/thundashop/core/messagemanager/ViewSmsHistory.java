@@ -59,7 +59,7 @@ public class ViewSmsHistory {
         Database database = context.getBean(Database.class);
         
         // 1 = januar
-        int month = 5;
+        int month = 8;
         int year = 2017;
         
         Date start = getDate(year, month,1);

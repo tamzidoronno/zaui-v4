@@ -173,7 +173,10 @@ app.PmsManagement = {
         app.PmsManagement.doChangeUser(btn,view, userId);
     },
     
-    loadAccountInformation : function() {
+    loadAccountInformation : function(event) {
+        if($(event.target).is(':checkbox')) {
+            return;
+        }
         var event = thundashop.Ajax.createEvent('','setQuickFilter',$(this),{
             "type" : "subtype_accountoverview",
             "userid" : $(this).attr('userid')

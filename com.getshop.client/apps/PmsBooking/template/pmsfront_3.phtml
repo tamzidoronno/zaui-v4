@@ -8,13 +8,9 @@ $nextPage = $this->getText("next_page");
 if(!$nextPage) {
     $nextPage = "/?page=booking_" . $this->getSelectedName();
 }
-$rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedName(), $this->convertToJavaDate(time()), $this->convertToJavaDate(time()+86400));
 ?>
 
 <div class="pmsfront pmsfront2">
-    <span class='inputblock'>
-        <i class='fa fa-bed'></i>
-    </span>
     <span class='inputblock'>
         <span class='start_date dates'>
             <div><span class='inputhelpertext'><? echo $this->__w("Check in"); ?></span></div>
@@ -38,28 +34,13 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
         </span>
     <? } ?>
         
-    <div class='productlist' style='display:none;'>
+    <div class='productlist'>
         <span class='inputhelpertext'><? echo $this->getText("select_product"); ?></span>
-        <select class='selected_product'>
-            <?php
-            foreach($rooms as $room) {
-                /* @var $room core_bookingengine_data_Booking */
-                echo "<option value='".$room->type->id."'>";
-                if($this->getText("display_prices") != "no") {
-                    if($room->price > 0) {
-                        echo round($room->price) . " NOK ";
-                    }
-                }
-                echo $room->type->name . "</option>";
-            }
-            ?>
-        </select>
-        
+        <select class='selected_product'></select>
     </div>
     
-    
     <span class='inputblock'>
-        <span class='check_available_button' next_page='<? echo $nextPage; ?>'><? echo $this->__w("Continue to booking"); ?></span>
+        <span class='go_to_page_button' next_page='<? echo $nextPage; ?>'><? echo $this->__w("Continue to booking"); ?></span>
     </span>
     <div style='clear:both;'></div>
 </div>
@@ -83,9 +64,51 @@ $rooms = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedNam
                }
                $('.end_date_input').val(day + "." + month + "." + moment(date).get('year'));
            }
+           loadAvailability();
          }
-     });
-    $('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
+    });
+    $('.go_to_page_button').click(function() {
+        var start = $('.start_date_input').val();
+        var end = $('.end_date_input').val();
+        var type = $('.selected_product').val();
+        var nextPage = $(this).attr('next_page');
+        if(!type) {
+            alert('No type selected');
+        }
+        window.location.href=nextPage+"&start=" + start + "&end=" + end + "&type=" + type;
+    });
+    
+    $('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+            loadAvailability();
+        }
+    });
     $('.start_cal').on('click', function() { $('.start_date_input').focus(); });
     $('.end_cal').on('click', function() { $('.end_date_input').focus(); });
+    
+    function loadAvailability() {
+        var start = $('.start_date_input').val();
+        var end = $('.end_date_input').val();
+        var endpoint = "<?php echo $this->getText("rest_endpoint"); ?>?manager=PmsWebBookingManager&method=getAllRooms&arg1=default&arg2="+start+"&arg3="+end;
+        $.ajax({
+            url: endpoint,
+            dataType: "jsonp",
+            success: function( response ) {
+                console.log(response);
+                var found = false;
+                $('.selected_product').html('');
+                for(var k in response) {
+                    var room = response[k];
+                    if(room.availableRooms > 0) {
+                        found = true;
+                        $('.selected_product').append("<option value='"+room.roomId+"'>" + room.name + " " + room.price + "kr " + "</option>");
+                    }
+                }
+                if(!found) {
+                    $('.selected_product').append("<option>No rooms available for given periode</option>");
+                }
+            }
+        });
+    }
+    loadAvailability();
 </script>

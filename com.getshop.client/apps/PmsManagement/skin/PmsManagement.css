@@ -408,7 +408,7 @@
     height: 200px;
 }
 
-@media only all and (max-width:1280px){
+@media only all and (max-width:800px){
     .gseditrowbuttons{display:none !important;}
     .PmsManagement .managementviewinput{
         height:auto;
@@ -542,8 +542,11 @@
     .PmsManagement .createorderpanelinfoRow2 input[gsname="postcode"]{width:30% !important;}
     .PmsManagement .createorderpanelinfoRow2 input[gsname="city"],
     .PmsManagement .createorderpanelinfoRow1 input[gsname="phone"]{width:70% !important;}
-
+    .PmsManagement .contactdata{border: 1px solid #aed5eb;padding: 5px 5px 5px 0px;}
+    
     /*Following belong to framework.css*/
     #informationbox.PmsManagement td{max-width: 40px;padding:0;margin:0;}
-    #infomrationboxclosebutton{width:auto;right: 10px;top: 18px;}
+    #infomrationboxclosebutton{width:auto;right: 10px;top: 6px;}
+    #informationboxtitle {height:20px;line-height: 0;}
+    
 }

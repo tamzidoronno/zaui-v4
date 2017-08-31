@@ -21,6 +21,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function doAccountAction() {
+        foreach($_POST['data'] as $key => $val) {
+            if(stristr($key, "user_") && $val == "true") {
+                $userId = str_replace("user_", "", $key);
+                $user = $this->getApi()->getUserManager()->getUserById($userId);
+                if($_POST['data']['action'] === "disableaccounts") {
+                    $user->suspended = !$user->suspended;
+                    $this->getApi()->getUserManager()->saveUser($user);
+                }
+            }
+        }
+    }
+    
     public function setBookingType() {
         $bookingId = $_POST['data']['bookingid'];
         $roomid = $_POST['data']['roomid'];

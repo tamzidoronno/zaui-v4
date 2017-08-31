@@ -1522,6 +1522,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
         convertTextDates(filter);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(filter.startDate);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        filter.startDate = cal.getTime();
+        
+        cal.setTime(filter.endDate);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        filter.endDate = cal.getTime();
+        
+        
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
         PmsPricing prices = getDefaultPriceObject();
@@ -3018,6 +3033,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
+        if(start.after(end)) {
+            return 0;
+        }
         if (!isOpen(itemType, start, end)) {
             return 0;
         }
@@ -4709,6 +4727,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 gsTiming("Subsctracted coupons");
             }
             createUserForBooking(booking);
+            if(userManager.getUserById(booking.userId).suspended) {
+                logPrint("User is suspended." + booking.id);
+                return null;
+            }
             gsTiming("Created user for booking");
             if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay && !booking.overBooking) {
                 booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
@@ -6512,6 +6534,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             row.invoiceAfterStay = discount.supportInvoiceAfter;
             row.preferredPaymentType = user.preferredPaymentType;
             row.hasDiscount = discount.discounts.keySet().size() > 0;
+            row.suspended = user.suspended;
             
             result.add(row);
         }

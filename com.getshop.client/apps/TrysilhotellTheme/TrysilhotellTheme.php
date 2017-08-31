@@ -15,6 +15,7 @@ class TrysilhotellTheme extends \ThemeApplication implements \Application {
     }
     public function addScripts() {
         echo "<link href='//fonts.googleapis.com/css?family=Exo' rel='stylesheet'>";
+        echo "<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>";
     }
 }
 ?>

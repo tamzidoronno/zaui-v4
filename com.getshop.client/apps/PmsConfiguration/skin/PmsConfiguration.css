@@ -94,5 +94,13 @@
     }
     .PmsConfiguration .paymentlinks textarea,
     .PmsConfiguration .paymentlinks input {width: 100% !important;float:none !important;}
-    .PmsConfiguration .mobileviews td{}
+    
+
+    .PmsConfiguration .notificationpanel.cleaning table input{width:26px !important;}
+    .PmsConfiguration .notificationpanel.cleaning table th{max-width:0;overflow: hidden;}
+    .PmsConfiguration .notificationpanel.cleaning table td{white-space: nowrap;max-width: 70px;overflow: hidden;}
+    .PmsConfiguration .notificationpanel.products, .PmsConfiguration .notificationpanel.mobileviews{overflow-x: auto;}
+    .PmsConfiguration .notificationpanel.mobileviews div[method="updateMobileViewRestriction"] table{border-collapse: collapse;}
+    .PmsConfiguration .notificationpanel.mobileviews div[method="updateMobileViewRestriction"] tr{border-bottom: 1px solid;}
+    .PmsConfiguration .notificationpanel.mobileviews div[method="updateMobileViewRestriction"] td{height:50px;}
 }

@@ -35,11 +35,11 @@ controllers.SettingsController = function($scope, $rootScope, $api, datareposito
         $scope.startedb = true; 
         $scope.startedc = true; 
         
-        productManager.getAllProducts().done(function(res) {  $scope.starteda = false; datarepository.setProducts(res); $scope.$apply(); });
-        productManager.getProductLists().done(function(res) { $scope.startedb = false; datarepository.setProductLists(res); $scope.$apply(); });
-        resturantManager.getRooms().done(function(res) { $scope.startedc = false; datarepository.setRooms(res); $scope.$apply(); } )
-        storeApplicationPool.getActivatedPaymentApplications().done(function(res) { datarepository.setActivatedPaymentMethods(res); $scope.$apply(); } )
-        storePrintManager.getPrinters().done(function(res) { datarepository.setPrinters(res); $scope.$apply(); } )
+        productManager.getAllProducts().done(function(res) {  $scope.starteda = false; datarepository.setProducts(res); $scope.$evalAsync(); });
+        productManager.getProductLists().done(function(res) { $scope.startedb = false; datarepository.setProductLists(res); $scope.$evalAsync(); });
+        resturantManager.getRooms().done(function(res) { $scope.startedc = false; datarepository.setRooms(res); $scope.$evalAsync(); } )
+        storeApplicationPool.getActivatedPaymentApplications().done(function(res) { datarepository.setActivatedPaymentMethods(res); $scope.$evalAsync(); } )
+        storePrintManager.getPrinters().done(function(res) { datarepository.setPrinters(res); $scope.$evalAsync(); } )
     }
     
     $scope.togglePincodeAsking = function() {

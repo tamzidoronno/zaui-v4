@@ -11,7 +11,14 @@ class MecaFleetAgreeService extends \MarketingApplication implements \Applicatio
     }
 
     public function render() {
-        $this->includefile("agree");
+        $car = $this->getApi()->getMecaManager()->getCar($this->getModalVariable("carid"));
+        $fleet = $this->getApi()->getMecaManager()->getFleetByCar($car);
+        
+        if ($fleet->followup) {
+            $this->includefile("agree_manual");    
+        } else {
+            $this->includefile("agree");    
+        }
     }
     
     public function requestDate() {
@@ -23,5 +30,10 @@ class MecaFleetAgreeService extends \MarketingApplication implements \Applicatio
             $this->getApi()->getMecaManager()->requestNextService($_POST['data']['carid'], $nextDate);
         }
     }
+    
+    public function setDate() {
+        $nextDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        $this->getApi()->getMecaManager()->setManuallyServiceDate($_POST['data']['carid'], $nextDate);
+   }
 }
 ?>

@@ -21,7 +21,7 @@
             </div>
 
             <div ng-repeat="order in getContainerBundles()" ng-mobile-click-end="toggleActionButton(order)" class="summaryrow" order="{{order.referenceNumber}}">
-                <div class="col"><span class="fa" ng-class="{'fa-check': orderFinished(order), 'fa-close' : !orderFinished(order)}"></span>{{order.referenceNumber}}</div>
+                <div class="col"><span class="fa" ng-class="{'fa-check': orderFinished(order), 'fa-close' : !orderFinished(order), 'fa-warning' : order.exceptionId }"></span>{{order.referenceNumber}}</div>
                 <div class="col">{{order.orderOdds}}</div>
                 <div class="col">{{order.orderFull}}</div>
                 <div class="col">{{order.orderLargeDisplays}}</div>
@@ -45,6 +45,9 @@
                     <div ng-if="!order.orderDriverDeliveries">
                         <div class="button orange exceptionButton order_task_completed" style='width: 100%; display: inline-block;' ng-mobile-click="openCorrection(order)">Make correction </div>
                     </div>
+                    <div ng-if="!order.orderDriverDeliveries">
+                        <div class="button orange exceptionButton" style='width: 100%; display: inline-block;' ng-mobile-click="openDeliveryException(order)">Add exception</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -64,7 +67,7 @@
             </div>
 
             <div ng-repeat="order in getLooseOrders()" ng-mobile-click-end="toggleActionButton(order)" class="summaryrow" order="{{order.referenceNumber}}">
-                <div class="col"><span class="fa" ng-class="{'fa-check': orderFinished(order), 'fa-close' : !orderFinished(order)}"></span>{{order.referenceNumber}}</div>
+                <div class="col"><span class="fa" ng-class="{'fa-check': orderFinished(order), 'fa-close' : !orderFinished(order), 'fa-warning' : order.exceptionId }"></span>{{order.referenceNumber}}</div>
                 <div class="col">{{order.orderOdds}}</div>
                 <div class="col">{{order.orderFull}}</div>
                 <div class="col">{{order.orderLargeDisplays}}</div>
@@ -81,6 +84,9 @@
                     </div>
                     <div ng-if="!order.orderDriverDeliveries">
                         <div class="button orange exceptionButton order_task_completed" ng-mobile-click="openCorrection(order)">Make correction </div>
+                    </div>
+                    <div ng-if="!order.orderDriverDeliveries">
+                        <div class="button orange exceptionButton" style='width: 100%; display: inline-block;' ng-mobile-click="openDeliveryException(order)">Add exception</div>
                     </div>
                 </div>
             </div>
@@ -100,7 +106,7 @@
         </div>
     </div>
     
-    <div ng-if='allOrdersFinished() && isContainerCounted()' class="button deliveredbutton" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered</div>
+    <div ng-if='allOrdersFinished() && isContainerCounted()' class="button deliveredbutton" ng-mobile-click="markAsDeliverd()"><i class="fa fa-check"></i> Delivered <span ng-if='anyOrderExceptions()'><br/>(with exceptions)</span></div>
     <div ng-if='!allOrdersFinished() && isContainerCounted()'>
         Please complete all the tasks above.
     </div>

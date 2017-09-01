@@ -44,4 +44,13 @@ public class DeliveryTask extends Task {
         podBarcode = orders.stream().map(order -> order.podBarcode).distinct().collect(Collectors.joining(","));
     }
 
+    void setOrderException(String orderReferenceNumber, String exceptionId) {
+        for (DeliveryOrder order : orders) {
+            if (order.referenceNumber.trim().equals(orderReferenceNumber.trim())) {
+                order.exceptionId = exceptionId;
+            }
+        }
+
+    }
+
 }

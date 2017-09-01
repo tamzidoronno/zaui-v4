@@ -12,7 +12,7 @@ controllers.BaseController = function($scope, $rootScope, $api, datarepository) 
     $scope.refreshTable = function(event, tableId) {
         $api.getApi().ResturantManager.getCurrentTableData(tableId).done(function(res) {
             datarepository.setCartItems(res.cartItems, tableId);
-            $scope.$apply();
+            $scope.$evalAsync();
         }) 
     }
     
@@ -24,10 +24,10 @@ controllers.BaseController = function($scope, $rootScope, $api, datarepository) 
                 table.refreshing = true;
                 $api.getApi().ResturantManager.getCurrentTableData(table.id).done(function(res) {
                     datarepository.setCartItems(res.cartItems, res.tableId);
-                    $scope.$apply();
+                    $scope.$evalAsync();
                 });
                 
-                $scope.$apply();
+                $scope.$evalAsync();
             }
         }
     }

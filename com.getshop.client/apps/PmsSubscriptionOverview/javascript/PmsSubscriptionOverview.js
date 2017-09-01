@@ -9,6 +9,8 @@ app.PmsSubscriptionOverview = {
         } else {
             $('.overviewrow').show();
         }
+    },
+    showDownloaded : function() {
     }
 };
 app.PmsSubscriptionOverview.init();

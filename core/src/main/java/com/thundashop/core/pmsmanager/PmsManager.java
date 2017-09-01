@@ -3973,6 +3973,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public HashMap<String, String> getChannelMatrix() {
         HashMap<String, String> res = new HashMap();
+        res.put("web", "Website");
         HashMap<String, PmsChannelConfig> getChannels = configuration.getChannels();
         for(String key : getChannels.keySet()) {
             if(getChannels.get(key).channel != null && !getChannels.get(key).channel.isEmpty()) {
@@ -4003,6 +4004,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBooking> res = new ArrayList();
         for(PmsBooking booking : finalized) {
             if(booking.channel != null && booking.channel.equals(channel)) {
+                res.add(booking);
+            }
+            if(channel.equals("web") && (booking.channel == null || booking.channel.trim().isEmpty())) {
                 res.add(booking);
             }
         }

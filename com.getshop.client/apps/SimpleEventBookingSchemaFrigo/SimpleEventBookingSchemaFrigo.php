@@ -44,10 +44,12 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
             $user->address->city = $_POST['data']['city'];
             @$user->metaData->{'parentName'} = $_POST['data']['parentname'];
             @$user->metaData->{'parentcell'} = $_POST['data']['parentcell'];
+            @$user->metaData->{'parentcell2'} = $_POST['data']['parentcell2'];
             @$user->metaData->{'sex'} = $_POST['data']['sex'];
             @$user->metaData->{'school'} = $_POST['data']['school'];
             @$user->metaData->{'schoolclass'} = $_POST['data']['schoolclass'];
             @$user->metaData->{'usepictures'} = $_POST['data']['usepicutres'];
+            @$user->metaData->{'vacation'} = $_POST['data']['vacation'];
             @$user->metaData->{'comments'} = $_POST['data']['comments'];
             @$user->metaData->{'overAge'} = $_POST['data']['overAge'] && $_POST['data']['overAge'] == "true" ? "Ja" : "Nei";
 
@@ -70,16 +72,22 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
         $header[] = "Fødselsdato";
         $header[] = "Mobilnr";
         $header[] = "Epost";
+        
         $header[] = "Skole";
         $header[] = "Klasse";
         $header[] = "Kjønn";
+        
         $header[] = "Addresse";
         $header[] = "Postnr";
         $header[] = "By";
+        
         $header[] = "Foresatte navn";
         $header[] = "Foresatte mobilnr";
+        $header[] = "Valgfri mobilnr";
         $header[] = "Tilatt bildebruk";
         $header[] = "Over 18år";
+        $header[] = "Annen ferie";
+        $header[] = "Kommentar";
         $rows[] = $header;
         
         foreach ($event->userIds as $userId) {
@@ -101,8 +109,11 @@ class SimpleEventBookingSchemaFrigo extends \MarketingApplication implements \Ap
             
             $xuser[] = @$user->metaData->{'parentName'};
             $xuser[] = @$user->metaData->{'parentcell'};
+            $xuser[] = @$user->metaData->{'parentcell2'};
             $xuser[] = @$user->metaData->{'usepictures'};
             $xuser[] = @$user->metaData->{'overAge'};
+            $xuser[] = @$user->metaData->{'vacation'};
+            $xuser[] = @$user->metaData->{'comments'};
             
             $rows[] = $xuser;
         }

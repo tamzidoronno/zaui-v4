@@ -1454,7 +1454,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void notifyAdmin(String key, PmsBooking booking) {
         String message = configuration.adminmessages.get(key);
         if (message == null) {
-            return;
+            return; 
         }
 
         message = formatMessage(message, booking, null, null);

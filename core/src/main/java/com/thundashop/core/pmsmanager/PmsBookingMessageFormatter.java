@@ -137,7 +137,7 @@ class PmsBookingMessageFormatter {
             if(room.date.end != null && room.date.start != null) {
                 diff = (room.date.end.getTime() - room.date.start.getTime()) / 1000;
             }
-            if(diff > (365*60*60)) {
+            if(diff > (365*60*60*24)) {
                 simpleRoom += "<td style='font-size:12px;'>" + formatDate(room.date.start) + "</td><td></td>";
                 rooms += formatDate(room.date.start);
             } else {

@@ -45,11 +45,16 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     
                     
                     this.lastShownError = new Date().getTime();
-                    alert("Wrong username or password, please try again.");
+                    logonError = "Wrong username or password, please try again.";
                     
                     me.$state.transitionTo('base.login');
                     $('.loginbutton').find('.login-shower').remove();
-                    this.lastShownError = new Date().getTime();
+                    $('.logonError').show();
+                    setTimeout(function() {
+                        $('.logonError').hide();
+                        logonError = "";
+                    }, 3000);
+                   this.lastShownError = new Date().getTime();
                 } else {
                     if (error != null && error.errorCode  != null && error.errorCode == 26 && !localStorage.getItem('username')) {
                         return;
@@ -80,8 +85,14 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             
             $getShopApi.UserManager.logOn(username, password).done(function(user) {
                 if (user.errorCode) {
-                    alert("Wrong username or password, please try again.");
+                    logonError = "Wrong username or password, please try again.";
                     me.$state.transitionTo('base.login');
+                    $('.loginbutton').find('.login-shower').remove();
+                    $('.logonError').show();
+                    setTimeout(function() {
+                        $('.logonError').hide();
+                        logonError = "";
+                    }, 3000);
                 } else {
                     $getShopApi.sendUnsentMessages();
                     localStorage.setItem("loggedInUserId", JSON.stringify(user));
@@ -110,7 +121,13 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             
             if (!username || !password) {
                 if (fromLogin) {
-                    alert("Wrong username or password, please try again.");
+                    logonError = "Wrong username or password, please try again.";
+                    $('.loginbutton').find('.login-shower').remove();
+                    $('.logonError').show();
+                    setTimeout(function() {
+                        $('.logonError').hide();
+                        logonError = "";
+                    }, 3000);
                 }
                 
                 this.$state.transitionTo('base.login');

@@ -10,6 +10,7 @@ controllers.LoginController = function($scope, $api) {
     $scope.username = localStorage.getItem("username");
     $scope.password = localStorage.getItem("password");
     $scope.company = localStorage.getItem("company");
+    $scope.logonError = logonError;
     
     $scope.doLogin = function() {
         if ($('.loginbutton').find('.login-shower').length) {

@@ -22,3 +22,13 @@ and open the template in the editor.
 .gsview.login input {
     text-align: center;
 }
+
+.logonError {
+    width: 200px;
+    margin: 0 auto;
+    padding: 20px;
+    color: red;
+    text-align: center;
+    border: solid 1px red;
+    margin-bottom: 20px;
+}

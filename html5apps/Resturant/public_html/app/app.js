@@ -1,3 +1,5 @@
+logonError = "";
+
 angular.module('TrackAndTrace', [
     'ui.router', 'bc.AngularKeypad', 'ngTouch', 'ngDialog'
 ]);

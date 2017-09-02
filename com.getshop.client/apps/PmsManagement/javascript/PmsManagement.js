@@ -828,7 +828,8 @@ app.PmsManagement = {
     sendconfirmation : function() {
         var data = {
             "bookingid" : $('#openedbookingid').val(),
-            "email" : $('.emailtosendconfirmationto').val()
+            "email" : $('.emailtosendconfirmationto').val(),
+            "dotype" : $('.emailtosendconfirmationto').attr('dotype')
         }
         var event = thundashop.Ajax.createEvent('','resendConfirmation', $(this),data);
         thundashop.common.showInformationBoxNew(event);

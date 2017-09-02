@@ -76,6 +76,19 @@ $states['10'] = "Send to invoice";
                                 <td><input class='gsniceinput1' value='<?php echo $user->address->city; ?>' gsname='city'></td>
                             </tr>
                             <tr>
+                                <td width='50%'>Country</td>
+                                <td>
+                                    <select gsname="countrycode" class="gsniceselect1">
+                                        <?php 
+                                        foreach(CountryCodes::getCodes() as $code => $val) {
+                                            $selected = ($code == $user->address->countrycode) ? "SELECTED" : "";
+                                            echo "<option value='$code' $selected>$val</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td width='50%'>Email address</td>
                                 <td><input class='gsniceinput1' value='<?php echo $user->emailAddress; ?>' gsname='email'></td>
                             </tr>

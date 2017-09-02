@@ -176,7 +176,18 @@ if(!$booking->confirmed) {
 ?>
 <br><br><br>
 <span class='pmsbutton doneediting' style='float:right;'><? echo $this->__w("Done editing"); ?></span> 
-<span class='pmsbutton' onclick='$(".resendconfirmationoption").slideDown();$(window).scrollTop(100000);' style='float:right; background-color:orange; margin-right: 20px;'><? echo $this->__w("Resend confirmation"); ?></span> 
+<?php 
+if($config->needConfirmation) {
+    ?>
+    <span class='pmsbutton' type='confirmation' onclick='$(".resendconfirmationoption").slideDown();$(".emailtosendconfirmationto").attr("dotype","confirmation"); $(".sendconfirmation").html("Send booking confirmation"); $(window).scrollTop(100000);' style='float:right; background-color:orange; margin-right: 20px;'><? echo $this->__w("Resend confirmation"); ?></span> 
+    <span class='pmsbutton' type='completed' onclick='$(".resendconfirmationoption").slideDown();$(".emailtosendconfirmationto").attr("dotype","completed"); $(".sendconfirmation").html("Send booking completed information");  $(window).scrollTop(100000);' style='float:right; background-color:orange; margin-right: 20px;'><? echo $this->__w("Resend booking"); ?></span> 
+    <?php
+} else {
+    ?>
+    <span class='pmsbutton' type='completed' onclick='$(".resendconfirmationoption").slideDown();$(".emailtosendconfirmationto").attr("dotype","confirmation");$(".sendconfirmation").html("Send booking confirmation"); $(window).scrollTop(100000);' style='float:right; background-color:orange; margin-right: 20px;'><? echo $this->__w("Resend confirmation"); ?></span> 
+    <?php
+}
+?>
 <span class='pmsbutton showlog' bookingid='<? echo $booking->id; ?>' style='background-color:yellow; color:#000;'><? echo $this->__w("Show log"); ?></span>
 <div style='clear:both;'></div>
 

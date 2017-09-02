@@ -4922,9 +4922,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void sendConfirmation(String email, String bookingId) {
+    public void sendConfirmation(String email, String bookingId, String type) {
         emailToSendTo = email;
-        doNotification("booking_completed", bookingId);
+        
+        if(type == "confirmation") {
+            doNotification("booking_confirmed", bookingId);
+        } else {
+            doNotification("booking_completed", bookingId);
+        }
+        
     }
 
     @Override

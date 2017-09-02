@@ -138,6 +138,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->address = $_POST['data']['adress'];
         $user->address->city = $_POST['data']['city'];
         $user->address->postCode = $_POST['data']['postcode'];
+        $user->address->countrycode = $_POST['data']['countrycode'];
         $user->emailAddress = $_POST['data']['email'];
         $user->emailAddressToInvoice = $_POST['data']['invoiceemail'];
         $this->getApi()->getUserManager()->saveUser($user);
@@ -1334,10 +1335,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->address = $_POST['data']['address.address'];
         $user->address->postCode = $_POST['data']['address.postCode'];
         $user->address->city = $_POST['data']['address.city'];
+        $user->address->countrycode = $_POST['data']['countryCode'];
         $user->birthDay = $_POST['data']['birthDay'];
         $user->relationship = $_POST['data']['relationship'];
         $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];
         $this->getApi()->getUserManager()->saveUser($user);
+        
+        $booking = $this->getSelectedBooking();
+        $booking->countryCode = $user->address->countrycode;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         
         $this->selectedBooking = null;
         $this->showBookingInformation();

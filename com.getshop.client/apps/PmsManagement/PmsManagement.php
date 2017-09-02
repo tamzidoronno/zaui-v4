@@ -2092,6 +2092,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))-(86400*$config->defaultNumberOfDaysBack));
         $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))+86300);
         $filter->sorting = "regdate";
+        if($config->bookingProfile == "conferense") {
+            $filter->groupByBooking = true;
+        }
         if(isset($_SESSION['pmfilter'][$this->getSelectedName()]) && $_SESSION['pmfilter'][$this->getSelectedName()]) {
             $filter->includeDeleted = true;
         }

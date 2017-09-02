@@ -68,10 +68,16 @@ if(!$this->isItemPage()) {
             if($type == "month") {
                 echo date("M Y", $this->getSelectedDay());
             }
+            $timeString = date("d.m.Y", $this->getSelectedDay());
             ?>
+            <i class="fa fa-edit" onclick='$(".displaychangedatebox").toggle();' style='cursor:pointer;'></i>
             <span style='padding-left: 30px; cursor:pointer;' gstype="clicksubmit" method="setNext" gsname="type" gsvalue="day">
                 <? echo $this->__w("Next"); ?> <i class='fa fa-caret-right'></i>
             </span>
+        </div>
+        <div style='padding: 10px; background-color:#fff; border: solid 1px; width: 250px; margin:auto; display:none;' class='displaychangedatebox' method='changeDateToSpecific' gstype='form'>
+            Skriv inn ønsket dato<br>
+            <input type='text' value='<?php echo $timeString; ?>' gsname='date' class='updatecalendar'><input type='submit' value='Oppdater' gstype='submit'>
         </div>
         <span style='position:absolute; right:0px; bottom: 30px; display:inline-block; width: 150px; text-align: left;'>
             <div class='statedesrow'><span class='statedescbox occupied'></span> <?php echo $this->__w("Occupied"); ?></div>

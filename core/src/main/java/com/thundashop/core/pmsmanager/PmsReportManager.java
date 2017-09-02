@@ -2,11 +2,14 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.bookingengine.data.RegistrationRulesField;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
@@ -32,6 +35,9 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     
     @Autowired
     UserManager userManager;
+    
+    @Autowired
+    OrderManager orderManager;
     
     @Override
     public List<PmsMobileReport> getReport(Date start, Date end, String compareTo, boolean excludeClosedRooms) {
@@ -316,6 +322,46 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
             }
         }
         return meters;
+    }
+
+    @Override
+    public List<PmsSubscriptionReportEntry> getSubscriptionReport(Date start, Date end) {
+        List<PmsSubscriptionReportEntry> result = new ArrayList();
+        List<BookingItem> items = bookingEngine.getBookingItems();
+        for(BookingItem item : items) {
+            List<Booking> bookings = bookingEngine.getAllBookingsByBookingItem(item.id);
+            boolean found = false;
+            for(Booking booking : bookings) {
+                if(booking.within(start, end)) {
+                    found = true;
+                    PmsBooking pmsBooking = pmsManager.getBookingFromBookingEngineId(booking.id);
+                    
+                    PmsSubscriptionReportEntry res = new PmsSubscriptionReportEntry();
+                    result.add(res);
+                    res.itemName = item.bookingItemName;
+                    
+                    User user = userManager.getUserById(pmsBooking.userId);
+                    if(user != null) {
+                        res.owner = user.fullName;
+                    } else {
+                        res.owner = "Unkown name";
+                    }
+                    for(String orderId : pmsBooking.orderIds) {
+                        Order order = orderManager.getOrder(orderId);
+                        if(order.rowCreatedDate.after(start) && order.rowCreatedDate.before(end)) {
+                            res.orders.add(order);
+                        }
+                    }
+                }
+            }
+            if(!found) {
+                PmsSubscriptionReportEntry res = new PmsSubscriptionReportEntry();
+                result.add(res);
+                res.itemName = item.bookingItemName;
+            }
+            
+        }
+        return result;
     }
     
 }

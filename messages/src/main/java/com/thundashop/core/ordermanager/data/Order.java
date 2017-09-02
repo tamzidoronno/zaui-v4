@@ -372,6 +372,14 @@ public class Order extends DataCommon implements Comparable<Order> {
         return false;
     }
 
+    public boolean createdOnMonth(Date date) {
+        Calendar check = Calendar.getInstance();
+        Calendar createDate = Calendar.getInstance();
+        createDate.setTime(rowCreatedDate);
+        check.setTime(date);
+        return (check.get(Calendar.MONTH) == createDate.get(Calendar.MONTH) && check.get(Calendar.YEAR) == createDate.get(Calendar.YEAR));
+    }
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;

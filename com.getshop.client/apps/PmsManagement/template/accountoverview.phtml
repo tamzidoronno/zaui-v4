@@ -267,11 +267,32 @@ $states['10'] = "Send to invoice";
                 </div>
             </div>
         </div>
+        
+        <div class='dashboard_panel_outer'>
+            <div class='dashboard_panel' gstype='form' method='saveDiscountPreferences'>
+                <div class='dashboard_panel_header'><i class='fa fa-lock'></i> Saved cards
+                    <span class='pmsbutton dashboardpmsbutton' onclick="$('.importcardpanel').show();">Import card from other user</span>
+                </div>
+                <div class="importcardpanel">
+                    <input type="text" placeholder="Four last digits of card" class='searchinput'><input type="button" value="Search" class="searchbutton" userid='<?php echo $user->id; ?>'>
+                    <span class="searcharea">
+                        
+                    </span>
+                </div>
+                <span class='cardlist'>
+                    <?php $this->printCards($user->id); ?>
+                </span>
+            </div>
+        </div>
+
+        
     </div>
     <div style='clear:both;'></div>
+    
 </div>
 
 <style>
+    .importcardpanel { border: solid 1px #bbb; background-color:#efefef; padding: 10px; margin-bottom: 20px; display:none; }
     .dashboard_panel {  height: 300px; padding: 10px; background-color:#fff; padding: 10px; border-radius: 5px; border: solid 1px #bbb; }
     .dashboard_panel_outer { width: 50%; padding: 10px; float: left;margin-top: 20px; box-sizing: border-box; position:relative; }
     .dashboard_panel_header { border-bottom: solid 1px #bbb; padding-bottom: 10px; margin-bottom: 10px;position:relative; }
@@ -292,5 +313,16 @@ $states['10'] = "Send to invoice";
             "userid" : $(this).attr('userid')
         });
         thundashop.Ajax.post(event);
+    });
+    
+    $('.searchbutton').on('click', function() {
+        var event = thundashop.Ajax.createEvent('','searchForCard',$(this),{
+            "searchword" : $('.searchinput').val(),
+            "userid" : $(this).attr('userid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.searcharea').html(res);
+            $('.importcardpanel').show();
+        });
     });
 </script>

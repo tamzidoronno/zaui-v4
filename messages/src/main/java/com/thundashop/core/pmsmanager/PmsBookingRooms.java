@@ -411,6 +411,14 @@ public class PmsBookingRooms implements Serializable {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
         return fmt.format(date1).equals(fmt.format(date2));
     }
+    
+    public static boolean isSameDayStatic(Date date1, Date date2) {
+        if(date1 == null || date2 == null) {
+            return false;
+        }
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        return fmt.format(date1).equals(fmt.format(date2));
+    }
 
     boolean isActiveInPeriode(Date startDate, Date endDate) {
         if(date != null && date.end != null && date.start != null && date.start.before(endDate) && date.end.after(startDate)) {

@@ -332,7 +332,9 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                             } else {
                                 captureOrder(order, toCapture);
                             }
-                            messageManager.sendInvoiceForOrder(order.id);
+                            if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                                messageManager.sendInvoiceForOrder(order.id);
+                            }
                             
                             orderManager.saveOrder(order);
                         }catch(Exception d) {

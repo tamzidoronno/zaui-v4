@@ -5256,6 +5256,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(view.sortType == PmsMobileView.PmsMobileSortyType.BYOWNER) {
             Collections.sort(items, new Comparator<PmsBookingAddonViewItem>(){
                 public int compare(PmsBookingAddonViewItem s1, PmsBookingAddonViewItem s2) {
+                    if(s1 == null || s1.owner == null || s2 == null || s2.owner == null) {
+                        return 0;
+                    }
                     return s1.owner.compareTo(s2.owner);
                 }
             });

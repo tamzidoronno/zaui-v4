@@ -39,7 +39,6 @@ class Vipps extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("subscriptionkeyprimary", $_POST['subscriptionkeyprimary']);
         $this->setConfigurationSetting("subscriptionkeysecondary", $_POST['subscriptionkeysecondary']);
         $this->setConfigurationSetting("serialNumber", $_POST['serialNumber']);
-        $this->setConfigurationSetting("adress", $_POST['adress']);
     }
 }
 ?>

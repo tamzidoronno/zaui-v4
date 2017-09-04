@@ -3619,6 +3619,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $searchtypes['uncofirmed'] = "Unconfirmed";
         $searchtypes['checkin'] = "Checking in";
         $searchtypes['checkout'] = "Checking out";
+        $searchtypes['activecheckin'] = "Checkin + stayover";
+        $searchtypes['activecheckout'] = "Checkout + stayover";
         $searchtypes['inhouse'] = "Inhouse";
         $searchtypes['stats'] = "Coverage";
         $searchtypes['summary'] = "Summary";

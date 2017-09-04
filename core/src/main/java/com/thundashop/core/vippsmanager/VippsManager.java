@@ -46,7 +46,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
     private String endpointTest = "https://apitest.vipps.no/";
     private String endpoint = "https://api.vipps.no/";
     
-    public String startMobileRequest(String phoneNumber, String orderId) throws Exception {
+    public boolean startMobileRequest(String phoneNumber, String orderId, String ip) throws Exception {
         String token = getToken();
         
         Order order = orderManager.getOrderSecure(orderId);
@@ -63,28 +63,22 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             startEndpoint = endpointTest;
         }
         
-        String key = clientId + "-vippsdev";
+        String key = serialNumber + "-vippsdev";
         if(frameworkConfig.productionMode) {
-            key = clientId + "-vippsprod";
+            key = serialNumber + "-vippsprod";
         }
         
         String callback = "http://pullserver_"+key+"_"+storeId+".nettmannen.no";
-        callback = "TEST";
-        
-        
         String url = startEndpoint + "/Ecomm/v1/payments";
-        
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        
         
         HashMap<String, String> header = new HashMap();
         header.put("Authorization", token);
-        header.put("X-Request-Id", orderId);
+        header.put("X-Request-Id", order.incrementOrderId + "");
         header.put("X-TimeStamp", sdf.format(new Date()));
-        header.put("X-Source-Address", adress);
+        header.put("X-Source-Address", ip);
         header.put("X-App-Id", clientId);
         header.put("Ocp-Apim-Subscription-Key", ocp);
-        
         
         try {
             Gson gson = new Gson();
@@ -100,25 +94,34 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             body.transaction.timeStamp = sdf.format(new Date());
             String json = gson.toJson(body);
             
-            for(String k : header.keySet()) {
-                System.out.println(k + " : " + header.get(k));
+            if(!frameworkConfig.productionMode) {
+                System.out.println("------------");
+                System.out.println("Endpoint: " + url);
+                for(String k : header.keySet()) {
+                    System.out.println(k + " : " + header.get(k));
+                }
+                System.out.println("Json:\n" + json);
+                System.out.println("------------");
             }
-            System.out.println("JsOn:" + json);
-            
+
             String res = webManager.htmlPostBasicAuth(url, json, true, "UTF-8", "", "", false, "POST", header);
-            System.out.println(res);
+            StartTransactionResponse response = gson.fromJson(res, StartTransactionResponse.class);
+            if(response.transactionInfo.status.equals("RESERVE")) {
+                order.status = Order.Status.NEEDCOLLECTING;
+            }
+            order.payment.transactionLog.put(System.currentTimeMillis(), res);
+            orderManager.saveOrder(order);
+            return true;
         }catch(Exception e) {
             e.printStackTrace();
-            return "";
+            return false;
         }
-        
-        return "";
         
     }
     
     @Override
     public boolean checkIfOrderHasBeenCompleted(Integer incOrderId) {
-        checkForOrdersToCapture();
+        checkForOrdersToCapture();                        
         return orderManager.getOrderByincrementOrderId(incOrderId).status == Order.Status.PAYMENT_COMPLETED;
     }
     
@@ -130,10 +133,12 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         if (vippsApp == null) {
             return;
         }
+
+        String serialNumber = vippsApp.getSetting("serialNumber");
         
-        String pollKey = vippsApp.getSetting("merchantid") + "-vippsdev";
+        String pollKey = serialNumber + "-vippsdev";
         if(frameworkConfig.productionMode) {
-            pollKey = vippsApp.getSetting("merchantid") + "-vippsprod";
+            pollKey = serialNumber + "-vippsprod";
         }
         try {
             //First check for polls.
@@ -150,19 +155,15 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
                         Order order = orderManager.getOrderByincrementOrderId(response.orderId);
                         try {
                             order.payment.callBackParameters.put("body", msg.body);
-
-                            Double amount = orderManager.getTotalAmount(order);
-                            double toCapture = new Double(amount*100).intValue();
-                            if(toCapture != response.transactionInfo.amount || !response.transactionInfo.status.equalsIgnoreCase("reserved")) {
-                                order.payment.transactionLog.put(System.currentTimeMillis(), "Amount does not match anymore");
-                                messageManager.sendMail("post@getshop.com", "post@getshop.com", "Vipps failed (vipps) amount does not (or different status than reserved) match for order, ", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
-                                return;
+                            if(captureOrder(response, order, msg)) {
+                                messageManager.sendInvoiceForOrder(order.id);
+                                order.status = Order.Status.PAYMENT_COMPLETED;
+                                orderManager.saveOrder(order);
+                            } else {
+                                messageManager.sendErrorNotification("Failed to capture order for vipps:" + order.incrementOrderId, null);
+                                order.status = Order.Status.PAYMENT_FAILED;
+                                orderManager.saveOrder(order);
                             }
-                            
-                            order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to capture this order");
-                            messageManager.sendInvoiceForOrder(order.id);
-                            order.status = Order.Status.PAYMENT_COMPLETED;
-                            orderManager.saveOrder(order);
                         }catch(Exception d) {
                             messageManager.sendMail("post@getshop.com", "post@getshop.com", "Failed message message from pull server (vipps)", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
                             order.payment.transactionLog.put(System.currentTimeMillis(), "Failed capturing order: " + d.getMessage());
@@ -189,10 +190,52 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
     }
 
     @Override
-    public boolean cancelOrder(String orderId) throws Exception {
+    public boolean cancelOrder(String orderId, String ip) throws Exception {
         Application vippsApp = storeApplicationPool.getApplication("f1c8301d-9900-420a-ad71-98adb44d7475");
         Order order = orderManager.getOrder(orderId);
         String token = getToken();
+        String clientId = vippsApp.getSetting("clientid"); 
+        String ocp = vippsApp.getSetting("subscriptionkeysecondary");
+        String serialNumber = vippsApp.getSetting("serialNumber");
+
+        String startEndpoint = endpoint;
+        
+        if(!frameworkConfig.productionMode) {
+            startEndpoint = endpointTest;
+        }
+        
+        
+        String url = startEndpoint + "/Ecomm/v1/payments/"+order.incrementOrderId+"/cancel";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        
+        HashMap<String, String> header = new HashMap();
+        header.put("Authorization", token);
+        header.put("X-TimeStamp", sdf.format(new Date()));
+        header.put("X-Source-Address", ip);
+        header.put("X-App-Id", clientId);
+        header.put("Ocp-Apim-Subscription-Key", ocp);
+        
+        if(!frameworkConfig.productionMode) {
+            System.out.println("---------");
+            System.out.println("Endpoint:" + url);
+            for(String k : header.keySet()) {
+                System.out.println(k + ":" + header.get(k));
+            }
+            System.out.println("---------");
+        }
+        
+        CancelRequest cancelation = new CancelRequest();
+        cancelation.merchantInfo.merchantSerialNumber = serialNumber;
+        cancelation.transaction.amount = new Double(orderManager.getTotalAmount(order)*100).intValue();
+        cancelation.transaction.transactionText = "Cancelled by user";
+        
+        Gson gson = new Gson();
+        String res = webManager.htmlPostBasicAuth(url, gson.toJson(cancelation), true, "UTF-8", "", "", false, "PUT", header);
+        if(!frameworkConfig.productionMode) {
+            System.out.println("---------");
+            System.out.println(res);
+            System.out.println("---------");
+        }
         
         return true;
     }
@@ -211,20 +254,23 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         String url = startEndpoint + "accessToken/get";
         
-        System.out.println(clientId + " - " + secret + "(" + url + ")");
-        
         HashMap<String, String> header = new HashMap();
         header.put("client_id", clientId);
         header.put("client_secret", secret);
         header.put("Ocp-Apim-Subscription-Key", ocp);
         
         try {
-            Gson gson = new Gson();
-                        
-            for(String k : header.keySet()) {
-                System.out.println(k + " : " + header.get(k));
+            
+            if(!frameworkConfig.productionMode) {
+                System.out.println("------------");
+                System.out.println("Endpoint:" + url);
+                for(String k : header.keySet()) {
+                    System.out.println(k + " : " + header.get(k));
+                }
+                System.out.println("------------");
             }
             
+            Gson gson = new Gson();
             String res = webManager.htmlPostBasicAuth(url, "test", false, "UTF-8", "", "", false, "POST", header);
             AccessTokenResponse tokeResp = gson.fromJson(res, AccessTokenResponse.class);
             return tokeResp.access_token;
@@ -232,6 +278,73 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             e.printStackTrace();
             return "";
         }
+    }
+
+    private boolean captureOrder(VippsResponse response, Order order, PullMessage msg) {
+        String token = getToken();
+        Application vippsApp = storeApplicationPool.getApplication("f1c8301d-9900-420a-ad71-98adb44d7475");
+        Double amount = orderManager.getTotalAmount(order);
+        double toCapture = new Double(amount*100).intValue();
+        
+        Gson gson = new Gson();
+
+        if(toCapture != response.transactionInfo.amount || !response.transactionInfo.status.equalsIgnoreCase("reserved")) {
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Amount does not match anymore");
+            messageManager.sendMail("post@getshop.com", "post@getshop.com", "Vipps failed (vipps) amount does not (or different status than reserved) match for order, ", gson.toJson(msg), "post@getshop.com", "post@getshop.com");
+            return false;
+        }
+        order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to capture this order");
+        
+        
+        String clientId = vippsApp.getSetting("clientid"); 
+        String ocp = vippsApp.getSetting("subscriptionkeysecondary");
+        String serialNumber = vippsApp.getSetting("serialNumber");
+
+        String startEndpoint = endpoint;
+        
+        if(!frameworkConfig.productionMode) {
+            startEndpoint = endpointTest;
+        }
+        
+        
+        String url = startEndpoint + "/Ecomm/v1/payments/"+order.incrementOrderId+"/capture";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        
+        HashMap<String, String> header = new HashMap();
+        header.put("Authorization", token);
+        header.put("X-TimeStamp", sdf.format(new Date()));
+        header.put("X-Source-Address", "138.68.66.223");
+        header.put("X-Request-Id", order.incrementOrderId + "");
+        header.put("X-App-Id", clientId);
+        header.put("Ocp-Apim-Subscription-Key", ocp);
+        
+        if(!frameworkConfig.productionMode) {
+            System.out.println("---------");
+            System.out.println("Endpoint:" + url);
+            for(String k : header.keySet()) {
+                System.out.println(k + ":" + header.get(k));
+            }
+            System.out.println("---------");
+        }
+        
+        CancelRequest cancelation = new CancelRequest();
+        cancelation.merchantInfo.merchantSerialNumber = serialNumber;
+        cancelation.transaction.amount = new Double(orderManager.getTotalAmount(order)*100).intValue();
+        cancelation.transaction.transactionText = "Captured";
+        
+        try {
+            String res = webManager.htmlPostBasicAuth(url, gson.toJson(cancelation), true, "UTF-8", "", "", false, "POST", header);
+            if(!frameworkConfig.productionMode) {
+                System.out.println("---------");
+                System.out.println(res);
+                System.out.println("---------");
+            }
+            StartTransactionResponse captureResponse = gson.fromJson(res, StartTransactionResponse.class);
+            return captureResponse.transactionInfo.status.equals("Captured");
+        }catch(Exception e) {
+            return false;
+        }
+        
     }
 
     

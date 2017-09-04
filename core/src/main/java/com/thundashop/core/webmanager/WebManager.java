@@ -112,6 +112,8 @@ public class WebManager extends ManagerBase implements IWebManager {
             outputStream.writeBytes(new String(data.getBytes(), encoding));
             outputStream.flush();
             outputStream.close();
+        } else {
+            connection.setRequestProperty("Content-Length", "0");
         }
         
         try {

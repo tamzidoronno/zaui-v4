@@ -5,7 +5,6 @@ $clientid = $this->getConfigurationSetting("clientid");
 $secret = $this->getConfigurationSetting("secret");
 $subscriptionkeyprimary = $this->getConfigurationSetting("subscriptionkeyprimary");
 $subscriptionkeysecondary = $this->getConfigurationSetting("subscriptionkeysecondary");
-$adress = $this->getConfigurationSetting("adress");
 $serialNumber = $this->getConfigurationSetting("serialNumber");
 ?>
 
@@ -51,13 +50,6 @@ $serialNumber = $this->getConfigurationSetting("serialNumber");
             <input type="textfield" gs_model='vippsmodel' gs_model_attr='subscriptionkeysecondary' value="<? echo $subscriptionkeysecondary; ?>">
             <div class="description">
                 <?php  echo $this->__f("Application subscription key."); ?>
-            </div>
-        </div>
-        <div class="textfield gss_setting"  id="adress">
-            <span class="title"><?php echo $this->__f("Adress"); ?></span>
-            <input type="textfield" gs_model='vippsmodel' gs_model_attr='adress' value="<? echo $adress; ?>">
-            <div class="description">
-                <?php  echo $this->__f("Adress used to communicate with vipps (usually webadress?)."); ?>
             </div>
         </div>
         <div class="textfield gss_setting"  id="serialNumber">

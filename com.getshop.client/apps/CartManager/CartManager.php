@@ -24,12 +24,13 @@ class CartManager extends \SystemApplication implements \Application {
     }
     
     public function cancelVippsOrder() {
-        $this->getApi()->getVippsManager()->cancelOrder($_POST['data']['orderid']);
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $this->getApi()->getVippsManager()->cancelOrder($_POST['data']['orderid'], $ip);
     }
     
     public function checkIfOrderHasBeenCompleted() {
         $this->getApi()->getVippsManager()->checkForOrdersToCapture();
-        $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderId($_POST['data']['orderid']);
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         if($order->status == 7) {
             echo "yes";
         } else {
@@ -40,9 +41,20 @@ class CartManager extends \SystemApplication implements \Application {
     public function startVippsPayment() {
         $orderId = $_POST['data']['orderid'];
         $phone = $_POST['data']['phonenumber'];
+        $ip = $_SERVER['REMOTE_ADDR'];
         
-        $res = $this->getApi()->getVippsManager()->startMobileRequest($phone, $orderId);
-        echo $res;
+        $res = $this->getApi()->getVippsManager()->startMobileRequest($phone, $orderId, $ip);
+        if($res) {
+            $result = array();
+            $result['status'] = "success";
+            $result['orderid'] = $orderId;
+            echo json_encode($result);
+        } else {
+            $result = array();
+            $result['status'] = "failed";
+            $result['orderid'] = "See order for more information";
+            echo json_encode($result);
+        }
     }
     
     public function preProcess() {

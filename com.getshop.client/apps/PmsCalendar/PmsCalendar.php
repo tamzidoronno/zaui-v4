@@ -19,6 +19,10 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         return "Calendar view for displaying booked entries in a calendar.";
     }
 
+    public function changeDateToSpecific() {
+        $_SESSION['calday'] = strtotime($_POST['data']['date']);
+    }
+    
     public function getName() {
         return "PmsCalendar";
     }

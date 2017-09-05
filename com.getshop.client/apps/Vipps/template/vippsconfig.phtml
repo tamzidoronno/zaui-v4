@@ -1,10 +1,11 @@
 <?
 /* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
 
-$userid = $this->getConfigurationSetting("userid");
-$auth_secret = $this->getConfigurationSetting("auth_secret");
-$xrequestid = $this->getConfigurationSetting("xrequestid");
-$merchantid = $this->getConfigurationSetting("merchantid");
+$clientid = $this->getConfigurationSetting("clientid");
+$secret = $this->getConfigurationSetting("secret");
+$subscriptionkeyprimary = $this->getConfigurationSetting("subscriptionkeyprimary");
+$subscriptionkeysecondary = $this->getConfigurationSetting("subscriptionkeysecondary");
+$serialNumber = $this->getConfigurationSetting("serialNumber");
 ?>
 
 <div class='gss_settings_header'>
@@ -16,7 +17,6 @@ $merchantid = $this->getConfigurationSetting("merchantid");
         </div>
         <div class='gss_settings_header_description_inner'>
             <?php echo $this->getDescription(); ?>
-            ?>	
         </div>
     </div>	
 </div>
@@ -24,32 +24,39 @@ $merchantid = $this->getConfigurationSetting("merchantid");
 <div class='gss_settings_content'>
 
     <div class="gss_simple_shipping">
-        <div class="textfield gss_setting"  id="merchantid">
-            <span class="title"><?php echo $this->__f("Merhcant id"); ?></span>
-            <input type="textfield" gs_model='vippsmodel' gs_model_attr='merchantid' value="<? echo $merchantid; ?>">
+        <div class="textfield gss_setting"  id="clientid">
+            <span class="title"><?php echo $this->__f("Client id"); ?></span>
+            <input type="textfield" gs_model='vippsmodel' gs_model_attr='clientid' value="<? echo $clientid; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The vipps clientsid."); ?>
+            </div>
+        </div>
+        <div class="textfield gss_setting"  id="secret">
+            <span class="title"><?php echo $this->__f("Client secret"); ?></span>
+            <input type="textfield" gs_model='vippsmodel' gs_model_attr='secret' value="<? echo $secret; ?>">
             <div class="description">
                 <?php  echo $this->__f("The userid to authenticate to vipps."); ?>
             </div>
         </div>
-        <div class="textfield gss_setting"  id="userid">
-            <span class="title"><?php echo $this->__f("User id"); ?></span>
-            <input type="textfield" gs_model='vippsmodel' gs_model_attr='userid' value="<? echo $userid; ?>">
+        <div class="textfield gss_setting"  id="subscriptionkeyprimary">
+            <span class="title"><?php echo $this->__f("Token subscription key"); ?></span>
+            <input type="textfield" gs_model='vippsmodel' gs_model_attr='subscriptionkeyprimary' value="<? echo $subscriptionkeyprimary; ?>">
             <div class="description">
-                <?php  echo $this->__f("The userid to authenticate to vipps."); ?>
+                <?php  echo $this->__f("Token subscription key."); ?>
             </div>
         </div>
-        <div class="textfield gss_setting"  id="auth_secret">
-            <span class="title"><?php echo $this->__f("Auth secret"); ?></span>
-            <input type="textfield" gs_model='vippsmodel' gs_model_attr='auth_secret' value="<? echo $auth_secret; ?>">
+        <div class="textfield gss_setting"  id="subscriptionkeysecondary">
+            <span class="title"><?php echo $this->__f("Application subscription key"); ?></span>
+            <input type="textfield" gs_model='vippsmodel' gs_model_attr='subscriptionkeysecondary' value="<? echo $subscriptionkeysecondary; ?>">
             <div class="description">
-                <?php  echo $this->__f("An auth secret provided by vipps."); ?>
+                <?php  echo $this->__f("Application subscription key."); ?>
             </div>
         </div>
-        <div class="textfield gss_setting"  id="xrequestid">
-            <span class="title"><?php echo $this->__f("X-request-id"); ?></span>
-            <input type="textfield" gs_model='vippsmodel' gs_model_attr='xrequestid' value="<? echo $xrequestid; ?>">
+        <div class="textfield gss_setting"  id="serialNumber">
+            <span class="title"><?php echo $this->__f("Serial number"); ?></span>
+            <input type="textfield" gs_model='vippsmodel' gs_model_attr='serialNumber' value="<? echo $serialNumber; ?>">
             <div class="description">
-                <?php  echo $this->__f("Request id to use."); ?>
+                <?php  echo $this->__f("The serial number for the application (found at the end of application the developement portal)."); ?>
             </div>
         </div>
     </div>

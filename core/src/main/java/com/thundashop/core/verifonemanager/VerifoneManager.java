@@ -133,6 +133,8 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         orderToPay = null;
     }
 
+    
+    
     private void saveOrderSomeHow(Order orderToPay) {
         System.out.println("############ NEED TO SAVE THIS ORDER HOWEVER WE HAVE LOST THE ORDERMANAGER #################");
         orderManager.saveOrderInternal(orderToPay);

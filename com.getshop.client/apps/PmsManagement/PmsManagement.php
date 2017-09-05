@@ -138,6 +138,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->address = $_POST['data']['adress'];
         $user->address->city = $_POST['data']['city'];
         $user->address->postCode = $_POST['data']['postcode'];
+        $user->address->countrycode = $_POST['data']['countrycode'];
         $user->emailAddress = $_POST['data']['email'];
         $user->emailAddressToInvoice = $_POST['data']['invoiceemail'];
         $this->getApi()->getUserManager()->saveUser($user);
@@ -1334,10 +1335,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->address = $_POST['data']['address.address'];
         $user->address->postCode = $_POST['data']['address.postCode'];
         $user->address->city = $_POST['data']['address.city'];
+        $user->address->countrycode = $_POST['data']['countryCode'];
         $user->birthDay = $_POST['data']['birthDay'];
         $user->relationship = $_POST['data']['relationship'];
         $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];
         $this->getApi()->getUserManager()->saveUser($user);
+        
+        $booking = $this->getSelectedBooking();
+        $booking->countryCode = $user->address->countrycode;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         
         $this->selectedBooking = null;
         $this->showBookingInformation();
@@ -2086,6 +2092,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))-(86400*$config->defaultNumberOfDaysBack));
         $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))+86300);
         $filter->sorting = "regdate";
+        if($config->bookingProfile == "conferense") {
+            $filter->groupByBooking = true;
+        }
         if(isset($_SESSION['pmfilter'][$this->getSelectedName()]) && $_SESSION['pmfilter'][$this->getSelectedName()]) {
             $filter->includeDeleted = true;
         }
@@ -3610,6 +3619,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $searchtypes['uncofirmed'] = "Unconfirmed";
         $searchtypes['checkin'] = "Checking in";
         $searchtypes['checkout'] = "Checking out";
+        $searchtypes['activecheckin'] = "Checkin + stayover";
+        $searchtypes['activecheckout'] = "Checkout + stayover";
         $searchtypes['inhouse'] = "Inhouse";
         $searchtypes['stats'] = "Coverage";
         $searchtypes['summary'] = "Summary";

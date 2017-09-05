@@ -64,4 +64,7 @@ public interface IPmsPaymentTerminal {
     public Double changeGuestCountOnRoom(String pmsBookingRoomId, Integer count);
     
     public boolean updateBooking(PmsBooking booking, User user, Company company);
+    
+    @Administrator
+    public void printReciept(String orderId);
 }

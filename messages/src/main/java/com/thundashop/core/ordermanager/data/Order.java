@@ -8,7 +8,10 @@ import com.google.gson.Gson;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -380,6 +383,114 @@ public class Order extends DataCommon implements Comparable<Order> {
         return (check.get(Calendar.MONTH) == createDate.get(Calendar.MONTH) && check.get(Calendar.YEAR) == createDate.get(Calendar.YEAR));
     }
 
+    public String createThermalPrinterReciept(AccountingDetails details, User user) {
+        SimpleDateFormat sm = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+        
+        String res = "";
+        res += "Date    : " + sm.format(new Date()) + "\n";
+        res += "Orderid : " + incrementOrderId + "\n";
+        res += "Org id  : " + details.vatNumber + "\n";
+        res += "Website : " + details.webAddress + "\n";
+        res += "Email   : " + details.contactEmail + "\n";
+        res += "\n";
+
+        res += details.companyName + "\n";
+        res += details.address + "\n";
+        res += details.postCode + " " + details.city + "\n";
+        res += "\n";
+
+        
+        double total = cart.getShippingCost() + cart.getTotal(true);
+        total = Math.round(total);
+        
+        for (CartTax cartTax : cart.getCartTaxes()) {
+            res += "Tax " + cartTax.taxGroup.taxRate + "% : " + Math.round(cartTax.sum) + " kr\n";
+        }
+        res += "Total     : " + total + " kr\n";
+        
+        res += "\n";
+        
+        res += user.fullName + "\n";
+        if(user.cellPhone != null && user.cellPhone.isEmpty()) {
+            res += "Phone: " + "(" + user.prefix + ")" + user.cellPhone + "\n";
+        }
+        if(user.address != null) {
+            if(user.address.address != null && !user.address.address.trim().isEmpty()) {
+                res += user.address.address + "\n";
+            }
+            if(user.address.postCode != null && !user.address.postCode.trim().isEmpty()) {
+                res += user.address.postCode + " " + user.address.city + "\n";
+            }
+        }
+        res += "\n";
+        
+        for(CartItem item : cart.getItems()) {
+            res += createLineText(item) + "\n";
+        }
+        
+        res += "\n";
+        res = wrapText(res);
+        
+        return res;
+    }
+
+    private String createLineText(CartItem item) {
+        String lineText = "";
+        String startDate = "";
+        SimpleDateFormat sm = new SimpleDateFormat("dd.MM.yyyy");
+        if(item.startDate != null) {
+            startDate = sm.format(item.startDate);
+        }
+
+        String endDate = "";
+        if(item.endDate != null) {
+            endDate = sm.format(item.endDate);
+        }
+        
+        String startEnd = "";
+        if(startDate != null && endDate != null && !endDate.isEmpty() && !startDate.isEmpty()) {
+            startEnd = startDate + " - " + endDate + "\n";
+        }
+        
+        if(!item.getProduct().additionalMetaData.trim().isEmpty()) {
+            lineText = item.getProduct().name + "\n";
+            lineText += item.getProduct().additionalMetaData + "\n";
+            lineText += startEnd + "\n";
+        } else {
+            String mdata = item.getProduct().metaData;
+            lineText = item.getProduct().name.trim()  + "\n";
+            if(!mdata.trim().isEmpty()) {
+//                lineText += mdata.trim() + "\n";
+            }
+            lineText += startEnd;
+        }
+        
+        lineText = lineText.trim();
+        lineText = makeSureIsOkay(lineText);
+        return lineText;
+    }
+    
+    private String makeSureIsOkay(String text) {
+        if(text == null) {
+            return "";
+        }
+        return text.replaceAll(",", " ");
+    }
+
+    private String wrapText(String res) {
+        String[] lines = res.split("\n");
+        String result = "";
+        for(String line : lines) {
+            if(line.length() > 29) {
+                result += line.substring(0, 29) + "\n";
+                result += line.substring(29) + "\n";
+            } else {
+                result += line + "\n";
+            }
+        }
+        return result;
+    }
+    
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;

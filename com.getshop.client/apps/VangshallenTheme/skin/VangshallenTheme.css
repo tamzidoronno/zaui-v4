@@ -15,20 +15,24 @@ body{background-color:#f9f9f9;font-family: 'Source Sans Pro', sans-serif;font-si
 
 .gsarea[area="header"]{background-color:#272729;padding:0 0 10px 0;}
 .gsarea[area="header"] .Menu {margin-top:30px;text-align:center}
+
 .gsarea[area="header"] .Menu a {color: #f9f9f9;font-size: 15px;text-shadow: 0px 1px 2px rgba(0,0,0,0.5);}
 .gsarea[area="header"] .Menu .entry{cursor:default;}
 .gsarea[area="header"] .Menu .entry a div{padding:8px 20px 7px 20px;}
 .gsarea[area="header"] .Menu .entry:hover{background-color:#20b0ec;}
 .gsarea[area="header"] .Menu .entry.active{border-bottom:0px solid #f9f9f9;background-color:#00a5ea;box-shadow:inset 0px 2px 3px #272729;}
+.gsarea[area="header"] .Menu .entries .entries .entry{white-space:nowrap;}
 .gsarea[area="header"] .Menu .entry .entries{
     text-align:left;
     background-color: rgba(39, 39, 41, 0.8);
     left:0;
-    top:32px;
+    top:34px;
     border:solid #272729;
-    border-width:13px 0 0 0px;
-    width:450px;
+    border-width:15px 0 0 0px;
+    width:auto;
+    min-width:100%;
 }
+
 .gsarea[area="body"]{padding:40px 0 40px 0;min-height:647px;}
 .gsarea[area="body"] .gs_page_width{background-color:#fff;box-shadow:0px 2px 2px #888;padding:20px;}
 
@@ -39,7 +43,8 @@ body{background-color:#f9f9f9;font-family: 'Source Sans Pro', sans-serif;font-si
 .PmsCalendar .dayentry.selected{color:#f7931d !important;}
 .PmsCalendar .tinycalendar{background-color:#00a5ea;}
 .PmsCalendar .day:hover{background-color:#00a5ea !important;opacity:0.5;}
-.PmsCalendar .dayorweekdiv div:first-child span{z-index:-1;}
+.PmsCalendar .dayorweekdiv div:first-child span{z-index:-1;top:-60px !important;}
+.PmsCalendar .ContentManager {top:0;}
 .PmsBookingContactData .complete_button{background-color:#00a5ea;margin-right:0;}
 
 
@@ -66,6 +71,7 @@ body{background-color:#f9f9f9;font-family: 'Source Sans Pro', sans-serif;font-si
     .gsarea[area="body"]{min-height:200px;}
     .gsarea[area="body"] .gs_page_width{padding:10px; margin:0 20px 0 20px;}
     
+    .PmsCalendar .bottomdesc{height:auto;}
     .PmsCalendar .pmscalendarmobilemenudiv{display:none;}
     .PmsCalendar .capasity{display:none;}
     .PmsCalendar .singleroomentry{position:relative;top:0 !important;z-index:0;}

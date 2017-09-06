@@ -54,6 +54,11 @@
         <div class='col1 <?php if(!$this->isValidField("parentname") ||!$this->isValidField("parentcell") ) { echo "invalidfield"; } ?>'>* Foresatte</div>
         <div class='col2'> <input class='gsniceinput1' placeholder='Navn på far/mor'  gsname="parentname" value="<?if(isset ($_POST['data']['parentname'])){ echo $_POST['data']['parentname'];}?>"/> </div>
         <div class='col2'> <input class='gsniceinput1' placeholder="Mobilnr"  gsname="parentcell" value="<?if(isset ($_POST['data']['parentcell'])){ echo $_POST['data']['parentcell'];}?>"/> </div>
+        <div class='col2'> <input class='gsniceinput1' placeholder="Mobilnr valgfri"  gsname="parentcell2" value="<?if(isset ($_POST['data']['parentcell2'])){ echo $_POST['data']['parentcell2'];}?>"/> </div>
+    </div>
+    <div class='row'>
+        <div class="col1">Har barnet annen ferie?</div>
+        <div class="col2"><textarea class="gsniceinput1" style="width:99.5%;" placeholder="Har barnet annen ferie?" gsname="vacation" value="<?if(isset ($_POST['data']['vacation'])){ echo $_POST['data']['vacation'];}?>"></textarea>
     </div>
     <div class='row'>
         <div class="col1">Kommentar</div>

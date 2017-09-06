@@ -8,8 +8,8 @@ if ($tree) {
 }
 
 function printItem($item) {
-    $liclass = $item->li_attr->class;
-    $nodeId = $item->li_attr->nodeid;
+    $liclass = @$item->li_attr->class;
+    $nodeId = @$item->li_attr->nodeid;
     echo "<ul><li class='$liclass' nodeid='$nodeId' id='$nodeId'>".$item->text;
         if (count($item->children)) {
             echo "<ul>";

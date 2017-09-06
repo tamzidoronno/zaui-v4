@@ -28,9 +28,10 @@ public class QuestBackImporter {
     private String languageName = "eng";
     private PageManager pageManager;
 
-    public QuestBackImporter(StoreApplicationInstancePool instancePool,  PageManager pageManager) {
+    public QuestBackImporter(StoreApplicationInstancePool instancePool,  PageManager pageManager, String languageName) {
         this.instancePool = instancePool;
         this.pageManager = pageManager;
+        this.languageName = languageName;
     }
     
     
@@ -41,7 +42,7 @@ public class QuestBackImporter {
         for (QuestBackImportRow row : treeList) {
             QuestionTreeItem topLevel = new QuestionTreeItem();
             topLevel.id = UUID.randomUUID().toString();
-            topLevel.text = row.col1 + "(" + languageName + ")";
+            topLevel.text = row.col1 + " (" + languageName + ")";
             
             for (QuestBackImportRow question : row.children) {
                 QuestionTreeItem questionLevel = new QuestionTreeItem();

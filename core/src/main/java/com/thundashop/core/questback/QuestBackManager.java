@@ -883,7 +883,7 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
 
     @Override
     public String importExcel(String base64, String language) {
-        List<QuestBackImportRow>  treeList = new QuestBackImporter(instancePool, pageManager).importExcel(base64);
+        List<QuestBackImportRow>  treeList = new QuestBackImporter(instancePool, pageManager, language).importExcel(base64);
         questionTreeChanged("eed3197f-8e24-4cc1-a03e-95931f572653");
         
         for (QuestBackImportRow topLevel : treeList) {

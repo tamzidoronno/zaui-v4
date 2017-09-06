@@ -265,6 +265,6 @@ class QuestBackManagement extends \ApplicationBase implements \Application {
     }
     
     public function triggerUpload() {
-        $this->getApi()->getQuestBackManager()->importExcel("", "eng");
+        $this->getApi()->getQuestBackManager()->importExcel("", "arb");
     }
 }

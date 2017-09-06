@@ -1420,8 +1420,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             
             try {
                 if((filter.itemsToCreate == null || filter.itemsToCreate.isEmpty()) && 
-                    (filter.pmsRoomIds == null || filter.pmsRoomIds.isEmpty())) {
+                    (filter.pmsRoomIds == null || filter.pmsRoomIds.isEmpty()) &&
+                        (filter.pmsRoomId != null && filter.pmsRoomId.isEmpty()) && 
+                        filter.totalAmount == null) {
+                    boolean warn = true;
+                    if(filter.startInvoiceAt != null && !PmsBookingRooms.isSameDayStatic(filter.startInvoiceAt, booking.getStartDate())) {
+                        warn = false;
+                    }
+                    if(filter.endInvoiceAt != null && !PmsBookingRooms.isSameDayStatic(filter.endInvoiceAt, booking.getEndDate())) {
+                        warn = false;
+                    }
+                    if(warn) {
                       verifyOrderCreationIsCorrect(booking, order);
+                    }
                 }
             }catch(Exception e) {
                 logPrintException(e);

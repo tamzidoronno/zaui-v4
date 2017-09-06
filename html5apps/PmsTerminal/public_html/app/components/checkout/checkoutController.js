@@ -124,6 +124,10 @@ controllers.checkoutController = function($scope, $api, $rootScope, $state, $sta
             });
         });
     };
+   
+    $scope.printReciept = function(orderId) {
+        var printing = $api.getApi().PmsPaymentTerminal.printReciept($api.getDomainName(), orderId);
+    }
     
     $scope.init();
 };

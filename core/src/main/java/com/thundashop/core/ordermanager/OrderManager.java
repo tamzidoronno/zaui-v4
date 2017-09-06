@@ -665,6 +665,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public Order getOrderByincrementOrderId(Integer id) throws ErrorException {
         for (Order order : getAllOrderIncludedVirtualNonFinalized()) {
+            if(order == null) {
+                continue;
+            }
             if (order.incrementOrderId == id) {
                 order.doFinalize();
                 return order;

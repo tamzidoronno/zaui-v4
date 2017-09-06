@@ -113,7 +113,21 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .existinguserselection', app.PmsManagement.selectExistingCustomer);
         $(document).on('click','.PmsManagement .doverifonepayment', app.PmsManagement.doVerifonePayment);
         $(document).on('click','.PmsManagement .loadRoomTypes', app.PmsManagement.loadRoomTypes);
+        $(document).on('click','.PmsManagement .deletecardbutton', app.PmsManagement.deleteCard);
         getshop.WebSocketClient.addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", app.PmsManagement.displayVerifoneFeedBack);
+    },
+    deleteCard : function() {
+        var confirmed = confirm("Are you sure you want to remove this card? This action can not be reverted");
+        if(!confirmed) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','deleteCard', $(this), {
+            "userid" : $(this).attr('userid'),
+            "cardid" : $(this).attr('cardid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.cardlist').html(res);
+        });
     },
     displayVerifoneFeedBack : function(res) {
         if(res.msg === "completed") {
@@ -814,7 +828,8 @@ app.PmsManagement = {
     sendconfirmation : function() {
         var data = {
             "bookingid" : $('#openedbookingid').val(),
-            "email" : $('.emailtosendconfirmationto').val()
+            "email" : $('.emailtosendconfirmationto').val(),
+            "dotype" : $('.emailtosendconfirmationto').attr('dotype')
         }
         var event = thundashop.Ajax.createEvent('','resendConfirmation', $(this),data);
         thundashop.common.showInformationBoxNew(event);

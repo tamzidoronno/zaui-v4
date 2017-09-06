@@ -312,6 +312,10 @@ adata = {
         this.deletedItems = newSet;
     },
     
+    clear: function() {
+        
+    },
+    
     setCartItems: function(items, tableId) {
         this.clearCartItemsForTable(tableId);
         var table = this.getTableById(tableId);

@@ -23,7 +23,7 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
             if (!res.length && res instanceof Array) {
                 $scope.errorMessage = "Wrong pincode, please try again";
                 $scope.pincode = "";
-                $scope.$apply();
+                $scope.$evalAsync();
             } else {
                 $scope.payOnRoom(res);
             }
@@ -212,7 +212,7 @@ controllers.PaymentController = function($scope, $rootScope, $api, $state, datar
                 if(a.room > b.room) return 1;
                 return 0;
             });
-            $scope.$apply();
+            $scope.$evalAsync();
         });
     }
     

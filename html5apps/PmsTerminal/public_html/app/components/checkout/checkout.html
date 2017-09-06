@@ -76,7 +76,7 @@
             <i class='fa fa-credit-card'></i> <b> Order information</b>
             <div ng-repeat="order in orders" style='padding-top: 5px;'>
                 <span class='gsbtn' style='float:right;' ng-show='!order.paid' ng-mobile-click='startPaymentProcess(order.id)'>Pay <i class='fa fa-arrow-right'></i></span>
-                <span class='gsbtn' style='float:right; background-color:green;' ng-show='order.paid' ng-mobile-click='printReciept()'><i class='fa fa-check'></i> paid, print reciept <i class='fa fa-arrow-right'></i></span>
+                <span class='gsbtn' style='float:right; background-color:green;' ng-show='order.paid' ng-mobile-click='printReciept(order.id)'><i class='fa fa-check'></i> paid, print receipt <i class='fa fa-arrow-right'></i></span>
                 <div class='orderrow'>Total to pay: {{order.amount}} NOK</div>
                 <div style='clear:both;'></div>
             </div>

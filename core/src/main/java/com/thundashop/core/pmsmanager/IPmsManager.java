@@ -69,7 +69,7 @@ public interface IPmsManager {
     public String swapRoom(String roomId, List<String> roomIds);
     
     @Administrator
-    public void sendConfirmation(String email, String bookingId);
+    public void sendConfirmation(String email, String bookingId, String type);
     
     @Administrator
     public void reportMissingInventory(List<SimpleInventory> inventories, String itemId, String roomId);

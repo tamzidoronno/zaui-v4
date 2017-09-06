@@ -3,12 +3,18 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.printmanager.PrintJob;
+import com.thundashop.core.printmanager.PrintManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
@@ -43,6 +49,12 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
     @Autowired
     BookingEngine bookingEngine;
     
+    @Autowired
+    StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    PrintManager printManager;
+    
     @Override
     public List<PaymentTerminalSearchResult> findBookings(String phoneNumber) {
         if(phoneNumber == null || phoneNumber.length() < 5) {
@@ -55,9 +67,6 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
         
         List<PaymentTerminalSearchResult> result = new ArrayList();
         for(PmsBooking booking : bookings) {
-            if(booking.payedFor) {
-                continue;
-            }
             if(booking.isEnded()) {
                 continue;
             }
@@ -78,7 +87,7 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
     private boolean hasPhoneNumber(PmsBooking booking,String phoneNumber) {
         User user = userManager.getUserById(booking.userId);
 
-        if(user.cellPhone.equals(phoneNumber)) {
+        if(user.cellPhone != null && user.cellPhone.equals(phoneNumber)) {
             return true;
         } 
 
@@ -382,6 +391,47 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
             room.paidFor = pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
         }
         return booking;
+    }
+
+    @Override
+    public void printReciept(String orderId) {
+        Order order = orderManager.getOrder(orderId);
+        User user = userManager.getUserById(order.userId);
+        String text = order.createThermalPrinterReciept(getAccountingDetails(), user);
+        PrintJob job = new PrintJob();
+        job.content = text;
+        job.createdDate = new Date();
+        job.printerId = "test";
+        
+        printManager.addPrintJob(job);
+        System.out.println(text);
+    }
+    
+    private AccountingDetails getAccountingDetails() throws ErrorException {
+        Application settings = storeApplicationPool.getApplicationIgnoreActive("70ace3f0-3981-11e3-aa6e-0800200c9a66");
+        AccountingDetails details = new AccountingDetails();
+        if(settings != null) {
+            details.accountNumber = settings.getSetting("accountNumber");
+            details.iban = settings.getSetting("iban");
+            details.swift = settings.getSetting("swift");
+            details.address = settings.getSetting("address");
+            details.city = settings.getSetting("city");
+            details.companyName = settings.getSetting("companyName");
+            details.contactEmail = settings.getSetting("contactEmail");
+            details.dueDays = Integer.parseInt(settings.getSetting("duedays"));
+            details.vatNumber = settings.getSetting("vatNumber");
+            details.webAddress = settings.getSetting("webAddress");
+            details.useLanguage = settings.getSetting("language");
+            String kidSize = settings.getSetting("kidSize");
+            if(kidSize != null && !kidSize.isEmpty()) {
+                details.kidSize = new Integer(kidSize);
+            }
+            details.kidType = settings.getSetting("defaultKidMethod");
+            details.type = settings.getSetting("type");
+            details.currency = settings.getSetting("currency");
+        }
+
+        return details;
     }
 
 }

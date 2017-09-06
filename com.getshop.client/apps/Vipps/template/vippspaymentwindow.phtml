@@ -23,6 +23,6 @@ $amount = $this->getApi()->getOrderManager()->getTotalAmount($this->getOrder());
 
 <?php 
 if($this->getOrder()->status == 9) {
-    echo "<script>app.Vipps.waitForCompletion(". $this->getOrder()->incrementOrderId . ");</script>";
+    echo "<script>app.Vipps.waitForCompletion(". $this->getOrder()->id . ");</script>";
 }
 ?>

@@ -138,6 +138,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->address = $_POST['data']['adress'];
         $user->address->city = $_POST['data']['city'];
         $user->address->postCode = $_POST['data']['postcode'];
+        $user->address->countrycode = $_POST['data']['countrycode'];
         $user->emailAddress = $_POST['data']['email'];
         $user->emailAddressToInvoice = $_POST['data']['invoiceemail'];
         $this->getApi()->getUserManager()->saveUser($user);
@@ -1334,10 +1335,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->address = $_POST['data']['address.address'];
         $user->address->postCode = $_POST['data']['address.postCode'];
         $user->address->city = $_POST['data']['address.city'];
+        $user->address->countrycode = $_POST['data']['countryCode'];
         $user->birthDay = $_POST['data']['birthDay'];
         $user->relationship = $_POST['data']['relationship'];
         $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];
         $this->getApi()->getUserManager()->saveUser($user);
+        
+        $booking = $this->getSelectedBooking();
+        $booking->countryCode = $user->address->countrycode;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         
         $this->selectedBooking = null;
         $this->showBookingInformation();
@@ -1820,6 +1826,88 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo json_encode($matrix);
     }
     
+    public function moveCard() {
+        $userId = $_POST['data']['userid'];
+        $cardId = $_POST['data']['cardid'];
+        
+        $users = $this->getApi()->getUserManager()->getAllUsers();
+        $toMove = null;
+        foreach($users as $user) {
+            $found = false;
+            $cardList = array();
+            foreach($user->savedCards as $card) {
+                if($card->id == $cardId) {
+                    $found = true;
+                    $toMove = $card;
+                    continue;
+                }
+            }
+            if($found) {
+                $user->savedCards = $cardList;
+                $this->getApi()->getUserManager()->saveUser($user);
+            }
+        }
+        
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        $user->savedCards[] = $toMove;
+        $this->getApi()->getUserManager()->saveUser($user);
+        
+        $this->printCards($userId);
+    }
+    
+    public function deleteCard() {
+        $userId = $_POST['data']['userid'];
+        $cardId = $_POST['data']['cardid'];
+        
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        $index = 0;
+        $cardList = array();
+        foreach($user->savedCards as $card) {
+            if($card->id != $cardId) {
+                $cardList[] = $card;
+            }
+            $user->savedCards = $cardList;
+            $this->getApi()->getUserManager()->saveUser($user);
+            $index++;
+        }
+        $this->printCards($userId);
+    }
+    
+    public function searchForCard() {
+        $searchword = $_POST['data']['searchword'];
+        $userId = $_POST['data']['userid'];
+        if(!$searchword) {
+            return;
+        }
+        $users = $this->getApi()->getUserManager()->getAllUsers();
+        foreach($users as $user) {
+            foreach($user->savedCards as $card) {
+                $text = json_encode($card);
+                if(stristr($text, $searchword)) {
+                    echo "<div style='border-bottom: solid 1px; padding-bottom: 3px; padding-top: 3px;'>";
+                    echo $card->mask . " - " . $card->expireMonth . "/" . $card->expireYear;
+                    echo "<span style='float:right; color:blue; cursor:pointer;' class='movecardbutton' cardid='".$card->id."' userid='".$userId."'>fetch</span>";
+                    echo "</div>";
+                }
+            }
+        }
+        ?>
+        <script>
+            $('.movecardbutton').on('click', function() {
+                var event = thundashop.Ajax.createEvent('','moveCard',$(this),{
+                    "type" : "subtype_accountoverview",
+                    "userid" : $(this).attr('userid'),
+                    "cardid" : $(this).attr('cardid')
+                });
+                thundashop.Ajax.postWithCallBack(event, function(res) {
+                    $('.cardlist').html(res);
+                    $('.importcardpanel').hide();
+                });
+            });
+        </script>
+        <?php
+    }
+    
     public function exportSaleStats() {
         $stats = $this->getManager()->getStatistics($this->getSelectedName(), $this->getSelectedFilter());
         $arr = (array)$stats->salesEntries;
@@ -2004,6 +2092,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->startDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))-(86400*$config->defaultNumberOfDaysBack));
         $filter->endDate = $this->formatTimeToJavaDate(strtotime(date("d.m.Y 00:00", time()))+86300);
         $filter->sorting = "regdate";
+        if($config->bookingProfile == "conferense") {
+            $filter->groupByBooking = true;
+        }
         if(isset($_SESSION['pmfilter'][$this->getSelectedName()]) && $_SESSION['pmfilter'][$this->getSelectedName()]) {
             $filter->includeDeleted = true;
         }
@@ -3528,6 +3619,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $searchtypes['uncofirmed'] = "Unconfirmed";
         $searchtypes['checkin'] = "Checking in";
         $searchtypes['checkout'] = "Checking out";
+        $searchtypes['activecheckin'] = "Checkin + stayover";
+        $searchtypes['activecheckout'] = "Checkout + stayover";
         $searchtypes['inhouse'] = "Inhouse";
         $searchtypes['stats'] = "Coverage";
         $searchtypes['summary'] = "Summary";
@@ -3956,6 +4049,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         }
         
         return $result;
+    }
+
+    public function printCards($userId) {
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        foreach($user->savedCards as $card) {
+            echo "<i class='fa fa-trash-o deletecardbutton' cardid='".$card->id."' userid='$userId'></i> " . $card->mask . " - " . $card->expireMonth . "/" . $card->expireYear . "<br>";
+        }
     }
 
 }

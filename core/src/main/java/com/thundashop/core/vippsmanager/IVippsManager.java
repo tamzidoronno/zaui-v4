@@ -8,9 +8,9 @@ import com.thundashop.core.common.GetShopApi;
  */
 @GetShopApi
 public interface IVippsManager {
-    public String startMobileRequest(String phoneNumber, String orderId) throws Exception;
+    public boolean startMobileRequest(String phoneNumber, String orderId, String ip) throws Exception;
     @Administrator
     public void checkForOrdersToCapture();
     public boolean checkIfOrderHasBeenCompleted(Integer incOrderId);
-    public boolean cancelOrder(String orderId) throws Exception ;
+    public boolean cancelOrder(String orderId, String ip) throws Exception ;
 }

@@ -25,4 +25,8 @@ public interface IPmsReportManager {
     
     @Administrator
     public PmsConferenceStatistics getConferenceStatistics(Date start, Date end);
+    
+    @Administrator
+    public List<PmsSubscriptionReportEntry> getSubscriptionReport(Date start, Date end);
+    
 }

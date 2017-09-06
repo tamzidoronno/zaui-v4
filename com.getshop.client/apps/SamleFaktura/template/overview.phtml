@@ -22,6 +22,10 @@ foreach ($groupedOrders as $userId => $orders) {
             $name = $order->cart->address ? $order->cart->address->fullName : "";
             $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
             $date = date("d/m-Y", strtotime($order->rowCreatedDate));
+            
+            if ($total === 0) {
+                continue;
+            }
             ?> 
             <div class='row'>
                 <div class='col col1'><input type='checkbox' gsname='orderid_<? echo $order->id; ?>' value='<? echo $order->id; ?>'/></div>

@@ -111,4 +111,10 @@ public interface IMecaManager {
     
     @Editor
     public String getBase64ExcelReport(String pageId);
+    
+    @Editor
+    public void setManuallyControlDate(String carId, Date date);
+    
+    @Editor
+    public void setManuallyServiceDate(String carId, Date date);
 }

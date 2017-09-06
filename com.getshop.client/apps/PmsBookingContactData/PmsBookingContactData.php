@@ -272,8 +272,17 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             return;
         }
         
+        
         if(isset($_POST['data'][$requirements->name])) {
             $res = $_POST['data'][$requirements->name];
+
+            if($key == "company_email" && !stristr($res, "@")) {
+                $this->validation[$requirements->name] = $this->__w("Not a valid email");
+            }
+
+            if($key == "user_emailAddress" && !stristr($res, "@")) {
+                $this->validation[$requirements->name] = $this->__w("Not a valid email");
+            }
 
             if($requirements->required && !$res) {
                 $this->validation[$requirements->name] = $this->__w("Field is required");

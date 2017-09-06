@@ -34,10 +34,11 @@ class Vipps extends \PaymentApplication implements \Application {
     }
 
     public function saveSettings() {
-        $this->setConfigurationSetting("userid", $_POST['userid']);
-        $this->setConfigurationSetting("auth_secret", $_POST['auth_secret']);
-        $this->setConfigurationSetting("xrequestid", $_POST['xrequestid']);
-        $this->setConfigurationSetting("merchantid", $_POST['merchantid']);
+        $this->setConfigurationSetting("clientid", $_POST['clientid']);
+        $this->setConfigurationSetting("secret", $_POST['secret']);
+        $this->setConfigurationSetting("subscriptionkeyprimary", $_POST['subscriptionkeyprimary']);
+        $this->setConfigurationSetting("subscriptionkeysecondary", $_POST['subscriptionkeysecondary']);
+        $this->setConfigurationSetting("serialNumber", $_POST['serialNumber']);
     }
 }
 ?>

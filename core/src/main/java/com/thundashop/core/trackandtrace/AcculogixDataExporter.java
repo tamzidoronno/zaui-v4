@@ -247,6 +247,11 @@ public class AcculogixDataExporter {
             exp.TotalPieces = order.originalQuantity;
             
             toAdd.add(exp);
+            
+            if (order.exceptionId != null && !order.exceptionId.isEmpty()) {
+                exp.TaskStatus = exceptions.get(order.exceptionId).name;
+                exp.ORStatus = exp.TaskStatus;
+            }
         }
         
         return toAdd;

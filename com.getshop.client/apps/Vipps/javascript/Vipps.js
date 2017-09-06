@@ -47,13 +47,10 @@ app.Vipps = {
         var event = thundashop.Ajax.createEvent('','startVippsPayment', $(this), data);
         thundashop.Ajax.postWithCallBack(event, function(res) {
             res = JSON.parse(res);
-            if(typeof(res.transactionInfo) !== "undefined") {
-                var transactionId = res.transactionInfo.transactionId;
-            }
-            if(typeof(transactionId) === "undefined") {
+            if(res.status !== "success") {
                 app.Vipps.displayError();
             } else {
-                var orderId = res.orderId;
+                var orderId = res.orderid;
                 app.Vipps.waitForCompletion(orderId);
             }
             console.log(res);

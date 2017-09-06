@@ -1454,7 +1454,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void notifyAdmin(String key, PmsBooking booking) {
         String message = configuration.adminmessages.get(key);
         if (message == null) {
-            return;
+            return; 
         }
 
         message = formatMessage(message, booking, null, null);
@@ -1522,6 +1522,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
         convertTextDates(filter);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(filter.startDate);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        filter.startDate = cal.getTime();
+        
+        cal.setTime(filter.endDate);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        filter.endDate = cal.getTime();
+        
+        
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
         PmsPricing prices = getDefaultPriceObject();
@@ -3958,6 +3973,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public HashMap<String, String> getChannelMatrix() {
         HashMap<String, String> res = new HashMap();
+        res.put("web", "Website");
         HashMap<String, PmsChannelConfig> getChannels = configuration.getChannels();
         for(String key : getChannels.keySet()) {
             if(getChannels.get(key).channel != null && !getChannels.get(key).channel.isEmpty()) {
@@ -3988,6 +4004,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBooking> res = new ArrayList();
         for(PmsBooking booking : finalized) {
             if(booking.channel != null && booking.channel.equals(channel)) {
+                res.add(booking);
+            }
+            if(channel.equals("web") && (booking.channel == null || booking.channel.trim().isEmpty())) {
                 res.add(booking);
             }
         }
@@ -4903,9 +4922,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void sendConfirmation(String email, String bookingId) {
+    public void sendConfirmation(String email, String bookingId, String type) {
         emailToSendTo = email;
-        doNotification("booking_completed", bookingId);
+        
+        if(type == "confirmation") {
+            doNotification("booking_confirmed", bookingId);
+        } else {
+            doNotification("booking_completed", bookingId);
+        }
+        
     }
 
     @Override
@@ -5231,6 +5256,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(view.sortType == PmsMobileView.PmsMobileSortyType.BYOWNER) {
             Collections.sort(items, new Comparator<PmsBookingAddonViewItem>(){
                 public int compare(PmsBookingAddonViewItem s1, PmsBookingAddonViewItem s2) {
+                    if(s1 == null || s1.owner == null || s2 == null || s2.owner == null) {
+                        return 0;
+                    }
                     return s1.owner.compareTo(s2.owner);
                 }
             });

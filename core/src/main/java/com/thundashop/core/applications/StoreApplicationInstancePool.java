@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -214,5 +217,22 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
                 secureClone.settings.put(key, application.settings.get(key).secureClone());
             }
         }
+    }
+
+    public ApplicationInstance makeDuplicatedApplication(String appId) {
+        ApplicationInstance app = getApplicationInstance(appId);
+        if (app != null) {
+            try {
+                ApplicationInstance newApp = (ApplicationInstance) app.clone();
+                newApp.id = UUID.randomUUID().toString();
+                applicationInstances.put(newApp.id, newApp);
+                saveObject(newApp);
+                return newApp;
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(StoreApplicationInstancePool.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    
+        return null;
     }
 }

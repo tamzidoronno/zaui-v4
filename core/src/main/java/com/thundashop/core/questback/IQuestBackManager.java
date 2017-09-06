@@ -139,4 +139,7 @@ public interface IQuestBackManager {
     
     @Administrator
     public String exportToExcel();
+    
+    @Administrator
+    public String importExcel(String base64, String language);
 }

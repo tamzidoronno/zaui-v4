@@ -59,7 +59,7 @@ public class ViewSmsHistory {
         Database database = context.getBean(Database.class);
         
         // 1 = januar
-        int month = 5;
+        int month = 7;
         int year = 2017;
         
         Date start = getDate(year, month,1);
@@ -80,11 +80,13 @@ public class ViewSmsHistory {
         hist.view(database, "Fasthotel - svolvær", "917 533 555");
         hist.view(database, "Fasthotel - havna", "818 772 092");
         hist.view(database, "Jernbaneplassen", "");
+        hist.view(database, "Trysilhotell", "");
+        hist.view(database, "Ilandtunet", "");
         
         System.exit(0);
     }
-
-    private static Date getDate(int year, int mont, int day) {
+ 
+   private static Date getDate(int year, int mont, int day) {
         mont = mont - 1;
         Calendar cal = Calendar.getInstance();
         cal.set(year, mont, day,0,0,0);
@@ -101,8 +103,16 @@ public class ViewSmsHistory {
             return "9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0";
         }
         
+        if (storeName.equals("Trysilhotell")) {
+            return "b6949f70-5e41-4c5e-abcf-d595450f8048";
+        }
+        
         if (storeName.equals("pronorge")) {
             return "17f52f76-2775-4165-87b4-279a860ee92c";
+        }
+        
+        if (storeName.equals("Ilandtunet")) {
+            return "a6c4029c-485e-4407-b7ad-8de3b17a951c";
         }
         
         if (storeName.equals("prosweden")) {

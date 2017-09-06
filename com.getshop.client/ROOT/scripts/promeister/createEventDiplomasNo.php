@@ -60,14 +60,15 @@ if ($eventHelder) {
     .title1 { 
         padding-top: 550px; 
         font-size: 20px; 
-        font-size: 40px; 
-        font-weight: bold;
+        font-size: 45px; 
+        font-weight: normal;
     }
     
     .candidatename {
         padding-top: 50px;
         font-size: 30px;
         text-transform: uppercase;
+        font-weight: bold;
     }
     
     .companyname {

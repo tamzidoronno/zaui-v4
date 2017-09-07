@@ -478,8 +478,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
-        booking.sessionId = "";
         verifyPhoneOnBooking(booking);
+        booking.sessionId = "";
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);
@@ -4358,6 +4358,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private boolean verifyPhoneOnBooking(PmsBooking booking) {
+        if(booking.isCompletedBooking()) {
+            return false;
+        }
         String countryCode = booking.countryCode;
         try {
             HashMap<Integer, String> list = PhoneCountryCodeList.getList();

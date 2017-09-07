@@ -435,8 +435,9 @@ public class InvoiceFrontPage {
             writeText(String.format("%.2f", (cartItem.getCount() * cartItem.getProduct().price))+getCurrency(), 560, pos, false, 8, true);
             
             String name = createLineText(cartItem);
+            name = name.toLowerCase();
             
-            int linebreakchars = 80;
+            int linebreakchars = 78;
             if (name.length() > linebreakchars) {
                 int rounds = name.length() / linebreakchars + 1;
                 for (int j=0; j<rounds; j++) {

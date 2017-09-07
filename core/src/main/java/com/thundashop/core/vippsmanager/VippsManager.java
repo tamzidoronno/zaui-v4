@@ -59,12 +59,12 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         String startEndpoint = endpoint;
         
-        if(!frameworkConfig.productionMode) {
+        if(!getProductionMode()) {
             startEndpoint = endpointTest;
         }
         
         String key = serialNumber + "-vippsdev";
-        if(frameworkConfig.productionMode) {
+        if(getProductionMode()) {
             key = serialNumber + "-vippsprod";
         }
         
@@ -94,7 +94,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             body.transaction.timeStamp = sdf.format(new Date());
             String json = gson.toJson(body);
             
-            if(!frameworkConfig.productionMode) {
+            if(!printDebugData()) {
                 System.out.println("------------");
                 System.out.println("Endpoint: " + url);
                 for(String k : header.keySet()) {
@@ -137,7 +137,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         String serialNumber = vippsApp.getSetting("serialNumber");
         
         String pollKey = serialNumber + "-vippsdev";
-        if(frameworkConfig.productionMode) {
+        if(getProductionMode()) {
             pollKey = serialNumber + "-vippsprod";
         }
         try {
@@ -200,7 +200,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
 
         String startEndpoint = endpoint;
         
-        if(!frameworkConfig.productionMode) {
+        if(!getProductionMode()) {
             startEndpoint = endpointTest;
         }
         
@@ -215,7 +215,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         header.put("X-App-Id", clientId);
         header.put("Ocp-Apim-Subscription-Key", ocp);
         
-        if(!frameworkConfig.productionMode) {
+        if(!printDebugData()) {
             System.out.println("---------");
             System.out.println("Endpoint:" + url);
             for(String k : header.keySet()) {
@@ -231,7 +231,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         Gson gson = new Gson();
         String res = webManager.htmlPostBasicAuth(url, gson.toJson(cancelation), true, "UTF-8", "", "", false, "PUT", header);
-        if(!frameworkConfig.productionMode) {
+        if(!printDebugData()) {
             System.out.println("---------");
             System.out.println(res);
             System.out.println("---------");
@@ -248,7 +248,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         String startEndpoint = endpoint;
         
-        if(!frameworkConfig.productionMode) {
+        if(!getProductionMode()) {
             startEndpoint = endpointTest;
         }
         
@@ -261,7 +261,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         try {
             
-            if(!frameworkConfig.productionMode) {
+            if(!printDebugData()) {
                 System.out.println("------------");
                 System.out.println("Endpoint:" + url);
                 for(String k : header.keySet()) {
@@ -302,7 +302,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
 
         String startEndpoint = endpoint;
         
-        if(!frameworkConfig.productionMode) {
+        if(!getProductionMode()) {
             startEndpoint = endpointTest;
         }
         
@@ -318,7 +318,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         header.put("X-App-Id", clientId);
         header.put("Ocp-Apim-Subscription-Key", ocp);
         
-        if(!frameworkConfig.productionMode) {
+        if(!printDebugData()) {
             System.out.println("---------");
             System.out.println("Endpoint:" + url);
             for(String k : header.keySet()) {
@@ -334,7 +334,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         try {
             String res = webManager.htmlPostBasicAuth(url, gson.toJson(cancelation), true, "UTF-8", "", "", false, "POST", header);
-            if(!frameworkConfig.productionMode) {
+            if(!printDebugData()) {
                 System.out.println("---------");
                 System.out.println(res);
                 System.out.println("---------");
@@ -345,6 +345,15 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             return false;
         }
         
+    }
+
+    private boolean getProductionMode() {
+//        return true;
+        return frameworkConfig.productionMode;
+    }
+    
+    private boolean printDebugData() {
+        return true;
     }
 
     

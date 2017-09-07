@@ -35,6 +35,7 @@ All orders;-;Alle bestilinger
 All products;-;Alle produkter
 All the time;-;Hele tiden
 Already signed up;-;Allerede registrert
+Amount to pay;-;Beløp å betale
 An email has been sent with a code to use in step 2.;-;En epost har blitt sendt til deg som kan benyttes i steg 2.s
 Anchor;-;Anker
 Application;-;Applikasjoner
@@ -200,6 +201,7 @@ Ends;-;Avslutter
 Enter a new password.;-;Skriv inn ditt nye passord
 Enter room number;-;Skriv inn nom nummeret ditt
 Enter the code sent to your email/sms.;-;Oppgi koden som er sendt til deg på epost/sms
+Enter your phone number;-;Skriv inn ditt tlf nummer
 Event label (google analythics);-;Event label (google analythics)
 Event name;-;Navn på kurs
 Every {periode} week;-;Hver {periode} uke
@@ -349,6 +351,7 @@ No header uploaded for mobile potrait mode yet, please upload one.;-;Ingen heade
 No items;-;Ingen elementer
 No rooms are available.;-;Ingen rom er tilgjengelig
 No users added yet;-;Ingen brukere lagt til enda
+Not a valid email;-;Ikke en gyldig epost adresse
 Not available;-;Ikke tilgjengelig
 Not confirmed;-;Ikke bekreftet
 Not invoiced yet;-;Ikke fakturert enda
@@ -404,6 +407,7 @@ Payment fee;-;Betalingsgebyr
 Payment information;-;Betalings informasjon
 Payment successfully completed;-;Betalingen gjennomført
 Phone;-;Telefon
+Phone number;-;Telefon nummer
 Phone number for company;-;Tlf nummer for firmaet
 Pillow;-;Putetrekk
 Pin area;-;Pin til område
@@ -418,6 +422,7 @@ Please enter your email address or cellphone number:;-;Oppgi epostaddresse eller
 Please enter your room number;-;Skriv inn nom nummeret ditt
 Please enter your username and password;-;Skriv inn ditt brukernavn og passord
 Please following theese steps to recover your password.;-;Vennligst følgt instruksjonen under.
+Please open the vipps application and accept the payment.;-;Vennligst åpne vipps på din mobil og godkjenn betalingen.
 Please select a payment method.;-;Vennligst velg en betalingsmetode
 Please select a user in the left menu;-;Vennligst velg en bruker fra venstre meny.
 Please select a valid payment method;-;Vennligst velg en gyldig betalings metode.
@@ -465,6 +470,7 @@ Repeats every {periode} week;-;Repeter hver {periode} uke
 Repeats montly same date in month;-;Repeteres månedlig på fast dato i måneden
 Repeats montly same day in week;-;Repeters daglig på fast dag i uken
 Reply;-;Svar
+Resend booking;-;Send bookingen p ånytt
 Reserve room now;-;Reserver rom nå
 Reserve your room now;-;Reserver ditt rom nå
 Reserve your storage room now;-;Reserver din bod nå
@@ -553,6 +559,7 @@ Su;-;Sø
 Subject to recipient;-;Tittel på motaker
 Subscription selected;-;Abonnement som er valgt
 Success;-;Success
+Success.;-;Success.
 Summary;-;Oppsummering
 Sun;-;Søn
 Sunday;-;Søndag
@@ -646,8 +653,10 @@ You do not have any products in your cart;-;Du har ingen produkter i din handlek
 You got rooms that are not available in the selected time periode.;-;Det er rom som ikke er tilgjenglig i valgt periode.
 You have not participated in any events yet.;-;Du har ikke deltatt på noen eventer enda
 You have not signed up for any events yet.;-;Du har ikke deltatt på noen eventer enda.
+You have successfully paid with vipps.;-;Du har fullført betalingen med vipps.
 You need to agree to the terms and conditions;-;Du må godta bruksvilkårene før du kan fortsette.
 You need to select at least one to send back message to;-;Du må velge minium en som du kan sende en melding til.
+You should recieve a payment message in your vipps application.;-;Du vil nå motta informasjon om hvordan du betaler via din vipps app.
 Your email;-;Din epost
 Your message has been delivered;-;Din melding har blitt sendt.
 Your name;-;Ditt navn
@@ -681,6 +690,7 @@ tax;-;moms
 until;-;frem til
 view as calendar;-;Vis som kalender
 view as list;-;Vis som liste
+waiting for payment to be completed.;-;Venter på at betalingen skal bli utført.
 week;-;uke
 weeks;-;uker
 when booked;-;ved booking

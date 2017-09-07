@@ -231,6 +231,12 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
 
     public function needToBeCleared() {
         $booking = $this->getBooking();
+        $bookingTime = strtotime($booking->rowCreatedDate);
+        $diff = time() - $bookingTime;
+
+        if($diff > (60*60)) {
+            return true;
+        }
         $res = (array)$booking->registrationData->resultAdded;
         if(sizeof($res) > 0) {
             return true;

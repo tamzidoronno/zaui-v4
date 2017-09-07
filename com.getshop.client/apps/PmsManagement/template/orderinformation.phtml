@@ -346,7 +346,7 @@ if($booking->orderIds) {
         }
         echo "</td>";
         echo "<td>";
-            if(@$order->closed && !@$order->isCreditNote && sizeof(@$order->creditOrderId) == 0) {
+            if(@$order->closed && !@$order->isCreditNote) {
                 echo "<span class='doCreditOrder'>Credit order</span>";
             } else {
                 echo "This order can not be credited.";

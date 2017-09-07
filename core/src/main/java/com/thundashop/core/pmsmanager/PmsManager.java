@@ -2053,6 +2053,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room.isEndingToday(day) && !getConfiguration().autoExtend) {
             return false;
         }
+        
+        if (room.isStartingToday(day) && !getConfiguration().autoExtend) {
+            return false;
+        }
         if (!room.isActiveOnDay(day)) {
             if(getConfiguration().autoExtend && room.isEndingToday(day)) {
                 //This is atleast a safe bet.
@@ -3359,7 +3363,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             PmsRoomSimple converted = filtering.convertRoom(r, booking);
             converted.roomCleaned = isClean(r.bookingItemId);
             converted.hasBeenCleaned = (converted.roomCleaned || isUsedToday(r.bookingItemId));
-
             res.add(converted);
         }
         return res;

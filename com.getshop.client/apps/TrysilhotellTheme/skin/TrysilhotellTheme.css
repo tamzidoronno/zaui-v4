@@ -1,6 +1,6 @@
 .gsmobileheader { display:none; }
 body{color:#222;font-family:"Source Sans Pro", sans-serif;}
-a{color:#e09400;}
+.ContentManager a{color:#00509d;}
 .gsarea[area="header"]{width:100%;background-color: #272729;max-height:90px;min-height:76px;border-bottom:3px solid #fff;}
 .gsarea[area="header"] .gs_page_width{height:auto;padding:0;max-width:1160px;background-color:rgba(0,0,0,0);}
 .gsarea[area="header"] .gs_page_width, .gs_page_width{max-width:1160px;margin:auto;}

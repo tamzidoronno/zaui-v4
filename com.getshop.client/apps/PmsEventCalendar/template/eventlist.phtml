@@ -3,6 +3,7 @@
 $cats = $this->getCategories();
 $entries = $this->getEventList();
 $searchword = $this->getFilteredCategory();
+$numberofevents = $this->getConfigurationSetting('setting_numberofevents');
 
 $datelist = array();
 $indexrange = array();
@@ -89,6 +90,9 @@ foreach($entries as $eventEntry) {
             break;
         }
         if(isset($_GET['list']) && $_GET['list'] == "tiny" && $i == 3) {
+            break;
+        }
+        if(isset($numberofevents) && $i == $numberofevents){
             break;
         }
     }

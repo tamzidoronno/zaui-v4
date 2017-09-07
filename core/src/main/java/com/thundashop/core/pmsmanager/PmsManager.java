@@ -962,11 +962,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         checkAndReportPriceMatrix(booking, "saving invalid price matrix 2");
         bookings.put(booking.id, booking);
-        try {
-            verifyPhoneOnBooking(booking);
-        }catch(Exception e) {
-            logPrintException(e);
-        }
         
         if(booking.priceType == PmsBooking.PriceType.daily) {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -4358,9 +4353,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private boolean verifyPhoneOnBooking(PmsBooking booking) {
-        if(booking.isCompletedBooking()) {
-            return false;
-        }
         String countryCode = booking.countryCode;
         try {
             HashMap<Integer, String> list = PhoneCountryCodeList.getList();

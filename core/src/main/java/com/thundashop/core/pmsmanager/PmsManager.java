@@ -478,8 +478,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
-        verifyPhoneOnBooking(booking);
         booking.sessionId = "";
+        verifyPhoneOnBooking(booking);
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);

@@ -47,6 +47,9 @@ body{background-color:#f9f9f9;font-family: 'Source Sans Pro', sans-serif;font-si
 .PmsCalendar .ContentManager {top:0;}
 .PmsBookingContactData .complete_button{background-color:#00a5ea;margin-right:0;}
 
+.PmsEventCalendar table{line-height:1;}
+.PmsEventCalendar .datecol{padding:10px;}
+.PmsEventCalendar .listtext{font-size:12px;}
 
 @media only all and (max-width:800px){
 
@@ -82,4 +85,6 @@ body{background-color:#f9f9f9;font-family: 'Source Sans Pro', sans-serif;font-si
         background-position:center;
         background-size:cover;
     }
+    .PmsManagement .secondary_text{display:block;}
+    .PmsManagement .roominfosub{width:auto;white-space:normal;}
 }

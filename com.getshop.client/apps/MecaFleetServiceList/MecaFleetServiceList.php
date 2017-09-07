@@ -18,18 +18,22 @@ class MecaFleetServiceList extends \MarketingApplication implements \Application
     }
     
     public function serviceCompleted() {
+        $this->checkError();
         $date = $this->convertToJavaDate(time());
-        $this->getApi()->getMecaManager()->resetServiceInterval($_POST['data']['carid'], $date, 125000);
+        $this->getApi()->getMecaManager()->resetServiceInterval($_POST['data']['carid'], $date, $_POST['data']['currentkilometers']);
+        
     }
     
     public function pkkCompleted() {
+        $this->checkError();
         $date = $this->convertToJavaDate(time());
         $this->getApi()->getMecaManager()->markControlAsCompleted($_POST['data']['carid']);
     }
     
     public function serviceAndCompleted() {
+        $this->checkError();
         $date = $this->convertToJavaDate(time());
-        $this->getApi()->getMecaManager()->resetServiceInterval($_POST['data']['carid'], $date, 125000);
+        $this->getApi()->getMecaManager()->resetServiceInterval($_POST['data']['carid'], $date, $_POST['data']['currentkilometers'] );
         $this->getApi()->getMecaManager()->markControlAsCompleted($_POST['data']['carid']);
     }
     
@@ -46,6 +50,16 @@ class MecaFleetServiceList extends \MarketingApplication implements \Application
             return $this->getApi()->getMecaManager()->getCarsServiceList(false);
         }
         
+    }
+
+    public function checkError() {
+        if (!isset($_POST['data']['currentkilometers']) || !$_POST['data']['currentkilometers']) {
+            $obj = $this->getStdErrorObject(); // Get a default error message
+            $obj->fields->errorMessage = "<i class='fa fa-warning'></i> Kilometerstanden må være oppgitt"; // The message you wish to display in the gserrorfield
+            $obj->gsfield->hours = 1; // Will highlight the field that has gsname "hours"
+            $this->doError($obj); // Code will stop here.
+        }
+
     }
 
 }

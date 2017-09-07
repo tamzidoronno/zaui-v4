@@ -38,6 +38,7 @@ public class WilhelmsenHouse implements AccountingInterface {
     @Override
     public List<String> createUserFile(List<User> users) {
         users.add(userManager.getUserById("a775ffcb-d3c4-469d-a980-a09f10144d2e")); //Dibs user.
+        users.add(userManager.getUserById("0e4e6040-e717-4ac0-9a21-c9831a9d1cb3")); //Vipps user.
         List<String> lines = new ArrayList();
         for(User user : users) {
             /*
@@ -268,6 +269,8 @@ public class WilhelmsenHouse implements AccountingInterface {
             ordrehode += order.incrementOrderId + ";"; // GetShop ordre id
             if (order.payment != null && order.payment.paymentType.equals("ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\\ExpediaPayment")) {
                 ordrehode += "11072;"; // Expedia customer id.
+            } else if (order.payment != null && order.payment.paymentType.equals("ns_f1c8301d_9900_420a_ad71_98adb44d7475\\Vipps")) {
+                ordrehode += "24359;"; // Vipps customer id.
             } else {
                 ordrehode += user.customerId + ";"; // Kundenr 
             }

@@ -153,6 +153,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         credited.status = Order.Status.CREATED;
         credited.parentOrder = order.id;
         credited.creditOrderId.clear();
+        credited.closed = false;
         order.creditOrderId.add(credited.id);
         order.doFinalize();
         saveOrder(credited);

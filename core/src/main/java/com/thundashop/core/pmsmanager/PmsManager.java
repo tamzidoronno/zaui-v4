@@ -479,7 +479,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         booking.sessionId = "";
-        verifyPhoneOnBooking(booking);
+        verifyPhoneOnBooking(booking, true);
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);
@@ -962,6 +962,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         checkAndReportPriceMatrix(booking, "saving invalid price matrix 2");
         bookings.put(booking.id, booking);
+        
+        try {
+            verifyPhoneOnBooking(booking, false);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
         
         if(booking.priceType == PmsBooking.PriceType.daily) {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
@@ -4352,7 +4358,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
-    private boolean verifyPhoneOnBooking(PmsBooking booking) {
+    private boolean verifyPhoneOnBooking(PmsBooking booking, boolean verifyPrefixFromCountryCode) {
         String countryCode = booking.countryCode;
         try {
             HashMap<Integer, String> list = PhoneCountryCodeList.getList();
@@ -4371,7 +4377,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             String prefix = user.prefix;
             
-            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ prefix,user.cellPhone, countryCode);
+            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ prefix,user.cellPhone, countryCode, verifyPrefixFromCountryCode);
             if(res != null) {
                 prefix = res.get("prefix");
                 String phone = res.get("phone");
@@ -4389,7 +4395,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         boolean save = false;
         for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             for(PmsGuests guest : room.guests) {
-                HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ guest.prefix,guest.phone, countryCode);
+                HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ guest.prefix,guest.phone, countryCode, verifyPrefixFromCountryCode);
                 if(res != null) {
                     String prefix = res.get("prefix");
                     String phone = res.get("phone");

@@ -458,7 +458,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         try {
-            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ user.prefix,user.cellPhone, "NO");
+            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ user.prefix,user.cellPhone, "NO", true);
             if(res != null) {
                 String prefix = res.get("prefix");
                 String phone = res.get("phone");

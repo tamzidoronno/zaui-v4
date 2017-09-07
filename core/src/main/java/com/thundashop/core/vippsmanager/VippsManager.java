@@ -118,7 +118,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             orderManager.saveOrder(order);
             return true;
         }catch(Exception e) {
-            e.printStackTrace();
+            logPrintException(e);
             return false;
         }
         
@@ -221,12 +221,12 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         header.put("Ocp-Apim-Subscription-Key", ocp);
         
         if(!printDebugData()) {
-            System.out.println("---------");
-            System.out.println("Endpoint:" + url);
+            logPrint("---------");
+            logPrint("Endpoint:" + url);
             for(String k : header.keySet()) {
-                System.out.println(k + ":" + header.get(k));
+                logPrint(k + ":" + header.get(k));
             }
-            System.out.println("---------");
+            logPrint("---------");
         }
         
         CancelRequest cancelation = new CancelRequest();
@@ -237,9 +237,9 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         Gson gson = new Gson();
         String res = webManager.htmlPostBasicAuth(url, gson.toJson(cancelation), true, "UTF-8", "", "", false, "PUT", header);
         if(!printDebugData()) {
-            System.out.println("---------");
-            System.out.println(res);
-            System.out.println("---------");
+            logPrint("---------");
+            logPrint(res);
+            logPrint("---------");
         }
         
         return true;
@@ -285,7 +285,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             AccessTokenResponse tokeResp = gson.fromJson(res, AccessTokenResponse.class);
             return tokeResp.access_token;
         }catch(Exception e) {
-            e.printStackTrace();
+            logPrintException(e);
             return "";
         }
     }

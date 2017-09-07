@@ -160,7 +160,9 @@ public class Page extends DataCommon implements Cloneable {
         if (isASlavePage()) {
             overrideApps.put(cellId, instanceId);
         } else {
-            getCell(cellId).appId = instanceId;
+            if (getCell(cellId) != null) {
+                getCell(cellId).appId = instanceId;
+            }
         }
     }
 

@@ -263,9 +263,9 @@
     color: #fff;
     float: right;
     font-size: 27px;
-    border-left: 1px solid #fff;
-    padding-left: 15px;
-    padding-right: 20px;
+    border-right: 1px solid #fff;
+    padding-right: 12px;
+    margin-right: 25px;
     cursor: pointer;
 }
 .PmsManagement .managementviewquickfilter{
@@ -407,8 +407,41 @@
     padding: 10px;
     height: 200px;
 }
-
+.PmsManagement .gs_icon{
+    display:block !important;
+    top:5px;
+    padding:6px;
+    box-shadow: 0 0;
+    background-color:#2885c0;
+}
+@media only all and (max-width:1280px){
+    .PmsManagement .managementviewdateinput{padding:7px 4px;height: 16px;width: 66px;}
+    .PmsManagement .managementviewdropdowninput{padding: 2px;max-width: 95px;}
+    .PmsManagement .manegementviewbutton{padding: 7px 0.3%;margin-left: 0.5%;}
+    .PmsManagement .managementviewsearchcontainer .fa-search{padding-left:5%;width:10%;}
+    .PmsManagement .managementviewsearchcontainer{width:12%;}
+    .PmsManagement .managementviewinput{padding: 0px;width: 80%;box-sizing: border-box;}
+}
+@media only all and (max-width:900px){
+    .PmsManagement .gs_icon{
+        display:none !important;
+    }
+    .PmsManagement .managementviewoptions{
+        visibility: hidden;
+        width: 13px;
+        height:0;
+    }
+    .PmsManagement .managementviewoptions:before{
+        visibility: visible;
+    }
+    .PmsManagement .managementviewbanner .fa-mobile-phone{
+        margin: 0;
+        border:0;
+        padding-right: 4px;
+    }
+}
 @media only all and (max-width:800px){
+    .PmsManagement .managementviewoptions{visibility: visible;width: auto;height:auto;}
     .gseditrowbuttons{display:none !important;}
     .PmsManagement .managementviewinput{
         height:auto;
@@ -423,14 +456,17 @@
         box-sizing: border-box;
         margin: 0 0 5px 0;
         height:auto;
+        max-width: 100%;
     }
-    .PmsManagement .managementviewsearchcontainer{padding:5px;width:100%;box-sizing:border-box;margin:3px 0 5px 0;}
+    .PmsManagement .managementviewsearchcontainer{padding:10px;width:100%;box-sizing:border-box;margin:3px 0 5px 0;}
     .PmsManagement .manegementviewbutton{
         width: 32%;
         margin: 0;
-        padding: 10px;
+        padding: 9px;
         text-align: center;
+        border:1px solid #1a557b;
     }
+    .PmsManagement .manegementviewbutton.fa-undo{border: 1px solid #fff;}
     .PmsManagement .managementviewbanner .fa-mobile-phone{padding:0 10px 0 10px;margin-top: 3px;}
     .PmsManagement .managementviewquickfilter{height:auto;padding:10px 0 10px 0;}
     .PmsManagement .manegementviewfilterquickopt{margin: 0;padding: 4px 4px 10px 4px;}

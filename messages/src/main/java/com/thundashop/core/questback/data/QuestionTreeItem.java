@@ -18,4 +18,6 @@ public class QuestionTreeItem {
     public String id = "";
     public String text = "";
     public String parentId = "";
+    public String pageId = "";
+    public int type;
 }

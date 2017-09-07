@@ -16,6 +16,8 @@ import com.thundashop.core.common.ApplicationInstance;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.Setting;
+import com.thundashop.core.common.Settings;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.eventbooking.Event;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -33,10 +35,17 @@ import com.thundashop.core.questback.data.UserQuestionAnswer;
 import com.thundashop.core.questback.data.UserTestResult;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -871,4 +880,90 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         
         return "";
     }
+
+    @Override
+    public String importExcel(String base64, String language) {
+        List<QuestBackImportRow>  treeList = new QuestBackImporter(instancePool, pageManager, language).importExcel(base64);
+        questionTreeChanged("eed3197f-8e24-4cc1-a03e-95931f572653");
+        
+        for (QuestBackImportRow topLevel : treeList) {
+            for (QuestBackImportRow question : topLevel.children) {
+                Page originalPage = pageManager.getPage(question.col4);
+                
+                String pageId = getPageId(question.col4 + "_" + language);
+                Page page = pageManager.getPage(pageId);
+                
+                if (originalPage != null && originalPage.getCell("dbe86a45-7353-474c-ac78-55c9bf838c78") != null && originalPage.getCell("dbe86a45-7353-474c-ac78-55c9bf838c78").appId != null && !originalPage.getCell("dbe86a45-7353-474c-ac78-55c9bf838c78").appId.isEmpty()) {
+                    ApplicationInstance application = instancePool.makeDuplicatedApplication(originalPage.getCell("dbe86a45-7353-474c-ac78-55c9bf838c78").appId);
+                    
+                    page.addApplication("dbe86a45-7353-474c-ac78-55c9bf838c78", application.id);
+                    pageManager.savePage(page);
+                }
+                
+                List<ApplicationInstance> instances = page.getCellsFlatList().stream()
+                        .map(cell -> cell.appId)
+                        .map(appId -> storeApplicationInstancePool.getApplicationInstance(appId))
+                        .filter(appInstance -> appInstance != null && appInstance.appSettingsId != null && appInstance.appSettingsId.equals("07422211-7818-445e-9f16-ad792320cb10"))
+                        .collect(Collectors.toList());
+                
+                if (!instances.isEmpty()) {
+                    setSettingsToApplication("type", question.col3, instances.get(0).id);
+                    
+                    String headerText = getHeaderText(question.children);
+                    if (headerText != null) {
+                        setSettingsToApplication("headingtext", headerText, instances.get(0).id);
+                    }
+                    
+                    List<QuestBackOption> options = getOptions(question.children);
+                    Gson gson = new Gson();
+                    setSettingsToApplication("options", gson.toJson(options), instances.get(0).id);
+                }
+            }
+        }
+        return "";
+    }
+    
+    public void setSettingsToApplication(String key, String value, String appId) {
+        Setting setting = new Setting();
+        setting.id = key;
+        setting.value = value;
+        setting.name = key;
+        setting.secure = false;
+        
+        Settings settings = new Settings();
+        settings.settings = new ArrayList();
+        settings.settings.add(setting);
+        
+        settings.appId = appId;
+        
+        instancePool.setApplicationSettings(settings);
+    }
+    
+    private List<QuestBackOption> getOptions(List<QuestBackImportRow> children) {
+        List<QuestBackOption> retList = new ArrayList();
+        
+        for (QuestBackImportRow row : children) {
+            if (row.col5 != null && !row.col5.equals("heading")) {
+                QuestBackOption option = new QuestBackOption();
+                option.correctAnswer = row.col5.equals("TRUE");
+                option.text = row.col4;
+                option.id = UUID.randomUUID().toString();
+                
+                retList.add(option);
+            }
+        }
+        
+        return retList;
+    }
+
+    private String getHeaderText(List<QuestBackImportRow> children) {
+        for (QuestBackImportRow row : children) {
+            if (row.col5 != null && row.col5.equals("heading")) {
+                return row.col4;
+            }
+        }
+        
+        return null;
+    }
+
 }

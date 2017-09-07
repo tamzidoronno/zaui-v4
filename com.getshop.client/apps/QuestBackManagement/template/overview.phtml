@@ -8,8 +8,8 @@ if ($tree) {
 }
 
 function printItem($item) {
-    $liclass = $item->li_attr->class;
-    $nodeId = $item->li_attr->nodeid;
+    $liclass = @$item->li_attr->class;
+    $nodeId = @$item->li_attr->nodeid;
     echo "<ul><li class='$liclass' nodeid='$nodeId' id='$nodeId'>".$item->text;
         if (count($item->children)) {
             echo "<ul>";
@@ -41,6 +41,7 @@ function printItem($item) {
 
 <br/>
 <div class="shop_button" gsclick="downloadExcel" style="">Download Excel</div>
+<div class="shop_button" gsclick="triggerUpload" style="display: none;">Trigger upload</div>
 
 <script>
     app.QuestBackManagement.createTree('<? echo $id;?>');

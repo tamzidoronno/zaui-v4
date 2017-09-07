@@ -25,6 +25,10 @@ $dateType = $this->getConfigurationSetting("date_type");
             <td width="50%"><? echo $this->__w("Category items"); ?></td>
             <td width="50%"><input type="text" gsname="setting_categoryitems" placeholder="Use semicolon / ; to seperate categories" style='width:100%;' value="<? echo $categoryitems ?>"></td>
         </tr>
+        <tr>
+            <td width="50%"><? echo $this->__w("Number of events"); ?></td>
+            <td width="50%"><input type='number' gsname='setting_numberofevents' style='width:100%;' value='<? echo $this->getConfigurationSetting("setting_numberofevents"); ?>'></td>
+        </tr>
     </table>
     <input gstype="submit" type="button" value='Save'>
 </div>

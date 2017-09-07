@@ -98,9 +98,11 @@ $cars = $this->getCarList();
             if ($agreementStatus === "green") {
                 echo '<div class="details">';
                 echo "Sjåfør eller kjøretøy har bekreftet servicedato: " . date('d/m-Y H:i', strtotime($car->nextServiceAgreed));
-                echo "<br/><span class='shop_button' gsclick='serviceCompleted' carid='$car->id'> Service gjennomført</span>";
-                echo " <span class='shop_button' gsclick='pkkCompleted' carid='$car->id'> PKK Gjennomført</span>";
-                echo " <span class='shop_button' gsclick='serviceAndCompleted' carid='$car->id'> Service og PKK Gjennomført</span>";
+                echo "<br/> Nåværende kilometerstand <input gsname='currentkilometers' class='current_kilometers' type='number'/> ";
+                echo "<div style='block;' class='gserrorfield' id='errorMessage'></div>";
+                echo "<br/><span class='shop_button' gs_also='current_kilometers' gsclick='serviceCompleted' carid='$car->id'> Service gjennomført</span>";
+                echo " <span class='shop_button' gs_also='current_kilometers' gsclick='pkkCompleted' carid='$car->id'> PKK Gjennomført</span>";
+                echo " <span class='shop_button' gs_also='current_kilometers' gsclick='serviceAndCompleted' carid='$car->id'> Service og PKK Gjennomført</span>";
                 ?>
                 <span style='margin-top: 5px;' class="shop_button" gsclick='noShow' carid='<? echo $car->id; ?>' type='control'>Ikke møtt</span>
                 <?

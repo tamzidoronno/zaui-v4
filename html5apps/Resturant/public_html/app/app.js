@@ -50,3 +50,12 @@ angular.module('TrackAndTrace').factory('$exceptionHandler',
             $state.transitionTo('base.errorhandler');
         };
     });
+    
+showErrorMessage = function(msg) {
+    $('.errormsgplace').html(msg);
+    $('.errormsgplace').slideDown();
+    
+    setTimeout(function() {
+        $('.errormsgplace').slideUp();
+    }, 5000);
+}

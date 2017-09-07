@@ -232,3 +232,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', end
     right: 40px;
     font-size: 30px;
 }
+
+.errormsgplace {
+    text-align: center;
+    padding: 20px;
+    background-color: red;
+    color: #FFF;
+    display: none;
+}

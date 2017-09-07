@@ -94,17 +94,22 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             body.transaction.timeStamp = sdf.format(new Date());
             String json = gson.toJson(body);
             
-            if(!printDebugData()) {
-                System.out.println("------------");
-                System.out.println("Endpoint: " + url);
+            if(printDebugData()) {
+                logPrint("------------");
+                logPrint("Endpoint: " + url);
                 for(String k : header.keySet()) {
-                    System.out.println(k + " : " + header.get(k));
+                    logPrint(k + " : " + header.get(k));
                 }
-                System.out.println("Json:\n" + json);
-                System.out.println("------------");
+                logPrint("Json:\n" + json);
+                logPrint("------------");
             }
 
             String res = webManager.htmlPostBasicAuth(url, json, true, "UTF-8", "", "", false, "POST", header);
+            if(printDebugData()) {
+                logPrint("----");
+                logPrint(res);
+                logPrint("----");
+            }
             StartTransactionResponse response = gson.fromJson(res, StartTransactionResponse.class);
             if(response.transactionInfo.status.equals("RESERVE")) {
                 order.status = Order.Status.NEEDCOLLECTING;
@@ -261,17 +266,22 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         try {
             
-            if(!printDebugData()) {
-                System.out.println("------------");
-                System.out.println("Endpoint:" + url);
+            if(printDebugData()) {
+                logPrint("------------");
+                logPrint("Endpoint:" + url);
                 for(String k : header.keySet()) {
-                    System.out.println(k + " : " + header.get(k));
+                    logPrint(k + " : " + header.get(k));
                 }
-                System.out.println("------------");
+                logPrint("------------");
             }
             
             Gson gson = new Gson();
             String res = webManager.htmlPostBasicAuth(url, "test", false, "UTF-8", "", "", false, "POST", header);
+            if(printDebugData()) {
+                logPrint("----");
+                logPrint(res);
+                logPrint("----");
+            }
             AccessTokenResponse tokeResp = gson.fromJson(res, AccessTokenResponse.class);
             return tokeResp.access_token;
         }catch(Exception e) {
@@ -318,13 +328,13 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         header.put("X-App-Id", clientId);
         header.put("Ocp-Apim-Subscription-Key", ocp);
         
-        if(!printDebugData()) {
-            System.out.println("---------");
-            System.out.println("Endpoint:" + url);
+        if(printDebugData()) {
+            logPrint("---------");
+            logPrint("Endpoint:" + url);
             for(String k : header.keySet()) {
-                System.out.println(k + ":" + header.get(k));
+                logPrint(k + ":" + header.get(k));
             }
-            System.out.println("---------");
+            logPrint("---------");
         }
         
         CancelRequest cancelation = new CancelRequest();
@@ -334,10 +344,10 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         try {
             String res = webManager.htmlPostBasicAuth(url, gson.toJson(cancelation), true, "UTF-8", "", "", false, "POST", header);
-            if(!printDebugData()) {
-                System.out.println("---------");
-                System.out.println(res);
-                System.out.println("---------");
+            if(printDebugData()) {
+                logPrint("---------");
+                logPrint(res);
+                logPrint("---------");
             }
             StartTransactionResponse captureResponse = gson.fromJson(res, StartTransactionResponse.class);
             return captureResponse.transactionInfo.status.equals("Captured");

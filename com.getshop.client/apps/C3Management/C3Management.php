@@ -130,5 +130,9 @@ class C3Management extends \MarketingApplication implements \Application {
     public function deletePeriode() {
         $this->getApi()->getC3Manager()->deleteForskningsUserPeriode($_POST['value2']);
     }
+    
+    public function deletePeriodeManagement() {
+        $this->getApi()->getC3Manager()->deleteC3Periode($_POST['value']);
+    }
 }
 ?>

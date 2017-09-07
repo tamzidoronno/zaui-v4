@@ -95,6 +95,7 @@
     foreach ($this->getApi()->getC3Manager()->getPeriodes() as $periode) {
         ?>
         <div class="textfield gss_setting" id="uniqueusersonemail">
+            <div class="gs_shop_small_icon" gss_method="deletePeriodeManagement" gss_model="savetimerate" gss_view="gss_c3_management_content" gss_fragment="content" gss_value="<? echo $periode->id; ?>"><i class="fa fa-trash"></i></div>
             <span class="title">Periode: <? echo date('d.m.Y', strtotime($periode->from))." - ".date('d.m.Y', strtotime($periode->to)); ?></span>
             <div c3periodeonoff='true' class="gss_onoff c3periodeclass" gs_model="activeperiodes" gs_model_attr="active_periode_<? echo $periode->id; ?>">
                 <? $faclass = $this->getActivePeriodeId() == $periode->id ? "fa-toggle-on" : "fa-toggle-off"; ?>
@@ -102,7 +103,7 @@
             </div>
             
             <div class="description">
-                <?php echo $this->__("This will force the users to not have the same cellphone number."); ?>
+                <?php echo $this->__(""); ?>
             </div>
         </div>
         <?

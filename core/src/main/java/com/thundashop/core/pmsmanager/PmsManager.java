@@ -457,7 +457,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return -2;
         }
         if(canAdd) {
-            addDefaultAddons(booking);
             bookingEngine.addBookings(bookingsToAdd);
             booking.attachBookingItems(bookingsToAdd);
             booking.sessionId = null;
@@ -4735,6 +4734,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 gsTiming("Subsctracted coupons");
             }
             createUserForBooking(booking);
+            addDefaultAddons(booking);
             if(userManager.getUserById(booking.userId).suspended) {
                 logPrint("User is suspended." + booking.id);
                 return null;

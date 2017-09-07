@@ -255,6 +255,11 @@ body { font-size: 12px; line-height: 18px; background-color:#E8DCCC; }
     position: absolute;
     right: 10px;
 }
+
+.CartManager .selectpaymentmethod, .CartManager .paymentappheading { border-color:rgb(210, 193, 167); }
+.CartManager .selectpaymentmethod:hover { background-color: #dbcebe; color:#000; cursor:pointer; }
+
+
 @media only all and (max-width: 800px) {
     .gsarea[area="header"] .ImageDisplayer .displayimagecontainer { text-align: center; }
     .gsarea[area="header"] .ImageDisplayer .imagecontainer img { width: 200px; }

@@ -1,7 +1,6 @@
 
 package com.thundashop.core.accountingmanager;
 
-import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -13,10 +12,6 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;

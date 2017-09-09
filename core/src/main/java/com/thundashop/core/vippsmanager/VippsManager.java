@@ -358,8 +358,8 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
     }
 
     private boolean getProductionMode() {
-//        return true;
-        return frameworkConfig.productionMode;
+        return true;
+//        return frameworkConfig.productionMode;
     }
     
     private boolean printDebugData() {

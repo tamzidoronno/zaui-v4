@@ -123,6 +123,7 @@ if($user->type > 10) {
                 <td >Country</td>
                 <td>
                     <select gsname='countryCode'>
+                        <option value=''>No default country set</option>
                         <?php
                         foreach(CountryCodes::getCodes() as $code => $country) {
                             $selected = "";

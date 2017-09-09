@@ -6529,6 +6529,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(String userId : count.keySet()) {
             PmsCustomerRow row = new PmsCustomerRow();
             User user = userManager.getUserById(userId);
+            if(user == null) {
+                continue;
+            }
             row.customerId = user.customerId;
             row.userId = user.id;
             row.name = user.fullName;

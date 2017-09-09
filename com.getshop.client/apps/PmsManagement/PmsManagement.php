@@ -4118,9 +4118,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 continue;
             }
             $user->preferredPaymentTypeReadable = "default";
-            foreach($methods as $met) {
-                if($met->id == $user->preferredPaymentType) {
-                    $user->preferredPaymentTypeReadable = $met->appName;
+            if(sizeof((array)$methods) > 0) {
+                foreach($methods as $met) {
+                    if($met->id == $user->preferredPaymentType) {
+                        $user->preferredPaymentTypeReadable = $met->appName;
+                    }
                 }
             }
 

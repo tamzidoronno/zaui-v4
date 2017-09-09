@@ -72,7 +72,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     public void deleteEntry(String entryId, String day) {
         PmsBookingEventEntry entry = getEntry(entryId, day);
         entry.isDeleted = true;
-        deleteObject(entry);
+        saveObject(entry);
     }
 
     @Override

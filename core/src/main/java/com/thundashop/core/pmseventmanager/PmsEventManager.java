@@ -130,9 +130,6 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     }
 
     private void setRooms(PmsBookingEventEntry entry, PmsBooking result, boolean includeDeteled) {
-        if(entry.bookingId.equals("0cf6ceaa-62ee-4092-b01d-5f42446f9435")) {
-            System.out.println("TEST");
-        }
         entry.dateRanges.clear();
         entry.roomNames.clear();
         List<PmsBookingRooms> rooms = result.getActiveRooms();

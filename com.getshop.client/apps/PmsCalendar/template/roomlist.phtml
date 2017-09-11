@@ -13,7 +13,8 @@ $f = $this->__w("Friday");
 $f = $this->__w("Saturday");
 $f = $this->__w("Sunday");
 
-
+/*Settings*/
+$showWeekOnly = $this->getConfigurationSetting("showWeekOnly");
 $withSideBar = "";
 if(!$this->isItemPage()) {
     $withSideBar = "withSideBar";
@@ -41,8 +42,12 @@ if(!$this->isItemPage()) {
             </span>
         <?php
             }
-            echo "<span class='typebutton "; if($type =="day") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='day'>".$this->__w("Day")."</span>";
-            echo "<span class='typebutton "; if($type =="week") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='week'>".$this->__w("Week")."</span>";
+            if($showWeekOnly == "true"){
+                
+            }else{
+                echo "<span class='typebutton "; if($type =="day") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='day'>".$this->__w("Day")."</span>";
+                echo "<span class='typebutton "; if($type =="week") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='week'>".$this->__w("Week")."</span>";
+            }
             if($this->isItemPage()) {
                 echo "<span class='typebutton "; if($type =="month") { echo "selected"; } echo "' gstype='clicksubmit' method='setDayType' gsname='type' gsvalue='month'>".$this->__w("Month")."</span>";
             }

@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PmsPricing extends DataCommon {
+    public static class PmsPricingCoverageType {
+        public static Integer PERCENTAGE = 0;
+        public static Integer FIXEDPRICE = 1;
+    }
+    
     public String code = "";
     public Integer defaultPriceType = 1;
     public HashMap<String, HashMap<String, Double>> dailyPrices = new HashMap(); 
@@ -24,4 +29,6 @@ public class PmsPricing extends DataCommon {
     public Double price_sun;
     public HashMap<String, Double> productPrices = new HashMap();
     public HashMap<Integer, Integer> longTermDeal = new HashMap();
+    public HashMap<Integer, Double> coveragePrices = new HashMap();
+    public Integer coverageType = PmsPricing.PmsPricingCoverageType.PERCENTAGE;
 }

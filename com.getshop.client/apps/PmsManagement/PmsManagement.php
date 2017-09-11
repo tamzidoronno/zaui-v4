@@ -2749,8 +2749,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
             echo "<tr class='moreinformationaboutbooking' style='cursor:pointer;' bookingid='".$booking->bookingId."'>";
             echo "<td>" . $booking->room . "</td>";
             echo "<td>" . $booking->owner . "</td>";
-            echo "<td>" . date("d.m.Y", $booking->start/1000) . "</td>";
-            echo "<td>" . date("d.m.Y", $booking->end/1000) . "</td>";
+            echo "<td>" . date("d.m.Y H:i", $booking->start/1000) . "</td>";
+            echo "<td>" . date("d.m.Y H:i", $booking->end/1000) . "</td>";
             echo "<td>" . round($price) . "</td>";
             echo "<td>" . $booking->progressState . "</td>";
             if($booking->testReservation) {

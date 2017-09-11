@@ -207,6 +207,7 @@ public class PmsBookingSimpleFilter {
         
         simple.numberOfGuests = room.numberOfGuests;
         simple.transferredToArx = room.addedToArx;
+        simple.priceType = booking.priceType;
         
         for(PmsBookingAddonItem item : room.addons) {
             if(item.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) { simple.latecheckout = true; }

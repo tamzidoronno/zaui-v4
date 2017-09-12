@@ -21,6 +21,49 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function accountsExport() {
+        $users = $this->getusersTable();
+        $rows = array();
+        
+        $heading = array();
+        $heading[] = "Customer id";
+        $heading[] = "Name";
+        $heading[] = "Customer type";
+        $heading[] = "Number of bookings";
+        $heading[] = "Number of orders";
+        $heading[] = "Last booking";
+        $heading[] = "Payment type";
+        $heading[] = "Suspended";
+        $heading[] = "Has discount";
+        $rows[] = $heading;
+        
+        foreach($users as $user) {
+            $row = array();
+            $row[] = $user->customerId;
+            $row[] = $user->name;
+            $row[] = $user->customerType;
+            $row[] = $user->numberOfBookings;
+            $row[] = $user->numberOfOrders;
+            $row[] = $user->latestBooking;
+            $row[] = $user->preferredPaymentType;
+            $row[] = $user->suspended ? "YES" : "NO";
+            $row[] = $user->hasDiscount ? "YES" : "NO";
+            $rows[] = $row;
+        }
+        echo json_encode($rows);
+    }
+    
+    public function setAccountsSubFilter() {
+        $_SESSION['accountsSubFilter'] = json_encode($_POST['data']);
+    }
+    
+    public function getAccountsSubFilter() {
+        if(isset($_SESSION['accountsSubFilter'])) {
+            return json_decode($_SESSION['accountsSubFilter'], true);
+        }
+        return array();
+    }
+    
     public function doAccountAction() {
         foreach($_POST['data'] as $key => $val) {
             if(stristr($key, "user_") && $val == "true") {
@@ -1198,6 +1241,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
         }
         $this->getApi()->getPmsInvoiceManager()->saveDiscounts($this->getSelectedName(), $discount);
+        $this->getApi()->getUserManager()->saveUser($user);
     }
     
     public function showBookingOnBookingEngineId() {
@@ -2705,8 +2749,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
             echo "<tr class='moreinformationaboutbooking' style='cursor:pointer;' bookingid='".$booking->bookingId."'>";
             echo "<td>" . $booking->room . "</td>";
             echo "<td>" . $booking->owner . "</td>";
-            echo "<td>" . date("d.m.Y", $booking->start/1000) . "</td>";
-            echo "<td>" . date("d.m.Y", $booking->end/1000) . "</td>";
+            echo "<td>" . date("d.m.Y H:i", $booking->start/1000) . "</td>";
+            echo "<td>" . date("d.m.Y H:i", $booking->end/1000) . "</td>";
             echo "<td>" . round($price) . "</td>";
             echo "<td>" . $booking->progressState . "</td>";
             if($booking->testReservation) {
@@ -4056,6 +4100,36 @@ class PmsManagement extends \WebshopApplication implements \Application {
         foreach($user->savedCards as $card) {
             echo "<i class='fa fa-trash-o deletecardbutton' cardid='".$card->id."' userid='$userId'></i> " . $card->mask . " - " . $card->expireMonth . "/" . $card->expireYear . "<br>";
         }
+    }
+
+    public function getusersTable() {
+        $users = $this->getApi()->getPmsManager()->getAllUsers($this->getSelectedName(), $this->getSelectedFilter());
+        $filter = $this->getAccountsSubFilter();
+        $newUsers = array();
+        $methods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        foreach($users as $user) {
+            if(isset($filter['companiesOnly']) && $filter['companiesOnly'] == "true" && $user->customerType !== "Company" && $user->customerType !== "Subuser") {
+                continue;
+            }
+            if(isset($filter['companiesOnly']) && $user->numberOfBookings < $filter['numberOfBookings']) {
+                continue;
+            }
+            if(isset($filter['lastBooked']) && $filter['lastBooked'] && strtotime($filter['lastBooked']) > strtotime($user->latestBooking)) {
+                continue;
+            }
+            $user->preferredPaymentTypeReadable = "default";
+            if(sizeof((array)$methods) > 0) {
+                foreach($methods as $met) {
+                    if($met->id == $user->preferredPaymentType) {
+                        $user->preferredPaymentTypeReadable = $met->appName;
+                    }
+                }
+            }
+
+            
+            $newUsers[] = $user;
+        }
+        return $newUsers;
     }
 
 }

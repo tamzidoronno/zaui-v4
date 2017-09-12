@@ -498,6 +498,32 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
     }
 
+    private Double increasePriceOnCoverage(Double price, Date dateObject, PmsPricing prices) {
+        Integer coverage = bookingEngine.getCoverageForDate(dateObject);
+        
+        Integer offset = 0;
+        for(Integer cov : prices.coveragePrices.keySet()) {
+            if(cov > offset && coverage > cov) {
+                offset = cov;
+            }
+        }
+        
+        Double increase = 0.0;
+        if(offset > 0) {
+           increase = prices.coveragePrices.get(offset);
+        }
+        
+        if(increase > 0) {
+            if(prices.coverageType == 0) {
+                price = price * (increase / 100);
+            } else {
+                price = price + increase;
+            }
+        }
+        
+        return price;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -1984,13 +2010,16 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             String dateToUse = PmsBookingRooms.getOffsetKey(cal, PmsBooking.PriceType.daily);
             cal.set(Calendar.HOUR_OF_DAY, 23);
             cal.set(Calendar.MINUTE, 59);
-            
-            cal.add(Calendar.DAY_OF_YEAR,1);
             if (priceRange.get(dateToUse) != null) {
                 price = priceRange.get(dateToUse);
             } else {
                 price = defaultPrice;
             }
+            
+            if(pmsManager.getConfigurationSecure().enableCoveragePrices) {
+                price = increasePriceOnCoverage(price, cal.getTime(), prices);
+            }
+            cal.add(Calendar.DAY_OF_YEAR,1);
             
             result.put(dateToUse, price);
             

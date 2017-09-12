@@ -30,13 +30,18 @@ public class PmsEventListEntry {
                 if(startTime.length() >= 4) {
                     startTime = startTime.substring(0, 5);
                     String startTimes[] = startTime.split(":");
-                    Integer hour = new Integer(startTimes[0]);
-                    Integer minute = new Integer(startTimes[1]);
-                    Calendar test = Calendar.getInstance();
-                    test.setTime(start);
-                    test.set(Calendar.HOUR_OF_DAY, hour);
-                    test.set(Calendar.MINUTE, minute);
-                    start = test.getTime();
+                    if(startTime.contains(".")) {
+                        startTimes = startTime.split(".");
+                    }
+                    if(startTimes.length >= 2) {
+                        Integer hour = new Integer(startTimes[0]);
+                        Integer minute = new Integer(startTimes[1]);
+                        Calendar test = Calendar.getInstance();
+                        test.setTime(start);
+                        test.set(Calendar.HOUR_OF_DAY, hour);
+                        test.set(Calendar.MINUTE, minute);
+                        start = test.getTime();
+                    }
                 }
             }
         }catch(Exception e) {

@@ -163,4 +163,7 @@ interface IC3Manager {
     public void deleteProjectCost(String projectCostId);
     
     public int calculateSum(String periodeId);
+    
+    @Administrator
+    public void deleteC3Periode(String periodeId);
 }

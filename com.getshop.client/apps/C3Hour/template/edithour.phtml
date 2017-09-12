@@ -22,6 +22,10 @@ if ($this->getModalVariable("hourid") && $hourObject == null) {
     }
 }
 
+if ($forskningsperiode) {
+    $percentUsing = true;
+}
+
 $from = $hourObject ? date('d.m.Y', strtotime($hourObject->from)) : "";
 $to = $hourObject ? date('d.m.Y', strtotime($hourObject->to)) : "";
 $hours = $hourObject && isset($hourObject->hours) ? $hourObject->hours : "";
@@ -41,6 +45,8 @@ if (!$to && isset($_SESSION['scope_C3Registration_last_to'])) {
 
 $costId = $hourObject ? $hourObject->id : "";
 $fixedHours = $this->getApi()->getC3Manager()->allowedFixedHourCosts(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id);
+
+$checkedForskningsraadetMidler = $hourObject && $hourObject->nfr ? 'checked="true"' : "";
 ?>
 
 <?
@@ -93,7 +99,7 @@ if ($forskningsperiode || $fixedHours) {
     if ($this->getApi()->getC3Manager()->allowedNfrHourCurrentUser()) {
         echo "<br/>";
         echo "<br/>";
-        echo "<input type='checkbox' gsname='nfr'/> Er dette forskningsrådets midler?";
+        echo "<input $checkedForskningsraadetMidler type='checkbox' gsname='nfr'/> Er dette forskningsrådets midler?";
         echo "<br/>";
     }
     
@@ -143,7 +149,7 @@ if ($forskningsperiode || $fixedHours) {
     
     if ($this->getApi()->getC3Manager()->allowedNfrHourCurrentUser()) {
         echo "<br/>";
-        echo "<input type='checkbox' gsname='nfr'/> Er dette forskningsrådets midler?";
+        echo "<input $checkedForskningsraadetMidler type='checkbox' gsname='nfr'/> Er dette forskningsrådets midler?";
         echo "<br/>";
     }
     
@@ -180,7 +186,7 @@ if ($fixedHours) {
     
     if ($this->getApi()->getC3Manager()->allowedNfrHourCurrentUser()) {
         echo "<br/>";
-        echo "<input type='checkbox' gsname='nfr'/> Er dette forskningsrådets midler?";
+        echo "<input $checkedForskningsraadetMidler type='checkbox' gsname='nfr'/> Er dette forskningsrådets midler?";
         echo "<br/>";
     }
     

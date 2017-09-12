@@ -45,7 +45,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
     private boolean productionMode = false;
     
     public SmsHandlerAbstract(String storeId, Database database, String prefix, String from, String to, String message, boolean productionMode) {
-        HashMap<String, String> res = validatePhone("+"+prefix, to, "NO");
+        HashMap<String, String> res = validatePhone("+"+prefix, to, "NO", true);
         if(res != null) {
             this.prefix = res.get("prefix");
             this.to = res.get("phone");
@@ -74,7 +74,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
     }
 
     
-    public static HashMap<String, String> validatePhone(String phonePrefix, String phone, String countryCode) {
+    public static HashMap<String, String> validatePhone(String phonePrefix, String phone, String countryCode, boolean verifyPrefixOnCountryCode) {
         if(phone == null) {
             return null;
         }
@@ -97,7 +97,7 @@ public abstract class SmsHandlerAbstract implements Runnable {
             try {
                 if(countryCode != null && !countryCode.isEmpty()) {
                     String defaultCountryCodeSetByStore = "no";
-                    if(!countryCode.equalsIgnoreCase(defaultCountryCodeSetByStore)) {
+                    if(!countryCode.equalsIgnoreCase(defaultCountryCodeSetByStore) && verifyPrefixOnCountryCode) {
                         //If the country code is a different one then the default set for the store, 
                         //That countrycode should have priority.
                         int fromutil = phoneUtil.getCountryCodeForRegion(countryCode);
@@ -166,8 +166,10 @@ public abstract class SmsHandlerAbstract implements Runnable {
                 phone = phonecheck.getNationalNumber() + "";
             }
         } catch (NumberParseException e) {
-//            e.printStackTrace();
-            return null;
+            HashMap<String, String> result = new HashMap();
+            result.put("prefix", prefix);
+            result.put("phone", phone);
+            return result;
         }
 
         HashMap<String, String> result = new HashMap();

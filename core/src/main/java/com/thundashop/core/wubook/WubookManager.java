@@ -457,7 +457,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
                 if(priceToAdd == null) {
                     priceToAdd = 999999.0;
+                } else if(pmsManager.getConfigurationSecure().enableCoveragePrices) {
+                    PmsBooking booking = new PmsBooking();
+                    priceToAdd = pmsInvoiceManager.calculatePrice(rdata.bookingEngineTypeId, calStart.getTime(), calStart.getTime(), true, booking);
                 }
+                
                 list.add(priceToAdd);
                 calStart.add(Calendar.DAY_OF_YEAR, 1);
             }

@@ -1236,4 +1236,12 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         reportData.periode = sdf.format(start) + " - " + sdf.format(end);
         return reportData;
     }
+
+    @Override
+    public void deleteC3Periode(String periodeId) {
+        C3ProjectPeriode periode = periodes.remove(periodeId);
+        if (periode != null) {
+            deleteObject(periode);
+        }
+    }
 }

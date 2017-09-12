@@ -57,4 +57,5 @@ public class PmsRoomSimple implements Serializable {
     boolean childbed = false;
     String cleaningComment = "";
     public Date requestedEndDate;
+    public Integer priceType;
 }

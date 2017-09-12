@@ -107,27 +107,69 @@ if(isset($this->addCouponError) && $this->addCouponError) {
 </div>
 <br>
 <br>
-<h1>Long term deals</h1>
-<div style="savelongtermdeals" gstype="form" method="savelongtermdeal">
-    <table>
-        <tr>
-            <th>Min days</th>
-            <th>discount(%)</th>
-        </tr>
-        <?php
-        $keys = array_keys((array)$prices->longTermDeal);
-        $values = array_values((array)$prices->longTermDeal);
-        for($i = 0; $i < 3; $i++) {
-            $days = "";
-            $discount = "";
-            if(isset($keys[$i])) { $days = $keys[$i]; }
-            if(isset($values[$i])) { $discount = $values[$i]; }
-            echo "<tr>";
-            echo "<td align='center'><input type='txt' style='width:40px;' gsname='minday_$i' value='$days'></td>";
-            echo "<td align='center'><input type='txt' style='width:40px;' gsname='discount_$i' value='$discount'></td>";
-            echo "</tr>";
-        }
-        ?>
-    </table>
-    <span class="pmsbutton" gstype="submit">Save long term stay deal</span>
-</div>
+<table width="100%">
+    <tr>
+        <td valign="top">
+            <h1>Long term deals</h1>
+            <div gstype="form" method="savelongtermdeal">
+                <table>
+                    <tr>
+                        <th>Min days</th>
+                        <th>discount(%)</th>
+                    </tr>
+                    <?php
+                    $keys = array_keys((array)$prices->longTermDeal);
+                    $values = array_values((array)$prices->longTermDeal);
+                    for($i = 0; $i < 3; $i++) {
+                        $days = "";
+                        $discount = "";
+                        if(isset($keys[$i])) { $days = $keys[$i]; }
+                        if(isset($values[$i])) { $discount = $values[$i]; }
+                        echo "<tr>";
+                        echo "<td align='center'><input type='txt' style='width:40px;' gsname='minday_$i' value='$days'></td>";
+                        echo "<td align='center'><input type='txt' style='width:40px;' gsname='discount_$i' value='$discount'></td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                </table>
+                <span class="pmsbutton" gstype="submit">Save long term stay deal</span>
+            </div>
+        </td>
+        <?php if($notificationSettings->enableCoveragePrices) { ?>
+            <td valign="top">
+                <div gstype="form" method="saveCoveragePrices">
+                    <h1>Increase by coverage</h1>
+                    <table>
+                        <tr>
+                            <th>Percentage</th>
+                            <th>Increase</th>
+                        </tr>
+                        <?php
+                        for($i = 0; $i < 3; $i++) {
+                            $keys = array_keys((array)$prices->coveragePrices);
+                            $price = "";
+                            $coverage = "";
+                            if(isset($keys[$i])) {
+                                $coverage = $keys[$i];
+                                $price = $prices->coveragePrices->{$coverage};
+                            }
+                            echo "<tr>";
+                            echo "<td><input type='text' style='width:50px' value='$coverage' gsname='coverage_$i'></td>";
+                            echo "<td><input type='text' style='width:50px' value='$price' gsname='price_$i'></td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </table><br>
+                    <select gsname='coveragePriceType'>
+                        <option value="0">Percentage</option>
+                        <option value="1" <?php if($prices->coverageType == 1) { echo "SELECTED"; } ?> >Fixed price</option>
+                    </select>
+                    <br><br>
+                    <span class="pmsbutton" gstype="submit">Save coverage prices</span>
+                </div>
+            </td>
+        <?php } ?>
+    </tr>
+</table>
+
+

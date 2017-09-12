@@ -457,7 +457,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return -2;
         }
         if(canAdd) {
-            addDefaultAddons(booking);
             bookingEngine.addBookings(bookingsToAdd);
             booking.attachBookingItems(bookingsToAdd);
             booking.sessionId = null;
@@ -479,7 +478,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         booking.sessionId = "";
-        verifyPhoneOnBooking(booking);
+        verifyPhoneOnBooking(booking, true);
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);
@@ -962,8 +961,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         checkAndReportPriceMatrix(booking, "saving invalid price matrix 2");
         bookings.put(booking.id, booking);
+        
         try {
-            verifyPhoneOnBooking(booking);
+            verifyPhoneOnBooking(booking, false);
         }catch(Exception e) {
             logPrintException(e);
         }
@@ -1103,6 +1103,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         prices.derivedPrices = newPrices.derivedPrices;
         prices.productPrices = newPrices.productPrices;
         prices.longTermDeal = newPrices.longTermDeal;
+        prices.coveragePrices = newPrices.coveragePrices;
+        prices.coverageType = newPrices.coverageType;
         
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
@@ -3781,7 +3783,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void setPriceOnRoom(PmsBookingRooms room, boolean avgPrice, PmsBooking booking) {
         room.price = pmsInvoiceManager.calculatePrice(room.bookingItemTypeId, room.date.start, room.date.end, avgPrice, booking);
-        room.priceWithoutDiscount = new Double(room.price); 
+        room.priceWithoutDiscount = new Double(room.price);
         if(getConfigurationSecure().usePriceMatrixOnOrder) {
             room.price = pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
             if(room.price.isNaN() || room.price.isInfinite()) {
@@ -4357,7 +4359,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
-    private boolean verifyPhoneOnBooking(PmsBooking booking) {
+    private boolean verifyPhoneOnBooking(PmsBooking booking, boolean verifyPrefixFromCountryCode) {
         String countryCode = booking.countryCode;
         try {
             HashMap<Integer, String> list = PhoneCountryCodeList.getList();
@@ -4376,7 +4378,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             String prefix = user.prefix;
             
-            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ prefix,user.cellPhone, countryCode);
+            HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ prefix,user.cellPhone, countryCode, verifyPrefixFromCountryCode);
             if(res != null) {
                 prefix = res.get("prefix");
                 String phone = res.get("phone");
@@ -4394,7 +4396,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         boolean save = false;
         for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             for(PmsGuests guest : room.guests) {
-                HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ guest.prefix,guest.phone, countryCode);
+                HashMap<String, String> res = SmsHandlerAbstract.validatePhone("+"+ guest.prefix,guest.phone, countryCode, verifyPrefixFromCountryCode);
                 if(res != null) {
                     String prefix = res.get("prefix");
                     String phone = res.get("phone");
@@ -4734,6 +4736,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 gsTiming("Subsctracted coupons");
             }
             createUserForBooking(booking);
+            addDefaultAddons(booking);
             if(userManager.getUserById(booking.userId).suspended) {
                 logPrint("User is suspended." + booking.id);
                 return null;
@@ -6528,6 +6531,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(String userId : count.keySet()) {
             PmsCustomerRow row = new PmsCustomerRow();
             User user = userManager.getUserById(userId);
+            if(user == null) {
+                continue;
+            }
             row.customerId = user.customerId;
             row.userId = user.id;
             row.name = user.fullName;

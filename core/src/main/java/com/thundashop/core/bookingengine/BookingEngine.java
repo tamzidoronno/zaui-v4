@@ -30,6 +30,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     @Autowired
     public BookingEngineAbstract bookingEngineAbstract;
     
+    
     @Override
     public BookingItemType createABookingItemType(String name) {
         return deepClone(bookingEngineAbstract.createABookingItemType(name));
@@ -304,5 +305,28 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     @Override
     public void forceUnassignBookingInfuture() {
         bookingEngineAbstract.forceUnassignBookingInfuture();
+    }
+    
+    /**
+     * A fast coverage calculation routine.
+     * Be aware that this result is cached and need to be manually resetted.
+     * @param dateObject
+     * @return 
+     */
+    public Integer getCoverageForDate(Date dateObject) {
+        Date dateStart = new Date(dateObject.getTime() - (3600*1) * 1000);
+        List<BookingItemType> types = getBookingItemTypes();
+        Integer total = 0;
+        Integer available = 0;
+        for(BookingItemType type : types) {
+            if(!type.visibleForBooking) {
+                continue;
+            }
+            available += getNumberOfAvailableWeakButFaster(type.id, dateStart, dateObject);
+            total += getBookingItemsByType(type.id).size();
+        }
+        
+        Double res = ((double)(total - available) / (double)total) * 100;
+        return res.intValue();
     }
 }

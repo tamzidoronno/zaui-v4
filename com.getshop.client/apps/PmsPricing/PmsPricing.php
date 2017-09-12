@@ -14,6 +14,21 @@ class PmsPricing extends \WebshopApplication implements \Application {
         return $this->getConfigurationSetting("engine_name");
     }
     
+    public function saveCoveragePrices() {
+        $pricePlan = $this->getPrices();
+        $newArray = array();
+        
+        for($i = 0; $i < 3; $i++) {
+            if($_POST['data']['coverage_'. $i]) {
+                 $newArray[$_POST['data']['coverage_'. $i]] = $_POST['data']['price_'. $i];
+            }
+        }
+        
+        $pricePlan->coveragePrices = $newArray;
+        $pricePlan->coverageType = $_POST['data']['coveragePriceType'];
+        $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $pricePlan->code, $pricePlan);
+    }
+    
     public function saveAddonsToDiscount() {
         $couponId = $_POST['data']['couponid'];
         $coupon = $this->getApi()->getCartManager()->getCouponById($couponId);

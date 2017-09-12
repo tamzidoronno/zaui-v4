@@ -101,6 +101,7 @@ public class PmsConfiguration extends DataCommon {
     public int numberOfDaysToSendPaymentLinkAheadOfStay = 2;
     public boolean ignoreRoomToEndDate = false;
     public boolean createVirtualOrders = false;
+    public boolean enableCoveragePrices = false;
 
     public Integer bookingTimeInterval = 1; //1 = hourly, 2 = daily
     public String defaultStart = "15:00";

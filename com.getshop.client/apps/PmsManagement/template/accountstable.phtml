@@ -3,7 +3,7 @@
 ?>
 <table cellspacing='0' cellpadding='0' width='100%' gstype='form' method='doAccountAction'>
     <tr>
-        <th>Id</th>
+        <th><i class='fa fa-file-excel-o' style='cursor:pointer;' gs_downloadexcelreport="accountsExport" gs_filename="accountsExport"></i> Id</th>
         <th align='left'>Customer name</th>
         <th>Customer type</th>
         <th>Number of bookings</th>
@@ -12,9 +12,20 @@
         <th>Preferences</th>
         <th>Payment type</th>
     </tr>
+    <tr>
+        <?php
+        $subFilter = $this->getAccountsSubFilter();
+        ?>
+        <th colspan='20' style='text-align: left; background-color:#1E4D6B;' gstype='form' method='setAccountsSubFilter'>
+            <input type='checkbox' gsname='companiesOnly'<?php if(@$subFilter['companiesOnly'] == "true") { echo "CHECKED"; } ?>> Display companies only
+            <input type='txt' style='width:40px;' gsname='numberOfBookings' value='<?php echo @$subFilter['numberOfBookings']; ?>'> number of bookings
+            <input type='txt' style='width:90px;' gsname='lastBooked' value='<?php echo @$subFilter['lastBooked']; ?>'> last booked
+            <input type='button' gstype="submit" method="setQuickFilter" gsvalue="subtype_customerlist" value='Set filter' style='float:right;'>
+        </th>
+    </tr>
+    
     <?php
-    $users = $this->getApi()->getPmsManager()->getAllUsers($this->getSelectedName(), $this->getSelectedFilter());
-    $methods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+    $users = $this->getusersTable();
     
     foreach($users as $user) {
         $name = $user->name ? $user->name : "Unkown name";
@@ -37,15 +48,7 @@
         }
         echo "</td>";
         echo "<td align='center'>";
-        if($user->preferredPaymentType) {
-            foreach($methods as $met) {
-                if($met->id == $user->preferredPaymentType) {
-                    echo $met->appName;
-                }
-            }
-        } else {
-            echo "default";
-        }
+        echo $user->preferredPaymentTypeReadable;
         echo "</td>";
         echo "</tr>";
     }

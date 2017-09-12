@@ -895,6 +895,18 @@ if($notificationSettings->requirePayments) {
                 <span class='configentry'>
                     <?
                     $checked = "";
+                    if($notificationSettings->enableCoveragePrices) {
+                        $checked = "CHECKED";
+                    }
+                    ?>
+                    <input type='checkbox' gsname='enableCoveragePrices' <? echo $checked; ?>>
+                </span>
+                Enable coverage pricing model
+            </div>
+            <div class='configrow'>
+                <span class='configentry'>
+                    <?
+                    $checked = "";
                     if($notificationSettings->autoGenerateChangeOrders) {
                         $checked = "CHECKED";
                     }

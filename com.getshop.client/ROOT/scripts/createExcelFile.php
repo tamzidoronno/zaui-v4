@@ -15,28 +15,47 @@ include '../loader.php';
 
 $factory = IocContainer::getFactorySingelton();
 
-header("Content-Type:   application/vnd.ms-excel; charset=ISO-8859-1");
-header("Expires: 0");
-header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-header("Cache-Control: private", false);
+$filename = $_POST['filename'];
 
-$xls = new Excel($_POST['filename']);
+header('Content-Disposition: attachment; filename="' . $filename . '.xlsx"');
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Transfer-Encoding: binary');
+header('Cache-Control: must-revalidate');
+header('Pragma: public');
 
 $data = base64_decode($_POST['data']);
 $data = json_decode($data);
 
-foreach ($data as $row) {
-    $xls->home();
-    foreach ($row as $cell) {
-        $column = mb_convert_encoding($cell, "ISO-8859-1", "UTF-8");
-        if(is_numeric($column)) {
-            $xls->number($column);
-        } else {
-            $xls->label($column);
+$newRes = array();
+foreach($data as $row) {
+    $newRow = array();
+    foreach($row as $field) {
+        if($field instanceof stdClass) {
+            $field = json_encode($field);
         }
-        $xls->right();
+        $newRow[] = $field;
     }
-    $xls->down();
+    $rewRes[] = $newRow;
 }
 
-$xls->send();
+//echo "<pre>";
+//print_r($rewRes);
+//echo "</pre>";
+
+echo base64_decode($factory->getApi()->getExcelManager()->getBase64Excel($rewRes));
+
+//foreach ($data as $row) {
+//    $xls->home();
+//    foreach ($row as $cell) {
+//        $column = mb_convert_encoding($cell, "ISO-8859-1", "UTF-8");
+//        if(is_numeric($column)) {
+//            $xls->number($column);
+//        } else {
+//            $xls->label($column);
+//        }
+//        $xls->right();
+//    }
+//    $xls->down();
+//}
+//
+//$xls->send();

@@ -529,8 +529,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                             try {
                                 GetShopHotelLockCodeResult result = getSetCodeResult(offset);
                                 waitForEmptyQueue();
-                                if(result != null && result.hasCode != null && result.hasCode.value != null && result.hasCode.value.equals(true)) {
+                                if(result == null || (result.hasCode != null && result.hasCode.value != null && result.hasCode.value.equals(true))) {
                                     logPrint("\t\t Code alread set... should not be on offset: " + offset + " (" + device.name + ")"  + "(code: " + code.code + ")");
+                                    if(result == null) {
+                                        logPrint("Result is null");
+                                    }
                                 } else {
                                     if(code.needForceRemove()) {
                                         code.addedToLock = null;

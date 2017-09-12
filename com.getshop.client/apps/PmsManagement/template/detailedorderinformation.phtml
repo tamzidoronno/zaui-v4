@@ -47,7 +47,8 @@ $booking = $this->getSelectedBooking();
                 if(isset($item->endDate) && $item->endDate) {
                     echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->endDate)) . "</span> ";
                 }
-                echo "<span style='display:inline-block; width: 300px;'>" . $item->product->name . "</span>" ;
+                $todaysname = $this->getApi()->getProductManager()->getProduct($item->product->id)->name;
+                echo "<span style='display:inline-block; width: 300px;' title='Named today : $todaysname'>" . $item->product->name . "</span>" ;
                 echo "<span style='display:inline-block; width: 50px;'>" . @$item->product->additionalMetaData . "</span> " ;
                 echo "<span style='display:inline-block; width: 200px;'>" .@$item->product->metaData . "</span> " ;
                 echo "<span style='float:right;'>";

@@ -463,6 +463,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         savedItem.description = type.description;
         savedItem.eventItemGroup = type.eventItemGroup;
         savedItem.minStay = type.minStay;
+        savedItem.historicalProductIds = type.historicalProductIds;
         saveObject(savedItem);
         return savedItem;
     }

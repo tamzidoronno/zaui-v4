@@ -71,6 +71,7 @@ public class GetShopLockRazberryLogFetcher extends GetShopSchedulerBase {
         }
         
         log.timestamp = date;
+        log.event = result.event.value;
         log.uId = result.uId.value;
         
         return log;

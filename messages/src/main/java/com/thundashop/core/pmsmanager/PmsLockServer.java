@@ -19,6 +19,7 @@ public class PmsLockServer implements Serializable {
     public String closeAllDoorsAfterTime = "22:00";
     public Date lastPing = new Date();
     public boolean beenWarned = false;
+    public String serverSource = "";
 
     public boolean isGetShopLockBox() {
         return locktype != null && locktype.equals("getshoplockbox");

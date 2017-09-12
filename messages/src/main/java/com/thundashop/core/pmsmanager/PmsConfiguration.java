@@ -119,11 +119,27 @@ public class PmsConfiguration extends DataCommon {
         }
         return defaultsv;
     }
+    
     public PmsLockServer getLockServer(String serverSource) {
         if(serverSource == null || serverSource.trim().isEmpty()) {
             serverSource = "default";
         }
-        return lockServerConfigs.get(serverSource);
+        PmsLockServer retLock = lockServerConfigs.get(serverSource);
+        
+        finalizePmsLockServer(retLock);
+        return retLock;
+    }
+    
+    public PmsLockServer getLockServerBasedOnHostname(String hostName) {
+        
+        for (PmsLockServer server : lockServerConfigs.values()) {
+            if (server.arxHostname != null && server.arxHostname.equals(hostName)) {
+                finalizePmsLockServer(server);
+                return server;
+            }
+        }
+        
+        return null;
     }
 
     
@@ -267,4 +283,13 @@ public class PmsConfiguration extends DataCommon {
         
         return false;
     }
+    
+    private void finalizePmsLockServer(PmsLockServer retLock) {
+        for (String serverSource : lockServerConfigs.keySet()) {
+            if (lockServerConfigs.get(serverSource).equals(retLock)) {
+                retLock.serverSource = serverSource;
+            }
+        }
+    }
+
 }

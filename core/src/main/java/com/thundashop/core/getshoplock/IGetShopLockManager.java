@@ -86,6 +86,8 @@ public interface IGetShopLockManager {
     @Administrator
     public boolean getUpdatesOnLock();
     
-   
+    public void triggerFetchingOfCodes(String ip, String deviceId);
+    
+    public void addLockLogs(List<GetShopDeviceLog> logs, String code);
     
 }

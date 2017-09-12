@@ -38,12 +38,14 @@ class PmsBookingCalendar extends \WebshopApplication implements \Application {
         $booking->sessionStartDate = $range->start;
         $booking->sessionEndDate = $range->end;
         $booking->rooms = array();
-        $count = $this->getApi()->getBookingEngine()->getAvailbleItems($this->getSelectedName(), 
-                $room->bookingItemTypeId, 
-                $this->convertToJavaDate(strtotime($range->start)), 
-                $this->convertToJavaDate(strtotime($range->end)));
-        if($count > 0) {
-            $booking->rooms[] = $room;
+        if($room->bookingItemTypeId) {
+            $count = $this->getApi()->getBookingEngine()->getAvailbleItems($this->getSelectedName(), 
+                    $room->bookingItemTypeId, 
+                    $this->convertToJavaDate(strtotime($range->start)), 
+                    $this->convertToJavaDate(strtotime($range->end)));
+            if($count > 0) {
+                $booking->rooms[] = $room;
+            }
         }
         
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);

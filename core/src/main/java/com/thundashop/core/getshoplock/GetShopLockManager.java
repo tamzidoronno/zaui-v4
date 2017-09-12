@@ -9,6 +9,7 @@ import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.GetShopDevice;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +41,8 @@ import org.springframework.stereotype.Component;
 @Component 
 @GetShopSession
 public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetShopLockManager {
+    
+    private HashMap<String, GetShopDeviceLog> deviceLogs = new HashMap();
     private HashMap<String, GetShopDevice> devices = new HashMap();
     private GetShopLockMasterCodes masterCodes = new GetShopLockMasterCodes();
     private boolean stopUpdatesOnLock = false;
@@ -372,6 +376,68 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
     }
 
+    @Override
+    public void triggerFetchingOfCodes(String ip, String deviceId) {
+        PmsLockServer server = pmsManager.getConfigurationSecure().getLockServerBasedOnHostname(ip);
+        if (server == null) {
+            throw new RuntimeException("Could  not start fetching of code, no servers with hostname: " + ip);
+        }
+        
+        GetShopDevice device = getDeviceForServer(server.serverSource, deviceId);
+        
+        if (device == null) {
+            throw new RuntimeException("Could not start fetching of code, did not find device for deviceId: " + deviceId);
+        }
+        
+        GetShopLockRazberryLogFetcher fetch = new GetShopLockRazberryLogFetcher(server, device);
+        createProcessor(fetch);
+        
+    }
+
+    @Override
+    public void addLockLogs(List<GetShopDeviceLog> logs, String code) {
+        if (!code.equals("asdfi0u23l4knraslnjdfakjwenrlikqnfklasdfbaewjhbq2hjb4rl1khb34r12lh34")) {
+            throw new ErrorException(26);
+        }
+        
+        List<GetShopDeviceLog> logsToSave = logs.stream()
+                .filter(o -> !alreadyGotLog(o))
+                .collect(Collectors.toList());
+        
+        for (GetShopDeviceLog log : logsToSave) {
+            saveObject(log);
+            deviceLogs.put(log.id, log);
+            
+            pmsManager.logChanged(log);
+        }
+    }
+
+    
+    private boolean alreadyGotLog(GetShopDeviceLog log) {
+        for (GetShopDeviceLog savedLog : deviceLogs.values()) {
+            if (savedLog.isSame(log)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    
+    private GetShopDevice getDeviceForServer(String serverSource, String deviceId) {
+        List<GetShopDevice> devices = this.devices.values().stream()
+                .filter(dev -> dev.serverSource != null && dev.serverSource.equals(serverSource))
+                .collect(Collectors.toList());
+        
+        for (GetShopDevice device : devices) {
+            if (device.serverSource != null && device.serverSource.equals(serverSource) && device.zwaveid != null && device.zwaveid.equals(Integer.parseInt(deviceId))) {
+                return device;
+            }
+        }
+        
+        return null;
+    }
+
     class GetshopLockCodeManagemnt extends Thread {
 
         private final GetShopDevice device;
@@ -646,6 +712,10 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 devices.put(obj.id, toAdd);
                 toAdd.beingUpdated = false;
                 toAdd.lastTriedUpdate = null;
+            }
+            if(obj instanceof GetShopDeviceLog) {
+                GetShopDeviceLog log = (GetShopDeviceLog)obj;
+                deviceLogs.put(log.id, log);
             }
             if(obj instanceof GetShopLockMasterCodes) {
                 masterCodes = (GetShopLockMasterCodes) obj;
@@ -998,5 +1068,4 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             }
         }
     }
-
 }

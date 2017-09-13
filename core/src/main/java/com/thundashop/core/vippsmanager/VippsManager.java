@@ -276,7 +276,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             }
             
             Gson gson = new Gson();
-            String res = webManager.htmlPostBasicAuth(url, "test", false, "UTF-8", "", "", false, "POST", header);
+            String res = webManager.htmlPostBasicAuth(url, "", false, "UTF-8", "", "", false, "POST", header);
             if(printDebugData()) {
                 logPrint("----");
                 logPrint(res);

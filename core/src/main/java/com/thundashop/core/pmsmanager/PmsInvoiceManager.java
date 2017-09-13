@@ -731,7 +731,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         for(Order ord : ordersToUse) {
             totalAmountEx += orderManager.getTotalAmountExTaxes(ord);
         }
-        System.out.println("Total amount: " + totalAmountEx);
+        
         
         List<String> roomProducts = new ArrayList();
         for(BookingItemType type : bookingEngine.getBookingItemTypes()) {

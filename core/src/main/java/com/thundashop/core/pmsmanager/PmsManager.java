@@ -13,6 +13,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.util.Calendar; 
 import com.thundashop.core.amesto.AmestoSync; 
+import com.thundashop.core.applications.StoreApplicationInstancePool;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
@@ -161,6 +164,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     GetShop getShop;
 
+    @Autowired
+    StoreApplicationPool storeApplicationPool;
+    
     @Autowired
     BookingComRateManagerManager bookingComRateManagerManager;
     
@@ -1564,6 +1570,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager, bookingEngine.getAllBookings());
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
+        if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841")) {
+//            setTotalFromIncomeReport(result, filter);
+        }
         result.setView(filter);
         result.buildTotal();
         result.buildTotalSales();
@@ -6633,6 +6642,104 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         int endYear = cal.get(Calendar.YEAR);
         
         return endYear- startYear;
+    }
+
+    private void setTotalFromIncomeReport(PmsStatistics result, PmsBookingFilter filter) {
+        List<BookingItemType> allRooms = bookingEngine.getBookingItemTypes();
+        List<String> roomProductIds = new ArrayList();
+        for(BookingItemType item : allRooms) {
+            if(!filter.typeFilter.isEmpty() && !filter.typeFilter.contains(item.id)) {
+                continue;
+            }
+            if(!roomProductIds.contains(item.productId)) {
+                roomProductIds.add(item.productId);
+            }
+            for(String history : item.historicalProductIds) {
+                if(!roomProductIds.contains(history)) {
+                    roomProductIds.add(history);
+                }
+            }
+        }
+        
+        PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
+        PmsOrderStatistics incomeReportResult = pmsInvoiceManager.generateStatistics(orderFilterToUse);
+        for(PmsOrderStatisticsEntry entry : incomeReportResult.entries) {
+            for(StatisticsEntry statEntry : result.entries) {
+                if(PmsBookingRooms.isSameDayStatic(statEntry.date, entry.day)) {
+                    double total = 0.0;
+                    for(String productId : roomProductIds) {
+                        Double productPrice = entry.priceEx.get(productId);
+                        if(productPrice == null) {
+                            productPrice = 0.0;
+                        }
+//                        Double productPrice = 0.0;
+//                        if(orderPrice != null) {
+//                            for(Double amount : orderPrice.values()) {
+//                                productPrice += amount;
+//                            }
+//                        }
+                        total += productPrice;
+//                        System.out.println("\t" + productPrice + " (" + productId + ")");
+                    }
+                    statEntry.totalPrice = (double)Math.round(total);
+                    if(statEntry.roomsRentedOut == 0) {
+                        statEntry.avgPrice = 0.0;
+                    } else {
+                        statEntry.avgPrice = (double)Math.round(statEntry.totalPrice / statEntry.roomsRentedOut);
+                    }
+//                    System.out.println(entry.day + " : " + statEntry.totalPrice);
+                    break;
+                 }
+            }
+        }
+    }
+
+    private PmsOrderStatsFilter createDefaultOrderStatsFilter(PmsBookingFilter pmsFilter) {
+        PmsOrderStatsFilter filter = new PmsOrderStatsFilter();
+        filter.start = pmsFilter.startDate;
+        filter.end = pmsFilter.endDate;
+        filter.methods.clear();
+        filter.savedPaymentMethod = "allmethods";
+        filter.displayType = "dayslept";
+        filter.priceType = "extaxes";
+        filter.includeVirtual = pmsFilter.includeVirtual;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(filter.start);
+        cal.set(Calendar.HOUR_OF_DAY, 00);
+        cal.set(Calendar.MINUTE, 00);
+        cal.set(Calendar.SECOND, 00);
+        filter.start = cal.getTime();
+        
+        cal.setTime(filter.end);
+        cal.set(Calendar.HOUR_OF_DAY, 00);
+        cal.set(Calendar.MINUTE, 00);
+        cal.set(Calendar.SECOND, 00);
+        filter.end = cal.getTime();
+        
+        List<Application> paymentApps = storeApplicationPool.getActivatedPaymentApplications();
+        for(Application app : paymentApps) {
+            PmsPaymentMethods method = null;
+            if(app.id.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66") || app.id.equals("cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba")) {
+                //Invoices and samlefaktura needs to include everything
+                method = new PmsPaymentMethods();
+                method.paymentMethod = app.id;
+                method.paymentStatus = 0;
+                filter.methods.add(method);
+                continue;
+            }
+            method = new PmsPaymentMethods();
+            method.paymentMethod = app.id;
+            method.paymentStatus = 7;
+            filter.methods.add(method);
+
+            method = new PmsPaymentMethods();
+            method.paymentMethod = app.id;
+            method.paymentStatus = -9;
+            filter.methods.add(method);
+        }
+        
+        return filter;
     }
 
     

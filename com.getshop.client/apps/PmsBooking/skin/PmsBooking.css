@@ -27,3 +27,5 @@
 .PmsBooking .pmsfront2 .fa-bed { font-size: 40px; margin-top: 15px; margin-bottom: 10px; }
 .PmsBooking .pmsfront2 .check_available_button { width: 200px; padding: 6px; }
 .PmsBooking .inputblock { display:inline-block; float:left; margin-right: 20px;  }
+.PmsBooking .pmsfront3 .inputblock{margin: 4px 4px 4px 0;}
+.PmsBooking .pmsfront3 .go_to_page_button{padding: 10px;background: #f29400;color: #fff;font-weight: bold;cursor:pointer;}

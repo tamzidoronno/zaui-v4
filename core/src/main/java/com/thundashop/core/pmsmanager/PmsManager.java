@@ -39,6 +39,7 @@ import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
+import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
@@ -6742,5 +6743,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return filter;
     }
 
-    
+    public void logChanged(GetShopDeviceLog log) {
+        // NEED TO DO SOMETHING TO PMS BECAUSE THINGS NEEDS TO BE UPDATED
+        System.out.println("Got trigger for : " + log);
+    }
 }

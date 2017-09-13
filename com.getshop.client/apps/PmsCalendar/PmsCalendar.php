@@ -55,6 +55,10 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     }
     
     public function render() {
+        $showWeekOnly = $this->getConfigurationSetting("showWeekOnly");
+        if($showWeekOnly == "true"){
+            $_SESSION['calendardaytype'] = "week";
+        }
         if (!$this->getSelectedName()) {
             echo "You need to specify a booking engine first<br>";
             $engines = $this->getApi()->getStoreManager()->getMultiLevelNames();

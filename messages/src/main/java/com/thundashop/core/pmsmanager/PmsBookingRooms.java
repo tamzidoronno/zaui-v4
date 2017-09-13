@@ -195,6 +195,9 @@ public class PmsBookingRooms implements Serializable {
     }
 
     boolean isEnded(Date day) {
+        if(day == null) {
+            return false;
+        }
         boolean result = day.after(date.end);
         return result;
     }

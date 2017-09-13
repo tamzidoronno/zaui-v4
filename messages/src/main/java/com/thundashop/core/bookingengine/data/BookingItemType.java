@@ -9,7 +9,9 @@ package com.thundashop.core.bookingengine.data;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -25,6 +27,7 @@ public class BookingItemType extends DataCommon {
     @Translation
     public String name;
     public String productId;
+    public List<String> historicalProductIds = new ArrayList();
     public String pageId;
     public Boolean visibleForBooking = true;
     public Integer addon = BookingItemAddonTypes.NONE;

@@ -8,7 +8,6 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.CartManager;
-import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.DataCommon;
@@ -24,7 +23,6 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.sendregning.SendRegningManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
-import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -524,6 +522,17 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return price;
     }
 
+    private void doubleCheckStats(PmsOrderStatistics stats, List<Order> orders) {
+        for(Order order : orders) {
+            Double totalEx = orderManager.getTotalAmount(order);
+            Double totalInStats = stats.getTotalForOrder(order.id);
+            Double diff = totalEx - totalInStats;
+            if(diff < -1 || diff > 1) {
+                System.out.println("Order failed calculated: " + order.incrementOrderId + " - " + diff);
+            }
+        }
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -718,14 +727,22 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             
         }
         
+        double totalAmountEx = 0;
+        for(Order ord : ordersToUse) {
+            totalAmountEx += orderManager.getTotalAmountExTaxes(ord);
+        }
+        
+        
         List<String> roomProducts = new ArrayList();
         for(BookingItemType type : bookingEngine.getBookingItemTypes()) {
             roomProducts.add(type.productId);
+            roomProducts.addAll(type.historicalProductIds);
         }
         
         PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts, userManager.getAllUsersMap());
         stats.createStatistics(ordersToUse, filter);
-        
+//        doubleCheckStats(stats,ordersToUse);
+
         return stats;
     }
 
@@ -1748,8 +1765,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         order.dueDays = booking.dueDays;
         
-        
-
         orderManager.setCompanyAsCartIfUserAddressIsNullAndUserConnectedToACompany(order, user.id);
 
         if (virtual) {

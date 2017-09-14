@@ -136,9 +136,6 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         if(includeDeteled) {
             rooms = result.getAllRooms();
         }
-        if(entry.id.equals("06e90242-ea91-411b-84e4-51854ca2b8da")) {
-            System.out.println("What happends here?");
-        }
         for(PmsBookingRooms room : rooms) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
             if(type != null && type.addon > 0) {
@@ -171,9 +168,6 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
     private void removeDeadEvents() {
         List<PmsBookingEventEntry> toremove = new ArrayList();
         for(PmsBookingEventEntry event : entries.values()) {
-            if(event.id.equals("06e90242-ea91-411b-84e4-51854ca2b8da")) {
-                System.out.println("What happends here?");
-            }
                             
             if(event.bookingId == null || event.bookingId.trim().isEmpty()) {
                 event.isDeleted = true;

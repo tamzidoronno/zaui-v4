@@ -105,7 +105,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             "-H","Ocp-Apim-Subscription-Key: "+ ocp,
             "--data-ascii", gson.toJson(body)};
             
-            if(printDebugData()) { for(String res : array) { System.out.println(res); } }
+            if(printDebugData()) { for(String res : array) { logPrint(res); } }
             
             Process p = Runtime.getRuntime().exec(array);
             
@@ -241,7 +241,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         "-H","Ocp-Apim-Subscription-Key: "+ ocp,
         "--data-ascii", gson.toJson(cancelation)};
         
-        if(printDebugData()) { for(String res : array) { System.out.println(res); } }
+        if(printDebugData()) { for(String res : array) { logPrint(res); } }
         Process p = Runtime.getRuntime().exec(array);
         
         BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -285,7 +285,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             "-H","Ocp-Apim-Subscription-Key: "+ocp,
             "--data-ascii", "{body}"};
                 
-        if(printDebugData()) { for(String res : array) { System.out.println(res); } }
+        if(printDebugData()) { for(String res : array) { logPrint(res); } }
         try {
             Process p = Runtime.getRuntime().exec(array);
             
@@ -367,7 +367,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             
             Process p = Runtime.getRuntime().exec(array);
 
-            if(printDebugData()) { for(String res : array) { System.out.println(res); } }
+            if(printDebugData()) { for(String res : array) { logPrint(res); } }
             
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             int resultCode = p.waitFor();

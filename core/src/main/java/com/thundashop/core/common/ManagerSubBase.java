@@ -22,11 +22,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
-import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -54,7 +54,8 @@ public class ManagerSubBase {
     
     protected boolean isSingleton = false;
     protected boolean ready = false;
-    private Session session;
+//    private Session session;
+    private Map<Long, Session> threadSessions = Collections.synchronizedMap(new HashMap<Long, Session>());
 
     private ManagerSetting managerSettings = new ManagerSetting();
     
@@ -178,7 +179,8 @@ public class ManagerSubBase {
     }
 
     public Session getSession() {
-        return session;
+        long threadId = Thread.currentThread().getId();
+        return threadSessions.get(threadId);
     }
 
     /**
@@ -278,7 +280,14 @@ public class ManagerSubBase {
     }
     
     public void setSession(Session session) {
-        this.session = session;
+//        this.session = session;
+        long threadId = Thread.currentThread().getId();
+
+        if (session == null) {
+            threadSessions.remove(threadId);
+        } else {
+            threadSessions.put(threadId, session);
+        }
     }
     
     public Credentials getCredentials() {

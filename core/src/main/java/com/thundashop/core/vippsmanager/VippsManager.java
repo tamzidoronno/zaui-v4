@@ -180,9 +180,9 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
                         try {
                             order.payment.callBackParameters.put("body", msg.body);
                             if(captureOrder(response, order, msg)) {
-                                messageManager.sendInvoiceForOrder(order.id);
                                 order.status = Order.Status.PAYMENT_COMPLETED;
                                 orderManager.saveOrder(order);
+                                messageManager.sendInvoiceForOrder(order.id);
                             } else {
                                 messageManager.sendErrorNotification("Failed to capture order for vipps:" + order.incrementOrderId, null);
                                 order.status = Order.Status.PAYMENT_FAILED;

@@ -135,6 +135,9 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             StringEntity reqEntity = new StringEntity(gson.toJson(body));
             request.setEntity(reqEntity);
             HttpClient httpclient = HttpClients.createDefault();
+            httpclient.getParams().setParameter("http.socket.timeout", new Integer(0));
+            httpclient.getParams().setParameter("http.connection.stalecheck", new  Boolean(true));
+
             HttpResponse response = httpclient.execute(request);
             HttpEntity entity = response.getEntity();
             if (entity != null) 
@@ -290,6 +293,9 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         request.setEntity(reqEntity);
 
         HttpClient httpclient = HttpClients.createDefault();
+        httpclient.getParams().setParameter("http.socket.timeout", new Integer(0));
+        httpclient.getParams().setParameter("http.connection.stalecheck", new  Boolean(true));
+        
         HttpResponse response = httpclient.execute(request);
         HttpEntity entity = response.getEntity();
 
@@ -336,6 +342,9 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
                 .setMaxConnPerRoute(20)
                 .setMaxConnTotal(100)
                 .build();
+        
+        httpclient.getParams().setParameter("http.socket.timeout", new Integer(0));
+        httpclient.getParams().setParameter("http.connection.stalecheck", new  Boolean(true));
 
         try {
             URIBuilder builder = new URIBuilder(url);
@@ -448,8 +457,13 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             request.setEntity(reqEntity);
 
             HttpClient httpclient = HttpClients.createDefault();
+            httpclient.getParams().setParameter("http.socket.timeout", new Integer(0));
+            httpclient.getParams().setParameter("http.connection.stalecheck", new  Boolean(true));
+            
             HttpResponse httpResp = httpclient.execute(request);
             HttpEntity entity = httpResp.getEntity();
+   
+
 
             if (entity != null) 
             {

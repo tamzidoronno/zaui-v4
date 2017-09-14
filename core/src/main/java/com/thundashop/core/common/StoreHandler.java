@@ -121,6 +121,8 @@ public class StoreHandler {
                 GetShopLogHandler.logPrintStatic("Access denied, store: " + storeId + " , user={" + userInfo + "} method={" + aClass.getSimpleName() + "." + inObject.method + "}", null);
             }
             throw ex;
+        } finally {
+            clearSessionObject();
         }
     }
 

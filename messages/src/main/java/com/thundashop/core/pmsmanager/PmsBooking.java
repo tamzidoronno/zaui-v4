@@ -264,7 +264,7 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
-    PmsBookingRooms getRoom(String pmsBookingRoomId) {
+    public PmsBookingRooms getRoom(String pmsBookingRoomId) {
         for(PmsBookingRooms room : rooms) {
             if(room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
                 return room;

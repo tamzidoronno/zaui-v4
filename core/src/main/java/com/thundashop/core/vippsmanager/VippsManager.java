@@ -12,10 +12,21 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.webmanager.WebManager;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,12 +60,16 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
     public boolean startMobileRequest(String phoneNumber, String orderId, String ip) throws Exception {
         String token = getToken();
         
+        if(!getProductionMode()) {
+            phoneNumber = "91504800";
+        }
+        
+        
         Order order = orderManager.getOrderSecure(orderId);
         
         Application vippsApp = storeApplicationPool.getApplication("f1c8301d-9900-420a-ad71-98adb44d7475");
         String clientId = vippsApp.getSetting("clientid"); 
         String ocp = vippsApp.getSetting("subscriptionkeysecondary");
-        String adress = vippsApp.getSetting("adress");
         String serialNumber = vippsApp.getSetting("serialNumber");
         
         String startEndpoint = endpoint;
@@ -78,6 +93,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         header.put("X-TimeStamp", sdf.format(new Date()));
         header.put("X-Source-Address", ip);
         header.put("X-App-Id", clientId);
+        header.put("Content-Type", "application/json");
         header.put("Ocp-Apim-Subscription-Key", ocp);
         
         try {
@@ -104,24 +120,48 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
                 logPrint("------------");
             }
 
-            String res = webManager.htmlPostBasicAuth(url, json, true, "UTF-8", "", "", false, "POST", header);
-            if(printDebugData()) {
-                logPrint("----");
-                logPrint(res);
-                logPrint("----");
+
+            URIBuilder builder = new URIBuilder(url);
+
+
+            URI uri = builder.build();
+            HttpPost request = new HttpPost(uri);
+            for(String k : header.keySet()) {
+                request.setHeader(k, header.get(k));
             }
-            StartTransactionResponse response = gson.fromJson(res, StartTransactionResponse.class);
-            if(response.transactionInfo.status.equals("RESERVE")) {
-                order.status = Order.Status.NEEDCOLLECTING;
+
+
+            // Request body
+            StringEntity reqEntity = new StringEntity(gson.toJson(body));
+            request.setEntity(reqEntity);
+            HttpClient httpclient = HttpClients.createDefault();
+            HttpResponse response = httpclient.execute(request);
+            HttpEntity entity = response.getEntity();
+            if (entity != null) 
+            {
+                String res = EntityUtils.toString(entity);
+                if(printDebugData()) {
+                    logPrint("----");
+                    logPrint(res);
+                    logPrint("----");
+                }
+                
+                StartTransactionResponse transResponse = gson.fromJson(res, StartTransactionResponse.class);
+                if(transResponse.transactionInfo.status.equals("RESERVE")) {
+                    order.status = Order.Status.NEEDCOLLECTING;
+                }
+                order.payment.transactionLog.put(System.currentTimeMillis(), res);
+                orderManager.saveOrder(order);
+                return true;
+            } else {
+                logPrint("Entity is null");
             }
-            order.payment.transactionLog.put(System.currentTimeMillis(), res);
-            orderManager.saveOrder(order);
-            return true;
+            
         }catch(Exception e) {
             logPrintException(e);
             return false;
         }
-        
+        return false;
     }
     
     @Override
@@ -235,11 +275,34 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         cancelation.transaction.transactionText = "Cancelled by user";
         
         Gson gson = new Gson();
-        String res = webManager.htmlPostBasicAuth(url, gson.toJson(cancelation), true, "UTF-8", "", "", false, "PUT", header);
-        if(!printDebugData()) {
-            logPrint("---------");
-            logPrint(res);
-            logPrint("---------");
+
+        
+        URIBuilder builder = new URIBuilder(url);
+
+        URI uri = builder.build();
+        HttpPut request = new HttpPut(uri);
+        for(String k : header.keySet()) {
+            request.setHeader(k, header.get(k));
+        }
+
+        // Request body
+        StringEntity reqEntity = new StringEntity(gson.toJson(cancelation));
+        request.setEntity(reqEntity);
+
+        HttpClient httpclient = HttpClients.createDefault();
+        HttpResponse response = httpclient.execute(request);
+        HttpEntity entity = response.getEntity();
+
+        if (entity != null) 
+        {
+            String res = EntityUtils.toString(entity);
+            if(!printDebugData()) {
+                logPrint("---------");
+                logPrint(res);
+                logPrint("---------");
+            }
+        } else {
+            logPrint("Entity is null in cancel");
         }
         
         return true;
@@ -258,36 +321,63 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         }
         
         String url = startEndpoint + "accessToken/get";
-        
-        HashMap<String, String> header = new HashMap();
-        header.put("client_id", clientId);
-        header.put("client_secret", secret);
-        header.put("Ocp-Apim-Subscription-Key", ocp);
-        
+
+        HttpClient httpclient = HttpClients.custom()
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        // Waiting for a connection from connection manager
+                        .setConnectionRequestTimeout(10000)
+                        // Waiting for connection to establish
+                        .setConnectTimeout(5000)
+                        .setExpectContinueEnabled(false)
+                        // Waiting for data
+                        .setSocketTimeout(5000)
+                        .setCookieSpec("easy")
+                        .build())
+                .setMaxConnPerRoute(20)
+                .setMaxConnTotal(100)
+                .build();
+
         try {
-            
-            if(printDebugData()) {
+            URIBuilder builder = new URIBuilder(url);
+
+            URI uri = builder.build();
+            HttpPost request = new HttpPost(uri);
+            request.setHeader("client_id", clientId);
+            request.setHeader("client_secret", secret);
+            request.setHeader("Ocp-Apim-Subscription-Key", ocp);
+            request.setHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            // Request body
+            StringEntity reqEntity = new StringEntity("{body}");
+            request.setEntity(reqEntity);
+
+            if (printDebugData()) {
                 logPrint("------------");
                 logPrint("Endpoint:" + url);
-                for(String k : header.keySet()) {
-                    logPrint(k + " : " + header.get(k));
-                }
+                logPrint("client_id:" + clientId);
+                logPrint("client_secret:" + secret);
+                logPrint("Ocp-Apim-Subscription-Key:" + ocp);
                 logPrint("------------");
             }
-            
-            Gson gson = new Gson();
-            String res = webManager.htmlPostBasicAuth(url, "", false, "UTF-8", "", "", false, "POST", header);
-            if(printDebugData()) {
-                logPrint("----");
-                logPrint(res);
-                logPrint("----");
+
+            HttpResponse response = httpclient.execute(request);
+            HttpEntity entity = response.getEntity();
+
+            if (entity != null) {
+                Gson gson = new Gson();
+                String res = EntityUtils.toString(entity);
+                if (printDebugData()) {
+                    logPrint("----");
+                    logPrint(res);
+                    logPrint("----");
+                }
+                AccessTokenResponse tokeResp = gson.fromJson(res, AccessTokenResponse.class);
+                return tokeResp.access_token;
             }
-            AccessTokenResponse tokeResp = gson.fromJson(res, AccessTokenResponse.class);
-            return tokeResp.access_token;
-        }catch(Exception e) {
-            logPrintException(e);
-            return "";
+        } catch (Exception e) {
+            logPrint(e.getMessage());
         }
+        return "";
     }
 
     private boolean captureOrder(VippsResponse response, Order order, PullMessage msg) {
@@ -322,10 +412,11 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         HashMap<String, String> header = new HashMap();
         header.put("Authorization", token);
+        header.put("X-Request-Id", order.incrementOrderId + "");
         header.put("X-TimeStamp", sdf.format(new Date()));
         header.put("X-Source-Address", "138.68.66.223");
-        header.put("X-Request-Id", order.incrementOrderId + "");
         header.put("X-App-Id", clientId);
+        header.put("Content-Type", "application/json");
         header.put("Ocp-Apim-Subscription-Key", ocp);
         
         if(printDebugData()) {
@@ -343,23 +434,49 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         cancelation.transaction.transactionText = "Captured";
         
         try {
-            String res = webManager.htmlPostBasicAuth(url, gson.toJson(cancelation), true, "UTF-8", "", "", false, "POST", header);
-            if(printDebugData()) {
-                logPrint("---------");
-                logPrint(res);
-                logPrint("---------");
+            URIBuilder builder = new URIBuilder(url);
+
+            URI uri = builder.build();
+            HttpPost request = new HttpPost(uri);
+            for(String k : header.keySet()) {
+                request.setHeader(k, header.get(k));
             }
-            StartTransactionResponse captureResponse = gson.fromJson(res, StartTransactionResponse.class);
-            return captureResponse.transactionInfo.status.equals("Captured");
+
+
+            // Request body
+            StringEntity reqEntity = new StringEntity(gson.toJson(cancelation));
+            request.setEntity(reqEntity);
+
+            HttpClient httpclient = HttpClients.createDefault();
+            HttpResponse httpResp = httpclient.execute(request);
+            HttpEntity entity = httpResp.getEntity();
+
+            if (entity != null) 
+            {
+                String res = EntityUtils.toString(entity);
+                StartTransactionResponse captureResponse = gson.fromJson(res, StartTransactionResponse.class);
+                
+                if(printDebugData()) {
+                    logPrint("---------");
+                    logPrint(res);
+                    logPrint("---------");
+                }
+                
+                return captureResponse.transactionInfo.status.equals("Captured");
+            } else {
+                logPrint("Entity is null on vipps capture call");
+            }
+
         }catch(Exception e) {
             return false;
         }
         
+        return false;
     }
 
     private boolean getProductionMode() {
-        return true;
-//        return frameworkConfig.productionMode;
+//        return false;
+        return frameworkConfig.productionMode;
     }
     
     private boolean printDebugData() {

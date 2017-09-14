@@ -43,7 +43,7 @@ $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById
             <br>
             <?php
             foreach($item->historicalProductIds as $histProdId) {
-                echo $product[$histProdId]->name."<br>";
+                echo "<span gstype='form' method='removeHistorical'><input type='hidden' gsname='productid' value='$histProdId'><input type='hidden' gsname='typeid' value='$id'><i class='fa fa-trash-o' style='cursor:pointer;' gstype='submitToInfoBox'></i></span> " . $product[$histProdId]->name."<br>";
             }
             ?>
             <br>

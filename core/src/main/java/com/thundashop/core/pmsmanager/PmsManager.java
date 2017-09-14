@@ -1572,7 +1572,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager, bookingEngine.getAllBookings());
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
         if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841")) {
-//            setTotalFromIncomeReport(result, filter);
+            setTotalFromIncomeReport(result, filter);
         }
         result.setView(filter);
         result.buildTotal();
@@ -6673,14 +6673,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         if(productPrice == null) {
                             productPrice = 0.0;
                         }
-//                        Double productPrice = 0.0;
-//                        if(orderPrice != null) {
-//                            for(Double amount : orderPrice.values()) {
-//                                productPrice += amount;
-//                            }
-//                        }
                         total += productPrice;
-//                        System.out.println("\t" + productPrice + " (" + productId + ")");
                     }
                     statEntry.totalPrice = (double)Math.round(total);
                     if(statEntry.roomsRentedOut == 0) {
@@ -6688,7 +6681,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     } else {
                         statEntry.avgPrice = (double)Math.round(statEntry.totalPrice / statEntry.roomsRentedOut);
                     }
-//                    System.out.println(entry.day + " : " + statEntry.totalPrice);
                     break;
                  }
             }
@@ -6738,6 +6730,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             method.paymentMethod = app.id;
             method.paymentStatus = -9;
             filter.methods.add(method);
+        }
+        
+        if(filter.includeVirtual) {
+            filter.methods.clear();
         }
         
         return filter;

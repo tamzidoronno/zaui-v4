@@ -10,6 +10,22 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         return "BookingEngineManagement";
     }
 
+    public function removeHistorical() {
+        $productId = $_POST['data']['productid'];
+        
+        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $_POST['data']['typeid']);
+        $newArray = array();
+        foreach($type->historicalProductIds as $histProdId) {
+            if($histProdId == $productId) {
+                continue;
+            }
+            $newArray[] = $histProdId;
+        }
+        $type->historicalProductIds = $newArray;
+        $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $type);
+        $this->loadTypeSettings();
+    }
+    
     public function configureTypeSorting() {
          $this->includefile("typesorting");
     }

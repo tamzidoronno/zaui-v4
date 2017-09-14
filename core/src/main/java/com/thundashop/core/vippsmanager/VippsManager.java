@@ -89,9 +89,14 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             body.merchantInfo.merchantSerialNumber = serialNumber;
             body.merchantInfo.callBack = callback;
             
+            Integer amount = new Double(orderManager.getTotalAmount(order) * 100).intValue();
+            if(!getProductionMode()) {
+                amount = 100;
+            }
+            
             body.customerInfo.mobileNumber = phoneNumber;
             body.transaction.orderId = order.incrementOrderId + "";
-            body.transaction.amount = new Double(orderManager.getTotalAmount(order) * 100).intValue();
+            body.transaction.amount = amount;
             body.transaction.transactionText = "Payment for order: " + order.incrementOrderId;
             body.transaction.timeStamp = sdf.format(new Date());
             
@@ -343,7 +348,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         }
         
         
-        String url = startEndpoint + "/Ecomm/v1/payments/"+order.incrementOrderId+"/capture";
+        String url = startEndpoint + "Ecomm/v1/payments/"+order.incrementOrderId+"/capture";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         
         CancelRequest cancelation = new CancelRequest();

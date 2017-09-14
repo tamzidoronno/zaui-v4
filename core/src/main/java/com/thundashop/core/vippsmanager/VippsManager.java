@@ -164,10 +164,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         }
         try {
             //First check for polls.
-            long start = System.currentTimeMillis();
             List<PullMessage> messages = getShopPullService.getMessages(pollKey, storeId);
-            long end = System.currentTimeMillis();
-            logPrint(start - end + "  meesagses: " + messages.size());
             for(PullMessage msg : messages) {
                 try {
                     VippsResponse response = gson.fromJson(msg.body, VippsResponse.class);

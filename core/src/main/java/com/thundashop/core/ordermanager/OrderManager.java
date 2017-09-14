@@ -1967,6 +1967,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (!user.company.isEmpty()) {
                 Company company = userManager.getCompany(user.company.get(0));
                 order.cart.address = company.address;
+                if (order.cart.address == null) {
+                    order.cart.address = new Address();
+                }
                 order.cart.address.fullName = company.name;
             }
         }

@@ -92,6 +92,12 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
 
     @Override
+    public void initialize() throws SecurityException {
+        super.initialize(); //To change body of generated methods, choose Tools | Templates.
+        createScheduler("fetchLockLock", "22 0,2,4,6,8,10,12,14,16,18,20,22 * * *", GetShopLogFetcherStarter.class);
+    }
+
+    @Override
     public void saveMastercodes(GetShopLockMasterCodes codes) {
         saveObject(codes);
         masterCodes = codes;
@@ -405,9 +411,11 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 .collect(Collectors.toList());
         
         for (GetShopDeviceLog log : logsToSave) {
+            log.code = getCodeForLog(log);
             saveObject(log);
             deviceLogs.put(log.id, log);
             
+            accessEvent(""+log.deviceId, log.code, log.serverSource);
             pmsManager.logChanged(log);
         }
     }
@@ -436,6 +444,31 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         }
         
         return null;
+    }
+
+    @Override
+    public void triggerMassUpdateOfLockLogs() {
+        for (String serverSource : pmsManager.getConfiguration().lockServerConfigs.keySet()) {
+            PmsLockServer server = pmsManager.getConfiguration().lockServerConfigs.get(serverSource);
+            
+            List<GetShopDevice> locks = getAllLocks(serverSource);
+            for (GetShopDevice dev : locks) {
+                if (dev.zwaveid != null && dev.zwaveid.intValue() > 0) {
+                    triggerFetchingOfCodes(server.arxHostname, ""+dev.zwaveid.intValue());
+                }
+            }
+        }
+    }
+
+    private String getCodeForLog(GetShopDeviceLog log) {
+        GetShopDevice device = getDeviceForServer(log.serverSource, ""+log.deviceId);
+        if (device == null)
+            return "";
+        
+        if (device.codes.get(log.uId) == null)
+            return "";
+        
+        return ""+device.codes.get(log.uId).code;
     }
 
     class GetshopLockCodeManagemnt extends Thread {
@@ -1059,7 +1092,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     }
     
     @Override
-    public void accessEvent(String id, String code, String domain) throws Exception {
+    public void accessEvent(String id, String code, String domain) {
         for(GetShopDevice dev : devices.values()) {
             Integer zwaveid = new Integer(id);
             if(dev.zwaveid.equals(zwaveid) && dev.isSameSource(domain)) {

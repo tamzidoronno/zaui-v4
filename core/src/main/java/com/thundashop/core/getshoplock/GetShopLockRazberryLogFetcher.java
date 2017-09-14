@@ -14,17 +14,13 @@ import com.thundashop.core.pmsmanager.PmsLockServer;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.joda.time.Instant;
 
 
 /**
@@ -71,7 +67,9 @@ public class GetShopLockRazberryLogFetcher extends GetShopSchedulerBase {
         }
         
         log.timestamp = date;
+        log.event = result.event.value;
         log.uId = result.uId.value;
+        log.getShopDeviceId = device.id;
         
         return log;
     }

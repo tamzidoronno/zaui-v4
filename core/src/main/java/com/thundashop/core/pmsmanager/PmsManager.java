@@ -4468,9 +4468,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             if(room.bookingItemId == null || !room.bookingItemId.equals(item.id)) {
                                 continue;
                             }
-                            doNotification("room_dooropenedfirsttime", booking, room);
-                            room.checkedin = true;
-                            saveBooking(booking);
+                            markGuestArrivedInternal(booking, room);
                         }
                     }
                 }
@@ -4485,12 +4483,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
                 if(room.code != null && room.code.equals(card) && !room.checkedin) {
-                    doNotification("room_dooropenedfirsttime", booking, room);
-                    room.checkedin = true;
-                    saveBooking(booking);
+                    markGuestArrivedInternal(booking, room);
                 }
             }
         }
+    }
+
+    private void markGuestArrivedInternal(PmsBooking booking, PmsBookingRooms room) throws ErrorException {
+        if (room.checkedin) {
+            return;
+        }
+        
+        doNotification("room_dooropenedfirsttime", booking, room);
+        room.checkedin = true;
+        saveBooking(booking);
     }
 
     public PmsBooking getBookingFromRoomSecure(String pmsBookingRoomId) {
@@ -6740,7 +6746,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public void logChanged(GetShopDeviceLog log) {
-        // NEED TO DO SOMETHING TO PMS BECAUSE THINGS NEEDS TO BE UPDATED
-        System.out.println("Got trigger for : " + log);
+    if (!log.isOpen()) {
+            return;
+        }
+
+        for(PmsBooking booking : bookings.values()) {
+            
+            if (booking.isEnded())
+                continue;
+            
+            for(PmsBookingRooms room : booking.rooms) {
+                if (room.checkedin)
+                    continue;
+                
+                BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                
+                if (item != null && item.bookingItemAlias.equals(log.getShopDeviceId) && room.code.equals(log.code) ) {
+                    System.out.println("Marking as arrived: " + room.guests.get(0).name);
+                    markGuestArrivedInternal(booking, room);
+                }
+            }   
+        }
     }
 }

@@ -75,7 +75,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         String key = serialNumber + "-vippsdev";
         if(getProductionMode()) {
-            key = serialNumber + "-vippsprod";
+            key = serialNumber + "-prod";
         }
         
         String callback = "http://pullserver_"+key+"_"+storeId+".nettmannen.no";
@@ -160,7 +160,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         String pollKey = serialNumber + "-vippsdev";
         if(getProductionMode()) {
-            pollKey = serialNumber + "-vippsprod";
+            pollKey = serialNumber + "-prod";
         }
         try {
             //First check for polls.

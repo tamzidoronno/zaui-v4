@@ -383,6 +383,7 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
                 if(result != null) {
                     res += result;
                 }
+                order.payment.transactionLog.put(System.currentTimeMillis(), res);
             }            
 
             StartTransactionResponse captureResponse = gson.fromJson(res, StartTransactionResponse.class);

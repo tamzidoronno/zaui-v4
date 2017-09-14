@@ -111,7 +111,7 @@ foreach($config->lockServerConfigs as $id => $server) {
             $incVirtual = "CHECKED";
         }
         if($filter->groupByBooking) { $checked = "CHECKED"; }
-        echo "<input type='checkbox' gstype='clicksubmitforce' method='groupByBooking' gsname='id' gsvalue='' $checked>Group by booking<br>";
+        echo "<input type='checkbox' gsname='groupByBooking' gsvalue='' $checked>Group by booking<br>";
         echo "<input type='checkbox' gstype='clicksubmitforce' method='includeDeleted' gsname='incdelete' $incDeleted class='clicksubmitcheckbox'>Include deleted<br>";
         echo "<input type='checkbox' gsname='include_virtual_filter' method='includeDeleted' gsname='incvirtual' $incVirtual class='clicksubmitcheckbox'>Include virtual orders<br>";
         echo "</div>";

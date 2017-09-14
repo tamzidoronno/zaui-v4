@@ -26,6 +26,8 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -122,6 +124,8 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
 
 
             URIBuilder builder = new URIBuilder(url);
+            builder.setParameter("http.socket.timeout","0");
+            builder.setParameter("http.connection.stalecheck","true");
 
 
             URI uri = builder.build();
@@ -135,8 +139,6 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             StringEntity reqEntity = new StringEntity(gson.toJson(body));
             request.setEntity(reqEntity);
             HttpClient httpclient = HttpClients.createDefault();
-            httpclient.getParams().setParameter("http.socket.timeout", new Integer(0));
-            httpclient.getParams().setParameter("http.connection.stalecheck", new  Boolean(true));
 
             HttpResponse response = httpclient.execute(request);
             HttpEntity entity = response.getEntity();
@@ -281,6 +283,8 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
 
         
         URIBuilder builder = new URIBuilder(url);
+        builder.setParameter("http.socket.timeout","0");
+        builder.setParameter("http.connection.stalecheck","true");
 
         URI uri = builder.build();
         HttpPut request = new HttpPut(uri);
@@ -293,8 +297,6 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         request.setEntity(reqEntity);
 
         HttpClient httpclient = HttpClients.createDefault();
-        httpclient.getParams().setParameter("http.socket.timeout", new Integer(0));
-        httpclient.getParams().setParameter("http.connection.stalecheck", new  Boolean(true));
         
         HttpResponse response = httpclient.execute(request);
         HttpEntity entity = response.getEntity();
@@ -342,13 +344,12 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
                 .setMaxConnPerRoute(20)
                 .setMaxConnTotal(100)
                 .build();
-        
-        httpclient.getParams().setParameter("http.socket.timeout", new Integer(0));
-        httpclient.getParams().setParameter("http.connection.stalecheck", new  Boolean(true));
 
         try {
             URIBuilder builder = new URIBuilder(url);
-
+            builder.setParameter("http.socket.timeout","0");
+            builder.setParameter("http.connection.stalecheck","true");
+            
             URI uri = builder.build();
             HttpPost request = new HttpPost(uri);
             request.setHeader("client_id", clientId);
@@ -444,6 +445,8 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
         
         try {
             URIBuilder builder = new URIBuilder(url);
+            builder.setParameter("http.socket.timeout","0");
+            builder.setParameter("http.connection.stalecheck","true");
 
             URI uri = builder.build();
             HttpPost request = new HttpPost(uri);
@@ -457,8 +460,6 @@ public class VippsManager  extends ManagerBase implements IVippsManager {
             request.setEntity(reqEntity);
 
             HttpClient httpclient = HttpClients.createDefault();
-            httpclient.getParams().setParameter("http.socket.timeout", new Integer(0));
-            httpclient.getParams().setParameter("http.connection.stalecheck", new  Boolean(true));
             
             HttpResponse httpResp = httpclient.execute(request);
             HttpEntity entity = httpResp.getEntity();

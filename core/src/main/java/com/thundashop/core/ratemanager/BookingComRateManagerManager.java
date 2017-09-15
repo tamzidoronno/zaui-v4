@@ -147,6 +147,10 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                     continue;
                 }
                 
+                if(!tmpType.visibleForBooking) {
+                   continue; 
+                }
+                
                 int numberOfAvailable = bookingEngine.getNumberOfAvailableWeakButFaster(tmpType.id, start, endCal.getTime());
                 BaseInvCountType toAdd = new BaseInvCountType();
 
@@ -244,6 +248,16 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
     public void pushBooking(PmsBooking booking, String actionType, boolean pushInventory) {
         if(config.hotelId == null || config.hotelId.isEmpty()) {
             return;
+        }
+        try {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                BookingItemType type = bookingEngine.getBookingItemType(room.pmsBookingRoomId);
+                if(!type.visibleForBooking) {
+                    return;
+                }
+            }
+        }catch(Exception e) {
+            
         }
         
         String uuid = UUID.randomUUID().toString();

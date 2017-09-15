@@ -531,7 +531,7 @@ public class InvoiceFrontPage {
         if(item.getProduct() != null && item.getProduct().metaData != null && !item.getProduct().metaData.isEmpty()) {
             lineText += " " + item.getProduct().metaData;
         }
-        if(!startDate.isEmpty() && !endDate.isEmpty()) {
+        if(!startDate.isEmpty() && !endDate.isEmpty() && !item.hideDates) {
             lineText += " (" + startDate + " - " + endDate + ")";
         }
         

@@ -1327,10 +1327,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         PmsBooking newbooking = null;
         List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
         List<Integer> allCodesInNewBooking = getAllResCodesForPmsBooking(booking);
-        System.out.println("Searching for ids:");
-        for(Integer test : allCodesInNewBooking) {
-            System.out.println("\t" + test);
-        }
 
         for(PmsBooking pmsbook : allbookings) {
             List<Integer> allCodesOnOldBooking = getAllResCodesForPmsBooking(pmsbook);

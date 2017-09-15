@@ -89,18 +89,17 @@ if(!$nextPage) {
     
     $('.end_date_input.'+'<?echo $appId;?>').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
-            loadAvailability();
+            loadAvailability('<?echo $appId;?>','<?php echo $this->getText("rest_endpoint"); ?>');
         }
     });
     $('.start_cal.'+'<?echo $appId;?>').on('click', function() { $('.start_date_input.'+'<?echo $appId;?>').focus(); });
     $('.end_cal.'+'<?echo $appId;?>').on('click', function() { $('.end_date_input.'+'<?echo $appId;?>').focus(); });
     
-    function loadAvailability() { 
-        var appId = '<? echo $appId ?>';
+    function loadAvailability(appId, endpoint) { 
         var select = $('.selected_product.'+ appId);
-        var start = $('.start_date_input').val();
-        var end = $('.end_date_input').val();
-        var endpoint = "<?php echo $this->getText("rest_endpoint"); ?>?manager=PmsWebBookingManager&method=getAllRooms&arg1=default&arg2="+start+"&arg3="+end;
+        var start = $('.start_date_input.'+ appId).val();
+        var end = $('.end_date_input.'+ appId).val();
+        endpoint = endpoint+"?manager=PmsWebBookingManager&method=getAllRooms&arg1=default&arg2="+start+"&arg3="+end;
         $.ajax({
             url: endpoint,
             dataType: "jsonp",
@@ -121,5 +120,5 @@ if(!$nextPage) {
             }
         });
     }
-    loadAvailability();
+    loadAvailability('<?echo $appId;?>','<?php echo $this->getText("rest_endpoint"); ?>');
 </script>

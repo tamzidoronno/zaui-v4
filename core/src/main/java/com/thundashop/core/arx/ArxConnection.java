@@ -71,7 +71,7 @@ public class ArxConnection {
             try {
                 httpResponse = client.execute(request);
             }catch(Exception e) {
-                GetShopLogHandler.logPrintStatic("Failed lookup on address: " + address, null);
+                GetShopLogHandler.logPrintStatic("Failed lookup on address: " + address + " : " + e.getMessage(), null);
                 e.printStackTrace();
                 throw e;
             }

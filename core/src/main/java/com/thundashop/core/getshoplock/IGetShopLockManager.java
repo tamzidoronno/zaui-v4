@@ -90,4 +90,6 @@ public interface IGetShopLockManager {
     
     public void addLockLogs(List<GetShopDeviceLog> logs, String code);
     
+    @Administrator
+    public void triggerMassUpdateOfLockLogs();
 }

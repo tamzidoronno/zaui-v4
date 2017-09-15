@@ -296,6 +296,10 @@ public class CartItem implements Serializable {
         return count * getProduct().price;
     }
 
+    public double getTotalEx() {
+        return count * getProduct().priceExTaxes;
+    }
+
     public Double getPriceMatrixAmount() {
         if(priceMatrix == null) {
             return 0.0;

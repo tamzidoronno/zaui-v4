@@ -238,9 +238,6 @@ class PmsStatisticsBuilder {
 
     private void addGuests(StatisticsEntry entry, PmsBookingRooms room, PmsBooking booking) {
         
-        if(room.pmsBookingRoomId.equals("523bd975-6168-4970-943c-be4ac06d57b4")) {
-            System.out.println("okay?");
-        }
         String countryCode = booking.countryCode;
         if(countryCode == null || countryCode.isEmpty()) {
             HashMap<Integer, String> list = PhoneCountryCodeList.getList();
@@ -316,6 +313,12 @@ class PmsStatisticsBuilder {
     private Double addBookingValues(Calendar cal) {
         Double res = 0.0;
         for(PmsBooking booking : allBookings) {
+            if(!booking.isCompletedBooking()) {
+                continue;
+            }
+            if(booking.isDeleted) {
+                continue;
+            }
             if(booking.createdOnDay(cal.getTime())) {
                 booking.calculateTotalCost();
                 res += booking.getTotalPrice();

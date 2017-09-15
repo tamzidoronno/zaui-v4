@@ -96,7 +96,7 @@ public class PmsOrderStatistics implements Serializable  {
                     }
                     Double inc = priceInc.get(item.getProduct().id);
                     Double ex = priceEx.get(item.getProduct().id);
-                    
+
                     if(roomProducts != null && !roomProducts.contains(item.getProduct().id) && !item.getProduct().id.equals("815d31ef-716d-4906-aae1-bddb028b55f4")) {
                         secondsInDay = -1;
                     }
@@ -139,13 +139,22 @@ public class PmsOrderStatistics implements Serializable  {
                         ex += item.getPriceExForMinutes() * secondsInDay;
                         orderPriceInc += item.getPriceIncForMinutes() * secondsInDay;
                         orderPriceEx += item.getPriceExForMinutes() * secondsInDay;
+                        
+                        Double extotal = item.getSeconds() * item.getPriceExForMinutes();
+                        Double itemTotalEx = item.getTotalEx();
+                        Double diff = (extotal - itemTotalEx);
+                        diff = (double)Math.round(diff*1000) / 1000;
+                        if(diff != 0.000) {
+                            System.out.println("Failed to summarize order: " + diff);
+                        }
+                        
                         addProductOrderPrice(item.getProduct().id, order.id, item.getPriceExForMinutes() * secondsInDay, entry.priceExOrders);
                         addProductOrderPrice(item.getProduct().id, order.id, item.getPriceIncForMinutes() * secondsInDay, entry.priceIncOrders);
                     }
                     
                     priceInc.put(item.getProduct().id, inc);
                     priceEx.put(item.getProduct().id, ex);
-                    if(totalCalc != 0.0) {
+                    if(totalCalc != 0.0 || priceIncOrder.containsKey(order.id)) {
                         priceIncOrder.put(order.id, totalCalc);
                         orderInc.put(order.incrementOrderId, orderPriceInc);                    
                         orderEx.put(order.incrementOrderId, orderPriceEx);

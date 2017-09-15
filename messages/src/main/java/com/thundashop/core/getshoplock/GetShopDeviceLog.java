@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.getshoplock;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import java.util.Date;
 
@@ -17,8 +18,9 @@ public class GetShopDeviceLog extends DataCommon {
     public int deviceId;
     
     /**
-     * 6 = open
-     * 9 = close
+     * 2 = open.
+     * 10 = close.
+     * 27 = usercode changed.
      */
     public int event;
     
@@ -31,7 +33,16 @@ public class GetShopDeviceLog extends DataCommon {
     
     public String serverSource;
 
+    @Administrator
+    public String code;
+    
+    public String getShopDeviceId;
+    
     boolean isSame(GetShopDeviceLog log) {
         return (log.timestamp.equals(timestamp) && uId == log.uId && serverSource.equals(log.serverSource));
+    }
+
+    public boolean isOpen() {
+        return event == 2;
     }
 }

@@ -10,6 +10,22 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         return "BookingEngineManagement";
     }
 
+    public function removeHistorical() {
+        $productId = $_POST['data']['productid'];
+        
+        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $_POST['data']['typeid']);
+        $newArray = array();
+        foreach($type->historicalProductIds as $histProdId) {
+            if($histProdId == $productId) {
+                continue;
+            }
+            $newArray[] = $histProdId;
+        }
+        $type->historicalProductIds = $newArray;
+        $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedName(), $type);
+        $this->loadTypeSettings();
+    }
+    
     public function configureTypeSorting() {
          $this->includefile("typesorting");
     }
@@ -252,6 +268,20 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
     
     public function saveItemType() {
         $item = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedName(), $_POST['data']['typeid']);
+        
+        $historical = array();
+        if($item->productId != $_POST['data']['productId']) {
+            foreach($item->historicalProductIds as $histProdId) {
+                if($histProdId == $_POST['data']['productId']) {
+                    continue;
+                }
+                $historical[] = $histProdId;
+            }
+            $historical[] = $item->productId;
+            
+            $item->historicalProductIds = $historical;
+        }
+        
         if(isset($_POST['data']['addon'])) { $item->addon = $_POST['data']['addon']; }
         if(isset($_POST['data']['productId'])) { $item->productId = $_POST['data']['productId']; }
         if(isset($_POST['data']['visibleForBooking'])) { $item->visibleForBooking = $_POST['data']['visibleForBooking']; }

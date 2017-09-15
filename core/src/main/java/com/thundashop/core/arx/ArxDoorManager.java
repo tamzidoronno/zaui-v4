@@ -13,8 +13,6 @@ import com.assaabloy.arxdata.persons.PersonType;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.ManagerSubBase;
-import com.thundashop.core.getshop.data.GetShopLockCode;
 import com.thundashop.core.getshop.data.GetShopLockMasterCodes;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
@@ -90,7 +88,9 @@ public class ArxDoorManager implements IDoorManager {
         if(arxHost.contains(":")) {
             address = address.replace(":5002", "");
         }
-        
+        GetShopLogHandler.logPrintStatic("Executing:" + address, null);
+        GetShopLogHandler.logPrintStatic("Username:" + username, null);
+        GetShopLogHandler.logPrintStatic("Password:" + password, null);
         return connection.httpLoginRequest(address, username, password, content);
     }
     
@@ -353,8 +353,12 @@ public class ArxDoorManager implements IDoorManager {
         toPost += "</arxdata>\n";
         
         String hostName = ":5002/arx/import";
-        httpLoginRequest(hostName,toPost);
+        System.out.println("Posting to :" + hostName);
+        System.out.println(toPost);
         
+        String response = httpLoginRequest(hostName,toPost);
+        System.out.println("Response:");
+        System.out.println(response);
         return person;
     }
 

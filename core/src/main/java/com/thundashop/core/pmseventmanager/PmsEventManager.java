@@ -136,17 +136,15 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         if(includeDeteled) {
             rooms = result.getAllRooms();
         }
-
         for(PmsBookingRooms room : rooms) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
             if(type != null && type.addon > 0) {
                 continue;
             }
-            if(room.isDeleted()) {
-                entry.isDeleted = true;
+            if(room.isDeleted() || entry.isDeleted) {
                 room.date.isDeleted = true;
-            } else if(entry.isDeleted) {
-                room.date.isDeleted = true;
+            } else {
+                room.date.isDeleted = false;
             }
             entry.location = type.name;
             entry.dateRanges.add(room.date);
@@ -267,6 +265,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
                 
                 PmsBookingEventEntry overrideEntry = entry.getDay(day);
                 PmsEventListEntry newEntry = new PmsEventListEntry(overrideEntry, range.start, entry.roomNames.get(i));
+
                 newEntry.eventId = entry.id;
                 newEntry.eventDateId = entry.id + "_" + day;
                 newEntry.isDeleted = range.isDeleted;

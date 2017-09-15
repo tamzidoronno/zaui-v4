@@ -96,6 +96,21 @@ $states['10'] = "Send to invoice";
                                 <td width='50%'>Invoice email adress</td>
                                 <td><input class='gsniceinput1' value='<?php echo $user->emailAddressToInvoice; ?>' gsname='invoiceemail'></td>
                             </tr>
+                            <tr>
+                                <td width="50%"><? echo $this->__w("Autoconfirm when booking"); ?></td>
+                                <td width="50%" style="padding:23px 0;">
+                                    <?
+                                    $checked = "";
+                                    if($user->autoConfirmBookings) {
+                                        $checked = "CHECKED";
+                                    }
+                                    ?>
+                                    <div class="gsnicecheckbox1" style="text-align:center;">
+                                        <input id="autoConfirmBookings" type='checkbox' gsname='autoConfirmBookings' <? echo $checked; ?>>
+                                        <label for="autoConfirmBookings"></label>
+                                    </div>
+                                </td>
+                            </tr>
                         </table>
                 </div>
             </div>
@@ -210,7 +225,12 @@ $states['10'] = "Send to invoice";
                             
                             <td><b>Create order after stay</b><br>
                             When a booking is completed the order will be created after the stay has been completed.</td>
-                            <td align='center'><input type='checkbox' class='gsniceinput1' gsname='createAfterStay' <?php echo $afterStayChecked; ?>></td>
+                            <td align='center'>
+                            <div class="gsnicecheckbox1">
+                                <input type='checkbox' id="createorderafterstay" gsname='createAfterStay' <?php echo $afterStayChecked; ?>>
+                                <label for="createorderafterstay"></label>
+                            </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><b>Preferred payment type</b><br>

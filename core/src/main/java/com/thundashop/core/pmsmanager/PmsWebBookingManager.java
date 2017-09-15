@@ -36,8 +36,8 @@ public class PmsWebBookingManager extends GetShopSessionBeanNamed implements IPm
         calEnd.set(Calendar.MINUTE, new Integer(defaultEnd[1]));
         end = calEnd.getTime();
         
-        List<Room> pmsrooms = pmsManager.getAllRoomTypes(start, end);
-        for(Room r : pmsrooms) {
+        List<PmsBookingRooms> pmsrooms = pmsManager.getAllRoomTypes(start, end);
+        for(PmsBookingRooms r : pmsrooms) {
             PmsWebRoom toAdd = new PmsWebRoom();
             toAdd.price = r.price;
             toAdd.availableRooms = pmsManager.getNumberOfAvailable(r.type.id, start, end);

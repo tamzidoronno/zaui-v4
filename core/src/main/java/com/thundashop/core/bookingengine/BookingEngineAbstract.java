@@ -456,6 +456,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         savedItem.pageId = type.pageId;
         savedItem.productId = type.productId;
         savedItem.visibleForBooking = type.visibleForBooking;
+        savedItem.autoConfirm = type.autoConfirm;
         savedItem.addon = type.addon;
         savedItem.rules = type.rules;
         savedItem.order = type.order;

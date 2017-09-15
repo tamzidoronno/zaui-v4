@@ -255,6 +255,7 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         if(isset($_POST['data']['addon'])) { $item->addon = $_POST['data']['addon']; }
         if(isset($_POST['data']['productId'])) { $item->productId = $_POST['data']['productId']; }
         if(isset($_POST['data']['visibleForBooking'])) { $item->visibleForBooking = $_POST['data']['visibleForBooking']; }
+        if(isset($_POST['data']['autoConfirm'])){$item->autoConfirm = $_POST['data']['autoConfirm']; }
         if(isset($_POST['data']['size'])) { $item->size = $_POST['data']['size']; }
         if(isset($_POST['data']['name'])) { $item->name = $_POST['data']['name']; }
         if(isset($_POST['data']['description'])) { $item->description = $_POST['data']['description']; }

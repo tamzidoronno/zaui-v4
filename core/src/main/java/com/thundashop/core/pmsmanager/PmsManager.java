@@ -6652,7 +6652,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void setTotalFromIncomeReport(PmsStatistics result, PmsBookingFilter filter) {
+        if(!filter.itemFilter.isEmpty()) {
+            return;
+        }
+
+        
         List<BookingItemType> allRooms = bookingEngine.getBookingItemTypes();
+
         List<String> roomProductIds = new ArrayList();
         for(BookingItemType item : allRooms) {
             if(!filter.typeFilter.isEmpty() && !filter.typeFilter.contains(item.id)) {

@@ -2073,6 +2073,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $filter->filterSubType = $current->filterSubType;
         $filter->includeVirtual = $_POST['data']['include_virtual_filter'] == "true";
         $filter->searchWord = $_POST['data']['searchWord'];
+        $filter->groupByBooking = $_POST['data']['groupByBooking'] == "true";
         if(isset($_POST['data']['channel'])) {
             $filter->channel = $_POST['data']['channel'];
         }

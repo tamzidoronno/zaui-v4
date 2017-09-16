@@ -313,6 +313,12 @@ class PmsStatisticsBuilder {
     private Double addBookingValues(Calendar cal) {
         Double res = 0.0;
         for(PmsBooking booking : allBookings) {
+            if(!booking.isCompletedBooking()) {
+                continue;
+            }
+            if(booking.isDeleted) {
+                continue;
+            }
             if(booking.createdOnDay(cal.getTime())) {
                 booking.calculateTotalCost();
                 res += booking.getTotalPrice();

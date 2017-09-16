@@ -401,6 +401,12 @@ public class WilhelmsenHouse implements AccountingInterface {
                     toRemove.add(order);
                 }
             }
+            
+            if (order.payment != null && order.payment.paymentType.equals("ns_f1c8301d_9900_420a_ad71_98adb44d7475\\Vipps")) {
+                if(order.status != Order.Status.PAYMENT_COMPLETED) {
+                    toRemove.add(order);
+                }
+            }
         }
         orders.removeAll(toRemove);
         return orders;

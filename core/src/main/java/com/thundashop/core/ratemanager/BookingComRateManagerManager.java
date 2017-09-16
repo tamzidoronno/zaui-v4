@@ -11,21 +11,13 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
-import com.thundashop.core.pmsmanager.PmsMailStatistics;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.core.webmanager.WebManager;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigInteger;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -147,6 +139,10 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                     continue;
                 }
                 
+                if(!tmpType.visibleForBooking) {
+                   continue; 
+                }
+                
                 int numberOfAvailable = bookingEngine.getNumberOfAvailableWeakButFaster(tmpType.id, start, endCal.getTime());
                 BaseInvCountType toAdd = new BaseInvCountType();
 
@@ -244,6 +240,16 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
     public void pushBooking(PmsBooking booking, String actionType, boolean pushInventory) {
         if(config.hotelId == null || config.hotelId.isEmpty()) {
             return;
+        }
+        try {
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                BookingItemType type = bookingEngine.getBookingItemType(room.pmsBookingRoomId);
+                if(!type.visibleForBooking) {
+                    return;
+                }
+            }
+        }catch(Exception e) {
+            
         }
         
         String uuid = UUID.randomUUID().toString();

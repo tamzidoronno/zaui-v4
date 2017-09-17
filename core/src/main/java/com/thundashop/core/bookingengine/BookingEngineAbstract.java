@@ -610,6 +610,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             throw new BookingEngineException("Can not change to a bookingItem that does not exists");
         }
         
+        String oldItemId = booking.bookingItemId;
+        String oldBookingItemTypeId = booking.bookingItemTypeId;
+        
         checkIfCanGetOptimalLines(booking, itemId, bookingItem);
         
         Booking newBooking = deepClone(booking);
@@ -623,7 +626,35 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         if (bookingItem != null)
             booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
         
+        tryToGetLineAfterChange(booking, oldItemId, oldBookingItemTypeId);
+        
         saveObject(booking);
+    }
+
+    private void tryToGetLineAfterChange(Booking booking, String oldItemId, String oldBookingItemTypeId) {
+        List<Booking> bookingsIntercepts = bookings.values().stream()
+                .filter(o -> o.interCepts(booking.startDate, booking.endDate))
+                .collect(Collectors.toList());
+        
+        List<Booking> secondLayer = new ArrayList(bookingsIntercepts);
+        
+        for (Booking booking2 : bookingsIntercepts) {
+            for (Booking iBooking : bookings.values()) {
+                if (iBooking.interCepts(booking2.startDate, booking2.endDate)) {
+                    secondLayer.add(iBooking);
+                }
+            }
+        }
+        
+        Date startDate = secondLayer.stream().map(u -> u.startDate).min(Date::compareTo).get();
+        Date endDate = secondLayer.stream().map(u -> u.endDate).max(Date::compareTo).get();
+        
+        try {
+            getTimeLinesForItemWithOptimal(startDate, endDate);
+        } catch (BookingEngineException ex) {
+            booking.bookingItemId = oldItemId;
+            booking.bookingItemTypeId = oldBookingItemTypeId;
+        }
     }
 
     private void checkIfCanGetOptimalLines(Booking booking, String itemId, BookingItem bookingItem)  {
@@ -682,6 +713,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
     public void changeBookingItemAndDateOnBooking(String bookingId, String itemId, Date start, Date end) {
         Booking booking = getBooking(bookingId);
         
+        String oldItemId = booking.bookingItemId;
+        String oldBookingItemTypeId = booking.bookingItemTypeId;
+        
         if (booking == null) {
             throw new BookingEngineException("Can not change bookingitem, the booking does not exists");
         }
@@ -709,6 +743,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
             booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
         }
         
+        tryToGetLineAfterChange(booking, oldItemId, oldBookingItemTypeId);
         
         saveObject(booking);
     }
@@ -934,7 +969,43 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .map(o -> items.get(o))
                 .collect(Collectors.toList());
         
-        return retList;
+        Booking booking = getBooking(bookingId);
+        
+        List<BookingItem> retList2 = new ArrayList(retList);
+        if (booking != null && !bookingId.isEmpty()) {
+            retList2 = doSecondFiltration(booking, retList);
+        }
+        
+        return retList2;
+    }
+
+    /**
+     * Filters an extra time to check if its really possible to use the
+     * items that are sent in.
+     * 
+     * @param booking
+     * @param retList
+     * @return 
+     */
+    private List<BookingItem> doSecondFiltration(Booking booking, List<BookingItem> retList) {
+        List<BookingItem> retList2 = new ArrayList();
+        if (booking != null) {
+            for (BookingItem item : retList) {
+                String oldItemId = booking.bookingItemId;
+                String oldTypeId = booking.bookingItemTypeId;
+                booking.bookingItemId = item.id;
+                booking.bookingItemTypeId = item.bookingItemTypeId;
+                tryToGetLineAfterChange(booking, oldItemId, oldTypeId);
+                
+                if (booking.bookingItemId.equals(item.id)) {
+                    retList2.add(item);
+                }
+                
+                booking.bookingItemId = oldItemId;
+                booking.bookingItemTypeId = oldTypeId;
+            }
+        }
+        return retList2;
     }
 
     private BookingItemAssignerOptimal getAvailableItemsAssigner(String typeId, Date start, Date end, String bookingId) throws BookingEngineException {

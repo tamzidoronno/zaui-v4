@@ -138,22 +138,12 @@ $roomsInWorkSpace = (array)$this->getApi()->getPmsManager()->getWorkSpaceRooms($
     echo "<bR><bR>";
 
     if(sizeof($roomsInWorkSpace) > 0) {
-        $start = null;
-        $end = null;
-        foreach($roomsInWorkSpace as $room) {
-            if($start == null || strtotime($room->date->start) < $start) {
-                $start = strtotime($room->date->start);
-            }
-            if($end == null || strtotime($room->date->end) > $end) {
-                $end = strtotime($room->date->end);
-            }
-        }
         
         echo "<br><br><br>";
         echo "<span class='changeroomfromworkspacebox' style='display:none; position:absolute;background-color:#fff; border: solid 1px; padding: 10px;' ></span>";
         echo "<div style='border: solid 1px; '>";
         echo "<div style='border-bottom: 2px;text-align:center; padding: 10px; color:#fff; background-color:red;'><i class='fa fa-warning'></i> Hey there, you got rooms added to your workspace.</b><br>";
-        echo "Availability has been closed of between: " . date("d.m.Y H:i", $start) . " - " . date("d.m.Y H:i", $end);
+        echo "Availability for dates where rooms are in the workspace has been closed off.";
         echo "</div>";
         echo "<div style='padding: 10px;'>";
         echo "<table cellspacing='0' cellpadding='0'>";

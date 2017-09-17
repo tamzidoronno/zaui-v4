@@ -3056,6 +3056,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!isOpen(itemType, start, end)) {
             return 0;
         }
+        if(hasRoomsInWorkspace(start, end)) {
+            return 0;
+        }
+        
         try {
             return bookingEngine.getNumberOfAvailableWeakButFaster(itemType, start, end);
         }catch(BookingEngineException e) {
@@ -6783,6 +6787,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             removeFromBooking(booking.id, pmsRoomId);
             room.inWorkSpace = true;
+            saveBooking(booking);
         }catch(Exception e) {
             logPrintException(e);
         }
@@ -6799,5 +6804,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return res;
+    }
+
+    private boolean hasRoomsInWorkspace(Date start, Date end) {
+        List<PmsBookingRooms> rooms = getWorkSpaceRooms();
+
+        for(PmsBookingRooms room : rooms) {
+            if(room.isActiveInPeriode(start, end)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

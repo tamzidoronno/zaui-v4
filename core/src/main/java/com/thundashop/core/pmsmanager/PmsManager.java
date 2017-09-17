@@ -1056,6 +1056,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     room.bookingItemId = null;
                 }
             }
+            
             finalize(booking);
 
             String logText = "";
@@ -6773,5 +6774,30 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }   
         }
+    }
+
+    @Override
+    public void addToWorkSpace(String pmsRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        try {
+            removeFromBooking(booking.id, pmsRoomId);
+            room.inWorkSpace = true;
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+    }
+
+    @Override
+    public List<PmsBookingRooms> getWorkSpaceRooms() {
+        List<PmsBookingRooms> res = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+                if(room.inWorkSpace) {
+                    res.add(room);
+                }
+            }
+        }
+        return res;
     }
 }

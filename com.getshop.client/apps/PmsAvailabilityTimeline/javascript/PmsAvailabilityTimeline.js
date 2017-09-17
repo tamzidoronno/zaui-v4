@@ -18,6 +18,7 @@ app.PmsAvailabilityTimeline = {
         $(document).on('click', '.PmsAvailabilityTimeline .shortinformationboxFooter', app.PmsAvailabilityTimeline.hideShortOptionsForEntry);
         $(document).on('click', '.PmsAvailabilityTimeline #toggleRoomoverview', app.PmsAvailabilityTimeline.toggleRoomoverview);
         $(document).on('click', '.PmsAvailabilityTimeline .completeaction', app.PmsAvailabilityTimeline.completeQuickAction);
+        $(document).on('click', '.PmsAvailabilityTimeline .readdfromworkspace', app.PmsAvailabilityTimeline.loadBookingFromRoomId);
         $(document).keyup(app.PmsAvailabilityTimeline.hideShortOptionsForEntry);
     },
     toggleRoomoverview : function(){
@@ -257,6 +258,24 @@ app.PmsAvailabilityTimeline = {
         
         var instanceId = $('#bookinginstanceid').val();
         var event = thundashop.Ajax.createEvent('','showBookingOnBookingEngineId',instanceId,data);
+        event.core.appname = "PmsManagement";
+        app.PmsAvailabilityTimeline.hideShortOptionsForEntry(e);
+        thundashop.common.showInformationBoxNew(event,'Configuration');
+    },
+    
+    
+    loadBookingFromRoomId : function(e) {
+        $('.ui-tooltip').remove();
+        var data = {
+            "roomid" : $(this).attr('roomid'),
+            "bookingid" : $(this).attr('bid')
+        };
+        
+        $('.shortinformationbox').remove();
+        app.PmsAvailabilityTimeline.ignoreMouseOver = false;
+        
+        var instanceId = $('#bookinginstanceid').val();
+        var event = thundashop.Ajax.createEvent('','showBookingInformation',instanceId,data);
         event.core.appname = "PmsManagement";
         app.PmsAvailabilityTimeline.hideShortOptionsForEntry(e);
         thundashop.common.showInformationBoxNew(event,'Configuration');

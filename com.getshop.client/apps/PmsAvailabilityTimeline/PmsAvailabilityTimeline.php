@@ -29,6 +29,10 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         if($action == "moveroom") {
             $itemId = $_POST['data']['newroomid'];
             $this->getApi()->getPmsManager()->setBookingItem($this->getSelectedName(), $room->pmsBookingRoomId, $booking->id, $itemId, true);
+        } else if($action == "unassign") {
+            $this->getApi()->getPmsManager()->setBookingItem($this->getSelectedName(), $room->pmsBookingRoomId, $booking->id, "", true);
+        } else if($action == "toworkspace") {
+            $this->getApi()->getPmsManager()->addToWorkSpace($this->getSelectedName(), $room->pmsBookingRoomId);
         } else if($action == "unclose") {
             $this->getApi()->getBookingEngine()->deleteBooking($this->getSelectedName(), $_POST['data']['bid']);
         } else if($action == "deletereservation") {
@@ -318,6 +322,11 @@ class PmsAvailabilityTimeline extends \WebshopApplication implements \Applicatio
         }
         
         return false;
+    }
+    
+    public function loadMoveRoom() {
+        $_POST['data']['action'] = "moveroom";
+        $this->includefile("runquickaction");
     }
     
     public function prepareAction() {

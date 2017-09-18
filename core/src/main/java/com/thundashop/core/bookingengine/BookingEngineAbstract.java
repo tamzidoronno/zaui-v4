@@ -972,7 +972,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
         Booking booking = getBooking(bookingId);
         
         List<BookingItem> retList2 = new ArrayList(retList);
-        if (booking != null && !bookingId.isEmpty()) {
+        if (booking != null && !bookingId.isEmpty() && storeId.equals("9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0")) {
             retList2 = doSecondFiltration(booking, retList);
         }
         

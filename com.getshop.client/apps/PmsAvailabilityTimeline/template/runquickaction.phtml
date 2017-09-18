@@ -13,7 +13,7 @@ if($bid) {
     }
 }
 /* @var $this ns_176ea989_c7bb_4cef_a4bd_0c8421567e0b\PmsAvailabilityTimeline */
-echo "<div class='draggableShortbox' style='padding: 10px;'>";
+echo "<div class='draggableShortbox' style='padding-left: 10px; padding-right: 10px;'>";
 if($action == "closeroom") {
     $start = date("d.m.Y", $_POST['data']['time']/1000);
     $end = date("d.m.Y", strtotime("+1day", strtotime($start)));
@@ -42,12 +42,16 @@ if($action == "closeroom") {
     $isAvailableItem = $this->getApi()->getBookingEngine()->getAllAvailbleItemsWithBookingConsidered($this->getSelectedName(), $start, $end, $bid);
     $isAvailableItem = $this->indexList($isAvailableItem);
     
+    echo "<div style=' padding-left: 3px;padding-top: 3px;'>";
+    echo "<span style='color:blue; cursor:pointer;' class='completeaction' roomid='".$room->pmsBookingRoomId."' finalaction='unassign'>Unassign</span>";
+    echo "<span style='float:right; color:blue; cursor:pointer;' class='completeaction' roomid='".$room->pmsBookingRoomId."' finalaction='toworkspace' onMouseOver='$(document).tooltip(\"disable\");$(\".workspacedescription\").show();' onMouseOut='$(\".workspacedescription\").hide();$(document).tooltip(\"enable\");'>To workspace</span>";
+    echo "</div>";
+    echo "<span class='workspacedescription' style='position:absolute; background-color:#FFF; border: solid 2px; padding: 5px; display:none; z-index: 21000;'>";
+    echo "If you add this booking to your workspace you will free up this space. When there are reservations added to the workspace this periode will be closed until the workspace has been cleaned up. This comes specially in handy when the hotel is full and you want to swap rooms.";
+    echo "</span>";
+    
     foreach($types as $type) {
-        if($room->bookingItemTypeId == $type->id) {
-            echo "<div style='border-bottom: solid 1px;'><i class='fa fa-check'></i> <b>" . $type->name . "</b></div>";
-        } else {
-            echo "<div style='border-bottom: solid 1px;'><b>" . $type->name . "</b></div>";
-        }
+        echo "<div style='border-bottom: solid 1px;border-top: solid 1px;'><b>" . $type->name . "</b></div>";
         echo "<table width='100%'>";
         $j = 0;
         echo "<tr>";

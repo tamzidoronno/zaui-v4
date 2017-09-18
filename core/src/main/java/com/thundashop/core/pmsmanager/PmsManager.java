@@ -1056,6 +1056,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     room.bookingItemId = null;
                 }
             }
+            
             finalize(booking);
 
             String logText = "";
@@ -3055,6 +3056,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!isOpen(itemType, start, end)) {
             return 0;
         }
+        if(hasRoomsInWorkspace(start, end)) {
+            return 0;
+        }
+        
         try {
             return bookingEngine.getNumberOfAvailableWeakButFaster(itemType, start, end);
         }catch(BookingEngineException e) {
@@ -6785,5 +6790,42 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }   
         }
+    }
+
+    @Override
+    public void addToWorkSpace(String pmsRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        try {
+            removeFromBooking(booking.id, pmsRoomId);
+            room.inWorkSpace = true;
+            saveBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+    }
+
+    @Override
+    public List<PmsBookingRooms> getWorkSpaceRooms() {
+        List<PmsBookingRooms> res = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+                if(room.inWorkSpace) {
+                    res.add(room);
+                }
+            }
+        }
+        return res;
+    }
+
+    private boolean hasRoomsInWorkspace(Date start, Date end) {
+        List<PmsBookingRooms> rooms = getWorkSpaceRooms();
+
+        for(PmsBookingRooms room : rooms) {
+            if(room.isActiveInPeriode(start, end)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

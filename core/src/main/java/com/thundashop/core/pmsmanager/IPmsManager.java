@@ -142,6 +142,12 @@ public interface IPmsManager {
     @Administrator
     public void createNewUserOnBooking(String bookingId, String name, String orgId);
     
+    @Administrator
+    public void addToWorkSpace(String pmsRoomId);
+    
+    @Administrator
+    public List<PmsBookingRooms> getWorkSpaceRooms();
+    
     public Date getEarliestEndDate(String pmsBookingRoomId);
     
     @Editor

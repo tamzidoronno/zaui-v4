@@ -69,6 +69,7 @@ public class PmsBookingRooms implements Serializable {
     public Date undeletedDate;
     public boolean forceUpdateLocks = false;
     public boolean deletedByChannelManagerForModification = false;
+    public boolean inWorkSpace = false;
     
     /**
      * Finalized entries
@@ -529,6 +530,7 @@ public class PmsBookingRooms implements Serializable {
         deleted = false;
         deletedDate = null;
         undeletedDate = new Date();
+        inWorkSpace = false;
     }
 
     public void delete() {

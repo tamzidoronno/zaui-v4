@@ -8,6 +8,7 @@ package com.thundashop.core.bookingengine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.GetShopLogHandler;
 import java.util.ArrayList;
@@ -93,7 +94,11 @@ public class BookingItemAssignerOptimal {
         
         List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
         
-        addUnassignedBookingsToLine(bookingLines, unassignedBookings);
+        if (storeId != null && storeId.equals("9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0")) {
+            addUnassignedBookingsToLine2(bookingLines, unassignedBookings);
+        } else {
+            addUnassignedBookingsToLine(bookingLines, unassignedBookings);
+        }
         
         setItemIdsToLines(bookingLines);
         
@@ -486,6 +491,35 @@ public class BookingItemAssignerOptimal {
                 unassignedBookings.removeAll(newBookings);
                 bookingLines.addAll(newLine);
             }
+        }
+    }
+    
+    private void addUnassignedBookingsToLine2(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings) {
+        
+        for (OptimalBookingTimeLine timeLine : bookingLines) {
+            BookingTimeLineFlatten flattenTimeLine = new BookingTimeLineFlatten(Integer.MAX_VALUE, "all");
+            timeLine.bookings.stream().forEach(o -> flattenTimeLine.add(o));
+            unassignedBookings.stream().forEach(o -> flattenTimeLine.add(o));
+            List<Booking> bestCombo = flattenTimeLine.getBestCombo();
+            
+            for (Booking ibooking : bestCombo) {
+                if (!timeLine.bookings.contains(ibooking)) {
+                    timeLine.bookings.add(ibooking);
+                }
+            }
+            
+            unassignedBookings.removeAll(bestCombo);
+        }
+        
+        while(!unassignedBookings.isEmpty()) {
+            BookingTimeLineFlatten flattenTimeLine = new BookingTimeLineFlatten(Integer.MAX_VALUE, "all");
+            unassignedBookings.stream().forEach(o -> flattenTimeLine.add(o));
+            List<Booking> bookingsToUse = flattenTimeLine.getBestCombo();
+            
+            OptimalBookingTimeLine bookingLine = new OptimalBookingTimeLine();
+            bookingLine.bookings.addAll(bookingsToUse);
+            unassignedBookings.removeAll(bookingsToUse);
+            bookingLines.add(bookingLine);
         }
     }
     

@@ -43,6 +43,9 @@
         if($user->hasDiscount) {
             echo " <i class='fa fa-dollar' title='This user has a discount'></i>";
         }
+        if($user->autoConfirmBookings){
+            echo " <i class='fa fa-check-square-o' title='Autoconfirm booking is active for this user'></i>";
+        }
         if($user->suspended) {
             echo " <i class='fa fa-ban' style='color:red;' title='This user has been suspended'></i>";
         }

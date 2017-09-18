@@ -27,5 +27,59 @@
 .PmsBooking .pmsfront2 .fa-bed { font-size: 40px; margin-top: 15px; margin-bottom: 10px; }
 .PmsBooking .pmsfront2 .check_available_button { width: 200px; padding: 6px; }
 .PmsBooking .inputblock { display:inline-block; float:left; margin-right: 20px;  }
-.PmsBooking .pmsfront3 .inputblock{margin: 4px 4px 4px 0;}
-.PmsBooking .pmsfront3 .go_to_page_button{padding: 10px;background: #f29400;color: #fff;font-weight: bold;cursor:pointer;}
+
+/* pmsfront3 */
+.PmsBooking .pmsfront3 .productlist{margin:2%;}
+.PmsBooking .pmsfront3 .productlist select{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    width: 100%;
+    color: #807668;
+    background-color: #ffeccf;
+    padding: 6px;
+    border: 0;
+    border-radius: 4px;
+    
+    font-weight: bold;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.PmsBooking .pmsfront3 select::-ms-expand {display: none;}
+.PmsBooking .pmsfront3 .select_arrow{position:relative;display: inline;}
+.PmsBooking .pmsfront3 .select_arrow:after {content:""; width:0; height:0; position:absolute; pointer-events: none;}
+.PmsBooking .pmsfront3 .select_arrow:after {
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    top: .3em;
+    right: .75em;
+    border-top: 8px solid #000;
+    opacity: 0.5;
+}
+.PmsBooking .pmsfront3 .productlist option{padding:5px;}
+.PmsBooking .pmsfront3 {letter-spacing:2px;font-family: 'Quicksand', sans-serif;}
+.PmsBooking .pmsfront3 .inputblock{margin:0 2%;padding:0;width:46%;box-sizing: border-box;text-align:center;}
+.PmsBooking .pmsfront3 .inputblock_button{}
+.PmsBooking .pmsfront3 .dates{width:100%;box-sizing: border-box;}
+.PmsBooking .pmsfront3 .dates input{width: 80%;background-color: rgba(0,0,0,0);color:#fff;width: 100%;padding: 8px 0 6px 34px;;box-sizing: border-box;}
+.PmsBooking .pmsfront3 .dates .dates_inner{width:100%;box-sizing: border-box;background-color: #ffb33a;border:0;padding:0;height:29px;}
+.PmsBooking .pmsfront3 .dates .dates_inner i{ position: absolute;width: 12px;padding: 8px;}
+.PmsBooking .pmsfront3 .go_to_page_button{
+    margin:4% 2%;
+    padding:8px;
+    box-sizing:border-box;
+    background-color:#ffb33a;
+    color:#fff;
+    font-size:18px;
+    font-weight: bold;
+    text-align: center;
+    cursor:pointer;
+    border-radius:4px;
+}
+.PmsBooking .pmsfront3 .dates_inner:hover,
+.PmsBooking .pmsfront3 .dates_inner:hover i,
+.PmsBooking .pmsfront3 .selected_product:hover,
+.PmsBooking .pmsfront3 .go_to_page_button:hover{opacity: 0.8;}

@@ -142,6 +142,12 @@ public interface IPmsManager {
     @Administrator
     public void createNewUserOnBooking(String bookingId, String name, String orgId);
     
+    @Administrator
+    public void addToWorkSpace(String pmsRoomId);
+    
+    @Administrator
+    public List<PmsBookingRooms> getWorkSpaceRooms();
+    
     public Date getEarliestEndDate(String pmsBookingRoomId);
     
     @Editor
@@ -363,7 +369,7 @@ public interface IPmsManager {
     public List<Integer> getAvailabilityForType(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
     public void toggleAddon(String itemId) throws Exception;
     public PmsBookingDateRange getDefaultDateRange();
-    public List<Room> getAllRoomTypes(Date start, Date end);
+    public List<PmsBookingRooms> getAllRoomTypes(Date start, Date end);
     public void setBooking(PmsBooking addons) throws Exception;
     public PmsBooking getCurrentBooking();
     public PmsBooking startBooking();

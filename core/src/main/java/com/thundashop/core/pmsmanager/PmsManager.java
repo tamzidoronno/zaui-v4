@@ -304,7 +304,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     @Override
-    public List<Room> getAllRoomTypes(Date start, Date end) {
+    public List<PmsBookingRooms> getAllRoomTypes(Date start, Date end) {
         if(numberOfYearsBetween(start, end) > 5) {
             return new ArrayList();
         }
@@ -314,7 +314,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             isAdmin = (loggedon.isAdministrator() || loggedon.isEditor());
         }
         
-        List<Room> result = new ArrayList();
+        List<PmsBookingRooms> result = new ArrayList();
         List<BookingItemType> allGroups = bookingEngine.getBookingItemTypes();
 
         Collections.sort(allGroups, new Comparator<BookingItemType>() {
@@ -328,7 +328,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 continue;
             }
             
-            Room roomToAdd = new Room();
+            PmsBookingRooms roomToAdd = new PmsBookingRooms();
             roomToAdd.type = type;
             
             PmsBookingRooms room = new PmsBookingRooms();
@@ -1056,6 +1056,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     room.bookingItemId = null;
                 }
             }
+            
             finalize(booking);
 
             String logText = "";
@@ -3055,6 +3056,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (!isOpen(itemType, start, end)) {
             return 0;
         }
+        if(hasRoomsInWorkspace(start, end)) {
+            return 0;
+        }
+        
         try {
             return bookingEngine.getNumberOfAvailableWeakButFaster(itemType, start, end);
         }catch(BookingEngineException e) {
@@ -5784,6 +5789,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(configuration.needConfirmationInWeekEnds && booking.isWeekendBooking() && booking.isStartingToday()) {
             return true;
         }
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            if(type.autoConfirm) {
+                return false;
+            }
+        }
+        
+        User user = userManager.getUserById(booking.userId);
+        if(user != null && user.autoConfirmBookings) {
+            return false; 
+        }
         return configuration.needConfirmation;
     }
 
@@ -6573,6 +6589,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             row.preferredPaymentType = user.preferredPaymentType;
             row.hasDiscount = discount.discounts.keySet().size() > 0;
             row.suspended = user.suspended;
+            row.autoConfirmBookings = user.autoConfirmBookings;
             
             result.add(row);
         }
@@ -6773,5 +6790,42 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }   
         }
+    }
+
+    @Override
+    public void addToWorkSpace(String pmsRoomId) {
+        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsRoomId);
+        try {
+            removeFromBooking(booking.id, pmsRoomId);
+            room.inWorkSpace = true;
+            saveBooking(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+    }
+
+    @Override
+    public List<PmsBookingRooms> getWorkSpaceRooms() {
+        List<PmsBookingRooms> res = new ArrayList();
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
+                if(room.inWorkSpace) {
+                    res.add(room);
+                }
+            }
+        }
+        return res;
+    }
+
+    private boolean hasRoomsInWorkspace(Date start, Date end) {
+        List<PmsBookingRooms> rooms = getWorkSpaceRooms();
+
+        for(PmsBookingRooms room : rooms) {
+            if(room.isActiveInPeriode(start, end)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

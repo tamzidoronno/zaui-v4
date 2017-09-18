@@ -57,7 +57,7 @@ body{background-color:#f9f9f9;font-family: 'Source Sans Pro', sans-serif;font-si
     .gsarea[area="header"] .Menu {margin:0;}
     .gsarea[area="header"] .Menu a {font-size:14px;}
     .gsarea[area="header"] .Menu .entries {border-bottom: 5px solid #00a5ea;}
-    .gsarea[area="header"] .Menu .entry .entries{top:0;width:100%;background-color:#1d4659;}
+    .gsarea[area="header"] .Menu .entry .entries{top:0;width:100%;background-color:#1d4659;border:0;}
     .gsarea[area="header"] .Menu .menuentries.horizontal{background-color:#272729;}
     .gsarea[area="header"] .Menu .mobilenavigatemenu {display:inline-block;}
     .gsarea[area="header"] .Menu .mobilenavigatemenu .fa{
@@ -87,4 +87,6 @@ body{background-color:#f9f9f9;font-family: 'Source Sans Pro', sans-serif;font-si
     }
     .PmsManagement .secondary_text{display:block;}
     .PmsManagement .roominfosub{width:auto;white-space:normal;}
+    
+    .PmsEventCalendar .listtext h2, .PmsEventCalendar .datecol{padding:0;}
 }

@@ -2762,6 +2762,9 @@ select.gsniceselect1:active {
 .cancelImpersonation { cursor: pointer; }
 
 @media only all and (max-width:800px){
+    body{
+        -webkit-overflow-scrolling: touch;
+    }
     .gsbody_inner.gseditormode {
         margin-left: 0;
     }

@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -94,11 +95,11 @@ public class BookingItemAssignerOptimal {
         
         List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
         
-//        if (storeId != null && storeId.equals("9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0")) {
-//            addUnassignedBookingsToLine2(bookingLines, unassignedBookings);
-//        } else {
+        if (storeId != null && storeId.equals("9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0")) {
+            addUnassignedBookingsToLine2(bookingLines, unassignedBookings);
+        } else {
             addUnassignedBookingsToLine(bookingLines, unassignedBookings);
-//        }
+        }
         
         setItemIdsToLines(bookingLines);
         
@@ -513,8 +514,20 @@ public class BookingItemAssignerOptimal {
         
         while(!unassignedBookings.isEmpty()) {
             BookingTimeLineFlatten flattenTimeLine = new BookingTimeLineFlatten(Integer.MAX_VALUE, "all");
-            unassignedBookings.stream().forEach(o -> flattenTimeLine.add(o));
+            unassignedBookings.stream().forEach(o -> {
+                if (o.id == null || o.id.isEmpty()) {
+                    o.id = "blank_"+UUID.randomUUID().toString();
+                }
+                flattenTimeLine.add(o);
+            });
+            
             List<Booking> bookingsToUse = flattenTimeLine.getBestCombo();
+            
+            bookingsToUse.stream().forEach(o -> {
+                if (o.id != null && o.id.startsWith("blank_")) {
+                    o.id = "";
+                }
+            });
             
             OptimalBookingTimeLine bookingLine = new OptimalBookingTimeLine();
             bookingLine.bookings.addAll(bookingsToUse);

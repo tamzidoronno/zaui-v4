@@ -9,6 +9,44 @@ if [ "1" == `ping -c 1 www.getshop.com |grep "bytes from" |grep 127.0.0.1 |wc -l
      echo -e "";
      exit;
 fi
+
+echo "What server do you want to sync from?"
+echo "3 = Server 3 ( First server ever created )";
+echo "4 = Server 4 ( Created: 8 june 2017 )";
+read serverQuestion;
+
+
+SERVER="NONE";
+if [ $serverQuestion = "3" ]; then
+        SERVER="148.251.15.227";
+elif [ $serverQuestion = "4" ]; then
+        SERVER="138.201.203.177"
+else
+        echo "Invalid server setup";
+fi;
+
+echo "What store?";
+cat $serverQuestion | while read line
+do
+  array=(${line//;/ })
+  echo ${array[0]}"="${array[2]};
+done
+read storeQuestion;
+
+STOREID="NONE";
+cat $serverQuestion | while read line
+do
+  array=(${line//;/ })
+  if [ $storeQuestion = ${array[0]} ]
+  then
+      STOREID=${array[1]}
+  fi
+done
+
+if [ $storeQuestion = "NONE" ]; then
+        echo "Invalid store setup";
+        exit 1;
+fi;
   
 #DELETE LOCAL DATABASE
 echo -e "";
@@ -21,9 +59,13 @@ mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( func
 
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
-ssh -T naxa@backend30.getshop.com << EOF > /dev/null
-/home/naxa/backup2.sh $1
+ssh -oPort=4223 -T naxa@$SERVER << EOF > /dev/null
+/home/naxa/backup2.sh $STOREID
 EOF
+
+if [ -f dump.tar.gz ]; then
+    rm -rf dump.tar.gz;
+fi
 
 #transfer file
 cat << EOF > batchfile
@@ -31,11 +73,11 @@ get dump.tar.gz
 EOF
 
 echo -e " Fetching database file from server";
-sftp -b batchfile naxa@backend30.getshop.com > /dev/null
+sftp -oPort=4223 -b batchfile naxa@$SERVER > /dev/null
 rm -rf batchfile;
 
 echo -e " Importing database to local";
-if [ -f dump ]; then
+if [ -d dump ]; then
     rm -rf dump;
 fi
 
@@ -45,7 +87,7 @@ rm -rf dump.tar.gz
 
 #transfer images
 echo -e " Syncing images";
-rsync -avz -e ssh naxa@frontend30.getshop.com:/thundashopimages/ ../com.getshop.client/uploadedfiles/ &> /dev/null
+rsync -avz -e ssh naxa@10.0.4.32:/thundashopimages/ ../com.getshop.client/uploadedfiles/ &> /dev/null
 
 echo -e " Done!"
 echo -e " Note: if you wish to run resin on port 80 run: "

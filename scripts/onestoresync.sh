@@ -34,16 +34,18 @@ done
 read storeQuestion;
 
 STOREID="NONE";
-cat $serverQuestion | while read line
+
+while read line
 do
   array=(${line//;/ })
-  if [ $storeQuestion = ${array[0]} ]
+  val=${array[0]};
+  if [ "$storeQuestion" == "$val" ]
   then
-      STOREID=${array[1]}
+      STOREID="${array[1]}";
   fi
-done
+done <<< "$(cat $serverQuestion)"
 
-if [ $storeQuestion = "NONE" ]; then
+if [ $STOREID = "NONE" ]; then
         echo "Invalid store setup";
         exit 1;
 fi;
@@ -60,7 +62,6 @@ mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( func
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
 ssh -oPort=4223 -T naxa@$SERVER << EOF > /dev/null
-/home/naxa/backup2.sh $STOREID
 EOF
 
 if [ -f dump.tar.gz ]; then

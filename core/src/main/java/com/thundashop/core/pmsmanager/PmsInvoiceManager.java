@@ -681,50 +681,50 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 continue;
             }
             
-            if(filter.methods.isEmpty()) {
+            if(filter.methods.isEmpty() || filter.includeVirtual) {
                 ordersToUse.add(order);
-            }
-            for(PmsPaymentMethods pmethod : filter.methods) {
-                boolean avoid = false;
-                String filterMethod = pmethod.paymentMethod;
-                Integer filterStatus = pmethod.paymentStatus;
-                if(filterMethod != null && !filterMethod.isEmpty()) {
-                    if(order.payment == null) {
-                        avoid = true;
-                    }
-                    String method = filterMethod.replace("-", "_");
-                    if(!order.payment.paymentType.contains(method)) {
-                        avoid = true;
-                    }
-                }
-
-                if(filterStatus != null) {
-                    if(filterStatus == -10) {
-                        if(!order.transferredToAccountingSystem) {
+            } else {
+                for(PmsPaymentMethods pmethod : filter.methods) {
+                    boolean avoid = false;
+                    String filterMethod = pmethod.paymentMethod;
+                    Integer filterStatus = pmethod.paymentStatus;
+                    if(filterMethod != null && !filterMethod.isEmpty()) {
+                        if(order.payment == null) {
                             avoid = true;
                         }
-                    }
-                    if(filterStatus == -9) {
-                        if(orderManager.getTotalAmount(order) > 0) {
+                        String method = filterMethod.replace("-", "_");
+                        if(!order.payment.paymentType.contains(method)) {
                             avoid = true;
                         }
                     }
 
-                    if(filterStatus > 0) {
-                        if(order.status != filterStatus) {
-                            avoid = true;
+                    if(filterStatus != null) {
+                        if(filterStatus == -10) {
+                            if(!order.transferredToAccountingSystem) {
+                                avoid = true;
+                            }
+                        }
+                        if(filterStatus == -9) {
+                            if(orderManager.getTotalAmount(order) > 0) {
+                                avoid = true;
+                            }
+                        }
+
+                        if(filterStatus > 0) {
+                            if(order.status != filterStatus) {
+                                avoid = true;
+                            }
                         }
                     }
-                }
-                if(order.isVirtual && filter.includeVirtual) {
-                    avoid = false;
-                }
-                
-                if(!avoid && !ordersToUse.contains(order)) {
-                    ordersToUse.add(order);
+                    if(order.isVirtual && filter.includeVirtual) {
+                        avoid = false;
+                    }
+
+                    if(!avoid && !ordersToUse.contains(order)) {
+                        ordersToUse.add(order);
+                    }
                 }
             }
-            
         }
         
         double totalAmountEx = 0;

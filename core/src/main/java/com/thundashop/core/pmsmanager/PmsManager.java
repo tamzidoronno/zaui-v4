@@ -6682,6 +6682,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
         PmsOrderStatistics incomeReportResult = pmsInvoiceManager.generateStatistics(orderFilterToUse);
         for(PmsOrderStatisticsEntry entry : incomeReportResult.entries) {
+            boolean modified = false;
             for(StatisticsEntry statEntry : result.entries) {
                 if(PmsBookingRooms.isSameDayStatic(statEntry.date, entry.day)) {
                     double total = 0.0;
@@ -6692,6 +6693,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                         total += productPrice;
                     }
+                    modified = true;
                     statEntry.totalPrice = (double)Math.round(total);
                     if(statEntry.roomsRentedOut == 0) {
                         statEntry.avgPrice = 0.0;
@@ -6699,7 +6701,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         statEntry.avgPrice = (double)Math.round(statEntry.totalPrice / statEntry.roomsRentedOut);
                     }
                     break;
-                 }
+                }
+            }
+            if(!modified) {
+                System.out.println(entry.day + " : not modified");
             }
         }
     }

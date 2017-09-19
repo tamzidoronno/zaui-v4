@@ -1,6 +1,10 @@
 <?
 /* @var $this ns_8dcbf529_72ae_47dd_bd6b_bd2d0c54b30a\PmsBooking */
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+$engine = $this->getConfigurationSetting("booking_engine_name");
+if(!isset($engine)|| $engine == ""){
+    $engine = "default";
+}
 $appId = "class_".$this->getAppInstanceId();
 $appId = str_replace("-", "_", $appId);
 
@@ -99,7 +103,8 @@ if(!$nextPage) {
         var select = $('.selected_product.'+ appId);
         var start = $('.start_date_input.'+ appId).val();
         var end = $('.end_date_input.'+ appId).val();
-        endpoint = endpoint+"?manager=PmsWebBookingManager&method=getAllRooms&arg1=default&arg2="+start+"&arg3="+end;
+        var engine = '<?echo $engine;?>';
+        endpoint = endpoint+"?manager=PmsWebBookingManager&method=getAllRooms&arg1="+engine+"&arg2="+start+"&arg3="+end;
         $.ajax({
             url: endpoint,
             dataType: "jsonp",

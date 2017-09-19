@@ -74,6 +74,22 @@ $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById
             </select>
         </td>
     </tr>
+    <?if($config->bookingProfile == "conferense"){?>
+    <tr>
+        <td width="50%"><? echo $this->__w("Autoconfirmed when booked"); ?></td>
+         <td width="50%">
+            <?
+            $checked = "";
+            if($item->autoConfirm) {
+                $checked = "CHECKED";
+            }
+            ?>
+            <input type='checkbox' gsname='autoConfirm' <? echo $checked; ?>>
+        </td>
+    </tr>
+        
+    <?
+    }else{?>
     <tr>
         <td width="50%"><? echo $this->__w("Number of guests"); ?></td>
         <td width="50%">
@@ -122,6 +138,7 @@ $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById
     </tr>
     
         <?php
+    }
     }
     ?>
     

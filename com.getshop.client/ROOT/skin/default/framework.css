@@ -2709,6 +2709,37 @@ select.gsniceselect1:active {
     box-shadow: inset 0px 0px 5px rgb(58,153,215);
     cursor: pointer;
 }
+/* Checkbox 1*/
+.gsnicecheckbox1{position:relative;}
+.gsnicecheckbox1 input {opacity: 0 !important;position: absolute !important;display:none !important;width:0 !important;height: 0 !important;}
+.gsnicecheckbox1 label{cursor:pointer;}
+.gsnicecheckbox1 label::before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 14px;
+    border-radius:3px;
+    background: #eee;
+    transform: translateY(-50%);
+    box-shadow: 0 1px 3px rgba(100,100,100,.5) inset,0 0 10px rgba(100,100,100,.2) inset;
+}
+.gsnicecheckbox1 label::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    top: -1px;
+    height: 20px;
+    border: 3px solid #ffffff;
+    box-sizing: border-box;
+    background-color: #ddd;
+    background-image: linear-gradient(to top, #fff 0%, #fff 40%, transparent 100%);
+    transform: translateY(-50%);
+    box-shadow: 0 2px 4px rgba(0,0,0,.5);
+}
+.gsnicecheckbox1 label, .gsnicecheckbox1 label::before, .gsnicecheckbox1 label::after {transition: all .2s cubic-bezier(0.165, 0.840, 0.440, 1);}
+.gsnicecheckbox1 input:checked + label::before {background: #7ae897;}
+.gsnicecheckbox1 input:checked + label::after {transform: translateX(30px) translateY(-50%);}
+/*End of checkbox*/
 
 .gsdndpanelstepup {
     padding: 5px; border: solid 1px; background-color:#efefef; cursor:pointer;
@@ -2731,6 +2762,9 @@ select.gsniceselect1:active {
 .cancelImpersonation { cursor: pointer; }
 
 @media only all and (max-width:800px){
+    body{
+        -webkit-overflow-scrolling: touch;
+    }
     .gsbody_inner.gseditormode {
         margin-left: 0;
     }

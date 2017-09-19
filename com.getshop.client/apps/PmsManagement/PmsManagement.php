@@ -184,6 +184,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $user->address->countrycode = $_POST['data']['countrycode'];
         $user->emailAddress = $_POST['data']['email'];
         $user->emailAddressToInvoice = $_POST['data']['invoiceemail'];
+        $user->autoConfirmBookings = $_POST['data']['autoConfirmBookings'];
         $this->getApi()->getUserManager()->saveUser($user);
         
         if($user->companyObject) {

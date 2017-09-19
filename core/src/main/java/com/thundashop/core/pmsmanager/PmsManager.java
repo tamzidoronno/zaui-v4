@@ -304,7 +304,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     @Override
-    public List<Room> getAllRoomTypes(Date start, Date end) {
+    public List<PmsBookingRooms> getAllRoomTypes(Date start, Date end) {
         if(numberOfYearsBetween(start, end) > 5) {
             return new ArrayList();
         }
@@ -314,7 +314,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             isAdmin = (loggedon.isAdministrator() || loggedon.isEditor());
         }
         
-        List<Room> result = new ArrayList();
+        List<PmsBookingRooms> result = new ArrayList();
         List<BookingItemType> allGroups = bookingEngine.getBookingItemTypes();
 
         Collections.sort(allGroups, new Comparator<BookingItemType>() {
@@ -328,7 +328,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 continue;
             }
             
-            Room roomToAdd = new Room();
+            PmsBookingRooms roomToAdd = new PmsBookingRooms();
             roomToAdd.type = type;
             
             PmsBookingRooms room = new PmsBookingRooms();
@@ -5789,6 +5789,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(configuration.needConfirmationInWeekEnds && booking.isWeekendBooking() && booking.isStartingToday()) {
             return true;
         }
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
+            BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            if(type.autoConfirm) {
+                return false;
+            }
+        }
+        
+        User user = userManager.getUserById(booking.userId);
+        if(user != null && user.autoConfirmBookings) {
+            return false; 
+        }
         return configuration.needConfirmation;
     }
 
@@ -6578,6 +6589,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             row.preferredPaymentType = user.preferredPaymentType;
             row.hasDiscount = discount.discounts.keySet().size() > 0;
             row.suspended = user.suspended;
+            row.autoConfirmBookings = user.autoConfirmBookings;
             
             result.add(row);
         }

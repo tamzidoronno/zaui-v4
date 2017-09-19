@@ -25,5 +25,6 @@ public class PmsCustomerRow {
     public boolean invoiceAfterStay = false;
     public boolean hasDiscount = false;
     public boolean suspended = false;
+    public boolean autoConfirmBookings = false;
     
 }

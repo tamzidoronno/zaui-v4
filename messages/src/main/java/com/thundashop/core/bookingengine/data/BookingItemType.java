@@ -30,6 +30,7 @@ public class BookingItemType extends DataCommon {
     public List<String> historicalProductIds = new ArrayList();
     public String pageId;
     public Boolean visibleForBooking = true;
+    public Boolean autoConfirm = false;
     public Integer addon = BookingItemAddonTypes.NONE;
     public Integer size = 0;
     public RegistrationRules rules = null;

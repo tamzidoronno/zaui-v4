@@ -59,6 +59,7 @@ public class User extends DataCommon implements Comparable<User> {
     public List<UserCompanyHistory> companyHistory = new ArrayList();
     
     public boolean createInSendRegning = false;
+    public boolean autoConfirmBookings = false;
  
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);

@@ -20,6 +20,10 @@ public class PmsMailStatistics extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
+        String multi = getMultiLevelName();
+        if(multi != null && !multi.equals("default")) {
+            return;
+        }
         Calendar cal = Calendar.getInstance();
         int dayofweek = cal.get(Calendar.DAY_OF_WEEK);
         int lastOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);

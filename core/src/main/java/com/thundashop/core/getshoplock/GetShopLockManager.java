@@ -411,11 +411,15 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 .collect(Collectors.toList());
         
         for (GetShopDeviceLog log : logsToSave) {
-            log.code = getCodeForLog(log);
+            
+            if (log.code == null || log.code.isEmpty()) {
+                log.code = getCodeForLog(log);
+            }
+            
             saveObject(log);
             deviceLogs.put(log.id, log);
             
-            accessEvent(""+log.deviceId, log.code, log.serverSource);
+            logOldAccess(""+log.deviceId, log.serverSource);
             pmsManager.logChanged(log);
         }
     }
@@ -1093,6 +1097,18 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     
     @Override
     public void accessEvent(String id, String code, String domain) {
+        GetShopDeviceLog log = new GetShopDeviceLog();
+        log.deviceId = new Integer(id);
+        log.code = code;
+        log.serverSource = getHostname(domain);
+        
+        ArrayList<GetShopDeviceLog> logs = new ArrayList();
+        logs.add(log);
+     
+        addLockLogs(logs, "asdfi0u23l4knraslnjdfakjwenrlikqnfklasdfbaewjhbq2hjb4rl1khb34r12lh34");
+    }
+
+    private void logOldAccess(String id, String domain) throws ErrorException, NumberFormatException {
         for(GetShopDevice dev : devices.values()) {
             Integer zwaveid = new Integer(id);
             if(dev.zwaveid.equals(zwaveid) && dev.isSameSource(domain)) {

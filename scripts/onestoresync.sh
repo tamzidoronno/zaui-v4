@@ -62,6 +62,7 @@ mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( func
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
 ssh -oPort=4223 -T naxa@$SERVER << EOF > /dev/null
+/home/naxa/backup2.sh $STOREID
 EOF
 
 if [ -f dump.tar.gz ]; then

@@ -51,7 +51,6 @@ public class PmsManagerProcessor {
         try { processAutoDeletion(); }catch(Exception e) { manager.logPrintException(e); }
         try { processLockSystem(); }catch(Exception e) {manager.logPrintException(e); }
         try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { manager.logPrintException(e); }
-        try { warnOrderNotPaidFor(); }catch(Exception e) { manager.logPrintException(e); }
     }
     
     public void hourlyProcessor() {
@@ -63,6 +62,7 @@ public class PmsManagerProcessor {
         try { checkForRoomToClose(); }catch(Exception e) {manager.logPrintException(e); }
         try { updateInvoices(); }catch(Exception e) {manager.logPrintException(e); }
         try { checkForDeadCodes(); }catch(Exception e) { manager.logPrintException(e); }
+        try { warnOrderNotPaidFor(); }catch(Exception e) { manager.logPrintException(e); }
     }
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {

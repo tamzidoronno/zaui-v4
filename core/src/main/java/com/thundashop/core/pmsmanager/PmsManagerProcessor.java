@@ -905,12 +905,18 @@ public class PmsManagerProcessor {
             return;
         }
         
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        if(hour < 8) {
+            return;
+        }
+        
         int days = manager.getConfigurationSecure().numberOfDaysToSendPaymentLinkAheadOfStay;
         
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.filterType = "checkin";
         filter.startDate = new Date();
-        Calendar cal = Calendar.getInstance();
+        cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, days);
         filter.endDate = cal.getTime();
         

@@ -3674,7 +3674,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $searchtypes['summary'] = "Summary";
         if($config->requirePayments) {
             $searchtypes['orderstats'] = "Income report";
-//            $searchtypes['unbilled'] = "Unbilled cust.";
             $searchtypes['afterstayorder'] = "Order created after stay";
             $searchtypes['unsettled'] = "Bookings with unsettled amounts";
         }

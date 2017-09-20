@@ -1761,24 +1761,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     private void hardDeleteBooking(PmsBooking booking, String source) {
         logPrint("Deleting, source: " + source);
-//        bookings.remove(booking.id);
-//        booking.deletedBySource = source;
-//        
-//        for(String orderId : booking.orderIds) {
-//            Order order = orderManager.getOrderSecure(orderId);
-//            order.bookingHasBeenDeleted = true;
-//            orderManager.saveOrder(order);
-//        }
-//        
-//        if(booking.sessionId == null || booking.sessionId.isEmpty()) {
-//            String text = "Booking which should not be deleted where tried deleted: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
-//            text += "<br>";
-//            text += "<br>";
-//            text += booking.createSummary(bookingEngine.getBookingItemTypes());
-//            messageManager.sendErrorNotification(text, null);
-//        } else {
-//            deleteObject(booking);
-//        }
+        bookings.remove(booking.id);
+        booking.deletedBySource = source;
+        
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrderSecure(orderId);
+            order.bookingHasBeenDeleted = true;
+            orderManager.saveOrder(order);
+        }
+        
+        if(booking.sessionId == null || booking.sessionId.isEmpty()) {
+            String text = "Booking which should not be deleted where tried deleted: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
+            text += "<br>";
+            text += "<br>";
+            text += booking.createSummary(bookingEngine.getBookingItemTypes());
+            messageManager.sendErrorNotification(text, null);
+        } else {
+            deleteObject(booking);
+        }
 }
     
     private void removeDeleted(PmsBookingFilter filter, List<PmsBooking> result) {

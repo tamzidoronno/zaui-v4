@@ -82,6 +82,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String sentToPhone = "";
     public String sentToPhonePrefix = "";
     public Date chargeAfterDate = null;
+    public boolean warnedNotPaid = false;
     
     public Order jsonClone() {
         Gson gson = new Gson();

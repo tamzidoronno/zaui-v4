@@ -419,7 +419,9 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             saveObject(log);
             deviceLogs.put(log.id, log);
             
-            logOldAccess(""+log.deviceId, log.serverSource);
+            if (log.event == 2) {
+                logOldAccess(""+log.deviceId, log.serverSource);
+            }
             pmsManager.logChanged(log);
         }
     }
@@ -1100,6 +1102,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
         GetShopDeviceLog log = new GetShopDeviceLog();
         log.deviceId = new Integer(id);
         log.code = code;
+        log.event = 2;
         log.serverSource = getHostname(domain);
         
         ArrayList<GetShopDeviceLog> logs = new ArrayList();

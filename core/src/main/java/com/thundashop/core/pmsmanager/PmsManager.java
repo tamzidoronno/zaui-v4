@@ -6784,7 +6784,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                 
-                if (item != null && item.bookingItemAlias.equals(log.getShopDeviceId) && room.code.equals(log.code) ) {
+                if (item != null && item.bookingItemAlias.equals(log.getShopDeviceId) && room.code.equals(log.code) && log.event == 2) {
                     System.out.println("Marking as arrived: " + room.guests.get(0).name);
                     markGuestArrivedInternal(booking, room);
                 }

@@ -62,6 +62,7 @@ public class PmsManagerProcessor {
         try { checkForRoomToClose(); }catch(Exception e) {manager.logPrintException(e); }
         try { updateInvoices(); }catch(Exception e) {manager.logPrintException(e); }
         try { checkForDeadCodes(); }catch(Exception e) { manager.logPrintException(e); }
+        try { warnOrderNotPaidFor(); }catch(Exception e) { manager.logPrintException(e); }
     }
 
     private void processStarting(int hoursAhead, int maxAhead, boolean started) {
@@ -905,12 +906,18 @@ public class PmsManagerProcessor {
             return;
         }
         
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        if(hour < 10) {
+            return;
+        }
+        
         int days = manager.getConfigurationSecure().numberOfDaysToSendPaymentLinkAheadOfStay;
         
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.filterType = "checkin";
         filter.startDate = new Date();
-        Calendar cal = Calendar.getInstance();
+        cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, days);
         filter.endDate = cal.getTime();
         
@@ -1098,6 +1105,52 @@ public class PmsManagerProcessor {
                     server.beenWarned = false;
                     manager.messageManager.sendErrorNotification("Connection to server : " + server.arxHostname + " reestablished, name: " + name + ", where down since: " + server.lastPing, null);
                     manager.saveConfiguration(config);
+                }
+            }
+        }
+    }
+
+    private void warnOrderNotPaidFor() {
+        PmsConfiguration config = manager.getConfigurationSecure();
+        if(config.warnIfOrderNotPaidFirstTimeInHours <= 0) {
+            return;
+        }
+        
+        PmsBookingFilter filter = new PmsBookingFilter();
+        filter.filterType = "registered";
+        filter.endDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR_OF_DAY, -36);
+        filter.startDate = cal.getTime();
+        
+        
+        List<PmsBooking> activeBookings = manager.getAllBookings(filter);
+        cal = Calendar.getInstance();
+        Calendar toCheck = Calendar.getInstance();
+        toCheck.add(Calendar.HOUR_OF_DAY, config.warnIfOrderNotPaidFirstTimeInHours * -1);
+        Date checkDate = toCheck.getTime();
+        
+        for(PmsBooking booking : activeBookings) {
+            if(booking.orderIds.size() > 1) {
+                continue;
+            }
+            for(String orderId : booking.orderIds) {
+                Order order = manager.orderManager.getOrder(orderId);
+                if(order.warnedNotPaid) {
+                    continue;
+                }
+                cal.setTime(order.rowCreatedDate);
+                if(order.status == Order.Status.PAYMENT_COMPLETED) {
+                    continue;
+                }
+                if(order.isInvoice()) {
+                    continue;
+                }
+                if(checkDate.after(order.rowCreatedDate)) {
+                    System.out.println("Order need to be warned:" + order.rowCreatedDate);
+                    order.warnedNotPaid = true;
+                    manager.orderManager.saveOrder(order);
+                    manager.doNotification("warnfirstordernotpaid", booking.id);
                 }
             }
         }

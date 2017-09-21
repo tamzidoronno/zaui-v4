@@ -254,6 +254,9 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                     if($config->bookingProfile == "hotel") {
                         echo "<i class='fa fa-info-circle loadadditionalinfo' roomid='".$room->pmsBookingRoomId."' title='Additional information' style='cursor:pointer;'></i> ";
                     }
+                    if($config->bookingProfile != "hotel" && $config->arxHostname){
+                        echo"<i class='fa fa-info-circle loadadditionalinfo' roomid='".$room->pmsBookingRoomId."' title='Code: ".$room->code."' style='cursor:pointer;'></i>";
+                    }
                     if($hasAddons) {
                         ?>
                         <i class='fa fa-plus-circle loadAddonsList' title='Add addons' onclick='$(this).closest("td").find(".addaddonpanel").toggle()' style='cursor:pointer;'></i>

@@ -67,6 +67,7 @@
 .PmsCalendar .not_available { background-color: #cbcbcb !important; }
 .PmsCalendar .day.disabled { color:#bbb; cursor:inherit !important; }
 .PmsCalendar .day.disabled:hover { cursor:inherit !important;  }
+.PmsCalendar .highlighted .timeblock { background-color:green !important; cursor:pointer; }
 
 .PmsCalendar .readmorelink { position:absolute; right: 5px; bottom: 5px; }
 .PmsCalendar .roomentry { display:inline-block; min-height: 100px; width:100%; position:relative; min-height: 50px; background-color:#fff;  }

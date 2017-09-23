@@ -122,6 +122,27 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         return strtotime(date("d.m.Y", $day) . " 22:00:00");
     }
     
+    public function fastDisplayBookerInfo() {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        $selectedRoom = null;
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $selectedRoom = $room;
+            }
+        }
+        
+        $title = $user->fullName . "<br>";
+        $title .= date("H:i", strtotime($room->date->start))." - ".date("H:i", strtotime($room->date->end));
+        
+        $res = array();
+        $res['title'] = $title;
+        $res['start'] = strtotime($room->date->start);
+        $res['end'] = strtotime($room->date->end);
+        echo json_encode($res);
+    }
+    
+    
     public function printBlocks($day, $type, $room, $withSideBar) {
         $size = "";
         $start = $this->getStartTime($day);
@@ -415,6 +436,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
     
     public function getBlockState($typeId, $day, $startTime, $endTime) {
         $bookings = $this->getBookingsForDay($day);
+        $additionalTypes = $this->getAdditionalBookingItemTypes();
         if(!$bookings) {
             $bookings = array();
         }
@@ -441,8 +463,15 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                 }
                 $roomStart = strtotime($room->date->start);
                 $roomEnd = strtotime($room->date->end);
-                if($room->bookingItemTypeId != $typeId) {
-                    continue;
+                
+                if($additionalTypes[$room->bookingItemTypeId]->dependsOnTypeId) {
+                    if($room->bookingItemTypeId != $typeId && $typeId != $additionalTypes[$room->bookingItemTypeId]->dependsOnTypeId) {
+                        continue;
+                    }
+                } else {
+                    if($room->bookingItemTypeId != $typeId) {
+                        continue;
+                    }
                 }
                 if($roomStart >= $endTime) {
                     continue;
@@ -556,6 +585,18 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             $start = strtotime("last monday", $this->getSelectedDay());
         }
         return $start;
+    }
+
+    public function getAdditionalBookingItemTypes() {
+        if(isset($this->selectedTypes)) {
+            return $this->selectedTypes;
+        }
+        $this->selectedTypes = array();
+        $types = $this->indexList($this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName()));
+        foreach($types as $type) {
+            $this->selectedTypes[$type->id] = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $type->id);
+        }
+        return $this->selectedTypes;
     }
 
 }

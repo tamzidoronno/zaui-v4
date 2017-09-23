@@ -19,8 +19,17 @@ app.PmsAvailabilityTimeline = {
         $(document).on('click', '.PmsAvailabilityTimeline #toggleRoomoverview', app.PmsAvailabilityTimeline.toggleRoomoverview);
         $(document).on('click', '.PmsAvailabilityTimeline .completeaction', app.PmsAvailabilityTimeline.completeQuickAction);
         $(document).on('click', '.PmsAvailabilityTimeline .readdfromworkspace', app.PmsAvailabilityTimeline.loadBookingFromRoomId);
+        $(document).on('click', '.PmsAvailabilityTimeline .reserveRoomButton', app.PmsAvailabilityTimeline.loadReserveRoomDialog);
         $(document).keyup(app.PmsAvailabilityTimeline.hideShortOptionsForEntry);
     },
+    loadReserveRoomDialog : function() {
+        var instanceId = $('#bookinginstanceid').val();
+        var event = thundashop.Ajax.createEvent('','loadReserveRoomInformation',instanceId,{});
+        event.core.appname = "PmsManagement";
+        app.PmsAvailabilityTimeline.hideShortOptionsForEntry(e);
+        thundashop.common.showInformationBoxNew(event,'Configuration');
+    },
+    
     toggleRoomoverview : function(){
         $('.roomoverview').slideToggle();
         $("#toggleRoomoverview").toggleClass('flip');

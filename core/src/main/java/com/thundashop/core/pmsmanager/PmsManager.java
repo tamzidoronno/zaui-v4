@@ -1761,24 +1761,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     private void hardDeleteBooking(PmsBooking booking, String source) {
         logPrint("Deleting, source: " + source);
-//        bookings.remove(booking.id);
-//        booking.deletedBySource = source;
-//        
-//        for(String orderId : booking.orderIds) {
-//            Order order = orderManager.getOrderSecure(orderId);
-//            order.bookingHasBeenDeleted = true;
-//            orderManager.saveOrder(order);
-//        }
-//        
-//        if(booking.sessionId == null || booking.sessionId.isEmpty()) {
-//            String text = "Booking which should not be deleted where tried deleted: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
-//            text += "<br>";
-//            text += "<br>";
-//            text += booking.createSummary(bookingEngine.getBookingItemTypes());
-//            messageManager.sendErrorNotification(text, null);
-//        } else {
-//            deleteObject(booking);
-//        }
+        bookings.remove(booking.id);
+        booking.deletedBySource = source;
+        
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrderSecure(orderId);
+            order.bookingHasBeenDeleted = true;
+            orderManager.saveOrder(order);
+        }
+        
+        if(booking.sessionId == null || booking.sessionId.isEmpty()) {
+            String text = "Booking which should not be deleted where tried deleted: " + "<br><br>, channel: " + booking.channel + ", wubook rescode: " + booking.wubookreservationid;
+            text += "<br>";
+            text += "<br>";
+            text += booking.createSummary(bookingEngine.getBookingItemTypes());
+            messageManager.sendErrorNotification(text, null);
+        } else {
+            deleteObject(booking);
+        }
 }
     
     private void removeDeleted(PmsBookingFilter filter, List<PmsBooking> result) {
@@ -6694,6 +6694,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsOrderStatsFilter orderFilterToUse = createDefaultOrderStatsFilter(filter);
         PmsOrderStatistics incomeReportResult = pmsInvoiceManager.generateStatistics(orderFilterToUse);
         for(PmsOrderStatisticsEntry entry : incomeReportResult.entries) {
+            boolean modified = false;
             for(StatisticsEntry statEntry : result.entries) {
                 if(PmsBookingRooms.isSameDayStatic(statEntry.date, entry.day)) {
                     double total = 0.0;
@@ -6704,6 +6705,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                         total += productPrice;
                     }
+                    modified = true;
                     statEntry.totalPrice = (double)Math.round(total);
                     if(statEntry.roomsRentedOut == 0) {
                         statEntry.avgPrice = 0.0;
@@ -6711,7 +6713,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         statEntry.avgPrice = (double)Math.round(statEntry.totalPrice / statEntry.roomsRentedOut);
                     }
                     break;
-                 }
+                }
+            }
+            if(!modified) {
+                System.out.println(entry.day + " : not modified");
             }
         }
     }
@@ -6784,7 +6789,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                 
-                if (item != null && item.bookingItemAlias.equals(log.getShopDeviceId) && room.code.equals(log.code) ) {
+                if (item != null && item.bookingItemAlias.equals(log.getShopDeviceId) && room.code.equals(log.code) && log.event == 2) {
                     System.out.println("Marking as arrived: " + room.guests.get(0).name);
                     markGuestArrivedInternal(booking, room);
                 }

@@ -970,12 +970,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed {
                 .map(o -> items.get(o))
                 .collect(Collectors.toList());
         
-        Booking booking = getBooking(bookingId);
-        
         List<BookingItem> retList2 = new ArrayList(retList);
-        if (booking != null && !bookingId.isEmpty()) {
-            retList2 = doSecondFiltration(booking, retList);
-        }
         
         return retList2;
     }

@@ -3361,6 +3361,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function buildResultMatrix($includeDownload) {
         
         $filter = $this->getOrderStatsFilter();
+        $filter->includeVirtual = $this->getSelectedFilter()->includeVirtual;
+        
         $result = $this->getApi()->getPmsInvoiceManager()->generateStatistics($this->getSelectedName(), $filter);
         $_SESSION['currentOrderStatsResult'] = serialize($result);
         
@@ -3676,8 +3678,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $searchtypes['stats'] = "Coverage";
         $searchtypes['summary'] = "Summary";
         if($config->requirePayments) {
-            $searchtypes['orderstats'] = "Order statistics";
-//            $searchtypes['unbilled'] = "Unbilled cust.";
+            $searchtypes['orderstats'] = "Income report";
             $searchtypes['afterstayorder'] = "Order created after stay";
             $searchtypes['unsettled'] = "Bookings with unsettled amounts";
         }

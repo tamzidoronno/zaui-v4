@@ -6,10 +6,22 @@ app.PmsCalendar = {
         $(document).on('mousedown', '.PmsCalendar .available', app.PmsCalendar.selectField);
         $(document).on('click', '.PmsCalendar .available.mobileentry', app.PmsCalendar.markMobileEntry);
         $(document).on('mousedown', '.PmsCalendar .continue_button', app.PmsCalendar.continueToForm);
+        $(document).on('mouseover', '.PmsCalendar .loadbookingonclick .occupied', app.PmsCalendar.loadBookingInformation);
         $(document).on('click', '.PmsCalendar .loadbookingonclick', app.PmsCalendar.loadBookingId);
         $(document).on('click', '.PmsCalendar .gotopage', app.PmsCalendar.gotopage);
         $(document).on('blur', '.PmsCalendar .changemonthmobile', app.PmsCalendar.changemonthmobile);
         $(document).on('mouseup', app.PmsCalendar.mouseup);
+    },
+    loadBookingInformation : function() {
+        $('.PmsCalendar .highlighted').removeClass('highlighted');
+        var roomid = $(this).closest('.outerblock').attr('roomid');
+        var box = $(this).closest('.timecontainer');
+        box.find('.outerblock').each(function() {
+            var boxRoomId = $(this).attr('roomid');
+            if(boxRoomId === roomid) {
+                $(this).addClass('highlighted');
+            }
+        });
     },
     continueButtonMobile : function(element) {
         var start = $('.selecteddate').val() + " " + $('.starthour').val() + ":" + $('.startminute').val();

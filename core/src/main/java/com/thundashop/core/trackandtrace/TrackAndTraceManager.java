@@ -397,7 +397,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 route.userIds.add(userId);
                 route.addLogEntryForDriver(userId, getSession().currentUser.id, new Date(), true);
                 route.makeSureUserIdsNotDuplicated();
-                saveObjectInternal(route);
+                saveObject(route);
                 
                 notifyRoute(route);
             }
@@ -644,7 +644,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 dest.originalRouteId = routeId;
                 saveObjectInternal(dest);
                 pooledDestinations.put(dest.id, dest);
-                saveObjectInternal(route);
+                saveObject(route);
                 
                 
                 Route virtualRoute = createVirtualRouteBasedOnRouteId(dest);
@@ -693,7 +693,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 dest.movedFromPool = new Date();
                 route.destinationIds.add(dest.id);
                 route.completedInfo.completedTimeStamp = null;
-                saveObjectInternal(route);
+                saveObjectInternal(dest);
+                saveObject(route);
                 notifyRoute(route);
                 finalize(route);
                 retRoutes.add(route);
@@ -1094,7 +1095,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         if (route != null) {
             route.userIds.remove(userId);
             route.addLogEntryForDriver(userId, getSession().currentUser.id, new Date(), false);
-            saveObjectInternal(route);
+            saveObject(route);
             
             finalize(route);
             
@@ -1194,7 +1195,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         }
         
         route.instructionAccepted = true;
-        saveObjectInternal(route);
+        saveObject(route);
         
         notifyRoute(route);
     }

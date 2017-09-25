@@ -6,6 +6,8 @@ if (!$bookingtypes) {
     $bookingtypes = [];
 }
 
+$bookingtypes = $this->indexList($bookingtypes);
+
 
 
 $allbookingtypes = array();
@@ -63,6 +65,13 @@ $products=$products2;
                         <?php
                         foreach ($bookingtypes as $type) {
                             /* @var $type core_bookingengine_data_BookingItemType */
+                            
+                            $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $type->id);
+                            $dependName = "";
+                            if($additional->dependsOnTypeId) {
+                                $dependName = $bookingtypes[$additional->dependsOnTypeId]->name;
+                            }
+                            
                             echo "<tr entryid='" . $type->id . "' type='itemtype'>";
                             echo "<td style='white-space: nowrap;'>";
                             echo "<i class='fa fa-trash-o deletegroupid' bookingitemtypeid='" . $type->id . "'></i>";
@@ -76,7 +85,11 @@ $products=$products2;
                                 $selected = "selected";
                             }
                             echo " <i class='fa fa-plus $selected' title='Is addon'></i>";
-                            echo "</td><td><span class='currentname'>" . $type->name . "</span>";
+                            echo "</td><td><span class='currentname'>" . $type->name;
+                            if($dependName) {
+                                echo "<span style='color:red'> depends on $dependName</span>";
+                            }
+                            echo "</span>";
                             echo "<div class='secondary'>";
                             if(isset($products[$type->productId])) {
                                 echo $products[$type->productId]->name;

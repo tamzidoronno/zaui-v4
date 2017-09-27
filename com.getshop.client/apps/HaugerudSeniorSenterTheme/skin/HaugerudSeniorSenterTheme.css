@@ -1,0 +1,84 @@
+body{background-color:#fff !important;font-family:"Source Sans Pro", sans-serif;color:#222;font-size:16px;}
+.gs_page_width {max-width: 1110px; margin:auto; background-color:rgba(0,0,0,0) !important;}
+
+.Menu{text-align:center;}
+.Menu .entry div{
+    padding:10px;
+    background-color:#fff;
+    color:#777;
+    letter-spacing:2px;
+    position:relative;
+    top:18px;
+    font-size:14px;
+    z-index:2;
+}
+.Menu .entry div:hover{color:#aaa;}
+.Menu .entry.active div{color:#5cc9b4;}
+.Menu .entry.active div:hover{color:#5cc9b4;}
+
+.gsarea[area="body"]{min-height:600px;padding:40px 0px}
+.gsarea[area="footer"]{min-height:250px;}
+.shop_button{
+    color:#fff;
+    font-size:20px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    border-radius:2px;
+    background:#5cc9b4;
+}
+.shop_button:hover{opacity:0.75;}
+.ContentManager a{color:#28abd6;}
+.ContentManager a:visited{color:#005588}
+.gscell_40.gsuicell .ContentManager{
+    color:#5cc9b4;
+    font-size:46px;
+    text-align:center;
+    padding:10px;
+    font-family: 'Gloria Hallelujah', cursive;
+}
+.PmsCalendar .tinycalendar{background-color:#3b9c89;border:0;padding:10px;}
+.PmsCalendar .dayentry:hover{background-color:#52b39f !important;}
+.GoogleMaps .googlemapcanvas{min-height:420px !important;}
+.gs_modalouter .gs_modalinner{background-color:#fff !important;text-align:center;width:500px;}
+.gs_modalouter .gs_modalinner .gs_close_modal{background:#28abd6 !important;}
+.loginform.loginuserpasswordform{text-align:center;}
+.Login .login_header_type_1{display:none !important;}
+
+
+/*Sideoptions*/
+.gscell_97.gsuicell{position:fixed;top:18%;z-index:2;}
+.gscell_97.gsuicell .button_text_content:before{font-family:fontawesome;padding:10px 24px 10px 6px;}
+.gscell_97.gsuicell .shop_button:hover{width:240px;}
+.gscell_97.gsuicell .shop_button{
+    box-shadow:1px 0px 2px #bbb;
+    border-radius:0 6px 0 6px;
+    width:32px;
+    -webkit-transition: width 0.6s; /* For Safari 3.1 to 6.0 */
+    transition: width 0.6s;
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+.gscell_114 .button_text_content:before{content:"\f08e";}
+.gscell_115 .button_text_content:before{content:"\f09a";}
+.gscell_110 .button_text_content:before{content:"\f090";}
+
+.gscell_114 .shop_button:hover{background-color:#4d4c4d;}
+.gscell_115 .shop_button:hover{background-color:#4267b2;}
+.gscell_110 .shop_button:hover{background-color:#f5a034;}
+/*End of sideoptions*/
+
+@media only all and (max-width:800px){
+    .Menu{background-color:#555;color:#fff;text-align:left !important;}
+    .Menu .mobilenavigatemenu i{padding:5px 9px;font-size:0px;background-color:#676767;}
+    .Menu .mobilenavigatemenu i:before{font-size:30px;}
+    .Menu .menuentries.horizontal{top:40px;background-color:#676767;}
+    .Menu .entry{padding:0;}
+    .Menu .entry div{top:0;background-color:#676767;color:#fff;}
+    .gscell_40.gsuicell .ContentManager{font-size:26px;}
+    .gscell_42.gsuicell{border:0;}
+    .gscell_97.gsuicell{display:none;}
+    .PmsCalendar .pmscalendarmobilemenudiv{display:none;}
+    .PmsCalendar .singleroomentry{position:relative;}
+    .PmsCalendar .singleroomoverview{padding-top:140px;}
+}

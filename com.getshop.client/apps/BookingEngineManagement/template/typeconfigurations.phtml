@@ -9,7 +9,7 @@ $addons = array();
 $addons[0] = "None";
 $addons[1] = "One time";
 $addons[2] = "Per timeslot";
-
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedName(), $id);
 ?>
 <div gstype="form" method="saveItemType">
@@ -85,6 +85,26 @@ $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById
             }
             ?>
             <input type='checkbox' gsname='autoConfirm' <? echo $checked; ?>>
+        </td>
+    </tr>
+    <tr>
+        <td width="50%"><? echo $this->__w("Depends on room"); ?></td>
+         <td width="50%">
+            <?
+            $checked = "";
+            if($item->autoConfirm) {
+                $checked = "CHECKED";
+            }
+            ?>
+             <select gsname='additional_dependsOnTypeId'>
+                 <option value=''>Not select</option>
+                 <?php 
+                 foreach($types as $type) {
+                     $checked = ($additional->dependsOnTypeId == $type->id) ? "SELECTED" : "";
+                     echo "<option value='". $type->id ."' $checked>" . $type->name . "</option>";
+                 }
+                 ?>
+             </select>
         </td>
     </tr>
         

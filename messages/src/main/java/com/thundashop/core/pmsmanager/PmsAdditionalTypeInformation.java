@@ -13,6 +13,7 @@ public class PmsAdditionalTypeInformation extends DataCommon {
     public Integer numberOfChildren = 1;
     public Integer numberOfAdults = 2;
     public List<PmsTypeImages> images = new ArrayList();
+    public String dependsOnTypeId = "";
 
     void update(PmsAdditionalTypeInformation info) {
         defaultNumberOfChildBeds = info.defaultNumberOfChildBeds;
@@ -22,5 +23,6 @@ public class PmsAdditionalTypeInformation extends DataCommon {
         maxNumberOfBeds = info.maxNumberOfBeds;
         maxNumberOfChildBeds = info.maxNumberOfChildBeds;
         images = info.images;
+        dependsOnTypeId = info.dependsOnTypeId;
     }
 }

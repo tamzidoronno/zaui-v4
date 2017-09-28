@@ -93,6 +93,7 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .setNewPasswordOnUser', app.PmsManagement.setNewPasswordOnUser);
         $(document).on('click','.PmsManagement .changeRecieptEmail', app.PmsManagement.changeRecieptEmail);
         $(document).on('click','.PmsManagement .loadadditionalinfo', app.PmsManagement.loadadditionalinfo);
+        
         $(document).on('change','.PmsManagement .contactdatadropdown', app.PmsManagement.updateBookingInformationDropdown);
         $(document).on('click','.PmsManagement .loadorderinformation', app.PmsManagement.loadOrderInformation);
         $(document).on('click','.PmsManagement .createnewfilter', app.PmsManagement.createNewIncomeReportFilter);

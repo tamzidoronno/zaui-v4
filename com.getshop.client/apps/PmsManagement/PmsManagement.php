@@ -278,6 +278,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $item->count = $count;
             }
             
+            if($item->product->id != $_POST['data']['productid']) {
+                $newProduct = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
+                $item->product->id = $newProduct->id;
+                $item->product->taxGroupObject = $newProduct->taxGroupObject;
+                $item->product->taxes = $newProduct->taxes;
+            }
+            
             $item->product->additionalMetaData = $_POST['data']['roomnumber'];
             $item->product->metaData = $_POST['data']['roomname'];
             $item->product->name = $_POST['data']['productname'];
@@ -352,7 +359,12 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function loadAdditionalInformationForRoom() {
-        $this->includefile("additionalinformationforroom");
+        $config = $this->getConfig();
+        if($config->bookingProfile == "hotel"){
+            $this->includefile("additionalinformationforroom");
+        }else{
+            $this->includefile("additionalinformationfornonhotel");
+        }
     }
     
     public function markRoomCleaned() {
@@ -375,7 +387,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         
         echo "<br><center><b><i class='fa fa-check'></i> User has been blocked<br></center><br></b>";
-        $this->includefile("additionalinformationforroom");
+        $this->loadAdditionalInformationForRoom();
     }
     
     public function forceUnBlockAccess() {
@@ -388,7 +400,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         
         echo "<br><center><b><i class='fa fa-check'></i> User has been blocked<br></center><br></b>";
-        $this->includefile("additionalinformationforroom");
+        $this->loadAdditionalInformationForRoom();
     }
     
     public function forceUnGrantAccess() {
@@ -396,7 +408,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $booking->forceGrantAccess = false;
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         echo "<br><center><b><i class='fa fa-check'></i> Forced access has been removed from user<br></center><br></b>";
-        $this->includefile("additionalinformationforroom");
+        $this->loadAdditionalInformationForRoom();
     }
     
     public function forceGrantAccess() {
@@ -404,7 +416,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $booking->forceGrantAccess = true;
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         echo "<br><center><b><i class='fa fa-check'></i> User has been forced access<br></center><br></b>";
-        $this->includefile("additionalinformationforroom");
+        $this->loadAdditionalInformationForRoom();
     }
     public function undoLastCleaning() {
         $room = $this->getSelectedPmsRoom();
@@ -419,13 +431,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $this->getApi()->getPmsManager()->sendCode($this->getSelectedName(),$prefix,$phoneNumber,$roomId);
         echo "<br><center><b><i class='fa fa-check'></i> Code has been sent<br></center><br></b>";
-        $this->includefile("additionalinformationforroom");
+        $this->loadAdditionalInformationForRoom();
     }
     
     public function renewCode() {
         $this->getApi()->getPmsManager()->generateNewCodeForRoom($this->getSelectedName(), $_POST['data']['roomid']);
         echo "<br><center><b><i class='fa fa-check'></i> Code has been renewed<br></center><br></b>";
-        $this->includefile("additionalinformationforroom");
+        $this->loadAdditionalInformationForRoom();
     }
     
     public function updateRecieptEmailOnOrder() {

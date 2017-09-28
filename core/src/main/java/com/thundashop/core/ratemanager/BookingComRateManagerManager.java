@@ -110,6 +110,28 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         return items.size();
     }
     
+     private Calendar getCalendar(boolean start) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 11);
+        
+        String time = pmsManager.getConfigurationSecure().defaultEnd;
+        if(start) {
+            time = pmsManager.getConfigurationSecure().defaultStart;
+        }
+        if(time != null && time.contains(":")) {
+            String[] times = time.split(":");
+            try {
+                cal.set(Calendar.HOUR_OF_DAY, new Integer(times[0]));
+                cal.set(Calendar.MINUTE, new Integer(times[1]));
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+            }catch(Exception e) {
+                logPrintException(e);
+            }
+        }
+        return cal;
+    }
+    
     private OTAHotelInvCountNotifRQ createInventoryListToPush(Date startCheck, Date endCheck, List<String> types) {
         OTAHotelInvCountNotifRQ res = new OTAHotelInvCountNotifRQ();
         
@@ -120,19 +142,24 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         
         List<BaseInvCountType> inventories = new ArrayList();
         
-        Calendar startcal = Calendar.getInstance();
-        Calendar endCal = Calendar.getInstance();
+        Calendar startcal = getCalendar(true);
+        Calendar endCal = getCalendar(false);
         
         if(startCheck != null) {
             startcal.setTime(startCheck);
         }
         
         startcal.set(Calendar.HOUR_OF_DAY, 16);
+        
+        HashMap<String, Integer> itemSize = new HashMap();
+        for(BookingItemType t : bookingEngine.getBookingItemTypes()) {
+            itemSize.put(t.id, bookingEngine.getBookingItemsByType(t.id).size());
+        }
+        
         for (int i = 0; i < 365; i++) {
             Date start = startcal.getTime();
-            endCal.setTime(startcal.getTime());
-            endCal.add(Calendar.HOUR_OF_DAY, 16);
-
+            endCal.add(Calendar.DAY_OF_YEAR, 1);
+            System.out.println(start + " : " + endCal.getTime());
             for(BookingItemType tmpType : bookingEngine.getBookingItemTypes()) {
                 
                 if(types != null && !types.contains(tmpType.id)) {
@@ -145,7 +172,7 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                 
                 int numberOfAvailable = bookingEngine.getNumberOfAvailableWeakButFaster(tmpType.id, start, endCal.getTime());
                 BaseInvCountType toAdd = new BaseInvCountType();
-
+                
                 StatusApplicationControlType statusApp = new StatusApplicationControlType();
                 
                 statusApp.setStart(new SimpleDateFormat("yyyy-MM-dd").format(start.getTime()));
@@ -175,7 +202,9 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
                 takenRooms.setCountType("4");
                 takenRooms.setCount(BigInteger.valueOf(roomSize - numberOfAvailable));
                 invCountList.add(takenRooms);
-
+                
+                System.out.println((roomSize - numberOfAvailable) + ":" + tmpType.name + ":" + roomSize + ":" + numberOfAvailable);
+                
                 for(int j = 5; j <= 8; j++) {
                     if(j == 7) {
                         continue;

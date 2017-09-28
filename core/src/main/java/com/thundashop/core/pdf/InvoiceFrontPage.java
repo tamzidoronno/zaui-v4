@@ -546,7 +546,7 @@ public class InvoiceFrontPage {
         kidText = "Customer identification (KID)";
         paidByText = "Paid by";
         paymentInformationText = "Payment information";
-        recieptText = "Reciept";
+        recieptText = "Receipt";
         accountNumberHeading = "Paid by account";
         payToText = "Paid to";
         amountText = "Amount";

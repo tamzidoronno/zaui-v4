@@ -1,0 +1,93 @@
+.GetShopLockSystem .locklist {
+    border: solid 1px #DDD;
+    position: relative;
+    min-height: 400px;
+    background-color: #EEE;
+}
+
+.GetShopLockSystem .menuarea {
+    padding: 10px;
+    background-color: #EEE;
+}
+.GetShopLockSystem .locklist .serverdetails {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    text-align: center;
+    background-color: #DDD;
+    padding: 5px;
+}
+.GetShopLockSystem .locklist .header {
+    background-color: #DDD;
+    padding: 10px;
+}
+
+.GetShopLockSystem .locklist .lockrow {
+    padding: 5px;
+    border-bottom: solid 1px #DDD;
+    margin-right: 200px;
+}
+
+.GetShopLockSystem .locklist .lockrow div { display: inline-block; }
+.GetShopLockSystem .locklist .lockrow .icon { width: 30px; }
+.GetShopLockSystem .locklist .lockrow .name { width: 400px; }
+.GetShopLockSystem .locklist .lockrow .numberofcodes { width: 30px; }
+.GetShopLockSystem .locklist .lockrow .inforow { display: block; }
+.GetShopLockSystem .locklist .lockrow:last-of-type { border:solid 0px;}
+
+
+.GetShopLockSystem .commandArea {
+    border: solid 1px #DDD;
+    background-color: #EEE;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.GetShopLockSystem .userslotrow {
+    position: relative;
+    height: 33px;
+}
+.GetShopLockSystem .slotActions {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+.GetShopLockSystem .userrow {
+    padding-left: 19px;
+    height: 45px;
+}
+
+.GetShopLockSystem .userrow:nth-child(odd) {
+    background: #EEE;
+}
+
+.GetShopLockSystem .leftmenu,
+.GetShopLockSystem .rightside {
+    display: inline-block;
+}
+
+.GetShopLockSystem .leftmenu {
+    width: 200px;
+    vertical-align: top;
+    margin-right: 10px;
+    border: Solid 1px #DDD;
+    background-color: #EEE;
+}
+
+.GetShopLockSystem .leftmenu .row {
+    line-height: 30px;
+    padding-left: 10px;
+    cursor: pointer;
+}
+
+
+.GetShopLockSystem .lockandserverids {
+    padding: 20px;
+    background-color: #EEE;
+}
+
+.GetShopLockSystem .rightside {
+    width: calc(100% - 212px);
+    
+}

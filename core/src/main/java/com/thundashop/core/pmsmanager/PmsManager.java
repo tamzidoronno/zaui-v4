@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ibm.icu.util.Calendar; 
 import com.thundashop.core.amesto.AmestoSync; 
-import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.arx.AccessLog;
@@ -176,6 +175,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Date virtualOrdersCreated;
     private Date startedDate;
     
+    private PmsBookingAutoIncrement autoIncrement = new PmsBookingAutoIncrement();
+    
+    
     public HashMap<String, PmsCareTaker> getCareTakerTasks() {
         return careTaker;
     }
@@ -196,6 +198,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof FailedWubookInsertion) {
                 FailedWubookInsertion failure = (FailedWubookInsertion) dataCommon;
                 failedWubooks.put(failure.wubookResId, failure);
+            }
+            if (dataCommon instanceof PmsBookingAutoIncrement) {
+                autoIncrement = (PmsBookingAutoIncrement) dataCommon;
             }
             if (dataCommon instanceof PmsPricing) {
                 PmsPricing price = (PmsPricing) dataCommon;
@@ -791,6 +796,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return booking;
         }
         boolean needSaving = false;
+        
+        if(booking.incrementBookingId == null) {
+            booking.incrementBookingId = getAutoIncrementBookingId();
+            needSaving = true;
+        }
+        
         for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             room.checkAddons();
             if(room.price.isNaN() || room.price.isInfinite()) {
@@ -859,6 +870,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         return booking;
+    }
+    
+    private Integer getAutoIncrementBookingId() {
+        autoIncrement.incrementBookingId++;
+        saveObject(autoIncrement);
+        return autoIncrement.incrementBookingId;
     }
 
 
@@ -1419,7 +1436,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         }
                         
                         title = formatMessage(title, booking, room, guest);
-                        if(email != null && email.contains("@")) {
+                        if(email != null && email.contains("@") && message != null && !message.trim().isEmpty()) {
                             messageManager.sendMail(email, guest.name, title, message, getFromEmail(), getFromName());
                             repicientList.add(email);
                             

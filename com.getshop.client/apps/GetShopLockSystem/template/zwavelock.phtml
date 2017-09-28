@@ -1,0 +1,35 @@
+<?
+/* @var $this \ns_3e89173c_42e2_493f_97bb_2261c0418bfe\GetShopLockSystem */
+$lock = $this->getLock();
+?>
+
+<div class="warning" style="color: red; border: solid 1px red; margin-top: 20px; margin-bottom: 20px; padding: 20px; font-weight: bold;">
+    <i class="fa fa-warning"></i> Change settings below with extreme care!<br/> Changes in this settings may reduce access for guests etc.
+</div>
+
+<div class="shop_button" gsclick="cancelEditingLock">Back to overview</div>
+<br/>
+<h2><? echo "Device id: " .$lock->zwaveDeviceId .", Name: ".$lock->name; ?></h2>
+
+<div class="commandArea">
+    <div class="shop_button" title="This function will not make new codes, only mark all as need to be updated.">Resend all codes</div>
+    <?
+    if (!$lock->prioritizeLockUpdate) {
+    ?>
+    <div class="shop_button" gsclick='activateForceUpdate' title="Activating this will force the lock to update the lock, prioritize it.">Priority update of this lock</div>
+    <?
+    } else {
+    ?>
+    <div class="shop_button" gsclick='deactivateForceUpdate' title="Deactivate priority update.">Deactivate priority update of lock</div>
+    <?
+    }
+    ?>
+    <div class="shop_button" title="Warning, do not use this unless you are 100% sure of what you are doing" gsclick="generateNewCodesForLock" lockid="<? echo $lock->id; ?>">Change all codes on lock.</div>
+    <div class="shop_button" title="Clear the queue and force update on this lock" gsclick="prioritizeLockUpdate" lockid="<? echo $lock->id; ?>">Force update on lock.</div>
+</div>
+
+Device id: 
+<div class="device_specific" gstype="form" method="saveZwaveLockSettings">
+    <input type="text" class="gsniceinput1" value="<? echo $lock->zwaveDeviceId; ?>" gsname="updateDeviceId"/>
+    <br/><div class="shop_button" gstype="submit">Save</div>
+</div>

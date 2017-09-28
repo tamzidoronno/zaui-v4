@@ -16,7 +16,7 @@ $config = $this->getConfigurationToUse();
 ?>
 <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
-        <th width="60%">Form filled out when registering</th>
+        <th width="60%">Detailed booking information</th>
         <th width="40%">Internal comments
             <span gstype="form" method="showBookingInformation">
                 <input type='hidden' gsname="bookingid" value="<?php echo $booking->id; ?>">
@@ -27,6 +27,7 @@ $config = $this->getConfigurationToUse();
     <tr>
         <td valign="top">
             <?
+            if($booking->incrementBookingId) { echo "GetShop booking id: " . $booking->incrementBookingId . "<br>"; }
             if($booking->channel) { echo "Channel : " . $booking->channel . "<br>"; }
             if($booking->couponCode) { echo "Discount coupon code :  " . $booking->couponCode . "<br>"; }
             if($booking->wubookchannelreservationcode) { echo "Channel res id : " . $booking->wubookchannelreservationcode . "<br>"; }

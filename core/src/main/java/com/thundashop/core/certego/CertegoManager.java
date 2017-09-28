@@ -23,7 +23,6 @@ import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,12 +31,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.xml.bind.DatatypeConverter;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.misc.BASE64Decoder;
+
 
 /**
  *
@@ -157,27 +153,27 @@ public class CertegoManager extends ManagerBase implements ICertegoManager {
     }
 
     private void validateOrder(CertegoOrder order) {
-        BASE64Decoder decoder = new BASE64Decoder();
-        byte[] dataBytes; 
-        try {
-            dataBytes = decoder.decodeBuffer(order.data);
-        } catch (IOException ex) {
-            Logger.getLogger(CertegoManager.class.getName()).log(Level.SEVERE, null, ex);
-            return;
-        }
-        String data = new String(dataBytes);
-        JsonElement jelement = new JsonParser().parse(data);
-        JsonObject jobject = jelement.getAsJsonObject();
-        JsonElement dataElement = jobject.get("data");
-        JsonObject dataObject = dataElement.getAsJsonObject();
-        
-        JsonObject page2 = dataObject.get("page2").getAsJsonObject();
-        
-        JsonArray keysSetupElement = page2.getAsJsonArray("keys_setup");
-        checkOrderLines(keysSetupElement);
-        
-        JsonArray cylinderSetupElement = page2.getAsJsonArray("cylinder_setup");
-        checkOrderLines(cylinderSetupElement);
+//        BASE64Decoder decoder = new BASE64Decoder();
+//        byte[] dataBytes; 
+//        try {
+//            dataBytes = decoder.decodeBuffer(order.data);
+//        } catch (IOException ex) {
+//            Logger.getLogger(CertegoManager.class.getName()).log(Level.SEVERE, null, ex);
+//            return;
+//        }
+//        String data = new String(dataBytes);
+//        JsonElement jelement = new JsonParser().parse(data);
+//        JsonObject jobject = jelement.getAsJsonObject();
+//        JsonElement dataElement = jobject.get("data");
+//        JsonObject dataObject = dataElement.getAsJsonObject();
+//        
+//        JsonObject page2 = dataObject.get("page2").getAsJsonObject();
+//        
+//        JsonArray keysSetupElement = page2.getAsJsonArray("keys_setup");
+//        checkOrderLines(keysSetupElement);
+//        
+//        JsonArray cylinderSetupElement = page2.getAsJsonArray("cylinder_setup");
+//        checkOrderLines(cylinderSetupElement);
     }
 
     private void checkOrderLines(JsonArray keysSetupElement) {

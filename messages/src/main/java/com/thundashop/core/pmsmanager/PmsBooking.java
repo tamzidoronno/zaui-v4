@@ -59,6 +59,7 @@ public class PmsBooking extends DataCommon {
     public boolean transferredToRateManager = false;
     public boolean forceGrantAccess = false;
     public boolean avoidAutoDelete = false;
+    public Integer incrementBookingId = null;
     
     public String countryCode = "";
     public boolean needCapture;
@@ -122,6 +123,10 @@ public class PmsBooking extends DataCommon {
             }
         }
         if(containsOrderId(searchWord)) {
+            return true;
+        }
+        
+        if(incrementBookingId != null && (incrementBookingId + "").equals(searchWord)) {
             return true;
         }
         

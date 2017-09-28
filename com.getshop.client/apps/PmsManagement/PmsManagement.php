@@ -278,6 +278,13 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $item->count = $count;
             }
             
+            if($item->product->id != $_POST['data']['productid']) {
+                $newProduct = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
+                $item->product->id = $newProduct->id;
+                $item->product->taxGroupObject = $newProduct->taxGroupObject;
+                $item->product->taxes = $newProduct->taxes;
+            }
+            
             $item->product->additionalMetaData = $_POST['data']['roomnumber'];
             $item->product->metaData = $_POST['data']['roomname'];
             $item->product->name = $_POST['data']['productname'];

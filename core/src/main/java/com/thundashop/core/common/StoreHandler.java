@@ -531,7 +531,7 @@ public class StoreHandler {
                 .serializeNulls()
                 .serializeSpecialFloatingPointValues()
                 .disableInnerClassSerialization()
-                .addSerializationExclusionStrategy(new SerializationExcludeStragety(user))
+                .setExclusionStrategies(new AnnotationExclusionStrategy())
                 .create();
                 
         String json = gson.toJson((Object) result);

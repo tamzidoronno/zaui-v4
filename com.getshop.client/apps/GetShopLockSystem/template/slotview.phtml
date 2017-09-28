@@ -1,0 +1,61 @@
+<?
+/* @var $this ns_3e89173c_42e2_493f_97bb_2261c0418bfe\GetShopLockSystem */
+$slot = $this->getSlot();
+$group = $this->getGroup();
+
+$inUseClass = $slot->takenInUseDate ? "inUse" : "";
+$connectedToGroup = "";
+
+if ($slot->belongsToGroupId) {
+    $connectedToGroup = " ( Group: ".$this->getApi()->getGetShopLockSystemManager()->getNameOfGroup($slot->belongsToGroupId). " ) "; 
+}
+
+    
+?>
+<div class="userrow <? echo $inUseClass; ?>"> 
+        <?
+        $state = "unkown";
+        if ($slot->toBeAdded && !$slot->toBeRemoved) {
+            $state = "<i class='fa fa-upload' title='Waiting for being uploaded to lock'></i>";
+        }
+        if (!$slot->toBeAdded && $slot->toBeRemoved) {
+            $state = "<i class='fa fa-trash' title='Waiting to be removed from lock'></i>";
+        }
+        if (!$slot->toBeAdded && !$slot->toBeRemoved) {
+            $state = "<i class='fa fa-check' title='All good'></i>";
+        }
+        
+        if (!$slot->code) {
+            $state = "<i class='fa fa-close' title='Not in use'></i>";
+        }
+        ?>
+        <div class="userslotrow"> 
+            <?
+            echo $state. " Slot: ". $slot->slotId. " ".$connectedToGroup. "<br/>";
+            
+            if (!$slot->code) {
+                echo "No code activated for this slot";
+            } else {
+                ?>
+                
+                    Pincode: <? echo $slot->code->pinCode; ?>, CardId: <? echo $slot->code->cardId; ?>
+                
+                <?
+            }
+            ?>    
+            <div class="slotActions">
+                <?
+                if ($group) {
+                ?>
+                    <div class="gs_shop_small_icon changecodeonslot" slotid="<? echo $slot->slotId; ?>" title="Change code"><i class="fa fa-edit"></i></div>
+                <?
+                } else {
+                ?>
+                    <div class="gs_shop_small_icon" slotid="<? echo $slot->slotId; ?>" gsclick="markCodeForResend" title="Resend code to lock"><i class="fa fa-upload"></i></div>
+                    <div class="gs_shop_small_icon" slotid="<? echo $slot->slotId; ?>" gsclick="markCodeForDeletion" title="Delete this code. (code only)"><i class="fa fa-trash"></i></div>
+                <? } ?>
+            </div>
+
+        </div>
+        
+    </div>

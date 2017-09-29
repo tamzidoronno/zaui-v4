@@ -1,0 +1,21 @@
+
+<h2>Add new server</h2>
+<div class="createServer">
+    <?
+    echo $this->__f("Select what type you wish to add, then enter username and password before you click Add Server button.");
+    ?>
+    <br/>
+    <br/>
+    <div gstype='form' method='createNewServer'>
+        <select class="gsniceselect1" gsname='type' >
+            <option value="zwaveserver">Razberry Zwave Server</option>
+            <option value="getshoplockbox">GetShop Lockbox</option>
+        </select>
+    
+        <br/><input style='line-height: 29px; vertical-align: top;' gsname='hostname' class="gsniceinput1" placeholder="Hostname">
+        <br/><input style='line-height: 29px; vertical-align: top;' gsname='username' class="gsniceinput1" placeholder="Username">
+        <br/><input style='line-height: 29px; vertical-align: top;' gsname='password' class="gsniceinput1" placeholder="Password">
+        <br/><input style='line-height: 29px; vertical-align: top;' gsname='name' class="gsniceinput1" placeholder="Give it a name">
+        <br/><div class="shop_button" gstype='submit'>Add server</div>
+    </div>
+</div>

@@ -13,7 +13,6 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.data.GetShopLockCode;
-import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.pmsmanager.PmsLockServer;
 import com.thundashop.core.pmsmanager.PmsManager;
@@ -55,7 +54,6 @@ public class ApacManager extends GetShopSessionBeanNamed implements IApacManager
     
     @Override
     public ApacAccess grantAccess(ApacAccess apacAccess) throws Exception {
-       
         GetShopLockCode code = doorManager.getNextAvailableCode(apacAccess.deviceId);
         
         if (code == null) {

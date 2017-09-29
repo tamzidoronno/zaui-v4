@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import com.thundashop.core.common.AnnotationExclusionStrategy;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ErrorMessage;
 import com.thundashop.core.common.GetShopLogHandler;
@@ -78,6 +79,7 @@ public class WebInterfaceSocketThread2 implements Runnable {
                 builder.serializeNulls();
                 builder.disableInnerClassSerialization();
                 builder.serializeSpecialFloatingPointValues();
+                builder.setExclusionStrategies(new AnnotationExclusionStrategy());
                 Gson gson = builder.create();
                 json = gson.toJson((Object) result);
             }catch(Exception e) {

@@ -1,0 +1,34 @@
+<?
+/* @var $this ns_3e89173c_42e2_493f_97bb_2261c0418bfe\GetShopLockSystem */
+$servers = $this->getServers();
+$groups = $this->getGroups();
+
+?>
+<div class="leftmenu">
+    <div class="row" gsclick="changeToMenu" menu="addnewserver">Add new server</div>
+    <div class="row" gsclick="changeToMenu" menu="addlockgroup">Add lock group</div>
+    
+    
+    
+    <?
+    if ($servers) {
+        echo '<br/><b style="padding-left: 10px;">Servers:</b>';
+        
+        foreach ($servers as $server) {
+            ?> 
+            <div class="row" gsclick="changeToMenu" menu="server" serverid="<? echo $server->id; ?>"><? echo $server->givenName; ?></div>
+            <?
+        }
+    }
+    
+    if ($groups) {
+        echo '<br/><b style="padding-left: 10px;">Groups:</b>';
+        
+        foreach ($groups as $group) {
+            ?> 
+            <div class="row" gsclick="changeToMenu" menu="editgroup" groupid="<? echo $group->id; ?>"><? echo $group->name; ?></div>
+            <?
+        }
+    }
+    ?>
+</div>

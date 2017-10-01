@@ -8,7 +8,7 @@ $toPrint = array();
 $addons = array();
 $sorting = array();
 foreach($booking->rooms as $room) {
-    if($types[$room->bookingItemTypeId]->addon == 0) {
+    if(!$room->bookingItemTypeId || $types[$room->bookingItemTypeId]->addon == 0) {
         $toPrint[] = $room;
         $sorting[] = strtotime($room->date->start);
     } else {
@@ -218,8 +218,12 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 <span class='roomattribute'>
                    <span class='roompostfix'>
                        <span class="viewmode loadRoomTypes">               
-                            <? 
-                            $text = $types[$room->bookingItemTypeId]->name;
+                            <?
+                            if(!$room->bookingItemTypeId) { 
+                                $text = "No type seleced yet"; 
+                            } else {
+                                $text = $types[$room->bookingItemTypeId]->name;
+                            }
                             echo "<div style=' text-overflow: ellipsis; display:block; width: 150px; overflow:hidden; white-space:nowrap;' title='$text'>$text</div>"; ?>
                                                    </span>
                     <span class="editmode changebookingtypepanel" gstype='form' method='setBookingType' ></span>

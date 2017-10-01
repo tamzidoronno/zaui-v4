@@ -115,7 +115,32 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .doverifonepayment', app.PmsManagement.doVerifonePayment);
         $(document).on('click','.PmsManagement .loadRoomTypes', app.PmsManagement.loadRoomTypes);
         $(document).on('click','.PmsManagement .deletecardbutton', app.PmsManagement.deleteCard);
+        $(document).on('change','.informationbox .changetypeonroom', app.PmsManagement.changetypeonroom);
+        $(document).on('click','.informationbox .completeRoomReservation', app.PmsManagement.completeRoomReservation);
+        $(document).on('click','.PmsManagement .managementviewbanner .fa-plus-square', app.PmsManagement.loadQuickReservation);
         getshop.WebSocketClient.addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", app.PmsManagement.displayVerifoneFeedBack);
+    },
+    loadQuickReservation : function() {
+        var event = thundashop.Ajax.createEvent('','loadReserveRoomInformation',$(this),{});
+        event.core.appname = "PmsManagement";
+        thundashop.common.showInformationBoxNew(event,'Configuration');
+    },
+    completeRoomReservation : function() {
+        var event = thundashop.Ajax.createEvent('','completeQuickReservation',$(this),{
+            "typeid" : $(this).val(),
+            "roomid" : $(this).closest('tr').attr('roomid')
+        });
+        event.core.appname = "PmsManagement";
+        thundashop.common.showInformationBoxNew(event,'Configuration');
+    },
+    
+    changetypeonroom : function() {
+        var event = thundashop.Ajax.createEvent('','changeTypeOnRoom',$(this),{
+            "typeid" : $(this).val(),
+            "roomid" : $(this).closest('tr').attr('roomid')
+        });
+        event.core.appname = "PmsManagement";
+        thundashop.common.showInformationBoxNew(event,'Configuration');
     },
     deleteCard : function() {
         var confirmed = confirm("Are you sure you want to remove this card? This action can not be reverted");

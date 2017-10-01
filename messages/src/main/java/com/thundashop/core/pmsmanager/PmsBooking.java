@@ -80,6 +80,7 @@ public class PmsBooking extends DataCommon {
     @Administrator
     public String secretBookingId = "";
     public boolean ignoreNoShow = false;
+    boolean quickReservation = false;
     
     public Double getTotalPrice() {
         return totalPrice;
@@ -481,6 +482,15 @@ public class PmsBooking extends DataCommon {
         overBooking = false;
     }
 
+    boolean hasWaitingRooms() {
+        for(PmsBookingRooms room : rooms) {
+            if(room.addedToWaitingList) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;
@@ -536,6 +546,9 @@ public class PmsBooking extends DataCommon {
     }
 
     boolean checkingInBetween(Date startDate, Date endDate) {
+        if(startDate == null) {
+            return false;
+        }
         for(PmsBookingRooms room : rooms) {
             if(room.checkingInBetween(startDate, endDate)) {
                 return true;

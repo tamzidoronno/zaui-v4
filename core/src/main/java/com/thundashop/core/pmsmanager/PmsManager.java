@@ -6747,6 +6747,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.displayType = "dayslept";
         filter.priceType = "extaxes";
         filter.includeVirtual = pmsFilter.includeVirtual;
+        filter.channel = pmsFilter.channel;
         
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.start);

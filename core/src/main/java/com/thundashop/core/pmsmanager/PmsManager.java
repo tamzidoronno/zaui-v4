@@ -278,8 +278,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(virtualOrdersCreated != null) {
             return;
         }
+        List<PmsBooking> allBookings = new ArrayList();
+        allBookings.addAll(bookings.values());
         
-        for (PmsBooking booking : bookings.values()) {
+        for (PmsBooking booking : allBookings) {
                 orderManager.deleteVirtualOrders(booking.id);
                 pmsInvoiceManager.createVirtualOrder(booking.id);
         }

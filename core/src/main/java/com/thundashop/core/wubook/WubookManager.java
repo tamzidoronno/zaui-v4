@@ -280,6 +280,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             Hashtable roomtable = (Hashtable) roomIterator.next();
             Integer roomId = (Integer) roomtable.get("room_id");
+            
+            try {
+                if(table.containsKey("men") && (int)table.get("id_channel") == 37) {
+                    guest = (int) table.get("men");
+                }
+            }catch(Exception e) {
+                
+            }
+            
             room.guest = guest;
             room.guestName = getGuestName(roomNumber, table);
             room.roomId = roomId;

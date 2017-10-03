@@ -17,4 +17,5 @@ public class PmsOrderStatsFilter extends DataCommon {
     public Integer shiftHours = 0;
     
     public String savedPaymentMethod = "";
+    public String channel;
 }

@@ -317,6 +317,9 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
     private String createReservationXml(PmsBooking booking) throws DatatypeConfigurationException {
         String toReturn = "<HotelReservations>";
         for(PmsBookingRooms room : booking.rooms) {
+            if(room.addedToWaitingList) {
+                continue;
+            }
             toReturn += createReservationXmlForRoom(booking, room);
         }
         toReturn += "</HotelReservations>";

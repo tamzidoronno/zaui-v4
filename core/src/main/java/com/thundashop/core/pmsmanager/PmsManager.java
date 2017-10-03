@@ -278,8 +278,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(virtualOrdersCreated != null) {
             return;
         }
+        List<PmsBooking> allBookings = new ArrayList();
+        allBookings.addAll(bookings.values());
         
-        for (PmsBooking booking : bookings.values()) {
+        for (PmsBooking booking : allBookings) {
                 orderManager.deleteVirtualOrders(booking.id);
                 pmsInvoiceManager.createVirtualOrder(booking.id);
         }
@@ -391,7 +393,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             addDiscountAddons(room, booking);
 
             room.count = totalDays;
-            setPriceOnRoom(room, true, booking);
+            if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty() && !room.bookingItemTypeId.equals("waiting_list")) {
+                setPriceOnRoom(room, true, booking);
+            }
             room.updateBreakfastCount();
             
             for (PmsGuests guest : room.guests) {
@@ -609,6 +613,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     result.add(booking);
                 }
             }
+        } else if (filter.filterType.equals("waiting")) {
+            for (PmsBooking booking : bookings.values()) {
+                if (booking.isActiveInPeriode(filter.startDate, filter.endDate) && booking.hasWaitingRooms()) {
+                    result.add(booking);
+                }
+            }
         } else if (filter.filterType.equals("requestedending")) {
             for (PmsBooking booking : bookings.values()) {
                 if (booking.hasRequestedEnding(filter.startDate, filter.endDate)) {
@@ -724,7 +734,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         booking.unsettled = diff;
         
-        for(PmsBookingRooms room : booking.rooms) {
+        for(PmsBookingRooms room : booking.getActiveRooms()) {
             try {
                 room.maxNumberOfGuests = bookingEngine.getBookingItemType(room.bookingItemTypeId).size;
             }catch(Exception e) {
@@ -912,9 +922,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         try {
             PmsBookingRooms room = booking.findRoom(roomId);
-            bookingEngine.changeBookingItemOnBooking(room.bookingId, "");
-            bookingEngine.changeTypeOnBooking(room.bookingId, newType);
-            room.bookingItemTypeId = newType;
+            if(room.isDeleted()) {
+                room.bookingItemTypeId = newType;
+            } else {
+                bookingEngine.changeBookingItemOnBooking(room.bookingId, "");
+                bookingEngine.changeTypeOnBooking(room.bookingId, newType);
+                room.bookingItemTypeId = newType;
+            }
             saveBooking(booking);
 
             String from = "none";
@@ -3172,7 +3186,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             gsTiming("got configuration");
             if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
-                if(getConfigurationSecure().supportRemoveWhenFull || booking.isWubook()) {
+                if(getConfigurationSecure().supportRemoveWhenFull || booking.isWubook() || room.addedToWaitingList) {
                     booking.overBooking = true;
                     room.canBeAdded = false;
                     room.delete();
@@ -3836,7 +3850,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.userId = getSession().currentUser.id;
         }
         
-        if (booking.userId == null || booking.userId.isEmpty()) {
+        
+        if(booking.userId != null && booking.userId.equals("quickreservation")) {
+            User user = userManager.getUserByIdUnfinalized("quickreservation");
+            if(user == null) {
+                user = new User();
+                user.fullName = "Quick reservation user";
+                user.id = "quickreservation";
+                userManager.saveUser(user);
+            }
+        } else if (booking.userId == null || booking.userId.isEmpty()) {
             User newuser = null;
             Company curcompany = createCompany(booking);
             if (curcompany != null) {
@@ -6747,6 +6770,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         filter.displayType = "dayslept";
         filter.priceType = "extaxes";
         filter.includeVirtual = pmsFilter.includeVirtual;
+        filter.channel = pmsFilter.channel;
         
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.start);

@@ -1,0 +1,117 @@
+<?php /* @var $this \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement */ ?>
+<table cellspacing='0' cellpadding='0' gstype='form' method='addRooms'>
+    <tr>
+        <th>Start date</th>
+        <th>End date</th>
+        <th>Number of rooms</th>
+        <th>Action</th>
+    <tr>
+        <td>
+            <input type="text" gsname='start' class='start_date_input'>
+        </td>
+        <td>
+            <input type="text" gsname='end' class='end_date_input'>
+        </td>
+        <td>
+            <input type="number" gsname='numberofrooms' value='1'>
+        </td>
+        <td>
+            <input type='button' value='Add room(s)' gstype='submitToInfoBox'> 
+        </td>
+    </tr>
+</table>
+
+<?php
+/* @var $currentBooking core_pmsmanager_PmsBooking */
+$currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
+
+echo "<br>";
+echo "<b>Rooms selected to be added</b><br>";
+echo "<table cellspacing='0' cellpadding='0'>";
+echo "<tr>";
+echo "<th></th>";
+echo "<th>Start</th>";
+echo "<th>End</th>";
+echo "<th>Room type</th>";
+echo "<th>Price</th>";
+echo "</tr>";
+
+if(sizeof((array)$currentBooking->rooms) == 0) {
+    echo "<tr><td colspan='200' style='padding: 10px;'>No rooms added yet</td></tr>";
+}
+
+$notSelectedType = false;
+$total = 0;
+foreach($currentBooking->rooms as $room) {
+    echo "<tr roomid='".$room->pmsBookingRoomId."'>";
+    echo "<td style='text-align:center;cursor:pointer;'><i class='fa fa-trash-o' gstype='forceClicksubmitToInfoBox' method='removeRoomFromCurrentBooking' gsname='id' gsvalue='".$room->pmsBookingRoomId."'></td>";
+    echo "<td>" . date("d.m.Y", strtotime($room->date->start)) . "</td>";
+    echo "<td>" . date("d.m.Y", strtotime($room->date->end)) . "</td>";
+    echo "<td>";
+    echo "<select class='changetypeonroom'>";
+    echo "<option value=''>No type selected yet</option>";
+    echo "<option value='waiting_list'";
+    if($room->addedToWaitingList) {
+        echo "SELECTED";
+    }
+    echo ">Waiting list</option>";
+    foreach($types as $type) {
+        $selected = ($type->id == $room->bookingItemTypeId) ? "SELECTED" : "";
+        $count = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $type->id, $room->date->start, $room->date->end);
+        echo "<option value='" . $type->id . "' $selected>" . $type->name . " ($count available)</option>";
+    }
+    if(!$room->bookingItemTypeId && !$room->addedToWaitingList) { $notSelectedType = true; }
+    echo "</select>";
+    echo "</td>";
+    echo "<td>" . $room->price . "</td>";
+    $total += $room->price;
+    echo "</tr>";
+}
+echo "<tr>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td></td>";
+echo "<td>$total</td>";
+echo "</tr>";
+echo "</table>";
+if($notSelectedType) {
+    echo "<div style='padding: 10px;color:red;'>";
+    echo "<i class='fa fa-warning'></i>";
+    echo " Please specify the room type before continue.";
+    echo "</div>";
+} else {
+    echo "<div style='padding: 10px;'>";
+    echo "<input type='button' value='Complete reservation' class='completeRoomReservation'>";
+    echo "</div>";
+}
+?>
+
+
+
+<script>
+    $('.start_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect: function(dateText) {
+           var date = moment(dateText, "DD.MM.YYYY");
+           var month = (moment(date).get('month')+1);
+           if(month < 10) {
+               month = "0" + month;
+           }
+           var currentEnd = $('.end_date_input').val();
+           var endMoment = moment(currentEnd, "DD.MM.YYYY");
+
+           var diff = endMoment.diff(date, "minutes");
+           if(diff < 0) {
+               var day = moment(date).get('date')+1;
+               if(day < 10) {
+                   day = "0" + day;
+               }
+               $('.end_date_input').val(day + "." + month + "." + moment(date).get('year'));
+           }
+         }
+    });
+    $('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.start_cal').on('click', function() { $('.start_date_input').focus(); });
+    $('.end_cal').on('click', function() { $('.end_date_input').focus(); });
+</script>

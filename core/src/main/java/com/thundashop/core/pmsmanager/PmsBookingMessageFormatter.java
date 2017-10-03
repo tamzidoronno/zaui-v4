@@ -129,7 +129,7 @@ class PmsBookingMessageFormatter {
         
         for(PmsBookingRooms room : roomsToIterate) {
             String simpleRoom = "";
-            if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
+            if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty() && !room.bookingItemTypeId.equals("waiting_list")) {
                 simpleRoom += "<td style='font-size:12px;'>" + bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "</td>";
                 rooms += bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
             }
@@ -202,7 +202,9 @@ class PmsBookingMessageFormatter {
                 for(String prodId : addonsCount.keySet()) {
                     Product product = productManager.getProduct(prodId);
                     addonText += "<tr bgcolor='#fff'>";
-                    addonText += "<td style='font-size: 10px;'>&nbsp;&nbsp;&nbsp;&nbsp;" + addonsCount.get(prodId) + " x " + product.name + "</td>";
+                    if(addonsCount.get(prodId) != null) {
+                        addonText += "<td style='font-size: 10px;'>&nbsp;&nbsp;&nbsp;&nbsp;" + addonsCount.get(prodId) + " x " + product.name + "</td>";
+                    }
                     addonText += "<td style='font-size: 10px;'></td>";
                     addonText += "<td style='font-size: 10px;'></td>";
                     addonText += "<td style='font-size: 10px;'></td>";

@@ -229,8 +229,14 @@ foreach($stats as $cleaningstat) {
             $totalfortype = 0;
             for($i = 1; $i <= 7; $i++) {
                 $count = 0;
-                if(isset($cleaningstat->cleanings->{$i})) {
-                    $count = $cleaningstat->cleanings->{$i};
+                if($i == 7) {
+                    $index = 0;
+                } else {
+                    $index = $i;
+                }
+                
+                if(isset($cleaningstat->cleanings->{$index})) {
+                    $count = $cleaningstat->cleanings->{$index};
                 }
                 echo "<td>" . $count . "</td>";
                 if(!isset($total[$i])) {
@@ -246,7 +252,12 @@ foreach($stats as $cleaningstat) {
         echo "<tr>";
         echo "<td></td>";
         for($i = 1; $i <= 7; $i++) {
-            echo "<td>" . $total[$i] . "</td>";
+            if($i == 7) {
+                $index = 0;
+            } else {
+                $index = $i;
+            }
+            echo "<td>" . $total[$index] . "</td>";
         }
         echo "<td>" . $total["total"] . "</td>";
         echo "</tr>";

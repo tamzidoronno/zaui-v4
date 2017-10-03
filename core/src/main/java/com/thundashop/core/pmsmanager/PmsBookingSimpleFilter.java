@@ -161,7 +161,7 @@ public class PmsBookingSimpleFilter {
         if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
             simple.room = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
         }
-        if(room.bookingItemTypeId != null) {
+        if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
             simple.roomType = manager.bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
         }
         
@@ -200,6 +200,9 @@ public class PmsBookingSimpleFilter {
         
         if(booking.overBooking) {
             simple.progressState = "overbooking";
+        }
+        if(room.addedToWaitingList) {
+            simple.progressState = "waiting";
         }
         
         simple.checkedIn = room.checkedin;
@@ -263,6 +266,10 @@ public class PmsBookingSimpleFilter {
             }
         } else if (filter.filterType.equals("activecheckin")) {
             if((room.isActiveInPeriode(filter.startDate, filter.endDate) || room.isStartingToday(filter.startDate)) && !room.isEndingToday(filter.startDate)) {
+                return true;
+            }
+        } else if (filter.filterType.equals("waiting")) {
+            if((room.isActiveInPeriode(filter.startDate, filter.endDate) || room.isStartingToday(filter.startDate)) && !room.isEndingToday(filter.startDate) && room.addedToWaitingList) {
                 return true;
             }
         } else if (filter.filterType.equals("activecheckout")) {

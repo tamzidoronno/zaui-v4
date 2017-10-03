@@ -234,7 +234,11 @@ if(!$user->fullName) {
         <span>
             <i class='fa fa-info-circle loadAccountInformation' userid='<?php echo $user->id; ?>' title='Open user overview' style='cursor:pointer;'></i>
             <span title='<? echo $user->emailAddress . ", phone +" . $user->prefix . $user->cellPhone; ?>'>
-                Booked for <span style='color:blue;cursor:pointer;' class='customertablerow loadedituser'><? echo $user->fullName; ?></span>
+                <?php if($user->id == "quickreservation") {
+                    echo "This is a booking reservation";
+                } else { ?>
+                    Booked for <span style='color:blue;cursor:pointer;' class='customertablerow loadedituser'><? echo $user->fullName; ?></span>
+                <?php } ?>
             </span>
                 , <span class='createanewuserfromeditbox' style='cursor:pointer; color:blue;'>change</span>
         </span>

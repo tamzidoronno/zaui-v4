@@ -3450,6 +3450,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
+        verifyAddons(room);
+        
         saveBooking(booking);
     }
 
@@ -5187,6 +5189,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         pmsInvoiceManager.updateAddonsByDates(room);
         bookingUpdated(getBookingFromRoom(room.pmsBookingRoomId).id, "date_changed", room.pmsBookingRoomId);
+        verifyAddons(room);
         saveBooking(booking);
     }
 
@@ -6873,5 +6876,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return false;
+    }
+
+    private void verifyAddons(PmsBookingRooms room) {
+        HashMap<String, Integer> products = new HashMap();
+        for(PmsBookingAddonItem item : room.addons) {
+            products.put(item.productId, 1);
+        }
+        
+        for(String prodId : products.keySet()) {
+            PmsBookingAddonItem addon = getConfigurationSecure().getAddonFromProductId(prodId);
+            if(addon.dependsOnGuestCount || addon.isIncludedInRoomPrice || addon.addedToRoom || !addon.isSingle) {
+                addAddonsToBooking(addon.addonType, room.pmsBookingRoomId, false);
+            }
+        }
+        
+        checkIfAddonsShouldBeRemoved(room);
+    }
+
+    private void checkIfAddonsShouldBeRemoved(PmsBookingRooms room) {
+        List<PmsBookingAddonItem> toRemove = new ArrayList();
+        for(PmsBookingAddonItem item : room.addons) {
+            if(!item.isSingle && !room.isActiveOnDay(item.date)) {
+                toRemove.add(item);
+            }
+        }
+        room.addons.removeAll(toRemove);
     }
 }

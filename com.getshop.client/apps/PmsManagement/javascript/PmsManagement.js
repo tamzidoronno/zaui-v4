@@ -814,14 +814,7 @@ app.PmsManagement = {
         var data = thundashop.framework.createGsArgs(form);
         var method = form.attr('method');
         var event = thundashop.Ajax.createEvent('',method, $(this), data);
-        if(data.updateprices || data.updateaddons) {
-            thundashop.common.showInformationBoxNew(event);
-        } else {
-            thundashop.Ajax.postWithCallBack(event, function(res) {
-                form.closest('td').find('.viewmode').html(res);
-                form.fadeOut();
-            });
-        }
+        thundashop.common.showInformationBoxNew(event);
     },
     
     loadStatsForDay : function(e) {

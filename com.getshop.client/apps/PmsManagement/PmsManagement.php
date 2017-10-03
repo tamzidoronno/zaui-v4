@@ -1789,12 +1789,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->errors[] = "Could not update start date, due to room not available at the time being.";
         }
 
-        if($_POST['data']['updateprices'] == "true") {
-            $this->getApi()->getPmsManager()->resetPriceForRoom($this->getSelectedName(), $_POST['data']['roomid']);
-        }
-        if($_POST['data']['updateaddons'] == "true") {
-            $this->getApi()->getPmsManager()->updateAddonsBasedOnGuestCount($this->getSelectedName(), $_POST['data']['roomid']);
-        }
         $this->setLastSelectedRoom($_POST['data']['roomid']);       
         $this->refreshSelectedBooking();
         $this->showBookingInformation();
@@ -2353,18 +2347,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $this->setLastSelectedRoom($_POST['data']['roomid']);
         
-        if($_POST['data']['updateprices'] == "true") {
-            $this->getApi()->getPmsManager()->resetPriceForRoom($this->getSelectedName(), $_POST['data']['roomid']);
-        }
-        if($_POST['data']['updateaddons'] == "true") {
-            $this->getApi()->getPmsManager()->updateAddonsBasedOnGuestCount($this->getSelectedName(), $_POST['data']['roomid']);
-        }
-        
-        if($_POST['data']['updateprices'] == "true" || $_POST['data']['updateaddons'] == "true") {
-            $this->showBookingInformation();
-        } else {
-            $this->printGuests($guests);
-        }
+        $this->showBookingInformation();
     }
 
     public function createPaymentTypeText($app) {

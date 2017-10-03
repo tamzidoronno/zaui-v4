@@ -269,6 +269,7 @@
     margin-right: 25px;
     cursor: pointer;
 }
+.PmsManagement .managementviewbanner .fa-plus-square { margin-right: 12px; }
 .PmsManagement .managementviewquickfilter{
     box-sizing: border-box;
     position: relative;

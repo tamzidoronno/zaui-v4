@@ -4418,14 +4418,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private boolean verifyPhoneOnBooking(PmsBooking booking, boolean verifyPrefixFromCountryCode) {
         String countryCode = booking.countryCode;
-        try {
-            HashMap<Integer, String> list = PhoneCountryCodeList.getList();
-            Integer prefix = new Integer(booking.rooms.get(0).guests.get(0).prefix);
-            if(list.containsKey(prefix)) {
-                countryCode = list.get(prefix);
+        if(booking.countryCode == null || booking.countryCode.trim().isEmpty()) {
+            try {
+                HashMap<Integer, String> list = PhoneCountryCodeList.getList();
+                Integer prefix = new Integer(booking.rooms.get(0).guests.get(0).prefix);
+                if(list.containsKey(prefix)) {
+                    countryCode = list.get(prefix);
+                }
+            }catch(Exception e) {
+                countryCode = "NO";
             }
-        }catch(Exception e) {
-            countryCode = "NO";
         }
         
         if(booking.userId != null) {

@@ -176,7 +176,7 @@ if($type == "month") {
         }
         
         $size = $room->capacity;
-        $desc = $room->description;
+        $desc = nl2br($room->description);
         ?>
         <div class='roomrow itemlist' itemid='<? echo $room->id; ?>'>
             <?php

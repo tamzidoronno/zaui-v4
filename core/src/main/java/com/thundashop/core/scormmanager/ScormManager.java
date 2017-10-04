@@ -166,32 +166,42 @@ public class ScormManager extends ManagerBase implements IScormManager {
     }
 
     @Override
-    public void updateResult(List<ScormResult> results) {
-        for (ScormResult result : results) {
-            Scorm scorm = getScorm(result.username, result.scormid);
+    public boolean needUpdate(String username, String scormid, boolean isCompleted, boolean isPassed, boolean isFailed) {
+        Scorm scorm = getScorm(username, scormid);
 
-            if (scorm.completed == result.isCompleted() && scorm.passed == result.isPassed() && result.isFailed() == scorm.failed) {
-                continue;
-            }
-            
-            scorm.completed = result.isCompleted();
-            scorm.passed = result.isPassed();
-            scorm.failed = result.isFailed();
-
-            if (scorm.passed && scorm.passedDate == null) {
-                scorm.passedDate = new Date();
-            }
-
-            try {
-                scorm.score = Integer.parseInt(result.score);
-            } catch (NumberFormatException ex) {
-                scorm.score = 0;
-            }
-
-            saveObject(scorm);
-
-            updateGroupedScormPackages(scorm, result.username);
+        if (scorm.completed == isCompleted && scorm.passed == isPassed && isFailed == scorm.failed) {
+            return false;
         }
+        
+        return true;
+    }
+    
+    @Override
+    public void updateResult(ScormResult result) {
+        Scorm scorm = getScorm(result.username, result.scormid);
+
+        if (scorm.completed == result.isCompleted() && scorm.passed == result.isPassed() && result.isFailed() == scorm.failed) {
+            return;
+        }
+
+        scorm.completed = result.isCompleted();
+        scorm.passed = result.isPassed();
+        scorm.failed = result.isFailed();
+
+        if (scorm.passed && scorm.passedDate == null) {
+            scorm.passedDate = new Date();
+        }
+
+        try {
+            scorm.score = Integer.parseInt(result.score);
+        } catch (NumberFormatException ex) {
+            scorm.score = 0;
+        }
+
+        saveObject(scorm);
+
+        updateGroupedScormPackages(scorm, result.username);
+
     }
 
     @Override

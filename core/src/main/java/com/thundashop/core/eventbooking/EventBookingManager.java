@@ -2332,7 +2332,10 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         String groupId = user.companyObject.groupId;
         
         return getBookingItemTypes().stream()
-                .filter(type -> getBookingTypeMetaData(type.id).mandatoryForGroup.get(groupId) == true)
+                .filter(type -> getBookingTypeMetaData(type.id) != null 
+                        && getBookingTypeMetaData(type.id).mandatoryForGroup != null 
+                        && getBookingTypeMetaData(type.id).mandatoryForGroup.get(groupId) != null 
+                        && getBookingTypeMetaData(type.id).mandatoryForGroup.get(groupId) == true)
                 .collect(Collectors.toList());
     }
 

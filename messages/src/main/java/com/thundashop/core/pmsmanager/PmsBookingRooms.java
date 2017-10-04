@@ -70,6 +70,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean forceUpdateLocks = false;
     public boolean deletedByChannelManagerForModification = false;
     public boolean inWorkSpace = false;
+    public boolean addedToWaitingList = false;
     
     /**
      * Finalized entries
@@ -199,7 +200,7 @@ public class PmsBookingRooms implements Serializable {
         if(day == null) {
             return false;
         }
-        boolean result = day.after(date.end);
+        boolean result = date.end != null && day.after(date.end);
         return result;
     }
 
@@ -435,7 +436,7 @@ public class PmsBookingRooms implements Serializable {
     }
 
     boolean checkingInBetween(Date startDate, Date endDate) {
-        if((date.start.after(startDate) && date.start.before(endDate)) || 
+        if(date != null && date.start != null && (date.start.after(startDate) && date.start.before(endDate)) || 
             isSameDay(date.start, endDate) ||
             isSameDay(date.start, startDate)) {
             return true;
@@ -530,6 +531,7 @@ public class PmsBookingRooms implements Serializable {
         deleted = false;
         deletedDate = null;
         undeletedDate = new Date();
+        addedToWaitingList = false;
         inWorkSpace = false;
     }
 

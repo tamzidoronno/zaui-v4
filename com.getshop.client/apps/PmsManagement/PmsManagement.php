@@ -21,6 +21,76 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function completeQuickReservation() {
+        $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+        $currentBooking->userId = "quickreservation";
+        $currentBooking->quickReservation = true;
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $currentBooking);
+        $res = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
+        if(!$res) {
+            echo "<div style='border: solid 1px; background-color:red; padding: 10px; font-size: 16px; color:#fff;'>";
+            echo "<i class='fa fa-warning'></i> ";
+            echo "Unable to comply, your selection is a possible.";
+            echo "</div>";
+            $this->loadReserveRoomInformation();
+        } else {
+            $_POST['data']['bookingid'] = $currentBooking->id;
+            $this->showBookingInformation();
+        }
+        
+    }
+    
+    public function changeTypeOnRoom() {
+        $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+
+        $newRoomList = array();
+        foreach($currentBooking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                if($_POST['data']['typeid'] == "waiting_list") {
+                    $room->bookingItemTypeId = "";
+                    $room->addedToWaitingList = true;
+                } else {
+                    $room->bookingItemTypeId = $_POST['data']['typeid'];
+                }
+            }
+        }
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $currentBooking);
+        $this->loadReserveRoomInformation();
+    }
+    
+    public function removeRoomFromCurrentBooking() {
+        $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+
+        $newRoomList = array();
+        foreach($currentBooking->rooms as $room) {
+            if($room->pmsBookingRoomId != $_POST['data']['clicksubmit']) {
+                $newRoomList[] = $room;
+            }
+        }
+        $currentBooking->rooms = $newRoomList;
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $currentBooking);
+        $this->loadReserveRoomInformation();
+    }
+
+    public function loadReserveRoomInformation() {
+        $this->includefile("reserveroompanel");
+    }
+    
+    public function addRooms() {
+        $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
+
+        $number = $_POST['data']['numberofrooms'];
+        for($i = 0; $i < $number; $i++) {
+            $room = new \core_pmsmanager_PmsBookingRooms();
+            $room->date = new \core_pmsmanager_PmsBookingDateRange();
+            $room->date->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+            $room->date->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+            $currentBooking->rooms[] = $room;
+        }
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $currentBooking);
+        $this->loadReserveRoomInformation();
+    }
+    
     public function accountsExport() {
         $users = $this->getusersTable();
         $rows = array();
@@ -1792,12 +1862,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->errors[] = "Could not update start date, due to room not available at the time being.";
         }
 
-        if($_POST['data']['updateprices'] == "true") {
-            $this->getApi()->getPmsManager()->resetPriceForRoom($this->getSelectedName(), $_POST['data']['roomid']);
-        }
-        if($_POST['data']['updateaddons'] == "true") {
-            $this->getApi()->getPmsManager()->updateAddonsBasedOnGuestCount($this->getSelectedName(), $_POST['data']['roomid']);
-        }
         $this->setLastSelectedRoom($_POST['data']['roomid']);       
         $this->refreshSelectedBooking();
         $this->showBookingInformation();
@@ -2356,18 +2420,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $this->setLastSelectedRoom($_POST['data']['roomid']);
         
-        if($_POST['data']['updateprices'] == "true") {
-            $this->getApi()->getPmsManager()->resetPriceForRoom($this->getSelectedName(), $_POST['data']['roomid']);
-        }
-        if($_POST['data']['updateaddons'] == "true") {
-            $this->getApi()->getPmsManager()->updateAddonsBasedOnGuestCount($this->getSelectedName(), $_POST['data']['roomid']);
-        }
-        
-        if($_POST['data']['updateprices'] == "true" || $_POST['data']['updateaddons'] == "true") {
-            $this->showBookingInformation();
-        } else {
-            $this->printGuests($guests);
-        }
+        $this->showBookingInformation();
     }
 
     public function createPaymentTypeText($app) {
@@ -3752,6 +3805,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $searchtypes['uncofirmed'] = "Unconfirmed";
         $searchtypes['checkin'] = "Checking in";
         $searchtypes['checkout'] = "Checking out";
+        $searchtypes['waiting'] = "Waiting";
         $searchtypes['activecheckin'] = "Checkin + stayover";
         $searchtypes['activecheckout'] = "Checkout + stayover";
         $searchtypes['inhouse'] = "Inhouse";

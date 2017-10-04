@@ -64,13 +64,23 @@ if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
     if(isset($booking->registrationData->resultAdded->{'company_email'})) {
         $companyEmail = $booking->registrationData->resultAdded->{'company_email'};
     }
+    if($user->emailAddress) {
+        $companyEmail = $user->emailAddress;
+    }
     
     echo "<div style='clear:both;'></div>";
     echo "<label class='col-25'>";
     echo $this->__w("Send confirmation to an alternate email address") .":<br>";
     echo "<input type='text' gsname='company_email' value='".$companyEmail."'>";
     echo "</label>";
-    echo "<div style='clear:both;'></div><br>";
+    echo "<div style='clear:both;'></div>";
+    echo "<div class='errordesc'>";
+    if(isset($this->validation["company_email"])) {
+        echo "* " . $this->validation["company_email"];
+    } else {
+        echo "&nbsp;";
+    }
+    echo "</div><br>";
     
     echo "<span class='complete_button'>$completeText</span>";
 } else {

@@ -259,7 +259,8 @@
 .PmsManagement .manegementviewbutton.fa-refresh{background-color: rgba(0, 0, 0, 0.36);}
 .PmsManagement .manegementviewbutton.fa-refresh:hover{background-color: rgba(0, 0, 0, 0.26);}
 .PmsManagement .manegementviewbutton.fa-undo:hover{background-color: rgba(0, 0, 0, 0.10)}
-.PmsManagement .managementviewbanner .fa-mobile-phone{
+.PmsManagement .managementviewbanner .fa-mobile-phone,
+.PmsManagement .managementviewbanner .fa-plus-square {
     color: #fff;
     float: right;
     font-size: 27px;
@@ -268,6 +269,7 @@
     margin-right: 25px;
     cursor: pointer;
 }
+.PmsManagement .managementviewbanner .fa-plus-square { margin-right: 12px; }
 .PmsManagement .managementviewquickfilter{
     box-sizing: border-box;
     position: relative;

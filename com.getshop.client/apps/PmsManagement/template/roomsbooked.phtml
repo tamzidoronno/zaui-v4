@@ -8,7 +8,7 @@ $toPrint = array();
 $addons = array();
 $sorting = array();
 foreach($booking->rooms as $room) {
-    if($types[$room->bookingItemTypeId]->addon == 0) {
+    if(!$room->bookingItemTypeId || $types[$room->bookingItemTypeId]->addon == 0) {
         $toPrint[] = $room;
         $sorting[] = strtotime($room->date->start);
     } else {
@@ -218,8 +218,12 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                 <span class='roomattribute'>
                    <span class='roompostfix'>
                        <span class="viewmode loadRoomTypes">               
-                            <? 
-                            $text = $types[$room->bookingItemTypeId]->name;
+                            <?
+                            if(!$room->bookingItemTypeId) { 
+                                $text = "No type seleced yet"; 
+                            } else {
+                                $text = $types[$room->bookingItemTypeId]->name;
+                            }
                             echo "<div style=' text-overflow: ellipsis; display:block; width: 150px; overflow:hidden; white-space:nowrap;' title='$text'>$text</div>"; ?>
                                                    </span>
                     <span class="editmode changebookingtypepanel" gstype='form' method='setBookingType' ></span>
@@ -336,12 +340,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                             <input type='text' gsname='end' value='<? echo date("d.m.Y", strtotime($room->date->end)); ?>' style='width:80px;' class='calinput'>
                             <input type='text' gsname='endtime' value='<? echo date("H:i", strtotime($room->date->end)); ?>' style='width:40px;'>
                             <br>
-                            
-                            <div style='margin-top: 5px; margin-bottom: 5px;'>
-                                <div style="display: inline-block;margin-right: 20px;"><input type="checkbox" gsname="updateprices">Update prices</div>
-                                <div style="display: inline-block; "><input type="checkbox" gsname="updateaddons">Update addons</div>
-                            </div>
-                            
+                                                        
                             <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change dates</span>
                         </span>
                     </span>
@@ -415,10 +414,6 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                 }
                                 ?>
                                 </table>
-                                <div style='margin-top: 5px; margin-bottom: 5px;'>
-                                    <div style="display: inline-block;margin-right: 20px;"><input type="checkbox" gsname="updateprices">Update prices</div>
-                                    <div style="display: inline-block; "><input type="checkbox" gsname="updateaddons">Update addons</div>
-                                </div>
                                 <span class='pmsbutton tiny changeGuestInformation'>Change guest information</span>
                             </span>
                         </span>

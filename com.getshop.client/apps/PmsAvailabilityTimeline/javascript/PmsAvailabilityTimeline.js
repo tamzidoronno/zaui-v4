@@ -26,7 +26,6 @@ app.PmsAvailabilityTimeline = {
         var instanceId = $('#bookinginstanceid').val();
         var event = thundashop.Ajax.createEvent('','loadReserveRoomInformation',instanceId,{});
         event.core.appname = "PmsManagement";
-        app.PmsAvailabilityTimeline.hideShortOptionsForEntry(e);
         thundashop.common.showInformationBoxNew(event,'Configuration');
     },
     

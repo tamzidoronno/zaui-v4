@@ -533,6 +533,40 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
     }
 
+    private List<Order> filterOrdersOnChannel(String channel, List<Order> orders) {
+        List<PmsBooking> bookings = pmsManager.getAllBookings(null);
+
+        List<Order> ordersToReturn = new ArrayList();
+        
+        HashMap<String, Order> ordersMap = new HashMap();
+        for(Order ord : orders) {
+            ordersMap.put(ord.id, ord);
+        }
+        List<String> added = new ArrayList();
+        for(PmsBooking booking : bookings) {
+            if(channel != null && channel.equals("web") && (booking.channel != null && !booking.channel.trim().isEmpty())) {
+                for(String orderId : booking.orderIds) {
+                    added.add(orderId);
+                }
+            } else if(booking.channel != null && booking.channel.equals(channel)) {
+                for(String orderId : booking.orderIds) {
+                    ordersToReturn.add(ordersMap.get(orderId));
+                    added.add(orderId);
+                }
+            }
+        }
+        
+        if(channel != null && channel.equals("web")) {
+            for(Order ord : orders) {
+                if(!added.contains(ord.id)) {
+                    ordersToReturn.add(ord);
+                }
+            }
+        }
+        
+        return ordersToReturn;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -669,6 +703,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             pmsManager.createAllVirtualOrders();
             orders = orderManager.getAllOrderIncludedVirtual();
         }
+        
+        if(filter.channel != null && !filter.channel.trim().isEmpty()) {
+            orders = filterOrdersOnChannel(filter.channel, orders);
+        }
+        System.out.println("Channel: " + filter.channel + " - " + orders.size());
+        
         List<Order> ordersToUse = new ArrayList();
         for(Order order : orders) {
             if(order == null || order.cart == null) {
@@ -731,7 +771,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         for(Order ord : ordersToUse) {
             totalAmountEx += orderManager.getTotalAmountExTaxes(ord);
         }
-        
+        System.out.println("Jepp: " + filter.channel + ":" + totalAmountEx);
         
         List<String> roomProducts = new ArrayList();
         for(BookingItemType type : bookingEngine.getBookingItemTypes()) {

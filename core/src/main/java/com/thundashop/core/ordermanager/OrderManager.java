@@ -1988,46 +1988,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return null;
     }
 
-    private void doubleCheckPriceMatrixAndItemsAdded(Order order) {
-        Double total = 0.0;
-        boolean found = false;
-        for(CartItem item : order.cart.getItems()) {
-            if(item.itemsAdded != null && !item.itemsAdded.isEmpty()) {
-               for(PmsBookingAddonItem pmsitem : item.itemsAdded) {
-                   if (pmsitem == null ) {
-                       continue;
-                   }
-                   
-                   if (pmsitem.count == null) {
-                       pmsitem.count = 0;
-                   }
-                   
-                   if (pmsitem.price == null) {
-                       pmsitem.price = 0D;
-                   }
-                   
-                   total += (pmsitem.count * pmsitem.price);
-                   found = true;
-               }
-            }
-            if(item.priceMatrix != null && !item.priceMatrix.isEmpty()) {
-                for(Double val : item.priceMatrix.values()) {
-                    total += val;
-                    found = true;
-                }
-            }
+    public void doubleCheckPriceMatrixAndItemsAdded(Order order) {
+        if(!order.isMatrixAndItemsValid()) {
+            System.out.println("Order is incorrect: " + order.incrementOrderId);
         }
-        
-        Double orderTotal = getTotalAmount(order);
-        long ordertotalcheck = Math.round(orderTotal);
-        long ordercheck = Math.round(total);
-        if(order.isCreditNote) {
-           ordercheck *= -1;
-        }
-        if(found && ordercheck != ordertotalcheck) {
-            System.out.println("Order is incorrect: " + order.incrementOrderId + " total: " + orderTotal + " found: " + total);
-        }
-        
     }
 
     private void emptyPullServerQueue() {

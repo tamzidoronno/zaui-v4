@@ -41,6 +41,7 @@ if($rowIndex > 0) {
             $user = $this->getApi()->getUserManager()->getUserById($order->userId);
             echo "<tr class='loadorderstatsentryfororder' productid='$productId' orderid='".$order->id."'>";
             echo "<td>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
+            echo "<td></td>";
             echo "<td>" . $order->incrementOrderId . "</td>";
             echo "<td>" . $user->fullName . "</td>";
             echo "<td>".round($value)."</td>";
@@ -49,6 +50,8 @@ if($rowIndex > 0) {
         }
     }
     echo "<tr>";
+    echo "<td></td>";
+    echo "<td></td>";
     echo "<td></td>";
     echo "<td></td>";
     echo "<td>".round($totalEx)."</td>";

@@ -340,12 +340,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                             <input type='text' gsname='end' value='<? echo date("d.m.Y", strtotime($room->date->end)); ?>' style='width:80px;' class='calinput'>
                             <input type='text' gsname='endtime' value='<? echo date("H:i", strtotime($room->date->end)); ?>' style='width:40px;'>
                             <br>
-                            
-                            <div style='margin-top: 5px; margin-bottom: 5px;'>
-                                <div style="display: inline-block;margin-right: 20px;"><input type="checkbox" gsname="updateprices">Update prices</div>
-                                <div style="display: inline-block; "><input type="checkbox" gsname="updateaddons">Update addons</div>
-                            </div>
-                            
+                                                        
                             <span class='pmsbutton tiny' gstype='submitToInfoBox'>Change dates</span>
                         </span>
                     </span>
@@ -419,10 +414,6 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                 }
                                 ?>
                                 </table>
-                                <div style='margin-top: 5px; margin-bottom: 5px;'>
-                                    <div style="display: inline-block;margin-right: 20px;"><input type="checkbox" gsname="updateprices">Update prices</div>
-                                    <div style="display: inline-block; "><input type="checkbox" gsname="updateaddons">Update addons</div>
-                                </div>
                                 <span class='pmsbutton tiny changeGuestInformation'>Change guest information</span>
                             </span>
                         </span>

@@ -149,10 +149,7 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         changed.done(function(res) {
             if(res.length != 0) {
                 alert('Stay has been changed');
-                var reloadAddons = getshopclient.PmsManager.updateAddonsBasedOnGuestCount(getMultilevelName(), $scope.room.pmsBookingRoomId);
-                reloadAddons.done(function() {
-                    $scope.loadGuest();
-                });
+                $scope.loadGuest();
             } else {
                 alert('Unable to update stay, room is not available.');
             }

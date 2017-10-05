@@ -27,7 +27,7 @@ public interface IScormManager {
     public List<ScormPackage> getAllPackages();
     
     @Administrator
-    public void updateResult(List<ScormResult> results);
+    public void updateResult(ScormResult scorm);
     
     @Administrator
     public void deleteScormPackage(String packageId);
@@ -46,4 +46,7 @@ public interface IScormManager {
     
     @Administrator
     public void syncMoodle();
+    
+    @Administrator
+    public boolean needUpdate(String username, String scormid, boolean isCompleted, boolean isPassed, boolean isFailed);
 }

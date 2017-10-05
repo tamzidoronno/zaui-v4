@@ -1563,13 +1563,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
         convertTextDates(filter);
-        
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         filter.startDate = cal.getTime();
+        int startYear = cal.get(Calendar.YEAR);
         
         cal.setTime(filter.endDate);
         cal.set(Calendar.HOUR_OF_DAY, 23);
@@ -1603,7 +1603,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager, bookingEngine.getAllBookings());
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
-        if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841")) {
+        if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841") || storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382") || startYear >= 2018) {
             setTotalFromIncomeReport(result, filter);
         }
         result.setView(filter);
@@ -3450,6 +3450,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
+        verifyAddons(room);
+        
         saveBooking(booking);
     }
 
@@ -4416,14 +4418,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private boolean verifyPhoneOnBooking(PmsBooking booking, boolean verifyPrefixFromCountryCode) {
         String countryCode = booking.countryCode;
-        try {
-            HashMap<Integer, String> list = PhoneCountryCodeList.getList();
-            Integer prefix = new Integer(booking.rooms.get(0).guests.get(0).prefix);
-            if(list.containsKey(prefix)) {
-                countryCode = list.get(prefix);
+        if(booking.countryCode == null || booking.countryCode.trim().isEmpty()) {
+            try {
+                HashMap<Integer, String> list = PhoneCountryCodeList.getList();
+                Integer prefix = new Integer(booking.rooms.get(0).guests.get(0).prefix);
+                if(list.containsKey(prefix)) {
+                    countryCode = list.get(prefix);
+                }
+            }catch(Exception e) {
+                countryCode = "NO";
             }
-        }catch(Exception e) {
-            countryCode = "NO";
         }
         
         if(booking.userId != null) {
@@ -5187,6 +5191,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         pmsInvoiceManager.updateAddonsByDates(room);
         bookingUpdated(getBookingFromRoom(room.pmsBookingRoomId).id, "date_changed", room.pmsBookingRoomId);
+        verifyAddons(room);
         saveBooking(booking);
     }
 
@@ -6873,5 +6878,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return false;
+    }
+
+    private void verifyAddons(PmsBookingRooms room) {
+        HashMap<String, Integer> products = new HashMap();
+        for(PmsBookingAddonItem item : room.addons) {
+            products.put(item.productId, 1);
+        }
+        
+        for(String prodId : products.keySet()) {
+            PmsBookingAddonItem addon = getConfigurationSecure().getAddonFromProductId(prodId);
+            if(addon.dependsOnGuestCount || addon.isIncludedInRoomPrice || addon.addedToRoom || !addon.isSingle) {
+                addAddonsToBooking(addon.addonType, room.pmsBookingRoomId, false);
+            }
+        }
+        
+        checkIfAddonsShouldBeRemoved(room);
+    }
+
+    private void checkIfAddonsShouldBeRemoved(PmsBookingRooms room) {
+        List<PmsBookingAddonItem> toRemove = new ArrayList();
+        for(PmsBookingAddonItem item : room.addons) {
+            if(!item.isSingle && !room.isActiveOnDay(item.date)) {
+                toRemove.add(item);
+            }
+        }
+        room.addons.removeAll(toRemove);
     }
 }

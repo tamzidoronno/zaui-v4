@@ -16,6 +16,8 @@ $items[7] = "EXTRA CHILDBED";
 ?>
 
 <h2>Addons</h2>
+<div style='cursor: pointer' gs_downloadExcelReport='createExcelForAddons' gs_fileName='addons' bookingid='<? echo $booking->id; ?>'><i class='fa fa-download'></i> Download excel file</div>
+<br/>
 <?php
 echo "<select id='roomsForAddons'>";
 echo "<option value=''>All rooms</option>";

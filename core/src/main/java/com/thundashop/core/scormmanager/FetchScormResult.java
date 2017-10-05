@@ -14,14 +14,17 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import org.omg.CORBA.Current;
 
 /**
  *
  * @author ktonder
  */
 public class FetchScormResult extends GetShopSchedulerBase {
-
+    public HashMap<String, ScormResult> scorms = new HashMap();
+    
     public FetchScormResult(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
         super(webAddress, username, password, scheduler, multiLevelName);
     }
@@ -33,7 +36,22 @@ public class FetchScormResult extends GetShopSchedulerBase {
         Type listType = new TypeToken<ArrayList<ScormResult>>(){}.getType();
         Gson gson = new Gson();
         List<ScormResult> resultList = gson.fromJson(result, listType);
-        getApi().getScormManager().updateResult(resultList);
+        for (ScormResult res : resultList) {
+            long time = System.currentTimeMillis();
+            
+            if (!localCheckNeedUpdate(res)) {
+                continue;
+            }
+            
+            boolean needUpdate = getApi().getScormManager().needUpdate(res.username, res.scormid, res.isCompleted(), res.isPassed(), res.isFailed());
+            
+            if (needUpdate) {
+                getApi().getScormManager().updateResult(res);
+            }
+            
+            scorms.put(res.scormid+"_"+res.username, res);
+        }
+//        
     }
     
     private String getText(String url) throws Exception {
@@ -52,5 +70,17 @@ public class FetchScormResult extends GetShopSchedulerBase {
         in.close();
 
         return response.toString();
+    }
+
+    private boolean localCheckNeedUpdate(ScormResult res) {
+        ScormResult inMemory = scorms.get(res.scormid+"_"+res.username);
+        if (inMemory == null)
+            return true;
+        
+        if (inMemory.isCompleted() == res.isCompleted() && inMemory.isPassed() == res.isPassed() && inMemory.isFailed() == res.isFailed()) {
+            return false;
+        }
+        
+        return true;
     }
 }

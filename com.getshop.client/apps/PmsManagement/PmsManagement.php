@@ -1260,6 +1260,79 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordergenerationpreview");
     }
     
+    public function createExcelForAddons() {
+        $bookingItems = $this->getItems();
+        $emptyRow = array();
+        
+        $rows = array();
+        $booking = $this->getSelectedBooking();
+        $types = $this->getTypes();
+        $bookingItems = $this->getItems();
+
+        $items = array();
+        $items[1] = "BREAKFAST";
+        $items[2] = "PARKING";
+        $items[3] = "LATECHECKOUT";
+        $items[4] = "EARLYCHECKIN";
+        $items[5] = "EXTRABED";
+        $items[6] = "CANCELATION FEE";
+        $items[7] = "EXTRA CHILDBED";
+        
+        foreach ($booking->rooms as $room) {
+            if($room->deleted) {
+                continue;
+            }
+            
+            $roomName = $types[$room->bookingItemTypeId]->name;
+            if($room->bookingItemId) {
+                $roomName .= " (" . $bookingItems[$room->bookingItemId]->bookingItemName . ") " . $room->guests[0]->name;
+            }
+            
+            $guestName = "";
+            if(isset($room->guests[0])) {
+                $guestName = $room->guests[0]->name;
+            }
+            
+            $rows[] = array();
+            
+            $row = array();
+            $row[] = " $guestName " . $roomName . " - " . date("d.m.Y H:i" , strtotime($room->date->start)) . " - " . date("d.m.Y H:i" , strtotime($room->date->end));
+            $rows[] = $row;
+            
+            if(sizeof($room->addons) == 0) {
+                $row = array();
+                $row[] = "No addons for this room";
+                $rows[] = $row;
+                
+            } else {
+                foreach($room->addons as $addon) {
+                    $name = "";
+                    
+                    if($addon->productId) {
+                        $name = $this->getApi()->getProductManager()->getProduct($addon->productId)->name;
+                    }
+                    
+                    if(isset($items[$addon->addonType])) {
+                        $name = $items[$addon->addonType];
+                    }
+                    
+                    $row = array();
+                    $row[] = $name;
+                    $row[] = $roomName;
+                    $row[] = $addon->count;
+                    $row[] = $addon->price;
+                    $row[] = date("d.m.Y, H:i", strtotime($addon->date));
+                    $row[] = $addon->isIncludedInRoomPrice ? "IRM" : "NO";
+                    $rows[] = $row;
+                }
+
+            }
+        }
+        
+        echo json_encode($rows);
+        die();
+    }
+    
    public function loadBookingDataArea() {
        $area = $_POST['data']['area'];
        $_SESSION['lastloadedarea'] = $area;
@@ -1789,12 +1862,6 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $this->errors[] = "Could not update start date, due to room not available at the time being.";
         }
 
-        if($_POST['data']['updateprices'] == "true") {
-            $this->getApi()->getPmsManager()->resetPriceForRoom($this->getSelectedName(), $_POST['data']['roomid']);
-        }
-        if($_POST['data']['updateaddons'] == "true") {
-            $this->getApi()->getPmsManager()->updateAddonsBasedOnGuestCount($this->getSelectedName(), $_POST['data']['roomid']);
-        }
         $this->setLastSelectedRoom($_POST['data']['roomid']);       
         $this->refreshSelectedBooking();
         $this->showBookingInformation();
@@ -2353,18 +2420,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         
         $this->setLastSelectedRoom($_POST['data']['roomid']);
         
-        if($_POST['data']['updateprices'] == "true") {
-            $this->getApi()->getPmsManager()->resetPriceForRoom($this->getSelectedName(), $_POST['data']['roomid']);
-        }
-        if($_POST['data']['updateaddons'] == "true") {
-            $this->getApi()->getPmsManager()->updateAddonsBasedOnGuestCount($this->getSelectedName(), $_POST['data']['roomid']);
-        }
-        
-        if($_POST['data']['updateprices'] == "true" || $_POST['data']['updateaddons'] == "true") {
-            $this->showBookingInformation();
-        } else {
-            $this->printGuests($guests);
-        }
+        $this->showBookingInformation();
     }
 
     public function createPaymentTypeText($app) {

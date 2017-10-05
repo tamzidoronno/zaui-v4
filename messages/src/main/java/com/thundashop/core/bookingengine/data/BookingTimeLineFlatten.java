@@ -217,6 +217,10 @@ public class BookingTimeLineFlatten implements Serializable {
 
     private List<String> bruteForceCombination(List<BookingTimeLine> lines) {
 
+        if (lines == null || lines.isEmpty()) {
+            return new ArrayList();
+        }
+        
         List<String> bookingIdsToIgnore = new ArrayList();
         
         List<String> combos = new ArrayList();

@@ -228,16 +228,21 @@ foreach($paymentTypesThatHasBeenSupported as $supported) {
 }
 
 if(sizeof($inUse) > 0) {
-    echo "<div style='border: solid 1px #bbb;padding: 10px; '>";
-    echo "<i class='fa fa-warning'></i> There are payment methods in use that does not have any export yet.<br>";
+    $found = false;
+    $res = "<div style='border: solid 1px #bbb;padding: 10px; '>";
+    $res .= "<i class='fa fa-warning'></i> There are payment methods in use that does not have any export yet.<br>";
     foreach($inUse as $missing) {
         foreach($paymentMethods as $met) {
             if($met->id == $missing) {
-                echo "<span style='border-bottom: solid 1px; padding: 3px; display:inline-block; margin-right: 5px;'>" . $met->appName . "</span>";
+                $res .= "<span style='border-bottom: solid 1px; padding: 3px; display:inline-block; margin-right: 5px;'>" . $met->appName . "</span>";
+                $found = true;
             }
         }
     }
-    echo "</div>";
+    $res .= "</div>";
+    if($found) {
+        echo $res;
+    }
 }
 
 ?>

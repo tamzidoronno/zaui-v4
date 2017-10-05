@@ -39,6 +39,7 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class ScormManager extends ManagerBase implements IScormManager {
     private HashMap<String, Scorm> scorms = new HashMap();
+    private HashMap<String, Scorm> cachedMap = new HashMap();
     private HashMap<String, ScormPackage> packages = new HashMap();
     private HashMap<String, ScormCertificateContent> certificateContents = new HashMap();
     
@@ -55,6 +56,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
             if (data instanceof Scorm) {
                 Scorm scorm = (Scorm)data;
                 scorms.put(scorm.id, scorm);
+                cachedMap.put(scorm.scormId+"_"+scorm.userId, scorm);
             }
             
             if (data instanceof ScormCertificateContent) {
@@ -140,10 +142,12 @@ public class ScormManager extends ManagerBase implements IScormManager {
         scorm.userId = userId;
         scorm.scormId = scormId;
         
-        return scorms.values().stream()
-                .filter(o -> o.scormId.equals(scormId) && o.userId.equals(userId))
-                .findFirst()
-                .orElse(scorm);
+        Scorm cached = cachedMap.get(scormId+"_"+userId);
+        if (cached != null) {
+            return cached;
+        }
+        
+        return scorm;
     }
 
     private void finalizeScorm(Scorm scorm) {
@@ -157,6 +161,10 @@ public class ScormManager extends ManagerBase implements IScormManager {
             scorm.scormName = scormPackage.name;
             scorm.groupedScormPackage = !scormPackage.groupedScormPackages.isEmpty();
             scorm.groupedScormPackageIds = scormPackage.groupedScormPackages;
+        }
+        
+        if (scorm.groupedScormPackageIds != null && !scorm.groupedScormPackageIds.isEmpty()) {
+            scorm.passed = isAllTestPassed(scorm.userId, scorm.groupedScormPackageIds);
         }
     }
 
@@ -223,13 +231,25 @@ public class ScormManager extends ManagerBase implements IScormManager {
     }
 
     private boolean alreadyCompletedOrStartedTest(ScormPackage scormPackage, String userId) {
-        Scorm res = scorms.values().stream()
-                .filter(o -> o.scormId.equals(scormPackage.id) && o.userId.equals(userId))
-                .filter(o -> !o.isPartOfOtherGroupScormPackages(packages.values()))
-                .findFirst()
-                .orElse(null);
+        Scorm cached = cachedMap.get(scormPackage.id + "_" + userId);
+        if (cached != null) {
+            if (!cached.isPartOfOtherGroupScormPackages(packages.values())) {
+                return true;
+            }
+        }
         
-        return res != null;
+        return false;
+        
+//        Scorm res = scorms.values().stream()
+//                .filter(o -> o.scormId.equals(scormPackage.id) && o.userId.equals(userId))
+//                .filter(o -> !o.isPartOfOtherGroupScormPackages(packages.values()))
+//                .findFirst()
+//                .orElse(null);
+//        
+//        System.out.println(res);
+//        
+//        return res != null;
+        
     }
 
     @Override
@@ -338,7 +358,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
                 if (userscorm == null)
                     continue;
                 
-                userscorm.passed = true;
+                scorm.passed = true;
                 
                 if (userscorm.passedDate == null) {
                     userscorm.passedDate = getLastPassedDate(passedTests);
@@ -347,6 +367,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
                 saveObject(userscorm);
 
                 scorms.put(userscorm.id, userscorm);
+                cachedMap.put(userscorm.scormId+"_"+userscorm.userId, scorm);
             }
         }
     }
@@ -366,6 +387,20 @@ public class ScormManager extends ManagerBase implements IScormManager {
         }
         
         return latest;
+    }
+
+    private boolean isAllTestPassed(String userId, List<String> groupedScormPackageIds) {
+        for (String scormPackageId : groupedScormPackageIds ) {
+            Scorm scorm = getScorm(userId, scormPackageId);
+            if (!scorm.passed) {
+                return false;
+            }
+        }
+        
+        if (groupedScormPackageIds.isEmpty())
+            return false;
+        
+        return true;
     }
     
 }

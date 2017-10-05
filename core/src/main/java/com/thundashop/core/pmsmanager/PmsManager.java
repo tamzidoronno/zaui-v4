@@ -1563,13 +1563,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsStatistics getStatistics(PmsBookingFilter filter) {
         convertTextDates(filter);
-        
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         filter.startDate = cal.getTime();
+        int startYear = cal.get(Calendar.YEAR);
         
         cal.setTime(filter.endDate);
         cal.set(Calendar.HOUR_OF_DAY, 23);
@@ -1603,7 +1603,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager, bookingEngine.getAllBookings());
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
-        if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841") || storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382")) {
+        if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841") || storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382") || startYear >= 2018) {
             setTotalFromIncomeReport(result, filter);
         }
         result.setView(filter);

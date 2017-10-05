@@ -18,3 +18,4 @@ body { font-family: roboto, Helvetica, Tahoma, Geneva, Arial, sans-serif; backgr
     text-transform: uppercase;
 }
 .shop_button { background:none; background-color:rgb(103, 60, 77); border-radius: 0px; color:#fff; margin: 5px; }
+.footerprovidedtext { display:none; }

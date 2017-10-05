@@ -11,6 +11,7 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -100,6 +101,48 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
 
         return orderNew;
+    }
+    
+    public boolean isMatrixAndItemsValid() {
+        Double total = 0.0;
+        boolean found = false;
+        for(CartItem item : cart.getItems()) {
+            if(item.itemsAdded != null && !item.itemsAdded.isEmpty()) {
+               for(PmsBookingAddonItem pmsitem : item.itemsAdded) {
+                   if (pmsitem == null ) {
+                       continue;
+                   }
+                   
+                   if (pmsitem.count == null) {
+                       pmsitem.count = 0;
+                   }
+                   
+                   if (pmsitem.price == null) {
+                       pmsitem.price = 0D;
+                   }
+                   
+                   total += (pmsitem.count * pmsitem.price);
+                   found = true;
+               }
+            }
+            if(item.priceMatrix != null && !item.priceMatrix.isEmpty()) {
+                for(Double val : item.priceMatrix.values()) {
+                    total += val;
+                    found = true;
+                }
+            }
+        }
+        
+        Double orderTotal = getTotalAmount();
+        long ordertotalcheck = Math.round(orderTotal);
+        long ordercheck = Math.round(total);
+        if(isCreditNote) {
+           ordercheck *= -1;
+        }
+        if(found && ordercheck != ordertotalcheck) {
+            return false;
+        }
+        return true;
     }
     
     public void generateKidLuhn(String byNumber, Integer length) {
@@ -490,6 +533,14 @@ public class Order extends DataCommon implements Comparable<Order> {
             }
         }
         return result;
+    }
+
+    public double getTotalAmount() {
+        double amount = 0.0;
+        for(CartItem item : cart.getItems()) {
+            amount += item.getTotalAmount();
+        }
+        return amount;
     }
     
     public static class Status  {

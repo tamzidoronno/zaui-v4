@@ -1603,7 +1603,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager, bookingEngine.getAllBookings());
         result.salesEntries = builder.buildOrderStatistics(filter, orderManager);
-        if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841")) {
+        if(storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841") || storeId.equals("fcaa6625-17da-447e-b73f-5c07b9b7d382")) {
             setTotalFromIncomeReport(result, filter);
         }
         result.setView(filter);

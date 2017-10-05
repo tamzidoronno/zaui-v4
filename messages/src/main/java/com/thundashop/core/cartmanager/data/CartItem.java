@@ -312,4 +312,41 @@ public class CartItem implements Serializable {
         }
         return check;
     }
+
+    public double getDiffForFromMeta() {
+        double total = getTotalAmount();
+        double totalOnMeta = getTotalOnMeta();
+        double diff = (total - totalOnMeta);
+        if(diff < 1 && diff > -1) {
+            diff = 0.0;
+        }
+        
+        return diff;
+    }
+
+    private double getTotalOnMeta() {
+        double val = 0.0;
+        double total = getTotalAmount();
+        
+        if(priceMatrix != null) {
+            for(String day : priceMatrix.keySet()) {
+                if(total > 0) {
+                    val += priceMatrix.get(day);
+                } else {
+                    val -= priceMatrix.get(day);
+                }
+            }
+        }
+        if(itemsAdded != null) {
+            for(PmsBookingAddonItem addonItem : itemsAdded) {
+                if(total > 0) {
+                    val += (addonItem.price * addonItem.count);
+                } else {
+                    val += (addonItem.price * (addonItem.count*-1));
+                }
+            }
+        }
+
+        return val;
+    }
 }

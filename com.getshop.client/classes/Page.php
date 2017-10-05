@@ -137,6 +137,10 @@ class Page {
                 $editedCellid = $edited;
             }
             echo "</div>";
+            echo "<div style='text-align:center; padding-top: 10px; padding-bottom: 10px;' class='footerprovidedtext'>";
+            echo "<center>System provided by GetShop AS - <a href='http://www.getshop.com'>www.getshop.com</a></center>";
+            echo "</div>";
+
 
             foreach ($layout->areas as $section) {
                 $this->printCss($section);

@@ -48,6 +48,12 @@ public class PmsOrderStatistics implements Serializable  {
         double total = 0.0;
         int orderscount = 0;
         for(Order order : ordersToUse) {
+            double ordertotal = order.getTotalAmount();
+            
+            if(ordertotal < 1.0 && ordertotal > -1.0) {
+                continue;
+            }
+            
             if(filter.displayType == null || filter.displayType.equals("dayregistered")) {
                 if(!order.createdOnDay(cal.getTime())) {
                     continue;
@@ -90,74 +96,85 @@ public class PmsOrderStatistics implements Serializable  {
                 }
             } else if(filter.displayType.equals("dayslept")) {
                 for(CartItem item : order.cart.getItems()) {
-                    double secondsInDay = item.getSecondsForDay(cal, filter.shiftHours != 0);
-                    if(secondsInDay == 0.0) {
-                        continue;
-                    }
-                    Double inc = priceInc.get(item.getProduct().id);
-                    Double ex = priceEx.get(item.getProduct().id);
-
-                    if(roomProducts != null && !roomProducts.contains(item.getProduct().id) && !item.getProduct().id.equals("815d31ef-716d-4906-aae1-bddb028b55f4")) {
-                        secondsInDay = -1;
-                    }
-                    
-                    Double totalCalc = priceIncOrder.get(order.id);
-                    if(totalCalc == null) { totalCalc = 0.0; }
-                    if(inc == null) { inc = 0.0; }
-                    if(ex == null) { ex = 0.0; }
-                    
-                    Double orderPriceInc = 0.0;
-                    Double orderPriceEx = 0.0;
-
-                    if(orderEx.containsKey(order.incrementOrderId)) {
-                        orderPriceEx = orderEx.get(order.incrementOrderId);
-                    }
-                    if(orderInc.containsKey(order.incrementOrderId)) {
-                        orderPriceInc = orderInc.get(order.incrementOrderId);
-                    }
-                    
-                    if(secondsInDay == -1) {
-                        Date createUse = new Date(order.rowCreatedDate.getTime());
-                        if(filter.shiftHours != 0) {
-                            Calendar tmpCal = Calendar.getInstance();
-                            tmpCal.setTime(createUse);
-                            tmpCal.add(Calendar.HOUR_OF_DAY, filter.shiftHours);
-                            createUse = tmpCal.getTime();
-                        }
-                        if(item.startsOnDate(cal.getTime(), createUse)) {
-                            totalCalc += (item.getProduct().price * item.getCount());
-                            inc += (item.getProduct().price * item.getCount());
-                            ex += (item.getProduct().priceExTaxes * item.getCount());
-                            orderPriceInc += (item.getProduct().price * item.getCount());
-                            orderPriceEx += (item.getProduct().priceExTaxes * item.getCount());
-                            addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().priceExTaxes * item.getCount()), entry.priceExOrders);
-                            addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().price * item.getCount()), entry.priceIncOrders);
-                        }
+                    if(canUseNewCalculation(item, entry, cal, order)) {
+                        PmsOrderStatisticsEntry tmpEntry = calculatePeriodisatedValues(order, item,cal);
+                        copy(priceEx, tmpEntry.priceEx);
+                        copy(priceInc, tmpEntry.priceInc);
+                        copyMap(orderEx, tmpEntry.orderEx);
+                        copyMap(orderInc, tmpEntry.orderInc);
+                        copyDoubleMap(entry.priceExOrders, tmpEntry.priceExOrders);
+                        copyDoubleMap(entry.priceIncOrders, tmpEntry.priceIncOrders);
                     } else {
-                        totalCalc += item.getPriceIncForMinutes() * secondsInDay;
-                        inc += item.getPriceIncForMinutes() * secondsInDay;
-                        ex += item.getPriceExForMinutes() * secondsInDay;
-                        orderPriceInc += item.getPriceIncForMinutes() * secondsInDay;
-                        orderPriceEx += item.getPriceExForMinutes() * secondsInDay;
-                        
-                        Double extotal = item.getSeconds() * item.getPriceExForMinutes();
-                        Double itemTotalEx = item.getTotalEx();
-                        Double diff = (extotal - itemTotalEx);
-                        diff = (double)Math.round(diff*1000) / 1000;
-                        if(diff != 0.000) {
-                            System.out.println("Failed to summarize order: " + diff);
+                        /** @this is a deprecated calculation routine. */
+                        double secondsInDay = item.getSecondsForDay(cal, filter.shiftHours != 0);
+                        if(secondsInDay == 0.0) {
+                            continue;
                         }
-                        
-                        addProductOrderPrice(item.getProduct().id, order.id, item.getPriceExForMinutes() * secondsInDay, entry.priceExOrders);
-                        addProductOrderPrice(item.getProduct().id, order.id, item.getPriceIncForMinutes() * secondsInDay, entry.priceIncOrders);
-                    }
-                    
-                    priceInc.put(item.getProduct().id, inc);
-                    priceEx.put(item.getProduct().id, ex);
-                    if(totalCalc != 0.0 || priceIncOrder.containsKey(order.id)) {
-                        priceIncOrder.put(order.id, totalCalc);
-                        orderInc.put(order.incrementOrderId, orderPriceInc);                    
-                        orderEx.put(order.incrementOrderId, orderPriceEx);
+                        Double inc = priceInc.get(item.getProduct().id);
+                        Double ex = priceEx.get(item.getProduct().id);
+
+                        if(roomProducts != null && !roomProducts.contains(item.getProduct().id) && !item.getProduct().id.equals("815d31ef-716d-4906-aae1-bddb028b55f4")) {
+                            secondsInDay = -1;
+                        }
+
+                        Double totalCalc = priceIncOrder.get(order.id);
+                        if(totalCalc == null) { totalCalc = 0.0; }
+                        if(inc == null) { inc = 0.0; }
+                        if(ex == null) { ex = 0.0; }
+
+                        Double orderPriceInc = 0.0;
+                        Double orderPriceEx = 0.0;
+
+                        if(orderEx.containsKey(order.incrementOrderId)) {
+                            orderPriceEx = orderEx.get(order.incrementOrderId);
+                        }
+                        if(orderInc.containsKey(order.incrementOrderId)) {
+                            orderPriceInc = orderInc.get(order.incrementOrderId);
+                        }
+
+                        if(secondsInDay == -1) {
+                            Date createUse = new Date(order.rowCreatedDate.getTime());
+                            if(filter.shiftHours != 0) {
+                                Calendar tmpCal = Calendar.getInstance();
+                                tmpCal.setTime(createUse);
+                                tmpCal.add(Calendar.HOUR_OF_DAY, filter.shiftHours);
+                                createUse = tmpCal.getTime();
+                            }
+                            if(item.startsOnDate(cal.getTime(), createUse)) {
+                                totalCalc += (item.getProduct().price * item.getCount());
+                                inc += (item.getProduct().price * item.getCount());
+                                ex += (item.getProduct().priceExTaxes * item.getCount());
+                                orderPriceInc += (item.getProduct().price * item.getCount());
+                                orderPriceEx += (item.getProduct().priceExTaxes * item.getCount());
+                                addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().priceExTaxes * item.getCount()), entry.priceExOrders);
+                                addProductOrderPrice(item.getProduct().id, order.id, (item.getProduct().price * item.getCount()), entry.priceIncOrders);
+                            }
+                        } else {
+                            totalCalc += item.getPriceIncForMinutes() * secondsInDay;
+                            inc += item.getPriceIncForMinutes() * secondsInDay;
+                            ex += item.getPriceExForMinutes() * secondsInDay;
+                            orderPriceInc += item.getPriceIncForMinutes() * secondsInDay;
+                            orderPriceEx += item.getPriceExForMinutes() * secondsInDay;
+
+                            Double extotal = item.getSeconds() * item.getPriceExForMinutes();
+                            Double itemTotalEx = item.getTotalEx();
+                            Double diff = (extotal - itemTotalEx);
+                            diff = (double)Math.round(diff*1000) / 1000;
+                            if(diff != 0.000) {
+                                System.out.println("Failed to summarize order: " + diff);
+                            }
+
+                            addProductOrderPrice(item.getProduct().id, order.id, item.getPriceExForMinutes() * secondsInDay, entry.priceExOrders);
+                            addProductOrderPrice(item.getProduct().id, order.id, item.getPriceIncForMinutes() * secondsInDay, entry.priceIncOrders);
+                        }
+
+                        priceInc.put(item.getProduct().id, inc);
+                        priceEx.put(item.getProduct().id, ex);
+                        if(totalCalc != 0.0 || priceIncOrder.containsKey(order.id)) {
+                            priceIncOrder.put(order.id, totalCalc);
+                            orderInc.put(order.incrementOrderId, orderPriceInc);                    
+                            orderEx.put(order.incrementOrderId, orderPriceEx);
+                        }
                     }
                 }
             } else if(filter.displayType.equals("daypaid")) {
@@ -234,6 +251,132 @@ public class PmsOrderStatistics implements Serializable  {
         
         current += price;
         toAdd.get(productId).put(orderId, current);
+    }
+
+    private boolean canUseNewCalculation(CartItem item, PmsOrderStatisticsEntry entry, Calendar cal,Order order) {
+        int year = cal.get(Calendar.YEAR);
+        if(year < 2018) {
+            return false;
+        }
+        if(!order.isMatrixAndItemsValid()) {
+            return false;
+        }
+        if(item.priceMatrix != null && !item.priceMatrix.isEmpty()) {
+            return true;
+        }
+        if(item.itemsAdded != null && !item.itemsAdded.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    private PmsOrderStatisticsEntry calculatePeriodisatedValues(Order order, CartItem item, Calendar cal) {
+        PmsOrderStatisticsEntry entry = new PmsOrderStatisticsEntry();
+        String date = PmsBookingRooms.convertOffsetToString(cal.getTime());
+        Double price = 0.0;
+        Double priceInc = 0.0;
+        Double total = item.getTotalAmount();
+        
+        if(total < 1 && total > -1.0) {
+            return entry;
+        }
+        
+        if(item.priceMatrix != null) {
+            for(String key : item.priceMatrix.keySet()) {
+                if(key.equals(date)) {
+                    double dayPriceInc = item.priceMatrix.get(key);
+                    if(!order.isCreditNote) {
+                        price += dayPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
+                        priceInc += dayPriceInc;
+                    } else {
+                        price -= dayPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
+                        priceInc -= dayPriceInc;
+                    }
+                }
+            }
+        }
+        if(item.itemsAdded != null) {
+            for(PmsBookingAddonItem addonItem : item.itemsAdded) {
+                if(PmsBookingRooms.isSameDayStatic(addonItem.date, cal.getTime())) {
+                    if(addonItem.price != null && addonItem.count != null) {
+                        double itemPriceInc = addonItem.price*addonItem.count;
+                        if(!order.isCreditNote) {
+                            price += itemPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
+                            priceInc += itemPriceInc;
+                        } else {
+                            price -= itemPriceInc / ((100 + item.getProduct().taxGroupObject.taxRate)/100);
+                            priceInc -= itemPriceInc;
+                        }
+                    }
+                }
+            }
+        }
+        
+        Double added = entry.priceEx.get(item.getProduct().id);
+        if(added != null) {
+            price += added;
+        }
+        String productId = item.getProduct().id;
+        entry.priceEx.put(productId, price);
+        entry.priceInc.put(productId, priceInc);
+        HashMap<String, Double> ordersMap = entry.priceExOrders.get(productId);
+        if(ordersMap == null) {
+            ordersMap = new HashMap();
+        }
+        ordersMap.put(order.id, price);
+        if(price != 0.0) {
+            entry.priceExOrders.put(productId, ordersMap);
+        }
+        
+        HashMap<String, Double> ordersMapInc = entry.priceIncOrders.get(productId);
+        if(ordersMapInc == null) {
+            ordersMapInc = new HashMap();
+        }
+        if(priceInc != 0.0) {
+            ordersMapInc.put(order.id, priceInc);
+        }
+        entry.priceIncOrders.put(productId, ordersMapInc);
+        
+        
+        entry.orderEx.put(order.incrementOrderId, price);
+        entry.orderInc.put(order.incrementOrderId, priceInc);
+        
+        return entry;
+    }
+
+    private void copy(HashMap<String, Double> original, HashMap<String, Double> toAdd) {
+        for(String key : toAdd.keySet()) {
+            Double res = 0.0;
+            if(original.containsKey(key)) {
+                res = original.get(key);
+            }
+            res += toAdd.get(key);
+            original.put(key, res);
+        }
+    }
+
+    private void copyMap(HashMap<Long, Double> original, HashMap<Long, Double> toAdd) {
+        for(Long key : toAdd.keySet()) {
+            Double res = 0.0;
+            if(original.containsKey(key)) {
+                res = original.get(key);
+            }
+            res += toAdd.get(key);
+            original.put(key, res);
+        }
+    }
+
+    private void copyDoubleMap(HashMap<String, HashMap<String, Double>> original, HashMap<String, HashMap<String, Double>> toAdd) {
+        for(String productId : toAdd.keySet()) {
+            HashMap<String, Double> productMapOriginal = original.get(productId);
+            if(productMapOriginal == null) {
+                productMapOriginal = new HashMap();
+            }
+            HashMap<String, Double> productMapToAdd = toAdd.get(productId);
+            copy(productMapOriginal, productMapToAdd);
+            original.put(productId, productMapOriginal);
+        }
+        
     }
 
 }

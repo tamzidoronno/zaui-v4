@@ -1,0 +1,17 @@
+<?php
+namespace ns_81edf29e_38e8_4811_a2c7_bc86ad5ab948;
+
+class GslBooking extends \MarketingApplication implements \Application {
+    public function getDescription() {
+        return "New bookingview";
+    }
+
+    public function getName() {
+        return "GslBooking";
+    }
+
+    public function render() {
+        $this->includefile("gslfront_1");
+    }
+}
+?>

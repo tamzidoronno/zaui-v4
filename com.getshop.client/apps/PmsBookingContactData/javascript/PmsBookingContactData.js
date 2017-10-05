@@ -128,7 +128,9 @@ app.PmsBookingContactData = {
         $('.'+type).fadeIn();
         if(type === "registered_user") {
             app.PmsBookingContactData.saveForm();
-            $('.selectregisterduser').chosen();
+            if(!isMobile) {
+                $('.selectregisterduser').chosen();
+            }
         }
     },
     showSettings : function() {

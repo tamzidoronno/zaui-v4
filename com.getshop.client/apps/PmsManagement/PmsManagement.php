@@ -3288,6 +3288,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "</select>";
     }
     
+    public function updateInvoiceNoteOnBooking() {
+        echo "Information has been updated.";
+        $booking = $this->getSelectedBooking();
+        $booking->invoiceNote = $_POST['data']['invoiceNote'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
+    }
+    
     public function fastordercreation() {
         $appendToOrders = array();
         
@@ -3301,6 +3310,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter = new \core_pmsmanager_NewOrderFilter();
             $bookingId = $_POST['data']['bookingid'];
             $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingId);
+            if(isset($_POST['data']['invoicenoteinfo'])) {
+                $booking->invoiceNote = $_POST['data']['invoicenoteinfo'];
+                $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+            }
             $filter->avoidOrderCreation = false;
             $filter->prepayment = true;
             $filter->createNewOrder = true;

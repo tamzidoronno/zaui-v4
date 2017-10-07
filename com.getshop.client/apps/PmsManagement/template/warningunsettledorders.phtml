@@ -60,6 +60,15 @@ if($amount != 0) {
                 echo "<b>" . $app->appName . "</b>";
             }
         }
+        if($preferred == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
+            echo "<div gstype='form' method='updateInvoiceNoteOnBooking'>";
+            echo "<input type='hidden' gsname='bookingid' value='".$booking->id."'>";
+            echo "<textarea style='width: 100%; margin-top: 5px;box-sizing:border-box;' gsname='invoiceNote'>". $booking->invoiceNote . "</textarea>";
+            echo "<div style='text-align:right;'>";
+            echo "<input type='button' value='Update invoice note' gstype='submitToInfoBox'>";
+            echo "</div>";
+            echo "</div>";
+        }
         echo "</div>";
     } else {
         if($amount > 1 || $amount < -1) {

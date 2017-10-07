@@ -179,6 +179,9 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
         if($room->deleted) {
             $deleted = "roomdeleted";
         }
+        if($room->addedToWaitingList) {
+            $deleted = "addedtowaitinglist";
+        }
         $lastSelectedRoom = $object->getLastSelectedRoom();
 
         $highlightclass = "";
@@ -198,6 +201,9 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                         }
                         ?>
                         <input type='checkbox' class='checkboxforbookedroom' roomid='<?php echo $room->pmsBookingRoomId; ?>' <?php echo $checked; ?>>
+                    <?php } else if($room->addedToWaitingList) { ?>
+                        <input type='checkbox' class='checkboxforbookedroom' roomid='<?php echo $room->pmsBookingRoomId; ?>'>
+                        <i class='fa fa-undo'  gstype='submitToInfoBox' title="Try to add to list" style='cursor:pointer;'></i>
                     <?php } else { ?>
                         <i class='fa fa-undo'  gstype='submitToInfoBox' title="Undelete" style='cursor:pointer;'></i>
                     <?php } ?>
@@ -220,7 +226,7 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                        <span class="viewmode loadRoomTypes">               
                             <?
                             if(!$room->bookingItemTypeId) { 
-                                $text = "No type seleced yet"; 
+                                $text = "No type selected yet"; 
                             } else {
                                 $text = $types[$room->bookingItemTypeId]->name;
                             }
@@ -424,7 +430,13 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                         <span class='roompostfix'>
                             <span class='viewmode'>
                                 <? 
-                                echo round($room->price);
+                                if($room->addedToWaitingList) {
+                                    echo "On wait";
+                                } else if($room->deleted) {
+                                    echo "Overbooking";
+                                } else {
+                                    echo round($room->price);
+                                }
                                 ?>
                             </span>
                             <span class='editmode' method='changePrice' gstype='form'>

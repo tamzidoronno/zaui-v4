@@ -1669,9 +1669,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String addResult = "";
         for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             if (room.pmsBookingRoomId.equals(roomId)) {
+                room.addedToWaitingList = false;
                 if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                     roomName = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName + " (" + convertToStandardTime(room.date.start) + " - " + convertToStandardTime(room.date.end) + ")";
-                } else {
+                } else if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
                     roomName = bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " (" + convertToStandardTime(room.date.start) + " - " + convertToStandardTime(room.date.end) + ")";
                 }
                 toRemove.add(room);
@@ -1692,6 +1693,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     booking.isDeleted = false;
                     remove.credited = false;
                     remove.setBooking(tmpbook);
+                    if(remove.priceMatrix.keySet().isEmpty()) {
+                        setPriceOnRoom(remove, true, booking);
+                    }
                     logEntry(roomName + " readded to booking ", bookingId, null);
                 }catch(BookingEngineException ex) {
                     addResult = ex.getMessage();
@@ -1819,7 +1823,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBooking> toRemove = new ArrayList();
         if (!filter.includeDeleted) {
             for (PmsBooking booking : result) {
-                if (booking.isDeleted && !booking.overBooking) {
+                if (booking.isDeleted && !booking.hasOverBooking()) {
                     toRemove.add(booking);
                 }
             }
@@ -3187,7 +3191,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("got configuration");
             if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
                 if(getConfigurationSecure().supportRemoveWhenFull || booking.isWubook() || room.addedToWaitingList) {
-                    booking.overBooking = true;
+                    if(booking.isWubook()) {
+                        room.overbooking = true;
+                    }
                     room.canBeAdded = false;
                     room.delete();
                 }
@@ -4807,7 +4813,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return null;
             }
             gsTiming("Created user for booking");
-            if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay && !booking.overBooking) {
+            if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay && !booking.hasOverBooking()) {
                 booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
                 pmsInvoiceManager.createPrePaymentOrder(booking);
                 gsTiming("Created payment for order");

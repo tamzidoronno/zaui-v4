@@ -44,6 +44,7 @@
 .PmsManagement .notpaid,
 .PmsManagement .Unpaid { color:red; }
 .PmsManagement .roomdeleted td { color: red; }
+.PmsManagement .addedtowaitinglist td { color: blue; }
 .PmsManagement .sendinvoicebox { position:absolute; padding: 10px; border: solid 1px; background-color: #fff; display:none; }
 .PmsManagement .sendinvoicebox input { font-size: 20px; }
 .PmsManagement .doCreditOrder:hover { color:red; cursor: pointer; }

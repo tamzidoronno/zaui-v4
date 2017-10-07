@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class PmsBookingSimpleFilter { 
-
+ 
     private final PmsManager manager;
     private final PmsInvoiceManager pmsInvoiceManager;
 
@@ -29,9 +29,11 @@ public class PmsBookingSimpleFilter {
                 }
             } else {
                 List<PmsBookingRooms> rooms = booking.getActiveRooms();
-                if(filter.includeDeleted || booking.overBooking) {
+                if(filter.includeDeleted) {
                     rooms = booking.getAllRoomsIncInactive();
                 }
+                rooms.addAll(booking.getOverBookedRooms());
+                rooms.addAll(booking.getWaitingListRooms());
                 for(PmsBookingRooms room : rooms) {
                     if(inFilter(room, filter, booking)) {
                         result.add(convertRoom(room, booking));
@@ -198,7 +200,7 @@ public class PmsBookingSimpleFilter {
             simple.progressState = "blocked";
         }
         
-        if(booking.overBooking) {
+        if(room.overbooking) {
             simple.progressState = "overbooking";
         }
         if(room.addedToWaitingList) {

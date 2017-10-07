@@ -158,13 +158,23 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function loadBookingTypes() {
+        
+        $booking = $this->getSelectedBooking();
+        $selectedRoom = null;
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $selectedRoom = $room;
+            }
+        }
+        
         echo "<b>Change room type</b><i class='fa fa-times' style='float:right; cursor:pointer;' onclick='$(\".changebookingtypepanel\").hide()'></i><br>";
         echo "<input type='hidden' gsname='bookingid' value='".$this->getSelectedBooking()->id."'>";
         echo "<input type='hidden' gsname='roomid' value='".$_POST['data']['roomid']."'>";
         $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
         echo "<select gsname='newtype'>";
         foreach($types as $type) {
-            echo "<option value='".$type->id."'>".$type->name."</option>";
+            $count = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $type->id, $room->date->start, $room->date->end);
+            echo "<option value='".$type->id."'>".$type->name." ($count available)</option>";
         }
         echo "</select>";
         echo "<input type='button' value='Change' gstype='submitToInfoBox'>";

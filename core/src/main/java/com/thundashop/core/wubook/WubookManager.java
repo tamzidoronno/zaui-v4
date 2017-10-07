@@ -917,7 +917,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             filter.prepayment = true;
             filter.endInvoiceAt = end;
             pmsInvoiceManager.clearOrdersOnBooking(newbooking);
-            if(!newbooking.overBooking) {
+            if(!newbooking.hasOverBooking()) {
                 pmsInvoiceManager.createOrder(newbooking.id, filter);
             } else {
                 newbooking.rowCreatedDate = new Date();

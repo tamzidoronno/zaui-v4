@@ -21,6 +21,16 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function toggleDeleteComment() {
+        $booking = $this->getSelectedBooking();
+        foreach($booking->comments as $key => $val) {
+            if($key == $_POST['data']['time']) {
+                $booking->comments->{$key}->deleted = !$booking->comments->{$key}->deleted;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+    }
+
     public function completeQuickReservation() {
         $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
         $currentBooking->userId = "quickreservation";

@@ -9,6 +9,7 @@
 .PmsManagement .roomsbookedactions .fa { position: absolute; left: 14px; top: -12px; color:#CAE8EA; }
 .PmsManagement .showorderbutton { color: blue; cursor:pointer; }
 .PmsManagement .bookinginfo a { color: blue; }
+.PmsManagement .commentline.deleted { text-decoration: line-through; }
 .PmsManagement .guestrow input { width: 20%; float:left; }
 .PmsManagement .columnfilter {position:absolute; left: 505px;border: solid 2px; padding: 5px; z-index: 2; background-color: #fff; max-width: 500px; display:none; margin-top: 5px;}
 .PmsManagement .toggleColumnFilter {}

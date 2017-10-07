@@ -47,7 +47,7 @@
     </div>
 </div>
 
-<div class="row" ng-show='booking.forceGrantAccess && !loading'>
+<div class="row" ng-show='room.forceAccess && !loading'>
     <div class='col-xs-12'>
         Access has been forced. The guests for this booking will be granted access regarding if they have paid for it or not.
     </div>
@@ -64,7 +64,7 @@
     </div>
 </div>
 
-<div class="row" ng-show='!booking.forceGrantAccess && !booking.payedFor && !loading'>
+<div class="row" ng-show='!room.forceAccess && !booking.payedFor && !loading'>
     <div class='col-xs-8'>
         If there is unpaid orders and you want to grant access anyway. 
         You can force grant access, the code will be given out even if booking is not fully paid.

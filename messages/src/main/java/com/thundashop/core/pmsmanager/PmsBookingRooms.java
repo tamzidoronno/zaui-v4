@@ -86,6 +86,7 @@ public class PmsBookingRooms implements Serializable {
     public Integer maxNumberOfGuests = 0;
     @Transient
     boolean paidFor = false;
+    boolean forceAccess = false;
     
     void clear() {
         pmsBookingRoomId = UUID.randomUUID().toString();

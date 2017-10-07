@@ -79,7 +79,7 @@ if($this->getApi()->getPmsInvoiceManager()->isRoomPaidFor($this->getSelectedName
 if(strtotime($room->date->start) < time() && strtotime($room->date->end) > time()) {
     $withinTime = "<i class='fa fa-check'></i>";
 }
-if($booking->forceGrantAccess) {
+if($room->forceAccess) {
     $paidFor = "<i class='fa fa-check'></i> (forced) ";
 }
 
@@ -139,7 +139,7 @@ if($room->addedToArx) {
     </tr>
     <tr>
         <td>Force access</td>
-        <?php if(!$booking->forceGrantAccess) { ?>
+        <?php if(!$room->forceAccess) { ?>
             <td><span class='forcegrantaccess' style='color:blue; cursor:pointer;'>Force access regardless of payment.</span></td>
         <?php } else { ?>
             <td><span class='unforcegrantaccess' style='color:blue; cursor:pointer;'>Unforce access regardless of payment.</span></td>

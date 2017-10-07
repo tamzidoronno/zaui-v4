@@ -1061,7 +1061,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(book.payedFor) {
                 continue;
             }
-            if(book.forceGrantAccess) {
+            if(book.hasForcedAccessedRooms()) {
                 continue;
             }
             boolean arrived = false;

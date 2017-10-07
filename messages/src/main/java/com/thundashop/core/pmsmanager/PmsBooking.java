@@ -58,7 +58,6 @@ public class PmsBooking extends DataCommon {
     public List<String> wubookModifiedResId = new ArrayList();
     public boolean wubookNoShow = false;
     public boolean transferredToRateManager = false;
-    public boolean forceGrantAccess = false;
     public boolean avoidAutoDelete = false;
     public Integer incrementBookingId = null;
     
@@ -85,6 +84,22 @@ public class PmsBooking extends DataCommon {
     public Double getTotalPrice() {
         return totalPrice;
     }
+    
+        
+    public List<PmsBookingRooms> getRoomsWithForcedAccess() {
+        List<PmsBookingRooms> res = new ArrayList();
+        for(PmsBookingRooms r : getActiveRooms()) {
+            if(r.forceAccess) {
+                res.add(r);
+            }
+        }
+        return res;
+    }
+    
+    public boolean hasForcedAccessedRooms() {
+        return !getRoomsWithForcedAccess().isEmpty();
+    }
+
     
     public boolean hasOverBooking() {
         for(PmsBookingRooms room : rooms) {

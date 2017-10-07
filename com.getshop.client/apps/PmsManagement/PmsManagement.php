@@ -485,7 +485,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function forceUnGrantAccess() {
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
-        $booking->forceGrantAccess = false;
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $room->forceAccess = false;
+            }
+        }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         echo "<br><center><b><i class='fa fa-check'></i> Forced access has been removed from user<br></center><br></b>";
         $this->loadAdditionalInformationForRoom();
@@ -493,7 +497,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function forceGrantAccess() {
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
-        $booking->forceGrantAccess = true;
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $room->forceAccess = true;
+            }
+        }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         echo "<br><center><b><i class='fa fa-check'></i> User has been forced access<br></center><br></b>";
         $this->loadAdditionalInformationForRoom();

@@ -79,6 +79,13 @@ $roomsInWorkSpace = (array)$this->getApi()->getPmsManager()->getWorkSpaceRooms($
     
     $result = $this->getApi()->getPmsManager()->getIntervalAvailability($this->getSelectedName(), $filter);
 
+    $bookingfilter = new core_pmsmanager_PmsBookingFilter();
+    $bookingfilter->startDate = $this->convertToJavaDate($this->getStart());
+    $bookingfilter->endDate = $this->convertToJavaDate($this->getEnd());
+    $bookingfilter->filterType = "waiting";
+    $waitingList = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedName(), $bookingfilter);
+
+    
     $numberOfDays = 0;
     foreach($result->typeTimeLines as $type => $lines) {
         foreach($lines as $line) {
@@ -136,7 +143,46 @@ $roomsInWorkSpace = (array)$this->getApi()->getPmsManager()->getWorkSpaceRooms($
     echo "</div>";
     echo "</div>";
     echo "<div id='toggleRoomoverview'><i class='fa fa-fw fa-angle-double-up'></i></div>";
-    echo "<bR><bR>";
+    echo "<bR>";
+    if(sizeof((array)$waitingList) > 0) {
+        
+        echo "<br><br><br>";
+        echo "<span class='changeroomfromworkspacebox' style='display:none; position:absolute;background-color:#fff; border: solid 1px; padding: 10px;' ></span>";
+        echo "<div style='border: solid 1px; '>";
+        echo "<div style='border-bottom: 2px;text-align:center; padding: 10px; color:#fff; background-color:red;'><i class='fa fa-warning'></i> You have rooms in waiting list for this periode.</b><br>";
+        echo "</div>";
+        echo "<div style='padding: 10px;'>";
+        echo "<table cellspacing='0' cellpadding='0'>";
+        echo "<tr>";
+        echo "<th>Booker</th>";
+        echo "<th>Guest</th>";
+        echo "<th>Start</th>";
+        echo "<th>End</th>";
+        echo "<th>Action</th>";
+        echo "</tr>";
+        
+        foreach($waitingList as $room) {
+            /* @var $room core_pmsmanager_PmsRoomSimple */
+            echo "<tr>";
+            echo "<td style='padding: 5px;'>" . $room->owner . "</td>";
+            if(sizeof((array)$room->guest) > 0) {
+                echo "<td style='padding: 5px;'>" . $room->guest[0]->name . "</td>";
+            } else {
+                echo "<td style='padding: 5px;'>No guest name</td>";
+            }
+            echo "<td style='padding: 5px;'>" . date("d.m.Y", $room->start/1000) . "</td>";
+            echo "<td style='padding: 5px;'>" . date("d.m.Y", $room->end/1000) . "</td>";
+            echo "<td style='padding: 5px; color:blue; cursor:pointer;' class='readdfromworkspace' roomid='".$room->pmsRoomId."' bid='".$room->bookingId."'>Open</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+        echo "</div>";
+        echo "</div>";
+        echo "<br><br><br>";
+        
+        echo "<span class='changeroomfromworkspacebox' style='display:none; position:absolute;background-color:#fff; border: solid 1px; padding: 10px;' ></span>";
+    }
+    echo "<bR>";
 
     if(sizeof($roomsInWorkSpace) > 0) {
         

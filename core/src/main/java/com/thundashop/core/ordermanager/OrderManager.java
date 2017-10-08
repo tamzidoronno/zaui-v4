@@ -901,35 +901,35 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public Double getTotalSalesAmount(Integer year, Integer month, Integer week, Integer day, String type) {
         double amount = 0;
-        for (Order order : orders.values()) {
-            
-            if (!order.useForStatistic()) {
-                continue;
-            }
-            
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(order.createdDate);
-            if (year != null && cal.get(Calendar.YEAR) != year) {
-                continue;
-            }
-            if (month != null && cal.get(Calendar.MONTH) != (month-1)) {
-                continue;
-            }
-            if (week != null && cal.get(Calendar.WEEK_OF_YEAR) != week) {
-                continue;
-            }
-            if (day != null && cal.get(Calendar.DAY_OF_YEAR) != day) {
-                continue;
-            }
-            
-            if(type != null) {
-                if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.equals(type)) {
-                    continue;
-                }
-            }
-            
-            amount += cartManager.calculateTotalCost(order.cart);
-        }
+//        for (Order order : orders.values()) {
+//            
+//            if (!order.useForStatistic()) {
+//                continue;
+//            }
+//            
+//            Calendar cal = Calendar.getInstance();
+//            cal.setTime(order.createdDate);
+//            if (year != null && cal.get(Calendar.YEAR) != year) {
+//                continue;
+//            }
+//            if (month != null && cal.get(Calendar.MONTH) != (month-1)) {
+//                continue;
+//            }
+//            if (week != null && cal.get(Calendar.WEEK_OF_YEAR) != week) {
+//                continue;
+//            }
+//            if (day != null && cal.get(Calendar.DAY_OF_YEAR) != day) {
+//                continue;
+//            }
+//            
+//            if(type != null) {
+//                if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.equals(type)) {
+//                    continue;
+//                }
+//            }
+//            
+//            amount += cartManager.calculateTotalCost(order.cart);
+//        }
 
         return amount;
     }

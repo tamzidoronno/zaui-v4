@@ -1,0 +1,167 @@
+<div class='gslfront_1'>
+    <div class='gslbookingHeader'>
+        <span><div class="input_header_text">Destination</div><div class="fa_box destination"><input value='Oslo, Norway'></div></span>
+        <span><div class="input_header_text">Check in - Check out</div><div class="fa_box date"><input value='Oct 20 - Oct 22'></div></span>
+        
+        <span><div class="input_header_text">Number of guests</div>
+            <div class="fa_box gsniceselect2">
+                <select class='selected_product'>
+                    <option>1 guest, 1 room</option>
+                    <option>2 guests, 1 room </option>
+                    <option>More options</option>
+                </select>
+            </div>
+        </span>
+        <span><div class="input_header_text">Coupon</div><div class="fa_box coupon"><input title="Green = Valid code <br>Red = non-valid code" id='coupon_input' placeholder="Discount coupon?"></div></span>
+        <span><div class="input_header_text"><br></div><div class="gsl_button" onclick="showProductList()">Search</div></span>
+    </div>
+    <div class="show_body_footer">
+    <div class="gslbookingBody">
+        <div class="productoverview">
+            <div class="productentry">
+                <div style="width:24%;float:left;">
+                    <img class='roomimg' src='https://www.regalhotel.com/uploads/rrh/accommodations/720x475/DeluxeSuite_FINAL_large.jpg'> 
+                </div>
+                <div style="width: 76%;float: left;">
+                    <div class="productentry_header">
+                        <div>Double room, 2 guests</div>
+                        <div style="font-size:10px;">Available rooms: 23</div>
+                        <div style="float:right;font-size:18px;color:#30819f;">NOK 799,-</div>
+                    </div>
+                    <div class="productentry_body">
+                        <div>Praesent ex mauris, vehicula non dui sit amet, tempus tristique arcu. Suspendisse sem felis, efficitur accumsan ipsum in, accumsan ultricies ante. Donec at odio felis. Curabitur feugiat venenatis fermentum. Etiam eget malesuada velit. Quisque sollicitudin luctus scelerisque. Sed dui enim, consequat at sem sit amet, malesuada auctor magna.</div>
+                    </div>
+                    <div class="productentry_footer">
+                        <div class="productentry_choose_room" onclick="nextPage()">Choose Room</div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="productentry">
+                <div style="display: inline-block;width:24%;float:left;">
+                    <img class='roomimg' src='http://static.wynnlasvegas.com/~/media/WLV/Rooms%20and%20Suites/Encore%20Tower%20Suites/Salon%20Suite/2_129_encore_salon_suite_bedroom.jpg?h=540&la=en&w=1001&vs=1&d=20170331T095925'> 
+                </div>
+                <div style="display:inline-block;width: 76%;float: left;">
+                    <div class="productentry_header">
+                        <div>Suite, 2 guests</div>
+                        <div style="font-size:10px;">Available rooms: 7</div>
+                        <div style="float:right;font-size:18px;color:#30819f;">NOK 1299,-</div>
+                    </div>
+                    <div class="productentry_body">
+                        <div>In et ultrices felis, quis ullamcorper ex. Cras vestibulum sit amet tellus auctor semper. Etiam sed nulla nulla. Vestibulum eget purus vel nibh porttitor dapibus sed at tortor. Nulla a nulla ut nulla porta vulputate sit amet vitae risus. Nunc eleifend ac nisl nec feugiat. Phasellus vulputate ante ac convallis aliquam. Mauris a nisl nec nibh euismod rutrum non id lorem.</div>
+                    </div>
+                    <div class="productentry_footer">
+                        <div class="productentry_choose_room" onclick="nextPage()">Choose Room</div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div class="overview">
+            <div class="overview_room_info">
+                <h2>Your order's</h2>
+                <img class='roomimg' src='http://static.wynnlasvegas.com/~/media/WLV/Rooms%20and%20Suites/Encore%20Tower%20Suites/Salon%20Suite/2_129_encore_salon_suite_bedroom.jpg?h=540&la=en&w=1001&vs=1&d=20170331T095925'> 
+                <h3>Hotel GetShop</h3>
+                <div>2 nights, Oct 20 - Oct 22 </div>
+                <div>Room 1, 2 guests - Suite</div>
+                <h3>Total</h3>
+                <p>NOK 1299,-<p>
+            </div>
+            <div class="overview_article">
+                <div class="overview_addons">
+                    <h2>Addons</h2>
+                    <div class="addon">
+                        <div style="width:60%;">Breakfast for all guests in the mornings</div><div>NOK 99,-</div><div class="addButton">Add</div>
+                    </div>
+                    <div class="addon">
+                        <div style="width:60%;">Late check out, from 11:00 in the morning, to 16:00 in the evening</div><div>NOK 249,-</div><div class="addButton">Add</div>
+                    </div>
+                    <div class="addon">
+                        <div style="width:60%;">Early check in. Check in 12:00  in the morning</div><div>NOK 149,-</div><div class="addButton">Add</div>
+                    </div>
+                </div>
+                <div class="overview_contact">
+                    <h2>Contact information</h2>
+                    <div class="overview_contact_tab">
+                        <input type="radio" name="user" checked="checked">Private
+                        <input type="radio" name="user">Organization
+                    </div>
+                    <br>
+                    <div class="private_fields">
+                        <div class="private_field" >
+                            <div>Forename*</div>
+                            <input type="txt">
+                        </div>
+                        <div class="private_field">
+                            <div>Surname*</div>
+                            <input type="txt" style="position: relative;left: -1px;">
+                        </div>
+                        <div class="private_field">
+                            <div>Phone number*</div>
+                            <select id="prefix">
+                                <option data-countryCode="NU" value="683">Niue (+683)</option>
+                                <option data-countryCode="NF" value="672">Norfolk Islands (+672)</option>
+                                <option data-countryCode="NP" value="670">Northern Marianas (+670)</option>
+                                <option data-countryCode="NO" value="47" selected="selected">Norway (+47)</option>
+                                <option data-countryCode="OM" value="968">Oman (+968)</option>
+                                <option data-countryCode="PW" value="680">Palau (+680)</option>
+                                <option data-countryCode="PA" value="507">Panama (+507)</option>
+                            </select>
+                        </div>
+                        <div class="private_field">
+                            <br>
+                            <span id="prefix_box"style="position: absolute;width:45px;padding: 7px;padding-bottom: 8px;top:19px;background-color:#f2f2f2">+47</span><input type="txt" value=""style="padding-left:50px;">
+                        </div>
+                        <div class="private_field" style="width:100%;">
+                            <div>E-mail*</div>
+                            <input type="txt">
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+            <div class="overview_confirmation">
+                <div class="complete_booking_button">Go to payment</div>
+                <input type="checkbox">I agree to terms
+                <div style="color:blue;cursor: pointer;">Read terms of use</div>
+                <div style="color:blue;cursor: pointer;">Download terms of use</div>
+                
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<script>
+    $('#prefix').on('change', function(){
+        var prefix = $(this).val();
+        $('#prefix_box').html('+'+ prefix);
+    });
+    $('#coupon_input').on('change', function(){
+        if($('#coupon_input').val() === "code" || $('#coupon_input').val() === "Code"){
+            $(this).addClass('validCode');
+            $(this).removeClass('non-validCode');
+        }else if($('#coupon_input').val() === ""){
+            $(this).removeClass('validCode');
+            $(this).removeClass('non-validCode');
+        }else{
+            $(this).removeClass('validCode');
+            $(this).addClass('non-validCode');
+        }
+    });
+    function nextPage(){
+        $('.productoverview').slideUp('slow', function(){
+            $('.overview').slideDown('slow');
+        });
+    };
+    function previusPage(){
+        $('.overview').slideUp('slow', function(){
+            $('.productoverview').slideDown('slow');
+        });
+    };
+    function showProductList(){
+        $('.show_body_footer').slideDown('slow');
+        $('.overview').slideUp('slow', function(){
+            $('.productoverview').slideDown('slow');
+        });
+    };
+</script>

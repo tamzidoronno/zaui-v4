@@ -43,8 +43,8 @@ public class AcculogixDriverImporter {
             User user = new User();
             user.id = data[1];
             user.fullName = data[2] + " " + data[3];
-            user.username = data[4].toLowerCase();
-            user.password = data[4].toLowerCase();
+            user.username = data[3].toLowerCase();
+            user.password = data[1].toLowerCase();
             
             userManager.saveUser(user);
             userManager.updatePassword(user.id, data[1].toLowerCase(), data[1].toLowerCase());

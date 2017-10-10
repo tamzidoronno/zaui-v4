@@ -1,62 +1,81 @@
 <div class='gslfront_1'>
     <div class='gslbookingHeader'>
-        <span><div class="input_header_text">Destination</div><div class="fa_box destination"><input value='Oslo, Norway'></div></span>
-        <span><div class="input_header_text">Check in - Check out</div><div class="fa_box date"><input value='Oct 20 - Oct 22'></div></span>
-        
-        <span><div class="input_header_text">Number of guests</div>
-            <div class="fa_box gsniceselect2">
-                <select class='selected_product'>
-                    <option>1 guest, 1 room</option>
-                    <option>2 guests, 1 room </option>
-                    <option>More options</option>
-                </select>
-            </div>
-        </span>
-        <span><div class="input_header_text">Coupon</div><div class="fa_box coupon"><input title="Green = Valid code <br>Red = non-valid code" id='coupon_input' placeholder="Discount coupon?"></div></span>
-        <span><div class="input_header_text"><br></div><div class="gsl_button" onclick="showProductList()">Search</div></span>
+        <div class="fa_box destination"><input id="destination" value='Oslo, Norway'></div><div class="fa_box date"><input id="date_start" value='Oct 20 - Oct 22'></div><div class="fa_box guests"><input value='1 guest, 1 room'></div><div class="fa_box coupon"><input id='coupon_input' placeholder="Discount coupon?"></div><div class="fa_box gsl_button" id="search_rooms" onclick="showProductList()">Search</div>
     </div>
     <div class="show_body_footer">
     <div class="gslbookingBody">
         <div class="productoverview">
             <div class="productentry">
-                <div style="width:24%;float:left;">
+                <div style="width:30%;float:left;">
                     <img class='roomimg' src='https://www.regalhotel.com/uploads/rrh/accommodations/720x475/DeluxeSuite_FINAL_large.jpg'> 
                 </div>
-                <div style="width: 76%;float: left;">
+                <div class="productentry_main" style="width: 70%;float: left;">
                     <div class="productentry_header">
-                        <div>Double room, 2 guests</div>
+                        <div>Double room</div>
+                        <div style="float:right;">fra NOK 799,-</div>
                         <div style="font-size:10px;">Available rooms: 23</div>
-                        <div style="float:right;font-size:18px;color:#30819f;">NOK 799,-</div>
+                    </div>
+                    <div class="productentry_itemlist">
+                        <i class="fa fa-user" style="padding-left:10px;"></i>
+                        <i class="fa fa-user"></i>
+                        <div>Double room, 2 guests NOK 999,-</div>
+                        <div style="float:right;padding:0;">
+                            <span>Antall rom valgt</span>
+                            <select><option>0</option><option>1 &nbsp;(NOK 999,-)</option><option>2 &nbsp;(NOK 1899,-)</option></select>
+                        </div>
+                    </div>
+                    <div class="productentry_itemlist">
+                        <i class="fa fa-user" style="padding-left:10px;"></i>
+                        <div>Double room, 1 guest NOK 799,-</div>
+                        <div style="float:right;padding:0;">
+                            <span>Antall rom valgt</span>
+                            <select><option>0</option><option>1 &nbsp;(NOK 799,-)</option><option>2 &nbsp;(NOK 1499,-)</option></select>
+                        </div>
                     </div>
                     <div class="productentry_body">
                         <div>Praesent ex mauris, vehicula non dui sit amet, tempus tristique arcu. Suspendisse sem felis, efficitur accumsan ipsum in, accumsan ultricies ante. Donec at odio felis. Curabitur feugiat venenatis fermentum. Etiam eget malesuada velit. Quisque sollicitudin luctus scelerisque. Sed dui enim, consequat at sem sit amet, malesuada auctor magna.</div>
                     </div>
                     <div class="productentry_footer">
-                        <div class="productentry_choose_room" onclick="nextPage()">Choose Room</div>
+                        <!--<div class="productentry_choose_room" onclick="nextPage()">Choose Room</div>-->
                     </div>
                 </div>
                 <div style="clear:both;"></div>
             </div>
             <div class="productentry">
-                <div style="display: inline-block;width:24%;float:left;">
+                <div style="display: inline-block;width:30%;float:left;">
                     <img class='roomimg' src='http://static.wynnlasvegas.com/~/media/WLV/Rooms%20and%20Suites/Encore%20Tower%20Suites/Salon%20Suite/2_129_encore_salon_suite_bedroom.jpg?h=540&la=en&w=1001&vs=1&d=20170331T095925'> 
                 </div>
-                <div style="display:inline-block;width: 76%;float: left;">
+                <div style="display:inline-block;width: 70%;float: left;">
                     <div class="productentry_header">
-                        <div>Suite, 2 guests</div>
+                        <div>Suite</div>
                         <div style="font-size:10px;">Available rooms: 7</div>
-                        <div style="float:right;font-size:18px;color:#30819f;">NOK 1299,-</div>
+                        <div style="float:right;">fra NOK 1299,-</div>
+                    </div>
+                    <div class="productentry_itemlist">
+                        <i class="fa fa-user" style="padding-left:10px;"></i>
+                        <i class="fa fa-user"></i>
+                        <i class="fa fa-user"></i>
+                        <i class="fa fa-user"></i>
+                        <div>Suite, 4 guests NOK 1299,-</div>
+                        <div style="float:right;padding:0;">
+                            <span>Antall rom valgt</span>
+                            <select><option>0</option><option>1 &nbsp;(NOK 1299,-)</option></select>
+                        </div>
                     </div>
                     <div class="productentry_body">
                         <div>In et ultrices felis, quis ullamcorper ex. Cras vestibulum sit amet tellus auctor semper. Etiam sed nulla nulla. Vestibulum eget purus vel nibh porttitor dapibus sed at tortor. Nulla a nulla ut nulla porta vulputate sit amet vitae risus. Nunc eleifend ac nisl nec feugiat. Phasellus vulputate ante ac convallis aliquam. Mauris a nisl nec nibh euismod rutrum non id lorem.</div>
                     </div>
                     <div class="productentry_footer">
-                        <div class="productentry_choose_room" onclick="nextPage()">Choose Room</div>
+                        <!--<div class="productentry_choose_room" onclick="nextPage()">Choose Room</div>-->
                     </div>
                 </div>
                 <div style="clear:both;"></div>
             </div>
+            <div id="productentry_confirm" onclick="nextPage()">
+                Continue
+            </div>
         </div>
+        
         <div class="overview">
             <div class="overview_room_info">
                 <h2>Your order's</h2>
@@ -83,17 +102,19 @@
                 <div class="overview_contact">
                     <h2>Contact information</h2>
                     <div class="overview_contact_tab">
-                        <input type="radio" name="user" checked="checked">Private
-                        <input type="radio" name="user">Organization
+                        <input type="radio" id="private" name="user" checked="checked">
+                        <label for="private">Private</label>
+                        <input type="radio" id="organization"name="user">
+                        <label for="organization">Organization</label>
                     </div>
                     <br>
                     <div class="private_fields">
                         <div class="private_field" >
-                            <div>Forename*</div>
+                            <div>First Name*</div>
                             <input type="txt">
                         </div>
                         <div class="private_field">
-                            <div>Surname*</div>
+                            <div>Last Name*</div>
                             <input type="txt" style="position: relative;left: -1px;">
                         </div>
                         <div class="private_field">
@@ -110,7 +131,7 @@
                         </div>
                         <div class="private_field">
                             <br>
-                            <span id="prefix_box"style="position: absolute;width:45px;padding: 7px;padding-bottom: 8px;top:19px;background-color:#f2f2f2">+47</span><input type="txt" value=""style="padding-left:50px;">
+                            <span id="prefix_box"style="position: absolute;width:45px;padding: 8px;padding-bottom: 9px;top:17px;background-color:#f2f2f2">+47</span><input type="txt" value=""style="padding-left:50px;">
                         </div>
                         <div class="private_field" style="width:100%;">
                             <div>E-mail*</div>
@@ -122,7 +143,8 @@
             </div>
             <div class="overview_confirmation">
                 <div class="complete_booking_button">Go to payment</div>
-                <input type="checkbox">I agree to terms
+                <input id="agreeTerms" type="checkbox">
+                <label for="agreeTerms">I agree to terms</label>
                 <div style="color:blue;cursor: pointer;">Read terms of use</div>
                 <div style="color:blue;cursor: pointer;">Download terms of use</div>
                 
@@ -164,4 +186,52 @@
             $('.productoverview').slideDown('slow');
         });
     };
+    $('#search_rooms').on('click', function(){
+        var destination = "";
+        var startDate = "";
+        var endDate = "";
+        var adults = "";
+        var children = "";
+        var discount = "";
+        var data = {
+            "bookingid" : "filter",
+            "name" : "Filter",
+            "destination" : destination,
+            "startDate" : startDate,
+            "endDate" : endDate,
+            "adults" : adults,
+            "children" : children,
+            "discount" : discount
+        }
+        
+    });
+    var roomTypes = [
+        {
+            "roomid" : "singleroom",
+            "name" : "Single room",
+            "price" : 499,
+            "maxGuests" : 1,
+            "images" : ["1", "2", "3"],
+            "description" : "Room for one guests",
+            "availableRooms": 4
+        },
+        {
+            "roomid" : "doubleroom",
+            "name" : "Double room",
+            "price" : 799,
+            "maxGuests" : 2,
+            "images" : [ "1", "2", "3"],
+            "description" : "Room for two guests",
+            "availableRooms": 23
+        },
+        {
+            "roomid" : "tripleroom",
+            "name" : "Triple room",
+            "price" : 1299,
+            "maxGuests" : 3,
+            "images" : [ "1", "2", "3"],
+            "description" : "Room for up to three guests",
+            "availableRooms": 10
+        }
+    ];
 </script>

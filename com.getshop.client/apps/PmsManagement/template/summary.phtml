@@ -34,6 +34,7 @@ $cleanAccs['dyne'] = $this->__w("Duvet");
 $cleanAccs['handkle_stort'] = $this->__w("Towel large");
 $cleanAccs['handkle_lite'] = $this->__w("Towel small");
 $cleanAccs['laken'] = $this->__w("Sheet");
+$codes = CountryCodes::getCodes();
 
 $itemsCount = 0;
 $totalCleaningCost = 0;
@@ -54,7 +55,6 @@ foreach($stats as $cleaningstat) {
             $itemsCount += ($count * $tmpItemCount);
      }
 }
-
 ?>
 <br><br>
 <div class="pdfPageSizer">
@@ -138,7 +138,7 @@ foreach($stats as $cleaningstat) {
                     Type
                 </th>
                 <?php foreach($saleStats->sleepoverstats->uniqueGuests as $country => $count) {
-                    echo "<th>" . $country . "</th>";
+                    echo "<th>" . $codes[$country] . "<br>($country)" . "</th>";
                 }?>
                 <th>Total</th>
             </tr>

@@ -302,6 +302,10 @@ class PmsStatisticsBuilder {
                 }
             }
 
+            if(countryCode != null && countryCode.equals("")) {
+                countryCode = "NO";
+            }
+            
             int regularGuests = 0;
             if(entry.uniqueGuests.containsKey(countryCode)) {
                 regularGuests = entry.uniqueGuests.get(countryCode);

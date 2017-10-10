@@ -2,6 +2,7 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -164,7 +165,10 @@ public class PmsBookingSimpleFilter {
             simple.room = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
         }
         if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
-            simple.roomType = manager.bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+            BookingItemType type = manager.bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            if(type != null) {
+                simple.roomType = manager.bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+            }
         }
         
         simple.paidFor = pmsInvoiceManager.isRoomPaidForWithBooking(room.pmsBookingRoomId, booking);

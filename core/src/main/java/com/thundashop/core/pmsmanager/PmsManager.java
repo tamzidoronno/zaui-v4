@@ -6770,6 +6770,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     break;
                 }
+                statEntry.finalize();
             }
             if(!modified) {
                 System.out.println(entry.day + " : not modified");

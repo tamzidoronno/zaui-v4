@@ -4315,5 +4315,73 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return $newUsers;
     }
 
+    public function getChartData($entries, $filter, $type) {
+        $result = array();
+        if($type == "roomguest") {
+            $axis = array();
+            $axis[] = "Day";
+            $axis[] = "Utleid";
+            $axis[] = "Gjester";
+            $result[] = $axis;
+        }
+        if($type == "revpar") {
+            $axis = array();
+            $axis[] = "Day";
+            $axis[] = "AvgPrice";
+            $axis[] = "RevPar";
+            $result[] = $axis;
+        }
+        if($type == "income") {
+            $axis = array();
+            $axis[] = "Day";
+            $axis[] = "Total";
+            $result[] = $axis;
+        }
+        if($type == "coverage") {
+            $axis = array();
+            $axis[] = "Day";
+            $axis[] = "Coverage";
+            $result[] = $axis;
+        }
+        
+        foreach($entries as $entry) {
+            /* @var $entry \core_pmsmanager_StatisticsEntry */
+            if($entry->date) {
+                $day = $this->getDayText($entry->date, $filter->timeInterval);
+                $day = str_replace(".2016", "", $day);
+                $day = str_replace(".2017", "", $day);
+                $day = str_replace(".2018", "", $day);
+                $day = str_replace(".2019", "", $day);
+                $day = str_replace(".2020", "", $day);
+                $day = str_replace(".2021", "", $day);
+                $day = str_replace("<br>", " - ", $day);
+                
+                $row = array();
+                if($type == "roomguest") {
+                    $row[] = $day;
+                    $row[] = $entry->roomsRentedOut;
+                    $row[] = $entry->guestCount;
+                }
+                if($type == "revpar") {
+                    $row[] = $day;
+                    $row[] = $entry->avgPrice;
+                    $row[] = $entry->revPar;
+                }
+                if($type == "income") {
+                    $row[] = $day;
+                    $row[] = $entry->totalPrice;
+                }
+                if($type == "coverage") {
+                    $row[] = $day;
+                    $row[] = $entry->coverage;
+                }
+                
+                $result[] = $row;
+            }
+        }
+        
+        return json_encode($result);
+    }
+
 }
 ?>

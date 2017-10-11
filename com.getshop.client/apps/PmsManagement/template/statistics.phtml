@@ -38,6 +38,81 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
 </div>
 <br>
 <div class="pdfPageSizer" >
+    <style>
+        .coveragechart {
+            width: 50%; height: 300px; float:left;
+            border: solid 1px #bbb;
+            box-sizing: border-box;
+        }
+    </style>
+    
+    <div id="guestroomchart" class='coveragechart'></div>
+   
+    <script type="text/javascript">
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(<?php echo $this->getChartData($stats->entries, $filter, "roomguest"); ?>);
+        var options = {
+          title: 'Rooms and guests',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('guestroomchart'));
+        chart.draw(data, options);
+      }
+      drawChart();
+    </script>
+    
+    <div id="performacechart" class='coveragechart'></div>
+    <script type="text/javascript">
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(<?php echo $this->getChartData($stats->entries, $filter, "revpar"); ?>);
+        var options = {
+          title: 'Economy performance',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('performacechart'));
+        chart.draw(data, options);
+      }
+      drawChart();
+    </script>
+    
+    <div id="totalincomechart" class='coveragechart'></div>
+    <script type="text/javascript">
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(<?php echo $this->getChartData($stats->entries, $filter, "income"); ?>);
+        var options = {
+          title: 'Total income',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('totalincomechart'));
+        chart.draw(data, options);
+      }
+      drawChart();
+    </script>
+    
+    <div id="coveragechart" class='coveragechart'></div>
+    <script type="text/javascript">
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(<?php echo $this->getChartData($stats->entries, $filter, "coverage"); ?>);
+        var options = {
+          title: 'Coverage (percentage)',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('coveragechart'));
+        chart.draw(data, options);
+      }
+      drawChart();
+    </script>
+</div>
+<br>
+<div class="pdfPageSizer" >
     <table cellspacing='0' cellpadding='0' class='statisticstable' width='100%'>
         <tr>
             <th>
@@ -47,6 +122,7 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
             <th><?php echo $this->__w("Rented<br>out"); ?></th>
             <th><?php echo $this->__w("Guests"); ?></th>
             <th><?php echo $this->__w("Avg.<br>price"); ?></th>
+            <th><?php echo $this->__w("RevPar"); ?></th>
             <th><?php echo $this->__w("Total"); ?></th>
             <th><?php echo $this->__w("Budget"); ?></th>
             <th><?php echo $this->__w("Coverage"); ?></th>
@@ -76,6 +152,7 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
             echo "</td>";
             echo "<td>$guests</td>";
             echo "<td>"; if($entry->avgPrice >= 0) { echo round($entry->avgPrice); } echo "</td>";
+            echo "<td>"; if($entry->revPar >= 0) { echo round($entry->revPar); } echo "</td>";
             if ($entry->date) {
                 echo "<td>"; if($entry->totalPrice >= 0) { echo $entry->totalPrice; } echo "</td>";
             } else {

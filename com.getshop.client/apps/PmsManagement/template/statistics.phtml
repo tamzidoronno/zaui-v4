@@ -54,7 +54,7 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
         var data = google.visualization.arrayToDataTable(<?php echo $this->getChartData($stats->entries, $filter, "roomguest"); ?>);
         chartOptions = {
          backgroundColor: { fill: "#d1efff" },
-          title: 'Rooms and guests',
+          title: '',
           colors: ['#43459d', '#1c91c0', '#6f9654'],
           legend: { position: 'bottom' }
         };

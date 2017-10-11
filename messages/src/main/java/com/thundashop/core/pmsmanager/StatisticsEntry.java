@@ -41,8 +41,10 @@ public class StatisticsEntry {
         double result = (double)roomsRentedOut / (double)totalRooms;
         result *= 100;
         coverage = (int)result;
-        result = (double)roomsRentedOut / (double)totalRoomsOriginal;
-        result *= 100;
+        if(totalRoomsOriginal != null && roomsRentedOut != null) {
+            result = (double)roomsRentedOut / (double)totalRoomsOriginal;
+            result *= 100;
+        }
         coverageOriginal = (int)result;
     }
 

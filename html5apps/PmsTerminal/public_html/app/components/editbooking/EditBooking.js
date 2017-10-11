@@ -166,8 +166,27 @@ controllers.EditBookingController = function($scope, $api, $rootScope, $state, $
     $scope.numberOfGuests= function(room) {
         return new Array(room.numberOfGuests);
     };
+    $scope.validateGuestInformation = function() {
+        for(var k in $scope.booking.rooms) {
+           var room = $scope.booking.rooms[k];
+           var guest = room.guests[0];
+           if(!guest) {
+               return false;
+           }
+           console.log(guest);
+           if(!guest.email) { return false; }
+           if(!guest.phone) { return false; }
+           if(!guest.prefix) { return false; }
+           if(!guest.name) { return false; }
+        }
+        return true;
+    };
     
     $scope.continueToCheckout = function() {
+        if(!$scope.validateGuestInformation()) {
+            alert('Please specify guest information first');
+            return;
+        }
         showWaitingOverLay();
         var company = $scope.company;
         if(!company) {

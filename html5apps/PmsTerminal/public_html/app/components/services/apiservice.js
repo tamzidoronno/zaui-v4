@@ -24,9 +24,9 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                         return;
                     }
                     
-                    this.lastShownError = new Date().getTime();
+                    this.lastShownError = new Date().getTime(); 
                     alert("Did not find the company you specified, please check your details.");
-                    me.$state.transitionTo('base.home');
+                    me.$state.transitionTo('base.login');
                     $('.loginbutton').find('.login-shower').remove();
                     this.lastShownError = new Date().getTime();
                 } else if (error.errorCode == 13) {
@@ -40,7 +40,7 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                     this.lastShownError = new Date().getTime();
                     alert("Wrong username or password, please try again.");
                     
-                    me.$state.transitionTo('base.home');
+                    me.$state.transitionTo('base.login');
                     $('.loginbutton').find('.login-shower').remove();
                     this.lastShownError = new Date().getTime();
                 } else {

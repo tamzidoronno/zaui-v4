@@ -5816,12 +5816,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             PmsBooking booking = getBookingUnsecure(bookingId);
             if(type.equals("created")) {
-                bookingComRateManagerManager.pushBooking(booking, "Commit", true);
+                bookingComRateManagerManager.pushBooking(booking, "Commit", false);
             } else if(type.equals("room_removed") || 
                     type.equals("room_changed") ||
                     type.equals("date_changed") ||
                     type.equals("booking_undeleted")) {
-                bookingComRateManagerManager.pushBooking(booking, "Modify", true);
+                bookingComRateManagerManager.pushBooking(booking, "Modify", false);
             }
         }catch(Exception e) {
             e.printStackTrace();

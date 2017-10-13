@@ -36,10 +36,10 @@ body { background-color:#3a99d7; box-sizing: border-box; }
 .roomrow.waitingforlock { border: solid 1px; background-color:blue;  }
 .roomrow.notpaid { background-color:red; color:#fff !important;  }
 .roombox { border: solid 1px; border-radius: 3px; margin: 3px; text-align: center; padding: 3px; cursor:pointer; }
-.roombox.notclean { background-color:red; color:#000; }
+.roombox.notclean { background-color:#35280d; color:#fff; }
 .roombox.clean {background-color:green; color:#fff; }
 .roombox.inUse {background-color:purple; color:#fff; }
-.roombox.needInterval { background-color:red !important; color:#fff; }
+.roombox.needInterval { background-color:#35280d !important; color:#fff; }
 .roomrow.notpaid a, 
 .roomrow.started a,
 .roomrow.waitingforlock a
@@ -62,7 +62,7 @@ a, a:hover { color:#000; }
 .cleaningrow { border-bottom: solid 1px #bbb; padding-top: 10px; padding-bottom: 10px; cursor:pointer; }
 .cleaningrow.init { background-color:#fff !important }
 .cleaningrow.clean { background-color:green !important; color:#fff; }
-.cleaningrow.notclean { background-color:red !important; color:#fff; }
+.cleaningrow.notclean { background-color:#35280d !important; color:#fff; }
 .cleaningrow a { text-decoration: none; color:#fff !important;}
 
 @media only all and (max-width: 500px) {

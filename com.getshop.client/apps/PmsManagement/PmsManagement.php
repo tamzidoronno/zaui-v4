@@ -1967,6 +1967,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function setQuickFilter() {
+        if(stristr($_POST['data']['type'], "stats_")) {
+            $stattype = explode("_",$_POST['data']['type']);
+            $stattype = $stattype[1];
+            $_POST['data']['type'] = "stats";
+        }
         if(stristr($_POST['data']['type'], "subtype_")) {
             $filter = $this->getSelectedFilter();
             $filter->filterSubType = str_replace("subtype_", "", $_POST['data']['type']);
@@ -1990,8 +1995,28 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->startDate = $this->convertToJavaDate(time());
             $filter->endDate = $this->convertToJavaDate(time());
             if($filter->filterType == "stats" || $filter->filterType == "orderstats") {
-                $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime($filter->startDate))));
-                $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime($filter->endDate))));
+                if($stattype == "thismonth") {
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime($filter->startDate))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime($filter->endDate))));
+                }
+                if($stattype == "nextmonth") {
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " +1month"))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " +1month"))));
+                }
+                if($stattype == "prevmonth") {
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " -1month"))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " -1month"))));
+                }
+                if($stattype == "thisyear") {
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.01.Y", strtotime($filter->startDate))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.12.Y", strtotime($filter->endDate))));
+                    $filter->timeInterval = "monthly";
+                }
+                if($stattype == "prevyear") {
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.01.Y", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " -1year"))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.12.Y", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " -1year"))));
+                    $filter->timeInterval = "monthly";
+                }
             }
 
             if($_POST['data']['type'] == "stats") {
@@ -1999,6 +2024,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 if($savedFilter) {
                     $savedFilter->startDate = $filter->startDate;
                     $savedFilter->endDate = $filter->endDate;
+                    $savedFilter->timeInterval = $filter->timeInterval;
                     $filter = $savedFilter;
                 }
             }

@@ -51,6 +51,9 @@
 .PmsManagement .doCreditOrder:hover { color:red; cursor: pointer; }
 .PmsManagement .statisticsrow:hover td { cursor:pointer; color:green; }
 .PmsManagement .massupdatepricesfield { position:absolute; background-color:#fff; border: solid 2px; border-radius: 3px; z-index: 1; display:none; }
+.PmsManagement .quickcoveragefilter { border: solid 1px;  position:absolute; background-color: #fff; display:none;z-index: 10; }
+.PmsManagement .quickcoveragefilter .quickselection { padding: 5px; border-bottom: solid 1px; }
+.PmsManagement .quickcoveragefilter .quickselection:hover { background-color:#efefef; cursor:pointer; }
 .PmsManagement .tiparea {
     position: absolute;
     background-color: #fff;

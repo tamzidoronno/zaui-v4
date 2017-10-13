@@ -74,7 +74,14 @@ foreach($config->lockServerConfigs as $id => $server) {
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "checkin" && !$selectedFilter->filterSubType){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="checkin" gsname="type">Checking in</span> 
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "checkout" && !$selectedFilter->filterSubType){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="checkout" gsname="type">Checking out</span> 
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "active" && !$selectedFilter->filterSubType){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="active" gsname="type">Active today</span> 
-            <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "stats" && !$selectedFilter->filterSubType){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="stats" gsname="type">Coverage</span> 
+            <span class="displayquickcoveragefilter manegementviewfilterquickopt <?php if($selectedFilter->filterType == "stats" && !$selectedFilter->filterSubType){echo "managementviewActive";}?>">Coverage</span> 
+            <span class='quickcoveragefilter'>
+                <div class='quickselection' gstype="clicksubmit" method='setQuickFilter' gsvalue="stats_thismonth" gsname="type">This month</div>
+                <div class='quickselection' gstype="clicksubmit" method='setQuickFilter' gsvalue="stats_prevmonth" gsname="type">Previous month</div>
+                <div class='quickselection' gstype="clicksubmit" method='setQuickFilter' gsvalue="stats_nextmonth" gsname="type">Next month</div>
+                <div class='quickselection' gstype="clicksubmit" method='setQuickFilter' gsvalue="stats_thisyear" gsname="type">This year</div>
+                <div class='quickselection' gstype="clicksubmit" method='setQuickFilter' gsvalue="stats_pastyear" gsname="type">Previous year</div>
+            </span>
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterType == "orderstats" && !$selectedFilter->filterSubType){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="orderstats" gsname="type">Income report</span> 
             <span class="manegementviewfilterquickopt <?php if($selectedFilter->filterSubType == "customerlist"){echo "managementviewActive";}?>" gstype="clicksubmit" method='setQuickFilter' gsvalue="subtype_customerlist" gsname="type">Accounts</span> 
             <span class="manegementviewfilterquickopt" onclick="$('.morefilteroptions').slideToggle();">More filters</span>
@@ -131,6 +138,9 @@ foreach($config->lockServerConfigs as $id => $server) {
 <br>
 
 <script>
+    $('.displayquickcoveragefilter').on('click', function(){
+        $('.quickcoveragefilter').toggle();
+    });
     $('.start.managementviewdateinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
     onSelect: function(dateText) {
         var date = moment(dateText, "DD.MM.YYYY");

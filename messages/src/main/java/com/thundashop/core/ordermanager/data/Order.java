@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +26,6 @@ import java.util.UUID;
  * @author ktonder
  */
 public class Order extends DataCommon implements Comparable<Order> {
-
     public Boolean triedTransferredToAccountingSystem = false;
     public Boolean transferredToAccountingSystem = false;
     public Date transferredToCreditor = null;
@@ -70,6 +70,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean forcedOpen = false;
     public boolean warnedNotAbleToPay = false;
     public String attachedToRoom = null;
+    public LinkedList<OrderShipmentLogEntry> shipmentLog = new LinkedList();
     
     /**
      * This will be populated if the order is created by merging multiple 
@@ -304,8 +305,34 @@ public class Order extends DataCommon implements Comparable<Order> {
         if (forcedOpen) {
             closed = false;
         }
+        if(sentToPhone != null && !sentToPhone.isEmpty()) {
+            OrderShipmentLogEntry entry = new OrderShipmentLogEntry();
+            entry.date = sentToCustomerDate;
+            entry.type = "phone";
+            entry.address = "+" + sentToPhonePrefix + sentToPhone;
+            shipmentLog.add(entry);
+        }
+        if(sentToEmail != null && !sentToEmail.isEmpty()) {
+            OrderShipmentLogEntry entry = new OrderShipmentLogEntry();
+            entry.date = sentToCustomerDate;
+            entry.type = "email";
+            entry.address = sentToEmail;
+            shipmentLog.add(entry);
+        }
+        sentToEmail = "";
+        sentToPhone = null;
+        sentToPhonePrefix = null;
+        sentToCustomerDate = null;
     }
 
+    public void markAsSent(String type, String adress) {
+        OrderShipmentLogEntry entry = new OrderShipmentLogEntry();
+        entry.date = new Date();
+        entry.type = type;
+        entry.address = adress;
+        shipmentLog.add(entry);
+    }
+    
     public boolean needToBeTranferredToCreditor() {
         if(transferredToCreditor != null) {
             return false;

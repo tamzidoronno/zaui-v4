@@ -16,6 +16,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.productmanager.ProductManager;
@@ -1456,9 +1457,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(res.isEmpty()) {
             order.closed = true;
-            order.sentToCustomer = true;
-            order.sentToCustomerDate = new Date();
-            order.sentToEmail = email;
+            order.markAsSent(OrderShipmentLogEntry.Type.email, email);
             orderManager.saveOrder(order);
         }
         return res;

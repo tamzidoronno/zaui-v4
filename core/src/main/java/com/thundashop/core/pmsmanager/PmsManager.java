@@ -1343,7 +1343,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (key.startsWith("sendinvoice")) {
                 attachments.put("invoice.pdf", createInvoiceAttachment());
             }
-            
+             
             String recipientEmail = user.emailAddress;
             boolean specificEmail = false;
             if(emailToSendTo != null) {

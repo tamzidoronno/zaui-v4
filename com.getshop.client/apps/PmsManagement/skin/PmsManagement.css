@@ -9,6 +9,7 @@
 .PmsManagement .roomsbookedactions .fa { position: absolute; left: 14px; top: -12px; color:#CAE8EA; }
 .PmsManagement .showorderbutton { color: blue; cursor:pointer; }
 .PmsManagement .bookinginfo a { color: blue; }
+.PmsManagement .commentline.deleted { text-decoration: line-through; }
 .PmsManagement .guestrow input { width: 20%; float:left; }
 .PmsManagement .columnfilter {position:absolute; left: 505px;border: solid 2px; padding: 5px; z-index: 2; background-color: #fff; max-width: 500px; display:none; margin-top: 5px;}
 .PmsManagement .toggleColumnFilter {}
@@ -44,11 +45,15 @@
 .PmsManagement .notpaid,
 .PmsManagement .Unpaid { color:red; }
 .PmsManagement .roomdeleted td { color: red; }
+.PmsManagement .addedtowaitinglist td { color: blue; }
 .PmsManagement .sendinvoicebox { position:absolute; padding: 10px; border: solid 1px; background-color: #fff; display:none; }
 .PmsManagement .sendinvoicebox input { font-size: 20px; }
 .PmsManagement .doCreditOrder:hover { color:red; cursor: pointer; }
 .PmsManagement .statisticsrow:hover td { cursor:pointer; color:green; }
 .PmsManagement .massupdatepricesfield { position:absolute; background-color:#fff; border: solid 2px; border-radius: 3px; z-index: 1; display:none; }
+.PmsManagement .quickcoveragefilter { border: solid 1px;  position:absolute; background-color: #fff; display:none;z-index: 10; }
+.PmsManagement .quickcoveragefilter .quickselection { padding: 5px; border-bottom: solid 1px; }
+.PmsManagement .quickcoveragefilter .quickselection:hover { background-color:#efefef; cursor:pointer; }
 .PmsManagement .tiparea {
     position: absolute;
     background-color: #fff;

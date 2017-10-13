@@ -254,6 +254,25 @@ $states['10'] = "Send to invoice";
                             </td>
                         </tr>
                         <tr>
+                            <td><b>Price plan</b><br>
+                                Specify a specific price plan for this user<br>
+                            <td align='center'>
+                                <select class='gsniceselect1' gsname='pricePlan'>
+                                <?php
+                                    echo "<option value=''>Default</option>";
+                                    $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($this->getSelectedName());
+                                    foreach($priceCodes as $code) {
+                                        if($code == "default") {
+                                            continue;
+                                        }
+                                        $selected = "";
+                                        echo "<option value='".$code."' $selected>".$code."</option>";
+                                    }
+                                ?>                                    
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><b>Discount type</b><br>
                                 Percentage or fixed price discount?<br>
                             <td align='center'>

@@ -11,6 +11,7 @@ import com.thundashop.core.common.GetShopLogHandler;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +58,6 @@ public class PmsBooking extends DataCommon {
     public List<String> wubookModifiedResId = new ArrayList();
     public boolean wubookNoShow = false;
     public boolean transferredToRateManager = false;
-    public boolean forceGrantAccess = false;
     public boolean avoidAutoDelete = false;
     public Integer incrementBookingId = null;
     
@@ -73,7 +73,6 @@ public class PmsBooking extends DataCommon {
     boolean isConference = false;
     double bookingAmountDiff;
     double totalUnsettledAmount = 0.0;
-    public boolean overBooking = false;
     Double unsettled;
     public boolean nonrefundable = false;
     
@@ -86,6 +85,31 @@ public class PmsBooking extends DataCommon {
         return totalPrice;
     }
     
+        
+    public List<PmsBookingRooms> getRoomsWithForcedAccess() {
+        List<PmsBookingRooms> res = new ArrayList();
+        for(PmsBookingRooms r : getActiveRooms()) {
+            if(r.forceAccess) {
+                res.add(r);
+            }
+        }
+        return res;
+    }
+    
+    public boolean hasForcedAccessedRooms() {
+        return !getRoomsWithForcedAccess().isEmpty();
+    }
+
+    
+    public boolean hasOverBooking() {
+        for(PmsBookingRooms room : rooms) {
+            if(room.overbooking) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public boolean isStartingToday() {
         for(PmsBookingRooms room : getActiveRooms()) {
             if(room.isStartingToday()) {
@@ -95,6 +119,16 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
+    public List<PmsBookingRooms> getOverBookedRooms() {
+        List<PmsBookingRooms> res = new ArrayList();
+        for(PmsBookingRooms room : rooms) {
+            if(room.overbooking) {
+                res.add(room);
+            }
+        }
+        return res;
+    }
+    
     
     public boolean isWeekendBooking() {
         Calendar cal = Calendar.getInstance();
@@ -475,11 +509,13 @@ public class PmsBooking extends DataCommon {
 
     void unmarkOverBooking() {
         for(PmsBookingRooms room : getAllRoomsIncInactive()) {
+            room.overbooking = false;
+        }
+        for(PmsBookingRooms room : getAllRoomsIncInactive()) {
             if(room.isDeleted() && !room.deletedByChannelManagerForModification) {
                 return;
             }
         }
-        overBooking = false;
     }
 
     boolean hasWaitingRooms() {
@@ -489,6 +525,16 @@ public class PmsBooking extends DataCommon {
             }
         }
         return false;
+    }
+
+    public List<PmsBookingRooms> getWaitingListRooms() {
+        List<PmsBookingRooms> res = new ArrayList();
+        for(PmsBookingRooms room : rooms) {
+            if(room.addedToWaitingList) {
+                res.add(room);
+            }
+        }
+        return res;
     }
 
     public static class PriceType {

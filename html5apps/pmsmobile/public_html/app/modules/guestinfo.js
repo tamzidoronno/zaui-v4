@@ -81,7 +81,7 @@ getshop.guestInfoController = function($scope, $state, $stateParams) {
         });
     },
     $scope.forceGrantAccess = function() {
-        $scope.booking.forceGrantAccess = true;
+        $scope.room.forceAccess = true;
         getshopclient.PmsManager.saveBooking(getMultilevelName(), $scope.booking);
     },
     

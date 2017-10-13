@@ -71,6 +71,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean deletedByChannelManagerForModification = false;
     public boolean inWorkSpace = false;
     public boolean addedToWaitingList = false;
+    public boolean overbooking = false;
     
     /**
      * Finalized entries
@@ -85,6 +86,7 @@ public class PmsBookingRooms implements Serializable {
     public Integer maxNumberOfGuests = 0;
     @Transient
     boolean paidFor = false;
+    boolean forceAccess = false;
     
     void clear() {
         pmsBookingRoomId = UUID.randomUUID().toString();
@@ -533,6 +535,7 @@ public class PmsBookingRooms implements Serializable {
         undeletedDate = new Date();
         addedToWaitingList = false;
         inWorkSpace = false;
+        overbooking = false;
     }
 
     public void delete() {

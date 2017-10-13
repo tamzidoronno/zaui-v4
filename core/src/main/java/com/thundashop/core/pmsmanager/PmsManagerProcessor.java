@@ -262,7 +262,7 @@ public class PmsManagerProcessor {
                if (room.isStarted() && !room.isEnded()) {
                     boolean payedfor = manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
                     boolean grantEven = manager.getConfigurationSecure().grantAccessEvenWhenNotPaid;
-                    if(!payedfor && (grantEven && booking.isBookedAfterOpeningHours()) || booking.forceGrantAccess) {
+                    if(!payedfor && (grantEven && booking.isBookedAfterOpeningHours()) || room.forceAccess) {
                         payedfor = true;
                     }
                     if(payedfor && !room.deleted) {
@@ -285,7 +285,7 @@ public class PmsManagerProcessor {
                         (room.deleted && room.addedToArx) || 
 //                        (!manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId) && room.addedToArx) || 
                         (room.blocked && room.addedToArx)) {
-                    if(booking.forceGrantAccess) {
+                    if(room.forceAccess) {
                         continue;
                     }
                     if (pushToLock(room, true)) {
@@ -693,11 +693,13 @@ public class PmsManagerProcessor {
                     }
                 }
 
-                if(!booking.forceGrantAccess && forceAccess) {
-                    booking.forceGrantAccess = forceAccess;
-                    needSaving = true;
+                for(PmsBookingRooms tmpRoom : booking.getActiveRooms()) {
+                    if(tmpRoom.forceAccess && forceAccess) {
+                        tmpRoom.forceAccess = forceAccess;
+                        needSaving = true;
+                    }
                 }
-                
+
                 if(booking.needCapture != needCapture) {
                     booking.needCapture = needCapture;
                     needSaving = true;
@@ -725,7 +727,7 @@ public class PmsManagerProcessor {
             if(!manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
                 forceSend = true;
             }
-            if(booking.forceGrantAccess) {
+            if(booking.hasForcedAccessedRooms()) {
                 forceSend = true;
             }
             
@@ -837,7 +839,7 @@ public class PmsManagerProcessor {
     }
 
     private boolean checkIgnorePaidFor(PmsBooking booking) {
-        if(booking.forceGrantAccess) {
+        if(booking.hasForcedAccessedRooms()) {
             return true;
         }
         
@@ -947,7 +949,7 @@ public class PmsManagerProcessor {
                 }
             }
             
-            if(book.forceGrantAccess) {
+            if(book.hasForcedAccessedRooms()) {
                 continue;
             }
             

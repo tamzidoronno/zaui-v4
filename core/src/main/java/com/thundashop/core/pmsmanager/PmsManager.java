@@ -1669,9 +1669,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         String addResult = "";
         for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             if (room.pmsBookingRoomId.equals(roomId)) {
+                room.addedToWaitingList = false;
                 if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                     roomName = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName + " (" + convertToStandardTime(room.date.start) + " - " + convertToStandardTime(room.date.end) + ")";
-                } else {
+                } else if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
                     roomName = bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " (" + convertToStandardTime(room.date.start) + " - " + convertToStandardTime(room.date.end) + ")";
                 }
                 toRemove.add(room);
@@ -1692,6 +1693,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     booking.isDeleted = false;
                     remove.credited = false;
                     remove.setBooking(tmpbook);
+                    if(remove.priceMatrix.keySet().isEmpty()) {
+                        setPriceOnRoom(remove, true, booking);
+                    }
                     logEntry(roomName + " readded to booking ", bookingId, null);
                 }catch(BookingEngineException ex) {
                     addResult = ex.getMessage();
@@ -1819,7 +1823,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBooking> toRemove = new ArrayList();
         if (!filter.includeDeleted) {
             for (PmsBooking booking : result) {
-                if (booking.isDeleted && !booking.overBooking) {
+                if (booking.isDeleted && !booking.hasOverBooking()) {
                     toRemove.add(booking);
                 }
             }
@@ -2646,55 +2650,60 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void autoAssignItem(PmsBookingRooms room) {
-        List<BookingItem> items = bookingEngine.getAvailbleItemsWithBookingConsidered(room.bookingItemTypeId, room.date.start, room.date.end, room.bookingId);
-        Collections.sort(items, new Comparator<BookingItem>() {
-            public int compare(BookingItem o1, BookingItem o2) {
-                return o1.order.compareTo(o2.order);
-            }
-        });
-        
-        if(!getConfigurationSecure().avoidRandomRoomAssigning) {
-            long seed = System.nanoTime();
-            Collections.shuffle(items, new Random(seed));
-            Collections.shuffle(items, new Random(seed));
-        }
-            
-        if (items.isEmpty()) {
-            if(!warnedAboutAutoassigning) {
-                messageManager.sendErrorNotification("Failed to autoassign room, its critical since someone will not recieve the code for the room now.", null);
-                warnedAboutAutoassigning = true;
-            }
-            logPrint("....");
-            logPrint("No items available?");
-        } else {
-            BookingItem item = null;
-            for(BookingItem tmpitem : items) {
-                item = tmpitem;
-                PmsAdditionalItemInformation additionalroominfo = getAdditionalInfo(item.id);
-                //Comment to commit.
-                if(additionalroominfo.isClean()) {
-                    break;
+        try {
+            List<BookingItem> items = bookingEngine.getAvailbleItemsWithBookingConsidered(room.bookingItemTypeId, room.date.start, room.date.end, room.bookingId);
+            Collections.sort(items, new Comparator<BookingItem>() {
+                public int compare(BookingItem o1, BookingItem o2) {
+                    return o1.order.compareTo(o2.order);
                 }
-            }
-            room.bookingItemId = item.id;
-            room.bookingItemTypeId = item.bookingItemTypeId;
+            });
 
-            if (room.bookingId != null) {
-                try {
-                    bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
-                }catch(Exception e) {
-                    if(warnedAbout.contains("Itemchangedfailed_" + room.pmsBookingRoomId)) {
-                        messageManager.sendErrorNotification("Booking failure for room: " + room.pmsBookingRoomId + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress, null);
-                        warnedAbout.add("Itemchangedfailed_" + room.pmsBookingRoomId);
+            if(!getConfigurationSecure().avoidRandomRoomAssigning) {
+                long seed = System.nanoTime();
+                Collections.shuffle(items, new Random(seed));
+                Collections.shuffle(items, new Random(seed));
+            }
+
+            if (items.isEmpty()) {
+                if(!warnedAboutAutoassigning) {
+                    messageManager.sendErrorNotification("Failed to autoassign room, its critical since someone will not recieve the code for the room now.", null);
+                    warnedAboutAutoassigning = true;
+                }
+                logPrint("....");
+                logPrint("No items available?");
+            } else {
+                BookingItem item = null;
+                for(BookingItem tmpitem : items) {
+                    item = tmpitem;
+                    PmsAdditionalItemInformation additionalroominfo = getAdditionalInfo(item.id);
+                    //Comment to commit.
+                    if(additionalroominfo.isClean()) {
+                        break;
                     }
                 }
+                room.bookingItemId = item.id;
+                room.bookingItemTypeId = item.bookingItemTypeId;
+
+                if (room.bookingId != null) {
+                    try {
+                        bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
+                    }catch(Exception e) {
+                        if(warnedAbout.contains("Itemchangedfailed_" + room.pmsBookingRoomId)) {
+                            messageManager.sendErrorNotification("Booking failure for room: " + room.pmsBookingRoomId + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress, null);
+                            warnedAbout.add("Itemchangedfailed_" + room.pmsBookingRoomId);
+                        }
+                    }
+                }
+                PmsBooking booking = getBookingFromRoomSecure(room.pmsBookingRoomId);
+                String bookingId = "";
+                if (booking != null) {
+                    bookingId = booking.id;
+                }
+                logEntry("Autoasigned item " + item.bookingItemName, bookingId, null);
             }
-            PmsBooking booking = getBookingFromRoomSecure(room.pmsBookingRoomId);
-            String bookingId = "";
-            if (booking != null) {
-                bookingId = booking.id;
-            }
-            logEntry("Autoasigned item " + item.bookingItemName, bookingId, null);
+        }catch(Exception d) {
+            messageManager.sendErrorNotification("Exception happened while autoassigning room.", null);
+            logPrintException(d);
         }
     }
 
@@ -3187,7 +3196,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("got configuration");
             if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
                 if(getConfigurationSecure().supportRemoveWhenFull || booking.isWubook() || room.addedToWaitingList) {
-                    booking.overBooking = true;
+                    if(booking.isWubook()) {
+                        room.overbooking = true;
+                    }
                     room.canBeAdded = false;
                     room.delete();
                 }
@@ -4807,7 +4818,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 return null;
             }
             gsTiming("Created user for booking");
-            if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay && !booking.overBooking) {
+            if (configuration.payAfterBookingCompleted && canAdd(bookingsToAdd) && !booking.createOrderAfterStay && !booking.hasOverBooking()) {
                 booking.priceType = getPriceObjectFromBooking(booking).defaultPriceType;
                 pmsInvoiceManager.createPrePaymentOrder(booking);
                 gsTiming("Created payment for order");
@@ -5292,7 +5303,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     if(toBeAdded) {
                         if(view.paidFor && !pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId)) {
-                            if(!booking.forceGrantAccess) {
+                            if(!room.forceAccess) {
                                 continue;
                             }
                         }
@@ -5805,12 +5816,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             PmsBooking booking = getBookingUnsecure(bookingId);
             if(type.equals("created")) {
-                bookingComRateManagerManager.pushBooking(booking, "Commit", true);
+                bookingComRateManagerManager.pushBooking(booking, "Commit", false);
             } else if(type.equals("room_removed") || 
                     type.equals("room_changed") ||
                     type.equals("date_changed") ||
                     type.equals("booking_undeleted")) {
-                bookingComRateManagerManager.pushBooking(booking, "Modify", true);
+                bookingComRateManagerManager.pushBooking(booking, "Modify", false);
             }
         }catch(Exception e) {
             e.printStackTrace();
@@ -6759,6 +6770,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                     break;
                 }
+                statEntry.finalize();
             }
             if(!modified) {
                 System.out.println(entry.day + " : not modified");

@@ -16,6 +16,7 @@ public class StatisticsEntry {
     public Integer guestCount = 0;
     public Integer coverageOriginal = 0;
     public Integer roomsNotIncluded = 0;
+    public Double revPar = 0.0;
     public Double bugdet = 0.0;
     public HashMap<Integer, Integer> addonsCount = new HashMap();
     public HashMap<Integer, Double> addonsPrice = new HashMap();
@@ -36,11 +37,14 @@ public class StatisticsEntry {
         totalPrice = (double)Math.round(totalPrice);
         avgPrice = (double)Math.round(avgPrice);
         spearRooms = totalRooms - roomsRentedOut;
+        revPar = totalPrice / (roomsRentedOut + spearRooms);
         double result = (double)roomsRentedOut / (double)totalRooms;
         result *= 100;
         coverage = (int)result;
-        result = (double)roomsRentedOut / (double)totalRoomsOriginal;
-        result *= 100;
+        if(totalRoomsOriginal != null && roomsRentedOut != null) {
+            result = (double)roomsRentedOut / (double)totalRoomsOriginal;
+            result *= 100;
+        }
         coverageOriginal = (int)result;
     }
 

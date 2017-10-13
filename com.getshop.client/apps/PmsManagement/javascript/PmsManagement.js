@@ -118,8 +118,24 @@ app.PmsManagement = {
         $(document).on('change','.informationbox .changetypeonroom', app.PmsManagement.changetypeonroom);
         $(document).on('click','.informationbox .completeRoomReservation', app.PmsManagement.completeRoomReservation);
         $(document).on('click','.PmsManagement .managementviewbanner .fa-plus-square', app.PmsManagement.loadQuickReservation);
+        $(document).on('click','.PmsManagement .deleteComment', app.PmsManagement.deleteComment);
         getshop.WebSocketClient.addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", app.PmsManagement.displayVerifoneFeedBack);
     },
+    deleteComment : function() {
+        var line = $(this).closest('.commentline');
+        var event = thundashop.Ajax.createEvent('','toggleDeleteComment', line, {
+            "bookingid" : $(this).attr('bookingid'),
+            "time" : $(this).attr('time')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            if(line.hasClass('deleted')) {
+                line.removeClass('deleted');
+            } else {
+                line.addClass('deleted');
+            }
+        });
+    },
+    
     loadQuickReservation : function() {
         var event = thundashop.Ajax.createEvent('','loadReserveRoomInformation',$(this),{});
         event.core.appname = "PmsManagement";

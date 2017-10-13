@@ -21,6 +21,16 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->includefile("ordersforroom");
     }
     
+    public function toggleDeleteComment() {
+        $booking = $this->getSelectedBooking();
+        foreach($booking->comments as $key => $val) {
+            if($key == $_POST['data']['time']) {
+                $booking->comments->{$key}->deleted = !$booking->comments->{$key}->deleted;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+    }
+
     public function completeQuickReservation() {
         $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
         $currentBooking->userId = "quickreservation";
@@ -158,13 +168,23 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function loadBookingTypes() {
+        
+        $booking = $this->getSelectedBooking();
+        $selectedRoom = null;
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $selectedRoom = $room;
+            }
+        }
+        
         echo "<b>Change room type</b><i class='fa fa-times' style='float:right; cursor:pointer;' onclick='$(\".changebookingtypepanel\").hide()'></i><br>";
         echo "<input type='hidden' gsname='bookingid' value='".$this->getSelectedBooking()->id."'>";
         echo "<input type='hidden' gsname='roomid' value='".$_POST['data']['roomid']."'>";
         $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
         echo "<select gsname='newtype'>";
         foreach($types as $type) {
-            echo "<option value='".$type->id."'>".$type->name."</option>";
+            $count = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $type->id, $room->date->start, $room->date->end);
+            echo "<option value='".$type->id."'>".$type->name." ($count available)</option>";
         }
         echo "</select>";
         echo "<input type='button' value='Change' gstype='submitToInfoBox'>";
@@ -475,7 +495,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function forceUnGrantAccess() {
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
-        $booking->forceGrantAccess = false;
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $room->forceAccess = false;
+            }
+        }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         echo "<br><center><b><i class='fa fa-check'></i> Forced access has been removed from user<br></center><br></b>";
         $this->loadAdditionalInformationForRoom();
@@ -483,7 +507,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function forceGrantAccess() {
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedName(), $_POST['data']['roomid']);
-        $booking->forceGrantAccess = true;
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId == $_POST['data']['roomid']) {
+                $room->forceAccess = true;
+            }
+        }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
         echo "<br><center><b><i class='fa fa-check'></i> User has been forced access<br></center><br></b>";
         $this->loadAdditionalInformationForRoom();
@@ -1939,6 +1967,11 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function setQuickFilter() {
+        if(stristr($_POST['data']['type'], "stats_")) {
+            $stattype = explode("_",$_POST['data']['type']);
+            $stattype = $stattype[1];
+            $_POST['data']['type'] = "stats";
+        }
         if(stristr($_POST['data']['type'], "subtype_")) {
             $filter = $this->getSelectedFilter();
             $filter->filterSubType = str_replace("subtype_", "", $_POST['data']['type']);
@@ -1962,8 +1995,28 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter->startDate = $this->convertToJavaDate(time());
             $filter->endDate = $this->convertToJavaDate(time());
             if($filter->filterType == "stats" || $filter->filterType == "orderstats") {
-                $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime($filter->startDate))));
-                $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime($filter->endDate))));
+                if($stattype == "thismonth") {
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime($filter->startDate))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime($filter->endDate))));
+                }
+                if($stattype == "nextmonth") {
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " +1month"))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " +1month"))));
+                }
+                if($stattype == "prevmonth") {
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.m.Y", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " -1month"))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.m.Y", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " -1month"))));
+                }
+                if($stattype == "thisyear") {
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.01.Y", strtotime($filter->startDate))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.12.Y", strtotime($filter->endDate))));
+                    $filter->timeInterval = "monthly";
+                }
+                if($stattype == "prevyear") {
+                    $filter->startDate = $this->convertToJavaDate(strtotime(date("01.01.Y", strtotime(date("d.m.Y", strtotime($filter->startDate)) . " -1year"))));
+                    $filter->endDate = $this->convertToJavaDate(strtotime(date("t.12.Y", strtotime(date("d.m.Y", strtotime($filter->endDate)) . " -1year"))));
+                    $filter->timeInterval = "monthly";
+                }
             }
 
             if($_POST['data']['type'] == "stats") {
@@ -1971,6 +2024,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 if($savedFilter) {
                     $savedFilter->startDate = $filter->startDate;
                     $savedFilter->endDate = $filter->endDate;
+                    $savedFilter->timeInterval = $filter->timeInterval;
                     $filter = $savedFilter;
                 }
             }
@@ -3270,6 +3324,15 @@ class PmsManagement extends \WebshopApplication implements \Application {
         echo "</select>";
     }
     
+    public function updateInvoiceNoteOnBooking() {
+        echo "Information has been updated.";
+        $booking = $this->getSelectedBooking();
+        $booking->invoiceNote = $_POST['data']['invoiceNote'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+        $this->selectedBooking = null;
+        $this->showBookingInformation();
+    }
+    
     public function fastordercreation() {
         $appendToOrders = array();
         
@@ -3283,6 +3346,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $filter = new \core_pmsmanager_NewOrderFilter();
             $bookingId = $_POST['data']['bookingid'];
             $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedName(), $bookingId);
+            if(isset($_POST['data']['invoicenoteinfo'])) {
+                $booking->invoiceNote = $_POST['data']['invoicenoteinfo'];
+                $this->getApi()->getPmsManager()->saveBooking($this->getSelectedName(), $booking);
+            }
             $filter->avoidOrderCreation = false;
             $filter->prepayment = true;
             $filter->createNewOrder = true;
@@ -4272,6 +4339,74 @@ class PmsManagement extends \WebshopApplication implements \Application {
             $newUsers[] = $user;
         }
         return $newUsers;
+    }
+
+    public function getChartData($entries, $filter, $type) {
+        $result = array();
+        if($type == "roomguest") {
+            $axis = array();
+            $axis[] = "Day";
+            $axis[] = "Utleid";
+            $axis[] = "Gjester";
+            $result[] = $axis;
+        }
+        if($type == "revpar") {
+            $axis = array();
+            $axis[] = "Day";
+            $axis[] = "AvgPrice";
+            $axis[] = "RevPar";
+            $result[] = $axis;
+        }
+        if($type == "income") {
+            $axis = array();
+            $axis[] = "Day";
+            $axis[] = "Total";
+            $result[] = $axis;
+        }
+        if($type == "coverage") {
+            $axis = array();
+            $axis[] = "Day";
+            $axis[] = "Coverage";
+            $result[] = $axis;
+        }
+        
+        foreach($entries as $entry) {
+            /* @var $entry \core_pmsmanager_StatisticsEntry */
+            if($entry->date) {
+                $day = $this->getDayText($entry->date, $filter->timeInterval);
+                $day = str_replace(".2016", "", $day);
+                $day = str_replace(".2017", "", $day);
+                $day = str_replace(".2018", "", $day);
+                $day = str_replace(".2019", "", $day);
+                $day = str_replace(".2020", "", $day);
+                $day = str_replace(".2021", "", $day);
+                $day = str_replace("<br>", " - ", $day);
+                
+                $row = array();
+                if($type == "roomguest") {
+                    $row[] = $day;
+                    $row[] = $entry->roomsRentedOut;
+                    $row[] = $entry->guestCount;
+                }
+                if($type == "revpar") {
+                    $row[] = $day;
+                    $row[] = $entry->avgPrice;
+                    $row[] = $entry->revPar;
+                }
+                if($type == "income") {
+                    $row[] = $day;
+                    $row[] = $entry->totalPrice;
+                }
+                if($type == "coverage") {
+                    $row[] = $day;
+                    $row[] = $entry->coverage;
+                }
+                
+                $result[] = $row;
+            }
+        }
+        
+        return json_encode($result);
     }
 
 }

@@ -26,6 +26,31 @@
 $currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedName());
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedName());
 
+$start = null;
+$end = null;
+
+foreach($currentBooking->rooms as $room) {
+    if($start == null || strtotime($start) > strtotime($room->date->start)) {
+        $start = $room->date->start;
+    }
+    if($end == null || strtotime($end) < strtotime($room->date->end)) {
+        $end = $room->date->end;
+    }
+}
+
+if($start) {
+    echo "<br><bR>";
+    echo "<table cellspacing='0' cellpadding='0'>";
+    echo "<tr><th colspan='5'>Available rooms in time periode " . date("d.m.Y", strtotime($start))." - " . date("d.m.Y", strtotime($end))."</th></tr>";
+
+    foreach($types as $type) {
+        $count = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $type->id, $start, $end);
+        echo "<tr><td>". $count . "</td><td>" . $type->name . "</td></tr>";
+    }
+    echo "</table>";
+    echo "<br>";
+}
+
 echo "<br>";
 echo "<b>Rooms selected to be added</b><br>";
 echo "<table cellspacing='0' cellpadding='0'>";
@@ -58,8 +83,7 @@ foreach($currentBooking->rooms as $room) {
     echo ">Waiting list</option>";
     foreach($types as $type) {
         $selected = ($type->id == $room->bookingItemTypeId) ? "SELECTED" : "";
-        $count = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedName(), $type->id, $room->date->start, $room->date->end);
-        echo "<option value='" . $type->id . "' $selected>" . $type->name . " ($count available)</option>";
+        echo "<option value='" . $type->id . "' $selected>" . $type->name . "</option>";
     }
     if(!$room->bookingItemTypeId && !$room->addedToWaitingList) { $notSelectedType = true; }
     echo "</select>";

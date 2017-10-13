@@ -210,18 +210,22 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
                 booking.registrationData.resultAdded.put("company_contactPerson", company.contactPerson);
                 booking.registrationData.resultAdded.put("company_phone", company.phone);
                 booking.registrationData.resultAdded.put("company_email", company.email);
-                booking.registrationData.resultAdded.put("company_address_address", company.address.address);
-                booking.registrationData.resultAdded.put("company_address_city", company.address.city);
-                booking.registrationData.resultAdded.put("company_address_postCode", company.address.postCode);
+                if(company.address != null) {
+                    booking.registrationData.resultAdded.put("company_address_address", company.address.address);
+                    booking.registrationData.resultAdded.put("company_address_city", company.address.city);
+                    booking.registrationData.resultAdded.put("company_address_postCode", company.address.postCode);
+                }
             } else {
                 booking.registrationData.resultAdded.put("user_fullName", user.fullName);
                 booking.registrationData.resultAdded.put("user_emailAddress", user.emailAddress);
                 booking.registrationData.resultAdded.put("user_prefix", user.prefix);
                 booking.registrationData.resultAdded.put("user_cellPhone", user.cellPhone);
-                booking.registrationData.resultAdded.put("user_address_address", user.address.address);
-                booking.registrationData.resultAdded.put("user_address_city", user.address.city); 
-                booking.registrationData.resultAdded.put("user_address_postCode", user.address.address);
-                booking.registrationData.resultAdded.put("user_address_countrycode", user.address.countrycode);
+                if(user.address != null) {
+                    booking.registrationData.resultAdded.put("user_address_address", user.address.address);
+                    booking.registrationData.resultAdded.put("user_address_city", user.address.city); 
+                    booking.registrationData.resultAdded.put("user_address_postCode", user.address.address);
+                    booking.registrationData.resultAdded.put("user_address_countrycode", user.address.countrycode);
+                }
             }
             booking.channel = "terminal";
             try {

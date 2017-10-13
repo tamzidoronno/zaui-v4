@@ -8,4 +8,5 @@ public class PmsBookingComment implements Serializable {
     public String userId = "";
     public String comment = "";
     public Date added = new Date();
+    public boolean deleted = false;
 }

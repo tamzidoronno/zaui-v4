@@ -2,6 +2,7 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class PmsBookingSimpleFilter { 
-
+ 
     private final PmsManager manager;
     private final PmsInvoiceManager pmsInvoiceManager;
 
@@ -29,9 +30,11 @@ public class PmsBookingSimpleFilter {
                 }
             } else {
                 List<PmsBookingRooms> rooms = booking.getActiveRooms();
-                if(filter.includeDeleted || booking.overBooking) {
+                if(filter.includeDeleted) {
                     rooms = booking.getAllRoomsIncInactive();
                 }
+                rooms.addAll(booking.getOverBookedRooms());
+                rooms.addAll(booking.getWaitingListRooms());
                 for(PmsBookingRooms room : rooms) {
                     if(inFilter(room, filter, booking)) {
                         result.add(convertRoom(room, booking));
@@ -162,7 +165,10 @@ public class PmsBookingSimpleFilter {
             simple.room = manager.bookingEngine.getBookingItem(room.bookingItemId).bookingItemName;
         }
         if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
-            simple.roomType = manager.bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+            BookingItemType type = manager.bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            if(type != null) {
+                simple.roomType = manager.bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+            }
         }
         
         simple.paidFor = pmsInvoiceManager.isRoomPaidForWithBooking(room.pmsBookingRoomId, booking);
@@ -198,7 +204,7 @@ public class PmsBookingSimpleFilter {
             simple.progressState = "blocked";
         }
         
-        if(booking.overBooking) {
+        if(room.overbooking) {
             simple.progressState = "overbooking";
         }
         if(room.addedToWaitingList) {

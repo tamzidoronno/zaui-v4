@@ -154,17 +154,25 @@ $config = $this->getConfigurationToUse();
             <span class="commentfield">
                 <?php
                 $res = array();
-                foreach($booking->comments as $key => $obj) {
+                $comments = $booking->comments;
+                foreach($comments as $key => $obj) {
                     $res[$key] = $obj;
                 }
-                krsort($res);
+                ksort($res);
                 foreach($res as $time => $obj) {
+                    $cssAttr = "";
+                    if($obj->deleted) {
+                        $cssAttr = "deleted";
+                    }
+                    echo "<div class='commentline $cssAttr'>";
                     /* @var $obj core_pmsmanager_PmsBookingComment */
+                    echo "<i class='fa fa-trash-o deleteComment' style='cursor:pointer;' time='".$time."' bookingid='".$booking->id."'></i> ";
                     echo $obj->comment . "<br>";
                     echo "<div class='commentbottom'>";
                     if($this->getApi()->getUserManager()->getUserById($obj->userId)) {
                         echo "By " . $this->getApi()->getUserManager()->getUserById($obj->userId)->fullName . ", " . date("d.m.Y H:i", $time / 1000);
                     }
+                    echo "</div>";
                     echo "</div>";
                 }
                 ?>

@@ -1,4 +1,4 @@
-.PmsCleaning .roomNotReady { cursor:pointer; color: red; font-weight: bold; }
+.PmsCleaning .roomNotReady { cursor:pointer; color: #35280d; font-weight: bold; }
 .PmsCleaning .roomIsReady { color: green; font-weight: bold; }
 .PmsCleaning .guestname { display:inline-block; width: 50px; overflow:hidden;  text-overflow: ellipsis; white-space: nowrap; height: 12px; line-height: 12px;
  }
@@ -33,6 +33,6 @@
 }
 
 .PmsCleaning .roombox {  color:#fff; display: inline-block; margin: 3px; padding: 3px; border: solid 1px #bbb; width: 60px; text-align: center; }
-.PmsCleaning .notclean { background-color: red; }
+.PmsCleaning .notclean { background-color: #35280d; }
 .PmsCleaning .inUse { background-color: purple; }
 .PmsCleaning .clean { background-color: green; }

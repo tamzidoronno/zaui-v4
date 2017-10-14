@@ -569,6 +569,10 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return amount;
     }
+
+    public boolean sentToCustomer() {
+        return shipmentLog.size() > 0;
+    }
     
     public static class Status  {
         public static int CREATED = 1;

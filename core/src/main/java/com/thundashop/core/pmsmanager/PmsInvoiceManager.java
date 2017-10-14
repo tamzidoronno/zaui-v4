@@ -589,7 +589,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(!pmsManager.getConfigurationSecure().autoSendInvoice) {
             return;
         }
-        if(order.sentToCustomer) {
+        if(order.sentToCustomer || order.sentToCustomer()) {
             return;
         }
         

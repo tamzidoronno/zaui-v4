@@ -479,7 +479,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             double itemdiff = item.getDiffForFromMeta();
             if(itemdiff > 1.0 || itemdiff < -1.0) {
                 if(!warned) {
-                   messageManager.sendErrorNotification("When creating an order, an item got incorrect metadata diff where created that was not supposed to be ("+itemdiff+"), this happened to order: " + order.incrementOrderId, null);
+                   String corrected = "no";
+                   if(item.correctIncorrectCalculation()) {
+                       corrected = "yes";
+                   }
+                   messageManager.sendErrorNotification("When creating an order, an item got incorrect metadata diff where created that was not supposed to be ("+itemdiff+"), this happened to order: " + order.incrementOrderId + "; corrected: " + corrected, null);
                    warned = true;
                 }
             }

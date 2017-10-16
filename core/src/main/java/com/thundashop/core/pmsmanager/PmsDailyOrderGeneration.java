@@ -471,12 +471,14 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                 if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
                     if(item.itemsAdded != null) {
                         copy = gson.toJson(item.itemsAdded);
-                        double diff = item.getDiffForFromMeta();
-                        if(diff > 1.0 || diff < -1.0) {
-                            System.out.println("This is wrong: " + diff);
-                            item.dumpMetaData();
-                            if(item.correctIncorrectCalculation()) {
-                                System.out.println("corrected");
+                        if(storeId.equals("b6949f70-5e41-4c5e-abcf-d595450f8048")) {
+                            double diff = item.getDiffForFromMeta();
+                            if(diff > 1.0 || diff < -1.0) {
+                                System.out.println("This is wrong: " + diff);
+                                item.dumpMetaData();
+                                if(item.correctIncorrectCalculation()) {
+                                    System.out.println("corrected");
+                                }
                             }
                         }
                         

@@ -148,10 +148,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                         for(String offset : orderMatrix.keySet()) {
                             Double price = orderMatrix.get(offset);
                             
-                            if(order.isCreditNote) {
-                                price *= -1;
-                            }
-                            
                             if(currentMatrix.containsKey(offset)) {
                                 price = currentMatrix.get(offset) - price;
                             } else {
@@ -194,7 +190,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         Date startDate = null;
         int count = 0;
         Double total = 0.0;
-        HashMap<String, Double> priceMatrixToSave = new HashMap();
         for(Date dayToIterate : dailyPrices.keySet()) {
             Double priceOne = null;
             Double priceTwo = null;
@@ -202,7 +197,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             if(!dateIsFiltered(dayToIterate)) {
                 continue;
             }
-            daysInPriceMatrix.add(PmsBookingRooms.convertOffsetToString(dayToIterate));
             
             if(lastDay != null && dailyPrices.containsKey(lastDay)) { priceOne = dailyPrices.get(lastDay).price; }
             if(dailyPrices.containsKey(dayToIterate)) { priceTwo = dailyPrices.get(dayToIterate).price; }
@@ -226,6 +220,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                 count = 0;
                 total = 0.0;
             }
+            daysInPriceMatrix.add(PmsBookingRooms.convertOffsetToString(dayToIterate));
             
             if(startDate == null) {
                 startDate = dayToIterate;
@@ -599,6 +594,7 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         if(item != null) {
             item.priceMatrix = newPriceMatrix;
         }
+        item.correctIncorrectCalculation();
         daysInPriceMatrix.clear();
     }
 

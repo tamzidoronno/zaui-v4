@@ -156,6 +156,7 @@ public class CartItem implements Serializable {
                 }
             }
         }
+        correctIncorrectCalculation();
     }
 
     public Date getStartingDate() {
@@ -330,20 +331,12 @@ public class CartItem implements Serializable {
         
         if(priceMatrix != null) {
             for(String day : priceMatrix.keySet()) {
-                if(total > 0) {
-                    val += priceMatrix.get(day);
-                } else {
-                    val -= priceMatrix.get(day);
-                }
+                val += priceMatrix.get(day);
             }
         }
         if(itemsAdded != null) {
             for(PmsBookingAddonItem addonItem : itemsAdded) {
-                if(total > 0) {
-                    val += (addonItem.price * addonItem.count);
-                } else {
-                    val += (addonItem.price * (addonItem.count*-1));
-                }
+                val += (addonItem.price * addonItem.count);
             }
         }
 

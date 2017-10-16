@@ -29,7 +29,7 @@ if(isset($_GET['bookingid']) && $_GET['bookingid']) {
 session_write_close();
 
 if(!isset($_GET['readable'])) {
-    $base64 = $factory->getApi()->getUtilManager()->getBase64EncodedPDFWebPage($address);
+    $base64 = $factory->getApi()->getGetShop()->getBase64EncodedPDFWebPage($address);
     echo base64_decode($base64);
 } else {
     echo $_SESSION['contractLoaded'];

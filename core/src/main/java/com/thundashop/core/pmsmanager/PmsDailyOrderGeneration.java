@@ -30,6 +30,8 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
 
+    public String debugRoom = "";
+    
     PmsBooking currentBooking = null;
     NewOrderFilter currentFilter = null;
     
@@ -54,6 +56,12 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
     
     /* This is where it all begins */
     public String createCart(String bookingId, NewOrderFilter filter) {
+        try {
+            dumpData(bookingId);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
         if(filter.itemsToCreate != null && !filter.itemsToCreate.isEmpty()) {
             List<CartItem> itemsToRemove = new ArrayList();
             for(CartItem item : cartManager.getCart().getItems()) {
@@ -428,7 +436,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             }
             String json = gson.toJson(item);
             item = gson.fromJson(json, PmsBookingAddonItem.class);
-            
             addonsToAdd.put(item.addonId, item);
         }
         
@@ -444,6 +451,9 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                 }
                 PmsBookingAddonItem baseItem = pmsManager.getConfigurationSecure().getAddonFromProductId(item.productId);
                 if(baseItem.noRefundable) {
+                    if(room.pmsBookingRoomId.equals(debugRoom)) {
+                        System.out.println("unpaidaddon;" + productManager.getProduct(item.productId).name + ";" + item.count + ";" + item.price);
+                    }
                     addonsToAdd.put(item.addonId, item);
                 }
             }
@@ -461,6 +471,14 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                 if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
                     if(item.itemsAdded != null) {
                         copy = gson.toJson(item.itemsAdded);
+                        double diff = item.getDiffForFromMeta();
+                        if(diff > 1.0 || diff < -1.0) {
+                            System.out.println("This is wrong: " + diff);
+                            item.dumpMetaData();
+                            if(item.correctIncorrectCalculation()) {
+                                System.out.println("corrected");
+                            }
+                        }
                         
                         type = new TypeToken<List<PmsBookingAddonItem>>(){}.getType();
                         List<PmsBookingAddonItem> alreadyAdded = gson.fromJson(copy, type);
@@ -480,6 +498,11 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                             if(item.getCount() < 0) {
                                 toCheck.count *= -1;
                             }
+                            
+                            if(room.pmsBookingRoomId.equals(debugRoom)) {
+                                System.out.println("removeaddon;" + order.incrementOrderId + ";" + productManager.getProduct(toCheck.productId).name + ";" + toCheck.count + ";" + toCheck.price);
+                            }
+                            
                             removeFromAddon(addonOnRoom, toCheck);
                         }
                     }
@@ -604,9 +627,9 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             
             //Addon prices.
             HashMap<String, List<PmsBookingAddonItem>> items = getUnpaidAddonsForRoom(room);
-            for(String productId : items.keySet()) { 
+            for(String productId : items.keySet()) {
                generateAddonsCostForProduct(items.get(productId), room, true);
-                generateAddonsCostForProduct(items.get(productId), room, false);
+               generateAddonsCostForProduct(items.get(productId), room, false);
             }    
         }
 
@@ -660,5 +683,29 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
         return "";
     }
 
-
+    private void dumpData(String bookingId) {
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        PmsBookingRooms room = booking.getRoom(debugRoom);
+        if(room == null) {
+            return;
+        }
+        System.out.println("Addons");
+        for(PmsBookingAddonItem item : room.addons) {
+            System.out.println(productManager.getProduct(item.productId).name + ";" + room.price + ";" + item.date);
+        }
+        System.out.println("Pricematrix");
+        for(String day : room.priceMatrix.keySet()) {
+            System.out.println("pricematrix;" + day + ";" + room.priceMatrix.get(day));
+        }
+        
+        System.out.println("Cart");
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            for(CartItem item : order.cart.getItems()) {
+                if(item.getProduct().externalReferenceId.equals(debugRoom)) {
+                    System.out.println(order.incrementOrderId + ";" + item.getProduct().name + ";" + item.getCount() + ";" + item.getProduct().price);
+                }
+            }
+        }
+    }
 }

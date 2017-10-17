@@ -94,6 +94,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private User internalApiUser;
     private String internalApiUserPassword;
     
+    
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
@@ -2013,5 +2015,18 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user != null) {
             addUserToSession(user);
         }
+    }
+
+    @Override
+    public List<User> getSubUsers(String userId) {
+        List<User> result = new ArrayList();
+        List<User> users = getAllUsers();
+        for(User usr : users) {
+            if(usr.subUsers.contains(userId)) {
+                result.add(usr);
+            }
+        }
+        
+        return result;
     }
 }

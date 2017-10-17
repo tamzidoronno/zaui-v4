@@ -11,7 +11,24 @@
     height: 30px; line-height: 30px;
     padding-left: 5px;
 }
-
+.PmsBookingContactData .searchfororgpanel { position:absolute; left: 0px; background-color:#fff; display:none; border: solid 1px; padding: 10px; border-radius: 5px; }
+.PmsBookingContactData .alternativeaccountbutton { 
+    font-size: 16px;
+    height: 30px; line-height: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 5px; 
+    box-sizing: border-box; 
+    display:inline-block;
+    border: solid 1px #dcdcdc; 
+    background-color:green;
+    color:#fff;
+    cursor:pointer;
+}
+.PmsBookingContactData .alternativeaccountresult { border: solid 1px; background-color:#fff; display:none; width:418px; position:absolute; }
+.PmsBookingContactData .orgnumber { width: 100px; display:inline-block;padding: 5px; }
+.PmsBookingContactData .orgname { width: 250px; display:inline-block;padding: 5px; }
+.PmsBookingContactData .selectorg {display:inline-block;padding: 5px; border: solid 1px; cursor:pointer; }
 .PmsBookingContactData .formspacer {
     width: 100%; margin-top: 5px; box-sizing: border-box; display:inline-block;
     font-size: 16px;

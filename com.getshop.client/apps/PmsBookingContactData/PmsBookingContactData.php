@@ -16,6 +16,12 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
         return "PmsBookingContactData";
     }
 
+    public function addAlternativeOrganiasation() {
+        $booking = $this->getCurrentBooking();
+        $booking->alternativeOrginasation = $_POST['data']['orgid'];
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedName(), $booking);
+    }
+    
     public function render() {
         if(!$this->getSelectedName()) {
             echo "Please specify a booking engine first";

@@ -43,7 +43,7 @@ if(!$completeText) {
 }
 
 if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
-    $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+    $user = $this->getApi()->getUserManager()->getLoggedOnUser();
     if($user->preferredPaymentType == "70ace3f0-3981-11e3-aa6e-0800200c9a66") {
         $note = "";
         if(isset($_POST['data']['invoicenote'])) {
@@ -69,18 +69,65 @@ if(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isCustomer()) {
     }
     
     echo "<div style='clear:both;'></div>";
-    echo "<label class='col-25'>";
+    echo "<label class='col-50'>";
     echo $this->__w("Send confirmation to an alternate email address") .":<br>";
     echo "<input type='text' gsname='company_email' value='".$companyEmail."'>";
-    echo "</label>";
-    echo "<div style='clear:both;'></div>";
     echo "<div class='errordesc'>";
     if(isset($this->validation["company_email"])) {
         echo "* " . $this->validation["company_email"];
     } else {
         echo "&nbsp;";
     }
-    echo "</div><br>";
+    echo "</div>";
+    echo "</label>";
+    echo "<label class='col-50' style='position:absolute;'>Alternativ organisasjon<br>";
+    echo "<span class='alternativeaccountbutton showsearchcompany'>Search</span>";
+    $subid = "";
+    if(isset($booking->alternativeOrginasation)) {
+        $account = explode(";", $booking->alternativeOrginasation);
+        $subid = $account[0];
+        if(strlen($subid) < 15 && $subid) {
+            echo "<span class='alternativeaccountbutton'><i class='fa fa-check'></i> ".$account[1]."</span>";
+        }
+    }
+    $subUsers = (array)$user->subUserList;
+    if(sizeof($subUsers) > 0) {
+        $meSelected = "";
+        if(!isset($booking->alternativeOrginasation) || !$booking->alternativeOrginasation) { $meSelected = "<i class='fa fa-check'></i>"; }
+        echo "<span class='alternativeaccountbutton selectorgbtn' orgid=''>$meSelected Meg selv</span>";
+        foreach($subUsers as $subUser) {
+            $meSelected = "";
+            if($subid == $subUser->id) {
+                $meSelected = "<i class='fa fa-check'></i>";
+            }
+            echo "<span class='alternativeaccountbutton selectorgbtn' orgid='".$subUser->id.";" . $subUser->fullName."'>$meSelected " . $subUser->fullName . "</span>";
+        }
+    }
+    
+    echo "<span class='searchfororgpanel'>";
+    echo "Navn på organisasjon<br>";
+    echo "<input type='text' id='searchbrregkeyword'>";
+    echo "<span class='alternativeaccountbutton searchbrregaltaccount'>Search</span>";
+    echo "<div class='alternativeaccountresult'></div>";
+    echo "</span>";
+    echo "</label><br>";
+    echo "<div style='clear:both;'></div>";
+
+    $config2 = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
+    if($config2->needToAgreeOnContract) {
+        echo "<div>";
+        echo "<span><div style='padding-bottom: 5px;'><input type='checkbox' gsname='agreetoterms'> ". $this->__w("I agree to the terms and conditions");
+        echo "</div>";
+          echo "<div style='font-size: 20px;color:red;'>";
+            if(isset($this->validation['agreetoterms'])) {
+                echo "* " . $this->validation['agreetoterms'];
+            }
+            echo "</div>";
+        echo "<a class='termsandcondtext' onclick=\"window.open('/scripts/loadContractPdf.php?readable=true&engine=".$this->getSelectedName()."');\" >". $this->__w("Read the terms and conditions")."</a><br>";
+        echo "<a class='termsandcondtext' onclick=\"window.open('/scripts/loadContractPdf.php?engine=".$this->getSelectedName()."');\">". $this->__w("Download the terms and conditions")."</a>";
+        echo "</span>";
+        echo "</div>";
+    }
     
     echo "<span class='complete_button'>$completeText</span>";
 } else {

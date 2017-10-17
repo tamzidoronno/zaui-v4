@@ -492,9 +492,6 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
                             }
                             
                             addonOnRoom = addonsToAdd.get(toCheck.addonId);
-                            if(item.getCount() < 0) {
-                                toCheck.count *= -1;
-                            }
                             
                             if(room.pmsBookingRoomId.equals(debugRoom)) {
                                 System.out.println("removeaddon;" + order.incrementOrderId + ";" + productManager.getProduct(toCheck.productId).name + ";" + toCheck.count + ";" + toCheck.price);

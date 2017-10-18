@@ -582,6 +582,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if(user != null) {
             finalizeUser(user);
         }
+        
         return user;
     }
 
@@ -955,6 +956,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             counter.counter++;
             saveObject(counter);
             saveObject(user);
+        }
+        
+        user.subUserList.clear();
+        for(String userid : user.subUsers) {
+            user.subUserList.add(getUserById(userid));
         }
     }
 

@@ -16,6 +16,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.productmanager.ProductManager;
@@ -472,6 +473,22 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(diff > 1 || diff < -1) {
             messageManager.sendErrorNotification("When creating an order, a diff where created that was not supposed to be ("+diff+"), this happened to order: " + order.incrementOrderId, null);
         }
+        
+        boolean warned = false;
+        for(CartItem item : order.cart.getItems()) {
+            double itemdiff = item.getDiffForFromMeta();
+            if(itemdiff > 1.0 || itemdiff < -1.0) {
+                if(!warned) {
+                   String corrected = "no";
+                   if(item.correctIncorrectCalculation()) {
+                       corrected = "yes";
+                   }
+                   messageManager.sendErrorNotification("When creating an order, an item got incorrect metadata diff where created that was not supposed to be ("+itemdiff+"), this happened to order: " + order.incrementOrderId + "; corrected: " + corrected, null);
+                   warned = true;
+                }
+            }
+        }
+        
     }
 
     private void adjustAmountOnOrder(Order order, Double totalAmount) {
@@ -588,7 +605,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(!pmsManager.getConfigurationSecure().autoSendInvoice) {
             return;
         }
-        if(order.sentToCustomer) {
+        if(order.sentToCustomer || order.sentToCustomer()) {
             return;
         }
         
@@ -1456,9 +1473,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(res.isEmpty()) {
             order.closed = true;
-            order.sentToCustomer = true;
-            order.sentToCustomerDate = new Date();
-            order.sentToEmail = email;
+            order.markAsSent(OrderShipmentLogEntry.Type.email, email);
             orderManager.saveOrder(order);
         }
         return res;

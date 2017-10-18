@@ -313,13 +313,16 @@ if($booking->orderIds) {
             }
         }
         $title = "";
-        if(isset($order->sentToEmail) && $order->sentToEmail) {
-            $title .= " email: " . $order->sentToEmail;
+        $sentDate = null;
+        if(isset($order->shipmentLog) && sizeof($order->shipmentLog) > 0) {
+            foreach($order->shipmentLog as $logEntry) {
+                if(isset($logEntry->date)) {
+                    $title .=  date("d.m.Y H:i", strtotime($logEntry->date)) . ", " . $logEntry->type . ": " . $logEntry->address . "<br>";
+                    $sentDate = $logEntry->date;
+                }
+            }
         }
-        if(isset($order->sentToPhone) && $order->sentToPhone) {
-            $title .= " phone: (" . $order->sentToPhonePrefix . ") " . $order->sentToPhone;
-        }
-        if($title) { echo "<br><div title='$title'><i class='fa fa-share'></i>" . date("d.m.Y H:i", strtotime($order->sentToCustomerDate)) . "</div>"; }
+        if($title) { echo "<br><div title='$title'><i class='fa fa-share'></i>" . date("d.m.Y H:i", strtotime($sentDate)) . "</div>"; }
         echo "</td>";
         echo "<td align='center'>";
 

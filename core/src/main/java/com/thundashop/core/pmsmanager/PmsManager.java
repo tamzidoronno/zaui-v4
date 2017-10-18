@@ -55,6 +55,7 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.utils.BrRegEngine;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.wubook.WubookManager;
 import java.io.ByteArrayOutputStream;
@@ -169,6 +170,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     BookingComRateManagerManager bookingComRateManagerManager;
+    
+    @Autowired
+    BrRegEngine brRegEngine;
     
     @Autowired
     Database dataBase;
@@ -1343,7 +1347,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (key.startsWith("sendinvoice")) {
                 attachments.put("invoice.pdf", createInvoiceAttachment());
             }
-            
+             
             String recipientEmail = user.emailAddress;
             boolean specificEmail = false;
             if(emailToSendTo != null) {
@@ -4813,6 +4817,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             createUserForBooking(booking);
             addDefaultAddons(booking);
+            checkIfBookedBySubAccount(booking);
             if(userManager.getUserById(booking.userId).suspended) {
                 logPrint("User is suspended." + booking.id);
                 return null;
@@ -6916,5 +6921,49 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         room.addons.removeAll(toRemove);
+    }
+
+    private void checkIfBookedBySubAccount(PmsBooking booking) {
+        if(booking.alternativeOrginasation == null || booking.alternativeOrginasation.trim().isEmpty()) {
+            return;
+        }
+        
+        String[] altData = booking.alternativeOrginasation.split(";");
+        String id = altData[0];
+        User user = userManager.getUserById(id);
+        if(user == null) {
+            List<User> users = userManager.getUsersByCompanyId(id);
+            id = null;
+            for(User usr : users) {
+                if(usr.isCompanyMainContact) {
+                    id = usr.id;
+                }
+            }
+        }
+        
+        if(id == null) {
+            Company company = brRegEngine.getCompany(altData[0], true);
+            userManager.saveCompany(company);
+            User newuser = new User();
+            company = userManager.saveCompany(company);
+            newuser.company.add(company.id);
+            newuser.isCompanyMainContact = true;
+            newuser.address = company.address;
+            newuser.fullName = company.name;
+            newuser.cellPhone = company.phone;
+            newuser.prefix = company.prefix;
+            
+            userManager.saveUserSecure(newuser);
+            id = newuser.id;
+        }
+        
+        booking.bookedByUserId = getSession().currentUser.id;
+        booking.userId = id;
+        
+        user = userManager.getUserById(booking.bookedByUserId);
+        if(!user.subUsers.contains(id)) {
+            user.subUsers.add(id);
+            userManager.saveUserSecure(user);
+        }
     }
 }

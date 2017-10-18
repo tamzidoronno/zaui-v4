@@ -35,6 +35,7 @@ echo "<th align='left'>Owner</th>";
 echo "<th align='left'>Orderid</th>";
 echo "<th align='left'>Order date</th>";
 echo "<th align='left'>Due date</th>";
+echo "<th align='left'>Shipment date</th>";
 echo "<th align='left'>Total inc taxes</th>";
 echo "<th align='left'>Total ex taxes</th>";
 echo "<th align='left'>Payment date</th>";
@@ -120,6 +121,16 @@ foreach ($orderList as $order) {
     if(isset($order->creditOrderId) && sizeof($order->creditOrderId) > 0) {
         $style = "style='color:orange;'";
     }
+    
+    $shippingDate = "";
+    $shipmentTitle = "";
+    if(isset($order->shipmentLog)) {
+        foreach($order->shipmentLog as $logEntry) {
+            $shippingDate = date("d.m.Y", strtotime($logEntry->date));
+            $shipmentTitle .= $shippingDate . " : " . $logEntry->type . " " . $logEntry->address . "<br>";
+        }
+    }
+    
     echo "<tr gstype='form' method='markpaid' $style>";
     $download = "<a style='cursor:pointer;' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'><i class='fa fa-file-pdf-o'></i></a>";
     echo "<td  style='text-align:center;'>" . $download . "</td>";
@@ -128,6 +139,11 @@ foreach ($orderList as $order) {
     echo "<td>" . $order->incrementOrderId . "</td>";
     echo "<td data-order='".strtotime($order->rowCreatedDate)."'>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
     echo "<td data-order='".$fourTeenDaysInFuture."'>" . date("d.m.Y", $fourTeenDaysInFuture) . "</td>";
+    if($shippingDate) {
+        echo "<td data-order='".strtotime($shippingDate)."' title='$shipmentTitle'>" . $shippingDate . "</td>";
+    } else {
+        echo "<td></td>";
+    }
     echo "<td>" . $ordersum . "</td>";
     echo "<td>" . $ordersumEx . "</td>";
     echo "<td>";
@@ -158,6 +174,11 @@ foreach ($orderList as $order) {
             echo "<td>" . $order->incrementOrderId . "</td>";
             echo "<td data-order='".strtotime($order->rowCreatedDate)."'>" . date("d.m.Y", strtotime($order->rowCreatedDate)) . "</td>";
             echo "<td data-order='".$fourTeenDaysInFuture."'>" . date("d.m.Y", $fourTeenDaysInFuture) . "</td>";
+            if($shippingDate) {
+                echo "<td data-order='".strtotime($shippingDate)."' title='$shipmentTitle'>" . $shippingDate . "</td>";
+            } else {
+                echo "<td></td>";
+            }
             echo "<td>" . $ordersum . "</td>";
             echo "<td>" . $ordersumEx . "</td>";
             echo "<td>";

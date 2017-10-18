@@ -15,10 +15,39 @@ app.PmsBookingContactData = {
         $(document).on('change', '.PmsBookingContactData .bookingregistrationform textarea', app.PmsBookingContactData.saveForm);
         $(document).on('change', '.PmsBookingContactData .selectregisterduser', app.PmsBookingContactData.changeUserToRegisterOn);
         $(document).on('click', '.PmsBookingContactData .complete_button', app.PmsBookingContactData.completeRegistration);
+        $(document).on('click', '.PmsBookingContactData .showsearchcompany', app.PmsBookingContactData.showBookingRegistration);
+        $(document).on('click', '.PmsBookingContactData .searchbrregaltaccount', app.PmsBookingContactData.searchBrRegAccount);
+        $(document).on('click', '.PmsBookingContactData .selectorgbtn', app.PmsBookingContactData.selectAlternativOrganisation);
         
         $(document).on('keyup', '.PmsBookingContactData [gsname="visitor_name_1"]', function() { $('[gsname="user_fullName"]').val($(this).val());  });
         $(document).on('keyup', '.PmsBookingContactData [gsname="visitor_phone_1"]', function() { $('[gsname="user_cellPhone"]').val($(this).val());  });
         $(document).on('keyup', '.PmsBookingContactData [gsname="visitor_email_1"]', function() { $('[gsname="user_emailAddress"]').val($(this).val());  });
+    },
+    selectAlternativOrganisation : function() {
+        var orgid = $(this).attr('orgid');
+        var event = thundashop.Ajax.createEvent('','addAlternativeOrganiasation', $(this), {
+             orgid : orgid
+       });
+       thundashop.Ajax.post(event);
+    },
+    searchBrRegAccount : function() {
+        var val = $('#searchbrregkeyword').val();
+        var result = $('<div></div>');
+        $.ajax({
+            "url" : "https://hotell.difi.no/api/json/brreg/enhetsregisteret?query=" + val,
+            "success" : function(data) {
+                for(var k in data.entries) {
+                    var res = data.entries[k];
+                    result.append($("<div><span class='orgnumber'>" + res.orgnr + "</span><span class='orgname'>" + res.navn + "</span><span class='selectorg selectorgbtn' orgid='"+res.orgnr+";"+res.navn+"'>select</span></div>"));
+                }
+                $('.alternativeaccountresult').html(result);
+                $('.PmsBookingContactData .alternativeaccountresult').show();
+            }
+        });
+        
+    },
+    showBookingRegistration : function() {
+        $('.PmsBookingContactData .searchfororgpanel').show();
     },
     completeRegistration : function() {
         $(this).html('<i class="fa fa-spin fa-spinner"></i>');

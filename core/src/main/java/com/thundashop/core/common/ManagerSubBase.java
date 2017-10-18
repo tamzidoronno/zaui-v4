@@ -23,6 +23,7 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -230,6 +231,7 @@ public class ManagerSubBase {
 
     public void saveObject(DataCommon data) throws ErrorException {
         data.storeId = storeId;
+        data.lastModified = new Date();
         if(getSession() != null) {
             String lang = getSession().language;
             data.validateTranslationMatrix();

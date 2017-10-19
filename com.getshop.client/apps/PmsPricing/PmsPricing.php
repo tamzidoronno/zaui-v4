@@ -110,6 +110,9 @@ class PmsPricing extends \WebshopApplication implements \Application {
     }
     
     public function creatnewpriceplan() {
+        if(!$_POST['data']['newplan']) {
+            return;
+        }
         $this->getApi()->getPmsManager()->createNewPricePlan($this->getSelectedName(), $_POST['data']['newplan']);
     }
     

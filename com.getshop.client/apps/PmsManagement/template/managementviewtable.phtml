@@ -80,6 +80,9 @@ $sortList = array();
 foreach($bookings as $booking) {
     $comments = "";
     foreach($booking->comments as $time => $val) {
+        if($val->deleted) {
+            continue;
+        }
         $comments .= $val->comment . "<br>";
     }
     

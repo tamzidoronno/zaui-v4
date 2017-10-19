@@ -133,6 +133,9 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         $comments = "";
         if(isset($room->bookingComments)) {
             foreach($room->bookingComments as $time => $val) {
+                if($val->deleted) {
+                    continue;
+                }
                 $comments .= $val->comment . "<br>";
             }
         }

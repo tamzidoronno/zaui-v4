@@ -212,7 +212,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     price.code = "default";
                     saveObject(price);
                 }
-                priceMap.put(price.code, price);
+                if(price.lastModified != null && priceMap.containsKey(price.code)) {
+                    PmsPricing containing = priceMap.get(price.code);
+                    if(containing.lastModified != null && containing.lastModified.after(price.lastModified)) {
+                        deleteObject(price);
+                    } else {
+                        System.out.println("removing : " + price.code + " : " + price.rowCreatedDate + " : id: " + price.id);
+                        deleteObject(priceMap.get(price.code));
+                        priceMap.put(price.code, price);
+                    }
+                }
+
+                if(!price.id.equals("10eda3b2-ecb5-460e-a064-60913ad3f798")) {
+                    priceMap.put(price.code, price);
+                }
+                
+                
             }
             if (dataCommon instanceof PmsCareTaker) {
                 careTaker.put(dataCommon.id, (PmsCareTaker) dataCommon);
@@ -5821,12 +5836,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             PmsBooking booking = getBookingUnsecure(bookingId);
             if(type.equals("created")) {
-                bookingComRateManagerManager.pushBooking(booking, "Commit", false);
+                bookingComRateManagerManager.pushBooking(booking, "Commit", true);
             } else if(type.equals("room_removed") || 
                     type.equals("room_changed") ||
                     type.equals("date_changed") ||
                     type.equals("booking_undeleted")) {
-                bookingComRateManagerManager.pushBooking(booking, "Modify", false);
+                bookingComRateManagerManager.pushBooking(booking, "Modify", true);
             }
         }catch(Exception e) {
             e.printStackTrace();

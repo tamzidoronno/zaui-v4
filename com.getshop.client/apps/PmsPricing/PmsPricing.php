@@ -10,6 +10,11 @@ class PmsPricing extends \WebshopApplication implements \Application {
         return "PmsPricing";
     }
 
+    public function deletePricePlan() {
+        $code = $_POST['data']['code'];
+        $this->getApi()->getPmsManager()->deletePricePlan($this->getSelectedName(), $code);
+    }
+    
     public function getSelectedName() {
         return $this->getConfigurationSetting("engine_name");
     }

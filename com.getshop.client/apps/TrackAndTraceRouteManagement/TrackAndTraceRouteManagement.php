@@ -168,5 +168,29 @@ class TrackAndTraceRouteManagement extends \MarketingApplication implements \App
         
         
     }
+    
+    public function renderUserSettings($user) {
+        $this->user = $user;
+        $this->includefile("usersetting");
+    }
+    
+    /**
+     * @return \core_usermanager_data_User
+     */
+    public function getCurrentUser() {
+        return $this->user;
+    }
+    
+    public function saveUser() {
+        $this->setUser();
+        $this->getApi()->getUserManager()->addMetaData($this->user->id, "depotId", $_POST['depotId']);
+    }
+    
+    public function setUser() {
+        if (isset($_POST['userid'])) {
+            $this->user = $this->getApi()->getUserManager()->getUserById($_POST['userid']);
+        }
+    }
+    
 }
 ?>

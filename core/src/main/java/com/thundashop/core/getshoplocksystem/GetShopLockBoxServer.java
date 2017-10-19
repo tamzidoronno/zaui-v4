@@ -69,6 +69,7 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
         lockAlreadAdded = new LockBoxLock();
         lockAlreadAdded.maxnumberOfCodes = 1000;
         lockAlreadAdded.name = "Lock " + deviceId;
+        lockAlreadAdded.connectedToServerId  = id;
         lockAlreadAdded.id = UUID.randomUUID().toString();
         lockAlreadAdded.initializeUserSlots();
         locks.put(lockAlreadAdded.id, lockAlreadAdded);

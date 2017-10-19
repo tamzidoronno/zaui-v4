@@ -274,9 +274,25 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
 
     @Override
     public List<Route> getAllRoutes() {
-        ArrayList<Route> retList = new ArrayList(routes.values());
+        List<Route> retList = new ArrayList(routes.values());
+        retList = filterListByDepotId(retList); 
         retList.stream().forEach(route -> finalize(route));
         retList.sort(Route.getSortedById());
+        return retList;
+    }
+
+    private List<Route> filterListByDepotId(List<Route> retList) {
+        if (getSession() != null && getSession().currentUser != null
+                && getSession().currentUser.isEditor()
+                && getSession().currentUser.metaData.get("depotId") != null 
+                && !getSession().currentUser.metaData.get("depotId").isEmpty()) {
+            String depotId = getSession().currentUser.metaData.get("depotId");
+            return retList.stream()
+                    .filter(r -> depotId.equals(r.depotId))
+                    .collect(Collectors.toList());
+            
+        }
+        
         return retList;
     }
 
@@ -352,7 +368,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         
         AcculogixDataImporter ret = new AcculogixDataImporter(base64, userManager, this, fileName);
         ret.getRoutes().stream().forEach(route -> notifyRoute(getRouteById(route.id)));
-        
     }
 
     void saveTask(DeliveryTask task) {
@@ -742,7 +757,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             ((Route)data).dirty = false;
         }
         
-        if (data instanceof Destination) {
+        if (data instanceof Destination) { 
             ((Destination)data).dirty = true;
             Route route = getRouteByDestination(((Destination)data));
             createExport(route);

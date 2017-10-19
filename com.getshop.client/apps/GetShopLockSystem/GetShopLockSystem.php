@@ -19,11 +19,16 @@ class GetShopLockSystem extends \WebshopApplication implements \Application {
     }
 
     public function render() {
+        $this->includefile('header');
         $this->includefile("leftmenu");
         
         echo "<div class='rightside'>";
         $this->includefile($this->getMenuFile());
         echo "</div>";
+    }
+    
+    public function showEditSlot() {
+        
     }
     
     public function getMenuFile() {
@@ -51,16 +56,25 @@ class GetShopLockSystem extends \WebshopApplication implements \Application {
         if ($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_menuaction'] == "editgroup") {
             return "editgroup";
         }
+        if ($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_menuaction'] == "editslot") {
+            return "editslot";
+        }
     }
     
     public function changeToMenu() {
-        $this->clearSessionVariables();
+        if (!isset($_POST['data']['dontclear'])) {
+            $this->clearSessionVariables();
+        }
+        
         $_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_menuaction'] = $_POST['data']['menu'];
         if (isset($_POST['data']['serverid'])) {
             $_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_serverid'] = $_POST['data']['serverid'];
         }
         if (isset($_POST['data']['groupid'])) {
             $_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_groupid'] = $_POST['data']['groupid'];
+        }
+        if (isset($_POST['data']['slotid'])) {
+            $_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_slotid'] = $_POST['data']['slotid'];
         }
     }
     
@@ -185,6 +199,7 @@ class GetShopLockSystem extends \WebshopApplication implements \Application {
         unset($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_menuaction']);
         unset($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_serverid']);
         unset($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_groupid']);
+        unset($_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_slotid']);
     }
 
     public function getGroups() {
@@ -219,9 +234,23 @@ class GetShopLockSystem extends \WebshopApplication implements \Application {
         $this->slot = $slot;
     }
     
-    public function changeCode() {
+    public function saveSlotInformation() {
         $groupId = $_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_groupid'];   
-        $this->getApi()->getGetShopLockSystemManager()->changeCode($groupId, $_POST['data']['slotid'], $_POST['data']['code'], "");
+        $slotId = $_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_slotid'];
+        $code = $_POST['data']['pincode'];
+        
+        if ($code) {
+            $this->getApi()->getGetShopLockSystemManager()->changeCode($groupId, $slotId, $code, "");
+        }
+        
+        $startDate = $this->convertToJavaDate(strtotime($_POST['data']['from']));
+        $endDate = $this->convertToJavaDate(strtotime($_POST['data']['to']));
+
+        if ($startDate && $endDate) {
+            $this->getApi()->getGetShopLockSystemManager()->changeDatesForSlot($groupId, $slotId, $startDate, $endDate);
+        }
+        
+        $this->goBackToGroup();
     }
     
     public function activateForceUpdate() {
@@ -234,5 +263,12 @@ class GetShopLockSystem extends \WebshopApplication implements \Application {
         $serverId = $_SESSION['ns_3e89173c_42e2_493f_97bb_2261c0418bfe_editlock_serverid'];
         $this->getApi()->getGetShopLockSystemManager()->deactivatePrioritingOfLock($serverId);
     }
+
+    public function goBackToGroup() {
+        $_POST['data']['menu'] = 'editgroup';
+        $_POST['data']['dontclear'] = 'true';
+        $this->changeToMenu();
+    }
+
 }
 ?>

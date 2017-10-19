@@ -29,6 +29,7 @@ public class UserSlot implements Serializable {
     public String connectedToServerId;
     public String connectedToLockId;
     
+    
 
     public void generateNewCode() {
         code = new LockCode();
@@ -127,4 +128,15 @@ public class UserSlot implements Serializable {
         markCodeForResending();
         takenInUseDate = null;
     }
+    
+    void setDates(Date validFrom, Date validTo) {
+        if (code == null) {
+            generateNewCode();
+        }
+        
+        code.validFrom = validFrom;
+        code.validTo = validTo;
+        
+    }
+
 }

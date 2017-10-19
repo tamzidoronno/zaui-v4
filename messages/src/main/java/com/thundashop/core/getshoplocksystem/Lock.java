@@ -63,6 +63,9 @@ public class Lock {
                 slot.connectedToLockId = id;
                 slot.slotId = i;
                 userSlots.put(slot.slotId, slot);
+            } else {
+                userSlots.get(i).connectedToServerId = connectedToServerId;
+                userSlots.get(i).connectedToLockId = id;
             }
         }
     }

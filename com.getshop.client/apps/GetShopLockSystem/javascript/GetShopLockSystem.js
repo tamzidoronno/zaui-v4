@@ -1,21 +1,8 @@
 app.GetShopLockSystem = {
     init: function() {
         $(document).on('click', '.GetShopLockSystem .saveGroup', app.GetShopLockSystem.saveGroup);
-        $(document).on('click', '.GetShopLockSystem .changecodeonslot', app.GetShopLockSystem.changeCodeOnSlot);
     },
-    
-    changeCodeOnSlot: function() {
-        var res = prompt('Code');
-        if (res) {
-            var data = {
-                code : res,
-                slotid: $(this).attr('slotid')
-            };
-            
-            thundashop.Ajax.simplePost(this, "changeCode", data);
-        }
-    },
-    
+
     saveGroup: function() {
         var servers = {};
         

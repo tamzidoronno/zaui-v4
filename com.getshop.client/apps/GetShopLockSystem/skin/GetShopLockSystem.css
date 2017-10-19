@@ -46,7 +46,8 @@
 
 .GetShopLockSystem .userslotrow {
     position: relative;
-    height: 33px;
+    min-height: 33px;
+    padding-bottom: 5px;
 }
 .GetShopLockSystem .slotActions {
     position: absolute;
@@ -55,7 +56,7 @@
 }
 .GetShopLockSystem .userrow {
     padding-left: 19px;
-    height: 45px;
+    min-height: 45px;
 }
 
 .GetShopLockSystem .userrow:nth-child(odd) {

@@ -3,10 +3,6 @@
 $lock = $this->getLock();
 ?>
 
-<div class="warning" style="color: red; border: solid 1px red; margin-top: 20px; margin-bottom: 20px; padding: 20px; font-weight: bold;">
-    <i class="fa fa-warning"></i> Change settings below with extreme care!<br/> Changes in this settings may reduce access for guests etc.
-</div>
-
 <div class="shop_button" gsclick="cancelEditingLock">Back to overview</div>
 <br/>
 <h2><? echo "Device id: " .$lock->zwaveDeviceId .", Name: ".$lock->name; ?></h2>

@@ -96,15 +96,20 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                                 .get("99").getAsJsonObject()
                                 .get("data").getAsJsonObject();
                         
-                        String name = innerElement.getAsJsonObject()
-                                .get("data").getAsJsonObject()
-                                .get("givenName").getAsJsonObject()
+                        JsonObject data = innerElement.getAsJsonObject()
+                                .get("data").getAsJsonObject();
+                        
+                        String name = "";
+                        if (data.get("givenName").getAsJsonObject() != null && !data.get("givenName").getAsJsonObject().get("value").isJsonNull()) {
+                            name = data.get("givenName").getAsJsonObject()
                                 .get("value").getAsString();
+                            }
                         
                         LocstarLock lock = new LocstarLock();
                         lock.maxnumberOfCodes = userCode.get("maxUsers").getAsJsonObject().get("value").getAsInt();
                         lock.zwaveDeviceId = Integer.parseInt(deviceId);
                         lock.name = name;
+                        lock.connectedToServerId  = id;
                         lock.initializeUserSlots();
                         locks.add(lock);
                     }   

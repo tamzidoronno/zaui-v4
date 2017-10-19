@@ -937,43 +937,43 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public Map<String, List<Statistic>> getMostSoldProducts(int numberOfProducts) {
         Map<String, Integer> counts = new HashMap();
-        
-        for (Order order : orders.values()) {
-            
-            if (order.cart == null) {
-                continue;
-            }
-            
-            for (CartItem item : order.cart.getItems()) {
-                Integer oldCount = counts.get(item.getProduct().id);
-                if (oldCount == null) {
-                    oldCount = 0;
-                }
-                
-                oldCount += item.getCount();
-                counts.put(item.getProduct().id, oldCount);
-            }
-        }
-        
-        counts = sortByValue(counts);
-        
-        Map<String, List<Statistic>> retMap = new HashMap();
-        int i = 0;
-        for (String productId : counts.keySet()) {
-            List<Statistic> statistics = new ArrayList();
-            statistics.addAll(createStatistic(productId));
-            
-            retMap.put(productId, statistics);
-            
-            i++;
-            if (i >= numberOfProducts) {
-                break;
-            }
-            
-            
-        }
-        
-        return retMap;
+//        
+//        for (Order order : orders.values()) {
+//            
+//            if (order.cart == null) {
+//                continue;
+//            }
+//            
+//            for (CartItem item : order.cart.getItems()) {
+//                Integer oldCount = counts.get(item.getProduct().id);
+//                if (oldCount == null) {
+//                    oldCount = 0;
+//                }
+//                
+//                oldCount += item.getCount();
+//                counts.put(item.getProduct().id, oldCount);
+//            }
+//        }
+//        
+//        counts = sortByValue(counts);
+//        
+//        Map<String, List<Statistic>> retMap = new HashMap();
+//        int i = 0;
+//        for (String productId : counts.keySet()) {
+//            List<Statistic> statistics = new ArrayList();
+//            statistics.addAll(createStatistic(productId));
+//            
+//            retMap.put(productId, statistics);
+//            
+//            i++;
+//            if (i >= numberOfProducts) {
+//                break;
+//            }
+//            
+//            
+//        }
+//        
+        return new HashMap();
     }
     
     private Map sortByValue(Map map) {

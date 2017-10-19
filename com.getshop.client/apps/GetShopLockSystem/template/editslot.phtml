@@ -1,0 +1,18 @@
+
+<div class='shop_button' gsclick='changeToMenu' menu='editgroup' dontclear='true'>Back</div>
+
+<div gstype='form' method='saveSlotInformation'>
+    <br/>Pin Code: 
+    <br/><input class='gsniceinput1' gsname='pincode'/>
+    <br/>
+    <br/>Time limit:
+    <br/><input id='from' class='gsniceinput1' gsname='from' /> - <input class='gsniceinput1' id='to' gsname='to'/>
+    <br/>
+    <br/><div class='shop_button' gstype='submit'>Save</div>
+</div>
+
+<script>
+    $('#from').datetimepicker();
+    $('#to').datetimepicker();
+</script>
+  

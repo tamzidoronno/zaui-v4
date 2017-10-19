@@ -41,13 +41,17 @@ if ($slot->belongsToGroupId) {
                     Pincode: <? echo $slot->code->pinCode; ?>, CardId: <? echo $slot->code->cardId; ?>
                 
                 <?
+                if ($slot->code->validFrom && $slot->code->validTo) {
+                    echo "<br/> Valid from: ".$slot->code->validFrom.", to: ".$slot->code->validTo;
+                }
+                
             }
             ?>    
             <div class="slotActions">
                 <?
                 if ($group) {
                 ?>
-                    <div class="gs_shop_small_icon changecodeonslot" slotid="<? echo $slot->slotId; ?>" title="Change code"><i class="fa fa-edit"></i></div>
+                    <div class="gs_shop_small_icon" gsclick='changeToMenu' menu='editslot' dontclear='true' slotid="<? echo $slot->slotId; ?>" title="showEditSlot"><i class="fa fa-edit"></i></div>
                 <?
                 } else {
                 ?>

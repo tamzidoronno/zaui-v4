@@ -24,7 +24,11 @@ if ($routes) {
             echo  "<div gsclick='deleteRoute' gs_confirm='are you sure you want to delete the route?' routeid='$route->id' class='gs_shop_small_icon'><i class='fa fa-trash'></i></div> "
                 . " ";
         }
-        echo $route->name." $completed</div>";
+        echo $route->name." $completed";
+        if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+            echo ", Depot: ". $route->depotId;
+        }
+        echo "</div>";
     }
     echo "</div>";
     echo "<br/>";

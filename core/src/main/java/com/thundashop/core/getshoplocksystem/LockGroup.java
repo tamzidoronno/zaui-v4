@@ -8,6 +8,7 @@ package com.thundashop.core.getshoplocksystem;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +71,11 @@ public class LockGroup extends DataCommon {
     void renewCodeForSlot(int slotId) {
         MasterUserSlot slot = groupLockCodes.get(slotId);
         slot.generateNewCode();
+    }
+
+    void changeDatesForSlot(int slotId, Date validFrom, Date validTo) {
+        MasterUserSlot slot = groupLockCodes.get(slotId);
+        slot.setDates(validFrom, validTo);
     }
 
     

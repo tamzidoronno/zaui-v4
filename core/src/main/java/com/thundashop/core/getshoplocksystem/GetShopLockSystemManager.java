@@ -344,8 +344,18 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     }
 
     @Override
-    public void changeDatesForSlot(String groupId, int slotId, Date startDate, Date endDate) {
-        System.out.println("Not yet implemented");
+    public void changeDatesForSlot(String groupId, int slotId, Date validFrom, Date validTo) {
+        LockGroup group = getGroup(groupId);
+        
+        if (group != null) {
+            group.changeDatesForSlot(slotId, validFrom, validTo);
+            
+            lockServers.values().stream().forEach(server -> {
+                server.syncGroupSlot(group, slotId);
+            });
+            
+            saveObject(group);
+        }
     }
 
 }

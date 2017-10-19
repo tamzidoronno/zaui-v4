@@ -347,6 +347,7 @@ class PmsPricing extends \WebshopApplication implements \Application {
     public function changepricetype() {
         $prices = $this->getPrices();
         $prices->defaultPriceType = $_POST['data']['pricetype'];
+        $prices->code = $_POST['data']['code'];
         $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $this->getSelectedPricePlan(), $prices);
     }
     

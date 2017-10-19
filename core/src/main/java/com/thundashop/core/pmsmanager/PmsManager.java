@@ -1159,6 +1159,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         prices.longTermDeal = newPrices.longTermDeal;
         prices.coveragePrices = newPrices.coveragePrices;
         prices.coverageType = newPrices.coverageType;
+        if(priceMap.containsKey(prices.code)) {
+            priceMap.remove(prices.code);
+        } else {
+            priceMap.remove("default");
+        }
+        prices.code = newPrices.code;
+        priceMap.put(prices.code, prices);
         
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);

@@ -47,6 +47,27 @@ $booking = $this->getSelectedBooking();
                 if(isset($item->endDate) && $item->endDate) {
                     echo "<span style='display:inline-block; width: 125px;'>" .date("d.m.Y H:i", strtotime($item->endDate)) . "</span> ";
                 }
+                
+                $total = $item->product->price * $item->count;
+                $total2 = 0;
+                if(isset($item->itemsAdded)) {
+                    foreach($item->itemsAdded as $addonItem) {
+                        $total2 += $addonItem->price * $addonItem->count;
+                    }
+                }
+                if(isset($item->priceMatrix)) {
+                    foreach($item->priceMatrix as $day => $pmprice) {
+                        $total2 += $pmprice;
+                    }
+                }
+                
+                $additionalDiff = $total - $total2;
+                $warning = false;
+                if($additionalDiff > 1 || $additionalDiff < -1) {
+                    echo "<span style='color:red;' padding: 10px;'>WARNING FAILED CALCULATING ADDITIONAL DATA ($additionalDiff)</span>";
+                    $warning = true;
+                }
+                
                 $todaysname = $this->getApi()->getProductManager()->getProduct($item->product->id)->name;
                 echo "<span style='display:inline-block; width: 300px;' title='Named today : $todaysname'>" . $item->product->name . "</span>" ;
                 echo "<span style='display:inline-block; width: 50px;'>" . @$item->product->additionalMetaData . "</span> " ;
@@ -54,7 +75,7 @@ $booking = $this->getSelectedBooking();
                 echo "<span style='float:right;'>";
                 echo "<span style='display:inline-block; width: 10px; text-align:right'>" . $item->count . "</span>" . " x ";
                 echo "" . round($item->product->price);
-                if(!@$order->closed) {
+                if(!@$order->closed || $warning) {
                     echo ' <i class="fa fa-edit loadeditcartitemonorder" cartitemid="'.$item->cartItemId.'" orderid="'.$order->id.'"></i>';
                 }
                 echo "</span><br>";

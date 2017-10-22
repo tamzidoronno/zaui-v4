@@ -3220,11 +3220,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("got configuration");
             if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
                 if(getConfigurationSecure().supportRemoveWhenFull || booking.isWubook() || room.addedToWaitingList) {
+                    room.canBeAdded = false;
+                    room.delete();
                     if(booking.isWubook()) {
                         room.overbooking = true;
                     }
-                    room.canBeAdded = false;
-                    room.delete();
                 }
                 BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                 String name = "";
@@ -4869,7 +4869,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         } catch (Exception e) {
             messageManager.sendErrorNotification("This should never happen and need to be investigated : Unknown booking exception occured for booking id: " + booking.id + ", raw: " + rawBooking, e);
-            e.printStackTrace();
+            logPrintException(e);
         }
         logPrint("COMPLETECURRENTBOOKING : Result is : " + result);
         return null; 

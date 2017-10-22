@@ -536,11 +536,13 @@ public class PmsBookingRooms implements Serializable {
         addedToWaitingList = false;
         inWorkSpace = false;
         overbooking = false;
+        deletedByChannelManagerForModification = false;
     }
 
     public void delete() {
         deleted = true;
         deletedDate = new Date();
+        overbooking = false;
     }
 
     public boolean isDeleted() {

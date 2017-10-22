@@ -346,7 +346,8 @@ public class CartItem implements Serializable {
     public boolean correctIncorrectCalculation() {
         double total = getTotalAmount();
         double totalOnMeta = getTotalOnMeta();
-        if((total + totalOnMeta) == 0.0) {
+        double diff = total + totalOnMeta;
+        if(diff > -0.1 && diff < 0.1) {
             if(itemsAdded != null) {
                 for(PmsBookingAddonItem item : itemsAdded) {
                     item.price = item.price * -1;

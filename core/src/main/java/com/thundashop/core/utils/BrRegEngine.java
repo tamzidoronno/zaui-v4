@@ -11,6 +11,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import javax.net.ssl.HttpsURLConnection;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.springframework.stereotype.Component;
 
 class BrRegCompany {
@@ -85,6 +87,8 @@ public class BrRegEngine implements CompanySearchEngine {
     }
 
     private String read(String organisationUrl, boolean subdep) {
+        HttpsURLConnection.setDefaultHostnameVerifier(SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
         try {
             organisationUrl = URLEncoder.encode(organisationUrl, "UTF-8");
             if (subdep) {

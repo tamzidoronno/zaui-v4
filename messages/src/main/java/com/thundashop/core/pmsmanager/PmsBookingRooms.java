@@ -1,6 +1,7 @@
 
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.annotations.ExcludePersonalInformation;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -25,6 +26,7 @@ public class PmsBookingRooms implements Serializable {
     public String bookingItemTypeId = "";
     public String bookingItemId = "";
     public String pmsBookingRoomId = UUID.randomUUID().toString();
+    @ExcludePersonalInformation
     public List<PmsGuests> guests = new ArrayList();
     public PmsBookingDateRange date = new PmsBookingDateRange();
     public Integer numberOfGuests = 1;

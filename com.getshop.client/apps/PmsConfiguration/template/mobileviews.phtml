@@ -80,6 +80,7 @@ if(!$views || sizeof($views) == 0) {
 $users = $this->getApi()->getUserManager()->getAllUsers();
 
 $vareas = array();
+$vareas['userdata'] = "<i class='fa fa-user' title='Deny access to user data'></i>";
 $vareas['otherinstruction'] = "Instructions";
 $vareas['findguest'] = "Guests";
 $vareas['fire'] = "Fire";
@@ -110,10 +111,16 @@ foreach($users as $user) {
     if($user->type != 100) {
         continue;
     }
+    if($user->id == ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id) {
+//        continue;
+    }
     echo "<tr>";
     echo "<td>" . $user->fullName . " (" . $user->emailAddress . ")". "</td>";
     foreach($vareas as $id => $area) {
         $checked = "";
+        if($id == "userdata" && in_array("ExcludePersonalInformation", (array)$user->annotionsAdded)) {
+            $checked = "CHECKED";
+        }
         if(isset($config->mobileViewRestrictions->{$user->id}) && in_array($id, $config->mobileViewRestrictions->{$user->id})) {
             $checked = "CHECKED";
         }

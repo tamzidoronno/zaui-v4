@@ -6,6 +6,7 @@ package com.thundashop.core.usermanager.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thundashop.core.annotations.ExcludePersonalInformation;
 import com.thundashop.core.common.Administrator;
 import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
@@ -57,6 +58,8 @@ public class User extends DataCommon implements Comparable<User> {
     public String internalPassword;
     
     public List<UserCompanyHistory> companyHistory = new ArrayList();
+    
+    public List<String> annotionsAdded = new ArrayList();
     
     public boolean createInSendRegning = false;
     public boolean autoConfirmBookings = false;
@@ -208,11 +211,15 @@ public class User extends DataCommon implements Comparable<User> {
         public static int CUSTOMER = 10;
     }
     
+    @ExcludePersonalInformation
     public Address address;
+    @ExcludePersonalInformation
     public String fullName = "";
+    @ExcludePersonalInformation
     public String emailAddress = "";
     public String relationship = "";
     public String emailAddressToInvoice = "";
+    @ExcludePersonalInformation
     public String prefix = "47";
     public String password = "";
     public String username = "";
@@ -221,7 +228,9 @@ public class User extends DataCommon implements Comparable<User> {
     public Date lastLoggedIn;
     public Date prevLoggedIn;
     public Date expireDate;
+    @ExcludePersonalInformation
     public String birthDay;
+    @ExcludePersonalInformation
     public String cellPhone;
     public HashMap<String, Comment> comments = new HashMap();
     public HashMap<String, String> metaData = new HashMap();

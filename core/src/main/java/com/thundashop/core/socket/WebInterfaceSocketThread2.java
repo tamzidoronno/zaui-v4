@@ -79,7 +79,7 @@ public class WebInterfaceSocketThread2 implements Runnable {
                 builder.serializeNulls();
                 builder.disableInnerClassSerialization();
                 builder.serializeSpecialFloatingPointValues();
-                builder.setExclusionStrategies(new AnnotationExclusionStrategy());
+                builder.setExclusionStrategies(new AnnotationExclusionStrategy(null));
                 Gson gson = builder.create();
                 json = gson.toJson((Object) result);
             }catch(Exception e) {

@@ -407,6 +407,21 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
+        User currentUser = getSession().currentUser;
+        //if same user tries to change annotiations on itself.
+        if (user.id != null && currentUser.id.equals(user.id)) {
+            for(String ann : user.annotionsAdded) {
+                if(!currentUser.annotionsAdded.contains(ann)) {
+                    throw new ErrorException(26);
+                }
+            }
+        }
+        
+        //If a user has annotation restriction, do not allow updates on other users.
+        if(user.id != null && currentUser != null && !currentUser.annotionsAdded.isEmpty() && !currentUser.id.equals(user.id)) {
+            throw new ErrorException(26);
+        }
+        
     }
     
     @Override
@@ -446,9 +461,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return;
         }
         
+        
         checkUserAccess(user);
         preventOverwriteOfData(user, savedUser);
-
+        
         validatePhoneNumber(user);
         
         collection.addUser(user);

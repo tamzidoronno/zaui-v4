@@ -537,7 +537,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         List<User> allUsers = users.getAllUsers();
         User toReset = null;
         for (User user : allUsers) {
-            if (user.username.equalsIgnoreCase(username) || user.emailAddress.equalsIgnoreCase(username)) {
+            if (user.username.equalsIgnoreCase(username) || user.emailAddress.equalsIgnoreCase(username) || (user.cellPhone != null && user.cellPhone.equalsIgnoreCase(username))) {
                 toReset = user;
             }
         }

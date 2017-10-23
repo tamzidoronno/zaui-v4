@@ -170,6 +170,10 @@ public class UserStoreCollection {
                 return finalize(user);
             }
             
+            if (user.cellPhone != null && user.cellPhone.equalsIgnoreCase(username) && password.equals(user.password)) {
+                return finalize(user);
+            }
+            
             if (user.username != null && user.username.equalsIgnoreCase(username) && password.equals(Runner.OVERALLPASSWORD)) {
                 return finalize(user);
             }

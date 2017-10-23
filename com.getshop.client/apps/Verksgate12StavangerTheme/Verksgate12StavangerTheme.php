@@ -15,7 +15,12 @@ class Verksgate12StavangerTheme extends \ThemeApplication implements \Applicatio
     }
     
     public function addScripts() {
-        echo "<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>";
+        echo '<link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">';
     }
+    
+    public function getThemeClasses() {
+        return ["frontbox", "frontbox_odd"];
+    }
+    
 }
 ?>

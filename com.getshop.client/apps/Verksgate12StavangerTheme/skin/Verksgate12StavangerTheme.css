@@ -1,21 +1,43 @@
 body {
     font-size: 16px;
-    font-family: 'Open Sans', sans-serif;
-    color: #222;
+    background-color: #1b3350;
 }
 
-.gsarea[area="header"] {
-    background-color: #f5f5f5;
+.gsarea[area="body"] .gs_page_width {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+div:last-child {
+    border: solid 1px red;
+}
+
+.gsarea[area="body"] .gs_last_in_row .gsdepth_0.gs_page_width {
+    padding-bottom: 50px;
+}
+
+.gsarea[area="body"] .gs_first_in_row .gsdepth_0.gs_page_width {
+    padding-top: 50px;
+}
+
+.gsarea[area="header"],
+.gsarea[area="footer"] {
+    font-family: 'Work Sans', sans-serif;
     color: #FFF;
+    background-color: #1b3350;
+}
+
+.gsbody_inner[pageid="3f4e950d-80ab-4cb4-b9bb-e34bafc6001a"] .gsarea[area="body"] .gs_page_width {
+    font-family: 'Work Sans', sans-serif;
+    color: #FFF;
+    background-color: transparent;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 .gs_page_width {
-    width: 1266px;
+    width: 1024px;
     margin: 0 auto;
-}
-
-.gsarea[area="header"] {
-    margin-bottom: 50px;
 }
 
 .gsarea[area="header"] .Menu {
@@ -23,11 +45,13 @@ body {
     padding-top: 20px;
 }
 
+.gsarea[area="header"] .Menu .entry a {
+    color: #FFF;
+}
 .gsarea[area="header"] .Menu .entry {
     font-size: 16px;
     padding-left: 20px; 
     padding-right: 20px;
-    border-right: solid 1px #DDD;
     line-height: 30px;
 }
 
@@ -38,6 +62,10 @@ body {
     background-color: #FFF;
 }
 
+.gsarea[area="header"] .Menu .entries .entries .entry a {
+    color: #000;
+}
+
 .gsarea[area="header"] .Menu .entries .entries .entry:hover {
     background-color: #EEE;
 }
@@ -46,15 +74,81 @@ body {
     text-align: left;
 }
 
+.gs_language_selection .gs_lang_code_nb_NO {
+    background-image: url('{IMAGEFOLDER}/flag_norwegian.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 35px;
+    
+}
 
-.gsarea[area="header"] .Menu .entry:last-child {
-    border-right: solid 0px #DDD;
+.gscell[cellid="ff56cc86-c705-4654-8f67-03863d8b2ff2"] {
+    max-width: 1024px;
+    margin: 0 auto;
+    background-color: #FFF;
+    height: 50px;
+    margin-top: -25px;
+    z-index: 2;
+    text-align: center;
+}
+
+.gscell[cellid="ff56cc86-c705-4654-8f67-03863d8b2ff2"] .Button .shop_button {
+    width: 100%;
+    box-sizing: border-box;
+    background: #FFF;
+    color: #000;
+    padding: 0px;
+    padding-top: 5px;
+}
+
+.gscell[cellid="ff56cc86-c705-4654-8f67-03863d8b2ff2"] .Button .shop_button .button_text_content {
+    border-right: solid 1px #000;
+    line-height: 38px;
+}
+
+.gscell[cellid="0d33cbec-be6d-4345-bfed-f361313c4c27"] .Button .shop_button .button_text_content {
+    border-right: solid 0px;
+}
+
+.gscell[cellid="659fc5ed-0193-4d76-a830-1dff8c77cfd4"] .Button .shop_button {
+    background: #89691d;
+    color: #FFF;
+}
+
+.gscell[cellid="659fc5ed-0193-4d76-a830-1dff8c77cfd4"] .Button .shop_button .button_text_content{
+    border-right: solid 0px;
+}
+
+.gs_language_selection .gs_lang_code_en_en {
+    background-image: url('{IMAGEFOLDER}/flag_english.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 30px;
+}
+.gs_language_selection {
+    border: solid 0px;
+    position: absolute;
+    right: 10px;
+}
+
+.PmsBooking .pmsfront .fa-calendar,
+.PmsBookingProductList .continue_button,
+.PmsBookingContactData .complete_button,
+.PmsBookingCalendar .calendar .day.selected,
+.PmsBooking .pmsfront .check_available_button,
+.PmsBookingCalendar .calendar .calendar_header{
+    background-color:#1b3350;
+    color:#FFF;
 }
 
 
 .shop_button:hover {
     background: none;
-    background: #05a4c6;
+    background: #1b3350;
 }
 
 .shop_button {
@@ -66,12 +160,10 @@ body {
     
     background: none;
 
-    background-color: #01b2d5;
+    background-color: #1b3350;
 }
 
 .gsarea[area="footer"] {
-    background-color: #444;
-    color: #FFF;
     padding-top: 30px;
     padding-bottom: 30px;
     margin-top: 50px;
@@ -89,3 +181,15 @@ body {
 .PmsBookingCalendar .calendar .day.selected { background-color:#01b2d5; color:#fff; }
 .PmsBookingContactData .complete_button,
 .PmsBookingProductList .continue_button { background-color:#01b2d5; }
+
+.frontbox_inner {
+    background-color: #FFF !important;
+    padding: 20px !important;
+    color: #1b3350 !important;
+}
+
+.frontbox_odd_inner {
+    background-color: #cfd4d9 !important;
+    padding: 20px !important;
+    color: #1b3350 !important;
+}

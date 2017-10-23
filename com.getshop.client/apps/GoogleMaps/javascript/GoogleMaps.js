@@ -77,6 +77,54 @@ thundashop.app.GoogleMaps.prototype = {
                 center: center,
                 minZoom: parseInt(scope.config.minZoom),
                 maxZoom: parseInt(scope.config.maxZoom)
+            };
+            
+            if (scope.config.blackandwhite && scope.config.blackandwhite === "true") {
+                mapOptions.styles = [
+                    {elementType: 'geometry', stylers: [{color: '#e3e2e2'}]},
+                    {elementType: 'labels.text.stroke', stylers: [{color: '#FFFFFF'}]},
+                    {elementType: 'labels.text.fill', stylers: [{color: '#727070'}]},
+                    {
+                      featureType: 'administrative.locality',
+                      elementType: 'labels.text.fill',
+                      stylers: [{color: '#d59563'}]
+                    },
+                    {
+                      featureType: 'road',
+                      elementType: 'geometry',
+                      stylers: [{color: '#FFFFFF'}]
+                    },
+                    {
+                      featureType: 'road',
+                      elementType: 'geometry.stroke',
+                      stylers: [{color: '#FFFFFF'}]
+                    },
+                    {
+                      featureType: 'road',
+                      elementType: 'labels.text.fill',
+                      stylers: [{color: '#878585'}]
+                    },
+                    {
+                      featureType: 'road.highway',
+                      elementType: 'geometry',
+                      stylers: [{color: '#FFFFFF'}]
+                    },
+                    {
+                      featureType: 'road.highway',
+                      elementType: 'geometry.stroke',
+                      stylers: [{color: '#878585'}]
+                    },
+                    {
+                      featureType: 'road.highway',
+                      elementType: 'labels.text.fill',
+                      stylers: [{color: '#878585'}]
+                    },
+                    {
+                      featureType: 'water',
+                      elementType: 'geometry',
+                      stylers: [{color: '#bcbabb'}]
+                    }
+                ]
             }
             scope.mapOptions = mapOptions;
             scope.mapDiv = document.getElementById(scope.config.container);
@@ -229,7 +277,8 @@ thundashop.app.GoogleMapsCommon = {
             height: container.find('.mapheight').val(),
             minZoom: container.find('.minzoom').val(),
             maxZoom: container.find('.maxzoom').val(),
-            draggable : container.find('.draggable').val()
+            draggable : container.find('.draggable').val(),
+            blackandwhite : container.find('.blackandwhite').val()
         };
         var entries = [];
         container.find('.container').find('.entryrow').each(function() {

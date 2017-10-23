@@ -479,7 +479,7 @@ class Page {
      * @param type $header
      * @return boolean
      */
-    function printCell($cell, $count, $depth, $totalcells, $edit, $parent, $header=false) {
+    function printCell($cell, $count, $depth, $totalcells, $edit, $parent, $header=false, $rowsForArea=null) {
         if ($this->factory->isMobile() && $cell->hideOnMobile) {
              return;
         }
@@ -630,6 +630,10 @@ class Page {
         $lastInRow = (count(@$parent->cells) - 1) == $count ?  "gs_last_in_row" : "";
         $firstInRowClass = $count == 0 ?  "gs_first_in_row" : "";
         $height = $cell->height;
+        
+        if (!$parent && $rowsForArea && count($rowsForArea) == ($count+1)) {
+            $lastInRow = "gs_last_in_row";
+        }
         
         
         echo "<div class='gsucell $themeClass $lastInRow $firstInRowClass $gslayoutbox $selectedCell $gscell $gsrowmode $container $marginsclasses $roweditouter gsdepth_$depth gscount_$count $mode gscell_" . $cell->incrementalCellId . "' $styles incrementcellid='" . $cell->incrementalCellId . "' cellid='" . $cell->cellId . "' outerwidth='" . $cell->outerWidth . "' outerWidthWithMargins='" . $cell->outerWidthWithMargins . "' selectedThemeClass='$themeClass' anchor='$anchor' $permissions $additionalinfo width='$width' gsheight='$height' $keepMobile>";
@@ -1032,7 +1036,7 @@ class Page {
                 echo "</div></div>";
                 $this->printEasyRowMode($row);
             }
-            $this->printCell($row, $count, 0, 0, $isedit, null, $header);
+            $this->printCell($row, $count, 0, 0, $isedit, null, $header, $rowsToPrint);
             if ($isedit) {
                 echo "<div class='gseditrowseperator'><div class='gseditrowseperatorinnerbottom'></div></div>";
             }

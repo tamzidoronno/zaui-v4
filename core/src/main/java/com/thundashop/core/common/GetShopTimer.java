@@ -27,6 +27,9 @@ public class GetShopTimer {
    
     
     public void addLogEntry(String description, String managerName) {
+        if(logs.get(Thread.currentThread().getId()) == null) {
+            return;
+        }
         GetShopTimePerformanceEntry entry = new GetShopTimePerformanceEntry();
         entry.sequence = logs.get(Thread.currentThread().getId()).size();
         entry.milliseconds = System.currentTimeMillis();

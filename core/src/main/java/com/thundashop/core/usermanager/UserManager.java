@@ -94,6 +94,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private User internalApiUser;
     private String internalApiUserPassword;
     
+    
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
@@ -405,6 +407,21 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
         
+        User currentUser = getSession().currentUser;
+        //if same user tries to change annotiations on itself.
+        if (user.id != null && currentUser.id.equals(user.id)) {
+            for(String ann : user.annotionsAdded) {
+                if(!currentUser.annotionsAdded.contains(ann)) {
+                    throw new ErrorException(26);
+                }
+            }
+        }
+        
+        //If a user has annotation restriction, do not allow updates on other users.
+        if(user.id != null && currentUser != null && !currentUser.annotionsAdded.isEmpty() && !currentUser.id.equals(user.id)) {
+            throw new ErrorException(26);
+        }
+        
     }
     
     @Override
@@ -444,9 +461,10 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return;
         }
         
+        
         checkUserAccess(user);
         preventOverwriteOfData(user, savedUser);
-
+        
         validatePhoneNumber(user);
         
         collection.addUser(user);
@@ -519,7 +537,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         List<User> allUsers = users.getAllUsers();
         User toReset = null;
         for (User user : allUsers) {
-            if (user.username.equalsIgnoreCase(username) || user.emailAddress.equalsIgnoreCase(username)) {
+            if (user.username.equalsIgnoreCase(username) || user.emailAddress.equalsIgnoreCase(username) || (user.cellPhone != null && user.cellPhone.equalsIgnoreCase(username))) {
                 toReset = user;
             }
         }
@@ -2013,5 +2031,18 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (user != null) {
             addUserToSession(user);
         }
+    }
+
+    @Override
+    public List<User> getSubUsers(String userId) {
+        List<User> result = new ArrayList();
+        List<User> users = getAllUsers();
+        for(User usr : users) {
+            if(usr.subUsers.contains(userId)) {
+                result.add(usr);
+            }
+        }
+        
+        return result;
     }
 }

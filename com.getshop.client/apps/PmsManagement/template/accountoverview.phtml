@@ -65,21 +65,22 @@ $states['10'] = "Send to invoice";
                             </tr>
                             <tr>
                                 <td width='50%'>Street address</td>
-                                <td><input class='gsniceinput1' value='<?php echo $user->address->address; ?>' gsname='adress'></td>
+                                <td><input class='gsniceinput1' value='<?php echo @$user->address->address; ?>' gsname='adress'></td>
                             </tr>
                             <tr>
                                 <td width='50%'>Postal code</td>
-                                <td><input class='gsniceinput1' value='<?php echo $user->address->postCode; ?>' gsname='postcode'></td>
+                                <td><input class='gsniceinput1' value='<?php echo @$user->address->postCode; ?>' gsname='postcode'></td>
                             </tr>
                             <tr>
                                 <td width='50%'>City</td>
-                                <td><input class='gsniceinput1' value='<?php echo $user->address->city; ?>' gsname='city'></td>
+                                <td><input class='gsniceinput1' value='<?php echo @$user->address->city; ?>' gsname='city'></td>
                             </tr>
                             <tr>
                                 <td width='50%'>Country</td>
                                 <td>
                                     <select gsname="countrycode" class="gsniceselect1">
                                         <?php 
+                                        echo "<option value=''>Select a country</option>";
                                         foreach(CountryCodes::getCodes() as $code => $val) {
                                             $selected = ($code == $user->address->countrycode) ? "SELECTED" : "";
                                             echo "<option value='$code' $selected>$val</option>";
@@ -165,10 +166,21 @@ $states['10'] = "Send to invoice";
         <div class='dashboard_panel_outer'>
             <div class='dashboard_panel'>
                 <div class='dashboard_panel_header'><i class='fa fa-user-times'></i> Subaccounts
-                    <span class='pmsbutton dashboardpmsbutton'>Create subaccount (N/A)</span>
                 </div>
                 <div class='dashboard_panel_body'>
-                    <?php echo "Subaccount support is not yet available."; ?>
+                    <?php
+                    $subAccounts = $this->getApi()->getUserManager()->getSubUsers($user->id);
+                    if(isset($subAccounts)) {
+                        foreach($subAccounts as $account) {
+                            echo "<div>" . $account->fullName . "<i class='fa fa-arrow-right refreshbutton' userid='".$account->id."' style='float:right;cursor:pointer;'></i></div>";
+                        }
+                    }
+                    if(isset($user->subUserList)) {
+                        foreach($user->subUserList as $usr) {
+                            echo "<div>" . $usr->fullName . "<i class='fa fa-arrow-right refreshbutton' userid='".$usr->id."' style='float:right;cursor:pointer;'></i></div>";
+                        }
+                    }
+                    ?>
                 </div>
             </div>
         </div>

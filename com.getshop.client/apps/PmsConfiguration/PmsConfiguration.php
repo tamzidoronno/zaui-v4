@@ -115,16 +115,30 @@ class PmsConfiguration extends \WebshopApplication implements \Application {
     public function updateMobileViewRestriction() {
         $toSave = array();
         foreach($_POST['data'] as $key => $val) {
-            if($val === "true") {
-//                echo "found";
-                $res = explode("_", $key);
-                $userId = $res[0];
-                $area = $res[1];
-                echo $userId;
-                if(!isset($toSave[$userId])) {
-                    $toSave[$userId] = array();
+            $res = explode("_", $key);
+            $userId = $res[0];
+            $area = $res[1];
+            if($area == "userdata") {
+                $user = $this->getApi()->getUserManager()->getUserById($userId);
+                $newAnnotiations = array();
+                foreach($user->annotionsAdded as $annotation) {
+                    if($annotation == "ExcludePersonalInformation") {
+                        continue;
+                    }
+                    $newAnnotiations[] = $annotation;
                 }
-                $toSave[$userId][] = $area;
+                if($val === "true") {
+                    $newAnnotiations[] = "ExcludePersonalInformation";
+                }
+                $user->annotionsAdded = $newAnnotiations;
+                $this->getApi()->getUserManager()->saveUser($user);
+            } else {
+                if($val === "true") {
+                    if(!isset($toSave[$userId])) {
+                        $toSave[$userId] = array();
+                    }
+                    $toSave[$userId][] = $area;
+                }
             }
         }
         

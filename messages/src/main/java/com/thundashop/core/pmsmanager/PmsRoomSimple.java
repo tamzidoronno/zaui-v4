@@ -1,6 +1,7 @@
 
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.annotations.ExcludePersonalInformation;
 import com.thundashop.core.common.Editor;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,8 +14,11 @@ public class PmsRoomSimple implements Serializable {
     public String bookingEngineId = "";
     public String pmsRoomId = "";
     public String bookingItemId = "";
+    @ExcludePersonalInformation
     public String owner = "";
+    @ExcludePersonalInformation
     public String ownersEmail = "";
+    @ExcludePersonalInformation
     public List<PmsGuests> guest = new ArrayList();
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public long start;

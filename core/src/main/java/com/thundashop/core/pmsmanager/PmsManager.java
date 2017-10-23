@@ -212,6 +212,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     price.code = "default";
                     saveObject(price);
                 }
+                if(priceMap.containsKey(price.code)) {
+                    for(int i = 0; i < 10; i++) {
+                        String code = price.code + "_" + i;
+                        if(!priceMap.containsKey(code)) {
+                            price.code = code;
+                            saveObject(price);
+                            break;
+                        }
+                        break;
+                    }
+                }
                 priceMap.put(price.code, price);
             }
             if (dataCommon instanceof PmsCareTaker) {
@@ -1148,6 +1159,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         prices.longTermDeal = newPrices.longTermDeal;
         prices.coveragePrices = newPrices.coveragePrices;
         prices.coverageType = newPrices.coverageType;
+        if(newPrices.code != null && !newPrices.code.isEmpty()) {
+            if(priceMap.containsKey(prices.code)) {
+                priceMap.remove(prices.code);
+            } else {
+                priceMap.remove("default");
+            }
+            prices.code = newPrices.code;
+            priceMap.put(prices.code, prices);
+        }
         
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
@@ -3200,11 +3220,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("got configuration");
             if (!bookingEngine.canAdd(bookingToAdd) || doAllDeleteWhenAdded()) {
                 if(getConfigurationSecure().supportRemoveWhenFull || booking.isWubook() || room.addedToWaitingList) {
+                    room.canBeAdded = false;
+                    room.delete();
                     if(booking.isWubook()) {
                         room.overbooking = true;
                     }
-                    room.canBeAdded = false;
-                    room.delete();
                 }
                 BookingItemType item = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                 String name = "";
@@ -4849,7 +4869,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         } catch (Exception e) {
             messageManager.sendErrorNotification("This should never happen and need to be investigated : Unknown booking exception occured for booking id: " + booking.id + ", raw: " + rawBooking, e);
-            e.printStackTrace();
+            logPrintException(e);
         }
         logPrint("COMPLETECURRENTBOOKING : Result is : " + result);
         return null; 
@@ -5821,12 +5841,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         try {
             PmsBooking booking = getBookingUnsecure(bookingId);
             if(type.equals("created")) {
-                bookingComRateManagerManager.pushBooking(booking, "Commit", false);
+                bookingComRateManagerManager.pushBooking(booking, "Commit", true);
             } else if(type.equals("room_removed") || 
                     type.equals("room_changed") ||
                     type.equals("date_changed") ||
                     type.equals("booking_undeleted")) {
-                bookingComRateManagerManager.pushBooking(booking, "Modify", false);
+                bookingComRateManagerManager.pushBooking(booking, "Modify", true);
             }
         }catch(Exception e) {
             e.printStackTrace();

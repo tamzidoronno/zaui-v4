@@ -37,8 +37,10 @@ $priceCodes = $this->getApi()->getPmsManager()->getpriceCodes($this->getSelected
     </div>
 </div>
 
+<input type='button' gstype='clicksubmitforce' gsvalue='<?php echo $priceObject->code; ?>' gsname='code' value='Delete price plan' style='float:right;' method='deletePricePlan'>
 <div method='changepricetype' gstype='form'>
     <?php
+    echo "<input type='text' gsname='code' value='".$priceObject->code."'><br>";
     echo "<select gsname='pricetype'>";
     foreach($pricetypes as $id => $type) {
         $selected = ($priceObject->defaultPriceType == $id) ? "SELECTED" : "";

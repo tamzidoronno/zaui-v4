@@ -116,7 +116,6 @@ class Login extends \SystemApplication implements \Application {
         $confirmCode = $_POST['data']['confirmCode'];
         
         $resetCode = $confirmCode;
-        $email = $email;
         $newPassword = $password;
         $code = $this->getApi()->getUserManager()->resetPassword($resetCode, $email, $newPassword);
         $result['code'] = $code;

@@ -10,6 +10,11 @@ class PmsPricing extends \WebshopApplication implements \Application {
         return "PmsPricing";
     }
 
+    public function deletePricePlan() {
+        $code = $_POST['data']['code'];
+        $this->getApi()->getPmsManager()->deletePricePlan($this->getSelectedName(), $code);
+    }
+    
     public function getSelectedName() {
         return $this->getConfigurationSetting("engine_name");
     }
@@ -110,6 +115,9 @@ class PmsPricing extends \WebshopApplication implements \Application {
     }
     
     public function creatnewpriceplan() {
+        if(!$_POST['data']['newplan']) {
+            return;
+        }
         $this->getApi()->getPmsManager()->createNewPricePlan($this->getSelectedName(), $_POST['data']['newplan']);
     }
     
@@ -339,6 +347,7 @@ class PmsPricing extends \WebshopApplication implements \Application {
     public function changepricetype() {
         $prices = $this->getPrices();
         $prices->defaultPriceType = $_POST['data']['pricetype'];
+        $prices->code = $_POST['data']['code'];
         $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $this->getSelectedPricePlan(), $prices);
     }
     

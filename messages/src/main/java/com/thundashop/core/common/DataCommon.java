@@ -31,6 +31,7 @@ public class DataCommon extends TranslationHandler implements Serializable, Clon
     public String gs_manager;
     public String colection;
     public String gsDeletedBy;
+    public String lastModifiedByUserId = "";
 
     private void checkAnnotations(Field field, boolean Administrator) throws IllegalArgumentException, IllegalAccessException {
         Object emptyObject = new Product();

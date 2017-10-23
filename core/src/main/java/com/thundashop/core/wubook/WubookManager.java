@@ -444,8 +444,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Calendar calStart = Calendar.getInstance();
             
             HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
+            if(pricesForType == null) {
+                logPrint("Invalid price daily prices for : " + rdata.bookingEngineTypeId);
+                continue;
+            }
             Double defaultPrice = pricesForType.get("default");
-            Double price = pricesForType.get("default");
             
             for(int i = 0;i < (365*2); i++) {
                 int year = calStart.get(Calendar.YEAR);
@@ -470,7 +473,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     PmsBooking booking = new PmsBooking();
                     priceToAdd = pmsInvoiceManager.calculatePrice(rdata.bookingEngineTypeId, calStart.getTime(), calStart.getTime(), true, booking);
                 }
-                
+                if(priceToAdd == 0.0) {
+                    priceToAdd = 1.0;
+                }
                 list.add(priceToAdd);
                 calStart.add(Calendar.DAY_OF_YEAR, 1);
             }
@@ -515,7 +520,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
 
             HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
-            Double minstay = pricesForType.get("minstay");
+            Double minstay = null;
+            if(pricesForType != null) {
+                minstay = pricesForType.get("minstay");
+            }
             if(minstay == null || minstay == 1.0) {
                 // Ignoreing Akers Have as they want to set back the 1 day minstay setting
                 if (!storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841")) {

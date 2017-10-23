@@ -464,6 +464,9 @@ public class PmsBooking extends DataCommon {
     void calculateTotalCost() {
         double total = 0.0;
         for(PmsBookingRooms room : rooms) {
+            if(room.deletedByChannelManagerForModification) {
+                continue;
+            }
             room.calculateTotalCost(priceType);
             if(room.isDeleted() && !nonrefundable) {
                 total += room.calculateNonRefundAddons();

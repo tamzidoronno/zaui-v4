@@ -7,6 +7,7 @@ package com.thundashop.core.common;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
+import com.thundashop.core.usermanager.data.User;
 
 /**
  *
@@ -14,8 +15,32 @@ import com.google.gson.FieldAttributes;
  */
 public class AnnotationExclusionStrategy implements ExclusionStrategy {
 
+    private final User user;
+
+    public AnnotationExclusionStrategy(User user) {
+        this.user = user;
+    }
+    
     @Override
     public boolean shouldSkipField(FieldAttributes f) {
+        if(user != null && !user.annotionsAdded.isEmpty()) {
+            for(String annotation : user.annotionsAdded) {
+                try {
+                    Class cls = Class.forName("com.thundashop.core.annotations." + annotation);
+                    if(annotation.startsWith("Exclude")) {
+                        if (f.getAnnotation(cls) != null) {
+                            return true;
+                        }
+                    } else {
+                        if (f.getAnnotation(cls) != null) {
+                            return false;
+                        }
+                    }
+                }catch(Exception e) {
+                    return false;
+                }
+            }
+        }
         return f.getAnnotation(ExcludeFromJson.class) != null;
     }
 

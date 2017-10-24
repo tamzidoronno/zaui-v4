@@ -8,17 +8,20 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.apigenerator.GenerateApi.ApiMethod;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.GetShopMultiLayerSession;
-import com.thundashop.core.common.ManagerSubBase;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -30,10 +33,12 @@ public class JavaApiBuilder {
     private String apiPath = "../javaapi/src/main/java/com/getshop/javaapi";
     private final List<Class> allManagers;
     private final List<Class> dataObjects;
+    private final List<Class> changedManagers;
 
-    public JavaApiBuilder(GenerateApi generator, List<Class> allManagers, List<Class> dataObjects, String pathToSource) {
+    public JavaApiBuilder(GenerateApi generator, List<Class> allManagers, List<Class> dataObjects, String pathToSource, List<Class> changedManagers) {
         this.generator = generator;
         this.allManagers = allManagers;
+        this.changedManagers = changedManagers;
         this.dataObjects = dataObjects;
         if(pathToSource != null && !pathToSource.isEmpty()) {
             apiPath = pathToSource + "/" + apiPath;
@@ -45,7 +50,7 @@ public class JavaApiBuilder {
     }
 
     void generate() throws IOException {
-        BuildJavaApi(allManagers);
+        BuildJavaApi();
     }
 
     private String getFileName(Class entry) {
@@ -91,8 +96,8 @@ public class JavaApiBuilder {
         return content;
     }
 
-    private String BuildJavaApi(List<Class> list) throws IOException {
-        String content = "";
+    private String BuildJavaApi() throws IOException {
+        
         List<String> apiclasses = new ArrayList();
         if(apiPath == null) {
             GetShopLogHandler.logPrintStatic("Not building java api, the path to source is not specified", null);
@@ -100,78 +105,28 @@ public class JavaApiBuilder {
         }
         GetShopLogHandler.logPrintStatic("Building java api to: " + apiPath + "/", null);
 
-        for (Class entry : list) {
+        for (Class entry : allManagers) {
             String filename = getFileName(entry);
             if (filename.contains("<error>") || !filename.startsWith("I")) {
                 continue;
             }
-            content = "";
-            List<Class> addedClasses = new ArrayList();
-            Annotation[] annotations = entry.getAnnotations();
-            for (Annotation annotation : annotations) {
-                if (annotation instanceof GetShopApi) {
-                    content += "public class API" + entry.getSimpleName().substring(1) + " {\r\n\r\n";
-                    content += "      public Transporter transport;\r\n\r\n";
-                    content += "      public API" + entry.getSimpleName().substring(1) + "(Transporter transport){\r\n";
-                    content += "           this.transport = transport;\r\n";
-                    content += "      }\r\n\r\n";
-                    apiclasses.add(entry.getSimpleName().substring(1));
-                    
-                    LinkedList<ApiMethod> methods = generator.getMethods(entry);
-                    for (ApiMethod method : methods) {
-                        String path = entry.getCanonicalName();
-                        path = path.replace(".", "/") + ".java";
-
-                        for(String cmnt : method.commentLines) {
-                            content += "     " + cmnt + "\n";
-                        }
-                        addedClasses.add(method.method.getReturnType());
-                        String args = "";
-                       
-                        boolean multiLevel = entry.getAnnotation(GetShopMultiLayerSession.class) != null;
-                        if(multiLevel) {
-                            LinkedHashMap res = method.arguments;
-                            method.arguments = new LinkedHashMap();
-                            method.arguments.put("multiLevelName", "String");
-                            method.arguments.putAll(res);
-                        }
-                        for(String arg : method.arguments.keySet()) {
-                            args += method.arguments.get(arg) + " " + arg + ", ";
-                        }
-                        if(args.length() > 0) {
-                            args = args.substring(0, args.length()-2);
-                        }
-                        String returnvalue = method.method.getReturnType().getCanonicalName().toString();
-                        
-                        content += "     public " + returnvalue + " " + method.method.getName() +  "(" + args + ")  throws Exception  {\r\n";
-                        String ifacename = entry.getCanonicalName();
-                        ifacename = ifacename.replace("com.thundashop.", "");
-                        content += buildJavaApiContent(method.arguments, method.method.getName(), ifacename, returnvalue, method.generics);
-                        content += "     }\r\n\r\n";
-                    }
-                    content += "}\r\n";
-                }
-            }
-            String resultHeader = "package com.getshop.javaapi;\n\n";
-            resultHeader += "import com.google.gson.GsonBuilder;\n";
-            resultHeader += "import com.google.gson.Gson;\n";
-            resultHeader += "import com.google.gson.reflect.TypeToken;\n";
-            resultHeader += "import java.lang.reflect.Type;\n";
-            resultHeader += "import java.util.HashMap;\n";
-            resultHeader += "import java.util.LinkedHashMap;\n";
-
-            resultHeader += "import com.thundashop.core.common.JsonObject2;\n";
-            resultHeader += "import com.getshop.common.Transporter;\n";
-
-            String fname = "API" + entry.getSimpleName().substring(1) + ".java";
             
+            String content = "";
+            
+            if (changedManagers.contains(entry)) {
+                content = getContent(entry, apiclasses);
+            } else {
+                content = getCachedContent(entry, apiclasses);
+            }
+            
+            String fname = "API" + entry.getSimpleName().substring(1) + ".java";
             File file = new File(apiPath + "/");
             file.mkdirs();
-            generator.writeFile(resultHeader+content, apiPath + "/" + fname);
+            generator.writeFile(content, apiPath + "/" + fname);
         }
 
         
-        content = "";
+        String content = "";
         content = "package com.getshop.javaapi;\n\n";
         content += "import com.getshop.common.Transporter;\n";
         content += "public class GetShopApi {\r\n";
@@ -200,5 +155,101 @@ public class JavaApiBuilder {
         generator.writeFile(content, apiPath + "/GetShopApi.java");
 
         return content;
+    }
+
+    private String getContent(Class entry, List<String> apiclasses) {
+        String content = "";
+        List<Class> addedClasses = new ArrayList();
+        Annotation[] annotations = entry.getAnnotations();
+        for (Annotation annotation : annotations) {
+            if (annotation instanceof GetShopApi) {
+                content += "public class API" + entry.getSimpleName().substring(1) + " {\r\n\r\n";
+                content += "      public Transporter transport;\r\n\r\n";
+                content += "      public API" + entry.getSimpleName().substring(1) + "(Transporter transport){\r\n";
+                content += "           this.transport = transport;\r\n";
+                content += "      }\r\n\r\n";
+                apiclasses.add(entry.getSimpleName().substring(1));
+                
+                LinkedList<ApiMethod> methods = generator.getMethods(entry);
+                for (ApiMethod method : methods) {
+                    String path = entry.getCanonicalName();
+                    path = path.replace(".", "/") + ".java";
+                    
+                    for(String cmnt : method.commentLines) {
+                        content += "     " + cmnt + "\n";
+                    }
+                    addedClasses.add(method.method.getReturnType());
+                    String args = "";
+                    
+                    boolean multiLevel = entry.getAnnotation(GetShopMultiLayerSession.class) != null;
+                    if(multiLevel) {
+                        LinkedHashMap res = method.arguments;
+                        method.arguments = new LinkedHashMap();
+                        method.arguments.put("multiLevelName", "String");
+                        method.arguments.putAll(res);
+                    }
+                    for(String arg : method.arguments.keySet()) {
+                        args += method.arguments.get(arg) + " " + arg + ", ";
+                    }
+                    if(args.length() > 0) {
+                        args = args.substring(0, args.length()-2);
+                    }
+                    String returnvalue = method.method.getReturnType().getCanonicalName().toString();
+                    
+                    content += "     public " + returnvalue + " " + method.method.getName() +  "(" + args + ")  throws Exception  {\r\n";
+                    String ifacename = entry.getCanonicalName();
+                    ifacename = ifacename.replace("com.thundashop.", "");
+                    content += buildJavaApiContent(method.arguments, method.method.getName(), ifacename, returnvalue, method.generics);
+                    content += "     }\r\n\r\n";
+                }
+                content += "}\r\n";
+            }
+        }
+        
+        String resultHeader = "package com.getshop.javaapi;\n\n";
+        resultHeader += "import com.google.gson.GsonBuilder;\n";
+        resultHeader += "import com.google.gson.Gson;\n";
+        resultHeader += "import com.google.gson.reflect.TypeToken;\n";
+        resultHeader += "import java.lang.reflect.Type;\n";
+        resultHeader += "import java.util.HashMap;\n";
+        resultHeader += "import java.util.LinkedHashMap;\n";
+
+        resultHeader += "import com.thundashop.core.common.JsonObject2;\n";
+        resultHeader += "import com.getshop.common.Transporter;\n";
+
+        String returnContent = resultHeader+content;
+        String filePathString = "/tmp/cached_java_"+entry.getCanonicalName()+".cache";
+        
+        Path path = Paths.get(filePathString);
+ 
+        //Use try-with-resource to get auto-closeable writer instance
+        try (BufferedWriter writer = Files.newBufferedWriter(path))
+        {
+            writer.write(returnContent);
+        } catch (IOException ex) {
+            Logger.getLogger(PHPApiBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        return returnContent;
+    }
+
+    private String getCachedContent(Class manager, List<String> apiclasses) {
+        if (!GetShopLogHandler.isDeveloper) {
+            return getContent(manager, apiclasses);
+        }
+        
+        String filePathString = "/tmp/cached_java_"+manager.getCanonicalName()+".cache";
+        File f = new File(filePathString);
+        if (!f.exists()) {
+            return getContent(manager, apiclasses);
+        }
+        
+        try {
+            String contentLoaded = new String(Files.readAllBytes(Paths.get(filePathString)));
+            return contentLoaded;
+        } catch (IOException ex) {
+            return getContent(manager, apiclasses);
+        }
+        
     }
 }

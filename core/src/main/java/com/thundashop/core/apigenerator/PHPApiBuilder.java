@@ -4,14 +4,20 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.common.ManagerSubBase;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PHPApiBuilder {
 
@@ -19,8 +25,9 @@ public class PHPApiBuilder {
     private String eventsPath = "../com.getshop.client/events/";
     private final List<Class> allManagers;
     private final List<Class> dataObjects;
+    private final List<Class> managersChanged;
 
-    public PHPApiBuilder(GenerateApi generator, List<Class> allManagers, List<Class> dataObjects, String pathToEvents) {
+    public PHPApiBuilder(GenerateApi generator, List<Class> allManagers, List<Class> dataObjects, String pathToEvents, List<Class> managersChanged) {
         
         if (pathToEvents != null) {
             eventsPath = pathToEvents+"events/";
@@ -29,6 +36,7 @@ public class PHPApiBuilder {
         this.generator = generator;
         this.allManagers = allManagers;
         this.dataObjects = dataObjects;
+        this.managersChanged = managersChanged;
         this.generator.setType("php");
     }
 
@@ -151,10 +159,13 @@ public class PHPApiBuilder {
                 + "*/\n\n";
 
         for (Class manager : allManagers) {
-            LinkedList<GenerateApi.ApiMethod> methods = generator.getMethods(manager);
-            result += generatePHPApiClass(manager, methods);
+            if (managersChanged.contains(manager)) {
+                result += generatePHPApiClass(manager); 
+            } else {               
+                result += getCachedPHPApiClass(manager);
+            }
         }
-
+        
         result += "class GetShopApi {\n"
                 + "\n"
                 + "      var $transport;\n"
@@ -204,7 +215,27 @@ public class PHPApiBuilder {
         return existingComment;
     }
     
-    public String generatePHPApiClass(Class manager, List<GenerateApi.ApiMethod> methods) {
+    public String getCachedPHPApiClass(Class manager) {
+        if (!GetShopLogHandler.isDeveloper) {
+            return generatePHPApiClass(manager);
+        }
+        
+        String filePathString = "/tmp/cachced_php_event_"+manager.getCanonicalName()+".cache";
+        File f = new File(filePathString);
+        if (!f.exists()) {
+            return generatePHPApiClass(manager);
+        }
+        
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(filePathString)));
+            return content;
+        } catch (IOException ex) {
+            return generatePHPApiClass(manager);
+        }
+    }
+    
+    public String generatePHPApiClass(Class manager) {
+        System.out.println("Generating");
         String phpClass = "class API" + manager.getSimpleName().substring(1) + " {\n";
 
         phpClass += "\n\tvar $transport;\n"
@@ -214,7 +245,7 @@ public class PHPApiBuilder {
                 + "\t}\n\n";
 
         boolean multiLevel = manager.getAnnotation(GetShopMultiLayerSession.class) != null;
-        
+        LinkedList<GenerateApi.ApiMethod> methods = generator.getMethods(manager);
         for (GenerateApi.ApiMethod method : methods) {
             String args = "";
             
@@ -276,7 +307,18 @@ public class PHPApiBuilder {
 
         phpClass += "}\n";
 
-        return phpClass;
+        String filePathString = "/tmp/cachced_php_event_"+manager.getCanonicalName()+".cache";
+        
+        Path path = Paths.get(filePathString);
+ 
+        //Use try-with-resource to get auto-closeable writer instance
+        try (BufferedWriter writer = Files.newBufferedWriter(path))
+        {
+            writer.write(phpClass);
+        } catch (IOException ex) {
+            Logger.getLogger(PHPApiBuilder.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
+        return phpClass;
     }
 }

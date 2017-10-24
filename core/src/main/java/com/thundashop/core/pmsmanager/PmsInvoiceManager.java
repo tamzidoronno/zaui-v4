@@ -12,6 +12,8 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -73,6 +75,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         cartManager.getCart().addCartItems(added);
     }
 
+    @Override
+    public List<Order> fetchDibsOrdersToAutoPay() {
+        return new ArrayList();
+    }
+    
     private boolean sameMonth(Date startDate, Date endDate) {
         Calendar cal = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();

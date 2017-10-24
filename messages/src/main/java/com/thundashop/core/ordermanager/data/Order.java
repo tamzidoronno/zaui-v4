@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -85,6 +86,9 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String sentToPhonePrefix = "";
     public Date chargeAfterDate = null;
     public boolean warnedNotPaid = false;
+    
+    @Transient
+    public String wubookid = "";
     
     public Order jsonClone() {
         Gson gson = new Gson();

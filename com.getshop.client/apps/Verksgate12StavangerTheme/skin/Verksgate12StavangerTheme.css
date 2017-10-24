@@ -28,6 +28,8 @@ div:last-child {
     background-color: #1b3350;
 }
 
+.gsbody_inner[pageid="58009a42-79c6-4494-9d50-ce9a10239bab"] .gsarea[area="body"] .gs_page_width,
+.gsbody_inner[pageid="booking_default"] .gsarea[area="body"] .gs_page_width,
 .gsbody_inner[pageid="3f4e950d-80ab-4cb4-b9bb-e34bafc6001a"] .gsarea[area="body"] .gs_page_width {
     font-family: 'Work Sans', sans-serif;
     color: #FFF;

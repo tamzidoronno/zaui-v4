@@ -6,6 +6,11 @@ $notDraggable = "";
 if(isset($configuration->draggable) && $configuration->draggable == "false") {
     $notDraggable = "SELECTED";
 }
+
+$blackAndWhite = "";
+if(isset($configuration->blackandwhite) && $configuration->blackandwhite == "true") {
+    $blackAndWhite = "SELECTED";
+}
 ?>
 
 <div class="container">
@@ -31,6 +36,7 @@ if(isset($configuration->draggable) && $configuration->draggable == "false") {
     <div class="row">Max zoom<input type='text' class="positionright maxzoom" value='<? echo $configuration->maxZoom; ?>'></div>
     <div class="row">Min zoom<input type='text' class="positionright minzoom" value='<? echo $configuration->minZoom; ?>'></div>
     <div class="row">Draggable<select type='text' class="positionright draggable"><option value="true"><? echo $this->__f("Yes"); ?></option><option value="false" <? echo $notDraggable; ?>><? echo $this->__f("No"); ?></option></select></div>
+    <div class="row">Black and white<select type='text' class="positionright blackandwhite"><option value="false"><? echo $this->__f("No"); ?></option><option value="true" <? echo $blackAndWhite; ?>><? echo $this->__f("Yes"); ?></option></select></div>
     <br><br>
     <div class="title">
         <? echo $this->__f("Markers"); ?>

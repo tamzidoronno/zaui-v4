@@ -18,7 +18,7 @@ public class GSEnvironments {
     public HashMap<String, GSEnvironment> environments = new HashMap();
 
     public GSEnvironments() {
-        addEnvironment("3.0.prod", "clients.getshop.com", 4224);
+        addEnvironment("3.0.prod", "10.0.4.33", 25554);
         addEnvironment("3.0.local", "localhost", 25554);
     }
 

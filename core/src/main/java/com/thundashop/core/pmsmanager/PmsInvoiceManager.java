@@ -2672,6 +2672,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             toAdd.confirmed = booking.confirmed;
             toAdd.userId = pmsManager.getBookingUnfinalized(simple.bookingId).userId;
             toAdd.invoicedTo = room.invoicedTo;
+            toAdd.email = simple.ownersEmail;
             
             User user = userManager.getUserById(toAdd.userId);
             toAdd.cardsSaved = user.savedCards.size();

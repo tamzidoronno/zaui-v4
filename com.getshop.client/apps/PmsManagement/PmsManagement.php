@@ -329,6 +329,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
     
     public function updateCartItemRow() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $startDate = null;
+        $endDate = null;
         foreach($order->cart->items as $item) {
             if($item->cartItemId != $_POST['data']['cartitemid']) {
                 continue;
@@ -340,6 +342,16 @@ class PmsManagement extends \WebshopApplication implements \Application {
             foreach($_POST['data'] as $key => $val) {
                 if(stristr($key, "matrixprice_")) {
                     $day = str_replace("matrixprice_", "", $key);
+                    if(isset($_POST['data']['deletematrix_'.$day]) && $_POST['data']['deletematrix_'.$day] == "true") {
+                        unset($item->priceMatrix->{$day});
+                        continue;
+                    }
+                    if($startDate == null || $startDate > strtotime($day)) {
+                        $startDate = strtotime($day);
+                    }
+                    if($endDate == null || $endDate < strtotime($day)) {
+                        $endDate = strtotime($day);
+                    }
                     $item->priceMatrix->{$day} = $val;
                     $total += $val;
                     $count++;
@@ -347,21 +359,39 @@ class PmsManagement extends \WebshopApplication implements \Application {
             }
             
             //Update addon prices.
+            $newAddonsList = array();
+            $substractItemCount = 0;
             foreach($_POST['data'] as $key => $val) {
                 if(stristr($key, "itemcount_")) {
                     $addonId = str_replace("itemcount_", "", $key);
-                    $count += $val;
                     $itemprice = $_POST['data']['itemprice_'.$addonId];
-                    $total += ($itemprice * $val);
                     
                     foreach($item->itemsAdded as $addonItem) {
                         if($addonItem->addonId == $addonId) {
+                                                
+                            if(isset($_POST['data']['deleteitem_'.$addonId]) && $_POST['data']['deleteitem_'.$addonId] == "true") {
+                                $substractItemCount -= $addonItem->count;
+                                continue;
+                            }
+                            $count += $val;
+                            $total += ($itemprice * $val);
+                            
                             $addonItem->count = $val;
                             $addonItem->price = $itemprice;
+                            
+                            if($startDate == null || $startDate > strtotime($addonItem->date)) {
+                                $startDate = strtotime($addonItem->date);
+                            }
+                            if($endDate == null || $endDate < strtotime($addonItem->date)) {
+                                $endDate = strtotime($addonItem->date);
+                            }
+                            $newAddonsList[] = $addonItem;
                         }
                     }
                 }
             }
+            $item->itemsAdded = $newAddonsList;
+            $item->count += $substractItemCount;
             
             if($count > 0) {
                 $item->product->price = $total / $count;
@@ -374,7 +404,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
                 $item->product->taxGroupObject = $newProduct->taxGroupObject;
                 $item->product->taxes = $newProduct->taxes;
             }
-            
+            $item->startDate = $this->convertToJavaDate($startDate);
+            $item->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y", $endDate).' +1 day'));
             $item->product->additionalMetaData = $_POST['data']['roomnumber'];
             $item->product->metaData = $_POST['data']['roomname'];
             $item->product->name = $_POST['data']['productname'];

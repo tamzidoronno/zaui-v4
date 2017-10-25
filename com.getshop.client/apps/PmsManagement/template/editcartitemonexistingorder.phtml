@@ -6,20 +6,32 @@ foreach($order->cart->items as $item) {
     if($item->cartItemId == $_POST['data']['cartitemid']) {
         echo "<table cellspacing='0' cellpadding='0' gstype='form' cartitemid='".$item->cartItemId."' orderid='".$order->id."'>";
         echo "<tr>";
+        echo "<th width='10' style='text-align:center;'><i class='fa fa-trash-o' title='Mark the items you want to delete'></i></th>";
         echo "<th></th>";
         echo "<th></th>";
         echo "</tr>";
+        
         if(sizeof($item->priceMatrix) > 0) {
+            $sortarray = array();
             foreach($item->priceMatrix as $day => $value) {
+                $sortarray[strtotime($day)] = $value;
+            }
+            ksort($sortarray);
+            
+            foreach($sortarray as $day => $value) {
+                $day = date("d-m-Y", $day);
                 echo "<tr>";
+                echo "<td style='text-align:center;padding:0px;' width='10'><input type='checkbox' gsname='deletematrix_$day'></td>";
                 echo "<td>$day</td>";
-                echo "<td><input type='txt' style='width:156px;' value='$value' gsname='matrixprice_$day'></input></td>";
+                echo "<td><input type='txt' style='width:156px;' value='$value' gsname='matrixprice_$day'></input>";
+                echo "</td>";
                 echo "</tr>";
             }
         }
         if(sizeof($item->itemsAdded) > 0) {
             foreach($item->itemsAdded as $itemAdded) {
                 echo "<tr>";
+                echo "<td style='text-align:center;padding:0px;' width='10'><input type='checkbox' gsname='deleteitem_".$itemAdded->addonId."'></td>";
                 echo "<td>" . date("d.m.Y H:i", strtotime($itemAdded->date)) . "</td>";
                 echo "<td><input type='txt' style='width:40px;' gsname='itemcount_".$itemAdded->addonId."' value='" . $itemAdded->count . "'>";
                 echo "<input style='width:110px;' type='txt' gsname='itemprice_".$itemAdded->addonId."' value='" . $itemAdded->price . "'></td>";
@@ -27,11 +39,11 @@ foreach($order->cart->items as $item) {
             }
         }
         echo "<tr>";
-        echo "<td colspan='2'><div style='height:10px;'></div></td>";
+        echo "<td colspan='3'><div style='height:10px;'></div></td>";
         echo "</tr>";
         
-        echo "<tr><td>Product name</td><td><input type='txt' style='width:156px;' gsname='productname' value='".$item->product->name."'></input></td></tr>";
-        echo "<tr><td>Product</td><td>";
+        echo "<tr><td colspan='2'>Product name</td><td><input type='txt' style='width:156px;' gsname='productname' value='".$item->product->name."'></input></td></tr>";
+        echo "<tr><td colspan='2'>Product</td><td>";
         echo "<select gsname='productid'>";
         foreach($products as $prod) {
             $selected = ($prod->id == $item->product->id) ? "SELECTED" : "";
@@ -39,11 +51,11 @@ foreach($order->cart->items as $item) {
         }
         echo "</select>";
         echo "</td></tr>";
-        echo "<tr><td>Room number</td><td><input type='txt' style='width:156px;' gsname='roomnumber' value='".$item->product->additionalMetaData."'></input></td></tr>";
-        echo "<tr><td>Name</td><td><input type='txt' style='width:156px;' gsname='roomname' value='".$item->product->metaData."'></input></td></tr>";
+        echo "<tr><td colspan='2'>Room number</td><td><input type='txt' style='width:156px;' gsname='roomnumber' value='".$item->product->additionalMetaData."'></input></td></tr>";
+        echo "<tr><td colspan='2'>Name</td><td><input type='txt' style='width:156px;' gsname='roomname' value='".$item->product->metaData."'></input></td></tr>";
         echo "<tr>";
-        echo "<td></td>";
-        echo "<td><input type='button' value='Update row' style='width:163px' class='updatecartitemrowbutton'></input></td>";
+        echo "<td></td><td></td>";
+        echo "<td><input type='button' value='Update / delete selected rows' style='width:163px' class='updatecartitemrowbutton'></input></td>";
         echo "</tr>";
         echo "</table>";
     }

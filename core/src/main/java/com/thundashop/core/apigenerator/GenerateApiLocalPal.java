@@ -14,7 +14,7 @@ public class GenerateApiLocalPal {
         GenerateApi ga = new GenerateApi("/home/boggi/projects/3.0.0/GetShop Core/", "/home/boggi/projects/3.0.0/GetShop Messages/", "/source/getshop/3.0.0/com.getshop.client/", "/source/getshop/3.0.0/core", false);
         ga.generate();
 
-//        ga = new GenerateApi("/home/boggi/projects/3.0.0/GetShop Core/", "/home/boggi/projects/3.0.0/GetShop Messages/", "/source/getshop/3.0.0/com.getshop.pullserver/", "/source/getshop/3.0.0/core", false);
-//        ga.generate();
+        ga = new GenerateApi("/home/boggi/projects/3.0.0/GetShop Core/", "/home/boggi/projects/3.0.0/GetShop Messages/", "/source/getshop/3.0.0/com.getshop.pullserver/", "/source/getshop/3.0.0/core", false);
+        ga.generate();
     }
 }

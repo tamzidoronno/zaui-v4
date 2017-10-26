@@ -10,6 +10,7 @@ public class PmsSubscriptionOverview {
     String userId;
     String usersName;
     String roomName;
+    String email;
     Double price;
     boolean paid = false;
     long end;

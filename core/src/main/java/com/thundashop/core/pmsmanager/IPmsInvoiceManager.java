@@ -5,10 +5,13 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -84,5 +87,9 @@ public interface IPmsInvoiceManager {
     
     public List<PmsSubscriptionOverview> getSubscriptionOverview(Date start, Date end); 
     
-   public String createRegisterCardOrder(String item);
+    public String createRegisterCardOrder(String item);
+
+    @Administrator
+    public List<Order> fetchDibsOrdersToAutoPay();
+    
 }

@@ -13,6 +13,7 @@ echo "<th align='left'>Item</th>";
 echo "<th align='left'>Start</th>";
 echo "<th align='left'>End</th>";
 echo "<th align='left'>Owner</th>";
+echo "<th align='left'>Email</th>";
 echo "<th align='left'>Price</th>";
 echo "<th align='left'>Order price</th>";
 echo "<th align='left'>Room Invoiced to</th>";
@@ -44,6 +45,7 @@ foreach($overview as $room) {
     echo "<td>" . date("d.m.Y", $room->start/1000). "</td>";
     echo "<td>" . date("d.m.Y", $room->end/1000). "</td>";
     echo "<td>" . $room->usersName . "</td>";
+    echo "<td>" . $room->email . "</td>";
     echo "<td>" . $room->price . "</td>";
     echo "<td>" . round($room->orderValue) . "</td>";
     if($room->invoicedTo) {

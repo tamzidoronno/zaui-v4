@@ -12,6 +12,8 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -73,6 +75,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         cartManager.getCart().addCartItems(added);
     }
 
+    @Override
+    public List<Order> fetchDibsOrdersToAutoPay() {
+        return new ArrayList();
+    }
+    
     private boolean sameMonth(Date startDate, Date endDate) {
         Calendar cal = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
@@ -315,7 +322,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
-            if(order.createByManager == null || !order.createByManager.equals("PmsDailyOrderGeneration")) {
+            if(order == null || order.createByManager == null || !order.createByManager.equals("PmsDailyOrderGeneration")) {
                 return false;
             }
         }
@@ -2577,6 +2584,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         PmsBooking booking = pmsManager.getBookingUnsecure(id);
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
+            if(order == null) {
+                continue;
+            }
             for(CartItem item : order.cart.getItems()) {
                 Product product = item.getProduct();
                 if(product != null && product.externalReferenceId != null && product.externalReferenceId.equals(pmsBookingRoomId)) {
@@ -2662,6 +2672,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             toAdd.confirmed = booking.confirmed;
             toAdd.userId = pmsManager.getBookingUnfinalized(simple.bookingId).userId;
             toAdd.invoicedTo = room.invoicedTo;
+            toAdd.email = simple.ownersEmail;
             
             User user = userManager.getUserById(toAdd.userId);
             toAdd.cardsSaved = user.savedCards.size();

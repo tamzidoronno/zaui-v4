@@ -9,6 +9,8 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 
 controllers.BaseController = function($scope, $rootScope, $state, datarepository, $api) {
     $scope.messages = datarepository.driverMessages;
+    $scope.showReply = false;
+    $scope.currentMesage = null;
     
     if (!$api.getApi() || !$api.getLoggedOnUser()) {
         $scope.messages = [];
@@ -73,5 +75,25 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
         
         message.isRead = true;
         datarepository.save();
+    };
+    
+    $scope.replyMessage = function(message) {
+        $('#commonMessageReplyBox').val("");
+        $scope.currentMessage = message;
+        $scope.showReply = true;
+    }
+    
+    $scope.cancelSendMessage = function() {
+        $scope.showReply = false;
+    }
+    
+    $scope.sendMessageBack = function() {
+        var message = $scope.currentMessage;
+        var textMessage = $('#commonMessageReplyBox').val();
+        var me = $scope;
+        $scope.showReply = false;
+        $api.getApi().TrackAndTraceManager.replyMessage(message.id, textMessage).done(function(res) {
+            me.ackMessage(message);
+        });
     }
 };

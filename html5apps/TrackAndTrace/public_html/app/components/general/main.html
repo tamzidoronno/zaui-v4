@@ -11,7 +11,16 @@
     
     <div ng-repeat='message in messages' class='importantmessageview' ng-if='!message.isRead'>
         <div>{{message.message}}</div>
-        <br/><div class='button' ng-click='ackMessage(message)'>Got it!</div>
+        <br/><div class='button' ng-mobile-click='ackMessage(message)'>Got it!</div>
+        <br/><div class='button' ng-mobile-click='replyMessage(message)'>Reply message</div>
+    </div>
+    <div ng-if="showReply" class="importantmessageview">
+        <div>
+            <textarea style="width:100%; height: 300px;"  id="commonMessageReplyBox"></textarea>
+        </div>
+        <div class="button" ng-mobile-click="sendMessageBack()">Send message</div>
+        <div class="button" ng-mobile-click="cancelSendMessage()">Cancel</div>
+        
     </div>
 </div>
 

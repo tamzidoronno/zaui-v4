@@ -21,10 +21,23 @@
 <div ng-show="destination.extraInstructions && !destination.extraInstractionsRead" class='instruction'>
     <div  class='subinstruction'>
         <b>Extra instruction</b>
+        
         <br/> {{ destination.extraInstructions }}    
         <br/>
         <br/>
-        <div class="button" ng-mobile-click="instructionRead()">Instruction read</div>
+        <div ng-if="!showReplyMessage">
+            <div class="button" ng-mobile-click="instructionRead()">Instruction read</div>
+            <div class="button" ng-mobile-click="doShowReplyMessage()">Reply</div>
+        </div>
+        
+        <div ng-if="showReplyMessage">
+            Reply message (optional):
+            <textarea style="width:100%; height: 300px;" id="replyMessageArea"></textarea>
+            <br/>
+            <div class="button" ng-mobile-click="sendMessageBack()">Send message</div>
+            <div class="button" ng-mobile-click="cancelSendBackMessage()">Cancel</div>
+        </div>
+        
     </div>
 </div>
 

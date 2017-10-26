@@ -92,7 +92,8 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
         var textMessage = $('#commonMessageReplyBox').val();
         var me = $scope;
         $scope.showReply = false;
-        $api.getApi().TrackAndTraceManager.replyMessage(message.id, textMessage).done(function(res) {
+        
+        $api.getApi().TrackAndTraceManager.replyMessage(message.id, textMessage, new Date()).done(function(res) {
             me.ackMessage(message);
         });
     }

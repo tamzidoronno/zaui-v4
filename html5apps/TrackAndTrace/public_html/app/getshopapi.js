@@ -14674,11 +14674,25 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'replyMessage' : function(messageId,text, gs_silent) {
+    'replyGeneral' : function(routeId,text,date, gs_silent) {
+        var data = {
+            args : {
+                routeId : JSON.stringify(routeId),
+                text : JSON.stringify(text),
+                date : JSON.stringify(date),
+            },
+            method: 'replyGeneral',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'replyMessage' : function(messageId,text,date, gs_silent) {
         var data = {
             args : {
                 messageId : JSON.stringify(messageId),
                 text : JSON.stringify(text),
+                date : JSON.stringify(date),
             },
             method: 'replyMessage',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
@@ -14686,11 +14700,12 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
-    'replyMessageForDestionation' : function(destinationId,text, gs_silent) {
+    'replyMessageForDestionation' : function(destinationId,text,date, gs_silent) {
         var data = {
             args : {
                 destinationId : JSON.stringify(destinationId),
                 text : JSON.stringify(text),
+                date : JSON.stringify(date),
             },
             method: 'replyMessageForDestionation',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',

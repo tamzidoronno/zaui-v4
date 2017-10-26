@@ -30,18 +30,20 @@
             <div class="button" ng-mobile-click="doShowReplyMessage()">Reply</div>
         </div>
         
-        <div ng-if="showReplyMessage">
-            Reply message (optional):
-            <textarea style="width:100%; height: 300px;" id="replyMessageArea"></textarea>
-            <br/>
-            <div class="button" ng-mobile-click="sendMessageBack()">Send message</div>
-            <div class="button" ng-mobile-click="cancelSendBackMessage()">Cancel</div>
-        </div>
+        
         
     </div>
 </div>
 
-<div ng-show="!destination.extraInstructions || destination.extraInstractionsRead">
+<div ng-if="showReplyMessage" style='margin-top: 20px;'>
+    Message:
+    <textarea style="width:100%; height: 300px;" id="replyMessageArea"></textarea>
+    <br/>
+    <div class="button" ng-mobile-click="sendMessageBack()">Send message</div>
+    <div class="button" ng-mobile-click="cancelSendBackMessage()">Cancel</div>
+</div>
+
+<div ng-show="(!destination.extraInstructions || destination.extraInstractionsRead) && !showReplyMessage">
     <div ng-if="destination.onDemandInstructions || destination.pickupInstruction || destination.deliveryInstruction" class='instruction'>
         <div ng-if='destination.onDemandInstructions' class='subinstruction'>
             <b>Todays instruction</b>
@@ -97,4 +99,5 @@
         </div>
     </div>
 
+    <div class="button" ng-mobile-click="doShowReplyMessage()"><i class='fa fa-comment'></i> Send message to supervisor</div>
 </div>

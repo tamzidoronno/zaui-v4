@@ -123,7 +123,8 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
     $scope.sendMessageBack = function() {
         var message = $('#replyMessageArea').val();
         var me = $scope;
-        $api.getApi().TrackAndTraceManager.replyMessageForDestionation($scope.destination.id, message).done(function(res) {
+        $scope.showReplyMessage = false;
+        $api.getApi().TrackAndTraceManager.replyMessageForDestionation($scope.destination.id, message, new Date()).done(function(res) {
             me.instructionRead();
         });
     }

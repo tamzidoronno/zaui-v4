@@ -17,6 +17,7 @@ import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -287,15 +288,17 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 && getSession().currentUser.metaData.get("depotId") != null 
                 && !getSession().currentUser.metaData.get("depotId").isEmpty()) {
             String depotId = getSession().currentUser.metaData.get("depotId");
+            List<String> depotIds = Arrays.asList(depotId.split(";"));
+            
             return retList.stream()
-                    .filter(r -> depotId.equals(r.depotId))
+                    .filter(r -> depotIds.contains(r.depotId))
                     .collect(Collectors.toList());
             
         }
         
         return retList;
     }
-
+    
 //    @Override
 //    public void addCompanyToRoute(String routeId, String companyId) {
 //        Route route = getRouteById(routeId);
@@ -1140,13 +1143,18 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
         User user = userManager.getUserById(getSession().currentUser.id);
         
         String depotId = user.metaData.get("depotId");
+        if (depotId == null) {
+            return new ArrayList();
+        }
         
-        if (depotId == null)
+        List<String> depotIds = Arrays.asList(depotId.split(";"));
+        
+        if (depotIds == null || depotIds.isEmpty())
             return new ArrayList();
         
         List<PooledDestionation> dests = getPooledDestiontions().stream()
                 .filter(dest -> getRouteById(dest.originalRouteId) != null)
-                .filter(dest -> getRouteById(dest.originalRouteId).depotId.equals(depotId))
+                .filter(dest -> depotIds.contains(getRouteById(dest.originalRouteId).depotId))
                 .collect(Collectors.toList());
         
         dests.stream().forEach(dest -> finalize(dest));

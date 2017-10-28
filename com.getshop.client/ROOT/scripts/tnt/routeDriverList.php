@@ -19,6 +19,4 @@ foreach ($ids as $id) {
 }
 
 echo json_encode($retData);
-    
-
 ?>

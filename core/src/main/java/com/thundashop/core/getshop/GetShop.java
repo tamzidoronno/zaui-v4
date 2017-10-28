@@ -556,7 +556,6 @@ public class GetShop extends ManagerBase implements IGetShop {
     public void saveSmsCallback(SmsResponse response) {
         smsResponses.put(response.id, response);
         response.storeId = "all";
-        saveObject(response);
     }
 
     public SmsResponse getSmsResponse(String msgId) {

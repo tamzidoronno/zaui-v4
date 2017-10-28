@@ -10,17 +10,25 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerSubBase;
 import java.io.BufferedReader;
     import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,6 +36,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.bind.DatatypeConverter;
 
 public class GenerateApi {
 
@@ -35,13 +46,20 @@ public class GenerateApi {
     private final List<Class> messageClasses;
     private final LinkedList<Class> allManagers;
     private HashMap<String, Integer> methodProcessed = new HashMap();
+    private HashMap<String, String> md5sums = new HashMap();
+    private HashMap<String, String> md5sumsnew = new HashMap();
     private String type = "defualt";
     private final String pathToClients;
     private boolean addMain = true;
     private final String pathToSource;
     private final boolean debug;
+    private final LinkedList<Class> changedManagers;
 
     public GenerateApi(String pathToCore, String pathToMessages, String pathToClients, String pathToSource, boolean debug) throws ClassNotFoundException {
+        if (GetShopLogHandler.isDeveloper) {
+            loadMd5Sums();
+        }
+        
         File core = null;
         File messages = null;
         
@@ -60,10 +78,16 @@ public class GenerateApi {
         
         
         
-        coreClasses = findClasses(core);
-        messageClasses = findClasses(messages);
+        coreClasses = findClasses(core, true);
+        List<Class> coreClassesChanged = findClasses(core, false);
+        messageClasses = findClasses(messages, true);
         allManagers = filterClasses(coreClasses);
+        changedManagers = filterClasses(coreClassesChanged);
         GetShopLogHandler.logPrintStatic("Done finding datasource", null);
+        
+         if (GetShopLogHandler.isDeveloper) {
+            saveMd5Sums();
+        }
     }
 
     public void analyseApplications() throws UnknownHostException, IOException, ClassNotFoundException {
@@ -79,12 +103,12 @@ public class GenerateApi {
     }
 
     public void generateJavaApi() throws IOException {
-        JavaApiBuilder javaapi = new JavaApiBuilder(this, coreClasses, messageClasses, pathToSource);
+        JavaApiBuilder javaapi = new JavaApiBuilder(this, coreClasses, messageClasses, pathToSource, changedManagers);
         javaapi.generate();
     }
 
     public void generatePHPApi() throws Exception {
-        PHPApiBuilder phpapi = new PHPApiBuilder(this, allManagers, messageClasses, pathToClients);
+        PHPApiBuilder phpapi = new PHPApiBuilder(this, allManagers, messageClasses, pathToClients, changedManagers);
         phpapi.generate();
     }
 
@@ -114,6 +138,78 @@ public class GenerateApi {
         
         return methods;
     }
+
+    private boolean hasChanged(File file) {
+        if (!GetShopLogHandler.isDeveloper)
+            return true;
+
+        String md5sum = getMd5Sum(file);
+        String oldMd5Sum = md5sums.get(file.getAbsolutePath());
+        
+        md5sumsnew.put(file.getAbsolutePath(), md5sum);
+        
+        if (md5sum.equals(oldMd5Sum)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public String getChecksum(Serializable object) {
+        ByteArrayOutputStream baos = null;
+        ObjectOutputStream oos = null;
+        try {
+            baos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(baos);
+            oos.writeObject(object);
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] thedigest = md.digest(baos.toByteArray());
+            return DatatypeConverter.printHexBinary(thedigest);
+        } catch (IOException x2) {
+            x2.printStackTrace();
+        } catch (NoSuchAlgorithmException x2) {
+            x2.printStackTrace();
+        } finally {
+            try {
+                oos.close();
+                baos.close();
+            } catch (IOException ex) {
+                Logger.getLogger(GenerateApi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return null;
+    }
+
+    private String getMd5Sum(File file) {
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+            fis.close();
+            return md5;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GenerateApi.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GenerateApi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return "";
+    }
+
+    private void loadMd5Sums() {
+        try (ObjectInputStream oos = new ObjectInputStream(new FileInputStream("/tmp/javaGeneratorMd5Sums.ser"))) {
+            md5sums = (HashMap)oos.readObject();
+        } catch (Exception ex) {
+        }
+    }
+
+    private void saveMd5Sums() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("/tmp/javaGeneratorMd5Sums.ser"))) {
+            oos.writeObject(md5sumsnew);
+        } catch (Exception ex) {
+        }
+    }
+
 
     public class ApiMethod {
 
@@ -212,12 +308,13 @@ public class GenerateApi {
      * @throws ClassNotFoundException
      */
     @SuppressWarnings("unchecked")
-    public List<Class> findClasses(File directory) throws ClassNotFoundException {
+    public List<Class> findClasses(File directory, boolean ignoreCache) throws ClassNotFoundException {
         List<Class> classes = new ArrayList<Class>();
         if (!directory.exists()) {
             return classes;
         }
 
+        
         try {
             String current = new java.io.File( "." ).getCanonicalPath();
         } catch (Exception ex) { }
@@ -226,8 +323,8 @@ public class GenerateApi {
             String fileName = file.getName();
             if (file.isDirectory()) {
                 assert !fileName.contains(".");
-                classes.addAll(findClasses(file));
-            } else if (fileName.endsWith(".class") && !fileName.contains("$")) {
+                classes.addAll(findClasses(file, ignoreCache));
+            } else if (fileName.endsWith(".class") && !fileName.contains("$") && (hasChanged(file) || ignoreCache)) {
                 Class _class;
                 try {
                     String addText = addMain ? "main/" : "";

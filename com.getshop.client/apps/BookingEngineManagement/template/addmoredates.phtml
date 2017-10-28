@@ -1,3 +1,15 @@
+<div gstype="form" method="addGeneralOpeningHour">
+    <?php
+    $itemid = "";
+    if(isset($_POST['data']['typeid'])) {
+        $itemid = $_POST['data']['typeid'];
+    }
+    echo "<input type='hidden' gsname='typeid' value='".$itemid."'>";
+    ?>
+    <span class="pmsbutton" gstype="submitToInfoBox"><?php echo $this->__w("Add an opening hour / restriction"); ?></span>
+</div>
+<div style="clear:both;"></div>
+
 <?php
 /* @var $this ns_3b18f464_5494_4f4a_9a49_662819803c4a\BookingEngineManagement */
 $endDate = date("d.m.Y", time()+(86400*30));
@@ -9,6 +21,13 @@ $end = time();
 if(!$openingdata) {
     $openingdata = array();
 }
+
+$timePeriodeType = array();
+$timePeriodeType[0] = "Opened";
+$timePeriodeType[1] = "Closed";
+$timePeriodeType[2] = "Min stay";
+$timePeriodeType[3] = "Max stay";
+$timePeriodeType[4] = "Deny same day booking";
 
 foreach($openingdata as $data) {
     if(!$data->firstEvent) {
@@ -24,7 +43,7 @@ foreach($openingdata as $data) {
     }
     ?>
 
-    <div class='itemrow' style='position:relative; display:inline-block; border: solid 1px #bbb; margin:10px; padding: 10px; float:left;' repeaterId="<?php echo $data->repeaterId; ?>">
+    <div class='itemrow' style='position:relative; display:inline-block; border: solid 1px #bbb; margin:10px; padding: 10px; float:left;width:45%;' repeaterId="<?php echo $data->repeaterId; ?>">
     <span class='bookedaction'></span> 
     <a class='addmoredates togglerepeatbox'><? 
     if($repeat) {
@@ -49,6 +68,15 @@ foreach($openingdata as $data) {
 
 
             <div class='eventrow'>
+                <select style='width:80%;' gsname='timeperiodetype'>
+                    <?php 
+                    foreach($timePeriodeType as $idx => $val) {
+                        $selected = ($idx == $data->timePeriodeType) ? "SELECTED" : "";
+                        echo "<option value='$idx' $selected>$val</option>";
+                    }
+                    ?>
+                </select>
+                <input style='width:15%;' gsname='timePeriodeTypeAttribute' value='<?php echo $data->timePeriodeTypeAttribute; ?>'>
                 <span class='title'>
                     <span class='datetypepanel repeat'><? echo $this->__w("First event"); ?>:</span><br>
                 </span>
@@ -127,7 +155,7 @@ foreach($openingdata as $data) {
                 <span class='optionbox'>
                     <input type='button'value='<? echo $this->__w("Save"); ?>' gstype='submitToInfoBox'>
                     <?php if($data) { ?>
-                        <input type='button' gstype="clicksubmitforce" value='<? echo $this->__w("Delete opening hours"); ?>'  method="deleteClosingHours" gsname="id" gsvalue="<?php echo $data->repeaterId; ?>">
+                        <input type='button' gstype="forceClicksubmitToInfoBox" value='<? echo $this->__w("Delete opening hours"); ?>'  method="deleteClosingHours" gsname="id" gsvalue="<?php echo $data->repeaterId; ?>">
                     <? } ?>
                 </span>
             </div>
@@ -176,14 +204,3 @@ foreach($openingdata as $data) {
       }
     });
 </script>
-<div style="clear:both;"></div>
-<div gstype="form" method="addGeneralOpeningHour">
-    <?php
-    $itemid = "";
-    if(isset($_POST['data']['typeid'])) {
-        $itemid = $_POST['data']['typeid'];
-    }
-    echo "<input type='hidden' gsname='typeid' value='".$itemid."'>";
-    ?>
-    <span class="pmsbutton" gstype="submitToInfoBox"><?php echo $this->__w("Add an opening hour"); ?></span>
-</div>

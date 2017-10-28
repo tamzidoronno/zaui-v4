@@ -113,6 +113,8 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         $data->repeatSunday = $_POST['data']['repeatSunday'] == "true";
         $data->endingAt = $this->convertToJavaDate(strtotime($_POST['data']['endingAt']));
         $data->repeatEachTime = $_POST['data']['repeateachtime'];
+        $data->timePeriodeType = $_POST['data']['timeperiodetype'];
+        $data->timePeriodeTypeAttribute = $_POST['data']['timePeriodeTypeAttribute'];
         if(isset($_POST['data']['repeatmonthtype'])) {
             $data->data->repeatAtDayOfWeek = $_POST['data']['repeatmonthtype'] == "dayofweek";
         }
@@ -153,11 +155,13 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
         if(isset($_POST['data']['typeid'])) {
             $id = $_POST['data']['typeid'];
         }
-        return $this->getApi()->getBookingEngine()->getOpeningHours($this->getSelectedName(), $id);
+        return $this->getApi()->getBookingEngine()->getOpeningHoursWithType($this->getSelectedName(), $id, null);
     }
     
     public function deleteClosingHours() {
     $this->getApi()->getBookingEngine()->deleteOpeningHours($this->getSelectedName(), $_POST['data']['id']);
+    $this->includefile("addmoredates");
+    
     }
     
     public function editFormFields() {

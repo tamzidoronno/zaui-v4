@@ -1727,7 +1727,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     
-    private int getNumberOfDays(Date startDate, Date endDate) {
+    public int getNumberOfDays(Date startDate, Date endDate) {
         if(startDate.after(endDate)) {
             Date tmpStart = startDate;
             startDate = endDate;
@@ -1745,7 +1745,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             days++;
 
             cal.add(Calendar.DAY_OF_YEAR, 1);
-            if (cal.getTime().after(endDate)) {
+            if (cal.getTime().after(endDate) || cal.getTime().equals(endDate)) {
                 break;
             }
         }

@@ -12,6 +12,13 @@ public class TimeRepeaterData implements Serializable {
         public static Integer monthly = 2;
         public static Integer continously = 3;
     }
+    public static class TimePeriodeType {
+        public static Integer open = 0;
+        public static Integer closed = 1;
+        public static Integer min_stay = 2;
+        public static Integer max_stay = 3;
+        public static Integer denySameDayBooking = 4;
+    }
     
     Integer repeatPeride = TimeRepeaterData.RepeatPeriodeTypes.daily;
     
@@ -20,6 +27,10 @@ public class TimeRepeaterData implements Serializable {
     public String repeaterId = UUID.randomUUID().toString();
     
     Date endingAt = null;
+    
+    public Integer timePeriodeType = TimePeriodeType.open;
+    public String timePeriodeTypeAttribute = "";
+    
     
     /* Interval to repeat between */
     Integer repeatEachTime = 1;

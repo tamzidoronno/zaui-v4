@@ -239,8 +239,20 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     }
 
     @Override
+    public List<TimeRepeaterData> getOpeningHoursWithType(String itemId, Integer timePeriodeType) {
+        List<TimeRepeaterData> toReturn = new ArrayList();
+        List<TimeRepeaterData> openingHours = deepClone(bookingEngineAbstract.getOpeningHours(itemId));
+        for(TimeRepeaterData data : openingHours) {
+            if(timePeriodeType == null || data.timePeriodeType.equals(timePeriodeType)) {
+                toReturn.add(data);
+            }
+        }
+        return toReturn;
+    }
+    
+    @Override
     public List<TimeRepeaterData> getOpeningHours(String itemId) {
-        return deepClone(bookingEngineAbstract.getOpeningHours(itemId));
+        return getOpeningHoursWithType(itemId, TimeRepeaterData.TimePeriodeType.open);
     }
 
     public List<BookingItem> getBookingItemsByType(String typeId) {

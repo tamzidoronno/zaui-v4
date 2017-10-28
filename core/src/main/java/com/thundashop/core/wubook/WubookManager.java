@@ -24,6 +24,9 @@ import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
+import com.thundashop.core.pmsmanager.TimeRepeater;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.text.ParseException;
@@ -36,6 +39,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcClient;
@@ -518,28 +522,21 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(!rdata.addedToWuBook) {
                 continue;
             }
-
-            HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
-            Double minstay = null;
-            if(pricesForType != null) {
-                minstay = pricesForType.get("minstay");
-            }
-            if(minstay == null || minstay == 1.0) {
-                // Ignoreing Akers Have as they want to set back the 1 day minstay setting
-                if (!storeId.equals("75e5a890-1465-4a4a-a90a-f1b59415d841")) {
-                    continue;
-                }
-            }
             
             Vector list = new Vector();
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY,16);
             for(int i = 0;i < (365*2); i++) {
-                Hashtable dayEntry = new Hashtable();
+                Double minstay = getMinStay(cal.getTime(), rdata.bookingEngineTypeId);
                 if(minstay == null) {
-                    minstay  = 1.0;
+                    return "";
                 }
+                System.out.println(cal.getTime() + " : " + minstay + " : " + rdata.bookingEngineTypeId);
+                Hashtable dayEntry = new Hashtable();
                 dayEntry.put("min_stay", minstay);
                 list.add(dayEntry);
                 found = true;
+                cal.add(Calendar.DAY_OF_YEAR, 1);
             }
             table.put(rdata.wubookroomid + "", list);
         }
@@ -1491,7 +1488,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 Date end = endCal.getTime();
                 int count = 0;
                 try {
-                    count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end);
+                    count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end, false);
                 }catch(BookingEngineException e) {
                     
                 }
@@ -1783,5 +1780,32 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         return null;
 }
+
+    private Double getMinStay(Date time, String bookingEngineTypeId) {
+        List<TimeRepeaterData> minstayours = bookingEngine.getOpeningHoursWithType(bookingEngineTypeId, TimeRepeaterData.TimePeriodeType.min_stay);
+        if(minstayours == null || minstayours.isEmpty()) {
+            minstayours = bookingEngine.getOpeningHoursWithType(null, TimeRepeaterData.TimePeriodeType.min_stay);
+        }
+        
+        if(minstayours == null || minstayours.isEmpty()) {
+            return null;
+        }
+        
+        TimeRepeater repeater = new TimeRepeater();
+        double minstay = 1.0;
+        for(TimeRepeaterData res : minstayours) {
+            LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
+            for(TimeRepeaterDateRange range : ranges) {
+                if(range.isBetweenTime(time)) {
+                    try {
+                        minstay = new Integer(res.timePeriodeTypeAttribute);
+                    }catch(Exception e) {
+
+                    }
+                }
+            }
+        }
+        return minstay;
+    }
 
 }

@@ -3114,14 +3114,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public Integer getNumberOfAvailable(String itemType, Date start, Date end) {
+        return getNumberOfAvailable(itemType, start, end, true);
+    }
+    
+    public Integer getNumberOfAvailable(String itemType, Date start, Date end, boolean includeMinMaxStay) {
         if(start.after(end)) {
             return 0;
         }
-        if (!isOpen(itemType, start, end)) {
+        if(hasRestriction(itemType,start,end)) {
             return 0;
         }
-        if(hasRoomsInWorkspace(start, end)) {
-            return 0;
+        if(includeMinMaxStay) {
+            if(isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.min_stay)) {
+                return 0;
+            }
+            if(isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.max_stay)) {
+                return 0;
+            }
         }
         
         try {
@@ -3129,10 +3138,50 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }catch(BookingEngineException e) {
             return 0;
         }
+
     }
 
-    private boolean isOpen(String itemType, Date start, Date end) {
+    private boolean avoidSameDayDropIn(Date start, String itemType) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.HOUR, -7);
+        Date checkDate = cal.getTime();
+        //If booking is done in the midle of the night, the same day is yesterday.
+        if(!PmsBookingRooms.isSameDayStatic(checkDate, start)) {
+            return false;
+        }
         
+        Session sess = getSession();
+        if(sess != null && sess.currentUser != null) {
+            if(sess.currentUser.isAdministrator() && !sess.currentUser.isProcessUser()) {
+                return false;
+            }
+        }
+        
+        List<TimeRepeaterData> openingshours = bookingEngine.getOpeningHoursWithType(itemType, TimeRepeaterData.TimePeriodeType.denySameDayBooking);
+        if(openingshours.isEmpty()) {
+            openingshours = bookingEngine.getOpeningHoursWithType(null, TimeRepeaterData.TimePeriodeType.denySameDayBooking);
+        }
+        
+        if(openingshours.isEmpty()) {
+            return false;
+        }
+        
+        TimeRepeater repeater = new TimeRepeater();
+        for(TimeRepeaterData res : openingshours) {
+            LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
+            for(TimeRepeaterDateRange range : ranges) {
+                if(range.isBetweenTime(new Date())) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    private boolean isRestricted(String itemType, Date start, Date end, Integer periodeType) {
+        int days = pmsInvoiceManager.getNumberOfDays(start, end);
         Session sess = getSession();
         if(sess != null && sess.currentUser != null) {
             if(sess.currentUser.isAdministrator() && !sess.currentUser.isProcessUser()) {
@@ -3145,21 +3194,43 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return false;
         }
         
-        List<TimeRepeaterData> openingshours = bookingEngine.getOpeningHours(itemType);
+        List<TimeRepeaterData> openingshours = bookingEngine.getOpeningHoursWithType(itemType, periodeType);
         if(openingshours.isEmpty()) {
-            openingshours = bookingEngine.getOpeningHours(null);
+            openingshours = bookingEngine.getOpeningHoursWithType(null, periodeType);
         }
         
         if(openingshours.isEmpty()) {
-            return true;
+            return false;
         }
         
         TimeRepeater repeater = new TimeRepeater();
         for(TimeRepeaterData res : openingshours) {
             LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
             for(TimeRepeaterDateRange range : ranges) {
-                if(range.containsRange(start, end)) {
-                    return true;
+                if(range.isBetweenTime(start) || range.isBetweenTime(end)) {
+                    if(periodeType.equals(TimeRepeaterData.TimePeriodeType.min_stay)) {
+                        Integer daysInRestrioction = 1;
+                        try {
+                            daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
+                        }catch(Exception e) {
+                            
+                        }
+                        if(daysInRestrioction > days) {
+                            return true;
+                        }
+                    } else if(periodeType.equals(TimeRepeaterData.TimePeriodeType.max_stay)) {
+                        Integer daysInRestrioction = 1;
+                        try {
+                            daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
+                        }catch(Exception e) {
+                            
+                        }
+                        if(daysInRestrioction < days) {
+                            return true;
+                        }
+                    } else {
+                        return true;
+                    }
                 }
             }
         }
@@ -3169,7 +3240,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private boolean canAdd(List<Booking> toCheck) {
         for(Booking book : toCheck) {
-            if(!isOpen(book.bookingItemTypeId, book.startDate, book.endDate)) {
+            if(hasRestriction(book.bookingItemTypeId, book.startDate, book.endDate)) {
                 return false;
             }
         }
@@ -6986,4 +7057,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             userManager.saveUserSecure(user);
         }
     }
+
+    private boolean hasRestriction(String itemType, Date start, Date end) {
+        if (isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.open)) {
+            return true;
+        }
+        if (isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.closed)) {
+            return true;
+        }
+        if(hasRoomsInWorkspace(start, end)) {
+            return true;
+        }
+        if(avoidSameDayDropIn(start, itemType)) {
+            return true;
+        }
+        return false;
+    }
+
+    
 }

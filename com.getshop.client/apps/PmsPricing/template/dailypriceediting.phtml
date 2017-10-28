@@ -9,7 +9,6 @@ $prices = $priceObject->dailyPrices;
 <table cellspacing='0' cellpadding='0'>
     <tr>
         <th align='left' style="position:absolute;left:0;">Item</th>
-        <th>Minstay</th>
         <th>Default</th>
         <?php
         for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
@@ -27,13 +26,8 @@ $prices = $priceObject->dailyPrices;
         if(isset($prices->{$type->id}->{'default'})) {
             $price = $prices->{$type->id}->{'default'};
         }
-        $defaultMinStay = 1;
-        if(isset($prices->{$type->id}->{'minstay'})) {
-            $defaultMinStay = $prices->{$type->id}->{'minstay'};
-        }
         echo "<tr itemtype='".$type->id."'>";
         echo "<td class='fixedpricerow'><span style='white-space:nowrap; padding-right: 15px;'>" . $type->name . "</span></td>";
-        echo "<td><input date='minstay' type='text' value='$defaultMinStay' class='priceinput'></td>";
         echo "<td><input date='default' type='text' value='".$price."' class='priceinput'></td>";
         for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
             $date = date("d-m-Y", $i);

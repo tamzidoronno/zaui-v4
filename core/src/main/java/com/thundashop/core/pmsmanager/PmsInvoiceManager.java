@@ -1513,6 +1513,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(order == null) {
                 return "";
             }
+            order.wubookid = booking.latestwubookreservationid;
             order.createByManager = "PmsDailyOrderGeneration";
             if(filter.totalAmount != null && filter.totalAmount > 0) {
                 adjustAmountOnOrder(order, filter.totalAmount);

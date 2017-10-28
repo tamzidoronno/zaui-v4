@@ -804,6 +804,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(!isUpdate) {
             newbooking.wubookreservationid = booking.reservationCode;
         }
+        newbooking.latestwubookreservationid = booking.reservationCode;
         newbooking.countryCode = booking.countryCode;
         if(booking.customerNotes != null && !booking.customerNotes.isEmpty()) {
             PmsBookingComment comment = new PmsBookingComment();

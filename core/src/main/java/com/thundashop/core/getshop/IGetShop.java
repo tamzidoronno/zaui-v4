@@ -1,8 +1,10 @@
 package com.thundashop.core.getshop;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopNotSynchronized;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.getshop.data.DibsAutoCollectData;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.PartnerData;
 import com.thundashop.core.getshop.data.SmsResponse;
@@ -27,6 +29,11 @@ public interface IGetShop {
      * @return 
      */
     public List<GetshopStore> getStores(String code);
+    
+    @Administrator
+    public List<DibsAutoCollectData> getOrdersToAutoPayFromDibs();
+    
+    public void addToDibsAutoCollect(String orderId, String storeId);
     
     /**
      * 

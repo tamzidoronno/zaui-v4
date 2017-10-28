@@ -984,6 +984,15 @@ public class PmsManagerProcessor {
                     key = key + "_" + order.id;
                 }
                 
+                if(order.payment.paymentType.toLowerCase().contains("dibsautocollect")) {
+                    if(order.tryAutoPayWithDibs == null) {
+                        order.tryAutoPayWithDibs = new Date();
+                        manager.orderManager.saveOrder(order);
+                        manager.getShop.addToDibsAutoCollect(order.id, manager.storeManager.getStoreId());
+                    }
+                    continue;
+                }
+                
                 if(book.notificationsSent.contains(key)) {
                     continue;
                 }

@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -125,5 +126,14 @@ public class Destination extends DataCommon {
 
     public void unStart() {
         signatures.clear();
+    }
+    
+    public List<String> getPodBarcodes() {
+        Set<String> podBarcodes = new TreeSet();
+        tasks.stream().forEach(t -> {
+            podBarcodes.add(t.podBarcode);
+        });
+        
+        return new ArrayList(podBarcodes);
     }
 }

@@ -4440,5 +4440,19 @@ class PmsManagement extends \WebshopApplication implements \Application {
         return json_encode($result);
     }
 
+    /**
+     * @param \core_ordermanager_data_Order $order
+     */
+    public function getChargeDate($order) {
+        $start = null;
+        $config = $this->getManager()->getConfiguration($this->getSelectedName());
+        foreach($order->cart->items as $item) {
+            if($start == null || $start > strtotime($item->startDate)) {
+                $start = strtotime($item->startDate);
+            }
+        }
+        return strtotime(date("d.m.Y", $start) . " -".$config->numberOfDaysToSendPaymentLinkAheadOfStay."days");
+    }
+
 }
 ?>

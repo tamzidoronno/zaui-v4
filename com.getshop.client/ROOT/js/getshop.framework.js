@@ -327,7 +327,7 @@ thundashop.framework = {
         }
         
         var method = form.attr('method');
-        if(typeof(method) === "undefined") {
+        if(typeof(method) === "undefined" || $(this).attr('method')) {
             method = $(this).attr('method');
         }
         var event = thundashop.Ajax.createEvent('',method,$(this),data);

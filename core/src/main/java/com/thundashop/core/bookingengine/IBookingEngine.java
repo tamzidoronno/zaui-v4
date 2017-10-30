@@ -118,4 +118,7 @@ public interface IBookingEngine {
     
     @Administrator
     public void forceUnassignBookingInfuture();
+    
+    @Administrator
+    public List<TimeRepeaterData> getOpeningHoursWithType(String itemId, Integer timePeriodeType);
 }

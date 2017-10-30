@@ -86,6 +86,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String sentToPhonePrefix = "";
     public Date chargeAfterDate = null;
     public boolean warnedNotPaid = false;
+    public Date tryAutoPayWithDibs = null;
     
     @Transient
     public String wubookid = "";

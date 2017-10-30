@@ -19,6 +19,7 @@ import com.thundashop.core.common.StoreHandler;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.data.DibsAutoCollectData;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.Partner;
 import com.thundashop.core.getshop.data.PartnerData;
@@ -58,6 +59,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class GetShop extends ManagerBase implements IGetShop {
 
+    private List<DibsAutoCollectData> listToAdd = new ArrayList();
+    
     private HashMap<String, List<Partner>> partners;
     private HashMap<String, PartnerData> partnerData = new HashMap();
     private ConcurrentHashMap<String, SmsResponse> smsResponses = new ConcurrentHashMap();
@@ -683,5 +686,24 @@ public class GetShop extends ManagerBase implements IGetShop {
                 
         new Thread(thread).start();      
         
+    }
+
+    @Override
+    public List<DibsAutoCollectData> getOrdersToAutoPayFromDibs() {
+        List<DibsAutoCollectData> res = new ArrayList();
+        for(DibsAutoCollectData autoCollect : listToAdd) {
+            res.add(autoCollect);
+            deleteObject(autoCollect);
+        }
+        return res;
+    }
+
+    @Override
+    public void addToDibsAutoCollect(String orderId, String storeId) {
+        DibsAutoCollectData toAdd = new DibsAutoCollectData();
+        toAdd.storeId = storeId;
+        toAdd.orderId = orderId;
+        saveObject(toAdd);
+        listToAdd.add(toAdd);
     }
 }

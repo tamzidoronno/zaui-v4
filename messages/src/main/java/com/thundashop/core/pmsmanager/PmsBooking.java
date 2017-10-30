@@ -81,6 +81,7 @@ public class PmsBooking extends DataCommon {
     public String secretBookingId = "";
     public boolean ignoreNoShow = false;
     boolean quickReservation = false;
+    public String latestwubookreservationid = "";
     
     public Double getTotalPrice() {
         return totalPrice;

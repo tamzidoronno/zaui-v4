@@ -28,12 +28,24 @@ public class StatisticsEntry {
     public HashMap<String, Integer> guestsConference = new HashMap();
     public HashMap<String, Integer> guestsRegular = new HashMap();
     public List<String> roomsIncluded = new ArrayList();
+    public List<String> ordersUsed = new ArrayList();
     boolean isTotal = false;
     public Integer squareMetres = 0;
     public Integer totalRoomsOriginal;
     
     public void finalize() {
-        avgPrice = totalPrice / roomsRentedOut;
+        
+        HashMap<String, Integer> newList = new HashMap();
+        for(String k : ordersUsed) {
+            newList.put(k, 1);
+        }
+        ordersUsed = new ArrayList(newList.keySet());
+        
+        if(roomsRentedOut > 0) {
+            avgPrice = totalPrice / roomsRentedOut;
+        } else {
+            avgPrice = 0.0;
+        }
         totalPrice = (double)Math.round(totalPrice);
         avgPrice = (double)Math.round(avgPrice);
         spearRooms = totalRooms - roomsRentedOut;

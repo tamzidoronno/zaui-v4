@@ -116,13 +116,15 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
             $included = $entry->roomsIncluded;
             $included = json_encode($included);
             
+            $ordersIncluded = json_encode($entry->ordersUsed);
+            
             $guests = $entry->guestCount;
             if ($entry->date) {
                 $day = $this->getDayText($entry->date, $filter->timeInterval);
             } else {
                 $day = "Sum";
             }
-            echo "<tr class='statisticsrow' type='coverage' day='$day' included='$included'>";
+            echo "<tr class='statisticsrow' type='coverage' day='$day' included='$included' ordersincluded='$ordersIncluded'>";
             echo "<td>";
                 echo $day;
             echo "</td>";

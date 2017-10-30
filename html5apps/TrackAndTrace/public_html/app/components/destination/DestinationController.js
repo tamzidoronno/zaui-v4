@@ -10,6 +10,7 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 controllers.DestinationController = function($scope, datarepository, $stateParams, $api, $state) {
     $scope.route = datarepository.getRouteById($stateParams.routeId);
     $scope.destination = datarepository.getDestinationById($stateParams.destinationId);
+    $scope.showReplyMessage = false;
 
     if (!$scope.destination) {
         $state.transitionTo("base.home");
@@ -115,6 +116,19 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
         $state.transitionTo('base.destinationexception', { destinationId: $stateParams.destinationId,  routeId: $stateParams.routeId });
     }
     
+    $scope.cancelSendBackMessage = function() {
+        $scope.showReplyMessage = false;
+    }
+    
+    $scope.sendMessageBack = function() {
+        var message = $('#replyMessageArea').val();
+        var me = $scope;
+        $scope.showReplyMessage = false;
+        $api.getApi().TrackAndTraceManager.replyMessageForDestionation($scope.destination.id, message, new Date()).done(function(res) {
+            me.instructionRead();
+        });
+    }
+    
     $scope.$on('refreshRoute', function(msg, route) {
         for (var i in route.destinations) {
             var dest = route.destinations[i];
@@ -125,5 +139,7 @@ controllers.DestinationController = function($scope, datarepository, $stateParam
         }
     });
     
-    
+    $scope.doShowReplyMessage = function() {
+        $scope.showReplyMessage = true;
+    }
 }

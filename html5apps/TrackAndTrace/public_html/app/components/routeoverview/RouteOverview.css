@@ -16,6 +16,7 @@ and open the template in the editor.
     text-align: left;
 }
 
+.gsview.routeoverview .sendGeneralMessage, 
 .gsview.routeoverview .hidefinishedtasksbutton {
     position: absolute;
     top: 95px;
@@ -23,6 +24,10 @@ and open the template in the editor.
     font-size: 12px;
     right: 10px;
     padding: 10px;
+}
+
+.gsview.routeoverview .sendGeneralMessage {
+    right: 100px;
 }
 
 .gsview.routeoverview .destination {

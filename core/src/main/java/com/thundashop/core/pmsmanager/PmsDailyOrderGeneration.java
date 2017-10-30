@@ -529,10 +529,19 @@ public class PmsDailyOrderGeneration extends GetShopSessionBeanNamed {
             return;
         }
         if(addonOnRoom.count >= addonAlreadyBilled.count && addonAlreadyBilled.price.equals(addonOnRoom.price)) {
-            if(addonOnRoom.price > 0.0) {
-                addonOnRoom.count -= addonAlreadyBilled.count;
+            if((addonAlreadyBilled.price*addonAlreadyBilled.count) > 0.0) {
+                if((addonOnRoom.price*addonOnRoom.count) > 0.0) {
+                    addonOnRoom.count -= addonAlreadyBilled.count;
+                } else {
+                    addonOnRoom.count += addonAlreadyBilled.count;
+                }
             } else {
-                addonOnRoom.count += addonAlreadyBilled.count;
+                if((addonOnRoom.price*addonOnRoom.count) < 0.0) {
+                    addonOnRoom.count -= addonAlreadyBilled.count;
+                } else {
+                    addonOnRoom.count += addonAlreadyBilled.count;
+                }
+                
             }
         } else if(addonOnRoom.count != null && addonOnRoom.count.equals(0)) {
             addonOnRoom.count = addonAlreadyBilled.count;

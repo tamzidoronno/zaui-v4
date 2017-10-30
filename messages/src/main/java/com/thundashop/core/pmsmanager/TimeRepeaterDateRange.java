@@ -8,9 +8,6 @@ public class TimeRepeaterDateRange implements Serializable {
     public Date end;
 
     public boolean isBetweenTime(Date dateToCheck) {
-        if(start.equals(dateToCheck)) {
-            return true;
-        }
         if(dateToCheck.after(start) && dateToCheck.before(end)) {
             return true;
         }

@@ -7073,7 +7073,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private boolean hasRestriction(String itemType, Date start, Date end) {
-        if (isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.open)) {
+        if (!isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.open)) {
             return true;
         }
         if (isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.closed)) {

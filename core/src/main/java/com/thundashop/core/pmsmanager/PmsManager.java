@@ -3205,8 +3205,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             openingshours = bookingEngine.getOpeningHoursWithType(null, periodeType);
         }
         
-        if(openingshours.isEmpty()) {
-            return false;
+        if(periodeType.equals(TimeRepeaterData.TimePeriodeType.open)) {
+            return true;
         }
         
         TimeRepeater repeater = new TimeRepeater();
@@ -4883,7 +4883,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return result;
     }
-
+ 
     public PmsBooking doCompleteBooking(PmsBooking booking) {
         String rawBooking = "";
         if(booking != null) {
@@ -7073,6 +7073,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private boolean hasRestriction(String itemType, Date start, Date end) {
+        //Check for user.
         if(getSession() != null && getSession().currentUser != null && (getSession().currentUser.isAdministrator() || getSession().currentUser.isEditor())) {
             return false;
         }

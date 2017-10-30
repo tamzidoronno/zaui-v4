@@ -2442,12 +2442,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<Integer> getAvailabilityForType(String bookingTypeId, Date startTime, Date endTime, Integer intervalInMinutes) {
-        LinkedList<TimeRepeaterDateRange> lines = createAvailabilityLines(bookingTypeId);
-
+        LinkedList<TimeRepeaterDateRange> lines = createAvailabilityLines(bookingTypeId, TimeRepeaterData.TimePeriodeType.open);
+        LinkedList<TimeRepeaterDateRange> closedLines = createAvailabilityLines(bookingTypeId, TimeRepeaterData.TimePeriodeType.closed);
+        
         DateTime timer = new DateTime(startTime);
         List<Integer> result = new ArrayList();
         while (true) {
-            if (hasRange(lines, timer)) {
+            if (hasRange(lines, timer, closedLines)) {
                 result.add(1);
             } else {
                 result.add(0);
@@ -2460,15 +2461,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
-    private LinkedList<TimeRepeaterDateRange> createAvailabilityLines(String bookingItemId) {
+    private LinkedList<TimeRepeaterDateRange> createAvailabilityLines(String bookingItemId, Integer type) {
         if (bookingItemId != null && bookingItemId.isEmpty()) {
             bookingItemId = null;
         }
         LinkedList<TimeRepeaterDateRange> result = new LinkedList<TimeRepeaterDateRange>();
-        List<TimeRepeaterData> repeaters = bookingEngine.getOpeningHours(bookingItemId);
+        List<TimeRepeaterData> repeaters = bookingEngine.getOpeningHoursWithType(bookingItemId, type);
         if (repeaters.isEmpty()) {
-            repeaters = bookingEngine.getOpeningHours(null);
+            repeaters = bookingEngine.getOpeningHoursWithType(null, type);
         }
+        
+        if(type.equals(TimeRepeaterData.TimePeriodeType.closed)) {
+            repeaters.addAll(bookingEngine.getOpeningHoursWithType(null, type));
+        }
+        
         for (TimeRepeaterData repeater : repeaters) {
             TimeRepeater generator = new TimeRepeater();
             result.addAll(generator.generateRange(repeater));
@@ -2477,7 +2483,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
-    private boolean hasRange(LinkedList<TimeRepeaterDateRange> lines, DateTime timer) {
+    private boolean hasRange(LinkedList<TimeRepeaterDateRange> lines, DateTime timer, LinkedList<TimeRepeaterDateRange> closed) {
+        for (TimeRepeaterDateRange line : closed) {
+            if (line.isBetweenTime(timer.toDate())) {
+                return false;
+            }
+        }
         for (TimeRepeaterDateRange line : lines) {
             if (line.isBetweenTime(timer.toDate())) {
                 return true;

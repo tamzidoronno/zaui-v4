@@ -17,7 +17,7 @@ $repeat = $this->getRepeatingSummary();
 $openingdata = $this->getOpeningHours();
 $start = time();
 $end = time();
-
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
 if(!$openingdata) {
     $openingdata = array();
 }
@@ -25,9 +25,11 @@ if(!$openingdata) {
 $timePeriodeType = array();
 $timePeriodeType[0] = "Opened";
 $timePeriodeType[1] = "Closed";
-$timePeriodeType[2] = "Min stay";
-$timePeriodeType[3] = "Max stay";
-$timePeriodeType[4] = "Deny same day booking";
+if($config->bookingProfile != "conferense") {
+    $timePeriodeType[2] = "Min stay";
+    $timePeriodeType[3] = "Max stay";
+    $timePeriodeType[4] = "Deny same day booking";
+}
 
 foreach($openingdata as $data) {
     if(!$data->firstEvent) {

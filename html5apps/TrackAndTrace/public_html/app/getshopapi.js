@@ -86,6 +86,11 @@ GetShopApiWebSocket.prototype = {
             return;
         }
 
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
+            messagePersister.markAsSent(corrolatingMessage);
+            this.fireMessageCountChanged();
+        }
+
         if (this.globalErrorHandler && jsonObject && jsonObject.object && jsonObject.object.errorCode) {
             this.globalErrorHandler(jsonObject.object);
         } else {
@@ -101,10 +106,7 @@ GetShopApiWebSocket.prototype = {
             this.firstUnsentMessages = false;
         }
         
-        if (typeof(messagePersister) !== "undefined" && messagePersister) {
-            messagePersister.markAsSent(corrolatingMessage);
-            this.fireMessageCountChanged();
-        }
+        
     },
 
     handleIncomingMessage: function(msg) {
@@ -14299,6 +14301,17 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'deleteReplyMessage' : function(replyMessageId, gs_silent) {
+        var data = {
+            args : {
+                replyMessageId : JSON.stringify(replyMessageId),
+            },
+            method: 'deleteReplyMessage',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
     'deleteRoute' : function(routeId, gs_silent) {
         var data = {
             args : {
@@ -14444,6 +14457,16 @@ GetShopApiWebSocket.TrackAndTraceManager.prototype = {
             args : {
             },
             method: 'getPooledDestiontionsByUsersDepotId',
+            interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
+        };
+        return this.communication.send(data, gs_silent);
+    },
+
+    'getReplyMessages' : function(gs_silent) {
+        var data = {
+            args : {
+            },
+            method: 'getReplyMessages',
             interfaceName: 'core.trackandtrace.ITrackAndTraceManager',
         };
         return this.communication.send(data, gs_silent);

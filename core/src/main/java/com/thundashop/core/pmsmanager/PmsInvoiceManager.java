@@ -2445,9 +2445,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 if(priceType == PmsBooking.PriceType.monthly) {
                     calStart.add(Calendar.MONTH,1);
                 }
-                if(!room.priceMatrix.containsKey(offset)) {
-                    logPrint("Huston, we have a problem: " + offset);
-                } else {
+                if(room.priceMatrix.containsKey(offset)) {
                     price += room.priceMatrix.get(offset);
                 }
 
@@ -2795,6 +2793,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(!booking.isCompletedBooking()) {
             return;
         }
+        
+        if(userManager.getUserById(booking.userId) == null) {
+            return;
+        }
+        
         double total = booking.getTotalPrice();
         double totalOrder = getTotalOrderPrice(booking);
         double diff = totalOrder - total;
@@ -2820,8 +2823,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             double newDiff = diff + orderManager.getTotalAmount(order);
             newDiff = Math.round(newDiff);
             if(newDiff != 0.0) {
-                System.out.println("Failed when creating virtual order : " + bookingId + " - " + newDiff);
-                System.out.println(pmsManager.dumpBooking(booking));
+//                System.out.println("Failed when creating virtual order : " + bookingId + " - " + newDiff);
+//                System.out.println(pmsManager.dumpBooking(booking));
             }
         }
         

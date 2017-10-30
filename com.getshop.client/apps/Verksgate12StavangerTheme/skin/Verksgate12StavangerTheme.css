@@ -213,7 +213,6 @@ div:last-child {
 @media only all and (max-width:800px) {
     .gsarea[area="header"] .mobilenavigatemenu .fa{visibility:hidden;position:relative;z-index:30;font-size:27px;user-select:none;color:#fff;position: absolute; right: -50px; top 20px;}
     .gsarea[area="header"] .mobilenavigatemenu .fa:before{visibility:visible;}
-    .gsarea[area="header"] .Menu{display:inline-block;width:100%;margin:0;padding:0;}
     .gsarea[area="header"] .Menu .entry  div{line-height:34px; margin:0;padding:2px;letter-spacing:0;font-size:16px;text-align:center !important;}
     .gsarea[area="header"] .Menu .entry .entries{top:0;}
     .gsarea[area="header"] .Menu .menuentries .entry{padding:0;}
@@ -231,9 +230,10 @@ div:last-child {
     }
     
     .gsarea[area="header"] .gscell[cellid="9c81ff48-5357-4a3e-8d18-07e27d40ce50"] { width: 200px !important; }
-    .gsarea[area="header"] .gscell[cellid="e094a522-6d1a-4234-9aac-5f8e6133d436"] { position: absolute; right: 0px; top: 30px;}
+    .gsarea[area="header"] .gscell[cellid="e094a522-6d1a-4234-9aac-5f8e6133d436"] { position: absolute; left: 0px; right: 0px; height: 0px; top: 30px; }
+    
     .gsarea[area="body"] .gs_page_width { margin-left: 20px; margin-right: 20px; }
-    .gsarea[area="body"] .gscell[cellid="6d030aa9-6b7a-426c-8c85-36093b6ac06f"] .gs_page_width { margin-left: 0px; margin-right: 0px; }
+    .gsarea[area="body"] .gscell[cellid="6d030aa9-6b7a-426c-8c85-36093b6ac06f"] .gs_page_width { margin-left: 0px; margin-right: 0px;  }
     
     .gsarea[area="body"] .pmsfront2 { background-color: #FFF;}
     .gsarea[area="body"] .inputblock { display: block; width: 100%;}

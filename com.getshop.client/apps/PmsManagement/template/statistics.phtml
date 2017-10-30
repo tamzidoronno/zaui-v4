@@ -128,12 +128,14 @@ if($filter->channel || sizeof($filter->typeFilter) > 0) {
             echo "<td>";
                 echo $day;
             echo "</td>";
-            echo "<td>"; if($entry->spearRooms >= 0) { echo $entry->spearRooms; } echo "</td>";
+            echo "<td>"; if($entry->spearRooms >= 0) { echo $entry->spearRooms; } else { echo "0"; } echo "</td>";
             echo "<td>"; if($entry->roomsRentedOut >= 0) { 
                 echo $entry->roomsRentedOut; 
                 if($entry->roomsNotIncluded > 0) {
                     echo " (" . $entry->roomsNotIncluded . ")";
                 }
+            } else {
+                echo "0";
             }
             echo "</td>";
             echo "<td>$guests</td>";

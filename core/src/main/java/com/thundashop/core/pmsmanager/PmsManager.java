@@ -298,9 +298,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for (PmsBooking booking : allBookings) {
             orderManager.deleteVirtualOrders(booking.id);
-            if(booking.isCompletedBooking()) {
-                pmsInvoiceManager.createVirtualOrder(booking.id);
-            }
+            pmsInvoiceManager.createVirtualOrder(booking.id);
         }
         
         virtualOrdersCreated = new Date();
@@ -3762,7 +3760,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.deletedByChannelManagerForModification) {
                 continue;
             }
-            res += "   " + type.name + " - " + room.date.start + " frem til : " + room.date.end + "<br>";
+            if(type != null) {
+                res += "   " + type.name + " - ";
+            }
+            if(room.date != null) {
+                res += room.date.start + " frem til : " + room.date.end;
+            }
+            res += "<br>";
+            
         }
             
         User user = userManager.getUserById(booking.userId);

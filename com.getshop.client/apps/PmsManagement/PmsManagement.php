@@ -1458,6 +1458,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function saveDiscountPreferences() {
         $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
         $user->preferredPaymentType = $_POST['data']['preferredPaymentType'];
+        $user->showExTaxes = $_POST['data']['showExTaxes'] == "true";
         $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedName(), $user->id);
         $discount->supportInvoiceAfter = $_POST['data']['createAfterStay'] == "true";
         $discount->discountType = 0;

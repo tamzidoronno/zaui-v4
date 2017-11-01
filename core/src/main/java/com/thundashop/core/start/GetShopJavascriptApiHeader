@@ -86,6 +86,11 @@ GetShopApiWebSocket.prototype = {
             return;
         }
 
+        if (typeof(messagePersister) !== "undefined" && messagePersister) {
+            messagePersister.markAsSent(corrolatingMessage);
+            this.fireMessageCountChanged();
+        }
+
         if (this.globalErrorHandler && jsonObject && jsonObject.object && jsonObject.object.errorCode) {
             this.globalErrorHandler(jsonObject.object);
         } else {
@@ -101,10 +106,7 @@ GetShopApiWebSocket.prototype = {
             this.firstUnsentMessages = false;
         }
         
-        if (typeof(messagePersister) !== "undefined" && messagePersister) {
-            messagePersister.markAsSent(corrolatingMessage);
-            this.fireMessageCountChanged();
-        }
+        
     },
 
     handleIncomingMessage: function(msg) {

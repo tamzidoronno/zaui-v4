@@ -10,6 +10,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsRepeatingData;
 import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
@@ -18,6 +19,7 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -401,8 +403,8 @@ public class CartManager extends ManagerBase implements ICartManager {
             getCart().removeItem(remove.getCartItemId());
         }
     }
-
-    public boolean couponIsValid(String couponCode, Date start, Date end, String productId) {
+    
+    public boolean couponIsValid(Date registrationDate, String couponCode, Date start, Date end, String productId, int days) {
         if(start == null || end == null) {
             return true;
         }
@@ -421,6 +423,17 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
         
         PmsRepeatingData when = coupon.whenAvailable;
+        if(coupon.minDays > 0 && coupon.minDays > days) {
+            return false;
+        }
+        if(coupon.maxDays > 0 && coupon.maxDays < days) {
+            return false;
+        }
+        
+        if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
+            start = registrationDate;
+            end = registrationDate;
+        }
         
         TimeRepeater repeater = new TimeRepeater();
         LinkedList<TimeRepeaterDateRange> res = repeater.generateRange(when.data);

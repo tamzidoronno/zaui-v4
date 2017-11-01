@@ -10,7 +10,7 @@ if(typeof(controllers) === "undefined") { var controllers = {}; }
 controllers.RouteOverviewController = function($scope, datarepository, $rootScope, $stateParams, $state, $api) {
     $scope.route = datarepository.getRouteById($stateParams.routeId);
     $scope.showFinished = datarepository.showFinished;
-    
+    $scope.inMessageMode = false;
     
     $scope.getFinishedState = function(destination) {
         
@@ -119,6 +119,19 @@ controllers.RouteOverviewController = function($scope, datarepository, $rootScop
     $scope.markRouteCompleted = function() {
         $state.transitionTo("base.completeRoute", {
             routeId: $stateParams.routeId
+        });
+    }
+    
+    $scope.toggleMessageMode = function() {
+        $scope.inMessageMode = !$scope.inMessageMode;
+    }
+    
+    $scope.sendMessage = function() {
+        var message = $('#routeGeneralMessage').val();
+        var me = $scope;
+        
+        $api.getApi().TrackAndTraceManager.replyGeneral( $scope.route.id, message, new Date()).done(function(res) {
+            me.toggleMessageMode();
         });
     }
 };

@@ -39,6 +39,8 @@ $states['10'] = "Send to invoice";
 <div class='userdashboard'>
     <div style='padding-left: 20px;padding-top: 20px;padding-right: 20px;'>
         <span class='pmsbutton' gstype="clicksubmit" method="setQuickFilter" gsvalue="subtype_customerlist" gsname="type">Back to customerlist</span>
+        <a href="/impersonate.php?userId=<?php echo $user->id; ?>" class='pmsbutton' style='background-color:red;'>Impersonate</a>
+        
         <span class='pmsbutton refreshbutton' userid='<?php echo $user->id; ?>'>refresh</span>
         <?php if(isset($_SESSION['latestBookingLoadedOnPms'])) { ?>
             <span style='float:right;' class="moreinformationaboutbooking pmsbutton" bookingid='<?php echo $_SESSION['latestBookingLoadedOnPms']; ?>'>Open last opened booking</span>
@@ -235,13 +237,15 @@ $states['10'] = "Send to invoice";
                             $afterStayChecked = $discounts->supportInvoiceAfter ? "CHECKED" : "";
                             ?>
                             
-                            <td><b>Create order after stay</b><br>
-                            When a booking is completed the order will be created after the stay has been completed.</td>
+                            <td>
+                                <b>Create order after stay</b><br>
+                                When a booking is completed the order will be created after the stay has been completed.
+                            </td>
                             <td align='center'>
-                            <div class="gsnicecheckbox1">
-                                <input type='checkbox' id="createorderafterstay" gsname='createAfterStay' <?php echo $afterStayChecked; ?>>
-                                <label for="createorderafterstay"></label>
-                            </div>
+                                <div class="gsnicecheckbox1">
+                                    <input type='checkbox' id="createorderafterstay" gsname='createAfterStay' <?php echo $afterStayChecked; ?>>
+                                    <label for="createorderafterstay"></label>
+                                </div>
                             </td>
                         </tr>
                         <tr>
@@ -294,6 +298,24 @@ $states['10'] = "Send to invoice";
                                 </select>
                             </td>
                         </tr>
+                        
+                        <tr>
+                            <?php
+                            $afterStayChecked = $user->showExTaxes ? "CHECKED" : "";
+                            ?>
+                            
+                            <td>
+                                <b>Prices are without taxes</b><br>
+                                If this is active the prices will be shown without taxes in the booking process.
+                            </td>
+                            <td align='center'>
+                                <div class="gsnicecheckbox1">
+                                    <input type='checkbox' id="showpricesextaxes" gsname='showExTaxes' <?php echo $afterStayChecked; ?>>
+                                    <label for="showpricesextaxes"></label>
+                                </div>
+                            </td>
+                        </tr>
+                        
                         <?php
                         foreach($rooms as $room) {
                             $amount = "";

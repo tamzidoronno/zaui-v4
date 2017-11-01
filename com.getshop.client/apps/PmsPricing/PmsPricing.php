@@ -288,6 +288,8 @@ class PmsPricing extends \WebshopApplication implements \Application {
                 $coupon->productsToSupport[] = $product;
             }
         }
+        $coupon->minDays = $_POST['data']['minDays'];
+        $coupon->maxDays = $_POST['data']['maxDays'];
         
         $this->getApi()->getCartManager()->addCoupon($coupon);
     }

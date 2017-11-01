@@ -176,5 +176,21 @@ public interface ITrackAndTraceManager {
    
     @Editor
     public List<String> getRouteIdsThatHasNotCompleted();
+    
+    @Customer
+    public void replyMessage(String messageId, String text, Date date);
+    
+    @Customer
+    public void replyMessageForDestionation(String destinationId, String text, Date date);
+    
+    @Customer
+    public void replyGeneral(String routeId, String text, Date date);
+    
+    @Administrator
+    public void deleteReplyMessage(String replyMessageId);
+    
+    @Administrator
+    public List<ReplyMessage> getReplyMessages();
+    
 
 }

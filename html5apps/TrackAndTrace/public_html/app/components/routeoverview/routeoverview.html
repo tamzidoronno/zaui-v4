@@ -8,15 +8,16 @@
     <div class="button" ng-mobile-click="acceptTodaysInstruction()"><i class="fa fa-check"></i> Got it</div>
 </div>
 
-<div class="gsview routeoverview" ng-if="route.instructionAccepted || !route.instruction">
+<div class="gsview routeoverview" ng-if="(route.instructionAccepted || !route.instruction)">
     
     <b>{{ route.name }}</b>
     <br/>
    
+    <div class='button sendGeneralMessage' ng-mobile-click="toggleMessageMode()" ><i class="fa fa-comment"></i></div>
     <div class='button hidefinishedtasksbutton' ng-mobile-click="toggleFinished()" ng-if="showFinished">Hide finished</div>
     <div class='button hidefinishedtasksbutton' ng-mobile-click="toggleFinished()" ng-if="!showFinished">Show finished</div>
     
-    <div class='destionations'>
+    <div class='destionations' ng-if='!inMessageMode'>
         <div style='padding-bottom: 10px;'><b>Destinations (tap one to see more)</b></div>
         
         <div class='destination' ng-repeat="destination in route.destinations" ng-if="showFinished || getFinishedState(destination) !== 'green'">
@@ -47,7 +48,16 @@
             </div>
             
         </div>
+        
+        <div class="button" ng-mobile-click="markRouteCompleted()"> Route completed </div>
     </div>
     
-    <div class="button" ng-mobile-click="markRouteCompleted()"> Route completed </div>
+    <div class='destionations' ng-if='inMessageMode' style='padding-top: 50px;'>
+        <textarea id='routeGeneralMessage' style='width:100%; height: 300px;'></textarea>
+        <br/>
+        <div class='button' ng-mobile-click='sendMessage()'>Send message</div>
+        <div class='button' ng-mobile-click='toggleMessageMode()'>Cancel</div>
+    </div>
+    
+    
 </div>

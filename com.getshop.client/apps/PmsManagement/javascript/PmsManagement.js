@@ -73,6 +73,8 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .doCreditOrder', app.PmsManagement.doCreditOrder);
         $(document).on('click','.PmsManagement .executeroomsbookedaction', app.PmsManagement.executeroomsbookedaction);
         $(document).on('keyup','.PmsManagement .matrixpricealldays', app.PmsManagement.updateRoomPriceMatrix);
+        $(document).on('keyup','.PmsManagement .matrixpricealldaysextaxes', app.PmsManagement.updateRoomPriceExTaxesMatrix);
+        $(document).on('keyup','.PmsManagement .matrixdaypriceextax, .PmsManagement .matrixdayprice', app.PmsManagement.calculateTax);
         $(document).on('click','.PmsManagement .addonstable', app.PmsManagement.showSaveButton);
         $(document).on('click','.PmsManagement .listaddonsaddedtoroom', app.PmsManagement.showAddonList);
         $(document).on('click','.PmsManagement .removeAddonsFromRoom', app.PmsManagement.removeAddonsFromRoom);
@@ -121,6 +123,20 @@ app.PmsManagement = {
         $(document).on('click','.PmsManagement .deleteComment', app.PmsManagement.deleteComment);
         getshop.WebSocketClient.addListener("com.thundashop.core.verifonemanager.VerifoneFeedback", app.PmsManagement.displayVerifoneFeedBack);
     },
+    calculateTax : function() {
+        var taxValue = parseInt($(this).closest('.editmode').find('.taxvalue').val());
+        var val = $(this).val();
+        var row = $(this).closest('tr');
+        if($(this).hasClass('matrixdaypriceextax')) {
+            var incTaxes = val * ((100+taxValue)/100);
+            incTaxes = Math.round(incTaxes);
+            row.find('.matrixdayprice').val(incTaxes);
+        } else {
+            var incTaxes = val / ((100+taxValue)/100);
+            row.find('.matrixdaypriceextax').val(incTaxes);
+        }
+    },
+    
     deleteComment : function() {
         var line = $(this).closest('.commentline');
         var event = thundashop.Ajax.createEvent('','toggleDeleteComment', line, {
@@ -1050,9 +1066,17 @@ app.PmsManagement = {
     updateRoomPriceMatrix : function() {
         var table = $(this).closest('.roompricematrixtable');
         var val = $(this).val();
-        console.log(val);
         table.find('.matrixdayprice').each(function() {
             $(this).val(val);
+            $(this).keyup();
+        });
+    },
+    updateRoomPriceExTaxesMatrix : function() {
+        var table = $(this).closest('.roompricematrixtable');
+        var val = $(this).val();
+        table.find('.matrixdaypriceextax').each(function() {
+            $(this).val(val);
+            $(this).keyup();
         });
     },
     
@@ -1124,7 +1148,8 @@ app.PmsManagement = {
         var data = {
             "type" : $(this).attr('type'),
             "day" : $(this).attr('day'),
-            "included" : $(this).attr('included')
+            "included" : $(this).attr('included'),
+            "ordersincluded" : $(this).attr('ordersincluded')
         }
         
         var event = thundashop.Ajax.createEvent('','loadDayStatistics',$(this),data);

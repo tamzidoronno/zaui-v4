@@ -3,7 +3,7 @@
 $booking = $this->getSelectedBooking();
 $types = $this->getTypes();
 $items = $this->getItems();
-
+           
 $toPrint = array();
 $addons = array();
 $sorting = array();
@@ -42,11 +42,13 @@ if(($prices->defaultPriceType == 1 && !empty($arr)) || $prices->defaultPriceType
      $hasPrices = true;
 }
 
-printRooms($toPrint, $types, $items, $booking, false, $hasPrices, $hasArx,$config, $this, $products);
+$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+
+printRooms($toPrint, $types, $items, $booking, false, $hasPrices, $hasArx,$config, $this, $products, $user);
 
 if(sizeof($addons) > 0) {
     echo '<h2>Addons</h2>';
-    printRooms($addons, $types, $items, $booking, true, $hasPrices, $hasArx,$config, $this, $products);
+    printRooms($addons, $types, $items, $booking, true, $hasPrices, $hasArx,$config, $this, $products, $user);
 }
 
 /**
@@ -58,10 +60,11 @@ if(sizeof($addons) > 0) {
  * @param type $addons
  * @param type $hasPrices
  * @param type $hasArx
+ * @param core_usermanager_data_User $user
  * @param core_pmsmanager_PmsConfiguration $config
  * @param \ns_7e828cd0_8b44_4125_ae4f_f61983b01e0a\PmsManagement $object
  */
-function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasArx, $config, $object, $products) {
+function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasArx, $config, $object, $products, $user) {
     $bookingId = $booking->id;
     $deletedcount = 0;
 
@@ -448,7 +451,6 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                     $matrix[strtotime($key)] = $val;
                                 }
                                 ksort($matrix);
-                                
                                 if(!$config->usePriceMatrixOnOrder) {
                                     ?>
                                     <input type='hidden' value='no' gsname='pricematrix'>
@@ -458,7 +460,12 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                     ?>
                                     <i class="fa fa-times" style="float:right; cursor:pointer;" onclick="$('.editmode').hide();"></i>
                                     <span style='color:blue;cursor:pointer;' onclick='$(this).parent().find(".setperiodeprice").toggle();'>Set a price for a period</span><br>
-                                    
+                                    <label>
+                                        <?php
+                                        $showTaxes = $user->showExTaxes ? "CHECKED" : "";
+                                        ?>
+                                        <input type='checkbox' class='showExTaxesToggle' <?php echo $showTaxes; ?>> Show prices ex taxes 
+                                    </label>
                                     <div style='padding: 10px; border: solid 1px #bbb; margin-bottom: 10px; display:none;' class='setperiodeprice'>
                                         Price type<br>
                                         <select gsname='periodePriceType'>
@@ -469,16 +476,26 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
                                         Amount<br>
                                         <input type='text' gsname='periodePrice'><input type='button' value='Change prices'  gstype='submitToInfoBox' gsvalue='setPeriodePrice'>
                                     </div>
-                                    
                                     <table cellspacing='0' cellpadding='0' class='roompricematrixtable'>
-                                    <tr><th>Day</th><th>price</th></tr>
+                                        <input type='hidden' class='taxvalue' value='<?php echo $room->taxes; ?>'>
+                                    <tr><th>Day</th><th class='extaxescol'>Ex taxes</th><th>Inc taxes</th></tr>
                                     <?php if(sizeof($matrix) > 1) { ?>
-                                        <tr><th>All days</th><th><input type='text' class='matrixpricealldays' style='width: 40px; border: solid 1px;'></th></tr>
+                                        <tr>
+                                            <th>All days</th>
+                                            <th class='extaxescol'><input type='text' class='matrixpricealldaysextaxes' style='width: 40px; border: solid 1px;'></th>
+                                            <th><input type='text' class='matrixpricealldays' style='width: 40px; border: solid 1px;'></th>
+                                        </tr>
                                     <?php
                                     }
                                     echo "<input type='hidden' value='yes' gsname='pricematrix'>";
                                     foreach($matrix as $key => $val) {
-                                        echo "<tr><td><div style='display:inline-block; width: 125px;'>" . date("d.m.Y", $key) . "</td><td><input type='txt' value='$val' gsname='matrixprice_$key' class='matrixdayprice' style='width: 40px; border: solid 1px;'></div></td></tr>";
+                                        $exTaxes = $val / ((100+$room->taxes)/100);
+                                        $exTaxes = round($exTaxes,2);
+                                        echo "<tr>";
+                                        echo "<td><div style='display:inline-block; width: 125px;'>" . date("d.m.Y", $key) . "</td>";
+                                        echo "<td class='extaxescol'><input type='txt' class='matrixdaypriceextax' value='$exTaxes'style='width: 40px; border: solid 1px;'></div></td>";
+                                        echo "<td><input type='txt' value='$val' gsname='matrixprice_$key' class='matrixdayprice' style='width: 40px; border: solid 1px;'></div></td>";
+                                        echo "</tr>";
                                     }
                                     ?> 
                                     </table>
@@ -599,4 +616,21 @@ function printRooms($rooms, $types, $items, $booking, $addons, $hasPrices, $hasA
     $('.calinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
     $('.newroomstartdate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
     $('.newroomenddate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.showExTaxesToggle').on('click', function() {
+        var box = $(this).closest('.editmode');
+        if($(this).is(':checked')) {
+            box.find('.extaxescol').show();
+        } else {
+            box.find('.extaxescol').hide();
+        }
+    });
 </script>
+<style>
+    .extaxescol { display:none; }
+</style>
+
+<?php
+if($user->showExTaxes) {
+    echo "<script>$('.extaxescol').show();</script>";
+}
+?>

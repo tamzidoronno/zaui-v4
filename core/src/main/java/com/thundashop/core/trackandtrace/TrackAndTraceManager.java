@@ -54,6 +54,8 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
     public HashMap<String, ExportedData> exports = new HashMap();
     
     public HashMap<String, DriverMessage> driverMessages = new HashMap();
+    
+    public HashMap<String, ReplyMessage> replyMessages = new HashMap();
 
     public ExportCounter exportCounter = null;
     
@@ -119,6 +121,11 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             if (common instanceof DriverMessage) {
                 DriverMessage driverMessage = (DriverMessage)common;
                 driverMessages.put(driverMessage.id, driverMessage);
+            }
+            
+            if (common instanceof ReplyMessage) {
+                ReplyMessage msg = (ReplyMessage)common;
+                replyMessages.put(msg.id, msg);
             }
         }
         
@@ -1323,6 +1330,86 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 .map(r -> r.id)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void replyMessage(String messageId, String text, Date date) {
+        ReplyMessage message = createCommonReplyMessage(text, date, "message");
+        message.driverId = getCurrentDriverId();
+        message.driverName = getCurrentDriverName();
+        message.repliedOnMessageId = messageId;
+        
+        saveObject(message);
+        replyMessages.put(message.id, message);
+    }
+
+    @Override
+    public void replyMessageForDestionation(String destinationId, String text, Date date) {
+        Destination destination = getDestination(destinationId);
+        Route route = getRouteByDestination(destination);
+        
+        if (destination == null || route == null) {
+            throw new NullPointerException("Could not find destination");
+        }
+        
+        ReplyMessage message = createCommonReplyMessage(text, date, "destination");
+        message.companyId = destination.company.id;
+        message.stopSequence = destination.seq;
+        message.podBarCodes = destination.getPodBarcodes();
+        message.routeId = route.id;
+        
+        saveObject(message);
+        replyMessages.put(message.id, message);
+    }
+
+    @Override
+    public void replyGeneral(String routeId, String text, Date date) {
+        ReplyMessage message = createCommonReplyMessage(text, date, "general");
+        message.routeId = routeId;
+        saveObject(message);
+        replyMessages.put(message.id, message);
+    }
+
+    @Override
+    public void deleteReplyMessage(String replyMessageId) {
+        ReplyMessage msg = replyMessages.remove(replyMessageId);
+        if (msg != null) {
+            deleteObject(msg);
+        }
+    }
+
+    @Override
+    public List<ReplyMessage> getReplyMessages() {
+        return new ArrayList<ReplyMessage>(replyMessages.values());
+    }
+
+    private String getCurrentDriverId() {
+        if (getSession() != null && getSession().currentUser != null) {
+            return getSession().currentUser.id;
+        }
+        
+        return "";
+    }
+
+    private String getCurrentDriverName() {
+        if (getSession() != null && getSession().currentUser != null) {
+            return getSession().currentUser.fullName;
+        }
+        
+        return "";
+    }
+    
+    private ReplyMessage createCommonReplyMessage(String text, Date date, String source) {
+        ReplyMessage message = new ReplyMessage();
+        message.message = text;
+        message.messageSource = source;
+        message.driverId = getCurrentDriverId();
+        message.driverName = getCurrentDriverName();
+        message.dateFromDevice = date;
+        return message;
+    }
+
+
+    
     
 
 }

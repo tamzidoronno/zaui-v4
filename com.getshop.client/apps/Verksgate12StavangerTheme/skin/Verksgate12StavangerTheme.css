@@ -39,7 +39,7 @@ div:last-child {
 }
 
 .gs_page_width {
-    width: 1024px;
+    max-width: 1024px;
     margin: 0 auto;
 }
 
@@ -105,23 +105,28 @@ div:last-child {
     position: relative;
     border: solid 1px;
 }
-.gscell[cellid="ff56cc86-c705-4654-8f67-03863d8b2ff2"] .PmsBooking  span {
-    display: inline-block;
-    vertical-align: top;
-    float: none;
-}
 
-.gscell[cellid="ff56cc86-c705-4654-8f67-03863d8b2ff2"] .bookingbuttonblock {
-    position: absolute;
-    right: -21px;
-    top: -1px;
+@media only all and (min-width:800px) {
     
+    .gscell[cellid="ff56cc86-c705-4654-8f67-03863d8b2ff2"] .PmsBooking  span {
+        display: inline-block;
+        vertical-align: top;
+        float: none;
+    }
+
+    .gscell[cellid="ff56cc86-c705-4654-8f67-03863d8b2ff2"] .bookingbuttonblock {
+        position: absolute;
+        right: -21px;
+        top: -1px;
+    }
+
+    .PmsBooking .pmsfront .dates.start_date { border-right: solid 1px #1b3350; margin-right: 50px; padding-right: 80px; padding-left: 100px;}    
 }
 
 .PmsBooking .pmsfront .inputhelpertext { }
 .PmsBooking .pmsfront .dates.start_date div {display:  inline-block; }
 .PmsBooking .pmsfront .dates.end_date div {display:  inline-block; }
-.PmsBooking .pmsfront .dates.start_date { border-right: solid 1px #1b3350; margin-right: 50px; padding-right: 80px; padding-left: 100px;}
+
 .PmsBooking .pmsfront .dates input {border: solid 0px;width: 100px;  box-sizing: border-box;}
 .PmsBooking .pmsfront .dates .dates_inner { border: solid 0px; }
 .PmsBooking .pmsfront .dates { border-right: solid 1px #DDD; padding-right: 50px; color: #000; border-right: solid 0px;}
@@ -203,4 +208,38 @@ div:last-child {
     background-color: #cfd4d9 !important;
     padding: 20px !important;
     color: #1b3350 !important;
+}
+
+@media only all and (max-width:800px) {
+    .gsarea[area="header"] .mobilenavigatemenu .fa{visibility:hidden;position:relative;z-index:30;font-size:27px;user-select:none;color:#fff;position: absolute; right: -50px; top 20px;}
+    .gsarea[area="header"] .mobilenavigatemenu .fa:before{visibility:visible;}
+    .gsarea[area="header"] .Menu .entry  div{line-height:34px; margin:0;padding:2px;letter-spacing:0;font-size:16px;text-align:center !important;}
+    .gsarea[area="header"] .Menu .entry .entries{top:0;}
+    .gsarea[area="header"] .Menu .menuentries .entry{padding:0;}
+    .gsarea[area="header"] .Menu .entries .entries{border:0;box-shadow:0 0 0;}
+    .gsarea[area="header"] .Menu .entries .entries div{width:100%;}
+    
+    .frontbox_odd_inner .gsucell,
+    .frontbox_inner .gsucell { width: 100% !important; display:  block !important; }
+    
+    .frontbox_odd_inner .gsuicell,  
+    .frontbox_inner .gsuicell { padding-left: 0px !important; }
+    
+    .gsarea[area="footer"] .gsucell {
+        width: 100% !important; display:  block !important;
+    }
+    
+    .gsarea[area="header"] .gscell[cellid="9c81ff48-5357-4a3e-8d18-07e27d40ce50"] { width: 200px !important; }
+    .gsarea[area="header"] .gscell[cellid="e094a522-6d1a-4234-9aac-5f8e6133d436"] { position: absolute; left: 0px; right: 0px; height: 0px; top: 30px; }
+    
+    .gsarea[area="body"] .gs_page_width { margin-left: 20px; margin-right: 20px; }
+    .gsarea[area="body"] .gscell[cellid="6d030aa9-6b7a-426c-8c85-36093b6ac06f"] .gs_page_width { margin-left: 0px; margin-right: 0px;  }
+    
+    .gsarea[area="body"] .pmsfront2 { background-color: #FFF;}
+    .gsarea[area="body"] .inputblock { display: block; width: 100%;}
+    
+    .gscell[cellid="ff56cc86-c705-4654-8f67-03863d8b2ff2"] { height: 160px; }
+    .PmsBooking .pmsfront .check_available_button { width: 100%; }
+    
+    .PmsBooking .pmsfront .inputhelpertext { width: 86px; }
 }

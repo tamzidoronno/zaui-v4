@@ -1184,6 +1184,21 @@ class PmsManagement extends \WebshopApplication implements \Application {
             echo "<br><br><b>Other rooms not included in the statistics</b><br>";
             echo "* Test bookings and not paid which is before today is not included in the statistics";
             $this->printSimpleRoomTable($toExclude, $day);
+            echo "<br>";
+            echo "<b>Orders included</b><br>";
+            $orders = json_decode($_POST['data']['ordersincluded']);
+            echo "<table cellspacing='0' cellpadding='0'>";
+            echo "<tr><th>Order id</th><th>ex taxes</th><th>inc taxes</th><th>User</th></tr>";
+            foreach($orders as $orderId) {
+                $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                echo "<tr>";
+                echo "<td>" . $order->incrementOrderId . "</td>";
+                echo "<td>" . $this->getApi()->getOrderManager()->getTotalAmountExTaxes($order) . "</td>";
+                echo "<td>" . $this->getApi()->getOrderManager()->getTotalAmount($order) . "</td>";
+                echo "<td>" . $this->getApi()->getUserManager()->getUserById($order->userId)->fullName . "</td>";
+                echo "</tr>";
+            }
+            echo "</table>";
         } else {
             $filterOptions = new \core_common_FilterOptions();
             $filterOptions->startDate = $this->convertToJavaDate(strtotime($day));
@@ -1443,6 +1458,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function saveDiscountPreferences() {
         $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
         $user->preferredPaymentType = $_POST['data']['preferredPaymentType'];
+        $user->showExTaxes = $_POST['data']['showExTaxes'] == "true";
         $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedName(), $user->id);
         $discount->supportInvoiceAfter = $_POST['data']['createAfterStay'] == "true";
         $discount->discountType = 0;

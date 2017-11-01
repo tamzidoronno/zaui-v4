@@ -5251,7 +5251,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBookingAddonItem> result = createAddonForTimePeriode(type, room.date.start, room.date.end, booking.priceType);
         
         for(PmsBookingAddonItem item : result) {
-            if(cartManager.couponIsValid(booking.couponCode, item.date, item.date, item.productId)) {
+            int days = pmsInvoiceManager.getNumberOfDays(room.date.start, room.date.end);
+            if(cartManager.couponIsValid(booking.rowCreatedDate, booking.couponCode, item.date, item.date, item.productId,days)) {
                 Coupon coupon = cartManager.getCoupon(booking.couponCode);
                 if(coupon.addonsToInclude == null || coupon.addonsToInclude.isEmpty()) {
                     item.price = cartManager.calculatePriceForCouponWithoutSubstract(booking.couponCode, item.price);
@@ -6453,7 +6454,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
-        if(!cartManager.couponIsValid(booking.couponCode, room.date.start, room.date.end, productId)) {
+        int days = pmsInvoiceManager.getNumberOfDays(room.date.start, room.date.end);
+        
+        if(!cartManager.couponIsValid(booking.rowCreatedDate, booking.couponCode, room.date.start, room.date.end, productId,days)) {
             return;
         }
         

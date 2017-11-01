@@ -25,4 +25,6 @@ public class Coupon extends DataCommon {
     public List<String> productsToSupport = new ArrayList();
     public List<AddonsInclude> addonsToInclude = new ArrayList();
     public String priceCode = "default";
+    public int minDays = 0;
+    public int maxDays = 0;
 }

@@ -933,7 +933,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room != null) { 
             price = addDerivedPrices(booking, room, price);
         }
-        price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId);
+        price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId,room);
         price = calculateLongTermDiscount(booking, price, room);
         price = getUserPrice(bookingEngineTypeId, price, count);
         
@@ -2018,7 +2018,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return generatePriceFromPriceMatrix(priceMatrix, avgPrice, booking, typeId);
     }
 
-    private Double calculateDiscountCouponPrice(PmsBooking booking, Double price, Date start, Date end, String typeId) {
+    private Double calculateDiscountCouponPrice(PmsBooking booking, Double price, Date start, Date end, String typeId, PmsBookingRooms room) {
         if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
             String couponCode = booking.couponCode;
             if(booking.discountType.equals("partnership")) {
@@ -2028,11 +2028,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             Coupon coupon = cartManager.getCoupon(couponCode);
             if(coupon != null) {
-                if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
-                    start = booking.rowCreatedDate;
-                    end = booking.rowCreatedDate;
-                }
-                
                 String productId = null;
                 if(typeId != null) {
                     BookingItemType type = bookingEngine.getBookingItemType(typeId);
@@ -2040,8 +2035,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         productId = type.productId;
                     }
                 }
-                
-                if(cartManager.couponIsValid(couponCode, start, end, productId)) {
+                int days = 1;
+                if(room != null) {
+                    days = getNumberOfDays(room.date.start, room.date.end);
+                }
+                if(cartManager.couponIsValid(booking.rowCreatedDate, couponCode, start,end, productId, days)) {
                     price = cartManager.calculatePriceForCouponWithoutSubstract(couponCode, price);
                 }
             }

@@ -2062,6 +2062,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     price = discount * count;
                 }
             }
+            if(getSession().currentUser.showExTaxes) {
+                Product product = productManager.getProduct(bookingEngine.getBookingItemType(typeId).productId);
+                price = price * ((100+product.taxGroupObject.taxRate) / 100);
+            }
        }
        return price;
     }

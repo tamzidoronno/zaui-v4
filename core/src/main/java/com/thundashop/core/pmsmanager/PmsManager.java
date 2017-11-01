@@ -854,6 +854,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         for (PmsBookingRooms room : booking.getActiveRooms()) {
+            if(room.bookingItemTypeId != null && 
+                    productManager.getProduct(room.bookingItemTypeId) != null && 
+                    productManager.getProduct(room.bookingItemTypeId).taxGroupObject != null) {
+                room.taxes = productManager.getProduct(room.bookingItemTypeId).taxGroupObject.taxRate;
+            }
             if(room.code == null || room.code.isEmpty()) {
                 room.code = generateCode();
             }

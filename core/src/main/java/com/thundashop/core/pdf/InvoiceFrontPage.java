@@ -105,7 +105,12 @@ public class InvoiceFrontPage {
         addOrderText();
         addSummary();
         
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+        boolean isInvoice = false;
+        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+            isInvoice = true;
+        }
+        
+        if (order.status != Order.Status.PAYMENT_COMPLETED && !isInvoice) {
             int startx = 33;
             contentStream.drawLine(20, startx, 20, 77);
             contentStream.drawLine(220, startx, 220, 77);

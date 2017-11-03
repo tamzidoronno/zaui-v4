@@ -11,6 +11,7 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
     $scope.messages = datarepository.driverMessages;
     $scope.showReply = false;
     $scope.currentMesage = null;
+    $scope.apiOptions = false;
     
     if (!$api.getApi() || !$api.getLoggedOnUser()) {
         $scope.messages = [];
@@ -96,5 +97,21 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
         $api.getApi().TrackAndTraceManager.replyMessage(message.id, textMessage, new Date()).done(function(res) {
             me.ackMessage(message);
         });
+    }
+    
+    $scope.toggleOptions = function() {
+        $scope.apiOptions = !$scope.apiOptions;
+    }
+    
+    $scope.resetApi = function() {
+        $api.getApi().resetConnection();
+    }
+    
+    $scope.goOffline = function() {
+        $api.getApi().disconnect();
+    }
+    
+    $scope.goOnline = function() {
+        $api.getApi().connect();
     }
 };

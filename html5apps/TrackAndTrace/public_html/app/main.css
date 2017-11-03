@@ -74,6 +74,7 @@ body {
     padding-right: 10px;
     display: relative;
     padding-bottom: 70px;
+    position: relative;
 }
 
 .button {

@@ -218,6 +218,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         text += "<br/>Store email: " + getStoreEmailAddress();
         text += "<br/>Store name: " + getStoreName();
         text += "<br/>Store default address: " + getStoreDefaultAddress();
+        text += "<br/>Store default login: " + getStoreDefaultAddress() + "/login.php";
         text += "<br/>";
         
         

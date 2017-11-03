@@ -8,19 +8,13 @@ $guestInfoBox = <<<EOD
     </div>
     <div class='guestInfoBox_right'>
         <div class="count_line">
-            <i id="subtract_room" class="fa fa-minus disabled"></i>
-            <span class="count" id="count_room" value="1"> 1 </span>
-            <i id="add_room" class="fa fa-plus"></i>
+            <i id="subtract_room" class="fa fa-minus disabled"></i><input type="txt" class="count" id="count_room" value="1" readonly><i id="add_room" class="fa fa-plus"></i>
         </div>
         <div class="count_line">
-            <i id="subtract_adult" class="fa fa-minus disabled"></i>
-            <span class="count" id="count_adult"> 1 </span>
-            <i id="add_adult" class="fa fa-plus"></i>
+            <i id="subtract_adult" class="fa fa-minus disabled"></i><input type="txt" class="count" id="count_adult" value="1" readonly><i id="add_adult" class="fa fa-plus"></i>
         </div>
         <div class="count_line">
-            <i id="subtract_child" class="fa fa-minus disabled "></i>
-            <span class="count" id="count_child"> 0 </span>
-            <i id="add_child" class="fa fa-plus"></i>
+            <i id="subtract_child" class="fa fa-minus disabled "></i><input type="txt" class="count" id="count_child" value="0" readonly><i id="add_child" class="fa fa-plus"></i>
         </div>
     </div>
     <div class="guestInfoBox_footer">
@@ -44,7 +38,7 @@ EOD;
         </div><div class="fa_box date">
             <input id="date_picker" style="border-right:1px solid #ddd;" readonly>
         </div><div class="fa_box guests">
-            <input id="guests" value=" 1  room, 1 guest" style="border-right:1px solid #ddd;" readonly>
+            <input id="guests" value="1 room, 1 guest" style="border-right:1px solid #ddd;" readonly>
                 <? echo $guestInfoBox;?>
         </div><div class="fa_box coupon">
             <input id='coupon_input' onfocus="this.placeholder =''" onblur="this.placeholder ='Discount coupon?'" placeholder="Discount coupon?">
@@ -60,8 +54,8 @@ EOD;
                 <div class="productentry_main">
                     <div class="productentry_header">
                         <div>Double room</div>
-                        <div style="float:right;">fra NOK 799,-</div>
-                        <div style="font-size:10px;">Available rooms: 23</div>
+                        <div style="float:right;">from NOK 799,-</div>
+                        <div style="font-size:12px;">Available rooms: 23</div>
                     </div>
                     <div class="productentry_itemlist">
                         <i class="fa fa-user" style="padding-left:10px;"></i>
@@ -98,8 +92,8 @@ EOD;
                 <div class="productentry_main">
                     <div class="productentry_header">
                         <div>Suite</div>
-                        <div style="font-size:10px;">Available rooms: 7</div>
-                        <div style="float:right;">fra NOK 1299,-</div>
+                        <div style="font-size:12px;">Available rooms: 7</div>
+                        <div style="float:right;">from NOK 1299,-</div>
                     </div>
                     <div class="productentry_itemlist">
                         <i class="fa fa-user" style="padding-left:10px;"></i>
@@ -143,17 +137,21 @@ EOD;
             <div style="width:70%;background-color:#f9f9f9;padding:10px;box-shadow: inset -1px 0 0 #ddd;">
                 <div class="addonsentry">
                     <h4>Addons</h4>
+                    Add addons for all guests, or add individual addons under guest info.
                     <div class="overview_addons">
-                        Add addons for all guests, or add individual addons under guest info.
+                        <div class="addon">
+                            <div style="width:60%;">Early check in. Check in 12:00  in the morning</div><div>NOK 149,-</div><div class="addButton gsl_button">Add</div>
+                        </div>
                         <div class="addon">
                             <div style="width:60%;">Breakfast for all guests in the mornings</div><div>NOK 99,-</div><div class="addButton gsl_button">Add</div>
                         </div>
                         <div class="addon">
-                            <div style="width:60%;">Late check out, from 11:00 in the morning, to 16:00 in the evening</div><div>NOK 249,-</div><div class="addButton gsl_button">Add</div>
+                            <div style="width:60%;">Coat for one person. Keeps you warm in the morning</div><div>NOK 299,-</div><div class="addButton gsl_button">Add</div>
                         </div>
                         <div class="addon">
-                            <div style="width:60%;">Early check in. Check in 12:00  in the morning</div><div>NOK 149,-</div><div class="addButton gsl_button">Add</div>
+                            <div style="width:60%;">Late check out, from 11:00 in the morning, to 16:00 in the evening</div><div>NOK 249,-</div><div class="addButton gsl_button">Add</div>
                         </div>
+                        
                     </div>
                 </div>
                 <h4>Guest info</h4>
@@ -172,6 +170,17 @@ EOD;
                                 </div>
                             </div>
                         </div>
+                        <div class="guestentry">
+                            <div>Name<br><input type="txt">
+                            </div><div>E-mail<br><input type="txt">
+                            </div><div>Phone<br><input type="txt" class="guest_phone" value="+47"><input type="text" style="width:75%;">
+                            </div><div>Addons<br>
+                                <div style="border: 1px solid #ddd;padding: 8px;width:100%;position: relative;">
+                                    <i class="fa fa-sign-in" title="Early check in"></i><i class="fa fa-cutlery" title="Breakfast"></i><i class="fa fa-black-tie" title="Coat for one person"></i><i class="fa fa-sign-out" title="Late check out"></i>
+                                    <i class="fa fa-times removeguest" title="Remove guest"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="addguest gsl_button"><i class="fa fa-plus"></i> Add guest</div>
                 </div>
@@ -179,7 +188,6 @@ EOD;
         </div>
         <div class="overview">
             <div class="overview_room_info">
-                <!--<img class='roomimg' src='http://static.wynnlasvegas.com/~/media/WLV/Rooms%20and%20Suites/Encore%20Tower%20Suites/Salon%20Suite/2_129_encore_salon_suite_bedroom.jpg?h=540&la=en&w=1001&vs=1&d=20170331T095925'>--> 
                 <h4 style="border-bottom: 1px solid #ddd;padding-bottom: 4px;">Your stay at GetShop Hotel</h4>
                 <div>
                     2 nights, Oct 20 - Oct 22<br>
@@ -190,17 +198,21 @@ EOD;
                 </div>
                 <h4>Total</h4><p>NOK 1599,-</p>
                 <div class="overview_confirmation">
-                    <div class="gsl_button" style="width:26%;margin:0 2%;background-color:#3776b3;padding:8px 0;" onclick="showAddonsPage()"><i class="fa fa-arrow-left"></i> Return</div><div class="complete_booking_button gsl_button">Go to payment</div>
+                    <div class="gsl_button addons_guests_return" onclick="showAddonsPage()"><i class="fa fa-arrow-left"></i> Return</div><div class="complete_booking_button gsl_button">Go to payment</div>
                 </div>
             </div>
             <div class="overview_article">
                 <div class="overview_contact">
                     <h4>Contact information</h4>
+                    This is used for contacting regarding your stay. Be sure to pick private or organization.
+                    <br><br>
                     <div class="overview_contact_tab">
                         <input type="radio" id="private" name="user" checked="checked">
                         <label for="private">Private</label>
                         <input type="radio" id="organization"name="user">
                         <label for="organization">Organization</label>
+                        <input type="radio" id="gotAccount"name="user">
+                        <label for="gotAccount">Already got an Account?</label>
                     </div>
                     <br>
                     <div class="private_fields">
@@ -257,7 +269,7 @@ EOD;
     $('.numberof_rooms').on('change', function(){
         $('#productentry_confirm').addClass('active');
     });
-    $('#productentry_confirm').on('mousedown', function(){
+    $('#productentry_confirm').on('click', function(){
         if($('#productentry_confirm').hasClass('active')){
             $('.productoverview').fadeOut('400', function(){
                 $('.addons_guests').fadeIn('400');
@@ -308,44 +320,46 @@ EOD;
     });
     $('.guestInfoBox .fa').on('mousedown', function(){
         var minusButton = $(this).closest('.count_line').find('.fa-minus'); //Closest minusbutton
+        var plusButton = $(this).closest('.count_line').find('.fa-plus'); //Closest plusbutton
         var count = $(this).closest('.count_line').find('.count'); //Closest numbercount for adding guests or room
         if($(this).is('.fa-plus')){
-            count.text(function(i,val){
-                if(val < 10){
-                    return (+val + 1);
-                }
-            });
-            if($(this).is('#add_child') && count.text() >= 1){
-                minusButton.removeClass('disabled');
-            }else if(count.text() >= 2){
-                minusButton.removeClass('disabled');
-            }
-            if($('#add_room').text() > $('#add_adult').text()){
-                $('#add_adult').text(function(i,val){
+            if(count.val() < 10){
+                count.val(function(i,val){
                     return (+val + 1);
                 });
+            }
+            if($(this).is('#add_child') && count.val() >= 1){
+                minusButton.removeClass('disabled');
+            }else if(count.val() >= 2){
+                minusButton.removeClass('disabled');
+            }
+            if(count.val() >= 10){
+                plusButton.addClass('disabled');
             }
         }
         if($(this).is('.fa-minus')){
             if($(this).is('#subtract_child')){
-                count.text(function(i,val){
-                    if(val > 0){
+                if(count.val() > 0){
+                    count.val(function(i,val){
                         return (+val - 1);
-                    }
-                });
-                if(count.text() <=0){
+                    });
+                }
+                if(count.val() <=0){
                     minusButton.addClass('disabled');
                 }
             }else{
-               count.text(function(i,val){
-                    if(val > 1){
+                if(count.val() > 1){
+                    count.val(function(i,val){
                         return (+val - 1);
-                    }
-                });
-                if(count.text() <=1){
+                    });
+                }
+                if(count.val() <=1){
                     minusButton.addClass('disabled');
                 }
             }
+            if(count.val() <= 9){
+                plusButton.removeClass('disabled'); 
+           }
         }
     });    
     $(document).on('mousedown', function(e){
@@ -418,9 +432,9 @@ EOD;
     };
     
     function confirmGuestInfoBox(){
-        var room = $('#count_room').text(); 
-        var adult = $('#count_adult').text();
-        var child = $('#count_child').text();
+        var room = $('#count_room').val(); 
+        var adult = $('#count_adult').val();
+        var child = $('#count_child').val();
         var guest = +adult + +child;
         var roomText = " room";
         var guestText = " guest ";

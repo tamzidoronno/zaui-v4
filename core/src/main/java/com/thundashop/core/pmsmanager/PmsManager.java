@@ -552,6 +552,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        gsTiming("start");
         if(!getConfigurationSecure().exposeUnsecureBookings) {
             if(getSession() == null || getSession().currentUser == null || getSession().currentUser == null) {
                 return new ArrayList();
@@ -585,6 +586,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         List<PmsBooking> result = new ArrayList();
+        gsTiming("searching");
 
         if (filter.searchWord != null && !filter.searchWord.isEmpty()) {
 
@@ -682,6 +684,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        gsTiming("done searching");
 
         removeInactive(filter, result);
 
@@ -694,6 +697,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(unsettled) {
             finalized = filterByUnsettledAmounts(finalized);
         }
+        gsTiming("done finalizing new list");
         
         return finalized;
     }
@@ -862,6 +866,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.code == null || room.code.isEmpty()) {
                 room.code = generateCode();
             }
+            
+            room.date.startTimeStamp = room.date.start.getTime();
+            room.date.endTimeStamp = room.date.end.getTime();
+            
             if (room.bookingId != null) {
                 room.booking = bookingEngine.getBooking(room.bookingId);
                 if (room.booking != null) {

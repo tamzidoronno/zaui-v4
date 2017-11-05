@@ -899,6 +899,16 @@ public class PmsManagerProcessor {
             if(booking.transferredToLock()) {
                 continue;
             }
+            
+            if(configuration.ignorePaymentWindowDaysAheadOfStay > 0) {
+                Date startDate = booking.getStartDate();
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.DAY_OF_YEAR, configuration.ignorePaymentWindowDaysAheadOfStay);
+                if(cal.getTime().before(startDate)) {
+                    continue;
+                }
+            }
+            
             System.out.println("Running autodelete: Autodeleted because it has expired" + " " + booking.rowCreatedDate);
             manager.logEntry("Autodeleted because it has expired.", booking.id, null);
             manager.deleteBooking(booking.id);

@@ -18,13 +18,14 @@ public interface IPmsEventManager {
     public List<PmsEventListEntry> getEventList();
     public List<PmsEventListEntry> getEventListWithDeleted();
     
+    public boolean isChecked(String pmsBookingId);
+    
     public void saveEntry(PmsBookingEventEntry entry, String day);
     @Administrator
     public void deleteEntry(String entryId, String day);
     @Administrator
     public PmsBookingEventEntry createEvent(String id);
-
-            
+    
     public PmsBookingEventEntry getEntry(String entryId, String day);
     public PmsBookingEventEntry getEntryShort(String shortId, String day);
 }

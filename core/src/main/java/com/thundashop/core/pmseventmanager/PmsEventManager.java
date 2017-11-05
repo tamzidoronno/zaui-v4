@@ -35,6 +35,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
  
     @Autowired
     UserManager userManager;
+    private List<PmsEventListEntry> cachedList;
     
      @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -58,6 +59,8 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
 
     @Override
     public void saveEntry(PmsBookingEventEntry entry, String day) {
+        cachedList = null;
+
         if(day != null && !day.isEmpty()) {
             PmsBookingEventEntry oldentry = getEntry(entry.id, "");
             oldentry.saveDay(entry, day);
@@ -70,7 +73,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
 
     @Override
     public void deleteEntry(String entryId, String day) {
-        
+        cachedList = null;
         if(day == null) {
             for(PmsBookingEventEntry entry : entries.values()) {
                 if(entry.bookingId.equals(entryId)) {
@@ -87,6 +90,7 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
 
     @Override
     public PmsBookingEventEntry createEvent(String id) {
+        cachedList = null;
         PmsBooking result = pmsManager.getBookingUnsecure(id);
         PmsBookingEventEntry entry = new PmsBookingEventEntry();
         entry.id = result.id;
@@ -187,7 +191,12 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
 
     @Override
     public List<PmsEventListEntry> getEventList() {
-        return getEventListInternal(false);
+        if(cachedList != null) {
+            return cachedList;
+        }
+        List<PmsEventListEntry> list = getEventListInternal(false);
+        cachedList = list;
+        return list;
     }
 
     @Override
@@ -291,6 +300,17 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
             deleteObject(entry);
         }
         entries.clear();
+    }
+
+    @Override
+    public boolean isChecked(String pmsBookingId) {
+        List<PmsEventListEntry> list = getEventList();
+        for(PmsEventListEntry entry : list) {
+            if(entry.bookingId != null && entry.bookingId.equals(pmsBookingId)) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }

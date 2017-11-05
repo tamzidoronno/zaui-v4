@@ -193,8 +193,11 @@ public class PmsBooking extends DataCommon {
 
     PmsBooking copyUnsecure() {
         PmsBooking result = new PmsBooking();
+        result.registrationData = registrationData;
+        result.id = id;
         for(PmsBookingRooms room : rooms) {
             PmsBookingRooms roomCopied = new PmsBookingRooms();
+            roomCopied.pmsBookingRoomId = room.pmsBookingRoomId;
             roomCopied.date = room.date;
             roomCopied.bookingItemId = room.bookingItemId;
             roomCopied.bookingItemTypeId = room.bookingItemTypeId;

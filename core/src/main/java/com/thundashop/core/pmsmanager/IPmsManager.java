@@ -298,6 +298,12 @@ public interface IPmsManager {
     public void sendPaymentLink(String orderId, String bookingId, String email, String prefix, String phone);
     
     @Administrator
+    public void sendPaymentLinkWithText(String orderId, String bookingId, String email, String prefix, String phone, String message);
+    
+    @Administrator
+    public String getMessage(String bookingId, String key);
+    
+    @Administrator
     public void failedChargeCard(String orderId, String bookingId);
     
     @Administrator

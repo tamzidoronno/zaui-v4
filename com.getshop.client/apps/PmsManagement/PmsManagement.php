@@ -1274,13 +1274,14 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $email = $_POST['data']['bookerEmail'];
         $prefix = $_POST['data']['bookerPrefix'];
         $phone = $_POST['data']['bookerPhone'];
+        $msg = $_POST['data']['smsMessage'];
 
         echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
         echo "<i class='fa fa-info'></i> Paymentlink has been sent.";
         echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
         echo "</div>";
         
-        $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderid, $bookingid, $email, $prefix, $phone);
+        $this->getApi()->getPmsManager()->sendPaymentLinkWithText($this->getSelectedName(), $orderid, $bookingid, $email, $prefix, $phone, $msg);
         $this->showBookingInformation();
     }
     
@@ -3460,7 +3461,8 @@ class PmsManagement extends \WebshopApplication implements \Application {
                     $email = $_POST['data']['paymentlinkemail'];
                     $phone = $_POST['data']['paymentlinkphone'];
                     $prefix = $_POST['data']['paymentlinkprefix'];
-                    $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone);
+                    $smsText = $_POST['data']['smsText'];
+                    $this->getApi()->getPmsManager()->sendPaymentLinkWithText($this->getSelectedName(), $orderId, $bookingId, $email, $prefix, $phone, $smsText);
                     $this->paymentLinkSent = true;
                 }
 

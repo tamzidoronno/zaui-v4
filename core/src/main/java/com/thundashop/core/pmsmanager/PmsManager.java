@@ -180,6 +180,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Date startedDate;
     
     private PmsBookingAutoIncrement autoIncrement = new PmsBookingAutoIncrement();
+    private String messageToSend;
     
     
     public HashMap<String, PmsCareTaker> getCareTakerTasks() {
@@ -1325,6 +1326,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         emailToSendTo = null;
     }
 
+    public String getMessage(String bookingId, String key) {
+        orderIdToSend = null;
+        
+        PmsBooking booking = getBooking(bookingId);
+        key = key + "_" + booking.language;
+        String message = getMessageToSend(key, "sms", booking);
+        message = formatMessage(message, booking, null, null);
+        return message;
+    }
+    
     private String notify(String key, PmsBooking booking, String type, PmsBookingRooms room) {
         if(booking != null && booking.silentNotification) {
             return "Not notified, silent booking: " + type;
@@ -3736,6 +3747,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         phoneToSend = phone;
         doNotification("booking_sendpaymentlink", bookingId);
     }
+    
+    @Override
+    public void sendPaymentLinkWithText(String orderId, String bookingId, String email, String prefix, String phone, String message) {
+        orderIdToSend = orderId;
+        emailToSendTo = email;
+        prefixToSend = prefix;
+        phoneToSend = phone;
+        messageToSend = message;
+        doNotification("booking_sendpaymentlink", bookingId);
+        messageToSend = null;
+    }
 
     @Override
     public void failedChargeCard(String orderId, String bookingId) {
@@ -6011,6 +6033,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             message = configuration.smses.get(key);
         }
         
+        if(messageToSend != null && !messageToSend.isEmpty()) {
+            message = messageToSend;
+        }
+        
         if(key.startsWith("booking_sendpaymentlink") || 
                 key.startsWith("booking_unabletochargecard") || 
                 key.startsWith("booking_paymentmissing") || 
@@ -6047,10 +6073,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 key.startsWith("booking_unabletochargecard") || 
                 key.startsWith("booking_paymentmissing") || 
                 key.startsWith("order_")) {
-            message = message.replace("{orderid}", this.orderIdToSend);
-            Order order = orderManager.getOrderSecure(this.orderIdToSend);
-            message = message.replace("{paymentlink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/p.php?id="+order.incrementOrderId);
-            message = message.replace("{selfmanagelink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/?page=booking_self_management&id="+booking.secretBookingId);
+            if(orderIdToSend != null) {
+                message = message.replace("{orderid}", this.orderIdToSend);
+                Order order = orderManager.getOrderSecure(this.orderIdToSend);
+                message = message.replace("{paymentlink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/p.php?id="+order.incrementOrderId);
+                message = message.replace("{selfmanagelink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/?page=booking_self_management&id="+booking.secretBookingId);
+            }
         }
         
         return message;

@@ -591,6 +591,20 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return ordersToReturn;
     }
 
+    public Double getDerivedPrice(PmsBooking booking, String bookingItemType, Integer numberOfGuests) {
+        PmsPricing priceObject = pmsManager.getPriceObjectFromBooking(booking);
+        double toAdd = 0.0;
+        if(priceObject.derivedPrices != null && priceObject.derivedPrices.containsKey(bookingItemType)) {
+            HashMap<Integer, Double> derivedPriced = priceObject.derivedPrices.get(bookingItemType);
+            for(int i = 2;i <= numberOfGuests;i++) {
+                if(derivedPriced != null && derivedPriced.containsKey(i)) {
+                    toAdd += derivedPriced.get(i);
+                }
+            }
+        }
+        return toAdd;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -890,17 +904,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.bookingItemTypeId == null) {
             return price;
         }
-        
-        PmsPricing priceObject = pmsManager.getPriceObjectFromBooking(booking);
-        double toAdd = 0.0;
-        if(priceObject.derivedPrices != null && priceObject.derivedPrices.containsKey(room.bookingItemTypeId)) {
-            HashMap<Integer, Double> derivedPriced = priceObject.derivedPrices.get(room.bookingItemTypeId);
-            for(int i = 2;i <= room.numberOfGuests;i++) {
-                if(derivedPriced != null && derivedPriced.containsKey(i)) {
-                    toAdd += derivedPriced.get(i);
-                }
-            }
-        }
+        Double toAdd = getDerivedPrice(booking, room.bookingItemTypeId, room.numberOfGuests);
         return price + toAdd;
     }
 

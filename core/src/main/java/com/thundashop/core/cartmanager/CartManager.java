@@ -325,17 +325,6 @@ public class CartManager extends ManagerBase implements ICartManager {
         return count;
     }
 
-    public double calculatePriceForCoupon(String couponCode, double price) {
-        double newPrice = calculatePriceForCouponWithoutSubstract(couponCode, price);
-        subtractTimesLeft(couponCode);
-        
-        if(newPrice < 0) {
-            newPrice = 0;
-        }
-        
-        return newPrice;
-    }
-
     
     @Administrator
     public Coupon getCoupon(String couponCode) {
@@ -507,7 +496,7 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
     }
 
-    public double calculatePriceForCouponWithoutSubstract(String couponCode, double price) {
+    public double calculatePriceForCouponWithoutSubstract(String couponCode, double price, int days) {
         Coupon coupon = getCoupon(couponCode); 
         Double newPrice = price;
         if(coupon != null) {
@@ -521,6 +510,9 @@ public class CartManager extends ManagerBase implements ICartManager {
                 if(coupon.type == CouponType.PERCENTAGE) {
                     double multiplier = (double)(100-coupon.amount)/(double)100;
                     newPrice = price * multiplier;
+                }
+                if(coupon.type == CouponType.FIXEDDISCOUNTSTAY) {
+                    newPrice = price - ((double)coupon.amount / days);
                 }
             }
         }

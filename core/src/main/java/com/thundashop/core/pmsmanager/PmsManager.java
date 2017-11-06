@@ -867,9 +867,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.code == null || room.code.isEmpty()) {
                 room.code = generateCode();
             }
-            
-            room.date.startTimeStamp = room.date.start.getTime();
-            room.date.endTimeStamp = room.date.end.getTime();
+            if(room.date != null) {
+                if(room.date.start != null) {
+                    room.date.startTimeStamp = room.date.start.getTime();
+                }
+                if(room.date.end != null) {
+                    room.date.endTimeStamp = room.date.end.getTime();
+                }
+            }
             
             if (room.bookingId != null) {
                 room.booking = bookingEngine.getBooking(room.bookingId);
@@ -6088,7 +6093,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         
         Order order = orderManager.getOrderSecure(orderIdToSend);
-        if(order.cart == null || order.cart.getItems() == null) {
+        if(order == null || order.cart == null || order.cart.getItems() == null) {
             return null;
         }
         

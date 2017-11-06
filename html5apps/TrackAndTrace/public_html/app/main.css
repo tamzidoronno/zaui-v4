@@ -189,3 +189,16 @@ a {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+.gs_header_error_field {
+    position: fixed;
+    top: 0px;
+    background-color: red;
+    color: #FFF;
+    padding: 20px;
+    text-align: center;
+    display: none;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 1000;
+}

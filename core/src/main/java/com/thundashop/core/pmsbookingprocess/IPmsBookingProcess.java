@@ -16,5 +16,5 @@ import com.thundashop.core.common.GetShopMultiLayerSession;
 @GetShopApi
 @GetShopMultiLayerSession
 public interface IPmsBookingProcess {
-    public StartBookingResult startBooking(StartBooking object);
+    public StartBookingResult startBooking(StartBooking arg);
 }

@@ -38,10 +38,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     PmsInvoiceManager pmsInvoiceManager;
     
     @Override
-    public StartBookingResult startBooking(StartBooking object) {
+    public StartBookingResult startBooking(StartBooking arg) {
         
-        object.start = pmsInvoiceManager.normalizeDate(object.start, true);
-        object.end = pmsInvoiceManager.normalizeDate(object.end, false);
+        arg.start = pmsInvoiceManager.normalizeDate(arg.start, true);
+        arg.end = pmsInvoiceManager.normalizeDate(arg.end, false);
         
         StartBookingResult result = new StartBookingResult();
         List<BookingItemType> types = bookingEngine.getBookingItemTypes();
@@ -53,7 +53,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
             BookingProcessRooms room = new BookingProcessRooms();
             room.description = type.description;
-            room.availableRooms = bookingEngine.getNumberOfAvailable(type.id, object.start, object.end);
+            room.availableRooms = bookingEngine.getNumberOfAvailable(type.id, arg.start, arg.end);
             result.totalRooms += room.availableRooms;
             try {
                 PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
@@ -69,7 +69,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                         }
                     }
                     room.roomsSelectedByGuests.put(i, count);
-                    Double price = pmsInvoiceManager.calculatePrice(type.id, object.start, object.end, true, existing);
+                    Double price = pmsInvoiceManager.calculatePrice(type.id, arg.start, arg.end, true, existing);
                     price += pmsInvoiceManager.getDerivedPrice(existing, type.id, i);
                     room.pricesByGuests.put(i, price);
                 }

@@ -283,7 +283,9 @@ public class PmsManagerProcessor {
             for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                 if (((room.isEnded() || !room.isStarted()) && room.addedToArx) || 
                         (room.deleted && room.addedToArx) || 
-//                        (!manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId) && room.addedToArx) || 
+                        //Special function for rena treningssenter.
+                        (manager.storeManager.getStoreId().equals("cd94ea1c-01a1-49aa-8a24-836a87a67d3b") && 
+                        !manager.pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId) && room.addedToArx) || 
                         (room.blocked && room.addedToArx)) {
                     if(room.forceAccess) {
                         continue;
@@ -897,6 +899,16 @@ public class PmsManagerProcessor {
             if(booking.transferredToLock()) {
                 continue;
             }
+            
+            if(configuration.ignorePaymentWindowDaysAheadOfStay > 0) {
+                Date startDate = booking.getStartDate();
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.DAY_OF_YEAR, configuration.ignorePaymentWindowDaysAheadOfStay);
+                if(cal.getTime().before(startDate)) {
+                    continue;
+                }
+            }
+            
             System.out.println("Running autodelete: Autodeleted because it has expired" + " " + booking.rowCreatedDate);
             manager.logEntry("Autodeleted because it has expired.", booking.id, null);
             manager.deleteBooking(booking.id);

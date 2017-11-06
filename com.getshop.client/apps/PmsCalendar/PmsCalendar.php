@@ -425,11 +425,7 @@ class PmsCalendar extends \WebshopApplication implements \Application {
         $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00:00", $day)));
         $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 23:59:59", $day)));
         $filter->filterType = "active";
-        if($this->isEditorMode()) {
-            $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
-        } else {
-            $bookings = $this->getApi()->getPmsManager()->getAllBookingsUnsecure($this->getSelectedName(), $filter);
-        }
+        $bookings = $this->getApi()->getPmsManager()->getAllBookingsUnsecure($this->getSelectedName(), $filter);
         $this->bookingresultforday[$key] = $bookings;
         return $bookings;
     }
@@ -441,33 +437,25 @@ class PmsCalendar extends \WebshopApplication implements \Application {
             $bookings = array();
         }
         $rules = $this->getFormRules();
-
+        $startCache = array();
+        $endCache = array();
+        
         foreach($bookings as $booking) {
             /* @var $booking \core_pmsmanager_PmsBooking */
-            if($this->isEditorMode()) {
-                $this->currentTitle = "<table>";
-                foreach($booking->registrationData->data as $key => $val) {
-                    if(!$rules->data->{$key}->active) {
-                        continue;
-                    }
-                    
-                    if($rules->data->{$key}->type != "text") {
-                        continue;
-                    }
-                    
-                    if(isset($booking->registrationData->resultAdded->{$val->name})) {
-                        $this->currentTitle .= "<tr><td>". $val->title . "</td><td>" . $booking->registrationData->resultAdded->{$val->name} . "</td></tr>";
-                    }
-                }
-                $this->currentTitle .= "</table>";
-            }
-            
             foreach($booking->rooms as $room) {
                 if($room->deleted) {
                     continue;
                 }
-                $roomStart = strtotime($room->date->start);
-                $roomEnd = strtotime($room->date->end);
+                
+                $roomStart = $room->date->startTimeStamp/1000;
+                $roomEnd = $room->date->endTimeStamp/1000;
+                
+                if($roomStart >= $endTime) {
+                    continue;
+                }
+                if($roomEnd <= $startTime) {
+                    continue;
+                }
                 
                 if($additionalTypes[$room->bookingItemTypeId]->dependsOnTypeId) {
                     if($room->bookingItemTypeId != $typeId && $typeId != $additionalTypes[$room->bookingItemTypeId]->dependsOnTypeId) {
@@ -477,12 +465,6 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                     if($room->bookingItemTypeId != $typeId) {
                         continue;
                     }
-                }
-                if($roomStart >= $endTime) {
-                    continue;
-                }
-                if($roomEnd <= $startTime) {
-                    continue;
                 }
                 
                 $state = "";
@@ -495,6 +477,26 @@ class PmsCalendar extends \WebshopApplication implements \Application {
                 }
                 $this->currentTitle .= date("H:i", strtotime($room->date->start)) . " - ". date("H:i",strtotime($room->date->end));
                 $this->currentRoomId = $room->pmsBookingRoomId;
+                
+                
+                if($this->isEditorMode()) {
+                    $this->currentTitle = "<table>";
+                    foreach($booking->registrationData->data as $key => $val) {
+                        if(!$rules->data->{$key}->active) {
+                            continue;
+                        }
+
+                        if($rules->data->{$key}->type != "text") {
+                            continue;
+                        }
+
+                        if(isset($booking->registrationData->resultAdded->{$val->name})) {
+                            $this->currentTitle .= "<tr><td>". $val->title . "</td><td>" . $booking->registrationData->resultAdded->{$val->name} . "</td></tr>";
+                        }
+                    }
+                    $this->currentTitle .= "</table>";
+                }
+                            
                 return $state;
             }
         }

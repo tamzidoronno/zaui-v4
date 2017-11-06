@@ -64,8 +64,8 @@ $booking = $this->getSelectedBooking();
                 $additionalDiff = $total - $total2;
                 $warning = false;
                 if($additionalDiff > 1 || $additionalDiff < -1) {
-                    echo "<span style='color:red;' padding: 10px;'>WARNING FAILED CALCULATING ADDITIONAL DATA ($additionalDiff)</span>";
-                    $warning = true;
+//                    echo "<span style='color:red;' padding: 10px;'>WARNING FAILED CALCULATING ADDITIONAL DATA ($additionalDiff)</span>";
+//                    $warning = true;
                 }
                 
                 $todaysname = $this->getApi()->getProductManager()->getProduct($item->product->id)->name;

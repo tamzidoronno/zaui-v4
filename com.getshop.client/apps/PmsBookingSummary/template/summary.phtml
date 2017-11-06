@@ -150,7 +150,7 @@ function printRoomSummaryRow($room, $items, $booking, $addonsAdded, $bookingitem
 //        return;
     }
     
-    $price = $room->price * $room->count;
+    $price = $room->printablePrice * $room->count;
     
     $canNotBeAded = "";
     if(!$room->canBeAdded) {

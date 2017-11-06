@@ -93,11 +93,16 @@ public class InvoiceFrontPage {
     public void createInvoice() throws IOException, COSVisitorException {
         PDPage page = new PDPage(PDPage.PAGE_SIZE_A4);
         
+        boolean isInvoice = false;
+        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+            isInvoice = true;
+        }
+        
         document.addPage(page);
 
         contentStream = new PDPageContentStream(document, page);
         
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+        if (order.status != Order.Status.PAYMENT_COMPLETED || isInvoice ) {
             addFooterLines();
             generateYellowLines(page);
         }
@@ -105,7 +110,8 @@ public class InvoiceFrontPage {
         addOrderText();
         addSummary();
         
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+        
+        if (order.status != Order.Status.PAYMENT_COMPLETED || isInvoice) {
             int startx = 33;
             contentStream.drawLine(20, startx, 20, 77);
             contentStream.drawLine(220, startx, 220, 77);
@@ -197,13 +203,18 @@ public class InvoiceFrontPage {
     }
 
     private void addTexts() throws IOException {
-        String INVOICEORRECEIPT = order.status == Order.Status.PAYMENT_COMPLETED ? recieptText : invoiceText;
+        boolean isInvoice = false;
+        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+            isInvoice = true;
+        }
+
+        String INVOICEORRECEIPT = (order.status == Order.Status.PAYMENT_COMPLETED && !isInvoice) ? recieptText : invoiceText;
         contentStream.setNonStrokingColor(new Color(0, 0, 0));
         
         
         writeText(INVOICEORRECEIPT, 485, 810, true, 15);
         
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+        if (order.status != Order.Status.PAYMENT_COMPLETED || isInvoice) {
             writeText(details.accountNumber, 40, 303, false, 12);
             writeText(toAccountHeading, 40, 320, true, 8);
             writeText(subAmountText, 310, 68, true, 8);
@@ -260,18 +271,23 @@ public class InvoiceFrontPage {
         writeText(order.cart.address.address, 45, startTop-lineHeight, false, 11);
         writeText(order.cart.address.postCode + " " + order.cart.address.city, 45, startTop-lineHeight*2, false, 11);
         
+        boolean isInvoice = false;
+        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+            isInvoice = true;
+        }
+        
         // Name bottom
         lineHeight = 13;
         int topLine = 160;
         int fontSize = 11;
         int left = 40;
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+        if (order.status != Order.Status.PAYMENT_COMPLETED || isInvoice) {
             writeText(order.cart.address.fullName, left, topLine, false, fontSize);
             writeText(order.cart.address.address, left, topLine-lineHeight, false, fontSize);
             writeText(order.cart.address.postCode + " " + order.cart.address.city, left, topLine-lineHeight*2, false, fontSize);
         }
         
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+        if (order.status != Order.Status.PAYMENT_COMPLETED || isInvoice) {
             // Price bottom
             Double total = order.cart.getTotal(true)+order.cart.getShippingCost();
             String totalString = String.format("%.2f", total);
@@ -290,7 +306,7 @@ public class InvoiceFrontPage {
             writeText(order.kid, 30, 45, false, 12);
         }
         
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+        if (order.status != Order.Status.PAYMENT_COMPLETED || isInvoice) {
             writeText(details.accountNumber, 400, 45, false, 12);
         }
         
@@ -301,7 +317,7 @@ public class InvoiceFrontPage {
         topLine = 250;
         fontSize = 11;
         left = 40;
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+        if (order.status != Order.Status.PAYMENT_COMPLETED || isInvoice) {
             writeText(invoiceDateText + " " + order.getDateCreated().replace("/", "."), left, topLine, false, fontSize);
             writeText(invoiceNumberText + " " + order.incrementOrderId, left, topLine-lineHeight, false, fontSize);
         }
@@ -320,7 +336,7 @@ public class InvoiceFrontPage {
         writeText(details.contactEmail, left, 725, false, 8);
         writeText(details.webAddress, left+120, 725, false, 8);
         
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+        if (order.status != Order.Status.PAYMENT_COMPLETED || isInvoice) {
             writeText(paymentDateText + " " + order.getDateCreated().split(" ")[0].replace("/", "."), left, 710, false, 8);
             writeText(invoiceNumberText + " " + order.incrementOrderId, left+120, 710, false, 8);
             writeText(dueDateText + " " + getDueDate(), left, 698, false, 8);
@@ -340,21 +356,26 @@ public class InvoiceFrontPage {
         topLine = 160;
         fontSize = 11;
         left = 310;
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+        if (order.status != Order.Status.PAYMENT_COMPLETED || isInvoice) {
             writeText(details.companyName, left, topLine, false, fontSize);
             writeText(details.address, left, topLine-lineHeight, false, fontSize);
             writeText(details.postCode + " " + details.city, left, topLine-lineHeight*2, false, fontSize);
         }
         
         
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
+        if (order.status != Order.Status.PAYMENT_COMPLETED || isInvoice) {
             // Betalings frist
             writeText(getDueDate(), 499, 273, false, 12);   
         }
     }
     
     private String getDueDate() {
-        if (order.status == Order.Status.PAYMENT_COMPLETED) {
+        boolean isInvoice = false;
+        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+            isInvoice = true;
+        }
+        
+        if (order.status == Order.Status.PAYMENT_COMPLETED && !isInvoice) {
             return paidStatusText;
         }
         
@@ -487,9 +508,13 @@ public class InvoiceFrontPage {
             String sum = String.format("%.2f", cartTax.sum) + getCurrency();
             writeText(sum, (int) 560, 404-(i*11), false, 9, true);
         }
+        boolean isInvoice = false;
+        if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.toLowerCase().contains("invoice")) {
+            isInvoice = true;
+        }
         
         i++;
-        if (order.status == Order.Status.PAYMENT_COMPLETED) {
+        if (order.status == Order.Status.PAYMENT_COMPLETED || isInvoice) {
             writeText(paidText, 443, 404-(i*11), false, 9);
         } else {
             writeText(toPayText, 443, 404-(i*11), false, 9);

@@ -180,6 +180,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Date startedDate;
     
     private PmsBookingAutoIncrement autoIncrement = new PmsBookingAutoIncrement();
+    private String messageToSend;
     
     
     public HashMap<String, PmsCareTaker> getCareTakerTasks() {
@@ -332,8 +333,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         User loggedon = userManager.getLoggedOnUser();
         boolean isAdmin = false;
+        boolean displayExTaxes = false;
         if(loggedon != null) {
             isAdmin = (loggedon.isAdministrator() || loggedon.isEditor());
+            displayExTaxes = loggedon.showExTaxes;
         }
         
         List<PmsBookingRooms> result = new ArrayList();
@@ -363,6 +366,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.priceType = PmsBooking.PriceType.daily;
             
             setPriceOnRoom(room, true, booking);
+            
+            if(displayExTaxes) {
+                Product product = productManager.getProduct(type.productId);
+                room.price = room.price / ((100+product.taxGroupObject.taxRate) / 100);              
+                room.priceWithoutDiscount = room.priceWithoutDiscount / ((100+product.taxGroupObject.taxRate) / 100);              
+            }
+            
             roomToAdd.price = room.price;
             roomToAdd.priceWithoutDiscount = room.priceWithoutDiscount;
             result.add(roomToAdd);
@@ -448,7 +458,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (result == null) {
             result = startBooking();
         }
-
+        
+        addPrintablePrice(result);
+        
         return result;
     }
 
@@ -541,6 +553,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
+        gsTiming("start");
         if(!getConfigurationSecure().exposeUnsecureBookings) {
             if(getSession() == null || getSession().currentUser == null || getSession().currentUser == null) {
                 return new ArrayList();
@@ -574,6 +587,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         List<PmsBooking> result = new ArrayList();
+        gsTiming("searching");
 
         if (filter.searchWord != null && !filter.searchWord.isEmpty()) {
 
@@ -671,6 +685,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        gsTiming("done searching");
 
         removeInactive(filter, result);
 
@@ -683,6 +698,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(unsettled) {
             finalized = filterByUnsettledAmounts(finalized);
         }
+        gsTiming("done finalizing new list");
         
         return finalized;
     }
@@ -843,9 +859,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         for (PmsBookingRooms room : booking.getActiveRooms()) {
+            if(room.bookingItemTypeId != null && 
+                    productManager.getProduct(room.bookingItemTypeId) != null && 
+                    productManager.getProduct(room.bookingItemTypeId).taxGroupObject != null) {
+                room.taxes = productManager.getProduct(room.bookingItemTypeId).taxGroupObject.taxRate;
+            }
             if(room.code == null || room.code.isEmpty()) {
                 room.code = generateCode();
             }
+            
+            room.date.startTimeStamp = room.date.start.getTime();
+            room.date.endTimeStamp = room.date.end.getTime();
+            
             if (room.bookingId != null) {
                 room.booking = bookingEngine.getBooking(room.bookingId);
                 if (room.booking != null) {
@@ -1301,6 +1326,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         emailToSendTo = null;
     }
 
+    public String getMessage(String bookingId, String key) {
+        orderIdToSend = null;
+        
+        PmsBooking booking = getBooking(bookingId);
+        key = key + "_" + booking.language;
+        String message = getMessageToSend(key, "sms", booking);
+        message = formatMessage(message, booking, null, null);
+        return message;
+    }
+    
     private String notify(String key, PmsBooking booking, String type, PmsBookingRooms room) {
         if(booking != null && booking.silentNotification) {
             return "Not notified, silent booking: " + type;
@@ -3205,8 +3240,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             openingshours = bookingEngine.getOpeningHoursWithType(null, periodeType);
         }
         
-        if(openingshours.isEmpty()) {
-            return false;
+        if(periodeType.equals(TimeRepeaterData.TimePeriodeType.open)) {
+            return true;
         }
         
         TimeRepeater repeater = new TimeRepeater();
@@ -3712,6 +3747,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         phoneToSend = phone;
         doNotification("booking_sendpaymentlink", bookingId);
     }
+    
+    @Override
+    public void sendPaymentLinkWithText(String orderId, String bookingId, String email, String prefix, String phone, String message) {
+        orderIdToSend = orderId;
+        emailToSendTo = email;
+        prefixToSend = prefix;
+        phoneToSend = phone;
+        messageToSend = message;
+        doNotification("booking_sendpaymentlink", bookingId);
+        messageToSend = null;
+    }
 
     @Override
     public void failedChargeCard(String orderId, String bookingId) {
@@ -3874,6 +3920,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         PmsPricing prices = getPriceObjectFromBooking(booking);
+        User loggedOn = null;
+        if(getSession() != null) {
+            loggedOn = getSession().currentUser;
+        }
 
         List<PmsBookingAddonItem> allAddons = new ArrayList(getConfiguration().addonConfiguration.values());
         List<PmsBookingAddonItem> result = new ArrayList();
@@ -3904,6 +3954,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if(count > 0) {
                 addon.price = price / count;
+            }
+            
+            if(loggedOn != null && loggedOn.showExTaxes) {
+                Product product = productManager.getProduct(addon.productId);
+                addon.price = (double)Math.round(addon.price / ((100+product.taxGroupObject.taxRate) / 100));   
             }
             result.add(addon);
         }
@@ -4883,7 +4938,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         return result;
     }
-
+ 
     public PmsBooking doCompleteBooking(PmsBooking booking) {
         String rawBooking = "";
         if(booking != null) {
@@ -5226,10 +5281,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBookingAddonItem> result = createAddonForTimePeriode(type, room.date.start, room.date.end, booking.priceType);
         
         for(PmsBookingAddonItem item : result) {
-            if(cartManager.couponIsValid(booking.couponCode, item.date, item.date, item.productId)) {
+            int days = pmsInvoiceManager.getNumberOfDays(room.date.start, room.date.end);
+            if(cartManager.couponIsValid(booking.rowCreatedDate, booking.couponCode, item.date, item.date, item.productId,days)) {
                 Coupon coupon = cartManager.getCoupon(booking.couponCode);
                 if(coupon.addonsToInclude == null || coupon.addonsToInclude.isEmpty()) {
-                    item.price = cartManager.calculatePriceForCouponWithoutSubstract(booking.couponCode, item.price);
+                    item.price = cartManager.calculatePriceForCouponWithoutSubstract(booking.couponCode, item.price, days);
                 }
             }
         }
@@ -5977,6 +6033,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             message = configuration.smses.get(key);
         }
         
+        if(messageToSend != null && !messageToSend.isEmpty()) {
+            message = messageToSend;
+        }
+        
         if(key.startsWith("booking_sendpaymentlink") || 
                 key.startsWith("booking_unabletochargecard") || 
                 key.startsWith("booking_paymentmissing") || 
@@ -6013,10 +6073,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 key.startsWith("booking_unabletochargecard") || 
                 key.startsWith("booking_paymentmissing") || 
                 key.startsWith("order_")) {
-            message = message.replace("{orderid}", this.orderIdToSend);
-            Order order = orderManager.getOrderSecure(this.orderIdToSend);
-            message = message.replace("{paymentlink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/p.php?id="+order.incrementOrderId);
-            message = message.replace("{selfmanagelink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/?page=booking_self_management&id="+booking.secretBookingId);
+            if(orderIdToSend != null) {
+                message = message.replace("{orderid}", this.orderIdToSend);
+                Order order = orderManager.getOrderSecure(this.orderIdToSend);
+                message = message.replace("{paymentlink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/p.php?id="+order.incrementOrderId);
+                message = message.replace("{selfmanagelink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/?page=booking_self_management&id="+booking.secretBookingId);
+            }
         }
         
         return message;
@@ -6428,7 +6490,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         
-        if(!cartManager.couponIsValid(booking.couponCode, room.date.start, room.date.end, productId)) {
+        int days = pmsInvoiceManager.getNumberOfDays(room.date.start, room.date.end);
+        
+        if(!cartManager.couponIsValid(booking.rowCreatedDate, booking.couponCode, room.date.start, room.date.end, productId,days)) {
             return;
         }
         
@@ -7073,7 +7137,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private boolean hasRestriction(String itemType, Date start, Date end) {
-        if (isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.open)) {
+        //Check for user.
+        if(getSession() != null && getSession().currentUser != null && (getSession().currentUser.isAdministrator() || getSession().currentUser.isEditor())) {
+            return false;
+        }
+        if (!isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.open)) {
             return true;
         }
         if (isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.closed)) {
@@ -7086,6 +7154,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return true;
         }
         return false;
+    }
+
+    private void addPrintablePrice(PmsBooking result) {
+        boolean displayWithoutTaxes = false;
+        if(getSession() != null && getSession().currentUser != null && getSession().currentUser.showExTaxes) {
+            displayWithoutTaxes = true;
+        }
+        for(PmsBookingRooms room : result.rooms) {
+            room.printablePrice = room.price;
+            if(displayWithoutTaxes) {
+                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                Product product = productManager.getProduct(type.productId);
+                room.printablePrice = room.printablePrice / ((100+product.taxGroupObject.taxRate) / 100);     
+            }
+        }
     }
 
     

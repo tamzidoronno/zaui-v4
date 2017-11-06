@@ -178,9 +178,26 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             if($this->currentBooking) {
                 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
                 $curBooking = $this->currentBooking;
+                $daysToIgnore = $config->ignorePaymentWindowDaysAheadOfStay;
+                $ignorePaymentWindow = false;
+                if($daysToIgnore > 0) {
+                    $latestDay = null;
+                    foreach($bookingToSend->rooms as $room) {
+                        $latestDay = strtotime($room->date->start);
+                    }
+                    $daysBetween = 0;
+                    if($latestDay == null || $latestDay > $startDayOnBooking) {
+                        $daysBetween = floor(($latestDay-time()) / (60 * 60 * 24));
+                    }
+                    if($daysBetween > $daysToIgnore) {
+                        $ignorePaymentWindow = true;
+                    }
+                    echo $daysBetween;
+                }
+                
                 echo "<script>";
                 if($config->payAfterBookingCompleted) {
-                    if(!isset($curBooking->orderIds[0])) {
+                    if(!isset($curBooking->orderIds[0]) || $ignorePaymentWindow) {
                         if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
                             $nextPage = $this->getConfigurationSetting("nextPageId");
                             if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $nextPage) {
@@ -189,7 +206,11 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                                 echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
                             }
                         } else {
-                            echo 'thundashop.common.goToPage("payment_failed");';
+                            if($ignorePaymentWindow) {
+                                echo 'thundashop.common.goToPageLink("/?page=booking_completed_'.$this->getSelectedName() . '");';
+                            } else {
+                                echo 'thundashop.common.goToPage("payment_failed");';
+                            }
                         }
                     } else {
                         echo 'thundashop.common.goToPageLink("?page=cart&payorder='.$curBooking->orderIds[0].'");';

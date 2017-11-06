@@ -26,7 +26,7 @@ $starting = time();
                     <option value='DAYBOOKED'>The actual stay</option>
                 </select>
             </span>
-        </div>        
+        </div>
         
         <div class='eventrow'>
             <span class='title'>
@@ -97,6 +97,14 @@ $starting = time();
             <div class='eventrow'>
                 <span class='title'><? echo $this->__w("Ends"); ?>:</span>
                 <span class='optionbox'><input type='text' gsname='endingAt' value='<? echo date("d.m.Y", $endDate); ?>' style='width: 35%;text-align: center;'></span>
+            </div>
+            <div class='eventrow'>
+                <span class='title'><? echo $this->__w("Min days"); ?>:</span>
+                <span class='optionbox'><input type='text' gsname='minDays' value='<? echo $coupon->minDays == 0 ? "" : $coupon->minDays ?>' style='width: 35%;text-align: center;'></span>
+            </div>
+            <div class='eventrow'>
+                <span class='title'><? echo $this->__w("Max days"); ?>:</span>
+                <span class='optionbox'><input type='text' gsname='maxDays' value='<? echo $coupon->maxDays == 0 ? "" : $coupon->maxDays ?>' style='width: 35%;text-align: center;'></span>
             </div>
         </div>
         

@@ -163,7 +163,7 @@ if($type == "month") {
      }
 } else {
     foreach($types as $room) {
-        if(!$room->visibleForBooking && !$this->isEditorMode()) {
+        if(!$room->visibleForBooking) {
             continue;
         }
         if($room->addon) {

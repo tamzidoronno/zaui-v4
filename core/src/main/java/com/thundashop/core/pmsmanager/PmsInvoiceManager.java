@@ -591,6 +591,20 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return ordersToReturn;
     }
 
+    public Double getDerivedPrice(PmsBooking booking, String bookingItemType, Integer numberOfGuests) {
+        PmsPricing priceObject = pmsManager.getPriceObjectFromBooking(booking);
+        double toAdd = 0.0;
+        if(priceObject.derivedPrices != null && priceObject.derivedPrices.containsKey(bookingItemType)) {
+            HashMap<Integer, Double> derivedPriced = priceObject.derivedPrices.get(bookingItemType);
+            for(int i = 2;i <= numberOfGuests;i++) {
+                if(derivedPriced != null && derivedPriced.containsKey(i)) {
+                    toAdd += derivedPriced.get(i);
+                }
+            }
+        }
+        return toAdd;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -890,17 +904,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room.bookingItemTypeId == null) {
             return price;
         }
-        
-        PmsPricing priceObject = pmsManager.getPriceObjectFromBooking(booking);
-        double toAdd = 0.0;
-        if(priceObject.derivedPrices != null && priceObject.derivedPrices.containsKey(room.bookingItemTypeId)) {
-            HashMap<Integer, Double> derivedPriced = priceObject.derivedPrices.get(room.bookingItemTypeId);
-            for(int i = 2;i <= room.numberOfGuests;i++) {
-                if(derivedPriced != null && derivedPriced.containsKey(i)) {
-                    toAdd += derivedPriced.get(i);
-                }
-            }
-        }
+        Double toAdd = getDerivedPrice(booking, room.bookingItemTypeId, room.numberOfGuests);
         return price + toAdd;
     }
 
@@ -933,7 +937,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(room != null) { 
             price = addDerivedPrices(booking, room, price);
         }
-        price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId);
+        price = calculateDiscountCouponPrice(booking, price, start, end, bookingEngineTypeId,room);
         price = calculateLongTermDiscount(booking, price, room);
         price = getUserPrice(bookingEngineTypeId, price, count);
         
@@ -2018,7 +2022,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return generatePriceFromPriceMatrix(priceMatrix, avgPrice, booking, typeId);
     }
 
-    private Double calculateDiscountCouponPrice(PmsBooking booking, Double price, Date start, Date end, String typeId) {
+    private Double calculateDiscountCouponPrice(PmsBooking booking, Double price, Date start, Date end, String typeId, PmsBookingRooms room) {
         if(booking.couponCode != null && !booking.couponCode.isEmpty()) {
             String couponCode = booking.couponCode;
             if(booking.discountType.equals("partnership")) {
@@ -2028,11 +2032,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
             Coupon coupon = cartManager.getCoupon(couponCode);
             if(coupon != null) {
-                if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
-                    start = booking.rowCreatedDate;
-                    end = booking.rowCreatedDate;
-                }
-                
                 String productId = null;
                 if(typeId != null) {
                     BookingItemType type = bookingEngine.getBookingItemType(typeId);
@@ -2040,9 +2039,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                         productId = type.productId;
                     }
                 }
-                
-                if(cartManager.couponIsValid(couponCode, start, end, productId)) {
-                    price = cartManager.calculatePriceForCouponWithoutSubstract(couponCode, price);
+                int days = 1;
+                if(room != null) {
+                    days = getNumberOfDays(room.date.start, room.date.end);
+                }
+                if(cartManager.couponIsValid(booking.rowCreatedDate, couponCode, start,end, productId, days)) {
+                    price = cartManager.calculatePriceForCouponWithoutSubstract(couponCode, price, days);
                 }
             }
         }
@@ -2061,6 +2063,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 } else {
                     price = discount * count;
                 }
+            }
+            if(getSession().currentUser.showExTaxes) {
+                Product product = productManager.getProduct(bookingEngine.getBookingItemType(typeId).productId);
+                price = price * ((100+product.taxGroupObject.taxRate) / 100);
             }
        }
        return price;

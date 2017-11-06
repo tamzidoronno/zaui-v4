@@ -99,6 +99,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean notifyGetShopAboutCriticalTransactions = false;
     public boolean autoSumarizeCartItems = false;
     public int numberOfDaysToSendPaymentLinkAheadOfStay = 2;
+    public int ignorePaymentWindowDaysAheadOfStay = 0;
     public boolean ignoreRoomToEndDate = false;
     public boolean createVirtualOrders = false;
     public boolean enableCoveragePrices = false;

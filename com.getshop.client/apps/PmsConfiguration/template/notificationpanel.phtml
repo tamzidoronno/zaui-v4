@@ -657,6 +657,12 @@ if($notificationSettings->requirePayments) {
         </div>
         <div class='configrow'>
             <span class='configentry'>
+                <input type='number' style='width: 40px;' gsname='ignorePaymentWindowDaysAheadOfStay' value='<? echo $notificationSettings->ignorePaymentWindowDaysAheadOfStay; ?>'>
+            </span>
+            I stay is booking is number of days before stay, do not show payment window.
+        </div>
+        <div class='configrow'>
+            <span class='configentry'>
                 <?
                 $checked = "";
                 if($notificationSettings->autoSendPaymentReminder) {

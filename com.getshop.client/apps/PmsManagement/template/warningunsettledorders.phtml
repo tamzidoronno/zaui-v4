@@ -165,6 +165,8 @@ if($amount != 0) {
                 echo "+<input type='txt' gsname='paymentlinkprefix' value='".$user->prefix."' placeholder='phone' gsname='paymentlinkphone' style='width:30px;'> ";
                 echo "<input type='txt' gsname='paymentlinkphone' value='".$user->cellPhone."' placeholder='phone' gsname='paymentlinkphone'> ";
                 echo "<input type='txt' gsname='paymentlinkemail' value='".$user->emailAddress."' style='width:300px;' placeholder='Email adress' gsname='paymentlinkemail'>";
+                $msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedName(), $booking->id, "booking_sendpaymentlink");
+                echo "<div>Message:<br><textarea style='width:100%; height: 40px;font-size:10px;' gsname='smsText'>$msg</textarea></div>";
                 echo "</div>";
             }
             echo "</div>";

@@ -10,6 +10,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsRepeatingData;
 import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
@@ -18,6 +19,7 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -323,17 +325,6 @@ public class CartManager extends ManagerBase implements ICartManager {
         return count;
     }
 
-    public double calculatePriceForCoupon(String couponCode, double price) {
-        double newPrice = calculatePriceForCouponWithoutSubstract(couponCode, price);
-        subtractTimesLeft(couponCode);
-        
-        if(newPrice < 0) {
-            newPrice = 0;
-        }
-        
-        return newPrice;
-    }
-
     
     @Administrator
     public Coupon getCoupon(String couponCode) {
@@ -401,8 +392,8 @@ public class CartManager extends ManagerBase implements ICartManager {
             getCart().removeItem(remove.getCartItemId());
         }
     }
-
-    public boolean couponIsValid(String couponCode, Date start, Date end, String productId) {
+    
+    public boolean couponIsValid(Date registrationDate, String couponCode, Date start, Date end, String productId, int days) {
         if(start == null || end == null) {
             return true;
         }
@@ -421,6 +412,17 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
         
         PmsRepeatingData when = coupon.whenAvailable;
+        if(coupon.minDays > 0 && coupon.minDays > days) {
+            return false;
+        }
+        if(coupon.maxDays > 0 && coupon.maxDays < days) {
+            return false;
+        }
+        
+        if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
+            start = registrationDate;
+            end = registrationDate;
+        }
         
         TimeRepeater repeater = new TimeRepeater();
         LinkedList<TimeRepeaterDateRange> res = repeater.generateRange(when.data);
@@ -494,7 +496,7 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
     }
 
-    public double calculatePriceForCouponWithoutSubstract(String couponCode, double price) {
+    public double calculatePriceForCouponWithoutSubstract(String couponCode, double price, int days) {
         Coupon coupon = getCoupon(couponCode); 
         Double newPrice = price;
         if(coupon != null) {
@@ -508,6 +510,9 @@ public class CartManager extends ManagerBase implements ICartManager {
                 if(coupon.type == CouponType.PERCENTAGE) {
                     double multiplier = (double)(100-coupon.amount)/(double)100;
                     newPrice = price * multiplier;
+                }
+                if(coupon.type == CouponType.FIXEDDISCOUNTSTAY) {
+                    newPrice = price - ((double)coupon.amount / days);
                 }
             }
         }

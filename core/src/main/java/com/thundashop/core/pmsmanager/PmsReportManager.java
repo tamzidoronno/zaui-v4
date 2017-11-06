@@ -337,6 +337,8 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
                     PmsBooking pmsBooking = pmsManager.getBookingFromBookingEngineId(booking.id);
                     
                     PmsSubscriptionReportEntry res = new PmsSubscriptionReportEntry();
+                    res.start = booking.startDate;
+                    res.end = booking.endDate;
                     result.add(res);
                     res.itemName = item.bookingItemName;
                     
@@ -348,7 +350,13 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
                     }
                     for(String orderId : pmsBooking.orderIds) {
                         Order order = orderManager.getOrder(orderId);
-                        if(order.rowCreatedDate.after(start) && order.rowCreatedDate.before(end)) {
+                        Date endDateByItems = order.getEndDateByItems();
+                        Date startDateByItems = order.getStartDateByItems();
+                        if(endDateByItems != null && endDateByItems.after(start) && endDateByItems.before(end)) {
+                            res.orders.add(order);
+                        } else if(endDateByItems != null && startDateByItems != null && startDateByItems.before(start) && endDateByItems.after(end)) {
+                            res.orders.add(order);
+                        } else if(order.rowCreatedDate.after(start) && order.rowCreatedDate.before(end)) {
                             res.orders.add(order);
                         }
                     }

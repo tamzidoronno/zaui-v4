@@ -18,6 +18,8 @@ public class TimeRepeaterData implements Serializable {
         public static Integer min_stay = 2;
         public static Integer max_stay = 3;
         public static Integer denySameDayBooking = 4;
+        public static Integer autoconfirm = 5;
+        public static Integer forceConfirmationSameDay = 6;
     }
     
     Integer repeatPeride = TimeRepeaterData.RepeatPeriodeTypes.daily;

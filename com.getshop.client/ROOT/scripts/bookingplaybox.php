@@ -5,7 +5,7 @@
   "end" : "<?php echo date("M d, Y h:i:s A", time()+86400); ?>",
   "rooms" : 2,
   "adults" : 4,
-  "childer" : 2,
+  "children" : 2,
   "discountCode" : "",
   "bookingId" : ""
 }</textarea><br>

@@ -189,7 +189,8 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         foreach($typesAdded as $prodId => $val) {
             $title = $val . " x " . $products[$prodId]->name;
             if(isset($products[$prodId]->name)) {
-                $name = $this->getFirstWords($products[$prodId]->name);
+                $name = "";
+//                $name = $this->getFirstWords($products[$prodId]->name);
 //                $res[] = $name;
                 $res[] = "<span title='$title' style='cursor:pointer;'>($name)</span>";
             }

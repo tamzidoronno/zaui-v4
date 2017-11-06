@@ -54,7 +54,7 @@ class Page {
         
         $editormodeclass = "";
         $canChangeLayout = "";
-        if($this->factory->isEditorMode()) {
+        if($this->factory->isEditorMode() && $this->factory->isCmsMode()) {
             $editormodeclass = "gseditormode";
         }
         

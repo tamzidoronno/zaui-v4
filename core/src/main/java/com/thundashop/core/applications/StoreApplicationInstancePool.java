@@ -13,6 +13,7 @@ import com.thundashop.core.common.Setting;
 import com.thundashop.core.common.Settings;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.ListManager;
+import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.pagemanager.PageManager;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,15 +44,20 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     private ListManager listManager;
     
     private Map<String, ApplicationInstance> applicationInstances;
+    private Map<String, Map<String, ApplicationInstance>> moduleApplicationInstances = new HashMap<String, Map<String, ApplicationInstance>>();
     
     private HashMap<String, Integer> cachedSecurity = new HashMap();
 
+    private GetShopModules modules = new GetShopModules();
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         applicationInstances = data.data.stream()
                 .filter(o -> o.getClass() == ApplicationInstance.class)
                 .map(o -> (ApplicationInstance) o)
                 .collect(Collectors.toMap(o -> o.id, o -> o));
+        
+        loadRemoteData();
     }
 
     @Override
@@ -66,13 +72,13 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         applicationInstance.appSettingsId = app.id;
         saveObject(applicationInstance);
 
-        applicationInstances.put(applicationInstance.id, applicationInstance);
+        getCurrentApplicationInstances().put(applicationInstance.id, applicationInstance);
         return checkSecurity(applicationInstance.secureClone());
     }
 
     @Override
     public ApplicationInstance getApplicationInstance(String applicationInstanceId) {
-        ApplicationInstance instance = applicationInstances.get(applicationInstanceId);
+        ApplicationInstance instance = getCurrentApplicationInstances().get(applicationInstanceId);
         
         if (instance == null) {
             return null;
@@ -88,7 +94,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
 
     @Override
     public ApplicationInstance setApplicationSettings(Settings settings) {
-        ApplicationInstance application = applicationInstances.get(settings.appId);
+        ApplicationInstance application = getCurrentApplicationInstances().get(settings.appId);
 
         HashMap<String, Setting> saveSettings = application.settings;
         if (saveSettings == null) {
@@ -129,7 +135,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         }
         
         if (app != null) {
-            for (ApplicationInstance instance : applicationInstances.values()) {
+            for (ApplicationInstance instance : getCurrentApplicationInstances().values()) {
                 if (instance.appSettingsId.equals(app.id)) {
                     return instance.settings;
                 }
@@ -185,7 +191,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     @Override
     public List<ApplicationInstance> getApplicationInstances(String applicationId) {
         List<ApplicationInstance> result = new ArrayList();
-        for(ApplicationInstance app : applicationInstances.values()) {
+        for(ApplicationInstance app : getCurrentApplicationInstances().values()) {
             if(app.appSettingsId.equals(applicationId)) {
                 if (getSession() != null && getSession().currentUser != null && getSession().currentUser.type >= 50) {
                     result.add(checkSecurity(app));
@@ -225,7 +231,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
             try {
                 ApplicationInstance newApp = (ApplicationInstance) app.clone();
                 newApp.id = UUID.randomUUID().toString();
-                applicationInstances.put(newApp.id, newApp);
+                getCurrentApplicationInstances().put(newApp.id, newApp);
                 saveObject(newApp);
                 return newApp;
             } catch (CloneNotSupportedException ex) {
@@ -234,5 +240,31 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
         }
     
         return null;
+    }
+    
+    private Map<String, ApplicationInstance> getCurrentApplicationInstances() {
+        if (isCmsModule()) {
+            return applicationInstances;
+        }
+        
+        if (moduleApplicationInstances.get(getCurrentGetShopModule()) == null) {
+            moduleApplicationInstances.put(getCurrentGetShopModule(), new HashMap());
+        }
+        
+        return moduleApplicationInstances.get(getCurrentGetShopModule());
+    }
+
+    private void loadRemoteData() {
+        modules.getModules().stream().forEach(m -> {
+            databaseRemote.getAll("StoreApplicationInstancePool", "all", m.id).forEach(o -> {
+                if (o instanceof ApplicationInstance) {
+                    ApplicationInstance instance = (ApplicationInstance)o;
+                    if (moduleApplicationInstances.get(instance.getshopModule) == null) {
+                        moduleApplicationInstances.put(instance.getshopModule, new HashMap());
+                    }
+                    moduleApplicationInstances.get(instance.getshopModule).put(instance.id, instance);
+                }
+            });
+        });
     }
 }

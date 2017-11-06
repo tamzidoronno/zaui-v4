@@ -354,6 +354,11 @@ class Factory extends FactoryBase {
         @session_start();
         header('Content-Type: text/html; charset=UTF-8');
         $this->initialize();
+        
+        if (isset($_GET['changeGetShopModule'])) {
+            $this->getApi()->getPageManager()->changeModule($_GET['changeGetShopModule']);
+        }
+        
         $this->applicationPool = new ApplicationPool($this);
         $this->pageManager = $this->getApi()->getPageManager();
     }
@@ -1045,6 +1050,10 @@ class Factory extends FactoryBase {
         }
     
         return false;
+    }
+    
+    public function isCmsMode() {
+        return (!$this->page->javapage->getshopModule || $this->page->javapage->getshopModule == "cms");
     }
 
 }

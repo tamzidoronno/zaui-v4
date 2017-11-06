@@ -14,6 +14,7 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.storemanager.data.SettingsRow;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,6 +48,8 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     private Set<ApplicationModule> activatedModules = new HashSet();
 
     private Map<String, SavedApplicationSettings> settings = new HashMap();
+    
+    private GetShopModules getShopModules = new GetShopModules();
 
     private Application cachedThemeApp = null;
     private Date cachedThemeAppExpire = new Date();
@@ -142,15 +145,12 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
 
     @Override
     public Application getThemeApplication() {
-        if(cachedThemeApp != null) {
-            if((System.currentTimeMillis() - cachedThemeAppExpire.getTime()) < 1000) {
-                return cachedThemeApp;
-            }
-        }
-        
         cachedThemeAppExpire = new Date();
         String id = getManagerSetting("selectedThemeApplication");
         
+        if (!isCmsModule()) {
+            id = getShopModules.getThemApplicationId(getCurrentGetShopModule());
+        }
         
         if (id == null) {
             Application app = finalizeApplication(getDefaultThemeApplication());
@@ -158,9 +158,10 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
             return app;
         }
 
+        String idToTest = id;
         Application app = getAvailableThemeApplications()
                 .stream()
-                .filter(a -> a.id.equals(id))
+                .filter(a -> a.id.equals(idToTest))
                 .findFirst()
                 .orElse(null);
 
@@ -171,7 +172,8 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         }
 
         cachedThemeApp = app;
-        return finalizeApplication(app);
+        Application ret = finalizeApplication(app);
+        return ret;
     }
 
     @Override

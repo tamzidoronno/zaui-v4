@@ -27,6 +27,9 @@ GetShopApiWebSocket.prototype = {
     globalErrorHandler: false,
     messageCountChangedEvent: null,
     listeners: [],
+    currentlySendingMessageInProgress: false,
+    isInitialized: false,
+    ignoreReconnectOnce: false,
     
     connect: function() {
         if (!this.shouldConnect)
@@ -34,6 +37,8 @@ GetShopApiWebSocket.prototype = {
         
         this.shouldConnect = false;
         this.connectedCalled = true;
+        this.isInitialized = false;
+        
         var me = this;
         if (this.connectionEstablished === null) {
             this.fireDisconnectedEvent();
@@ -53,6 +58,24 @@ GetShopApiWebSocket.prototype = {
 
     setGlobalErrorHandler: function(globalErrorHandler) {
         this.globalErrorHandler = globalErrorHandler;
+    },
+    
+    disconnect: function() {
+        if (this.socket !== null) {
+            this.socket.close();
+            this.socket = null;
+        }
+        
+        this.ignoreReconnectOnce = true;
+        this.shouldConnect = true;
+        this.connectionEstablished = null;
+        this.currentlySendingMessageInProgress = false;
+        this.sentMessages = [];
+    },
+    
+    resetConnection: function() {
+        this.disconnect()
+        this.connect();
     },
     
     guid: function() {
@@ -105,13 +128,15 @@ GetShopApiWebSocket.prototype = {
             this.transferCompletedFirstTimeAfterUnsentMessageSent();
             this.firstUnsentMessages = false;
         }
-        
-        
     },
 
     handleIncomingMessage: function(msg) {
-        if ( typeof msg === "object")
+        this.currentlySendingMessageInProgress = false;
+        
+        if ( typeof msg === "object") {
+            this.sendUnsentMessages();
             return;
+        }
         
         var dataObject = JSON.parse(msg);
         for (var i in this.listeners) {
@@ -124,9 +149,16 @@ GetShopApiWebSocket.prototype = {
                 }
             }
         }
+        
+        this.sendUnsentMessages();
     },
 
     reconnect: function() {
+        if (this.ignoreReconnectOnce) {
+            this.ignoreReconnectOnce = false;
+            return;
+        }
+        
         var me = this;
         this.shouldConnect = true;
         exec = function() {
@@ -136,8 +168,10 @@ GetShopApiWebSocket.prototype = {
     },
             
     initializeStore: function() {
-        if (this.socket.OPEN)
+        if (this.socket.OPEN) {
             this.socket.send('initstore:'+this.identifier);
+            this.isInitialized = true;
+        }
     },
             
     connected: function() {
@@ -145,6 +179,7 @@ GetShopApiWebSocket.prototype = {
         this.initializeStore();
         this.fireConnectedEvent();
         this.connectionEstablished = true;
+        this.sendUnsentMessages();
     },
     
     getUnsentMessageCount: function() {
@@ -225,33 +260,14 @@ GetShopApiWebSocket.prototype = {
         }
         
         deferred.messageId = message.messageId;
-        var messageJson = JSON.stringify(message);
+        deferred.messageSent = false;
         
         if (this.sentMessages.length === 0 && this.transferStarted && silent !== true) {
             this.transferStarted();
         }
         
         this.sentMessages.push(deferred);
-        
-        var loginMessage = this.getLoginMessage();
-        
-        var sendFunc = function(messageJson, me) {
-            if (me.socket.readyState !== 1) {
-                setTimeout(function() {
-                    sendFunc(messageJson, me);
-                }, 50);
-            } else {
-                if (loginMessage) {
-                    me.socket.send(loginMessage);
-                }
-                me.socket.send(messageJson);
-                var messageObject = JSON.parse(messageJson);
-            }
-        }
-        
-        sendFunc(messageJson, this);
-        
-        this.sendUnsentMessages();
+        this.sendUnsentMessages(message);
         
         return deferred;
     },
@@ -274,14 +290,28 @@ GetShopApiWebSocket.prototype = {
         return false;
     },
     
-    sendUnsentMessages: function() {
+    sendUnsentMessages: function(incommingMessage) {
+        if (!this.isInitialized)
+            return;
+        
+        var loginMessage = this.getLoginMessage();
+        
         var sendFunc = function(messageJson, me) { 
-            if (me.socket.readyState !== 1) {
+            if (me.socket == null || me.socket.readyState !== 1) {
                 setTimeout(function() {
                     sendFunc(messageJson, me);
                 }, 50);
             } else {
+                if (loginMessage) {
+                    me.socket.send(loginMessage);
+                }
+                
+                
                 me.socket.send(messageJson);
+                var msg = JSON.parse(messageJson);
+                var deffered = me.inSentMessages(msg.messageId);
+                deffered.messageSent = true;
+                me.currentlySendingMessageInProgress = true;
             }
         }
         
@@ -291,25 +321,45 @@ GetShopApiWebSocket.prototype = {
             for (var k in allUnsetMessages) {
                 var unsentMessage = allUnsetMessages[k];
                 
-                if (!this.inUnsentMessages(unsentMessage.messageId)) {
-                    var messageJson2 = JSON.stringify(unsentMessage);
-                    var deferred2 = $.Deferred();
-                    deferred2.messageId = unsentMessage.messageId;
-                    this.sentMessages.push(deferred2);
-                    sendFunc(messageJson2, this);
+                if (this.currentlySendingMessageInProgress) {
+                    return;
                 }
+
+                var messageJson2 = JSON.stringify(unsentMessage);
+                var deferred2 = $.Deferred();
+                deferred2.messageId = unsentMessage.messageId;
+
+                var alreadySentMessage = this.inSentMessages(unsentMessage.messageId);
+                
+                if (alreadySentMessage && alreadySentMessage.messageSent) {
+                    continue;
+                }
+                
+                if (!alreadySentMessage) {
+                    this.sentMessages.push(deferred2);
+                } 
+
+                sendFunc(messageJson2, this);
+            }
+        } else {
+            if (incommingMessage !== null) {
+                var messageJson2 = JSON.stringify(incommingMessage);
+                var deferred2 = $.Deferred();
+                deferred2.messageId = unsentMessage.messageId;
+                this.sentMessages.push(deferred2);
+                sendFunc(messageJson2, this);
             }
         }
     },
     
-    inUnsentMessages: function(msgId) {
+    inSentMessages: function(msgId) {
         for (var i in this.sentMessages) {
             if (this.sentMessages[i].messageId === msgId) {
-                return true;
+                return this.sentMessages[i];
             }
         }
         
-        return false;
+        return null;
     },
 
     getMessage: function(id) {

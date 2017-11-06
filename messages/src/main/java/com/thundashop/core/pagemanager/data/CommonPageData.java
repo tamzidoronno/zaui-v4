@@ -1,10 +1,12 @@
 package com.thundashop.core.pagemanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+@GetShopRemoteObject
 public class CommonPageData extends DataCommon {
     public Map<String, ArrayList<PageCell>> leftSideBars = new HashMap();
     public Map<String, ArrayList<PageCell>> modals = new HashMap();

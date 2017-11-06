@@ -1,0 +1,98 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 5, 2017, 12:12:56 PM
+    Author     : ktonder
+*/
+
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+.Menu .entry  {
+    
+    padding-left: 10px;
+    padding-right: 10px;
+    border-right: solid 1px rgba(0,0,0,0.2);
+}
+
+.Menu .entry:last-child {
+    border: solid 0px;
+}
+
+.Menu .entry a {
+    line-height: 40px;
+    font-size: 15px;
+    color: #333;
+}
+
+.Menu {
+    background: rgb(214,249,255); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(214,249,255,1) 0%, rgba(158,232,250,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(214,249,255,1) 0%,rgba(158,232,250,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(214,249,255,1) 0%,rgba(158,232,250,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d6f9ff', endColorstr='#9ee8fa',GradientType=0 ); 
+    border-bottom: solid 1px #DDD;
+    border-top: solid 1px rgba(0,0,0,0.2);
+}
+
+.gsarea[area="body"] {
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.gsarea[area="footer"] {
+    background-color: #EEE;
+}
+
+.gs_language_selection {
+    position: absolute;
+    right: 20px;
+    top: 8px;
+    border: solid 0px #EEE; 
+}
+
+
+.gs_language_selection .gs_lang_code_nb_NO {
+    background-image: url('images/flag_norwegian.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 35px;
+}
+
+.gs_language_selection .gs_lang_code_en_en {
+    background-image: url('images/flag_english.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    font-size: 0px;
+    width: 18px;
+    background-size: 30px;
+}
+.GetShopModuleTable {
+    border: solid 1px #DDD;
+}
+
+.GetShopModuleTable .datarow {
+    padding: 3px;
+}
+.GetShopModuleTable .datarow.odd {
+    background-color: #c7f4ff;
+    
+}
+
+.GetShopModuleTable .attributeheader {
+    background-color: #2885c0;
+    color: #FFF;
+}
+
+.GetShopModuleTable .col {
+    display: inline-block;
+    vertical-align: top;
+    width: 200px;
+}

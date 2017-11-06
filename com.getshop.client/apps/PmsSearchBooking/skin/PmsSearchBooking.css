@@ -1,0 +1,19 @@
+.PmsSearchBooking .GetShopModuleTable .secondary_text {
+    color: #888;
+}
+
+.PmsSearchBooking .GetShopModuleTable .col_visitor {
+    width: 500px;
+}
+
+.PmsSearchBooking .GetShopModuleTable .col_reg { width: 130px; }
+.PmsSearchBooking .GetShopModuleTable .col_periode { width: 130px; }
+.PmsSearchBooking .GetShopModuleTable .col_price { width: 50px; }
+.PmsSearchBooking .GetShopModuleTable .col_state { width: 50px; }
+.PmsSearchBooking .GetShopModuleTable .col_visitor { width: calc(100% - 600px); }
+
+.PmsSearchBooking .filterbox {
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+    margin-bottom: 50px;
+    min-height: 100px;
+}

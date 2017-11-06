@@ -668,5 +668,9 @@ class ApplicationBase extends FactoryBase {
         $appManager = new ApplicationManager();
         $appManager->closemodal();
     }
+    
+    public function getSelectedMultilevelDomainName() {
+        return "default";
+    }
 }
 ?>

@@ -4,6 +4,7 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.app.contentmanager.data.ContentData;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import java.util.HashMap;
@@ -25,7 +26,10 @@ import org.springframework.stereotype.Component;
 public class ContentManager extends ManagerBase implements IContentManager {
     private int id=1002;
 
+    private Map<String, HashMap<String, ContentData>> moduleMemory = new HashMap();
     private HashMap<String, ContentData> memory = new HashMap();
+    
+    private GetShopModules modules = new GetShopModules();
     
     @Autowired
     public PageManager pageManager;
@@ -40,14 +44,16 @@ public class ContentManager extends ManagerBase implements IContentManager {
                 memory.put(data2.appId, data2);
             }
         }
+        
+        loadRemoteData();
     }
 
     @Override
     public void saveContent(String id, String content) throws ErrorException {
         ContentData data = null;
         String contentId = id;
-        if(memory.get(contentId) != null) {
-            data = memory.get(contentId);
+        if(getMemoryForCurrentModule().get(contentId) != null) {
+            data = getMemoryForCurrentModule().get(contentId);
         } else {
             data = new ContentData();
         }
@@ -56,14 +62,14 @@ public class ContentManager extends ManagerBase implements IContentManager {
         
         data.content = content;
         saveObject(data);
-        memory.put(contentId, data);
+        getMemoryForCurrentModule().put(contentId, data);
     }
 
     @Override
     public void deleteContent(String id) throws ErrorException {
         ContentData data = getContentData(id);
         deleteObject(data);
-        memory.remove(id);
+        getMemoryForCurrentModule().remove(id);
     }
  
    @Override
@@ -84,25 +90,25 @@ public class ContentManager extends ManagerBase implements IContentManager {
     public HashMap<String,String> getAllContent() throws ErrorException {
         HashMap<String,String> result = new HashMap();
         int i = 0;
-        for(String key : memory.keySet()) {
-            result.put(key, memory.get(key).content);
+        for(String key : getMemoryForCurrentModule().keySet()) {
+            result.put(key, getMemoryForCurrentModule().get(key).content);
         }
         
         return result;
     }
 
     private ContentData getContentData(String id) throws ErrorException {
-        if(memory.get(id) == null) {
-            memory.put(id, new ContentData());
-            memory.get(id).content = "";
-            memory.get(id).appId = id;
+        if(getMemoryForCurrentModule().get(id) == null) {
+            getMemoryForCurrentModule().put(id, new ContentData());
+            getMemoryForCurrentModule().get(id).content = "";
+            getMemoryForCurrentModule().get(id).appId = id;
         }
         
-        return memory.get(id);
+        return getMemoryForCurrentModule().get(id);
     }   
 
     public Map<String, String> search(String searchWord) {
-        List<ContentData> res = memory.values().stream()
+        List<ContentData> res = getMemoryForCurrentModule().values().stream()
                 .filter(contentData -> contentData.content.toLowerCase().contains(searchWord))
                 .collect(Collectors.toList());
         
@@ -148,5 +154,32 @@ public class ContentManager extends ManagerBase implements IContentManager {
         
         String word = start + "<b>" + searchWord + "</b>" + end;
         return word;
+    }
+    
+    private HashMap<String, ContentData> getMemoryForCurrentModule() {
+        if (isCmsModule()) {
+            return memory;
+        }
+        
+        if (moduleMemory.get(getCurrentGetShopModule()) == null) {
+            moduleMemory.put(getCurrentGetShopModule(), new HashMap());
+        }
+        
+        return moduleMemory.get(getCurrentGetShopModule());
+    }
+    
+    
+    private void loadRemoteData() {
+        modules.getModules().stream().forEach(m -> {
+            databaseRemote.getAll("ContentManager", "all", m.id).forEach(o -> {
+                if (o instanceof ContentData) {
+                    ContentData instance = (ContentData)o;
+                    if (moduleMemory.get(instance.getshopModule) == null) {
+                        moduleMemory.put(instance.getshopModule, new HashMap());
+                    }
+                    moduleMemory.get(instance.getshopModule).put(instance.appId, instance);
+                }
+            });
+        });
     }
 }

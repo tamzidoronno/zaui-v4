@@ -10,19 +10,18 @@ import com.thundashop.core.pagemanager.data.CarouselConfig;
 import com.thundashop.core.pagemanager.data.CellGroupAccess;
 import com.thundashop.core.pagemanager.data.CommonPageData;
 import com.thundashop.core.pagemanager.data.FloatingData;
+import com.thundashop.core.pagemanager.data.GetShopModule;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
 import com.thundashop.core.pagemanager.data.PageCellSettings;
 import com.thundashop.core.pagemanager.data.PageComment;
 import com.thundashop.core.pagemanager.data.SavedCommonPageData;
 import com.thundashop.core.productmanager.ProductManager;
-import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
 import com.thundashop.core.usermanager.UserManager;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,9 +40,13 @@ import org.springframework.stereotype.Component;
 public class PageManager extends ManagerBase implements IPageManager {
 
     HashMap<String, Page> pages = new HashMap();
+    HashMap<String, HashMap<String, Page>> modulePages = new HashMap();
+    HashMap<String, CommonPageData> moduleCommonAreas = new HashMap();
+    
     HashMap<String, PageComment> comments = new HashMap();
     CommonPageData commonPageData = new CommonPageData();
     SavedCommonPageData savedCommonPageData = new SavedCommonPageData();
+    private GetShopModules modules = new GetShopModules();
 
     @Autowired
     private StoreApplicationInstancePool instancePool;
@@ -73,7 +76,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     
     private Page createPage(String pageId) {
         Page page = new Page();
-        if (pages.isEmpty()) {
+        if (getPagesForCurrentModule().isEmpty()) {
             page.id = "home";
         }
         page.storeId = storeId;
@@ -83,7 +86,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         }
 
         saveObject(page);
-        pages.put(page.id, page);
+        getPagesForCurrentModule().put(page.id, page);
         return page;
     }
 
@@ -92,7 +95,7 @@ public class PageManager extends ManagerBase implements IPageManager {
         for (DataCommon obj : data.data) {
             if (obj instanceof Page) {
                 Page page = (Page) obj;
-                pages.put(page.id, page);
+                getPagesForCurrentModule().put(page.id, page);
             }
             if (obj instanceof CommonPageData) {
                 commonPageData = (CommonPageData) obj;
@@ -105,6 +108,7 @@ public class PageManager extends ManagerBase implements IPageManager {
             }
         }
         createDefaultPages();
+        loadCommonData();
     }
 
     @Override
@@ -136,11 +140,16 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public Page getPage(String id) throws ErrorException {
         createDefaultPages();
-        Page page = pages.get(id);
+        Page page = getPagesForCurrentModule().get(id);
 
         gsTiming("After page default page added");
         if (page == null && userManager.getLoggedOnUser() != null && userManager.getLoggedOnUser().isAdministrator()) {
             page = createPage(id);
+        }
+        
+        if (page == null && !isCmsModule()) {
+            changeModule("cms");
+            page = getPagesForCurrentModule().get(id);
         }
         
         if (page == null) {
@@ -153,7 +162,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     private Page finalizePage(Page page) {
-        page.finalizePage(commonPageData);
+        page.finalizePage(getCommonDataPages());
         
         Entry entry = listManager.findEntryByPageId(page.id);
         if(entry == null) {
@@ -287,7 +296,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     @Override
     public List<String> getPagesForApplication(String appId) {
         List<String> retPages = new ArrayList();
-        for (Page page : pages.values()) {
+        for (Page page : getPagesForCurrentModule().values()) {
             for (PageCell cell : page.getCellsFlatList()) {
                 if (cell.appId != null && cell.appId.equals(appId)) {
                     retPages.add(page.id);
@@ -304,7 +313,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     public List<String> getPagesForApplicationOnlyBody(String appId) {
         List<String> retPages = new ArrayList();
-        for (Page page : pages.values()) {
+        for (Page page : getPagesForCurrentModule().values()) {
             // We do not care about the slave pages as they follow the same rights as as the masterpage.
             if (page.isASlavePage()) {
                 continue;
@@ -335,7 +344,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public void savePage(Page page) {
-        pages.put(page.id, page);
+        getPagesForCurrentModule().put(page.id, page);
         saveObject(page);
         saveCommonAreas();
     }
@@ -410,12 +419,12 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     private void saveCommonAreas() {
-        commonPageData.storeId = storeId;
-        saveObject(commonPageData);
+        getCommonDataPages().storeId = storeId;
+        saveObject(getCommonDataPages());
     }
 
     private List<Page> getPagesThatHasCell(String pageCellId) {
-        return pages.values().stream()
+        return getPagesForCurrentModule().values().stream()
                 .filter(page -> page.getCell(pageCellId) != null)
                 .collect(Collectors.toList());
     }
@@ -488,7 +497,7 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     private void createDefaultPage(String pageId) {
-        Page page = pages.get(pageId);
+        Page page = getPagesForCurrentModule().get(pageId);
         if (page == null) {
             createPage(pageId);
         }
@@ -629,10 +638,10 @@ public class PageManager extends ManagerBase implements IPageManager {
         PageCell cell = new PageCell();
         cell.mode = PageCell.CellMode.row;
         if(type.equals("FOOTER")) {
-            commonPageData.footer.add(cell);
-            saveObject(commonPageData);
+            getCommonDataPages().footer.add(cell);
+            saveObject(getCommonDataPages());
         } else {
-            commonPageData.header.add(cell);            
+            getCommonDataPages().header.add(cell);            
         }
     }
 
@@ -762,7 +771,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public void toggleLeftSideBar(String pageId, String columnName) throws ErrorException {
-        Page page = pages.get(pageId);
+        Page page = getPagesForCurrentModule().get(pageId);
         if (page != null) {
             if (!page.leftSideBarName.equals(columnName)) {
                 page.leftSideBar = true;
@@ -772,8 +781,8 @@ public class PageManager extends ManagerBase implements IPageManager {
             
             page.leftSideBarName = columnName;
             
-            if (commonPageData.leftSideBars.get(columnName) == null) {
-                commonPageData.leftSideBars.put(columnName, new ArrayList());
+            if (getCommonDataPages().leftSideBars.get(columnName) == null) {
+                getCommonDataPages().leftSideBars.put(columnName, new ArrayList());
                 saveObject(page);
             }
             
@@ -823,14 +832,14 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     private void backupPage(Page page) {
         savedCommonPageData.backupCurrentLayout(page.id, page.layout);
-        savedCommonPageData.saveData(commonPageData);
+        savedCommonPageData.saveData(getCommonDataPages());
         saveObject(savedCommonPageData);
     }
 
     @Override
     public List<String> getLeftSideBarNames() {
         Set<String> names = new TreeSet();
-        pages.values().stream()
+        getPagesForCurrentModule().values().stream()
                 .forEach( o -> names.add(o.leftSideBarName));
         
         return new ArrayList(names);
@@ -838,28 +847,28 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     @Override
     public void createModal(String modalName) {
-        if (commonPageData.modals.containsKey(modalName)) {
+        if (getCommonDataPages().modals.containsKey(modalName)) {
             return;
         }
         
-        commonPageData.modals.put(modalName, new ArrayList());
-        saveObject(commonPageData);
+        getCommonDataPages().modals.put(modalName, new ArrayList());
+        saveObject(getCommonDataPages());
     }   
 
     @Override
     public List<String> getModalNames() {
-        return new ArrayList<String>(commonPageData.modals.keySet());
+        return new ArrayList<String>(getCommonDataPages().modals.keySet());
     }
 
     @Override
     public void saveMobileLink(String link) {
-        commonPageData.mobileLink = link;
-        saveObject(commonPageData);
+        getCommonDataPages().mobileLink = link;
+        saveObject(getCommonDataPages());
     }
 
     @Override
     public String getMobileLink() {
-        return commonPageData.mobileLink;
+        return getCommonDataPages().mobileLink;
     }
 
     public void changeTemplateForPage(String pageId, String selectedProductTemplate) {
@@ -879,7 +888,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     private List<PageCell> getAllCells() {
         List<PageCell> allCells = new ArrayList();
-        for(Page p : pages.values()) {
+        for(Page p : getPagesForCurrentModule().values()) {
             allCells.addAll(p.getCellsFlatList());
         }
         return allCells;
@@ -949,4 +958,76 @@ public class PageManager extends ManagerBase implements IPageManager {
         
         return false;
     }
+
+    @Override
+    public List<GetShopModule> getModules() {
+        if (!GetShopLogHandler.isDeveloper) {
+            return new ArrayList();
+        }
+        
+        return modules.getModules();
+    }
+
+    @Override
+    public void changeModule(String moduleId) {
+        
+        if (getSession() == null)
+            return;
+        
+        getSession().put("currentGetShopModule", moduleId);
+    }
+
+    private HashMap<String, Page> getPagesForCurrentModule() {
+        if (isCmsModule()) {
+            return pages;
+        }
+        
+        String currentModule = getCurrentGetShopModule();
+        
+        if (modulePages.get(currentModule) == null) {
+            modulePages.put(currentModule, new HashMap());
+        }
+        
+        return modulePages.get(currentModule);
+    }
+    
+    private CommonPageData getCommonDataPages() {
+        if (isCmsModule()) {
+            return commonPageData;
+        }
+        
+        if (moduleCommonAreas.get(getCurrentGetShopModule()) == null) {
+            CommonPageData cm = new CommonPageData();
+            moduleCommonAreas.put(getCurrentGetShopModule(), cm);
+        }
+        
+        return moduleCommonAreas.get(getCurrentGetShopModule());
+    }
+
+    private void loadCommonData() {
+        modules.getModules().stream().forEach(m -> {
+            databaseRemote.getAll("PageManager", "all", m.id).forEach(o -> {
+                if (o instanceof Page) {
+                    Page page = (Page)o;
+                    HashMap<String, Page> modPages = modulePages.get(page.getshopModule);
+                    if (modPages == null) {
+                        modPages = new HashMap();
+                        modulePages.put(page.getshopModule, modPages);
+                    }
+
+                    modPages.put(page.id, page);
+                }
+
+
+                if (o instanceof CommonPageData) {
+                    CommonPageData commonPage = (CommonPageData)o;
+                    moduleCommonAreas.put(commonPage.getshopModule, commonPage);
+                }
+            });
+        });
+        
+    }
+
+    
+    
 }

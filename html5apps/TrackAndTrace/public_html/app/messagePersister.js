@@ -63,10 +63,12 @@ messagePersister = {
             }
         }
         
+        this.copiedMessages = this.messages;
         this.messages = [];
         var i = 0;
-        for (var i in this.messages) {
-            var msg = this.messages[i];
+        
+        for (var i in this.copiedMessages) {
+            var msg = this.copiedMessages[i];
             if (!msg.sent) {
                 this.messages.push(msg);
             }

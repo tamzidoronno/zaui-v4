@@ -2,6 +2,7 @@ package com.thundashop.core.common;
 
 import java.util.HashMap;
 
+@GetShopRemoteObject
 public class ApplicationInstance extends DataCommon {
     public HashMap<String, Setting> settings = new HashMap<>();
     public String appSettingsId;

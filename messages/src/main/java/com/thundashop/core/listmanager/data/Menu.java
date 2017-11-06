@@ -6,12 +6,14 @@
 package com.thundashop.core.listmanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopRemoteObject;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
  * @author ktonder
  */
+@GetShopRemoteObject
 public class Menu extends DataCommon {
     public String entryListId = "";
     public String appId = "";

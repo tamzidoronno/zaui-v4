@@ -32,6 +32,7 @@ public class DataCommon extends TranslationHandler implements Serializable, Clon
     public String colection;
     public String gsDeletedBy;
     public String lastModifiedByUserId = "";
+    public String getshopModule = "";
 
     private void checkAnnotations(Field field, boolean Administrator) throws IllegalArgumentException, IllegalAccessException {
         Object emptyObject = new Product();
@@ -106,5 +107,9 @@ public class DataCommon extends TranslationHandler implements Serializable, Clon
 
     public DataCommon clone() throws CloneNotSupportedException {
         return (DataCommon) super.clone();
+    }
+
+    boolean isCms() {
+        return getshopModule == null || getshopModule.isEmpty() || getshopModule.equals("cms");
     }
 }

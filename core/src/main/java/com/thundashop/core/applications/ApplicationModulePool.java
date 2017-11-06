@@ -116,6 +116,12 @@ class ApplicationModulePool {
         c3AccountingModule.description = "Special apps for C3, accounting stuff.";
         modules.put(c3AccountingModule.id, c3AccountingModule);
         
+        ApplicationModule pms = new ApplicationModule();
+        pms.moduleName = "GetShop Module - Property Management";
+        pms.id = "pm";
+        pms.faIcon = "fa-calendar";
+        pms.description = "GetShop Module.";
+        modules.put(booking.id, pms);
     }
     
     public ApplicationModule getModule(String id) {

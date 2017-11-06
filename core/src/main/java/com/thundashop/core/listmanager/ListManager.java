@@ -14,6 +14,7 @@ import com.thundashop.core.listmanager.data.ListType;
 import com.thundashop.core.listmanager.data.Menu;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import java.util.ArrayList;
@@ -35,14 +36,20 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class ListManager extends ManagerBase implements IListManager {
+    private Map<String, Map<String, EntryList>> moduleAllEntries = new HashMap();
     private Map<String, EntryList> allEntries = new HashMap();
+    
+    private Map<String, Map<String, JsTreeList>> moduleJsTreeList = new HashMap();
     private Map<String, JsTreeList> jsTreeLists = new HashMap();
     
     /**
      * String = ApplicatoinInstanceId
      * List instide is a list of all menues connected to the app.
      */
+    private Map<String, Map<String, List<Menu>>> moduleMenues = new HashMap();
     private Map<String, List<Menu>> menues = new HashMap();
+    
+    private GetShopModules modules = new GetShopModules();
     
     private Integer currentUniqueCounter = -1;
     
@@ -75,9 +82,9 @@ public class ListManager extends ManagerBase implements IListManager {
             if (entry instanceof EntryList) {
                 EntryList listObject = (EntryList) entry;
                 
-                if (allEntries.containsKey(listObject.appId)) {
-                    if (allEntries.get(listObject.appId).rowCreatedDate.after(listObject.rowCreatedDate)) {
-                        allEntries.put(listObject.appId, listObject);
+                if (getAllEntriesForCurrentModule().containsKey(listObject.appId)) {
+                    if (getAllEntriesForCurrentModule().get(listObject.appId).rowCreatedDate.after(listObject.rowCreatedDate)) {
+                        getAllEntriesForCurrentModule().put(listObject.appId, listObject);
                     } else {
                         try {
                             deleteObject(listObject);
@@ -86,13 +93,13 @@ public class ListManager extends ManagerBase implements IListManager {
                         }
                     }
                 } else {
-                    allEntries.put(listObject.appId, listObject);
+                    getAllEntriesForCurrentModule().put(listObject.appId, listObject);
                 }
             }
             
             if (entry instanceof JsTreeList) {
                JsTreeList l = (JsTreeList) entry;
-                jsTreeLists.put(l.treeName, l);
+                getJsTreeListCurrentModule().put(l.treeName, l);
             }
             
             if (entry instanceof Menu) {
@@ -100,13 +107,15 @@ public class ListManager extends ManagerBase implements IListManager {
                 addMenu(menu);
             }
         }
+        
+        loadRemoteData();
     }
     
     public List<String> findListIdByEntryId(String id) {
         List<String> entries = new ArrayList();
         
-        for(String listId : allEntries.keySet()) {
-            Entry entry = recursiveEntrySearch(id, allEntries.get(listId).entries);
+        for(String listId : getAllEntriesForCurrentModule().keySet()) {
+            Entry entry = recursiveEntrySearch(id, getAllEntriesForCurrentModule().get(listId).entries);
             if(entry != null) {
                 entries.add(listId);
             }
@@ -127,14 +136,14 @@ public class ListManager extends ManagerBase implements IListManager {
     }
     
     private void makeSureListExists(String listId) {
-        if (allEntries.get(listId) == null) {
-            allEntries.put(listId, new EntryList());
-            allEntries.get(listId).appId = listId;
-            allEntries.get(listId).entries = new ArrayList();
+        if (getAllEntriesForCurrentModule().get(listId) == null) {
+            getAllEntriesForCurrentModule().put(listId, new EntryList());
+            getAllEntriesForCurrentModule().get(listId).appId = listId;
+            getAllEntriesForCurrentModule().get(listId).entries = new ArrayList();
         }
         
-        if(allEntries.get(listId).entries == null) {
-            allEntries.get(listId).entries = new ArrayList();
+        if(getAllEntriesForCurrentModule().get(listId).entries == null) {
+            getAllEntriesForCurrentModule().get(listId).entries = new ArrayList();
         }
 		
         saveList(listId);
@@ -154,7 +163,7 @@ public class ListManager extends ManagerBase implements IListManager {
         
         if ((entry.parentId == null || entry.parentId.trim().length() == 0) || getEntry(entry.parentId) == null) {
             entry.parentId = "";
-            allEntries.get(listId).entries.add(entry);
+            getAllEntriesForCurrentModule().get(listId).entries.add(entry);
         } else {
             addSubEntry(entry);
         }
@@ -174,11 +183,8 @@ public class ListManager extends ManagerBase implements IListManager {
 
     private List<Entry> buildEntries(String listId) {
         genereateUniqueIds();
-        if (allEntries == null) {
-            allEntries = new HashMap();
-        }
 
-        EntryList entries = allEntries.get(listId);
+        EntryList entries = getAllEntriesForCurrentModule().get(listId);
         if (entries == null) {
             return new ArrayList<Entry>();
         }
@@ -191,8 +197,8 @@ public class ListManager extends ManagerBase implements IListManager {
     }
 
     private Entry getEntry(String id) throws ErrorException {
-        for (String key : allEntries.keySet()) {
-            Entry entry = recursiveEntrySearch(id, allEntries.get(key).entries);
+        for (String key : getAllEntriesForCurrentModule().keySet()) {
+            Entry entry = recursiveEntrySearch(id, getAllEntriesForCurrentModule().get(key).entries);
             if (entry != null) {
                 return entry;
             }
@@ -202,8 +208,8 @@ public class ListManager extends ManagerBase implements IListManager {
     
     @Administrator
     public Entry getEntryByPageId(String pageId) throws ErrorException {
-        for (String key : allEntries.keySet()) {
-            Entry entry = recursiveEntrySearchByPageId(pageId, allEntries.get(key).entries);
+        for (String key : getAllEntriesForCurrentModule().keySet()) {
+            Entry entry = recursiveEntrySearchByPageId(pageId, getAllEntriesForCurrentModule().get(key).entries);
             if (entry != null) {
                 return entry;
             }
@@ -222,20 +228,20 @@ public class ListManager extends ManagerBase implements IListManager {
     }
 
     private void saveList(String listId) throws ErrorException {
-        EntryList entry = allEntries.get(listId);
+        EntryList entry = getAllEntriesForCurrentModule().get(listId);
         entry.storeId = storeId;
-        allEntries.put(listId, entry);
+        getAllEntriesForCurrentModule().put(listId, entry);
         saveToDatabase(entry);
     }
 
     private EntryList getEntryListInternal(String appId) {
-        if (allEntries.get(appId) == null) {
-            allEntries.put(appId, new EntryList());
-            allEntries.get(appId).appId = appId;
-            allEntries.get(appId).entries = new ArrayList();
+        if (getAllEntriesForCurrentModule().get(appId) == null) {
+            getAllEntriesForCurrentModule().put(appId, new EntryList());
+            getAllEntriesForCurrentModule().get(appId).appId = appId;
+            getAllEntriesForCurrentModule().get(appId).entries = new ArrayList();
         }
 
-        return allEntries.get(appId);
+        return getAllEntriesForCurrentModule().get(appId);
     }
 
     private void sortList(String id, String after) throws ErrorException {
@@ -279,7 +285,7 @@ public class ListManager extends ManagerBase implements IListManager {
         if (toSortParent != null) {
             toSortParent.subentries = newList;
         } else {
-            EntryList elist = allEntries.get(getListIdFromEntry(toSortEntry));
+            EntryList elist = getAllEntriesForCurrentModule().get(getListIdFromEntry(toSortEntry));
             elist.entries = newList;
         }
     }
@@ -335,7 +341,7 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         
         if(toRemove == null) {
-            allEntries.get(listId).entries.remove(entry);
+            getAllEntriesForCurrentModule().get(listId).entries.remove(entry);
         } else {
             toRemove.remove(entry);
         }
@@ -464,9 +470,9 @@ public class ListManager extends ManagerBase implements IListManager {
     }
 
     private String getListIdFromEntry(Entry entry) {
-        for (String key : allEntries.keySet()) {
-            if(entry != null && entry.id != null && allEntries != null && allEntries.get(key) != null) {
-                Entry result = recursiveEntrySearch(entry.id, allEntries.get(key).entries);
+        for (String key : getAllEntriesForCurrentModule().keySet()) {
+            if(entry != null && entry.id != null && getAllEntriesForCurrentModule() != null && getAllEntriesForCurrentModule().get(key) != null) {
+                Entry result = recursiveEntrySearch(entry.id, getAllEntriesForCurrentModule().get(key).entries);
                 if (result != null) {
                     return key;
                 }
@@ -482,14 +488,14 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public List<String> getLists() {
-        return new ArrayList<>(this.allEntries.keySet());
+        return new ArrayList<>(this.getAllEntriesForCurrentModule().keySet());
     }
     
     @Override
     public List<EntryList> getAllListsByType(String inType) {
         ListType type = ListType.valueOf(inType);
         ArrayList<EntryList> allLists = new ArrayList();
-        for (EntryList list : allEntries.values()) {
+        for (EntryList list : getAllEntriesForCurrentModule().values()) {
             if (list.type != null && list.type.equals(type)) {
                 allLists.add(list);
             }
@@ -632,7 +638,7 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public void setEntries(String listId, ArrayList<Entry> entries) throws ErrorException {
-        EntryList entryList = allEntries.get(listId);
+        EntryList entryList = getAllEntriesForCurrentModule().get(listId);
         if (entryList != null) {
             entryList.entries.clear();
         }
@@ -671,8 +677,8 @@ public class ListManager extends ManagerBase implements IListManager {
             return "";
         }
         
-        for (String appId : menues.keySet()) {
-            List<Menu> all = menues.get(appId);
+        for (String appId : getMenusCurrentModule().keySet()) {
+            List<Menu> all = getMenusCurrentModule().get(appId);
             for (Menu menu : all) {
                 if (menu.entryListId.equals(listId)) {
                     if (all.size() < 2) {
@@ -689,7 +695,7 @@ public class ListManager extends ManagerBase implements IListManager {
     @Override
     public String getPageIdByName(String name) {
         String found = "";
-        for (EntryList entryList : allEntries.values()) {
+        for (EntryList entryList : getAllEntriesForCurrentModule().values()) {
             
             if (getSession() != null && getSession().language != null) {
                 entryList.updateTranslation(getSession().language);
@@ -707,7 +713,7 @@ public class ListManager extends ManagerBase implements IListManager {
         List<Entry> tmpAllEntries = new ArrayList();
         HashMap<String, Boolean> count = new HashMap();
         
-        for(EntryList list : allEntries.values()) {
+        for(EntryList list : getAllEntriesForCurrentModule().values()) {
             addToList(list.entries, tmpAllEntries);
         }
         
@@ -740,7 +746,7 @@ public class ListManager extends ManagerBase implements IListManager {
 	@Override
 	public void createMenuList(String menuApplicationId) throws ErrorException {
 		pushToMemory(null, menuApplicationId);
-		EntryList list = allEntries.get(menuApplicationId);
+		EntryList list = getAllEntriesForCurrentModule().get(menuApplicationId);
 		list.type = ListType.MENU;
 		list.name = "Menu "+(getAllListsByType(ListType.MENU.toString()).size() + 1);
 		saveList(menuApplicationId);
@@ -753,7 +759,7 @@ public class ListManager extends ManagerBase implements IListManager {
     public int getHighestAccessLevel(String pageId) {
         int accessLevel = 0;
         
-        for (EntryList list : allEntries.values()) {
+        for (EntryList list : getAllEntriesForCurrentModule().values()) {
             for (Entry entry : list.getAllEntriesFlatList()) {
                 if (entry.pageId != null && entry.pageId.equals(pageId)) {
                     if (accessLevel < entry.userLevel) {
@@ -768,11 +774,11 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public List<Menu> getMenues(String applicationInstanceId ){
-        List<Menu> retMenues = menues.get(applicationInstanceId);
+        List<Menu> retMenues = getMenusCurrentModule().get(applicationInstanceId);
         
         if (retMenues == null) {
             retMenues = new ArrayList();
-            menues.put(applicationInstanceId, retMenues);
+            getMenusCurrentModule().put(applicationInstanceId, retMenues);
         }
         
         for (Menu menu : retMenues) {
@@ -794,22 +800,22 @@ public class ListManager extends ManagerBase implements IListManager {
     }
 
     private void addMenu(Menu menu) {
-        List<Menu> retMenues = menues.get(menu.appId);
+        List<Menu> retMenues = getMenusCurrentModule().get(menu.appId);
         if (retMenues == null) {
             retMenues = new ArrayList();
         }
         
         retMenues.add(menu);
-        menues.put(menu.appId, retMenues);
+        getMenusCurrentModule().put(menu.appId, retMenues);
     }
 
     @Override
     public void saveMenu(String appId, String listId, ArrayList<Entry> entries, String name) {
-        List<Menu> retMenues = menues.get(appId);
+        List<Menu> retMenues = getMenusCurrentModule().get(appId);
         
         if (retMenues == null) {
             retMenues = new ArrayList();
-            menues.put(appId, retMenues);
+            getMenusCurrentModule().put(appId, retMenues);
         }
         
         Menu menu = retMenues.stream().filter(o -> o.entryListId.equals(listId)).findFirst().orElse(null);
@@ -829,7 +835,7 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public void deleteMenu(String appId, String listId) {
-        List<Menu> retMenues = menues.get(appId);
+        List<Menu> retMenues = getMenusCurrentModule().get(appId);
         
         if (retMenues != null) {
             for (Menu menu : retMenues) {
@@ -847,7 +853,7 @@ public class ListManager extends ManagerBase implements IListManager {
     public void saveJsTree(String name, JsTreeList list) {
         list.treeName = name;
         saveObject(list);
-        jsTreeLists.put(name, list);
+        getJsTreeListCurrentModule().put(name, list);
     }
 
     @Override
@@ -879,7 +885,7 @@ public class ListManager extends ManagerBase implements IListManager {
     }
 
     public void deleteList(String listId) {
-        EntryList listToDelete = allEntries.values()
+        EntryList listToDelete = getAllEntriesForCurrentModule().values()
                 .stream()
                 .filter(list -> list.id.equals(listId))
                 .findFirst()
@@ -892,7 +898,7 @@ public class ListManager extends ManagerBase implements IListManager {
 
     @Override
     public TreeNode getJSTreeNode(String nodeId) {
-        for (JsTreeList treeList : jsTreeLists.values()) {
+        for (JsTreeList treeList : getJsTreeListCurrentModule().values()) {
             TreeNode node = treeList.getNode(nodeId);
             if (node != null)
                 return node;
@@ -921,4 +927,76 @@ public class ListManager extends ManagerBase implements IListManager {
         
         messageManager.sendMail(entry.emailToSendConfirmationTo, entry.emailToSendConfirmationTo, "Message entry confirmed", content, "", "");
     }
+    
+    private Map<String, EntryList> getAllEntriesForCurrentModule() {
+        if (isCmsModule()) {
+            return allEntries;
+        }
+        
+        if (moduleAllEntries.get(getCurrentGetShopModule()) == null) {
+            moduleAllEntries.put(getCurrentGetShopModule(), new HashMap());
+        }
+        
+        return moduleAllEntries.get(getCurrentGetShopModule());
+    }
+    
+    private void loadRemoteData() {
+        modules.getModules().stream().forEach(m -> {
+            databaseRemote.getAll("ListManager", "all", m.id).forEach(o -> {
+                if (o instanceof EntryList) {
+                    EntryList instance = (EntryList)o;
+                    if (moduleAllEntries.get(instance.getshopModule) == null) {
+                        moduleAllEntries.put(instance.getshopModule, new HashMap());
+                    }
+                    moduleAllEntries.get(instance.getshopModule).put(instance.appId, instance);
+                }
+
+                if (o instanceof JsTreeList) {
+                    JsTreeList instance = (JsTreeList)o;
+                    if (moduleJsTreeList.get(instance.getshopModule) == null) {
+                        moduleJsTreeList.put(instance.getshopModule, new HashMap());
+                    }
+                    moduleJsTreeList.get(instance.getshopModule).put(instance.treeName, instance);
+                }
+
+                if (o instanceof Menu) {
+                    Menu instance = (Menu)o;
+                    if (moduleMenues.get(instance.getshopModule) == null) {
+                        moduleMenues.put(instance.getshopModule, new HashMap());
+                    }
+                    if (moduleMenues.get(instance.getshopModule).get(instance.appId) == null) {
+                        moduleMenues.get(instance.getshopModule).put(instance.appId, new ArrayList());
+                    }
+                    moduleMenues.get(instance.getshopModule).get(instance.appId).add(instance);
+                }
+            });
+        });
+    }
+    
+    private Map<String, JsTreeList> getJsTreeListCurrentModule() {
+        if (isCmsModule()) {
+            return jsTreeLists;
+        }
+        
+        if (moduleJsTreeList.get(getCurrentGetShopModule()) == null) {
+            moduleJsTreeList.put(getCurrentGetShopModule(), new HashMap());
+        }
+        
+        return moduleJsTreeList.get(getCurrentGetShopModule());
+    }
+    
+    private Map<String, List<Menu>> getMenusCurrentModule() {
+        if (isCmsModule()) {
+            return menues;
+        }
+        
+        if (moduleMenues.get(getCurrentGetShopModule()) == null) {
+            moduleMenues.put(getCurrentGetShopModule(), new HashMap());
+        }
+        
+        return moduleMenues.get(getCurrentGetShopModule());
+    }
+
 }
+
+

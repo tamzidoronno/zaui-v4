@@ -12,8 +12,10 @@ import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import static com.thundashop.core.common.GetShopLogHandler.logPrintStatic;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.DatabaseRemote;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.ByteArrayInputStream;
@@ -54,6 +56,8 @@ public class ManagerSubBase {
     @Autowired
     public FrameworkConfig frameworkConfig;
     
+    private GetShopModules modules = new GetShopModules();
+    
     protected boolean isSingleton = false;
     protected boolean ready = false;
 //    private Session session;
@@ -63,11 +67,14 @@ public class ManagerSubBase {
     
     @Autowired
     protected Database database;
+    
+    @Autowired
+    protected DatabaseRemote databaseRemote;
+    
+    
     private HashMap<String, GetShopScheduler> schedulers = new HashMap();
     private HashMap<String, GetShopSchedulerBase> schedulersBases = new HashMap();
 
-    
-    
     public Database getDatabase() {
         return database;
     }
@@ -235,8 +242,17 @@ public class ManagerSubBase {
     }
 
     public void saveObject(DataCommon data) throws ErrorException {
+        if (modules.shouldStoreRemote(getCurrentGetShopModule())) {
+            if (data.getClass().getAnnotation(GetShopRemoteObject.class) != null) {
+                data.getshopModule = getCurrentGetShopModule();
+                storeRemote(data);
+                return;
+            }
+        }
+        
         data.storeId = storeId;
         data.lastModified = new Date();
+        
         try {
             if(getSession() != null && getSession().currentUser != null && getSession().currentUser.id != null) {
                 data.lastModifiedByUserId = getSession().currentUser.id;
@@ -244,11 +260,13 @@ public class ManagerSubBase {
         }catch(Exception e) {
             logPrintException(e);
         }
+        
         if(getSession() != null) {
             String lang = getSession().language;
             data.validateTranslationMatrix();
             data.updateTranslation(lang);
         }
+        
         database.save(data, credentials);
     }
  
@@ -427,5 +445,53 @@ public class ManagerSubBase {
     
     public void gsTiming(String description) {
         GetShopTimer.timeEntry(description, getClass().getSimpleName());
+    }
+
+    private void storeRemote(DataCommon data) {
+        data.storeId = "all_"+getCurrentGetShopModule();
+        data.lastModified = new Date();
+        
+        try {
+            if(getSession() != null && getSession().currentUser != null && getSession().currentUser.id != null) {
+                data.lastModifiedByUserId = getSession().currentUser.id;
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
+        if(getSession() != null) {
+            String lang = getSession().language;
+            data.validateTranslationMatrix();
+            data.updateTranslation(lang);
+        }
+        
+        databaseRemote.save(data, credentials);
+    }
+    
+    public String getCurrentGetShopModule() {
+        if (getSession() == null || getSession().get("currentGetShopModule") == null) {
+            return "cms";
+        }
+        
+        String moduleId = (String) getSession().get("currentGetShopModule");
+        if (moduleId.isEmpty()) {
+            return "cms";
+        }
+        
+        return moduleId;
+    }
+    
+    public boolean isCmsModule() {
+        if (getSession() == null || getSession().get("currentGetShopModule") == null) {
+            return true;
+        }
+        
+        String currentModule = (String)getSession().get("currentGetShopModule");
+            
+        if (currentModule.isEmpty() || currentModule.equals("cms")) {
+            return true;
+        }
+        
+        return false;
     }
 }

@@ -233,7 +233,7 @@ div:last-child {
     .gsarea[area="header"] .gscell[cellid="e094a522-6d1a-4234-9aac-5f8e6133d436"] { position: absolute; left: 0px; right: 0px; height: 0px; top: 30px; }
     
     .gsarea[area="body"] .gs_page_width { margin-left: 20px; margin-right: 20px; }
-    .gsarea[area="body"] .gscell[cellid="6d030aa9-6b7a-426c-8c85-36093b6ac06f"] .gs_page_width { margin-left: 0px; margin-right: 0px;  }
+    .gsarea[area="body"] .gscell[cellid="6d030aa9-6b7a-426c-8c85-36093b6ac06f"] .gs_page_width { margin-left: 0px; margin-right: 0px; height: 300px; }
     
     .gsarea[area="body"] .pmsfront2 { background-color: #FFF;}
     .gsarea[area="body"] .inputblock { display: block; width: 100%;}

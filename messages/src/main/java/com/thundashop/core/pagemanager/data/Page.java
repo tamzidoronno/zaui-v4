@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import org.mongodb.morphia.annotations.Transient;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.core.common.GetShopRemoteObject;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.listmanager.data.Entry;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.UUID;
  *
  * @author ktonder
  */
+@GetShopRemoteObject
 public class Page extends DataCommon implements Cloneable {
 
     public Page parent;

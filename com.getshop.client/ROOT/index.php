@@ -157,6 +157,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
 
         <?
         $javapage = $factory->getPage()->javapage;
+        $isCmsLayout = $factory->isCmsMode();
         ?>
         
         <meta http-equiv="Cache-control" content="public">
@@ -196,6 +197,12 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
 
 
         <title class='pagetitle'></title>
+        <?
+        if (!$isCmsLayout) {
+            echo '<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">';
+            echo '<link rel="stylesheet" type="text/css" href="skin/default/gesthopmodules.css" />';
+        }
+        ?>
     <script>
      $(function() {
         if (typeof(CKEDITOR) !== "undefined") {         
@@ -206,6 +213,20 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
     </head>
     <body editormode="<? echo $factory->isEditorMode() ? "true" : "false"?>">
         <?
+        
+        $modules = $factory->getApi()->getPageManager()->getModules();
+        if (count($modules) > 1) {
+            echo "<div class='gs_framework_modules'>";
+            
+            foreach ($modules as $module) {
+                $pageToUse = $module->id == "cms" ? "" : "&page=home";
+                $moduleActiveClass = $factory->getPage()->javapage->getshopModule == $module->id ? "active" : "";
+                $icon = "<i class='fa $module->fontAwesome'></i>";
+                echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id$pageToUse'><div class='gs_framework_module $moduleActiveClass'>$icon <br/> $module->name</div></a>";
+            }
+            echo "</div>";
+        }
+        
         if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->showLoguotCounter) {
             echo "<div class='gs_logout_counter'></div>";
         }
@@ -228,7 +249,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
             $factory->printTemplateFunctions();
         ?>
         
-        <? if ($factory->isEditorMode() && !$factory->isMobile() && !$factory->isAccessToBackedForEditorDisabled() && !$factory->isMobileIgnoreDisabled()) {
+        <? if ($factory->isEditorMode() && !$factory->isMobile() && !$factory->isAccessToBackedForEditorDisabled() && !$factory->isMobileIgnoreDisabled() && $isCmsLayout) {
             echo "<div class='gs_site_main_buttons_view'>";
                 echo "<div title='".$factory->__f("Open settings")."' class='gs_site_main_button store_settings_button'><i class='fa fa-gears'></i></div>";
                 
@@ -283,7 +304,7 @@ if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
         <input name="userid" type="hidden"  value="<?php echo  \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null ? \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id : ""; ?>"/>
 
         <?
-        if ($factory->isEditorMode()) { ?>
+        if ($factory->isEditorMode() && $isCmsLayout) { ?>
             <div id='backsidesettings'>
                 <? include('../template/default/Common/settings.phtml'); ?>
             </div>

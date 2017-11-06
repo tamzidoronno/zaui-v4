@@ -19,7 +19,7 @@ and open the template in the editor.
 .gsview.routeoverview .sendGeneralMessage, 
 .gsview.routeoverview .hidefinishedtasksbutton {
     position: absolute;
-    top: 95px;
+    top: -10px;
     width: 80px;
     font-size: 12px;
     right: 10px;

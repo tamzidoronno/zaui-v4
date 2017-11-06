@@ -4,6 +4,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.pagemanager.data.CarouselConfig;
 import com.thundashop.core.pagemanager.data.CellGroupAccess;
 import com.thundashop.core.pagemanager.data.FloatingData;
+import com.thundashop.core.pagemanager.data.GetShopModule;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pagemanager.data.PageCell;
 import com.thundashop.core.pagemanager.data.PageCellSettings;
@@ -393,4 +394,8 @@ public interface IPageManager {
     public List<PageComment> getComments(String pageId);
     
     public boolean accessDenied(String pageId);
+    
+    public List<GetShopModule> getModules();
+    
+    public void changeModule(String moduleId);
 }

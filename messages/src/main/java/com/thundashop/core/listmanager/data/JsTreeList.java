@@ -1,9 +1,11 @@
 package com.thundashop.core.listmanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
+@GetShopRemoteObject
 public class JsTreeList extends DataCommon {
     public String treeName = "";
     public List<TreeNode> nodes = new ArrayList();

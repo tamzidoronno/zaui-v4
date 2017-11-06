@@ -5,6 +5,7 @@
 package com.thundashop.core.listmanager.data;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopRemoteObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  *
  * @author boggi
  */
+@GetShopRemoteObject
 public class EntryList extends DataCommon {
     public List<Entry> entries = new ArrayList();
     public String appId;

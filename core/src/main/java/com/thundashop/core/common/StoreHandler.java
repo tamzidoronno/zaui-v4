@@ -57,6 +57,8 @@ public class StoreHandler {
     }
         
     public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
+        SyncronizedMethodCountDownThread timerThread = new SyncronizedMethodCountDownThread(inObject.interfaceName, inObject.method, storeId);
+        timerThread.start();
         long start = System.currentTimeMillis();
         GetShopTimer.start();
         Object rest = executeMethod(inObject, types, argumentValues);
@@ -74,6 +76,9 @@ public class StoreHandler {
                 GetShopLogHandler.logPrintStatic(timing, storeId);
             }
         }
+        
+        timerThread.printFinishedMessage();
+        timerThread.terminate();
         
         return rest;
     }

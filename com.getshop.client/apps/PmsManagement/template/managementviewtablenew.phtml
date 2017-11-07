@@ -219,8 +219,8 @@ $selectedFields = $this->getSelectedFields($allFieldsToPrint);
         } else {
             $row['invoicedto'] = "";
         }
-        if(sizeof($room->orderIds) == 0 && $config->requirePayments) {
-            $row['stateadditional'] = "<span style='font-weight:bold; color:red;' title='No orders has been created for this booking yet'><i class='fa fa-warning'></i> orders</span>";
+        if((sizeof($room->orderIds) == 0 || (!$room->paidFor && $room->progressState != "notpaid")) && $config->requirePayments) {
+            $row['stateadditional'] = "<span style='font-weight:bold; color:red;' title='Orders needs to be investegated on this booking'><i class='fa fa-warning'></i> orders</span>";
         }
         if($room->createOrderAfterStay) {
             $row['stateadditional'] = "<span title='Orders are being created after the stay'><i class='fa fa-arrow-right'></i></span>";

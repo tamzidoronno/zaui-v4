@@ -8,7 +8,7 @@ public class StartBooking implements Serializable {
     public Date end;
     public Integer rooms;
     public Integer adults;
-    public Integer childer;
+    public Integer children;
     public String discountCode;
     String bookingId = "";
 }

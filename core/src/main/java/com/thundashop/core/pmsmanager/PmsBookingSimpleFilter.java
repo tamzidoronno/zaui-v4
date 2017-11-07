@@ -188,7 +188,7 @@ public class PmsBookingSimpleFilter {
         
         if(!simple.paidFor && 
                 manager.getConfigurationSecure().requirePayments && 
-                !simple.progressState.equals("deleted")) {
+                !simple.progressState.equals("deleted") && !room.forceAccess && !room.addedToArx) {
             simple.progressState = "notpaid";
         } 
         

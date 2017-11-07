@@ -6015,11 +6015,35 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(configuration.needConfirmationInWeekEnds && booking.isWeekendBooking() && booking.isStartingToday()) {
             return true;
         }
+        
+        
+        boolean foundAutoConfirm = false;
+        boolean foundNonAutoConfirm = false;
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            if(room.date != null && room.date.start != null && room.date.end != null) {
+                if(!isRestricted(type.id, room.date.start, room.date.start, TimeRepeaterData.TimePeriodeType.autoconfirm)) {
+                    foundNonAutoConfirm = true;
+                } else if(!isRestricted(type.id, room.date.end, room.date.end, TimeRepeaterData.TimePeriodeType.autoconfirm)) {
+                    foundNonAutoConfirm = true;
+                } else if(isRestricted(type.id, room.date.start, room.date.end, TimeRepeaterData.TimePeriodeType.autoconfirm)) {
+                    foundAutoConfirm = true;
+                } else {
+                    foundNonAutoConfirm = true;
+                }
+                
+                if(pmsInvoiceManager.isSameDay(new Date(), room.date.start) && isRestricted(type.id, room.date.start, room.date.end, TimeRepeaterData.TimePeriodeType.forceConfirmationSameDay)) {
+                    return true;
+                }
+                
+            }
             if(type.autoConfirm) {
                 return false;
             }
+        }
+        
+        if(!foundNonAutoConfirm && foundAutoConfirm) {
+            return false;
         }
         
         User user = userManager.getUserById(booking.userId);

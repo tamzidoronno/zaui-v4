@@ -3,6 +3,9 @@
 $car = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
 $date = $car && $car->lastService ? date('Y-m-d',strtotime($car->lastService)) : date('Y-m-d', time());
 $veihjelp = $car && $car->mecaVeihjelpExpiry ? date('Y-m-d',strtotime($car->mecaVeihjelpExpiry)) : "";
+$isAdmin = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
+$disabled = !$isAdmin ? "disabled='true'" : "";
+
 if($veihjelp == "1970-01-01"){
     $veihjelp = "";
 }
@@ -21,17 +24,23 @@ $kmStatus = "Nåværende kilmoterstand: ".$car->kilometers.", Sist oppdatert: ".
 ?>
 
 <div gstype='form' method='save'>
-    <div>Når var den inne sist<br/> <input type='text' id='lastservice' class='gsniceinput1' gsname='lastservicedate' value='<? echo $date; ?>'/> </div>
+    <div>Når var den inne sist<br/> <input <? echo $disabled; ?> type='text' id='lastservice' class='gsniceinput1' gsname='lastservicedate' value='<? echo $date; ?>'/> </div>
 
-    <br/><div>Kilometerstand ved siste service<br/> <input type='textfield' class='gsniceinput1' placeholder='120000' gsname='lastservicekm' value='<? echo $car->lastServiceKilomters; ?>'/> </div>
+    <br/><div>Kilometerstand ved siste service<br/> <input <? echo $disabled; ?> type='textfield' class='gsniceinput1' placeholder='120000' gsname='lastservicekm' value='<? echo $car->lastServiceKilomters; ?>'/> </div>
 
-    <br/><div>Hvor mange kilometer mellom hver service?<br/> <input type='textfield' class='gsniceinput1' placeholder='12000' gsname='servicekm' value='<? echo $car->kilometersBetweenEachService; ?>'/> </div>
+    <br/><div>Hvor mange kilometer mellom hver service?<br/> <input <? echo $disabled; ?> type='textfield' class='gsniceinput1' placeholder='12000' gsname='servicekm' value='<? echo $car->kilometersBetweenEachService; ?>'/> </div>
 
-    <br/><div>Hvor mange måneder mellom hver service?<br/> <input type='textfield' class='gsniceinput1' placeholder='18' gsname='months' value='<? echo $car->monthsBetweenServices; ?>'/> </div>
+    <br/><div>Hvor mange måneder mellom hver service?<br/> <input <? echo $disabled; ?> type='textfield' class='gsniceinput1' placeholder='18' gsname='months' value='<? echo $car->monthsBetweenServices; ?>'/> </div>
     
-    <br/><div>Når går MECA Veihjelp ut?<br/> <input type='textfield' id="mecaVeihjelpExpiry" class='gsniceinput1' placeholder='' gsname='mecaVeihjelpExpiry' value='<? echo $veihjelp; ?>'/> </div>
+    <br/><div>Når går MECA Veihjelp ut?<br/> <input <? echo $disabled; ?> type='textfield' id="mecaVeihjelpExpiry" class='gsniceinput1' placeholder='' gsname='mecaVeihjelpExpiry' value='<? echo $veihjelp; ?>'/> </div>
 
+    <?
+    if ($isAdmin) {
+    ?>
     <br/><div gstype='submit' class='shop_button'><i class='fa fa-save'></i> Lagre serviceintervaller </div>
+    <?
+    }
+    ?>
 </div>
 
 <br/>

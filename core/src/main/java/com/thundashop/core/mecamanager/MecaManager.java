@@ -100,6 +100,13 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     @Override
     public List<MecaFleet> getFleets() {
         fleets.values().stream().forEach(o -> finalize(o));
+        
+        if (getSession().currentUser.type == 10) {
+            return fleets.values().stream()
+                    .filter(f -> checkAccessToFleet(f))
+                    .collect(Collectors.toList());
+        }
+        
         return new ArrayList(fleets.values());
     }
 
@@ -260,6 +267,7 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
     @Override
     public MecaFleet getFleetByCar(MecaCar car) {
         MecaFleet fleet = getFleetThatCarBelongsTo(car);
+        hasAccessToFleet(fleet);
         return fleet;
     }
 
@@ -796,5 +804,26 @@ public class MecaManager extends ManagerBase implements IMecaManager, ListBadget
         car.nextServiceAgreed = date;
         car.nextServiceAcceptedByCarOwner = true;
         saveObject(car);
+    }
+
+    private void hasAccessToFleet(MecaFleet fleet) {
+        if (!checkAccessToFleet(fleet)) {
+            throw new ErrorException(26);
+        }
+    }
+    
+    private boolean checkAccessToFleet(MecaFleet fleet) {
+        if (getSession() != null && getSession().currentUser.type == 10) {
+            String metadata = getSession().currentUser.metaData.get("mecafleetportalid");
+            if (metadata == null || metadata.isEmpty()) {
+                return false;
+            }
+            
+            if (!fleet.id.equals(metadata)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

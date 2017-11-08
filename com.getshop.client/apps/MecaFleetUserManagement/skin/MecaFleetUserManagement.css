@@ -1,0 +1,11 @@
+.MecaFleetUserManagement table {
+    margin-top: 20px;
+    background-color: #EEE;
+    width: 100%;
+    padding: 10px;
+}
+
+
+.MecaFleetUserManagement table td {
+    font-size: 16px;
+}

@@ -1311,9 +1311,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         repicientList.clear();
 
         String message2 = notify(key, booking, "email", room);
-        if(!key.contains("booking_completed")) {
-            notifyAdmin(key, booking);
-        }
+        notifyAdmin(key, booking);
+        
         specifiedMessage = "";
         List<String> emailRecp = repicientList;
 
@@ -4958,7 +4957,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrint("COMPLETECURRENTBOOKING : No rooms active on booking." + booking.id);
             return null;
         }
-        notifyAdmin("booking_completed_" + booking.language, booking);
         gsTiming("Notified admins");
         if (!bookingEngine.isConfirmationRequired()) {
             bookingEngine.setConfirmationRequired(true);

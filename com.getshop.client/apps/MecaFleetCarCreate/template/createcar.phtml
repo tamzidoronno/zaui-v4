@@ -2,9 +2,15 @@
 /* @var $this ns_cf32e5a8_faf9_4039_92cd_176b5d3113ec\MecaFleetCarCreate */
 $car = $this->getApi()->getMecaManager()->getCarByPageId($this->getPage()->getId());
 
+if ($this->getModalVariable("createnewcaronfleet")) {
+    $car = null;
+}
+
 if ($car) {
     $fleet = $this->getApi()->getMecaManager()->getFleetByCar($car);
 }
+
+
 //$fleet = $this->getApi()->getMecaManager()->getFleetByCar($car);
 //$followup = $fleet ? $fleet->followup : "";
 
@@ -19,7 +25,17 @@ $eu =date('Y-m-d', $eutime);
 
 ?>
 <div gstype="form" method="saveCar">
+    <?
+    if (!$this->getModalVariable("createnewcaronfleet")) {
+    ?>
     <input type='hidden' value='<? echo $id; ?>' gsname='carId'/>
+    <?
+    } else {
+    ?>
+        <input type='hidden' value='<? echo $this->getModalVariable("createnewcaronfleet"); ?>' gsname='createnewcaronfleet'/>
+    <?
+    }
+    ?>
     <div>
         Reg nr:
         <br/><input class="gsniceinput1" type="textfield" gsname="regnr" placeholder="" value='<? echo $regnr; ?>'/>

@@ -222,6 +222,17 @@ thundashop.framework = {
         $(document).on('keyup', '[gstype="clicksubmitToInfoBox"]', thundashop.framework.postToInformationBox);
         $(document).on('click', '[gstype="forceClicksubmitToInfoBox"]', thundashop.framework.postToInformationBox);
         $(document).on('mousedown', '.gscellsettings .gsoperate', this.operateCell);
+        $(document).on('click', '.gs_framework_modules_icon', this.showModuleMenu);
+        
+    
+    },
+    
+    showModuleMenu: function() {
+        if ($('.gs_framework_modules').is(':visible')) {
+            $('.gs_framework_modules').slideUp();
+        } else {
+            $('.gs_framework_modules').slideDown();
+        }
     },
     setHeightOnCell : function() {
         var cellid = $('.gsresizingpanel').attr('cellid');

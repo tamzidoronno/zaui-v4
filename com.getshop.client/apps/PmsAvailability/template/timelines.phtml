@@ -1,0 +1,84 @@
+<?
+/* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
+
+$items = $this->getItems();
+$timelines = $this->getData();
+$types = $this->getTypes();
+
+foreach ($types as $type) {
+?>
+    <h2><? echo $type->name; ?></h2>
+   
+    <div class='type_line'>
+        <div class='timeline_item_name'>
+            <?
+            foreach ($items as $item) {
+                if ($item->bookingItemTypeId != $type->id) {
+                    continue;
+                }
+
+                echo "<div class='item_name'>".$item->bookingItemName."</div>";
+            }
+            ?>
+        </div>
+        
+        <div class='timeline'>
+            <?
+            $j = 0;
+            foreach ($items as $item) {
+                
+                if ($item->bookingItemTypeId != $type->id) {
+                    continue;
+                }
+                
+                $itemTimeLines = $timelines->itemTimeLines->{$item->id};
+                $i = 1;
+                $j++;
+                
+                $odd = $j % 2 ? "odd" : "even";
+                echo "<div class='timeline_row $odd'>";
+                    $prevBookingIds = array();
+                    
+                    foreach ($itemTimeLines as $time => $data) {
+                        $header = "";
+                        
+                        if ($j == 1) {
+                            $header = "<div class='header'>".date("d.m.y", $time/1000)."</div>";
+                        }
+                        
+                        $nextBookingIds = $this->getNextBookingIds($itemTimeLines, $time);
+                        $inPrev = $this->anyMatches($data->bookingIds, $prevBookingIds) ? "connected_with_prev" : "";
+                        $inNext = $this->anyMatches($data->bookingIds, $nextBookingIds) ? "connected_with_next" : "";
+                        $virtuallyAssigned = $this->anyMatches($data->bookingIds, $data->virtuallyAssigned);
+                        
+                        $firstInRow = (!$inPrev && $inNext) || (!$inNext && !$inPrev)  ? "first_in_row" : "";
+                        $lastInRow = ($inPrev && !$inNext) || (!$inNext && !$inPrev) ? "last_in_row" : "";
+                        
+                        $color = "red";
+                        if ($virtuallyAssigned) {
+                            $color = "grey";
+                        }
+                        
+                        $containsBooking = count($data->bookingIds) ? "contains_booking" : "";
+                        $bookingId = count($data->bookingIds) ? $data->bookingIds[0] : "";
+                        
+                        echo "<div bookingid='$bookingId' class='$color timeline_col$i col col_data $containsBooking $inPrev $inNext $firstInRow $lastInRow'>$header</div>";
+                        $prevBookingIds = $data->bookingIds;
+                        $i++;
+                    }
+                    
+                echo "</div>";
+
+            }
+            ?>
+        </div>
+    </div>
+<?
+}
+?>
+<script>
+$('.type_line').each(function() {
+    var width = $(this).find('.timeline_item_name').outerWidth() + 5;
+    $(this).find('.timeline').css('width', 'calc(100% - ' + width + "px)");
+});
+</script>

@@ -12,32 +12,53 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 .Menu .entry  {
-    
+    text-align: center;
+    border-right: solid 1px rgba(0,0,0,0.2);
+    width: 60px;
+    height: 60px;
     padding-left: 10px;
     padding-right: 10px;
-    border-right: solid 1px rgba(0,0,0,0.2);
 }
 
 .Menu .entry:last-child {
     border: solid 0px;
 }
 
+.Menu .entry i {
+    font-size: 30px;
+    display: block;
+    
+    margin-top: 5px;
+    margin-bottom: -7px;
+}
 .Menu .entry a {
     line-height: 40px;
-    font-size: 15px;
-    color: #333;
+    font-size: 11px;
+    
+    color: #222;
+}
+
+.gs_framework_modules_icon {
+    background: inherit;
+    background-color: inherit;
+    border: solid 0px;
+    border-left: solid 1px rgba(0,0,0,0.2);
 }
 
 .Menu {
-    background: rgb(214,249,255); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(214,249,255,1) 0%, rgba(158,232,250,1) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(214,249,255,1) 0%,rgba(158,232,250,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(214,249,255,1) 0%,rgba(158,232,250,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d6f9ff', endColorstr='#9ee8fa',GradientType=0 ); 
-    border-bottom: solid 1px #DDD;
-    border-top: solid 1px rgba(0,0,0,0.2);
-}
+ }
 
+.gsarea[area="header"] {
+    border-bottom: solid 1px #DDD;
+    padding-left: 20px;
+    /*box-shadow: 0px 5px 5px rgba(0,0,0,0.2);*/
+    
+    background: rgb(252,255,244); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(252,255,244,1) 0%, rgba(233,233,206,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(252,255,244,1) 0%,rgba(233,233,206,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#e9e9ce',GradientType=0 );
+}
 .gsarea[area="body"] {
     padding-left: 50px;
     padding-right: 50px;
@@ -51,7 +72,7 @@ body {
 
 .gs_language_selection {
     position: absolute;
-    right: 20px;
+    right: 70px;
     top: 8px;
     border: solid 0px #EEE; 
 }

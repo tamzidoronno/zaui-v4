@@ -2821,64 +2821,66 @@ select.gsniceselect1:active {
 .gserrorinput { border-color: red !important; }
 .cancelImpersonation { cursor: pointer; }
 
+.gs_framework_modules_icon {
+    position: absolute;
+    right: 30px;
+    top: 0px;
+    width: 60px;
+    height: 60px;
+    background-color: #FFF;
+    z-index: 3;
+    text-align: center;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+    font-size: 11px;
+}
+
+.gs_framework_modules_icon i {
+    font-size: 30px;
+    display: block;
+    
+    margin-top: 5px;
+    margin-bottom: 2px;
+}
 .gs_framework_modules {
     text-align: left;
-    
-    
+    position: absolute;
+    width: 300px;
+    right: 30px;
+    top: 60px;
+    z-index: 3;
     font-size: 0px;
-    
-    background: rgb(233,246,253); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(233,246,253,1) 0%, rgba(211,238,251,1) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(233,246,253,1) 0%,rgba(211,238,251,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(233,246,253,1) 0%,rgba(211,238,251,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e9f6fd', endColorstr='#d3eefb',GradientType=0 ); 
-    border-right: solid 1px rgba(0,0,0,0.2);
+    display: none;
+    background-color: #FFF;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
 }
 
 
 .gs_framework_modules .gs_framework_module {
-    display: inline-block;
+    display:  inline-block;
+    right: 30px;
+    top: 0px;
+    width: 60px;
+    height: 60px;
+    background-color: #FFF;
+    z-index: 1;
     text-align: center;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
     color: #333;
-    height: 80px;
-    width: 80px;
-    
-    font-size: 15px;
-    cursor: pointer;
-    overflow: hidden;
-    
-  
-    http://colorzilla.com/gradient-editor/#e9f6fd+0,d3eefb+100;Blue+3D+%233 */
-    background: rgb(233,246,253); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(233,246,253,1) 0%, rgba(211,238,251,1) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(233,246,253,1) 0%,rgba(211,238,251,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(233,246,253,1) 0%,rgba(211,238,251,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e9f6fd', endColorstr='#d3eefb',GradientType=0 ); 
-    font-size: 12px;
-    
-    padding-bottom: 5px !important;
-    
-    border-left: solid 1px rgba(0,0,0,0.1);
-    border-right: solid 1px rgba(0,0,0,0.2);
+    font-size: 11px;
 }
 
 .gs_framework_modules .gs_framework_module:hover {
-    background: #fcfff4; /* Old browsers */
-    background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, #fcfff4 0%,#dfe5d7 40%,#b3bead 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, #fcfff4 0%,#dfe5d7 40%,#b3bead 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
 }
 
-.gs_framework_modules .gs_framework_module.active {
-    background: #d6f9ff;
-}
 
 .gs_framework_modules .gs_framework_module i {
-    font-size: 40px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    text-align: center;
+    font-size: 30px;
+    display: block;
+    
+    margin-top: 5px;
+    margin-bottom: 2px;
 }
 
 

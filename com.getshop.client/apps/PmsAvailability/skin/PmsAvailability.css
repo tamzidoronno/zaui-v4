@@ -1,0 +1,232 @@
+.PmsAvailability .timeline_item_name {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 12px;
+    box-sizing: border-box;   
+    padding-top: 50px;
+}
+
+.PmsAvailability .item_name {
+    padding-top: 2px;
+    padding-bottom: 1px;
+}
+
+.PmsAvailability .timeline {
+    vertical-align: top;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    position: relative;
+    padding-bottom: 5px;
+    display: inline-block;
+    box-sizing: border-box;
+    padding-top: 50px;
+}
+
+.PmsAvailability .timeline_row.odd {
+    background-color: #EEE;
+}
+
+.PmsAvailability .timeline_row {
+    
+    white-space: nowrap;
+    font-size: 0px;
+    border-bottom: solid 1px #DDD;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.PmsAvailability .col {
+    display: inline-block;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.PmsAvailability .header {
+    font-size: 11px;
+    position: absolute;
+    top: -43px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    -ms-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-45deg);
+    border-bottom: solid 1px #b7b6b6;
+    box-sizing: border-box;
+    height: 22px;
+    margin-left: -17px;
+    padding-left: 11px;
+    padding-right: 10px;
+    padding-top: 6px;
+    
+}
+.PmsAvailability .contains_booking.first_in_row {
+    border-radius: 5px 0px 0px 5px;
+}
+
+.PmsAvailability .contains_booking.last_in_row {
+    border-radius: 0px 5px 5px 0px;
+}
+
+.PmsAvailability .contains_booking.last_in_row.first_in_row {
+    border-radius: 5px 5px 5px 5px;
+}
+
+.PmsAvailability .contains_booking.connected_with_next { border-right: solid 1px rgba(255,255,255,0.2); }
+
+.PmsAvailability .contains_booking { 
+    background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.2) 50%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.2) 50%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#00000000',GradientType=0 );
+}
+
+.PmsAvailability .contains_booking.mouseover { 
+    background: red;
+}
+
+.PmsAvailability .contains_booking.grey { 
+    background-color: #b5bdc8;
+}
+
+
+.PmsAvailability .contains_booking.red { 
+    background-color: #0092b6;
+}
+
+.PmsAvailability .contains_booking {
+    background-color: red;
+    cursor: pointer;
+}
+
+.PmsAvailability .col_data {
+    
+    border-right: solid 1px #DDD;
+    width: 20px;
+    height: 15px;
+}
+
+
+.PmsAvailability .timeline::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.1);
+	background-color: #F5F5F5;
+	border-radius: 10px;
+        height: 8px;
+}
+
+.PmsAvailability .timeline::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+        height: 8px;
+}
+
+.PmsAvailability .timeline::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: #FFF;
+	background-image: -webkit-gradient(linear,
+									   40% 0%,
+									   75% 84%,
+									   from(#4D9C41),
+									   to(#19911D),
+									   color-stop(.6,#54DE5D))
+}
+
+.PmsAvailability .bookingoverview_submenu {
+    font-size: 0px;
+    border-bottom: solid 1px #DDD;
+}
+.PmsAvailability .bookingoverview_submenu .menuitem {
+    display: inline-block;
+    width: 50%;
+    font-size: 12px;
+    text-align: center;
+    border-right: solid 1px #DDD;
+    box-sizing: border-box;
+    padding: 5px;
+    cursor: pointer;
+    
+    background: rgb(0,183,234); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(0,183,234,1) 0%, rgba(0,158,195,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(0,183,234,1) 0%,rgba(0,158,195,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(0,183,234,1) 0%,rgba(0,158,195,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b7ea', endColorstr='#009ec3',GradientType=0 ); 
+    color: #FFF;
+}
+.PmsAvailability .bookingoverview_submenu .menuitem i {
+    font-size: 30px;
+    display: block;
+}
+.PmsAvailability .bookingoverview {
+    display: none;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 500px;
+    min-height: 500px;
+    background-color: #FFF;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+}
+
+.PmsAvailability .generalinformation {
+    border-bottom: solid 1px #DDD;
+    background: #1fbee6;
+    color: #FFF;
+    padding: 5px;
+}
+
+.PmsAvailability .generalinformation .guestinfo {
+    font-size: 0px;
+}
+
+.PmsAvailability .generalinformation .guestinfo .guestname,
+.PmsAvailability .generalinformation .guestinfo .from,
+.PmsAvailability .generalinformation .guestinfo .to {
+    display: inline-block;
+    font-size: 14px;
+    width: 33.33%;
+    vertical-align: top;
+}
+
+.PmsAvailability .movetotype {
+    border-bottom: solid 1px #DDD;
+}
+
+.PmsAvailability .movetotype .headername {
+    padding: 5px;
+    text-align: center;
+    background-color: #DDD;
+}
+
+.PmsAvailability .movetotype .bookingitem.canUse {
+    background: rgb(201,222,150); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(201,222,150,1) 0%, rgba(138,182,107,1) 44%, rgba(57,130,53,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(57,130,53,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9de96', endColorstr='#398235',GradientType=0 );
+    color: #FFF;
+    cursor: pointer;
+}
+
+.PmsAvailability .movetotype .bookingitem.canUse:hover {
+    background: rgb(201,222,150); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(201,222,150,1) 0%, rgba(138,182,107,1) 44%, rgba(11,94,0,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(11,94,0,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(201,222,150,1) 0%,rgba(138,182,107,1) 44%,rgba(11,94,0,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9de96', endColorstr='#0b5e00',GradientType=0 );
+}
+
+.PmsAvailability .movetotype .bookingitem.canNotUse {
+    background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
+    color: #888;
+}
+.PmsAvailability .movetotype .bookingitem {
+    display: inline-block;
+    border-right: solid 1px #DDD;
+    padding: 3px;
+    border-top: solid 1px #DDD;
+}

@@ -10,6 +10,21 @@ if (!$mecaCar) {
 }
 ?>
 
+<div class="fleetinformation">
+    Flåte: <? echo $this->getApi()->getMecaManager()->getFleetByCar($mecaCar)->name; ?>
+    <br/> 
+    <?
+    if ($fleet->followup) {
+        echo "Dette er en manuell flåte";
+    } else {
+        echo "Dette er en automatisk flåte";
+    }
+    ?>
+    <br/>
+    
+    <div class="shop_button" gs_show_modal="newcar" createnewcaronfleet="<? echo $fleet->id; ?>">Opprett nytt kjøretøy i flåten</div>
+</div>
+
 <?
 if ($fleet->followup) {
     return;

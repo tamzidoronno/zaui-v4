@@ -84,10 +84,10 @@ public class MecaCarRequestKilomters implements Serializable {
         
         if (date1.before(toDay)) {
             
-            if (requestedLastTime == null) 
+            if (requestedLastTimeSms == null) 
                 return true;
             
-            Date date2 = getDateInFuture(requestedLastTime, 0, 7);
+            Date date2 = getDateInFuture(requestedLastTimeSms, 0, 7);
             
             if (date2.before(toDay) && requestedLastTimeSms == null) {
                 return true;

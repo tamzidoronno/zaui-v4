@@ -342,10 +342,10 @@ GetShopApiWebSocket.prototype = {
                 sendFunc(messageJson2, this);
             }
         } else {
-            if (incommingMessage !== null) {
+            if (incommingMessage !== null && typeof(incommingMessage) !== "undefined") {
                 var messageJson2 = JSON.stringify(incommingMessage);
                 var deferred2 = $.Deferred();
-                deferred2.messageId = unsentMessage.messageId;
+                deferred2.messageId = incommingMessage.messageId;
                 this.sentMessages.push(deferred2);
                 sendFunc(messageJson2, this);
             }

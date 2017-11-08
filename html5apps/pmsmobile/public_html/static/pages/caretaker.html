@@ -8,6 +8,7 @@
         <span class="changebtn btn btn-info" ng-click="changeView('assigned')" view='assigned'>Assigned tasks</span>
         <span class="changebtn btn btn-info" ng-click="changeView('completed')" view='completed'>Completed tasks</span>
         <span class="changebtn btn btn-info" ng-click="changeView('addtask')" view='addtask'>Add task</span>
+        <span class="changebtn btn btn-info" ng-click="changeView('addrepeatingtask')" view='addrepeatingtask'>Repeating task</span>
     </div>
     <div style='clear:both;'></div>
 <div ng-show="view === 'addtask'">
@@ -16,6 +17,83 @@
         <select class='form-control' ng-model="selectedRoom" ng-options="item as item.bookingItemName for item in items"></select>
         <textarea ng-model="caretakermsg" class='form-control'></textarea>
         <span class='btn btn-success form-control' ng-click="reportToCareTaker()">Add task</span>
+    </div>
+</div>
+<div ng-show="view === 'addrepeatingtask'">
+    <br>
+    <div class="row" style="font-weight:bold;">
+        <span class="col-xs-12">
+            <h1>Add a repeating task</h1>
+            <table>
+                <tr>
+                    <td>Item</td>
+                    <td>
+                        <select class='form-control' ng-model="selectedRoom" ng-options="item as item.bookingItemName for item in items"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Task name</td>
+                    <td><input type="text" ng-model="repeatname"></td>
+                </tr>
+                <tr>
+                    <td>Task text</td>
+                    <td style='padding-bottom: 20px;'><textarea type="text" ng-model="repeattext" style='width:100%;'></textarea></td>
+                </tr>
+                <tr>
+                    <td>Starting at</td>
+                    <td><input type="date" ng-model="repeatstart"></td>
+                </tr>
+                <tr>
+                    <td>Ending at</td><td><input type="date" ng-model="repeatend"></td>
+                </tr>
+                <tr>
+                    <td style='padding-right: 50px;'>Repeating type:</td>
+                    <td>
+                        <select ng-model="repeattype">
+                            <option value="0">Daily</option>
+                            <option value="1">Weekly</option>
+                            <option value="2">Monthly</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <div ng-show="repeattype == '2'">
+                            Repeat each <input type='text' ng-model='repeatinterval' value='1' style='width:40px; text-align:center;'> month.
+                        </div>
+                        <div ng-show="repeattype == '1'">
+                            <div><input type="checkbox" ng-model="repeat_mon"> Monday</div>
+                            <div><input type="checkbox" ng-model="repeat_tue"> Tuesday</div>
+                            <div><input type="checkbox" ng-model="repeat_wed"> Wednesday</div>
+                            <div><input type="checkbox" ng-model="repeat_thu"> Thursday</div>
+                            <div><input type="checkbox" ng-model="repeat_fri"> Friday</div>
+                            <div><input type="checkbox" ng-model="repeat_sat"> Saturday</div>
+                            <div><input type="checkbox" ng-model="repeat_sun"> Sunday</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="btn btn-success" style='margin-top: 10px;' ng-click="createRepeatingTask()">Create a new repeating task</span>
+                    </td>
+                </tr>
+            </table>
+        </span>
+   </div>
+    
+    <div class="row" style="font-weight:bold;">
+        <span class="col-xs-12">
+            <h1>Added repeating tasks</h1>
+        </span>
+    </div>
+        
+    <div ng-repeat="repeaterData in repeaterList" class="row">
+        <span class="col-xs-3"><span class='btn btn-danger' ng-click="removeRepeatingTask(repeaterData)"><i class='fa fa-trash-o'></i></span> {{repeaterData.name}}</span>
+        <span class="col-xs-3">{{translateRepeatType(repeaterData.repeaterData.repeatPeride, repeaterData.repeaterData)}}</span>
+        <span class="col-xs-3">{{repeaterData.repeaterData.firstEvent.start}}</span>
+        <span class="col-xs-3">{{repeaterData.repeaterData.endingAt}}</span>
     </div>
 </div>
 <div ng-show="view === 'overview'">
@@ -39,7 +117,7 @@
         <span class="col-xs-3" style="text-align:center;">{{roomview.completed}} / {{roomview.total}}</span>
     </div>
 </div>
-
+    
 <div ng-show="listViewLoaded" style="position:relative;">
     <br>
     <br>

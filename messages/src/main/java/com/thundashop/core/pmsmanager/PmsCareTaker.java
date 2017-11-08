@@ -9,8 +9,10 @@ public class PmsCareTaker extends DataCommon {
     public Date dateCompleted;
     public Date dateAssigned;
     public String inventoryProductId;
+    public String repeatingTaskId = "";
+    
     //Bookingengine itemid.
-    public String roomId;
+    public String roomId = "";
     public String assignedTo = "";
     public String assignedToName = "";
     

@@ -76,7 +76,13 @@ foreach ($groupedOrders as $userId => $orders) {
 }
 
 echo "<tbody>";
+$ordersPrinted = array();
 foreach ($orderList as $order) {
+    if(in_array($order->incrementOrderId, $ordersPrinted)) {
+        continue;
+    }
+    $ordersPrinted[] = $order->incrementOrderId;
+    
     $user = $this->getApi()->getUserManager()->getUserById($order->userId);
 
     /* @var $order core_ordermanager_data_Order */
@@ -99,7 +105,7 @@ foreach ($orderList as $order) {
     if ($due)
         $totalDue += $ordersum;
 
-    if($ordersum > -1 && $ordersum < 1 || $ordersum < 0) {
+    if($ordersum > -1 && $ordersum < 1 || @$order->isCreditNote) {
         continue;
     }
 
@@ -164,6 +170,11 @@ foreach ($orderList as $order) {
     if(isset($order->creditOrderId) && sizeof($order->creditOrderId) > 0) {
         foreach($order->creditOrderId as $creditOrderId) {
             $order = $this->getApi()->getOrderManager()->getOrder($creditOrderId);
+            if(in_array($order->incrementOrderId, $ordersPrinted)) {
+                continue;
+            }
+            $ordersPrinted[] = $order->incrementOrderId;
+            
             $ordersum = $this->getApi()->getOrderManager()->getTotalAmount($order);
             $ordersumEx = round($this->getApi()->getOrderManager()->getTotalAmountExTaxes($order), 2);
              echo "<tr gstype='form' method='markpaid' $style>";

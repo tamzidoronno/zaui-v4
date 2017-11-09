@@ -36,6 +36,8 @@ public class Order extends DataCommon implements Comparable<Order> {
      */
     private Boolean transferedToAccountingSystem = false;
         
+    
+    public Date needCollectingDate = null;
     public String paymentTransactionId = "";
     public Shipping shipping;
     public Payment payment = new Payment();

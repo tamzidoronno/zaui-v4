@@ -2039,6 +2039,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     messageManager.sendMessageToStoreOwner("Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, "Payment warning");
                     messageManager.sendErrorNotification("Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, null);
                     order.warnedNotAbleToCapture = true;
+                    saveOrder(order);
                 }
             }
         }

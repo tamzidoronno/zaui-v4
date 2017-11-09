@@ -2034,7 +2034,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         cal.add(Calendar.MINUTE, -30);
         Date past = cal.getTime();
         for(Order order : orders.values()) {
-            if(order.status == Order.Status.NEEDCOLLECTING && order.needCollectingDate != null && !order.warnedNotAbleToCapture) {
+            if(order.status == Order.Status.NEEDCOLLECTING && order.needCollectingDate != null && !order.warnedNotAbleToCapture && order.incrementOrderId > 0) {
                 if(past.after(order.needCollectingDate)) {
                     messageManager.sendMessageToStoreOwner("Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, "Payment warning");
                     messageManager.sendErrorNotification("Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, null);

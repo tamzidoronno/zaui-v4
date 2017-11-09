@@ -117,6 +117,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private GetShopPullService getShopPullService; 
+    private boolean queuedEmptied = false;
 
    
     @Override
@@ -207,6 +208,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 orders.put(order.id, order);
             }
         }
+        createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
     }
 
     @Override
@@ -234,6 +236,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(order.incrementOrderId > incrementingOrderId) {
             incrementingOrderId = order.incrementOrderId;
         }
+        
+        if(order.status == Order.Status.NEEDCOLLECTING && order.needCollectingDate == null) {
+            order.needCollectingDate = new Date();
+        }
+        
         if(order.status == Order.Status.PAYMENT_COMPLETED && order.paymentDate == null) {
             markAsPaidInternal(order, new Date());
         }
@@ -1995,11 +2002,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void emptyPullServerQueue() {
+        if(queuedEmptied) {
+            return;
+        }
         try {
             List<PullMessage> msgs = getShopPullService.getMessages("getshop_all_message_for_store_to_receive", storeId);
             for (PullMessage msg : msgs) {
                 getShopPullService.markMessageAsReceived(msg.id, storeId);
             }
+            queuedEmptied = true;
         } catch (Exception ex) {
             java.util.logging.Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -2015,6 +2026,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
            }
         }
         return new ArrayList(maps.keySet());
+    }
+
+    @Override
+    public void checkForOrdersFailedCollecting() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, -30);
+        Date past = cal.getTime();
+        for(Order order : orders.values()) {
+            if(order.status == Order.Status.NEEDCOLLECTING && order.needCollectingDate != null) {
+                if(past.after(order.needCollectingDate)) {
+                    messageManager.sendMessageToStoreOwner("Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, "Payment warning");
+                    messageManager.sendErrorNotification("Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, null);
+                }
+            }
+        }
     }
 
 

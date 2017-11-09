@@ -6,6 +6,8 @@ $paymentsuccess = $this->getConfigurationSetting("paymentsuccess");
 $paymentfailed = $this->getConfigurationSetting("paymentfailed");
 $paymentcancelled = $this->getConfigurationSetting("paymentcancelled");
 $hmac = $this->getConfigurationSetting("hmac");
+$md5k1 = $this->getConfigurationSetting("md5k1");
+$md5k2 = $this->getConfigurationSetting("md5k2");
 ?>
 
 <div class='gss_settings_header'>
@@ -66,7 +68,7 @@ $hmac = $this->getConfigurationSetting("hmac");
                </div>
         </div>
         
-        <div class="textfield gss_setting"  id="testmode">
+        <div class="textfield gss_setting"  id="hasssl">
                <span class="title"><?php echo $this->__f("Supports ssl callbacks?"); ?></span>
                <div class="gss_onoff" gs_model="dibsmodel" gs_model_attr="hasssl">
                    <?
@@ -77,6 +79,35 @@ $hmac = $this->getConfigurationSetting("hmac");
                <div class="description">
                    <?php echo $this->__w("Can the end user be redirected to a ssl enabled page?"); ?>
                </div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="useflexwin">
+               <span class="title"><?php echo $this->__f("Use flexwin"); ?></span>
+               <div class="gss_onoff" gs_model="dibsmodel" gs_model_attr="useflexwin">
+                   <?
+                   $class = $this->getConfigurationSetting("useflexwin") == "true" ? "fa-toggle-on" : "fa-toggle-off";
+                   ?>
+                   <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+               </div>
+               <div class="description">
+                   <?php echo $this->__w("Use flexwin payment window instead of DPW."); ?>
+               </div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="md5k1">
+            <span class="title"><?php echo $this->__f("MD5 key 1 for flexwin"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='md5k1' value="<? echo $md5k1; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The md5 key found in the dibs admin panel (for flexwin)."); ?>
+            </div>
+        </div>
+        
+        <div class="textfield gss_setting"  id="md5k2">
+            <span class="title"><?php echo $this->__f("MD5 key 2 for flexwin"); ?></span>
+            <input type="textfield" gs_model='dibsmodel' gs_model_attr='md5k2' value="<? echo $md5k2; ?>">
+            <div class="description">
+                <?php  echo $this->__f("The md5 key found in the dibs admin panel (for flexwin)."); ?>
+            </div>
         </div>
     </div>
 

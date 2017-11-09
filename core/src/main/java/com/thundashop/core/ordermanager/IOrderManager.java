@@ -50,6 +50,9 @@ public interface IOrderManager {
     public void deleteAllVirtualOrders();
     
     @Administrator
+    public void checkForOrdersFailedCollecting();
+    
+    @Administrator
     public void forceDeleteOrder(String orderId, String password);
     
     /**

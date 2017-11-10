@@ -126,7 +126,11 @@ if($notificationSettings->requirePayments) {
     {extrafield},
     {userid},
     {roomDescription},
-    {simpleRoomList}, {nightprice}, {totalcost}.
+    {simpleRoomList}, {nightprice}, {totalcost}.<br>
+    
+    <b>Specifics:</b><br>
+    <?php echo htmlentities('<specific channel="wubook_2" text="Remember the card you registered will be charged 2 days ahead of your stay."></specific>');  ?><br>
+    <?php echo htmlentities('<specific type="d93a80e2-fcd6-47a5-8aec-6e9be48e3c1e" text="Remember to clean the room."></specific>'); ?>
 </div>
 
 <div class='calculatorplugins notificationpanel'><?php $this->includefile("calculatorplugins"); ?></div>

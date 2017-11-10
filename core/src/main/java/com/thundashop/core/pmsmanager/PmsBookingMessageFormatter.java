@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 class PmsBookingMessageFormatter { 
 
@@ -288,7 +291,7 @@ class PmsBookingMessageFormatter {
         message = message.replace("{bookinginformation}", bookinginfo);
         message = message.replace("{totalcost}", total + "");
         message = message.replace("{nightprice}", nightPrice + "");
-        
+        message = formatSpecifics(message, booking);
         return message;
     }
     
@@ -336,6 +339,33 @@ class PmsBookingMessageFormatter {
 
           final Matcher mailLinksMatcher = mailAddressPattern.matcher(message);
           message = mailLinksMatcher.replaceAll("<a href=\"mailto:$0\">$0</a>");
+        }
+        return message;
+    }
+
+    private String formatSpecifics(String message, PmsBooking booking) {
+        Document doc = Jsoup.parse(message);
+        for (Element specific : doc.select("specific")){
+            boolean show = false;
+            String channel = specific.attr("channel");
+            String type = specific.attr("type");
+            String text = specific.attr("text");
+            
+            if(channel != null && channel.equals(booking.channel)) {
+                show = true;
+            }
+            
+            if(type != null && booking.containsType(type)) {
+                show = true;
+            }
+            
+            if(!show) {
+               message = message.replace(specific.toString() + "<br>", "");
+               message = message.replace(specific.toString(), "");
+            } else {
+               message = message.replace(specific.toString(), text);
+            }
+            
         }
         return message;
     }

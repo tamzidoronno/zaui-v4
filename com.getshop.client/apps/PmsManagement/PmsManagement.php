@@ -752,7 +752,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     public function resendConfirmation() {
         $email = $_POST['data']['email'];
         $bookingId = $_POST['data']['bookingid'];
-        $this->getApi()->getPmsManager()->sendConfirmation($this->getSelectedName(), $email, $bookingId);
+        $this->getApi()->getPmsManager()->sendConfirmation($this->getSelectedName(), $email, $bookingId, "");
         echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
         echo "<i class='fa fa-info'></i> Confirmation has been sent.";
         echo "</div>";

@@ -58,6 +58,7 @@ app.PmsManagement = {
         $(document).on('change','.PmsManagement .repeat_type', app.PmsManagement.changeRepeatType);
         $(document).on('click','.PmsManagement .sendpaymentlink', app.PmsManagement.sendpaymentlink);
         $(document).on('click','.PmsManagement .closesendpaymentlink', app.PmsManagement.sendpaymentlink);
+        $(document).on('click','.PmsManagement .closesendreciept', app.PmsManagement.sendreciept);        
         $(document).on('change','.PmsManagement select[gsname="itemid"]', app.PmsManagement.loadTakenRoomList);
         $(document).on('change','.PmsManagement .changebookingitempanel input', app.PmsManagement.loadTakenRoomList);
         $(document).on('blur','.PmsManagement .changebookingitempanel input', app.PmsManagement.loadTakenRoomList);
@@ -1055,7 +1056,7 @@ app.PmsManagement = {
     changePaymentLinkUser : function() {
         var val = $(this).val();
         var splitted = val.split(":");
-        var box = $(this).closest('.sendpaymentlinkbox');
+        var box = $(this).closest('.dosendbox');
         box.find('[gsname="bookerPrefix"]').val(splitted[0]);
         box.find('[gsname="bookerPhone"]').val(splitted[1]);
         box.find('[gsname="bookerEmail"]').val(splitted[2]);
@@ -1237,6 +1238,9 @@ app.PmsManagement = {
     
     sendpaymentlink : function() {
         $(this).closest('td').find('.sendpaymentlinkbox').toggle();
+    },
+    sendreciept : function() {
+        $(this).closest('td').find('.sendinvoicebox').toggle();
     },
     
     loadTakenRoomList : function() {

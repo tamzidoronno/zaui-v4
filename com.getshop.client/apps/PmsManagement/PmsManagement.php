@@ -1017,7 +1017,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
     }
     
     public function sendInvoice() {
-        $email = $_POST['data']['email'];
+        $email = $_POST['data']['bookerEmail'];
         $bookingId = $_POST['data']['bookingid'];
         $orderid = $_POST['data']['orderid'];
         $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoice($this->getSelectedName(), $orderid, $email, $bookingId);

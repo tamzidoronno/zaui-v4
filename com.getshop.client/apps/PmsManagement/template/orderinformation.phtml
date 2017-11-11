@@ -209,10 +209,48 @@ if($booking->orderIds) {
         echo "</td>";
         echo "<td valign='top'>";
         
-        echo "<span class='sendinvoicebox' gstype='form' method='sendInvoice'>";
+        echo "<span class='sendinvoicebox dosendbox' gstype='form' method='sendInvoice'>";
+        
+        echo "<div style='padding-bottom: 10px;'>";
+        echo "<i class='fa fa-close closesendreciept' style='float:right;cursor:pointer;'></i>";
+        echo "Send reciept";
+        echo "</div>";
         echo "<input type='hidden' value='".$booking->id."' gsname='bookingid'>";
         echo "<input type='hidden' value='".$order->id."' gsname='orderid'>";
-        echo "<input type='txt' value='".$invoiceEmail."' placeholder='Email' gsname='email'><span class='pmsbutton' gstype='submitToInfoBox'>Send</span>";
+        echo "<div>";
+        
+        echo "<select style='width:100%; margin-bottom: 5px;' class='sendlinktouser'>";
+        echo "<option value='$phonePrefix:$phoneNumber:$invoiceEmail'>Booker : $bookerName</option>";
+        $k = 1;
+        $selectedPhone = $phoneNumber;
+        $selectedEmail = $invoiceEmail;
+        $selectedPrefix = $phonePrefix;
+        foreach($guests as $guest) {
+            /* @var $guest core_pmsmanager_PmsGuests */
+            if(!$guest->name) {
+                continue;
+            }
+            $pref = $guest->prefix;
+            $phone = $guest->phone;
+            $email = $guest->email;
+            $selected = "";
+            if($k == $guestSelectedOffset) {
+                $selectedPhone = $phone;
+                $selectedEmail = $email;
+                $selectedPrefix = $pref;
+                $selected = "SELECTED";
+            }
+
+            echo "<option value='$pref:$phone:$email' $selected>Guest : " . $guest->name . "</option>";
+            $k++;
+        }
+        
+        echo "</select><br>";
+        echo "<input type='txt' value='".$selectedEmail."' placeholder='Email' gsname='bookerEmail' style='width:100%; margin-bottom: 5px;box-sizing:border-box;'><br>";
+        echo "<input type='button' gstype='submitToInfoBox' gsvalue='sendtobooker' value='Send' style='width:100%;'>";
+        echo "</div>";
+                
+        
         echo "</span>";
         
         if(stristr($order->payment->paymentType, "invoice")) {
@@ -229,9 +267,9 @@ if($booking->orderIds) {
         }
 
         
-        echo "<span class='sendpaymentlinkbox' gstype='form' method='sendPaymentLink'>";
+        echo "<span class='sendpaymentlinkbox dosendbox' gstype='form' method='sendPaymentLink'>";
         echo "<div style='padding-bottom: 10px;'>";
-        echo "<i class='fa fa-close closesendpaymentlink' style='float:right;'></i>";
+        echo "<i class='fa fa-close closesendpaymentlink' style='float:right;cursor:pointer;'></i>";
         echo "Send payment link";
         echo "</div>";
         echo "<input type='hidden' value='".$booking->id."' gsname='bookingid'>";
@@ -240,6 +278,11 @@ if($booking->orderIds) {
         
         echo "<select style='width:100%; margin-bottom: 5px;' class='sendlinktouser'>";
         echo "<option value='$phonePrefix:$phoneNumber:$invoiceEmail'>Booker : $bookerName</option>";
+        $selectedPhone = $phoneNumber;
+        $selectedEmail = $invoiceEmail;
+        $selectedPrefix = $phonePrefix;
+        
+        
         $k = 1;
         foreach($guests as $guest) {
             /* @var $guest core_pmsmanager_PmsGuests */
@@ -251,6 +294,9 @@ if($booking->orderIds) {
             $email = $guest->email;
             $selected = "";
             if($k == $guestSelectedOffset) {
+                $selectedPhone = $phone;
+                $selectedEmail = $email;
+                $selectedPrefix = $pref;
                 $selected = "SELECTED";
             }
 
@@ -260,9 +306,9 @@ if($booking->orderIds) {
         $msg = $this->getApi()->getPmsManager()->getMessage($this->getSelectedName(), $booking->id, "booking_sendpaymentlink");
         
         echo "</select><br>";
-        echo "<input type='txt' value='".$invoiceEmail."' placeholder='Email' gsname='bookerEmail' style='width:100%; margin-bottom: 5px;box-sizing:border-box;'><br>";
-        echo "<input type='txt' value='+".$phonePrefix."' placeholder='bookerPrefix' gsname='bookerPrefix' style='width: 30px;'>";
-        echo "<input type='txt' value='".$phoneNumber."' placeholder='bookerPhone' gsname='bookerPhone' style='width: 80px;'><input type='button' gstype='submitToInfoBox' gsvalue='sendtobooker' value='Send link'>";
+        echo "<input type='txt' value='".$selectedEmail."' placeholder='Email' gsname='bookerEmail' style='width:100%; margin-bottom: 5px;box-sizing:border-box;'><br>";
+        echo "<input type='txt' value='+".$selectedPrefix."' placeholder='bookerPrefix' gsname='bookerPrefix' style='width: 30px;'>";
+        echo "<input type='txt' value='".$selectedPhone."' placeholder='bookerPhone' gsname='bookerPhone' style='width: 80px;'><input type='button' gstype='submitToInfoBox' gsvalue='sendtobooker' value='Send link'>";
         echo "<br><br><span style='font-size:12px;'>Message</span><br>";
         echo "<textarea style='font-size:10px; width:100%; height: 100px;' gsname='smsMessage'>$msg</textarea>";
         

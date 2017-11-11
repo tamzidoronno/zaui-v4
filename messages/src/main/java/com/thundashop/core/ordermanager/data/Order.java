@@ -36,6 +36,8 @@ public class Order extends DataCommon implements Comparable<Order> {
      */
     private Boolean transferedToAccountingSystem = false;
         
+    
+    public Date needCollectingDate = null;
     public String paymentTransactionId = "";
     public Shipping shipping;
     public Payment payment = new Payment();
@@ -90,6 +92,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     
     @Transient
     public String wubookid = "";
+    public boolean warnedNotAbleToCapture = false;
     
     public Order jsonClone() {
         Gson gson = new Gson();

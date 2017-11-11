@@ -1350,7 +1350,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         String message = getMessageToSend(key, type, booking);
-        message = formatMessage(message, booking, room, null);    
+        message = formatMessage(message, booking, room, null);
+        
         if(message == null || message.trim().isEmpty()) {
             return "";
         }
@@ -6064,6 +6065,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             message = messageToSend;
         }
         
+        
         if(key.startsWith("booking_sendpaymentlink") || 
                 key.startsWith("booking_unabletochargecard") || 
                 key.startsWith("booking_paymentmissing") || 
@@ -6082,6 +6084,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         if (type.equals("email")) {
             if (message != null) {
+                if(message.contains("http") && !message.contains("<a")) {
+                    PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+                    message = formater.formatHtml(message);
+                }
+                
                 message = configuration.emailTemplate.replace("{content}", message);
                 message = message.trim();
                 message = message.replace("\n", "<br>\n");

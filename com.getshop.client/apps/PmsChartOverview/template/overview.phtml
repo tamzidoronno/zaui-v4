@@ -1,55 +1,161 @@
-<div class="statistics">
-    <b>I dag</b>
-    
-    <div class="statiticbox counter1">
-        <div class="filecount boldFont">12</div>
-        <div class="subinfo boldFont"> Innsjekk</div>
+<?php
+$boxes = array();
+$boxes["Arrivals"] = "Number of guests arriving today and tomorrow";
+$boxes["DEPARTURES"] = "Number of guests leaving the hotel today and tomorrow";
+$boxes["NEW BOOKINGS"] = "New bookings registered today";
+$boxes["CLEANING"] = "Number of room to clean";
+$boxes["GUEST COMMENTS"] = "Number of comments from the guests";
+$boxes["ECONOMY"] = "Total value of income generated today and tomorrow (ex taxes)";
+$boxes["Coverage"] = "Total coverage for the specified day";
+$boxes["Janitor"] = "Number of tasks in queue for the janitor";
+?>
+
+<div class='dashboard_main'>
+    <?php
+    foreach($boxes as $title => $desc) {
+        $field = str_replace(" ", "_", $title);
+    ?>
+    <div class="statistics <?php echo $field; ?>">
+        <div class='header'>
+            <i class='fa fa-info-circle' title='<?php echo $desc; ?>'></i> 
+            <?php echo $title; ?>
+            <i class='fa fa-arrow-right'></i> 
+        </div>
+        <div class='inner'>
+            <div class='dayheader'><?php
+            if($field == "Janitor") {
+                echo "In queue";
+            } else {
+                echo "Today";
+            }
+            ?>
+            </div>
+            <div class="statiticbox counter1">
+                <div class="filecount boldFont"><i class='fa fa-spin fa-spinner'></i></div>
+            </div>
+
+            <div class='dayheader'>
+            <?php
+            if($field == "NEW_BOOKINGS") {
+                echo "Yesterday";
+            } else if($field == "Janitor") {
+                echo "Completed";
+            } else {
+                echo "Tomorrow";
+            }
+            ?>
+            </div>
+            <div class="statiticbox counter2">
+                <div class="filecount boldFont"><i class='fa fa-spin fa-spinner'></i></div>
+            </div>    
+        </div>    
     </div>
-
-    <div class="statiticbox counter2">
-        <div class="filecount boldFont">18</div>
-        <div class="subinfo boldFont"> Utsjekk </div>
-    </div>    
-</div>
-
-<div class="statistics">
-    <b>I morgen</b>
-    
-    <div class="statiticbox counter1">
-        <div class="filecount boldFont">10</div>
-        <div class="subinfo boldFont"> Innsjekk</div>
-    </div>
-
-    <div class="statiticbox counter2">
-        <div class="filecount boldFont">20</div>
-        <div class="subinfo boldFont"> Utsjekk </div>
-    </div>    
-</div>
-
-<div class="statistics">
-    <b>Renhold</b>
-    
-    <div class="statiticbox counter1">
-        <div class="filecount boldFont">7</div>
-        <div class="subinfo boldFont">Stayovers</div>
-    </div>
-
-    <div class="statiticbox counter2">
-        <div class="filecount boldFont">28</div>
-        <div class="subinfo boldFont">Rom igjen <br/>å vaske</div>
-    </div>    
-</div>
-
-<div class="statistics">
-    <b>Whatever</b>
-    
-    <div class="statiticbox counter1">
-        <div class="filecount boldFont">15</div>
-        <div class="subinfo boldFont">Bla</div>
-    </div>
-
-    <div class="statiticbox counter2">
-        <div class="filecount boldFont">21</div>
-        <div class="subinfo boldFont">Bla</div>
-    </div>    
+    <script>
+        var event = thundashop.Ajax.createEvent('','lazyLoadOverviewData',$('.PmsChartOverview'), {
+            "view" : "<?php echo $field; ?>"
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            var json = JSON.parse(res);
+            
+            var timerCounter = 0;
+            var countertoday = 1;
+            var todayContainer = $('.PmsChartOverview .<?php echo $field;?>').find('.counter1 .boldFont');
+            for(var i = 0; i <= json.today;) {
+                setTimeout(function() {
+                    if(json.today > 1000) {
+                        countertoday += 199;
+                    } else if(json.today > 10000) {
+                        countertoday += 1999;
+                    } else if(json.today > 100000) {
+                        countertoday += 19999;
+                    } else {
+                        countertoday++
+                    }
+                    
+                    if(countertoday > json.today) {
+                        countertoday = json.today;
+                    }
+                    
+                    todayContainer.html(countertoday);
+                    
+                    if(countertoday > 1000) {
+                        todayContainer.css('font-size',43);
+                        todayContainer.css('padding-top',42);
+                    }
+                    if(countertoday > 10000) {
+                        todayContainer.css('font-size',35);
+                        todayContainer.css('padding-top',47);
+                    }
+                    if(countertoday > 100000) {
+                        todayContainer.css('font-size',30);
+                        todayContainer.css('padding-top',51);
+                    }
+                    
+                }, (20*timerCounter));
+                timerCounter++;
+                if(json.today > 1000) {
+                    i += 199;
+                } else if(json.today > 10000) {
+                    i += 1999;
+                } else if(json.today > 100000) {
+                    i += 19999;
+                } else {
+                    i++
+                }
+            }
+            
+            
+            
+            
+            
+            var timerCounter = 0;
+            var counterTomorrow = 1;
+            var tomorrowContainer = $('.PmsChartOverview .<?php echo $field;?>').find('.counter2 .boldFont');
+            for(var i = 0; i <= json.tomorrow;) {
+                setTimeout(function() {
+                    if(json.tomorrow > 1000) {
+                        counterTomorrow += 199;
+                    } else if(json.tomorrow > 10000) {
+                        counterTomorrow += 1999;
+                    } else if(json.tomorrow > 100000) {
+                        counterTomorrow += 19999;
+                    } else {
+                        counterTomorrow++
+                    }
+                    
+                    if(counterTomorrow > json.tomorrow) {
+                        counterTomorrow = json.tomorrow;
+                    }
+                    
+                    tomorrowContainer.html(counterTomorrow);
+                    
+                    if(counterTomorrow > 1000) {
+                        tomorrowContainer.css('font-size',43);
+                        tomorrowContainer.css('padding-top',42);
+                    }
+                    if(counterTomorrow > 10000) {
+                        tomorrowContainer.css('font-size',35);
+                        tomorrowContainer.css('padding-top',47);
+                    }
+                    if(counterTomorrow > 100000) {
+                        tomorrowContainer.css('font-size',30);
+                        tomorrowContainer.css('padding-top',51);
+                    }
+                    
+                }, (20*timerCounter));
+                timerCounter++;
+                if(json.tomorrow > 1000) {
+                    i += 199;
+                } else if(json.tomorrow > 10000) {
+                    i += 1999;
+                } else if(json.tomorrow > 100000) {
+                    i += 19999;
+                } else {
+                    i++
+                }
+            }
+        });
+    </script>
+<?php } ?>
 </div>

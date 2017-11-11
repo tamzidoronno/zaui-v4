@@ -1,9 +1,6 @@
 <?
 /* @var $this ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking */
 $filter = $this->getSelectedFilter();
-echo "<pre>";
-print_r($filter);
-echo "</pre>";
 $channels = (array)$this->getChannelMatrix();
         
 $start = date('d.m.Y', strtotime($filter->startDate));

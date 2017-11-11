@@ -97,9 +97,12 @@ class Page {
             }
             echo "</div>";
 
-            echo "<div class='gsarea' area='body'>";
+            $leftBarEnabled = $this->javapage->leftSideBar;
+            $hasLeftSidebar = $leftBarEnabled ? "hasleftsidebar" : "";
+            
+            echo "<div class='gsarea $hasLeftSidebar' area='body'>";
                 $this->printCurrentLoggedUserId();
-                $leftBarEnabled = $this->javapage->leftSideBar;
+                
                 if ($leftBarEnabled)  {
                     $gsClassInnerPageWidth = method_exists($this->themeApp, "sideBarShouldBeInner") && $this->themeApp->sideBarShouldBeInner() ? "gs_page_width" : "";
                     echo "<div class='$gsClassInnerPageWidth'>";

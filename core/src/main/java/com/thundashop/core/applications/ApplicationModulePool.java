@@ -122,6 +122,13 @@ class ApplicationModulePool {
         pms.faIcon = "fa-calendar";
         pms.description = "GetShop Module.";
         modules.put(booking.id, pms);
+        
+        ApplicationModule apac = new ApplicationModule();
+        apac.moduleName = "GetShop Module - APAC";
+        apac.id = "apac";
+        apac.faIcon = "fa-calendar";
+        apac.description = "GetShop Module.";
+        modules.put(booking.id, apac);
     }
     
     public ApplicationModule getModule(String id) {

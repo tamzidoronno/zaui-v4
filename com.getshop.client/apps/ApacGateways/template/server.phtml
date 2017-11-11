@@ -1,0 +1,52 @@
+<?
+/* @var $this \ns_2d6a27b9_b238_4406_9f03_c4ca8184f590\ApacGateways */
+
+$server = $this->getServer();
+$isUpdating = true;
+?>
+
+
+<div class='locklist'>
+    <div class='menuarea'>
+        <div class='shop_button' gsclick='startFetchingOfLocks' serverid='<? echo $server->id; ?>'><i class='fa fa-lock'></i> Fetch locks</div>
+        <div gs_confirm='Are you sure?' class='shop_button' gsclick='deleteServer' serverid='<? echo $server->id; ?>'><i class='fa fa-trash'></i> Delete</div>
+        <div class='shop_button' gsclick='toggleUpdate' serverid='<? echo $server->id; ?>'>
+            <? if ($isUpdating) { ?>
+                <i class='fa fa-pause'></i> Toggle update ( currently updating )
+            <? } else { ?>
+                <i class='fa fa-play'></i> Toggle update ( currently not updating )
+            <? } ?>
+        </div>
+        
+        <div class="serverdetails" gstype="form" method="saveConnectionDetails">
+            <input type="hidden" gsname="serverid" value="<? echo $server->id; ?>"/>
+            Given name<br/> <input style='line-height: 29px; vertical-align: top;' gsname='servername' class="gsniceinput1" placeholder="Server name" value="<? echo $server->givenName; ?>">
+            <br/>Hostname<br/> <input style='line-height: 29px; vertical-align: top;' gsname='hostname' class="gsniceinput1" placeholder="Hostname" value="<? echo $server->hostname; ?>">
+            <br/>Username<br/> <input style='line-height: 29px; vertical-align: top;' gsname='username' class="gsniceinput1" placeholder="Username" value="<? echo $server->username; ?>">
+            <br/>Password<br/> <input style='line-height: 29px; vertical-align: top;' gsname='password' class="gsniceinput1" placeholder="Password" value="<? echo $server->password; ?>">        
+            <br/><div class="shop_button" gstype="submit"><? echo $this->__f("Save"); ?></div>
+        </div>
+    </div>
+    
+    <?
+        foreach ($server->locks as $id => $lock) {
+            ?>
+            <div class="lockrow">
+                <div class="icon"><i class="fa fa-moon-o"></i></div>
+                <div class="name"><? echo $lock->name; ?></div>
+                <div class="gs_shop_small_icon" gsclick="editSettingsForLock" serverid="<? echo $server->id; ?>" lockid="<? echo $lock->id; ?>">
+                    <i class="fa fa-gears"></i> Edit settings
+                </div>
+
+                <div class="inforow">
+                    To update: <? echo count($lock->toUpdate); ?> | To remove: <? echo count($lock->toRemove); ?> | In use: <? echo count($lock->inUse); ?> | Total codes: <? echo $lock->maxnumberOfCodes; ?>
+                </div>
+                <div class="inforow">
+                    Conneted to groups: -
+                </div>
+
+            </div>
+            <?
+        }
+        ?>
+</div>

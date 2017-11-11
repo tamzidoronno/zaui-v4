@@ -3,6 +3,30 @@ app.PmsAvailability = {
         $(document).on('mouseenter', '.PmsAvailability .contains_booking', this.mouseOver);
         $(document).on('mouseleave', '.PmsAvailability .contains_booking', this.mouseOut);
         $(document).on('click', '.PmsAvailability .contains_booking', this.showMenuBox);
+        $(document).on('click', '.PmsAvailability .canUse', this.addSelectedClass);
+    },
+    
+    updateAvailability: function() {
+        $('.PmsAvailability .itemview').addClass('update_in_progress');
+        
+        var data = {
+            bookingid: $('.PmsAvailability .itemview').attr('bookingid'),
+            start : $('.PmsAvailability .startdate').val(),
+            end : $('.PmsAvailability .enddate').val()
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "loaditemview", $('.PmsAvailability'), data);
+        
+        event['synchron'] = true;
+        thundashop.Ajax.post(event, function(res) {
+            $('.PmsAvailability .itemview').html(res);
+            $('.PmsAvailability .itemview').removeClass('update_in_progress');
+        });
+    },
+    
+    addSelectedClass: function() {
+        $('.PmsAvailability .gs_selected').removeClass('gs_selected');
+        $(this).addClass('gs_selected');
     },
     
     showMenuBox: function(event) {

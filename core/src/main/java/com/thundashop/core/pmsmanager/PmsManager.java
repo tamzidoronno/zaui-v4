@@ -7198,5 +7198,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
+    @Override
+    public List<PmsRoomSimple> getSimpleRoomsForGroup(String bookingEngineId) {
+        PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
+        PmsBooking booking = getBookingFromBookingEngineId(bookingEngineId);
+        return booking.rooms.stream()
+                .map(room -> filtering.convertRoom(room, booking))
+                .collect(Collectors.toList());
+    }
+
     
 }

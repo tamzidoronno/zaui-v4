@@ -10,6 +10,24 @@ attribute gstypes;
             <input gstype="submitToInfoBox" type="button">
         </div>
 
+    form - gs_local_update_only="true":
+    Adding this attribute to the submit button and the page will not load everything. Only the same form over again.
+    
+    example:
+        It will print whatever is echo'ed in the addEntry function.
+
+        <div gstype="form" method="addEntry">
+            <div gstype="submit" class="shop_button" gs_local_update_only="true">Add new entry</div>
+        </div>
+
+    gstype="select"
+
+    <div gstype="select" gsname="room">
+        <div gstype='option' class='gs_selected' gs_value='a'>Selected value</div>
+        <div gstype='option' class='' gs_value='b'>not selected value1</div>
+        <div gstype='option' class='' gs_value='c'>not selected value2</div>
+    </div>
+
     submit, when click event is triggered, form is submitted
         example: <input gstype="submit" type="button">
 

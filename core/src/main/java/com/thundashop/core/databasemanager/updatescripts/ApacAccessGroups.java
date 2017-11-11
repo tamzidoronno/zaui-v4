@@ -20,16 +20,16 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
-public class GetShopLockSystem extends UpdateScriptBase implements UpdateScript {
+public class ApacAccessGroups extends UpdateScriptBase implements UpdateScript {
 
     @Override
     public Date getAddedDate() {
-        return getDate("20/09-2017");
+        return getDate("09/11-2017");
     }
     
     @Override
     public String getId() {
-        return "767c2068-ee7e-4432-8129-55f24f6e6638";
+        return "41af53ca-c736-46f6-b559-ef6ccde3f0f5";
     }
 
     @SuppressWarnings("empty-statement")
@@ -49,7 +49,7 @@ public class GetShopLockSystem extends UpdateScriptBase implements UpdateScript 
     }
     
     public static void main(String[] args) {
-        new GetShopLockSystem().runSingle();
+        new ApacAccessGroups().runSingle();
     }
     
     @Override
@@ -66,16 +66,16 @@ public class GetShopLockSystem extends UpdateScriptBase implements UpdateScript 
         credentials.password = "ADFASDF";
         credentials.storeid = "all";
 
-        Application GetShopLockSystem = createSettings("GetShopLockSystem",
-        "3e89173c-42e2-493f-97bb-2261c0418bfe",
+        Application ApacAccessGroups = createSettings("ApacAccessGroups",
+        "25c15968-4b9b-4c23-9e44-dc5cdb83244c",
         allowed2,
         " ",
-        Application.Type.Webshop, true);
-        GetShopLockSystem.isPublic = true;
-        GetShopLockSystem.isFrontend = true;
-        GetShopLockSystem.moduleId = "other";
-        GetShopLockSystem.defaultActivate = false;
-        GetShopLockSystem.storeId = "all";
-        database.save(GetShopLockSystem, credentials);
+        Application.Type.Marketing, true);
+        ApacAccessGroups.isPublic = true;
+        ApacAccessGroups.isFrontend = true;
+        ApacAccessGroups.moduleId = "apac";
+        ApacAccessGroups.defaultActivate = true;
+        ApacAccessGroups.storeId = "all";
+        database.save(ApacAccessGroups, credentials);
     }
 }

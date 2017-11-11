@@ -48,9 +48,14 @@ echo "4. Content Management"
 echo "5. Reports"
 echo "6. EventBooking"
 echo "7. E-commerce template pool"
+echo "";
+echo "In GetShop Modules";
+echo "8. Property Management";
+echo "9. Apac";
 read moduleNumber
 
 module=other
+defaultActivated=false
 if [ $moduleNumber = "2" ]; then 
     module=WebShop
 fi
@@ -68,6 +73,14 @@ if [ $moduleNumber = "6" ]; then
 fi
 if [ $moduleNumber = "7" ]; then 
     module=ecommercetemplate
+fi
+if [ $moduleNumber = "8" ]; then 
+    module=pms
+    defaultActivated=true
+fi
+if [ $moduleNumber = "9" ]; then 
+    module=apac
+    defaultActivated=true
 fi
 
 echo "Building files and folders."
@@ -106,6 +119,7 @@ CODE=$(echo "$CODE" | sed "s|{{UUID}}|$UUID|g");
 CODE=$(echo "$CODE" | sed "s|{{UUID2}}|$UUID2|g");
 CODE=$(echo "$CODE" | sed "s|{{MODULE}}|$module|g");
 CODE=$(echo "$CODE" | sed "s|{{JAVATYPE}}|$JAVATYPE|g");
+CODE=$(echo "$CODE" | sed "s|{{defaultActivated}}|$defaultActivated|g");
 
 . ./createDbScript.sh
 
